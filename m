@@ -2,428 +2,480 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DDBC7C8A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9E3C5519B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 345CC2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D269D2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:13:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="YZgA8CeH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbgD0JMH convert rfc822-to-8bit (ORCPT
+        id S1726770AbgD0JN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:12:07 -0400
-Received: from albireo.enyo.de ([37.24.231.21]:46222 "EHLO albireo.enyo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726831AbgD0JME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:12:04 -0400
-Received: from [172.17.203.2] (helo=deneb.enyo.de)
-        by albireo.enyo.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1jSzno-00041P-Vh; Mon, 27 Apr 2020 09:11:48 +0000
-Received: from fw by deneb.enyo.de with local (Exim 4.92)
-        (envelope-from <fw@deneb.enyo.de>)
-        id 1jSzno-0007JF-TF; Mon, 27 Apr 2020 11:11:48 +0200
-From:   Florian Weimer <fw@deneb.enyo.de>
-To:     Mathieu Desnoyers via Libc-alpha <libc-alpha@sourceware.org>
-Cc:     Carlos O'Donell <carlos@redhat.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Rich Felker <dalias@libc.org>, linux-api@vger.kernel.org,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Paul Turner <pjt@google.com>,
-        Joseph Myers <joseph@codesourcery.com>
-Subject: Re: [PATCH glibc 5/9] glibc: Perform rseq(2) registration at C startup and thread creation (v17)
-References: <20200326155633.18236-1-mathieu.desnoyers@efficios.com>
-        <20200326155633.18236-6-mathieu.desnoyers@efficios.com>
-Date:   Mon, 27 Apr 2020 11:11:48 +0200
-In-Reply-To: <20200326155633.18236-6-mathieu.desnoyers@efficios.com> (Mathieu
-        Desnoyers via Libc-alpha's message of "Thu, 26 Mar 2020 11:56:29
-        -0400")
-Message-ID: <87ees9z417.fsf@mid.deneb.enyo.de>
+        Mon, 27 Apr 2020 05:13:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41212 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbgD0JN2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 05:13:28 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 473C3C061BD3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:13:27 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id c18so737070ile.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:13:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=antmicro.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TliImwXH88fQJMi7PEn1RMD3rA+S3RxYctLfKQtuzNg=;
+        b=YZgA8CeHt7baozzY6wji/VhSnmX8tYa+EmWWZE6T2QlaKiz2qrSihaFjZYMLMSQoUp
+         06SlFKsG8/U7FMyUod/Xd6McMuyXArz5+SbrLfhWLwmE/j3lG9dTM3OS+hONe13uS8wn
+         oKvjScUmzahJ7LQnWJ3z2kiA7i3DZzM5euLfU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TliImwXH88fQJMi7PEn1RMD3rA+S3RxYctLfKQtuzNg=;
+        b=oT8OhXw0QFdVl17z2us5T+XfsZX2HeMm3J8vNPOQTKertNEwyljPI8bAT2SxVPoWjK
+         c222sVSJ41a27DVvVGstu/mQ/thMrCrWTE9H3tYKVeGjBRCQzSaDSNlcOq33N01LWfhs
+         IeOvnOTPB9/mzG629FMiMAJUouskJdG8GKc7R0zPn6QNivHmeuyrp90L4B6S0A1sERpm
+         i1EHRFEBu9o9SNt3usW9d2Z61uIgvHJ51H4VdZQqVHSNH+9xU0bZhKnVPiu3iftK1kmm
+         4gZH/3Pgl8PNBslk1yLjX50OdVQVSImzfb0l3enquA1CcMaWwqWYxEBHSAs7H6IVXpmL
+         9gqg==
+X-Gm-Message-State: AGi0PuYCYaG4uLGuPpYO6d3PNGMgnS9HRR2Sf23e30y9+MuIj+cHSSWP
+        1oZWAz4M9O5KyVldCgQLzkfDfA9ISkzgaeKxUoAlfg==
+X-Google-Smtp-Source: APiQypJN5XDI76v/A+E9lgcfMKlqphtg6iKR1loYPIo3bugZWnuVIMXMrJzRWYqV79tqDWjmPGIkYVAosgofYFcja7g=
+X-Received: by 2002:a92:8fc4:: with SMTP id r65mr19297602ilk.179.1587978806246;
+ Mon, 27 Apr 2020 02:13:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+References: <20200425133939.3508912-0-mholenko@antmicro.com> <20200425133939.3508912-3-mholenko@antmicro.com>
+In-Reply-To: <20200425133939.3508912-3-mholenko@antmicro.com>
+From:   Mateusz Holenko <mholenko@antmicro.com>
+Date:   Mon, 27 Apr 2020 11:13:13 +0200
+Message-ID: <CAPk366REVxz7qRfJ0dJOVPRey6+01q1JRvqANDNffYV8Lvh73g@mail.gmail.com>
+Subject: Re: [PATCH v5 3/5] drivers/soc/litex: add LiteX SoC Controller driver
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Cc:     Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org, "Gabriel L. Somlo" <gsomlo@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers via Libc-alpha:
-
-> +* Support for automatically registering threads with the Linux rseq(2)
-> +  system call has been added.  This system call is implemented starting
-> +  from Linux 4.18.  The Restartable Sequences ABI accelerates user-space
-> +  operations on per-cpu data.  It allows user-space to perform updates
-> +  on per-cpu data without requiring heavy-weight atomic operations.
-> +  Automatically registering threads allows all libraries, including libc,
-> +  to make immediate use of the rseq(2) support by using the documented ABI.
-> +  See 'man 2 rseq' for the details of the ABI shared between libc and the
-> +  kernel.
-
-This should refer documentation in the glibc manual.
-
-(It is currently a glibc project requirement to add documentation for
-new Linux interfaces, something that I do not necessarily agree with.)
-
->  
->  Deprecated and removed features, and other changes affecting compatibility:
->  
-> diff --git a/elf/libc_early_init.c b/elf/libc_early_init.c
-> index 1ac66d895d..30466afea0 100644
-> --- a/elf/libc_early_init.c
-> +++ b/elf/libc_early_init.c
-> @@ -18,10 +18,13 @@
->  
->  #include <ctype.h>
->  #include <libc-early-init.h>
-> +#include <rseq-internal.h>
->  
->  void
->  __libc_early_init (void)
->  {
->    /* Initialize ctype data.  */
->    __ctype_init ();
-> +  /* Register rseq ABI to the kernel.   */
-> +  (void) rseq_register_current_thread ();
->  }
-
-The cast to void should be removed (see below the comment about the
-return type.
-
-> diff --git a/manual/threads.texi b/manual/threads.texi
-> index 0858ef8f92..59f634e432 100644
-> --- a/manual/threads.texi
-> +++ b/manual/threads.texi
-> @@ -9,8 +9,10 @@ This chapter describes functions used for managing threads.
->  POSIX threads.
->  
->  @menu
-> -* ISO C Threads::	Threads based on the ISO C specification.
-> -* POSIX Threads::	Threads based on the POSIX specification.
-> +* ISO C Threads::		Threads based on the ISO C specification.
-> +* POSIX Threads::		Threads based on the POSIX specification.
-> +* Restartable Sequences::	Linux-specific Restartable Sequences
-> +				integration.
->  @end menu
->  
->  
-> @@ -881,3 +883,27 @@ Behaves like @code{pthread_timedjoin_np} except that the absolute time in
->  @c pthread_spin_unlock
->  @c pthread_testcancel
->  @c pthread_yield
-> +
-> +@node Restartable Sequences
-> +@section Restartable Sequences
-> +@cindex rseq
-> +
-> +This section describes @theglibc{} Restartable Sequences integration.
-> +
-> +@deftypevar {struct rseq} __rseq_abi
-> +@standards{GNU, sys/rseq.h}
-> +@Theglibc{} implements a @code{__rseq_abi} TLS symbol to interact with the
-> +Restartable Sequences system call (Linux-specific).  The layout of this
-> +structure is defined by the Linux kernel @file{linux/rseq.h} UAPI.
-> +Registration of each thread's @code{__rseq_abi} is performed by
-> +@theglibc{} at libc initialization and pthread creation.
-> +@end deftypevar
-> +
-> +@deftypevr Macro int RSEQ_SIG
-> +@standards{GNU, sys/rseq.h}
-> +Each supported architecture provide a @code{RSEQ_SIG} macro in
-> +@file{sys/rseq.h} which contains a signature.  That signature is expected to be
-> +present in the code before each Restartable Sequences abort handler.  Failure
-> +to provide the expected signature may terminate the process with a Segmentation
-> +fault.
-> +@end deftypevr
-
-This should say Linux, not GNU as the standards source, given that the
-interface is not added to the GNU ABI.
-
-Is this sufficient documentation of this feature?  What do others
-think about this?
-
-> diff --git a/misc/rseq-internal.h b/misc/rseq-internal.h
+On Sat, Apr 25, 2020 at 1:42 PM Mateusz Holenko <mholenko@antmicro.com> wrote:
+>
+> From: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
+>
+> This commit adds driver for the FPGA-based LiteX SoC
+> Controller from LiteX SoC builder.
+>
+> Co-developed-by: Mateusz Holenko <mholenko@antmicro.com>
+> Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+> Signed-off-by: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
+> ---
+>
+> Notes:
+>     Changes in v5:
+>     - removed helper accessors and used __raw_readl/__raw_writel instead
+>     - fixed checking for errors in litex_soc_ctrl_probe
+>
+>     Changes in v4:
+>     - fixed indent in Kconfig's help section
+>     - fixed copyright header
+>     - changed compatible to "litex,soc-controller"
+>     - simplified litex_soc_ctrl_probe
+>     - removed unnecessary litex_soc_ctrl_remove
+>
+>     This commit has been introduced in v3 of the patchset.
+>
+>     It includes a simplified version of common 'litex.h'
+>     header introduced in v2 of the patchset.
+>
+>  MAINTAINERS                        |   2 +
+>  drivers/soc/Kconfig                |   1 +
+>  drivers/soc/Makefile               |   1 +
+>  drivers/soc/litex/Kconfig          |  14 ++
+>  drivers/soc/litex/Makefile         |   3 +
+>  drivers/soc/litex/litex_soc_ctrl.c | 197 +++++++++++++++++++++++++++++
+>  include/linux/litex.h              |  45 +++++++
+>  7 files changed, 263 insertions(+)
+>  create mode 100644 drivers/soc/litex/Kconfig
+>  create mode 100644 drivers/soc/litex/Makefile
+>  create mode 100644 drivers/soc/litex/litex_soc_ctrl.c
+>  create mode 100644 include/linux/litex.h
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 421ede6c4f71..1afe7348353b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9820,6 +9820,8 @@ M:        Karol Gugala <kgugala@antmicro.com>
+>  M:     Mateusz Holenko <mholenko@antmicro.com>
+>  S:     Maintained
+>  F:     Documentation/devicetree/bindings/*/litex,*.yaml
+> +F:     drivers/soc/litex/litex_soc_ctrl.c
+> +F:     include/linux/litex.h
+>
+>  LIVE PATCHING
+>  M:     Josh Poimboeuf <jpoimboe@redhat.com>
+> diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+> index 1778f8c62861..78add2a163be 100644
+> --- a/drivers/soc/Kconfig
+> +++ b/drivers/soc/Kconfig
+> @@ -9,6 +9,7 @@ source "drivers/soc/bcm/Kconfig"
+>  source "drivers/soc/fsl/Kconfig"
+>  source "drivers/soc/imx/Kconfig"
+>  source "drivers/soc/ixp4xx/Kconfig"
+> +source "drivers/soc/litex/Kconfig"
+>  source "drivers/soc/mediatek/Kconfig"
+>  source "drivers/soc/qcom/Kconfig"
+>  source "drivers/soc/renesas/Kconfig"
+> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+> index a39f17cea376..49bbb6ca6d95 100644
+> --- a/drivers/soc/Makefile
+> +++ b/drivers/soc/Makefile
+> @@ -14,6 +14,7 @@ obj-$(CONFIG_ARCH_GEMINI)     += gemini/
+>  obj-y                          += imx/
+>  obj-$(CONFIG_ARCH_IXP4XX)      += ixp4xx/
+>  obj-$(CONFIG_SOC_XWAY)         += lantiq/
+> +obj-$(CONFIG_LITEX_SOC_CONTROLLER) += litex/
+>  obj-y                          += mediatek/
+>  obj-y                          += amlogic/
+>  obj-y                          += qcom/
+> diff --git a/drivers/soc/litex/Kconfig b/drivers/soc/litex/Kconfig
 > new file mode 100644
-> index 0000000000..d564cf1bc3
+> index 000000000000..71264c0e1d6c
 > --- /dev/null
-> +++ b/misc/rseq-internal.h
-> @@ -0,0 +1,33 @@
-
-> +static inline int
-> +rseq_register_current_thread (void)
-> +{
-> +  return -1;
-> +}
-
-Nothing checks the return value of this function as far as I can see,
-so it can return void.
-
-> +static inline int
-> +rseq_unregister_current_thread (void)
-> +{
-> +  return -1;
-> +}
-
-This function is unused.  This also applies to the full version.  I
-believe we switched to implicit deregistration on thread exit, so I
-think you can just remove it.
-
-> diff --git a/nptl/pthread_create.c b/nptl/pthread_create.c
-> index afd379e89a..1ff248042e 100644
-> --- a/nptl/pthread_create.c
-> +++ b/nptl/pthread_create.c
-> @@ -33,6 +33,7 @@
->  #include <default-sched.h>
->  #include <futex-internal.h>
->  #include <tls-setup.h>
-> +#include <rseq-internal.h>
->  #include "libioP.h"
->  
->  #include <shlib-compat.h>
-> @@ -384,6 +385,9 @@ START_THREAD_DEFN
->    /* Initialize pointers to locale data.  */
->    __ctype_init ();
->  
-> +  /* Register rseq TLS to the kernel. */
-> +  (void) rseq_register_current_thread ();
+> +++ b/drivers/soc/litex/Kconfig
+> @@ -0,0 +1,14 @@
+> +# SPDX-License_Identifier: GPL-2.0
 > +
-
-The cast can go.
-
->  #ifndef __ASSUME_SET_ROBUST_LIST
->    if (__set_robust_list_avail >= 0)
->  #endif
-> @@ -578,6 +582,14 @@ START_THREAD_DEFN
->       process is really dead since 'clone' got passed the CLONE_CHILD_CLEARTID
->       flag.  The 'tid' field in the TCB will be set to zero.
->  
-> +     rseq TLS is still registered at this point. Rely on implicit unregistration
-> +     performed by the kernel on thread teardown. This is not a problem because the
-> +     rseq TLS lives on the stack, and the stack outlives the thread. If TCB
-> +     allocation is ever changed, additional steps may be required, such as
-> +     performing explicit rseq unregistration before reclaiming the rseq TLS area
-> +     memory. It is NOT sufficient to block signals because the kernel may write
-> +     to the rseq area even without signals.
+> +menu "Enable LiteX SoC Builder specific drivers"
 > +
->       The exit code is zero since in case all threads exit by calling
->       'pthread_exit' the exit status must be 0 (zero).  */
->    __exit_thread ();
-
-Some of these lines are too long.  Also two spaces after . at the end
-of sentences.
-
-> diff --git a/sysdeps/unix/sysv/linux/rseq-internal.h b/sysdeps/unix/sysv/linux/rseq-internal.h
+> +config LITEX_SOC_CONTROLLER
+> +       tristate "Enable LiteX SoC Controller driver"
+> +       help
+> +         This option enables the SoC Controller Driver which verifies
+> +         LiteX CSR access and provides common litex_get_reg/litex_set_reg
+> +         accessors.
+> +         All drivers that use functions from litex.h must depend on
+> +         LITEX_SOC_CONTROLLER.
+> +
+> +endmenu
+> diff --git a/drivers/soc/litex/Makefile b/drivers/soc/litex/Makefile
 > new file mode 100644
-> index 0000000000..5f7f02f1ec
+> index 000000000000..98ff7325b1c0
 > --- /dev/null
-> +++ b/sysdeps/unix/sysv/linux/rseq-internal.h
-
-> +static inline int
-> +rseq_register_current_thread (void)
-> +{
-> +  int rc, ret = 0;
+> +++ b/drivers/soc/litex/Makefile
+> @@ -0,0 +1,3 @@
+> +# SPDX-License_Identifier: GPL-2.0
 > +
-> +  if (__rseq_abi.cpu_id == RSEQ_CPU_ID_REGISTRATION_FAILED)
-> +    return -1;
-> +  rc = INTERNAL_SYSCALL_CALL (rseq, &__rseq_abi, sizeof (struct rseq),
-> +                              0, RSEQ_SIG);
-> +  if (!rc)
-> +    goto end;
-> +  if (INTERNAL_SYSCALL_ERRNO (rc) != EBUSY)
-> +    __rseq_abi.cpu_id = RSEQ_CPU_ID_REGISTRATION_FAILED;
-> +  ret = -1;
-> +end:
-> +  return ret;
-> +}
-
-This does not seem to use INTERNAL_SYSCALL_CALL correctly.  I think
-you need to use INTERNAL_SYSCALL_ERROR_P on the result to check for an
-error, and only then use INTERNAL_SYSCALL_ERRNO to extract the error
-code.
-
-> diff --git a/sysdeps/unix/sysv/linux/rseq-sym.c b/sysdeps/unix/sysv/linux/rseq-sym.c
+> +obj-$(CONFIG_LITEX_SOC_CONTROLLER)     += litex_soc_ctrl.o
+> diff --git a/drivers/soc/litex/litex_soc_ctrl.c b/drivers/soc/litex/litex_soc_ctrl.c
 > new file mode 100644
-> index 0000000000..0e33fab278
+> index 000000000000..16f1625836a5
 > --- /dev/null
-> +++ b/sysdeps/unix/sysv/linux/rseq-sym.c
-
-> +#include <sys/syscall.h>
-> +#include <stdint.h>
-> +#include <kernel-features.h>
-> +#include <sys/rseq.h>
+> +++ b/drivers/soc/litex/litex_soc_ctrl.c
+> @@ -0,0 +1,197 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * LiteX SoC Controller Driver
+> + *
+> + * Copyright (C) 2020 Antmicro <www.antmicro.com>
+> + *
+> + */
 > +
-> +__thread struct rseq __rseq_abi = {
-> +  .cpu_id = RSEQ_CPU_ID_UNINITIALIZED,
+> +#include <linux/litex.h>
+> +#include <linux/device.h>
+> +#include <linux/errno.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/printk.h>
+> +#include <linux/module.h>
+> +#include <linux/errno.h>
+> +#include <linux/io.h>
+> +
+> +/*
+> + * The parameters below are true for LiteX SoC
+> + * configured for 8-bit CSR Bus, 32-bit aligned.
+> + *
+> + * Supporting other configurations will require
+> + * extending the logic in this header.
+> + */
+> +#define LITEX_REG_SIZE             0x4
+> +#define LITEX_SUBREG_SIZE          0x1
+> +#define LITEX_SUBREG_SIZE_BIT      (LITEX_SUBREG_SIZE * 8)
+> +
+> +static DEFINE_SPINLOCK(csr_lock);
+> +
+> +/*
+> + * LiteX SoC Generator, depending on the configuration,
+> + * can split a single logical CSR (Control & Status Register)
+> + * into a series of consecutive physical registers.
+> + *
+> + * For example, in the configuration with 8-bit CSR Bus,
+> + * 32-bit aligned (the default one for 32-bit CPUs) a 32-bit
+> + * logical CSR will be generated as four 32-bit physical registers,
+> + * each one containing one byte of meaningful data.
+> + *
+> + * For details see: https://github.com/enjoy-digital/litex/issues/314
+
+This could link to the wiki
+(https://github.com/enjoy-digital/litex/wiki/CSR-Bus) directly.
+(Suggested by Gabriel Somlo <gsomlo@gmail.com>)
+
+> + *
+> + * The purpose of `litex_set_reg`/`litex_get_reg` is to implement
+> + * the logic of writing to/reading from the LiteX CSR in a single
+> + * place that can be then reused by all LiteX drivers.
+> + */
+> +void litex_set_reg(void __iomem *reg, unsigned long reg_size,
+> +                   unsigned long val)
+> +{
+> +       unsigned long shifted_data, shift, i;
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&csr_lock, flags);
+> +
+> +       for (i = 0; i < reg_size; ++i) {
+> +               shift = ((reg_size - i - 1) * LITEX_SUBREG_SIZE_BIT);
+> +               shifted_data = val >> shift;
+> +
+> +               __raw_writel(shifted_data, reg + (LITEX_REG_SIZE * i));
+
+As Gabriel Somlo <gsomlo@gmail.com> suggested to me, I could still use
+readl/writel/ioread/iowrite() standard functions providing memory
+barriers *and* have values in CPU native endianness by using the
+following constructs:
+
+`le32_to_cpu(readl(addr))`
+
+and
+
+`writel(cpu_to_le32(value), addr)`
+
+as le32_to_cpu/cpu_to_le32():
+- does nothing on LE CPUs and
+- reorders bytes on BE CPUs which in turn reverts swapping made by
+readl() resulting in returning the original value.
+
+> +       }
+> +
+> +       spin_unlock_irqrestore(&csr_lock, flags);
+> +}
+> +
+> +unsigned long litex_get_reg(void __iomem *reg, unsigned long reg_size)
+> +{
+> +       unsigned long shifted_data, shift, i;
+> +       unsigned long result = 0;
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&csr_lock, flags);
+> +
+> +       for (i = 0; i < reg_size; ++i) {
+> +               shifted_data = __raw_readl(reg + (LITEX_REG_SIZE * i));
+> +
+> +               shift = ((reg_size - i - 1) * LITEX_SUBREG_SIZE_BIT);
+> +               result |= (shifted_data << shift);
+> +       }
+> +
+> +       spin_unlock_irqrestore(&csr_lock, flags);
+> +
+> +       return result;
+> +}
+> +
+> +static int accessors_ok;
+> +
+> +/*
+> + * Check if accessors are safe to be used by other drivers
+> + * returns true if yes - false if not
+> + */
+> +int litex_check_accessors(void)
+> +{
+> +       return accessors_ok;
+> +}
+> +
+> +#define SCRATCH_REG_OFF         0x04
+> +#define SCRATCH_REG_SIZE        4
+> +#define SCRATCH_REG_VALUE       0x12345678
+> +#define SCRATCH_TEST_VALUE      0xdeadbeef
+> +
+> +/*
+> + * Check LiteX CSR read/write access
+> + *
+> + * This function reads and writes a scratch register in order
+> + * to verify if CSR access works.
+> + *
+> + * In case any problems are detected, the driver should panic
+> + * and not set `accessors_ok` flag. As a result no other
+> + * LiteX driver should access CSR bus.
+> + *
+> + * Access to the LiteX CSR is, by design, done in CPU native
+> + * endianness. The driver should not dynamically configure
+> + * access functions when the endianness mismatch is detected.
+> + * Such situation indicates problems in the soft SoC design
+> + * and should be solved at the LiteX generator level,
+> + * not in the software.
+> + */
+> +static int litex_check_csr_access(void __iomem *reg_addr)
+> +{
+> +       unsigned long reg;
+> +
+> +       reg = litex_get_reg(reg_addr + SCRATCH_REG_OFF, SCRATCH_REG_SIZE);
+> +
+> +       if (reg != SCRATCH_REG_VALUE) {
+> +               panic("Scratch register read error! Expected: 0x%x but got: 0x%lx",
+> +                       SCRATCH_REG_VALUE, reg);
+> +               return -EINVAL;
+> +       }
+> +
+> +       litex_set_reg(reg_addr + SCRATCH_REG_OFF,
+> +               SCRATCH_REG_SIZE, SCRATCH_TEST_VALUE);
+> +       reg = litex_get_reg(reg_addr + SCRATCH_REG_OFF, SCRATCH_REG_SIZE);
+> +
+> +       if (reg != SCRATCH_TEST_VALUE) {
+> +               panic("Scratch register write error! Expected: 0x%x but got: 0x%lx",
+> +                       SCRATCH_TEST_VALUE, reg);
+> +               return -EINVAL;
+> +       }
+> +
+> +       /* restore original value of the SCRATCH register */
+> +       litex_set_reg(reg_addr + SCRATCH_REG_OFF,
+> +               SCRATCH_REG_SIZE, SCRATCH_REG_VALUE);
+> +
+> +       /* Set flag for other drivers */
+> +       accessors_ok = 1;
+> +       pr_info("LiteX SoC Controller driver initialized");
+> +
+> +       return 0;
+> +}
+> +
+> +struct litex_soc_ctrl_device {
+> +       void __iomem *base;
 > +};
-
-{ should go onto its own line.  I'd also add attribute_tls_model_ie,
-also it's implied by the declaration in the header.
-
-> diff --git a/sysdeps/unix/sysv/linux/sys/rseq.h b/sysdeps/unix/sysv/linux/sys/rseq.h
+> +
+> +static const struct of_device_id litex_soc_ctrl_of_match[] = {
+> +       {.compatible = "litex,soc-controller"},
+> +       {},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, litex_soc_ctrl_of_match);
+> +
+> +static int litex_soc_ctrl_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev;
+> +       struct device_node *node;
+> +       struct litex_soc_ctrl_device *soc_ctrl_dev;
+> +
+> +       dev = &pdev->dev;
+> +       node = dev->of_node;
+> +       if (!node)
+> +               return -ENODEV;
+> +
+> +       soc_ctrl_dev = devm_kzalloc(dev, sizeof(*soc_ctrl_dev), GFP_KERNEL);
+> +       if (!soc_ctrl_dev)
+> +               return -ENOMEM;
+> +
+> +       soc_ctrl_dev->base = devm_platform_ioremap_resource(pdev, 0);
+> +       if (IS_ERR(soc_ctrl_dev->base))
+> +               return PTR_ERR(soc_ctrl_dev->base);
+> +
+> +       return litex_check_csr_access(soc_ctrl_dev->base);
+> +}
+> +
+> +static struct platform_driver litex_soc_ctrl_driver = {
+> +       .driver = {
+> +               .name = "litex-soc-controller",
+> +               .of_match_table = of_match_ptr(litex_soc_ctrl_of_match)
+> +       },
+> +       .probe = litex_soc_ctrl_probe,
+> +};
+> +
+> +module_platform_driver(litex_soc_ctrl_driver);
+> +MODULE_DESCRIPTION("LiteX SoC Controller driver");
+> +MODULE_AUTHOR("Antmicro <www.antmicro.com>");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/litex.h b/include/linux/litex.h
 > new file mode 100644
-> index 0000000000..503dce4cac
+> index 000000000000..f31062436273
 > --- /dev/null
-> +++ b/sysdeps/unix/sysv/linux/sys/rseq.h
-> @@ -0,0 +1,186 @@
-
-I think there is some value in making this header compatible with
-inclusion from the assembler (including constants for the relevant
-struct offsets), but that can be a later change.
-
-> +#ifndef _SYS_RSEQ_H
-> +#define _SYS_RSEQ_H	1
+> +++ b/include/linux/litex.h
+> @@ -0,0 +1,45 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Common LiteX header providing
+> + * helper functions for accessing CSRs.
+> + *
+> + * Implementation of the functions is provided by
+> + * the LiteX SoC Controller driver.
+> + *
+> + * Copyright (C) 2019-2020 Antmicro <www.antmicro.com>
+> + */
 > +
-> +/* Architecture-specific rseq signature.  */
-> +#include <bits/rseq.h>
+> +#ifndef _LINUX_LITEX_H
+> +#define _LINUX_LITEX_H
+> +
+> +#include <linux/io.h>
+> +#include <linux/types.h>
+> +#include <linux/compiler_types.h>
+> +
+> +/*
+> + * litex_check_accessors is a function implemented in
+> + * drivers/soc/litex/litex_soc_controller.c
+> + * checking if the common LiteX CSR accessors
+> + * are safe to be used by the drivers;
+> + * returns true (1) if yes - false (0) if not
+> + *
+> + * Important: All drivers that use litex_set_reg/litex_get_reg
+> + * functions should make sure that LiteX SoC Controller driver
+> + * has verified LiteX CSRs read and write operations before
+> + * issuing any read/writes to the LiteX peripherals.
+> + *
+> + * Exemplary snippet that can be used at the beginning
+> + * of the driver's probe() function to ensure that LiteX
+> + * SoC Controller driver is properely initialized:
+> + *
+> + * if (!litex_check_accessors())
+> + *     return -EPROBE_DEFER;
+> + */
+> +int litex_check_accessors(void);
+> +
+> +void litex_set_reg(void __iomem *reg, unsigned long reg_sz, unsigned long val);
+> +
+> +unsigned long litex_get_reg(void __iomem *reg, unsigned long reg_sz);
+> +
+> +
+> +#endif /* _LINUX_LITEX_H */
+> --
+> 2.25.1
+>
 
-Maybe add a newline between the above and the following, to make clear
-the comment only applies to the first #include.
 
-> +#include <stdint.h>
-> +#include <sys/cdefs.h>
-> +
-> +#ifdef __has_include
-> +# if __has_include ("linux/rseq.h")
-> +#   define __GLIBC_HAVE_KERNEL_RSEQ
-> +# endif
-> +#else
-> +# include <linux/version.h>
-> +# if LINUX_VERSION_CODE >= KERNEL_VERSION (4, 18, 0)
-> +#   define __GLIBC_HAVE_KERNEL_RSEQ
-> +# endif
-> +#endif
-> +
-> +#ifdef __GLIBC_HAVE_KERNEL_RSEQ
-> +/* We use the structures declarations from the kernel headers.  */
-> +# include <linux/rseq.h>
-> +#else
-> +/* We use a copy of the include/uapi/linux/rseq.h kernel header.  */
-> +
-> +#include <asm/byteorder.h>
-> +
-> +enum rseq_cpu_id_state
-> +  {
-> +    RSEQ_CPU_ID_UNINITIALIZED = -1,
-> +    RSEQ_CPU_ID_REGISTRATION_FAILED = -2,
-> +  };
-> +
-> +enum rseq_flags
-> +  {
-> +    RSEQ_FLAG_UNREGISTER = (1 << 0),
-> +  };
-> +
-> +enum rseq_cs_flags_bit
-> +  {
-> +    RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT_BIT = 0,
-> +    RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL_BIT = 1,
-> +    RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE_BIT = 2,
-> +  };
-> +
-> +enum rseq_cs_flags
-> +  {
-> +    RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT =
-> +      (1U << RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT_BIT),
-> +    RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL =
-> +      (1U << RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL_BIT),
-> +    RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE =
-> +      (1U << RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE_BIT),
-> +  };
-> +
-> +/* struct rseq_cs is aligned on 4 * 8 bytes to ensure it is always
-> +   contained within a single cache-line. It is usually declared as
-> +   link-time constant data.  */
-> +struct rseq_cs
-> +  {
-> +    /* Version of this structure.  */
-> +    uint32_t version;
-> +    /* enum rseq_cs_flags.  */
-> +    uint32_t flags;
-> +    uint64_t start_ip;
-> +    /* Offset from start_ip.  */
-> +    uint64_t post_commit_offset;
-> +    uint64_t abort_ip;
-> +} __attribute__((aligned(4 * sizeof(uint64_t))));
-
-The comment is wrong.  32-byte alignment does not put struct rseq_cs
-on its own cache line on many (most?) CPUs.  Not using the constant 32
-looks like unnecessary obfuscation to me.
-
-I still think we should avoid the alignment.  The _ip fields should
-perhaps be _pc (IP is more or less specific to x86).
-
-{ and } are not aligned.  Please do not forget to add spaces before
-opening parentheses, and two spaces after the . and the end of
-sentences.  The opening { should always be on its own line.  (This
-also applies to the definition of struct rseq below.)
-
-> +
-> +/* struct rseq is aligned on 4 * 8 bytes to ensure it is always
-> +   contained within a single cache-line.
-> +
-> +   A single struct rseq per thread is allowed.  */
-> +struct rseq
-> +  {
-> +    /* Restartable sequences cpu_id_start field. Updated by the
-> +       kernel. Read by user-space with single-copy atomicity
-> +       semantics. This field should only be read by the thread which
-> +       registered this data structure. Aligned on 32-bit. Always
-
-What does “Aligned on 32-bit” mean in this context?  Do you mean to
-reference 32-*byte* alignment here?
-
-> +    /* Restartable sequences rseq_cs field.
-> +
-> +       Contains NULL when no critical section is active for the current
-> +       thread, or holds a pointer to the currently active struct rseq_cs.
-> +
-> +       Updated by user-space, which sets the address of the currently
-> +       active rseq_cs at the beginning of assembly instruction sequence
-> +       block, and set to NULL by the kernel when it restarts an assembly
-> +       instruction sequence block, as well as when the kernel detects that
-> +       it is preempting or delivering a signal outside of the range
-> +       targeted by the rseq_cs. Also needs to be set to NULL by user-space
-> +       before reclaiming memory that contains the targeted struct rseq_cs.
-> +
-> +       Read and set by the kernel. Set by user-space with single-copy
-> +       atomicity semantics. This field should only be updated by the
-> +       thread which registered this data structure. Aligned on 64-bit.  */
-> +    union {
-> +      uint64_t ptr64;
-> +#ifdef __LP64__
-> +      uint64_t ptr;
-> +#else
-> +      struct {
-> +#if (defined(__BYTE_ORDER) && (__BYTE_ORDER == __BIG_ENDIAN)) || defined(__BIG_ENDIAN)
-> +        uint32_t padding; /* Initialized to zero.  */
-> +        uint32_t ptr32;
-> +#else /* LITTLE */
-> +        uint32_t ptr32;
-> +        uint32_t padding; /* Initialized to zero.  */
-> +#endif /* ENDIAN */
-> +      } ptr;
-> +#endif
-> +    } rseq_cs;
-
-Are these conditionals correct for x32?  Shouldn't there be a member
-of type const struct rseq_cs * somewhere?
-
-> diff --git a/sysdeps/unix/sysv/linux/x86/bits/rseq.h b/sysdeps/unix/sysv/linux/x86/bits/rseq.h
-> new file mode 100644
-> index 0000000000..75f52d9788
-> --- /dev/null
-> +++ b/sysdeps/unix/sysv/linux/x86/bits/rseq.h
-> @@ -0,0 +1,30 @@
-> +/* Restartable Sequences Linux x86 architecture header.
-> +   Copyright (C) 2019-2020 Free Software Foundation, Inc.
-
-Please make sure that none of the new files reference the 2019 year.
-It should be 2020, per GNU policy.
-
-The patch needs some rebasing on top of current master.
+--
+Mateusz Holenko
+Antmicro Ltd | www.antmicro.com
+Roosevelta 22, 60-829 Poznan, Poland
