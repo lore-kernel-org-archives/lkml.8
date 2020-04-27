@@ -2,173 +2,113 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 997EBC54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEE4C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C6F320775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:40:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="jZOn6q/j"
+	by mail.kernel.org (Postfix) with ESMTP id CD4FD208FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:42:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgD0RkS (ORCPT
+        id S1726377AbgD0RmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 13:40:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35924 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726189AbgD0RkS (ORCPT
+        Mon, 27 Apr 2020 13:42:03 -0400
+Received: from smtprelay0159.hostedemail.com ([216.40.44.159]:35734 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726208AbgD0RmC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 13:40:18 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C56D2C0610D5;
-        Mon, 27 Apr 2020 10:40:17 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id A316B2305C;
-        Mon, 27 Apr 2020 19:40:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1588009213;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Mb7wOIhi91zTa7OdCwnok2RD4/Y3FAeCxF/iMp7nN6o=;
-        b=jZOn6q/jxrjwYNn4nj3d83zoUJgdzvpe11GNFG7mRNPqsDk605zmppuXrjG6DwI9lToeYu
-        hv+XTWKczoGnq1p/Vnvk/7ctIF/9ikivCHAneUAnz7kw7CjEkx+6UB5FgdL5xAtJTg6voE
-        R4T413P+f5UjxDP86b2VwSVDn779YB4=
+        Mon, 27 Apr 2020 13:42:02 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id ED6CD3CF6;
+        Mon, 27 Apr 2020 17:42:00 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: bee19_2e797eea40b41
+X-Filterd-Recvd-Size: 3336
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 27 Apr 2020 17:41:59 +0000 (UTC)
+Message-ID: <515362d10c06567f35f0d5b7c3f2e121769fb04b.camel@perches.com>
+Subject: Re: [PATCH] xfs: Use the correct style for SPDX License Identifier
+From:   Joe Perches <joe@perches.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>
+Cc:     Nishad Kamdar <nishadkamdar@gmail.com>,
+        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 27 Apr 2020 10:41:58 -0700
+In-Reply-To: <20200427172959.GB3936841@kroah.com>
+References: <20200425133504.GA11354@nishad> <20200427155617.GY6749@magnolia>
+         <20200427172959.GB3936841@kroah.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 27 Apr 2020 19:40:11 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 06/16] irqchip: add sl28cpld interrupt controller
- support
-In-Reply-To: <87pnbtqhr1.fsf@nanos.tec.linutronix.de>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-7-michael@walle.cc>
- <87pnbtqhr1.fsf@nanos.tec.linutronix.de>
-Message-ID: <87f141bce0a4fda04b550647306be296@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: A316B2305C
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[24];
-         NEURAL_HAM(-0.00)[-0.766];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[linux.intel.com,vger.kernel.org,lists.infradead.org,linaro.org,baylibre.com,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,lakedaemon.net,linuxfoundation.org];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
-
-thanks for the review.
-
-Am 2020-04-27 13:40, schrieb Thomas Gleixner:
-> Michael Walle <michael@walle.cc> writes:
+On Mon, 2020-04-27 at 19:29 +0200, Greg Kroah-Hartman wrote:
+> On Mon, Apr 27, 2020 at 08:56:18AM -0700, Darrick J. Wong wrote:
+> > On Sat, Apr 25, 2020 at 07:05:09PM +0530, Nishad Kamdar wrote:
+> > > This patch corrects the SPDX License Identifier style in
+> > > header files related to XFS File System support.
+> > > For C header files Documentation/process/license-rules.rst
+> > > mandates C-like comments (opposed to C source files where
+> > > C++ style should be used).
+> > > 
+> > > Changes made by using a script provided by Joe Perches here:
+> > > https://lkml.org/lkml/2019/2/7/46.
+[]
+> > > diff --git a/fs/xfs/libxfs/xfs_ag_resv.h b/fs/xfs/libxfs/xfs_ag_resv.h
+[]
+> > > @@ -1,4 +1,4 @@
+> > > -// SPDX-License-Identifier: GPL-2.0+
+> > > +/* SPDX-License-Identifier: GPL-2.0+ */
+> > 
+> > I thought we were supposed to use 'GPL-2.0-or-newer' because 'GPL-2.0+'
+> > is deprecated in some newer version of the SPDX standard?
+> > 
+> > <shrug>
 > 
->> This patch adds support for the interrupt controller inside the sl28
-> 
-> git grep 'This patch' Documentation/process/
+> The kernel follows the "older" SPDX standard, but will accept either,
+> it's up to the author.  It is all documented in LICENSES/ if people
+> really want to make sure.
 
-ok.
+I think the kernel should prefer the "newer" SPDX standard
+for any/all changes to these lines.
+---
+ LICENSES/preferred/GPL-2.0 | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-> 
->> CPLD management controller.
->> 
->> +static int sl28cpld_intc_probe(struct platform_device *pdev)
->> +{
->> +	struct sl28cpld_intc *irqchip;
->> +	struct resource *res;
->> +	unsigned int irq;
->> +	int ret;
->> +
->> +	if (!pdev->dev.parent)
->> +		return -ENODEV;
->> +
->> +	irqchip = devm_kzalloc(&pdev->dev, sizeof(*irqchip), GFP_KERNEL);
->> +	if (!irqchip)
->> +		return -ENOMEM;
->> +
->> +	irqchip->regmap = dev_get_regmap(pdev->dev.parent, NULL);
->> +	if (!irqchip->regmap)
->> +		return -ENODEV;
->> +
->> +	irq = platform_get_irq(pdev, 0);
->> +	if (irq < 0)
->> +		return irq;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
->> +	if (!res)
->> +		return -EINVAL;
->> +
->> +	irqchip->chip.name = "sl28cpld-intc";
->> +	irqchip->chip.irqs = sl28cpld_irqs;
->> +	irqchip->chip.num_irqs = ARRAY_SIZE(sl28cpld_irqs);
->> +	irqchip->chip.num_regs = 1;
->> +	irqchip->chip.status_base = res->start + INTC_IP;
->> +	irqchip->chip.mask_base = res->start + INTC_IE;
->> +	irqchip->chip.mask_invert = true,
->> +	irqchip->chip.ack_base = res->start + INTC_IP;
->> +
->> +	ret = devm_regmap_add_irq_chip(&pdev->dev, irqchip->regmap, irq,
->> +				       IRQF_SHARED | IRQF_ONESHOT, 0,
-> 
-> What's the point of IRQF_SHARED | IRQF_ONESHOT here?
+diff --git a/LICENSES/preferred/GPL-2.0 b/LICENSES/preferred/GPL-2.0
+index ff0812..c50f93 100644
+--- a/LICENSES/preferred/GPL-2.0
++++ b/LICENSES/preferred/GPL-2.0
+@@ -8,13 +8,13 @@ Usage-Guide:
+   tag/value pairs into a comment according to the placement
+   guidelines in the licensing rules documentation.
+   For 'GNU General Public License (GPL) version 2 only' use:
+-    SPDX-License-Identifier: GPL-2.0
+-  or
+     SPDX-License-Identifier: GPL-2.0-only
++  or the deprecated alternative
++    SPDX-License-Identifier: GPL-2.0
+   For 'GNU General Public License (GPL) version 2 or any later version' use:
+-    SPDX-License-Identifier: GPL-2.0+
+-  or
+     SPDX-License-Identifier: GPL-2.0-or-later
++  or the deprecated alternative
++    SPDX-License-Identifier: GPL-2.0+
+ License-Text:
+ 
+ 		    GNU GENERAL PUBLIC LICENSE
 
-IRQF_SHARED because this interrupt is shared with all the blocks
-which can generate interrupts, i.e. the GPIO contollers.
 
-IRQF_ONESHOT, because its is a threaded interrupt with no primary
-handler. But I just noticed, that regmap-irq will also set the
-IRQF_ONESHOT. But that the commit 09cadf6e088b ("regmap-irq:
-set IRQF_ONESHOT flag to ensure IRQ request") reads like it is
-just there to be sure. So I don't know if it should also be set
-here.
-
--michael
-
-> 
->> +				       &irqchip->chip, &irqchip->irq_data);
-> 
-> Thanks,
-> 
->         tglx
