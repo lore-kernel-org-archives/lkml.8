@@ -2,176 +2,73 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C73C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 04:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8077C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 05:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08833206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 04:57:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="d7jNaJcz"
+	by mail.kernel.org (Postfix) with ESMTP id 958B8206CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 05:03:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbgD0E55 (ORCPT
+        id S1726349AbgD0FDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 00:57:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726172AbgD0E55 (ORCPT
+        Mon, 27 Apr 2020 01:03:33 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:63442 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbgD0FDd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 00:57:57 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4860C061A0F;
-        Sun, 26 Apr 2020 21:57:52 -0700 (PDT)
-Received: from flygoat-x1e (unknown [IPv6:240e:390:491:f2b0::d68])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 88B13204A9;
-        Mon, 27 Apr 2020 04:57:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1587963470; bh=Bf+K5RF1Jq3Z7fCRRq9kRtAsgQ0d2am+2DOV7/56Q2s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=d7jNaJczRXVpbod3XayJ2EXRKWvQjrF9epeZdSQq3ZbdPWwoatirMWZ4bO6m4lcmH
-         Y0CgriyYXbwxYWs2+EErF7FIl7kWYfsZxSATXbNvQok3+Aqn5URMX80HNlTVEbJoa3
-         dhJsjmtBtvkXy0X1t5tMtx5YUFjRzAH6ZlsVOKkMQVgIVZWieYR9gBfJwDfXjTcMGe
-         EsJ39Vmi1hbQE6uUTiH10yeqvYUzW5xTcf3WRt9uT+f4S/yuBB2eWrhnkD4yl36tyf
-         FEDo+jVg0NeSXCoZvC/rtrJ2YZHeU1eNPnXPBXXrdsEhCpHydETP6R+1rV43CkFTIr
-         lLscShlgjaPIA==
-Date:   Mon, 27 Apr 2020 12:57:32 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH v4 0/3] Add basic support for LS7A bridge chip
-Message-ID: <20200427125732.3212ced3@flygoat-x1e>
-In-Reply-To: <8afa3df1-9c9f-aa90-e630-2b77f24fe41f@loongson.cn>
-References: <1585906191-26037-1-git-send-email-yangtiezhu@loongson.cn>
-        <8afa3df1-9c9f-aa90-e630-2b77f24fe41f@loongson.cn>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 27 Apr 2020 01:03:33 -0400
+Received: from fsav305.sakura.ne.jp (fsav305.sakura.ne.jp [153.120.85.136])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 03R53HRg000862;
+        Mon, 27 Apr 2020 14:03:17 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav305.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav305.sakura.ne.jp);
+ Mon, 27 Apr 2020 14:03:17 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav305.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 03R53GLu000850
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Mon, 27 Apr 2020 14:03:17 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Subject: Re: [patch] mm, oom: stop reclaiming if GFP_ATOMIC will start failing
+ soon
+To:     David Rientjes <rientjes@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <alpine.DEB.2.22.394.2004241347310.70176@chino.kir.corp.google.com>
+ <20200425172706.26b5011293e8dc77b1dccaf3@linux-foundation.org>
+ <alpine.DEB.2.22.394.2004261959310.80211@chino.kir.corp.google.com>
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Message-ID: <fed6a727-1005-cb12-0ad0-4d9a6bb06564@I-love.SAKURA.ne.jp>
+Date:   Mon, 27 Apr 2020 14:03:15 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <alpine.DEB.2.22.394.2004261959310.80211@chino.kir.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Apr 2020 09:31:54 +0800
-Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+On 2020/04/27 12:12, David Rientjes wrote:
+> Tetsuo: the specific allocation that triggers a page allocation failure is 
+> not interesting; we have tens of thousands of examples.  Each example is 
+> simply the unlucky last GFP_ATOMIC allocation that fails; the interesting 
+> point is the amount of free memory.  In other words, when free memory is 
+> below ALLOC_HIGH watermarks, we assume that we have depleted memory 
+> reserves *faster* than when user allocations started to fail.  In the 
+> interest of userspace being responsive, we should oom kill here.
 
-> On 04/03/2020 05:29 PM, Tiezhu Yang wrote:
-> > The LS7A bridge chip has been released for several years since the
-> > second half of 2017, but it is not supported by the Linux mainline
-> > kernel while it only works well with the Loongson internal kernel
-> > version. When I update the latest version of Linux mainline kernel
-> > on the Loongson 3A3000 CPU and LS7A bridge chip system, the boot
-> > process failed and I feel depressed.
-> >
-> > The LS7A bridge chip is used a lot with 3A3000 or 3A4000 CPU in
-> > the most Loongson desktop and sever products, it is important to
-> > support LS7A bridge chip by the Linux mainline kernel.
-> >
-> > This patch series adds the basic support for the LS7A bridge chip,
-> > the patch about vendor ID and SATA has been merged into the mainline
-> > tree, the next work is to refactor the code about the interrupt
-> > controller, and then power management and some other controller
-> > device drivers.
-> >
-> > By the way, if you want the boot process is successful (just for
-> > test) on the Loongson 3A3000 CPU and LS7A bridge chip system,
-> > you should not only apply these patches, but also need the support
-> > for SATA and interrupt controller in the v1 patch series.
-> >
-> > This patch series is based on mips-next.
-> >
-> > If you have any questions and suggestions, please let me know.
-> >
-> > Thanks,
-> >
-> > Tiezhu Yang
-> >
-> > v2:
-> >    - The split patch series about Loongson vendor ID and SATA
-> > controller has been merged into the linux-block.git by Jens Axboe
-> > [1].
-> >
-> >    - Think about using hierarchy IRQ domain in the patch of
-> > interrupt controller, and this maybe depend on the patch series by
-> > Jiaxun ("Modernize Loongson64 Machine"), so the patch about
-> > interrupt is not included in this v2 patch series.
-> >
-> > v3:
-> >    - The split patch series about Loongson vendor ID and SATA
-> > controller has been merged into the mainline tree [2]
-> >
-> >    - Modify the macro definition and add comment to make it easy to
-> > read
-> >
-> >    - Move ls7a1000_pci_class_quirk() to fixup-loongson3.c
-> >
-> >    - Use PCI_VENDOR_ID_LOONGSON in pci_ids.h instead of 0x0014
-> >
-> > v4:
-> >    - Use LS7A instead of Loongson 7A1000 in the description
-> >    - Use LS7A or ls7a instead of LS7A1000 or ls7a1000 in the code
-> >
-> > [1]
-> > https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-next&id=9acb9fe18d86
-> > https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-next&id=e49bd683e00b
-> > [2]
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9acb9fe18d86
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e49bd683e00b
-> >
-> > Tiezhu Yang (3):
-> >    MIPS: Loongson: Get host bridge information
-> >    MIPS: Loongson: Add DMA support for LS7A
-> >    MIPS: Loongson: Add PCI support for LS7A
-> >
-> >   arch/mips/include/asm/mach-loongson64/boot_param.h | 20 +++++++
-> >   arch/mips/loongson64/dma.c                         |  9 ++--
-> >   arch/mips/loongson64/env.c                         | 22 ++++++++
-> >   arch/mips/loongson64/init.c                        | 17 ++++++
-> >   arch/mips/pci/fixup-loongson3.c                    | 12 +++++
-> >   arch/mips/pci/ops-loongson3.c                      | 63
-> > ++++++++++++++++++++-- 6 files changed, 136 insertions(+), 7
-> > deletions(-) 
-> 
-> Hi Thomas,
-> 
-> Could you please apply the following two patches to mips-next?
-> 
-> [v4,1/3] MIPS: Loongson: Get host bridge information
-> https://lore.kernel.org/patchwork/patch/1220009/
-> 
-> [v4,2/3] MIPS: Loongson: Add DMA support for LS7A
-> https://lore.kernel.org/patchwork/patch/1220010/
+My interest is, which function (and which process if process context) is [ab]using
+GFP_ATOMIC (or __GFP_MEMALLOC) allocations enough to hit memory allocation failure.
+GFP_NOWAIT (or __GFP_NOMEMALLOC) could be used if that allocation can't sleep and
+can't shortly recover free memory.
 
-Sorry but I really don't like the DMA patch, hard coding a config
-register in platform code is not necessarily a good idea, it
-create painful hell for adding new platform support.
-
-I'm trying very hard to let all devices go through DeviceTree.
-
-I'd suggest you to limit DMA capability on LS7A PCH instead of doing
-the hack.
-
-Or if you think the function is necessary, you can create a DeviceTree
-node called "loongson,ls7a-syscon", and do whatever you like in
-init_calls by parsing this node.
-
-Also that will also block my upcoming LS2K support patches.
-You can check my tree here[1].
-
-Thanks.
-
-[1]: https://github.com/FlyGoat/linux/commits/next-testing-2k
-
-> 
-> Thanks,
-> Tiezhu Yang
-> 
-
---
-Jiaxun Yang
