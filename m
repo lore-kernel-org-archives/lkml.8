@@ -2,102 +2,129 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E03BC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFA8C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B91320728
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:46:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="o4FLdetP"
+	by mail.kernel.org (Postfix) with ESMTP id 6679720728
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:47:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbgD0Sqm (ORCPT
+        id S1726636AbgD0SrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:46:42 -0400
-Received: from mout.web.de ([212.227.15.14]:33461 "EHLO mout.web.de"
+        Mon, 27 Apr 2020 14:47:08 -0400
+Received: from mga05.intel.com ([192.55.52.43]:20616 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbgD0Sql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:46:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1588013192;
-        bh=n6UuAwEQ8lGzpi0hPjL9sE87HUEm4F8XXWCeKLzXQ/Y=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=o4FLdetPhe0Npu6X4csMoh9AIih5AduEerKbhBSrV0qhXbXxzgVoe2iv0zqxcQ4LT
-         9B/tLwIvz8qQlv92FkM9N2afWSe3QjaX8iGdjHfyFqr6tTXPurqQuGsLQQgC2L7kMk
-         /VAulm3fCzic3eKUygXzq/1NmWGjqC05TKv+pKNo=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.31] ([89.12.68.2]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MdLcJ-1jjzEa3WBn-00IQSX; Mon, 27
- Apr 2020 20:46:31 +0200
-Subject: Re: [PATCH v2 0/5] mfd: RK8xx tidyup
-To:     Anand Moon <linux.amoon@gmail.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-rockchip@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>
-References: <cover.1578789410.git.robin.murphy@arm.com>
- <CANAwSgSFPtdvEvacNf6DhzE2fCabgZSBNnZUf0+nQErDWpErOw@mail.gmail.com>
-From:   Soeren Moch <smoch@web.de>
-Message-ID: <c7345431-7585-6052-835e-d9c292978b6e@web.de>
-Date:   Mon, 27 Apr 2020 20:46:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726249AbgD0SrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 14:47:08 -0400
+IronPort-SDR: PRC6689qJ1oUsyFvOsRNFva+d0TxYT0Nt9C2cLQtC0CJJnAOZsJySNeZS4DLFTG4Uvp54TPDpN
+ bpoHnqDFaIvw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 11:47:08 -0700
+IronPort-SDR: tMRtVWJYS1g//srvZYmJ2nFAv6Wb5tQeTTBE/WbF5xB2QrFFDh6VQW2DqK0OwiIGflsdk5wXw3
+ 3SAMWLsKrYlA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
+   d="scan'208";a="260825823"
+Received: from jbarra4x-mobl2.amr.corp.intel.com (HELO [10.252.135.2]) ([10.252.135.2])
+  by orsmga006.jf.intel.com with ESMTP; 27 Apr 2020 11:47:07 -0700
+Subject: Re: [PATCH] Allow RDTSC and RDTSCP from userspace
+To:     Joerg Roedel <jroedel@suse.de>
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Mike Stunes <mstunes@vmware.com>, joro@8bytes.org,
+        dan.j.williams@intel.com, dave.hansen@linux.intel.com,
+        hpa@zytor.com, jgross@suse.com, jslaby@suse.cz,
+        keescook@chromium.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, luto@kernel.org,
+        peterz@infradead.org, thellstrom@vmware.com,
+        virtualization@lists.linux-foundation.org, x86@kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <20200319091407.1481-56-joro@8bytes.org>
+ <20200424210316.848878-1-mstunes@vmware.com>
+ <2c49061d-eb84-032e-8dcb-dd36a891ce90@intel.com>
+ <ead88d04-1756-1190-2b37-b24f86422595@amd.com>
+ <4d2ac222-a896-a60e-9b3c-b35aa7e81a97@intel.com>
+ <20200425124909.GO30814@suse.de>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <45000aa0-a6d1-03c3-069b-0e9a07c0284d@intel.com>
+Date:   Mon, 27 Apr 2020 11:47:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <CANAwSgSFPtdvEvacNf6DhzE2fCabgZSBNnZUf0+nQErDWpErOw@mail.gmail.com>
+In-Reply-To: <20200425124909.GO30814@suse.de>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-Provags-ID: V03:K1:J3sgsNO32AOu5Qc2TXlIFA83VzwJ76ohcZOv1Zmet6fdTcPtQ/0
- 4RsP2orl2tRvBXAVaxnDzmQ3IM2ZOv8fm+IzGziq5N6kl0XWLzEWz4DvFNrGcqESyzLojyJ
- gY2gUh5dRsFEx989CX8HE39Ee9lIZ4tE+jh7j/RX7BW0nclSCt+9TLQyW/loX28hPyHWs9W
- 5cuz6h4q6uFbfg6y77IAg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:c+fGa3ZUgT8=:UT3/AWU+oXGeHnzZ3FIo2j
- K2tPHD2ZbFLNXg1rI2KuYZGjUNJAP6k+OVCT1hI6KFGbnBjZ3CmInZEp5dqSMOpogCyMnynuS
- YBB/aVfu93oZjwVd1CkBLkNWWOEux1C81qAjiseTjJyAYLryEqOGh3NIqpH/K+mE991DIuzaa
- JnnyxWIdfQSQz5Lji3zU71EO4ZekZ31NfeL9MuNFnIaEb3kjz0sRkfEtfldqAwmasLEdaqhp/
- hucMsbdcQ+5A2gXFS1ktt5nXtclTcvl6GxcIGbpFQoiCLNx8pJnnI7edLSGheVIL2rxD1gLVw
- ETniqc541O35tToH1wBZPswLH0Dx5KMQ9L1W6zBOTiLYxye/voRu55t/2VGppiX7/0GUZEeAn
- PkQjXIt4ffP3M7oNIh3RJ5yJjUQ4dFJCb89xLgxZml4MZsqRsvleIZYq9iBYvHVtmh1obr5wl
- 1MXyICDBmBVEM5BeQpSNVoL0gkparclReq5JIpYHmeLGaYcXj0uVZ00Hvw6eA5XG3QBIsA6FK
- 6+vEkHbwzWHt/xX8G+UvAZiNdCIBip2WrC8r2VsSQBnGtP6plLFZ88l7ttZMhdGy090tTkLYU
- VLi7XsbnI+2bL5MgukePqqg4x5Eet32T0+8w4LCir/zL2lzA3RevfxolbOzPfHc1YdMOslTk9
- 7dSNovxiFhuX+Qz5Pfv2Fo9B2q2XVqEB095zI+JRkb/BWWkEUGHOs04HbqbKN2QU2cpnk7LaU
- VZ9BQs9gqO7Ho+STtFkpmSJCILAQ7Bem6UozYD2VSW3u53HsvGxNfu+DPK7I5Qg/c65Tn1FCH
- L6d2WV3WtXFav/zhGFyAA+R4YMkSqYk0hKWP5jhw6so5IR56FCxMhy9ghZlBet4ncrfZDeKkC
- eJNjPlFRaouTHoole5YnxqOhUnD3++UC7wsleUNHGVf6jjGtwmGx0An+/yQSqCsD64u4iLGT8
- ZI/I5fpikUw0KWB4Q5XNzwZ5eahbr6a1/iWfPJLBFdbYKrIWWJLupQcFUydk8TX10jrB6DV1Q
- 9wjbOcO1W0fJe6sY6sVjv61I8W7yf+7QsbnXVchYeI/YykUoeu8hoUiQcrgf0yTPOsbpC1CU0
- v8tsC5TndhJOegqzV3/yFxjSKp2pEVWUl1M0TSytH5WlalvQKBG0ebBF2Una3a9eRnq5Ve1sD
- GLNBvzPZITNUhq2MrY70nodfojKldmVsbQEYRe22p4oTK+Tm+XZS5ucwYJYmgrQPyMxDg=
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 27.04.20 20:41, Anand Moon wrote:
-> Hi Robin,
->
-> On Sun, 12 Jan 2020 at 07:25, Robin Murphy <robin.murphy@arm.com> wrote:
->> Hi all,
+On 4/25/20 5:49 AM, Joerg Roedel wrote:
+>> That's a fun point because it means that the (untrusted) hypervisor can
+>> cause endless faults.  I *guess* we have mitigation for this with our
+>> stack guard pages, but it's still a bit nasty that the hypervisor can
+>> arbitrarily land a guest in the double-fault handler.
 >>
->> Here's a second crack at my RK805-inspired cleanup. There was a bit
->> of debate around v1[1], but it seems like we're now all happy that this
->> is a reasonable way to go. For clarity I decided to include Soeren's
->> patch as #1/5, but since I've rewritten most of my patches I've not
->> included the tested-by tags.
->>
->> Robin.
->>
-> Can you re-spin this series, it seem these patches are lost.
->
-These patches are already merged as
-d8f083a302f7..42679765faf2
+>> It just all seems a bit weak for the hypervisor to be considered
+>> untrusted.  But, it's _certainly_ a steep in the right direction from SEV.
+> Yeah, a malicious hypervisor can do bad things to an SEV-ES VM, but it
+> can't easily steal its secrets from memory or registers. The #VC handler
+> does its best to just crash the VM if unexpected hypervisor behavior is
+> detected.
 
-Soeren
+This is the kind of design information that would be very useful to
+reviewers.  Will some of this information make it into the cover letter
+eventually?  Or, Documentation/?
+
+Also, for the security purists, an SEV-ES host is still trusted (in the
+same TCB as the guest).  Truly guest-untrusted VMMs won't be available
+until SEV-SNP, right?
