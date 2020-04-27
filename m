@@ -2,130 +2,116 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C347EC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EA5C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99B462078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E7132078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:53:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OIccgn8A"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qX0Zz/fn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726253AbgD0Qwx (ORCPT
+        id S1726270AbgD0QxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 12:52:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35904 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726194AbgD0Qwx (ORCPT
+        Mon, 27 Apr 2020 12:53:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbgD0Qw7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 12:52:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588006372;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IeLFSaS8ezTi+2RJ/llDpWcAwPrT3k0KSS3uMh365gw=;
-        b=OIccgn8A2bskSU7FSxz/GuH9lmrAglDEfVnFbjRXbTjTcLkHoq92DSDwh0BtRGcrcRLCcF
-        lDtlfVApbcoxQ7AKEkWZPhcgnQJA7boI6pjioeiRHEgG8tuxU7qvQvDvOgD1elm7OLBjQo
-        ypJ6eWZrQN3j04EubY/fh0oEsV520pU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-420-Z16BndkVPJ6UJjzV3R1T-g-1; Mon, 27 Apr 2020 12:52:46 -0400
-X-MC-Unique: Z16BndkVPJ6UJjzV3R1T-g-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BF05D872FE0;
-        Mon, 27 Apr 2020 16:52:45 +0000 (UTC)
-Received: from redhat.com (ovpn-112-171.phx2.redhat.com [10.3.112.171])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 20F015C1D4;
-        Mon, 27 Apr 2020 16:52:45 +0000 (UTC)
-Date:   Mon, 27 Apr 2020 12:52:43 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>, live-patching@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: Re: [PATCH v3 00/10] livepatch,module: Remove .klp.arch and
- module_disable_ro()
-Message-ID: <20200427165243.GA7222@redhat.com>
-References: <cover.1587812518.git.jpoimboe@redhat.com>
- <a566f775-4e5b-6ced-079b-4951dfd98cab@redhat.com>
+        Mon, 27 Apr 2020 12:52:59 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12773C0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:52:59 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id u16so385487wmc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:52:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=L+f5rXb1fm0ddPawdaHU5SqIUExIWo7ZaWY7+7ST/oQ=;
+        b=qX0Zz/fnIDcCTmTrZNOvEAVu0G15kUG2va77BGRxQ+BmnBFWZsRrnaLHz5AJeDtNzy
+         im1UlPKai40zbHFsTmlFjs0ZlJ8dSJxK5mwzZ+nAIEwEmIgCwcYm7RTGYxfXNXUnv7iT
+         GvITdFyEQESb0fEeHG9nVNlC93iR5CJnTVdL0pJBSMI/cuHkO/7l0VAJaTkmAeFHzYYM
+         zph00Gm2PW/XDw3Tg+sdx8+1m/6xFtHAP1MWzfbVvhm2Xbiz/TC41CE+rwGou+JPnFT8
+         pd5dUPNqNOceRTLdcITOTJqqCb8zhCttUIrobwkSJqKbvweOrdCnityaPhTQz1J5bPDo
+         cz+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=L+f5rXb1fm0ddPawdaHU5SqIUExIWo7ZaWY7+7ST/oQ=;
+        b=HPHDXUEpvhi5DG14aQ4RIMoGpy6lukAQUkIQb8NVkwRomG+fxvK4xTKmsRvorarJfB
+         MDku/to/cUxyZd3tuLiFz+c4rbSs5w/BBPeylfZpnZk/dxB3OOCwFQnWCKNIB573sN10
+         /USw7hK/+D0No4DIO+FedSd2Pse/FQ1duEM0qTmorlh4eLAxNBLuM2PI2nIyzRyWkfZz
+         qo9ltP63Egaq8SnaM4UakHJr6Xr7EZQpbb1rcYRd2zekSNX8MW0yQHriEiC1JByWvjOW
+         a36+LvDhGq1p2BiwdkkbSjPwUISiUWiYcMbuZs/onQ/5REa38HglmufhwIr41nB6cRxX
+         9yZQ==
+X-Gm-Message-State: AGi0Pubmb/AvfvPEuSys3F2bTw7hBg14NdFgO7TbbVmWT52n37DlnBzI
+        5pjbpIvvCQBD564KmnWTtZlLvg==
+X-Google-Smtp-Source: APiQypIg33MdzG1fsD4Vtx7fCSqJxX2k4oqiO4ZdOMqbRC/BCATKrNwRWvi691/BgqaV0F5UCCKSag==
+X-Received: by 2002:a7b:c927:: with SMTP id h7mr417005wml.122.1588006377727;
+        Mon, 27 Apr 2020 09:52:57 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id v16sm16085225wml.30.2020.04.27.09.52.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 09:52:57 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 17:52:55 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     jason.wessel@windriver.com, gregkh@linuxfoundation.org,
+        kgdb-bugreport@lists.sourceforge.net, mingo@redhat.com,
+        hpa@zytor.com, bp@alien8.de, linux-serial@vger.kernel.org,
+        agross@kernel.org, tglx@linutronix.de, frowand.list@gmail.com,
+        bjorn.andersson@linaro.org, jslaby@suse.com,
+        catalin.marinas@arm.com, corbet@lwn.net, will@kernel.org,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Enrico Weigelt <info@metux.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        jinho lim <jordan.lim@samsung.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/9] arm64: Add call_break_hook() to early_brk64() for
+ early kgdb
+Message-ID: <20200427165255.bjwkjobfzinzzlxb@holly.lan>
+References: <20200421211447.193860-1-dianders@chromium.org>
+ <20200421141234.v2.5.I22067ad43e77ddfd4b64c2d49030628480f9e8d9@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a566f775-4e5b-6ced-079b-4951dfd98cab@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200421141234.v2.5.I22067ad43e77ddfd4b64c2d49030628480f9e8d9@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 08:22:03AM -0400, Joe Lawrence wrote:
-> On 4/25/20 7:07 AM, Josh Poimboeuf wrote:
-> > v3:
-> > - klp: split klp_write_relocations() into object/section specific
-> >    functions [joe]
-> > - s390: fix plt/got writes [joe]
-> > - s390: remove text_mutex usage [mbenes]
-> > - x86: do text_poke_sync() before releasing text_mutex [peterz]
-> > - split x86 text_mutex changes into separate patch [mbenes]
-> > 
-> > v2:
-> > - add vmlinux.ko check [peterz]
-> > - remove 'klp_object' forward declaration [mbenes]
-> > - use text_mutex [jeyu]
-> > - fix documentation TOC [jeyu]
-> > - fix s390 issues [mbenes]
-> > - upstream kpatch-build now supports this
-> >    (though it's only enabled for Linux >= 5.8)
-> > 
-> > These patches add simplifications and improvements for some issues Peter
-> > found six months ago, as part of his non-writable text code (W^X)
-> > cleanups.
-> > 
-> > Highlights:
-> > 
-> > - Remove the livepatch arch-specific .klp.arch sections, which were used
-> >    to do paravirt patching and alternatives patching for livepatch
-> >    replacement code.
-> > 
-> > - Add support for jump labels in patched code.
-
-Nit: support for the hopefully common cases anyway: jump labels whose
-keys are not going to require late-module klp-relocation (defined in an
-unloaded module).
-
-> > 
-> > - Remove the last module_disable_ro() usage.
-> > 
-> > For more background, see this thread:
-> > 
-> >    https://lkml.kernel.org/r/20191021135312.jbbxsuipxldocdjk@treble
-> > 
-> > This has been tested with kpatch-build integration tests and klp-convert
-> > selftests.
-> > 
+On Tue, Apr 21, 2020 at 02:14:43PM -0700, Douglas Anderson wrote:
+> In order to make early kgdb work properly we need early_brk64() to be
+> able to call into it.  This is as easy as adding a call into
+> call_break_hook() just like we do later in the normal brk_handler().
 > 
-> Hi Josh,
+> Once we do this we can let kgdb know that it can break into the
+> debugger a little earlier (specifically when parsing early_param's).
 > 
-> I've added some late module patching tests for klp-convert as well as
-> extended the existing ones.  I'll put them on-top of v3 and give it some
-> test runs today (x86, ppc64le, s390x) and report back.
+> NOTE: without this patch it turns out that arm64 can't do breakpoints
+> even at dbg_late_init(), so if we decide something about this patch is
+> wrong we might need to move dbg_late_init() a little later.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
 
-Ok all three arches look good with the klp-convert WIP tests.  For
-reference, I pushed the combined branch up to github [1] if anyone else
-wants to see the klp-relocations in action first hand.
+I haven't done any testing at this point (I'd hope to enable tests
+for this in the test suite), however FWIW and just so you know I didn't
+forget about this patch:
 
-For the series:
-Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 
 
-[1] https://github.com/joe-lawrence/linux/tree/jp-v3-klp-convert
-
--- Joe
-
+Daniel.
