@@ -2,110 +2,127 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7FEC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC13CC5519A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 656A720575
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:15:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BXLQ8oWg"
+	by mail.kernel.org (Postfix) with ESMTP id C665220575
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:18:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgD0LPc (ORCPT
+        id S1726945AbgD0LS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 07:15:32 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:38002 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbgD0LPc (ORCPT
+        Mon, 27 Apr 2020 07:18:58 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42155 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbgD0LS5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 07:15:32 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RBFSN3063594;
-        Mon, 27 Apr 2020 06:15:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587986128;
-        bh=gWEr5tUocVL65YN3YdxkcoYlxJ4xnh76tpLqZoEi+T4=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=BXLQ8oWgszzhS0GV9UfDuuVUIYnrSddUEq0vE+9Rs9AACJ3poew6mm6tlOp/V0bfI
-         4/WQE22r6YIZwkiu1I0urYnMsabV716UlqXvWUcP/5/UvvyjtcNvFwMdcc84Tciw+b
-         yCHmotWXuGxhCX8NBjOsiZ1UVnUes0ZtGV3qKBQg=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03RBFS42121540
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Apr 2020 06:15:28 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
- Apr 2020 06:15:27 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 27 Apr 2020 06:15:27 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RBFPaI063776;
-        Mon, 27 Apr 2020 06:15:26 -0500
-Subject: Re: [PATCH 2/3] arm64: dts: ti: k3-j721e-main.dtsi: Add DSS node
-To:     Jyri Sarha <jsarha@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200422091512.950-1-tomi.valkeinen@ti.com>
- <20200422091512.950-2-tomi.valkeinen@ti.com>
- <ade3a177-f060-bc40-bcc1-494093e3071d@ti.com>
- <47b7f858-a8d9-1c3b-4dca-2cc493f6730f@ti.com>
- <fa497e8d-7911-5f3d-cf91-347370f8edaa@ti.com>
- <217c0c14-f4fb-7321-9f57-205df0cd01fe@ti.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <9a4b1d0a-c871-2280-8d22-196730e9385b@ti.com>
-Date:   Mon, 27 Apr 2020 14:15:25 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 27 Apr 2020 07:18:57 -0400
+Received: by mail-ot1-f67.google.com with SMTP id m18so25419462otq.9;
+        Mon, 27 Apr 2020 04:18:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CXoIxJ0w84+gaX7lsp/3b8bY8viRFcnPlJWfzHbiZf8=;
+        b=mteN7XTr4EBwrrONWMEYcxD6AFays0+0pgkurGjIlgteLqhhLOTNLP6D2Su5PGIbcZ
+         +UNkqmQiEUPV0KbZ117LEMUf1cP25ORvMgtlnOvdzXRhKsyAaMuF6Nx2qF7Kz4XRH2jy
+         4vWV8F8bnH8bhRzUVfPSz24l72c/vng3qNA8eL4bTTnRmuAJ4/TTCF8PSm/urj727vb5
+         kmEk9wdiy+vOcdanyCO4hl7xcTvzIAGkjiSuSfYRvBwfdkxowgh5LDypVQB1d3T/m+M0
+         49+9vIIknViMRuwJWoPgHPN613DCQxo8i3DIbKTieiwmWFep1Iizipq1n6nINQe+aJf2
+         sE5w==
+X-Gm-Message-State: AGi0PuZI1H6LztnpE0zhoLuIexgK1uPRLMpO/pnv6E/p0cfraHwGQRdO
+        THsRpVEI54FLyjC9LA42oZmn5KFTaH7mEou812A=
+X-Google-Smtp-Source: APiQypL5O90eZiVP91Spazxw9kNLM/oUk/UxGHPayskHGw0X4cu3MGkQ9jx0LWUyAkboJxHXtR2bszWrIXRFKtjKifw=
+X-Received: by 2002:a9d:564:: with SMTP id 91mr17871599otw.250.1587986335286;
+ Mon, 27 Apr 2020 04:18:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <217c0c14-f4fb-7321-9f57-205df0cd01fe@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdXwsUAaeY+b6t-nqPE8kL-p+F4HqXE2mujP0eXPjrbooQ@mail.gmail.com> <CA+V-a8sH4sLN1XuRM+SgbbN5O38wrtMyk5QEXEPhV5tOkbchJw@mail.gmail.com>
+In-Reply-To: <CA+V-a8sH4sLN1XuRM+SgbbN5O38wrtMyk5QEXEPhV5tOkbchJw@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 27 Apr 2020 13:18:44 +0200
+Message-ID: <CAMuHMdXW1YQMUzzTGcyz2d=NxkcLtLasTqgZH0CRufQx=vfT0g@mail.gmail.com>
+Subject: Re: [PATCH 00/10] Add RZ/G1H support.
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/04/2020 14:10, Jyri Sarha wrote:
-> On 27/04/2020 13:51, Tomi Valkeinen wrote:
->> On 27/04/2020 13:37, Jyri Sarha wrote:
->>> On 27/04/2020 13:09, Tero Kristo wrote:
->>>>> +        status = "disabled";
->>>>
->>>> Again, why disabled by default?
->>>>
->>>
->>> tidss device is not functional without a defined video-port. The driver
->>> is not implemented in a way that it would handle a broken configuration
->>> gracefully.
->>
->> Then we need to fix it. The driver should handle the case where there
->> are no ports defined just fine.
->>
-> 
-> Just by reading the code, I would say that currently the probe would
-> fail with returned -ENOMEM after calling drm_vblank_init() with zero CRTCs.
-> 
-> So should the probe fail gracefully and silently, or should we try to
-> register a DRM device with no CRTCs? Is that even possible?
+Hi Prabhakar,
 
-My first thought is that the driver should exit probe silently with ENODEV if there are no outputs 
-defined (but, of course, with EPROBE_DEFER if there are outputs which haven't been probed yet).
+On Mon, Apr 27, 2020 at 12:31 PM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Mon, Apr 27, 2020 at 10:28 AM Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+> > On Thu, Apr 23, 2020 at 11:41 PM Lad Prabhakar
+> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > > This patch series aims to add support for Renesas RZ/G1H (r8a7742) SoC.
+> > >
+> > > RZ/G1H SoC is similar to R-Car Gen2 H2 SoC.
+> > >
+> > > This patch set is based on renesas-drivers/master-v5.7-rc1.
+> >
+> > Thanks for your series!
+> >
+> > Looks mostly OK to me.
+> Thank you for the review. After fixing patch 8/10 shall I just post a
+> v2 with a single patch or the entire series ?
 
-It gets a bit more complex if we ever support writeback, as that can be used as mem-to-mem without 
-any displays, but I think we can ignore that for now.
+A single v2 patch is fine.  The clock driver goes in through a different
+tree anyway/
 
-  Tomi
+> > The missing code part seems to be the introduction of the main
+> > CONFIG_ARCH_R8A7742 symbol?
+> >
+> I was planning to post them once these patches were reviewed, just
+> didn't wanted to flood with too many patches.
+>
+> for enabling r8a7742 SoC in multi_v7_defconfig should this be only
+> sent out wen its accepted in shmobile_defconfig or can it be part of
+> same series as below ?
+>
+> 05ba50a4cf99 ARM: multi_v7_defconfig: Enable r8a7742 SoC
+> 99b69d08729a ARM: shmobile: defconfig: Enable r8a7742 SoC
+> 6b7bcd6635c7 ARM: debug-ll: Add support for r8a7742
+> 1cf4e52e3a0e soc: renesas: Add Renesas R8A7742 config option
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+It can be part of the same series.
+
+> > I assume you plan to submit the DTS for v5.8, too, so I'll have to be
+> > careful and apply the binding definitions to a separate shared branch?
+> >
+> Yes I do plan to submit the DTS changes for v5.8.
+
+Thanks. Looking forward to it!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
