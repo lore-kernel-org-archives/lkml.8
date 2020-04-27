@@ -2,101 +2,99 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8619BC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 04:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAD9C5519A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 04:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 591D4206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 04:41:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587962492;
-	bh=djvCbNDaA+a30AHx0Y08ssMqYTvTxFQMgnTgZsJsMTE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ncoJqM6e//M/FyajX3FKIgVq13vVWJ3dJc/k4MDc7Bha5v4ArBer3q/Znhbbri9jn
-	 vcRe9dF7HTGeJuqbmNsDLTGmXEj2crrZbnARldCCtCbr2uYHCwHB8tGw/jjGmZIbUY
-	 2OOTxHBLZOURpP8bsoPHi1C4QQ64lyRxUZWucw6c=
+	by mail.kernel.org (Postfix) with ESMTP id A1DDD206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 04:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbgD0Elb (ORCPT
+        id S1726339AbgD0EuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 00:41:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgD0Elb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 00:41:31 -0400
-Received: from localhost (unknown [106.51.110.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6CFF206D4;
-        Mon, 27 Apr 2020 04:41:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587962490;
-        bh=djvCbNDaA+a30AHx0Y08ssMqYTvTxFQMgnTgZsJsMTE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k3ETmyic3zjkttIoDz+ZScSZe/jpiI7c04b/t6FqC5zMCnjbTPCk74gfQJNbom+HE
-         3o8+jg15iqbfwCiZ0GJebDeXJkDZxMIkNtxTP7FxW/YWTVYh5XXKYHcwrAuGym+lJZ
-         +Gbr9G7N7ZzfRezgAuk5KRXARZKAsCosL1P0ZJak=
-Date:   Mon, 27 Apr 2020 10:11:26 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Jonathan Marek <jonathan@marek.ca>, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] clk: qcom: gcc: Add GPU and NPU clocks for SM8150
-Message-ID: <20200427044126.GA4625@vkoul-mobl.Dlink>
-References: <20200424044311.2155917-1-vkoul@kernel.org>
- <158784184123.117437.7321952768664025415@swboyd.mtv.corp.google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158784184123.117437.7321952768664025415@swboyd.mtv.corp.google.com>
+        Mon, 27 Apr 2020 00:50:00 -0400
+Received: from baldur.buserror.net ([165.227.176.147]:35002 "EHLO
+        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726172AbgD0EuA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 00:50:00 -0400
+Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
+        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <oss@buserror.net>)
+        id 1jSvgG-0007p7-BQ; Sun, 26 Apr 2020 23:47:44 -0500
+Message-ID: <35c53c47c4b8cc648f56144306c21224163f1e72.camel@buserror.net>
+From:   Scott Wood <oss@buserror.net>
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?=E7=8E=8B=E6=96=87=E8=99=8E?= <wenhu.wang@vivo.com>
+Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, kernel@vivo.com, robh@kernel.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Randy Dunlap <rdunlap@infradead.org>
+Date:   Sun, 26 Apr 2020 23:47:43 -0500
+In-Reply-To: <20200421093427.GC725219@kroah.com>
+References: <20200420145128.GA4131449@kroah.com>
+         <AB6A-gBhCLyx5bgBRPuIiqp1.3.1587460187094.Hmail.wenhu.wang@vivo.com>
+         <20200421093427.GC725219@kroah.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
+X-SA-Exim-Rcpt-To: gregkh@linuxfoundation.org, wenhu.wang@vivo.com, arnd@arndb.de, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, kernel@vivo.com, robh@kernel.org, christophe.leroy@c-s.fr, mpe@ellerman.id.au, rdunlap@infradead.org
+X-SA-Exim-Mail-From: oss@buserror.net
+Subject: Re: [PATCH v2,RESEND] misc: new driver sram_uapi for user level
+ SRAM access
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-04-20, 12:10, Stephen Boyd wrote:
-> Quoting Vinod Koul (2020-04-23 21:43:10)
-> > Add the GPU and NPU clocks for SM8150. They were missed in earlier
-> > addition of clock driver.
+On Tue, 2020-04-21 at 11:34 +0200, Greg KH wrote:
+> On Tue, Apr 21, 2020 at 05:09:47PM +0800, 王文虎 wrote:
+> > Hi, Greg, Arnd,
 > > 
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > Thank you for your comments first, and then really very very very sorry
+> > for driving Greg to sigh and I hope there would be chance to share Moutai
+> > (rather than whisky, we drink it much, a kind of Baijiu), after the virus.
+> > 
+> > Back to the comments, I'd like to do a bit of documentation or explanation
+> > first,
+> > which should have been done early or else there would not be so much to
+> > explain:
+> > 1. What I have been trying to do is to access the Freescale Cache-SRAM
+> > device form
+> > user level;
+> > 2. I implemented it using UIO, which was thought of non-proper;
 > 
-> Fixes tag? That way backporters know they're missing this.
+> I still think that using uio is the best way to do this, and never said
+> it was "non-proper".  All we got bogged down in was the DT
+> representation of stuff from what I remember.  That should be worked
+> through.
 
-Yes it makes sense to add here, will add.
+The hardware is already reperesented in the DT (the various "fsl,<chip>-l2-
+cache-controller" nodes).  What is there to "work through"?
 
-> > +/* external clocks so add BRANCH_HALT_SKIP */
-> > +static struct clk_branch gcc_npu_gpll0_clk_src = {
-> > +       .halt_check = BRANCH_HALT_SKIP,
-> > +       .clkr = {
-> > +               .enable_reg = 0x52004,
-> > +               .enable_mask = BIT(18),
-> > +               .hw.init = &(struct clk_init_data){
-> > +                       .name = "gcc_npu_gpll0_clk_src",
-> > +                       .parent_hws = (const struct clk_hw *[]){
-> > +                               &gpll0.clkr.hw },
-> > +                       .num_parents = 1,
-> > +                       .flags = CLK_SET_RATE_PARENT,
-> > +                       .ops = &clk_branch2_ops,
-> > +               },
-> > +       },
-> > +};
-> > +
-> > +/* external clocks so add BRANCH_HALT_SKIP */
-> 
-> None of these look external. The parents are all inside this driver. Why
-> are we skipping the halt check?
+I didn't say UIO was "non-proper" though I did question whether it was the
+best fit.  We don't need the IRQ stuff, and we do want some means of
+allocating multiple regions to different users (at least, that seems to be a
+requirement for Wenhu, and it leaves open the possibility of a kernel driver
+allocating some SRAM for itself which appears to be what
+arch/powerpc/sysdev/fsl_85xx_cache_sram.c was originally meant for) and I
+don't see how you'd do that through UIO.
 
-yeah not sure why this got added here, tested and these look fine. I
-will update these and send update.
+So that leaves either a separate interface for dynamic region allocation (in
+which case why not map through that interface), static allocation via
+boot/module parameters which you didn't like, or abusing the device tree with
+something that's not hardware description (why don't we replace kmalloc with
+some device tree nodes while we're at it).
 
-Thanks for the review
+-Scott
 
--- 
-~Vinod
+
