@@ -2,26 +2,26 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988B8C54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 635B9C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CBF6206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AA2A206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:04:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgD0SEv (ORCPT
+        id S1726505AbgD0SEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:04:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54558 "EHLO mx2.suse.de"
+        Mon, 27 Apr 2020 14:04:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54612 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbgD0SEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:04:50 -0400
+        id S1726306AbgD0SEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 14:04:51 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id ED4C7AC22;
+        by mx2.suse.de (Postfix) with ESMTP id EDA14ACC4;
         Mon, 27 Apr 2020 18:04:47 +0000 (UTC)
 From:   Vlastimil Babka <vbabka@suse.cz>
 To:     Andrew Morton <akpm@linux-foundation.org>,
@@ -40,14 +40,11 @@ Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Christian Brauner <christian.brauner@ubuntu.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>
-Subject: [PATCH v3 3/5] kernel/hung_task convert hung_task_panic boot parameter to sysctl
-Date:   Mon, 27 Apr 2020 20:04:31 +0200
-Message-Id: <20200427180433.7029-4-vbabka@suse.cz>
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH v3 0/5] support setting sysctl parameters from kernel command line
+Date:   Mon, 27 Apr 2020 20:04:28 +0200
+Message-Id: <20200427180433.7029-1-vbabka@suse.cz>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200427180433.7029-1-vbabka@suse.cz>
-References: <20200427180433.7029-1-vbabka@suse.cz>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,69 +52,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can now handle sysctl parameters on kernel command line and have
-infrastructure to convert legacy command line options that duplicate sysctl
-to become a sysctl alias.
+This series adds support for something that seems like many people always
+wanted but nobody added it yet, so here's the ability to set sysctl parameters
+via kernel command line options in the form of sysctl.vm.something=1
 
-This patch converts the hung_task_panic parameter. Note that the sysctl handler
-is more strict and allows only 0 and 1, while the legacy parameter allowed
-any non-zero value. But there is little reason anyone would not be using 1.
+The important part is Patch 1. The second, not so important part is an attempt
+to clean up legacy one-off parameters that do the same thing as a sysctl.
+I don't want to remove them completely for compatibility reasons, but with
+generic sysctl support the idea is to remove the one-off param handlers and
+treat the parameters as aliases for the sysctl variants.
 
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
----
- Documentation/admin-guide/kernel-parameters.txt |  2 +-
- fs/proc/proc_sysctl.c                           |  1 +
- kernel/hung_task.c                              | 10 ----------
- 3 files changed, 2 insertions(+), 11 deletions(-)
+I have identified several parameters that mention sysctl counterparts in
+Documentation/admin-guide/kernel-parameters.txt but there might be more. The
+conversion also has varying level of success:
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 73dbbf942431..1b6e710b7a8a 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1491,7 +1491,7 @@
- 			[KNL] Should the hung task detector generate panics.
- 			Format: <integer>
- 
--			A nonzero value instructs the kernel to panic when a
-+			A value of 1 instructs the kernel to panic when a
- 			hung task is detected. The default value is controlled
- 			by the CONFIG_BOOTPARAM_HUNG_TASK_PANIC build-time
- 			option. The value selected by this boot parameter can
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index 209ad03e1b82..e8f97bd65909 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -1710,6 +1710,7 @@ struct sysctl_alias {
-  */
- static const struct sysctl_alias sysctl_aliases[] = {
- 	{"numa_zonelist_order",		"vm.numa_zonelist_order" },
-+	{"hung_task_panic",		"kernel.hung_task_panic" },
- 	{ }
- };
- 
-diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-index 14a625c16cb3..b22b5eeab3cb 100644
---- a/kernel/hung_task.c
-+++ b/kernel/hung_task.c
-@@ -63,16 +63,6 @@ static struct task_struct *watchdog_task;
- unsigned int __read_mostly sysctl_hung_task_panic =
- 				CONFIG_BOOTPARAM_HUNG_TASK_PANIC_VALUE;
- 
--static int __init hung_task_panic_setup(char *str)
--{
--	int rc = kstrtouint(str, 0, &sysctl_hung_task_panic);
--
--	if (rc)
--		return rc;
--	return 1;
--}
--__setup("hung_task_panic=", hung_task_panic_setup);
--
- static int
- hung_task_panic(struct notifier_block *this, unsigned long event, void *ptr)
- {
+- numa_zonelist_order is converted in Patch 2 together with adding the
+  necessary infrastructure. It's easy as it doesn't really do anything but warn
+  on deprecated value these days.
+- hung_task_panic is converted in Patch 3, but there's a downside that now it
+  only accepts 0 and 1, while previously it was any integer value
+- nmi_watchdog maps to two sysctls nmi_watchdog and hardlockup_panic, so
+  there's no straighforward conversion possible
+- traceoff_on_warning is a flag without value and it would be required to
+  handle that somehow in the conversion infractructure, which seems pointless
+  for a single flag
+
+Vlastimil Babka (3):
+  kernel/sysctl: support setting sysctl parameters from kernel command
+    line
+  kernel/sysctl: support handling command line aliases
+  kernel/hung_task convert hung_task_panic boot parameter to sysctl
+
+Changes since v2:
+- rebase to 5.7-rc3
+- add acks
+- add a testcase to tools/testing/selftests/sysctl/sysctl.sh - this adds a new
+  sysctl parameter ../boot_int in lib/test_sysctl and expects the tester to
+  pass the respective boot parameter in any feasible way (including bootconfig)
+  the testcase checks /proc/cmdline to distinguish real failure from the lack of
+  parameter. That allows us to test this without introducing further new
+  functionality (patches 4+5).
+
+Vlastimil Babka (5):
+  kernel/sysctl: support setting sysctl parameters from kernel command
+    line
+  kernel/sysctl: support handling command line aliases
+  kernel/hung_task convert hung_task_panic boot parameter to sysctl
+  tools/testing/selftests/sysctl/sysctl.sh: support CONFIG_TEST_SYSCTL=y
+  lib/test_sysctl: support testing of sysctl. boot parameter
+
+ .../admin-guide/kernel-parameters.txt         |  11 +-
+ fs/proc/proc_sysctl.c                         | 142 ++++++++++++++++++
+ include/linux/sysctl.h                        |   4 +
+ init/main.c                                   |   2 +
+ kernel/hung_task.c                            |  10 --
+ lib/test_sysctl.c                             |  13 ++
+ mm/page_alloc.c                               |   9 --
+ tools/testing/selftests/sysctl/sysctl.sh      |  42 +++++-
+ 8 files changed, 210 insertions(+), 23 deletions(-)
+
 -- 
 2.26.0
 
