@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E91C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D91EDC5519D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA8FC20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B594C2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:09:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="fLBvj22t"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="SekRKTLN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgD0MJA (ORCPT
+        id S1727100AbgD0MJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 08:09:00 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:42975 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbgD0MI7 (ORCPT
+        Mon, 27 Apr 2020 08:09:23 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:27659 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbgD0MJW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 08:08:59 -0400
+        Mon, 27 Apr 2020 08:09:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1587989338; x=1619525338;
+  t=1587989361; x=1619525361;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=DE1OnifYiXqw9Om7Vnyy3tf4L5PRElje19LPPu8+r8w=;
-  b=fLBvj22tO93Z4jI/Yzs8SxlyPdN788pFH0D5oImz8gqy/SdA0BystRo8
-   pfW3xtf9kPyim2rcbpQ0VIeimISqBu2q/DG2x/95I9ThP+ac2xD5irAgT
-   tZbs9hhoDjKduTWc7cST6L7wZSUtLBjww7o39tW2xLJX6Uvtbnj5yUdCE
-   g=;
-IronPort-SDR: 6n+gskDtQxCEeeAUGOeucIh80bubTS2Fj8gzEHZFCwRC/P6JHy5jaMsjA37c7nkDPaUR9j0cq0
- OregcYHKWmew==
+  bh=pClXhda7lpE1OA1RSHso3inzdXzhCTrM+3ubjycL3B4=;
+  b=SekRKTLNERl09/BT+T5PmL4SuYFZjKWTkptVmuGHWs+WpgQZUg/RYhgv
+   Evq03P5KoeTyJ5FQEqFqQLO/AP+BVshjMseRdNA2xq252Z9aN04/1yuP7
+   CPv82zuFqqv/vkPdams7AlHKLOpgT5tTmco6Vg5F9P9RvAPxBB4wc6buS
+   o=;
+IronPort-SDR: OB38RxdTsMh9sFcRvRKaLHTFRY0cLXW48kwheHk96hU9UaQJu+wruxCnn/uBfNI5sywlx0LaiN
+ ju9IgJYVGn0g==
 X-IronPort-AV: E=Sophos;i="5.73,324,1583193600"; 
-   d="scan'208";a="27431295"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 27 Apr 2020 12:08:43 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com (Postfix) with ESMTPS id CDFE4A18D5;
-        Mon, 27 Apr 2020 12:08:39 +0000 (UTC)
+   d="scan'208";a="27716329"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 27 Apr 2020 12:09:04 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com (Postfix) with ESMTPS id 4EB81A0319;
+        Mon, 27 Apr 2020 12:09:01 +0000 (UTC)
 Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
  EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 27 Apr 2020 12:08:39 +0000
+ id 15.0.1497.2; Mon, 27 Apr 2020 12:09:00 +0000
 Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.53) by
  EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 27 Apr 2020 12:08:23 +0000
+ id 15.0.1497.2; Mon, 27 Apr 2020 12:08:44 +0000
 From:   SeongJae Park <sjpark@amazon.com>
 To:     <akpm@linux-foundation.org>
 CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
@@ -66,9 +66,9 @@ CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
         <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
         <linux-damon@amazon.com>, <linux-mm@kvack.org>,
         <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v9 08/15] mm/damon: Implement access pattern recording
-Date:   Mon, 27 Apr 2020 14:04:35 +0200
-Message-ID: <20200427120442.24179-9-sjpark@amazon.com>
+Subject: [PATCH v9 09/15] mm/damon: Add debugfs interface
+Date:   Mon, 27 Apr 2020 14:04:36 +0200
+Message-ID: <20200427120442.24179-10-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200427120442.24179-1-sjpark@amazon.com>
 References: <20200427120442.24179-1-sjpark@amazon.com>
@@ -84,228 +84,462 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: SeongJae Park <sjpark@amazon.de>
 
-This commit implements the recording feature of DAMON. If this feature
-is enabled, DAMON writes the monitored access patterns in its binary
-format into a file which specified by the user. This is already able to
-be implemented by each user using the callbacks.  However, as the
-recording is expected to be used widely, this commit implements the
-feature in the DAMON, for more convenience and efficiency.
+This commit adds a debugfs interface for DAMON.
+
+DAMON exports four files, ``attrs``, ``pids``, ``record``, and
+``monitor_on`` under its debugfs directory, ``<debugfs>/damon/``.
+
+Attributes
+----------
+
+Users can read and write the ``sampling interval``, ``aggregation
+interval``, ``regions update interval``, and min/max number of
+monitoring target regions by reading from and writing to the ``attrs``
+file.  For example, below commands set those values to 5 ms, 100 ms,
+1,000 ms, 10, 1000 and check it again::
+
+    # cd <debugfs>/damon
+    # echo 5000 100000 1000000 10 1000 > attrs
+    # cat attrs
+    5000 100000 1000000 10 1000
+
+Target PIDs
+-----------
+
+Users can read and write the pids of current monitoring target processes
+by reading from and writing to the ``pids`` file.  For example, below
+commands set processes having pids 42 and 4242 as the processes to be
+monitored and check it again::
+
+    # cd <debugfs>/damon
+    # echo 42 4242 > pids
+    # cat pids
+    42 4242
+
+Note that setting the pids doesn't start the monitoring.
+
+Record
+------
+
+DAMON supports direct monitoring result record feature.  The recorded
+results are first written to a buffer and flushed to a file in batch.
+Users can set the size of the buffer and the path to the result file by
+reading from and writing to the ``record`` file.  For example, below
+commands set the buffer to be 4 KiB and the result to be saved in
+'/damon.data'.
+
+    # cd <debugfs>/damon
+    # echo 4096 /damon.data > pids
+    # cat record
+    4096 /damon.data
+
+Turning On/Off
+--------------
+
+You can check current status, start and stop the monitoring by reading
+from and writing to the ``monitor_on`` file.  Writing ``on`` to the file
+starts DAMON to monitor the target processes with the attributes.
+Writing ``off`` to the file stops DAMON.  DAMON also stops if every
+target processes is terminated.  Below example commands turn on, off,
+and check status of DAMON::
+
+    # cd <debugfs>/damon
+    # echo on > monitor_on
+    # echo off > monitor_on
+    # cat monitor_on
+    off
+
+Please note that you cannot write to the ``attrs`` and ``pids`` files
+while the monitoring is turned on.  If you write to the files while
+DAMON is running, ``-EINVAL`` will be returned.
 
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
 ---
- include/linux/damon.h |   7 +++
- mm/damon.c            | 131 +++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 135 insertions(+), 3 deletions(-)
+ mm/damon.c | 351 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 350 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 264569b21502..bc46ea00e9a1 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -50,6 +50,11 @@ struct damon_ctx {
- 	struct timespec64 last_aggregation;
- 	struct timespec64 last_regions_update;
- 
-+	unsigned char *rbuf;
-+	unsigned int rbuf_len;
-+	unsigned int rbuf_offset;
-+	char *rfile_path;
-+
- 	struct task_struct *kdamond;
- 	bool kdamond_stop;
- 	struct mutex kdamond_lock;
-@@ -65,6 +70,8 @@ int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids);
- int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
- 		unsigned long aggr_int, unsigned long regions_update_int,
- 		unsigned long min_nr_reg, unsigned long max_nr_reg);
-+int damon_set_recording(struct damon_ctx *ctx,
-+				unsigned int rbuf_len, char *rfile_path);
- int damon_start(struct damon_ctx *ctx);
- int damon_stop(struct damon_ctx *ctx);
- 
 diff --git a/mm/damon.c b/mm/damon.c
-index 863b60e16a4a..621217b58173 100644
+index 621217b58173..f810d0764840 100644
 --- a/mm/damon.c
 +++ b/mm/damon.c
-@@ -44,6 +44,9 @@
- #define damon_for_each_task_safe(ctx, t, next) \
- 	list_for_each_entry_safe(t, next, &(ctx)->tasks_list, list)
+@@ -10,6 +10,7 @@
+ #define pr_fmt(fmt) "damon: " fmt
  
-+#define MAX_RECORD_BUFFER_LEN	(4 * 1024 * 1024)
-+#define MAX_RFILE_PATH_LEN	256
-+
+ #include <linux/damon.h>
++#include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/kthread.h>
+ #include <linux/mm.h>
+@@ -50,6 +51,15 @@
  /* Get a random number in [l, r) */
  #define damon_rand(l, r) (l + prandom_u32() % (r - l))
  
-@@ -565,16 +568,80 @@ static bool kdamond_aggregate_interval_passed(struct damon_ctx *ctx)
- }
- 
- /*
-- * Reset the aggregated monitoring results
-+ * Flush the content in the result buffer to the result file
-+ */
-+static void damon_flush_rbuffer(struct damon_ctx *ctx)
-+{
-+	ssize_t sz;
-+	loff_t pos = 0;
-+	struct file *rfile;
-+
-+	rfile = filp_open(ctx->rfile_path, O_CREAT | O_RDWR | O_APPEND, 0644);
-+	if (IS_ERR(rfile)) {
-+		pr_err("Cannot open the result file %s\n",
-+				ctx->rfile_path);
-+		return;
-+	}
-+
-+	while (ctx->rbuf_offset) {
-+		sz = kernel_write(rfile, ctx->rbuf, ctx->rbuf_offset, &pos);
-+		if (sz < 0)
-+			break;
-+		ctx->rbuf_offset -= sz;
-+	}
-+	filp_close(rfile, NULL);
-+}
-+
-+/*
-+ * Write a data into the result buffer
-+ */
-+static void damon_write_rbuf(struct damon_ctx *ctx, void *data, ssize_t size)
-+{
-+	if (!ctx->rbuf_len || !ctx->rbuf)
-+		return;
-+	if (ctx->rbuf_offset + size > ctx->rbuf_len)
-+		damon_flush_rbuffer(ctx);
-+
-+	memcpy(&ctx->rbuf[ctx->rbuf_offset], data, size);
-+	ctx->rbuf_offset += size;
-+}
-+
-+/*
-+ * Flush the aggregated monitoring results to the result buffer
-+ *
-+ * Stores current tracking results to the result buffer and reset 'nr_accesses'
-+ * of each region.  The format for the result buffer is as below:
-+ *
-+ *   <time> <number of tasks> <array of task infos>
-+ *
-+ *   task info: <pid> <number of regions> <array of region infos>
-+ *   region info: <start address> <end address> <nr_accesses>
-  */
- static void kdamond_reset_aggregated(struct damon_ctx *c)
- {
- 	struct damon_task *t;
--	struct damon_region *r;
-+	struct timespec64 now;
-+	unsigned int nr;
-+
-+	ktime_get_coarse_ts64(&now);
-+
-+	damon_write_rbuf(c, &now, sizeof(struct timespec64));
-+	nr = nr_damon_tasks(c);
-+	damon_write_rbuf(c, &nr, sizeof(nr));
- 
- 	damon_for_each_task(c, t) {
--		damon_for_each_region(r, t)
-+		struct damon_region *r;
-+
-+		damon_write_rbuf(c, &t->pid, sizeof(t->pid));
-+		nr = nr_damon_regions(t);
-+		damon_write_rbuf(c, &nr, sizeof(nr));
-+		damon_for_each_region(r, t) {
-+			damon_write_rbuf(c, &r->vm_start, sizeof(r->vm_start));
-+			damon_write_rbuf(c, &r->vm_end, sizeof(r->vm_end));
-+			damon_write_rbuf(c, &r->nr_accesses,
-+					sizeof(r->nr_accesses));
- 			r->nr_accesses = 0;
-+		}
- 	}
- }
- 
-@@ -820,6 +887,14 @@ static bool kdamond_need_stop(struct damon_ctx *ctx)
- 	return true;
- }
- 
-+static void kdamond_write_record_header(struct damon_ctx *ctx)
-+{
-+	int recfmt_ver = 1;
-+
-+	damon_write_rbuf(ctx, "damon_recfmt_ver", 16);
-+	damon_write_rbuf(ctx, &recfmt_ver, sizeof(recfmt_ver));
-+}
++/* A monitoring context for debugfs interface users. */
++static struct damon_ctx damon_user_ctx = {
++	.sample_interval = 5 * 1000,
++	.aggr_interval = 100 * 1000,
++	.regions_update_interval = 1000 * 1000,
++	.min_nr_regions = 10,
++	.max_nr_regions = 1000,
++};
 +
  /*
-  * The monitoring daemon that runs as a kernel thread
-  */
-@@ -832,6 +907,9 @@ static int kdamond_fn(void *data)
- 
- 	pr_info("kdamond (%d) starts\n", ctx->kdamond->pid);
- 	kdamond_init_regions(ctx);
-+
-+	kdamond_write_record_header(ctx);
-+
- 	while (!kdamond_need_stop(ctx)) {
- 		kdamond_prepare_access_checks(ctx);
- 		if (ctx->sample_cb)
-@@ -852,6 +930,7 @@ static int kdamond_fn(void *data)
- 		if (kdamond_need_update_regions(ctx))
- 			kdamond_update_regions(ctx);
- 	}
-+	damon_flush_rbuffer(ctx);
- 	damon_for_each_task(ctx, t) {
- 		damon_for_each_region_safe(r, next, t)
- 			damon_destroy_region(r);
-@@ -954,6 +1033,52 @@ int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids)
+  * Construct a damon_region struct
+  *
+@@ -1117,13 +1127,352 @@ int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
  	return 0;
  }
  
-+/**
-+ * damon_set_recording() - Set attributes for the recording.
-+ * @ctx:	target kdamond context
-+ * @rbuf_len:	length of the result buffer
-+ * @rfile_path:	path to the monitor result files
-+ *
-+ * Setting 'rbuf_len' 0 disables recording.
-+ *
-+ * This function should not be called while the kdamond is running.
-+ *
-+ * Return: 0 on success, negative error code otherwise.
-+ */
-+int damon_set_recording(struct damon_ctx *ctx,
-+			unsigned int rbuf_len, char *rfile_path)
+-static int __init damon_init(void)
++static ssize_t debugfs_monitor_on_read(struct file *file,
++		char __user *buf, size_t count, loff_t *ppos)
 +{
-+	size_t rfile_path_len;
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char monitor_on_buf[5];
++	bool monitor_on;
++	int len;
 +
-+	if (rbuf_len > MAX_RECORD_BUFFER_LEN) {
-+		pr_err("too long (>%d) result buffer length\n",
-+				MAX_RECORD_BUFFER_LEN);
++	monitor_on = damon_kdamond_running(ctx);
++	len = snprintf(monitor_on_buf, 5, monitor_on ? "on\n" : "off\n");
++
++	return simple_read_from_buffer(buf, count, ppos, monitor_on_buf, len);
++}
++
++static ssize_t debugfs_monitor_on_write(struct file *file,
++		const char __user *buf, size_t count, loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	ssize_t ret;
++	char cmdbuf[5];
++	int err;
++
++	ret = simple_write_to_buffer(cmdbuf, 5, ppos, buf, count);
++	if (ret < 0)
++		return ret;
++
++	if (sscanf(cmdbuf, "%s", cmdbuf) != 1)
 +		return -EINVAL;
-+	}
-+	rfile_path_len = strnlen(rfile_path, MAX_RFILE_PATH_LEN);
-+	if (rfile_path_len >= MAX_RFILE_PATH_LEN) {
-+		pr_err("too long (>%d) result file path %s\n",
-+				MAX_RFILE_PATH_LEN, rfile_path);
++	if (!strncmp(cmdbuf, "on", 5))
++		err = damon_start(ctx);
++	else if (!strncmp(cmdbuf, "off", 5))
++		err = damon_stop(ctx);
++	else
 +		return -EINVAL;
-+	}
-+	ctx->rbuf_len = rbuf_len;
-+	kfree(ctx->rbuf);
-+	kfree(ctx->rfile_path);
-+	ctx->rfile_path = NULL;
-+	if (!rbuf_len) {
-+		ctx->rbuf = NULL;
-+	} else {
-+		ctx->rbuf = kvmalloc(rbuf_len, GFP_KERNEL);
-+		if (!ctx->rbuf)
++
++	if (err)
++		ret = err;
++	return ret;
++}
++
++static ssize_t damon_sprint_pids(struct damon_ctx *ctx, char *buf, ssize_t len)
++{
++	struct damon_task *t;
++	int written = 0;
++	int rc;
++
++	damon_for_each_task(ctx, t) {
++		rc = snprintf(&buf[written], len - written, "%d ", t->pid);
++		if (!rc)
 +			return -ENOMEM;
++		written += rc;
 +	}
-+	ctx->rfile_path = kmalloc(rfile_path_len + 1, GFP_KERNEL);
-+	if (!ctx->rfile_path)
++	if (written)
++		written -= 1;
++	written += snprintf(&buf[written], len - written, "\n");
++	return written;
++}
++
++static ssize_t debugfs_pids_read(struct file *file,
++		char __user *buf, size_t count, loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	ssize_t len;
++	char pids_buf[320];
++
++	len = damon_sprint_pids(ctx, pids_buf, 320);
++	if (len < 0)
++		return len;
++
++	return simple_read_from_buffer(buf, count, ppos, pids_buf, len);
++}
++
++/*
++ * Converts a string into an array of unsigned long integers
++ *
++ * Returns an array of unsigned long integers if the conversion success, or
++ * NULL otherwise.
++ */
++static int *str_to_pids(const char *str, ssize_t len, ssize_t *nr_pids)
++{
++	int *pids;
++	const int max_nr_pids = 32;
++	int pid;
++	int pos = 0, parsed, ret;
++
++	*nr_pids = 0;
++	pids = kmalloc_array(max_nr_pids, sizeof(pid), GFP_KERNEL);
++	if (!pids)
++		return NULL;
++	while (*nr_pids < max_nr_pids && pos < len) {
++		ret = sscanf(&str[pos], "%d%n", &pid, &parsed);
++		pos += parsed;
++		if (ret != 1)
++			break;
++		pids[*nr_pids] = pid;
++		*nr_pids += 1;
++	}
++	if (*nr_pids == 0) {
++		kfree(pids);
++		pids = NULL;
++	}
++
++	return pids;
++}
++
++static ssize_t debugfs_pids_write(struct file *file,
++		const char __user *buf, size_t count, loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char *kbuf;
++	int *targets;
++	ssize_t nr_targets;
++	ssize_t ret;
++	int err;
++
++	kbuf = kmalloc(count, GFP_KERNEL);
++	if (!kbuf)
 +		return -ENOMEM;
-+	strncpy(ctx->rfile_path, rfile_path, rfile_path_len + 1);
++
++	ret = simple_write_to_buffer(kbuf, count, ppos, buf, count);
++	if (ret < 0)
++		goto out;
++
++	targets = str_to_pids(kbuf, ret, &nr_targets);
++	if (!targets) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	mutex_lock(&ctx->kdamond_lock);
++	if (ctx->kdamond) {
++		ret = -EINVAL;
++		goto unlock_out;
++	}
++
++	err = damon_set_pids(ctx, targets, nr_targets);
++	if (err)
++		ret = err;
++unlock_out:
++	mutex_unlock(&ctx->kdamond_lock);
++	kfree(targets);
++out:
++	kfree(kbuf);
++	return ret;
++}
++
++static ssize_t debugfs_record_read(struct file *file,
++		char __user *buf, size_t count, loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char record_buf[20 + MAX_RFILE_PATH_LEN];
++	int ret;
++
++	ret = snprintf(record_buf, ARRAY_SIZE(record_buf), "%u %s\n",
++			ctx->rbuf_len, ctx->rfile_path);
++	return simple_read_from_buffer(buf, count, ppos, record_buf, ret);
++}
++
++static ssize_t debugfs_record_write(struct file *file,
++		const char __user *buf, size_t count, loff_t *ppos)
+ {
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char *kbuf;
++	unsigned int rbuf_len;
++	char rfile_path[MAX_RFILE_PATH_LEN];
++	ssize_t ret;
++	int err;
++
++	kbuf = kmalloc(count + 1, GFP_KERNEL);
++	if (!kbuf)
++		return -ENOMEM;
++	kbuf[count] = '\0';
++
++	ret = simple_write_to_buffer(kbuf, count, ppos, buf, count);
++	if (ret < 0)
++		goto out;
++	if (sscanf(kbuf, "%u %s",
++				&rbuf_len, rfile_path) != 2) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	mutex_lock(&ctx->kdamond_lock);
++	if (ctx->kdamond) {
++		ret = -EBUSY;
++		goto unlock_out;
++	}
++
++	err = damon_set_recording(ctx, rbuf_len, rfile_path);
++	if (err)
++		ret = err;
++unlock_out:
++	mutex_unlock(&ctx->kdamond_lock);
++out:
++	kfree(kbuf);
++	return ret;
++}
++
++
++static ssize_t debugfs_attrs_read(struct file *file,
++		char __user *buf, size_t count, loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char kbuf[128];
++	int ret;
++
++	ret = snprintf(kbuf, ARRAY_SIZE(kbuf), "%lu %lu %lu %lu %lu\n",
++			ctx->sample_interval, ctx->aggr_interval,
++			ctx->regions_update_interval, ctx->min_nr_regions,
++			ctx->max_nr_regions);
++
++	return simple_read_from_buffer(buf, count, ppos, kbuf, ret);
++}
++
++static ssize_t debugfs_attrs_write(struct file *file,
++		const char __user *buf, size_t count, loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	unsigned long s, a, r, minr, maxr;
++	char *kbuf;
++	ssize_t ret;
++	int err;
++
++	kbuf = kmalloc(count, GFP_KERNEL);
++	if (!kbuf)
++		return -ENOMEM;
++
++	ret = simple_write_to_buffer(kbuf, count, ppos, buf, count);
++	if (ret < 0)
++		goto out;
++
++	if (sscanf(kbuf, "%lu %lu %lu %lu %lu",
++				&s, &a, &r, &minr, &maxr) != 5) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	mutex_lock(&ctx->kdamond_lock);
++	if (ctx->kdamond) {
++		ret = -EBUSY;
++		goto unlock_out;
++	}
++
++	err = damon_set_attrs(ctx, s, a, r, minr, maxr);
++	if (err)
++		ret = err;
++unlock_out:
++	mutex_unlock(&ctx->kdamond_lock);
++out:
++	kfree(kbuf);
++	return ret;
++}
++
++static const struct file_operations monitor_on_fops = {
++	.owner = THIS_MODULE,
++	.read = debugfs_monitor_on_read,
++	.write = debugfs_monitor_on_write,
++};
++
++static const struct file_operations pids_fops = {
++	.owner = THIS_MODULE,
++	.read = debugfs_pids_read,
++	.write = debugfs_pids_write,
++};
++
++static const struct file_operations record_fops = {
++	.owner = THIS_MODULE,
++	.read = debugfs_record_read,
++	.write = debugfs_record_write,
++};
++
++static const struct file_operations attrs_fops = {
++	.owner = THIS_MODULE,
++	.read = debugfs_attrs_read,
++	.write = debugfs_attrs_write,
++};
++
++static struct dentry *debugfs_root;
++
++static int __init damon_debugfs_init(void)
++{
++	const char * const file_names[] = {"attrs", "record",
++		"pids", "monitor_on"};
++	const struct file_operations *fops[] = {&attrs_fops, &record_fops,
++		&pids_fops, &monitor_on_fops};
++	int i;
++
++	debugfs_root = debugfs_create_dir("damon", NULL);
++	if (!debugfs_root) {
++		pr_err("failed to create the debugfs dir\n");
++		return -ENOMEM;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(file_names); i++) {
++		if (!debugfs_create_file(file_names[i], 0600, debugfs_root,
++					NULL, fops[i])) {
++			pr_err("failed to create %s file\n", file_names[i]);
++			return -ENOMEM;
++		}
++	}
++
+ 	return 0;
+ }
+ 
++static int __init damon_init_user_ctx(void)
++{
++	int rc;
++
++	struct damon_ctx *ctx = &damon_user_ctx;
++
++	ktime_get_coarse_ts64(&ctx->last_aggregation);
++	ctx->last_regions_update = ctx->last_aggregation;
++
++	rc = damon_set_recording(ctx, 1024 * 1024, "/damon.data");
++	if (rc)
++		return rc;
++
++	mutex_init(&ctx->kdamond_lock);
++
++	INIT_LIST_HEAD(&ctx->tasks_list);
++
 +	return 0;
 +}
 +
- /**
-  * damon_set_attrs() - Set attributes for the monitoring.
-  * @ctx:		monitoring context
++static int __init damon_init(void)
++{
++	int rc;
++
++	rc = damon_init_user_ctx();
++	if (rc)
++		return rc;
++
++	rc = damon_debugfs_init();
++	if (rc)
++		pr_err("%s: debugfs init failed\n", __func__);
++
++	return rc;
++}
++
+ static void __exit damon_exit(void)
+ {
++	damon_stop(&damon_user_ctx);
++	debugfs_remove_recursive(debugfs_root);
++
++	kfree(damon_user_ctx.rbuf);
++	kfree(damon_user_ctx.rfile_path);
+ }
+ 
+ module_init(damon_init);
 -- 
 2.17.1
 
