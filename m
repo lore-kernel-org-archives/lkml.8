@@ -2,135 +2,136 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4249C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF7EC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C420D2073C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:45:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vr00ZiG5"
+	by mail.kernel.org (Postfix) with ESMTP id D2A702070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:46:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588020407;
+	bh=S0JGqMXyfhwp4pwnB+rzqtWpJTu9aRY8xFng4Qs4J64=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eI2tzVcdg4TMpxhQsZvyl1YckUpwQEgmFcGibuvdgH14awRx55wxbAZ37t1vqL7nH
+	 JaJoYPjUIptuCc9fUZ+a75ZOi9O5HU4EVHKv3P6ZUe73lmsVKg4Q5JytHqeoUGDSPP
+	 4YIeMooZmtFUumLXhPSw37YBF2xcB16cGWB3FOOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgD0Up4 (ORCPT
+        id S1726788AbgD0Uqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:45:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37122 "EHLO
+        Mon, 27 Apr 2020 16:46:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726420AbgD0Upz (ORCPT
+        by vger.kernel.org with ESMTP id S1726233AbgD0Uqq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 16:45:55 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AA7DC0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:45:54 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id v63so9556886pfb.10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:45:54 -0700 (PDT)
+        Mon, 27 Apr 2020 16:46:46 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70B3FC0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:46:44 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id t11so15007306lfe.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:46:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Bcag0IOMjkeMKf6Qdaig8RmUgJulOZ6Dwcg/kc7mWuw=;
-        b=vr00ZiG50BbHCZgiGhKzUig8ebmcxwNyAuSZDS9Fy9++/+lBSJLPHB5VE0jqKA8VVp
-         g5hGQKYr39R1dLfLNK2DxhYc//BK+yuzOcm5KbUsvU99ovE352pXh2+A8+7w7icg/xqJ
-         RQwcjXxsQigIv1hDNScho2GwzEDFZfzHHQaRH/4pVYxLOayrJSWaOEVPwPB4xxrhdIoU
-         RiQO1uExeEqZgKgR01+xq+u4cWEz7Wt1sbzS+NfXx7/JhBbJnsVGfWrstDJ129Ge1XMZ
-         SuSTWs1W3SCWz53yl1fhzUC1dT7hlEqmdxcZgxuyk4Ah4zyhUKRpkoeUu5rKpqLSHkg7
-         Q6QA==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dWR2+QPOvDM4Hcpn5wbulNRTutKr2RiZhAYOOOoHLGE=;
+        b=XXUouBL3HsVdD5w4SVkh5b5D8g9+OFHyEx+DyQoaqHU6zlLiC7Dv4gWIn8To8ExMgw
+         NntG+tgahRdl4PgQkAptOglp72S4qq9gaTpBKYXOGyoVBKVhhZlHK+aoAtOs0FgfdNnG
+         Q4eXzMDYFO1E9IXcsn+dcaRD4uEyvCywvcRfE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Bcag0IOMjkeMKf6Qdaig8RmUgJulOZ6Dwcg/kc7mWuw=;
-        b=pAzAhDb3M7M+A55xDxEmZuOwC/OZNtsi88JaYLu2yAsPsAsyrS+6NEYeKLU0UtBQfe
-         AAtVYuU2owpLuB8ldiwEFg96BGpcXQuPx8Kxw07ijRKblJB35oJednZxnqu8sDPcZsQF
-         xDUwqEP3UsJ0XuiiWkYd3qXuGvMilg9lGbP8Ap7QzOD21ykukqx/sMJP9vUe/eqgps67
-         IjVqtCNJbSBoelMYgtBqg1c+CVP+imUX+6W8Wx6ObQamcxcFaNyP+d3uNM5INLrEvo3l
-         Fob4P4a77DC+c54yI4oTUjwALsZ++/Syw3w/eF/DXOzIeegPllhKLnu9XZD2KeUtKtkv
-         GDpA==
-X-Gm-Message-State: AGi0PuawcsCDK032rWTMlHuTKsc98RapdiEJ+ezDdUmjX75ezxxic72c
-        0qsjBZ62zGf+B40jRSP8wxNBuQ==
-X-Google-Smtp-Source: APiQypIdmfjwcDuAuA2SB4pP8kr68I93NPWhf6BxSPVcCeqZMEvirYIWHKdGIJ3TN8iKQ9IKNzr4sA==
-X-Received: by 2002:aa7:9218:: with SMTP id 24mr25789630pfo.312.1588020353394;
-        Mon, 27 Apr 2020 13:45:53 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
-        by smtp.gmail.com with ESMTPSA id 1sm13672326pff.180.2020.04.27.13.45.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 13:45:52 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 13:45:46 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 01/12] add support for Clang's Shadow Call Stack (SCS)
-Message-ID: <20200427204546.GA80713@google.com>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20200416161245.148813-1-samitolvanen@google.com>
- <20200416161245.148813-2-samitolvanen@google.com>
- <20200420171727.GB24386@willie-the-truck>
- <20200420211830.GA5081@google.com>
- <20200422173938.GA3069@willie-the-truck>
- <20200422235134.GA211149@google.com>
- <202004231121.A13FDA100@keescook>
- <20200424112113.GC21141@willie-the-truck>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dWR2+QPOvDM4Hcpn5wbulNRTutKr2RiZhAYOOOoHLGE=;
+        b=McutMoyy8u7finb679WxfYPejebul/aUgMUtTSnIGtYBjHUlZHYqs2bdCnqLX2ChNB
+         thDAaHLI2oVNIqufk0AkoFH9uVUlG6JCAOoEP3ai80pMb0hXZCtzm0lwVsa4bZh1hBJI
+         QQ6YXc8f4Ovza5/7x61ZfNjNc7dAegEtNJFWDBGba8W9I+ljfWWvTcD7iFapM3aLtO49
+         977OIO7CaX4R4oRZ038OIPV2n+WMuSBHG5csWnuEahxQElv7m2+Xxpqg96unw2u+rAO/
+         RcphQUhsHnYtr+IoZhbt0Yk3cunMsUym7fJlu1wY+r4No1FhxXUmvaegO/czopEcXa5J
+         Ph3g==
+X-Gm-Message-State: AGi0PuZU+WhymPPWg/WtA9T1gJaD6Loo1r5TxSpw4GKK4O/xYCSyDZ4I
+        dAHBMUEv/bUYhGvqKKed2wHeioT88RY=
+X-Google-Smtp-Source: APiQypJhDfxcdP4Ub0wCcaMrGE1KL7Kre6rARAO1kTHkvlHXEm6ltjCwzseUWom4Xu+g2ySHuogURQ==
+X-Received: by 2002:ac2:4213:: with SMTP id y19mr15620705lfh.99.1588020402519;
+        Mon, 27 Apr 2020 13:46:42 -0700 (PDT)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id r9sm10176766ljh.36.2020.04.27.13.46.41
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 13:46:41 -0700 (PDT)
+Received: by mail-lf1-f46.google.com with SMTP id t11so15007240lfe.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:46:41 -0700 (PDT)
+X-Received: by 2002:a19:240a:: with SMTP id k10mr16839809lfk.30.1588020401250;
+ Mon, 27 Apr 2020 13:46:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200424112113.GC21141@willie-the-truck>
+References: <20200425133504.GA11354@nishad> <20200427155617.GY6749@magnolia>
+ <20200427172959.GB3936841@kroah.com> <515362d10c06567f35f0d5b7c3f2e121769fb04b.camel@perches.com>
+ <20200427174611.GA4035548@kroah.com> <791a97d5d4dfd11af533a0bbd6ae27d1a2d479ee.camel@perches.com>
+ <20200427183629.GA20158@kroah.com> <16b209d0b0c8034db62f8d4d0a260a00f0aa5d5e.camel@perches.com>
+ <CAHk-=wgN=Ox112_O=GQ-kwMxYduix9gZFsr1GXXJWLpDpNDm5g@mail.gmail.com> <fdcc8aa5a506ba9c6a3e6e68a7147161424985bf.camel@perches.com>
+In-Reply-To: <fdcc8aa5a506ba9c6a3e6e68a7147161424985bf.camel@perches.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 27 Apr 2020 13:46:25 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi2bdXuYhC9bd9FShtcf_u-6RUb3Qr_aXq3XtbCxR5NGQ@mail.gmail.com>
+Message-ID: <CAHk-=wi2bdXuYhC9bd9FShtcf_u-6RUb3Qr_aXq3XtbCxR5NGQ@mail.gmail.com>
+Subject: Re: [PATCH] xfs: Use the correct style for SPDX License Identifier
+To:     Joe Perches <joe@perches.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Nishad Kamdar <nishadkamdar@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 12:21:14PM +0100, Will Deacon wrote:
-> Also, since you mentioned the lack of redzoning, isn't it a bit dodgy
-> allocating blindly out of the kmem_cache? It means we don't have a redzone
-> or a guard page, so if you can trigger something like a recursion bug then
-> could you scribble past the SCS before the main stack overflows? Would this
-> clobber somebody else's SCS?
+On Mon, Apr 27, 2020 at 1:39 PM Joe Perches <joe@perches.com> wrote:
+>
+> > The fact is, there *is * a reason to avoid the pedantic "change to new
+> > version" - pointless churn.
+>
+> Have you *looked* at this proposed change?
+>
+> It just changes // SPDX comments to /* */ in .h files.
 
-I agree that allocating from a kmem_cache isn't ideal for safety. It's a
-compromise to reduce memory overhead.
+That's not what I was reacting to - it was you arguing with Greg about
+how we use the legacy format.
 
-> The vmap version that I asked Sami to drop
-> is at least better in this regard, although the guard page is at the wrong
-> end of the stack and we just hope that the allocation below us didn't pass
-> VM_NO_GUARD. Looks like the same story for vmap stack :/
+I really don't care at all about the comment character choices
+(either), but wanted to point out that as far as the kernel is
+concerned, the "deprecated" spdx keys simply arent' deprecated, they
+are just as valid.
 
-SCS grows up and the guard page is after the allocation, so how is it at
-the wrong end? Am I missing something here?
+> Piecemeal changes aren't great.
 
-> If we split the pointer in two (base, offset) then we could leave the
-> base live in the thread_info, not require alignment of the stacks (which
-> may allow for unconditional redzoning?) and then just update the offset
-> value on context switch, which could be trivially checked as part of the
-> existing stack overflow checking on kernel entry.
+Piecemeal changes are fine, when the change doesn't have to be done AT ALL.
 
-I sent out v13 with split pointers, but I'm not sure it's convenient to
-add an overflow check to kernel_ventry where the VMAP_STACK check is
-done. I suppose I could add a check to kernel_entry after we load x18
-from tsk. Thoughts?
+There is simply no point in EVER changing "GPL-2.0" into
+"GPL-2.0-only" etc, unless the thing is then touched for some other
+reason (which it may never be).
 
-Sami
+Scripted changes are not as useful as you think. They often cause
+unnecessary noise in other respects.
+
+I'm constantly seeing stupid pointless work due to irrelevant patches
+that then show up in "get_maintainer" output because they show up as
+changes to drivbers that nobody cares about.
+
+Or "git blame -C" things that I have to ignore and go past that
+history because the scripted change showed an (uninteresting) change.
+
+The fact is, pointless churn is BAD. It's a real expense. The whole
+"get it over with once" argument is simply completely wrong.
+
+There are real advantages to "don't touch stuff that doesn't actively
+need touching".
+
+              Linus
