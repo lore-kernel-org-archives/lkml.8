@@ -2,151 +2,128 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1597C7C860
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41E1C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C57532078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40A8206CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:15:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VAiQfdYY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgD0NLF (ORCPT
+        id S1727114AbgD0NP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 09:11:05 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:64112 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726651AbgD0NLF (ORCPT
+        Mon, 27 Apr 2020 09:15:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50800 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726786AbgD0NPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 09:11:05 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03RCvCGJ022375;
-        Mon, 27 Apr 2020 09:10:48 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30mj457vkc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Apr 2020 09:10:48 -0400
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 03RDAkc3007155
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Mon, 27 Apr 2020 09:10:47 -0400
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Mon, 27 Apr
- 2020 06:10:45 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Mon, 27 Apr 2020 06:10:45 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03RDAfUQ011495;
-        Mon, 27 Apr 2020 09:10:41 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <lars@metafoo.de>, <jic23@kernel.org>, <pmeerw@pmeerw.net>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v6 0/6] iio: core,buffer: re-organize chardev creation
-Date:   Mon, 27 Apr 2020 16:10:54 +0300
-Message-ID: <20200427131100.50845-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 27 Apr 2020 09:15:25 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30590C0610D5;
+        Mon, 27 Apr 2020 06:15:25 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id e25so17528337ljg.5;
+        Mon, 27 Apr 2020 06:15:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Yv+Yf1SDaIjRjfiGBc4e6L26R7Y5+CX+LAg5EicPHrE=;
+        b=VAiQfdYYK49y2ij6jlP/UkXehRD0FlOK3KIywZgntgpXPqtpipYHBUXUYysji6qI8x
+         RRCREB9Hosdaoqf9u2vCOaanQTM/FmgI1G2e0FCWnl9m9/SSioQUMPx6paQZmrmoRb3U
+         GtbzkgF//kZajx/ADE61JJ5jlytOM59igNeWj7zSXPoX20knFCYqDeDdKiAyGmVPGXjE
+         tHgcux94zLaVlWzQ2z80QubdOcPkO7C/hcozd8pqm//44A4VrhmYOTV0gVtNRcGCn9tN
+         DVyB5UUCxDSeNFewBgELpVjvFcqxMXnc8+dpbfYbNd2MS/Lg40jmJJ756LM0rgJY0Ssl
+         Hlxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Yv+Yf1SDaIjRjfiGBc4e6L26R7Y5+CX+LAg5EicPHrE=;
+        b=IfnAl0+WTjKP7FeVsEjs5HZzyHoHf0v0WFBt4xKLg8C/JrF7aX2AwrRaX++rwjhBzW
+         ZprjHKhWmkKiLHdbAjDl57j/vAFujH1COwjZGcGrXHrh4YQVbbVgkCVDljx6oIWjVzaY
+         1MJYib4L39MMnr7NuW8wYvuLvoC+Uctux6NJ1hLkwBWIoJ1+GQoKHQyVeWjN3bQx5EB2
+         RM5YBwnZSW6oYiTDLA4bIpLGSPSqJrpuXBh1dbMe8FT6rsAf0L3fy5FjZqDwCL7kEdBu
+         k+IXmpER3fR+/SNiLLoFbFRTbb3LJBxtepthlI13Hq0jnpVe3K+kED0jplK4JNewcVuo
+         Kp3Q==
+X-Gm-Message-State: AGi0PuYCbOQcPtHMk/tP7JwQpirHCbf7fjMNr8Hqa1SMnwk7fZgSrBeT
+        G+FaZBrcF8IHDoS5xrjkMgWfN8jV
+X-Google-Smtp-Source: APiQypKEDGP/PSN983auyZAywmLt8GSg70EdZeYAC2WFD1YAvqJ8Q5FjzS/gNq1XPeVYCcycOiNAlg==
+X-Received: by 2002:a2e:b4a5:: with SMTP id q5mr14589286ljm.58.1587993323426;
+        Mon, 27 Apr 2020 06:15:23 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id z65sm11447664lfa.37.2020.04.27.06.15.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 06:15:22 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <77a31b2f-f525-ba9e-f1ae-2b474465bde4@gmail.com>
+ <470b4de4-e98a-1bdc-049e-6259ad603507@nvidia.com>
+ <d2531fc1-b452-717d-af71-19497e14ef00@gmail.com>
+ <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
+ <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
+ <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
+ <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
+ <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
+ <20200427074837.GC3451400@ulmo>
+ <c1190858-eaea-8e94-b4d1-1cf28076c330@gmail.com>
+ <20200427103851.GB24446@kunai>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <dc2de966-81d6-6ad5-0c51-16dd28ca4165@gmail.com>
+Date:   Mon, 27 Apr 2020 16:15:21 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-27_09:2020-04-24,2020-04-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- suspectscore=2 malwarescore=0 spamscore=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 mlxlogscore=999 clxscore=1015
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004270114
+In-Reply-To: <20200427103851.GB24446@kunai>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The main intent is to be able to add more chardevs per IIO device, one
-for each buffer. To get there, some rework is needed.
-This tries to re-organize the init of the chardev.
+27.04.2020 13:38, Wolfram Sang пишет:
+> On Mon, Apr 27, 2020 at 12:52:10PM +0300, Dmitry Osipenko wrote:
+>> 27.04.2020 10:48, Thierry Reding пишет:
+>> ...
+>>>> Maybe but all these other problems appear to have existed for sometime
+>>>> now. We need to fix all, but for the moment we need to figure out what's
+>>>> best for v5.7.
+>>>
+>>> To me it doesn't sound like we have a good handle on what exactly is
+>>> going on here and we're mostly just poking around.
+>>>
+>>> And even if things weren't working quite properly before, it sounds to
+>>> me like this patch actually made things worse.
+>>
+>> There is a plenty of time to work on the proper fix now. To me it sounds
+>> like you're giving up on fixing the root of the problem, sorry.
+> 
+> From what I understood, there were (at least) two regressions reported.
+> So, to me, it makes sense to revert the change, so for upstream users
+> everything stays "the same". Of course, this does not mean it should
+> stay like this forever and you guys can work on fixing the root causes.
+> I'll happily apply them for this release when you are confident with the
+> results.
+> 
 
- 
-Changelog v5 -> v6:
-- patch 'iio: core: register chardev only if needed'
-  - sort file_operations fields for iio_event_fileops
-- patch 'iio: buffer,event: duplicate chardev creation for buffers & events'
-  - fixed-up '**/' -> '*/' for 2 block comments
-  - sorted file_operations for iio_buffer_fileops, after move
-  - removed 'indio_dev->chrdev = NULL' on IIO device unregister
-  - added comment about 'indio_dev->info' NULL check in
-    iio_device_event_ioctl()
-- patch 'iio: core: add simple centralized mechanism for ioctl() handlers'
-  - re-using lock 'indio_dev->info_exist_lock' for new ioctl register
-    mechanism in iio_device_ioctl()
-  - simplified exit condition from the loop; only need to check
-    `ret != IIO_IOCTL_UNHANDLED` to continue looping;
-    everything else is just return/break
-- patch 'iio: core: use new common ioctl() mechanism'
-  - the comment for 'indio_dev->info' NULL check is being moved here to
-    highlight why the null-check is being removed; or where it's being
-    moved
+For now it's a single regression in the PCIe driver and it's actually
+not a regression, but a PCIe driver bug that needs to be fixed. The I2C
+part should be okay.
 
-Changelog v4 -> v5:
-- dropped patch 'iio: Use an early return in iio_device_alloc to simplify code.'
-  is applied upstream
-
-Changelog v3 -> v4:
-- added patch [1] 'iio: Use an early return in iio_device_alloc to simplify code.'
-  it's main purpose is so that this patch applies:
-     [2]'iio: core: add simple centralized mechanism for ioctl() handlers'
-  depending on the final version of patch [1], patch [2] needs some
-  minor fixup
-- added patch 'iio: core,buffer: wrap iio_buffer_put() call into iio_buffers_put()'
-- patch 'iio: core: register buffer fileops only if buffer present'
-  is now: 'iio: core: register chardev only if needed'
-- dropped 'iio: buffer: move sysfs alloc/free in industrialio-buffer.c'
-  it's likely we won't be doing this patch anymore
-- patches:
-    'iio: buffer: move iio buffer chrdev in industrialio-buffer.c'
-    'iio: event: move event-only chardev in industrialio-event.c'
-  have been merged into 'iio: buffer,event: duplicate chardev creation for buffers & events'
-  since now, the logic is a bit different, and 'indio_dev->chrdev' is
-  now a reference to either the buffer's chrdev & or the events-only
-  chrdev
-- added simple mechanism to register ioctl() handlers for IIO device
-  which is currently used only by events mechanism
-
-Changelog v2 -> v3:
-* removed double init in
-  'iio: event: move event-only chardev in industrialio-event.c'
-
-Changelog v1 -> v2:
-* re-reviewed some exit-paths and cleanup some potential leaks on those
-  exit paths:
-  - for 'iio: buffer: move iio buffer chrdev in industrialio-buffer.c'
-    add iio_device_buffers_put() helper and calling iio_buffers_uninit()
-    on device un-regsiter
-  - for 'move sysfs alloc/free in industrialio-buffer.c'
-    call 'iio_buffer_free_sysfs_and_mask()' on exit path if
-    cdev_device_add() fails
-  - for 'move event-only chardev in industrialio-event.c'
-    check if event_interface is NULL in
-    iio_device_unregister_event_chrdev()
-
-Alexandru Ardelean (6):
-  iio: buffer: add back-ref from iio_buffer to iio_dev
-  iio: core,buffer: wrap iio_buffer_put() call into iio_buffers_put()
-  iio: core: register chardev only if needed
-  iio: buffer,event: duplicate chardev creation for buffers & events
-  iio: core: add simple centralized mechanism for ioctl() handlers
-  iio: core: use new common ioctl() mechanism
-
- drivers/iio/iio_core.h            |  29 +++++---
- drivers/iio/industrialio-buffer.c | 102 ++++++++++++++++++++++++--
- drivers/iio/industrialio-core.c   | 116 +++++++++++++-----------------
- drivers/iio/industrialio-event.c  | 100 +++++++++++++++++++++++++-
- include/linux/iio/buffer_impl.h   |  10 +++
- include/linux/iio/iio.h           |   8 +--
- 6 files changed, 276 insertions(+), 89 deletions(-)
-
--- 
-2.17.1
-
+By reverting the I2C patch, we're back to the PCIe bug being papered
+over and I don't like this. Let's just fix the PCIe driver and the
+problem is gone.. it needs to be fixed anyways.
