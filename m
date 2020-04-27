@@ -2,118 +2,108 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B4EC81857
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597FCC82C08
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 639BE20775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:40:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588027253;
-	bh=CC6rMEFyGSKGcmYNdgrkgIArdM9m2XSVKnBpMMN2Afc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=XD+CMLMtrVJuWTXcTbtX82W0QAKsAUyC+tDFThKo7EDpwhItxfv8B1evyJWSG5eEP
-	 AMb3th72WHEQ46f3i3pV0qTHks7Hyn77R/vSAEV+DkR/YpAwBNmeO7e9PSYx63Vy9Z
-	 OuTZRZo9rfN1bVVLhUN3EVWadSBTxWTnGjm/RXTU=
+	by mail.kernel.org (Postfix) with ESMTP id 3FF4620661
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:46:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgD0Wkw (ORCPT
+        id S1726405AbgD0Wqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 18:40:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34772 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 18:46:53 -0400
+Received: from mga12.intel.com ([192.55.52.136]:40986 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726262AbgD0Wkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 18:40:52 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D8742075E;
-        Mon, 27 Apr 2020 22:40:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588027251;
-        bh=CC6rMEFyGSKGcmYNdgrkgIArdM9m2XSVKnBpMMN2Afc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=M1Bzf7imQ9+pFeCE+KA+cbdSB5d1Q5QGQB9MnKaltdtd5VWtUvFW7fQAnmE0URwl5
-         3BA6ohXMoMglNl9UZcTo0fBye8BSMjujqHnJjVYOuU0KjCzBVzKwaD+JYsXxpLWgrr
-         AEvVdCbCW82EWkeE0LLaMEaXsLBh2Bd66+0Ooopg=
-Date:   Mon, 27 Apr 2020 15:40:50 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 2/7] signal: factor copy_siginfo_to_external32 from
- copy_siginfo_to_user32
-Message-Id: <20200427154050.e431ad7fb228610cc6b95973@linux-foundation.org>
-In-Reply-To: <20200426074039.GA31501@lst.de>
-References: <20200421154204.252921-1-hch@lst.de>
-        <20200421154204.252921-3-hch@lst.de>
-        <20200425214724.a9a00c76edceff7296df7874@linux-foundation.org>
-        <20200426074039.GA31501@lst.de>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726403AbgD0Wqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 18:46:48 -0400
+IronPort-SDR: e7pQAc9MveTlcpyNPNaXJGOOptyMIFT/B0Ep3wJe3ZWwu8XHRwYVCSsvLbSbeQKzEibRIFFEnf
+ +oskRM6UdUTw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 15:46:47 -0700
+IronPort-SDR: UHVzSlXZVdNamgJeTnygmEuXY5wBVq5RZcNSoRgPwHzzqHDm3NcyQ2wPRbh+JCVXcKjUrc6TKD
+ /A5HxJvcQb8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
+   d="scan'208";a="459025738"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
+  by fmsmga006.fm.intel.com with ESMTP; 27 Apr 2020 15:46:46 -0700
+Date:   Mon, 27 Apr 2020 15:46:46 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Fenghua Yu <fenghua.yu@intel.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH 6/7] x86/traps: Fix up invalid PASID
+Message-ID: <20200427224646.GA103955@otc-nc-03>
+References: <1585596788-193989-1-git-send-email-fenghua.yu@intel.com>
+ <1585596788-193989-7-git-send-email-fenghua.yu@intel.com>
+ <87mu6ys20d.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87mu6ys20d.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 26 Apr 2020 09:40:39 +0200 Christoph Hellwig <hch@lst.de> wrote:
+Hi Thomas
 
-> On Sat, Apr 25, 2020 at 09:47:24PM -0700, Andrew Morton wrote:
-> > I looked at fixing it but surely this sort of thing:
-> > 
-> > 
-> > int copy_siginfo_to_user32(struct compat_siginfo __user *to,
-> > 			   const struct kernel_siginfo *from)
-> > #if defined(CONFIG_X86_X32_ABI) || defined(CONFIG_IA32_EMULATION)
-> > {
-> > 	return __copy_siginfo_to_user32(to, from, in_x32_syscall());
-> > }
-> > int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
-> > 			     const struct kernel_siginfo *from, bool x32_ABI)
-> > #endif
-> > {
-> > 	...
-> > 
-> > 
-> > is too ugly to live?
+On Sun, Apr 26, 2020 at 05:25:06PM +0200, Thomas Gleixner wrote:
+> Fenghua Yu <fenghua.yu@intel.com> writes:
+> > A #GP fault is generated when ENQCMD instruction is executed without
+> > a valid PASID value programmed in.
 > 
-> I fixed it up in my earlier versions, but Eric insisted to keep it,
-> which is why I switched to his version given that he is the defacto
-> signal.c maintainer.
+> Programmed in what?
 > 
-> Here is what I would have preferred:
+> > The #GP fault handler will initialize the current thread's PASID MSR.
+> >
+> > The following heuristic is used to avoid decoding the user instructions
+> > to determine the precise reason for the #GP fault:
+> > 1) If the mm for the process has not been allocated a PASID, this #GP
+> >    cannot be fixed.
+> > 2) If the PASID MSR is already initialized, then the #GP was for some
+> >    other reason
+> > 3) Try initializing the PASID MSR and returning. If the #GP was from
+> >    an ENQCMD this will fix it. If not, the #GP fault will be repeated
+> >    and we will hit case "2".
+> >
+> > Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 > 
-> https://www.spinics.net/lists/kernel/msg3473847.html
-> https://www.spinics.net/lists/kernel/msg3473840.html
-> https://www.spinics.net/lists/kernel/msg3473843.html
+> Just for the record I also suggested to have a proper errorcode in the
+> #GP for ENQCMD and I surely did not suggest to avoid decoding the user
+> instructions.
 
-OK, but that doesn't necessitate the above monstrosity?  How about
+We certainly discussed the possiblity of adding an error code to 
+identiy #GP due to ENQCMD with our HW architects. 
 
-static int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
-			     const struct kernel_siginfo *from, bool x32_ABI)
-{
-	struct compat_siginfo new;
-	copy_siginfo_to_external32(&new, from);
-	...
-}
+There are only a few cases that have an error code, like move to segment
+with an invalid value for instance. There were a few but i don't
+recall that entire list. 
 
-int copy_siginfo_to_user32(struct compat_siginfo __user *to,
-			   const struct kernel_siginfo *from)
-{
-#if defined(CONFIG_X86_X32_ABI) || defined(CONFIG_IA32_EMULATION)
-	return __copy_siginfo_to_user32(to, from, in_x32_syscall());
-#else
-	return __copy_siginfo_to_user32(to, from, 0);
-#endif
-}
+Since the error code is 0 in most places, there isn't plumbing in hw to return
+this value in all cases. It appeared that due to some uarch reasons it
+wasn't as simple as it appears to /me sw kinds :-)
 
-Or something like that - I didn't try very hard.  We know how to do
-this stuff, and surely this thing isn't how!
+So after some internal discussion we decided to take the current
+approach. Its possible that if the #GP was due to some other reason
+we might #GP another time. Since this wasn't perf or speed path we took
+this lazy approach. 
+
+We will keep tabs with HW folks for future consideration. 
