@@ -2,114 +2,84 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C94CAC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC37C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9CDA20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0B6C20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:58:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgD0R4s (ORCPT
+        id S1726244AbgD0R6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 13:56:48 -0400
-Received: from mga04.intel.com ([192.55.52.120]:18653 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726229AbgD0R4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 13:56:48 -0400
-IronPort-SDR: 3dXglAy1oN7zYNVmuX34tO7qIovq1LqlmDunV/9d5KkpqZOqrVn2jIGpULvbkzQeJn+W0+gGMU
- mwnKCMi2wKbw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 10:56:48 -0700
-IronPort-SDR: VMqz5JP/v6+Xipo7yk79MoKh7DT+hIdwj2pgAYG7iyo+P5HvnpbpRlhEEdEg6YoQGkuTrlnCvh
- VX6WGnLDvddw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
-   d="scan'208";a="248940043"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga008.fm.intel.com with ESMTP; 27 Apr 2020 10:56:47 -0700
-Date:   Mon, 27 Apr 2020 10:56:47 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com
-Subject: Re: [PATCH v11 3/9] KVM: VMX: Set host/guest CET states for
- vmexit/vmentry
-Message-ID: <20200427175647.GK14870@linux.intel.com>
-References: <20200326081847.5870-1-weijiang.yang@intel.com>
- <20200326081847.5870-4-weijiang.yang@intel.com>
- <20200423171741.GH17824@linux.intel.com>
- <20200424143510.GH24039@local-michael-cet-test>
- <20200424144941.GC30013@linux.intel.com>
- <20200425092021.GB26221@local-michael-cet-test>
- <20200427170426.GH14870@linux.intel.com>
+        Mon, 27 Apr 2020 13:58:07 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:59629 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbgD0R6H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 13:58:07 -0400
+X-Originating-IP: 42.111.30.142
+Received: from localhost (unknown [42.111.30.142])
+        (Authenticated sender: me@yadavpratyush.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 6DE7B1C0005;
+        Mon, 27 Apr 2020 17:57:52 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 23:25:36 +0530
+From:   Pratyush Yadav <me@yadavpratyush.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Mason Yang <masonccyang@mxic.com.tw>, vigneshr@ti.com,
+        tudor.ambarus@microchip.com, juliensu@mxic.com.tw, richard@nod.at,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        broonie@kernel.org, linux-mtd@lists.infradead.org,
+        miquel.raynal@bootlin.com, Pratyush Yadav <p.yadav@ti.com>
+Subject: Re: [PATCH v2 0/5] mtd: spi-nor: Add support for Octal 8D-8D-8D mode
+Message-ID: <20200427175536.2mmei2fy6f7bg6jm@yadavpratyush.com>
+References: <1587451187-6889-1-git-send-email-masonccyang@mxic.com.tw>
+ <20200421092328.129308f6@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200427170426.GH14870@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200421092328.129308f6@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 10:04:26AM -0700, Sean Christopherson wrote:
-> On Sat, Apr 25, 2020 at 05:20:21PM +0800, Yang Weijiang wrote:
-> > On Fri, Apr 24, 2020 at 07:49:41AM -0700, Sean Christopherson wrote:
-> > > On Fri, Apr 24, 2020 at 10:35:10PM +0800, Yang Weijiang wrote:
-> > > > On Thu, Apr 23, 2020 at 10:17:41AM -0700, Sean Christopherson wrote:
-> > > > > On Thu, Mar 26, 2020 at 04:18:40PM +0800, Yang Weijiang wrote:
-> > > > > > @@ -7140,8 +7175,23 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
-> > > > > >  	}
-> > > > > >  
-> > > > > >  	if (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
-> > > > > > -	    guest_cpuid_has(vcpu, X86_FEATURE_IBT))
-> > > > > > +	    guest_cpuid_has(vcpu, X86_FEATURE_IBT)) {
-> > > > > >  		vmx_update_intercept_for_cet_msr(vcpu);
-> > > > > > +
-> > > > > > +		if (cpu_has_cet_guest_load_ctrl() && is_cet_supported(vcpu))
-> > > > > > +			vm_entry_controls_setbit(to_vmx(vcpu),
-> > > > > > +						 VM_ENTRY_LOAD_GUEST_CET_STATE);
-> > > > > > +		else
-> > > > > > +			vm_entry_controls_clearbit(to_vmx(vcpu),
-> > > > > > +						   VM_ENTRY_LOAD_GUEST_CET_STATE);
-> > > > > > +
-> > > > > > +		if (cpu_has_cet_host_load_ctrl() && is_cet_supported(vcpu))
-> > > > > > +			vm_exit_controls_setbit(to_vmx(vcpu),
-> > > > > > +						VM_EXIT_LOAD_HOST_CET_STATE);
-> > > > > > +		else
-> > > > > > +			vm_exit_controls_clearbit(to_vmx(vcpu),
-> > > > > > +						  VM_EXIT_LOAD_HOST_CET_STATE);
-> > > > > 
-> > > > > As above, I think this can be done in vmx_set_cr4().
-> > > > >
-> > > > Hmm, it's in vmx_set_cr4() in early versions, OK, will move them back.
-> > > 
-> > > Did I advise you to move them out of vmx_set_cr4()?  It's entirely possible
-> > > I forgot some detail since the last time I reviewed this series.
-> > Things are always changing, I'm willing to change any part of the patch
-> > before it's landed :-).
+On 21/04/20 09:23AM, Boris Brezillon wrote:
+> +Pratyush who's working on a similar patchet [1].
 > 
-> I'm worried that there was a reason for requesting the logic to be moved
-> out vmx_set_cr4() that I've since forgotten.  I'll see if I can dredge up
-> the old mail.
+> Hello Mason,
+> 
+> On Tue, 21 Apr 2020 14:39:42 +0800
+> Mason Yang <masonccyang@mxic.com.tw> wrote:
+> 
+> > Hello,
+> > 
+> > This is repost of patchset from Boris Brezillon's
+> > [RFC,00/18] mtd: spi-nor: Proposal for 8-8-8 mode support [1].
+> 
+> I only quickly went through the patches you sent and saying it's a
+> repost of the RFC is a bit of a lie. You completely ignored the state
+> tracking I was trying to do to avoid leaving the flash in 8D mode when
+> suspending/resetting the board, and I think that part is crucial. If I
+> remember correctly, we already had this discussion so I must say I'm a
+> bit disappointed.
+> 
+> Can you sync with Pratyush? I think his series [1] is better in that it
+> tries to restore the flash in single-SPI mode before suspend (it's
+> missing the shutdown case, but that can be easily added I think). Of
+> course that'd be even better to have proper state tracking at the SPI
+> NOR level.
 
-Aha.  v1-v7 had this in cr4.  In v7, you stated that you would move the
-toggling to VM-Enter, and in v8 you did just that[2].  In v9 I questioned
-why the bits were being toggled in vmx_vcpu_run() and advised moving the
-code to vmx_cpuid_update()[3], obviously forgetting that earlier versions
-did the toggling in vmx_set_cr4().
+Hi Mason,
 
-AFAICT, I was only reacting to the immediate patch when I advised moving
-the code to vmx_cpuid_update(), i.e. the recommendation to move the code
-to vmx_set_cr4() doesn't contradict any previous feedback and thus doesn't
-reintroduce a known bug.
+I posted a re-roll of my series here [0]. Could you please base your 
+changes on top of it? Let me know if the series is missing something you 
+need.
+ 
+[0]  https://lore.kernel.org/linux-mtd/20200424184410.8578-1-p.yadav@ti.com/
 
-[1] https://patchwork.kernel.org/patch/11163639/#22931561
-[2] https://patchwork.kernel.org/patch/11222763/
-[3] https://patchwork.kernel.org/patch/11310823/
+-- 
+Regards,
+Pratyush Yadav
