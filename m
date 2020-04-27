@@ -2,95 +2,76 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E29C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34871C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6658A214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F85214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgD0TAh (ORCPT
+        id S1726793AbgD0TBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 15:00:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48684 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726688AbgD0TAh (ORCPT
+        Mon, 27 Apr 2020 15:01:07 -0400
+Received: from smtprelay0077.hostedemail.com ([216.40.44.77]:57564 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726680AbgD0TBH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 15:00:37 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E71F1C0610D5;
-        Mon, 27 Apr 2020 12:00:36 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jT8z9-0004q5-0k; Mon, 27 Apr 2020 21:00:07 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id E95AB100606; Mon, 27 Apr 2020 21:00:05 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 06/16] irqchip: add sl28cpld interrupt controller support
-In-Reply-To: <87f141bce0a4fda04b550647306be296@walle.cc>
-References: <20200423174543.17161-1-michael@walle.cc> <20200423174543.17161-7-michael@walle.cc> <87pnbtqhr1.fsf@nanos.tec.linutronix.de> <87f141bce0a4fda04b550647306be296@walle.cc>
-Date:   Mon, 27 Apr 2020 21:00:05 +0200
-Message-ID: <87sggopxe2.fsf@nanos.tec.linutronix.de>
+        Mon, 27 Apr 2020 15:01:07 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id D83A6100E7B48;
+        Mon, 27 Apr 2020 19:01:05 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: coat03_96cc627aaf08
+X-Filterd-Recvd-Size: 1807
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 27 Apr 2020 19:01:04 +0000 (UTC)
+Message-ID: <d036dbad02241fdeb0a6400896f73ff11e98e53b.camel@perches.com>
+Subject: Re: [PATCH 2/3] mtd: lpddr: Replace printk with pr_notice
+From:   Joe Perches <joe@perches.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org
+Date:   Mon, 27 Apr 2020 12:01:03 -0700
+In-Reply-To: <c9684a22b661fdeff9efcd5b18be01653911fc89.1588013366.git.gustavo@embeddedor.com>
+References: <cover.1588013366.git.gustavo@embeddedor.com>
+         <c9684a22b661fdeff9efcd5b18be01653911fc89.1588013366.git.gustavo@embeddedor.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael,
+On Mon, 2020-04-27 at 14:03 -0500, Gustavo A. R. Silva wrote:
+> pr_notice is preferred over printk.
 
-Michael Walle <michael@walle.cc> writes:
-> Am 2020-04-27 13:40, schrieb Thomas Gleixner:
->>> +
->>> +	ret = devm_regmap_add_irq_chip(&pdev->dev, irqchip->regmap, irq,
->>> +				       IRQF_SHARED | IRQF_ONESHOT, 0,
->> 
->> What's the point of IRQF_SHARED | IRQF_ONESHOT here?
->
-> IRQF_SHARED because this interrupt is shared with all the blocks
-> which can generate interrupts, i.e. the GPIO contollers.
+So is coalescing formats
 
-Why are people still designing hardware with shared interrupts? Shared
-interrupts are broken by design and that's well known for decades.
+? diff --git a/include/linux/mtd/pfow.h b/include/linux/mtd/pfow.h
+[]
+> @@ -127,31 +127,31 @@ static inline void print_drs_error(unsigned dsr)
+>  	int prog_status = (dsr & DSR_RPS) >> 8;
+>  
+>  	if (!(dsr & DSR_AVAILABLE))
+> -		printk(KERN_NOTICE"DSR.15: (0) Device not Available\n");
+> +		pr_notice("DSR.15: (0) Device not Available\n");
+>  	if ((prog_status & 0x03) == 0x03)
+> -		printk(KERN_NOTICE"DSR.9,8: (11) Attempt to program invalid "
+> +		pr_notice("DSR.9,8: (11) Attempt to program invalid "
+>  						"half with 41h command\n");
 
-> IRQF_ONESHOT, because its is a threaded interrupt with no primary
-> handler. But I just noticed, that regmap-irq will also set the
-> IRQF_ONESHOT. But that the commit 09cadf6e088b ("regmap-irq:
-> set IRQF_ONESHOT flag to ensure IRQ request") reads like it is
-> just there to be sure. So I don't know if it should also be set
-> here.
+		pr_notice("DSR.9,8: (11) Attempt to program invalid half with 41h command\n");
 
-Ok. Wasn't aware of that magic threaded interrupt connection.
+etc...
 
-Thanks,
 
-        tglx
