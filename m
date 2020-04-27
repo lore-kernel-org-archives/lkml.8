@@ -2,223 +2,116 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C32C82D80
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79840C81857
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00EDB2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 244272072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:04:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="sKaTKzVJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N2ph7yhO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbgD0XDP (ORCPT
+        id S1726360AbgD0XD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 19:03:15 -0400
-Received: from mail-40134.protonmail.ch ([185.70.40.134]:57009 "EHLO
-        mail-40134.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726285AbgD0XDO (ORCPT
+        Mon, 27 Apr 2020 19:03:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726261AbgD0XD6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 19:03:14 -0400
-Date:   Mon, 27 Apr 2020 23:03:08 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1588028590;
-        bh=/8jeaAYNHBTw1/iBeKysJVGgKhFBokWGnxJzXLaSc84=;
-        h=Date:To:From:Cc:Reply-To:Subject:From;
-        b=sKaTKzVJsVkTcPPtXdUFMFCSiWxQEa6pWHGAgKF2d10xoEVSHBlXVQfJRVIgCF5d1
-         HYMJsl5C/5aEwV6R6c3WHdc7uLLPxDfLBO/6L02EqP8rRFewHk5/YnSiUlab+fOGw0
-         p4WnSQaAL8demSwOS2OzHJgPV2ftn8jAW1yG6PmU=
-To:     linux-media@vger.kernel.org
-From:   =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
-        <nfraprado@protonmail.com>
-Cc:     Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
-Reply-To: =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
-          <nfraprado@protonmail.com>
-Subject: [PATCH v3 3/3] media: vimc: deb: Add support for {RGB,BGR,GBR}888 bus formats on source pad
-Message-ID: <20200427230234.3114565-4-nfraprado@protonmail.com>
+        Mon, 27 Apr 2020 19:03:58 -0400
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE467C0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 16:03:58 -0700 (PDT)
+Received: by mail-pg1-x52c.google.com with SMTP id h69so9378959pgc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 16:03:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=cnYx5FSyU75ZOrIsU+CTkq5jI4uN9HVRGnd3oZ84iCs=;
+        b=N2ph7yhOcyT0jIuugk3FhGAr8dkhMlazcj0IcIqtbB/vQS05zdvYmIKfs5R5oBEmZN
+         yKGTQvvlffThLT7uUPkIbdk5QkAUYnopzMKU7hITi7y4DTLDK927NfktJyTcL2bZ7EiM
+         0C4gWZwLh83ZpDugolQL2j+XalPVSMXgq4DKikeb6kj5mw+mnOEvCKoVHoS94MvKo+w1
+         +W76ulTNeWs2E7JUwA6qH7PFfGs5hvlPkp1vV9U4oX1wdghUX3RbStUt2mQpdnxvs6+Y
+         eMf5GJxQJkG878JrbCID6FnxN8kLdxF3rslnDr3tTVABmgz7Rt54lHy9wzqfMwGgUCTM
+         8Vzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=cnYx5FSyU75ZOrIsU+CTkq5jI4uN9HVRGnd3oZ84iCs=;
+        b=G+wbL1Q+L+reaxOtmyaFnQpOeyP7eKgFBKBIrHr3JSZsPmlnTDsrid5qEpE6Gq6YbE
+         Inxdv4+bhZu4ZYST9trIbzvA4jFpDV7w6RGPz0AYm5v7rlV/EgyV1EZvE8BMPpZmT0nL
+         inZWDpaqhCa0i+YQnyQWsv6Tijx6I3GSaQ1hxSiJHRPr2XotEYeqsZuRdBa1hHnNJwLk
+         zhqUT9L7cm3lNAvjfj7lEy0nTQY0PyQ37mp8WYAFuzS1ZRkWCMvd5mxQ5DtgGP56mGYs
+         q6x+++5yjINfBC3uAmAdBu45WCz36dVAgpqfeS18xUmlI74q+UtD2E3rBCTmwkKRFrMp
+         Lsxg==
+X-Gm-Message-State: AGi0PubXs1WwqfopHhCvAshBSz+1gTedndWo4hsd+WbEXfZ3BBVW7rd1
+        0vhmgjQ/gCHK8T/a+R1tbI0P/wZAXMY=
+X-Google-Smtp-Source: APiQypJjBe4sy6hyaOZsrisOjWXeJmUOriHMUalc09RDGkLyoECKliWmzPHcAzDKIM4EnSRQ2vSamA==
+X-Received: by 2002:a63:7252:: with SMTP id c18mr865010pgn.49.1588028637937;
+        Mon, 27 Apr 2020 16:03:57 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id c11sm11636534pgl.53.2020.04.27.16.03.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 16:03:57 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 16:03:56 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+cc:     Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [patch] mm, oom: stop reclaiming if GFP_ATOMIC will start failing
+ soon
+In-Reply-To: <20200427133051.b71f961c1bc53a8e72c4f003@linux-foundation.org>
+Message-ID: <alpine.DEB.2.22.394.2004271558540.248401@chino.kir.corp.google.com>
+References: <alpine.DEB.2.22.394.2004241347310.70176@chino.kir.corp.google.com> <20200425172706.26b5011293e8dc77b1dccaf3@linux-foundation.org> <alpine.DEB.2.22.394.2004261959310.80211@chino.kir.corp.google.com>
+ <20200427133051.b71f961c1bc53a8e72c4f003@linux-foundation.org>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for RGB888_*, BGR888_* and GBR888_* media bus formats on
-the source pad of debayer subdevices.
+On Mon, 27 Apr 2020, Andrew Morton wrote:
 
-Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
-Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@protonmail.com>
----
+> > No - that would actually make the problem worse.
+> > 
+> > Today, per-zone min watermarks dictate when user allocations will loop or 
+> > oom kill.  should_reclaim_retry() currently loops if reclaim has succeeded 
+> > in the past few tries and we should be able to allocate if we are able to 
+> > reclaim the amount of memory that we think we can.
+> > 
+> > The issue is that this supposes that looping to reclaim more will result 
+> > in more free memory.  That doesn't always happen if there are concurrent 
+> > memory allocators.
+> > 
+> > GFP_ATOMIC allocators can access below these per-zone watermarks.  So the 
+> > issue is that per-zone free pages stays between ALLOC_HIGH watermarks 
+> > (the watermark that GFP_ATOMIC allocators can allocate to) and min 
+> > watermarks.  We never reclaim enough memory to get back to min watermarks 
+> > because reclaim cannot keep up with the amount of GFP_ATOMIC allocations.
+> 
+> But there should be an upper bound upon the total amount of in-flight
+> GFP_ATOMIC memory at any point in time?  These aren't like pagecache
+> which will take more if we give it more.  Setting the various
+> thresholds appropriately should ensure that blockable allocations don't
+> get their memory stolen by GPP_ATOMIC allocations?
+> 
 
-Changes in v3:
-- Rename vimc_deb_is_src_code_invalid() to vimc_deb_src_code_is_valid()
-- Change vimc_deb_src_code_is_valid() to return bool
-
-Changes in v2:
-- Change commit message to reflect v2 changes
-- Rename variables
-- Fix array formatting
-- Add vimc_deb_is_src_code_valid function
-- Add other BGR888 and RGB888 formats to debayer source pad supported
-  formats
-
- .../media/test-drivers/vimc/vimc-debayer.c    | 61 +++++++++++++++----
- 1 file changed, 49 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/media/test-drivers/vimc/vimc-debayer.c b/drivers/media=
-/test-drivers/vimc/vimc-debayer.c
-index d10aee9f84c4..7e87706d417e 100644
---- a/drivers/media/test-drivers/vimc/vimc-debayer.c
-+++ b/drivers/media/test-drivers/vimc/vimc-debayer.c
-@@ -51,6 +51,19 @@ static const struct v4l2_mbus_framefmt sink_fmt_default =
-=3D {
- =09.colorspace =3D V4L2_COLORSPACE_DEFAULT,
- };
-=20
-+static const u32 vimc_deb_src_mbus_codes[] =3D {
-+=09MEDIA_BUS_FMT_GBR888_1X24,
-+=09MEDIA_BUS_FMT_BGR888_1X24,
-+=09MEDIA_BUS_FMT_BGR888_3X8,
-+=09MEDIA_BUS_FMT_RGB888_1X24,
-+=09MEDIA_BUS_FMT_RGB888_2X12_BE,
-+=09MEDIA_BUS_FMT_RGB888_2X12_LE,
-+=09MEDIA_BUS_FMT_RGB888_3X8,
-+=09MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-+=09MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
-+=09MEDIA_BUS_FMT_RGB888_1X32_PADHI,
-+};
-+
- static const struct vimc_deb_pix_map vimc_deb_pix_map_list[] =3D {
- =09{
- =09=09.code =3D MEDIA_BUS_FMT_SBGGR8_1X8,
-@@ -125,6 +138,17 @@ static const struct vimc_deb_pix_map *vimc_deb_pix_map=
-_by_code(u32 code)
- =09return NULL;
- }
-=20
-+static bool vimc_deb_src_code_is_valid(u32 code)
-+{
-+=09unsigned int i;
-+
-+=09for (i =3D 0; i < ARRAY_SIZE(vimc_deb_src_mbus_codes); i++)
-+=09=09if (vimc_deb_src_mbus_codes[i] =3D=3D code)
-+=09=09=09return true;
-+
-+=09return false;
-+}
-+
- static int vimc_deb_init_cfg(struct v4l2_subdev *sd,
- =09=09=09     struct v4l2_subdev_pad_config *cfg)
- {
-@@ -148,14 +172,11 @@ static int vimc_deb_enum_mbus_code(struct v4l2_subdev=
- *sd,
- =09=09=09=09   struct v4l2_subdev_pad_config *cfg,
- =09=09=09=09   struct v4l2_subdev_mbus_code_enum *code)
- {
--=09/* We only support one format for source pads */
- =09if (VIMC_IS_SRC(code->pad)) {
--=09=09struct vimc_deb_device *vdeb =3D v4l2_get_subdevdata(sd);
--
--=09=09if (code->index)
-+=09=09if (code->index >=3D ARRAY_SIZE(vimc_deb_src_mbus_codes))
- =09=09=09return -EINVAL;
-=20
--=09=09code->code =3D vdeb->src_code;
-+=09=09code->code =3D vimc_deb_src_mbus_codes[code->index];
- =09} else {
- =09=09if (code->index >=3D ARRAY_SIZE(vimc_deb_pix_map_list))
- =09=09=09return -EINVAL;
-@@ -170,8 +191,6 @@ static int vimc_deb_enum_frame_size(struct v4l2_subdev =
-*sd,
- =09=09=09=09    struct v4l2_subdev_pad_config *cfg,
- =09=09=09=09    struct v4l2_subdev_frame_size_enum *fse)
- {
--=09struct vimc_deb_device *vdeb =3D v4l2_get_subdevdata(sd);
--
- =09if (fse->index)
- =09=09return -EINVAL;
-=20
-@@ -181,7 +200,7 @@ static int vimc_deb_enum_frame_size(struct v4l2_subdev =
-*sd,
-=20
- =09=09if (!vpix)
- =09=09=09return -EINVAL;
--=09} else if (fse->code !=3D vdeb->src_code) {
-+=09} else if (!vimc_deb_src_code_is_valid(fse->code)) {
- =09=09return -EINVAL;
- =09}
-=20
-@@ -237,6 +256,7 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
- {
- =09struct vimc_deb_device *vdeb =3D v4l2_get_subdevdata(sd);
- =09struct v4l2_mbus_framefmt *sink_fmt;
-+=09u32 *src_code;
-=20
- =09if (fmt->which =3D=3D V4L2_SUBDEV_FORMAT_ACTIVE) {
- =09=09/* Do not change the format while stream is on */
-@@ -244,8 +264,10 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
- =09=09=09return -EBUSY;
-=20
- =09=09sink_fmt =3D &vdeb->sink_fmt;
-+=09=09src_code =3D &vdeb->src_code;
- =09} else {
- =09=09sink_fmt =3D v4l2_subdev_get_try_format(sd, cfg, 0);
-+=09=09src_code =3D &v4l2_subdev_get_try_format(sd, cfg, 1)->code;
- =09}
-=20
- =09/*
-@@ -253,9 +275,14 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
- =09 * it is propagated from the sink
- =09 */
- =09if (VIMC_IS_SRC(fmt->pad)) {
-+=09=09u32 code =3D fmt->format.code;
-+
- =09=09fmt->format =3D *sink_fmt;
--=09=09/* TODO: Add support for other formats */
--=09=09fmt->format.code =3D vdeb->src_code;
-+
-+=09=09if (vimc_deb_src_code_is_valid(code))
-+=09=09=09*src_code =3D code;
-+
-+=09=09fmt->format.code =3D *src_code;
- =09} else {
- =09=09/* Set the new format in the sink pad */
- =09=09vimc_deb_adjust_sink_fmt(&fmt->format);
-@@ -291,11 +318,21 @@ static void vimc_deb_set_rgb_mbus_fmt_rgb888_1x24(str=
-uct vimc_deb_device *vdeb,
- =09=09=09=09=09=09  unsigned int col,
- =09=09=09=09=09=09  unsigned int rgb[3])
- {
-+=09const struct vimc_pix_map *vpix;
- =09unsigned int i, index;
-=20
-+=09vpix =3D vimc_pix_map_by_code(vdeb->src_code);
- =09index =3D VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
--=09for (i =3D 0; i < 3; i++)
--=09=09vdeb->src_frame[index + i] =3D rgb[i];
-+=09for (i =3D 0; i < 3; i++) {
-+=09=09switch (vpix->pixelformat) {
-+=09=09case V4L2_PIX_FMT_RGB24:
-+=09=09=09vdeb->src_frame[index + i] =3D rgb[i];
-+=09=09=09break;
-+=09=09case V4L2_PIX_FMT_BGR24:
-+=09=09=09vdeb->src_frame[index + i] =3D rgb[2-i];
-+=09=09=09break;
-+=09=09}
-+=09}
- }
-=20
- static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
---=20
-2.26.1
-
-
+Certainly if that upper bound is defined and enforced somewhere we would 
+not have run into this issue causing all userspace to become completely 
+unresponsive.  Do you have links to patches that proposed enforcing this 
+upper bound?  It seems like it would have to be generic to 
+__alloc_pages_slowpath() because otherwise multiple different GFP_ATOMIC 
+allocators, all from different sources, couldn't orchestrate their memory 
+allocations amongst themselves to enforce this upper bound.  They would 
+need to work together to ensure they don't conspire to cause this 
+depletion.  I'd be happy to take a look if there are links to other 
+approaches.
