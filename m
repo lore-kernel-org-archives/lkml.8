@@ -2,139 +2,103 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EB3C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 02:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5C3C55194
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 02:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E82B8206B9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 02:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA5122080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 02:08:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d8cQhN9h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bhyxtfon"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbgD0CDF (ORCPT
+        id S1726458AbgD0CIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 22:03:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51555 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726327AbgD0CDE (ORCPT
+        Sun, 26 Apr 2020 22:08:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726084AbgD0CIf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 22:03:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587952982;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=v8IFSlr9wk6PnyUzpFzR48ViDPJ0s7W1u3H0V53GluQ=;
-        b=d8cQhN9hOKBk09jvHvC9RP4DkL5y6/+9I16xp2ph0JPNmTisFiWdX9sfG1lvpXFJlwVSEA
-        k6dr2UOONTyIUJoZAIUKZbI8u8wZa+J2d06lsQqcWq0FYSyNgpezFmQTG9igaxWTInEUKv
-        e8nTvpR/vW2a+2OKsfI68hj7M5NEppA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-448-N7-FcSTOP6ivGEwrnC56Ig-1; Sun, 26 Apr 2020 22:02:28 -0400
-X-MC-Unique: N7-FcSTOP6ivGEwrnC56Ig-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0417C835B40;
-        Mon, 27 Apr 2020 02:02:27 +0000 (UTC)
-Received: from llong.com (ovpn-112-228.rdu2.redhat.com [10.10.112.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0D351610B0;
-        Mon, 27 Apr 2020 02:02:21 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Changbin Du <changbin.du@gmail.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH] mm/slub: Fix incorrect checkings of s->offset
-Date:   Sun, 26 Apr 2020 22:02:12 -0400
-Message-Id: <20200427020212.5222-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Sun, 26 Apr 2020 22:08:35 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E52BFC061A0F;
+        Sun, 26 Apr 2020 19:08:34 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id h69so7969434pgc.8;
+        Sun, 26 Apr 2020 19:08:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=YqeGjbRkHRifTCZxJaGXA8PQirJ4wk+R8m4oliZtO60=;
+        b=bhyxtfonS87CdrkvwBFz7qAvJHCPO6Rn/C3NENzutjkE0TyO2ONhgDJwj42DQ+0OZ2
+         9iVUNYDH+SOjmdpAixY+DhgpBefl4GLAU4fwJfLKBzYzBKYC/9evYFL+oSYhVvO23E0/
+         figzvrO3K1W4jY0XwRQo2HDjDjlcEpbqI/+0GXhsrNqEWzz1pAZS+s+5UQwdy3DPW+gI
+         G2eUWmf+a2rh0l3BzRtGZHMlg6B3ei5Um2HMY8JIV+KVjFcD7EKEdjm/pn4q03W3gVzP
+         U7zb2o54shedAYyTIFgu5bVLdEdNxoLxSUeR5mtERNR+NGhhbS9HadKwp7zfmDKf4t8a
+         mELg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YqeGjbRkHRifTCZxJaGXA8PQirJ4wk+R8m4oliZtO60=;
+        b=cn398Vo4Jys4ax44cvsZk7MQwZWXIb7UQtGeuB3Cf1DhpzUjXI4A2B3pKfbbU0OgTO
+         kMltV4VJvQK3VrLJYexRo4qqU+lBH+7dz92iOr5hmVoLvL2uMdKTgOUg5xY1qP1Tfkg9
+         rxAy5PNqW8A0AHvDkuZBJaaJOjPaE6JPDirikure1Zsisp7OEIQBdqaUUYRRTRln1qRI
+         U3mtbxdlASGh+UbXFtSpV0FHG7lNukTUvOp7VMIepDnbOvn/JSX+hEZ6cOdNcFlcUs0J
+         dJHbsQryRdzxpJWPDBiwXNxiF5t1CGmhtY06LX83Mp+M9FfbqEbFXdBD3UOCnDLcRTHj
+         oyvw==
+X-Gm-Message-State: AGi0PuYoFqLR7s5Q0AiPm0Mzb7NWiWwWsfsHXmHv2kMeHn/CvIvMhbS4
+        ch+ZYuZp7XWPYA4Me0JFias=
+X-Google-Smtp-Source: APiQypIgoHEyUq1+TMBpUyg8ytGcXIuJu5TdZvBYUuJudAgiYk8L7e2CQv/p6vKvur6+C8wXxd9iPA==
+X-Received: by 2002:a63:1510:: with SMTP id v16mr4873757pgl.17.1587953313922;
+        Sun, 26 Apr 2020 19:08:33 -0700 (PDT)
+Received: from Ryzen-7-3700X.localdomain ([45.152.182.77])
+        by smtp.gmail.com with ESMTPSA id d29sm9179662pgm.83.2020.04.26.19.08.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Apr 2020 19:08:33 -0700 (PDT)
+Date:   Sun, 26 Apr 2020 19:08:30 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-kbuild@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        Sedat Dilek <sedat.dilek@gmail.com>
+Subject: Re: [PATCH v3 3/4] MIPS: VDSO: Use $(LD) instead of $(CC) to link
+ VDSO
+Message-ID: <20200427020830.GA260@Ryzen-7-3700X.localdomain>
+References: <20200419202128.20571-1-natechancellor@gmail.com>
+ <20200423171807.29713-1-natechancellor@gmail.com>
+ <20200423171807.29713-3-natechancellor@gmail.com>
+ <20200426162737.GA9322@alpha.franken.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200426162737.GA9322@alpha.franken.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a couple of places in the slub memory allocator, the code uses
-"s->offset" as a check to see if the free pointer is put right after the
-object. That check is no longer true with commit 3202fa62fb43 ("slub:
-relocate freelist pointer to middle of object").
+On Sun, Apr 26, 2020 at 06:27:37PM +0200, Thomas Bogendoerfer wrote:
+> On Thu, Apr 23, 2020 at 10:18:06AM -0700, Nathan Chancellor wrote:
+> > Currently, the VDSO is being linked through $(CC). This does not match
+> > how the rest of the kernel links objects, which is through the $(LD)
+> > variable.
+> 
+> this causes build errors for me when (cross) compiling a big endian target:
+> 
+> target is little endian
+> mips64-linux-gnu-ld: arch/mips/vdso/elf.o: endianness incompatible with that of the selected emulation
+> mips64-linux-gnu-ld: failed to merge target specific data of file arch/mips/vdso/elf.o
 
-As a result, echoing "1" into the validate sysfs file, e.g. of dentry,
-may cause a bunch of "Freepointer corrupt" error reports to appear with
-the system in panic afterwards.
+Thanks for the report. I will look into it tomorrow and hopefully have a
+v4 by then.
 
-To fix it, use the check "s->offset == s->inuse" instead.
-
-Fixes: 3202fa62fb43 ("slub: relocate freelist pointer to middle of object")
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- mm/slub.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
-
-diff --git a/mm/slub.c b/mm/slub.c
-index 0e736d66bb42..99952d01e7e0 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -556,10 +556,8 @@ static struct track *get_track(struct kmem_cache *s, void *object,
- {
- 	struct track *p;
- 
--	if (s->offset)
--		p = object + s->offset + sizeof(void *);
--	else
--		p = object + s->inuse;
-+	p = object + s->inuse +
-+	    ((s->offset == s->inuse) ? sizeof(void *) : 0);
- 
- 	return p + alloc;
- }
-@@ -693,10 +691,8 @@ static void print_trailer(struct kmem_cache *s, struct page *page, u8 *p)
- 		print_section(KERN_ERR, "Redzone ", p + s->object_size,
- 			s->inuse - s->object_size);
- 
--	if (s->offset)
--		off = s->offset + sizeof(void *);
--	else
--		off = s->inuse;
-+	off = s->inuse +
-+	      ((s->offset == s->inuse) ? sizeof(void *) : 0);
- 
- 	if (s->flags & SLAB_STORE_USER)
- 		off += 2 * sizeof(struct track);
-@@ -790,7 +786,7 @@ static int check_bytes_and_report(struct kmem_cache *s, struct page *page,
-  * object address
-  * 	Bytes of the object to be managed.
-  * 	If the freepointer may overlay the object then the free
-- * 	pointer is the first word of the object.
-+ *	pointer is at the middle of the object.
-  *
-  * 	Poisoning uses 0x6b (POISON_FREE) and the last byte is
-  * 	0xa5 (POISON_END)
-@@ -826,7 +822,7 @@ static int check_pad_bytes(struct kmem_cache *s, struct page *page, u8 *p)
- {
- 	unsigned long off = s->inuse;	/* The end of info */
- 
--	if (s->offset)
-+	if (s->offset == s->inuse)
- 		/* Freepointer is placed after the object. */
- 		off += sizeof(void *);
- 
-@@ -915,7 +911,7 @@ static int check_object(struct kmem_cache *s, struct page *page,
- 		check_pad_bytes(s, page, p);
- 	}
- 
--	if (!s->offset && val == SLUB_RED_ACTIVE)
-+	if ((s->offset != s->inuse) && val == SLUB_RED_ACTIVE)
- 		/*
- 		 * Object and freepointer overlap. Cannot check
- 		 * freepointer while object is allocated.
--- 
-2.18.1
-
+Cheers,
+Nathan
