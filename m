@@ -2,130 +2,107 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2C6C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4DAC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1B0206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FFA2206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:31:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/CAcjfz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dz8JzZTV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgD0Dai (ORCPT
+        id S1726541AbgD0DbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 23:30:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44578 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726340AbgD0Dai (ORCPT
+        Sun, 26 Apr 2020 23:31:17 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41696 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726374AbgD0DbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 23:30:38 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBBA6C061A0F;
-        Sun, 26 Apr 2020 20:30:36 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id o185so8061305pgo.3;
-        Sun, 26 Apr 2020 20:30:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:mime-version
-         :content-disposition;
-        bh=tqL9U//y5mnl9UT2TzE9aF40cu5r1lEwRulehFj9YQU=;
-        b=O/CAcjfzpTTmTfNtQqV6kz4m96WQBl5k7rxyj/SUvrcvLYYC7F1q7yBrdyLLJpItcA
-         EVKgnfXpdg3nl+iFuby2hAfUs+JwiVIlBV5fJXaQjFHN+NUVMr89EwfkJn5/QthCU/4o
-         KoOhI0U9GXUFVI3MALjYav7fbVakfXIyRvhA9aojC7GP2gBMVFNH8xjxzG7UBMF/D65/
-         ROpIdQZn1OQCw6A2XRTbMSIMx5V/8lcG3oUnEMc5QRISMkHKAevs+EJmn/wvLX335UBW
-         kv5fmH1pC0ngUqVJKSISTX26yC8K4St37Knp7tR4ODLwjMe+oz1pYEfTEAlKv+BuSxsC
-         kTcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:mime-version:content-disposition;
-        bh=tqL9U//y5mnl9UT2TzE9aF40cu5r1lEwRulehFj9YQU=;
-        b=dvCWMYPgz0IsUiX2L9A6x45ZaNa9GEaQ1Fo5s2JT/UnUIMHYS6DS+mMsGJUXBfQEQg
-         CW6n8NXUT16u2aD6nrJCGSB1F33f9Z9eHG8Pk/10clocXdM3NDHPb8SiE6aXjFsD8vtA
-         b8zehE6MeD2m4LtZm9C1TuRjAGrzXL0aez3h/BvTY2YZvAvfaIjZdNhXutn1B6NC+T/y
-         Le2DY9cOmWUpgALj/bA0apGcxnsRyjRwWWkbnC+OqKaDnpEcaM2dTZ0k7CBDqQD6RRlg
-         /p4aREBfoeLw81YGnDGoP/50OZAcibpdz7NxfPUq2RuCDn3YlUWaI1DVuCRUpN/OgL0L
-         KrQQ==
-X-Gm-Message-State: AGi0PuaE9nyySFwoByEMcebbTfw0PdWKLkQdTgpT3dDLPgqY/geHIaQu
-        Ze8202aOC5vinHJ2gnSDy4Q=
-X-Google-Smtp-Source: APiQypIIxOuTBW+tqVf/rrBOZMOpIZ6AdroW2RE3Ovum9Sb5nZ8K7vDTVsg3EFVP4EGoTGCrJjIrBQ==
-X-Received: by 2002:a63:1759:: with SMTP id 25mr21617119pgx.417.1587958236278;
-        Sun, 26 Apr 2020 20:30:36 -0700 (PDT)
-Received: from Slackware ([103.231.91.68])
-        by smtp.gmail.com with ESMTPSA id d8sm11114996pfd.159.2020.04.26.20.30.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Apr 2020 20:30:35 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 09:00:23 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     david@fromorbit.com
-Cc:     LinuxKernel <linux-kernel@vger.kernel.org>,
-        linux-xfs@vger.kernel.org, darrick.wong@oracle.com
-Subject: xfs superblock corrupt,how to find next one!
-Message-ID: <20200427033023.GA30304@Slackware>
-Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        david@fromorbit.com, LinuxKernel <linux-kernel@vger.kernel.org>,
-        linux-xfs@vger.kernel.org, darrick.wong@oracle.com
+        Sun, 26 Apr 2020 23:31:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587958275;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0WoA+56dUoJ/42TBfEa8gnCTKtqRiC7Gj8GgqmhVbnk=;
+        b=Dz8JzZTVTOo9q8Ox1Vo90CQ5LtyLYbTaQKLE78KvPL0/5pTAFP+4KpEEyxB24HDTFCtA6e
+        Wkixeo0/rPqg5eiXFsMW6dM5E9FIn0JgfDAkXy9JEoXIO/XWauaYtNHzWWP/5c26/Dwlqj
+        XFI/FrgPIe9kUCz8nyF4Nj5bjvi60uo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-228-mbCEEtQlNV2GbyXyosO0mw-1; Sun, 26 Apr 2020 23:31:14 -0400
+X-MC-Unique: mbCEEtQlNV2GbyXyosO0mw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 072B918FE863;
+        Mon, 27 Apr 2020 03:31:13 +0000 (UTC)
+Received: from [10.72.12.205] (ovpn-12-205.pek2.redhat.com [10.72.12.205])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 57E371001281;
+        Mon, 27 Apr 2020 03:31:07 +0000 (UTC)
+Subject: Re: [PATCH V4 0/3] vdpa: Support config interrupt in vhost_vdpa
+To:     Zhu Lingshan <lingshan.zhu@intel.com>, mst@redhat.com,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     lulu@redhat.com, dan.daly@intel.com, cunming.liang@intel.com
+References: <1587901406-27400-1-git-send-email-lingshan.zhu@intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <ff2471ae-254e-7697-72b7-6601a561c3d9@redhat.com>
+Date:   Mon, 27 Apr 2020 11:31:05 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="DocE+STaALJfprDB"
-Content-Disposition: inline
+In-Reply-To: <1587901406-27400-1-git-send-email-lingshan.zhu@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---DocE+STaALJfprDB
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-  Hey Dave/Darrick,
-
-  I was stumbled over this last week and ended up recreating(huh!) the
-  fs from the scratch . Internet was littered with the information which
-  I hardly could use. Oh, btw, I did stumble also in old google group
-  where you suggested few stuff to do .=20
-
-  But alas, none come to handy. I have tried xfs_db and it spit out lots
-  of info including AGS ,but..I had  a simple requirement , just to
-  replace the corrupted super block with another good one. Which,
-  everyone including you know it very well that can done in ext in a blink =
-of an
-  eye(my lack of understanding and exposure are pardonable I believe).
-
-  But I couldn't find an easy way to recover the fs.I followed the
-  repair ..get into db as I said ...
-
-  Is it lurking somewhere which I failed to discover or it has been
-  implemented in different way , which is not easily decipherable by
-  ordinary users...not sure though.
-
-  Kindly ,point out ,which route should one take , when they encounter
-  that kind of a situation. Recreating the fs is not an or probably the
-  least option to opt for.=20
+On 2020/4/26 =E4=B8=8B=E5=8D=887:43, Zhu Lingshan wrote:
+> This series includes two patches, one introduced
+> config interrupt support in VDPA core, the other
+> one implemented config interrupt in IFCVF.
+>
+> changes from V3:
+> move changes in driver/vhost/vhost.c to a
+> separated patch.
+>
+> changes from V2:
+> move VHOST_FILE_UNBIND to the uapi header.
+>
+> changes from V1:
+> vdpa: more efficient code to handle eventfd unbind.
+> ifcvf: add VIRTIO_NET_F_STATUS feature bit.
 
 
-  Thanks,
-  Bhaskar
+5.8 material I think.
 
---DocE+STaALJfprDB
-Content-Type: application/pgp-signature; name="signature.asc"
+Acked-by: Jason Wang <jasowang@redhat.com>
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl6mUc8ACgkQsjqdtxFL
-KRXh+gf/S4XIXZJPU3dFUyujCUJYWAWCWjf40fdrhuhtdM3Sapb8OOKW4tNsrR4r
-oo9K7TvZOwmhiUY5aRRwii6gMA+k92cnlsOwhjsA+geZTfhW1wdez9sy79W6Ben4
-H8LgeT+DqGp1tMdtajmJLOkkDqcE2xIBzspuU8BU23qC0HEpy1XN3SOV/ly0nOBi
-cMOywgnJyQ3lE9oeHkqViuq12oBXEuuHplh9b6D/0i6R1Vr/pc+PUd85XIgZ+OkI
-6Yv4uOfsBkFIHTNDYtm2fv2C2C3qardtO4v9kVWCg5J2TqrCy72CUAYfKk70ZOKw
-neDhA2O8XWfAy4gdyJ1qzFQ7lCx5aw==
-=SdUE
------END PGP SIGNATURE-----
+>
+> Zhu Lingshan (3):
+>    vdpa: Support config interrupt in vhost_vdpa
+>    vhost: replace -1 with  VHOST_FILE_UNBIND in iotcls
+>    vdpa: implement config interrupt in IFCVF
+>
+>   drivers/vdpa/ifcvf/ifcvf_base.c |  3 +++
+>   drivers/vdpa/ifcvf/ifcvf_base.h |  3 +++
+>   drivers/vdpa/ifcvf/ifcvf_main.c | 22 ++++++++++++++++++-
+>   drivers/vhost/vdpa.c            | 47 ++++++++++++++++++++++++++++++++=
++++++++++
+>   drivers/vhost/vhost.c           |  8 +++----
+>   include/uapi/linux/vhost.h      |  4 ++++
+>   6 files changed, 82 insertions(+), 5 deletions(-)
+>
 
---DocE+STaALJfprDB--
