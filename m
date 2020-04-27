@@ -2,89 +2,105 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF29C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3364AC4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92B6A20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:12:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H/lTZBMX"
+	by mail.kernel.org (Postfix) with ESMTP id 1F45920775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:13:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgD0TMp (ORCPT
+        id S1726598AbgD0TNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 15:12:45 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:46452 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbgD0TMp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 15:12:45 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RJCfei126800;
-        Mon, 27 Apr 2020 14:12:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588014761;
-        bh=jRcgf5XdMQaZw49wtJzlSVjIEPTTwfQwyL6oaWcmdTg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=H/lTZBMXaC/GFQF+1zgoRg0376pP1z2bN2dXM/lScy4ZRucmtVh2j1UpzcBnDMnby
-         WAheAMkriNgXQYNk9WTGR0Z4+mPjKFnisHgellVlcDmqqpDTKnIVi60GVL8HdldcFr
-         kcLZq7m5QBVoYs98kc6vFjWaW8z6hEg8hdG35M6U=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03RJCfCi052652
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Apr 2020 14:12:41 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
- Apr 2020 14:12:41 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 27 Apr 2020 14:12:40 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RJCeAC070544;
-        Mon, 27 Apr 2020 14:12:40 -0500
-Subject: Re: [PATCH v20 10/17] ARM: dts: ste-href: Add reg property to the
- LP5521 channel nodes
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-References: <20200423155524.13971-1-dmurphy@ti.com>
- <20200423155524.13971-11-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <1d7bba6a-e038-c367-3d5a-ef5758616301@ti.com>
-Date:   Mon, 27 Apr 2020 14:06:47 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 27 Apr 2020 15:13:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726364AbgD0TNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 15:13:50 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9D38206B8;
+        Mon, 27 Apr 2020 19:13:49 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 15:13:48 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     Brian Gerst <brgerst@gmail.com>, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH] tracing/x86: fix trace event registration for syscalls
+ without arguments
+Message-ID: <20200427151348.6a55abd9@gandalf.local.home>
+In-Reply-To: <adafb601-d1e7-b95b-ae31-fa3844a48851@yandex-team.ru>
+References: <158636958997.7900.16485049455470033557.stgit@buzz>
+        <adafb601-d1e7-b95b-ae31-fa3844a48851@yandex-team.ru>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200423155524.13971-11-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus
+On Mon, 27 Apr 2020 16:16:20 +0300
+Konstantin Khlebnikov <khlebnikov@yandex-team.ru> wrote:
 
-On 4/23/20 10:55 AM, Dan Murphy wrote:
-> Add the reg property to each channel node.  This update is
-> to accomodate the multicolor framework.  In addition to the
-> accomodation this allows the LEDs to be placed on any channel
-> and allow designs to skip channels as opposed to requiring
-> sequential order.
->
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> CC: Linus Walleij <linus.walleij@linaro.org>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Bump, bug still present in 5.7.0-rc3
+> 
+> root@kernel0:~# uname -r
+> 5.7.0-rc3-test
+> 
+> root@kernel0:~# ls -d /sys/kernel/tracing/events/syscalls/sys_enter_{sync,fsync}
+> ls: cannot access '/sys/kernel/tracing/events/syscalls/sys_enter_sync': No such file or directory
+> /sys/kernel/tracing/events/syscalls/sys_enter_fsync
+> 
+> On 08/04/2020 21.13, Konstantin Khlebnikov wrote:
+> > Syscalls without arguments now has no ABI subs, instead of that macro
+> > SYSCALL_DEFINE0() defines __abi_sys_name as aliase to __do_sys_name.
+> > 
+> > As a result in find_syscall_meta() kallsyms_lookup() returns
+> > "__do_sys_name" which does not match with declared trace event.
+> > 
+> > Also see commit 1c758a2202a6 ("tracing/x86: Update syscall trace events
+> > to handle new prefixed syscall func names")
 
-Pavel is asking for a review and if ok your ack
+This is the first I've seen of this patch.
 
-Dan
+> > 
+> > Fixes: d2b5de495ee9 ("x86/entry: Refactor SYSCALL_DEFINE0 macros")
+> > Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> > ---
+> >   arch/x86/include/asm/ftrace.h |    5 +++--
+> >   1 file changed, 3 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
+> > index 85be2f506272..70b96cae5b42 100644
+> > --- a/arch/x86/include/asm/ftrace.h
+> > +++ b/arch/x86/include/asm/ftrace.h
+> > @@ -61,11 +61,12 @@ static inline bool arch_syscall_match_sym_name(const char *sym, const char *name
+> >   {
+> >   	/*
+> >   	 * Compare the symbol name with the system call name. Skip the
+> > -	 * "__x64_sys", "__ia32_sys" or simple "sys" prefix.
+> > +	 * "__x64_sys", "__ia32_sys", "__do_sys" or simple "sys" prefix.
+> >   	 */
+> >   	return !strcmp(sym + 3, name + 3) ||
+> >   		(!strncmp(sym, "__x64_", 6) && !strcmp(sym + 9, name + 3)) ||
+> > -		(!strncmp(sym, "__ia32_", 7) && !strcmp(sym + 10, name + 3));
+> > +		(!strncmp(sym, "__ia32_", 7) && !strcmp(sym + 10, name + 3)) ||
+> > +		(!strncmp(sym, "__do_sys", 8) && !strcmp(sym + 8, name + 3));
+> >   }
+
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- Steve
+
+> >   
+> >   #ifndef COMPILE_OFFSETS
+> >   
 
