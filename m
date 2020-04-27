@@ -2,251 +2,113 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E43CC5519E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516C2C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D61EE20575
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:33:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587983616;
-	bh=aOaIIKszeCrTqlWbseYknAJ8SMIcs8kkPSNhJjQ6u9E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fbO4h3USjBn/uewCv1ukf9jZ/gAodogoc85005ZKfSqxe2vuvjiEoZgIQWos04g/z
-	 U5VEBB+P1I14LWU95AJDvexKxYOSDZo1LhTZn7k4TNPDhBTNK3hJNIT25jlXYKdHsc
-	 iqmtf06bRxzYUHIRRQwhINHVJmx8W8b0ijtKvjFo=
+	by mail.kernel.org (Postfix) with ESMTP id 2B2A320575
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:33:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="svEuRkyX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgD0Kdf (ORCPT
+        id S1727079AbgD0Kdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 06:33:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726504AbgD0Kde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 06:33:34 -0400
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EB5320735;
-        Mon, 27 Apr 2020 10:33:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587983613;
-        bh=aOaIIKszeCrTqlWbseYknAJ8SMIcs8kkPSNhJjQ6u9E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UlRBMPvoNLzTUwJ+zdPpThA5L0s9xRgXLrZ8eoGDZIuwANdtW9I2jCMH1GosymYX+
-         tqmIYiXCOMHVIHBBOgjhC3Tg4TVYun5gpZadxN0GAuLqRrOQsaRVpHyxhn9dUns24N
-         NfDLQ7IjDJICa6jSUq0JV9hPvXX4Jr7dLl/rSUJk=
-Received: by mail-lj1-f171.google.com with SMTP id a21so16998918ljb.9;
-        Mon, 27 Apr 2020 03:33:33 -0700 (PDT)
-X-Gm-Message-State: AGi0Publ4NBWfABfdbmiUyf5FeYs8Khn0/LXyuaUdfriEYqFoTfqRDj2
-        kCs/htPvrI0vbXKTSYd0kIkRJ4DER1uS/bwjp90=
-X-Google-Smtp-Source: APiQypIqOK1mjsOHL1arjUsIJmqjBh9f6SaKAQkyQrjJ4yAtDn+rUtD2oFnEgN8nt8ZLYAHmAznVhXsvWd0e3gOKPI0=
-X-Received: by 2002:a05:651c:48a:: with SMTP id s10mr13149460ljc.226.1587983611214;
- Mon, 27 Apr 2020 03:33:31 -0700 (PDT)
+        Mon, 27 Apr 2020 06:33:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726504AbgD0Kdt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 06:33:49 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED004C0610D5;
+        Mon, 27 Apr 2020 03:33:48 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id z1so7129950pfn.3;
+        Mon, 27 Apr 2020 03:33:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/yQSlVE7PnqopQQf8iulieHvAebBl49JpRFSg6plQOM=;
+        b=svEuRkyXeWE3IGEar5EHdocILyDaW+N13jTvaXBDoiDY7QzRabNPcqPxk2izwFfPrS
+         jvDbUeVC5CoKypPJaGwxGalr9dnagxExe7bIiHksHfBch3vtRWBCIEYTgyBM83QqYkz5
+         YxeEJh/bzDTpa02BND1fjJLof2J+ssnoQaXbNs732qWb1yyOPp1QbwGEv/SFEq+tUmuJ
+         VywvW5hrMuOdMz27XswGzFq7FO48vtQ7AkbuOn9dm5p6ATj1UH0ErQ/pU3bWM5YogOfU
+         fwyve8vTb692wz5hPxqwJiMgWLcz+2rUjmamPzMNrc5j0uGbaf1e6ngiPzMwAdV8NLwN
+         IthA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/yQSlVE7PnqopQQf8iulieHvAebBl49JpRFSg6plQOM=;
+        b=sia8Kndqs18gloYktSSudrjF8kBjU07sudqIfba25fJNsTVmtdzZXB4MJccS9vU8Eh
+         no4VPtWPrAKO96UkUnbLgqyfWln9vfD03Yacwz5WpD2IejJTLk1BUfMEAxVX1U1+d/LR
+         EmrihH8oI7TUSyutjEstVtJHwwwMn5Ot85LGmMJAGBWC/rNkTEkOJRaXbmIza+70YTh6
+         PY5m9Oyq/WIRWlUI9APswT3tf+Ud9NI8r9P/8V/c1BMb1K3QnvaH9PRuQ77exiqXqF9M
+         w+pa8puTPWybjlXJbRo3khRtE+RiZbogD5UkvrTsJDeI1/P56P/TRVSXweBU3JKuHAtu
+         dLYQ==
+X-Gm-Message-State: AGi0PuYMmNnHva3RtLdFwTVzI12TFs5iUSp2b222nK81oZ9JjFOt/cvA
+        e9V41FOdYwWpQnKTed/5FsX67s2Yz7lrNd6j/LE=
+X-Google-Smtp-Source: APiQypKwFdPTEoWxkFdp7BjvZptGlC1JmP+zurw7A4cawLsmuik55JaoNHk55SZ8V/uC/2uAPJ5DV7eEk98vKKYHIXU=
+X-Received: by 2002:a63:1c1:: with SMTP id 184mr23267416pgb.203.1587983628496;
+ Mon, 27 Apr 2020 03:33:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200427073132.29997-3-wens@kernel.org> <684132b8-4a84-8295-474b-38ccb992bba7@gmail.com>
- <CAGb2v66Piu5_2bdqvWV3eEn2Se_y1MNKWvvYBv_J7DA-8jBhbQ@mail.gmail.com> <65d15254-08da-895c-1a0c-ef6ce231b620@gmail.com>
-In-Reply-To: <65d15254-08da-895c-1a0c-ef6ce231b620@gmail.com>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Mon, 27 Apr 2020 18:33:19 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65fGYguNoksq5Dyx3HTKeYg+U82TiQSL+NO8AUcQJQj5w@mail.gmail.com>
-Message-ID: <CAGb2v65fGYguNoksq5Dyx3HTKeYg+U82TiQSL+NO8AUcQJQj5w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] arm64: dts: rockchip: rk3399-roc-pc: Fix MMC
- numbering for LED triggers
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     Chen-Yu Tsai <wens@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>, dmurphy@ti.com,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        jacek.anaszewski@gmail.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
+References: <20200425125737.5245-1-zhengdejin5@gmail.com>
+In-Reply-To: <20200425125737.5245-1-zhengdejin5@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 27 Apr 2020 13:33:41 +0300
+Message-ID: <CAHp75VceH08X5oWSCXhx8O0Bsx9u=Tm+DVQowG+mC3Vs2=ruVQ@mail.gmail.com>
+Subject: Re: [PATCH net v1] net: macb: fix an issue about leak related system resources
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        yash.shah@sifive.com, netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 6:09 PM Johan Jonker <jbx6244@gmail.com> wrote:
+On Sat, Apr 25, 2020 at 3:57 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
 >
-> On 4/27/20 11:17 AM, Chen-Yu Tsai wrote:
-> > On Mon, Apr 27, 2020 at 4:57 PM Johan Jonker <jbx6244@gmail.com> wrote:
-> >>
-> >> Hi Chen-Yu,
-> >>
-> >>> From: Chen-Yu Tsai <wens@csie.org>
-> >>>
-> >>> With SDIO now enabled, the numbering of the existing MMC host controllers
-> >>> gets incremented by 1, as the SDIO host is the first one.
-> >>>
-> >>> Increment the numbering of the MMC LED triggers to match.
-> >>>
-> >>> Fixes: cf3c5397835f ("arm64: dts: rockchip: Enable sdio0 and uart0 on rk3399-roc-pc-mezzanine")
-> >>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> >>> ---
-> >>>  arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts | 8 ++++++++
-> >>>  arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi          | 4 ++--
-> >>>  2 files changed, 10 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-> >>> index 2acb3d500fb9..f0686fc276be 100644
-> >>> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-> >>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-> >>> @@ -38,6 +38,10 @@ vcc3v3_pcie: vcc3v3-pcie {
-> >>>       };
-> >>>  };
-> >>>
-> >>> +&diy_led {
+> A call of the function macb_init() can fail in the function
+> fu540_c000_init. The related system resources were not released
+> then. use devm_ioremap() to replace ioremap() for fix it.
 >
-> >>> +     linux,default-trigger = "mmc2";
+
+Why not to go further and convert to use devm_platform_ioremap_resource()?
+
+> Fixes: c218ad559020ff9 ("macb: Add support for SiFive FU540-C000")
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> ---
+>  drivers/net/ethernet/cadence/macb_main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> If you decide to use a free form trigger that is not a 'standard' one,
-> then it becomes a user property.
-> User defined properties should not go in a generic dts.
-> It's up to the user what function he/she gives to that led!
-
-The original (in the base .dtsi file for this series of boards) trigger
-is already a non-standard, i.e. not listed in the bindings, one.
-
-Now I would very much like to get rid of user specific stuff, and I
-also mentioned that in the previous round of discussions. No one said
-anything.
-
-> >>> +};
-> >>> +
-> >>>  &pcie_phy {
-> >>>       status = "okay";
-> >>>  };
-> >>> @@ -91,3 +95,7 @@ &uart0 {
-> >>>       pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
-> >>>       status = "okay";
-> >>>  };
-> >>> +
-> >>> +&yellow_led {
-> >>> +     linux,default-trigger = "mmc1";
-> >>> +};
-> >>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> >>> index 9f225e9c3d54..bc060ac7972d 100644
-> >>> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> >>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> >>> @@ -70,14 +70,14 @@ work-led {
-> >>>                       linux,default-trigger = "heartbeat";
-> >>>               };
-> >>>
-> >>
-> >>> -             diy-led {
-> >>> +             diy_led: diy-led {
-> >>
-> >> This changes an existing nodename into something that is still not the
+> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+> index a0e8c5bbabc0..edba2eb56231 100644
+> --- a/drivers/net/ethernet/cadence/macb_main.c
+> +++ b/drivers/net/ethernet/cadence/macb_main.c
+> @@ -4178,7 +4178,7 @@ static int fu540_c000_init(struct platform_device *pdev)
+>         if (!res)
+>                 return -ENODEV;
 >
-> Correction:
-> It takes an existing nodename and adds a label.
-
-OK.
-
-> >> preferred way. In the current Rockchip dts there are nodenames like
-> >> 'work', 'yellow' that causing warnings with the command:
-> >
-> > This doesn't change the node name at all. It only adds a label.
-> > If it doesn't pass the check now, it didn't pass the check before.
-> >
-> > I just realized that the footnote I added before is gone because I
-> > regenerated the patches. The original footnote was something along
-> > the lines of:
-> >
-> > I opted to not change the node names nor the labels as the discussion
-> > had not concluded. The other reason being that people may have scripts
-> > or device tree overlays depending on the existing node names.
-> >
-> > Previously I asked the following but got no response:
-> >
-> >     Is changing this after it has been in some kernel releases OK? Wouldn't
-> >     it be considered a break of sysfs ABI?
-> >
-> >     Also, is there some guideline on how to name the labels? For sunxi we've
-> >     been doing "${vendor}:${color}:${function}" since forever.
-> >
-> >     As far as I can tell, the hardware vendor [1] has no specific uses for
-> >     these two (red and yellow) LEDs designed in. And their GPIO lines are
-> >     simply labeled "DIY" (for the red one) and "YELLOW". So I'm not sure
-> >     if putting "our" interpretations and the default-trigger into the
-> >     label is wise.
-> >
-> >     For reference, the green one has its GPIO line labeled "WORK", and their
-> >     intention from [1] is to have it as some sort of power / activity indicator.
-> >     Hence it is named / labeled "work".
-> >
-> >     As for the node names, I think we can keep it as is for now. It's not
-> >     the preferred form, but there's really no need to change it either.
-> >     And some overlay or script might actually expect that name.
-> >
-> >> make -k ARCH=arm dtbs_check
-> >>
-> >> Could you give a generic guide line/example, so all these changes are
-> >> treated the same way? As if the naming follows the preferred 'led-0' line.
-> >
-> > I'm not sure what you are asking for.
+> -       mgmt->reg = ioremap(res->start, resource_size(res));
+> +       mgmt->reg = devm_ioremap(&pdev->dev, res->start, resource_size(res));
+>         if (!mgmt->reg)
+>                 return -ENOMEM;
 >
-> Your nodename just happend to contain 'led' to pass the regex.
-> There are many other names in use.
-
-Right. So if it passes, what's the problem?
-
-> 'If' the DT maintainer (=Heiko) decides the get rid of all the warnings
-> for led nodes then that change would require all nodename to be handled
-> to same (=preferred way):
+> --
+> 2.25.0
 >
-> Change this:
->
-> diy_led: diy-led
-> yellow_led: yellow-led
->
-> Into something like:
->
-> led_0: led-0
-> led_1: led-1
-
-As I already said, if the maintainers want to clean this up, I am happy to
-provide patches towards this. That is not the case right now. Furthermore,
-that cleanup is not directly related to what I'm trying to fix in this
-patch, which is, from the original submitter's point of view, incorrect
-triggers are used when the mezzanine board is added.
-
-Also, DT labels "led_0" and "led_1" are useless. They have no relation to
-what is used in the schematics, which are "work", "diy", and "yellow". The
-board itself doesn't have anything silk-screened on, so on that end the only
-thing to go with is the color.
-
-So for fixing up the LED node names, we'd probably want the following:
-
-    diy_led: led-0
-    yellow_led: led-1
-    work_led: led-2
-
-Is that what you're asking for?
 
 
-ChenYu
-
-> >
-> > ChenYu
-> >
-> >>>                       label = "red:diy";
-> >>>                       gpios = <&gpio0 RK_PB5 GPIO_ACTIVE_HIGH>;
-> >>>                       default-state = "off";
-> >>>                       linux,default-trigger = "mmc1";
-> >>>               };
-> >>>
-> >>> -             yellow-led {
-> >>> +             yellow_led: yellow-led {
-> >>>                       label = "yellow:yellow-led";
-> >>>                       gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
-> >>>                       default-state = "off";
-> >>> --
-> >>> 2.26.0
-> >>
->
+-- 
+With Best Regards,
+Andy Shevchenko
