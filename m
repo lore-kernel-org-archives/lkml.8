@@ -2,63 +2,60 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0182EC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E792C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D80DB2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66E8D2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:27:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OwesEUCx"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RO3v5GTg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgD0V1b (ORCPT
+        id S1726411AbgD0V1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:27:31 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:59384 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgD0V1a (ORCPT
+        Mon, 27 Apr 2020 17:27:35 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:40030 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbgD0V1d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 17:27:30 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RLRLrJ028314;
-        Mon, 27 Apr 2020 16:27:21 -0500
+        Mon, 27 Apr 2020 17:27:33 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RLRB8f030240;
+        Mon, 27 Apr 2020 16:27:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588022841;
-        bh=M3ka0zwBQEFyARBdnBuOoAp46mGrBdLsTITwD7gl5S4=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=OwesEUCxOd9k6fwwtOye+2H7/d5X3xh6zOV4RJFZxGOzWIdeoyrSVn3MgwusArbtl
-         RiMJft3YO0wNKflvYGAvAX3h3ha9vRDhgmSHLn/fX3nb8sEB4CHjROdtx4gKFrNwn+
-         43Ohszk2+EVsGXTFR+9F0uDklRZWTBKsf+UGZ4Gc=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03RLRLIT123724
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Apr 2020 16:27:21 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+        s=ti-com-17Q1; t=1588022831;
+        bh=pWFC6a9Qbh3sjq2KJ7mhohvd+9WakZ3k6mQesnzqtvQ=;
+        h=From:To:CC:Subject:Date;
+        b=RO3v5GTg/Ir5sDZX0+sX7N7jZbfrVoyzJkaCbtqp1DOkKCP3wjULxpyF18DwbP0Wx
+         n392R/5HQW0Izw11NncVdDSJvR6hjQOzEzF3FRhuoMjcQA3QoY7IiMjQMnt8SI3Sk6
+         Y0ongCDjxm6ygsAntpdJ2C6p4xu8Ml9G+B0+BLQE=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RLRBTO002506;
+        Mon, 27 Apr 2020 16:27:11 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
- Apr 2020 16:27:21 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2020 16:27:10 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 27 Apr 2020 16:27:21 -0500
+ Frontend Transport; Mon, 27 Apr 2020 16:27:10 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RLRL9R048731;
-        Mon, 27 Apr 2020 16:27:21 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RLRAod048636;
+        Mon, 27 Apr 2020 16:27:10 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>
 CC:     <linux@armlinux.org.uk>, <davem@davemloft.net>,
         <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
         <afd@ti.com>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net v2 2/2] net: phy: DP83TC811: Fix WoL in config init to be disabled
-Date:   Mon, 27 Apr 2020 16:21:12 -0500
-Message-ID: <20200427212112.25368-3-dmurphy@ti.com>
+Subject: [PATCH net v2 0/2] WoL fixes for DP83822 and DP83tc811
+Date:   Mon, 27 Apr 2020 16:21:10 -0500
+Message-ID: <20200427212112.25368-1-dmurphy@ti.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200427212112.25368-1-dmurphy@ti.com>
-References: <20200427212112.25368-1-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -68,61 +65,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The WoL feature should be disabled when config_init is called and the
-feature should turned on or off  when set_wol is called.
+Hello
 
-In addition updated the calls to modify the registers to use the set_bit
-and clear_bit function calls.
+The WoL feature for each device was enabled during boot or when the PHY was
+brought up which may be undesired.  These patches disable the WoL in the
+config_init.  The disabling and enabling of the WoL is now done though the
+set_wol call.
 
-Fixes: 6d749428788b ("net: phy: DP83TC811: Introduce support for the
-DP83TC811 phy")
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
+Dan
+
+Dan Murphy (2):
+  net: phy: DP83822: Fix WoL in config init to be disabled
+  net: phy: DP83TC811: Fix WoL in config init to be disabled
+
+ drivers/net/phy/dp83822.c   | 30 ++++++++++++++----------------
  drivers/net/phy/dp83tc811.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ 2 files changed, 26 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/net/phy/dp83tc811.c b/drivers/net/phy/dp83tc811.c
-index 06f08832ebcd..ff325fb748b9 100644
---- a/drivers/net/phy/dp83tc811.c
-+++ b/drivers/net/phy/dp83tc811.c
-@@ -139,16 +139,19 @@ static int dp83811_set_wol(struct phy_device *phydev,
- 			value &= ~DP83811_WOL_SECURE_ON;
- 		}
- 
--		value |= (DP83811_WOL_EN | DP83811_WOL_INDICATION_SEL |
--			  DP83811_WOL_CLR_INDICATION);
--		phy_write_mmd(phydev, DP83811_DEVADDR, MII_DP83811_WOL_CFG,
--			      value);
-+		/* Clear any pending WoL interrupt */
-+		phy_read(phydev, MII_DP83811_INT_STAT1);
-+
-+		value |= DP83811_WOL_EN | DP83811_WOL_INDICATION_SEL |
-+			 DP83811_WOL_CLR_INDICATION;
-+
-+		return phy_write_mmd(phydev, DP83822_DEVADDR,
-+				     MII_DP83811_WOL_CFG, value);
- 	} else {
--		phy_clear_bits_mmd(phydev, DP83811_DEVADDR, MII_DP83811_WOL_CFG,
--				   DP83811_WOL_EN);
-+		return phy_clear_bits_mmd(phydev, DP83811_DEVADDR,
-+					  MII_DP83811_WOL_CFG, DP83811_WOL_EN);
- 	}
- 
--	return 0;
- }
- 
- static void dp83811_get_wol(struct phy_device *phydev,
-@@ -292,8 +295,8 @@ static int dp83811_config_init(struct phy_device *phydev)
- 
- 	value = DP83811_WOL_MAGIC_EN | DP83811_WOL_SECURE_ON | DP83811_WOL_EN;
- 
--	return phy_write_mmd(phydev, DP83811_DEVADDR, MII_DP83811_WOL_CFG,
--	      value);
-+	return phy_clear_bits_mmd(phydev, DP83811_DEVADDR, MII_DP83811_WOL_CFG,
-+				  value);
- }
- 
- static int dp83811_phy_reset(struct phy_device *phydev)
 -- 
 2.25.1
 
