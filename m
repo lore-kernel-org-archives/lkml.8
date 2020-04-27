@@ -2,169 +2,308 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595FFC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F821C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AC802076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78A6D2076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:26:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="TCciwyKF";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="TemQQlP1"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="fGHnEnyf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgD0RYp (ORCPT
+        id S1726487AbgD0R0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 13:24:45 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:27810 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726315AbgD0RYm (ORCPT
+        Mon, 27 Apr 2020 13:26:19 -0400
+Received: from mail.efficios.com ([167.114.26.124]:37564 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726204AbgD0R0T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 13:24:42 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03RHOL0Z008492;
-        Mon, 27 Apr 2020 10:24:29 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type :
- content-transfer-encoding : in-reply-to : mime-version; s=facebook;
- bh=GZ9GjamGT+A0A+SJhZXVkvpA+FGAIwEm1X+n/+7paQ0=;
- b=TCciwyKFyZMzT4+Eq4sazZg8gyQ+9vwxHjYTKSzWp4AmQUy7E9/nm/GALnbEUk10MmKZ
- GvDywdOra8XVimWVNdNc4arPAi9CgN3BX79umvH7/5hSOGWTR4PJGIkeXMdgPKyc6Avo
- 61gQBm4NnfZ4gWMKhI+vERI8WGP7doc12xw= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 30mjqn55mm-9
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 27 Apr 2020 10:24:29 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.198) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Mon, 27 Apr 2020 10:24:27 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TfTYXm2w4Qa5l/RRJVHaqy4uldRyJ44VYsZUwoj0s6OMn1H4V5oC0PTzJ79L07byBeSoRAW6sNx+KwEg3ZynqUm7+pte4VcETm7th9Wn92Qqb4zqWZpN7CPOLYDA5XYGZYH1jnvlYAtZRx3AjR72kdZcEs1f8P5/zZeKIlrwYMJfp4AxyP7gvrO9SRyykOrcCrs7ZV3eWugVJ9ajXqXhX6y8OprDEigjEJwQL9XoSf/IuVNevkPlp7JjIrz8BQtI+TC74fe8I/SKujV1qMKYeeqRQKMRNJ19Za3Mag66vZ44eVWYLjeaiqXvNXNscrY9hexdkN5yNiKYtjNF+oZONg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2gIlpWB4No8dxSMwkkUhV0bsKH8iSUF+NgmE3bfR/uY=;
- b=NoHXRxm0Gn4sZBSEXoH4pQJLoKO4P014utNMRQb14SpwHPWPRhCDWwwCAaK432xOAzeYhoudgBu1SK7UPi0kbAKAxgu8LqB9XaNpLL8ew1j79ruT4igji6OgDKjo6LIVe1mz9YKqwiw1agSJIqYm5CpP1tqQXXRwoCyqDzsFi9mlkjZbNl2lDn+I21bNfckUQiWDF6J2nRqRkroMapPDrVCNYs+HFF3WXpiRGHVNfIBhbFRs6JOYeyEs0iVmrNjuoNuvPCaRu/ufqYvZLS2N6mV/6bOTia1esbyKPmHBe7ARGjQM3ZNnly/QZEFbudh4O2XlAedYTHDOJnCF+oEiWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2gIlpWB4No8dxSMwkkUhV0bsKH8iSUF+NgmE3bfR/uY=;
- b=TemQQlP10HZATr6CSH/csr4rxTb9xPx80gTHSM6FWB1Grtk7FFhUa1mmp8+ECPjT79FBgzwjxL1AVpQWnTZ3875QKF0z/wCAFyDLo8aO1yMaNqX63ZcGHlj4s2FqYD1OIzIhLjwMnkZrEVEnuo5V93enMWp4ThxfPl8JiyB5ij8=
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB2872.namprd15.prod.outlook.com (2603:10b6:a03:b5::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Mon, 27 Apr
- 2020 17:24:26 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::bdf9:6577:1d2a:a275]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::bdf9:6577:1d2a:a275%7]) with mapi id 15.20.2937.023; Mon, 27 Apr 2020
- 17:24:26 +0000
-Date:   Mon, 27 Apr 2020 10:24:21 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-CC:     Yang Yingliang <yangyingliang@huawei.com>, <tj@kernel.org>,
-        <lizefan@huawei.com>, <cgroups@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <linux-mm@kvack.org>, <guro@cmpxchg.org>
-Subject: Re: memleak in cgroup
-Message-ID: <20200427172421.GA122591@carbon.DHCP.thefacebook.com>
-References: <6e4d5208-ba26-93ed-c600-4776fc620456@huawei.com>
- <34dfdb52-6efd-7b11-07c8-9461a13b3aa4@huawei.com>
- <20200427171304.GC29022@cmpxchg.org>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200427171304.GC29022@cmpxchg.org>
-X-ClientProxiedBy: MWHPR19CA0075.namprd19.prod.outlook.com
- (2603:10b6:320:1f::13) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
+        Mon, 27 Apr 2020 13:26:19 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 15F5E25AB7F;
+        Mon, 27 Apr 2020 13:26:18 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id vyE-AKT5Yyo9; Mon, 27 Apr 2020 13:26:17 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 8011B25B48F;
+        Mon, 27 Apr 2020 13:26:17 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 8011B25B48F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1588008377;
+        bh=4CDxUYdzmcopBG0/OPLT4vxX3lvaRe8HqEPYDfAllDQ=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=fGHnEnyfSSb1yhiMxCDx0oZgEYV7FBFlcvAxf3Y+/oM4mN0ueOWrwr9eyVq5a+rT0
+         +jRqi2+IuSsNW7PiQUOCthc1gu6lsMhpt4S9wN8XY47UTud9Uj4kWlRRiv1/kKd83d
+         WfVU9pUuiZ8wziBtMZuif2X4tYwfD1JKYFcJrdji1/vADYlf4QrQtWUBSVzI/TEgYE
+         aYs8yCCsxnT/LbXA67n+s6q0fG1k1m8Kdfm5lwZaVKMdShD/Vlvj5/B+uiSQk97nyD
+         Rqih1UJZ6d+b4YkqlmOwfWPIcItLjJKHmNtwB8S3FE3DwcZkTKgL1NeAi/aPedKwY2
+         RfOXugXFWnwug==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id Zj3X43GAeTna; Mon, 27 Apr 2020 13:26:17 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 6031B25B336;
+        Mon, 27 Apr 2020 13:26:17 -0400 (EDT)
+Date:   Mon, 27 Apr 2020 13:26:17 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fw@deneb.enyo.de>
+Cc:     Michael Kerrisk <mtk.manpages@gmail.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        carlos <carlos@redhat.com>, Rich Felker <dalias@libc.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>
+Message-ID: <2102127737.70791.1588008377292.JavaMail.zimbra@efficios.com>
+In-Reply-To: <87zhawvphv.fsf@mid.deneb.enyo.de>
+References: <20200326155633.18236-1-mathieu.desnoyers@efficios.com> <20200326155633.18236-6-mathieu.desnoyers@efficios.com> <87ees9z417.fsf@mid.deneb.enyo.de> <284293396.70630.1588005648556.JavaMail.zimbra@efficios.com> <87zhawvphv.fsf@mid.deneb.enyo.de>
+Subject: Re: [PATCH glibc 5/9] glibc: Perform rseq(2) registration at C
+ startup and thread creation (v17)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:90e0) by MWHPR19CA0075.namprd19.prod.outlook.com (2603:10b6:320:1f::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Mon, 27 Apr 2020 17:24:25 +0000
-X-Originating-IP: [2620:10d:c090:400::5:90e0]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 688fbeef-d988-48fe-52cc-08d7eacfd5a1
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2872:
-X-Microsoft-Antispam-PRVS: <BYAPR15MB28725F0FD9CE501B024C1129BEAF0@BYAPR15MB2872.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0386B406AA
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(39860400002)(366004)(396003)(376002)(136003)(66946007)(478600001)(86362001)(66556008)(6916009)(186003)(16526019)(5660300002)(6506007)(316002)(53546011)(66476007)(6666004)(3480700007)(8676002)(52116002)(7696005)(55016002)(2906002)(7116003)(33656002)(1076003)(4326008)(8936002)(9686003)(81156014);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: H9ZKxph5U/2XcW7OtxoPshwE3wHm6bBBxdk1xA205rtcT+HKkjIpFjbkhR2DgDF7Oe4YqBI7SOgAR1atXo1htEkGzf6e1bhjanYnH5kMiIh5I+wAq4bGOIjVho+W24VdjYMDnb8+vTBT5jnKtNc7OGt7AX5Ni8QXVhc5n/CZq01s9KYvRT/M3lFMbJbjaZUgDS0kdmzRmtar+A4JK0TZSBmIAOG358iOOMHJ+lchWWlqSzcURlWOJfcSxKpQ1QTaMvtiPgQkX8MWAjpodRa1EE+SmpUCpuJ2WDh/vLZKuEf+xnvG4HSm6bbEZXhF1mlqHLkMi3Gv1MDYxkOV2c25uI8dhADBHLO0tXq/fo3Wld/hfw9DnhJaE3SHsD4tiYeq8MypyGrMVOAL/IBdIUI+fybWkuM7XW34/1DG0U3op4I8BiV2loRd86qjtQ5PQBly
-X-MS-Exchange-AntiSpam-MessageData: 3Q9ZDGx1sf78FyeYrbTgz1unG1Xf8ZGp4dndCTVsb83SXbKuDhDno6uFW0fIeWwBGL5hW8r1RHC6LXyYhaqm1VTzQG1kdHj2Wlfi++ja8aQ7vTyhA4YhF36kMpETHwfC8u7nj7e5MNHfRd6Gi2AfBCvfPfaqtDsh9sIBh2Jyuv6hhTVSK3hyoypPCvrq+R/6Jg85jysu5W0Sec6BMXgk/29Q4dVqvnoPXt3QzXmWa6IZrpvxOef2hFCLVW1D3zb6uCBCe+E860KezGK536NQqbqSazQzyhqPMKwAw4pFIN8T32sjabJlfh93M8AWDQ0CxNdfCX4VhKavlenkPQ71ZTzrysOvULQ4v0IrSbWKPXgIBkIw6Bx19HLyEo2nduRwjKGffqHIhoreCsyMavvnPAYhBGvOpUFev5oADn9nJtbT/GeAK2tW1k2Sm8SIU79Qb4kNKhGynRkCwDV9+IeiQYUFI7VIczv33BpFxKh7Cp7wGdEV6Sl0uEnnSh0I7848upc5rgiB1zQh6aTUTM/9/ioR87xnkCnJXJkAO7biFz0tmqf34TgQ12d4QVqvIeKUNzMoZ7F9Ji2jcUc2UpFpgl9hhPTTzZLCzgtga+D4QjZWhulmmf/FsU92WaIR40oOBOpTe9i59b0uJpr7foWTrbQQYJ3eeKwZVQmUi+plJqEnGFq644zK/xFo0VOTc3ytedSpJqqqsJSamTCnlqKiwjtVqIzMWpQXs1bbVPzDTQiLA9/E6g9zicim8esZobELPis5XqHKjCzlg6F0r7XkMNKgnmw5TqfUu4eZ7DWx/hab5HdC/Flfv5oxgbCYu9TRHPRX/ShTgAAvM98FVDojwQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 688fbeef-d988-48fe-52cc-08d7eacfd5a1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2020 17:24:26.0623
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EVV3d9UgIVhTo4B14aZZiGdA1IDfsb47JFZfLeyHzHVeg4D/RVIvdjxU3e+jpDSN
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2872
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-27_12:2020-04-27,2020-04-27 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- mlxscore=0 malwarescore=0 bulkscore=0 phishscore=0 clxscore=1011
- mlxlogscore=923 spamscore=0 lowpriorityscore=0 impostorscore=0
- suspectscore=5 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2004270143
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF75 (Linux)/8.8.15_GA_3895)
+Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v17)
+Thread-Index: NB5tGkGbwSwj6uwD4kCQxwPloIWw0w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 01:13:04PM -0400, Johannes Weiner wrote:
-> +cc Roman who has been looking the most at this area
-> 
-> On Mon, Apr 27, 2020 at 03:48:13PM +0800, Yang Yingliang wrote:
-> > +cc linux-mm@kvack.org <mailto:linux-mm@kvack.org>
-> > 
-> > On 2020/4/26 19:21, Yang Yingliang wrote:
-> > > Hi,
-> > > 
-> > > When I doing the follow test in kernel-5.7-rc2, I found mem-free is
-> > > decreased
-> > > 
-> > > #!/bin/sh
-> > > cd /sys/fs/cgroup/memory/
-> > > 
-> > > for((i=0;i<45;i++))
-> > > do
-> > >         for((j=0;j<60000;j++))
-> > >         do
-> > >                 mkdir /sys/fs/cgroup/memory/yyl-cg$j
-> > >         done
-> > >         sleep 1
-> > >         ls /sys/fs/cgroup/memory/ | grep yyl | xargs rmdir
-> > > done
-> 
-> Should be easy enough to reproduce, thanks for the report. I'll try to
-> take a look later this week, unless Roman beats me to it.
-> 
-> Is this a new observation in 5.7-rc2?
-> 
-> Can you provide /sys/fs/cgroup/unified/cgroup.stat after the test?
 
-I'm actually trying to reproduce it now, but so far haven't found any issues.
 
-Yang, can you, please, attach the config you're using?
+----- On Apr 27, 2020, at 12:54 PM, Florian Weimer fw@deneb.enyo.de wrote:
 
-And also confirm that you're giving the system some time before looking
-at the memory statistics? Reclaim of internal cgroup structure is a complex
-process which might take some time to finish.
+> * Mathieu Desnoyers:
+>=20
+>>>> +#include <sys/syscall.h>
+>>>> +#include <stdint.h>
+>>>> +#include <kernel-features.h>
+>>>> +#include <sys/rseq.h>
+>>>> +
+>>>> +__thread struct rseq __rseq_abi =3D {
+>>>> +  .cpu_id =3D RSEQ_CPU_ID_UNINITIALIZED,
+>>>> +};
+>>>=20
+>>> { should go onto its own line.
+>>
+>> OK
+>>
+>>> I'd also add attribute_tls_model_ie,
+>>> also it's implied by the declaration in the header.
+>>
+>> This contradicts feedback I received from Szabolcs Nagy in September 201=
+9:
+>>
+>> https://public-inbox.org/libc-alpha/c58d4d6e-f22a-f5d9-e23a-5bd72cec1a86=
+@arm.com/
+>>
+>> "note that libpthread.so is built with -ftls-model=3Dinitial-exec
+>>
+>> (and if it wasn't then you'd want to put the attribute on the
+>> declaration in the internal header file, not on the definition,
+>> so the actual tls accesses generate the right code)"
+>>
+>> In the context of his feedback, __rseq_abi was defined within
+>> nptl/pthread_create.c.
+>> It is now defined in sysdeps/unix/sysv/linux/rseq-sym.c, which is built =
+into the
+>> csu which AFAIU ends up in libc.so. His comment still applies though, be=
+cause
+>> libc.so is also built with -ftls-model=3Dinitial-exec.
+>>
+>> So should I apply the "initial-exec" TLS model only to the __rseq_abi
+>> declaration, or is it preferred to apply it to both the declaration
+>> and the definition ?
+>=20
+> I do not have a strong preference here.  Technically, the declaration
+> in the header file should be enough.
 
-Is dmesg also clean?
+OK, so I'll just keep the attribute on the declaration in the header.
 
-Thanks!
+>=20
+>>>> diff --git a/sysdeps/unix/sysv/linux/sys/rseq.h
+>>>> b/sysdeps/unix/sysv/linux/sys/rseq.h
+>>>> new file mode 100644
+>>>> index 0000000000..503dce4cac
+>>>> --- /dev/null
+>>>> +++ b/sysdeps/unix/sysv/linux/sys/rseq.h
+>>>> @@ -0,0 +1,186 @@
+>>>=20
+>>> I think there is some value in making this header compatible with
+>>> inclusion from the assembler (including constants for the relevant
+>>> struct offsets), but that can be a later change.
+>>
+>> Agreed. By "later", do you mean before merging the patch, between
+>> merge of the patch and next glibc release, or for a subsequent glibc
+>> release ?
+>=20
+> It can happen some time after merging the patch, preferably for this
+> release.  But I don't think it's release-critical.
+
+OK
+
+>=20
+>>>> +/* struct rseq is aligned on 4 * 8 bytes to ensure it is always
+>>>> +   contained within a single cache-line.
+>>>> +
+>>>> +   A single struct rseq per thread is allowed.  */
+>>>> +struct rseq
+>>>> +  {
+>>>> +    /* Restartable sequences cpu_id_start field. Updated by the
+>>>> +       kernel. Read by user-space with single-copy atomicity
+>>>> +       semantics. This field should only be read by the thread which
+>>>> +       registered this data structure. Aligned on 32-bit. Always
+>>>=20
+>>> What does =E2=80=9CAligned on 32-bit=E2=80=9D mean in this context?  Do=
+ you mean to
+>>> reference 32-*byte* alignment here?
+>>
+>> No. I really mean 32-bit (4-byte). Being aligned on 32-byte guarantees t=
+hat
+>> this field is aligned at least on 4-byte. This is required by single-cop=
+y
+>> atomicity semantics.
+>>
+>> Should I update this comment to state "Aligned on 4-byte" instead ?
+>=20
+> I think this is implied by all Linux ABIs.  And the explicit alignment
+> specification for struct rseq makes the alignment 32 bytes.
+
+Unless a structure ends up being packed, which is of course not the case
+here.
+
+I would prefer to keep the comment about 32-bit alignment requirement on
+the specific fields, because the motivation for alignment requirement is
+much more strict for fields (correctness) than the motivation for alignment
+of the structure (performance).
+
+>=20
+>>>> +    /* Restartable sequences rseq_cs field.
+>>>> +
+>>>> +       Contains NULL when no critical section is active for the curre=
+nt
+>>>> +       thread, or holds a pointer to the currently active struct rseq=
+_cs.
+>>>> +
+>>>> +       Updated by user-space, which sets the address of the currently
+>>>> +       active rseq_cs at the beginning of assembly instruction sequen=
+ce
+>>>> +       block, and set to NULL by the kernel when it restarts an assem=
+bly
+>>>> +       instruction sequence block, as well as when the kernel detects=
+ that
+>>>> +       it is preempting or delivering a signal outside of the range
+>>>> +       targeted by the rseq_cs. Also needs to be set to NULL by user-=
+space
+>>>> +       before reclaiming memory that contains the targeted struct rse=
+q_cs.
+>>>> +
+>>>> +       Read and set by the kernel. Set by user-space with single-copy
+>>>> +       atomicity semantics. This field should only be updated by the
+>>>> +       thread which registered this data structure. Aligned on 64-bit=
+.  */
+>>>> +    union {
+>>>> +      uint64_t ptr64;
+>>>> +#ifdef __LP64__
+>>>> +      uint64_t ptr;
+>>>> +#else
+>>>> +      struct {
+>>>> +#if (defined(__BYTE_ORDER) && (__BYTE_ORDER =3D=3D __BIG_ENDIAN)) ||
+>>>> defined(__BIG_ENDIAN)
+>>>> +        uint32_t padding; /* Initialized to zero.  */
+>>>> +        uint32_t ptr32;
+>>>> +#else /* LITTLE */
+>>>> +        uint32_t ptr32;
+>>>> +        uint32_t padding; /* Initialized to zero.  */
+>>>> +#endif /* ENDIAN */
+>>>> +      } ptr;
+>>>> +#endif
+>>>> +    } rseq_cs;
+>>>=20
+>>> Are these conditionals correct for x32?
+>>
+>> Let's see. With x86 gcc:
+>>
+>> -m64: (__x86_64__ && __LP64__)
+>> -m32: (__i386__)
+>> -mx32: (__x86_64__ && __ILP32__)
+>>
+>> So with "#ifdef __LP64__" we specifically target 64-bit pointers. The re=
+st
+>> falls into the "else" case, which expects 32-bit pointers. Considering t=
+hat
+>> x32 has 32-bit pointers, I don't see any issue here.
+>=20
+> Does the kernel have a separate 32-bit entry point for rseq on x32?
+> If not, it will expect the 64-bit struct layout.
+
+No, there is a single entry point into rseq covering all of 32-bit, 64-bit =
+and x32.
+We achieve this by ensuring the layout of the linux/rseq.h structures
+uses the union representation for pointers. Therefore, the kernel does not =
+care
+whether it reads a pointer from a 32-bit or 64-bit process. This is becomin=
+g the
+preferred way to design Linux kernel ABIs nowadays.
+
+>=20
+>> We don't mind that user-space uses that pointer, but we never want the k=
+ernel
+>> to touch that pointer rather than the 32/64-bit-aware fields. One possib=
+ility
+>> would be to do:
+>>
+>>     union
+>>       {
+>>         uint64_t ptr64;
+>> #ifdef __LP64__
+>>         uint64_t ptr;
+>> #else
+>>         struct
+>>           {
+>> #if (defined (__BYTE_ORDER) && (__BYTE_ORDER =3D=3D __BIG_ENDIAN)) || de=
+fined
+>> (__BIG_ENDIAN)
+>>             uint32_t padding; /* Initialized to zero.  */
+>>             uint32_t ptr32;
+>> #else /* LITTLE */
+>>             uint32_t ptr32;
+>>             uint32_t padding; /* Initialized to zero.  */
+>> #endif /* ENDIAN */
+>>           } ptr;
+>> #endif
+>>
+>> #ifndef __KERNEL__
+>>      const struct rseq_cs *uptr;
+>> #endif
+>>       } rseq_cs;
+>>
+>> in the union, so only user-space can see that field. Thoughts ?
+>=20
+> I think this depends on where the x32 question lands.
+
+x32 should not be an issue as explained above, so I'm very open to
+add this "uptr" for user-space only.
+
+Thanks,
+
+Mathieu
+
+
+--=20
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
