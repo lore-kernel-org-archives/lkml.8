@@ -2,71 +2,86 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4301C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9ACC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6317206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C03206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:28:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgD0M2P (ORCPT
+        id S1727085AbgD0M23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 08:28:15 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:32966 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726589AbgD0M2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 08:28:14 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id AE24871CBB5878793B39;
-        Mon, 27 Apr 2020 20:28:12 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 27 Apr 2020 20:28:04 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Lee Jones <lee.jones@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH] mfd: wcd934x: Drop kfree for memory allocated with devm_kzalloc
-Date:   Mon, 27 Apr 2020 12:29:22 +0000
-Message-ID: <20200427122922.56643-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200427110805.154447-1-weiyongjun1@huawei.com>
-References: <20200427110805.154447-1-weiyongjun1@huawei.com>
+        Mon, 27 Apr 2020 08:28:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42276 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726260AbgD0M22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 08:28:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C06C1AB89;
+        Mon, 27 Apr 2020 12:28:25 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 33DE7DA781; Mon, 27 Apr 2020 14:27:41 +0200 (CEST)
+Date:   Mon, 27 Apr 2020 14:27:41 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        willy@infradead.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
+Subject: Re: [RFC PATCH 3/9] btrfs: use set/clear_fs_page_private
+Message-ID: <20200427122740.GZ18421@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Christoph Hellwig <hch@infradead.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        willy@infradead.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+        linux-btrfs@vger.kernel.org
+References: <20200426214925.10970-1-guoqing.jiang@cloud.ionos.com>
+ <20200426214925.10970-4-guoqing.jiang@cloud.ionos.com>
+ <20200426222054.GA2005@dread.disaster.area>
+ <20200427055428.GB16709@infradead.org>
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427055428.GB16709@infradead.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's not necessary to free memory allocated with devm_kzalloc
-and using kfree leads to a double free.
+On Sun, Apr 26, 2020 at 10:54:28PM -0700, Christoph Hellwig wrote:
+> On Mon, Apr 27, 2020 at 08:20:54AM +1000, Dave Chinner wrote:
+> > >  void set_page_extent_mapped(struct page *page)
+> > >  {
+> > > -	if (!PagePrivate(page)) {
+> > > -		SetPagePrivate(page);
+> > > -		get_page(page);
+> > > -		set_page_private(page, EXTENT_PAGE_PRIVATE);
+> > > -	}
+> > > +	if (!PagePrivate(page))
+> > > +		set_fs_page_private(page, (void *)EXTENT_PAGE_PRIVATE);
+> > 
+> > Change the definition of EXTENT_PAGE_PRIVATE so the cast is not
+> > needed? Nothing ever reads EXTENT_PAGE_PRIVATE; it's only there to
+> > set the private flag for other code to check and release the extent
+> > mapping reference to the page...
+> 
+> IIRC there as a patch on the btrfs list to remove EXTENT_PAGE_PRIVATE,
+> it might be better to not bother changing it.  Maybe the btrfs
+> maintainers remember this better.
 
-Fixes: 6ac7e4d7ad70 ("mfd: wcd934x: Add support to wcd9340/wcd9341 codec")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- drivers/mfd/wcd934x.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/mfd/wcd934x.c b/drivers/mfd/wcd934x.c
-index 90341f3c6810..da910302d51a 100644
---- a/drivers/mfd/wcd934x.c
-+++ b/drivers/mfd/wcd934x.c
-@@ -280,7 +280,6 @@ static void wcd934x_slim_remove(struct slim_device *sdev)
- 
- 	regulator_bulk_disable(WCD934X_MAX_SUPPLY, ddata->supplies);
- 	mfd_remove_devices(&sdev->dev);
--	kfree(ddata);
- }
- 
- static const struct slim_device_id wcd934x_slim_id[] = {
-
-
-
+The patch removing it is part of patchset adding full iomap support to
+btrfs,
+(https://lore.kernel.org/linux-btrfs/20190905150650.21089-4-rgoldwyn@suse.de/)
+but it'll still take some time so I'm OK with using the
+set_fs_page_private helper and adding the cast to EXTENT_PAGE_PRIVATE
+definition.
