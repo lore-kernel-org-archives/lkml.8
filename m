@@ -2,238 +2,270 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F99C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A94C55185
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D86B206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:44:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RKVWEZ2i"
+	by mail.kernel.org (Postfix) with ESMTP id 985D7206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgD0Do0 (ORCPT
+        id S1726470AbgD0DsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 23:44:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46714 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726535AbgD0Do0 (ORCPT
+        Sun, 26 Apr 2020 23:48:16 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:39194 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbgD0DsP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 23:44:26 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8A7CC061A0F;
-        Sun, 26 Apr 2020 20:44:25 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id i3so17301082ioo.13;
-        Sun, 26 Apr 2020 20:44:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aQq0CUnQfujiDDnJvRHgF4LcjSyfQt3UEj7L50b98/A=;
-        b=RKVWEZ2ioRL+cte2OumCaEGfBNi/Ob4AKIpk4K5KD00rj0JDK1PZIS7gzPvJXBAwXD
-         wEDKZYPg+Iwxfg3u6Qu2tHISBcIuoeMiAheln22UZOiycsdQ0HMoswEn0IMGDShJmzQk
-         1SCN3h1Ol/griaEytviyKiCcTm+lE555t9lIv5tWcUb5za9Ic35WNIaCEsYbLHrTQ1Fu
-         0l4ku6FDE+jmz7sQl3r2fP1tZYb2z9gLkiQqPBHbXGY2DfDYDrYJr2pLEETcwtCZxioW
-         tTPAGa9UZBCCSkNrIf8UWpHNoocAvTroQLIVShq/A0Z5rdQcfaDZA8EIjVuRUWnEivXS
-         UDcw==
+        Sun, 26 Apr 2020 23:48:15 -0400
+Received: by mail-il1-f200.google.com with SMTP id c11so10048897ilr.6
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 20:48:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aQq0CUnQfujiDDnJvRHgF4LcjSyfQt3UEj7L50b98/A=;
-        b=pwbBrk7OgiANoizUX+B2xHvHCnmvYLgwAB64yfpzkwBrc81RuzyigXUeLYB/A7Twz4
-         SyBvmm8Y8N1Nwj/LCxgAoPrjrh+luwv8P9GSNaieCWwuVIgze5jyKpsKjOBFwsvHLNhe
-         s3aZNdlVKNXLwNgQhkiTdSO8Ogu0ytw5Xjn6xLhsuSe32QcbgD1bjQr/c8jkezmBEORQ
-         2/0uiMpAKOAogLIBtEl9KDqCa+a4TS5mNxiYswuGyUKXi0ocRkglE6klSwxolUp37jWF
-         JsRXD2YlKMZExWqYEeHI3EwrdCSIvbIVeZEq0PUn/sVgGjP2A6ZgtMrDf3clu2xiv/8q
-         rXHA==
-X-Gm-Message-State: AGi0Pubuyz/Jb0dpeH+Qb8KURt20+iiMWj9ZfQTv+shS1yl+HdAtk9ht
-        Rj4bOgKoa2RtmJtqgswyzYLpFC9KC0Avrq7RaUw=
-X-Google-Smtp-Source: APiQypLX3afqSM1QWAKv61iq3HlPwMPQmqlnAsESamTCfsmhHfuQWhrkAz+NtraNDJj1UyhtF31EjwCvfUn58THeneA=
-X-Received: by 2002:a6b:7317:: with SMTP id e23mr19071605ioh.72.1587959064357;
- Sun, 26 Apr 2020 20:44:24 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=3CmKdxGXP/iHTlLpTWyhuApxpkWipFmSjdk7JK/lqHM=;
+        b=qwvYOGKjD52I2Ppq0sdp8NN5mQ3KW/QgO1CQYk9iL8iQ3MW7ga6WvoNFcQMF7vWyC1
+         5DKU+UtM/zz7R7zrx9BCY1EtA3+pS5/Cw9dvmr2e9lbYVslW+j69SlSdNTnD9tuUueRu
+         8jvoYdLWy9RCb0sUyACYjSObhrqK+3LXFNXYaMIFz1BkkMdmscczBGBTMjm9b9Uk1Unb
+         vTh6Q/YUU7izk/GlMMkzXJsBx4DItiVN/XUA6nOYQw0yfmkpbUAHJmG0F1iW0Vhh+73Y
+         CrrBl8wEHeLMoSCC2IabgWhMnDrgAIzI0L7/derPbxKaDMaQSLunpfiblerRJNIPC+8j
+         ioGA==
+X-Gm-Message-State: AGi0PuZT8wF6HZ9ZaMucjGfjMAYnZ8JbflZD1FojM/t7oK+8trgQJOJ4
+        /wtKek/xqHXx0AXNWb2G1N9118knYT+ZUyyRc9TCsvi971XP
+X-Google-Smtp-Source: APiQypIWiSpwdzcP8BpPZM8pnkdo6i4U2kCN36F1z1yDAhSmNiip6oKM8sfVlEXLansXzoRhKpkKwRxPKQwOzgn9JM1CQKdjo79b
 MIME-Version: 1.0
-References: <20200426123905.8336-1-tianjia.zhang@linux.alibaba.com> <20200426123905.8336-8-tianjia.zhang@linux.alibaba.com>
-In-Reply-To: <20200426123905.8336-8-tianjia.zhang@linux.alibaba.com>
-From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Mon, 27 Apr 2020 11:51:51 +0800
-Message-ID: <CAAhV-H7tSPFSU143ZfmgitEY1BY7MrBzwvJHve49i+ABQ9quCg@mail.gmail.com>
-Subject: Re: [PATCH v3 7/7] KVM: MIPS: clean up redundant kvm_run parameters
- in assembly
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        paulus@ozlabs.org, mpe@ellerman.id.au,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        cohuck@redhat.com, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        Thomas Gleixner <tglx@linutronix.de>, mingo@redhat.com,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org, hpa@zytor.com,
-        Marc Zyngier <maz@kernel.org>, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
-        christoffer.dall@arm.com, Peter Xu <peterx@redhat.com>,
-        thuth@redhat.com, kvm@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        kvmarm@lists.cs.columbia.edu,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+X-Received: by 2002:a5d:9256:: with SMTP id e22mr19758359iol.179.1587959292300;
+ Sun, 26 Apr 2020 20:48:12 -0700 (PDT)
+Date:   Sun, 26 Apr 2020 20:48:12 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000089155205a43d9596@google.com>
+Subject: KASAN: use-after-free Read in vkms_dumb_create
+From:   syzbot <syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com>
+To:     airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        hamohammed.sa@gmail.com, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        rodrigosiqueiramelo@gmail.com, sumit.semwal@linaro.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Tianjia,
+Hello,
 
-On Sun, Apr 26, 2020 at 8:40 PM Tianjia Zhang
-<tianjia.zhang@linux.alibaba.com> wrote:
->
-> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
-> structure. Earlier than historical reasons, many kvm-related function
-> parameters retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time.
-> This patch does a unified cleanup of these remaining redundant parameters.
->
-> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-> ---
->  arch/mips/include/asm/kvm_host.h |  4 ++--
->  arch/mips/kvm/entry.c            | 15 +++++----------
->  arch/mips/kvm/mips.c             |  3 ++-
->  arch/mips/kvm/trap_emul.c        |  2 +-
->  arch/mips/kvm/vz.c               |  2 +-
->  5 files changed, 11 insertions(+), 15 deletions(-)
->
-> diff --git a/arch/mips/include/asm/kvm_host.h b/arch/mips/include/asm/kvm_host.h
-> index 971439297cea..db915c55166d 100644
-> --- a/arch/mips/include/asm/kvm_host.h
-> +++ b/arch/mips/include/asm/kvm_host.h
-> @@ -310,7 +310,7 @@ struct kvm_mmu_memory_cache {
->  #define KVM_MIPS_GUEST_TLB_SIZE        64
->  struct kvm_vcpu_arch {
->         void *guest_ebase;
-> -       int (*vcpu_run)(struct kvm_run *run, struct kvm_vcpu *vcpu);
-> +       int (*vcpu_run)(struct kvm_vcpu *vcpu);
->
->         /* Host registers preserved across guest mode execution */
->         unsigned long host_stack;
-> @@ -821,7 +821,7 @@ int kvm_mips_emulation_init(struct kvm_mips_callbacks **install_callbacks);
->  /* Debug: dump vcpu state */
->  int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu);
->
-> -extern int kvm_mips_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu);
-> +extern int kvm_mips_handle_exit(struct kvm_vcpu *vcpu);
->
->  /* Building of entry/exception code */
->  int kvm_mips_entry_setup(void);
-> diff --git a/arch/mips/kvm/entry.c b/arch/mips/kvm/entry.c
-> index 16e1c93b484f..e3f29af3b6cd 100644
-> --- a/arch/mips/kvm/entry.c
-> +++ b/arch/mips/kvm/entry.c
-> @@ -204,7 +204,7 @@ static inline void build_set_exc_base(u32 **p, unsigned int reg)
->   * Assemble the start of the vcpu_run function to run a guest VCPU. The function
->   * conforms to the following prototype:
->   *
-> - * int vcpu_run(struct kvm_run *run, struct kvm_vcpu *vcpu);
-> + * int vcpu_run(struct kvm_vcpu *vcpu);
->   *
->   * The exit from the guest and return to the caller is handled by the code
->   * generated by kvm_mips_build_ret_to_host().
-> @@ -217,8 +217,7 @@ void *kvm_mips_build_vcpu_run(void *addr)
->         unsigned int i;
->
->         /*
-> -        * A0: run
-> -        * A1: vcpu
-> +        * A0: vcpu
->          */
->
->         /* k0/k1 not being used in host kernel context */
-> @@ -237,10 +236,10 @@ void *kvm_mips_build_vcpu_run(void *addr)
->         kvm_mips_build_save_scratch(&p, V1, K1);
->
->         /* VCPU scratch register has pointer to vcpu */
-> -       UASM_i_MTC0(&p, A1, scratch_vcpu[0], scratch_vcpu[1]);
-> +       UASM_i_MTC0(&p, A0, scratch_vcpu[0], scratch_vcpu[1]);
->
->         /* Offset into vcpu->arch */
-> -       UASM_i_ADDIU(&p, K1, A1, offsetof(struct kvm_vcpu, arch));
-> +       UASM_i_ADDIU(&p, K1, A0, offsetof(struct kvm_vcpu, arch));
->
->         /*
->          * Save the host stack to VCPU, used for exception processing
-> @@ -628,10 +627,7 @@ void *kvm_mips_build_exit(void *addr)
->         /* Now that context has been saved, we can use other registers */
->
->         /* Restore vcpu */
-> -       UASM_i_MFC0(&p, S1, scratch_vcpu[0], scratch_vcpu[1]);
-> -
-> -       /* Restore run (vcpu->run) */
-> -       UASM_i_LW(&p, S0, offsetof(struct kvm_vcpu, run), S1);
-> +       UASM_i_MFC0(&p, S0, scratch_vcpu[0], scratch_vcpu[1]);
->
->         /*
->          * Save Host level EPC, BadVaddr and Cause to VCPU, useful to process
-> @@ -793,7 +789,6 @@ void *kvm_mips_build_exit(void *addr)
->          * with this in the kernel
->          */
->         uasm_i_move(&p, A0, S0);
-> -       uasm_i_move(&p, A1, S1);
->         UASM_i_LA(&p, T9, (unsigned long)kvm_mips_handle_exit);
->         uasm_i_jalr(&p, RA, T9);
->          UASM_i_ADDIU(&p, SP, SP, -CALLFRAME_SIZ);
-I think uasm_i_move(&p, K1, S1) in kvm_mips_build_ret_from_exit() and
-UASM_i_MTC0(&p, S1, scratch_vcpu[0], scratch_vcpu[1]) in
-kvm_mips_build_ret_to_guest() should also be changed.
+syzbot found the following crash on:
 
-> diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
-> index 9710477a9827..32850470c037 100644
-> --- a/arch/mips/kvm/mips.c
-> +++ b/arch/mips/kvm/mips.c
-> @@ -1186,8 +1186,9 @@ static void kvm_mips_set_c0_status(void)
->  /*
->   * Return value is in the form (errcode<<2 | RESUME_FLAG_HOST | RESUME_FLAG_NV)
->   */
-> -int kvm_mips_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
-> +int kvm_mips_handle_exit(struct kvm_vcpu *vcpu)
->  {
-> +       struct kvm_run *run = vcpu->run;
->         u32 cause = vcpu->arch.host_cp0_cause;
->         u32 exccode = (cause >> CAUSEB_EXCCODE) & 0x1f;
->         u32 __user *opc = (u32 __user *) vcpu->arch.pc;
-> diff --git a/arch/mips/kvm/trap_emul.c b/arch/mips/kvm/trap_emul.c
-> index d822f3aee3dc..04c864cc356a 100644
-> --- a/arch/mips/kvm/trap_emul.c
-> +++ b/arch/mips/kvm/trap_emul.c
-> @@ -1238,7 +1238,7 @@ static int kvm_trap_emul_vcpu_run(struct kvm_vcpu *vcpu)
->          */
->         kvm_mips_suspend_mm(cpu);
->
-> -       r = vcpu->arch.vcpu_run(vcpu->run, vcpu);
-> +       r = vcpu->arch.vcpu_run(vcpu);
->
->         /* We may have migrated while handling guest exits */
->         cpu = smp_processor_id();
-> diff --git a/arch/mips/kvm/vz.c b/arch/mips/kvm/vz.c
-> index 94f1d23828e3..c5878fa0636d 100644
-> --- a/arch/mips/kvm/vz.c
-> +++ b/arch/mips/kvm/vz.c
-> @@ -3152,7 +3152,7 @@ static int kvm_vz_vcpu_run(struct kvm_vcpu *vcpu)
->         kvm_vz_vcpu_load_tlb(vcpu, cpu);
->         kvm_vz_vcpu_load_wired(vcpu);
->
-> -       r = vcpu->arch.vcpu_run(vcpu->run, vcpu);
-> +       r = vcpu->arch.vcpu_run(vcpu);
->
->         kvm_vz_vcpu_save_wired(vcpu);
->
-> --
-> 2.17.1
->
+HEAD commit:    c578ddb3 Merge tag 'linux-kselftest-5.7-rc3' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10fbf0d8100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b7a70e992f2f9b68
+dashboard link: https://syzkaller.appspot.com/bug?extid=e3372a2afe1e7ef04bc7
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15438330100000
 
-Regards,
-Huacai
+Bisection is inconclusive: the first bad commit could be any of:
+
+85b5bafb drm/cma-helper: Remove drm_fb_cma_fbdev_init_with_funcs()
+dff1c703 drm/tinydrm: Use drm_fbdev_generic_setup()
+23167fa9 drm/panel: simple: Add support for Rocktech RK070ER9427 LCD panel
+9060d7f4 drm/fb-helper: Finish the generic fbdev emulation
+2230ca12 dt-bindings: display: Document the EDT et* displays in one file.
+e896c132 drm/debugfs: Add internal client debugfs file
+894a677f drm/cma-helper: Use the generic fbdev emulation
+aa7e6455 drm/panel: Add support for the EDT ETM0700G0BDH6
+244007ec drm/pl111: Set .gem_prime_vmap and .gem_prime_mmap
+aad34de2 drm/panel: Add support for the EDT ETM0700G0EDH6
+7a6aca49 dt-bindings: Add vendor prefix for DLC Display Co., Ltd.
+d536540f drm/fb-helper: Add generic fbdev emulation .fb_probe function
+0ca0c827 drm/panel: simple: Add DLC DLC0700YZG-1 panel
+c76f0f7c drm: Begin an API for in-kernel clients
+5ba57bab drm: vkms: select DRM_KMS_HELPER
+5fa8e4a2 drm/panel: Make of_drm_find_panel() return an ERR_PTR() instead of NULL
+008095e0 drm/vc4: Add support for the transposer block
+c59eb3cf drm/panel: Let of_drm_find_panel() return -ENODEV when the panel is disabled
+1ebe99a7 drm/vc4: Call drm_atomic_helper_fake_vblank() in the commit path
+2e64a174 drm/of: Make drm_of_find_panel_or_bridge() fail when the device is disabled
+1b9883ea drm/vc4: Support the case where the DSI device is disabled
+6fb42b66 drm/atomic: Call fake_vblank() from the generic commit_tail() helpers
+b0b7aa40 dt-bindings: display: Add DT bindings for BOE HV070WSA-100 panel
+b25c60af drm/crtc: Add a generic infrastructure to fake VBLANK events
+184d3cf4 drm/vc4: Use wait_for_flip_done() instead of wait_for_vblanks()
+ae8cf41b drm/panel: simple: Add support for BOE HV070WSA-100 panel to simple-panel
+814bde99 drm/connector: Make ->atomic_commit() optional
+955f60db drm: Add support for extracting sync signal drive edge from videomode
+3b39ad7a drm/panel: simple: Add newhaven, nhd-4.3-480272ef-atxl LCD
+425132fd drm/connector: Pass a drm_connector_state to ->atomic_commit()
+a5d2ade6 drm/panel: simple: Add support for Innolux G070Y2-L01
+b82c1f8f drm/atomic: Avoid connector to writeback_connector casts
+03fa9aa3 dt-bindings: Add DataImage, Inc. vendor prefix
+73915b2b drm/writeback: Fix the "overview" section of the doc
+97ceb1fb drm/panel: simple: Add support for DataImage SCF0700C48GGU18
+e22e9531 Merge drm-upstream/drm-next into drm-misc-next
+3d5664f9 drm/panel: ili9881c: Fix missing assignment to error return ret
+a0120245 drm/crc: Only report a single overflow when a CRC fd is opened
+7ad4e463 drm/panel: p079zca: Refactor panel driver to support multiple panels
+8adbbb2e drm/stm: ltdc: rework reset sequence
+48bd379a drm/panel: p079zca: Add variable unprepare_delay properties
+7868e507 drm/stm: ltdc: filter mode pixel clock vs pad constraint
+731edd4c dt-bindings: Add Innolux P097PFG panel bindings
+f8878bb2 drm: print plane state normalized zpos value
+ca52bea9 drm/atomic-helper: Use bitwise or for filling a bitmask
+de04a462 drm/panel: p079zca: Support Innolux P097PFG panel
+2bb7a39c dt-bindings: Add vendor prefix for kingdisplay
+a65020d0 drm/v3d: Fix a grammar nit in the scheduler docs.
+2dd4f211 drm/v3d: Add missing v3d documentation structure.
+ebc950fd dt-bindings: Add KINGDISPLAY KD097D04 panel bindings
+cd0e0ca6 drm/panel: type promotion bug in s6e8aa0_read_mtp_id()
+e0d01811 drm/v3d: Remove unnecessary dma_fence_ops.
+624bb0c0 drm/v3d: Delay the scheduler timeout if we're still making progress.
+b6d83fcc drm/panel: p079zca: Use of_device_get_match_data()
+408633d2 drm/v3d: use new return type vm_fault_t in v3d_gem_fault
+decac6b0 dt-bindings: display: sun4i-drm: Add R40 display engine compatible
+0b7510d1 drm/tilcdc: Use drm_connector_has_possible_encoder()
+d978a94b drm/sun4i: Add R40 display engine compatible
+af11942e drm/sun4i: tcon-top: Cleanup clock handling
+f8222409 drm/msm: Use drm_connector_has_possible_encoder()
+38cb8d96 drm: Add drm_connector_has_possible_encoder()
+da82107e drm/sun4i: tcon: Release node when traversing of graph
+7a667775 dt-bindings: display: sun4i-drm: Add R40 TV TCON description
+7b71ca24 drm/radeon: Use drm_connector_for_each_possible_encoder()
+4a068c5c drm/sun4i: DW HDMI: Release nodes if error happens during CRTC search
+ddba766d drm/nouveau: Use drm_connector_for_each_possible_encoder()
+98c0e348 drm/amdgpu: Use drm_connector_for_each_possible_encoder()
+e0f56782 drm/sun4i: mixer: Order includes alphabetically
+05db311a drm/sun4i: tcon-top: Add helpers for mux switching
+83aefbb8 drm: Add drm_connector_for_each_possible_encoder()
+20431c05 drm/i915: Nuke intel_mst_best_encoder()
+5e496566 drm/sun4i: tcon-top: Remove mux configuration at probe time
+0d998891 drm/fb-helper: Eliminate the .best_encoder() usage
+ac1fe132 dt-bindings: display: sun4i-drm: Fix order of DW HDMI PHY compatibles
+03e3ec9a drm/panel: simple: Add Sharp LQ035Q7DB03 panel support
+c91b007e drm/vkms: Add extra information about vkms
+5685ca0c drm/tinydrm: Fix doc build warnings
+854502fa drm/vkms: Add basic CRTC initialization
+ae61f61f drm/client: Fix: drm_client_new: Don't require DRM to be registered
+c04372ea drm/vkms: Add mode_config initialization
+41111ce1 drm/vkms: vkms_driver can be static
+559e50fd drm/vkms: Add dumb operations
+1c7c5fd9 drm/vkms: Introduce basic VKMS driver
+657cd71e drm: gma500: Changed __attribute__((packed)) to __packed
+d1648930 drm/vkms: Add connectors helpers
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17b65cdfe00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in vkms_dumb_create+0x286/0x290 drivers/gpu/drm/vkms/vkms_gem.c:142
+Read of size 8 at addr ffff88809e537110 by task syz-executor.0/9558
+
+CPU: 0 PID: 9558 Comm: syz-executor.0 Not tainted 5.7.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:382
+ __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
+ kasan_report+0x33/0x50 mm/kasan/common.c:625
+ vkms_dumb_create+0x286/0x290 drivers/gpu/drm/vkms/vkms_gem.c:142
+ drm_mode_create_dumb+0x27c/0x300 drivers/gpu/drm/drm_dumb_buffers.c:94
+ drm_ioctl_kernel+0x220/0x2f0 drivers/gpu/drm/drm_ioctl.c:787
+ drm_ioctl+0x4c9/0x980 drivers/gpu/drm/drm_ioctl.c:887
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl fs/ioctl.c:770 [inline]
+ __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45c829
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f19a3e30c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000004e2d80 RCX: 000000000045c829
+RDX: 0000000020000080 RSI: 00000000c02064b2 RDI: 0000000000000003
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 000000000000028b R14: 00000000004d3188 R15: 00007f19a3e316d4
+
+Allocated by task 9558:
+ save_stack+0x1b/0x40 mm/kasan/common.c:49
+ set_track mm/kasan/common.c:57 [inline]
+ __kasan_kmalloc mm/kasan/common.c:495 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:468
+ kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
+ __vkms_gem_create+0x44/0xf0 include/linux/slab.h:555
+ vkms_gem_create drivers/gpu/drm/vkms/vkms_gem.c:111 [inline]
+ vkms_gem_create drivers/gpu/drm/vkms/vkms_gem.c:100 [inline]
+ vkms_dumb_create+0x110/0x290 drivers/gpu/drm/vkms/vkms_gem.c:138
+ drm_mode_create_dumb+0x27c/0x300 drivers/gpu/drm/drm_dumb_buffers.c:94
+ drm_ioctl_kernel+0x220/0x2f0 drivers/gpu/drm/drm_ioctl.c:787
+ drm_ioctl+0x4c9/0x980 drivers/gpu/drm/drm_ioctl.c:887
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl fs/ioctl.c:770 [inline]
+ __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Freed by task 9558:
+ save_stack+0x1b/0x40 mm/kasan/common.c:49
+ set_track mm/kasan/common.c:57 [inline]
+ kasan_set_free_info mm/kasan/common.c:317 [inline]
+ __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:456
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x109/0x2b0 mm/slab.c:3757
+ drm_gem_object_free+0xf0/0x1f0 drivers/gpu/drm/drm_gem.c:983
+ kref_put include/linux/kref.h:65 [inline]
+ drm_gem_object_put_unlocked drivers/gpu/drm/drm_gem.c:1017 [inline]
+ drm_gem_object_put_unlocked+0x190/0x1c0 drivers/gpu/drm/drm_gem.c:1002
+ vkms_gem_create drivers/gpu/drm/vkms/vkms_gem.c:116 [inline]
+ vkms_gem_create drivers/gpu/drm/vkms/vkms_gem.c:100 [inline]
+ vkms_dumb_create+0x14d/0x290 drivers/gpu/drm/vkms/vkms_gem.c:138
+ drm_mode_create_dumb+0x27c/0x300 drivers/gpu/drm/drm_dumb_buffers.c:94
+ drm_ioctl_kernel+0x220/0x2f0 drivers/gpu/drm/drm_ioctl.c:787
+ drm_ioctl+0x4c9/0x980 drivers/gpu/drm/drm_ioctl.c:887
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl fs/ioctl.c:770 [inline]
+ __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+The buggy address belongs to the object at ffff88809e537000
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 272 bytes inside of
+ 1024-byte region [ffff88809e537000, ffff88809e537400)
+The buggy address belongs to the page:
+page:ffffea0002794dc0 refcount:1 mapcount:0 mapping:00000000e8234a18 index:0x0
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea00027a3608 ffffea0002749008 ffff8880aa000c40
+raw: 0000000000000000 ffff88809e537000 0000000100000002 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88809e537000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88809e537080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88809e537100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                         ^
+ ffff88809e537180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88809e537200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
