@@ -2,110 +2,99 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D049CC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFFCC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5997205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13BE020656
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:22:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587986391;
-	bh=OIfs0Gdxd9XtZepR2yK/YGAjvqoLUCNJzr9phA+UYYM=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=Zl+Xd9y11r+tn/xKXs0EwiQFbLcOl7J8BLR7gpeJ2/QnyAE5Wud8v3rU+HFzbuLO7
-	 sIJW3OhNAKhCwQkz71ccSiWMSPeZ+4yL+Lmq2raKLoGBbvOmdA7jArdmAJFCOFU1DP
-	 tedbkLVPsrnqjbMKepYYTONSO1vNPglX3s8hCWHo=
+	s=default; t=1587986527;
+	bh=0jmC6ymb22IxBunv3XGNmRuVyT/qlxFM1kkb/eWadrs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wOjbud0ZUs0FY/PPl/X5pQuUw78JPY4kfpVK/KOiXqFylLqoqi7RuTEhm3Pg1J1eo
+	 4nXEnLj9jx7NjchSgOfmxn7/vZm9TSDiRziWO8vuw0jj8EbwkNQs8Ue+PMbMiL6TIo
+	 Q2hKcm+1C2nB7V7sHYpNrgWZ7tEswrdeGrf2dqA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgD0LTv (ORCPT
+        id S1726769AbgD0LWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 07:19:51 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34448 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbgD0LTu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 07:19:50 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v4so15707721wme.1;
-        Mon, 27 Apr 2020 04:19:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=nxQk4cEc0aiSGCEEBf1pbnwbO1uRcVsKiwXYVrEzomM=;
-        b=TEriAgfo/JwWsqNtPYb2ZmmZgMba65g3iFLb7ElM/BX5qL4dMIixo4iGySqYDj/FNx
-         Y69PTly26+ud+bzWgovwTvGlOI4w45oqUxHI8R2CM72whn5j7oMWOk0SfDpc661kFaem
-         KnGO9j5/Fuh3kvj3r4a9NVl+VQTW9HkF7psKybzwx2nkJA+F++RSswNFPRze4E4+oXs7
-         FVhU1QqR6V9sdK9W+OVdLIweByKllH1WVI0QkmVyLzkVacUaCzq31/zlHzY1EzvpVtV0
-         f/W85Wb20igxIYNA/dIEVuVpYNAk6nmvD/o0Tm5kscR/XhrhhN557pcAXyh8ixyMWPz+
-         grnQ==
-X-Gm-Message-State: AGi0PuYEnQ+ASE1N/6J7bp6ofb8jyV+rSnW3BM6mNM/QA+tv6oIMJf93
-        OAPWqrmWW8Lru3FzfjB3frc=
-X-Google-Smtp-Source: APiQypJ3tLDw/B9cJp+h+N49181NXJK1IyEIZ0rry8f+0usSARqtE+0sepnxxtHL84+7T+2ABET+3Q==
-X-Received: by 2002:a1c:4b15:: with SMTP id y21mr25802152wma.150.1587986388306;
-        Mon, 27 Apr 2020 04:19:48 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id s8sm20648434wru.38.2020.04.27.04.19.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 04:19:47 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 11:19:45 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>, kys@microsoft.com,
-        sthemmin@microsoft.com, haiyangz@microsoft.com
-Subject: [GIT PULL] Hyper-V commits for 5.7-rc4
-Message-ID: <20200427111945.6qdvgimt3nt3ja57@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
+        Mon, 27 Apr 2020 07:22:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726260AbgD0LWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 07:22:05 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A319B205C9;
+        Mon, 27 Apr 2020 11:22:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587986525;
+        bh=0jmC6ymb22IxBunv3XGNmRuVyT/qlxFM1kkb/eWadrs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oMCK4UYlbGod1a1y5XvygMeHe8P1YvmunwSWbIIZ552DSBYHSFnaTtzvitje4yc5D
+         UzTJgJwuPOO6O26FCKCXDrZ5nLtvogMTIbATLS/45lkyOxvE8oz98oRZNmjLdx9+Y8
+         prTJZl+Z5mrHc6TlOUvyi31ZKDG5NOWMKWlkKNSY=
+Date:   Mon, 27 Apr 2020 12:22:02 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH 4/4] ASoC: wm8994: Silence warnings during deferred probe
+Message-ID: <20200427112202.GB4272@sirena.org.uk>
+References: <20200427074832.22134-1-m.szyprowski@samsung.com>
+ <CGME20200427074843eucas1p1a3a265df0c7f14b0aaec25eb65daf606@eucas1p1.samsung.com>
+ <20200427074832.22134-5-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="98e8jtXdkpgskNou"
 Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200427074832.22134-5-m.szyprowski@samsung.com>
+X-Cookie: Secrecy is the beginning of tyranny.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus
 
-Please pull the following changes since commit
-f3a99e761efa616028b255b4de58e9b5b87c5545:
+--98e8jtXdkpgskNou
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  x86/Hyper-V: Report crash data in die() when panic_on_oops is set (2020-04-11 17:19:07 +0100)
+On Mon, Apr 27, 2020 at 09:48:32AM +0200, Marek Szyprowski wrote:
+> Don't confuse user with meaningless warning about the failure in getting
+> clocks in case of deferred probe.
 
-are available in the Git repository at:
+>  	if (ret < 0) {
+> -		dev_err(&pdev->dev, "Failed to get clocks: %d\n", ret);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "Failed to get clocks: %d\n", ret);
 
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
+This completely eliminates the diagnostics which means that if the clock
+isn't there the user is a bit stuck trying to work out what's missing.
+There should still be a diagnostic.
 
-for you to fetch changes up to f081bbb3fd03f949bcdc5aed95a827d7c65e0f30:
+--98e8jtXdkpgskNou
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  hyper-v: Remove internal types from UAPI header (2020-04-22 21:10:05 +0100)
+-----BEGIN PGP SIGNATURE-----
 
-----------------------------------------------------------------
-hyperv-fixes for 5.7-rc4
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6mwFkACgkQJNaLcl1U
+h9CnKgf+L0DHzyP9uJrX9mcCSOEFMqGDbUbVooabgQKACLN2NqFor9WHedKckCIh
+fDOp+RpDynCvnBX7erSNkPM8Hkpo8VemUi+ULRs+Bj2qP1h6t+069tYs+AZ8f9VJ
+dAWfnctdgI8rYKrfwFa7zPToZbEYNX+3tZHwBMwnpW12+maRF788h2uas/h6Ae2s
+9o0nObKwrSLLvvnqvFXGPeX6UZ4kXayfQ8RojLR+y+QtkcLZTZeB2WGuowRS62wD
+yccW4mzrZojzcC3aSuuCosv3h9wEMbMb+g1PIF4cCUGz14oywcWiVBDiEi7uMSWp
+oyQQZ6ObUxSdmIvqgirYU5GA67W+wA==
+=MSap
+-----END PGP SIGNATURE-----
 
- - Two patches from Dexuan fixing suspension bugs
- - Three cleanup patches from Andy and Michael
-
-----------------------------------------------------------------
-Andy Shevchenko (2):
-      hyper-v: Use UUID API for exporting the GUID
-      hyper-v: Remove internal types from UAPI header
-
-Dexuan Cui (2):
-      Drivers: hv: vmbus: Fix Suspend-to-Idle for Generation-2 VM
-      x86/hyperv: Suspend/resume the VP assist page for hibernation
-
-Michael Kelley (1):
-      Drivers: hv: Move AEOI determination to architecture dependent code
-
- arch/x86/hyperv/hv_init.c       | 12 ++++++++++--
- arch/x86/include/asm/mshyperv.h |  2 ++
- drivers/hv/hv.c                 |  6 +-----
- drivers/hv/hv_trace.h           |  4 ++--
- drivers/hv/vmbus_drv.c          | 43 ++++++++++++++++++++++++++++++++---------
- include/uapi/linux/hyperv.h     |  4 ++--
- 6 files changed, 51 insertions(+), 20 deletions(-)
+--98e8jtXdkpgskNou--
