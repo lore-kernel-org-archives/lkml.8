@@ -2,147 +2,101 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F22D8C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CABC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9D61205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:42:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFLVnTtC"
+	by mail.kernel.org (Postfix) with ESMTP id B9A1321707
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:42:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588016565;
+	bh=pHSFHwxnqBXxHCqPQAkxUYpCjZ/3lJQClrx+8qthDWQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=U3g+JXN6pmqQdckMvxDxGfan+SFxoWFuCdUtCYCb1QfBrrlOmoxe2Oxbru+ZXzad6
+	 u8ONyrubIg5nY8D17ZqR0a6wP2A5/ot2MoUxX0Q/bl23KynJJehOPGjPtL9cJhcLCM
+	 U+T/bewCAyyGVaa5ndhSkQUFMYOHWBdf09VnS3lc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgD0Tml (ORCPT
+        id S1726794AbgD0Tmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 15:42:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726384AbgD0Tmi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 15:42:38 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83032C0610D5;
-        Mon, 27 Apr 2020 12:42:38 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id k13so21999583wrw.7;
-        Mon, 27 Apr 2020 12:42:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zX/yCU9mpboJUliofvxQr7UBLJDwPoQSlPea6kKg8KM=;
-        b=LFLVnTtCANwmbGx07w7A2d1rWExGrk9F61XItaJsTSdgtxNzlJD2B+Qm4P9Y2WYHLY
-         dmrfieWwyoanVul+nm5Pg+r/X4ueOAXwbyl93hnAZmhz98d6YMtG5V6sI/PnCGbJoM8a
-         H8vtFUqOKKlahPDZoQSI622wRnbibBeVb386AZ6RzE7oPb0OINvtaoLjdqRKEPI/T5JV
-         wRj3wsN27IiZQoLhAsvQJ8IVGy+wvaF4k5YX3RyhVSr/LNC0jCRG7qJiMbypX3+lNGFn
-         x0o5dfDlyJSDqrP1o2a9uF1veIBjiYHzIcffIrGJ+zb/AUNtw95GuER5YX0wXUESQw6c
-         h0jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zX/yCU9mpboJUliofvxQr7UBLJDwPoQSlPea6kKg8KM=;
-        b=Duwwyfd+hA71DCzc9JE9vf18XXHqMd4DHartT2p+WEoLj/e5w7R9teoMzRFP+dtqie
-         V+HOAl+L9olerKoBAuSecpbd+9FTqWraZm5wtlo692V6OS/1xW1L1e/Nq7ylKgys7q26
-         0/fXMIB8XDz/3J8gXQm3e2dF3apwYVKnNzVheKe504KjZ1K+FAstztlzMakN2cwYrVrI
-         WCwyHvUuvq5hp5PINaoPghRzsFf4YXNxPYx2SqdGOc+04hHBKCkGQ2DL3Yrwae9yf9Mr
-         OoRI5kJw2yYE/ohtjQt4yEhatbjV6cevlN1jDZBMU9TYFuQevxmWgtkQ//3BxjH6F6kR
-         cXxw==
-X-Gm-Message-State: AGi0PubI+7ocFM6C+0TmXhV4LTIOqLuWfZlh+sLET36gH80Gt+bLsYpl
-        3GMPOFehwRBrWrvZASR8y1ECM7F3RfY=
-X-Google-Smtp-Source: APiQypIaWZzdNOKJ0UqTJO6QRZHkSwHsWlu2x+vb/32bEwBI7+pOjbNcr/qqtIIR2FCbOePQ3nCXXg==
-X-Received: by 2002:a5d:65cb:: with SMTP id e11mr28396924wrw.402.1588016557029;
-        Mon, 27 Apr 2020 12:42:37 -0700 (PDT)
-Received: from [192.168.1.23] (acft175.neoplus.adsl.tpnet.pl. [83.9.221.175])
-        by smtp.gmail.com with ESMTPSA id v10sm22978999wrq.45.2020.04.27.12.42.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 12:42:36 -0700 (PDT)
-Subject: Re: [PATCH v20 12/17] leds: lp55xx: Add multicolor framework support
- to lp55xx
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200423155524.13971-1-dmurphy@ti.com>
- <20200423155524.13971-13-dmurphy@ti.com>
- <24aa265c-46ca-1643-7781-9ddbf734405b@gmail.com>
- <4f149443-87f9-ca3f-e131-2b494cbfed84@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <9ebe27ee-4dc5-110a-3897-328f5bbba902@gmail.com>
-Date:   Mon, 27 Apr 2020 21:42:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <4f149443-87f9-ca3f-e131-2b494cbfed84@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 27 Apr 2020 15:42:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51328 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726384AbgD0Tmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 15:42:42 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B71652078C;
+        Mon, 27 Apr 2020 19:42:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588016562;
+        bh=pHSFHwxnqBXxHCqPQAkxUYpCjZ/3lJQClrx+8qthDWQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BF4/l8XrQ02299gpcli0FvwYPMF2hN3ZsowBym+oFxLCbmSBv6c8XKoMoCpSUs1mZ
+         vLIh3Da+bxY+s/o+fJHms7WltoegzNJwopJah4TrVT7ox2ZS8JuHiDXeMfsgI8/UYZ
+         lVmACC6y+QfktaRHOt+ND6M6DoBoUgRMxPoCw4LQ=
+Date:   Mon, 27 Apr 2020 12:42:41 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Zong Li <zong.li@sifive.com>
+Cc:     Will Deacon <will@kernel.org>, linux-mm@kvack.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, catalin.marinas@arm.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/4] mm: add DEBUG_WX support
+Message-Id: <20200427124241.28adefc19cfddcf83f75d03c@linux-foundation.org>
+In-Reply-To: <CANXhq0rW5j+uAymXbfsND9AXHYvM+fPUX9YYYRVXY-Y1u6yo0Q@mail.gmail.com>
+References: <cover.1587455584.git.zong.li@sifive.com>
+        <23980cd0f0e5d79e24a92169116407c75bcc650d.1587455584.git.zong.li@sifive.com>
+        <20200427074915.GA11787@willie-the-truck>
+        <CANXhq0rW5j+uAymXbfsND9AXHYvM+fPUX9YYYRVXY-Y1u6yo0Q@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
+On Mon, 27 Apr 2020 16:47:47 +0800 Zong Li <zong.li@sifive.com> wrote:
 
-On 4/27/20 8:17 PM, Dan Murphy wrote:
-> Jacek
+> > > +       This is useful for discovering cases where the kernel is leaving
+> > > +       W+X mappings after applying NX, as such mappings are a security risk.
+> > > +       This check also includes UXN, which should be set on all kernel
+> > > +       mappings.
+> >
+> > "UXN" is the name of a bit in the arm64 page-table descriptors, so this
+> > should be reworded now that it's in generic help text.
+> >
 > 
-> On 4/26/20 11:07 AM, Jacek Anaszewski wrote:
->> Hi Dan,
->>
->> One nit below.
->>
->> On 4/23/20 5:55 PM, Dan Murphy wrote:
->>> Add multicolor framework support for the lp55xx family.
->>>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>> ---
->>>   drivers/leds/Kconfig                      |   1 +
->>>   drivers/leds/leds-lp5521.c                |  14 +-
->>>   drivers/leds/leds-lp5523.c                |  14 +-
->>>   drivers/leds/leds-lp5562.c                |  13 +-
->>>   drivers/leds/leds-lp55xx-common.c         | 178 +++++++++++++++++++---
->>>   drivers/leds/leds-lp55xx-common.h         |  11 +-
->>>   drivers/leds/leds-lp8501.c                |  14 +-
->>>   include/linux/platform_data/leds-lp55xx.h |   8 +
->>>   8 files changed, 207 insertions(+), 46 deletions(-)
->>>
->> [...]
->>> diff --git a/drivers/leds/leds-lp55xx-common.h 
->>> b/drivers/leds/leds-lp55xx-common.h
->>> index b9b1041e8143..a9d7ba3f2fd1 100644
->>> --- a/drivers/leds/leds-lp55xx-common.h
->>> +++ b/drivers/leds/leds-lp55xx-common.h
->>> @@ -12,6 +12,8 @@
->>>   #ifndef _LEDS_LP55XX_COMMON_H
->>>   #define _LEDS_LP55XX_COMMON_H
->>>   +#include <linux/led-class-multicolor.h>
->>> +
->>>   enum lp55xx_engine_index {
->>>       LP55XX_ENGINE_INVALID,
->>>       LP55XX_ENGINE_1,
->>> @@ -109,6 +111,9 @@ struct lp55xx_device_config {
->>>       /* access brightness register */
->>>       int (*brightness_fn)(struct lp55xx_led *led);
->>>   +    /* perform brightness value to multiple LEDs */
->>> +    int (*multicolor_brightness_fn)(struct lp55xx_led *led);
->>
->> Isn't some word missing here? IMO it should be rephrased.
->> Maybe "write multi color brightness to hw" ?
->>
-> But brightness_fn does not say write_brightness_fn so I think this would 
-> look weird to add write to the function name
+> It's exactly. Sorry for missing the statement.
+> 
+> Hi Andrew,
+> Shall I send a next version patch to fix it? It should be "This is
+> useful for discovering cases where the kernel is leaving W+X mappings
+> after applying NX, as such mappings are a security risk." here.
 
-I referred to the comment, not to the function name.
-And the comment for brightness_fn is vague IMO.
-So I propose to change both comments:
+I'll add this:
 
-s/access brightness register/set LED brightness/
-s/perform brightness value to multiple LEDs/
-   set multicolor LED brightness/
+--- a/mm/Kconfig.debug~mm-add-debug_wx-support-fix
++++ a/mm/Kconfig.debug
+@@ -128,8 +128,8 @@ config DEBUG_WX
+ 	help
+ 	  Generate a warning if any W+X mappings are found at boot.
+ 
+-	  This is useful for discovering cases where the kernel is leaving
+-	  W+X mappings after applying NX, as such mappings are a security risk.
++	  This is useful for discovering cases where the kernel is leaving W+X
++	  mappings after applying NX, as such mappings are a security risk.
+ 	  This check also includes UXN, which should be set on all kernel
+ 	  mappings.
+ 
+_
 
--- 
-Best regards,
-Jacek Anaszewski
