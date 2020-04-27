@@ -2,268 +2,119 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD66C82A00
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B551AC82A02
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE4820575
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:04:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588025050;
-	bh=3ppIvIG2mo//4/u76SXHlEN0GqilsRg7Wy3lNHnVkGo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wlMZA25MKChZ/nIeUnmYNKVG+rrVQ/D+rWwUIwpVMDiXbneO8W282a2IREuUTMJUm
-	 HDOwa4dsO9EA3rperqtKIXR9LXpHKK7VBNv7f2gBTK41mstcp1OyyfviOwwIuZdoBI
-	 m9zU4Qyj/pB4i6gTL7BqSNEVkZBKMgN/EYh83TC4=
+	by mail.kernel.org (Postfix) with ESMTP id 9377920575
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:04:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Uyb+S4TF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgD0WEJ (ORCPT
+        id S1726825AbgD0WEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 18:04:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48128 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726369AbgD0WCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 18:02:00 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D284D2222A;
-        Mon, 27 Apr 2020 22:01:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588024917;
-        bh=3ppIvIG2mo//4/u76SXHlEN0GqilsRg7Wy3lNHnVkGo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YwCT3StNpTX1f4y5zEJHCOm+f+EPzi98T5bQ9NJC+t8ezMFf373h3/5QEKVNm20z0
-         5+5S/aBHrP/8RbHovWKi3JL5onjWbNfvaORTS7of+Ki2ivY5bl36DLdYCCNEkfvu5K
-         LpOpSc7UTtXs6vbQzzzI/1E/2IEMKIgQKK42dfVk=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jTBp5-000IpX-4H; Tue, 28 Apr 2020 00:01:55 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 24/38] docs: networking: convert generic-hdlc.txt to ReST
-Date:   Tue, 28 Apr 2020 00:01:39 +0200
-Message-Id: <aad912de6bd7278b3302e4a7a8864cdf8451f95e.1588024424.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <cover.1588024424.git.mchehab+huawei@kernel.org>
-References: <cover.1588024424.git.mchehab+huawei@kernel.org>
+        Mon, 27 Apr 2020 18:04:04 -0400
+Received: from mail-eopbgr700095.outbound.protection.outlook.com ([40.107.70.95]:8888
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726377AbgD0WEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 18:04:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fwtbqctPHdjjntNnzQjNGfCoybwgghT82g6bgptP8RQL6FGLamkyCEs+DgIi6+gK3T7MfuwwI0BVXSHa3EIzVyNCokKzBnRxYDOllLCxaKQhc36In+ze2n3S2g+fTlEINdwXsIN0kjWv30RtiBGxIXw6dZMu9s+2vjJSxxHpaakpa6bz/RtJlQiR89EHWZ3gCm2lkLAHSj2jOFC5sVtvbBgZItHEVWmMeGFkkuf5giUGrH9+yKemOVOFWA9liNAl6CP+od4cbLtREUfaZg2Y9guDrFwFUgIHPTJLuQ/8/Tz5dcs6MSuXb16X9UYpWO9Ii6HWHrs/oOv7duvw1VEw5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fyVaGdAVd3ZcAA9S86IjWSY51LH4+kE8Af80x+SSG/c=;
+ b=hFPe8VTHzzyz9GPwF2zIe99fDIqrL9o8MzqpL9gwUY0nnKUzcAxkvEaRfDg5dMYeHtU1TPuYVYPNekKNH1trsCOfoVGdfAXMCBOWRauwUtYiGRCna8YVBURSae3EAE4XMflN2rxMmdRly0dPevd/3dEMnlXnwTCYazyOlom6nPMEG/JWO17Nx8rAwkC51GexPxYgqV1lhBfqsBeEwwbai0hx8g2H5KGh0P635akp1Bkt8PzHINH+3DOhpic1qK6JhV4dBzRc+Yd0yG3ilF+U1QgPjGl6EYaZCKbzlZdsf1JfZTt4jP+yYGAmA7CoU/ROcyV3PJRqu4bx/xvrymvaqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fyVaGdAVd3ZcAA9S86IjWSY51LH4+kE8Af80x+SSG/c=;
+ b=Uyb+S4TF8FL8TX2/C5GFH6BQwIMQngaRn6ip8SGPNMzRg6F/S0u8nW9K4FDeRIS96Yfn3BwVKkTLCu4tGpPwU1+7E4Ru1aRvZM51CIt/1qeVeOQ05GQnogCd7hIiLvBbrdNEXbRCs5kutEStW6ZM9GI3wn5BbMOr5rsuyXxAcwU=
+Received: from CH2PR21MB1511.namprd21.prod.outlook.com (2603:10b6:610:88::24)
+ by CH2PR21MB1432.namprd21.prod.outlook.com (2603:10b6:610:84::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.2; Mon, 27 Apr
+ 2020 22:03:58 +0000
+Received: from CH2PR21MB1511.namprd21.prod.outlook.com
+ ([fe80::35cf:633b:4836:674e]) by CH2PR21MB1511.namprd21.prod.outlook.com
+ ([fe80::35cf:633b:4836:674e%9]) with mapi id 15.20.2979.005; Mon, 27 Apr 2020
+ 22:03:58 +0000
+From:   Steve MacLean <Steve.MacLean@microsoft.com>
+To:     Jiri Olsa <jolsa@redhat.com>,
+        Francois Saint-Jacques <fsaintjacques@gmail.com>
+CC:     "eranian@google.com" <eranian@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: RE: [EXTERNAL] Re: [PATCH v3] perf inject --jit: Remove //anon mmap
+ events
+Thread-Topic: [EXTERNAL] Re: [PATCH v3] perf inject --jit: Remove //anon mmap
+ events
+Thread-Index: AQHVvaj2LRXwQIFSU0aPphN9jUHHyqfRREQAgLz/fEA=
+Date:   Mon, 27 Apr 2020 22:03:58 +0000
+Message-ID: <CH2PR21MB1511DC522EBE2E19C8185FE8F7AF0@CH2PR21MB1511.namprd21.prod.outlook.com>
+References: <CABNn7+pYPSfduacOATcKT1X_=qs70i7Bc8pELXDahY7BoB9_wQ@mail.gmail.com>
+ <20191229155112.GA21785@krava>
+In-Reply-To: <20191229155112.GA21785@krava>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=stmaclea@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-27T22:03:57.3964788Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=3c4c1af4-6fb1-4315-bf8f-633d69333f0a;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Steve.MacLean@microsoft.com; 
+x-originating-ip: [24.163.126.65]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a466e4fd-5079-4a9a-2f66-08d7eaf6e305
+x-ms-traffictypediagnostic: CH2PR21MB1432:
+x-microsoft-antispam-prvs: <CH2PR21MB1432D948F4263B7C27B6C792F7AF0@CH2PR21MB1432.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 0386B406AA
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: V/mt+FYhNk5fWNDX69k6XRr+yPt2kT/tOZWM0bnCi/jH8TlyQE1Mex+Bs3pMrVS5JvZKf65UjeE2o6w9isP6ptJf94uvdOnsaBt+bjAQ3EdqyyZlnXe8vo04Ix+UgB+mPuKSqV/S93Fa02ZSv1/3Sc7rVbHlFoBwvfcJM634sjUR9dm4jpV1fKF8RvTgoR12KdOg2ygNc6OiHmJzKj1XgebzR9lvN4q4fyqH161EPfbDciJpBRTW5v4ZHAWpw+38Si+1azvA/HI9vzaVMCMf7wUesYBIEYRvOdB56RSba5orDz3HsGSmLp0ff/sXcRcQnuTHg3mDqKjSnzAE6k2qJ5+zOwpxYouAEJ7jW5rVOu6N6p5ADsxFQG4DGnXVrCfnGzCKbixqVMQPUDyQz2vrHF18Ytj5yu9tfvI4plUel77wrfDr23rf/Y7+OtEHreOK
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR21MB1511.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(39860400002)(396003)(366004)(346002)(82960400001)(33656002)(82950400001)(2906002)(7696005)(52536014)(64756008)(66446008)(66946007)(66556008)(66476007)(9686003)(76116006)(4326008)(55016002)(8990500004)(6506007)(8936002)(26005)(186003)(110136005)(86362001)(5660300002)(8676002)(558084003)(10290500003)(71200400001)(478600001)(54906003)(316002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: n04RHv2ItyUwtiYT92M2s3n+zUxBQIq9GrCGRBSWGD99hWG8WozNoivy4ci9tcSRlEuzlsr3XXrt4vjnzLDJhw8YsBpuB4vv3v2Uh9cZ/VH4uuzjww7jrLMCdKE/wMD+d4WsZ7bHjQCYePLyAlpYLediaDcX7gQEreWuRKzTLQqgZqxgrKrjCivps9FlLKfMTs050QpzqkflXX6aGY9NGWJHaH1Wo4wokNW/mTYlQjCBYRUVVMQPCdLT+ureqy0HMXenXi0Y8n8Fl0JyMy8NprMcCsD1/f/WWKTrUP9Nz5++476dvgamYEcWqYWM5vVkMJs1J0/klScQ5dUXaTGhZZaKVGzDdtGuNU5t6ChsvGsctMK/kYTpURnLH5AFispKLwfJLSucB4GJwekiRca7EOpCZSsxHUTn5+rb7Op1RLjpZEIlzt9wjDdQYDAwMEj1qZlWozX+Tw6b8M8ICjWhttoit2Xci/DC08JYxECjNwEZWskvOkZJyKd4+BHcohTjn7Cd9ivTDQK/+W4jCHgCH5uPljs3xGLlnCHumRVH4pm74u/AWfrg0p8Cy+aQlV3qkF1rM+Xg0wRkast/SaDkQI5ozNmkQP4mXqscfiJTVF5MOyfJAm9MHH5SrmIgRYAk6TN0cATQ0yrzLbW88kOxzz/2j+yPOBVIR1Ovz18GBGzu8iys3+vxmK7vVXRCJjecUfpAPCWqJBkQmBRNfEGBZfpwqfynqTwPFNKLkKs37jzJGk3YoqEfMNXWTLP7L2rGri2VbsY0yMicJA09+petNA+ALrKcPsOSuzKco7+wxg0=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a466e4fd-5079-4a9a-2f66-08d7eaf6e305
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2020 22:03:58.6557
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PBmonRXUjjV4Q3UoV8uUgFP3jRAaQTu5FMvAtOS2Ki62fkaFMJyTKoXTV3u5IWmeIhghEOB19J3vu6H/tGCing==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR21MB1432
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- add SPDX header;
-- adjust title markup;
-- mark code blocks and literals as such;
-- adjust identation, whitespaces and blank lines;
-- add to networking/index.rst.
+> it's simple enough to revert in case there's any issue
+>
+> thanks,
+> jirka
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../{generic-hdlc.txt => generic-hdlc.rst}    | 86 +++++++++++++------
- Documentation/networking/index.rst            |  1 +
- 2 files changed, 63 insertions(+), 24 deletions(-)
- rename Documentation/networking/{generic-hdlc.txt => generic-hdlc.rst} (75%)
+Can we go ahead and merge this?
 
-diff --git a/Documentation/networking/generic-hdlc.txt b/Documentation/networking/generic-hdlc.rst
-similarity index 75%
-rename from Documentation/networking/generic-hdlc.txt
-rename to Documentation/networking/generic-hdlc.rst
-index 4eb3cc40b702..1c3bb5cb98d4 100644
---- a/Documentation/networking/generic-hdlc.txt
-+++ b/Documentation/networking/generic-hdlc.rst
-@@ -1,14 +1,22 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==================
- Generic HDLC layer
-+==================
-+
- Krzysztof Halasa <khc@pm.waw.pl>
- 
- 
- Generic HDLC layer currently supports:
-+
- 1. Frame Relay (ANSI, CCITT, Cisco and no LMI)
-+
-    - Normal (routed) and Ethernet-bridged (Ethernet device emulation)
-      interfaces can share a single PVC.
-    - ARP support (no InARP support in the kernel - there is an
-      experimental InARP user-space daemon available on:
-      http://www.kernel.org/pub/linux/utils/net/hdlc/).
-+
- 2. raw HDLC - either IP (IPv4) interface or Ethernet device emulation
- 3. Cisco HDLC
- 4. PPP
-@@ -24,19 +32,24 @@ with IEEE 802.1Q (VLANs) and 802.1D (Ethernet bridging).
- Make sure the hdlc.o and the hardware driver are loaded. It should
- create a number of "hdlc" (hdlc0 etc) network devices, one for each
- WAN port. You'll need the "sethdlc" utility, get it from:
-+
- 	http://www.kernel.org/pub/linux/utils/net/hdlc/
- 
--Compile sethdlc.c utility:
-+Compile sethdlc.c utility::
-+
- 	gcc -O2 -Wall -o sethdlc sethdlc.c
-+
- Make sure you're using a correct version of sethdlc for your kernel.
- 
- Use sethdlc to set physical interface, clock rate, HDLC mode used,
- and add any required PVCs if using Frame Relay.
--Usually you want something like:
-+Usually you want something like::
- 
- 	sethdlc hdlc0 clock int rate 128000
- 	sethdlc hdlc0 cisco interval 10 timeout 25
--or
-+
-+or::
-+
- 	sethdlc hdlc0 rs232 clock ext
- 	sethdlc hdlc0 fr lmi ansi
- 	sethdlc hdlc0 create 99
-@@ -49,46 +62,63 @@ any IP address to it) before using pvc devices.
- 
- Setting interface:
- 
--* v35 | rs232 | x21 | t1 | e1 - sets physical interface for a given port
--                                if the card has software-selectable interfaces
--  loopback - activate hardware loopback (for testing only)
--* clock ext - both RX clock and TX clock external
--* clock int - both RX clock and TX clock internal
--* clock txint - RX clock external, TX clock internal
--* clock txfromrx - RX clock external, TX clock derived from RX clock
--* rate - sets clock rate in bps (for "int" or "txint" clock only)
-+* v35 | rs232 | x21 | t1 | e1
-+    - sets physical interface for a given port
-+      if the card has software-selectable interfaces
-+  loopback
-+    - activate hardware loopback (for testing only)
-+* clock ext
-+    - both RX clock and TX clock external
-+* clock int
-+    - both RX clock and TX clock internal
-+* clock txint
-+    - RX clock external, TX clock internal
-+* clock txfromrx
-+    - RX clock external, TX clock derived from RX clock
-+* rate
-+    - sets clock rate in bps (for "int" or "txint" clock only)
- 
- 
- Setting protocol:
- 
- * hdlc - sets raw HDLC (IP-only) mode
-+
-   nrz / nrzi / fm-mark / fm-space / manchester - sets transmission code
-+
-   no-parity / crc16 / crc16-pr0 (CRC16 with preset zeros) / crc32-itu
-+
-   crc16-itu (CRC16 with ITU-T polynomial) / crc16-itu-pr0 - sets parity
- 
- * hdlc-eth - Ethernet device emulation using HDLC. Parity and encoding
-   as above.
- 
- * cisco - sets Cisco HDLC mode (IP, IPv6 and IPX supported)
-+
-   interval - time in seconds between keepalive packets
-+
-   timeout - time in seconds after last received keepalive packet before
--            we assume the link is down
-+	    we assume the link is down
- 
- * ppp - sets synchronous PPP mode
- 
- * x25 - sets X.25 mode
- 
- * fr - Frame Relay mode
-+
-   lmi ansi / ccitt / cisco / none - LMI (link management) type
-+
-   dce - Frame Relay DCE (network) side LMI instead of default DTE (user).
-+
-   It has nothing to do with clocks!
--  t391 - link integrity verification polling timer (in seconds) - user
--  t392 - polling verification timer (in seconds) - network
--  n391 - full status polling counter - user
--  n392 - error threshold - both user and network
--  n393 - monitored events count - both user and network
-+
-+  - t391 - link integrity verification polling timer (in seconds) - user
-+  - t392 - polling verification timer (in seconds) - network
-+  - n391 - full status polling counter - user
-+  - n392 - error threshold - both user and network
-+  - n393 - monitored events count - both user and network
- 
- Frame-Relay only:
-+
- * create n | delete n - adds / deletes PVC interface with DLCI #n.
-   Newly created interface will be named pvc0, pvc1 etc.
- 
-@@ -101,26 +131,34 @@ Frame-Relay only:
- Board-specific issues
- ---------------------
- 
--n2.o and c101.o need parameters to work:
-+n2.o and c101.o need parameters to work::
- 
- 	insmod n2 hw=io,irq,ram,ports[:io,irq,...]
--example:
-+
-+example::
-+
- 	insmod n2 hw=0x300,10,0xD0000,01
- 
--or
-+or::
-+
- 	insmod c101 hw=irq,ram[:irq,...]
--example:
-+
-+example::
-+
- 	insmod c101 hw=9,0xdc000
- 
--If built into the kernel, these drivers need kernel (command line) parameters:
-+If built into the kernel, these drivers need kernel (command line) parameters::
-+
- 	n2.hw=io,irq,ram,ports:...
--or
-+
-+or::
-+
- 	c101.hw=irq,ram:...
- 
- 
- 
- If you have a problem with N2, C101 or PLX200SYN card, you can issue the
--"private" command to see port's packet descriptor rings (in kernel logs):
-+"private" command to see port's packet descriptor rings (in kernel logs)::
- 
- 	sethdlc hdlc0 private
- 
-diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index 4e225f1f7039..d34824b27264 100644
---- a/Documentation/networking/index.rst
-+++ b/Documentation/networking/index.rst
-@@ -59,6 +59,7 @@ Contents:
-    filter
-    fore200e
-    framerelay
-+   generic-hdlc
- 
- .. only::  subproject and html
- 
--- 
-2.25.4
 
