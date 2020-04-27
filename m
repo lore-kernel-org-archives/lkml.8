@@ -2,120 +2,97 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD436C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 913B0C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B799620575
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 711A12064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:46:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgD0Knx (ORCPT
+        id S1727021AbgD0KqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 06:43:53 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2111 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726537AbgD0Knv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 06:43:51 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 1A5E68E417FCE3EC8A7D;
-        Mon, 27 Apr 2020 11:43:50 +0100 (IST)
-Received: from [127.0.0.1] (10.210.170.137) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 27 Apr
- 2020 11:43:47 +0100
-Subject: Re: [PATCH 3/4] lib: logic_pio: Introduce MMIO_LOWER_RESERVED
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, <linux-mips@vger.kernel.org>
-CC:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Kitt <steve@sk2.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Daniel Silsby <dansilsby@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Wei Xu <xuwei5@hisilicon.com>, <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Linuxarm <linuxarm@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>
-References: <20200426114806.1176629-1-jiaxun.yang@flygoat.com>
- <20200426114806.1176629-4-jiaxun.yang@flygoat.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <e84f4146-b44f-b009-0dc4-876aa551f44f@huawei.com>
-Date:   Mon, 27 Apr 2020 11:43:09 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Mon, 27 Apr 2020 06:46:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726507AbgD0KqF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 06:46:05 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 247F9C0610D5;
+        Mon, 27 Apr 2020 03:46:05 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jT1Gx-0000QU-NI; Mon, 27 Apr 2020 12:45:59 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5AE371C0131;
+        Mon, 27 Apr 2020 12:45:59 +0200 (CEST)
+Date:   Mon, 27 Apr 2020 10:45:58 -0000
+From:   "tip-bot2 for Alex Shi" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/core] locking/rtmutex: Remove unused rt_mutex_cmpxchg_relaxed()
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <1587135032-188866-1-git-send-email-alex.shi@linux.alibaba.com>
+References: <1587135032-188866-1-git-send-email-alex.shi@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <20200426114806.1176629-4-jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Message-ID: <158798435889.28353.3343865646156622642.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.170.137]
-X-ClientProxiedBy: lhreml722-chm.china.huawei.com (10.201.108.73) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/04/2020 12:47, Jiaxun Yang wrote:
-> That would allow platforms reserve some lower address in PIO MMIO range
-> to deal with legacy drivers with hardcoded I/O ports that can't be
-> managed by logic_pio.
+The following commit has been merged into the locking/core branch of tip:
 
-Hi,
+Commit-ID:     23b5ae2e8e1326c91b5dfdbb6ebcd5a6820074ae
+Gitweb:        https://git.kernel.org/tip/23b5ae2e8e1326c91b5dfdbb6ebcd5a6820074ae
+Author:        Alex Shi <alex.shi@linux.alibaba.com>
+AuthorDate:    Fri, 17 Apr 2020 22:50:31 +08:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 27 Apr 2020 12:26:40 +02:00
 
-Is there some reason why the logic_pio code cannot be improved to handle 
-these devices at these "fixed" addresses? Or do you have a plan to 
-improve it? We already support fixed bus address devices in the INDIRECT 
-IO region.
+locking/rtmutex: Remove unused rt_mutex_cmpxchg_relaxed()
 
-Carving out a region of IO space is less than ideal.
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1587135032-188866-1-git-send-email-alex.shi@linux.alibaba.com
 
-Thanks,
-John
+---
+ kernel/locking/rtmutex.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->   lib/logic_pio.c | 6 +++++-
->   1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/lib/logic_pio.c b/lib/logic_pio.c
-> index f511a99bb389..57fff1cb7063 100644
-> --- a/lib/logic_pio.c
-> +++ b/lib/logic_pio.c
-> @@ -20,6 +20,10 @@
->   static LIST_HEAD(io_range_list);
->   static DEFINE_MUTEX(io_range_mutex);
->   
-> +#ifndef MMIO_LOWER_RESERVED
-> +#define MMIO_LOWER_RESERVED	0
-> +#endif
-> +
->   /* Consider a kernel general helper for this */
->   #define in_range(b, first, len)        ((b) >= (first) && (b) < (first) + (len))
->   
-> @@ -36,7 +40,7 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
->   	struct logic_pio_hwaddr *range;
->   	resource_size_t start;
->   	resource_size_t end;
-> -	resource_size_t mmio_end = 0;
-> +	resource_size_t mmio_end = MMIO_LOWER_RESERVED;
->   	resource_size_t iio_sz = MMIO_UPPER_LIMIT;
->   	int ret = 0;
->   
-> 
-
+diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
+index c9f090d..cfdd5b9 100644
+--- a/kernel/locking/rtmutex.c
++++ b/kernel/locking/rtmutex.c
+@@ -141,7 +141,6 @@ static void fixup_rt_mutex_waiters(struct rt_mutex *lock)
+  * set up.
+  */
+ #ifndef CONFIG_DEBUG_RT_MUTEXES
+-# define rt_mutex_cmpxchg_relaxed(l,c,n) (cmpxchg_relaxed(&l->owner, c, n) == c)
+ # define rt_mutex_cmpxchg_acquire(l,c,n) (cmpxchg_acquire(&l->owner, c, n) == c)
+ # define rt_mutex_cmpxchg_release(l,c,n) (cmpxchg_release(&l->owner, c, n) == c)
+ 
+@@ -202,7 +201,6 @@ static inline bool unlock_rt_mutex_safe(struct rt_mutex *lock,
+ }
+ 
+ #else
+-# define rt_mutex_cmpxchg_relaxed(l,c,n)	(0)
+ # define rt_mutex_cmpxchg_acquire(l,c,n)	(0)
+ # define rt_mutex_cmpxchg_release(l,c,n)	(0)
+ 
