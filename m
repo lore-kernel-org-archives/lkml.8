@@ -2,195 +2,193 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9604C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CAEC55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 993C2206CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C0A20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:32:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgD0Obs (ORCPT
+        id S1727916AbgD0Ob7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 10:31:48 -0400
-Received: from muru.com ([72.249.23.125]:51522 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbgD0Obs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 10:31:48 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id E62BE8087;
-        Mon, 27 Apr 2020 14:32:34 +0000 (UTC)
-Date:   Mon, 27 Apr 2020 07:31:44 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
+        Mon, 27 Apr 2020 10:31:59 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:54400 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbgD0Ob7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 10:31:59 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jT4nW-0003PY-3t; Mon, 27 Apr 2020 08:31:50 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jT4nU-0003ye-W9; Mon, 27 Apr 2020 08:31:49 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <aford173@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 02/14] clocksource/drivers/timer-ti-dm: Add clockevent
- and clocksource support
-Message-ID: <20200427143144.GQ37466@atomide.com>
-References: <20200417165519.4979-1-tony@atomide.com>
- <20200417165519.4979-3-tony@atomide.com>
- <62be90e2-7dbe-410d-4171-c0ad0cddc7a3@linaro.org>
+        "Paul E. McKenney" <paulmck@kernel.org>
+References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
+        <87ftcv1nqe.fsf@x220.int.ebiederm.org>
+        <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
+        <20200424173927.GB26802@redhat.com>
+        <87mu6ymkea.fsf_-_@x220.int.ebiederm.org>
+        <875zdmmj4y.fsf_-_@x220.int.ebiederm.org>
+        <CAHk-=whvktUC9VbzWLDw71BHbV4ofkkuAYsrB5Rmxnhc-=kSeQ@mail.gmail.com>
+Date:   Mon, 27 Apr 2020 09:28:34 -0500
+In-Reply-To: <CAHk-=whvktUC9VbzWLDw71BHbV4ofkkuAYsrB5Rmxnhc-=kSeQ@mail.gmail.com>
+        (Linus Torvalds's message of "Sun, 26 Apr 2020 10:40:17 -0700")
+Message-ID: <878sihgfzh.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <62be90e2-7dbe-410d-4171-c0ad0cddc7a3@linaro.org>
+Content-Type: text/plain
+X-XM-SPF: eid=1jT4nU-0003ye-W9;;;mid=<878sihgfzh.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18+znDKyGRhbxepUE3Q5lEojaY62DKpFTI=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v3 3/6] rculist: Add hlist_swap_before_rcu
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Linus Torvalds <torvalds@linux-foundation.org> writes:
 
-* Daniel Lezcano <daniel.lezcano@linaro.org> [200427 09:19]:
-> On 17/04/2020 18:55, Tony Lindgren wrote:
-> > --- a/Documentation/devicetree/bindings/timer/ti,timer.txt
-> > +++ b/Documentation/devicetree/bindings/timer/ti,timer.txt
-> > @@ -14,6 +14,8 @@ Required properties:
-> >  			ti,omap5430-timer (applicable to OMAP543x devices)
-> >  			ti,am335x-timer	(applicable to AM335x devices)
-> >  			ti,am335x-timer-1ms (applicable to AM335x devices)
-> > +			ti,dmtimer-clockevent (when used as for clockevent)
-> > +			ti,dmtimer-clocksource (when used as for clocksource)
-> 
-> Please, submit a separate patch for this.
-> 
-> Before you resend as is, this will be nacked as clocksource / clockevent
-> is not a hardware description but a Linux thing.
-> 
-> Finding a way to characterize that from the DT is an endless discussion
-> since years, so I suggest to use a single property for the timer eg
-> <ti,dmtimer> and initialize the clocksource and the clockevent in the
-> driver.
+> On Sun, Apr 26, 2020 at 7:14 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>>
+>> To support this add hlist_swap_before_rcu.  An hlist primitive that
+>> will allow swaping the leading sections of two tasks.  For exchanging
+>> the task pids it will just be swapping the hlist_heads of two single
+>> entry lists.  But the functionality is more general.
+>
+> So I have no problems with the series now - the code is much more
+> understandable. Partly because of the split-up, partly because of the
+> comments, and partly because you explained the special case and why it
+> was a valid thing to do...
+>
+> However, I did start thinking about this case again.
+>
+> I still don't think the "swap entry" macro is necessarily useful in
+> _general_ - any time it's an actual individual entry, that swap macro
+> doesn't really work.
 
-Hmm good point. We still need to specify which timer is a clocksource
-and which one a clockevent somehow.
+But it isn't a "swap entry" macro/function.  I did not even attempt
+to make it a "swap entry" function.
 
-Maybe we could have a generic properties like the clock framework such as:
+I made a chop two lists into two and swap the pieces function.
 
-assigned-system-clocksource
-assigned-system-clockevent
+> So the only reason it works here is because you're actually swapping
+> the whole list.
+>
+> But that, in turn, shouldn't be using that "first node" model at all,
+> it should use the hlist_head. That would have made it a lot more
+> obvious what is actually going on to me.
+>
+> Now, the comment very much talks about the head case, but the code
+> still looks like it's swapping a non-head thing.
+>
+> I guess the code technically _works_ with "swap two list ends", but
+> does that actually really make sense as an operation?
 
-Or do we already have something similar that can be used?
+As an operation yes.  Will anyone else want that operation I don't know.
 
-> > diff --git a/drivers/clocksource/timer-ti-dm-systimer.c b/drivers/clocksource/timer-ti-dm-systimer.c
-> > new file mode 100644
-> > --- /dev/null
-> > +++ b/drivers/clocksource/timer-ti-dm-systimer.c
-> > +struct dmtimer_clocksource {
-> > +	struct clocksource dev;
-> > +	struct omap_dm_timer timer;
-> 
-> The usage of the timer field is to use the __omap_dm_timer_* helpers
-> function which does a busy looping on the status before read/write the
-> register. AFAICS, for the clocksource, the posted argument is zero, thus
-> it is possible to replace the calls to these helpers to a write / read
-> and perhaps the struct omap_dm_timer could be removed from the
-> clocksource structure.
-> 
-> The driver gets obfuscated by calls to helpers which does 'posted' things.
-> 
-> Why not remove those and handle the case in the driver to make it
-> self-encapsuled and remove the omap_dm_timer structure usage in this driver.
+> So I no longer hate how this patch looks, but I wonder if we should
+> just make the whole "this node is the *first* node" a bit more
+> explicit in both the caller and in the swapping code.
+>
+> It could be as simple as replacing just the conceptual types and
+> names, so instead of some "pnode1" double-indirect node pointer, we'd
+> have
+>
+>         struct hlist_head *left_head = container_of(left->pprev,
+> struct hlist_head, first);
+>         struct hlist_head *right_head = container_of(right->pprev,
+> struct hlist_head, first);
+>
+> and then the code would do
+>
+>         rcu_assign_pointer(right_head->first, left);
+>         rcu_assign_pointer(left_head->first, right);
+>         WRITE_ONCE(left->pprev,  &right_head->first);
+>         WRITE_ONCE(right->pprev,  &left_head->first);
+>
+> which should generate the exact same code, but makes it clear that
+> what we're doing is switching the whole hlist when given the first
+> entries.
+>
+> Doesn't that make what it actually does a lot more understandable?
 
-Hmm that's a good comment indeed. If we can just use readl/writel for
-clockevent and clocksource driver without worrying about the posted mode
-flags, we can make all the old helpers static for the generic dmtimer
-driver. I'll take a look.
+Understandable is a bit subjective. I think having a well defined hlist
+operation I can call makes things more understandable.
 
-> > +static int dmtimer_systimer_type2_reset(struct omap_dm_timer *timer)
-> > +{
-> > +	void __iomem *sysc = timer->io_base + OMAP_TIMER_OCP_CFG_OFFSET;
-> > +	u32 l;
-> > +
-> 
-> Isn't missing a write here ?
+I think the getting the list head as:
+"head = &task->thread_pid->tasks[PIDTYPE_PID];" is more understandable
+and less risky than container_of.
 
-Oops thanks for spotting it. Without that the mode can be whatever left
-over from the bootloader.
+My concern and probably unreasonbable as this is a slow path
+with getting the list heads after looking up the pid is that it seems
+to add a wait for an additional cache line to load before anything can
+happen.
 
-> > +static int __init dmtimer_systimer_tag_disabled(struct device_node *np)
-> > +{
-> > +	struct property *prop;
-> > +
-> > +	prop = kzalloc(sizeof(*prop), GFP_KERNEL);
-> > +	if (!prop)
-> > +		return -ENOMEM;
-> > +
-> > +	prop->name = "status";
-> > +	prop->value = "disabled";
-> > +	prop->length = strlen(prop->value);
-> > +
-> > +	return of_add_property(np, prop);
-> 
-> Why not add this property in the DT instead ? That sounds hackish
+The only way I really know to make this code much more understandable is
+to remove the lists entirely for this case.  But that is a much larger
+change and it is not clear that it makes the kernel code overall better.
+I stared at that for a while and it is an interesting follow on but not
+something I want or we even can do before exchange_tids is in place.
 
-Yes that's a good point too. We need to configure the source clock anyways
-for the clocksource and clockevent in devicetree anyways, so setting it
-disabled there totally makes sense.
+> The
+> *pnode1/pnode2 games are somewhat opaque, but with that type and name
+> change and using "container_of()", the code now fairly naturally reads
+> as "oh, we're changing the first pointers in the list heads, and
+> making the nodes point back to them" .
+>
+> Again - the current function _works_ with swapping two hlists in the
+> middle (not two entries - it swaps the whole list starting at that
+> entry!), so your current patch is in some ways "more generic". I'm
+> just suggesting that the generic case doesn't make much sense, and
+> that the "we know the first entries, swap the lists" actually is what
+> the real use is, and writing it as such makes the code easier to
+> understand.
 
-> > +	dmtimer_systimer_enable(timer);
-> > +	dmtimer_systimer_reset(timer);
-> > +	pr_debug("dmtimer rev %08x sysc %08x\n", readl_relaxed(timer->io_base),
-> > +		 readl_relaxed(timer->io_base + OMAP_TIMER_OCP_CFG_OFFSET));
-> > +
-> > +	if (of_find_property(np, "ti,timer-alwon", NULL))
-> > +		timer->capability |= OMAP_TIMER_ALWON;
-> 
-> Where is used this capability in this driver ?
+Yep.  That is waht I designed it to do.  I sort of went the other
+direction when writing this.  I could start with the list heads and swap
+the rest of the lists and get the same code.  But it looked like it
+would be a little slower to find the hlist_heads, and I couldn't think
+of a good name for the function.  So I figured if I was writing a
+fucntion for this case I would write one that was convinient.
 
-That is just something we should show in dmesg for info as that helps to
-understand the board specific system timer configuration for PM related
-issues folks end up reporting.
+For understandability that is my real challenge what is a good name
+that people can read and understand what is happening for this swapping
+function.
 
-> > +static struct irqaction dmtimer_clockevent_irq = {
-> > +	.name		= "gp_timer",
-> > +	.flags		= IRQF_TIMER | IRQF_IRQPOLL,
-> 
-> Why do you need IRQF_IRQPOLL ?
+> But I'm not going to insist on this, so this is more an RFC. Maybe
+> people disagree, and/or have an actual use case for that "break two
+> hlists in the middle, swap the ends" that I find unlikely...
+>
+> (NOTE: My "convert to hlist_head" code _works_ for that case too
+> because the code generation is the same! But it would be really really
+> confusing for that code to be used for anything but the first entry).
 
-I'll check if that's needed. Probably just something that has mutated into
-the old timer code somehow.
+Yes.
 
-> > +	pa = of_translate_address(np, of_get_address(np, 0, NULL, NULL));
-> > +	pr_info("TI gptimer clockevent: %stimer@%08x at %lu Hz\n",
-> > +		timer->capability & OMAP_TIMER_ALWON ? "always-on " : "",
-> > +		pa, timer->rate);
-> 
-> %pOF instead of of_translate_address ?
+I am open to improvements.  Especially in the naming.
 
-That just 0 from the interconnect target module here. But doing %pOF
-on the np->parent should work here and for the clocksource.
+Would hlists_swap_heads_rcu be noticably better?
 
-> > diff --git a/include/clocksource/timer-ti-dm.h b/include/clocksource/timer-ti-dm.h
-> > --- a/include/clocksource/timer-ti-dm.h
-> > +++ b/include/clocksource/timer-ti-dm.h
-> > @@ -97,6 +97,7 @@ struct omap_dm_timer {
-> >  	int id;
-> >  	int irq;
-> >  	struct clk *fclk;
-> > +	struct clk *iclk;
-> 
-> No need of these clocks in the structure as they are used only to
-> initialize.
+Eric
 
-OK I'll make them local.
-
-Thanks for the review! I'll fix up the other issues you spotted too,
-they all seem good comments.
-
-Regards,
-
-Tony
