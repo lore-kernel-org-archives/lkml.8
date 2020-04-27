@@ -2,114 +2,106 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C91C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 836B9C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1110520644
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:18:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="M7xEpjZ3"
+	by mail.kernel.org (Postfix) with ESMTP id 61F2E20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:19:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbgD0ISe (ORCPT
+        id S1726781AbgD0ITA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:18:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60868 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726407AbgD0ISd (ORCPT
+        Mon, 27 Apr 2020 04:19:00 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34318 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbgD0ITA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 04:18:33 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7354EC061A10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 01:18:33 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id k12so9919538wmj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 01:18:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=nexsKNIAawz43xJ/+27exH8imkbeH1NfQDDNoT4uP+g=;
-        b=M7xEpjZ3CessG+SINts/wDYLCwIEjZ4vyzamIT03NbDgDQXm+ZOncvEv2SnYwT6aIg
-         t1+8LpZogfYOGM8hM5Tz6Yf5qJLRMrGdBROuGvMxDi/Q8ktk52fOF/q+xl0y73qhm5HI
-         zftiw88FUwfmzj4EAsz+nQmqhzhCSc5x+MtGROadcU381AyVJwfq6DqCQIXzcyw738r1
-         XqZzFXY1oZkg3bNwEJOXnfmxWG0/2pzBnQV4HNPIJeJixxQ5Vfe1k05lhwbd8/Eqm9yr
-         /H2yQ+EOYTGig1gCYO+lUKlIlLkypKs9QMQZyixX30bsql7iQpFbenJF2PG2FMxU3oIR
-         TvRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=nexsKNIAawz43xJ/+27exH8imkbeH1NfQDDNoT4uP+g=;
-        b=WenyGEX9jw0NWm0zqffEZ/yhfRt/PGxn60kQCwuMoHjneJ7PwY+ibX9t4hv1HJi+zb
-         WGBN41bK8XPGXsvwkOKp7GIxbNe77XBjoGMqQqEc3UU0u76UE6cCueGv+nGxVm6HvlxT
-         +qQjmqRdFnbCHrpDdDtAmGqfQmOrNXHvUVpKyWKzltlTfDuwHquuOq+M2jLHqBLTfOlH
-         kGp4JhEH44PGroM5hRLwAuDlGP2QpVYhPoq/h15stqulWyT4RLn0EZNwjvpqhfudmuy4
-         6Y6lX/NX0kGJSD3v8WTtAc4DGjRm/omcYHvmjU2q+oKerhY4URUzWDvYceicSehyK83X
-         ioug==
-X-Gm-Message-State: AGi0PubTkR/Os4K2UB4GaynrLxzUoKcFddUl7cismVkVg/Jaf77M1fLv
-        zF92XZ+A4eq0Dr37lmlS1/+iAA==
-X-Google-Smtp-Source: APiQypLDYwqKL13+uGJEVkrYOMe2jJVaaMrDZ7cNTTbGJGhFOHOdAk1CPY8M9TMIs5nGg5KfyVuhdQ==
-X-Received: by 2002:a1c:1d4b:: with SMTP id d72mr23965375wmd.19.1587975512127;
-        Mon, 27 Apr 2020 01:18:32 -0700 (PDT)
-Received: from ?IPv6:2001:16b8:4886:8400:6d4b:554:cd7c:6b19? ([2001:16b8:4886:8400:6d4b:554:cd7c:6b19])
-        by smtp.gmail.com with ESMTPSA id p16sm19639474wro.21.2020.04.27.01.18.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 01:18:31 -0700 (PDT)
-Subject: Re: [RFC PATCH 8/9] orangefs: use set/clear_fs_page_private
-To:     Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hch@infradead.org, Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        devel@lists.orangefs.org
-References: <20200426214925.10970-1-guoqing.jiang@cloud.ionos.com>
- <20200426214925.10970-9-guoqing.jiang@cloud.ionos.com>
- <20200426222455.GB2005@dread.disaster.area>
- <20200427001234.GB29705@bombadil.infradead.org>
- <20200427022709.GC2005@dread.disaster.area>
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Message-ID: <ac7728a0-c184-214a-70a9-ae219db72331@cloud.ionos.com>
-Date:   Mon, 27 Apr 2020 10:18:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 27 Apr 2020 04:19:00 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id 0F8022A018F
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-imx@nxp.com,
+        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH v8 00/10] Genericize DW MIPI DSI bridge and add i.MX 6 driver
+Date:   Mon, 27 Apr 2020 11:19:42 +0300
+Message-Id: <20200427081952.3536741-1-adrian.ratiu@collabora.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <20200427022709.GC2005@dread.disaster.area>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mattew and Dave,
+Hello everyone,
 
-On 4/27/20 4:27 AM, Dave Chinner wrote:
-> On Sun, Apr 26, 2020 at 05:12:34PM -0700, Matthew Wilcox wrote:
->> On Mon, Apr 27, 2020 at 08:24:55AM +1000, Dave Chinner wrote:
->>>> @@ -460,17 +456,13 @@ static void orangefs_invalidatepage(struct page *page,
->>>>   
->>>>   	if (offset == 0 && length == PAGE_SIZE) {
->>>>   		kfree((struct orangefs_write_range *)page_private(page));
->>>> -		set_page_private(page, 0);
->>>> -		ClearPagePrivate(page);
->>>> -		put_page(page);
->>>> +		clear_fs_page_private(page);
->>> Ditto:
->>> 		wr = clear_fs_page_private(page);
->>> 		kfree(wr);
->> You don't want to be as succinct as the btrfs change you suggested?
->>
->> 		kfree(clear_fs_page_private(page));
-> That could be done, yes. I was really just trying to point out the
-> use after free that was occurring here rather than write compact
-> code...
+The dt-binding added in this series depends on [1] for
+"make dt_binding_check" to pass.
 
-Really appreciate for your review, thanks.
+The biggest change in v8 is a conversion of the imx6 host controller
+driver to drm_bridge and an extension to dw_mipi_dsi.c which allows
+platform drivers to daisy-chain bridges between the encoder and the
+Synopsis DSI bridge.
 
-Best Regards,
-Guoqing
+Obviously a lot more work can be done on this front, for example to
+convert the Rockchip and STM platform drivers to drm_bridge (the STM
+driver doesn't even use the current dw_mipi_dsi.c bind API to attach)
+or to improve the API itself.
+
+Another kind of related work is refactoring the existng IMX drivers
+to drm_bridge and move the empty encoder management to imx-drm-core.
+
+Because this patch is already quite big, I did only the minimum
+changes to get the imx6 mipi dsi driver in good shape, all the other
+changes should be done in separate patch series.
+
+I also just realized imx6qdl.dtsi was missing some properties to get
+the DSI host controller working so I've added them as a new patch.
+
+All received feedback up to this point has been addressed.
+
+Thank you and best wishes,
+Adrian
+
+[1] https://lore.kernel.org/linux-devicetree/20200423100058.1734009-1-adrian.ratiu@collabora.com/
+
+Adrian Ratiu (10):
+  drm: bridge: dw_mipi_dsi: add initial regmap infrastructure
+  drm: bridge: dw_mipi_dsi: abstract register access using reg_fields
+  drm: bridge: dw_mipi_dsi: add dsi v1.01 support
+  drm: bridge: dw_mipi_dsi: allow bridge daisy chaining
+  drm: imx: Add i.MX 6 MIPI DSI host platform driver
+  ARM: dts: imx6qdl: add missing mipi dsi properties
+  dt-bindings: display: add i.MX6 MIPI DSI host controller doc
+  drm: stm: dw-mipi-dsi: let the bridge handle the HW version check
+  drm: bridge: dw-mipi-dsi: split low power cfg register into fields
+  drm: bridge: dw-mipi-dsi: fix bad register field offsets
+
+ .../display/imx/fsl,mipi-dsi-imx6.yaml        | 145 ++++
+ arch/arm/boot/dts/imx6qdl.dtsi                |   8 +
+ drivers/gpu/drm/bridge/synopsys/Kconfig       |   1 +
+ drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 698 +++++++++++++-----
+ drivers/gpu/drm/imx/Kconfig                   |   8 +
+ drivers/gpu/drm/imx/Makefile                  |   1 +
+ drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c        | 399 ++++++++++
+ .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   |   2 +-
+ drivers/gpu/drm/stm/dw_mipi_dsi-stm.c         |  12 +-
+ include/drm/bridge/dw_mipi_dsi.h              |   5 +-
+ 10 files changed, 1070 insertions(+), 209 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+ create mode 100644 drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c
+
+-- 
+2.26.0
+
