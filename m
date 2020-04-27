@@ -2,110 +2,259 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73506C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4BEC55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 535932075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:59:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587970766;
-	bh=ov6M4aYlkDxT50jIQMegvBYJbk1S2tGCE0FmhuKWQH0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Di20uWwhCJkVUWb7jrPMs+YhIVp22pJDcjISTgbLxuaTMpozU0b7SYuzzqA0JcQbH
-	 lCeB2tIkRyphrgLdoOuTOM+dEBRxT6fX88swrsKcY7Ecj2UT0/CNMfXCzQ2Fx4+W5n
-	 ca4i6v5O1Uv4R2bGtHHcJ60p4NSSfMki5q+n8jow=
+	by mail.kernel.org (Postfix) with ESMTP id A40A0206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:59:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="chxZwDHN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbgD0G7Z (ORCPT
+        id S1726735AbgD0G7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 02:59:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53094 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726692AbgD0G7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 02:59:25 -0400
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BFB8208FE;
-        Mon, 27 Apr 2020 06:59:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587970764;
-        bh=ov6M4aYlkDxT50jIQMegvBYJbk1S2tGCE0FmhuKWQH0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ep8onAZnXVdYGoJ87QmVsTIcOzFERI9ZdAde4GUoc7yFSD0wM7nX6q5mt3Qsyi17L
-         wqSJWEhr+U1gX0Zp1GrgIGBEBOoT5GH17TMSca7cWUFISwXIUeRnmFnoIGOyFpp2RE
-         fExOUm9+ncAhMxwXwqVkfMesr/3uuEH85Cf+yUjg=
-Received: by mail-io1-f50.google.com with SMTP id f3so17711454ioj.1;
-        Sun, 26 Apr 2020 23:59:24 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaYlEUKekDEO+SIKkrKUZsEIIvapdxh1wIQTp92b0hfvCbVmGBb
-        MZsWw7XoNdLfIZwkk/3RPRV/7LkaBApVyniCD8E=
-X-Google-Smtp-Source: APiQypLzw5Wlo2ON/5Pd90vRPCEMvEtwyzNHaL6myGvq3E+y/zS7dhbgAMW6zlSBYKCOh9aP0ySlRWzkTND4iQm/bQ0=
-X-Received: by 2002:a5d:8b57:: with SMTP id c23mr19677979iot.161.1587970764040;
- Sun, 26 Apr 2020 23:59:24 -0700 (PDT)
+        Mon, 27 Apr 2020 02:59:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48538 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbgD0G7b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 02:59:31 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D9FCC061A0F
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 23:59:30 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id x4so18263468wmj.1
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 23:59:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Ow7McboKHnEHo9r5OLmsIz4Khg2qeAiEPFCtI9iJ5vg=;
+        b=chxZwDHNXTJ9LJOmjqpAusafVfgN00EstU/LDJ2x3UU47pnuc7h7KV8ZvK1X26+9cQ
+         m0HnppQ06MM/x9JczH2v3crR6R0b5FE62JPp/F+lKJ2mSd6UsMg0SNJBsdEVIkSNQQQh
+         3xv7cS3VR3lkk5n0s8DKhUhGrUTRAtYosFliB+eaLaJJqr7LsQI4SD0MbG/Qsp7OQDUE
+         5L4gF1dXrH6DMlyQbT7i8tXJznHiRk2NgtMmfQEKB1bKpigiPhCwi/+V38yU1DE1T+lD
+         EQOKi9Hl1Vimen90hq9H05/SwNfrbCpzUc4pDTUWnGVlg61A83AIbexOkQdIdDzuKXv+
+         Lbjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Ow7McboKHnEHo9r5OLmsIz4Khg2qeAiEPFCtI9iJ5vg=;
+        b=dBYr06C48peOJ8LUG+T/2YSiUrNITurGaats1NQDmZ9kBjfPjx/VlwKpve1pNEKIle
+         drB5xbIznUFVnQokvJeqpTl9sF455SbpHtfE+fNgGDaEfRzhlqoPhINHeyIZ/ZZjagop
+         gf6SquEXaQs/G/jb4hspO79MFAdBDOPgexbg4a6BqiYc/FeGl7bVDx6xCZLJLp6Kk/Bg
+         L/4ni84NB1w3vxVPc0gLSZDmpr8MvR4dNhMG8881cfPhfM2/JZXEbg8ubeqF8/bXTtgj
+         40Ooz6bIgctKEolv3i6hT0FlvQ967zNzFvNtOo3WkKQZ715K6BFdtPJ9vRstOC3NF8bt
+         XX4g==
+X-Gm-Message-State: AGi0PuYiW8odpCMozLeGIZ9TZ7so7biPRZmuTGaxNGZnvz0TzhvCg/Mg
+        DH6bNLXsDUN0MRDtdGan27DOyZqJpndwiEItmobtEw==
+X-Google-Smtp-Source: APiQypKYmlBRKfcnlZ4RrIfnnayIILRLq4PzWZAAMN7VbVCPvBLaBtWLo5XIGj35M13x6iC9IplFe3P35RKC13YmeCk=
+X-Received: by 2002:a7b:c755:: with SMTP id w21mr23998184wmk.120.1587970768932;
+ Sun, 26 Apr 2020 23:59:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <1587966099-28139-1-git-send-email-hadar.gat@arm.com> <1587966099-28139-3-git-send-email-hadar.gat@arm.com>
-In-Reply-To: <1587966099-28139-3-git-send-email-hadar.gat@arm.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 27 Apr 2020 08:59:13 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGwVZiGbsT2NwWTyka0FVZnQcmfMSeoBKD03PdC=fRZeA@mail.gmail.com>
-Message-ID: <CAMj1kXGwVZiGbsT2NwWTyka0FVZnQcmfMSeoBKD03PdC=fRZeA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] hwrng: cctrng - change default to n
-To:     Hadar Gat <hadar.gat@arm.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <ofir.drang@arm.com>
+References: <20200426110740.123638-1-zong.li@sifive.com> <CAAhSdy3FCdzLV-nH03T=PBxB2tdZXhRrugcC2NcoA=22qpv+Lw@mail.gmail.com>
+ <CANXhq0qW9ORoZ5qc5g8ikO9QdeYX=p0fwoP8pyFFkk02a7imnw@mail.gmail.com>
+ <CAAhSdy2f2-SQP6TdgxA0HM2ft3eBJd6kEkB--RH=2gUuLktXLQ@mail.gmail.com>
+ <CANXhq0pDYa2QfGZX87d5gyO5V2uzA3-ttPZXf7s1EkMUcG37Cw@mail.gmail.com>
+ <CAAhSdy188_Kkfsz2bX05T3Rr12XDNtwGiwfqaT2TFVW7auGUaw@mail.gmail.com>
+ <CANXhq0qGq33u34q7nhJE4GG03pZ8BBJrnusr=FgmTeJwtq-=4Q@mail.gmail.com> <CAHCEeh+FVYd6GKDuN4fXz9ku57vmdyVR1y_mzu89-sanNa_E3A@mail.gmail.com>
+In-Reply-To: <CAHCEeh+FVYd6GKDuN4fXz9ku57vmdyVR1y_mzu89-sanNa_E3A@mail.gmail.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Mon, 27 Apr 2020 12:29:17 +0530
+Message-ID: <CAAhSdy1=Ye4wwZMcGzQmnV05eMQzBV3steopKCx9iWJWbOORrw@mail.gmail.com>
+Subject: Re: [PATCH] irqchip/sifive-plic: allow many cores to handle IRQs
+To:     Greentime Hu <greentime.hu@sifive.com>
+Cc:     Zong Li <zong.li@sifive.com>,
+        David Abdurachmanov <david.abdurachmanov@sifive.com>,
+        Marc Zyngier <maz@kernel.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Apr 2020 at 07:42, Hadar Gat <hadar.gat@arm.com> wrote:
+On Mon, Apr 27, 2020 at 12:19 PM Greentime Hu <greentime.hu@sifive.com> wro=
+te:
 >
-> For many users, the Arm CryptoCell HW is not available, so the
-> default for HW_RANDOM_CCTRNG changed to n.
+> Zong Li <zong.li@sifive.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=8826=E6=97=A5=
+ =E9=80=B1=E6=97=A5 =E4=B8=8B=E5=8D=8811:35=E5=AF=AB=E9=81=93=EF=BC=9A
+> >
+> > On Sun, Apr 26, 2020 at 11:21 PM Anup Patel <anup@brainfault.org> wrote=
+:
+> > >
+> > > On Sun, Apr 26, 2020 at 8:42 PM Zong Li <zong.li@sifive.com> wrote:
+> > > >
+> > > > On Sun, Apr 26, 2020 at 9:38 PM Anup Patel <anup@brainfault.org> wr=
+ote:
+> > > > >
+> > > > > +Mark Z
+> > > > >
+> > > > > On Sun, Apr 26, 2020 at 6:49 PM Zong Li <zong.li@sifive.com> wrot=
+e:
+> > > > > >
+> > > > > > On Sun, Apr 26, 2020 at 8:47 PM Anup Patel <anup@brainfault.org=
+> wrote:
+> > > > > > >
+> > > > > > > On Sun, Apr 26, 2020 at 4:37 PM Zong Li <zong.li@sifive.com> =
+wrote:
+> > > > > > > >
+> > > > > > > > Currently, driver forces the IRQs to be handled by only one=
+ core. This
+> > > > > > > > patch provides the way to enable others cores to handle IRQ=
+s if needed,
+> > > > > > > > so users could decide how many cores they wanted on default=
+ by boot
+> > > > > > > > argument.
+> > > > > > > >
+> > > > > > > > Use 'irqaffinity' boot argument to determine affinity. If t=
+here is no
+> > > > > > > > irqaffinity in dts or kernel configuration, use irq default=
+ affinity,
+> > > > > > > > so all harts would try to claim IRQ.
+> > > > > > > >
+> > > > > > > > For example, add irqaffinity=3D0 in chosen node to set irq =
+affinity to
+> > > > > > > > hart 0. It also supports more than one harts to handle irq,=
+ such as set
+> > > > > > > > irqaffinity=3D0,3,4.
+> > > > > > > >
+> > > > > > > > You can change IRQ affinity from user-space using procfs. F=
+or example,
+> > > > > > > > you can make CPU0 and CPU2 serve IRQ together by the follow=
+ing command:
+> > > > > > > >
+> > > > > > > > echo 4 > /proc/irq/<x>/smp_affinity
+> > > > > > > >
+> > > > > > > > Signed-off-by: Zong Li <zong.li@sifive.com>
+> > > > > > > > ---
+> > > > > > > >  drivers/irqchip/irq-sifive-plic.c | 21 +++++++------------=
+--
+> > > > > > > >  1 file changed, 7 insertions(+), 14 deletions(-)
+> > > > > > > >
+> > > > > > > > diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/ir=
+qchip/irq-sifive-plic.c
+> > > > > > > > index d0a71febdadc..bc1440d54185 100644
+> > > > > > > > --- a/drivers/irqchip/irq-sifive-plic.c
+> > > > > > > > +++ b/drivers/irqchip/irq-sifive-plic.c
+> > > > > > > > @@ -111,15 +111,12 @@ static inline void plic_irq_toggle(co=
+nst struct cpumask *mask,
+> > > > > > > >  static void plic_irq_unmask(struct irq_data *d)
+> > > > > > > >  {
+> > > > > > > >         struct cpumask amask;
+> > > > > > > > -       unsigned int cpu;
+> > > > > > > >         struct plic_priv *priv =3D irq_get_chip_data(d->irq=
+);
+> > > > > > > >
+> > > > > > > >         cpumask_and(&amask, &priv->lmask, cpu_online_mask);
+> > > > > > > > -       cpu =3D cpumask_any_and(irq_data_get_affinity_mask(=
+d),
+> > > > > > > > -                                          &amask);
+> > > > > > > > -       if (WARN_ON_ONCE(cpu >=3D nr_cpu_ids))
+> > > > > > > > -               return;
+> > > > > > > > -       plic_irq_toggle(cpumask_of(cpu), d, 1);
+> > > > > > > > +       cpumask_and(&amask, &amask, irq_data_get_affinity_m=
+ask(d));
+> > > > > > > > +
+> > > > > > > > +       plic_irq_toggle(&amask, d, 1);
+> > > > > > > >  }
+> > > > > > > >
+> > > > > > > >  static void plic_irq_mask(struct irq_data *d)
+> > > > > > > > @@ -133,24 +130,20 @@ static void plic_irq_mask(struct irq_=
+data *d)
+> > > > > > > >  static int plic_set_affinity(struct irq_data *d,
+> > > > > > > >                              const struct cpumask *mask_val=
+, bool force)
+> > > > > > > >  {
+> > > > > > > > -       unsigned int cpu;
+> > > > > > > >         struct cpumask amask;
+> > > > > > > >         struct plic_priv *priv =3D irq_get_chip_data(d->irq=
+);
+> > > > > > > >
+> > > > > > > >         cpumask_and(&amask, &priv->lmask, mask_val);
+> > > > > > > >
+> > > > > > > >         if (force)
+> > > > > > > > -               cpu =3D cpumask_first(&amask);
+> > > > > > > > +               cpumask_copy(&amask, mask_val);
+> > > > > > > >         else
+> > > > > > > > -               cpu =3D cpumask_any_and(&amask, cpu_online_=
+mask);
+> > > > > > > > -
+> > > > > > > > -       if (cpu >=3D nr_cpu_ids)
+> > > > > > > > -               return -EINVAL;
+> > > > > > > > +               cpumask_and(&amask, &amask, cpu_online_mask=
+);
+> > > > > > > >
+> > > > > > > >         plic_irq_toggle(&priv->lmask, d, 0);
+> > > > > > > > -       plic_irq_toggle(cpumask_of(cpu), d, 1);
+> > > > > > > > +       plic_irq_toggle(&amask, d, 1);
+> > > > > > > >
+> > > > > > > > -       irq_data_update_effective_affinity(d, cpumask_of(cp=
+u));
+> > > > > > > > +       irq_data_update_effective_affinity(d, &amask);
+> > > > > > > >
+> > > > > > > >         return IRQ_SET_MASK_OK_DONE;
+> > > > > > > >  }
+> > > > > > > > --
+> > > > > > > > 2.26.1
+> > > > > > > >
+> > > > > > >
+> > > > > > > I strongly oppose (NACK) this patch due to performance reason=
+s.
+> > > > > > >
+> > > > > > > In PLIC, if we enable an IRQ X for N CPUs then when IRQ X occ=
+urs:
+> > > > > > > 1) All N CPUs will take interrupt
+> > > > > > > 2) All N CPUs will try to read PLIC CLAIM register
+> > > > > > > 3) Only one of the CPUs will see IRQ X using the CLAIM regist=
+er
+> > > > > > > but other N - 1 CPUs will see no interrupt and return back to=
+ what
+> > > > > > > they were doing. In other words, N - 1 CPUs will just waste C=
+PU
+> > > > > > > every time IRQ X occurs.
+> > > > > > >
+> > > > > > > Example1, one Application doing heavy network traffic will
+> > > > > > > degrade performance of other applications because with every
+> > > > > > > network RX/TX interrupt N-1 CPUs will waste CPU trying to
+> > > > > > > process network interrupt.
+> > > > > > >
+> > > > > > > Example1, one Application doing heavy MMC/SD traffic will
+> > > > > > > degrade performance of other applications because with every
+> > > > > > > SPI read/write interrupt N-1 CPUs will waste CPU trying to
+> > > > > > > process it.
+> > > > > > >
 >
-> Signed-off-by: Hadar Gat <hadar.gat@arm.com>
-> ---
->  drivers/char/hw_random/Kconfig | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Hi Anup,
 >
-> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-> index df2d001..0938d3d 100644
-> --- a/drivers/char/hw_random/Kconfig
-> +++ b/drivers/char/hw_random/Kconfig
-> @@ -476,8 +476,8 @@ config HW_RANDOM_KEYSTONE
->
->  config HW_RANDOM_CCTRNG
->         tristate "Arm CryptoCell True Random Number Generator support"
-> -       depends on HAS_IOMEM & OF
-> -       default HW_RANDOM
-> +       depends on HW_RANDOM & HAS_IOMEM & OF
+> If there is a case that there are a lot of interrupts from a single
+> irq number coming very quickly, the first hart is still serving the
+> first interrupt and still in its top half so it doesn't enable
+> interrupt yet but the second interrupt is coming and waiting, only the
+> rest of the harts can serve it. If they are masked, the interrupt
+> won't be able to be served it right away. In this case, I think this
+> patch can get better performance. Maybe we can still keep this patch
+> for user to define their usage in his case?
 
-The whole block is guarded by if HW_RANDOM, so I don't think you need
-the dependency here.
+The way you described issue, it clearly means that other device driver
+you are using does not have a optimized interrupt handler and the driver
+should be fixed right away. I don't see the point in hacking PLIC driver
+and slowing it down because some other device driver spending too
+much time in interrupt context.
 
-> +       default n
+Seeing your comment, I quickly looked at Cadance MACB driver which
+is very important on SiFive Unleashed. It turns out that Cadance MACB
+driver does not have well designed top-half and bottom-half. Best thing
+would be to change Candance MACB driver to use threaded irqs so that
+majority of packet processing work on SiFive unleashed is done in kernel
+thread (which is preemtible).
 
-'default n' is the default so you can just remove the line
-
->         help
->           This driver provides support for the True Random Number
->           Generator available in Arm TrustZone CryptoCell.
-> --
-> 2.7.4
->
+Regards,
+Anup
