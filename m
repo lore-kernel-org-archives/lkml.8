@@ -2,75 +2,125 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F0BC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A17C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C377206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:18:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587997093;
-	bh=zXQ51mgKn2086N6wizSp+QElbF+XlMV+kXnI1pYIupo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0YYUcozMoW4PtELKYqvRPvmZrhGZ6cNeD2ULewhfeiQmsTWAPJULbFopYA2FHX0A1
-	 VqONasBK9wPOp+e2kS1efVg9xHol4Qn3B8EEhgpjIboVXZ5MneQeynjKX7C60s5HLM
-	 sloG4X7PlwWmYBzHP47hV8Zu/xCg5Z6QRlJS6s8o=
+	by mail.kernel.org (Postfix) with ESMTP id 036D9206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:19:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g8Uwg6Wf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgD0OSM (ORCPT
+        id S1728069AbgD0OTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 10:18:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727855AbgD0OSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 10:18:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 27 Apr 2020 10:19:04 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23675 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728023AbgD0OTD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 10:19:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587997142;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=//IIDXbV7XRjpK24m7Wh2m8pTq6hYTKHqfhZLqX4Iik=;
+        b=g8Uwg6WfE9yUric8ZwxaMAVJ9ppcQvYRH10QVxKfYtsd7ANsWVByy1hSSVgfCvROO7wUcr
+        xoZosvZ0qYcWiiJCog43KMw5vmeewF6baFy6id4UZkqauDKUEQ9oS4GJ9nsTLrwqBozvqr
+        AlAXQ4LUdnpJCjc1OZ8WVeczFDH/unU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-358-Zad7BFGDMceHE1Cw8nJ5Ag-1; Mon, 27 Apr 2020 10:18:58 -0400
+X-MC-Unique: Zad7BFGDMceHE1Cw8nJ5Ag-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B519C206B6;
-        Mon, 27 Apr 2020 14:18:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587997092;
-        bh=zXQ51mgKn2086N6wizSp+QElbF+XlMV+kXnI1pYIupo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mHBDofvS1ltNw6wWUrFj55BdrcHAE70kn5woRvDyehi5xL+/TT4oRzt1Ml7SBMnef
-         vFNOYaZfQeW/NwSztgHp9kwV6aO2xMmBMnVMPWLI9VCvYCX2XDVhhs1Sf53m2A+LCK
-         ppdFpHrESeOTXvt38mBbE1npB34ytmj0WdOt4mXo=
-Date:   Mon, 27 Apr 2020 16:18:10 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     John Oldman <john.oldman@polehill.co.uk>
-Cc:     devel@driverdev.osuosl.org, hslester96@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] drivers: staging: rts5208: rtsx.c fix Unbalanced
- braces around else statement issue
-Message-ID: <20200427141810.GB3158628@kroah.com>
-References: <20200427135212.26285-1-john.oldman@polehill.co.uk>
- <20200427135212.26285-2-john.oldman@polehill.co.uk>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81BE8928E37;
+        Mon, 27 Apr 2020 14:18:46 +0000 (UTC)
+Received: from x1.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E06E31002388;
+        Mon, 27 Apr 2020 14:18:41 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 08:18:41 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Message-ID: <20200427081841.18c4a994@x1.home>
+In-Reply-To: <20200427132218.GG13640@mellanox.com>
+References: <20200423191217.GD13640@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8960F9@SHSMSX104.ccr.corp.intel.com>
+        <20200424124444.GJ13640@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
+        <20200424181203.GU13640@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
+        <20200426191357.GB13640@mellanox.com>
+        <20200426214355.29e19d33@x1.home>
+        <20200427115818.GE13640@mellanox.com>
+        <20200427071939.06aa300e@x1.home>
+        <20200427132218.GG13640@mellanox.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427135212.26285-2-john.oldman@polehill.co.uk>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 02:52:12PM +0100, John Oldman wrote:
-> Make a better job of fixing coding style issues, this time fixing 
-> all blocks as per Joe Perches' comment.
+On Mon, 27 Apr 2020 10:22:18 -0300
+Jason Gunthorpe <jgg@mellanox.com> wrote:
 
-Trailing whitespace :(
-
+> On Mon, Apr 27, 2020 at 07:19:39AM -0600, Alex Williamson wrote:
 > 
-> Signed-off-by: John Oldman <john.oldman@polehill.co.uk>
-> ---
->  drivers/staging/rts5208/rtsx.c | 14 +++++---------
->  1 file changed, 5 insertions(+), 9 deletions(-)
+> > > It is not trivial masking. It is a 2000 line patch doing comprehensive
+> > > emulation.  
+> > 
+> > Not sure what you're referring to, I see about 30 lines of code in
+> > vdcm_vidxd_cfg_write() that specifically handle writes to the 4 BARs in
+> > config space and maybe a couple hundred lines of code in total handling
+> > config space emulation.  Thanks,  
 > 
+> Look around vidxd_do_command()
+> 
+> If I understand this flow properly..
 
-You sent 2 patches with identical subject lines, yet they do different
-things, which is not ok.  Please fix up.
+I've only glanced at it, but that's called in response to a write to
+MMIO space on the device, so it's implementing a device specific
+register.  Are you asking that PCI config space be done in userspace
+or any sort of device emulation?  The assumption with mdev is that we
+need emulation in the host kernel because we need a trusted entity to
+mediate device access and interact with privileged portion of the
+device control.  Thanks,
 
-greg k-h
+Alex
+
