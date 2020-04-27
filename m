@@ -2,86 +2,96 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E792C54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD91C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66E8D2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:27:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RO3v5GTg"
+	by mail.kernel.org (Postfix) with ESMTP id 5059E2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:28:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588022910;
+	bh=TI+Bio5sKlYlT/Nx52QoQXgZYPcyzD3Ih+se/keVCsA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pPd1tZoSxarseKvNzuxp0IQwS5wKLTQPF0IWGCClqn7R4h5v1CeqWVOL3YBkFZT5z
+	 W+jWRSEMI4NUo0WyeZ+Qmc4LT0mzFZSFLAzO2RWNzYhip+gnKpOwHwHw379kj0vkXH
+	 qxyaVzkYaaXtCZ35jV1LIQSM2jSao+//2OETQHfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgD0V1f (ORCPT
+        id S1726397AbgD0V23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:27:35 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40030 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgD0V1d (ORCPT
+        Mon, 27 Apr 2020 17:28:29 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33026 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgD0V23 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 17:27:33 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RLRB8f030240;
-        Mon, 27 Apr 2020 16:27:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588022831;
-        bh=pWFC6a9Qbh3sjq2KJ7mhohvd+9WakZ3k6mQesnzqtvQ=;
-        h=From:To:CC:Subject:Date;
-        b=RO3v5GTg/Ir5sDZX0+sX7N7jZbfrVoyzJkaCbtqp1DOkKCP3wjULxpyF18DwbP0Wx
-         n392R/5HQW0Izw11NncVdDSJvR6hjQOzEzF3FRhuoMjcQA3QoY7IiMjQMnt8SI3Sk6
-         Y0ongCDjxm6ygsAntpdJ2C6p4xu8Ml9G+B0+BLQE=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RLRBTO002506;
-        Mon, 27 Apr 2020 16:27:11 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
- Apr 2020 16:27:10 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 27 Apr 2020 16:27:10 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RLRAod048636;
-        Mon, 27 Apr 2020 16:27:10 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>
-CC:     <linux@armlinux.org.uk>, <davem@davemloft.net>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <afd@ti.com>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net v2 0/2] WoL fixes for DP83822 and DP83tc811
-Date:   Mon, 27 Apr 2020 16:21:10 -0500
-Message-ID: <20200427212112.25368-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 27 Apr 2020 17:28:29 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j26so28953362ots.0;
+        Mon, 27 Apr 2020 14:28:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=phD6dC2Al/yY/sFl+4yOknV0vS+D1yw4j8TAayBjiFg=;
+        b=iukvoNJ2cPgAKzNmwckbw1VCQRnySWWsYHhnCcqtJDMI9AOULxeE7FJSUiDlMrkTSf
+         uPFHkWS47KxNGdFCnEQf8iAlzlS1WzXE5R/YgeCuPRh8uiA1m8fosA9WLHCzkOJ4ZN1X
+         nNtCQWYFga04Bk1uq7db/Ts7Ckc4eMhU5s6OQwK3Sqr2djr7OuL2dRxsHKPGyxBYJfNZ
+         Zv6Z8zXldj+RJKc5uX1LxZlZ64+GX6ASe4hVkc7SSKgmxA/+P9ySBruJIYLA1RZtpqMp
+         tRit7NXRZUIKFgaDO5M7ZWL2Z9Za9JGHkVc8+Icmb0/vsKr4I4HnwPSrKugJYjuC4Ocu
+         qqPw==
+X-Gm-Message-State: AGi0Pua98pTD3JOujhGuPiiWUjS5wZ8uiuoGwPiDK0GMekd6DsbgkTEf
+        h+QT3VcEmUucC8jA5Qku3Qa8VrE=
+X-Google-Smtp-Source: APiQypJpmhS3vEKwGO9a8rjv0tcUcZmOuxpwt+49p18dJ+soi/+5A308a/uPpAMwYkKk2MszA4Qv+g==
+X-Received: by 2002:a54:4483:: with SMTP id v3mr637135oiv.0.1588022908294;
+        Mon, 27 Apr 2020 14:28:28 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q142sm4345841oic.44.2020.04.27.14.28.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 14:28:27 -0700 (PDT)
+Received: (nullmailer pid 26250 invoked by uid 1000);
+        Mon, 27 Apr 2020 21:28:26 -0000
+Date:   Mon, 27 Apr 2020 16:28:26 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org, jic23@kernel.org,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Subject: Re: [PATCH 5/6] dt-bindings: iio: scd30: add device binding file
+Message-ID: <20200427212826.GA25672@bogus>
+References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
+ <20200422141135.86419-6-tomasz.duszynski@octakon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422141135.86419-6-tomasz.duszynski@octakon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+On Wed, 22 Apr 2020 16:11:34 +0200, Tomasz Duszynski wrote:
+> Add SCD30 sensor binding file.
+> 
+> Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> ---
+>  .../iio/chemical/sensirion,scd30.yaml         | 71 +++++++++++++++++++
+>  1 file changed, 71 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+> 
 
-The WoL feature for each device was enabled during boot or when the PHY was
-brought up which may be undesired.  These patches disable the WoL in the
-config_init.  The disabling and enabling of the WoL is now done though the
-set_wol call.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Dan
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.example.dt.yaml: scd30@61: 'interrupt-parrent' does not match any of the regexes: 'pinctrl-[0-9]+'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.example.dt.yaml: scd30: 'interrupt-parrent' does not match any of the regexes: 'pinctrl-[0-9]+'
 
-Dan Murphy (2):
-  net: phy: DP83822: Fix WoL in config init to be disabled
-  net: phy: DP83TC811: Fix WoL in config init to be disabled
+See https://patchwork.ozlabs.org/patch/1275131
 
- drivers/net/phy/dp83822.c   | 30 ++++++++++++++----------------
- drivers/net/phy/dp83tc811.c | 21 ++++++++++++---------
- 2 files changed, 26 insertions(+), 25 deletions(-)
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
 
--- 
-2.25.1
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
 
+Please check and re-submit.
