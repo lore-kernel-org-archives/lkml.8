@@ -2,195 +2,143 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A021C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E025C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 187C4206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80F2E206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:48:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgD0NsS (ORCPT
+        id S1727999AbgD0NsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 09:48:18 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:51968 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727056AbgD0NsR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 09:48:17 -0400
-Received: by mail-io1-f69.google.com with SMTP id k1so20257209iov.18
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 06:48:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=IKLvnmX2O6G5JUPiVLiWpSP3a5qdDUhizIddlOL+gt0=;
-        b=hOWKx00NtoQQMUJ7Bcv9cTYKp4Ntrl6zWgpSsXWSX5C65SzRpmgbhLj1ETz8/Gvg0a
-         4I37jFEfqgWXQEGdCSZgOiJ+hdJfUzEkduCDuTSMhWCSdTJiy8Ok0K0ipGWH64fhG1WY
-         qhKWuz7brSlcrCIbZSmJuTzelxpFUUS55jph+CQi6QGX7cxthLOHEhHUr4PvYFw08lG4
-         tD8L3u4k/+gR5pu0/+wio0GhuDQ4XTldbWs27Gw9LJ1eVZBQBSrCXZd4owO6gGaNa/LB
-         mAHtAyuiTcjfib9NI3SscmpW/8Lpojuff1IxhCJzAA3vBUd7QrgM6nNOtOXBZZzqKBcx
-         jM/A==
-X-Gm-Message-State: AGi0PubLoO2/BdlkRTHFHdrS2vsW+5yV/E0/w+fJVp1T+pGBSRsQVOlp
-        eJuOh+TXrGXHSlpHry3yoFrRHxJ6sAURt+TCuMspNc5VE0ye
-X-Google-Smtp-Source: APiQypJMIAfRCG58K421qGBsaWHhvtaekdn2fEP6m3wE4vbwtCLcO2tCumRPcC8TM6DhEFnx4rznkFHTrAySJgtc01uMdr9hjAn5
+        Mon, 27 Apr 2020 09:48:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:35770 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727056AbgD0NsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 09:48:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2EB9D31B;
+        Mon, 27 Apr 2020 06:48:21 -0700 (PDT)
+Received: from [10.37.12.144] (unknown [10.37.12.144])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 28FE63F305;
+        Mon, 27 Apr 2020 06:48:19 -0700 (PDT)
+Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple
+ connections
+To:     mike.leach@linaro.org
+Cc:     saiprakash.ranjan@codeaurora.org, mathieu.poirier@linaro.org,
+        swboyd@chromium.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
+ <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com>
+ <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com>
+Date:   Mon, 27 Apr 2020 14:53:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a02:5184:: with SMTP id s126mr9960216jaa.81.1587995295346;
- Mon, 27 Apr 2020 06:48:15 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 06:48:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007bf88805a445f729@google.com>
-Subject: memory leak in inet_create (2)
-From:   syzbot <syzbot+bb7ba8dd62c3cb6e3c78@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net,
-        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
-        kuba@kernel.org, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com,
-        yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    5ef58e29 Merge tag 'scsi-fixes' of git://git.kernel.org/pu..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10f0f144100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bb30a3887988ffff
-dashboard link: https://syzkaller.appspot.com/bug?extid=bb7ba8dd62c3cb6e3c78
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=110e8fcfe00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+bb7ba8dd62c3cb6e3c78@syzkaller.appspotmail.com
-
-2020/04/25 22:35:25 executed programs: 3
-2020/04/25 22:35:30 executed programs: 5
-2020/04/25 22:35:36 executed programs: 7
-BUG: memory leak
-unreferenced object 0xffff88811094b300 (size 2200):
-  comm "syz-executor.0", pid 6864, jiffies 4294947266 (age 13.790s)
-  hex dump (first 32 bytes):
-    ac 14 14 bb ac 14 14 0a 89 26 f2 70 40 01 00 00  .........&.p@...
-    02 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
-  backtrace:
-    [<000000002efa2559>] sk_prot_alloc+0x3c/0x170 net/core/sock.c:1598
-    [<00000000a5b6b437>] sk_alloc+0x30/0x330 net/core/sock.c:1658
-    [<00000000494c18b6>] inet_create net/ipv4/af_inet.c:321 [inline]
-    [<00000000494c18b6>] inet_create+0x119/0x450 net/ipv4/af_inet.c:247
-    [<000000001239bbdb>] __sock_create+0x14a/0x220 net/socket.c:1433
-    [<00000000c1f7caa8>] sock_create net/socket.c:1484 [inline]
-    [<00000000c1f7caa8>] __sys_socket+0x60/0x110 net/socket.c:1526
-    [<00000000d35154cc>] __do_sys_socket net/socket.c:1535 [inline]
-    [<00000000d35154cc>] __se_sys_socket net/socket.c:1533 [inline]
-    [<00000000d35154cc>] __x64_sys_socket+0x1a/0x20 net/socket.c:1533
-    [<00000000283ef9ec>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
-    [<000000004290d57b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811b253f60 (size 32):
-  comm "syz-executor.0", pid 6864, jiffies 4294947266 (age 13.790s)
-  hex dump (first 32 bytes):
-    02 00 00 00 00 00 00 00 c0 3d 3f 15 81 88 ff ff  .........=?.....
-    01 00 00 00 00 00 00 00 10 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000007d627037>] kmalloc include/linux/slab.h:555 [inline]
-    [<000000007d627037>] kzalloc include/linux/slab.h:669 [inline]
-    [<000000007d627037>] selinux_sk_alloc_security+0x43/0xa0 security/selinux/hooks.c:5126
-    [<0000000076a22383>] security_sk_alloc+0x42/0x70 security/security.c:2120
-    [<0000000066acd291>] sk_prot_alloc+0x9c/0x170 net/core/sock.c:1607
-    [<00000000a5b6b437>] sk_alloc+0x30/0x330 net/core/sock.c:1658
-    [<00000000494c18b6>] inet_create net/ipv4/af_inet.c:321 [inline]
-    [<00000000494c18b6>] inet_create+0x119/0x450 net/ipv4/af_inet.c:247
-    [<000000001239bbdb>] __sock_create+0x14a/0x220 net/socket.c:1433
-    [<00000000c1f7caa8>] sock_create net/socket.c:1484 [inline]
-    [<00000000c1f7caa8>] __sys_socket+0x60/0x110 net/socket.c:1526
-    [<00000000d35154cc>] __do_sys_socket net/socket.c:1535 [inline]
-    [<00000000d35154cc>] __se_sys_socket net/socket.c:1533 [inline]
-    [<00000000d35154cc>] __x64_sys_socket+0x1a/0x20 net/socket.c:1533
-    [<00000000283ef9ec>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
-    [<000000004290d57b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881153f3dc0 (size 64):
-  comm "syz-executor.0", pid 6864, jiffies 4294947266 (age 13.790s)
-  hex dump (first 32 bytes):
-    15 00 00 01 00 00 00 00 20 68 e9 1c 81 88 ff ff  ........ h......
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000dde82831>] kmalloc include/linux/slab.h:555 [inline]
-    [<00000000dde82831>] kzalloc include/linux/slab.h:669 [inline]
-    [<00000000dde82831>] netlbl_secattr_alloc include/net/netlabel.h:382 [inline]
-    [<00000000dde82831>] selinux_netlbl_sock_genattr+0x48/0x180 security/selinux/netlabel.c:76
-    [<00000000438c6346>] selinux_netlbl_socket_post_create+0x41/0xb0 security/selinux/netlabel.c:398
-    [<00000000b422abf2>] selinux_socket_post_create+0x182/0x390 security/selinux/hooks.c:4541
-    [<000000005be0d1ac>] security_socket_post_create+0x54/0x80 security/security.c:2032
-    [<00000000a0ec3d71>] __sock_create+0x1cc/0x220 net/socket.c:1449
-    [<00000000c1f7caa8>] sock_create net/socket.c:1484 [inline]
-    [<00000000c1f7caa8>] __sys_socket+0x60/0x110 net/socket.c:1526
-    [<00000000d35154cc>] __do_sys_socket net/socket.c:1535 [inline]
-    [<00000000d35154cc>] __se_sys_socket net/socket.c:1533 [inline]
-    [<00000000d35154cc>] __x64_sys_socket+0x1a/0x20 net/socket.c:1533
-    [<00000000283ef9ec>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
-    [<000000004290d57b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ce96820 (size 32):
-  comm "syz-executor.0", pid 6864, jiffies 4294947266 (age 13.790s)
-  hex dump (first 32 bytes):
-    6b 65 72 6e 65 6c 5f 74 00 73 79 73 74 65 6d 5f  kernel_t.system_
-    72 3a 6b 65 72 6e 65 6c 5f 74 3a 73 30 00 00 00  r:kernel_t:s0...
-  backtrace:
-    [<000000007edbec14>] kstrdup+0x36/0x70 mm/util.c:60
-    [<00000000b343d2c4>] security_netlbl_sid_to_secattr+0x97/0x100 security/selinux/ss/services.c:3739
-    [<00000000ddb8495a>] selinux_netlbl_sock_genattr+0x67/0x180 security/selinux/netlabel.c:79
-    [<00000000438c6346>] selinux_netlbl_socket_post_create+0x41/0xb0 security/selinux/netlabel.c:398
-    [<00000000b422abf2>] selinux_socket_post_create+0x182/0x390 security/selinux/hooks.c:4541
-    [<000000005be0d1ac>] security_socket_post_create+0x54/0x80 security/security.c:2032
-    [<00000000a0ec3d71>] __sock_create+0x1cc/0x220 net/socket.c:1449
-    [<00000000c1f7caa8>] sock_create net/socket.c:1484 [inline]
-    [<00000000c1f7caa8>] __sys_socket+0x60/0x110 net/socket.c:1526
-    [<00000000d35154cc>] __do_sys_socket net/socket.c:1535 [inline]
-    [<00000000d35154cc>] __se_sys_socket net/socket.c:1533 [inline]
-    [<00000000d35154cc>] __x64_sys_socket+0x1a/0x20 net/socket.c:1533
-    [<00000000283ef9ec>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
-    [<000000004290d57b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881113aa400 (size 512):
-  comm "syz-executor.0", pid 6864, jiffies 4294947266 (age 13.790s)
-  hex dump (first 32 bytes):
-    00 b3 94 10 81 88 ff ff 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 03 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<0000000031227790>] kmalloc_node include/linux/slab.h:573 [inline]
-    [<0000000031227790>] kzalloc_node include/linux/slab.h:680 [inline]
-    [<0000000031227790>] sk_psock_init+0x2a/0x180 net/core/skmsg.c:496
-    [<00000000a405c065>] sock_map_link.isra.0+0x469/0x4f0 net/core/sock_map.c:236
-    [<000000003b7d5922>] sock_map_update_common+0xa1/0x3c0 net/core/sock_map.c:451
-    [<00000000f12c515e>] sock_map_update_elem+0x1e9/0x220 net/core/sock_map.c:552
-    [<000000000fedde3d>] bpf_map_update_value.isra.0+0x141/0x2f0 kernel/bpf/syscall.c:169
-    [<000000004deb6133>] map_update_elem kernel/bpf/syscall.c:1098 [inline]
-    [<000000004deb6133>] __do_sys_bpf+0x16bf/0x1f00 kernel/bpf/syscall.c:3689
-    [<00000000283ef9ec>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
-    [<000000004290d57b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+On 04/27/2020 10:45 AM, Mike Leach wrote:
+> HI,
+> 
+> On Mon, 27 Apr 2020 at 10:15, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>>
+>> On 04/26/2020 03:37 PM, Sai Prakash Ranjan wrote:
+>>> Since commit 30af4fb619e5 ("coresight: dynamic-replicator:
+>>> Handle multiple connections"), we do not make sure that
+>>> the other port is disabled when the dynamic replicator is
+>>> enabled. This is seen to cause the CPU hardlockup atleast
+>>> on SC7180 SoC with the following topology when enabling ETM
+>>> with ETR as the sink via sysfs. Since there is no trace id
+>>> logic in coresight yet to make use of multiple sinks in
+>>> parallel for different trace sessions, disable the other
+>>> port when one port is turned on.
+>>>
+>>>          etm0_out
+>>>          |
+>>>      apss_funnel_in0
+>>>             |
+>>>     apss_merge_funnel_in
+>>>             |
+>>>         funnel1_in4
+>>>          |
+>>>      merge_funnel_in1
+>>>          |
+>>>       swao_funnel_in
+>>>             |
+>>>           etf_in
+>>>          |
+>>>     swao_replicator_in
+>>>             |
+>>>      replicator_in
+>>>          |
+>>>           etr_in
+>>>
+>>>     Kernel panic - not syncing: Watchdog detected hard LOCKUP on cpu 0
+>>>     CPU: 7 PID: 0 Comm: swapper/7 Tainted: G S  B             5.4.25 #100
+>>>     Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
+>>>     Call trace:
+>>>      dump_backtrace+0x0/0x188
+>>>      show_stack+0x20/0x2c
+>>>      dump_stack+0xdc/0x144
+>>>      panic+0x168/0x370
+>>>      arch_seccomp_spec_mitigate+0x0/0x14
+>>>      watchdog_timer_fn+0x68/0x290
+>>>      __hrtimer_run_queues+0x264/0x498
+>>>      hrtimer_interrupt+0xf0/0x22c
+>>>      arch_timer_handler_phys+0x40/0x50
+>>>      handle_percpu_devid_irq+0x8c/0x158
+>>>      __handle_domain_irq+0x84/0xc4
+>>>      gic_handle_irq+0x100/0x1c4
+>>>      el1_irq+0xbc/0x180
+>>>      arch_cpu_idle+0x3c/0x5c
+>>>      default_idle_call+0x1c/0x38
+>>>      do_idle+0x100/0x280
+>>>      cpu_startup_entry+0x24/0x28
+>>>      secondary_start_kernel+0x15c/0x170
+>>>     SMP: stopping secondary CPUs
+>>>
+>>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>>> Tested-by: Stephen Boyd <swboyd@chromium.org>
 
 
+>>
+>> This is not sufficient. You must prevent another session trying to
+>> enable the other port of the replicator as this could silently fail
+>> the "on-going" session. Not ideal. Fail the attempt to enable a port
+>> if the other port is active. You could track this in software and
+>> fail early.
+>>
+>> Suzuki
+> 
+> While I have no issue in principle with not enabling a path to a sink
+> that is not in use - indeed in some cases attaching to unused sinks
+> can cause back-pressure that slows throughput (cf TPIU) - I am
+> concerned that this modification is masking an underlying issue with
+> the platform in question.
+> 
+> Should we decide to enable the diversion of different IDs to different
+> sinks or allow different sessions go to different sinks, then this has
+> potential to fail on the SC7180 SoC - and it will be difficult in
+> future to associate a problem with this discussion.
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Mike,
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+I think thats a good point.
+Sai, please could we narrow down this to the real problem and may be
+work around it for the "device" ? Do we know which sink is causing the
+back pressure ? We could then push the "work around" to the replicator
+it is connected to.
+
+Suzuki
