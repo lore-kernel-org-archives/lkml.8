@@ -2,119 +2,157 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B551AC82A02
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AB9C82A00
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9377920575
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:04:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Uyb+S4TF"
+	by mail.kernel.org (Postfix) with ESMTP id 7E66720575
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588025062;
+	bh=hcDugR9Ei2kcALB6m15r0N7fV4ifciWFKj04gGXvBuE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UTbzr366VxHFgs7sOfTUQ48h2do2EQuhJ25WEYuEtgyjqSq7WUxY2cHWE5ikdWn0p
+	 BqHzoEk2MVxdLkJnFm2MfS+5uq5ltDimEhtmuvqFG/RO6a9f1lRyMs88nI6uRc6JWE
+	 p4Z2+rU9m9N2qlFmrlgIclBJSBtcn5rwGMM4QSgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgD0WEE (ORCPT
+        id S1726895AbgD0WEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 18:04:04 -0400
-Received: from mail-eopbgr700095.outbound.protection.outlook.com ([40.107.70.95]:8888
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726377AbgD0WEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 18:04:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fwtbqctPHdjjntNnzQjNGfCoybwgghT82g6bgptP8RQL6FGLamkyCEs+DgIi6+gK3T7MfuwwI0BVXSHa3EIzVyNCokKzBnRxYDOllLCxaKQhc36In+ze2n3S2g+fTlEINdwXsIN0kjWv30RtiBGxIXw6dZMu9s+2vjJSxxHpaakpa6bz/RtJlQiR89EHWZ3gCm2lkLAHSj2jOFC5sVtvbBgZItHEVWmMeGFkkuf5giUGrH9+yKemOVOFWA9liNAl6CP+od4cbLtREUfaZg2Y9guDrFwFUgIHPTJLuQ/8/Tz5dcs6MSuXb16X9UYpWO9Ii6HWHrs/oOv7duvw1VEw5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fyVaGdAVd3ZcAA9S86IjWSY51LH4+kE8Af80x+SSG/c=;
- b=hFPe8VTHzzyz9GPwF2zIe99fDIqrL9o8MzqpL9gwUY0nnKUzcAxkvEaRfDg5dMYeHtU1TPuYVYPNekKNH1trsCOfoVGdfAXMCBOWRauwUtYiGRCna8YVBURSae3EAE4XMflN2rxMmdRly0dPevd/3dEMnlXnwTCYazyOlom6nPMEG/JWO17Nx8rAwkC51GexPxYgqV1lhBfqsBeEwwbai0hx8g2H5KGh0P635akp1Bkt8PzHINH+3DOhpic1qK6JhV4dBzRc+Yd0yG3ilF+U1QgPjGl6EYaZCKbzlZdsf1JfZTt4jP+yYGAmA7CoU/ROcyV3PJRqu4bx/xvrymvaqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fyVaGdAVd3ZcAA9S86IjWSY51LH4+kE8Af80x+SSG/c=;
- b=Uyb+S4TF8FL8TX2/C5GFH6BQwIMQngaRn6ip8SGPNMzRg6F/S0u8nW9K4FDeRIS96Yfn3BwVKkTLCu4tGpPwU1+7E4Ru1aRvZM51CIt/1qeVeOQ05GQnogCd7hIiLvBbrdNEXbRCs5kutEStW6ZM9GI3wn5BbMOr5rsuyXxAcwU=
-Received: from CH2PR21MB1511.namprd21.prod.outlook.com (2603:10b6:610:88::24)
- by CH2PR21MB1432.namprd21.prod.outlook.com (2603:10b6:610:84::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.2; Mon, 27 Apr
- 2020 22:03:58 +0000
-Received: from CH2PR21MB1511.namprd21.prod.outlook.com
- ([fe80::35cf:633b:4836:674e]) by CH2PR21MB1511.namprd21.prod.outlook.com
- ([fe80::35cf:633b:4836:674e%9]) with mapi id 15.20.2979.005; Mon, 27 Apr 2020
- 22:03:58 +0000
-From:   Steve MacLean <Steve.MacLean@microsoft.com>
-To:     Jiri Olsa <jolsa@redhat.com>,
-        Francois Saint-Jacques <fsaintjacques@gmail.com>
-CC:     "eranian@google.com" <eranian@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: RE: [EXTERNAL] Re: [PATCH v3] perf inject --jit: Remove //anon mmap
- events
-Thread-Topic: [EXTERNAL] Re: [PATCH v3] perf inject --jit: Remove //anon mmap
- events
-Thread-Index: AQHVvaj2LRXwQIFSU0aPphN9jUHHyqfRREQAgLz/fEA=
-Date:   Mon, 27 Apr 2020 22:03:58 +0000
-Message-ID: <CH2PR21MB1511DC522EBE2E19C8185FE8F7AF0@CH2PR21MB1511.namprd21.prod.outlook.com>
-References: <CABNn7+pYPSfduacOATcKT1X_=qs70i7Bc8pELXDahY7BoB9_wQ@mail.gmail.com>
- <20191229155112.GA21785@krava>
-In-Reply-To: <20191229155112.GA21785@krava>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=stmaclea@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-27T22:03:57.3964788Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=3c4c1af4-6fb1-4315-bf8f-633d69333f0a;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Steve.MacLean@microsoft.com; 
-x-originating-ip: [24.163.126.65]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a466e4fd-5079-4a9a-2f66-08d7eaf6e305
-x-ms-traffictypediagnostic: CH2PR21MB1432:
-x-microsoft-antispam-prvs: <CH2PR21MB1432D948F4263B7C27B6C792F7AF0@CH2PR21MB1432.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 0386B406AA
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: V/mt+FYhNk5fWNDX69k6XRr+yPt2kT/tOZWM0bnCi/jH8TlyQE1Mex+Bs3pMrVS5JvZKf65UjeE2o6w9isP6ptJf94uvdOnsaBt+bjAQ3EdqyyZlnXe8vo04Ix+UgB+mPuKSqV/S93Fa02ZSv1/3Sc7rVbHlFoBwvfcJM634sjUR9dm4jpV1fKF8RvTgoR12KdOg2ygNc6OiHmJzKj1XgebzR9lvN4q4fyqH161EPfbDciJpBRTW5v4ZHAWpw+38Si+1azvA/HI9vzaVMCMf7wUesYBIEYRvOdB56RSba5orDz3HsGSmLp0ff/sXcRcQnuTHg3mDqKjSnzAE6k2qJ5+zOwpxYouAEJ7jW5rVOu6N6p5ADsxFQG4DGnXVrCfnGzCKbixqVMQPUDyQz2vrHF18Ytj5yu9tfvI4plUel77wrfDr23rf/Y7+OtEHreOK
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR21MB1511.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(39860400002)(396003)(366004)(346002)(82960400001)(33656002)(82950400001)(2906002)(7696005)(52536014)(64756008)(66446008)(66946007)(66556008)(66476007)(9686003)(76116006)(4326008)(55016002)(8990500004)(6506007)(8936002)(26005)(186003)(110136005)(86362001)(5660300002)(8676002)(558084003)(10290500003)(71200400001)(478600001)(54906003)(316002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: n04RHv2ItyUwtiYT92M2s3n+zUxBQIq9GrCGRBSWGD99hWG8WozNoivy4ci9tcSRlEuzlsr3XXrt4vjnzLDJhw8YsBpuB4vv3v2Uh9cZ/VH4uuzjww7jrLMCdKE/wMD+d4WsZ7bHjQCYePLyAlpYLediaDcX7gQEreWuRKzTLQqgZqxgrKrjCivps9FlLKfMTs050QpzqkflXX6aGY9NGWJHaH1Wo4wokNW/mTYlQjCBYRUVVMQPCdLT+ureqy0HMXenXi0Y8n8Fl0JyMy8NprMcCsD1/f/WWKTrUP9Nz5++476dvgamYEcWqYWM5vVkMJs1J0/klScQ5dUXaTGhZZaKVGzDdtGuNU5t6ChsvGsctMK/kYTpURnLH5AFispKLwfJLSucB4GJwekiRca7EOpCZSsxHUTn5+rb7Op1RLjpZEIlzt9wjDdQYDAwMEj1qZlWozX+Tw6b8M8ICjWhttoit2Xci/DC08JYxECjNwEZWskvOkZJyKd4+BHcohTjn7Cd9ivTDQK/+W4jCHgCH5uPljs3xGLlnCHumRVH4pm74u/AWfrg0p8Cy+aQlV3qkF1rM+Xg0wRkast/SaDkQI5ozNmkQP4mXqscfiJTVF5MOyfJAm9MHH5SrmIgRYAk6TN0cATQ0yrzLbW88kOxzz/2j+yPOBVIR1Ovz18GBGzu8iys3+vxmK7vVXRCJjecUfpAPCWqJBkQmBRNfEGBZfpwqfynqTwPFNKLkKs37jzJGk3YoqEfMNXWTLP7L2rGri2VbsY0yMicJA09+petNA+ALrKcPsOSuzKco7+wxg0=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 27 Apr 2020 18:04:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726364AbgD0WCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 18:02:00 -0400
+Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9592221EB;
+        Mon, 27 Apr 2020 22:01:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588024916;
+        bh=hcDugR9Ei2kcALB6m15r0N7fV4ifciWFKj04gGXvBuE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GT+gPG34hk517db2YxFh+lLtciGEjV4Brm67oo557BBaUwujTGGRlz3qC7HSuPKc0
+         zr8AArJQGboc0B9fbIvvTbjBN7oXaKYVnGUCvTqnQ1V/VLTZBrIiIHkG4kHpuxj8Kt
+         Qh2ohmupTnfCLj3v9UQaFTTpQaZBDtUIJBoXXXFg=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jTBp4-000Ip4-Ve; Tue, 28 Apr 2020 00:01:54 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH 18/38] docs: networking: convert driver.txt to ReST
+Date:   Tue, 28 Apr 2020 00:01:33 +0200
+Message-Id: <830fa106e7fa2584038838973e71fe63ff73cac7.1588024424.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <cover.1588024424.git.mchehab+huawei@kernel.org>
+References: <cover.1588024424.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a466e4fd-5079-4a9a-2f66-08d7eaf6e305
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2020 22:03:58.6557
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PBmonRXUjjV4Q3UoV8uUgFP3jRAaQTu5FMvAtOS2Ki62fkaFMJyTKoXTV3u5IWmeIhghEOB19J3vu6H/tGCing==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR21MB1432
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> it's simple enough to revert in case there's any issue
->
-> thanks,
-> jirka
+- add SPDX header;
+- add a document title;
+- mark code blocks and literals as such;
+- adjust identation, whitespaces and blank lines;
+- add to networking/index.rst.
 
-Can we go ahead and merge this?
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ .../networking/{driver.txt => driver.rst}     | 22 +++++++++++--------
+ Documentation/networking/index.rst            |  1 +
+ 2 files changed, 14 insertions(+), 9 deletions(-)
+ rename Documentation/networking/{driver.txt => driver.rst} (85%)
 
+diff --git a/Documentation/networking/driver.txt b/Documentation/networking/driver.rst
+similarity index 85%
+rename from Documentation/networking/driver.txt
+rename to Documentation/networking/driver.rst
+index da59e2884130..c8f59dbda46f 100644
+--- a/Documentation/networking/driver.txt
++++ b/Documentation/networking/driver.rst
+@@ -1,4 +1,8 @@
+-Document about softnet driver issues
++.. SPDX-License-Identifier: GPL-2.0
++
++=====================
++Softnet Driver Issues
++=====================
+ 
+ Transmit path guidelines:
+ 
+@@ -8,7 +12,7 @@ Transmit path guidelines:
+    transmit function will become busy.
+ 
+    Instead it must maintain the queue properly.  For example,
+-   for a driver implementing scatter-gather this means:
++   for a driver implementing scatter-gather this means::
+ 
+ 	static netdev_tx_t drv_hard_start_xmit(struct sk_buff *skb,
+ 					       struct net_device *dev)
+@@ -38,25 +42,25 @@ Transmit path guidelines:
+ 		return NETDEV_TX_OK;
+ 	}
+ 
+-   And then at the end of your TX reclamation event handling:
++   And then at the end of your TX reclamation event handling::
+ 
+ 	if (netif_queue_stopped(dp->dev) &&
+-            TX_BUFFS_AVAIL(dp) > (MAX_SKB_FRAGS + 1))
++	    TX_BUFFS_AVAIL(dp) > (MAX_SKB_FRAGS + 1))
+ 		netif_wake_queue(dp->dev);
+ 
+-   For a non-scatter-gather supporting card, the three tests simply become:
++   For a non-scatter-gather supporting card, the three tests simply become::
+ 
+ 		/* This is a hard error log it. */
+ 		if (TX_BUFFS_AVAIL(dp) <= 0)
+ 
+-   and:
++   and::
+ 
+ 		if (TX_BUFFS_AVAIL(dp) == 0)
+ 
+-   and:
++   and::
+ 
+ 	if (netif_queue_stopped(dp->dev) &&
+-            TX_BUFFS_AVAIL(dp) > 0)
++	    TX_BUFFS_AVAIL(dp) > 0)
+ 		netif_wake_queue(dp->dev);
+ 
+ 2) An ndo_start_xmit method must not modify the shared parts of a
+@@ -86,7 +90,7 @@ Close/stop guidelines:
+ 
+ 1) After the ndo_stop routine has been called, the hardware must
+    not receive or transmit any data.  All in flight packets must
+-   be aborted. If necessary, poll or wait for completion of 
++   be aborted. If necessary, poll or wait for completion of
+    any reset commands.
+ 
+ 2) The ndo_stop routine will be called by unregister_netdevice
+diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
+index 55746038a7e9..313f66900bce 100644
+--- a/Documentation/networking/index.rst
++++ b/Documentation/networking/index.rst
+@@ -53,6 +53,7 @@ Contents:
+    decnet
+    defza
+    dns_resolver
++   driver
+ 
+ .. only::  subproject and html
+ 
+-- 
+2.25.4
 
