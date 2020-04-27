@@ -2,124 +2,179 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 649E5C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AE7C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41185206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3B0206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:21:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fv6KdKme"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bWY/9b/u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbgD0OT7 (ORCPT
+        id S1727971AbgD0OVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 10:19:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60932 "EHLO
+        Mon, 27 Apr 2020 10:21:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727824AbgD0OT6 (ORCPT
+        with ESMTP id S1727834AbgD0OVe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 10:19:58 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D799C0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 07:19:58 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id u127so20671097wmg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 07:19:58 -0700 (PDT)
+        Mon, 27 Apr 2020 10:21:34 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3F5CC0610D5;
+        Mon, 27 Apr 2020 07:21:33 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id k28so13970579lfe.10;
+        Mon, 27 Apr 2020 07:21:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bee/vT9YZsF5aLuysXN53gVWnahANuP+/H4BtD8nDYA=;
-        b=Fv6KdKme0P7Hd6Cv7sn90bDFGKT3FWV4huW02i2XsZ69hzzo1H3u17OS98OzaZnBTB
-         278KEthOnv0lxhcPsLu7SX/vgTtq4wPqX+E2pWCx23VhbpaUXDQfoVYsJbx/Kuva3O2S
-         PJxvYmNcCpSHd+6bDJnvLSiezLzVKMsooJagwhfuXLnIQQEXEEX67MWfkbn6V0X/Zu98
-         UsMjjj0yyJiwg66FMZp3hMqn6vGHm7TvUasx+awqJcZjlvQewIC2DbBCYNbvd62AZtYa
-         0AfvcSlUzA3xn+ukScz45mTXRED9CfUSUT8dzrtuQMu+s7czphHXriJF2Q1TTHqpC6ZW
-         LZcw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=os2wxZikCHk4lPPRcIN9xVfK7EnF40hJmqoZHUeqBOY=;
+        b=bWY/9b/uhSCLnSDkq28VEce1KtybvL18fneE2G2vRwvbKulIH41aQZ4ij8IXun7ndq
+         6Nc6Ik+S8lETHonsvv/b2Wkbsejp9wjup0Ibuen07M+gOg9aTVvtDOs5DAAj5cDP75eq
+         AUqZkkymzmjuHx8B7zjlR8VMptalKypZOCK/oksi+M+r73Azs5htA1cJIdIEKmjmN2e8
+         E3UzQO8VnX99fnl1/gq+wbrkLcOicbg6xmD9sfLiE5PjNcTntqhoKHKiF4glt3XheyVO
+         kZhztvFtS7MVPrW409Kom0YT79hNRk/JOQOEyUv4ETSHV8UOgULdft5S4ZRQkW0lm2Bd
+         +Kgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bee/vT9YZsF5aLuysXN53gVWnahANuP+/H4BtD8nDYA=;
-        b=reUCcGXZKnWdXkAw65po24HdI3r5IG4LEKugNTLHNZWHX4n0+m2JofwS36ST85ZpY8
-         zrJsQSiVMGEh5bSYwYNA9mNKy308uJI/ho7LRMTx54YpIgSUA0Oh4XXXAceOzTSRzZIw
-         OpG+xO/og1/hskHp/JDrYhhF4APruhjJE4A0Xp+T2ArK63XhIdelWhjP69VZF0Ln1O0j
-         7lZjvDsBHdhnbdo9LRRciLAM5Ed/JcPtM2eF+SRQulho81Oo/QajP4m6PNQ1l8S4xZXU
-         Nhoz6ErqhUjLMDRxEH1HW4WgKxeBkY6oBzouUF6WCGy/ggPWZuuNC/XkaRYMPt0ZcPMI
-         8UMw==
-X-Gm-Message-State: AGi0PuagmgWk3eYFYfcKxdlIDBWWSCxV8JObITQQDnExEwl99WWQM7h7
-        vjO9ja+yw2MICB6ZGkGb6v1lNA==
-X-Google-Smtp-Source: APiQypL3l+lAat7PP7CR3gM2nPKe8kVnYD5lj6efi+kyjeJHTF/ddP0kz0TZeQ47rwxSl4/e9jMwqQ==
-X-Received: by 2002:a1c:9cc6:: with SMTP id f189mr25872640wme.75.1587997197302;
-        Mon, 27 Apr 2020 07:19:57 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id i129sm16621988wmi.20.2020.04.27.07.19.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 07:19:56 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 15:19:54 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     jason.wessel@windriver.com, gregkh@linuxfoundation.org,
-        kgdb-bugreport@lists.sourceforge.net, mingo@redhat.com,
-        hpa@zytor.com, bp@alien8.de, linux-serial@vger.kernel.org,
-        agross@kernel.org, tglx@linutronix.de, frowand.list@gmail.com,
-        bjorn.andersson@linaro.org, jslaby@suse.com,
-        catalin.marinas@arm.com, corbet@lwn.net, will@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/9] kgdboc: Use a platform device to handle tty
- drivers showing up late
-Message-ID: <20200427141954.d55djgbq74e4dme5@holly.lan>
-References: <20200421211447.193860-1-dianders@chromium.org>
- <20200421141234.v2.3.I4a493cfb0f9f740ce8fd2ab58e62dc92d18fed30@changeid>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=os2wxZikCHk4lPPRcIN9xVfK7EnF40hJmqoZHUeqBOY=;
+        b=tynDOgAyk3viRiQQx9c2BwsCAhFhXpfujbcRYRzDrOnLwqXlUw37UeoFwV/b55WXzX
+         CJ+zY5+mCrlnatebqgdjo5B0QomR1EB0YDHsiHoVzegJC+kyvgtjlbblhyMHCvSfVGjn
+         837B57m7NfEhxC8WI0/6DtVUAnTl9h6BaH4YAhHHPKts1ZzT4Fez1aW64hcgmROt8vZL
+         M2dMa0PW/R9Va1pXaQ0V0y27o1fOHXE2FfQmF5SOTqxdFa9lhLfZ7JoBOkrGTHSGmdRT
+         oIDAwHc4gVBxPDxhNcjsaPAGvLYA11WYi1AcVtzP1KKiRZK565tZ0cIelgaZ6yfOanNY
+         2IDQ==
+X-Gm-Message-State: AGi0PuaiSY9K3iIOhoC/w4GrmpmawW9ROLMty+4/7H2ubcksWpnf7i/Y
+        Vf4wo2xsZGk2Xa8y0GyGur1BR4df
+X-Google-Smtp-Source: APiQypL5OkoT4ADX8Bbv2QCrYArfeVp/ykSHUymJxiZOPfBpqlBKw71QcvtRp5LTZ3VI06hm7KXA4Q==
+X-Received: by 2002:a19:ae06:: with SMTP id f6mr15508793lfc.97.1587997292185;
+        Mon, 27 Apr 2020 07:21:32 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id m18sm11287611lfj.10.2020.04.27.07.21.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 07:21:31 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <77a31b2f-f525-ba9e-f1ae-2b474465bde4@gmail.com>
+ <470b4de4-e98a-1bdc-049e-6259ad603507@nvidia.com>
+ <d2531fc1-b452-717d-af71-19497e14ef00@gmail.com>
+ <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
+ <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
+ <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
+ <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
+ <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
+ <20200427074837.GC3451400@ulmo>
+ <c1190858-eaea-8e94-b4d1-1cf28076c330@gmail.com>
+ <20200427110033.GC3464906@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <3a06811c-02dc-ce72-ebef-78c3fc3f4f7c@gmail.com>
+Date:   Mon, 27 Apr 2020 17:21:30 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421141234.v2.3.I4a493cfb0f9f740ce8fd2ab58e62dc92d18fed30@changeid>
+In-Reply-To: <20200427110033.GC3464906@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 02:14:41PM -0700, Douglas Anderson wrote:
-> If you build CONFIG_KGDB_SERIAL_CONSOLE into the kernel then you
-> should be able to have KGDB init itself at bootup by specifying the
-> "kgdboc=..." kernel command line parameter.  This has worked OK for me
-> for many years, but on a new device I switched to it stopped working.
+27.04.2020 14:00, Thierry Reding пишет:
+> On Mon, Apr 27, 2020 at 12:52:10PM +0300, Dmitry Osipenko wrote:
+>> 27.04.2020 10:48, Thierry Reding пишет:
+>> ...
+>>>> Maybe but all these other problems appear to have existed for sometime
+>>>> now. We need to fix all, but for the moment we need to figure out what's
+>>>> best for v5.7.
+>>>
+>>> To me it doesn't sound like we have a good handle on what exactly is
+>>> going on here and we're mostly just poking around.
+>>>
+>>> And even if things weren't working quite properly before, it sounds to
+>>> me like this patch actually made things worse.
+>>
+>> There is a plenty of time to work on the proper fix now. To me it sounds
+>> like you're giving up on fixing the root of the problem, sorry.
 > 
-> The problem is that on this new device the serial driver gets its
-> probe deferred.  Now when kgdb initializes it can't find the tty
-> driver and when it gives up it never tries again.
+> We're at -rc3 now and I haven't seen any promising progress in the last
+> week. All the while suspend/resume is now broken on at least one board
+> and that may end up hiding any other issues that could creep in in the
+> meantime.
 > 
-> We could try to find ways to move up the initialization of the serial
-> driver and such a thing might be worthwhile, but it's nice to be
-> robust against serial drivers that load late.  We could move kgdb to
-> init itself later but that penalizes our ability to debug early boot
-> code on systems where the driver inits early.  We could roll our own
-> system of detecting when new tty drivers get loaded and then use that
-> to figure out when kgdb can init, but that's ugly.
+> Furthermore we seem to have a preexisting issue that may very well
+> interfere with this patch, so I think the cautious thing is to revert
+> for now and then fix the original issue first. We can always come back
+> to this once everything is back to normal.
 > 
-> Instead, let's jump on the -EPROBE_DEFER bandwagon.  We'll create a
-> singleton instance of a "kgdboc" platform device.  If we can't find
-> our tty device when the singleton "kgdboc" probes we'll return
-> -EPROBE_DEFER which means that the system will call us back later to
-> try again when the tty device might be there.
+> Also, people are now looking at backporting this to v5.6. Unless we
+> revert this from v5.7 it may get picked up for backports to other
+> kernels and then I have to notify stable kernel maintainers that they
+> shouldn't and they have to back things out again. That's going to cause
+> a lot of wasted time for a lot of people.
 > 
-> We won't fully transition all of the kgdboc to a platform device
-> because early kgdb initialization (via the "ekgdboc" kernel command
-> line parameter) still runs before the platform device has been
-> created.  The kgdb platform device is merely used as a convenient way
-> to hook into the system's normal probe deferral mechanisms.
-> 
-> As part of this, we'll ever-so-slightly change how the "kgdboc=..."
-> kernel command line parameter works.  Previously if you booted up and
-> kgdb couldn't find the tty driver then later reading
-> '/sys/module/kgdboc/parameters/kgdboc' would return a blank string.
-> Now kgdb will keep track of the string that came as part of the
-> command line and give it back to you.  It's expected that this should
-> be an OK change.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> So, sorry, I disagree. I don't think we have "plenty of time".
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+There is about a month now before the 5.7 release. It's a bit too early
+to start the panic, IMO :)
+
+Jon already proposed a reasonable simple solution: to keep PCIe
+regulators always-ON. In a longer run we may want to have I2C atomic
+transfers supported for a late suspend phase.
+
+This should fix yours problem and it should go into stable kernels:
+
+--- >8 ---
+diff --git a/drivers/pci/controller/pci-tegra.c
+b/drivers/pci/controller/pci-tegra.c
+index 3e64ba6a36a8..6ac76323ca70 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -1533,8 +1533,16 @@ static int tegra_pcie_get_resources(struct
+tegra_pcie *pcie)
+ 		goto phys_put;
+ 	}
+
++	err = regulator_bulk_enable(pcie->num_supplies, pcie->supplies);
++	if (err) {
++		dev_err(dev, "failed to enable regulators: %d\n", err);
++		goto irq_free;
++	}
++
+ 	return 0;
+
++irq_free:
++	free_irq(pcie->irq, pcie);
+ phys_put:
+ 	if (soc->program_uphy)
+ 		tegra_pcie_phys_put(pcie);
+@@ -1545,6 +1553,12 @@ static int tegra_pcie_put_resources(struct
+tegra_pcie *pcie)
+ {
+ 	const struct tegra_pcie_soc *soc = pcie->soc;
+
++	err = regulator_bulk_disable(pcie->num_supplies, pcie->supplies);
++	if (err) {
++		dev_err(pcie->dev, "failed to disable regulators: %d\n", err);
++		return err;
++	}
++
+ 	if (pcie->irq > 0)
+ 		free_irq(pcie->irq, pcie);
+--- >8 ---
