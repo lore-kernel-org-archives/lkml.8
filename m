@@ -2,116 +2,249 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EA5C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99529C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7132078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:53:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qX0Zz/fn"
+	by mail.kernel.org (Postfix) with ESMTP id 826D1206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbgD0QxA (ORCPT
+        id S1726282AbgD0QyR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 12:53:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbgD0Qw7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 12:52:59 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12773C0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:52:59 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id u16so385487wmc.5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:52:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=L+f5rXb1fm0ddPawdaHU5SqIUExIWo7ZaWY7+7ST/oQ=;
-        b=qX0Zz/fnIDcCTmTrZNOvEAVu0G15kUG2va77BGRxQ+BmnBFWZsRrnaLHz5AJeDtNzy
-         im1UlPKai40zbHFsTmlFjs0ZlJ8dSJxK5mwzZ+nAIEwEmIgCwcYm7RTGYxfXNXUnv7iT
-         GvITdFyEQESb0fEeHG9nVNlC93iR5CJnTVdL0pJBSMI/cuHkO/7l0VAJaTkmAeFHzYYM
-         zph00Gm2PW/XDw3Tg+sdx8+1m/6xFtHAP1MWzfbVvhm2Xbiz/TC41CE+rwGou+JPnFT8
-         pd5dUPNqNOceRTLdcITOTJqqCb8zhCttUIrobwkSJqKbvweOrdCnityaPhTQz1J5bPDo
-         cz+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=L+f5rXb1fm0ddPawdaHU5SqIUExIWo7ZaWY7+7ST/oQ=;
-        b=HPHDXUEpvhi5DG14aQ4RIMoGpy6lukAQUkIQb8NVkwRomG+fxvK4xTKmsRvorarJfB
-         MDku/to/cUxyZd3tuLiFz+c4rbSs5w/BBPeylfZpnZk/dxB3OOCwFQnWCKNIB573sN10
-         /USw7hK/+D0No4DIO+FedSd2Pse/FQ1duEM0qTmorlh4eLAxNBLuM2PI2nIyzRyWkfZz
-         qo9ltP63Egaq8SnaM4UakHJr6Xr7EZQpbb1rcYRd2zekSNX8MW0yQHriEiC1JByWvjOW
-         a36+LvDhGq1p2BiwdkkbSjPwUISiUWiYcMbuZs/onQ/5REa38HglmufhwIr41nB6cRxX
-         9yZQ==
-X-Gm-Message-State: AGi0Pubmb/AvfvPEuSys3F2bTw7hBg14NdFgO7TbbVmWT52n37DlnBzI
-        5pjbpIvvCQBD564KmnWTtZlLvg==
-X-Google-Smtp-Source: APiQypIg33MdzG1fsD4Vtx7fCSqJxX2k4oqiO4ZdOMqbRC/BCATKrNwRWvi691/BgqaV0F5UCCKSag==
-X-Received: by 2002:a7b:c927:: with SMTP id h7mr417005wml.122.1588006377727;
-        Mon, 27 Apr 2020 09:52:57 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id v16sm16085225wml.30.2020.04.27.09.52.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 09:52:57 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 17:52:55 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     jason.wessel@windriver.com, gregkh@linuxfoundation.org,
-        kgdb-bugreport@lists.sourceforge.net, mingo@redhat.com,
-        hpa@zytor.com, bp@alien8.de, linux-serial@vger.kernel.org,
-        agross@kernel.org, tglx@linutronix.de, frowand.list@gmail.com,
-        bjorn.andersson@linaro.org, jslaby@suse.com,
-        catalin.marinas@arm.com, corbet@lwn.net, will@kernel.org,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Enrico Weigelt <info@metux.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        jinho lim <jordan.lim@samsung.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/9] arm64: Add call_break_hook() to early_brk64() for
- early kgdb
-Message-ID: <20200427165255.bjwkjobfzinzzlxb@holly.lan>
-References: <20200421211447.193860-1-dianders@chromium.org>
- <20200421141234.v2.5.I22067ad43e77ddfd4b64c2d49030628480f9e8d9@changeid>
+        Mon, 27 Apr 2020 12:54:17 -0400
+Received: from albireo.enyo.de ([37.24.231.21]:57964 "EHLO albireo.enyo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725963AbgD0QyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 12:54:17 -0400
+Received: from [172.17.203.2] (helo=deneb.enyo.de)
+        by albireo.enyo.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1jT71A-0003bs-8O; Mon, 27 Apr 2020 16:54:04 +0000
+Received: from fw by deneb.enyo.de with local (Exim 4.92)
+        (envelope-from <fw@deneb.enyo.de>)
+        id 1jT71A-00084T-3W; Mon, 27 Apr 2020 18:54:04 +0200
+From:   Florian Weimer <fw@deneb.enyo.de>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Michael Kerrisk <mtk.manpages@gmail.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        carlos <carlos@redhat.com>, Rich Felker <dalias@libc.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>
+Subject: Re: [PATCH glibc 5/9] glibc: Perform rseq(2) registration at C startup and thread creation (v17)
+References: <20200326155633.18236-1-mathieu.desnoyers@efficios.com>
+        <20200326155633.18236-6-mathieu.desnoyers@efficios.com>
+        <87ees9z417.fsf@mid.deneb.enyo.de>
+        <284293396.70630.1588005648556.JavaMail.zimbra@efficios.com>
+Date:   Mon, 27 Apr 2020 18:54:04 +0200
+In-Reply-To: <284293396.70630.1588005648556.JavaMail.zimbra@efficios.com>
+        (Mathieu Desnoyers's message of "Mon, 27 Apr 2020 12:40:48 -0400
+        (EDT)")
+Message-ID: <87zhawvphv.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421141234.v2.5.I22067ad43e77ddfd4b64c2d49030628480f9e8d9@changeid>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 02:14:43PM -0700, Douglas Anderson wrote:
-> In order to make early kgdb work properly we need early_brk64() to be
-> able to call into it.  This is as easy as adding a call into
-> call_break_hook() just like we do later in the normal brk_handler().
-> 
-> Once we do this we can let kgdb know that it can break into the
-> debugger a little earlier (specifically when parsing early_param's).
-> 
-> NOTE: without this patch it turns out that arm64 can't do breakpoints
-> even at dbg_late_init(), so if we decide something about this patch is
-> wrong we might need to move dbg_late_init() a little later.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
+* Mathieu Desnoyers:
 
-I haven't done any testing at this point (I'd hope to enable tests
-for this in the test suite), however FWIW and just so you know I didn't
-forget about this patch:
+>>> +#include <sys/syscall.h>
+>>> +#include <stdint.h>
+>>> +#include <kernel-features.h>
+>>> +#include <sys/rseq.h>
+>>> +
+>>> +__thread struct rseq __rseq_abi = {
+>>> +  .cpu_id = RSEQ_CPU_ID_UNINITIALIZED,
+>>> +};
+>> 
+>> { should go onto its own line.
+>
+> OK
+>
+>> I'd also add attribute_tls_model_ie,
+>> also it's implied by the declaration in the header.
+>
+> This contradicts feedback I received from Szabolcs Nagy in September 2019:
+>
+> https://public-inbox.org/libc-alpha/c58d4d6e-f22a-f5d9-e23a-5bd72cec1a86@arm.com/
+>
+> "note that libpthread.so is built with -ftls-model=initial-exec
+>
+> (and if it wasn't then you'd want to put the attribute on the
+> declaration in the internal header file, not on the definition,
+> so the actual tls accesses generate the right code)"
+>
+> In the context of his feedback, __rseq_abi was defined within nptl/pthread_create.c.
+> It is now defined in sysdeps/unix/sysv/linux/rseq-sym.c, which is built into the
+> csu which AFAIU ends up in libc.so. His comment still applies though, because
+> libc.so is also built with -ftls-model=initial-exec.
+>
+> So should I apply the "initial-exec" TLS model only to the __rseq_abi
+> declaration, or is it preferred to apply it to both the declaration
+> and the definition ?
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+I do not have a strong preference here.  Technically, the declaration
+in the header file should be enough.
 
+>>> diff --git a/sysdeps/unix/sysv/linux/sys/rseq.h
+>>> b/sysdeps/unix/sysv/linux/sys/rseq.h
+>>> new file mode 100644
+>>> index 0000000000..503dce4cac
+>>> --- /dev/null
+>>> +++ b/sysdeps/unix/sysv/linux/sys/rseq.h
+>>> @@ -0,0 +1,186 @@
+>> 
+>> I think there is some value in making this header compatible with
+>> inclusion from the assembler (including constants for the relevant
+>> struct offsets), but that can be a later change.
+>
+> Agreed. By "later", do you mean before merging the patch, between
+> merge of the patch and next glibc release, or for a subsequent glibc
+> release ?
 
-Daniel.
+It can happen some time after merging the patch, preferably for this
+release.  But I don't think it's release-critical.
+
+>>> +/* struct rseq_cs is aligned on 4 * 8 bytes to ensure it is always
+>>> +   contained within a single cache-line. It is usually declared as
+>>> +   link-time constant data.  */
+>>> +struct rseq_cs
+>>> +  {
+>>> +    /* Version of this structure.  */
+>>> +    uint32_t version;
+>>> +    /* enum rseq_cs_flags.  */
+>>> +    uint32_t flags;
+>>> +    uint64_t start_ip;
+>>> +    /* Offset from start_ip.  */
+>>> +    uint64_t post_commit_offset;
+>>> +    uint64_t abort_ip;
+>>> +} __attribute__((aligned(4 * sizeof(uint64_t))));
+>> 
+>> The comment is wrong.  32-byte alignment does not put struct rseq_cs
+>> on its own cache line on many (most?) CPUs.  Not using the constant 32
+>> looks like unnecessary obfuscation to me.
+>
+> There is a difference between "being contained within a single cache-line"
+> and "being the only structure in a cache-line". The objective here is the
+> former.
+
+Fair enough.
+
+> I agree that the constant 32 may be clearer here. I will change to align(32).
+
+With a space, please. 8-)
+
+>>> +/* struct rseq is aligned on 4 * 8 bytes to ensure it is always
+>>> +   contained within a single cache-line.
+>>> +
+>>> +   A single struct rseq per thread is allowed.  */
+>>> +struct rseq
+>>> +  {
+>>> +    /* Restartable sequences cpu_id_start field. Updated by the
+>>> +       kernel. Read by user-space with single-copy atomicity
+>>> +       semantics. This field should only be read by the thread which
+>>> +       registered this data structure. Aligned on 32-bit. Always
+>> 
+>> What does “Aligned on 32-bit” mean in this context?  Do you mean to
+>> reference 32-*byte* alignment here?
+>
+> No. I really mean 32-bit (4-byte). Being aligned on 32-byte guarantees that
+> this field is aligned at least on 4-byte. This is required by single-copy
+> atomicity semantics.
+>
+> Should I update this comment to state "Aligned on 4-byte" instead ?
+
+I think this is implied by all Linux ABIs.  And the explicit alignment
+specification for struct rseq makes the alignment 32 bytes.
+
+>>> +    /* Restartable sequences rseq_cs field.
+>>> +
+>>> +       Contains NULL when no critical section is active for the current
+>>> +       thread, or holds a pointer to the currently active struct rseq_cs.
+>>> +
+>>> +       Updated by user-space, which sets the address of the currently
+>>> +       active rseq_cs at the beginning of assembly instruction sequence
+>>> +       block, and set to NULL by the kernel when it restarts an assembly
+>>> +       instruction sequence block, as well as when the kernel detects that
+>>> +       it is preempting or delivering a signal outside of the range
+>>> +       targeted by the rseq_cs. Also needs to be set to NULL by user-space
+>>> +       before reclaiming memory that contains the targeted struct rseq_cs.
+>>> +
+>>> +       Read and set by the kernel. Set by user-space with single-copy
+>>> +       atomicity semantics. This field should only be updated by the
+>>> +       thread which registered this data structure. Aligned on 64-bit.  */
+>>> +    union {
+>>> +      uint64_t ptr64;
+>>> +#ifdef __LP64__
+>>> +      uint64_t ptr;
+>>> +#else
+>>> +      struct {
+>>> +#if (defined(__BYTE_ORDER) && (__BYTE_ORDER == __BIG_ENDIAN)) ||
+>>> defined(__BIG_ENDIAN)
+>>> +        uint32_t padding; /* Initialized to zero.  */
+>>> +        uint32_t ptr32;
+>>> +#else /* LITTLE */
+>>> +        uint32_t ptr32;
+>>> +        uint32_t padding; /* Initialized to zero.  */
+>>> +#endif /* ENDIAN */
+>>> +      } ptr;
+>>> +#endif
+>>> +    } rseq_cs;
+>> 
+>> Are these conditionals correct for x32?
+>
+> Let's see. With x86 gcc:
+>
+> -m64: (__x86_64__ && __LP64__)
+> -m32: (__i386__)
+> -mx32: (__x86_64__ && __ILP32__)
+>
+> So with "#ifdef __LP64__" we specifically target 64-bit pointers. The rest
+> falls into the "else" case, which expects 32-bit pointers. Considering that
+> x32 has 32-bit pointers, I don't see any issue here.
+
+Does the kernel have a separate 32-bit entry point for rseq on x32?
+If not, it will expect the 64-bit struct layout.
+
+> We don't mind that user-space uses that pointer, but we never want the kernel
+> to touch that pointer rather than the 32/64-bit-aware fields. One possibility
+> would be to do:
+>
+>     union
+>       {
+>         uint64_t ptr64;
+> #ifdef __LP64__
+>         uint64_t ptr;
+> #else
+>         struct
+>           {
+> #if (defined (__BYTE_ORDER) && (__BYTE_ORDER == __BIG_ENDIAN)) || defined (__BIG_ENDIAN)
+>             uint32_t padding; /* Initialized to zero.  */
+>             uint32_t ptr32;
+> #else /* LITTLE */
+>             uint32_t ptr32;
+>             uint32_t padding; /* Initialized to zero.  */
+> #endif /* ENDIAN */
+>           } ptr;
+> #endif
+>
+> #ifndef __KERNEL__
+>      const struct rseq_cs *uptr;
+> #endif
+>       } rseq_cs;
+>
+> in the union, so only user-space can see that field. Thoughts ?
+
+I think this depends on where the x32 question lands.
