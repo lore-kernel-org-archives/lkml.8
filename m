@@ -2,165 +2,116 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F5BC81982
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DAEC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02DC3214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E53EB21707
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:05:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588010743;
+	bh=3sQzTpb+6EQHtl/5+DLUwh9oczyqWHopzdygG/nBKq4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rFQYY2JxbwYXyQSwrJhV8XK8oZ8n8kNrhWn3OEfWNB2/SGUXXNC3mXDU3x6KwtnyB
+	 TgNWzk1wxND5RoYBF4vSMVZNgcXZstWGTf8UbTFWw4QZx1Ni40iOF5qJdDpMY9tfEJ
+	 JF3+klYQUcVdOOKI7HEHkR07mKi44QCB1SM0C0zA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbgD0SFF (ORCPT
+        id S1726559AbgD0SFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:05:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54588 "EHLO mx2.suse.de"
+        Mon, 27 Apr 2020 14:05:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726283AbgD0SEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:04:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E7407AB5C;
-        Mon, 27 Apr 2020 18:04:47 +0000 (UTC)
-From:   Vlastimil Babka <vbabka@suse.cz>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>
-Subject: [PATCH v3 2/5] kernel/sysctl: support handling command line aliases
-Date:   Mon, 27 Apr 2020 20:04:30 +0200
-Message-Id: <20200427180433.7029-3-vbabka@suse.cz>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200427180433.7029-1-vbabka@suse.cz>
-References: <20200427180433.7029-1-vbabka@suse.cz>
+        id S1725980AbgD0SFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 14:05:42 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6E20206D4;
+        Mon, 27 Apr 2020 18:05:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588010742;
+        bh=3sQzTpb+6EQHtl/5+DLUwh9oczyqWHopzdygG/nBKq4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QD5I+wu7tUiwLoN/991mjtzmzF6o4uZAAk4sUawxC1Y5pkfnCS7en7gEsecvhWgat
+         jaUVnplapxn0VjVZI6srYWtKrplFDpBi+duaXdXr/2i0/6VGfwKTTUTVyM8cdQK0Wt
+         irZS8s/ZXa0sba+tRn2fRZHkkZHk4tDTGkliVrhs=
+Date:   Mon, 27 Apr 2020 19:05:39 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 06/16] irqchip: add sl28cpld interrupt controller
+ support
+Message-ID: <20200427180539.GF4383@sirena.org.uk>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-7-michael@walle.cc>
+ <87pnbtqhr1.fsf@nanos.tec.linutronix.de>
+ <87f141bce0a4fda04b550647306be296@walle.cc>
+ <20200427174427.GE4383@sirena.org.uk>
+ <5d63026fc7c8700c2c7fb15267a9e441@walle.cc>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qftxBdZWiueWNAVY"
+Content-Disposition: inline
+In-Reply-To: <5d63026fc7c8700c2c7fb15267a9e441@walle.cc>
+X-Cookie: If your bread is stale, make toast.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can now handle sysctl parameters on kernel command line, but historically
-some parameters introduced their own command line equivalent, which we don't
-want to remove for compatibility reasons. We can however convert them to the
-generic infrastructure with a table translating the legacy command line
-parameters to their sysctl names, and removing the one-off param handlers.
 
-This patch adds the support and makes the first conversion to demonstrate it,
-on the (deprecated) numa_zonelist_order parameter.
+--qftxBdZWiueWNAVY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
-Acked-by: Kees Cook <keescook@chromium.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
----
- fs/proc/proc_sysctl.c | 48 ++++++++++++++++++++++++++++++++++++-------
- mm/page_alloc.c       |  9 --------
- 2 files changed, 41 insertions(+), 16 deletions(-)
+On Mon, Apr 27, 2020 at 08:01:14PM +0200, Michael Walle wrote:
+> Am 2020-04-27 19:44, schrieb Mark Brown:
 
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index 7804da5f5be0..209ad03e1b82 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -1694,6 +1694,37 @@ int __init proc_sys_init(void)
- 	return sysctl_init();
- }
- 
-+struct sysctl_alias {
-+	const char *kernel_param;
-+	const char *sysctl_param;
-+};
-+
-+/*
-+ * Historically some settings had both sysctl and a command line parameter.
-+ * With the generic sysctl. parameter support, we can handle them at a single
-+ * place and only keep the historical name for compatibility. This is not meant
-+ * to add brand new aliases. When adding existing aliases, consider whether
-+ * the possibly different moment of changing the value (e.g. from early_param
-+ * to the moment do_sysctl_args() is called) is an issue for the specific
-+ * parameter.
-+ */
-+static const struct sysctl_alias sysctl_aliases[] = {
-+	{"numa_zonelist_order",		"vm.numa_zonelist_order" },
-+	{ }
-+};
-+
-+static const char *sysctl_find_alias(char *param)
-+{
-+	const struct sysctl_alias *alias;
-+
-+	for (alias = &sysctl_aliases[0]; alias->kernel_param != NULL; alias++) {
-+		if (strcmp(alias->kernel_param, param) == 0)
-+			return alias->sysctl_param;
-+	}
-+
-+	return NULL;
-+}
-+
- /* Set sysctl value passed on kernel command line. */
- static int process_sysctl_arg(char *param, char *val,
- 			       const char *unused, void *arg)
-@@ -1707,15 +1738,18 @@ static int process_sysctl_arg(char *param, char *val,
- 	loff_t pos = 0;
- 	ssize_t wret;
- 
--	if (strncmp(param, "sysctl", sizeof("sysctl") - 1))
--		return 0;
--
--	param += sizeof("sysctl") - 1;
-+	if (strncmp(param, "sysctl", sizeof("sysctl") - 1) == 0) {
-+		param += sizeof("sysctl") - 1;
- 
--	if (param[0] != '/' && param[0] != '.')
--		return 0;
-+		if (param[0] != '/' && param[0] != '.')
-+			return 0;
- 
--	param++;
-+		param++;
-+	} else {
-+		param = (char *) sysctl_find_alias(param);
-+		if (!param)
-+			return 0;
-+	}
- 
- 	/*
- 	 * To set sysctl options, we use a temporary mount of proc, look up the
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 69827d4fa052..80b2788711c9 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5531,15 +5531,6 @@ static int __parse_numa_zonelist_order(char *s)
- 	return 0;
- }
- 
--static __init int setup_numa_zonelist_order(char *s)
--{
--	if (!s)
--		return 0;
--
--	return __parse_numa_zonelist_order(s);
--}
--early_param("numa_zonelist_order", setup_numa_zonelist_order);
--
- char numa_zonelist_order[] = "Node";
- 
- /*
--- 
-2.26.0
+> > Looking at the changelog there the "we can't be sure" bit is that
+> > coccinelle couldn't follow the flags through from the caller to make
+> > sure that IRQF_ONESHOT is set so we're just oring it in unconditionally.
 
+> So it is correct that IRQF_ONESHOT is also set in the driver which is
+> using regmap_add_irq_chip(), right?
+
+It shouldn't break anything and my instinct is that it's better form.
+
+--qftxBdZWiueWNAVY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6nHvMACgkQJNaLcl1U
+h9ApOQf/S6MhJTO+bFChRr3cqXq9pRPnjvTfkt1e+TT+fIXOh2uMY8mRxXizy7En
+nNcSqd3id4MgeW/kEGX7lvy7/oekEZsIqZATQy0THN93fw1n/0t9u22LwLFW00/w
+MHfKqmnBMOv+o5aYUrJtsdspfhyS76FcRnaoe5gr6PPYtEbQnWRy4UV3HAPpp5mO
+3d+MFa4olzoLwjD7HKkcIbbuWy3QcYgSn7HWfkqRPl+g06FIivX0SqC7kKLvTMzw
+++5Oj+jFw8W3sfX0mcnF1U/PieOR5WYuy6PXUKcN4j2zy1XrEbfF3e9k/H6B710c
+UOuaJn2BH7J1F4zSNSNQlc4ihuaoPw==
+=Y8Z/
+-----END PGP SIGNATURE-----
+
+--qftxBdZWiueWNAVY--
