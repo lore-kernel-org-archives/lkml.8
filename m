@@ -2,193 +2,108 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE0CC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D30AAC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE8E20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B795A20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:31:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgD0Pat (ORCPT
+        id S1728142AbgD0PbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 11:30:49 -0400
-Received: from mga11.intel.com ([192.55.52.93]:50188 "EHLO mga11.intel.com"
+        Mon, 27 Apr 2020 11:31:13 -0400
+Received: from sauhun.de ([88.99.104.3]:59292 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728021AbgD0Pas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 11:30:48 -0400
-IronPort-SDR: 8tMmEonabBebIQtUWcVAK9+E4KlWVRyIH86DXF4vQVdchlWHhFtis0rTbQDy7ZA56vi+t8XkPQ
- yKOpF60aXPeA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 08:30:48 -0700
-IronPort-SDR: GP3A3rfPMYdQpzYh2A4GAPQSDWg+are3wylGKVaQq4kEA+BeK88WkbqyFEkCwtaaKfarRcKcAw
- aZqyaUnWvt6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,324,1583222400"; 
-   d="scan'208";a="431816249"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005.jf.intel.com with ESMTP; 27 Apr 2020 08:30:44 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jT5iZ-003PtH-0X; Mon, 27 Apr 2020 18:30:47 +0300
-Date:   Mon, 27 Apr 2020 18:30:46 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>, linux-media@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com,
-        mchehab@kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Perches <joe@perches.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>
-Subject: Re: [RESEND PATCH v3 1/1] lib/vsprintf: Add support for printing
- V4L2 and DRM fourccs
-Message-ID: <20200427153046.GL185537@smile.fi.intel.com>
-References: <20200427145303.29943-1-sakari.ailus@linux.intel.com>
+        id S1726292AbgD0PbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 11:31:12 -0400
+Received: from localhost (p54B330D3.dip0.t-ipconnect.de [84.179.48.211])
+        by pokefinder.org (Postfix) with ESMTPSA id 68B992C1F66;
+        Mon, 27 Apr 2020 17:31:09 +0200 (CEST)
+Date:   Mon, 27 Apr 2020 17:31:07 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+Message-ID: <20200427153106.GA8113@kunai>
+References: <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
+ <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
+ <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
+ <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
+ <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
+ <20200427074837.GC3451400@ulmo>
+ <c1190858-eaea-8e94-b4d1-1cf28076c330@gmail.com>
+ <20200427103851.GB24446@kunai>
+ <dc2de966-81d6-6ad5-0c51-16dd28ca4165@gmail.com>
+ <20200427141922.GD3464906@ulmo>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
 Content-Disposition: inline
-In-Reply-To: <20200427145303.29943-1-sakari.ailus@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200427141922.GD3464906@ulmo>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 05:53:03PM +0300, Sakari Ailus wrote:
-> Add a printk modifier %p4cc (for pixel format) for printing V4L2 and DRM
-> pixel formats denoted by fourccs. The fourcc encoding is the same for both
-> so the same implementation can be used.
 
-4cc is more generic than pixel format.
-
-...
-
-> +V4L2 and DRM FourCC code (pixel format)
-> +---------------------------------------
-> +
-> +::
-> +
-> +	%p4cc
-
-Missed examples.
-
-> +Print a FourCC code used by V4L2 or DRM, including format endianness and
-> +its numerical value as hexadecimal.
-
-...
-
-> +static noinline_for_stack
-> +char *fourcc_string(char *buf, char *end, const u32 *__fourcc,
-> +		    struct printf_spec spec, const char *fmt)
-> +{
-> +#define FOURCC_HEX_CHAR_STR		"(xx)"
-> +#define FOURCC_BIG_ENDIAN_STR		" big-endian"
-> +#define FOURCC_LITTLE_ENDIAN_STR	" little-endian"
-> +#define FOURCC_HEX_NUMBER		" (0x01234567)"
-
-Where are #undef:s?
-
-> +#define FOURCC_STRING_MAX						\
-> +	FOURCC_HEX_CHAR_STR FOURCC_HEX_CHAR_STR FOURCC_HEX_CHAR_STR	\
-> +	FOURCC_HEX_CHAR_STR FOURCC_LITTLE_ENDIAN_STR FOURCC_HEX_NUMBER
-
-> +	struct printf_spec my_spec = {
-> +		.type = FORMAT_TYPE_UINT,
-> +		.field_width = 2,
-> +		.flags = SMALL,
-> +		.base = 16,
-> +		.precision = -1,
-> +	};
-
-Seems like close enough to bus_spec.
-
-> +	char __s[sizeof(FOURCC_STRING_MAX)];
-> +	char *s = __s;
-> +	unsigned int i;
-> +	/*
-> +	 * The 31st bit defines the endianness of the data, so save its printing
-> +	 * for later.
-> +	 */
-> +	u32 fourcc = *__fourcc & ~BIT(31);
-> +	int ret;
-> +
-> +	if (check_pointer(&buf, end, __fourcc, spec))
-> +		return buf;
-> +
-> +	if (fmt[1] != 'c' || fmt[2] != 'c')
-> +		return error_string(buf, end, "(%p4?)", spec);
-> +
-> +	for (i = 0; i < sizeof(fourcc); i++, fourcc >>= 8) {
-> +		unsigned char c = fourcc;
-> +
-> +		/* Weed out spaces */
-> +		if (c == ' ')
-> +			continue;
-> +
-> +		/* Print non-control characters as-is */
-> +		if (c > ' ') {
-> +			*s = c;
-> +			s++;
-> +			continue;
-> +		}
-
-> +		if (WARN_ON_ONCE(sizeof(__s) <
-> +				 (s - __s) + sizeof(FOURCC_HEX_CHAR_STR)))
-
-Why WARN?!
-
-> +			break;
-> +
-> +		*s = '(';
-> +		s++;
-> +		s = number(s, s + 2, c, my_spec);
-> +		*s = ')';
-> +		s++;
-> +	}
-> +
-> +	ret = strscpy(s, *__fourcc & BIT(31) ? FOURCC_BIG_ENDIAN_STR
-> +					     : FOURCC_LITTLE_ENDIAN_STR,
-> +		      sizeof(__s) - (s - __s));
-
-> +	if (!WARN_ON_ONCE(ret < 0))
-
-Ditto.
-
-> +		s += ret;
-
-> +	if (!WARN_ON_ONCE(sizeof(__s) <
-> +			  (s - __s) + sizeof(FOURCC_HEX_NUMBER))) {
-
-Ditto.
-
-> +		*s = ' ';
-> +		s++;
-> +		*s = '(';
-> +		s++;
-> +		/* subtract parentheses and the space from the size */
-> +		special_hex_number(s, s + sizeof(FOURCC_HEX_NUMBER) - 3,
-> +				   *__fourcc, sizeof(u32));
-> +		s += sizeof(u32) * 2 + 2 /* 0x */;
-> +		*s = ')';
-> +		s++;
-> +		*s = '\0';
-> +	}
-> +
-> +	return string(buf, end, __s, spec);
-
-This looks overengineered. Why everyone will need so long strings to be printed?
-
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
+--WIyZ46R2i8wDzkSu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
+> Yes, that bug should be fixed anyway. But that doesn't justify breaking
+> suspend/resume completely, which *is* a regression.
+>=20
+> Look, I'm not saying that we should drop this patch altogether. All I'm
+> saying is that we should postpone it so that we can: a) get suspend and
+> resume working again (and by doing so make sure no other suspend/resume
+> regressions silently creep in, because that always seems to happen when
+> you're not looking) and b) fix any preexisting issues without possibly
+> scrambling the result with this perhaps unrelated fix.
+>=20
+> So, again, I think the safest road forward is to back this one out for
+> now, fix whatever this other bug is and once suspend/resume is working
+> properly again we can revisit this patch based on a known-good baseline.
+
+I am with you here. I want to add that the proper fix should be
+developed without thinking too much about stable in the first place.
+*When* we have a proper working fix, then we can think about making it
+"more" suitable for backporting. Yet, it may also be a result that older
+kernels need a different solution. Or have no solution at all, in case
+they can't do atomic_transfers and this is needed.
+
+D'accord?
+
+
+--WIyZ46R2i8wDzkSu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6m+rYACgkQFA3kzBSg
+KbbGqw//cZv3rO5AhOcCCxeJFxoGIgIv9CidGK0fmKlYf0RLugGFMb0p4djzlUIG
+SqC/DZviHJVrmLbQgWChpBlwgIHdLoQNICqa8mNp5/dDfpsfC+ipjKG0cIiPTHhF
+Xih33dEwEp89eAxjb583BPUtMu6QGd8npiTyexDAiWFow0uYzms9JGZUGlAujZg0
+3tbbdQAHjW7bH4XtLcVl8umKGNV5zaIrdvDQl2rFm9Q+BRj6jN/zGKefFptsJols
+dLo76cXnTCdaHD5NRLMJESULyDUKSCP+C12d7KZ3PBsPPnBHAecze88WkmJzLqR1
+5l8GKHV9aNWJ4tmjr/B0rujvFZThpTJ8WNaxrYUqC5Lc27tiblLsJTfG04d9u6He
+jEXc0Osn+UQhmnoY0xBGUkXOict6u7beNE051fDqH6fvNUk1X5FZLobi9eVnsj10
+B4r2Z37jvKVRqz2W1vxkAAYrHdIzX+r/rJR7jIa8MjADuFpDSEpONkG10LKF6rnG
+Kyq9vlETJtN7FMvJ3gfWC89N93CXHXTiuJf1k9d1C2rJxTtvXf2wmppxBTE81ZES
+B29+V239qytKHdZOKrVZEqCsmnml9ufrdcRSkjm+yXIst6M1zX8uchC5RaEgkDeK
+40gJRr3GD/E8OWXEJ7gdWHwf63p8yWeTthkBn+2NlHVImCFkbs8=
+=aG5Q
+-----END PGP SIGNATURE-----
+
+--WIyZ46R2i8wDzkSu--
