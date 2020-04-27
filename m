@@ -2,306 +2,176 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D060C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DFEC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78B7F206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8607206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:12:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vlpJmso9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RtoV92Ej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728155AbgD0PMX (ORCPT
+        id S1728182AbgD0PMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 11:12:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40930 "EHLO
+        Mon, 27 Apr 2020 11:12:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726539AbgD0PMW (ORCPT
+        by vger.kernel.org with ESMTP id S1727098AbgD0PMo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 11:12:22 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5DCAC03C1A7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 08:12:22 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id 72so26749130otu.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 08:12:22 -0700 (PDT)
+        Mon, 27 Apr 2020 11:12:44 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49B3FC0610D5;
+        Mon, 27 Apr 2020 08:12:44 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 188so18604wmc.2;
+        Mon, 27 Apr 2020 08:12:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BIp8ZTFNXRaS7/OUF2y+xPzA9YTnd5ToCoVg08aWYRA=;
-        b=vlpJmso9TwRmefWhO2kzikOVfVrXkp8kpayvCO1uoHw7cBzuqj8nbxQJ1Tgxrhz9U+
-         oSrC1vWy96TUuj/s+7wJ2Uo4N5HTxPSMuGl3+LA3Rt2TxWD8SqQiV1rJFFyWE4fLyr5V
-         5dsLuTNZU5ZfSlSCFBwnHk0vPUtqcPpqAyjAL/MhFni8VOzzWDacLGeZR6yIPteJmyj8
-         WekLqd/ewUNmdHNVsjCmC68N2xe3w0K2UCa/vlPatf1phBgjE1KAnE4IRjgnsAq/Qm6G
-         xTZP8ZYoeza355Xnxi2c2JunJyRZDuDwNb83jkKzou4i6c7X9E1BrpMg1Lgzc/dycMPe
-         yW/A==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xlPDq2Z7+duAXL81aiHn6DAJZ5ySakmXAZUCUWCDqfA=;
+        b=RtoV92EjRriYb3tNoMTsPcffGxV+vSMUT5Q8i0M5KXp2qS5wa3L1beL+I1xNwcQx4O
+         Fr/KaAJKsjVEhAPD3i+SnlCISTaG9ETnr+dC/KaS+65AMNQN3fa/8h6rIixe6iM6ojmL
+         j/I97igvFSlysiDyFbaCpUAn27LQilsDcT0by9V5GV6v9Trrx7MfeFC74TwxYQRSRPWL
+         KrrvG944IgPGGqg7H57yWxpgfbc94XaEcvb0dFNozcVIgdPDaI08IykCH8uyJVl+Brtn
+         qzCuefq06yGMBpGNxRRh4KbS1Cazi0/7BR6cb3R05vY9XHADuOR5s/KRyPFN1yq3Ixtp
+         nqZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BIp8ZTFNXRaS7/OUF2y+xPzA9YTnd5ToCoVg08aWYRA=;
-        b=SquqUYmkMZMGB5BqTaxCEDqnmU27aFwgY/KH4sh8oiLHVbpPL3oZ94AK/ur3rPEaB9
-         0ZbKXtBKiMOMQR0eq3HRL5ivwD/z8mE7n3cKxqKdXDXJ9UXnGQZBDJI/lbakNtEj/n1G
-         p0fvDj1W9RYxPVNiT0MpAWKfrxdx+xuNldxkT09gA/yXJGB/Pgowr4PrMjnSCGHVwdQ0
-         HcGWDqrSuDBsdWRIPW9FvZZWe6c2V0Rb8rxFydB+dlSG76fE8NE13D3vGeKiuKhAm2rO
-         xezERrgcb8R080fM+Hun/MAukKylZclVLwcgt26huoXuUOnHydiaEvszAd3srE+cptTr
-         NShg==
-X-Gm-Message-State: AGi0PuZ7iWUUZnEE0bryPgcCqODsHPSG9COfi9kYOXC+eO4AP4BMM5bP
-        LA/ICGgKCKQp024fFiAssaqr8zwfgjVi/gt7r/+gvA==
-X-Google-Smtp-Source: APiQypIROFjpPfAr6klYkWqkYs40LPhaeY4S7P6AVL9pR2VKJxm7dlVIY8qtp8D3WUMrIAVNAFfqvkn7KBPpf7BKXTA=
-X-Received: by 2002:a05:6830:1d7:: with SMTP id r23mr18535317ota.68.1588000340557;
- Mon, 27 Apr 2020 08:12:20 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xlPDq2Z7+duAXL81aiHn6DAJZ5ySakmXAZUCUWCDqfA=;
+        b=XPf1L17/i9UKaWFgAinW5iW9AS5Em5wo24ulJDJs7WnGDKM22gyd05bmsOCd0wWxIU
+         RxCrHlhUTVL1Xc8gcKOinDJ5tiwZLW7JtWYJ4sYGxb592olQy7zkxLeSZNVSmRh8CdFw
+         XPNa7jeAHB1/S7cRCv7LLtCjKLWGp4Nnz72ao0Uz3D/0MHZp6JONExqUapUxhtpk32Xr
+         hyyFVoCYWECkeGeRRzOH/Se7R+icozvEFOkDN0A2tKsaYnXpcizIoGQJ442sHhLl2xyd
+         kAlP5HzIoKQuUJgIlQYqqL6Q637l+INMGw7gEz0SClILEOOVfA22IlbjPUGp2d29kPba
+         gaoA==
+X-Gm-Message-State: AGi0Pub1TVJMPXQpR+5ZXgl5Dz9+AlYmB9H9g1uK3cQ0/gTRUEK8FcEO
+        bg0+Y9EyYJvY+kIN5dXBkBU=
+X-Google-Smtp-Source: APiQypJlewgxnhPIQMsdhvzWnxDXU1udQ+3S/sAbRomiQX5SIFxsZHKumSqqwFBzMwXMKcnKtSzBpw==
+X-Received: by 2002:a1c:cc1a:: with SMTP id h26mr15377wmb.127.1588000362049;
+        Mon, 27 Apr 2020 08:12:42 -0700 (PDT)
+Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
+        by smtp.gmail.com with ESMTPSA id e5sm21326955wru.92.2020.04.27.08.12.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 08:12:40 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 17:12:34 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+Message-ID: <20200427151234.GE3464906@ulmo>
+References: <d2531fc1-b452-717d-af71-19497e14ef00@gmail.com>
+ <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
+ <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
+ <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
+ <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
+ <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
+ <20200427074837.GC3451400@ulmo>
+ <c1190858-eaea-8e94-b4d1-1cf28076c330@gmail.com>
+ <20200427110033.GC3464906@ulmo>
+ <3a06811c-02dc-ce72-ebef-78c3fc3f4f7c@gmail.com>
 MIME-Version: 1.0
-References: <20200408110816.2712841-1-robert.foss@linaro.org>
- <20200408110816.2712841-2-robert.foss@linaro.org> <20200415160729.GA4438@bogus>
-In-Reply-To: <20200415160729.GA4438@bogus>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Mon, 27 Apr 2020 17:12:09 +0200
-Message-ID: <CAG3jFysLE3Mh7Gm+XPj2q9w2x7aVvmWTriWY5sVyQbJzUDA_hQ@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] media: dt-bindings: ov8856: Document YAML bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="0H629O+sVkh21xTi"
+Content-Disposition: inline
+In-Reply-To: <3a06811c-02dc-ce72-ebef-78c3fc3f4f7c@gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020 at 18:07, Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Apr 08, 2020 at 01:08:14PM +0200, Robert Foss wrote:
-> > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> >
-> > This patch adds documentation of device tree in YAML schema for the
-> > OV8856 CMOS image sensor.
-> >
-> > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> > ---
-> >
-> > - Changes since v6:
-> >   * Marco: remove qcom specifics from DT example
-> >
-> > - Changes since v5:
-> >   * Add assigned-clocks and assigned-clock-rates
-> >   * robher: dt-schema errors
-> >
-> > - Changes since v4:
-> >   * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in description
-> >   * Add clock-lanes property to example
-> >   * robher: Fix syntax error in devicetree example
-> >
-> > - Changes since v3:
-> >   * robher: Fix syntax error
-> >   * robher: Removed maxItems
-> >   * Fixes yaml 'make dt-binding-check' errors
-> >
-> > - Changes since v2:
-> >   Fixes comments from from Andy, Tomasz, Sakari, Rob.
-> >   * Convert text documentation to YAML schema.
-> >
-> > - Changes since v1:
-> >   Fixes comments from Sakari, Tomasz
-> >   * Add clock-frequency and link-frequencies in DT
-> >
-> >  .../devicetree/bindings/media/i2c/ov8856.yaml | 143 ++++++++++++++++++
-> >  MAINTAINERS                                   |   1 +
-> >  2 files changed, 144 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov8856.yaml b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> > new file mode 100644
-> > index 000000000000..96bef5403d7e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> > @@ -0,0 +1,143 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +# Copyright (c) 2019 MediaTek Inc.
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/media/i2c/ov8856.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Omnivision OV8856 CMOS Sensor Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Ben Kao <ben.kao@intel.com>
-> > +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > +
-> > +description: |-
-> > +  The Omnivision OV8856 is a high performance, 1/4-inch, 8 megapixel, CMOS
-> > +  image sensor that delivers 3264x2448 at 30fps. It provides full-frame,
-> > +  sub-sampled, and windowed 10-bit MIPI images in various formats via the
-> > +  Serial Camera Control Bus (SCCB) interface. This chip is programmable
-> > +  through I2C and two-wire SCCB. The sensor output is available via CSI-2
-> > +  serial data output (up to 4-lane).
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: ovti,ov8856
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  clock-names:
-> > +    description:
-> > +      Input clock for the sensor.
-> > +    items:
-> > +      - const: xvclk
-> > +
-> > +  assigned-clocks:
-> > +    description:
-> > +      Input clock for the sensor.
-> > +
-> > +  assigned-clock-rates:
-> > +    description:
-> > +      Frequency of the xvclk clock in Hertz.
->
-> These 2 should have a 'maxItems: 1'
 
-Thanks for finding this, I'll send a new revision without assigned-clocks soon.
+--0H629O+sVkh21xTi
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
-> > +
-> > +  dovdd-supply:
-> > +    description:
-> > +      Definition of the regulator used as interface power supply.
-> > +
-> > +  avdd-supply:
-> > +    description:
-> > +      Definition of the regulator used as analog power supply.
-> > +
-> > +  dvdd-supply:
-> > +    description:
-> > +      Definition of the regulator used as digital power supply.
-> > +
-> > +  reset-gpios:
-> > +    description:
-> > +      The phandle and specifier for the GPIO that controls sensor reset.
-> > +      This corresponds to the hardware pin XSHUTDOWN which is physically
-> > +      active low.
-> > +
-> > +  port:
-> > +    type: object
-> > +    additionalProperties: false
-> > +    description:
-> > +      A node containing input and output port nodes with endpoint definitions
->
-> Only an output, right?
+On Mon, Apr 27, 2020 at 05:21:30PM +0300, Dmitry Osipenko wrote:
+> 27.04.2020 14:00, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Mon, Apr 27, 2020 at 12:52:10PM +0300, Dmitry Osipenko wrote:
+> >> 27.04.2020 10:48, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >> ...
+> >>>> Maybe but all these other problems appear to have existed for someti=
+me
+> >>>> now. We need to fix all, but for the moment we need to figure out wh=
+at's
+> >>>> best for v5.7.
+> >>>
+> >>> To me it doesn't sound like we have a good handle on what exactly is
+> >>> going on here and we're mostly just poking around.
+> >>>
+> >>> And even if things weren't working quite properly before, it sounds to
+> >>> me like this patch actually made things worse.
+> >>
+> >> There is a plenty of time to work on the proper fix now. To me it soun=
+ds
+> >> like you're giving up on fixing the root of the problem, sorry.
+> >=20
+> > We're at -rc3 now and I haven't seen any promising progress in the last
+> > week. All the while suspend/resume is now broken on at least one board
+> > and that may end up hiding any other issues that could creep in in the
+> > meantime.
+> >=20
+> > Furthermore we seem to have a preexisting issue that may very well
+> > interfere with this patch, so I think the cautious thing is to revert
+> > for now and then fix the original issue first. We can always come back
+> > to this once everything is back to normal.
+> >=20
+> > Also, people are now looking at backporting this to v5.6. Unless we
+> > revert this from v5.7 it may get picked up for backports to other
+> > kernels and then I have to notify stable kernel maintainers that they
+> > shouldn't and they have to back things out again. That's going to cause
+> > a lot of wasted time for a lot of people.
+> >=20
+> > So, sorry, I disagree. I don't think we have "plenty of time".
+>=20
+> There is about a month now before the 5.7 release. It's a bit too early
+> to start the panic, IMO :)
 
-Good find, fixing in next version.
+There's no panic. A patch got merged and it broken something, so we
+revert it and try again. It's very much standard procedure.
 
->
-> > +      as documented in
-> > +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> > +
-> > +    properties:
-> > +      endpoint:
-> > +        type: object
-> > +
-> > +        properties:
-> > +          clock-lanes:
-> > +            maxItems: 1
-> > +
-> > +          data-lanes:
-> > +            maxItems: 1
-> > +
-> > +          remote-endpoint: true
-> > +
-> > +        required:
-> > +          - clock-lanes
-> > +          - data-lanes
-> > +          - remote-endpoint
-> > +
-> > +    required:
-> > +      - endpoint
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +  - clock-names
-> > +  - assigned-clocks
-> > +  - assigned-clock-rates
-> > +  - dovdd-supply
-> > +  - avdd-supply
-> > +  - dvdd-supply
-> > +  - reset-gpios
-> > +  - port
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +
-> > +    i2c {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        ov8856: camera@10 {
-> > +            compatible = "ovti,ov8856";
-> > +            reg = <0x10>;
-> > +
-> > +            reset-gpios = <&pio 111 GPIO_ACTIVE_LOW>;
-> > +            pinctrl-names = "default";
-> > +            pinctrl-0 = <&clk_24m_cam>;
-> > +
-> > +            clocks = <&cam_osc>;
-> > +            clock-names = "xvclk";
-> > +            assigned-clocks = <&cam_osc>;
-> > +            assigned-clock-rates = <19200000>;
-> > +
-> > +            avdd-supply = <&mt6358_vcama2_reg>;
-> > +            dvdd-supply = <&mt6358_vcamd_reg>;
-> > +            dovdd-supply = <&mt6358_vcamio_reg>;
-> > +
-> > +            port {
-> > +                wcam_out: endpoint {
-> > +                    remote-endpoint = <&mipi_in_wcam>;
-> > +                    clock-lanes = <0>;
-> > +                    data-lanes = <1 2 3 4>;
-> > +                    link-frequencies = /bits/ 64 <360000000 180000000>;
-> > +                };
-> > +            };
-> > +        };
-> > +    };
-> > +...
-> > \ No newline at end of file
->
-> ^^^
->
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 534a8dc4f84a..3f35c6e9700a 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -12465,6 +12465,7 @@ L:    linux-media@vger.kernel.org
-> >  T:   git git://linuxtv.org/media_tree.git
-> >  S:   Maintained
-> >  F:   drivers/media/i2c/ov8856.c
-> > +F:   Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> >
-> >  OMNIVISION OV9650 SENSOR DRIVER
-> >  M:   Sakari Ailus <sakari.ailus@linux.intel.com>
-> > --
-> > 2.25.1
-> >
+> Jon already proposed a reasonable simple solution: to keep PCIe
+> regulators always-ON. In a longer run we may want to have I2C atomic
+> transfers supported for a late suspend phase.
+
+That's not really a solution, though, is it? It's just papering over
+an issue that this patch introduced or uncovered. I'm much more in
+favour of fixing problems at the root rather than keep papering over
+until we loose track of what the actual problems are.
+
+Thierry
+
+--0H629O+sVkh21xTi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6m9mAACgkQ3SOs138+
+s6HIgg//dIcA5nNp3RiKQ/afAlJ0Toi2/WrRH1Ah/2Pv7hgQuedUn+bgV0dvNTiA
+bsN20O6poktDDuCkGV6n2FXn0wCFMhpdcTA1IZIuLdxF+agwWfNh2bn7u8QzrVyV
+sQA4s6BHU8/RiZy5eN7KgEm9M+sqV5EH/ZUnXrTRL7cXKlf41HWwat98jDKa0i5f
+Yj3RmeFq7QkIiyI1l+nq0izY6MPF+Lzq7ixsM+KgaAEofedzCMcLfwgOrOZD4xiK
+tXmDlHqEhEcQAvXm8Ow9Z0mYUulaWetN8vU6WyViZP8YklFnzKuxBJNe3XTyoinQ
+3dB6a3WA/M8sH3S/dhSRT/PiMAKwpCJROzLfNC1pLZXvXOwyDsJVr95TjamIVSHu
+P8tzWMrbkzGlCbpqDp08GrD1yxGsSQsY1msrinSoNvb+27xgdEh6SFdGVZlDFPG1
+kgMUs0uWQ+SFTvDlCh7HJ3Lug0qnJQzGeRKWMcRvCzStQCIA02gdZS0FUbnIufty
+WVRK2tLpkJrA87gg1HHzxT8uCrJfIlo4x3wCGYTapCRikW9TlqkkpuO4yHeiwC3L
+8Q9X1xQ7xRcOz3j8KgQYP2sApp/8XyULG23ETN2Ple5wMGj54Ab07JGEd/B4fKPW
+I0J0Xp6T+WdpcBoilfSENMHoCTqMQ/6YBjGp7vv5aMGw4Y8kHrw=
+=pTlO
+-----END PGP SIGNATURE-----
+
+--0H629O+sVkh21xTi--
