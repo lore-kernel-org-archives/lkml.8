@@ -2,79 +2,107 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC68CC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA11C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B59EE2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 235DA20575
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:40:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eOFr0yND"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727037AbgD0Ki6 convert rfc822-to-8bit (ORCPT
+        id S1727008AbgD0KkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 06:38:58 -0400
-Received: from sauhun.de ([88.99.104.3]:56640 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726507AbgD0Kiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 06:38:54 -0400
-Received: from localhost (p54B330D3.dip0.t-ipconnect.de [84.179.48.211])
-        by pokefinder.org (Postfix) with ESMTPSA id 30E9C2C1F66;
-        Mon, 27 Apr 2020 12:38:52 +0200 (CEST)
-Date:   Mon, 27 Apr 2020 12:38:52 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
- for a long time
-Message-ID: <20200427103851.GB24446@kunai>
-References: <77a31b2f-f525-ba9e-f1ae-2b474465bde4@gmail.com>
- <470b4de4-e98a-1bdc-049e-6259ad603507@nvidia.com>
- <d2531fc1-b452-717d-af71-19497e14ef00@gmail.com>
- <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
- <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
- <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
- <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
- <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
- <20200427074837.GC3451400@ulmo>
- <c1190858-eaea-8e94-b4d1-1cf28076c330@gmail.com>
+        Mon, 27 Apr 2020 06:40:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726507AbgD0KkK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 06:40:10 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E2CBC0610D5;
+        Mon, 27 Apr 2020 03:40:09 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d17so8533650pgo.0;
+        Mon, 27 Apr 2020 03:40:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MW2w6cYBsYnn2GfMNP4KPWcf4PUGwZkZaGYmrXU7CiE=;
+        b=eOFr0yNDPSp7q7vgtgoOygCFVuXicOnsYIZSmwXP/zm9v21hH/m7B/9Hb2oMMFGHtE
+         TJzrxfZ/IsHx/xL3A7nixEZzZPfnHCrnw8nzcs//XtbBamVbtFXprYWr8CdrsUEwVDnl
+         m+LALk2hUIhF1UQyeYIs4ShIX/2a3QKNuQFMmlS1d6rzaU9cL0kpN6c0Y9u1hCINiwbt
+         8ebIwtQZbg/wzKk8WmSyti2sXvpcZYxvGfqG62viprQM05ppWoPzP22naKqsE2zI9Nz0
+         GoFYv4ueHnXM9uit745vpKHQ+DsDf0rlPt7RzendHla1sGLLQJEzc0ktoxqy/uj+e9Ds
+         G/4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MW2w6cYBsYnn2GfMNP4KPWcf4PUGwZkZaGYmrXU7CiE=;
+        b=QwlqhJvVweU9XCoeblLSiPVIOLRuXuwl2YKJUtLhTCYU+A2kvDcf4Lim7H7YZ/MzeT
+         6qdFVrYmpiN+tdNSwyaendy5pkhrKboB+yj91YfC78CoUMqCNIfxIJJSNUdjbI37dXMb
+         MifpRWQFzYqT73N/EthM4PsRHM+H5FaRKujSNj1u6G+2ow2++ZgGLA06lCsWX8bq28Sc
+         01FMinam3S2kpEkM5eLvMV5cnlMp9Lq2IXqYoLBMnQj280Tj79RCWAW7EFHSffwWnqGb
+         2XnHAoiSiIPSpYPGGrpjDZffZsF+nXiGFHElYLKMtTwzdE7smIWngwB13PvAIriiw1rt
+         pbRA==
+X-Gm-Message-State: AGi0Pub/JHAvto7oc9AOe4ho9+ov4duCWbkXk0+CEnDJ4W8y91c8Hh4F
+        UC6t8jsOjj1KsRDeX2TYtDB+cE09SXC+ImgYFIY=
+X-Google-Smtp-Source: APiQypK0i50BD8R4wbHRW29BsrZnhZtbNkgmmXrOJuxSXNQXSjWGpfxu1W5sqFiXTSMRmJsi/gbBjGU9S2MGMKwp1sc=
+X-Received: by 2002:a63:5511:: with SMTP id j17mr21751878pgb.4.1587984008659;
+ Mon, 27 Apr 2020 03:40:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <c1190858-eaea-8e94-b4d1-1cf28076c330@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200425134007.15843-1-zhengdejin5@gmail.com>
+In-Reply-To: <20200425134007.15843-1-zhengdejin5@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 27 Apr 2020 13:40:02 +0300
+Message-ID: <CAHp75VeAetsZsANoHx7X-g8+LOt0+NNarXheY5AR6L+LrdHavQ@mail.gmail.com>
+Subject: Re: [PATCH net v1] net: acenic: fix an issue about leak related
+ system resources
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>, jes@trained-monkey.org,
+        linux-acenic@sunsite.dk, netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 12:52:10PM +0300, Dmitry Osipenko wrote:
-> 27.04.2020 10:48, Thierry Reding пишет:
-> ...
-> >> Maybe but all these other problems appear to have existed for sometime
-> >> now. We need to fix all, but for the moment we need to figure out what's
-> >> best for v5.7.
-> > 
-> > To me it doesn't sound like we have a good handle on what exactly is
-> > going on here and we're mostly just poking around.
-> > 
-> > And even if things weren't working quite properly before, it sounds to
-> > me like this patch actually made things worse.
-> 
-> There is a plenty of time to work on the proper fix now. To me it sounds
-> like you're giving up on fixing the root of the problem, sorry.
+On Sat, Apr 25, 2020 at 4:40 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
+>
+> the function ace_allocate_descriptors() and ace_init() can fail in
+> the acenic_probe_one(), The related system resources were not
+> released then. so change the error handling to fix it.
 
-From what I understood, there were (at least) two regressions reported.
-So, to me, it makes sense to revert the change, so for upstream users
-everything stays "the same". Of course, this does not mean it should
-stay like this forever and you guys can work on fixing the root causes.
-I'll happily apply them for this release when you are confident with the
-results.
+...
 
+> @@ -568,7 +568,7 @@ static int acenic_probe_one(struct pci_dev *pdev,
+>  #endif
+>
+>         if (ace_allocate_descriptors(dev))
+> -               goto fail_free_netdev;
+> +               goto fail_uninit;
+
+Not sure.
+The code is quite old and requires a lot of refactoring.
+
+Briefly looking the error path there is quite twisted.
+
+> @@ -580,7 +580,7 @@ static int acenic_probe_one(struct pci_dev *pdev,
+>  #endif
+>
+>         if (ace_init(dev))
+> -               goto fail_free_netdev;
+> +               goto fail_uninit;
+
+This change seems incorrect, the ace_init() calls ace_init_cleanup() on error.
+So, your change makes it call the cleanup() twice.
+
+-- 
+With Best Regards,
+Andy Shevchenko
