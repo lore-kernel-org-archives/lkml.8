@@ -2,132 +2,110 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1E0C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E13D6C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A09B206B9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:59:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PMdjD0od"
+	by mail.kernel.org (Postfix) with ESMTP id B4F7320728
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:59:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588006766;
+	bh=/dqFyvgTMr7/GP4hysHTzeyCgcVIbSNQGjRnh7yYytk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HxfhcT7IHopyGRqTGc6F7nAHNW+iGPqibEqdPcIMTEr23lt0tcOwTBC8Vmqvxz18+
+	 GZPyQZjSq8+NWI7xy9ZE5yEN/E78dDp3C1FSmRlDduk25AipqDqipnuBA2QhwBbWH2
+	 8gvdr49OBulmGLJ/hX6Oglefw/vFFc6zrd1GjSsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbgD0Q70 (ORCPT
+        id S1726182AbgD0Q70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 27 Apr 2020 12:59:26 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:45906 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726177AbgD0Q7Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+Received: from mail.kernel.org ([198.145.29.99]:36842 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726030AbgD0Q7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Apr 2020 12:59:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588006764;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=b0MkAzhcBt7zpAJlv47FOL8k4zacsMQO/dxm0rrkVZo=;
-        b=PMdjD0od0XZQXUITJXTeEvk4JmTXmNMdg/r8Gfh2Vm2Gqe7+wqqpNfiZrCd+J3bY5cvDKd
-        hobAPI48Ujt8RyiHiXUa7x0KDQ+IuXPchctPk5pOJyeoZx48wdZdfB/VUkdrqyl9bGrK97
-        IrvJApWbMkTCH+jfPahOWKEkUUOQrGY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-135-ZOXwAPI6MGKz5yVCU0BHFg-1; Mon, 27 Apr 2020 12:59:20 -0400
-X-MC-Unique: ZOXwAPI6MGKz5yVCU0BHFg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from localhost (unknown [171.76.79.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3B3A118957E6;
-        Mon, 27 Apr 2020 16:59:19 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4280619C4F;
-        Mon, 27 Apr 2020 16:59:18 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     sean.j.christopherson@intel.com, jmattson@google.com,
-        joro@8bytes.org, everdox@gmail.com
-Subject: [PATCH] KVM: x86: handle wrap around 32-bit address space
-Date:   Mon, 27 Apr 2020 12:59:17 -0400
-Message-Id: <20200427165917.31799-1-pbonzini@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EDD2206B9;
+        Mon, 27 Apr 2020 16:59:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588006765;
+        bh=/dqFyvgTMr7/GP4hysHTzeyCgcVIbSNQGjRnh7yYytk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ItM+qEI46/NGazMa3t/sxUsrW0dOpgOGRdxhfenznQYkIPv7iu2aMVvRdW77ExxDa
+         k0ItWZ8tZ/4/wqYC1lzTh7JnEH5gWCvqao4usBSJGu1w6YjogIqoq4Fv4xpucK/WG8
+         sQFfgIOn7svWAecOjefan+HfthYwCuzzh9QyAGuU=
+Date:   Mon, 27 Apr 2020 22:29:19 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] phy: qcom-snps: Add runtime suspend and resume handlers
+Message-ID: <20200427165919.GR56386@vkoul-mobl.Dlink>
+References: <1587662818-4461-1-git-send-email-wcheng@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587662818-4461-1-git-send-email-wcheng@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KVM is not handling the case where EIP wraps around the 32-bit address
-space (that is, outside long mode).  This is needed both in vmx.c
-and in emulate.c.  SVM with NRIPS is okay, but it can still print
-an error to dmesg due to integer overflow.
+On 23-04-20, 10:26, Wesley Cheng wrote:
 
-Reported-by: Nick Peterson <everdox@gmail.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/emulate.c |  2 ++
- arch/x86/kvm/svm/svm.c |  3 ---
- arch/x86/kvm/vmx/vmx.c | 15 ++++++++++++---
- 3 files changed, 14 insertions(+), 6 deletions(-)
+> +static int qcom_snps_hsphy_suspend(struct qcom_snps_hsphy *hsphy)
+> +{
+> +	if (hsphy->suspended)
+> +		return 0;
+> +
+> +	dev_dbg(&hsphy->phy->dev, "Suspend QCOM SNPS PHY, mode = %d \n", hsphy->mode);
+> +
+> +	if (hsphy->mode == PHY_MODE_USB_HOST) {
+> +		/* Enable auto-resume to meet remote wakeup timing */
+> +		qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL2,
+> +										USB2_AUTO_RESUME, USB2_AUTO_RESUME);
+> +		usleep_range(500, 1000);
+> +		qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL2,
+> +										0, USB2_AUTO_RESUME);
 
-diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
-index bddaba9c68dd..de5476f8683e 100644
---- a/arch/x86/kvm/emulate.c
-+++ b/arch/x86/kvm/emulate.c
-@@ -5798,6 +5798,8 @@ int x86_emulate_insn(struct x86_emulate_ctxt *ctxt)
- 	}
- 
- 	ctxt->eip = ctxt->_eip;
-+	if (ctxt->mode != X86EMUL_MODE_PROT64)
-+		ctxt->eip = (u32)ctxt->_eip;
- 
- done:
- 	if (rc == X86EMUL_PROPAGATE_FAULT) {
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 8f8fc65bfa3e..d5e72b22bc87 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -319,9 +319,6 @@ static int skip_emulated_instruction(struct kvm_vcpu *vcpu)
- 		if (!kvm_emulate_instruction(vcpu, EMULTYPE_SKIP))
- 			return 0;
- 	} else {
--		if (svm->next_rip - kvm_rip_read(vcpu) > MAX_INST_SIZE)
--			pr_err("%s: ip 0x%lx next 0x%llx\n",
--			       __func__, kvm_rip_read(vcpu), svm->next_rip);
- 		kvm_rip_write(vcpu, svm->next_rip);
- 	}
- 	svm_set_interrupt_shadow(vcpu, 0);
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 3ab6ca6062ce..ed1ffc8a727b 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1556,7 +1556,7 @@ static int vmx_rtit_ctl_check(struct kvm_vcpu *vcpu, u64 data)
- 
- static int skip_emulated_instruction(struct kvm_vcpu *vcpu)
- {
--	unsigned long rip;
-+	unsigned long rip, orig_rip;
- 
- 	/*
- 	 * Using VMCS.VM_EXIT_INSTRUCTION_LEN on EPT misconfig depends on
-@@ -1568,8 +1568,17 @@ static int skip_emulated_instruction(struct kvm_vcpu *vcpu)
- 	 */
- 	if (!static_cpu_has(X86_FEATURE_HYPERVISOR) ||
- 	    to_vmx(vcpu)->exit_reason != EXIT_REASON_EPT_MISCONFIG) {
--		rip = kvm_rip_read(vcpu);
--		rip += vmcs_read32(VM_EXIT_INSTRUCTION_LEN);
-+		orig_rip = kvm_rip_read(vcpu);
-+		rip = orig_rip + vmcs_read32(VM_EXIT_INSTRUCTION_LEN);
-+#ifdef CONFIG_X86_64
-+		/*
-+		 * We need to mask out the high 32 bits of RIP if not in 64-bit
-+		 * mode, but just finding out that we are in 64-bit mode is
-+		 * quite expensive.  Only do it if there was a carry.
-+		 */
-+		if (unlikely(((rip ^ orig_rip) >> 31) == 3) && !is_64_bit_mode(vcpu))
-+			rip = (u32)rip;
-+#endif
- 		kvm_rip_write(vcpu, rip);
- 	} else {
- 		if (!kvm_emulate_instruction(vcpu, EMULTYPE_SKIP))
+Kernel has a coding guideline where we try to "stick" to 80 char limit
+and is sometimes okay like debug logs. Above is not okay. Please fix it
+and run ./scripts/checkpatch.pl --strict on your patch and fix all
+errors. Warning and checks at your discretion using common sense. When
+in doubt do ask :)
+
+> +	}
+> +
+> +	clk_disable_unprepare(hsphy->cfg_ahb_clk);
+> +	hsphy->suspended = true;
+
+why do you need to track this?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_snps_hsphy_resume(struct qcom_snps_hsphy *hsphy)
+> +{
+> +	int ret = 0;
+
+superfluous init..
+
+>  static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -251,6 +333,14 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	pm_runtime_set_active(dev);
+> +	pm_runtime_enable(dev);
+
+would it not make sense to enable this after pjy in initialized?
+
 -- 
-2.18.2
-
+~Vinod
