@@ -2,41 +2,101 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58864C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC94C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C37620663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 061BE20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:49:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FYefhIan"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgD0JsZ (ORCPT
+        id S1726981AbgD0JtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:48:25 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:60934 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726604AbgD0JsW (ORCPT
+        Mon, 27 Apr 2020 05:49:15 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54308 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726349AbgD0JtO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:48:22 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R601e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TwoMATP_1587980897;
-Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0TwoMATP_1587980897)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 27 Apr 2020 17:48:18 +0800
-Subject: Re: [PATCH] ocfs2: mount shared volume without ha stack
-To:     Gang He <ghe@suse.com>, mark@fasheh.com, jlbec@evilplan.org
-Cc:     linux-kernel@vger.kernel.org, ocfs2-devel@oss.oracle.com,
-        akpm@linux-foundation.org
-References: <20200423053300.22661-1-ghe@suse.com>
-From:   Joseph Qi <joseph.qi@linux.alibaba.com>
-Message-ID: <ec4f098b-f043-85d5-6717-66c4f611146d@linux.alibaba.com>
-Date:   Mon, 27 Apr 2020 17:48:17 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Mon, 27 Apr 2020 05:49:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587980953;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qLuzVeIGtHjNnvhWI7G809z76fTCxCvUxioh1QTBMgc=;
+        b=FYefhIan+SRhLZQI5L60x5FZRF49LfqtWtf+tKfwLFOIWOKkAL11yrgGyoPGu54/LsBteX
+        h0mLHkwPNHLDRWfhyj+UDkXPlaDPm/aH6Y23H6HcsNgFul/oKjFBKdT8jfOeSpSZAe1Lg8
+        d6bQPBd4l62gHnwstIdyUbJnNS9958U=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-512-WBwc64CSMJuM0TqGEqGQww-1; Mon, 27 Apr 2020 05:49:09 -0400
+X-MC-Unique: WBwc64CSMJuM0TqGEqGQww-1
+Received: by mail-wr1-f71.google.com with SMTP id r11so10247574wrx.21
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:49:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qLuzVeIGtHjNnvhWI7G809z76fTCxCvUxioh1QTBMgc=;
+        b=ZrBPUfga0NQJ8CyeEH5R0RA+8Ef8kO592rW7I7nyRQVigrqCcO7HHXiQx8bCvRhPwT
+         QbUDsrqiDZaMxU8fkQMD1ftzb583/FEm8TseKV0BBqWxK5iuiA0pwbGP2m/X0iYHrPK1
+         JRFB/6LTq8pUYS92xaPWXKO2u155/hiWJJR75mD7kXg2R0bwR/Dx1oZmZxcDGEybpvav
+         +UHaveUs2/LgVVJlSkT+Gedn51p0zz7BFxSIdHcfIUlaBhIXA00PVvUJ9ne2szGRM0U1
+         KLXuRA/c4PcTCLu+3hxpUpVBXtdUqDlBpj3PTDhmD2XXXUHHBb/lp0zgYNlYsaF1nMNf
+         EW0g==
+X-Gm-Message-State: AGi0PubB8QQpBuG+2cFZdvSbjdadM4/3Vy0Z5F5sWWLiPV0W9++SsN19
+        k0eB2yG3M0hS5HmV8EUwksAPL5fk3BiOrQCOLaE7ZtyqX5BeGQuPux+B/geYneDE28cpfYrBptz
+        BD/cB++RoF3/vjIHnGgzRyNvb
+X-Received: by 2002:a7b:c84f:: with SMTP id c15mr23872494wml.166.1587980947748;
+        Mon, 27 Apr 2020 02:49:07 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKSCCSEo/IUap21LF/LKNKSXQ68wlspkJLGATRQxBBAxTNotluNK9KtvIErIgkKA34OdFkAfg==
+X-Received: by 2002:a7b:c84f:: with SMTP id c15mr23872476wml.166.1587980947509;
+        Mon, 27 Apr 2020 02:49:07 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.170.5])
+        by smtp.gmail.com with ESMTPSA id s14sm15057222wme.33.2020.04.27.02.49.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 02:49:07 -0700 (PDT)
+Subject: Re: [PATCH v1 00/15] Add support for Nitro Enclaves
+To:     "Paraschiv, Andra-Irina" <andraprs@amazon.com>,
+        Alexander Graf <graf@amazon.com>, linux-kernel@vger.kernel.org
+Cc:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@amazon.com>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>, Balbir Singh <sblbir@amazon.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
+        ne-devel-upstream@amazon.com
+References: <20200421184150.68011-1-andraprs@amazon.com>
+ <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
+ <ff65b1ed-a980-9ddc-ebae-996869e87308@amazon.com>
+ <2a4a15c5-7adb-c574-d558-7540b95e2139@redhat.com>
+ <1ee5958d-e13e-5175-faf7-a1074bd9846d@amazon.com>
+ <f560aed3-a241-acbd-6d3b-d0c831234235@redhat.com>
+ <80489572-72a1-dbe7-5306-60799711dae0@amazon.com>
+ <0467ce02-92f3-8456-2727-c4905c98c307@redhat.com>
+ <5f8de7da-9d5c-0115-04b5-9f08be0b34b0@amazon.com>
+ <095e3e9d-c9e5-61d0-cdfc-2bb099f02932@redhat.com>
+ <602565db-d9a6-149a-0e1a-fe9c14a90ce7@amazon.com>
+ <fb0bfd95-4732-f3c6-4a59-7227cf50356c@redhat.com>
+ <fe8940ff-9deb-1b2b-8f30-2ecfe26ce27b@amazon.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <617eb49c-0ad9-8cf4-54bc-6d2cdfbb189a@redhat.com>
+Date:   Mon, 27 Apr 2020 11:46:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200423053300.22661-1-ghe@suse.com>
+In-Reply-To: <fe8940ff-9deb-1b2b-8f30-2ecfe26ce27b@amazon.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -45,209 +105,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gang,
-
-On 2020/4/23 13:33, Gang He wrote:
-> Usually we create and use a ocfs2 shared volume on the top of
-> ha stack. For pcmk based ha stack, which includes DLM, corosync
-> and pacemaker services.
-> The customers complained they could not mount existent ocfs2
-> volume in the single node without ha stack, e.g. single node
-> backup/restore scenario.
-> Like this case, the customers just want to access the data
-> from the existent ocfs2 volume quickly, but do not want to
-> restart or setup ha stack.
-> Then, I'd like to add a mount option "nocluster", if the users
-> use this option to mount a ocfs2 shared volume, the whole mount
-> will not depend on the ha related services. the command will mount
-> the existent ocfs2 volume directly (like local mount), for avoiding
-> setup the ha stack.
+On 27/04/20 11:22, Paraschiv, Andra-Irina wrote:
+>>
+>>
+>> 1) having the kernel and initrd loaded by the parent VM in enclave
+>> memory has the advantage that you save memory outside the enclave memory
+>> for something that is only needed inside the enclave
 > 
-> Signed-off-by: Gang He <ghe@suse.com>
-> ---
->  fs/ocfs2/ocfs2.h    |  4 +++-
->  fs/ocfs2/slot_map.c | 46 ++++++++++++++++++++++++++-------------------
->  fs/ocfs2/super.c    | 21 +++++++++++++++++++++
->  3 files changed, 51 insertions(+), 20 deletions(-)
-> 
-> diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
-> index 9150cfa4df7d..ee5d98516212 100644
-> --- a/fs/ocfs2/ocfs2.h
-> +++ b/fs/ocfs2/ocfs2.h
-> @@ -279,6 +279,7 @@ enum ocfs2_mount_options
->  	OCFS2_MOUNT_JOURNAL_ASYNC_COMMIT = 1 << 15,  /* Journal Async Commit */
->  	OCFS2_MOUNT_ERRORS_CONT = 1 << 16, /* Return EIO to the calling process on error */
->  	OCFS2_MOUNT_ERRORS_ROFS = 1 << 17, /* Change filesystem to read-only on error */
-> +	OCFS2_MOUNT_NOCLUSTER = 1 << 18, /* No cluster aware filesystem mount */
->  };
->  
->  #define OCFS2_OSB_SOFT_RO	0x0001
-> @@ -673,7 +674,8 @@ static inline int ocfs2_cluster_o2cb_global_heartbeat(struct ocfs2_super *osb)
->  
->  static inline int ocfs2_mount_local(struct ocfs2_super *osb)
->  {
-> -	return (osb->s_feature_incompat & OCFS2_FEATURE_INCOMPAT_LOCAL_MOUNT);
-> +	return ((osb->s_feature_incompat & OCFS2_FEATURE_INCOMPAT_LOCAL_MOUNT)
-> +		|| (osb->s_mount_opt & OCFS2_MOUNT_NOCLUSTER));
+> Here you wanted to say disadvantage? :)Wrt saving memory, it's about
+> additional memory from the parent / primary VM needed for handling the
+> enclave image sections (such as the kernel, ramdisk) and setting the EIF
+> at a certain offset in enclave memory?
 
-Could we set the feature bit when mount with "nocluster"?
+No, it's an advantage.  If the parent VM can load everything in enclave
+memory, it can read() into it directly.  It doesn't to waste its own
+memory for a kernel and initrd, whose only reason to exist is to be
+copied into enclave memory.
 
->  }
->  
->  static inline int ocfs2_uses_extended_slot_map(struct ocfs2_super *osb)
-> diff --git a/fs/ocfs2/slot_map.c b/fs/ocfs2/slot_map.c
-> index 8caeceeaeda7..4da0e4b1e79b 100644
-> --- a/fs/ocfs2/slot_map.c
-> +++ b/fs/ocfs2/slot_map.c
-> @@ -254,14 +254,16 @@ static int __ocfs2_find_empty_slot(struct ocfs2_slot_info *si,
->  	int i, ret = -ENOSPC;
->  
->  	if ((preferred >= 0) && (preferred < si->si_num_slots)) {
-> -		if (!si->si_slots[preferred].sl_valid) {
-> +		if (!si->si_slots[preferred].sl_valid ||
-> +		    !si->si_slots[preferred].sl_node_num) {
+Paolo
 
-Why specially handle node num 0 here?
-It seems breaks original logic.
-
->  			ret = preferred;
->  			goto out;
->  		}
->  	}
->  
->  	for(i = 0; i < si->si_num_slots; i++) {
-> -		if (!si->si_slots[i].sl_valid) {
-> +		if (!si->si_slots[i].sl_valid ||
-> +		    !si->si_slots[i].sl_node_num) {
->  			ret = i;
->  			break;
->  		}
-> @@ -456,24 +458,30 @@ int ocfs2_find_slot(struct ocfs2_super *osb)
->  	spin_lock(&osb->osb_lock);
->  	ocfs2_update_slot_info(si);
->  
-> -	/* search for ourselves first and take the slot if it already
-> -	 * exists. Perhaps we need to mark this in a variable for our
-> -	 * own journal recovery? Possibly not, though we certainly
-> -	 * need to warn to the user */
-> -	slot = __ocfs2_node_num_to_slot(si, osb->node_num);
-> -	if (slot < 0) {
-> -		/* if no slot yet, then just take 1st available
-> -		 * one. */
-> -		slot = __ocfs2_find_empty_slot(si, osb->preferred_slot);
-> +	if (ocfs2_mount_local(osb))
-> +		/* use slot 0 directly in local mode */
-> +		slot = 0;
-
-Could you please elaborate more why we need this?
-
-Thanks,
-Joseph
-
-> +	else {
-> +		/* search for ourselves first and take the slot if it already
-> +		 * exists. Perhaps we need to mark this in a variable for our
-> +		 * own journal recovery? Possibly not, though we certainly
-> +		 * need to warn to the user */
-> +		slot = __ocfs2_node_num_to_slot(si, osb->node_num);
->  		if (slot < 0) {
-> -			spin_unlock(&osb->osb_lock);
-> -			mlog(ML_ERROR, "no free slots available!\n");
-> -			status = -EINVAL;
-> -			goto bail;
-> -		}
-> -	} else
-> -		printk(KERN_INFO "ocfs2: Slot %d on device (%s) was already "
-> -		       "allocated to this node!\n", slot, osb->dev_str);
-> +			/* if no slot yet, then just take 1st available
-> +			 * one. */
-> +			slot = __ocfs2_find_empty_slot(si, osb->preferred_slot);
-> +			if (slot < 0) {
-> +				spin_unlock(&osb->osb_lock);
-> +				mlog(ML_ERROR, "no free slots available!\n");
-> +				status = -EINVAL;
-> +				goto bail;
-> +			}
-> +		} else
-> +			printk(KERN_INFO "ocfs2: Slot %d on device (%s) was "
-> +			       "already allocated to this node!\n",
-> +			       slot, osb->dev_str);
-> +	}
->  
->  	ocfs2_set_slot(si, slot, osb->node_num);
->  	osb->slot_num = slot;
-> diff --git a/fs/ocfs2/super.c b/fs/ocfs2/super.c
-> index ac61eeaf3837..71ea9ce71a6b 100644
-> --- a/fs/ocfs2/super.c
-> +++ b/fs/ocfs2/super.c
-> @@ -175,6 +175,7 @@ enum {
->  	Opt_dir_resv_level,
->  	Opt_journal_async_commit,
->  	Opt_err_cont,
-> +	Opt_nocluster,
->  	Opt_err,
->  };
->  
-> @@ -208,6 +209,7 @@ static const match_table_t tokens = {
->  	{Opt_dir_resv_level, "dir_resv_level=%u"},
->  	{Opt_journal_async_commit, "journal_async_commit"},
->  	{Opt_err_cont, "errors=continue"},
-> +	{Opt_nocluster, "nocluster"},
->  	{Opt_err, NULL}
->  };
->  
-> @@ -619,6 +621,13 @@ static int ocfs2_remount(struct super_block *sb, int *flags, char *data)
->  		goto out;
->  	}
->  
-> +	tmp = OCFS2_MOUNT_NOCLUSTER;
-> +	if ((osb->s_mount_opt & tmp) != (parsed_options.mount_opt & tmp)) {
-> +		ret = -EINVAL;
-> +		mlog(ML_ERROR, "Cannot change nocluster option on remount\n");
-> +		goto out;
-> +	}
-> +
->  	tmp = OCFS2_MOUNT_HB_LOCAL | OCFS2_MOUNT_HB_GLOBAL |
->  		OCFS2_MOUNT_HB_NONE;
->  	if ((osb->s_mount_opt & tmp) != (parsed_options.mount_opt & tmp)) {
-> @@ -859,6 +868,7 @@ static int ocfs2_verify_userspace_stack(struct ocfs2_super *osb,
->  	}
->  
->  	if (ocfs2_userspace_stack(osb) &&
-> +	    !(osb->s_mount_opt & OCFS2_MOUNT_NOCLUSTER) &&
->  	    strncmp(osb->osb_cluster_stack, mopt->cluster_stack,
->  		    OCFS2_STACK_LABEL_LEN)) {
->  		mlog(ML_ERROR,
-> @@ -1139,6 +1149,11 @@ static int ocfs2_fill_super(struct super_block *sb, void *data, int silent)
->  	       osb->s_mount_opt & OCFS2_MOUNT_DATA_WRITEBACK ? "writeback" :
->  	       "ordered");
->  
-> +	if ((osb->s_mount_opt & OCFS2_MOUNT_NOCLUSTER) &&
-> +	   !(osb->s_feature_incompat & OCFS2_FEATURE_INCOMPAT_LOCAL_MOUNT))
-> +		printk(KERN_NOTICE "ocfs2: The shared device (%s) is mounted "
-> +		       "without cluster aware mode.\n", osb->dev_str);
-> +
->  	atomic_set(&osb->vol_state, VOLUME_MOUNTED);
->  	wake_up(&osb->osb_mount_event);
->  
-> @@ -1445,6 +1460,9 @@ static int ocfs2_parse_options(struct super_block *sb,
->  		case Opt_journal_async_commit:
->  			mopt->mount_opt |= OCFS2_MOUNT_JOURNAL_ASYNC_COMMIT;
->  			break;
-> +		case Opt_nocluster:
-> +			mopt->mount_opt |= OCFS2_MOUNT_NOCLUSTER;
-> +			break;
->  		default:
->  			mlog(ML_ERROR,
->  			     "Unrecognized mount option \"%s\" "
-> @@ -1556,6 +1574,9 @@ static int ocfs2_show_options(struct seq_file *s, struct dentry *root)
->  	if (opts & OCFS2_MOUNT_JOURNAL_ASYNC_COMMIT)
->  		seq_printf(s, ",journal_async_commit");
->  
-> +	if (opts & OCFS2_MOUNT_NOCLUSTER)
-> +		seq_printf(s, ",nocluster");
-> +
->  	return 0;
->  }
->  
-> 
