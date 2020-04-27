@@ -2,157 +2,180 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D967DC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 216E5C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4A3B2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:49:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588006173;
-	bh=cGK5USlSVI+WhkX1qfyNm4MqOaOFLQJLMbJ62b/4oxw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=gSdqgzol1EJVRiqQ9I8wWBiGYtxCxkdNvzulj0nz2V55uFdZ5VyroccW5K5aHYECu
-	 zpnn3uOF+SYhHwfZxPOcX0kamIObT8ocNX+OTxaNlSA7RGRbk93XzJiTK2vTj0fij3
-	 hmeovIgVTAXsxAnK8W4f4SYQWYMUKx2ZDYF8k4ek=
+	by mail.kernel.org (Postfix) with ESMTP id F28922078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:50:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YN4xMzac"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgD0Qtc (ORCPT
+        id S1726350AbgD0QuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 12:49:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33756 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726248AbgD0Qtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 12:49:32 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BEEA2080C;
-        Mon, 27 Apr 2020 16:49:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588006171;
-        bh=cGK5USlSVI+WhkX1qfyNm4MqOaOFLQJLMbJ62b/4oxw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=c+phBkdhzVE7i8QZOqE9Lpni6t77kp2t6FsLoNiBQeUaJzZNOaZlVsbW5JgxNKZCH
-         ZRDgkXaMBYAL1pfVLpuQcrPgnvzEyj6cE0m3k0Lp+m8TMOOIU7d2wZePBbeb7t+Kfp
-         F4at1xkQo/c3W1K96x7BMBDuzYyyd3CTsCPzEgz8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 753AE35226DB; Mon, 27 Apr 2020 09:49:31 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 09:49:31 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     kunit-dev@googlegroups.com,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] kcsan: Add test suite
-Message-ID: <20200427164931.GF7560@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200427143507.49654-1-elver@google.com>
- <CANpmjNOv7VXv9LtWHWBx1-an+1+WxjtzDNBF+rKsOm+ybmvwog@mail.gmail.com>
- <20200427153744.GA7560@paulmck-ThinkPad-P72>
- <CANpmjNM7Aw7asb80OqZ0vmgQYY1SwM_Pnvf7ZHHvyFfsc6ZjmQ@mail.gmail.com>
+        Mon, 27 Apr 2020 12:50:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56288 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726223AbgD0QuO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 12:50:14 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D597AC03C1A8
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:50:12 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j2so21387221wrs.9
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:50:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ifZHzQrYJTJ2psIoVYONoJxVcPBrBwiLq0Ka5H1X7f0=;
+        b=YN4xMzacilYGgkI5xIJKKjKcvwZcZ4qjnwboi7t+4heCeg+DVoCri3aTgOQ43+2b/U
+         ur3Wx9/P9iXCTeuhRKTWS9KtRKW7D4EGSQ1W6lDnSmD3l0qsduegt1i2nxkp/i7sIvSY
+         40XOB+SMgz68l1/ArBdGciU3CqBzBQR7h2zzVy6FvC8lqekaAiyRsAw56dIw+I4FErQ4
+         azNHB4ooJm10iR0K4KIDxECVWcNQfJk1j0FaB9+bxGqUgxFV+H5J+klrzmWcM6+4poJV
+         1RqelOBabzBzN0wbIZzc+jQcxhamURzPkZjnvLWAby0K3AwbgDzpUeJXgcLJw4EKrHSR
+         6A2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ifZHzQrYJTJ2psIoVYONoJxVcPBrBwiLq0Ka5H1X7f0=;
+        b=KyRk2laheKOQ4kbuHsB+zA8QqWG+hY4nQL2jXK9G5oxOZa3goq1e1x8OakqSVSCOx7
+         XF+pIMj/WLhv5UblaP+yBBPYp61qr0ipSPSjQCtiM6wFFT2R/oXvI+nlIpnFdEs7P+9y
+         8LacGy79wYzDIHbWV+7FuthRdf5/w/YpdOQBRVwTdSzAwcPVjGLjakhakRMobzmyEInH
+         UzIKq/V5woMvVsKmSU0hg7DAYiJfV6/gBdOtPO37yjfe3yFboZIGCziFtPknKcxqs/wg
+         K5oTi90L4J8LgM/43ZqDs+BzI0Ojj3Zndf0uRw4is2XB1OmgUwmky4hNHXCJSn2jml7Y
+         S1aw==
+X-Gm-Message-State: AGi0PuYhVeNfaBNRlsAeBxGMYsZ9PE86GzpKgGFiW5EdfcwuLjHsl4ce
+        xmbGzcHZAdrOQJgqC6lt2Xm9zg==
+X-Google-Smtp-Source: APiQypLnpGbWiFbiATkGLzM1ksCRfp33HEV/xjz0k0UXMZ8dYv4G0WKZWQ6pcTQZyBZPekAo8fPm6Q==
+X-Received: by 2002:adf:f24c:: with SMTP id b12mr28353216wrp.359.1588006211473;
+        Mon, 27 Apr 2020 09:50:11 -0700 (PDT)
+Received: from [192.168.0.41] (lns-bzn-59-82-252-135-148.adsl.proxad.net. [82.252.135.148])
+        by smtp.googlemail.com with ESMTPSA id f23sm16030600wml.4.2020.04.27.09.50.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 09:50:10 -0700 (PDT)
+Subject: Re: [PATCH v3 4/4] thermal: cpuidle: Register cpuidle cooling device
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Cc:     rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "open list:CPU IDLE TIME MANAGEMENT FRAMEWORK" 
+        <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CPUIDLE DRIVER - ARM PSCI" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200414220837.9284-1-daniel.lezcano@linaro.org>
+ <20200414220837.9284-4-daniel.lezcano@linaro.org>
+ <6b58035c-fe48-09ab-f042-729b07bcfec6@linaro.org>
+Message-ID: <34667fb4-664c-c80b-6bba-fe2ae981dcc1@linaro.org>
+Date:   Mon, 27 Apr 2020 18:50:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNM7Aw7asb80OqZ0vmgQYY1SwM_Pnvf7ZHHvyFfsc6ZjmQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <6b58035c-fe48-09ab-f042-729b07bcfec6@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 06:43:21PM +0200, Marco Elver wrote:
-> On Mon, 27 Apr 2020 at 17:37, Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Mon, Apr 27, 2020 at 05:23:23PM +0200, Marco Elver wrote:
-> > > On Mon, 27 Apr 2020 at 16:35, Marco Elver <elver@google.com> wrote:
-> > > >
-> > > > This adds KCSAN test focusing on behaviour of the integrated runtime.
-> > > > Tests various race scenarios, and verifies the reports generated to
-> > > > console. Makes use of KUnit for test organization, and the Torture
-> > > > framework for test thread control.
-> > > >
-> > > > Signed-off-by: Marco Elver <elver@google.com>
-> > > > ---
-> > >
-> > > +KUnit devs
-> > > We had some discussions on how to best test sanitizer runtimes, and we
-> > > believe that this test is what testing sanitizer runtimes should
-> > > roughly look like. Note that, for KCSAN there are various additional
-> > > complexities like multiple threads, and report generation isn't
-> > > entirely deterministic (need to run some number of iterations to get
-> > > reports, may get multiple reports, etc.).
-> > >
-> > > The main thing, however, is that we want to verify the actual output
-> > > (or absence of it) to console. This is what the KCSAN test does using
-> > > the 'console' tracepoint. Could KUnit provide some generic
-> > > infrastructure to check console output, like is done in the test here?
-> > > Right now I couldn't say what the most useful generalization of this
-> > > would be (without it just being a wrapper around the console
-> > > tracepoint), because the way I've decided to capture and then match
-> > > console output is quite test-specific. For now we can replicate this
-> > > logic on a per-test basis, but it would be extremely useful if there
-> > > was a generic interface that KUnit could provide in future.
-> > >
-> > > Thoughts?
-> >
-> > What I do in rcutorture is to run in a VM, dump the console output
-> > to a file, then parse that output after the run completes.  For example,
-> > the admittedly crude script here:
-> >
-> >         tools/testing/selftests/rcutorture/bin/parse-console.sh
-> 
-> That was on the table at one point, but discarded. We debated when I
-> started this if I should do module + script, or all as one module.
-> Here is some of the reasoning we went through, just for the record:
-> 
-> We wanted to use KUnit, to be able to benefit from all the
-> infrastructure it provides. Wanting to use KUnit meant that we cannot
-> have a 2-step test (module + script), because KUnit immediately prints
-> success/fail after each test-case and doesn't run any external scripts
-> (AFAIK). There are several benefits to relying on KUnit, such as:
-> 1. Common way to set up and run test cases. No need to roll our own.
-> 2. KUnit has a standardized way to assert, report test status,
-> success, etc., which can be parsed by CI systems
-> (https://testanything.org).
-> 3. There are plans to set up KUnit CI systems, that just load and run
-> all existing KUnit tests on boot. The sanitizer tests can become part
-> of these automated test runs.
-> 4. If KUnit eventually has a way to check output to console, our
-> sanitizer tests will be simplified even further.
-> 
-> The other argument is that doing module + script is probably more complex:
-> 1. The test would have to explicitly delimit test cases in a custom
-> way, which a script could then extract.
-> 2. We need to print the function names, and sizes + addresses of the
-> variables used in the races, to then be parsed by the script, and
-> finally match the access information.
-> 3. Re-running the test without shutting down the system would require
-> clearing the kernel log or some other way to delimit tests.
-> 
-> We'd still need the same logic, one way or another, to check what was
-> printed to console. In the end, I came to the conclusion that it's
-> significantly simpler to just have everything integrated in the
-> module:
-> 1. No need to delimit test cases, and parse based on delimiters. Just
-> check what the console tracepoint last captured.
-> 2. Can just refer to the functions, and variables directly and no need
-> to parse this.
-> 3. Re-running the test works out of the box.
-> 
-> Therefore, the conclusion is that for the sanitizers this is hopefully
-> the best approach.
 
-Fair enough!
+Hi guys,
 
-Perhaps I should look into KUnit.  I don't recommend holding your breath
-waiting, though, inertia being what it is.  ;-)
+any chance you ack this patch ?
 
-							Thanx, Paul
+
+On 21/04/2020 10:15, Daniel Lezcano wrote:
+> 
+> Hi Lorenzo, Sudeep,
+> 
+> other patches of the series are acked / reviewed.
+> 
+> If you are ok with these changes, could you add your acked-by so I can
+> merge all the series via the thermal tree?
+> 
+> Thanks
+> 
+>   -- Daniel
+> 
+> On 15/04/2020 00:08, Daniel Lezcano wrote:
+>> The cpuidle driver can be used as a cooling device by injecting idle
+>> cycles. The DT binding for the idle state added an optional
+>>
+>> When the property is set, register the cpuidle driver with the idle
+>> state node pointer as a cooling device. The thermal framework will do
+>> the association automatically with the thermal zone via the
+>> cooling-device defined in the device tree cooling-maps section.
+>>
+>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> ---
+>>  drivers/cpuidle/cpuidle-arm.c  | 5 +++++
+>>  drivers/cpuidle/cpuidle-psci.c | 5 +++++
+>>  2 files changed, 10 insertions(+)
+>>
+>> diff --git a/drivers/cpuidle/cpuidle-arm.c b/drivers/cpuidle/cpuidle-arm.c
+>> index 9e5156d39627..2406ac0ae134 100644
+>> --- a/drivers/cpuidle/cpuidle-arm.c
+>> +++ b/drivers/cpuidle/cpuidle-arm.c
+>> @@ -8,6 +8,7 @@
+>>  
+>>  #define pr_fmt(fmt) "CPUidle arm: " fmt
+>>  
+>> +#include <linux/cpu_cooling.h>
+>>  #include <linux/cpuidle.h>
+>>  #include <linux/cpumask.h>
+>>  #include <linux/cpu_pm.h>
+>> @@ -124,6 +125,10 @@ static int __init arm_idle_init_cpu(int cpu)
+>>  	if (ret)
+>>  		goto out_kfree_drv;
+>>  
+>> +	ret = cpuidle_cooling_register(drv);
+>> +	if (ret)
+>> +		pr_err("Failed to register the idle cooling device: %d\n", ret);
+>> +
+>>  	return 0;
+>>  
+>>  out_kfree_drv:
+>> diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
+>> index edd7a54ef0d3..8e805bff646f 100644
+>> --- a/drivers/cpuidle/cpuidle-psci.c
+>> +++ b/drivers/cpuidle/cpuidle-psci.c
+>> @@ -9,6 +9,7 @@
+>>  #define pr_fmt(fmt) "CPUidle PSCI: " fmt
+>>  
+>>  #include <linux/cpuhotplug.h>
+>> +#include <linux/cpu_cooling.h>
+>>  #include <linux/cpuidle.h>
+>>  #include <linux/cpumask.h>
+>>  #include <linux/cpu_pm.h>
+>> @@ -305,6 +306,10 @@ static int __init psci_idle_init_cpu(int cpu)
+>>  	if (ret)
+>>  		goto out_kfree_drv;
+>>  
+>> +	ret = cpuidle_cooling_register(drv);
+>> +	if (ret)
+>> +		pr_err("Failed to register the idle cooling device: %d\n", ret);
+>> +
+>>  	return 0;
+>>  
+>>  out_kfree_drv:
+>>
+> 
+> 
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
