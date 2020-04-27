@@ -2,243 +2,195 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D5EC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A021C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7C1420656
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 187C4206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:48:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgD0Nrb (ORCPT
+        id S1727961AbgD0NsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 09:47:31 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55280 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726539AbgD0Nra (ORCPT
+        Mon, 27 Apr 2020 09:48:18 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:51968 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727056AbgD0NsR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 09:47:30 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03RDZxur141196;
-        Mon, 27 Apr 2020 09:47:22 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mguuv4y5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Apr 2020 09:47:21 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03RDaXtf142469;
-        Mon, 27 Apr 2020 09:47:21 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mguuv4xr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Apr 2020 09:47:21 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03RDjpWQ002474;
-        Mon, 27 Apr 2020 13:47:20 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma03dal.us.ibm.com with ESMTP id 30mcu70fcq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Apr 2020 13:47:20 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03RDlJm817170854
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 13:47:19 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 44BEDC6055;
-        Mon, 27 Apr 2020 13:47:19 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 95815C6057;
-        Mon, 27 Apr 2020 13:47:18 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.85.94.115])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 27 Apr 2020 13:47:18 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id CC98F2E2E25; Mon, 27 Apr 2020 19:17:11 +0530 (IST)
-Date:   Mon, 27 Apr 2020 19:17:11 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Abhishek Goel <huntbag@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org,
-        npiggin@gmail.com, ego@linux.vnet.ibm.com, svaidy@linux.ibm.com,
-        mpe@ellerman.id.au, oohall@gmail.com, mikey@neuling.org,
-        psampat@linux.ibm.com
-Subject: Re: [RFC 2/3] powernv/cpuidle : Interface for an idle-stop
- dependency structure
-Message-ID: <20200427134711.GD29708@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <20200427021027.114582-1-huntbag@linux.vnet.ibm.com>
- <20200427021027.114582-2-huntbag@linux.vnet.ibm.com>
+        Mon, 27 Apr 2020 09:48:17 -0400
+Received: by mail-io1-f69.google.com with SMTP id k1so20257209iov.18
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 06:48:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=IKLvnmX2O6G5JUPiVLiWpSP3a5qdDUhizIddlOL+gt0=;
+        b=hOWKx00NtoQQMUJ7Bcv9cTYKp4Ntrl6zWgpSsXWSX5C65SzRpmgbhLj1ETz8/Gvg0a
+         4I37jFEfqgWXQEGdCSZgOiJ+hdJfUzEkduCDuTSMhWCSdTJiy8Ok0K0ipGWH64fhG1WY
+         qhKWuz7brSlcrCIbZSmJuTzelxpFUUS55jph+CQi6QGX7cxthLOHEhHUr4PvYFw08lG4
+         tD8L3u4k/+gR5pu0/+wio0GhuDQ4XTldbWs27Gw9LJ1eVZBQBSrCXZd4owO6gGaNa/LB
+         mAHtAyuiTcjfib9NI3SscmpW/8Lpojuff1IxhCJzAA3vBUd7QrgM6nNOtOXBZZzqKBcx
+         jM/A==
+X-Gm-Message-State: AGi0PubLoO2/BdlkRTHFHdrS2vsW+5yV/E0/w+fJVp1T+pGBSRsQVOlp
+        eJuOh+TXrGXHSlpHry3yoFrRHxJ6sAURt+TCuMspNc5VE0ye
+X-Google-Smtp-Source: APiQypJMIAfRCG58K421qGBsaWHhvtaekdn2fEP6m3wE4vbwtCLcO2tCumRPcC8TM6DhEFnx4rznkFHTrAySJgtc01uMdr9hjAn5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427021027.114582-2-huntbag@linux.vnet.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-27_10:2020-04-24,2020-04-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 clxscore=1015 mlxlogscore=999 mlxscore=0 suspectscore=0
- bulkscore=0 adultscore=0 impostorscore=0 phishscore=0 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004270116
+X-Received: by 2002:a02:5184:: with SMTP id s126mr9960216jaa.81.1587995295346;
+ Mon, 27 Apr 2020 06:48:15 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 06:48:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007bf88805a445f729@google.com>
+Subject: memory leak in inet_create (2)
+From:   syzbot <syzbot+bb7ba8dd62c3cb6e3c78@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net,
+        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
+        kuba@kernel.org, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com,
+        yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 09:10:26PM -0500, Abhishek Goel wrote:
-> This patch introduces the idea of having a dependency structure for
-> idle-stop. The structure encapsulates the following:
-> 1. Bitmask for version of idle-stop
-> 2. Bitmask for propterties like ENABLE/DISABLE
-> 3. Function pointer which helps handle how the stop must be invoked
-> 
-> This patch lays a foundation for other idle-stop versions to be added
-> and handled cleanly based on their specified requirments.
-> Currently it handles the existing "idle-stop" version by setting the
-> discovery bits and the function pointer.
-> 
-> Earlier this patch was posted as part of this series :
-> https://lkml.org/lkml/2020/3/4/589
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    5ef58e29 Merge tag 'scsi-fixes' of git://git.kernel.org/pu..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10f0f144100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bb30a3887988ffff
+dashboard link: https://syzkaller.appspot.com/bug?extid=bb7ba8dd62c3cb6e3c78
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=110e8fcfe00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+bb7ba8dd62c3cb6e3c78@syzkaller.appspotmail.com
+
+2020/04/25 22:35:25 executed programs: 3
+2020/04/25 22:35:30 executed programs: 5
+2020/04/25 22:35:36 executed programs: 7
+BUG: memory leak
+unreferenced object 0xffff88811094b300 (size 2200):
+  comm "syz-executor.0", pid 6864, jiffies 4294947266 (age 13.790s)
+  hex dump (first 32 bytes):
+    ac 14 14 bb ac 14 14 0a 89 26 f2 70 40 01 00 00  .........&.p@...
+    02 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
+  backtrace:
+    [<000000002efa2559>] sk_prot_alloc+0x3c/0x170 net/core/sock.c:1598
+    [<00000000a5b6b437>] sk_alloc+0x30/0x330 net/core/sock.c:1658
+    [<00000000494c18b6>] inet_create net/ipv4/af_inet.c:321 [inline]
+    [<00000000494c18b6>] inet_create+0x119/0x450 net/ipv4/af_inet.c:247
+    [<000000001239bbdb>] __sock_create+0x14a/0x220 net/socket.c:1433
+    [<00000000c1f7caa8>] sock_create net/socket.c:1484 [inline]
+    [<00000000c1f7caa8>] __sys_socket+0x60/0x110 net/socket.c:1526
+    [<00000000d35154cc>] __do_sys_socket net/socket.c:1535 [inline]
+    [<00000000d35154cc>] __se_sys_socket net/socket.c:1533 [inline]
+    [<00000000d35154cc>] __x64_sys_socket+0x1a/0x20 net/socket.c:1533
+    [<00000000283ef9ec>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
+    [<000000004290d57b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88811b253f60 (size 32):
+  comm "syz-executor.0", pid 6864, jiffies 4294947266 (age 13.790s)
+  hex dump (first 32 bytes):
+    02 00 00 00 00 00 00 00 c0 3d 3f 15 81 88 ff ff  .........=?.....
+    01 00 00 00 00 00 00 00 10 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000007d627037>] kmalloc include/linux/slab.h:555 [inline]
+    [<000000007d627037>] kzalloc include/linux/slab.h:669 [inline]
+    [<000000007d627037>] selinux_sk_alloc_security+0x43/0xa0 security/selinux/hooks.c:5126
+    [<0000000076a22383>] security_sk_alloc+0x42/0x70 security/security.c:2120
+    [<0000000066acd291>] sk_prot_alloc+0x9c/0x170 net/core/sock.c:1607
+    [<00000000a5b6b437>] sk_alloc+0x30/0x330 net/core/sock.c:1658
+    [<00000000494c18b6>] inet_create net/ipv4/af_inet.c:321 [inline]
+    [<00000000494c18b6>] inet_create+0x119/0x450 net/ipv4/af_inet.c:247
+    [<000000001239bbdb>] __sock_create+0x14a/0x220 net/socket.c:1433
+    [<00000000c1f7caa8>] sock_create net/socket.c:1484 [inline]
+    [<00000000c1f7caa8>] __sys_socket+0x60/0x110 net/socket.c:1526
+    [<00000000d35154cc>] __do_sys_socket net/socket.c:1535 [inline]
+    [<00000000d35154cc>] __se_sys_socket net/socket.c:1533 [inline]
+    [<00000000d35154cc>] __x64_sys_socket+0x1a/0x20 net/socket.c:1533
+    [<00000000283ef9ec>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
+    [<000000004290d57b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff8881153f3dc0 (size 64):
+  comm "syz-executor.0", pid 6864, jiffies 4294947266 (age 13.790s)
+  hex dump (first 32 bytes):
+    15 00 00 01 00 00 00 00 20 68 e9 1c 81 88 ff ff  ........ h......
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<00000000dde82831>] kmalloc include/linux/slab.h:555 [inline]
+    [<00000000dde82831>] kzalloc include/linux/slab.h:669 [inline]
+    [<00000000dde82831>] netlbl_secattr_alloc include/net/netlabel.h:382 [inline]
+    [<00000000dde82831>] selinux_netlbl_sock_genattr+0x48/0x180 security/selinux/netlabel.c:76
+    [<00000000438c6346>] selinux_netlbl_socket_post_create+0x41/0xb0 security/selinux/netlabel.c:398
+    [<00000000b422abf2>] selinux_socket_post_create+0x182/0x390 security/selinux/hooks.c:4541
+    [<000000005be0d1ac>] security_socket_post_create+0x54/0x80 security/security.c:2032
+    [<00000000a0ec3d71>] __sock_create+0x1cc/0x220 net/socket.c:1449
+    [<00000000c1f7caa8>] sock_create net/socket.c:1484 [inline]
+    [<00000000c1f7caa8>] __sys_socket+0x60/0x110 net/socket.c:1526
+    [<00000000d35154cc>] __do_sys_socket net/socket.c:1535 [inline]
+    [<00000000d35154cc>] __se_sys_socket net/socket.c:1533 [inline]
+    [<00000000d35154cc>] __x64_sys_socket+0x1a/0x20 net/socket.c:1533
+    [<00000000283ef9ec>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
+    [<000000004290d57b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88811ce96820 (size 32):
+  comm "syz-executor.0", pid 6864, jiffies 4294947266 (age 13.790s)
+  hex dump (first 32 bytes):
+    6b 65 72 6e 65 6c 5f 74 00 73 79 73 74 65 6d 5f  kernel_t.system_
+    72 3a 6b 65 72 6e 65 6c 5f 74 3a 73 30 00 00 00  r:kernel_t:s0...
+  backtrace:
+    [<000000007edbec14>] kstrdup+0x36/0x70 mm/util.c:60
+    [<00000000b343d2c4>] security_netlbl_sid_to_secattr+0x97/0x100 security/selinux/ss/services.c:3739
+    [<00000000ddb8495a>] selinux_netlbl_sock_genattr+0x67/0x180 security/selinux/netlabel.c:79
+    [<00000000438c6346>] selinux_netlbl_socket_post_create+0x41/0xb0 security/selinux/netlabel.c:398
+    [<00000000b422abf2>] selinux_socket_post_create+0x182/0x390 security/selinux/hooks.c:4541
+    [<000000005be0d1ac>] security_socket_post_create+0x54/0x80 security/security.c:2032
+    [<00000000a0ec3d71>] __sock_create+0x1cc/0x220 net/socket.c:1449
+    [<00000000c1f7caa8>] sock_create net/socket.c:1484 [inline]
+    [<00000000c1f7caa8>] __sys_socket+0x60/0x110 net/socket.c:1526
+    [<00000000d35154cc>] __do_sys_socket net/socket.c:1535 [inline]
+    [<00000000d35154cc>] __se_sys_socket net/socket.c:1533 [inline]
+    [<00000000d35154cc>] __x64_sys_socket+0x1a/0x20 net/socket.c:1533
+    [<00000000283ef9ec>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
+    [<000000004290d57b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff8881113aa400 (size 512):
+  comm "syz-executor.0", pid 6864, jiffies 4294947266 (age 13.790s)
+  hex dump (first 32 bytes):
+    00 b3 94 10 81 88 ff ff 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 03 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<0000000031227790>] kmalloc_node include/linux/slab.h:573 [inline]
+    [<0000000031227790>] kzalloc_node include/linux/slab.h:680 [inline]
+    [<0000000031227790>] sk_psock_init+0x2a/0x180 net/core/skmsg.c:496
+    [<00000000a405c065>] sock_map_link.isra.0+0x469/0x4f0 net/core/sock_map.c:236
+    [<000000003b7d5922>] sock_map_update_common+0xa1/0x3c0 net/core/sock_map.c:451
+    [<00000000f12c515e>] sock_map_update_elem+0x1e9/0x220 net/core/sock_map.c:552
+    [<000000000fedde3d>] bpf_map_update_value.isra.0+0x141/0x2f0 kernel/bpf/syscall.c:169
+    [<000000004deb6133>] map_update_elem kernel/bpf/syscall.c:1098 [inline]
+    [<000000004deb6133>] __do_sys_bpf+0x16bf/0x1f00 kernel/bpf/syscall.c:3689
+    [<00000000283ef9ec>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
+    [<000000004290d57b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
 
-Please see the review comments to the earlier version:
-https://lkml.org/lkml/2020/4/8/245
 
-I still feel that we don't need cpuidle_prop and stop_version to be
-separate fields.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-
-> 
-> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
-> Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
-> ---
-> 
->  v1->v2: This patch is newly added in this series.
-> 
->  arch/powerpc/include/asm/processor.h  | 17 +++++++++++++++++
->  arch/powerpc/kernel/dt_cpu_ftrs.c     |  5 +++++
->  arch/powerpc/platforms/powernv/idle.c | 18 ++++++++++++++----
->  drivers/cpuidle/cpuidle-powernv.c     |  3 ++-
->  4 files changed, 38 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
-> index eedcbfb9a6ff..66fa20476d0e 100644
-> --- a/arch/powerpc/include/asm/processor.h
-> +++ b/arch/powerpc/include/asm/processor.h
-> @@ -429,6 +429,23 @@ extern void power4_idle_nap(void);
->  extern unsigned long cpuidle_disable;
->  enum idle_boot_override {IDLE_NO_OVERRIDE = 0, IDLE_POWERSAVE_OFF};
-> 
-> +#define STOP_ENABLE		0x00000001
-> +
-> +#define STOP_VERSION_P9       0x1
-> +
-> +/*
-> + * Classify the dependencies of the stop states
-> + * @idle_stop: function handler to handle the quirk stop version
-> + * @cpuidle_prop: Signify support for stop states through kernel and/or firmware
-> + * @stop_version: Classify quirk versions for stop states
-> + */
-> +typedef struct {
-> +	unsigned long (*idle_stop)(unsigned long psscr, bool mmu_on);
-> +	uint8_t cpuidle_prop;
-> +	uint8_t stop_version;
-> +} stop_deps_t;
-> +extern stop_deps_t stop_dep;
-> +
->  extern int powersave_nap;	/* set if nap mode can be used in idle loop */
-> 
->  extern void power7_idle_type(unsigned long type);
-> diff --git a/arch/powerpc/kernel/dt_cpu_ftrs.c b/arch/powerpc/kernel/dt_cpu_ftrs.c
-> index 182b4047c1ef..db1a525e090d 100644
-> --- a/arch/powerpc/kernel/dt_cpu_ftrs.c
-> +++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
-> @@ -292,6 +292,8 @@ static int __init feat_enable_idle_stop(struct dt_cpu_feature *f)
->  	lpcr |=  LPCR_PECE1;
->  	lpcr |=  LPCR_PECE2;
->  	mtspr(SPRN_LPCR, lpcr);
-> +	stop_dep.cpuidle_prop |= STOP_ENABLE;
-> +	stop_dep.stop_version = STOP_VERSION_P9;
-> 
->  	return 1;
->  }
-> @@ -657,6 +659,9 @@ static void __init cpufeatures_setup_start(u32 isa)
->  	}
->  }
-> 
-> +stop_deps_t stop_dep = {NULL, 0x0, 0x0};
-> +EXPORT_SYMBOL(stop_dep);
-> +
->  static bool __init cpufeatures_process_feature(struct dt_cpu_feature *f)
->  {
->  	const struct dt_cpu_feature_match *m;
-> diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
-> index 1841027b25c5..538f0842ac3f 100644
-> --- a/arch/powerpc/platforms/powernv/idle.c
-> +++ b/arch/powerpc/platforms/powernv/idle.c
-> @@ -842,7 +842,7 @@ static unsigned long power9_offline_stop(unsigned long psscr)
-> 
->  #ifndef CONFIG_KVM_BOOK3S_HV_POSSIBLE
->  	__ppc64_runlatch_off();
-> -	srr1 = power9_idle_stop(psscr, true);
-> +	srr1 = stop_dep.idle_stop(psscr, true);
->  	__ppc64_runlatch_on();
->  #else
->  	/*
-> @@ -858,7 +858,7 @@ static unsigned long power9_offline_stop(unsigned long psscr)
->  	local_paca->kvm_hstate.hwthread_state = KVM_HWTHREAD_IN_IDLE;
-> 
->  	__ppc64_runlatch_off();
-> -	srr1 = power9_idle_stop(psscr, false);
-> +	srr1 = stop_dep.idle_stop(psscr, true);
->  	__ppc64_runlatch_on();
-> 
->  	local_paca->kvm_hstate.hwthread_state = KVM_HWTHREAD_IN_KERNEL;
-> @@ -886,7 +886,7 @@ void power9_idle_type(unsigned long stop_psscr_val,
->  	psscr = (psscr & ~stop_psscr_mask) | stop_psscr_val;
-> 
->  	__ppc64_runlatch_off();
-> -	srr1 = power9_idle_stop(psscr, true);
-> +	srr1 = stop_dep.idle_stop(psscr, true);
->  	__ppc64_runlatch_on();
-> 
->  	fini_irq_for_idle_irqsoff();
-> @@ -1390,8 +1390,18 @@ static int __init pnv_init_idle_states(void)
->  	nr_pnv_idle_states = 0;
->  	supported_cpuidle_states = 0;
-> 
-> -	if (cpuidle_disable != IDLE_NO_OVERRIDE)
-> +	if (cpuidle_disable != IDLE_NO_OVERRIDE ||
-> +	    !(stop_dep.cpuidle_prop & STOP_ENABLE))
->  		goto out;
-> +
-> +	/* Check for supported version in kernel */
-> +	if (stop_dep.stop_version & STOP_VERSION_P9) {
-> +		stop_dep.idle_stop = power9_idle_stop;
-> +	} else {
-> +		stop_dep.idle_stop = NULL;
-> +		goto out;
-> +	}
-> +
->  	rc = pnv_parse_cpuidle_dt();
->  	if (rc)
->  		return rc;
-> diff --git a/drivers/cpuidle/cpuidle-powernv.c b/drivers/cpuidle/cpuidle-powernv.c
-> index 1b299e801f74..7430a8edf5c9 100644
-> --- a/drivers/cpuidle/cpuidle-powernv.c
-> +++ b/drivers/cpuidle/cpuidle-powernv.c
-> @@ -371,7 +371,8 @@ static int powernv_add_idle_states(void)
->   */
->  static int powernv_idle_probe(void)
->  {
-> -	if (cpuidle_disable != IDLE_NO_OVERRIDE)
-> +	if (cpuidle_disable != IDLE_NO_OVERRIDE ||
-> +	    !(stop_dep.cpuidle_prop & STOP_ENABLE))
->  		return -ENODEV;
-> 
->  	if (firmware_has_feature(FW_FEATURE_OPAL)) {
-> -- 
-> 2.17.1
-> 
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
