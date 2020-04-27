@@ -2,157 +2,168 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 823D4C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3800DC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69ECD20644
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E4CB2074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:54:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgD0Lyj (ORCPT
+        id S1727059AbgD0Lyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 07:54:39 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:42240 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbgD0Lyi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 07:54:38 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jT2LN-00056H-AR; Mon, 27 Apr 2020 05:54:37 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jT2LM-0007g2-Ct; Mon, 27 Apr 2020 05:54:37 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mon, 27 Apr 2020 07:54:50 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2112 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726260AbgD0Lyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 07:54:49 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 7AEC82A367116205EBC7;
+        Mon, 27 Apr 2020 12:54:47 +0100 (IST)
+Received: from [127.0.0.1] (10.210.170.137) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 27 Apr
+ 2020 12:54:44 +0100
+Subject: Re: [PATCH 3/4] lib: logic_pio: Introduce MMIO_LOWER_RESERVED
+To:     <jiaxun.yang@flygoat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     <linux-mips@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
-        <87ftcv1nqe.fsf@x220.int.ebiederm.org>
-        <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
-        <20200424173927.GB26802@redhat.com>
-        <87mu6ymkea.fsf_-_@x220.int.ebiederm.org>
-        <87blnemj5t.fsf_-_@x220.int.ebiederm.org>
-        <20200426172207.GA30118@redhat.com>
-Date:   Mon, 27 Apr 2020 06:51:23 -0500
-In-Reply-To: <20200426172207.GA30118@redhat.com> (Oleg Nesterov's message of
-        "Sun, 26 Apr 2020 19:22:07 +0200")
-Message-ID: <878sihjgec.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Stephen Kitt <steve@sk2.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Silsby <dansilsby@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Wei Xu <xuwei5@hisilicon.com>, <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>, Rob Herring <robh@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+References: <20200426114806.1176629-1-jiaxun.yang@flygoat.com>
+ <20200426114806.1176629-4-jiaxun.yang@flygoat.com>
+ <e84f4146-b44f-b009-0dc4-876aa551f44f@huawei.com>
+ <42432F7C-D859-48B4-9547-A61BD22EFEEF@flygoat.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <e6e3331f-283d-03e8-b23e-41870b547e34@huawei.com>
+Date:   Mon, 27 Apr 2020 12:54:06 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jT2LM-0007g2-Ct;;;mid=<878sihjgec.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/Hy5/LYsdoQjtguvFKGpsNQj0NXSTcRnw=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v3 2/6] posix-cpu-timers: Use PIDTYPE_TGID to simplify the logic in lookup_task
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+In-Reply-To: <42432F7C-D859-48B4-9547-A61BD22EFEEF@flygoat.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.210.170.137]
+X-ClientProxiedBy: lhreml722-chm.china.huawei.com (10.201.108.73) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oleg Nesterov <oleg@redhat.com> writes:
+On 27/04/2020 12:03, Jiaxun Yang wrote:
+> 
+> 
+> 于 2020年4月27日 GMT+08:00 下午6:43:09, John Garry <john.garry@huawei.com> 写到:
+>> On 26/04/2020 12:47, Jiaxun Yang wrote:
+>>> That would allow platforms reserve some lower address in PIO MMIO range
+>>> to deal with legacy drivers with hardcoded I/O ports that can't be
+>>> managed by logic_pio.
+>>
+>> Hi,
+>>
+>> Is there some reason why the logic_pio code cannot be improved to handle
+>> these devices at these "fixed" addresses? Or do you have a plan to
+>> improve it? We already support fixed bus address devices in the INDIRECT
+>> IO region.
+> 
+> Hi,
+> 
+> The issue about "Fixed Address" is we can't control the ioport
+> That driver used to operate devices.
+> So any attempt to resolve it in logic_pio seems impossible.
+> 
+> Currently we have i8259, i8042, piix4_smbus, mc146818 rely on this assumption.
 
-> Eric,
->
-> I am sick today and can't read the code, but I feel this patch is not
-> right ... please correct me.
+Right, and from glancing at a couple of drivers you mentioned, if we 
+were to register a logic pio region for that legacy region, there does 
+not seem to be an easy place to fixup to use logic pio addresses (for 
+those devices). They use hardcoded values. However if all those drivers 
+were mips specific, you could fixup those drivers to use logic_pio 
+addresses today through some macro. But not sure on that.
 
+So, going back to your change, I have a dilemma wondering whether you 
+should still register a logic pio region for the legacy region instead 
+of the carveout reservation, but ensure it is the first region 
+registered, such that logic pio address base is 0 and no translation is 
+required. At least then you have a region registered and it shows in 
+/proc/ioports, but then this whole thing becomes a bit fragile.
 
-> So, iiuc when posix_cpu_timer_create() is called and CPUCLOCK_PERTHREAD
-> is false we roughly have
->
-> 	task = pid_task(pid, PIDTYPE_TGID);			// lookup_task()
->
-> 	/* WINDOW */
->
-> 	timer->it.cpu.pid = = get_task_pid(task, PIDTYPE_TGID)	// posix_cpu_timer_create()
->
-> Now suppose that we race with mt-exec and this "task" is the old leader;
-> it can be release_task()'ed in the WINDOW above and then get_task_pid()
-> will return NULL.
+Maybe Arnd or Bjorn have an opinion on this.
 
-Except it is asking for PIDTYPE_TGID.
-
-task->signal even if it is freed (which it won't be in a mt-exec)
-is valid until after an rcu window.
-
-release_task()
-   put_task_struct_rcu_user()
-      call_rcu(..., delayed_put_task_struct())
-... rcu delay ...
-delayed_put_task_struct()
-   put_task_struct()
-      __put_task_struct()
-         put_signal_struct()
-            free_signal_struct()
-
-Which means that task->signal->pids[PIDTYPE_TGID] will remain valid even
-across mt-exec.
-
-Further the only change I have introduced is to perform this work under
-rcu_read_lock vs taking a reference to task_struct.  As the reference to
-task_struct does not prevent release_task, the situation with respect
-to races in the rest of the code does not change.
-
-Hmm....
-
-If the case instead is:
-> 	timer->it.cpu.pid = get_task_pid(task, PIDTYPE_PID)	// posix_cpu_timer_create()
-
-Which can also happen for threads in the same thread group.
-I have to agree that we can wind up with a NULL pid.
-
-And that is a brand new bug, because we didn't use to use pids.
-Sigh.
+Thanks,
+John
 
 
-> That is why I suggested to change lookup_task() to return "struct pid*"
-> to eliminate the pid -> task -> pid transition.
-
-Yes.  I have to agree.  Getting rid of the pid -> task -> pid transition
-looks important to close bugs like that.
-
-> Apart from the same_thread_group() check for the "thread" case we do not
-> need task_struct at all, lookup_task() can do
->
-> 	if (thread) {
-> 		p = pid_task(pid, PIDTYPE_PID);
-> 		if (p && !same_thread_group(p, current))
-> 			pid = NULL;
-> 	} else {
-> 		... gettime check ...
->
-> 		if (!pid_has_task(pid, PIDTYPE_TGID))
-> 			pid = NULL;
-> 	}
->
-> 	return pid;
->
-> No?
-
-There is also the posix_cpu_clock_get, where we immediately use the
-clock instead of create something we can use later.
-
-I want to say the gettime case is another reason to go through the whole
-transition but the code can just as easily say "pid = task_tgid(current)"
-as it can "p = current";
-
-Eric
+> 
+> My plan is after getting this part merged, I'm going to work on a ISA Host bridge driver,
+> then convert device drivers into logic_pio and Devicetree based driver step by step.
+> 
+> Finally when we nologner have any legacy driver, we can safely remove this reserved
+> range.
+> 
+> Thanks.
+> 
+> 
+>>
+>> Carving out a region of IO space is less than ideal.
+>>
+>> Thanks,
+>> John
+>>
+>>>
+>>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>>> ---
+>>>    lib/logic_pio.c | 6 +++++-
+>>>    1 file changed, 5 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/lib/logic_pio.c b/lib/logic_pio.c
+>>> index f511a99bb389..57fff1cb7063 100644
+>>> --- a/lib/logic_pio.c
+>>> +++ b/lib/logic_pio.c
+>>> @@ -20,6 +20,10 @@
+>>>    static LIST_HEAD(io_range_list);
+>>>    static DEFINE_MUTEX(io_range_mutex);
+>>>    
+>>> +#ifndef MMIO_LOWER_RESERVED
+>>> +#define MMIO_LOWER_RESERVED	0
+>>> +#endif
+>>> +
+>>>    /* Consider a kernel general helper for this */
+>>>    #define in_range(b, first, len)        ((b) >= (first) && (b) < (first) + (len))
+>>>    
+>>> @@ -36,7 +40,7 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
+>>>    	struct logic_pio_hwaddr *range;
+>>>    	resource_size_t start;
+>>>    	resource_size_t end;
+>>> -	resource_size_t mmio_end = 0;
+>>> +	resource_size_t mmio_end = MMIO_LOWER_RESERVED;
+>>>    	resource_size_t iio_sz = MMIO_UPPER_LIMIT;
+>>>    	int ret = 0;
+>>>    
+>>>
+>>
+> 
 
