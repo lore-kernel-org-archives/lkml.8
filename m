@@ -2,91 +2,127 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE56C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE700C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77BF4206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB8F9206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:00:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IL2IJv0C"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oVU3dM+b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbgD0G7m (ORCPT
+        id S1726649AbgD0HAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 02:59:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48570 "EHLO
+        Mon, 27 Apr 2020 03:00:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbgD0G7m (ORCPT
+        with ESMTP id S1726496AbgD0HAK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 02:59:42 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E9D7C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 23:59:42 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id f8so6650095plt.2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 23:59:42 -0700 (PDT)
+        Mon, 27 Apr 2020 03:00:10 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20CB2C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 00:00:09 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id u16so19121687wmc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 00:00:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WNj7owPD+ZbRnStugkoSGfUDDLECau6V6cMguxLHseM=;
-        b=IL2IJv0CwAvaTDLiqlc/43W1WRn+mgpJHcQ8lcGu5IP5LESVReGp34dPTQGf6e0LZa
-         3rCwR8nNmXOAEkd7Qzy7NviBN1004OJr8Pb5pMjqmfp3qpJihUZhwd7nyTcdErdOInIe
-         uT/acoJunK3/lzcWSYlr70GlAd1cL4+5aQRsO6ogXJBgfPAl7j9pz2uqOwVdBWbYe0q6
-         lbHRELStH3w+8HvL6IraAq8odymfgvcnvKnG15I3pwiOqF/UTkx28z5RWu01Jb8zRX6u
-         8N7Ya3TKyfDwMXJcwDdk6fA1JUwRLmFDLFLl41eCmhPhg6qDStbEFse06rD8j62TGsit
-         h9Ow==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3LrBTWKR8RZnJsKdt2BtOUDXV0TQoOt0eUU0K5w5lSE=;
+        b=oVU3dM+bm37jxxJCCv7t9xgHBlkV+VnyUx0PhitV+4aUyvSvxGbuKbY1MCIZSNFkvR
+         T7p9ezgKUbyGfrOp4Oze9bFpL/3ydotXHT00ciKv3b86BxVITEt7m7uZj2T1wD8c/IeC
+         t7QmPREZq3jeQEg1r9BHXEtttm9AZmW8ruOAnQoIle8CkJstrfLgDiAmupw6g1fTAC0D
+         Ckb952dTIhkM5l3VF89XdQIOZnowREmoEnCwBqnKHcv1Kj6L9aIgn4nFMGEvuFSVTUXZ
+         q1K77HYg9KMr1qsEGQnfmilHvf0fiCjko7rNtdy1zvRiKRlJp9qGH02KCYPlRKKfjFM9
+         xJyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WNj7owPD+ZbRnStugkoSGfUDDLECau6V6cMguxLHseM=;
-        b=BnD4tJKzXPsnzRkuN4REVceQRngm2SYoEgcsyMetTKdkloB0AdCl/k5TqCtC7Oc6xb
-         bI6MlmY4Xd73fDhTmXIHB/6yu8iy5cs49zNe+kShapG1BnunwsRWVMJhbaw4arXx/TR3
-         bE467e5XhVC4Oz7v2hCVi7yDPwF53N3cWPSJNJDOS6mhKgb9DqkE+1hn3QEQCLa3uoKd
-         TtujCSJ8QTsQxDmpPsa343+SlapCk48/Cvs50UTAgCtCA/M81PdUkWGW9h3EhsC8Ij27
-         BPyYuwcat+5AJ7cDuWzi7WpnImDX22tJl8Z8aAnKfa76nEyR8FSXmNycTxIB8Me0UE0S
-         Ck0A==
-X-Gm-Message-State: AGi0PuZVp5zSbCG9gvZlQExcIiuH9f6HmUDrI0MFsvC5IHSi7W7IBErl
-        AuUisvuVS0BvHFjDkZPq13w=
-X-Google-Smtp-Source: APiQypK642idgdGmw8QuDMMdid04wPSy9FsGffFOvsU2o0XwcfqVKE56jYsP/DglCL+LJ7YRbhEZMA==
-X-Received: by 2002:a17:902:9895:: with SMTP id s21mr249837plp.158.1587970781619;
-        Sun, 26 Apr 2020 23:59:41 -0700 (PDT)
-Received: from Asurada (c-73-162-191-63.hsd1.ca.comcast.net. [73.162.191.63])
-        by smtp.gmail.com with ESMTPSA id h9sm11317108pfo.129.2020.04.26.23.59.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 26 Apr 2020 23:59:41 -0700 (PDT)
-Date:   Sun, 26 Apr 2020 23:59:34 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ASoC: fsl_esai: Disable exception interrupt before
- scheduling tasklet
-Message-ID: <20200427065934.GA2236@Asurada>
-References: <a8f2ad955aac9e52587beedc1133b3efbe746895.1587968824.git.shengjiu.wang@nxp.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3LrBTWKR8RZnJsKdt2BtOUDXV0TQoOt0eUU0K5w5lSE=;
+        b=b4zy1X1QqNNuL5HhYW9Ifkr4M0qGxigwgOciEjzp/VCC0jPhD/j8aL7/3ME84C9U26
+         Eq+Kfq0rhw7viRXfVGLQWIMl1w3NiIJDNBJetzZn0FuVLQm5gpi3nrlGuUTTui51gBiH
+         mQ2wHSfmEJEzVv/EFWX2lpqu5qEKAfUoHCO86z300HJGloMQOaocHwUR3zATvcgko9rR
+         6Cr+84W/jxjAarKknU/6JcQcQXPiBuu88FAKZ0Ks1u/jFeqUUi1pgmiIFJMVVZWEPkqj
+         7WTvPyDHyLBVY5ymkdvxMHcp7L8f7haxjLaHlqjCsm4Q3TlgQT4f7odMDoXwS8GJTy8z
+         2FbA==
+X-Gm-Message-State: AGi0PuY2ZXu6u2uX8z3zb8eiDIk6MWo5yVbVxIRlfD8jb1GCwPrCLx+A
+        V4BqpRWb0EtboN+TbrP3lGMdKQ==
+X-Google-Smtp-Source: APiQypJodr4c4+fycbp55+jKelfPIyy5Mfb8pZxsys+qLWl4QK+n03MMhJxq9T3SNpJq6u+LIM4DhA==
+X-Received: by 2002:a7b:c399:: with SMTP id s25mr23845990wmj.169.1587970807729;
+        Mon, 27 Apr 2020 00:00:07 -0700 (PDT)
+Received: from [192.168.0.41] (lns-bzn-59-82-252-135-148.adsl.proxad.net. [82.252.135.148])
+        by smtp.googlemail.com with ESMTPSA id q143sm15169085wme.31.2020.04.27.00.00.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 00:00:07 -0700 (PDT)
+Subject: Re: [PATCH] clocksource/drivers/timer-microchip-pit64b: Select
+ CONFIG_TIMER_OF
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        linuxppc-dev@ozlabs.org, claudiu.beznea@microchip.com
+References: <20200426124356.3929682-1-mpe@ellerman.id.au>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <50114298-7788-79bf-b9a8-26f399437c63@linaro.org>
+Date:   Mon, 27 Apr 2020 09:00:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a8f2ad955aac9e52587beedc1133b3efbe746895.1587968824.git.shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.5.22 (2013-10-16)
+In-Reply-To: <20200426124356.3929682-1-mpe@ellerman.id.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 02:23:21PM +0800, Shengjiu Wang wrote:
-> Disable exception interrupt before scheduling tasklet, otherwise if
-> the tasklet isn't handled immediately, there will be endless xrun
-> interrupt.
+On 26/04/2020 14:43, Michael Ellerman wrote:
+> This driver is an OF driver, it depends on OF, and uses
+> TIMER_OF_DECLARE, so it should select CONFIG_TIMER_OF.
 > 
-> Fixes: 7ccafa2b3879 ("ASoC: fsl_esai: recover the channel swap after xrun")
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Without CONFIG_TIMER_OF enabled this can lead to warnings such as:
+> 
+>   powerpc-linux-ld: warning: orphan section `__timer_of_table' from
+>   `drivers/clocksource/timer-microchip-pit64b.o' being placed in
+>   section `__timer_of_table'.
+> 
+> Because TIMER_OF_TABLES in vmlinux.lds.h doesn't emit anything into
+> the linker script when CONFIG_TIMER_OF is not enabled.
+> 
+> Fixes: 625022a5f160 ("clocksource/drivers/timer-microchip-pit64b: Add Microchip PIT64B support")
+> Cc: stable@vger.kernel.org # v5.6+
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+> ---
 
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Applied, thanks
+
+>  drivers/clocksource/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index f2142e6bbea3..f225c27b70f7 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -709,6 +709,7 @@ config MICROCHIP_PIT64B
+>  	bool "Microchip PIT64B support"
+>  	depends on OF || COMPILE_TEST
+>  	select CLKSRC_MMIO
+> +	select TIMER_OF
+>  	help
+>  	  This option enables Microchip PIT64B timer for Atmel
+>  	  based system. It supports the oneshot, the periodic
+> 
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
