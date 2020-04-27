@@ -2,99 +2,90 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF62C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF12CC4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F36232073C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:42:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="noKuBg1N"
+	by mail.kernel.org (Postfix) with ESMTP id C0A772070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:44:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726737AbgD0Um4 (ORCPT
+        id S1726752AbgD0Uog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:42:56 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54826 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbgD0Um4 (ORCPT
+        Mon, 27 Apr 2020 16:44:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726205AbgD0Uof (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 16:42:56 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RKg7ao016845;
-        Mon, 27 Apr 2020 15:42:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588020127;
-        bh=lsXYqzJZ87/b6MFwb+B5fUGJvdO4PlNLviGnIO0YnAo=;
-        h=From:To:CC:Subject:Date;
-        b=noKuBg1NElWkIauG42saatFVPHdxtBT6s7C7V9rBxs1bD2QpLjquLnhOTElNvrbdb
-         pz36GfwWTSnnxJoHkFP4+VD97M4nE1PwA19O+niyJZUBTrJG6i+6QjqKGI/t5oUWq3
-         HRTL76pFRPgpFPGtefghQpe3rRaUbV1z6SxWENI8=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RKg7Yf070719;
-        Mon, 27 Apr 2020 15:42:07 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
- Apr 2020 15:42:07 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 27 Apr 2020 15:42:07 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RKg7gb098139;
-        Mon, 27 Apr 2020 15:42:07 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>, <stable@vger.kernel.org>
-Subject: [PATCH] ASoC: tlv320adcx140: Fix mic gain registers
-Date:   Mon, 27 Apr 2020 15:36:08 -0500
-Message-ID: <20200427203608.7031-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 27 Apr 2020 16:44:35 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74499C0610D5;
+        Mon, 27 Apr 2020 13:44:35 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jTAc9-00006V-U0; Mon, 27 Apr 2020 22:44:30 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 059CF1C0131;
+        Mon, 27 Apr 2020 22:44:29 +0200 (CEST)
+Date:   Mon, 27 Apr 2020 20:44:28 -0000
+From:   "tip-bot2 for Ethon Paul" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: smp/core] cpu/hotplug: Fix a typo in comment
+ "broadacasted"->"broadcasted"
+Cc:     Ethon Paul <ethp@qq.com>, Thomas Gleixner <tglx@linutronix.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200417164008.6541-1-ethp@qq.com>
+References: <20200417164008.6541-1-ethp@qq.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Message-ID: <158802026848.28353.13219786488498822850.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the mic gain registers for channels 2-4.
-The incorret register was being set as it was touching the CH1 config
-registers.
+The following commit has been merged into the smp/core branch of tip:
 
-Fixes: 37bde5acf040 ("ASoC: tlv320adcx140: Add the tlv320adcx140 codec driver family")
-Cc: stable@vger.kernel.org
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Commit-ID:     182e073f68a080a29920f6dca796ccf4806b0329
+Gitweb:        https://git.kernel.org/tip/182e073f68a080a29920f6dca796ccf4806b0329
+Author:        Ethon Paul <ethp@qq.com>
+AuthorDate:    Sat, 18 Apr 2020 00:40:04 +08:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 27 Apr 2020 22:42:04 +02:00
+
+cpu/hotplug: Fix a typo in comment "broadacasted"->"broadcasted"
+
+Signed-off-by: Ethon Paul <ethp@qq.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200417164008.6541-1-ethp@qq.com
+
 ---
- sound/soc/codecs/tlv320adcx140.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/cpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
-index 38897568ee96..0f713efde046 100644
---- a/sound/soc/codecs/tlv320adcx140.c
-+++ b/sound/soc/codecs/tlv320adcx140.c
-@@ -511,11 +511,11 @@ static const struct snd_soc_dapm_route adcx140_audio_map[] = {
- static const struct snd_kcontrol_new adcx140_snd_controls[] = {
- 	SOC_SINGLE_TLV("Analog CH1 Mic Gain Volume", ADCX140_CH1_CFG1, 2, 42, 0,
- 			adc_tlv),
--	SOC_SINGLE_TLV("Analog CH2 Mic Gain Volume", ADCX140_CH1_CFG2, 2, 42, 0,
-+	SOC_SINGLE_TLV("Analog CH2 Mic Gain Volume", ADCX140_CH2_CFG1, 2, 42, 0,
- 			adc_tlv),
--	SOC_SINGLE_TLV("Analog CH3 Mic Gain Volume", ADCX140_CH1_CFG3, 2, 42, 0,
-+	SOC_SINGLE_TLV("Analog CH3 Mic Gain Volume", ADCX140_CH3_CFG1, 2, 42, 0,
- 			adc_tlv),
--	SOC_SINGLE_TLV("Analog CH4 Mic Gain Volume", ADCX140_CH1_CFG4, 2, 42, 0,
-+	SOC_SINGLE_TLV("Analog CH4 Mic Gain Volume", ADCX140_CH4_CFG1, 2, 42, 0,
- 			adc_tlv),
- 
- 	SOC_SINGLE_TLV("DRE Threshold", ADCX140_DRE_CFG0, 4, 9, 0,
--- 
-2.25.1
-
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 2371292..6a02d44 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -432,7 +432,7 @@ static inline bool cpu_smt_allowed(unsigned int cpu)
+ 	/*
+ 	 * On x86 it's required to boot all logical CPUs at least once so
+ 	 * that the init code can get a chance to set CR4.MCE on each
+-	 * CPU. Otherwise, a broadacasted MCE observing CR4.MCE=0b on any
++	 * CPU. Otherwise, a broadcasted MCE observing CR4.MCE=0b on any
+ 	 * core will shutdown the machine.
+ 	 */
+ 	return !cpumask_test_cpu(cpu, &cpus_booted_once_mask);
