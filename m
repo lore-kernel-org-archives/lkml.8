@@ -2,84 +2,112 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7560FC5519D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0558C5519F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52E77206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB6B5206CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:14:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728106AbgD0PNt (ORCPT
+        id S1728262AbgD0POG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 11:13:49 -0400
-Received: from smtpout1.mo528.mail-out.ovh.net ([46.105.34.251]:44301 "EHLO
-        smtpout1.mo528.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728203AbgD0PNq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 11:13:46 -0400
-Received: from pro2.mail.ovh.net (unknown [10.108.16.2])
-        by mo528.mail-out.ovh.net (Postfix) with ESMTPS id 1A4BA5B0A4CF;
-        Mon, 27 Apr 2020 17:13:43 +0200 (CEST)
-Received: from localhost (89.70.31.203) by DAG2EX1.emp2.local (172.16.2.11)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Mon, 27 Apr
- 2020 17:13:42 +0200
-Date:   Mon, 27 Apr 2020 17:12:14 +0200
-From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
-To:     Andreas Klinger <ak@it-klinger.de>
-CC:     <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
-        <pmeerw@pmeerw.net>, <bgolaszewski@baylibre.com>,
-        <linus.walleij@linaro.org>, <tglx@linutronix.de>,
-        <allison@lohutok.net>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: bmp280: fix compensation of humidity
-Message-ID: <20200427151214.GA6389@arch>
-References: <20200427140017.GA25402@arbad>
+        Mon, 27 Apr 2020 11:14:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:36874 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728252AbgD0POD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 11:14:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA71A31B;
+        Mon, 27 Apr 2020 08:14:02 -0700 (PDT)
+Received: from [10.57.33.170] (unknown [10.57.33.170])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9BCC3F68F;
+        Mon, 27 Apr 2020 08:14:00 -0700 (PDT)
+Subject: Re: [PATCH v2 2/3] arm64: dts: rockchip: rk3399-roc-pc: Fix MMC
+ numbering for LED triggers
+To:     Johan Jonker <jbx6244@gmail.com>, Chen-Yu Tsai <wens@kernel.org>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
+        Pavel Machek <pavel@ucw.cz>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>, jacek.anaszewski@gmail.com,
+        linux-leds@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        dmurphy@ti.com
+References: <20200427073132.29997-3-wens@kernel.org>
+ <684132b8-4a84-8295-474b-38ccb992bba7@gmail.com>
+ <CAGb2v66Piu5_2bdqvWV3eEn2Se_y1MNKWvvYBv_J7DA-8jBhbQ@mail.gmail.com>
+ <65d15254-08da-895c-1a0c-ef6ce231b620@gmail.com>
+ <CAGb2v65fGYguNoksq5Dyx3HTKeYg+U82TiQSL+NO8AUcQJQj5w@mail.gmail.com>
+ <74a984fc-ce57-211b-936c-2d77e2e642bb@gmail.com>
+ <a81840d3-813b-51b5-767c-e0d9d270200e@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <94e7671f-2d11-b2f7-e049-b90893c61ab2@arm.com>
+Date:   Mon, 27 Apr 2020 16:13:59 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20200427140017.GA25402@arbad>
-X-Originating-IP: [89.70.31.203]
-X-ClientProxiedBy: DAG3EX2.emp2.local (172.16.2.22) To DAG2EX1.emp2.local
- (172.16.2.11)
-X-Ovh-Tracer-Id: 17773174454577880249
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrheelgdekgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkfhggtggujghisehttdertddttdejnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecukfhppedtrddtrddtrddtpdekledrjedtrdefuddrvddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+In-Reply-To: <a81840d3-813b-51b5-767c-e0d9d270200e@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 04:00:19PM +0200, Andreas Klinger wrote:
-> Output of humidity compensation is limited to the range between 0 and 100
-> percent. Add this to the compensation formula as described in the datasheet
-> chapter 4.2.3.
->
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> ---
->  drivers/iio/pressure/bmp280-core.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
-> index 29c209cc1108..ac9ef1b63b07 100644
-> --- a/drivers/iio/pressure/bmp280-core.c
-> +++ b/drivers/iio/pressure/bmp280-core.c
-> @@ -271,6 +271,9 @@ static u32 bmp280_compensate_humidity(struct bmp280_data *data,
->  		+ (s32)2097152) * calib->H2 + 8192) >> 14);
->  	var -= ((((var >> 15) * (var >> 15)) >> 7) * (s32)calib->H1) >> 4;
->
-> +	var = var < 0 ? 0 : var;
-> +	var = var > 419430400 ? 419430400 : var;
-> +
+On 2020-04-27 3:12 pm, Johan Jonker wrote:
+> Hi,
+> 
+>>> So for fixing up the LED node names, we'd probably want the following:
+>>>
+>>>      diy_led: led-0
+>>>      yellow_led: led-1
+>>>      work_led: led-2
+> 
+> Change proposal for led nodes to comply with preexisting dts.
+> Does this work?
+> 
+> diy_led: led_0: led-0
+> yellow_led: led_1: led-1
+> work_led: led_2: led-2
 
-Looks that clamp_val() might come in handy here.
+Yuck, why?
 
->  	return var >> 12;
->  };
->
-> --
-> 2.20.1
+Labels are simply human-readable source annotations for the sake of 
+referencing nodes more easily. Meaningful label names - that correlate 
+to SoC or board components, schematic names, or physical labels on the 
+board/device - make the DT sources easier to read, review, and maintain. 
+There are a handful of cases where one node might have multiple labels, 
+e.g. if two logical supply nets come from the same regulator on certain 
+board variants, but there is zero point in defining redundant labels 
+that just meaninglessly echo the DT's own structure.
+
+> blue: led_0: led-0
+> 
+> A check does not give any warnings.
+
+I should hope not. Labels are there to be consumed by DT compilers (and 
+whatever symbolic overlay handlers count as... DT linkers, maybe?) - 
+they have no business being within the scope of the bindings that define 
+a contract for system software consuming the final DTB.
+
+Robin.
+
+> make -k ARCH=arm dtbs_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/leds/leds-gpio.yaml
+> 
+>>
+>> That doesn't look pretty either.
+>> Would like to hear the maintainers view on how to handle other cases
+>> without 'led' like for example 'blue' for mk808.
+>>
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> 
