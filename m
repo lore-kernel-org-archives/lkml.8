@@ -2,92 +2,109 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB7FC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 617ABC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F050206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4878D2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:11:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbgD0GIr (ORCPT
+        id S1726588AbgD0GLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 02:08:47 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51230 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726221AbgD0GIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 02:08:47 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3D62DCE1779533C62C14;
-        Mon, 27 Apr 2020 14:08:45 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 27 Apr
- 2020 14:08:40 +0800
-Subject: Re: [PATCH V2] f2fs: Avoid double lock for cp_rwsem during checkpoint
-To:     Sayali Lokhande <sayalil@codeaurora.org>, <jaegeuk@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-CC:     <stummala@codeaurora.org>, <linux-kernel@vger.kernel.org>
-References: <1587967204-24824-1-git-send-email-sayalil@codeaurora.org>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <6cfb8f00-a36c-03b9-ffa7-12fe37a19317@huawei.com>
-Date:   Mon, 27 Apr 2020 14:08:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 27 Apr 2020 02:11:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41138 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726221AbgD0GLl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 02:11:41 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E46E3C061A0F
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 23:11:40 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jSwzJ-0005L3-RD; Mon, 27 Apr 2020 08:11:29 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jSwzB-0003QW-8g; Mon, 27 Apr 2020 08:11:21 +0200
+Date:   Mon, 27 Apr 2020 08:11:21 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, robh+dt@kernel.org,
+        leonard.crestez@nxp.com, linux@rempel-privat.de, peng.fan@nxp.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V5 1/2] dt-bindings: firmware: imx: Move system control
+ into dt-binding headfile
+Message-ID: <20200427061121.tsybnbqrzjpy7f3a@pengutronix.de>
+References: <1587888704-7158-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <1587967204-24824-1-git-send-email-sayalil@codeaurora.org>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587888704-7158-1-git-send-email-Anson.Huang@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 08:10:13 up 163 days, 21:28, 173 users,  load average: 0.13, 0.18,
+ 0.12
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/27 14:00, Sayali Lokhande wrote:
-> There could be a scenario where f2fs_sync_node_pages gets
-> called during checkpoint, which in turn tries to flush
-> inline data and calls iput(). This results in deadlock as
-> iput() tries to hold cp_rwsem, which is already held at the
-> beginning by checkpoint->block_operations().
-> 
-> Call stack :
-> 
-> Thread A		Thread B
-> f2fs_write_checkpoint()
-> - block_operations(sbi)
->  - f2fs_lock_all(sbi);
->   - down_write(&sbi->cp_rwsem);
-> 
->                         - open()
->                          - igrab()
->                         - write() write inline data
->                         - unlink()
-> - f2fs_sync_node_pages()
->  - if (is_inline_node(page))
->   - flush_inline_data()
->    - ilookup()
->      page = f2fs_pagecache_get_page()
->      if (!page)
->       goto iput_out;
->      iput_out:
-> 
->     - iput()
-        ^^^^
-			 - close()
-			 - iput()
+Hi Anson,
 
->        iput(inode);
->        - f2fs_evict_inode()
->         - f2fs_truncate_blocks()
->          - f2fs_lock_op()
->            - down_read(&sbi->cp_rwsem);
+sorry for jumping in..
+
+On 20-04-26 16:11, Anson Huang wrote:
+> From: Dong Aisheng <aisheng.dong@nxp.com>
 > 
-> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+> i.MX8 SoCs DTS file needs system control macro definitions, so move them
+> into dt-binding headfile, then include/linux/firmware/imx/types.h can be
+> removed and those drivers using it should be changed accordingly.
+> 
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> Signed-off-by: Jacky Bai <ping.bai@nxp.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V4:
+> 	- Use another patch for new added system controls and PM clock types.
+> ---
+>  drivers/firmware/imx/imx-scu.c          |  1 -
+>  drivers/thermal/imx_sc_thermal.c        |  2 +-
+>  include/dt-bindings/firmware/imx/rsrc.h | 51 ++++++++++++++++++++++++++
+>  include/linux/firmware/imx/sci.h        |  1 -
+>  include/linux/firmware/imx/types.h      | 65 ---------------------------------
+>  5 files changed, 52 insertions(+), 68 deletions(-)
+>  delete mode 100644 include/linux/firmware/imx/types.h
+> 
+> diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
+> index f71eaa5..f3340fa 100644
+> --- a/drivers/firmware/imx/imx-scu.c
+> +++ b/drivers/firmware/imx/imx-scu.c
+> @@ -8,7 +8,6 @@
+>   */
+>  
+>  #include <linux/err.h>
+> -#include <linux/firmware/imx/types.h>
+>  #include <linux/firmware/imx/ipc.h>
+>  #include <linux/firmware/imx/sci.h>
+>  #include <linux/interrupt.h>
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+You don't need this anymore here or was it a needless include?
 
-Thanks,
+Regards,
+  Marco
