@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F08BC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A9CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17117206CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 189E320663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:53:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbgD0Mwj (ORCPT
+        id S1727925AbgD0MxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 08:52:39 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:47795 "EHLO
+        Mon, 27 Apr 2020 08:53:07 -0400
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:47809 "EHLO
         herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727853AbgD0MwT (ORCPT
+        with ESMTP id S1726604AbgD0MxG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 08:52:19 -0400
+        Mon, 27 Apr 2020 08:53:06 -0400
 Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 03RCpkA7024061;
-        Mon, 27 Apr 2020 15:51:46 +0300
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 03RCpeDc024052;
+        Mon, 27 Apr 2020 15:51:40 +0300
 Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
-        id 9C91F639B1; Mon, 27 Apr 2020 15:51:46 +0300 (IDT)
+        id 4C804639B1; Mon, 27 Apr 2020 15:51:40 +0300 (IDT)
 From:   amirmizi6@gmail.com
 To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
         oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
@@ -37,10 +37,11 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
         Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
         shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Amir Mizinski <amirmizi6@gmail.com>
-Subject: [PATCH v7 5/7] tpm: Handle an exception for TPM Firmware Update mode.
-Date:   Mon, 27 Apr 2020 15:49:29 +0300
-Message-Id: <20200427124931.115697-6-amirmizi6@gmail.com>
+        Amir Mizinski <amirmizi6@gmail.com>,
+        Christophe Ricard <christophe-h.ricard@st.com>
+Subject: [PATCH v7 2/7] tpm: tpm_tis: Add verify_data_integrity handle toy tpm_tis_phy_ops
+Date:   Mon, 27 Apr 2020 15:49:26 +0300
+Message-Id: <20200427124931.115697-3-amirmizi6@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200427124931.115697-1-amirmizi6@gmail.com>
 References: <20200427124931.115697-1-amirmizi6@gmail.com>
@@ -53,44 +54,182 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Amir Mizinski <amirmizi6@gmail.com>
 
-An extra precaution for TPM Firmware Update Mode.
-For example if TPM power was cut while in Firmware update, platform
-should ignore "selftest" failure and skip TPM initialization sequence.
+To validate data integrity we need to compute the CRC over the data
+sent at a lower layer (I2C for instance).
+To do this, tpm_tis_verify_data_integrity() calls a "verify_data_integrity"
+operation (if available).
+If the data integrity check fails, a retry to save the sent/received
+data is implemented in the tpm_tis_send_main()/tpm_tis_recv() functions.
 
-Suggested-by: Benoit Houyere <benoit.houyere@st.com>
+Co-developed-by: Christophe Ricard <christophe-h.ricard@st.com>
+Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
 Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
 ---
- drivers/char/tpm/tpm2-cmd.c | 4 ++++
- include/linux/tpm.h         | 1 +
- 2 files changed, 5 insertions(+)
+ drivers/char/tpm/tpm_tis_core.c | 104 +++++++++++++++++++++++++---------------
+ drivers/char/tpm/tpm_tis_core.h |   3 ++
+ 2 files changed, 69 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
-index 7603295..6e42946 100644
---- a/drivers/char/tpm/tpm2-cmd.c
-+++ b/drivers/char/tpm/tpm2-cmd.c
-@@ -727,6 +727,10 @@ int tpm2_auto_startup(struct tpm_chip *chip)
- 		goto out;
+diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+index 27c6ca0..5dd5604 100644
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -242,6 +242,17 @@ static u8 tpm_tis_status(struct tpm_chip *chip)
+ 	return status;
+ }
  
- 	rc = tpm2_do_selftest(chip);
++static bool tpm_tis_verify_data_integrity(struct tpm_chip *chip, const u8 *buf,
++					  size_t len)
++{
++	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
 +
-+	if (rc == TPM2_RC_UPGRADE || rc == TPM2_RC_COMMAND_CODE)
-+		return 0;
++	if (priv->phy_ops->verify_data_integrity)
++		return priv->phy_ops->verify_data_integrity(priv, buf, len);
 +
- 	if (rc && rc != TPM2_RC_INITIALIZE)
- 		goto out;
++	return true;
++}
++
+ static void tpm_tis_ready(struct tpm_chip *chip)
+ {
+ 	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+@@ -308,47 +319,59 @@ static int tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+ {
+ 	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+ 	int size = 0;
+-	int status;
++	int status, i;
+ 	u32 expected;
++	bool data_valid = false;
  
-diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-index 03e9b18..5a2e031 100644
---- a/include/linux/tpm.h
-+++ b/include/linux/tpm.h
-@@ -199,6 +199,7 @@ enum tpm2_return_codes {
- 	TPM2_RC_INITIALIZE	= 0x0100, /* RC_VER1 */
- 	TPM2_RC_FAILURE		= 0x0101,
- 	TPM2_RC_DISABLED	= 0x0120,
-+	TPM2_RC_UPGRADE         = 0x012D,
- 	TPM2_RC_COMMAND_CODE    = 0x0143,
- 	TPM2_RC_TESTING		= 0x090A, /* RC_WARN */
- 	TPM2_RC_REFERENCE_H0	= 0x0910,
+-	if (count < TPM_HEADER_SIZE) {
+-		size = -EIO;
+-		goto out;
+-	}
++	for (i = 0; i < TPM_RETRY; i++) {
++		if (count < TPM_HEADER_SIZE) {
++			size = -EIO;
++			goto out;
++		}
+ 
+-	size = recv_data(chip, buf, TPM_HEADER_SIZE);
+-	/* read first 10 bytes, including tag, paramsize, and result */
+-	if (size < TPM_HEADER_SIZE) {
+-		dev_err(&chip->dev, "Unable to read header\n");
+-		goto out;
+-	}
++		size = recv_data(chip, buf, TPM_HEADER_SIZE);
++		/* read first 10 bytes, including tag, paramsize, and result */
++		if (size < TPM_HEADER_SIZE) {
++			dev_err(&chip->dev, "Unable to read header\n");
++			goto out;
++		}
+ 
+-	expected = be32_to_cpu(*(__be32 *) (buf + 2));
+-	if (expected > count || expected < TPM_HEADER_SIZE) {
+-		size = -EIO;
+-		goto out;
+-	}
++		expected = be32_to_cpu(*(__be32 *) (buf + 2));
++		if (expected > count || expected < TPM_HEADER_SIZE) {
++			size = -EIO;
++			goto out;
++		}
+ 
+-	size += recv_data(chip, &buf[TPM_HEADER_SIZE],
+-			  expected - TPM_HEADER_SIZE);
+-	if (size < expected) {
+-		dev_err(&chip->dev, "Unable to read remainder of result\n");
+-		size = -ETIME;
+-		goto out;
+-	}
++		size += recv_data(chip, &buf[TPM_HEADER_SIZE],
++				  expected - TPM_HEADER_SIZE);
++		if (size < expected) {
++			dev_err(&chip->dev, "Unable to read remainder of result\n");
++			size = -ETIME;
++			goto out;
++		}
+ 
+-	if (wait_for_tpm_stat(chip, TPM_STS_VALID, chip->timeout_c,
+-				&priv->int_queue, false) < 0) {
+-		size = -ETIME;
+-		goto out;
++		if (wait_for_tpm_stat(chip, TPM_STS_VALID, chip->timeout_c,
++				      &priv->int_queue, false) < 0) {
++			size = -ETIME;
++			goto out;
++		}
++
++		status = tpm_tis_status(chip);
++		if (status & TPM_STS_DATA_AVAIL) {	/* retry? */
++			dev_err(&chip->dev, "Error left over data\n");
++			size = -EIO;
++			goto out;
++		}
++
++		data_valid = tpm_tis_verify_data_integrity(chip, buf, size);
++		if (!data_valid)
++			tpm_tis_write8(priv, TPM_STS(priv->locality),
++				       TPM_STS_RESPONSE_RETRY);
++		else
++			break;
+ 	}
+-	status = tpm_tis_status(chip);
+-	if (status & TPM_STS_DATA_AVAIL) {	/* retry? */
+-		dev_err(&chip->dev, "Error left over data\n");
++	if (!data_valid)
+ 		size = -EIO;
+-		goto out;
+-	}
+-
+ out:
+ 	tpm_tis_ready(chip);
+ 	return size;
+@@ -453,14 +476,19 @@ static void disable_interrupts(struct tpm_chip *chip)
+ static int tpm_tis_send_main(struct tpm_chip *chip, const u8 *buf, size_t len)
+ {
+ 	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+-	int rc;
++	int rc, i;
+ 	u32 ordinal;
+ 	unsigned long dur;
++	bool data_valid = false;
+ 
+-	rc = tpm_tis_send_data(chip, buf, len);
+-	if (rc < 0)
+-		return rc;
+-
++	for (i = 0; i < TPM_RETRY && !data_valid; i++) {
++		rc = tpm_tis_send_data(chip, buf, len);
++		if (rc < 0)
++			return rc;
++		data_valid = tpm_tis_verify_data_integrity(chip, buf, len);
++	}
++	if (!data_valid)
++		return -EIO;
+ 	/* go and do it */
+ 	rc = tpm_tis_write8(priv, TPM_STS(priv->locality), TPM_STS_GO);
+ 	if (rc < 0)
+diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
+index d06c65b..cd97c01 100644
+--- a/drivers/char/tpm/tpm_tis_core.h
++++ b/drivers/char/tpm/tpm_tis_core.h
+@@ -34,6 +34,7 @@ enum tis_status {
+ 	TPM_STS_GO = 0x20,
+ 	TPM_STS_DATA_AVAIL = 0x10,
+ 	TPM_STS_DATA_EXPECT = 0x08,
++	TPM_STS_RESPONSE_RETRY = 0x02,
+ };
+ 
+ enum tis_int_flags {
+@@ -106,6 +107,8 @@ struct tpm_tis_phy_ops {
+ 	int (*read16)(struct tpm_tis_data *data, u32 addr, u16 *result);
+ 	int (*read32)(struct tpm_tis_data *data, u32 addr, u32 *result);
+ 	int (*write32)(struct tpm_tis_data *data, u32 addr, u32 src);
++	bool (*verify_data_integrity)(struct tpm_tis_data *data, const u8 *buf,
++				      size_t len);
+ };
+ 
+ static inline int tpm_tis_read_bytes(struct tpm_tis_data *data, u32 addr,
 -- 
 2.7.4
 
