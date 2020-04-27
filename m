@@ -2,93 +2,157 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64CF4C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 823D4C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45C8B206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:54:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587988461;
-	bh=nZ3mD9ws68gkD063hDmlcYv/n61XV3lal2k6Vx5PZk4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mp6vNjOXZM9QQ1dFZ8oDFHp3b9XYjgeSkHAXmYEdQPDb6N/7/Rotymo9RpEkkPaPg
-	 ORzbpnUFd82v/0P6BfoROcLGqPR80zttOWAYwQ8Lm2N++x+gor1yG0NCByCD/BtwTC
-	 JGLc35N3icFVyPzFAJknYgfwenEws+zfJPepfFkI=
+	by mail.kernel.org (Postfix) with ESMTP id 69ECD20644
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:54:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgD0LyU (ORCPT
+        id S1727029AbgD0Lyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 07:54:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726260AbgD0LyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 07:54:19 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 058D720644;
-        Mon, 27 Apr 2020 11:54:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587988459;
-        bh=nZ3mD9ws68gkD063hDmlcYv/n61XV3lal2k6Vx5PZk4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mZtWC51jN5UBzwJsN47+KsV2QojadwCDn8NKR8M9kFVY0RAehRGAoLxTfSFaBheQL
-         L3tHoQyKA3GWQOUDDc7sMCOH0uuFPoQTfm5Y3C6v2k20u3c6e7zLChAhNIFWLl1VS7
-         g622ihc/MIA2Q1EiV4hfyNeJnl26cR3Hxj9Yl+24=
-Date:   Mon, 27 Apr 2020 12:54:16 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sanjay R Mehta <sanju.mehta@amd.com>
-Cc:     Nehal-bakulchandra.Shah@amd.com, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] spi: spi-amd: Add AMD SPI controller driver support
-Message-ID: <20200427115416.GA4383@sirena.org.uk>
-References: <1587844788-33997-1-git-send-email-sanju.mehta@amd.com>
+        Mon, 27 Apr 2020 07:54:39 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:42240 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbgD0Lyi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 07:54:38 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jT2LN-00056H-AR; Mon, 27 Apr 2020 05:54:37 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jT2LM-0007g2-Ct; Mon, 27 Apr 2020 05:54:37 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
+        <87ftcv1nqe.fsf@x220.int.ebiederm.org>
+        <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
+        <20200424173927.GB26802@redhat.com>
+        <87mu6ymkea.fsf_-_@x220.int.ebiederm.org>
+        <87blnemj5t.fsf_-_@x220.int.ebiederm.org>
+        <20200426172207.GA30118@redhat.com>
+Date:   Mon, 27 Apr 2020 06:51:23 -0500
+In-Reply-To: <20200426172207.GA30118@redhat.com> (Oleg Nesterov's message of
+        "Sun, 26 Apr 2020 19:22:07 +0200")
+Message-ID: <878sihjgec.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
-Content-Disposition: inline
-In-Reply-To: <1587844788-33997-1-git-send-email-sanju.mehta@amd.com>
-X-Cookie: If your bread is stale, make toast.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-XM-SPF: eid=1jT2LM-0007g2-Ct;;;mid=<878sihjgec.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/Hy5/LYsdoQjtguvFKGpsNQj0NXSTcRnw=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v3 2/6] posix-cpu-timers: Use PIDTYPE_TGID to simplify the logic in lookup_task
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Oleg Nesterov <oleg@redhat.com> writes:
 
---LZvS9be/3tNcYl/X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Eric,
+>
+> I am sick today and can't read the code, but I feel this patch is not
+> right ... please correct me.
 
-On Sat, Apr 25, 2020 at 02:59:48PM -0500, Sanjay R Mehta wrote:
-> This driver supports SPI Controller for AMD SOCs.This driver
-> supports SPI operations using FIFO mode of transfer.
->=20
-> ChangeLog v1->v2:
-> 	- Fix up to handle multiple receive transfer case.
-> 	- move chip_select in transfer_message, flag device as
-> 	  half-duplex and some cosmetic changes.
 
-As covered in submitting-patches.rst this should go after the --- so it
-doesn't appear in git.  Otherwise this looks good though, thanks!
+> So, iiuc when posix_cpu_timer_create() is called and CPUCLOCK_PERTHREAD
+> is false we roughly have
+>
+> 	task = pid_task(pid, PIDTYPE_TGID);			// lookup_task()
+>
+> 	/* WINDOW */
+>
+> 	timer->it.cpu.pid = = get_task_pid(task, PIDTYPE_TGID)	// posix_cpu_timer_create()
+>
+> Now suppose that we race with mt-exec and this "task" is the old leader;
+> it can be release_task()'ed in the WINDOW above and then get_task_pid()
+> will return NULL.
 
---LZvS9be/3tNcYl/X
-Content-Type: application/pgp-signature; name="signature.asc"
+Except it is asking for PIDTYPE_TGID.
 
------BEGIN PGP SIGNATURE-----
+task->signal even if it is freed (which it won't be in a mt-exec)
+is valid until after an rcu window.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6mx+cACgkQJNaLcl1U
-h9DCSQf+K699hIJlaQHPEbRacevvfybEhe6YAWmB+PKZgF7K4ukUZ4clcMlCx6d0
-duwrN/CilJv+Yl2jbvoNq1GaVH3qf2UIPysXPVWwEgWn/mEtfIp/PLR0NRz909Cz
-+zThV+uuC6vLHKOGqKZdn2i2ySbTYF/X2QLDBCAV56kXEp+JG3nHJN6gITp2DJX4
-+ypx8s5hLN/+HcTYrVgDqSk0YcBpzJY7W/23eWPl9+n/ALGwWiblN2wJzbJyoZ0x
-8gS30I44BYCbTm288j7vDQux+aJZGUn5S0Hlp7ZoBV6l4Gz2nOl0nX0LV4FGpruX
-sBap5hf4mhN0ZPywI+jCihC0uLgaIw==
-=zNSI
------END PGP SIGNATURE-----
+release_task()
+   put_task_struct_rcu_user()
+      call_rcu(..., delayed_put_task_struct())
+... rcu delay ...
+delayed_put_task_struct()
+   put_task_struct()
+      __put_task_struct()
+         put_signal_struct()
+            free_signal_struct()
 
---LZvS9be/3tNcYl/X--
+Which means that task->signal->pids[PIDTYPE_TGID] will remain valid even
+across mt-exec.
+
+Further the only change I have introduced is to perform this work under
+rcu_read_lock vs taking a reference to task_struct.  As the reference to
+task_struct does not prevent release_task, the situation with respect
+to races in the rest of the code does not change.
+
+Hmm....
+
+If the case instead is:
+> 	timer->it.cpu.pid = get_task_pid(task, PIDTYPE_PID)	// posix_cpu_timer_create()
+
+Which can also happen for threads in the same thread group.
+I have to agree that we can wind up with a NULL pid.
+
+And that is a brand new bug, because we didn't use to use pids.
+Sigh.
+
+
+> That is why I suggested to change lookup_task() to return "struct pid*"
+> to eliminate the pid -> task -> pid transition.
+
+Yes.  I have to agree.  Getting rid of the pid -> task -> pid transition
+looks important to close bugs like that.
+
+> Apart from the same_thread_group() check for the "thread" case we do not
+> need task_struct at all, lookup_task() can do
+>
+> 	if (thread) {
+> 		p = pid_task(pid, PIDTYPE_PID);
+> 		if (p && !same_thread_group(p, current))
+> 			pid = NULL;
+> 	} else {
+> 		... gettime check ...
+>
+> 		if (!pid_has_task(pid, PIDTYPE_TGID))
+> 			pid = NULL;
+> 	}
+>
+> 	return pid;
+>
+> No?
+
+There is also the posix_cpu_clock_get, where we immediately use the
+clock instead of create something we can use later.
+
+I want to say the gettime case is another reason to go through the whole
+transition but the code can just as easily say "pid = task_tgid(current)"
+as it can "p = current";
+
+Eric
+
