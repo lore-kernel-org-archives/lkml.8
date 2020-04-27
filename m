@@ -2,195 +2,159 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB49C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B72BC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4662B206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A91F206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:32:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fFXg0qpT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgD0Pbg (ORCPT
+        id S1728139AbgD0Pct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 11:31:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43924 "EHLO
+        Mon, 27 Apr 2020 11:32:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728156AbgD0Pbf (ORCPT
+        by vger.kernel.org with ESMTP id S1727006AbgD0Pcs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 11:31:35 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A8D5C0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 08:31:34 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jT5j8-0006Yg-LG; Mon, 27 Apr 2020 17:31:22 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 0FCF0100606; Mon, 27 Apr 2020 17:31:22 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86 <x86@kernel.org>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/apic: Fix circular locking dependency between console and hrtimer locks
-In-Reply-To: <20200427134130.GE134660@unreal>
-References: <20200407170925.1775019-1-leon@kernel.org> <20200414054836.GA956407@unreal> <20200414062454.GA84326@gmail.com> <87tv15qj5u.fsf@nanos.tec.linutronix.de> <20200427113218.GB134660@unreal> <87h7x5qe3v.fsf@nanos.tec.linutronix.de> <20200427134130.GE134660@unreal>
-Date:   Mon, 27 Apr 2020 17:31:21 +0200
-Message-ID: <87y2qhoshi.fsf@nanos.tec.linutronix.de>
+        Mon, 27 Apr 2020 11:32:48 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97EC4C0610D5;
+        Mon, 27 Apr 2020 08:32:48 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id d15so19459807wrx.3;
+        Mon, 27 Apr 2020 08:32:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZIzsuUvV9z6GQyEY98USPySleDZj/xVpKFSZ8UafJXM=;
+        b=fFXg0qpTLvU2IlHUyZVdIyF6/vGhim1diEKxwM2qtoOFiK2BtG/i7z1noQRnJaCXvO
+         y7DKSCU6LjMNQMTadTjDIUwensi4FJjp35K6rq7BdKPxHTIgjP68YTUNMDxK+ESIZWsD
+         X5LCpLmjvuMiApnfMLDR2yXnLwyYyhvrF8wGoM0n06xotbrDc8FEYIo1eqL8umbP+4F8
+         RG2ZVrud7aXQS7SAmFkS4sys32lWdvnBynNshDqaRgrGPdl1tWzRu/bPngFv3c2rGFO4
+         YGFXGKTA/CnUNJb8tpbohnhmsVSH5GoUo8Avn1ts4bgRUg/pRNN+pOP+2Z4ivxXIhHph
+         2CEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZIzsuUvV9z6GQyEY98USPySleDZj/xVpKFSZ8UafJXM=;
+        b=lqXVg7lH0v7ug0VMjvjSNnnoYKuVJobrPnkY73oNzwYeOsQckrSrlilTVJjAIj0FS8
+         sEu/GeaDqfOH1fsuqlzz8FyIQX+d4hB34FeU1bYhx9HIO70iaaqc4fHXRDOFH8qw20P9
+         amK41lwah/IS9Kn6Rpad4NuwGy5XuDUVyFgOo4NS5ViiQeAqw423NKZ9jfOgslPdB3Wo
+         iQrv04vV04V3AsYPnY0WmqaESb7LwcOD53b4/QAl9i/fUctc0WgIGYG3oxFuIUfIXuY9
+         tsxk+/Z3v0dmpXAizAUWoxfBJ0Ft+5nZQrsJCojOn1dNTH+1qLPHpY2r14vS7MqU5X/G
+         dSZA==
+X-Gm-Message-State: AGi0PubkSxA7L8SCKDI+j7C1hj5LQUYIjVTe4m3jNrIssFBMtGOLltnE
+        1JXWAmz5JsLNKmSGMaNoUe2KyFDW
+X-Google-Smtp-Source: APiQypKRH9R184BRYnJmesVMLKhNVqvYu6mnpCSX6Qy7Ob0arcGNZbYpOe5Dcp5JaawT49T6BYpqqw==
+X-Received: by 2002:adf:e4d0:: with SMTP id v16mr26713589wrm.192.1588001567360;
+        Mon, 27 Apr 2020 08:32:47 -0700 (PDT)
+Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
+        by smtp.gmail.com with ESMTPSA id h3sm21178889wrm.73.2020.04.27.08.32.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 08:32:45 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 17:32:44 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+Message-ID: <20200427153244.GF3464906@ulmo>
+References: <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
+ <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
+ <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
+ <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
+ <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
+ <20200427074837.GC3451400@ulmo>
+ <20200427084424.GA28817@kunai>
+ <820200ce-17f3-18c0-6f79-3e582f45492d@gmail.com>
+ <20200427103553.GA24446@kunai>
+ <20200427105029.GB3464906@ulmo>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Y/WcH0a6A93yCHGr"
+Content-Disposition: inline
+In-Reply-To: <20200427105029.GB3464906@ulmo>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Leon Romanovsky <leon@kernel.org> writes:
-> OK, I consulted with verification people and back then the trigger was:
-> Reproduce when run "echo 1 > /sys/kernel/debug/clear_warn_once" after
-> reboot
 
-That explains it.
+--Y/WcH0a6A93yCHGr
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> [    0.937310] Freeing SMP alternatives memory: 32K
-> [    0.940471] TSC deadline timer enabled
+On Mon, Apr 27, 2020 at 12:50:29PM +0200, Thierry Reding wrote:
+> On Mon, Apr 27, 2020 at 12:35:53PM +0200, Wolfram Sang wrote:
+> > On Mon, Apr 27, 2020 at 12:07:19PM +0300, Dmitry Osipenko wrote:
+> > > 27.04.2020 11:44, Wolfram Sang =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > > >=20
+> > > >> Wolfram, can you revert the following two patches for v5.7, please?
+> > > >>
+> > > >> 	8814044fe0fa i2c: tegra: Synchronize DMA before termination
+> > >=20
+> > > This patch has nothing to do with your trouble, why do you want to
+> > > revert it?
+> >=20
+> > I'll wait some more before pushing out, so you can discuss it.
+>=20
+> Okay, let me run a quick test with that second patch still applied to
+> make sure it really is harmless.
 
-So here is the first one which sets 'once'. Of course if you clear 'once'
-afterwards then this triggers because the context is completely
-different.
+Alright, I tested v5.7-rc3 with this patch reverted:
 
-So the right thing to do is to move this out of __setup_APIC_LVTT() and
-be done with it.
+	a900aeac2537 i2c: tegra: Better handle case where CPU0 is busy for a long =
+time
 
-Thanks
+and the results came back positive, so I think we can leave patch:
 
-        tglx
+	8814044fe0fa i2c: tegra: Synchronize DMA before termination
 
-8<-------------------
-Subject: x86/apic: Move TSC deadline timer debug printk
-From: Thomas Gleixner <tglx@linutronix.de>
-Date: Mon, 27 Apr 2020 16:55:57 +0200
+in. But then again, I see that Dmitry posted this yesterday:
 
-Leon reported that the printk_once() in __setup_APIC_LVTT() triggers a
-lockdep splat due to a lock order violation between hrtimer_base::lock and
-console_sem, when the 'once' condition is reset via
-/sys/kernel/debug/clear_warn_once after boot.
+	https://lkml.org/lkml/2020/4/26/481
 
-The initial printk cannot trigger this because that happens during boot
-when the local APIC timer is set up on the boot CPU.
+which seems like it would be related to this and potentially be a
+follow-up fix for some corner cases? So I'm not sure how well this whole
+set has been tested yet.
 
-Prevent it by moving the printk to a place which is guaranteed to be only
-called once during boot.
+Maybe a better solution would be for the DMA synchronization patch to go
+into the 5.8 queue instead to make sure we get more testing cycles.
 
-Mark the deadline timer check related functions and data __init while at
-it.
+Thierry
 
-Reported-by: Leon Romanovsky <leon@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/x86/kernel/apic/apic.c |   27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
+--Y/WcH0a6A93yCHGr
+Content-Type: application/pgp-signature; name="signature.asc"
 
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -352,8 +352,6 @@ static void __setup_APIC_LVTT(unsigned i
- 		 * According to Intel, MFENCE can do the serialization here.
- 		 */
- 		asm volatile("mfence" : : : "memory");
--
--		printk_once(KERN_DEBUG "TSC deadline timer enabled\n");
- 		return;
- 	}
- 
-@@ -546,7 +544,7 @@ static struct clock_event_device lapic_c
- };
- static DEFINE_PER_CPU(struct clock_event_device, lapic_events);
- 
--static u32 hsx_deadline_rev(void)
-+static __init u32 hsx_deadline_rev(void)
- {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x02: return 0x3a; /* EP */
-@@ -556,7 +554,7 @@ static u32 hsx_deadline_rev(void)
- 	return ~0U;
- }
- 
--static u32 bdx_deadline_rev(void)
-+static __init u32 bdx_deadline_rev(void)
- {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x02: return 0x00000011;
-@@ -568,7 +566,7 @@ static u32 bdx_deadline_rev(void)
- 	return ~0U;
- }
- 
--static u32 skx_deadline_rev(void)
-+static __init u32 skx_deadline_rev(void)
- {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x03: return 0x01000136;
-@@ -581,7 +579,7 @@ static u32 skx_deadline_rev(void)
- 	return ~0U;
- }
- 
--static const struct x86_cpu_id deadline_match[] = {
-+static const struct x86_cpu_id deadline_match[] __initconst = {
- 	X86_MATCH_INTEL_FAM6_MODEL( HASWELL_X,		&hsx_deadline_rev),
- 	X86_MATCH_INTEL_FAM6_MODEL( BROADWELL_X,	0x0b000020),
- 	X86_MATCH_INTEL_FAM6_MODEL( BROADWELL_D,	&bdx_deadline_rev),
-@@ -603,18 +601,19 @@ static const struct x86_cpu_id deadline_
- 	{},
- };
- 
--static void apic_check_deadline_errata(void)
-+static __init bool apic_validate_deadline_timer(void)
- {
- 	const struct x86_cpu_id *m;
- 	u32 rev;
- 
--	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER) ||
--	    boot_cpu_has(X86_FEATURE_HYPERVISOR))
--		return;
-+	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER))
-+		return false;
-+	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-+		return true;
- 
- 	m = x86_match_cpu(deadline_match);
- 	if (!m)
--		return;
-+		return true;
- 
- 	/*
- 	 * Function pointers will have the MSB set due to address layout,
-@@ -626,11 +625,12 @@ static void apic_check_deadline_errata(v
- 		rev = (u32)m->driver_data;
- 
- 	if (boot_cpu_data.microcode >= rev)
--		return;
-+		return true;
- 
- 	setup_clear_cpu_cap(X86_FEATURE_TSC_DEADLINE_TIMER);
- 	pr_err(FW_BUG "TSC_DEADLINE disabled due to Errata; "
- 	       "please update microcode to version: 0x%x (or later)\n", rev);
-+	return false;
- }
- 
- /*
-@@ -2092,7 +2092,8 @@ void __init init_apic_mappings(void)
- {
- 	unsigned int new_apicid;
- 
--	apic_check_deadline_errata();
-+	if (apic_validate_deadline_timer())
-+		pr_debug("TSC deadline timer available\n");
- 
- 	if (x2apic_mode) {
- 		boot_cpu_physical_apicid = read_apic_id();
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6m+xoACgkQ3SOs138+
+s6E5gQ/+P87EF76Ek/gB3avyIodTtpcN7etsoM8oJNJWlmxgooiyhvZEaK6dBO+n
+6bwBtehuMfy3b0KW1AjyMsijY4Tf56/COp2fP2rSEMB0IqCPSygjX4w5qmZCVneo
+PiM5xCng+BjIu+P+yDiuDJ0w8DZ9IzCdBHuQsY+JIpFQdFZZ9zGO1bgw+rEytVUV
+Z8Hcg4/D3dN6FBRFPOPY3riOmi0HCdT9vvV3BRaqQ3fkVLFfgZ/Ve65quPpS+k0t
+ewnd8HUMTaP/KrCPU/85PvBmu6PSZ58qZXwVV+M3v1+x8lhdLPZHGsAMcJXXDP1l
+okLYy+aFm6gx3+egIhkKNDbEn//RrrgsE1VqGHVwb8ECwL/kII+/bS1v3j7snz7A
+e54Y0Er6D52SR8M+8oOGzSRueT/yuLNpx7h+++t72TGZpcvTGNR5KAp+NuIBeArg
+ybEEK/IpaLE7DUXZfqZoe/ujdj7ZMPuEPW/pxq5Xl1+XrKkJe7NyWedfdOxvXOpc
+AXqLcqSi8c+aKCx8Zoe/mh2klBRCShyYsBOCDiFklwM3lonSgBVIf4xW1bg1n10c
+Fw8jeSylwPg+4/lUH3oiIn48fOJtt6yooKbUvBGJ0qaspVEdvMeTKDgEmzoztCBz
+rzXVR3x6cdnAO4yIO3Gq3PxL/FR9rYjbZr0p/SwBlGF3KsqW+KA=
+=8yDJ
+-----END PGP SIGNATURE-----
+
+--Y/WcH0a6A93yCHGr--
