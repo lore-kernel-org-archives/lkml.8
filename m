@@ -2,117 +2,110 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 624D0C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D049CC55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 416C720656
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5997205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587986360;
-	bh=Yu0+6vmy1gZqJei6s8N1pKoxn3NJdnoVEX9RSHmQP4E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h2X7c624yXzTbH9D7N44HEwwDfp8fO0o958k7RIe2fRbhnjTAg5+++1iIV/etUwDS
-	 Pow4RYrdWbdBgp8n/vAXmgmC4f3jeSql48HyixiUG49A2DgodFslSkTWRfrl6pZVMZ
-	 GD8cCJLkpMDr+VB5jokUdYF4bRmRkxUnWGnfXy14=
+	s=default; t=1587986391;
+	bh=OIfs0Gdxd9XtZepR2yK/YGAjvqoLUCNJzr9phA+UYYM=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=Zl+Xd9y11r+tn/xKXs0EwiQFbLcOl7J8BLR7gpeJ2/QnyAE5Wud8v3rU+HFzbuLO7
+	 sIJW3OhNAKhCwQkz71ccSiWMSPeZ+4yL+Lmq2raKLoGBbvOmdA7jArdmAJFCOFU1DP
+	 tedbkLVPsrnqjbMKepYYTONSO1vNPglX3s8hCWHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgD0LTT (ORCPT
+        id S1727029AbgD0LTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 07:19:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726504AbgD0LTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 07:19:19 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25D57205C9;
-        Mon, 27 Apr 2020 11:19:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587986358;
-        bh=Yu0+6vmy1gZqJei6s8N1pKoxn3NJdnoVEX9RSHmQP4E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mLdUFEoQu+rt5NOviGBZcZJzCpczuW5FeibZRhKl1c2ZOvvlWtThRtr8WjvHotEag
-         UpuxbnPJ+Vjv+WGmHnfeg89n43x3G445Fwv+YakTlI9REOUiJNob+d9FVDswOIovB2
-         MnptV7VNmVWadrQ6qCPKiKvqaV1Rr7AUXmlv7KZc=
-Date:   Mon, 27 Apr 2020 12:19:16 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: linux-next: build failure after merge of the sound-asoc tree
-Message-ID: <20200427111916.GA4272@sirena.org.uk>
-References: <20200423155539.4492a0cc@canb.auug.org.au>
- <20200423113041.GI4808@sirena.org.uk>
- <20200423230400.2cb1a285@canb.auug.org.au>
- <20200423142114.GJ4808@sirena.org.uk>
- <87a72zgn2m.fsf@mpe.ellerman.id.au>
+        Mon, 27 Apr 2020 07:19:51 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34448 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbgD0LTu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 07:19:50 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v4so15707721wme.1;
+        Mon, 27 Apr 2020 04:19:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=nxQk4cEc0aiSGCEEBf1pbnwbO1uRcVsKiwXYVrEzomM=;
+        b=TEriAgfo/JwWsqNtPYb2ZmmZgMba65g3iFLb7ElM/BX5qL4dMIixo4iGySqYDj/FNx
+         Y69PTly26+ud+bzWgovwTvGlOI4w45oqUxHI8R2CM72whn5j7oMWOk0SfDpc661kFaem
+         KnGO9j5/Fuh3kvj3r4a9NVl+VQTW9HkF7psKybzwx2nkJA+F++RSswNFPRze4E4+oXs7
+         FVhU1QqR6V9sdK9W+OVdLIweByKllH1WVI0QkmVyLzkVacUaCzq31/zlHzY1EzvpVtV0
+         f/W85Wb20igxIYNA/dIEVuVpYNAk6nmvD/o0Tm5kscR/XhrhhN557pcAXyh8ixyMWPz+
+         grnQ==
+X-Gm-Message-State: AGi0PuYEnQ+ASE1N/6J7bp6ofb8jyV+rSnW3BM6mNM/QA+tv6oIMJf93
+        OAPWqrmWW8Lru3FzfjB3frc=
+X-Google-Smtp-Source: APiQypJ3tLDw/B9cJp+h+N49181NXJK1IyEIZ0rry8f+0usSARqtE+0sepnxxtHL84+7T+2ABET+3Q==
+X-Received: by 2002:a1c:4b15:: with SMTP id y21mr25802152wma.150.1587986388306;
+        Mon, 27 Apr 2020 04:19:48 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id s8sm20648434wru.38.2020.04.27.04.19.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 04:19:47 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 11:19:45 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>, kys@microsoft.com,
+        sthemmin@microsoft.com, haiyangz@microsoft.com
+Subject: [GIT PULL] Hyper-V commits for 5.7-rc4
+Message-ID: <20200427111945.6qdvgimt3nt3ja57@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87a72zgn2m.fsf@mpe.ellerman.id.au>
-X-Cookie: Secrecy is the beginning of tyranny.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus
 
---HcAYCG3uE/tztfnV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Please pull the following changes since commit
+f3a99e761efa616028b255b4de58e9b5b87c5545:
 
-On Sun, Apr 26, 2020 at 09:30:57AM +1000, Michael Ellerman wrote:
-> Mark Brown <broonie@kernel.org> writes:
+  x86/Hyper-V: Report crash data in die() when panic_on_oops is set (2020-04-11 17:19:07 +0100)
 
-> > I am doing that but that still doesn't mean that the architectures
-> > shouldn't be updated - to me this is like the architectures that don't
-> > implement standard APIs, we should fix the issues they bring up but it'd
-> > be a lot less noisy to sidestep the issue.
+are available in the Git repository at:
 
-> I don't think it's really like architectures that don't implement
-> standard APIs.
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
 
-> It's more like architectures not building code they don't need, AFAICS
-> none of the drivers under there can ever be used on powerpc.
+for you to fetch changes up to f081bbb3fd03f949bcdc5aed95a827d7c65e0f30:
 
-That's generally the reason people give for not doing the standard APIs
-- there were a few architectures that didn't have DMA hardware so didn't
-even have stubs for the DMA API for example, until those were added you
-used to end up with build testing tripping over them constantly.  It's
-much rarer to have an incompatible implementation of the same thing.
+  hyper-v: Remove internal types from UAPI header (2020-04-22 21:10:05 +0100)
 
-> Similarly we don't build drivers/acpi.
+----------------------------------------------------------------
+hyperv-fixes for 5.7-rc4
 
-ACPI has stubs so doesn't cause issues here.
+ - Two patches from Dexuan fixing suspension bugs
+ - Three cleanup patches from Andy and Michael
 
-> But if there's a good reason that we should be building it then I'm
-> happy to take a patch adding it.
+----------------------------------------------------------------
+Andy Shevchenko (2):
+      hyper-v: Use UUID API for exporting the GUID
+      hyper-v: Remove internal types from UAPI header
 
-The build coverage seems useful.
+Dexuan Cui (2):
+      Drivers: hv: vmbus: Fix Suspend-to-Idle for Generation-2 VM
+      x86/hyperv: Suspend/resume the VP assist page for hibernation
 
---HcAYCG3uE/tztfnV
-Content-Type: application/pgp-signature; name="signature.asc"
+Michael Kelley (1):
+      Drivers: hv: Move AEOI determination to architecture dependent code
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6mv7AACgkQJNaLcl1U
-h9C2uAf+Jws7pFf+23DtTiIuLnLp0xfnX1awFhQkI1eCP9tvACqRtjcDHFIMRPsL
-1jpb5QPnVkQz6WjKRz1QUV/PF9+svvzhPfrspY9EgOrar8ZPdAMFiFLZf2/685I/
-a0JHSUpOMTDEi134N9dst/B2q/t8flhRu+OXErxfvVisIaV5lC38Gr8TN627WgRp
-JALiCYQjcWSa14nCRO9nwxBL40zCEamOYGj9LV4SEVaP4zneTf83pYo2PZCdbZ7m
-YmOFaC9bMIcZMaKK8xz2N/EDWnvQtd7DSs2j63k/d7WPrA9ZtnTQ1pnnoszkV/ye
-BPA/o3glq9QOHgo5vMRPyKymT+r7nQ==
-=xYU4
------END PGP SIGNATURE-----
-
---HcAYCG3uE/tztfnV--
+ arch/x86/hyperv/hv_init.c       | 12 ++++++++++--
+ arch/x86/include/asm/mshyperv.h |  2 ++
+ drivers/hv/hv.c                 |  6 +-----
+ drivers/hv/hv_trace.h           |  4 ++--
+ drivers/hv/vmbus_drv.c          | 43 ++++++++++++++++++++++++++++++++---------
+ include/uapi/linux/hyperv.h     |  4 ++--
+ 6 files changed, 51 insertions(+), 20 deletions(-)
