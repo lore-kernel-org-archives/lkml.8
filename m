@@ -2,151 +2,193 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D35EDC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE0CC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B039420656
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:30:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588001438;
-	bh=LQMmEtPHtFUNYCOZU+U0PcFSBs6hoeEgrosLjqnuti4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1riR4fiOY5ZHfd8+AKzBpUlUPD8Pf0houOuNMJh0zDrPOM3V+8n21jgFBOQ67hau9
-	 La770e9WLQj/6IZjRigULwVfkwibuh34QDYBawr5F8xYWM99W8KvaVV46CQK2g5sJ0
-	 J/ZhMkBtJuNGXhRrWHDYCYcaoz47i/3KQaG9aUjs=
+	by mail.kernel.org (Postfix) with ESMTP id 0CE8E20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:30:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgD0Paf (ORCPT
+        id S1728101AbgD0Pat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 11:30:35 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:49264 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727010AbgD0Pae (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 11:30:34 -0400
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 03RFUIqq028481;
-        Tue, 28 Apr 2020 00:30:19 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 03RFUIqq028481
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588001419;
-        bh=/LO6tICgE78MZNhI1NfW4LOOHrAlbACrYCGyWo2BTqw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qST2hDpnTJl4/f26VsFJkL2qqFyxkFzgWcd1JWQEXc2vTHFuTJuzQnStVdwoX0ka2
-         2MhT452jqIkwBj7bx6uzMJwk9p5j9qZbv2j9INX6LVhYdfDC/tXHS1la9J2pH2IZi5
-         VWiccNvsoe6oC+Ylx3jYRdbbaC/7VgWKyMFWmDVoioTf37iduYa3SMFii4fXiWspbe
-         29FLS2ci0qH5+CG0H+S72RDHxvhNNIErObNghwvt+PIrgE2IsaxvbkO+LZIAuaEfJX
-         O/bYbRttBGmSy6DJoo/vCA7T8lCeYlA5lhxk41nsku5TqNgI9F6HljC1wwNQDYa9Ux
-         Vo+mkDcJ6Q0Ug==
-X-Nifty-SrcIP: [209.85.221.181]
-Received: by mail-vk1-f181.google.com with SMTP id q200so4909364vka.13;
-        Mon, 27 Apr 2020 08:30:19 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYtrO6sysjQPoERhd9tBeI2jtl12YRhDLyaPM4uxO3VN1UhF9SH
-        uzJnFHF/FdUnj/M5JPaplKbY8xLHNzR6V4u4JCE=
-X-Google-Smtp-Source: APiQypKPWSgj1WNxoDTf/RzqLmXb5cExoxDiUbXylHQF5TuEtk2FzTU1h3dF5UyrhWd/507lk3BPLfx1iFmCKsrqDhc=
-X-Received: by 2002:a1f:2a13:: with SMTP id q19mr4301247vkq.73.1588001417846;
- Mon, 27 Apr 2020 08:30:17 -0700 (PDT)
+        Mon, 27 Apr 2020 11:30:49 -0400
+Received: from mga11.intel.com ([192.55.52.93]:50188 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728021AbgD0Pas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 11:30:48 -0400
+IronPort-SDR: 8tMmEonabBebIQtUWcVAK9+E4KlWVRyIH86DXF4vQVdchlWHhFtis0rTbQDy7ZA56vi+t8XkPQ
+ yKOpF60aXPeA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 08:30:48 -0700
+IronPort-SDR: GP3A3rfPMYdQpzYh2A4GAPQSDWg+are3wylGKVaQq4kEA+BeK88WkbqyFEkCwtaaKfarRcKcAw
+ aZqyaUnWvt6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,324,1583222400"; 
+   d="scan'208";a="431816249"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga005.jf.intel.com with ESMTP; 27 Apr 2020 08:30:44 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jT5iZ-003PtH-0X; Mon, 27 Apr 2020 18:30:47 +0300
+Date:   Mon, 27 Apr 2020 18:30:46 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-media@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com,
+        mchehab@kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joe Perches <joe@perches.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>
+Subject: Re: [RESEND PATCH v3 1/1] lib/vsprintf: Add support for printing
+ V4L2 and DRM fourccs
+Message-ID: <20200427153046.GL185537@smile.fi.intel.com>
+References: <20200427145303.29943-1-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
-References: <20200423142354.312088-1-masahiroy@kernel.org> <20200423142354.312088-4-masahiroy@kernel.org>
-In-Reply-To: <20200423142354.312088-4-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 28 Apr 2020 00:29:41 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASMXV6F_LpEr3AhAJSNt8TAGHDMxR4XFQ7L7Ha=__Dh8A@mail.gmail.com>
-Message-ID: <CAK7LNASMXV6F_LpEr3AhAJSNt8TAGHDMxR4XFQ7L7Ha=__Dh8A@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] kbuild: use CONFIG_CC_VERSION_TEXT to construct
- LINUX_COMPILER macro
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427145303.29943-1-sakari.ailus@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 11:24 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> scripts/mkcompile_h runs $(CC) just for getting the version string.
-> Re-use CONFIG_CC_VERSION_TEXT to optimize it.
->
-> For GCC, this slightly changes the version string. I do not think it
-> is a big deal as we do not have the defined format for LINUX_COMPILER.
-> In fact, the recent commit 4dcc9a88448a ("kbuild: mkcompile_h:
-> Include $LD version in /proc/version") added the linker version.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
-> Changes in v2:
->   - new patch
->
->  init/Makefile       | 2 +-
->  scripts/mkcompile_h | 3 +--
->  2 files changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/init/Makefile b/init/Makefile
-> index d45e967483b2..30c7345e4fe2 100644
-> --- a/init/Makefile
-> +++ b/init/Makefile
-> @@ -35,4 +35,4 @@ include/generated/compile.h: FORCE
->         @$($(quiet)chk_compile.h)
->         $(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkcompile_h $@   \
->         "$(UTS_MACHINE)" "$(CONFIG_SMP)" "$(CONFIG_PREEMPT)"    \
-> -       "$(CONFIG_PREEMPT_RT)" "$(CC)" "$(LD)"
-> +       "$(CONFIG_PREEMPT_RT)" "$(CONFIG_CC_VERSION_TEXT)" "$(LD)"
+On Mon, Apr 27, 2020 at 05:53:03PM +0300, Sakari Ailus wrote:
+> Add a printk modifier %p4cc (for pixel format) for printing V4L2 and DRM
+> pixel formats denoted by fourccs. The fourcc encoding is the same for both
+> so the same implementation can be used.
+
+4cc is more generic than pixel format.
+
+...
+
+> +V4L2 and DRM FourCC code (pixel format)
+> +---------------------------------------
+> +
+> +::
+> +
+> +	%p4cc
+
+Missed examples.
+
+> +Print a FourCC code used by V4L2 or DRM, including format endianness and
+> +its numerical value as hexadecimal.
+
+...
+
+> +static noinline_for_stack
+> +char *fourcc_string(char *buf, char *end, const u32 *__fourcc,
+> +		    struct printf_spec spec, const char *fmt)
+> +{
+> +#define FOURCC_HEX_CHAR_STR		"(xx)"
+> +#define FOURCC_BIG_ENDIAN_STR		" big-endian"
+> +#define FOURCC_LITTLE_ENDIAN_STR	" little-endian"
+> +#define FOURCC_HEX_NUMBER		" (0x01234567)"
+
+Where are #undef:s?
+
+> +#define FOURCC_STRING_MAX						\
+> +	FOURCC_HEX_CHAR_STR FOURCC_HEX_CHAR_STR FOURCC_HEX_CHAR_STR	\
+> +	FOURCC_HEX_CHAR_STR FOURCC_LITTLE_ENDIAN_STR FOURCC_HEX_NUMBER
+
+> +	struct printf_spec my_spec = {
+> +		.type = FORMAT_TYPE_UINT,
+> +		.field_width = 2,
+> +		.flags = SMALL,
+> +		.base = 16,
+> +		.precision = -1,
+> +	};
+
+Seems like close enough to bus_spec.
+
+> +	char __s[sizeof(FOURCC_STRING_MAX)];
+> +	char *s = __s;
+> +	unsigned int i;
+> +	/*
+> +	 * The 31st bit defines the endianness of the data, so save its printing
+> +	 * for later.
+> +	 */
+> +	u32 fourcc = *__fourcc & ~BIT(31);
+> +	int ret;
+> +
+> +	if (check_pointer(&buf, end, __fourcc, spec))
+> +		return buf;
+> +
+> +	if (fmt[1] != 'c' || fmt[2] != 'c')
+> +		return error_string(buf, end, "(%p4?)", spec);
+> +
+> +	for (i = 0; i < sizeof(fourcc); i++, fourcc >>= 8) {
+> +		unsigned char c = fourcc;
+> +
+> +		/* Weed out spaces */
+> +		if (c == ' ')
+> +			continue;
+> +
+> +		/* Print non-control characters as-is */
+> +		if (c > ' ') {
+> +			*s = c;
+> +			s++;
+> +			continue;
+> +		}
+
+> +		if (WARN_ON_ONCE(sizeof(__s) <
+> +				 (s - __s) + sizeof(FOURCC_HEX_CHAR_STR)))
+
+Why WARN?!
+
+> +			break;
+> +
+> +		*s = '(';
+> +		s++;
+> +		s = number(s, s + 2, c, my_spec);
+> +		*s = ')';
+> +		s++;
+> +	}
+> +
+> +	ret = strscpy(s, *__fourcc & BIT(31) ? FOURCC_BIG_ENDIAN_STR
+> +					     : FOURCC_LITTLE_ENDIAN_STR,
+> +		      sizeof(__s) - (s - __s));
+
+> +	if (!WARN_ON_ONCE(ret < 0))
+
+Ditto.
+
+> +		s += ret;
+
+> +	if (!WARN_ON_ONCE(sizeof(__s) <
+> +			  (s - __s) + sizeof(FOURCC_HEX_NUMBER))) {
+
+Ditto.
+
+> +		*s = ' ';
+> +		s++;
+> +		*s = '(';
+> +		s++;
+> +		/* subtract parentheses and the space from the size */
+> +		special_hex_number(s, s + sizeof(FOURCC_HEX_NUMBER) - 3,
+> +				   *__fourcc, sizeof(u32));
+> +		s += sizeof(u32) * 2 + 2 /* 0x */;
+> +		*s = ')';
+> +		s++;
+> +		*s = '\0';
+> +	}
+> +
+> +	return string(buf, end, __s, spec);
+
+This looks overengineered. Why everyone will need so long strings to be printed?
+
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-This causes a build error.
-
-I will fix it up as follows:
-
-
-
-
-diff --git a/init/Makefile b/init/Makefile
-index 30c7345e4fe2..57499b1ff471 100644
---- a/init/Makefile
-+++ b/init/Makefile
-@@ -35,4 +35,4 @@ include/generated/compile.h: FORCE
-        @$($(quiet)chk_compile.h)
-        $(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkcompile_h $@   \
-        "$(UTS_MACHINE)" "$(CONFIG_SMP)" "$(CONFIG_PREEMPT)"    \
--       "$(CONFIG_PREEMPT_RT)" "$(CONFIG_CC_VERSION_TEXT)" "$(LD)"
-
-+       "$(CONFIG_PREEMPT_RT)" $(CONFIG_CC_VERSION_TEXT) "$(LD)"
-
-
-
-
-> diff --git a/scripts/mkcompile_h b/scripts/mkcompile_h
-> index 5b80a4699740..baf3ab8d9d49 100755
-> --- a/scripts/mkcompile_h
-> +++ b/scripts/mkcompile_h
-> @@ -6,7 +6,7 @@ ARCH=$2
->  SMP=$3
->  PREEMPT=$4
->  PREEMPT_RT=$5
-> -CC=$6
-> +CC_VERSION="$6"
->  LD=$7
->
->  vecho() { [ "${quiet}" = "silent_" ] || echo "$@" ; }
-> @@ -62,7 +62,6 @@ UTS_VERSION="$(echo $UTS_VERSION $CONFIG_FLAGS $TIMESTAMP | cut -b -$UTS_LEN)"
->    printf '#define LINUX_COMPILE_BY "%s"\n' "$LINUX_COMPILE_BY"
->    echo \#define LINUX_COMPILE_HOST \"$LINUX_COMPILE_HOST\"
->
-> -  CC_VERSION=$($CC -v 2>&1 | grep ' version ' | sed 's/[[:space:]]*$//')
->    LD_VERSION=$($LD -v | head -n1 | sed 's/(compatible with [^)]*)//' \
->                       | sed 's/[[:space:]]*$//')
->    printf '#define LINUX_COMPILER "%s"\n' "$CC_VERSION, $LD_VERSION"
-> --
-> 2.25.1
->
-
-
---
-Best Regards
-Masahiro Yamada
