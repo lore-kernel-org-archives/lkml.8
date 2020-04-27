@@ -2,97 +2,154 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF44C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 519A4C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 063F12073C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D62206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:26:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sUElo6wU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VVvceTad"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbgD0UX4 (ORCPT
+        id S1726654AbgD0U0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:23:56 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:37442 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbgD0UXl (ORCPT
+        Mon, 27 Apr 2020 16:26:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726233AbgD0U0E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 16:23:41 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RKNS7s144896;
-        Mon, 27 Apr 2020 20:23:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=EudmnGcySPS8EIjkWcSXHuZ7qHQcbnqbMBBI5yHftsQ=;
- b=sUElo6wUAEcHtFAoSgnNRQrL4DdMYpYptxr/4Z5zIoenWIFF+75KBc6qhviTfeT0KMiP
- n/0VDmK/z+UQPP8Ykn2TeWuo4KoYaSRnh2wC7p0VyAdRcFefDmJPT1BbIC09DxR26DQ2
- pXmwu1JT+y/SSmLl36H2qD1LIqyufNnPH1/ypKza9weNlccSQCWag+w/Uk6LdxmEU3gN
- stY+vjruuEmh6SZbttzOYIHK9oLTgcl0h16IxodMWEz3v+GExGlZRUhiggKdTrXOI1zB
- /eUvXMzI5p/4cCWAHzalpbWfPofog0/tyYadRf/xcnBZTXE8cGrAbS4+EQjjEaVWIzji Qw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 30p2p01abt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 20:23:30 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RKBwhR078266;
-        Mon, 27 Apr 2020 20:21:30 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 30mxrr066w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 20:21:30 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03RKLSZ3006401;
-        Mon, 27 Apr 2020 20:21:28 GMT
-Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 27 Apr 2020 13:21:28 -0700
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     brking@us.ibm.com, linux-kernel@vger.kernel.org,
-        jejb@linux.ibm.com, linux-scsi@vger.kernel.org,
-        Jason Yan <yanaijie@huawei.com>, ming.lei@redhat.com
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Hulk Robot <hulkci@huawei.com>
-Subject: Re: [PATCH] scsi: ipr: remove NULL check before freeing function
-Date:   Mon, 27 Apr 2020 16:21:17 -0400
-Message-Id: <158777063304.4076.4058045292916633331.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200418095903.35118-1-yanaijie@huawei.com>
-References: <20200418095903.35118-1-yanaijie@huawei.com>
+        Mon, 27 Apr 2020 16:26:04 -0400
+Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EB6CC0610D5;
+        Mon, 27 Apr 2020 13:26:04 -0700 (PDT)
+Received: by mail-qk1-x72e.google.com with SMTP id s63so19506172qke.4;
+        Mon, 27 Apr 2020 13:26:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qbxuSmRMpEVjcFcUWX8/U4mbuyvHeWXNoUh+2G3pNgI=;
+        b=VVvceTad5m1fz+NDeD0kkzZb5AzjBz0vCPLleFr14kF+joywaYU8GITJ60UTPIot9f
+         IZHXaUO1XcTE1Ht5K7/FUPDiMPrtc+x2fl7cbqG4fY+bHiBajZ2WG27y4Gb2mj5iKWkK
+         d8aVl9cPzgjaube2OtVUTg/1o5VWP2+ANhsuoQpErKrHcwAixwpmxaH0rzsu6SY5Aads
+         XpE4pXG63X6jf3UdPo/6tSYdTuIfEBuTZJTWkwHxOjSSrsafyJ92LbTawabjtukUUS1p
+         Hjf0TMlT3LjEEmBROBvWJAoyAFSDTbGlG9wOQfejX4y8+p9c4fRhF3u309RD7lB26JTt
+         eXow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qbxuSmRMpEVjcFcUWX8/U4mbuyvHeWXNoUh+2G3pNgI=;
+        b=Ji0rZ+qRbYsEEruibPS8hty06HI7LF+9dFZWEjz892yXqNJdCg5rEbCydrDTc9+MyR
+         crw/QrqFq8tDvcN2dXpwWXMpvdzz4u2xsGHbGpMbpon+cevBjHjoXhHT2/HawxNixJcp
+         12FTrw/ra1jm8u3v2OkPwtiJLOp0WjF+b3rVAZoxY8Dy5FSXMGG803qSC0EQve/IDq2z
+         sMKAv1D5mVvHaIfnDQhbcpe2bSuNu5w37C2SmvDb9djl+Bw3/SITNt3xgUGmz0H1AHNW
+         lQZxVzM7dQI0s+lPACJvb8trBT79jyi2alCzbmK5j9NUDIVbFVb9qj49WyfvAZ6Ybfda
+         S7Vg==
+X-Gm-Message-State: AGi0PuZ6+nIgyJTJ8dyicgSMZT0ZlG8rq9BOvUB6IJcyGqA5h6Ag0Cr6
+        SgY57Hcf0/jPaPplkcbL/Q4=
+X-Google-Smtp-Source: APiQypKCgKltuhPhW+aTgmBRGXJBLWWTu7vVvYfrto4NVsaJVk1Pdv0jkBvHXbaMKRyn3o04bQQvXg==
+X-Received: by 2002:a05:620a:541:: with SMTP id o1mr22112341qko.89.1588019163280;
+        Mon, 27 Apr 2020 13:26:03 -0700 (PDT)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id a65sm10476688qke.74.2020.04.27.13.26.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 Apr 2020 13:26:02 -0700 (PDT)
+Subject: Re: [Q] devicetree overlays
+To:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CAGngYiVa9v9jGPNu4W+KHUnvemKU-BVE89-XNLcWOmoZjAPMTg@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <e5f05ee3-515b-7b13-5125-b6d7a03ac031@gmail.com>
+Date:   Mon, 27 Apr 2020 15:26:01 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=0
- mlxlogscore=841 malwarescore=0 bulkscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004270164
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1011
- bulkscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
- mlxscore=0 suspectscore=0 mlxlogscore=912 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004270165
+In-Reply-To: <CAGngYiVa9v9jGPNu4W+KHUnvemKU-BVE89-XNLcWOmoZjAPMTg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Apr 2020 17:59:03 +0800, Jason Yan wrote:
-
-> Fix the following coccicheck warning:
+On 4/16/20 9:46 AM, Sven Van Asbroeck wrote:
+> Pantelis, Frank,
 > 
-> drivers/scsi/ipr.c:9533:2-18: WARNING: NULL check before some freeing
-> functions is not needed.
+> A quick question about the state of devicetree overlays. There don't seem to
+> be many in-kernel overlay users (rcar and fpga only?). Does it make sense for
+> new projects to use them?
 
-Applied to 5.8/scsi-queue, thanks!
+Run time overlay apply and run time overlay remove from user space are not
+supported in the mainline kernel.
 
-[1/1] scsi: ipr: Remove NULL check before freeing function
-      https://git.kernel.org/mkp/scsi/c/2e9ef0fcac01
+rcar is grandfathered in.  fpga use is very careful and done in a somewhat
+restricted manner.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+There is a desire for run time overlay apply and run time overlay remove
+to become more complete and more robust.  Improvements are slowly moving
+forward.
+
+The best way to use overlays at the moment is to apply them before booting
+the Linux kernel, such as having u-boot apply them.
+
+My opinion is that run time overlay apply and run time overlay remove will
+always be more fragile and less well supported than pre-boot overlay apply,
+and thus run time usage should be avoided if possible.
+
+You can read more details about the status and direction of overlays at:
+
+   https://elinux.org/Frank%27s_Evolving_Overlay_Thoughts
+
+
+> 
+> My situation is this: I have hardware which consists of several modules.
+> Knowledge about the type and location of these modules is located in an
+> on-board eeprom.
+
+Does the eeprom provide an ID, from which an overlay blob can be inferred?
+Or is "the type and location of these modules" more explicit, such as
+path of the blob in a filesystem?
+
+> 
+> So now I need to assemble a devicetree, by puzzling various 'blobs' together.
+> This could be done in the bootloader,
+
+Do this, if at all reasonably possible.
+
+> but also by a rcar-like driver, which
+> queries the eeprom and inserts devicetree fragments/overlays into a live kernel.
+
+Don't do this.
+
+> 
+> A couple of questions:
+> - are devicetree overlays here to stay? (given that there are 2 in-kernel users)
+
+I expect devicetree overlay run time support to remain for fpga.  I am optimistic
+that we will add support for other use cases in an incremental roll out of
+functionality.  But this is not happening quickly.
+
+
+> - does it make sense to solve the modular devicetree problem in a rcar-like
+>   fashion?
+
+No.
+
+> - is there perhaps a more canonical / idiomatic way to solve this?
+
+Yes, apply the overlays before booting.
+
+> 
+> Sven
+> 
+
