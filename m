@@ -2,120 +2,114 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF36C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BDEC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B65E2076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0DEB2076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:28:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OUYBdPcB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x5Zqjzao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726030AbgD0R2K (ORCPT
+        id S1726418AbgD0R2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 13:28:10 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58510 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725963AbgD0R2K (ORCPT
+        Mon, 27 Apr 2020 13:28:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34036 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbgD0R2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 13:28:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588008488;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AIdh8aRRTeVMDlIVe128qbh6x+vMtm/fPvnZdxCsjFc=;
-        b=OUYBdPcBz41whDEAW3YRly0U+ea4oFKl2SXHUGsadCFtZ3WFkoCMwbBCelbSB8AGAoEcuu
-        OJ62nniLq2bh7gYVNFEqnuSd099PCFLZzCtrysmAq57SGm1pS0mrhGRjuahmTXN817xOfd
-        WJxaczEMMjJM7m09EextrrkE6H3bbtg=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-161-gSnzpcViNRy5xByVCJ0PFg-1; Mon, 27 Apr 2020 13:28:06 -0400
-X-MC-Unique: gSnzpcViNRy5xByVCJ0PFg-1
-Received: by mail-wm1-f71.google.com with SMTP id q5so137831wmc.9
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 10:28:06 -0700 (PDT)
+        Mon, 27 Apr 2020 13:28:14 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49B29C03C1A8
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 10:28:14 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id j14so14534396lfg.9
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 10:28:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Dq6UXDEp+CfhWskvNuEfUSYYLoNA4rRIzRZcrwo0+MY=;
+        b=x5Zqjzao8L+ufNxFV7ltgeMVwwgp9ywdXPktv0A4tuA/TaySL6cN2ioBLum7Civlu1
+         mOWqG0GZaqxC6XmB2whqvkJ6yZkI0+6/1DldT4Rf69iCuuSf0fzdh+rzwK4wQWJ9NFAQ
+         CToGTup9Wx28bgq1lK6Xy7mcBOZeXGt8wmg6wXw9RU/LEIAuwNm1SLphUKyKPYjRtniM
+         CCzKJii7PGY4MRFaNyBL2QrXRc2B2UjrogvGv7J8dalEq2ezNIRUz+aHLTni/Xm5x/ve
+         ThCVeWwgJaPSJBVccziQTvoX+uAfGA06P2WGFUEW+jeOhpkofx1dzeVWKGFdcZrbc/Vy
+         9+Ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=AIdh8aRRTeVMDlIVe128qbh6x+vMtm/fPvnZdxCsjFc=;
-        b=mDUdGm3IrZ6vIzuG3326hMgXVemgqP1/y9hyOAWvKderE6zaUaIfYzcEzXlh3F0J6z
-         6LTaLT60cW1PyhtmYA+4S9XETkM8+461crxeyDI7rH/cY+35zcwcL5nJvvy9yAAKwWD+
-         a94bBa0jMarXiNsyt8UU91b3zMlIP/mJElHAa0oz2wljLxRwfadGsAyCeQPiUn3Prb1C
-         Ot0YeD+aa6NI12TQrYanvFpANtMFfIPXlsz13tZrQ3YeOgTeJYG5gwuUh8tWIrRm5HvF
-         TFHDUOPEpLDgKlEXOsK+2fqmLk7GxKEyc/pphmXSakM3KZ6vDMnsL5zeU8kXUdqRWhtY
-         9OlA==
-X-Gm-Message-State: AGi0Pua0637Xcwt9aYe0j8RMasOVXjOhuQJfUi1rmi5vp2DptcQOW8E9
-        mSJx27Zj6nDmClH0ouwJeiZ0hJpXVgpXyuVj5i35s7ygdRF1Nlxe0pIjMH5VVr9USzphCPFCbHB
-        agJxBcxYccJVzixC+B4rAlbcc
-X-Received: by 2002:adf:fe51:: with SMTP id m17mr28105887wrs.414.1588008485621;
-        Mon, 27 Apr 2020 10:28:05 -0700 (PDT)
-X-Google-Smtp-Source: APiQypK7mAxrF469/q2T6gwPBIgiv6em6qBY0yYH5Pgcqs55CxifERpdCZbEIn1L7QLLUTzS2XWc8w==
-X-Received: by 2002:adf:fe51:: with SMTP id m17mr28105867wrs.414.1588008485367;
-        Mon, 27 Apr 2020 10:28:05 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.170.5])
-        by smtp.gmail.com with ESMTPSA id s14sm15422654wmh.18.2020.04.27.10.28.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 10:28:04 -0700 (PDT)
-Subject: Re: [PATCH] KVM: VMX: Use accessor to read vmcs.INTR_INFO when
- handling exception
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200427171837.22613-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <8123dc4b-a449-a92c-85a1-c255fa2bbbca@redhat.com>
+        bh=Dq6UXDEp+CfhWskvNuEfUSYYLoNA4rRIzRZcrwo0+MY=;
+        b=uBJBM06DbUrJGRgeZe5G3MhAkZTHLevNWehPe2YEbcqMHZyD+o3E5qrzK9Fx1aw1bP
+         Df9ZbFeLHhOSnQB5aR5ujDqWLkkJ8vnd3ohFbYHNWKyK/h4Ee+XUptR8SvbfDAqb4ji6
+         6HjF/XjwKdNDgib43ekuwrn/o21ct9MM7nd0MG8qxM3hJhLYtF4RJOoNbue45C5rGNy2
+         Q5h5ni6Ry8PGZYI2Wf0xEhExXOeU3ZhvaamvK8Y6jTdt7TcV2lCy65vddjzMPgPhfFii
+         3PPiJaj3gOUlX5FyIkPOk7/+UTnLtA/w4Il+qyIdiwn+iQ2uH+TUGBuZfv6vFENMK81/
+         MzPg==
+X-Gm-Message-State: AGi0PubhrPrU4JmRtSN3Gwp0CMFloBV7Ba9++BxNsDtg6RddVCYOnv4m
+        9xLmFNDMg5CQUIX5TOM8wbMjAA==
+X-Google-Smtp-Source: APiQypJWv8O+pTWo8o5RVwex9KReKqhYTkJvhJxn5WYJuBnoQNeHME9vZsTS6HDD1lhOtGRpi+iE4w==
+X-Received: by 2002:a19:5f4e:: with SMTP id a14mr16402967lfj.57.1588008492538;
+        Mon, 27 Apr 2020 10:28:12 -0700 (PDT)
+Received: from localhost (c-8c28e555.07-21-73746f28.bbcust.telenor.se. [85.229.40.140])
+        by smtp.gmail.com with ESMTPSA id c19sm8058077lfj.18.2020.04.27.10.28.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 10:28:11 -0700 (PDT)
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     thierry.reding@gmail.com, jonathanh@nvidia.com
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH] memory: tegra: mark PM functions as __maybe_unused
 Date:   Mon, 27 Apr 2020 19:28:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+Message-Id: <20200427172802.17569-1-anders.roxell@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200427171837.22613-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/04/20 19:18, Sean Christopherson wrote:
-> Use vmx_get_intr_info() when grabbing the cached vmcs.INTR_INFO in
-> handle_exception_nmi() to ensure the cache isn't stale.  Bypassing the
-> caching accessor doesn't cause any known issues as the cache is always
-> refreshed by handle_exception_nmi_irqoff(), but the whole point of
-> adding the proper caching mechanism was to avoid such dependencies.
-> 
-> Fixes: 8791585837f6 ("KVM: VMX: Cache vmcs.EXIT_INTR_INFO using arch avail_reg flags")
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/vmx/vmx.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 3ab6ca6062ce..7bddcb24f6f3 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -4677,7 +4677,7 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
->  	u32 vect_info;
->  
->  	vect_info = vmx->idt_vectoring_info;
-> -	intr_info = vmx->exit_intr_info;
-> +	intr_info = vmx_get_intr_info(vcpu);
->  
->  	if (is_machine_check(intr_info) || is_nmi(intr_info))
->  		return 1; /* handled by handle_exception_nmi_irqoff() */
-> 
+Without this, we get a couple of warnings when CONFIG_PM_SLEEP is
+disabled.
 
-Hasn't this been applied already?
+../drivers/memory/tegra/tegra186.c:1578:12: warning: ‘tegra186_mc_resume’ defined but not used [-Wunused-function]
+ 1578 | static int tegra186_mc_resume(struct device *dev)
+      |            ^~~~~~~~~~~~~~~~~~
+../drivers/memory/tegra/tegra186.c:1573:12: warning: ‘tegra186_mc_suspend’ defined but not used [-Wunused-function]
+ 1573 | static int tegra186_mc_suspend(struct device *dev)
+      |            ^~~~~~~~~~~~~~~~~~~
 
-Paolo
+Fixes: 177602b00641 ("memory: tegra: Add system sleep support")
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+---
+ drivers/memory/tegra/tegra186.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/memory/tegra/tegra186.c b/drivers/memory/tegra/tegra186.c
+index 5d53f11ca7b6..e25c954dde2e 100644
+--- a/drivers/memory/tegra/tegra186.c
++++ b/drivers/memory/tegra/tegra186.c
+@@ -1570,12 +1570,12 @@ static const struct of_device_id tegra186_mc_of_match[] = {
+ };
+ MODULE_DEVICE_TABLE(of, tegra186_mc_of_match);
+ 
+-static int tegra186_mc_suspend(struct device *dev)
++static int __maybe_unused tegra186_mc_suspend(struct device *dev)
+ {
+ 	return 0;
+ }
+ 
+-static int tegra186_mc_resume(struct device *dev)
++static int __maybe_unused tegra186_mc_resume(struct device *dev)
+ {
+ 	struct tegra186_mc *mc = dev_get_drvdata(dev);
+ 
+-- 
+2.20.1
 
