@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B50D4C82A04
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B9DC82A09
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B03821775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 789B121775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588024950;
-	bh=kfeaxpOGbwlTZVDg0aWICkcxxb1d3iaKSlL4ED1+uBU=;
+	s=default; t=1588024971;
+	bh=UmynUtq3qtulIWnLtvNf0Bt9TiSxo4JcisGU3PNZoCA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vUxd9W9OvQTA+NaioOPvdDjkGzCg6gW06IY6/+A1KvmBAkaoM2rtJhxt87FOdnTgf
-	 cc8nUQSENzvyKZOZzHgyRNwHNzxaXCDMhCS6rPxf9FcgjmD1Wm1VVRhAJs+nuRiucp
-	 dQ3AgOLk+DPUdKrYgvt266agva/PEO1RLwA1T6yo=
+	b=cI6fnMUDOAXHEz8v/X9hJU5BQLuqPXqRRO+tpknaD1tVVTenUwAMPY/RgxdF/fz8+
+	 dfv3umwzS8XK7CgzprI51K1KeSYdgBIfTkHGN0DGXEa1u9Tle6jDoh7FpqiY8EVwxR
+	 qkVhgNAzPa0cRQYzmLWSmylAEj1feEezxUPjt48s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgD0WCE (ORCPT
+        id S1726440AbgD0WCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 18:02:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48024 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 18:02:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726355AbgD0WCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 18:02:00 -0400
+        id S1726257AbgD0WB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 18:01:59 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ABC721D91;
+        by mail.kernel.org (Postfix) with ESMTPSA id 65B04218AC;
         Mon, 27 Apr 2020 22:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588024916;
-        bh=kfeaxpOGbwlTZVDg0aWICkcxxb1d3iaKSlL4ED1+uBU=;
+        bh=UmynUtq3qtulIWnLtvNf0Bt9TiSxo4JcisGU3PNZoCA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bCfLx/mg+fsWsOPPtIVTBifEQUg6DOuylhQon+XrGzlCJ05q1Ndy0tOs/jd+IB3iG
-         5FPqPGMMcoKrYXxY36oDkU9YHa4hPVAfR07m4a/Ms0H5OcjhPwk/e4LzqHw2nhm/gK
-         kZKJDI8oBvDKTrIHuZNETKcpL76dI/7RLSZz7tsY=
+        b=A0e5Im0zuGJsRdkRiJ9zFE1FLea/BC3HxMinCHMvplgoaWEizd+3lg32G4Cw+XqPr
+         o6D1GVu/M8iquHbkxd7UH5mz/Wh3H0BJsV5XcRDufiFdJGagu5BqWXZWgcMgWEJB/2
+         8DCsLquQ5DquTn9v8anUVGuVe2B14tJYCpVHGBYY=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jTBp4-000Ioq-TK; Tue, 28 Apr 2020 00:01:54 +0200
+        id 1jTBp4-000IoH-MP; Tue, 28 Apr 2020 00:01:54 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-decnet-user@lists.sourceforge.net, netdev@vger.kernel.org
-Subject: [PATCH 15/38] docs: networking: convert decnet.txt to ReST
-Date:   Tue, 28 Apr 2020 00:01:30 +0200
-Message-Id: <1dcd53e2396aabbb8b32e038113c13f9d77f9365.1588024424.git.mchehab+huawei@kernel.org>
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH 08/38] docs: networking: convert baycom.txt to ReST
+Date:   Tue, 28 Apr 2020 00:01:23 +0200
+Message-Id: <737a50862c00ce0c840c9e846bab48a17cecdcc6.1588024424.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588024424.git.mchehab+huawei@kernel.org>
 References: <cover.1588024424.git.mchehab+huawei@kernel.org>
@@ -64,278 +63,271 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
 - adjust titles and chapters, adding proper markups;
-- mark lists as such;
 - mark code blocks and literals as such;
+- mark tables as such;
 - adjust identation, whitespaces and blank lines;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../admin-guide/kernel-parameters.txt         |  2 +-
- .../networking/{decnet.txt => decnet.rst}     | 77 +++++++++++--------
- Documentation/networking/index.rst            |  1 +
- MAINTAINERS                                   |  2 +-
- net/decnet/Kconfig                            |  4 +-
- 5 files changed, 50 insertions(+), 36 deletions(-)
- rename Documentation/networking/{decnet.txt => decnet.rst} (87%)
+ .../networking/{baycom.txt => baycom.rst}     | 110 ++++++++++--------
+ Documentation/networking/index.rst            |   1 +
+ drivers/net/hamradio/Kconfig                  |   8 +-
+ 3 files changed, 68 insertions(+), 51 deletions(-)
+ rename Documentation/networking/{baycom.txt => baycom.rst} (58%)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 942e7f59a356..cd68635370c6 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -831,7 +831,7 @@
- 
- 	decnet.addr=	[HW,NET]
- 			Format: <area>[,<node>]
--			See also Documentation/networking/decnet.txt.
-+			See also Documentation/networking/decnet.rst.
- 
- 	default_hugepagesz=
- 			[HW] The size of the default HugeTLB page. This is
-diff --git a/Documentation/networking/decnet.txt b/Documentation/networking/decnet.rst
-similarity index 87%
-rename from Documentation/networking/decnet.txt
-rename to Documentation/networking/decnet.rst
-index d192f8b9948b..b8bc11ff8370 100644
---- a/Documentation/networking/decnet.txt
-+++ b/Documentation/networking/decnet.rst
+diff --git a/Documentation/networking/baycom.txt b/Documentation/networking/baycom.rst
+similarity index 58%
+rename from Documentation/networking/baycom.txt
+rename to Documentation/networking/baycom.rst
+index 688f18fd4467..fe2d010f0e86 100644
+--- a/Documentation/networking/baycom.txt
++++ b/Documentation/networking/baycom.rst
 @@ -1,26 +1,31 @@
--                    Linux DECnet Networking Layer Information
--                   ===========================================
+-		    LINUX DRIVERS FOR BAYCOM MODEMS
 +.. SPDX-License-Identifier: GPL-2.0
  
--1) Other documentation....
-+=========================================
-+Linux DECnet Networking Layer Information
-+=========================================
+-       Thomas M. Sailer, HB9JNX/AE4WA, <sailer@ife.ee.ethz.ch>
++===============================
++Linux Drivers for Baycom Modems
++===============================
  
--   o Project Home Pages
--       http://www.chygwyn.com/                      	    - Kernel info
--       http://linux-decnet.sourceforge.net/                - Userland tools
--       http://www.sourceforge.net/projects/linux-decnet/   - Status page
-+1. Other documentation....
-+==========================
- 
--2) Configuring the kernel
-+   - Project Home Pages
-+     - http://www.chygwyn.com/				   - Kernel info
-+     - http://linux-decnet.sourceforge.net/                - Userland tools
-+     - http://www.sourceforge.net/projects/linux-decnet/   - Status page
+-!!NEW!! (04/98) The drivers for the baycom modems have been split into
++Thomas M. Sailer, HB9JNX/AE4WA, <sailer@ife.ee.ethz.ch>
 +
-+2. Configuring the kernel
-+=========================
++The drivers for the baycom modems have been split into
+ separate drivers as they did not share any code, and the driver
+ and device names have changed.
  
- Be sure to turn on the following options:
+ This document describes the Linux Kernel Drivers for simple Baycom style
+-amateur radio modems. 
++amateur radio modems.
  
--    CONFIG_DECNET (obviously)
--    CONFIG_PROC_FS (to see what's going on)
--    CONFIG_SYSCTL (for easy configuration)
-+    - CONFIG_DECNET (obviously)
-+    - CONFIG_PROC_FS (to see what's going on)
-+    - CONFIG_SYSCTL (for easy configuration)
+ The following drivers are available:
++====================================
  
- if you want to try out router support (not properly debugged yet)
- you'll need the following options as well...
+ baycom_ser_fdx:
+   This driver supports the SER12 modems either full or half duplex.
+-  Its baud rate may be changed via the `baud' module parameter,
++  Its baud rate may be changed via the ``baud`` module parameter,
+   therefore it supports just about every bit bang modem on a
+   serial port. Its devices are called bcsf0 through bcsf3.
+   This is the recommended driver for SER12 type modems,
+   however if you have a broken UART clone that does not have working
+-  delta status bits, you may try baycom_ser_hdx. 
++  delta status bits, you may try baycom_ser_hdx.
  
--    CONFIG_DECNET_ROUTER (to be able to add/delete routes)
--    CONFIG_NETFILTER (will be required for the DECnet routing daemon)
-+    - CONFIG_DECNET_ROUTER (to be able to add/delete routes)
-+    - CONFIG_NETFILTER (will be required for the DECnet routing daemon)
+-baycom_ser_hdx: 
++baycom_ser_hdx:
+   This is an alternative driver for SER12 type modems.
+   It only supports half duplex, and only 1200 baud. Its devices
+   are called bcsh0 through bcsh3. Use this driver only if baycom_ser_fdx
+@@ -37,45 +42,48 @@ baycom_epp:
  
- Don't turn on SIOCGIFCONF support for DECnet unless you are really sure
- that you need it, in general you won't and it can cause ifconfig to
-@@ -29,7 +34,7 @@ malfunction.
- Run time configuration has changed slightly from the 2.4 system. If you
- want to configure an endnode, then the simplified procedure is as follows:
+ The following modems are supported:
  
-- o Set the MAC address on your ethernet card before starting _any_ other
-+ - Set the MAC address on your ethernet card before starting _any_ other
-    network protocols.
+-ser12:  This is a very simple 1200 baud AFSK modem. The modem consists only
+-        of a modulator/demodulator chip, usually a TI TCM3105. The computer
+-        is responsible for regenerating the receiver bit clock, as well as
+-        for handling the HDLC protocol. The modem connects to a serial port,
+-        hence the name. Since the serial port is not used as an async serial
+-        port, the kernel driver for serial ports cannot be used, and this
+-        driver only supports standard serial hardware (8250, 16450, 16550)
++======= ========================================================================
++ser12   This is a very simple 1200 baud AFSK modem. The modem consists only
++	of a modulator/demodulator chip, usually a TI TCM3105. The computer
++	is responsible for regenerating the receiver bit clock, as well as
++	for handling the HDLC protocol. The modem connects to a serial port,
++	hence the name. Since the serial port is not used as an async serial
++	port, the kernel driver for serial ports cannot be used, and this
++	driver only supports standard serial hardware (8250, 16450, 16550)
  
- As soon as your network card is brought into the UP state, DECnet should
-@@ -37,7 +42,8 @@ start working. If you need something more complicated or are unsure how
- to set the MAC address, see the next section. Also all configurations which
- worked with 2.4 will work under 2.5 with no change.
+-par96:  This is a modem for 9600 baud FSK compatible to the G3RUH standard.
+-        The modem does all the filtering and regenerates the receiver clock.
+-        Data is transferred from and to the PC via a shift register.
+-        The shift register is filled with 16 bits and an interrupt is signalled.
+-        The PC then empties the shift register in a burst. This modem connects
+-        to the parallel port, hence the name. The modem leaves the 
+-        implementation of the HDLC protocol and the scrambler polynomial to
+-        the PC.
++par96   This is a modem for 9600 baud FSK compatible to the G3RUH standard.
++	The modem does all the filtering and regenerates the receiver clock.
++	Data is transferred from and to the PC via a shift register.
++	The shift register is filled with 16 bits and an interrupt is signalled.
++	The PC then empties the shift register in a burst. This modem connects
++	to the parallel port, hence the name. The modem leaves the
++	implementation of the HDLC protocol and the scrambler polynomial to
++	the PC.
  
--3) Command line options
-+3. Command line options
-+=======================
+-picpar: This is a redesign of the par96 modem by Henning Rech, DF9IC. The modem
+-        is protocol compatible to par96, but uses only three low power ICs
+-        and can therefore be fed from the parallel port and does not require
+-        an additional power supply. Furthermore, it incorporates a carrier
+-        detect circuitry.
++picpar  This is a redesign of the par96 modem by Henning Rech, DF9IC. The modem
++	is protocol compatible to par96, but uses only three low power ICs
++	and can therefore be fed from the parallel port and does not require
++	an additional power supply. Furthermore, it incorporates a carrier
++	detect circuitry.
  
- You can set a DECnet address on the kernel command line for compatibility
- with the 2.4 configuration procedure, but in general it's not needed any more.
-@@ -56,7 +62,7 @@ interface then you won't see any entries in /proc/net/neigh for the local
- host until such time as you start a connection. This doesn't affect the
- operation of the local communications in any other way though.
+-EPP:    This is a high-speed modem adaptor that connects to an enhanced parallel port.
+-        Its target audience is users working over a high speed hub (76.8kbit/s).
+-
+-eppfpga: This is a redesign of the EPP adaptor.
++EPP     This is a high-speed modem adaptor that connects to an enhanced parallel
++	port.
  
--The kernel command line takes options looking like the following:
-+The kernel command line takes options looking like the following::
++	Its target audience is users working over a high speed hub (76.8kbit/s).
  
-     decnet.addr=1,2
++eppfpga This is a redesign of the EPP adaptor.
++======= ========================================================================
  
-@@ -82,7 +88,7 @@ address of the node in order for it to be autoconfigured (and then appear in
- FTP sites called dn2ethaddr which can compute the correct ethernet
- address to use. The address can be set by ifconfig either before or
- at the time the device is brought up. If you are using RedHat you can
--add the line:
-+add the line::
+ All of the above modems only support half duplex communications. However,
+ the driver supports the KISS (see below) fullduplex command. It then simply
+ starts to send as soon as there's a packet to transmit and does not care
+ about DCD, i.e. it starts to send even if there's someone else on the channel.
+-This command is required by some implementations of the DAMA channel 
++This command is required by some implementations of the DAMA channel
+ access protocol.
  
-     MACADDR=AA:00:04:00:03:04
  
-@@ -95,7 +101,7 @@ verify with iproute2).
- The default device for routing can be set through the /proc filesystem
- by setting /proc/sys/net/decnet/default_device to the
- device you want DECnet to route packets out of when no specific route
--is available. Usually this will be eth0, for example:
-+is available. Usually this will be eth0, for example::
+ The Interface of the drivers
++============================
  
-     echo -n "eth0" >/proc/sys/net/decnet/default_device
+ Unlike previous drivers, these drivers are no longer character devices,
+ but they are now true kernel network interfaces. Installation is therefore
+@@ -88,20 +96,22 @@ me for WAMPES which allows attaching a kernel network interface directly.
  
-@@ -106,7 +112,9 @@ confirm that by looking in the default_device file of course.
- There is a list of what the other files under /proc/sys/net/decnet/ do
- on the kernel patch web site (shown above).
  
--4) Run time kernel configuration
-+4. Run time kernel configuration
+ Configuring the driver
++======================
+ 
+ Every time a driver is inserted into the kernel, it has to know which
+ modems it should access at which ports. This can be done with the setbaycom
+ utility. If you are only using one modem, you can also configure the
+ driver from the insmod command line (or by means of an option line in
+-/etc/modprobe.d/*.conf).
++``/etc/modprobe.d/*.conf``).
++
++Examples::
+ 
+-Examples:
+   modprobe baycom_ser_fdx mode="ser12*" iobase=0x3f8 irq=4
+   sethdlc -i bcsf0 -p mode "ser12*" io 0x3f8 irq 4
+ 
+ Both lines configure the first port to drive a ser12 modem at the first
+-serial port (COM1 under DOS). The * in the mode parameter instructs the driver to use
+-the software DCD algorithm (see below).
++serial port (COM1 under DOS). The * in the mode parameter instructs the driver
++to use the software DCD algorithm (see below)::
+ 
+   insmod baycom_par mode="picpar" iobase=0x378
+   sethdlc -i bcp0 -p mode "picpar" io 0x378
+@@ -115,29 +125,33 @@ Note that both utilities interpret the values slightly differently.
+ 
+ 
+ Hardware DCD versus Software DCD
 +================================
+ 
+ To avoid collisions on the air, the driver must know when the channel is
+ busy. This is the task of the DCD circuitry/software. The driver may either
+ utilise a software DCD algorithm (options=1) or use a DCD signal from
+ the hardware (options=0).
+ 
+-ser12:  if software DCD is utilised, the radio's squelch should always be
+-        open. It is highly recommended to use the software DCD algorithm,
+-        as it is much faster than most hardware squelch circuitry. The
+-        disadvantage is a slightly higher load on the system.
++======= =================================================================
++ser12   if software DCD is utilised, the radio's squelch should always be
++	open. It is highly recommended to use the software DCD algorithm,
++	as it is much faster than most hardware squelch circuitry. The
++	disadvantage is a slightly higher load on the system.
+ 
+-par96:  the software DCD algorithm for this type of modem is rather poor.
+-        The modem simply does not provide enough information to implement
+-        a reasonable DCD algorithm in software. Therefore, if your radio
+-        feeds the DCD input of the PAR96 modem, the use of the hardware
+-        DCD circuitry is recommended.
++par96   the software DCD algorithm for this type of modem is rather poor.
++	The modem simply does not provide enough information to implement
++	a reasonable DCD algorithm in software. Therefore, if your radio
++	feeds the DCD input of the PAR96 modem, the use of the hardware
++	DCD circuitry is recommended.
+ 
+-picpar: the picpar modem features a builtin DCD hardware, which is highly
+-        recommended.
++picpar  the picpar modem features a builtin DCD hardware, which is highly
++	recommended.
++======= =================================================================
+ 
+ 
+ 
+ Compatibility with the rest of the Linux kernel
++===============================================
+ 
+ The serial driver and the baycom serial drivers compete
+ for the same hardware resources. Of course only one driver can access a given
+@@ -154,5 +168,7 @@ The parallel port drivers (baycom_par, baycom_epp) now use the parport subsystem
+ to arbitrate the ports between different client drivers.
+ 
+ vy 73s de
 +
- 
- This is either done through the sysctl/proc interface (see the kernel web
- pages for details on what the various options do) or through the iproute2
-@@ -122,20 +130,21 @@ since its the _only_ way to add and delete routes currently. Eventually
- there will be a routing daemon to send and receive routing messages for
- each interface and update the kernel routing tables accordingly. The
- routing daemon will use netfilter to listen to routing packets, and
--rtnetlink to update the kernels routing tables. 
-+rtnetlink to update the kernels routing tables.
- 
- The DECnet raw socket layer has been removed since it was there purely
- for use by the routing daemon which will now use netfilter (a much cleaner
- and more generic solution) instead.
- 
--5) How can I tell if its working ?
-+5. How can I tell if its working?
-+=================================
- 
- Here is a quick guide of what to look for in order to know if your DECnet
- kernel subsystem is working.
- 
-    - Is the node address set (see /proc/sys/net/decnet/node_address)
--   - Is the node of the correct type 
--                             (see /proc/sys/net/decnet/conf/<dev>/forwarding)
-+   - Is the node of the correct type
-+     (see /proc/sys/net/decnet/conf/<dev>/forwarding)
-    - Is the Ethernet MAC address of each Ethernet card set to match
-      the DECnet address. If in doubt use the dn2ethaddr utility available
-      at the ftp archive.
-@@ -160,7 +169,8 @@ kernel subsystem is working.
-      network, and see if you can obtain the same results.
-    - At this point you are on your own... :-)
- 
--6) How to send a bug report
-+6. How to send a bug report
-+===========================
- 
- If you've found a bug and want to report it, then there are several things
- you can do to help me work out exactly what it is that is wrong. Useful
-@@ -175,18 +185,19 @@ information (_most_ of which _is_ _essential_) includes:
-  - How much data was being transferred ?
-  - Was the network congested ?
-  - How can the problem be reproduced ?
-- - Can you use tcpdump to get a trace ? (N.B. Most (all?) versions of 
-+ - Can you use tcpdump to get a trace ? (N.B. Most (all?) versions of
-    tcpdump don't understand how to dump DECnet properly, so including
-    the hex listing of the packet contents is _essential_, usually the -x flag.
-    You may also need to increase the length grabbed with the -s flag. The
-    -e flag also provides very useful information (ethernet MAC addresses))
- 
--7) MAC FAQ
-+7. MAC FAQ
-+==========
- 
- A quick FAQ on ethernet MAC addresses to explain how Linux and DECnet
--interact and how to get the best performance from your hardware. 
-+interact and how to get the best performance from your hardware.
- 
--Ethernet cards are designed to normally only pass received network frames 
-+Ethernet cards are designed to normally only pass received network frames
- to a host computer when they are addressed to it, or to the broadcast address.
- 
- Linux has an interface which allows the setting of extra addresses for
-@@ -197,8 +208,8 @@ significant processor time and bus bandwidth can be used up on a busy
- network (see the NAPI documentation for a longer explanation of these
- effects).
- 
--DECnet makes use of this interface to allow running DECnet on an ethernet 
--card which has already been configured using TCP/IP (presumably using the 
-+DECnet makes use of this interface to allow running DECnet on an ethernet
-+card which has already been configured using TCP/IP (presumably using the
- built in MAC address of the card, as usual) and/or to allow multiple DECnet
- addresses on each physical interface. If you do this, be aware that if your
- ethernet card doesn't support perfect hashing in its MAC address filter
-@@ -210,7 +221,8 @@ to gain the best efficiency. Better still is to use a card which supports
- NAPI as well.
- 
- 
--8) Mailing list
-+8. Mailing list
-+===============
- 
- If you are keen to get involved in development, or want to ask questions
- about configuration, or even just report bugs, then there is a mailing
-@@ -218,7 +230,8 @@ list that you can join, details are at:
- 
- http://sourceforge.net/mail/?group_id=4993
- 
--9) Legal Info
-+9. Legal Info
-+=============
- 
- The Linux DECnet project team have placed their code under the GPL. The
- software is provided "as is" and without warranty express or implied.
+ Tom Sailer, sailer@ife.ee.ethz.ch
++
+ hb9jnx @ hb9w.ampr.org
 diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index 9e83d3bda4e0..e17432492745 100644
+index 6a5858b27cf6..fbf845fbaff7 100644
 --- a/Documentation/networking/index.rst
 +++ b/Documentation/networking/index.rst
-@@ -50,6 +50,7 @@ Contents:
-    cxacru
-    dccp
-    dctcp
-+   decnet
+@@ -43,6 +43,7 @@ Contents:
+    arcnet
+    atm
+    ax25
++   baycom
  
  .. only::  subproject and html
  
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a1558eb34c45..f5214418cc19 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4739,7 +4739,7 @@ DECnet NETWORK LAYER
- L:	linux-decnet-user@lists.sourceforge.net
- S:	Orphan
- W:	http://linux-decnet.sourceforge.net
--F:	Documentation/networking/decnet.txt
-+F:	Documentation/networking/decnet.rst
- F:	net/decnet/
+diff --git a/drivers/net/hamradio/Kconfig b/drivers/net/hamradio/Kconfig
+index bf306fed04cc..fe409819b56d 100644
+--- a/drivers/net/hamradio/Kconfig
++++ b/drivers/net/hamradio/Kconfig
+@@ -127,7 +127,7 @@ config BAYCOM_SER_FDX
+ 	  your serial interface chip. To configure the driver, use the sethdlc
+ 	  utility available in the standard ax25 utilities package. For
+ 	  information on the modems, see <http://www.baycom.de/> and
+-	  <file:Documentation/networking/baycom.txt>.
++	  <file:Documentation/networking/baycom.rst>.
  
- DECSTATION PLATFORM SUPPORT
-diff --git a/net/decnet/Kconfig b/net/decnet/Kconfig
-index 0935453ccfd5..8f98fb2f2ec9 100644
---- a/net/decnet/Kconfig
-+++ b/net/decnet/Kconfig
-@@ -15,7 +15,7 @@ config DECNET
- 	  <http://linux-decnet.sourceforge.net/>.
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called baycom_ser_fdx.  This is recommended.
+@@ -145,7 +145,7 @@ config BAYCOM_SER_HDX
+ 	  the driver, use the sethdlc utility available in the standard ax25
+ 	  utilities package. For information on the modems, see
+ 	  <http://www.baycom.de/> and
+-	  <file:Documentation/networking/baycom.txt>.
++	  <file:Documentation/networking/baycom.rst>.
  
- 	  More detailed documentation is available in
--	  <file:Documentation/networking/decnet.txt>.
-+	  <file:Documentation/networking/decnet.rst>.
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called baycom_ser_hdx.  This is recommended.
+@@ -160,7 +160,7 @@ config BAYCOM_PAR
+ 	  par96 designs. To configure the driver, use the sethdlc utility
+ 	  available in the standard ax25 utilities package. For information on
+ 	  the modems, see <http://www.baycom.de/> and the file
+-	  <file:Documentation/networking/baycom.txt>.
++	  <file:Documentation/networking/baycom.rst>.
  
- 	  Be sure to say Y to "/proc file system support" and "Sysctl support"
- 	  below when using DECnet, since you will need sysctl support to aid
-@@ -40,4 +40,4 @@ config DECNET_ROUTER
- 	  filtering" option will be required for the forthcoming routing daemon
- 	  to work.
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called baycom_par.  This is recommended.
+@@ -175,7 +175,7 @@ config BAYCOM_EPP
+ 	  designs. To configure the driver, use the sethdlc utility available
+ 	  in the standard ax25 utilities package. For information on the
+ 	  modems, see <http://www.baycom.de/> and the file
+-	  <file:Documentation/networking/baycom.txt>.
++	  <file:Documentation/networking/baycom.rst>.
  
--	  See <file:Documentation/networking/decnet.txt> for more information.
-+	  See <file:Documentation/networking/decnet.rst> for more information.
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called baycom_epp.  This is recommended.
 -- 
 2.25.4
 
