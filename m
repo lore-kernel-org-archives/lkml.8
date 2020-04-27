@@ -2,102 +2,107 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF021C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC10C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9413820728
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 258202087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:31:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgD0Iag convert rfc822-to-8bit (ORCPT
+        id S1726821AbgD0IbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:30:36 -0400
-Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:15282 "EHLO
-        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726003AbgD0Iag (ORCPT
+        Mon, 27 Apr 2020 04:31:18 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:37097 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726003AbgD0IbS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 04:30:36 -0400
-X-Greylist: delayed 601 seconds by postgrey-1.27 at vger.kernel.org; Mon, 27 Apr 2020 04:30:35 EDT
-Subject: Re: [patch] mm, oom: stop reclaiming if GFP_ATOMIC will start failing
- soon
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>
-CC:     Vlastimil Babka <vbabka@suse.cz>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-References: <alpine.DEB.2.22.394.2004241347310.70176@chino.kir.corp.google.com>
- <20200425172706.26b5011293e8dc77b1dccaf3@linux-foundation.org>
-From:   peter enderborg <peter.enderborg@sony.com>
-Message-ID: <7726e8a8-8390-cee8-3480-4e68bf26f08a@sony.com>
-Date:   Mon, 27 Apr 2020 10:20:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 27 Apr 2020 04:31:18 -0400
+Received: from mail-lj1-f172.google.com ([209.85.208.172]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MofLl-1irjgI1R1N-00p50y; Mon, 27 Apr 2020 10:31:15 +0200
+Received: by mail-lj1-f172.google.com with SMTP id u15so16648780ljd.3;
+        Mon, 27 Apr 2020 01:31:15 -0700 (PDT)
+X-Gm-Message-State: AGi0Pub4gB4bImFEreZ0CJ+ic2dvZsupwqTelv3PMwzXMr7hnhDIrHRI
+        Y6R+GqDFIoOypwCRV88g72Vbm+23GYE2J3L3rZU=
+X-Google-Smtp-Source: APiQypKAcnbUUWXlNyg96pM/OC4tHvewG9xXx/yyyNxR4zEsmm5rQr/f7pRTKhnRcwwF9cXmbTUOrFIU0TM+uvDhv/c=
+X-Received: by 2002:a2e:6a08:: with SMTP id f8mr14221730ljc.8.1587976274762;
+ Mon, 27 Apr 2020 01:31:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200425172706.26b5011293e8dc77b1dccaf3@linux-foundation.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-GB
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=Nc2YKFL4 c=1 sm=1 tr=0 a=kIrCkORFHx6JeP9rmF/Kww==:117 a=IkcTkHD0fZMA:10 a=cl8xLZFz6L8A:10 a=1XWaLZrsAAAA:8 a=_KWB5BKwUhRobCCBmOoA:9 a=QEXdDO2ut3YA:10
-X-SEG-SpamProfiler-Score: 0
+References: <20200426130100.306246-1-hagen@jauu.net> <20200426163430.22743-1-hagen@jauu.net>
+In-Reply-To: <20200426163430.22743-1-hagen@jauu.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 27 Apr 2020 10:30:58 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1qdyw+5B-E52O42VEWvpq_6jF74__ptM+q6SoKd3pkuA@mail.gmail.com>
+Message-ID: <CAK8P3a1qdyw+5B-E52O42VEWvpq_6jF74__ptM+q6SoKd3pkuA@mail.gmail.com>
+Subject: Re: [RFC v2] ptrace, pidfd: add pidfd_ptrace syscall
+To:     Hagen Paul Pfeifer <hagen@jauu.net>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Brian Gerst <brgerst@gmail.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Ka4Wm7MWpM+RNPW+QnUrj+KN1kAsR6elSC0XDqoA8soDzQb/X2T
+ dc1KNnKCX6vkbXFfCf7GobHBRU/cUMboiRMV9FMH36/GOXLfVHehc+7+/8Q8oPQDvrKa6yZ
+ VQINi3VyZoNwOyNfG8w8SP4ACuniR/EhrwMEYocsMkquHI5A7WOtTbess1zDtq7uDRKWUJQ
+ +ij/uUTavuJaNjTPnVRlQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:jeH6gxgpOBQ=:WSbGomqreVARHjUgq/R0V0
+ bnDjO/HUhOTfQraVzrZRbsDwiKi9NziWBZ0CinMa7Wp6/VVMNrY493GNIthT9TVTAyrnMlvsx
+ 8frDniMbLeXi+3E05XY4LUJOXgholG09R4xgWMT+WgOAYmExIdssUDyn+xAqgFBHQzCvtyspY
+ fLuJaSOHA/bNrYZ9CFiwV1Uf/+k74ynyZVTegwiMBV7ic0RzFJvDnBazzhbxrAypXeOE3N27E
+ QeVKBCWl5HSMrL8lOXdEEvUiGz7tGo1KWzy16dQJUEmOCsvQRx7B9XDcRbeM2kTrWUbLFh1tF
+ /2NiHQvUWml3d9pE2Wh8CTyZnefedZsbcSaYGH+4bOv2e2Z31iJ4rSUElfTUlPkDv7ajdK59C
+ SYL2n/aNeQ/h2AU1J0mYsLM90aCYBDPxuc3TJVTa9GNJ8zvyvBLc8IapHcY6kuK6ne4tz0+bI
+ LUvJhhlDsRFku7HtWBchhfG9TQsUrLk9RQXq6G3vN0xVmeoWndJVzjL3hMa7q4KQkkflt2oDU
+ MUS7KnJV53QjM9XcQQq6Gf/Tph/ob+nfq4rYcvz30JP3H3EPnTD1yQv+X3H4GLGSwhqzNhX2A
+ bZFPvz3nhLNNS3dN4zoJIrKRy3CdPa1PD9l8qLsiGVJ68RnniVj0N9+tp18OyfC7hbZd94VsB
+ xLwRmN6/r7kCHUVS0OyjjabDTazp1whdfmQsWm/Wrg1Uka9zdXd462IUhZeIlIU/G9AtUdOw7
+ 2VHMbilcLqeki9Qu7+VTzGomlwPBT09WPTKE53GHwG6xPksnN88yuxgQJJprVavqbY5eKRA0v
+ sCwoMe/XUmN+P1S7WBLusxB/KXdHjJf0qGCrC+3AHCCf0ntX3Y=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/26/20 2:27 AM, Andrew Morton wrote:
-> On Fri, 24 Apr 2020 13:48:06 -0700 (PDT) David Rientjes <rientjes@google.com> wrote:
->
->> If GFP_ATOMIC allocations will start failing soon because the amount of
->> free memory is substantially under per-zone min watermarks, it is better
->> to oom kill a process rather than continue to reclaim.
->>
->> This intends to significantly reduce the number of page allocation
->> failures that are encountered when the demands of user and atomic
->> allocations overwhelm the ability of reclaim to keep up.  We can see this
->> with a high ingress of networking traffic where memory allocated in irq
->> context can overwhelm the ability to reclaim fast enough such that user
->> memory consistently loops.  In that case, we have reclaimable memory, and
-> "user memory allocation", I assume?  Or maybe "blockable memory
-> allocatoins".
->
->> reclaiming is successful, but we've fully depleted memory reserves that
->> are allowed for non-blockable allocations.
->>
->> Commit 400e22499dd9 ("mm: don't warn about allocations which stall for
->> too long") removed evidence of user allocations stalling because of this,
->> but the situation can apply anytime we get "page allocation failures"
->> where reclaim is happening but per-zone min watermarks are starved:
->>
->> Node 0 Normal free:87356kB min:221984kB low:416984kB high:611984kB active_anon:123009936kB inactive_anon:67647652kB active_file:429612kB inactive_file:209980kB unevictable:112348kB writepending:260kB present:198180864kB managed:195027624kB mlocked:81756kB kernel_stack:24040kB pagetables:11460kB bounce:0kB free_pcp:940kB local_pcp:96kB free_cma:0kB
->> lowmem_reserve[]: 0 0 0 0
->> Node 1 Normal free:105616kB min:225568kB low:423716kB high:621864kB active_anon:122124196kB inactive_anon:74112696kB active_file:39172kB inactive_file:103696kB unevictable:204480kB writepending:180kB present:201326592kB managed:198174372kB mlocked:204480kB kernel_stack:11328kB pagetables:3680kB bounce:0kB free_pcp:1140kB local_pcp:0kB free_cma:0kB
->> lowmem_reserve[]: 0 0 0 0
->>
->> Without this patch, there is no guarantee that user memory allocations
->> will ever be successful when non-blockable allocations overwhelm the
->> ability to get above per-zone min watermarks.
->>
->> This doesn't solve page allocation failures entirely since it's a
->> preemptive measure based on watermarks that requires concurrent blockable
->> allocations to trigger the oom kill.  To complete solve page allocation
->> failures, it would be possible to do the same watermark check for non-
->> blockable allocations and then queue a worker to asynchronously oom kill
->> if it finds watermarks to be sufficiently low as well.
->>
-> Well, what's really going on here?
->
-> Is networking potentially consuming an unbounded amount of memory?  If
-> so, then killing a process will just cause networking to consume more
-> memory then hit against the same thing.  So presumably the answer is
-> "no, the watermarks are inappropriately set for this workload".
->
-> So would it not be sensible to dynamically adjust the watermarks in
-> response to this condition?  Maintain a larger pool of memory for these
-> allocations?  Or possibly push back on networking and tell it to reduce
-> its queue sizes?  So that stuff doesn't keep on getting oom-killed?
->
-I think I seen similar issues when dma-buf allocate a lot.  But that is on older kernels and out of tree.
-So networking is maybe not the only cause. dma-buf are used a lot for camera stuff in android.
+>  arch/x86/entry/syscalls/syscall_32.tbl |   1 +
+>  arch/x86/entry/syscalls/syscall_64.tbl |   1 +
+>  include/linux/syscalls.h               |   2 +
+>  include/uapi/asm-generic/unistd.h      |   4 +-
 
+When you add a new system call, please add it to all architectures.
+See the patches for the last few additions on how to do it, in
+particular the bit around adding the arm64 compat entry that is
+a bit tricky.
+
+It may be best to split out the patch changing all architectures from
+the one adding the new syscall.
+
+> +SYSCALL_DEFINE5(pidfd_ptrace, int, pidfd, long, request, unsigned long, addr,
+> +               unsigned long, data, unsigned int, flags)
+> +{
+
+When you add a new variant of ptrace, there also needs to be the
+corresponding COMPAT_SYSCLAL_DEFINE5(...) calling
+compat_ptrace_request().
+
+If you want, you could unify the native and compat code paths more by
+merging compat_ptrace_request() into ptrace_request() and using
+in_compat_syscall() checks for the ones that are different. This also
+would best be done as a separate cleanup patch upfront.
+
+      Arnd
