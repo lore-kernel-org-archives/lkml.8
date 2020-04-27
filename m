@@ -2,185 +2,271 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED44C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E84FC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90BB920728
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:43:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BCD620775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:44:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="W+CR6FCj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lZIJCLa+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgD0Snc (ORCPT
+        id S1726583AbgD0SoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:43:32 -0400
-Received: from mail-co1nam11on2081.outbound.protection.outlook.com ([40.107.220.81]:9727
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726362AbgD0Snb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:43:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eeffvfeuTqt3XumNOX5oLva5DOlv98YJh90LRIMzfP6sf8c4xfr2+pjjEbADb7yGaoO1YVDoMifbp1aQuShE6K/xNVzgqVfQBbpPJDEP/sx7fFXxK1+1ugBVX/xEtQt8YvvVS3sfzmrc7IpwzrJGc1X2s2xqhP2uaJPBVKO3H8duVi2gsP6ytLT78mohFeb2+OV0yVKE165x9B58wmTLFV/SnJN65rikVmJMxWfJOO9B6m83Lp4EForR2Bc0kMo3iYMGJRvxhlutCazIik/slcS9CM+BH7BkHj+yvO7k67d0ddhcnYFQaA07mDPUaiFmatlJmxqAmLmMue0FjjEDvg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WWU8NYX6jE4fjzz6zeySRAYoQ655Sm4zyPCJVDiXcyI=;
- b=d7yvCVHGxuLn7pI93xeLbWBrgCse79kAPWZDZ3RXNHxFwrJp0O9rkF4nXbn856ZvcaeGn75BWKPFPaVJlOWeTQYAWTwiA9O8dI0QdkrTJD/vCTJ3t+uGmqRYkCVXSvaEKurqKkOvW+TP3FbvmF0pos59i4LWbPUmMC2vPXMc9f7HmON3rzN9tMquWB9p4TKhgDExvg1o1qc628Y/QI86q1cp78NZkVC3cy8uCHWeN4vdaVjGQOBCagIGJdHWOd5L9mdXod7tsV2b6Y8MjJYzwluoJi1SEbug9ewF+k47cTYzc0ElEcuRuiuqqwX1findo2nkKYlxsu90Ez03Vzy6uw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Mon, 27 Apr 2020 14:44:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbgD0SoD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 14:44:03 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9327C0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 11:44:03 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id j14so21685913ybt.10
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 11:44:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WWU8NYX6jE4fjzz6zeySRAYoQ655Sm4zyPCJVDiXcyI=;
- b=W+CR6FCj4RZLIDFE/ck2JqJ2RY5tgJ1aiXlDaDhpz0gP/JNmhLnFOIsktZIPNEmRNNRYeyju98hV3EzobpZSLFzyMu6aLXpu2x4JWu8Y4+zctYXs9WsubelumWf64aExRCIQVI9wBcfjF6yMP+Z8QtBt2FvGxtrbDmAv2/oerfE=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-Received: from DM5PR12MB1355.namprd12.prod.outlook.com (2603:10b6:3:6e::7) by
- DM5PR12MB1818.namprd12.prod.outlook.com (2603:10b6:3:114::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.22; Mon, 27 Apr 2020 18:43:27 +0000
-Received: from DM5PR12MB1355.namprd12.prod.outlook.com
- ([fe80::4ce1:9947:9681:c8b1]) by DM5PR12MB1355.namprd12.prod.outlook.com
- ([fe80::4ce1:9947:9681:c8b1%10]) with mapi id 15.20.2937.020; Mon, 27 Apr
- 2020 18:43:27 +0000
-Subject: Re: Should SEV-ES #VC use IST? (Re: [PATCH] Allow RDTSC and RDTSCP
- from userspace)
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Mike Stunes <mstunes@vmware.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <JGross@suse.com>,
-        Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-References: <20200425191032.GK21900@8bytes.org>
- <910AE5B4-4522-4133-99F7-64850181FBF9@amacapital.net>
- <20200425202316.GL21900@8bytes.org>
- <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
- <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <9b26ac10-27d1-96d8-d00e-2be511853024@amd.com>
-Date:   Mon, 27 Apr 2020 13:43:24 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0201CA0017.namprd02.prod.outlook.com
- (2603:10b6:803:2b::27) To DM5PR12MB1355.namprd12.prod.outlook.com
- (2603:10b6:3:6e::7)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from office-linux.texastahm.com (67.79.209.213) by SN4PR0201CA0017.namprd02.prod.outlook.com (2603:10b6:803:2b::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Mon, 27 Apr 2020 18:43:25 +0000
-X-Originating-IP: [67.79.209.213]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 8122fa1d-6f5e-47e1-7080-08d7eadadf7a
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1818:
-X-Microsoft-Antispam-PRVS: <DM5PR12MB1818A7CACBBF02FD67BE17CBECAF0@DM5PR12MB1818.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0386B406AA
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1355.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(39860400002)(396003)(366004)(346002)(186003)(66476007)(16526019)(66946007)(66556008)(956004)(5660300002)(86362001)(2616005)(6512007)(6916009)(2906002)(478600001)(31696002)(4326008)(31686004)(6486002)(81156014)(36756003)(8676002)(7416002)(6506007)(52116002)(53546011)(26005)(316002)(54906003)(8936002);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MOKPxNm4Xkr9ivnsOhR53m6bh5uXQMlcbNCsJXwttIcXU3jObBZSy7tYURuBrNcHcj+VxmK2wLp/7Va7RaxGH2PM2oS53+AJ3qcBUxORA9BchjeZztegh3025jR0NaN1Hq28mKalWSPpniUcyEBtIBTdChAC2lYYAHz9TnI25taWbuVR0joYrJN7c1qJizgj21/YG/V19DPGNEMnR0/D7pu8dLwk5UgddUSiF16RcBmh3VZTsi1MlnFbgpSVo22DkkUK/UjeSJQU6/ZXBDRn+wa17MvHSDXurnc6YHDl1gAXUpjQFNmSF/fcAqTtPzy9fiwiKzovqkp7OjSSIKqsBmuGBkyhVevpTcRkz9WQq+kgzWGoVMWfEliRs1XoTyI8q7QEVt3DSc7oejL2X2v2aqmwOLTto1cg7QizZM1yHqGrDCqLq/QINXuUnPWyrRz8
-X-MS-Exchange-AntiSpam-MessageData: aT7GRO19xFCjFKfJlkLCi92wOF2N/I0F7yX6HMoSn8BOgrZem3IQM8ccIEJ4iD/HmBIAYyklqz97zQ/yz6SgpKza+//HPweHBQhJ7skqIv2ApxpqEgGJV2JUJlO47O57Ayct5RXru7CoKskvnAw8HXOEaHavTAwQL08KRREnKfsyOEV44O3U5mc0uf+jNOqsBCoZqhfO3/o5prx/IdCjA/8H6PA7QVxhJG7FccDzANo8BRsRLhbD8hSDb8SYnkUtdQmqWa/JKygyW2X/dHDv0+mL3ycFsS/vzJcs6XZFIl4pxghgGlmbcOez/Ur+Z5Gh2X/prA7w+AoSD1NU9VYCFOk0OE0WszcTv3wAWl4Zkg7prwTqeH4NEzcg45h8uEk/L9L0gdP4A+0PjAgsiYFc+WPcYYb0rqFIHqi3o/BdyC1Wp2WtyPve/AvalB8H2ApObe9P2heoW58GQuLa0ABPwhR8e9spfMQ+UwtdeS7Hs2T7I71HsJ65zJl3hZVeZ1qSetIZ93K8e1/wW3u+7UgNgvHH4TgkTNSMci8+PrW9sEVKjUdHNkURik25QgZiwXAXGnmC1fteZNRxNKdNKvZoSrk0VDjS7LUB0JW2SyOv1y2iZuFkDqrk5Vm5QwQTY9T6teyYiTq6oN4zqbwTRRcsDMYW/98jXNVhFDhLy+1g2mCjxKk3eCPxJ5b33K/LPDAQTCOPOjJDlUDrZaKL3bSgpG8o/9jKELxVZSTgonwhvAowV8OZ3NzhDHUzu8K9HUKVG/unBYAxJ9uLUg21Q0UDJMNXXsfdcNxBbkAAiRt03zU=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8122fa1d-6f5e-47e1-7080-08d7eadadf7a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2020 18:43:27.3196
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: x14bk3anfG9BzlyJSA90uLutHZrhG7tZbHHoqCbr+/qE1LPl6H8dpk8/ft572zpHfjWNE5R/GokeqRZiTG0BrA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1818
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=tUPZR8jYBc9v0xao/MABE2wsoNahfX3099p1cY3Tx9I=;
+        b=lZIJCLa+TvQTi89lCRezZep/+7/9ZWTuSARZ1PUJMboOoDXBMqWkSqvNkma50SOQV/
+         DSvlOUH6OdjsjwrIf3+NroE6VDbQd0EBzWjoB9jv/ncM7JDj9zKofuW8Y4shDCUr/073
+         JP//OKFXcbyTo6zqlt58oGm+VtKHwZxY/Fcad3Cv/ig+1crdCTroUUn6IWcut6gtOW8o
+         2pKGYd9pd7B2+ApuCAFXVj1npCz4ulWWqbkzSCr4AYWCcHHhXofHbhXGp7yc9P1vmNdT
+         R8hjKxMO6uPGW64bRBvfxWAT8tK4lYWmEyDmxSBfAoYhVPeJvNF7iiNdj1V90i6KprO2
+         iCvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=tUPZR8jYBc9v0xao/MABE2wsoNahfX3099p1cY3Tx9I=;
+        b=fWpi+zr2ToV3/j5W9QRLBL6EnSCBBnP7XUyx39FFObpdlYFx1+6XfXjSlD/8WsnbjX
+         DNsyl5Fqu/kRhA1aGXmATj+muiPQmbp2xSV+9qcjLkRv6z9DRmm5nAfeZXijbuUBavIL
+         O4cWAWxZyuCJchFsY9bYmj8OPbnu/B91oaM7Xfywt+wayfVi8h1+DNHm/M8GsYyQAy4x
+         igijXpUBF9Kj8h7CAg9OrmbBi+Fq/49X6vwZcjssPi3md6DpzElHEkkW0KvvqCawTMw8
+         XzQrTyx0GxEQe5IItSzDsyqNvE+1LAup+yWcxCKTkMoUpKV/4BfEZ+zznWeG40eGvLxC
+         GI+A==
+X-Gm-Message-State: AGi0PuZ0yHArRQbZmIktkrx9ft8w2rod5sB3EpUo5udJp+jD9PMKrdqR
+        7CZHFeNt15PK88fh5CHA69S1aEilhOs=
+X-Google-Smtp-Source: APiQypKo+1K46gA5Mu7rAXthGEDVu9OINkjfOa7QcJ7hbSFQOr/t9jxSe52Fx9HCXlqWkoQlGh73wu3Ihkg=
+X-Received: by 2002:a25:3252:: with SMTP id y79mr38694008yby.274.1588013042905;
+ Mon, 27 Apr 2020 11:44:02 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 11:43:58 -0700
+Message-Id: <20200427184358.191624-1-surenb@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
+Subject: [PATCH 1/1] kthread: break dependency between worker->lock and task_struct->pi_lock
+From:   Suren Baghdasaryan <surenb@google.com>
+To:     surenb@google.com
+Cc:     peterz@infradead.org, mingo@redhat.com, hannes@cmpxchg.org,
+        will@kernel.org, akpm@linux-foundation.org, tglx@linutronix.de,
+        ben.dooks@codethink.co.uk, cl@rock-chips.com, ke.wang@unisoc.com,
+        shakeelb@google.com, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+A number of kthread-related functions indirectly take task_struct->pi_lock
+while holding worker->lock in the call chain like this:
+    spin_lock(&worker->lock)
+    kthread_insert_work
+    wake_up_process
+    try_to_wake_up
+    raw_spin_lock_irqsave(&p->pi_lock, flags)
 
+This lock dependency exists whenever kthread_insert_work is called either
+directly or indirectly via __kthread_queue_delayed_work in the following
+functions:
+    kthread_queue_work
+    kthread_delayed_work_timer_fn
+    kthread_queue_delayed_work
+    kthread_flush_work
+    kthread_mod_delayed_work
 
-On 4/27/20 12:37 PM, Andy Lutomirski wrote:
-> On Sat, Apr 25, 2020 at 3:10 PM Andy Lutomirski <luto@kernel.org> wrote:
->>
->> On Sat, Apr 25, 2020 at 1:23 PM Joerg Roedel <joro@8bytes.org> wrote:
->>>
->>> On Sat, Apr 25, 2020 at 12:47:31PM -0700, Andy Lutomirski wrote:
->>>> I assume the race you mean is:
->>>>
->>>> #VC
->>>> Immediate NMI before IST gets shifted
->>>> #VC
->>>>
->>>> Kaboom.
->>>>
->>>> How are you dealing with this?  Ultimately, I think that NMI will need
->>>> to turn off IST before engaging in any funny business. Let me ponder
->>>> this a bit.
->>>
->>> Right, I dealt with that by unconditionally shifting/unshifting the #VC IST entry
->>> in do_nmi() (thanks to Davin Kaplan for the idea). It might cause
->>> one of the IST stacks to be unused during nesting, but that is fine. The
->>> stack memory for #VC is only allocated when SEV-ES is active (in an
->>> SEV-ES VM).
->>
->> Blech.  It probably works, but still, yuck.  It's a bit sad that we
->> seem to be growing more and more poorly designed happens-anywhere
->> exception types at an alarming rate.  We seem to have #NM, #MC, #VC,
->> #HV, and #DB.  This doesn't really scale.
-> 
-> I have a somewhat serious question: should we use IST for #VC at all?
-> As I understand it, Rome and Naples make it mandatory for hypervisors
-> to intercept #DB, which means that, due to the MOV SS mess, it's sort
-> of mandatory to use IST for #VC.  But Milan fixes the #DB issue, so,
-> if we're running under a sufficiently sensible hypervisor, we don't
-> need IST for #VC.
-> 
-> So I think we have two choices:
-> 
-> 1. Use IST for #VC and deal with all the mess that entails.
-> 
-> 2. Say that we SEV-ES client support on Rome and Naples is for
-> development only and do a quick boot-time check for whether #DB is
-> intercepted.  (Just set TF and see what vector we get.)  If #DB is
-> intercepted, print a very loud warning and refuse to boot unless some
-> special sev_es.insecure_development_mode or similar option is set.
-> 
-> #2 results in simpler and more robust entry code.  #1 is more secure.
-> 
-> So my question is: will anyone actually use SEV-ES in production on
-> Rome or Naples?  As I understand it, it's not really ready for prime
-> time on those chips.  And do we care if the combination of a malicious
+This creates possibilities for circular dependencies like the one reported
+at: https://lkml.org/lkml/2020/4/24/954
+Break this lock dependency by moving task wakeup after worker->lock has
+been released.
 
-Naples was limited in the number of encryption keys available for guests 
-(15), but Rome increased that significantly (509). SEV-ES is ready on 
-those chips - Rome more so with the increased key count given the 
-requirement that SEV and SEV-ES guests have non-overlapping ASID ranges 
-(which corresponds to key usage).
+Reported-by: Ke Wang <ke.wang@unisoc.com>
+Reported-by: Shakeel Butt <shakeelb@google.com>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Tested-by: Shakeel Butt <shakeelb@google.com>
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+---
+ kernel/kthread.c | 44 +++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 33 insertions(+), 11 deletions(-)
 
-Thanks,
-Tom
+diff --git a/kernel/kthread.c b/kernel/kthread.c
+index bfbfa481be3a..7a93654072bb 100644
+--- a/kernel/kthread.c
++++ b/kernel/kthread.c
+@@ -9,6 +9,7 @@
+ #include <uapi/linux/sched/types.h>
+ #include <linux/sched.h>
+ #include <linux/sched/task.h>
++#include <linux/sched/wake_q.h>
+ #include <linux/kthread.h>
+ #include <linux/completion.h>
+ #include <linux/err.h>
+@@ -806,14 +807,15 @@ static void kthread_insert_work_sanity_check(struct kthread_worker *worker,
+ /* insert @work before @pos in @worker */
+ static void kthread_insert_work(struct kthread_worker *worker,
+ 				struct kthread_work *work,
+-				struct list_head *pos)
++				struct list_head *pos,
++				struct wake_q_head *wake_q)
+ {
+ 	kthread_insert_work_sanity_check(worker, work);
+ 
+ 	list_add_tail(&work->node, pos);
+ 	work->worker = worker;
+ 	if (!worker->current_work && likely(worker->task))
+-		wake_up_process(worker->task);
++		wake_q_add(wake_q, worker->task);
+ }
+ 
+ /**
+@@ -831,15 +833,19 @@ static void kthread_insert_work(struct kthread_worker *worker,
+ bool kthread_queue_work(struct kthread_worker *worker,
+ 			struct kthread_work *work)
+ {
+-	bool ret = false;
++	DEFINE_WAKE_Q(wake_q);
+ 	unsigned long flags;
++	bool ret = false;
+ 
+ 	raw_spin_lock_irqsave(&worker->lock, flags);
+ 	if (!queuing_blocked(worker, work)) {
+-		kthread_insert_work(worker, work, &worker->work_list);
++		kthread_insert_work(worker, work, &worker->work_list, &wake_q);
+ 		ret = true;
+ 	}
+ 	raw_spin_unlock_irqrestore(&worker->lock, flags);
++
++	wake_up_q(&wake_q);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(kthread_queue_work);
+@@ -857,6 +863,7 @@ void kthread_delayed_work_timer_fn(struct timer_list *t)
+ 	struct kthread_delayed_work *dwork = from_timer(dwork, t, timer);
+ 	struct kthread_work *work = &dwork->work;
+ 	struct kthread_worker *worker = work->worker;
++	DEFINE_WAKE_Q(wake_q);
+ 	unsigned long flags;
+ 
+ 	/*
+@@ -873,15 +880,18 @@ void kthread_delayed_work_timer_fn(struct timer_list *t)
+ 	/* Move the work from worker->delayed_work_list. */
+ 	WARN_ON_ONCE(list_empty(&work->node));
+ 	list_del_init(&work->node);
+-	kthread_insert_work(worker, work, &worker->work_list);
++	kthread_insert_work(worker, work, &worker->work_list, &wake_q);
+ 
+ 	raw_spin_unlock_irqrestore(&worker->lock, flags);
++
++	wake_up_q(&wake_q);
+ }
+ EXPORT_SYMBOL(kthread_delayed_work_timer_fn);
+ 
+ static void __kthread_queue_delayed_work(struct kthread_worker *worker,
+ 					 struct kthread_delayed_work *dwork,
+-					 unsigned long delay)
++					 unsigned long delay,
++					 struct wake_q_head *wake_q)
+ {
+ 	struct timer_list *timer = &dwork->timer;
+ 	struct kthread_work *work = &dwork->work;
+@@ -895,7 +905,7 @@ static void __kthread_queue_delayed_work(struct kthread_worker *worker,
+ 	 * on that there's no such delay when @delay is 0.
+ 	 */
+ 	if (!delay) {
+-		kthread_insert_work(worker, work, &worker->work_list);
++		kthread_insert_work(worker, work, &worker->work_list, wake_q);
+ 		return;
+ 	}
+ 
+@@ -928,17 +938,21 @@ bool kthread_queue_delayed_work(struct kthread_worker *worker,
+ 				unsigned long delay)
+ {
+ 	struct kthread_work *work = &dwork->work;
++	DEFINE_WAKE_Q(wake_q);
+ 	unsigned long flags;
+ 	bool ret = false;
+ 
+ 	raw_spin_lock_irqsave(&worker->lock, flags);
+ 
+ 	if (!queuing_blocked(worker, work)) {
+-		__kthread_queue_delayed_work(worker, dwork, delay);
++		__kthread_queue_delayed_work(worker, dwork, delay, &wake_q);
+ 		ret = true;
+ 	}
+ 
+ 	raw_spin_unlock_irqrestore(&worker->lock, flags);
++
++	wake_up_q(&wake_q);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(kthread_queue_delayed_work);
+@@ -967,6 +981,7 @@ void kthread_flush_work(struct kthread_work *work)
+ 		KTHREAD_WORK_INIT(fwork.work, kthread_flush_work_fn),
+ 		COMPLETION_INITIALIZER_ONSTACK(fwork.done),
+ 	};
++	DEFINE_WAKE_Q(wake_q);
+ 	struct kthread_worker *worker;
+ 	bool noop = false;
+ 
+@@ -979,15 +994,18 @@ void kthread_flush_work(struct kthread_work *work)
+ 	WARN_ON_ONCE(work->worker != worker);
+ 
+ 	if (!list_empty(&work->node))
+-		kthread_insert_work(worker, &fwork.work, work->node.next);
++		kthread_insert_work(worker, &fwork.work, work->node.next,
++				    &wake_q);
+ 	else if (worker->current_work == work)
+ 		kthread_insert_work(worker, &fwork.work,
+-				    worker->work_list.next);
++				    worker->work_list.next, &wake_q);
+ 	else
+ 		noop = true;
+ 
+ 	raw_spin_unlock_irq(&worker->lock);
+ 
++	wake_up_q(&wake_q);
++
+ 	if (!noop)
+ 		wait_for_completion(&fwork.done);
+ }
+@@ -1065,6 +1083,7 @@ bool kthread_mod_delayed_work(struct kthread_worker *worker,
+ 			      unsigned long delay)
+ {
+ 	struct kthread_work *work = &dwork->work;
++	DEFINE_WAKE_Q(wake_q);
+ 	unsigned long flags;
+ 	int ret = false;
+ 
+@@ -1083,9 +1102,12 @@ bool kthread_mod_delayed_work(struct kthread_worker *worker,
+ 
+ 	ret = __kthread_cancel_work(work, true, &flags);
+ fast_queue:
+-	__kthread_queue_delayed_work(worker, dwork, delay);
++	__kthread_queue_delayed_work(worker, dwork, delay, &wake_q);
+ out:
+ 	raw_spin_unlock_irqrestore(&worker->lock, flags);
++
++	wake_up_q(&wake_q);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(kthread_mod_delayed_work);
+-- 
+2.26.2.303.gf8c07b1a785-goog
 
-> hypervisor and malicious guest userspace on Milan can compromise the
-> guest kernel?  I don't think SEV-ES is really mean to resist a
-> concerted effort by the hypervisor to compromise the guest.
-> 
-> --Andy
-> 
