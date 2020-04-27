@@ -2,181 +2,334 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E82EC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 080A0C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E33B7206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7182206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:27:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="C2I3T7Cj"
+	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="Odo/K5D3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgD0O0F (ORCPT
+        id S1727889AbgD0O1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 10:26:05 -0400
-Received: from mail-eopbgr70071.outbound.protection.outlook.com ([40.107.7.71]:29699
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727077AbgD0O0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 10:26:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jyzGEwIYnkHquW8HRRU74yDUaR+aiKdRCbIK4vpoRBewvdWjPUnBb8YEYq1Sx2JA7hZphyWTB3KmULgIpDfWfd/zxsjwyE7h3pBquZYRid6XF8CsHEGLfXmqOMXS2NZZ8MQx8MS4SGJ5rGSZKie48WI+ODK1/G1yQOrXXD8R52kvx2B4G10k/okUxIM3wJ/78xzHDc7t/GwUnruaixKm31k9TWfbhernQ3DO5It/6lWXzUqB/+Eza7WMVCtk1wv4bHPLOaxwZ3xzSv36p8Wxgdbb5xnYCci5oIVUvuWDHq8qAxP+AmR28gN4WK6lyWqhSyUtm7msYal7GOry3Kh7cg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=73pxRLEAccaMA1EYoTl6Dgo3FZtgkSsRnyNyaKa83pM=;
- b=R9MuJv/hUlTZ37OYh3htsM2DDE6Ll0JOZ81ljbtunfsOVt9j2P2/2akCt9c58671I6KH0A1Cidh2RPWCr3f2/wedpbeJy6iK3HacuTMBUvc3lgsLXpz3cxIQ0ALajAj8OEiuqKHbox1kHypv524PTtLmrw/m1NuMy/CLqt4PH1xbzGxZulWCSWz6wrmy9NeKZ94vD0X+qjVWSoimrOdKD5bARXJceVCNnXx/R2Gf9I36M7Of3UkkJzxOqQlkPBJwMDfD0Kv4kLCFgTaM1taF6pn5mPmg1R1xTfKEvDo6HuSyIBQmMUn0+feLMVYg71ZLLRnlzHIZUdsIefqQ09pSCQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=73pxRLEAccaMA1EYoTl6Dgo3FZtgkSsRnyNyaKa83pM=;
- b=C2I3T7Cjax3NJfJF/B95zrYYv+/XiAlIoU1JrkVYicHKdx26s7CjP8JOzhgJJIQbXWk2Of2ETFGD8LyXVrlcQIPwIfl7zRi8ZReFIQHDiDjdyXhTTdWmC0ar6bY+MnGr7JRHxiq+2ovXWJCACkMWHHlP8C/pCjpcmw4ItpQ9AE0=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB5183.eurprd05.prod.outlook.com (2603:10a6:803:a9::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Mon, 27 Apr
- 2020 14:25:58 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2937.020; Mon, 27 Apr 2020
- 14:25:58 +0000
-Date:   Mon, 27 Apr 2020 11:25:53 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Message-ID: <20200427142553.GH13640@mellanox.com>
-References: <20200424124444.GJ13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
- <20200424181203.GU13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
- <20200426191357.GB13640@mellanox.com>
- <20200426214355.29e19d33@x1.home>
- <20200427115818.GE13640@mellanox.com>
- <20200427071939.06aa300e@x1.home>
- <20200427132218.GG13640@mellanox.com>
- <20200427081841.18c4a994@x1.home>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427081841.18c4a994@x1.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: BL0PR02CA0007.namprd02.prod.outlook.com
- (2603:10b6:207:3c::20) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        Mon, 27 Apr 2020 10:27:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbgD0O1I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 10:27:08 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62C64C0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 07:27:08 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id nv1so14288477ejb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 07:27:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5xaiJwxf5bizYJGRGo7ug7IG2WAtUtRwoEcLaSq8Teg=;
+        b=Odo/K5D3TIaqpTmsMGErs+sIjRD22u0LguhPbYTjeE4y/+bkeWfp30Kot6SyhCXhHr
+         L98B012zTSmfx3NMuwfrF1+JijWNF1J4H0MEeb1eGCJTV41DIRVeJuT7MAnjF5tq7krp
+         5zNAedaa6SiRipLjtO7u06i//XAE28O5gGUmWWMG3S/s1H74JH4EYgqppDANQF43pYgc
+         puMFA/i6+hoxfTchDGXOTRglCzEf+eAZ5K9bWd3GJI8hk7FUDjQHBTrdtaWEXU/hU1fM
+         lbhjSUXrlKM8UcVLCfLf2/pjROkFFr8lZepHwGmqjTgZdhS7aMMWbOsVhI2ORjXzEEVc
+         HSRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5xaiJwxf5bizYJGRGo7ug7IG2WAtUtRwoEcLaSq8Teg=;
+        b=ZaB4s2EGIaLxF7VeenjyyY5/rR9c9kgTJ/m0hZJSgDys9rENEEQ+4WoJ8nOrIyS7mX
+         pmoIdUXBxEFpJoPIfpX2e9F6GsC7zYBLHdMDgRoFOEfWJRTaIyQ32uWJ9B64tPPxPLSi
+         JOTcq+4KSNfs1Ia1Jc64YghBOKLya5+2zt8wWed7tL/pZQ4nuy1eoIzyB/OoAhZb/BVA
+         NgR5wNJvv4+vxUq8mPyYHY/8p+pHNRXtQzkq/Y4RuvSirKI1UL1td9Yx7iXPXsXi21GJ
+         kI6lvmrarJNx6KDzu1TM+3KR43D+5/wES1IOhzHwF2k5y6QyByXFgMzmsdGJ65lDslTb
+         fH8g==
+X-Gm-Message-State: AGi0PuZzFmzLNAHxECjrg6dF8IpTDPSfAZ31T1qEdz2spukjaEO7SwEl
+        3JBQUBekKBHO3rabjTH4ffqSN8Trpzavli5rOGrDww==
+X-Google-Smtp-Source: APiQypLXfqV0HKiZP7bfFJzl75f0rxK6T82MHGc1c+GmLousTsyiDNYWdq2HHlmiKi05gqLNnM2y6AYCrBCDoedU7QU=
+X-Received: by 2002:a17:906:390a:: with SMTP id f10mr19419682eje.74.1587997626980;
+ Mon, 27 Apr 2020 07:27:06 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.68.57.212) by BL0PR02CA0007.namprd02.prod.outlook.com (2603:10b6:207:3c::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Mon, 27 Apr 2020 14:25:58 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jT4hl-00083h-TE; Mon, 27 Apr 2020 11:25:53 -0300
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: bca20ff2-8517-4dc4-56fb-08d7eab6e754
-X-MS-TrafficTypeDiagnostic: VI1PR05MB5183:|VI1PR05MB5183:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB5183A2BD8069F6322A4EC67ECFAF0@VI1PR05MB5183.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0386B406AA
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(376002)(396003)(39860400002)(346002)(52116002)(26005)(6916009)(186003)(5660300002)(66946007)(2616005)(66556008)(54906003)(316002)(66476007)(4326008)(478600001)(9786002)(9746002)(1076003)(86362001)(33656002)(36756003)(2906002)(8936002)(8676002)(81156014)(7416002)(24400500001);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 05X4l1p6VZ+cBXhuIafJ0TZRnctsj5iI57eQJuYRJ0vltuBD+ZzYJ50ZZGSNykqyJ5iSwpGaZIHh+8cNJQHUKwmu6Ac6HQfQ147VdrO4GluBgifcmLF2q0t575J4BqmGZ6GeeNSVYfYhtG67py0/CFv3v2HNyCftS1tzCATaVawdXBroaFSS4HOCepZ+aHP2i3+EkOLBS7Oi4KQ1NUPF0KpwczrDkGYJRLq2vPf7/rUC6L0oOBxwWk5+th0Sy6gvw+evreoAVhN5Rwj7Z8MQzUkQkEaYBR+4m/OjWVFFauSKpWWaEFxBplTC5qdHYF+G/XxjdkSSWFQ5i9JfyN7x2IItXK+6YyRemxNpHnqt9/PAs+f5k+zVm1auLuRv0UWR4du36XddODxfxISpqwHxycN5ses36S5BKiRT/O0hhc0gX1wfgWeCrxS/7XqgqkfBiLppAJCR4aANAUFAZLLCyIAqpeTTBUnO0xV6rkN0wy0UFwuclC/1khmcedwfa7ng
-X-MS-Exchange-AntiSpam-MessageData: oJghRb+9wZU/4jL4TQYgagw1z6XiBgdb7+t/00wGxOYFgx5pURmaHIGKnh0/uOCmN3Pgq7/DOhe0DLfsT2VF378+4KQoCKhKZPBUeA8LHN8f7qpsb1oDt5P8N5zP/Um4dwhp5GNitrqqYEzLhP+TYE6qbO4rLy3miBsT7qCRzC9hsIfXn2dIxyeV4hHFReAII/Q/m36YR2T5NuKsk/1Zfk5JBNqwJKX5wcVfueYtLZxeDuaeKsvjIVz/BbwqxmcApI0IHKzpbUD1uazTJSammLZLgJUFtPutlVIlDUbru8a2pkIl40El/KNOKB3hE6bZo0UhfSi26Ym/UuuXaBtAVXLObL01iVhQSExzlTmckpDnLeiqylsQiodtY0+KQ8hMWxOo29q6NIcu1TWALN+7rxL/DwCVsSz5EUItTwJYwi4HKvF3EuduZD/K1VNq8afx5q8vGZBdBzsC03lz1BybqfrYUTy+zKAvoxBgiQX1n4tE7wI44X6nwkvoYK9ck9Y4IHZpKi7BqmqOkNnigATactJbsauCApluBSzaG1bsY5yb8dLPzKgJRmmsUV/e9fufRE1JtmNJchqqNzKSO8cGgeV5reHybZCqgwA2nF7ptkO9vWkiQffcoGFZ3rHzIMHas0cONkhgUdkXMThkBXl5qUAcu89fo3U/v6jduU4kHMCzdKfHI9obhkLEjlBLDBKR54tb33Y17txerK9sW6cbYUI7YeeW5gLeITIG2Fo15ff1sNffQsmkneuCB7EKisJ51zNHbrkh5iAYR3/2GrIXVFiKI219TMhb8xhIFmGjaOA=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bca20ff2-8517-4dc4-56fb-08d7eab6e754
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2020 14:25:58.5844
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qlRu1EcECVW2HvZPh4axAmcAxysrYphwx8KsJsJkjShDbj1BEgrvAITYYAv9+9gkAER0MjVJhkmdTB+LWYdS/g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5183
+References: <00000000000089155205a43d9596@google.com>
+In-Reply-To: <00000000000089155205a43d9596@google.com>
+From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Date:   Mon, 27 Apr 2020 11:26:54 -0300
+Message-ID: <CAAEAJfAnMeZw3H3PJccpJTEME877i3=21CehykkSgnSnCZbOVQ@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in vkms_dumb_create
+To:     syzbot <syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        hamohammed.sa@gmail.com, linaro-mm-sig@lists.linaro.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        rodrigosiqueiramelo@gmail.com,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 08:18:41AM -0600, Alex Williamson wrote:
-> On Mon, 27 Apr 2020 10:22:18 -0300
-> Jason Gunthorpe <jgg@mellanox.com> wrote:
-> 
-> > On Mon, Apr 27, 2020 at 07:19:39AM -0600, Alex Williamson wrote:
-> > 
-> > > > It is not trivial masking. It is a 2000 line patch doing comprehensive
-> > > > emulation.  
-> > > 
-> > > Not sure what you're referring to, I see about 30 lines of code in
-> > > vdcm_vidxd_cfg_write() that specifically handle writes to the 4 BARs in
-> > > config space and maybe a couple hundred lines of code in total handling
-> > > config space emulation.  Thanks,  
-> > 
-> > Look around vidxd_do_command()
-> > 
-> > If I understand this flow properly..
-> 
-> I've only glanced at it, but that's called in response to a write to
-> MMIO space on the device, so it's implementing a device specific
-> register.
+On Mon, 27 Apr 2020 at 00:48, syzbot
+<syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    c578ddb3 Merge tag 'linux-kselftest-5.7-rc3' of git://git...
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10fbf0d8100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=b7a70e992f2f9b68
+> dashboard link: https://syzkaller.appspot.com/bug?extid=e3372a2afe1e7ef04bc7
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15438330100000
+>
+> Bisection is inconclusive: the first bad commit could be any of:
+>
+> 85b5bafb drm/cma-helper: Remove drm_fb_cma_fbdev_init_with_funcs()
+> dff1c703 drm/tinydrm: Use drm_fbdev_generic_setup()
+> 23167fa9 drm/panel: simple: Add support for Rocktech RK070ER9427 LCD panel
+> 9060d7f4 drm/fb-helper: Finish the generic fbdev emulation
+> 2230ca12 dt-bindings: display: Document the EDT et* displays in one file.
+> e896c132 drm/debugfs: Add internal client debugfs file
+> 894a677f drm/cma-helper: Use the generic fbdev emulation
+> aa7e6455 drm/panel: Add support for the EDT ETM0700G0BDH6
+> 244007ec drm/pl111: Set .gem_prime_vmap and .gem_prime_mmap
+> aad34de2 drm/panel: Add support for the EDT ETM0700G0EDH6
+> 7a6aca49 dt-bindings: Add vendor prefix for DLC Display Co., Ltd.
+> d536540f drm/fb-helper: Add generic fbdev emulation .fb_probe function
+> 0ca0c827 drm/panel: simple: Add DLC DLC0700YZG-1 panel
+> c76f0f7c drm: Begin an API for in-kernel clients
+> 5ba57bab drm: vkms: select DRM_KMS_HELPER
+> 5fa8e4a2 drm/panel: Make of_drm_find_panel() return an ERR_PTR() instead of NULL
+> 008095e0 drm/vc4: Add support for the transposer block
+> c59eb3cf drm/panel: Let of_drm_find_panel() return -ENODEV when the panel is disabled
+> 1ebe99a7 drm/vc4: Call drm_atomic_helper_fake_vblank() in the commit path
+> 2e64a174 drm/of: Make drm_of_find_panel_or_bridge() fail when the device is disabled
+> 1b9883ea drm/vc4: Support the case where the DSI device is disabled
+> 6fb42b66 drm/atomic: Call fake_vblank() from the generic commit_tail() helpers
+> b0b7aa40 dt-bindings: display: Add DT bindings for BOE HV070WSA-100 panel
+> b25c60af drm/crtc: Add a generic infrastructure to fake VBLANK events
+> 184d3cf4 drm/vc4: Use wait_for_flip_done() instead of wait_for_vblanks()
+> ae8cf41b drm/panel: simple: Add support for BOE HV070WSA-100 panel to simple-panel
+> 814bde99 drm/connector: Make ->atomic_commit() optional
+> 955f60db drm: Add support for extracting sync signal drive edge from videomode
+> 3b39ad7a drm/panel: simple: Add newhaven, nhd-4.3-480272ef-atxl LCD
+> 425132fd drm/connector: Pass a drm_connector_state to ->atomic_commit()
+> a5d2ade6 drm/panel: simple: Add support for Innolux G070Y2-L01
+> b82c1f8f drm/atomic: Avoid connector to writeback_connector casts
+> 03fa9aa3 dt-bindings: Add DataImage, Inc. vendor prefix
+> 73915b2b drm/writeback: Fix the "overview" section of the doc
+> 97ceb1fb drm/panel: simple: Add support for DataImage SCF0700C48GGU18
+> e22e9531 Merge drm-upstream/drm-next into drm-misc-next
+> 3d5664f9 drm/panel: ili9881c: Fix missing assignment to error return ret
+> a0120245 drm/crc: Only report a single overflow when a CRC fd is opened
+> 7ad4e463 drm/panel: p079zca: Refactor panel driver to support multiple panels
+> 8adbbb2e drm/stm: ltdc: rework reset sequence
+> 48bd379a drm/panel: p079zca: Add variable unprepare_delay properties
+> 7868e507 drm/stm: ltdc: filter mode pixel clock vs pad constraint
+> 731edd4c dt-bindings: Add Innolux P097PFG panel bindings
+> f8878bb2 drm: print plane state normalized zpos value
+> ca52bea9 drm/atomic-helper: Use bitwise or for filling a bitmask
+> de04a462 drm/panel: p079zca: Support Innolux P097PFG panel
+> 2bb7a39c dt-bindings: Add vendor prefix for kingdisplay
+> a65020d0 drm/v3d: Fix a grammar nit in the scheduler docs.
+> 2dd4f211 drm/v3d: Add missing v3d documentation structure.
+> ebc950fd dt-bindings: Add KINGDISPLAY KD097D04 panel bindings
+> cd0e0ca6 drm/panel: type promotion bug in s6e8aa0_read_mtp_id()
+> e0d01811 drm/v3d: Remove unnecessary dma_fence_ops.
+> 624bb0c0 drm/v3d: Delay the scheduler timeout if we're still making progress.
+> b6d83fcc drm/panel: p079zca: Use of_device_get_match_data()
+> 408633d2 drm/v3d: use new return type vm_fault_t in v3d_gem_fault
+> decac6b0 dt-bindings: display: sun4i-drm: Add R40 display engine compatible
+> 0b7510d1 drm/tilcdc: Use drm_connector_has_possible_encoder()
+> d978a94b drm/sun4i: Add R40 display engine compatible
+> af11942e drm/sun4i: tcon-top: Cleanup clock handling
+> f8222409 drm/msm: Use drm_connector_has_possible_encoder()
+> 38cb8d96 drm: Add drm_connector_has_possible_encoder()
+> da82107e drm/sun4i: tcon: Release node when traversing of graph
+> 7a667775 dt-bindings: display: sun4i-drm: Add R40 TV TCON description
+> 7b71ca24 drm/radeon: Use drm_connector_for_each_possible_encoder()
+> 4a068c5c drm/sun4i: DW HDMI: Release nodes if error happens during CRTC search
+> ddba766d drm/nouveau: Use drm_connector_for_each_possible_encoder()
+> 98c0e348 drm/amdgpu: Use drm_connector_for_each_possible_encoder()
+> e0f56782 drm/sun4i: mixer: Order includes alphabetically
+> 05db311a drm/sun4i: tcon-top: Add helpers for mux switching
+> 83aefbb8 drm: Add drm_connector_for_each_possible_encoder()
+> 20431c05 drm/i915: Nuke intel_mst_best_encoder()
+> 5e496566 drm/sun4i: tcon-top: Remove mux configuration at probe time
+> 0d998891 drm/fb-helper: Eliminate the .best_encoder() usage
+> ac1fe132 dt-bindings: display: sun4i-drm: Fix order of DW HDMI PHY compatibles
+> 03e3ec9a drm/panel: simple: Add Sharp LQ035Q7DB03 panel support
+> c91b007e drm/vkms: Add extra information about vkms
+> 5685ca0c drm/tinydrm: Fix doc build warnings
+> 854502fa drm/vkms: Add basic CRTC initialization
+> ae61f61f drm/client: Fix: drm_client_new: Don't require DRM to be registered
+> c04372ea drm/vkms: Add mode_config initialization
+> 41111ce1 drm/vkms: vkms_driver can be static
+> 559e50fd drm/vkms: Add dumb operations
+> 1c7c5fd9 drm/vkms: Introduce basic VKMS driver
+> 657cd71e drm: gma500: Changed __attribute__((packed)) to __packed
+> d1648930 drm/vkms: Add connectors helpers
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17b65cdfe00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com
+>
+> ==================================================================
+> BUG: KASAN: use-after-free in vkms_dumb_create+0x286/0x290 drivers/gpu/drm/vkms/vkms_gem.c:142
+> Read of size 8 at addr ffff88809e537110 by task syz-executor.0/9558
+>
+> CPU: 0 PID: 9558 Comm: syz-executor.0 Not tainted 5.7.0-rc2-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x188/0x20d lib/dump_stack.c:118
+>  print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:382
+>  __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
+>  kasan_report+0x33/0x50 mm/kasan/common.c:625
+>  vkms_dumb_create+0x286/0x290 drivers/gpu/drm/vkms/vkms_gem.c:142
+>  drm_mode_create_dumb+0x27c/0x300 drivers/gpu/drm/drm_dumb_buffers.c:94
+>  drm_ioctl_kernel+0x220/0x2f0 drivers/gpu/drm/drm_ioctl.c:787
+>  drm_ioctl+0x4c9/0x980 drivers/gpu/drm/drm_ioctl.c:887
+>  vfs_ioctl fs/ioctl.c:47 [inline]
+>  ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
+>  __do_sys_ioctl fs/ioctl.c:772 [inline]
+>  __se_sys_ioctl fs/ioctl.c:770 [inline]
+>  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
+>  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+>  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> RIP: 0033:0x45c829
+> Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007f19a3e30c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 00000000004e2d80 RCX: 000000000045c829
+> RDX: 0000000020000080 RSI: 00000000c02064b2 RDI: 0000000000000003
+> RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+> R13: 000000000000028b R14: 00000000004d3188 R15: 00007f19a3e316d4
+>
+> Allocated by task 9558:
+>  save_stack+0x1b/0x40 mm/kasan/common.c:49
+>  set_track mm/kasan/common.c:57 [inline]
+>  __kasan_kmalloc mm/kasan/common.c:495 [inline]
+>  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:468
+>  kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
+>  __vkms_gem_create+0x44/0xf0 include/linux/slab.h:555
+>  vkms_gem_create drivers/gpu/drm/vkms/vkms_gem.c:111 [inline]
+>  vkms_gem_create drivers/gpu/drm/vkms/vkms_gem.c:100 [inline]
+>  vkms_dumb_create+0x110/0x290 drivers/gpu/drm/vkms/vkms_gem.c:138
+>  drm_mode_create_dumb+0x27c/0x300 drivers/gpu/drm/drm_dumb_buffers.c:94
+>  drm_ioctl_kernel+0x220/0x2f0 drivers/gpu/drm/drm_ioctl.c:787
+>  drm_ioctl+0x4c9/0x980 drivers/gpu/drm/drm_ioctl.c:887
+>  vfs_ioctl fs/ioctl.c:47 [inline]
+>  ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
+>  __do_sys_ioctl fs/ioctl.c:772 [inline]
+>  __se_sys_ioctl fs/ioctl.c:770 [inline]
+>  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
+>  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+>  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+>
+> Freed by task 9558:
+>  save_stack+0x1b/0x40 mm/kasan/common.c:49
+>  set_track mm/kasan/common.c:57 [inline]
+>  kasan_set_free_info mm/kasan/common.c:317 [inline]
+>  __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:456
+>  __cache_free mm/slab.c:3426 [inline]
+>  kfree+0x109/0x2b0 mm/slab.c:3757
+>  drm_gem_object_free+0xf0/0x1f0 drivers/gpu/drm/drm_gem.c:983
+>  kref_put include/linux/kref.h:65 [inline]
+>  drm_gem_object_put_unlocked drivers/gpu/drm/drm_gem.c:1017 [inline]
+>  drm_gem_object_put_unlocked+0x190/0x1c0 drivers/gpu/drm/drm_gem.c:1002
+>  vkms_gem_create drivers/gpu/drm/vkms/vkms_gem.c:116 [inline]
+>  vkms_gem_create drivers/gpu/drm/vkms/vkms_gem.c:100 [inline]
+>  vkms_dumb_create+0x14d/0x290 drivers/gpu/drm/vkms/vkms_gem.c:138
+>  drm_mode_create_dumb+0x27c/0x300 drivers/gpu/drm/drm_dumb_buffers.c:94
+>  drm_ioctl_kernel+0x220/0x2f0 drivers/gpu/drm/drm_ioctl.c:787
+>  drm_ioctl+0x4c9/0x980 drivers/gpu/drm/drm_ioctl.c:887
+>  vfs_ioctl fs/ioctl.c:47 [inline]
+>  ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
+>  __do_sys_ioctl fs/ioctl.c:772 [inline]
+>  __se_sys_ioctl fs/ioctl.c:770 [inline]
+>  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
+>  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+>  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+>
+> The buggy address belongs to the object at ffff88809e537000
+>  which belongs to the cache kmalloc-1k of size 1024
+> The buggy address is located 272 bytes inside of
+>  1024-byte region [ffff88809e537000, ffff88809e537400)
+> The buggy address belongs to the page:
+> page:ffffea0002794dc0 refcount:1 mapcount:0 mapping:00000000e8234a18 index:0x0
+> flags: 0xfffe0000000200(slab)
+> raw: 00fffe0000000200 ffffea00027a3608 ffffea0002749008 ffff8880aa000c40
+> raw: 0000000000000000 ffff88809e537000 0000000100000002 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>  ffff88809e537000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>  ffff88809e537080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> >ffff88809e537100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                          ^
+>  ffff88809e537180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>  ffff88809e537200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ==================================================================
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
 
-It is doing emulation of the secure BAR. The entire 1000 lines of
-vidxd_* functions appear to be focused on this task.
+#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+c578ddb3
 
-> Are you asking that PCI config space be done in userspace
-> or any sort of device emulation?  
+From 58035231aa036d5710286e242ec9b6d1f2995c85 Mon Sep 17 00:00:00 2001
+From: Ezequiel Garcia <ezequiel@collabora.com>
+Date: Mon, 27 Apr 2020 10:15:06 -0300
+Subject: [PATCH] vkms: Hold gem object while in use
 
-I'm concerned about doing full emulation of registers on a MMIO BAR
-that trigger complex actions in response to MMIO read/write.
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+---
+ drivers/gpu/drm/vkms/vkms_gem.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Simple masking and simple config space stuff doesn't seem so
-problematic.
+diff --git a/drivers/gpu/drm/vkms/vkms_gem.c b/drivers/gpu/drm/vkms/vkms_gem.c
+index 2e01186fb943..023e6a45fbf8 100644
+--- a/drivers/gpu/drm/vkms/vkms_gem.c
++++ b/drivers/gpu/drm/vkms/vkms_gem.c
+@@ -113,7 +113,6 @@ struct drm_gem_object *vkms_gem_create(struct
+drm_device *dev,
+  return ERR_CAST(obj);
 
-> The assumption with mdev is that we need emulation in the host
-> kernel because we need a trusted entity to mediate device access and
-> interact with privileged portion of the device control.  Thanks,
+  ret = drm_gem_handle_create(file, &obj->gem, handle);
+- drm_gem_object_put_unlocked(&obj->gem);
+  if (ret)
+  return ERR_PTR(ret);
 
-Sure, but there are all kinds of different levels to this - mdev
-should not be some open ended device emulation framework, IMHO.
+@@ -142,6 +141,8 @@ int vkms_dumb_create(struct drm_file *file, struct
+drm_device *dev,
+  args->size = gem_obj->size;
+  args->pitch = pitch;
 
-ie other devices need only a small amount of kernel side help and
-don't need complex MMIO BAR emulation.
++ drm_gem_object_put_unlocked(gem_obj);
++
+  DRM_DEBUG_DRIVER("Created object of size %lld\n", size);
 
-Would you be happy if someone proposed an e1000 NIC emulator using
-mdev? Why not move every part of qemu's PCI device emulation into the
-kernel?
-
-Jason
+  return 0;
+--
+2.26.0.rc2
