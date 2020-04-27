@@ -2,209 +2,145 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D34CC81857
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DC1C82F01
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C9002075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E11620B80
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:28:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588030137;
+	bh=EXwlW9YtDj2mhxuO/5UeEOGlkxheyWDNO0eQBZNy4rM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tMmwdQuoY0Ky5Gm2dYLWAtJypC9bT9YDYHZf4GOUMyZm4YpzNmX3gxX4i5X5oQZ1K
+	 ZxbCHCQMYc89Y35uDlBTMgp+t6tWs+3tsI16PRH5FH2iuAtSxIlBdqK4W7k+mzFvbm
+	 Lm5RKDLFCPVx0qVPyItyt8ctgGgTaLRL9GDBj6Go=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgD0XZQ (ORCPT
+        id S1726355AbgD0X24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 19:25:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33644 "EHLO
+        Mon, 27 Apr 2020 19:28:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725968AbgD0XZQ (ORCPT
+        by vger.kernel.org with ESMTP id S1726204AbgD0X2z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 19:25:16 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06C2CC0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 16:25:16 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jTD7c-00042r-Ny; Tue, 28 Apr 2020 01:25:09 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 86B39100FC0; Tue, 28 Apr 2020 01:24:54 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     x86@kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Juergen Gross <jgross@suse.com>
-Subject: Re: [PATCH] x86/idt: Keep spurious entries unset in system_vectors
-In-Reply-To: <20200424122535.1212732-1-vkuznets@redhat.com>
-References: <20200424122535.1212732-1-vkuznets@redhat.com>
-Date:   Tue, 28 Apr 2020 01:24:54 +0200
-Message-ID: <87ftcopl4p.fsf@nanos.tec.linutronix.de>
+        Mon, 27 Apr 2020 19:28:55 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D91E5C0610D5;
+        Mon, 27 Apr 2020 16:28:54 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id y25so9769651pfn.5;
+        Mon, 27 Apr 2020 16:28:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=3+IHnDhveDGaeKCCK0OYWbU0s/NXx9OTuAol7R/VECo=;
+        b=cGIyZLN1vtbT/cGwzzdhiFz4OM0YjsRDk5xuN0Yz842DiSOrJAjPTxJz+DomJSQpKR
+         TkeSn6hsRLpEbUTUD/0qfyJn+DMv02u7MVRRQ10nUUv3JK/ROXS5UukiAt66eFXVP7iW
+         T+YwDNHD5cYsVyqzlmbNb8BHQoFUJfxjkksitV0QPa4yyvfvz8GFBIctncwcgP/eHhJZ
+         fFZbhnYLnHWbpWvLZX69/VobPVATQWF11yfrphPZGRHr9lrUNoc770UaVMpGHFDsmX7Y
+         qvfOd4Do0r8C+KVktJUzrVMN6xBL7pG/7iJUHG6B1wN/X97u/jsBbVJzxxpoGYN8mwGK
+         evNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=3+IHnDhveDGaeKCCK0OYWbU0s/NXx9OTuAol7R/VECo=;
+        b=PUH5LHDyq+E45PsMA8Ew4dOuuAdIZmnCM6Rv59nBHnoVD/SgsSekJrFINXEUxmKfUN
+         aFTo0Vn9PORM3xd89rLWoYEUHjlRujjE/pR9cJaj5XoXc+6+JTzFgs0kIrcvTvjePUzc
+         lGSrZkA692r8v5ldadcKzbfxBVifDPSKi2BNbqvkpuiQE4GEPn9+3msxyrOxziLPQI2p
+         xfsWIzm06R5JK+JaawR8yZaTXCvX1mcH8l3I2VDcCyZ7orM/j7RwOQSPP+U8ZySDp9Av
+         LGmSRdcLvSOCjM+MMYY/5pqdIOw4IjtK7HQUOfZftn+gfrkgOwlDuA+elMM8g6VD862Z
+         pMTw==
+X-Gm-Message-State: AGi0PuaBFGkOeAxPZQHnIO03bYGE7bqSpissk3xQwklMg0J2OXy3cJGw
+        eFkF3o92NrL6TDitJ3IYFwI=
+X-Google-Smtp-Source: APiQypJtJ9ReIfTtyu5z3RxVDsRD7/rjAa3M3BxCSTrSlWeZnLHG1eQze305qm1kgwA01zyl/Ltaog==
+X-Received: by 2002:a63:1823:: with SMTP id y35mr25701371pgl.25.1588030134185;
+        Mon, 27 Apr 2020 16:28:54 -0700 (PDT)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id x12sm13510217pfq.209.2020.04.27.16.28.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 16:28:53 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 16:28:51 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
+Subject: Re: mmotm 2020-04-26-00-15 uploaded (mm/madvise.c)
+Message-ID: <20200427232851.GC163745@google.com>
+References: <20200426071602.ZmQ_9C0ql%akpm@linux-foundation.org>
+ <bec3b7bd-0829-b430-be1a-f61da01ac4ac@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bec3b7bd-0829-b430-be1a-f61da01ac4ac@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vitaly Kuznetsov <vkuznets@redhat.com> writes:
-> Commit dc20b2d52653 ("x86/idt: Move interrupt gate initialization to IDT
-> code") had a side-effect of 'set_bit(i, used_vectors)' for unused entries
+On Sun, Apr 26, 2020 at 10:26:01AM -0700, Randy Dunlap wrote:
+> On 4/26/20 12:16 AM, akpm@linux-foundation.org wrote:
+> > The mm-of-the-moment snapshot 2020-04-26-00-15 has been uploaded to
+> > 
+> >    http://www.ozlabs.org/~akpm/mmotm/
+> > 
+> > mmotm-readme.txt says
+> > 
+> > README for mm-of-the-moment:
+> > 
+> > http://www.ozlabs.org/~akpm/mmotm/
+> > 
+> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> > more than once a week.
+> > 
+> > You will need quilt to apply these patches to the latest Linus release (5.x
+> > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> > http://ozlabs.org/~akpm/mmotm/series
+> > 
+> > The file broken-out.tar.gz contains two datestamp files: .DATE and
+> > .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+> > followed by the base kernel version against which this patch series is to
+> > be applied.
+> 
+> Hi,
+> I'm seeing lots of build failures in mm/madvise.c.
+> 
+> Is Minchin's patch only partially applied or is it just missing some pieces?
+> 
+> a.  mm/madvise.c needs to #include <linux/uio.h>
+> 
+> b.  looks like the sys_process_madvise() prototype in <linux/syscalls.h>
+> has not been updated:
 
-That was not a side effect. That was intentional.
-
-> which are being mapped to spurious entries. (user_vectors were later
-
-user_vectors?
-
-> renamed to system_vectors).
->
-> Previously, we used to count on system_vectors in arch_show_interrupts()
-
-We used to? Maybe you used to. I did not.
-
-> to not print unexisting entries in /proc/interrupts. E.g. 'Hypervisor
-> callback interrupts' should not be printed on bare metal. This is
-> currently broken.
-
-That was definitely unintended, but that's a purely cosmetic issue.
-
-> Setting bits in system_vectors for all unused entries also makes
-> alloc_intr_gate() fail in case someone decides to do it later. It seems
-> this is not currently an issue because all alloc_intr_gate() users are
-> calling it early, before we call idt_setup_apic_and_irq_gates() but
-> this also seems wrong.
-
-No, that's not wrong. There is absolutely no reason to allocate an
-interrupt gate later.
-
-The only thing what's wrong is that alloc_intr_gate() lacks an __init
-annotation and a sanity check to reject attempts which come in late
-after idt_setup_apic_and_irq_gates() was invoked.
-
-With that addressed we can remove the set_bit() for unused vectors to
-cure the /proc/interrupts cosmetics.
-
-Talking about side effects. This also reflects the actual number of
-system vectors which are assigned in the debugfs interface as that was
-'broken' as well.
-
-Thanks,
-
-        tglx
-
-8<--------------------
- arch/x86/kernel/idt.c            |   20 ++++++++++++++++----
- drivers/xen/events/events_base.c |   24 +++++++++++++++---------
- 2 files changed, 31 insertions(+), 13 deletions(-)
-
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -51,6 +51,9 @@ struct idt_data {
- #define TSKG(_vector, _gdt)				\
- 	G(_vector, NULL, DEFAULT_STACK, GATE_TASK, DPL0, _gdt << 3)
- 
-+
-+static __initdata bool idt_setup_done;
-+
- /*
-  * Early traps running on the DEFAULT_STACK because the other interrupt
-  * stacks work only after cpu_init().
-@@ -318,11 +321,16 @@ void __init idt_setup_apic_and_irq_gates
- 
- #ifdef CONFIG_X86_LOCAL_APIC
- 	for_each_clear_bit_from(i, system_vectors, NR_VECTORS) {
--		set_bit(i, system_vectors);
-+		/*
-+		 * Don't set the non assigned system vectors in the
-+		 * system_vectors bitmap. Otherwise they show up in
-+		 * /proc/interrupts.
-+		 */
- 		entry = spurious_entries_start + 8 * (i - FIRST_SYSTEM_VECTOR);
- 		set_intr_gate(i, entry);
- 	}
- #endif
-+	idt_setup_done = true;
- }
- 
- /**
-@@ -352,6 +360,7 @@ void idt_invalidate(void *addr)
- 	load_idt(&idt);
- }
- 
-+/* This goes away once ASYNC_PF is sanitized */
- void __init update_intr_gate(unsigned int n, const void *addr)
- {
- 	if (WARN_ON_ONCE(!test_bit(n, system_vectors)))
-@@ -359,9 +368,12 @@ void __init update_intr_gate(unsigned in
- 	set_intr_gate(n, addr);
- }
- 
--void alloc_intr_gate(unsigned int n, const void *addr)
-+void __init alloc_intr_gate(unsigned int n, const void *addr)
- {
--	BUG_ON(n < FIRST_SYSTEM_VECTOR);
--	if (!test_and_set_bit(n, system_vectors))
-+	if (WARN_ON(n < FIRST_SYSTEM_VECTOR))
-+		return;
-+	if (WARN_ON(idt_setup_done))
-+		return;
-+	if (!WARN_ON(test_and_set_bit(n, system_vectors)))
- 		set_intr_gate(n, addr);
- }
---- a/drivers/xen/events/events_base.c
-+++ b/drivers/xen/events/events_base.c
-@@ -1639,26 +1639,32 @@ EXPORT_SYMBOL_GPL(xen_set_callback_via);
- /* Vector callbacks are better than PCI interrupts to receive event
-  * channel notifications because we can receive vector callbacks on any
-  * vcpu and we don't need PCI support or APIC interactions. */
--void xen_callback_vector(void)
-+static void xen_callback_vector(void)
- {
--	int rc;
- 	uint64_t callback_via;
- 
- 	if (xen_have_vector_callback) {
- 		callback_via = HVM_CALLBACK_VECTOR(HYPERVISOR_CALLBACK_VECTOR);
--		rc = xen_set_callback_via(callback_via);
--		if (rc) {
-+		if (xen_set_callback_via(callback_via)) {
- 			pr_err("Request for Xen HVM callback vector failed\n");
- 			xen_have_vector_callback = 0;
--			return;
- 		}
--		pr_info_once("Xen HVM callback vector for event delivery is enabled\n");
--		alloc_intr_gate(HYPERVISOR_CALLBACK_VECTOR,
--				xen_hvm_callback_vector);
- 	}
- }
-+
-+static __init void xen_init_callback_vector(void)
-+{
-+	xen_callback_vector();
-+	if (!xen_have_vector_callback)
-+		return;
-+
-+	alloc_intr_gate(HYPERVISOR_CALLBACK_VECTOR, xen_hvm_callback_vector);
-+	pr_info("Xen HVM callback vector for event delivery is enabled\n");
-+}
-+
- #else
- void xen_callback_vector(void) {}
-+static inline void xen_init_callback_vector(void) {}
- #endif
- 
- #undef MODULE_PARAM_PREFIX
-@@ -1693,7 +1699,7 @@ void __init xen_init_IRQ(void)
- 			pci_xen_initial_domain();
- 	}
- 	if (xen_feature(XENFEAT_hvm_callback_vector))
--		xen_callback_vector();
-+		xen_init_callback_vector();
- 
- 	if (xen_hvm_domain()) {
- 		native_init_IRQ();
+I screwed up. Sorry about that.
+Thanks for the fixing, Randy and Andrew.
+> 
+> In file included from ../mm/madvise.c:11:0:
+> ../include/linux/syscalls.h:239:18: error: conflicting types for ‘sys_process_madvise’
+>   asmlinkage long sys##name(__MAP(x,__SC_DECL,__VA_ARGS__)) \
+>                   ^
+> ../include/linux/syscalls.h:225:2: note: in expansion of macro ‘__SYSCALL_DEFINEx’
+>   __SYSCALL_DEFINEx(x, sname, __VA_ARGS__)
+>   ^~~~~~~~~~~~~~~~~
+> ../include/linux/syscalls.h:219:36: note: in expansion of macro ‘SYSCALL_DEFINEx’
+>  #define SYSCALL_DEFINE6(name, ...) SYSCALL_DEFINEx(6, _##name, __VA_ARGS__)
+>                                     ^~~~~~~~~~~~~~~
+> ../mm/madvise.c:1295:1: note: in expansion of macro ‘SYSCALL_DEFINE6’
+>  SYSCALL_DEFINE6(process_madvise, int, which, pid_t, upid,
+>  ^~~~~~~~~~~~~~~
+> In file included from ../mm/madvise.c:11:0:
+> ../include/linux/syscalls.h:880:17: note: previous declaration of ‘sys_process_madvise’ was here
+>  asmlinkage long sys_process_madvise(int which, pid_t pid, unsigned long start,
+>                  ^~~~~~~~~~~~~~~~~~~
+> 
+> thanks.
+> -- 
+> ~Randy
+> 
