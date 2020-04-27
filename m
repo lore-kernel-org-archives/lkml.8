@@ -2,110 +2,83 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE66C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62402C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C68C20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:19:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZcfjzbQ2"
+	by mail.kernel.org (Postfix) with ESMTP id 315C8206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:20:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgD0JTR (ORCPT
+        id S1726907AbgD0JUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:19:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42136 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgD0JTQ (ORCPT
+        Mon, 27 Apr 2020 05:20:14 -0400
+Received: from smtp13.smtpout.orange.fr ([80.12.242.135]:31132 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726434AbgD0JUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:19:16 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58AA3C0610D5;
-        Mon, 27 Apr 2020 02:19:16 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id a21so16773944ljb.9;
-        Mon, 27 Apr 2020 02:19:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=zyuVBjsIdXGQVFMeD0f1H4bcoGzMBUz/1lgvMwBIesE=;
-        b=ZcfjzbQ287TzP0v7Ah3Qa2k4sl+wT8u1fI5J3pzj09Y5kBp8mQXmVu6yoKuefxeu7/
-         8s4ICvjxj8inmFVeK4MwVqI7MNHmuHI3P7pk6ePpBK2QUm5wfVHMfRRjhPa9nZpXJ9tI
-         MNjSmDq6clfxrjem4wqjUFt2zFk+Mn+aXPue5w+gR2HKXeP1+RxVVlJ9x+pxEwDwwXuF
-         USljfBXancQjWeV0p/Nxaau22YUbVkmGSQqNZnB413FP2mrTnmbYwMu3RtOSzHbMs4bL
-         LqD3MNSIoOYlNIXKbrgG1Fay/fmXrh3j5OEHRjyXzejsGfz8IIW40n98KxOhRa6ejltq
-         dFJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=zyuVBjsIdXGQVFMeD0f1H4bcoGzMBUz/1lgvMwBIesE=;
-        b=jnNpjwi1WBNtVwsza8W1ygl/vJ0Gum6AjmzVyDxF05pBMBNGpf2flz40uiSSsXqgpQ
-         nG5TgdiShxNwPsMHWCKMiK7IR1Fe5oyZ9MbYNBT5kss/nYPaowNVUYCP0bIRX2+eoRxd
-         fojWLILuWelIm+5iHDA9IA2XA3CSFrq9PCL5bC40dLU0//pDUDFjVIVn9uOTB4FDEj8E
-         FQok239KsCK36s5fBj1kWfMPwBvwY4dJo+OXWGnoRx708zLPzWJoFjI12E463V6IZu5e
-         XenFZJy7wSl87khRjM1upMYZck6ldYAELtdDI459wI4voVmxuDN03YxwWg6v9dxMUq+l
-         vDfg==
-X-Gm-Message-State: AGi0PuaamUhR7irZplshchSkWrIlVnsMo/yMxni+KxMN3YjWJuEC25qd
-        FLj+Z0iwhjasQT2y1PbjqC4=
-X-Google-Smtp-Source: APiQypK7KCI35pS++4J0SIqHJD7dr5g2l7+08iQ5RiCR71+iMFlR/jYNxzQBPDEHu+qT/Sz5AOLSQg==
-X-Received: by 2002:a2e:96c2:: with SMTP id d2mr14198354ljj.214.1587979154856;
-        Mon, 27 Apr 2020 02:19:14 -0700 (PDT)
-Received: from [172.16.20.20] ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id g6sm9538704ljj.78.2020.04.27.02.19.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 Apr 2020 02:19:14 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
-Subject: Re: [PATCH v4] arm64: dts: meson: S922X: extend cpu opp-points
-From:   Christian Hewitt <christianshewitt@gmail.com>
-In-Reply-To: <1ja72x2t7w.fsf@starbuckisacylon.baylibre.com>
-Date:   Mon, 27 Apr 2020 13:19:09 +0400
-Cc:     Tim Lewis <elatllat@gmail.com>, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, joy.cho@hardkernel.com,
-        narmstrong@baylibre.com, khilman@baylibre.com,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        tobetter@gmail.com, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <2A9D3FBA-917A-42C7-9757-4316D6B3D284@gmail.com>
-References: <20200426162119.GA23268@imac>
- <1ja72x2t7w.fsf@starbuckisacylon.baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-X-Mailer: Apple Mail (2.3445.104.14)
+        Mon, 27 Apr 2020 05:20:14 -0400
+Received: from localhost.localdomain ([92.148.159.11])
+        by mwinf5d75 with ME
+        id XlL5220090F2omL03lL5VT; Mon, 27 Apr 2020 11:20:12 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 27 Apr 2020 11:20:12 +0200
+X-ME-IP: 92.148.159.11
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     b.zolnierkie@samsung.com, gregkh@linuxfoundation.org,
+        kstewart@linuxfoundation.org, tglx@linutronix.de, arnd@arndb.de,
+        jani.nikula@intel.com, akpm@osdl.org, adaplas@pol.net,
+        rpurdie@rpsys.net
+Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] video: fbdev: w100fb: Fix a potential double free.
+Date:   Mon, 27 Apr 2020 11:19:45 +0200
+Message-Id: <20200427091945.57534-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Some memory is vmalloc'ed in the 'suspend' function and freed in the
+'resume' function.
+However, it is also freed in the remove function.
 
-> On 27 Apr 2020, at 1:06 pm, Jerome Brunet <jbrunet@baylibre.com> =
-wrote:
->=20
-> On Sun 26 Apr 2020 at 18:21, Tim Lewis <elatllat@gmail.com> wrote:
->=20
->> Add extra cpu pop points to allow mild overclock on S922X. The opp
->> points are found in Hardkernel N2 sources [1] and testing shows no
->> obvious issues on other S922X devices. Thermal throttling should
->> keep things in-check if needed.
->=20
-> The Odroid-N2 has a massive heatsink mounted.
-> Do we have any idea if this applies (is safe) on any other S922x
-> device ?
+In order to avoid a potential double free, set the corresponding pointer
+to NULL once freed in the 'resume' function.
 
-I=E2=80=99ve tested it on several S922X box devices that I have, and =
-also the
-original S922X version of the VIM3 - all have similar sized passive
-heatsinks about 20% the size of the N2 one. No obvious issues with
-Kodi software decoding to increase CPU usage. NB: The original patch
-submission was N2 specific and then reworked to apply to all S922X
-devices at Neil=E2=80=99s suggestion (after my TB and earlier comments).
+Fixes: aac51f09d96a ("[PATCH] w100fb: Rewrite for platform independence")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/video/fbdev/w100fb.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-CH.
+diff --git a/drivers/video/fbdev/w100fb.c b/drivers/video/fbdev/w100fb.c
+index 2d6e2738b792..d96ab28f8ce4 100644
+--- a/drivers/video/fbdev/w100fb.c
++++ b/drivers/video/fbdev/w100fb.c
+@@ -588,6 +588,7 @@ static void w100fb_restore_vidmem(struct w100fb_par *par)
+ 		memsize=par->mach->mem->size;
+ 		memcpy_toio(remapped_fbuf + (W100_FB_BASE-MEM_WINDOW_BASE), par->saved_extmem, memsize);
+ 		vfree(par->saved_extmem);
++		par->saved_extmem = NULL;
+ 	}
+ 	if (par->saved_intmem) {
+ 		memsize=MEM_INT_SIZE;
+@@ -596,6 +597,7 @@ static void w100fb_restore_vidmem(struct w100fb_par *par)
+ 		else
+ 			memcpy_toio(remapped_fbuf + (W100_FB_BASE-MEM_WINDOW_BASE), par->saved_intmem, memsize);
+ 		vfree(par->saved_intmem);
++		par->saved_intmem = NULL;
+ 	}
+ }
+ 
+-- 
+2.25.1
 
-[snip]=
