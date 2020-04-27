@@ -2,125 +2,196 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B30BEC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4D4C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D126206CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D919E206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:56:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X+Y1Fu2S"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="T0rTi2zv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgD0N4j (ORCPT
+        id S1727846AbgD0N4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 09:56:39 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26194 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727012AbgD0N4j (ORCPT
+        Mon, 27 Apr 2020 09:56:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57244 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbgD0N4u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 09:56:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587995798;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Dy0jYuo6XaGKYlQX4BRkBSzyIkCSqXOzYVYleb3WUHA=;
-        b=X+Y1Fu2SteaBaqQWe9P3+5t2lQKzCzM8d6gggM8QgbILPc1QkHxQ8ZVvGHlon33wlJvJha
-        WyJB7S1Mnk82BYjOu8Szw/iSa1KGHYLiM78oZ4oQb054mN7DGvgMSxnvMjJOQ57sp5EbtQ
-        OS7moTnSAC9j13/WXvo4wSKY90iPnuc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-24-wADzoOmYO7WC06KpCjHJqg-1; Mon, 27 Apr 2020 09:56:34 -0400
-X-MC-Unique: wADzoOmYO7WC06KpCjHJqg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6AA6E464;
-        Mon, 27 Apr 2020 13:56:31 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-118-57.rdu2.redhat.com [10.10.118.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1E2B46062A;
-        Mon, 27 Apr 2020 13:56:29 +0000 (UTC)
-Subject: Re: [PATCH] mm/slub: Fix incorrect checkings of s->offset
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-References: <20200427020212.5222-1-longman@redhat.com>
- <20200427123814.GE29705@bombadil.infradead.org>
- <891a7635-9074-d320-9571-74f584401f01@redhat.com>
- <b4d05ff7-0fe2-67d8-f2a7-6d0c2ab19408@redhat.com>
- <20200427133807.GF29705@bombadil.infradead.org>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <5e529523-c3ea-954e-a0d0-70d9e2345dda@redhat.com>
-Date:   Mon, 27 Apr 2020 09:56:28 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 27 Apr 2020 09:56:50 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 955C1C0610D5;
+        Mon, 27 Apr 2020 06:56:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=X25jyGvf8DYeBAr/a+VcEJFJMS/q5ACVY5cjQsA4fy0=; b=T0rTi2zvQXK8xCQhYxuQfs54m
+        i9rr/1cdUrZyGp0FIw7aRsnPGwlKrO/mdlcOYG+Nd1bhApf/6T2kn9TIrba98S2XhVbymjcOCoU1/
+        9pDbAZoA41MEeIQh0uefD+IJR3z6Hfv8E/AkqRWXztRA9iZttbgJK6iy3RMXIO42lgcZ4ETxw7E0J
+        Km3X1ohVjHNNyT1A1BwQtZq+mo4Zav8NB7YjZt5TqSlcrdrjgmdXWNlaL6FmXzjmDN5rUASFhg45c
+        00Qlf7hYRbyOAUx57fNjm2ciWmkOZGP5MxSkUeKJBzT+4K9qFBi3XEsfcRNjRC2+iMuUF5QTiPHve
+        PlmhtgqGg==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:52154)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jT4FI-0003DY-TO; Mon, 27 Apr 2020 14:56:29 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jT4FD-0006i8-Qk; Mon, 27 Apr 2020 14:56:23 +0100
+Date:   Mon, 27 Apr 2020 14:56:23 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
+Cc:     linux.cj@gmail.com, Jeremy Linton <jeremy.linton@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        linux-acpi@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>, linux-kernel@vger.kernel.org,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [net-next PATCH v2 3/3] phylink: Introduce
+ phylink_fwnode_phy_connect()
+Message-ID: <20200427135623.GG25745@shell.armlinux.org.uk>
+References: <20200427132409.23664-1-calvin.johnson@oss.nxp.com>
+ <20200427132409.23664-4-calvin.johnson@oss.nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200427133807.GF29705@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427132409.23664-4-calvin.johnson@oss.nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/27/20 9:38 AM, Matthew Wilcox wrote:
-> On Mon, Apr 27, 2020 at 09:29:41AM -0400, Waiman Long wrote:
->> On 4/27/20 9:18 AM, Waiman Long wrote:
->>> On 4/27/20 8:38 AM, Matthew Wilcox wrote:
->>>> On Sun, Apr 26, 2020 at 10:02:12PM -0400, Waiman Long wrote:
->>>>> In a couple of places in the slub memory allocator, the code uses
->>>>> "s->offset" as a check to see if the free pointer is put right
->>>>> after the
->>>>> object. That check is no longer true with commit 3202fa62fb43 ("slu=
-b:
->>>>> relocate freelist pointer to middle of object").
->>>>>
->>>>> As a result, echoing "1" into the validate sysfs file, e.g. of dent=
-ry,
->>>>> may cause a bunch of "Freepointer corrupt" error reports to appear =
-with
->>>>> the system in panic afterwards.
->>>>>
->>>>> To fix it, use the check "s->offset =3D=3D s->inuse" instead.
->>>> I think a little refactoring would make this more clear.
->>>>
->>>> unsigned int track_offset(const struct kmem_cache *s)
->>>> {
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0return s->inuse + (s->offset =3D=3D s->inus=
-e) ? sizeof(void *) : 0;
->>>> }
->>> Yes, that was what I am thinking of doing in v2.
->> BTW, "+" has a higher priority than "?:". So we need a parenthesis aro=
-und
->> "?:".
-> That seems like a good reason to not use ?:
->
-> unsigned int track_offset(const struct kmem_cache *s)
-> {
-> 	if (s->offset !=3D s->inuse)
-> 		return s->inuse;
-> 	return s->inuse + sizeof(void *);
-> }
->
-> Also this needs a comment about why we're doing this ... something abou=
-t
-> the freelist pointer, I think?
->
-I can see a simple if-else to make it easier to read.
+On Mon, Apr 27, 2020 at 06:54:09PM +0530, Calvin Johnson wrote:
+> Define phylink_fwnode_phy_connect() to connect phy specified by
+> a fwnode to a phylink instance. Additionally,
+> phylink_device_phy_connect() is defined to connect phy specified
+> by a device to a phylink instance.
+> 
+> Signed-off-by: Calvin Johnson <calvin.johnson@oss.nxp.com>
+> ---
+> 
+> Changes in v2:
+>   replace of_ and acpi_ code with generic fwnode to get phy-handle.
+> 
+>  drivers/net/phy/phylink.c | 68 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/phylink.h   |  6 ++++
+>  2 files changed, 74 insertions(+)
+> 
+> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> index 0f23bec431c1..5eab1eadded7 100644
+> --- a/drivers/net/phy/phylink.c
+> +++ b/drivers/net/phy/phylink.c
+> @@ -961,6 +961,74 @@ int phylink_connect_phy(struct phylink *pl, struct phy_device *phy)
+>  }
+>  EXPORT_SYMBOL_GPL(phylink_connect_phy);
+>  
+> +/**
+> + * phylink_fwnode_phy_connect() - connect the PHY specified in the fwnode.
+> + * @pl: a pointer to a &struct phylink returned from phylink_create()
+> + * @fwnode: a pointer to a &struct fwnode_handle.
+> + * @flags: PHY-specific flags to communicate to the PHY device driver
+> + *
+> + * Connect the phy specified @fwnode to the phylink instance specified
+> + * by @pl. Actions specified in phylink_connect_phy() will be
+> + * performed.
+> + *
+> + * Returns 0 on success or a negative errno.
+> + */
+> +int phylink_fwnode_phy_connect(struct phylink *pl,
+> +			       struct fwnode_handle *fwnode,
+> +			       u32 flags)
+> +{
+> +	struct fwnode_handle *phy_fwnode;
+> +	struct phy_device *phy_dev;
+> +	int ret = 0;
+> +
+> +	/* Fixed links and 802.3z are handled without needing a PHY */
+> +	if (pl->cfg_link_an_mode == MLO_AN_FIXED ||
+> +	    (pl->cfg_link_an_mode == MLO_AN_INBAND &&
+> +	     phy_interface_mode_is_8023z(pl->link_interface)))
+> +		return 0;
+> +
+> +	phy_fwnode = fwnode_get_phy_node(fwnode);
+> +	if ((IS_ERR_OR_NULL(phy_fwnode)) && (pl->cfg_link_an_mode == MLO_AN_PHY))
 
-Thanks,
-Longman
+According to your documentation for fwnode_get_phy_node(), it can't
+return NULL.  So, use of IS_ERR_OR_NULL() is incorrect here.  Please
+also eliminate the unnecessary parens to match the style in the rest
+of this file.
 
+> +		return -ENODEV;
+
+If fwnode_get_phy_node() returns an error pointer, shouldn't you be
+propagating that error here?
+
+> +
+> +	phy_dev = fwnode_phy_find_device(phy_fwnode);
+> +	fwnode_handle_put(phy_fwnode);
+> +	if (!phy_dev)
+> +		return -ENODEV;
+> +
+> +	ret = phy_attach_direct(pl->netdev, phy_dev, flags,
+> +				pl->link_interface);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = phylink_bringup_phy(pl, phy_dev, pl->link_config.interface);
+> +	if (ret)
+> +		phy_detach(phy_dev);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(phylink_fwnode_phy_connect);
+> +
+> +/**
+> + * phylink_device_phy_connect() - connect the PHY specified by the device.
+> + * @pl: a pointer to a &struct phylink returned from phylink_create()
+> + * @dev: a pointer to a &struct device.
+> + * @flags: PHY-specific flags to communicate to the PHY device driver
+> + *
+> + * Connect the phy specified by the device to the phylink instance specified
+> + * by @pl. Actions specified in phylink_connect_phy() will be
+> + * performed.
+> + *
+> + * Returns 0 on success or a negative errno.
+> + */
+> +int phylink_device_phy_connect(struct phylink *pl,
+> +			       struct device *dev,
+> +			       u32 flags)
+> +{
+> +	return phylink_fwnode_phy_connect(pl, dev_fwnode(dev), flags);
+> +}
+> +EXPORT_SYMBOL_GPL(phylink_device_phy_connect);
+
+If this has any users, I think this should be an inline function in
+phylink.h - it's just a helper after all.  If it doesn't then it should
+just be dropped.
+
+Thanks.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
