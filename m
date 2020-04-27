@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09241C5519B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C65BC55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D27DF2064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB46206CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:28:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="hHGHaMWi"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="oaGyC+qq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgD0K2t (ORCPT
+        id S1727065AbgD0K2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 06:28:49 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:30750 "EHLO
+        Mon, 27 Apr 2020 06:28:55 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:31930 "EHLO
         mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727026AbgD0K2q (ORCPT
+        by vger.kernel.org with ESMTP id S1727024AbgD0K2r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 06:28:46 -0400
+        Mon, 27 Apr 2020 06:28:47 -0400
 Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03RAQxFo029197;
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03RAQxFn029197;
         Mon, 27 Apr 2020 05:28:15 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-type; s=PODMain02222019;
- bh=PLECDLnpOpABvYC2GeF5Z5Nrf9J1eEI4CatoOyQZKDM=;
- b=hHGHaMWiECGuP/jpVQ92EyMAUtKVnBCHENgPor2R/kzUx+ws5Uh3nSovQmYWMyKb05W0
- 3KR4HWy4CSd3HnyJKhKzlnUNF/bYjs2xswrQeLrhBTuEUPLDvC1NpRTSYgyoo98gjhfM
- Kv4xtXtOj+c4T0J/R0E0lo9H4mv/YchrwGaaafVHEh2N/K6ZmPVTzlFlEfQogmCin8z6
- ruCdQIq7LaPuS2oNO/MVmXVqIB9r+fZQ9Q5/D6WpfVfLRyF1PMNg35kkN26373+561nI
- u2UfLIC0lg/q8hoJxzaDdohNLUfzN9VTtSd4M5BxMzEunH9RT+IiXjLNG7G3n5Azuq2V CA== 
+ bh=JmrcVen7kYcAJZ9waAthPqfdugvgxyfvuE98X/vHYE8=;
+ b=oaGyC+qqgDfxdvxOTtXwtTcD5Q0irqjN48R3FFSYr+HzbtN0CpoxertEfE+LxX8Rrs7W
+ FSL/acrw1Bf39NWpzMK9yHKz37ctJ0sF0HVn5DCYXYlLUHlgJzFZlgYcQ1Num0Nz27W9
+ WVFqS5Tm8ZgazM3sFF7ycIgCxy1h4KT/324PeHcOT5zuvBi6GHdkrcaMu+5TfcHpwI5q
+ IaMik73QWC/UybCZjhNy/weBjEFDk4kPzts5sTdLBRI64obYnF3AxU2ZPn9QCPIpssRm
+ 7c8rJvuTRco/ZSplbnwNry6T5r8NT8z1mA7Ztt31pFUN+Jpy5hRWRSuUYhw/KvXEPp3G Wg== 
 Authentication-Results: ppops.net;
         spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
 Received: from ediex02.ad.cirrus.com ([87.246.76.36])
-        by mx0b-001ae601.pphosted.com with ESMTP id 30mhmqu0ng-5
+        by mx0b-001ae601.pphosted.com with ESMTP id 30mhmqu0ng-4
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
         Mon, 27 Apr 2020 05:28:15 -0500
 Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
@@ -49,7 +49,7 @@ Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
  Transport; Mon, 27 Apr 2020 11:28:12 +0100
 Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 88701448;
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 784DA2C6;
         Mon, 27 Apr 2020 10:28:12 +0000 (UTC)
 From:   Charles Keepax <ckeepax@opensource.cirrus.com>
 To:     <robh+dt@kernel.org>, <lee.jones@linaro.org>, <broonie@kernel.org>,
@@ -57,9 +57,9 @@ To:     <robh+dt@kernel.org>, <lee.jones@linaro.org>, <broonie@kernel.org>,
         <linux@roeck-us.net>, <linus.walleij@linaro.org>
 CC:     <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <patches@opensource.cirrus.com>
-Subject: [PATCH 6/6] mfd: lochnagar: Move binding over to dtschema
-Date:   Mon, 27 Apr 2020 11:28:12 +0100
-Message-ID: <20200427102812.23251-6-ckeepax@opensource.cirrus.com>
+Subject: [PATCH 5/6] clk: lochnagar: Move binding over to dtschema
+Date:   Mon, 27 Apr 2020 11:28:11 +0100
+Message-ID: <20200427102812.23251-5-ckeepax@opensource.cirrus.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200427102812.23251-1-ckeepax@opensource.cirrus.com>
 References: <20200427102812.23251-1-ckeepax@opensource.cirrus.com>
@@ -80,19 +80,18 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
- .../devicetree/bindings/mfd/cirrus,lochnagar.txt   |  85 ----------
- .../devicetree/bindings/mfd/cirrus,lochnagar.yaml  | 183 +++++++++++++++++++++
- MAINTAINERS                                        |  12 +-
- 3 files changed, 189 insertions(+), 91 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
+ .../devicetree/bindings/clock/cirrus,lochnagar.txt |  94 ---------
+ .../bindings/clock/cirrus,lochnagar.yaml           | 220 +++++++++++++++++++++
+ 2 files changed, 220 insertions(+), 94 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/cirrus,lochnagar.yaml
 
-diff --git a/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt
+diff --git a/Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
 deleted file mode 100644
-index 3bf92ad37fa1b..0000000000000
---- a/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt
+index 52a064c789eec..0000000000000
+--- a/Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
 +++ /dev/null
-@@ -1,85 +0,0 @@
+@@ -1,94 +0,0 @@
 -Cirrus Logic Lochnagar Audio Development Board
 -
 -Lochnagar is an evaluation and development board for Cirrus Logic
@@ -103,91 +102,100 @@ index 3bf92ad37fa1b..0000000000000
 -controlled through the Lochnagar, allowing the device under test
 -to be used in a variety of possible use cases.
 -
+-This binding document describes the binding for the clock portion of
+-the driver.
+-
 -Also see these documents for generic binding information:
--  [1] GPIO : ../gpio/gpio.txt
+-  [1] Clock : ../clock/clock-bindings.txt
 -
 -And these for relevant defines:
--  [2] include/dt-bindings/pinctrl/lochnagar.h
--  [3] include/dt-bindings/clock/lochnagar.h
+-  [2] include/dt-bindings/clock/lochnagar.h
 -
--And these documents for the required sub-node binding details:
--  [4] Clock: ../clock/cirrus,lochnagar.txt
--  [5] Pinctrl: ../pinctrl/cirrus,lochnagar.txt
--  [6] Regulator: ../regulator/cirrus,lochnagar.txt
--  [7] Sound: ../sound/cirrus,lochnagar.txt
--  [8] Hardware Monitor: ../hwmon/cirrus,lochnagar.txt
+-This binding must be part of the Lochnagar MFD binding:
+-  [3] ../mfd/cirrus,lochnagar.txt
 -
 -Required properties:
 -
 -  - compatible : One of the following strings:
--                 "cirrus,lochnagar1"
--                 "cirrus,lochnagar2"
+-                 "cirrus,lochnagar1-clk"
+-                 "cirrus,lochnagar2-clk"
 -
--  - reg : I2C slave address
--
--  - reset-gpios : Reset line to the Lochnagar, see [1].
--
--Required sub-nodes:
--
--  - lochnagar-clk : Binding for the clocking components, see [4].
--
--  - lochnagar-pinctrl : Binding for the pin control components, see [5].
--
--Optional sub-nodes:
--
--  - Bindings for the regulator components, see [6]. Only available on
--    Lochnagar 2.
--
--  - lochnagar-sc : Binding for the sound card components, see [7].
--                   Only available on Lochnagar 2.
--  - lochnagar-hwmon : Binding for the hardware monitor components, see [8].
--                      Only available on Lochnagar 2.
+-  - #clock-cells : Must be 1. The first cell indicates the clock
+-    number, see [2] for available clocks and [1].
 -
 -Optional properties:
 -
--  - present-gpios : Host present line, indicating the presence of a
--    host system, see [1]. This can be omitted if the present line is
--    tied in hardware.
+-  - clocks : Must contain an entry for each clock in clock-names.
+-  - clock-names : May contain entries for each of the following
+-    clocks:
+-     - ln-cdc-clkout : Output clock from CODEC card.
+-     - ln-dsp-clkout : Output clock from DSP card.
+-     - ln-gf-mclk1,ln-gf-mclk2,ln-gf-mclk3,ln-gf-mclk4 : Optional
+-       input audio clocks from host system.
+-     - ln-psia1-mclk, ln-psia2-mclk : Optional input audio clocks from
+-       external connector.
+-     - ln-spdif-mclk : Optional input audio clock from SPDIF.
+-     - ln-spdif-clkout : Optional input audio clock from SPDIF.
+-     - ln-adat-mclk : Optional input audio clock from ADAT.
+-     - ln-pmic-32k : On board fixed clock.
+-     - ln-clk-12m : On board fixed clock.
+-     - ln-clk-11m : On board fixed clock.
+-     - ln-clk-24m : On board fixed clock.
+-     - ln-clk-22m : On board fixed clock.
+-     - ln-clk-8m : On board fixed clock.
+-     - ln-usb-clk-24m : On board fixed clock.
+-     - ln-usb-clk-12m : On board fixed clock.
+-
+-  - assigned-clocks : A list of Lochnagar clocks to be reparented, see
+-    [2] for available clocks.
+-  - assigned-clock-parents : Parents to be assigned to the clocks
+-    listed in "assigned-clocks".
+-
+-Optional nodes:
+-
+-  - fixed-clock nodes may be registered for the following on board clocks:
+-     - ln-pmic-32k : 32768 Hz
+-     - ln-clk-12m : 12288000 Hz
+-     - ln-clk-11m : 11298600 Hz
+-     - ln-clk-24m : 24576000 Hz
+-     - ln-clk-22m : 22579200 Hz
+-     - ln-clk-8m : 8192000 Hz
+-     - ln-usb-clk-24m : 24576000 Hz
+-     - ln-usb-clk-12m : 12288000 Hz
 -
 -Example:
 -
--lochnagar: lochnagar@22 {
--	compatible = "cirrus,lochnagar2";
--	reg = <0x22>;
--
--	reset-gpios = <&gpio0 55 0>;
--	present-gpios = <&gpio0 60 0>;
--
+-lochnagar {
 -	lochnagar-clk {
 -		compatible = "cirrus,lochnagar2-clk";
--		...
+-
+-		#clock-cells = <1>;
+-
+-		clocks = <&clk-audio>, <&clk_pmic>;
+-		clock-names = "ln-gf-mclk2", "ln-pmic-32k";
+-
+-		assigned-clocks = <&lochnagar-clk LOCHNAGAR_CDC_MCLK1>,
+-				  <&lochnagar-clk LOCHNAGAR_CDC_MCLK2>;
+-		assigned-clock-parents = <&clk-audio>,
+-					 <&clk-pmic>;
 -	};
 -
--	lochnagar-pinctrl {
--		compatible = "cirrus,lochnagar-pinctrl";
--		...
--	};
--
--	lochnagar-sc {
--		compatible = "cirrus,lochnagar2-soundcard";
--		...
--	};
--
--	lochnagar-hwmon {
--		compatible = "cirrus,lochnagar2-hwmon";
--		...
+-	clk-pmic: clk-pmic {
+-		compatible = "fixed-clock";
+-		clock-cells = <0>;
+-		clock-frequency = <32768>;
 -	};
 -};
-diff --git a/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml b/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
+diff --git a/Documentation/devicetree/bindings/clock/cirrus,lochnagar.yaml b/Documentation/devicetree/bindings/clock/cirrus,lochnagar.yaml
 new file mode 100644
-index 0000000000000..b2967f141b2af
+index 0000000000000..55d27e4475333
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
-@@ -0,0 +1,183 @@
++++ b/Documentation/devicetree/bindings/clock/cirrus,lochnagar.yaml
+@@ -0,0 +1,220 @@
 +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/mfd/cirrus,lochnagar.yaml#
++$id: http://devicetree.org/schemas/clock/cirrus,lochnagar.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
 +title: Cirrus Logic Lochnagar Audio Development Board
@@ -198,198 +206,212 @@ index 0000000000000..b2967f141b2af
 +description: |
 +  Lochnagar is an evaluation and development board for Cirrus Logic
 +  Smart CODEC and Amp devices. It allows the connection of most Cirrus
-+  Logic devices on mini-cards, as well as allowing connection of
-+  various application processor systems to provide a full evaluation
-+  platform.  Audio system topology, clocking and power can all be
-+  controlled through the Lochnagar, allowing the device under test
-+  to be used in a variety of possible use cases.
++  Logic devices on mini-cards, as well as allowing connection of various
++  application processor systems to provide a full evaluation platform.
++  Audio system topology, clocking and power can all be controlled through
++  the Lochnagar, allowing the device under test to be used in a variety of
++  possible use cases.
++
++  This binding document describes the binding for the clock portion of the
++  driver.
 +
 +  Also see these documents for generic binding information:
-+    [1] GPIO : ../gpio/gpio.txt
++    [1] Clock : ../clock/clock-bindings.txt
 +
 +  And these for relevant defines:
-+    [2] include/dt-bindings/pinctrl/lochnagar.h
-+    [3] include/dt-bindings/clock/lochnagar.h
++    [2] include/dt-bindings/clock/lochnagar.h
 +
-+  And these documents for the required sub-node binding details:
-+    [4] Clock: ../clock/cirrus,lochnagar.yaml
-+    [5] Pinctrl: ../pinctrl/cirrus,lochnagar.yaml
-+    [6] Regulator: ../regulator/cirrus,lochnagar.yaml
-+    [7] Sound: ../sound/cirrus,lochnagar.yaml
-+    [8] Hardware Monitor: ../hwmon/cirrus,lochnagar.yaml
-+
-+allOf:
-+  - $ref: /schemas/clock/cirrus,lochnagar.yaml#
-+  - $ref: /schemas/pinctrl/cirrus,lochnagar.yaml#
-+  - $ref: /schemas/regulator/cirrus,lochnagar.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - cirrus,lochnagar2
-+    then:
-+      allOf:
-+        - $ref: /schemas/sound/cirrus,lochnagar.yaml#
-+        - $ref: /schemas/hwmon/cirrus,lochnagar.yaml#
++  This binding must be part of the Lochnagar MFD binding:
++    [3] ../mfd/cirrus,lochnagar.yaml
 +
 +properties:
-+  compatible:
-+    contains:
-+      enum:
-+        - cirrus,lochnagar1
-+        - cirrus,lochnagar2
++  lochnagar-clk:
++    type: object
 +
-+  reg:
-+    description:
-+      I2C slave address.
-+    const: 0x22
++    properties:
++      compatible:
++        contains:
++          enum:
++            - cirrus,lochnagar1-clk
++            - cirrus,lochnagar2-clk
 +
-+  reset-gpios:
-+    description: |
-+      Reset line to the Lochnagar, see [1].
-+    maxItems: 1
++      '#clock-cells':
++        description:
++          Must be 1. The first cell indicates the clock number, see [2] for
++          available clocks and [1].
++        const: 1
++      clock-names:
++        description: |
++          May contain entries for each of the following clocks:
++           - ln-cdc-clkout : Output clock from CODEC card.
++           - ln-dsp-clkout : Output clock from DSP card.
++           - ln-gf-mclk1,ln-gf-mclk2,ln-gf-mclk3,ln-gf-mclk4 : Optional
++             input audio clocks from host system.
++           - ln-psia1-mclk, ln-psia2-mclk : Optional input audio clocks from
++             external connector.
++           - ln-spdif-mclk : Optional input audio clock from SPDIF.
++           - ln-spdif-clkout : Optional input audio clock from SPDIF.
++           - ln-adat-mclk : Optional input audio clock from ADAT.
++           - ln-pmic-32k : On board fixed clock.
++           - ln-clk-12m : On board fixed clock.
++           - ln-clk-11m : On board fixed clock.
++           - ln-clk-24m : On board fixed clock.
++           - ln-clk-22m : On board fixed clock.
++           - ln-clk-8m : On board fixed clock.
++           - ln-usb-clk-24m : On board fixed clock.
++           - ln-usb-clk-12m : On board fixed clock.
++        items:
++          enum:
++            - ln-cdc-clkout
++            - ln-dsp-clkout
++            - ln-gf-mclk1
++            - ln-gf-mclk2
++            - ln-gf-mclk3
++            - ln-gf-mclk4
++            - ln-psia1-mclk
++            - ln-psia2-mclk
++            - ln-spdif-mclk
++            - ln-spdif-clkout
++            - ln-adat-mclk
++            - ln-pmic-32k
++            - ln-clk-12m
++            - ln-clk-11m
++            - ln-clk-24m
++            - ln-clk-22m
++            - ln-clk-8m
++            - ln-usb-clk-24m
++            - ln-usb-clk-12m
++        minItems: 1
++        maxItems: 19
++      clocks: true
++      assigned-clocks: true
++      assigned-clock-parents: true
 +
-+  present-gpios:
-+    description: |
-+      Host present line, indicating the presence of a
-+      host system, see [1]. This can be omitted if the present line is
-+      tied in hardware.
-+    maxItems: 1
++    additionalProperties: false
 +
-+required:
-+  - compatible
-+  - reg
-+  - reset-gpios
-+  - lochnagar-clk
-+  - lochnagar-pinctrl
++    required:
++      - compatible
++      - '#clock-cells'
 +
-+unevaluatedProperties: false
++  lochnagar-pmic32k:
++    type: object
++    properties:
++      compatible:
++        enum:
++          - fixed-clock
++      '#clock-cells':
++        const: 0
++      clock-frequency:
++        const: 32768
++    required:
++      - compatible
++      - '#clock-cells'
++      - clock-frequency
 +
-+examples:
-+  - |
-+    #include <dt-bindings/clk/lochnagar.h>
-+    #include <dt-bindings/pinctrl/lochnagar.h>
-+    i2c@e0004000 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        reg = <0xe0004000 0x1000>;
++  lochnagar-clk12m:
++    type: object
++    properties:
++      compatible:
++        enum:
++          - fixed-clock
++      '#clock-cells':
++        const: 0
++      clock-frequency:
++        const: 12288000
++    required:
++      - compatible
++      - '#clock-cells'
++      - clock-frequency
 +
-+        lochnagar: lochnagar@22 {
-+            compatible = "cirrus,lochnagar2";
-+            reg = <0x22>;
++  lochnagar-clk11m:
++    type: object
++    properties:
++      compatible:
++        enum:
++          - fixed-clock
++      '#clock-cells':
++        const: 0
++      clock-frequency:
++        const: 11298600
++    required:
++      - compatible
++      - '#clock-cells'
++      - clock-frequency
 +
-+            reset-gpios = <&gpio0 55 0>;
-+            present-gpios = <&gpio0 60 0>;
++  lochnagar-clk24m:
++    type: object
++    properties:
++      compatible:
++        enum:
++          - fixed-clock
++      '#clock-cells':
++        const: 0
++      clock-frequency:
++        const: 24576000
++    required:
++      - compatible
++      - '#clock-cells'
++      - clock-frequency
 +
-+            lochnagarclk: lochnagar-clk {
-+                compatible = "cirrus,lochnagar2-clk";
++  lochnagar-clk22m:
++    type: object
++    properties:
++      compatible:
++        enum:
++          - fixed-clock
++      '#clock-cells':
++        const: 0
++      clock-frequency:
++        const: 22579200
++    required:
++      - compatible
++      - '#clock-cells'
++      - clock-frequency
 +
-+                #clock-cells = <1>;
-+                clocks = <&clkaudio>, <&clkpmic>;
-+                clock-names = "ln-gf-mclk2", "ln-pmic-32k";
++  lochnagar-clk8m:
++    type: object
++    properties:
++      compatible:
++        enum:
++          - fixed-clock
++      '#clock-cells':
++        const: 0
++      clock-frequency:
++        const: 8192000
++    required:
++      - compatible
++      - '#clock-cells'
++      - clock-frequency
 +
-+                assigned-clocks = <&lochnagarclk LOCHNAGAR_CDC_MCLK1>,
-+                                  <&lochnagarclk LOCHNAGAR_CDC_MCLK2>;
-+                assigned-clock-parents = <&clkaudio>, <&clkpmic>;
-+            };
++  lochnagar-usb24m:
++    type: object
++    properties:
++      compatible:
++        enum:
++          - fixed-clock
++      '#clock-cells':
++        const: 0
++      clock-frequency:
++        const: 24576000
++    required:
++      - compatible
++      - '#clock-cells'
++      - clock-frequency
 +
-+            clkpmic: lochnagar-pmic32k {
-+                compatible = "fixed-clock";
-+                #clock-cells = <0>;
-+                clock-frequency = <32768>;
-+            };
-+
-+            lochnagar-pinctrl {
-+                compatible = "cirrus,lochnagar-pinctrl";
-+
-+                gpio-controller;
-+                #gpio-cells = <2>;
-+                gpio-ranges = <&lochnagar 0 0 LOCHNAGAR2_PIN_NUM_GPIOS>;
-+
-+                pinctrl-names = "default";
-+                pinctrl-0 = <&pinsettings>;
-+
-+                pinsettings: pin-settings {
-+                    ap2aif {
-+                        input-enable;
-+                        groups = "gf-aif1";
-+                        function = "codec-aif3";
-+                    };
-+                    codec2aif {
-+                        output-enable;
-+                        groups = "codec-aif3";
-+                        function = "gf-aif1";
-+                    };
-+                };
-+            };
-+
-+            lochnagar-sc {
-+                compatible = "cirrus,lochnagar2-soundcard";
-+
-+                #sound-dai-cells = <1>;
-+
-+                clocks = <&lochnagarclk LOCHNAGAR_SOUNDCARD_MCLK>;
-+                clock-names = "mclk";
-+            };
-+
-+            lochnagar-hwmon {
-+                compatible = "cirrus,lochnagar2-hwmon";
-+            };
-+
-+            MIC1VDD {
-+                compatible = "cirrus,lochnagar2-mic1vdd";
-+
-+                MICBIAS1-supply = <&eric>;
-+
-+                cirrus,micbias-input = <3>;
-+            };
-+
-+            MICVDD {
-+                compatible = "cirrus,lochnagar2-micvdd";
-+
-+                SYSVDD-supply = <&wallvdd>;
-+
-+                regulator-min-microvolt = <3300000>;
-+                regulator-max-microvolt = <3300000>;
-+            };
-+
-+            VDD1V8 {
-+                compatible = "regulator-fixed";
-+
-+                regulator-name = "VDD1V8";
-+                regulator-min-microvolt = <1800000>;
-+                regulator-max-microvolt = <1800000>;
-+                regulator-boot-on;
-+                regulator-always-on;
-+
-+                vin-supply = <&wallvdd>;
-+            };
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e64e5db314976..a2b94e8cf585c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4062,12 +4062,12 @@ M:	Charles Keepax <ckeepax@opensource.cirrus.com>
- M:	Richard Fitzgerald <rf@opensource.cirrus.com>
- L:	patches@opensource.cirrus.com
- S:	Supported
--F:	Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
--F:	Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
--F:	Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt
--F:	Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
--F:	Documentation/devicetree/bindings/regulator/cirrus,lochnagar.txt
--F:	Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
-+F:	Documentation/devicetree/bindings/clock/cirrus,lochnagar.yaml
-+F:	Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.yaml
-+F:	Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
-+F:	Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.yaml
-+F:	Documentation/devicetree/bindings/regulator/cirrus,lochnagar.yaml
-+F:	Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml
- F:	Documentation/hwmon/lochnagar.rst
- F:	drivers/clk/clk-lochnagar.c
- F:	drivers/hwmon/lochnagar-hwmon.c
++  lochnagar-usb12m:
++    type: object
++    properties:
++      compatible:
++        enum:
++          - fixed-clock
++      '#clock-cells':
++        const: 0
++      clock-frequency:
++        const: 12288000
++    required:
++      - compatible
++      - '#clock-cells'
++      - clock-frequency
 -- 
 2.11.0
 
