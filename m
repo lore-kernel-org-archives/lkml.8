@@ -2,102 +2,116 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29610C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B74F4C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC14D206B9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9591C206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:40:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B1EBJRVP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XvQ7Y9+h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgD0NiT (ORCPT
+        id S1727073AbgD0Nkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 09:38:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54344 "EHLO
+        Mon, 27 Apr 2020 09:40:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgD0NiS (ORCPT
+        with ESMTP id S1726721AbgD0Nkn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 09:38:18 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1A40C0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 06:38:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=9UoMgYzM3h0SmuuYcAun6uUW+gxC7pfA5UN/YTDR2z0=; b=B1EBJRVP47y3yK5GB9pE1YLIzA
-        ZJfigSMb5ZIUbxD8wk8m4Tssv8e7CKWZlK+bsX8y2NjDvoZWh7QeDkVQi+8uP1EK5dlxn8nL430UY
-        kbGvuGxH+7vnwXEufD71CqacdleCXtwxAI9CMCNEnUEErVPYgIHWTqJHjHgb2354bFjd3xJCMYrY/
-        EzntOhjQUJsP8bKXiGGhfJDL/3Tp9FYvGFIFN2LeMu8RjGZCEvMbGlZxIRoXQByzsEDnIN1x5NtBA
-        cKjHm7afLk4Ikb4hxknV+evmvpufJ+mbC2tpgm5Ou++L+TNGH1SIHwcnLj9cvwCoiE/6YVwsu504F
-        3DH3+E9A==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jT3xY-0000sU-2P; Mon, 27 Apr 2020 13:38:08 +0000
-Date:   Mon, 27 Apr 2020 06:38:07 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: Re: [PATCH] mm/slub: Fix incorrect checkings of s->offset
-Message-ID: <20200427133807.GF29705@bombadil.infradead.org>
-References: <20200427020212.5222-1-longman@redhat.com>
- <20200427123814.GE29705@bombadil.infradead.org>
- <891a7635-9074-d320-9571-74f584401f01@redhat.com>
- <b4d05ff7-0fe2-67d8-f2a7-6d0c2ab19408@redhat.com>
+        Mon, 27 Apr 2020 09:40:43 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FC39C03C1A7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 06:40:43 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f13so20546879wrm.13
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 06:40:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+SvAEnjQGoKRVavmP97K2vdMEb3EEIWTHohY4rQOeno=;
+        b=XvQ7Y9+hzU5EcfSQ86a6hv1PtqRh31M16VH/0xSAl6+mg4VcTWdI6ztirNiiq99XDR
+         fT1BYBCDOFu8V8lTkW8P4YOZ8+RNhxPNDgCw7xQgRWeAXBnWWprsLFTIbPnslLv34xia
+         LiSH/pEG//lcwOInyXULQDISTZEmyHdkTlSC1C3nHUpRAeWQaOFO30SbTtDvawGBlf4h
+         nz3IPr3vkEFhAlImlaxwqh/zYO8X2i9Jla84ye4f1rC+KQpT7ausyxtw87dLM0Ehvmaq
+         /yQm0VVw2UKpaO3xQc2pgJY7MQvjHpSXCL1zcHEC06ZZ13DBV9jfyiYANAJ7UmVAob7w
+         U3HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+SvAEnjQGoKRVavmP97K2vdMEb3EEIWTHohY4rQOeno=;
+        b=hC8+K6f3+o9dRBIHU+u+0qY8j93NaSXpQbi8LrOomE6ItmL8lwCXWMmWIl8xnd7i8a
+         AYlaH+atx7Y9iPvYd+vl68tHjCFTAeluquzk8GXwPJ1CbUDaF/erDwRB13qYva6/qzzF
+         RHQcpTu13B1u2UM4Hlv+29s8epD3rWMSeuevrfpXFr8ebYvrEvllXH2Tyep+Ez0hMQI5
+         NSZe6iSfPVKTm7EmGtf15FwS6F0wQl+4Z/ANZwwoNsxB6Ne4GpvlrX/TkQWGd3+ixSHw
+         ZQmAv09OmaapHcA5H5Mmb0pVRlhBgCF7DyvJrDEP5e0MMM3gKLFVWhMCZ+Og4qPOfo2s
+         8XjQ==
+X-Gm-Message-State: AGi0PuYlo6RTleIL+6Dgc3yaa2qOG5zdr9i61xlzPdTjA7aUjjiovWX9
+        /V+7fnhJsuaEEm/wC3t5KM6MHw==
+X-Google-Smtp-Source: APiQypKLt4Y3AQbKJxyRs7ev6STdRbv1Vx2RggZUFm2SboBwevpwPw7zspoBeZRz/dvMXUz+5GsOfQ==
+X-Received: by 2002:a5d:5081:: with SMTP id a1mr29784146wrt.81.1587994841629;
+        Mon, 27 Apr 2020 06:40:41 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id h137sm88954wme.0.2020.04.27.06.40.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 06:40:40 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 14:40:39 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     jason.wessel@windriver.com, gregkh@linuxfoundation.org,
+        kgdb-bugreport@lists.sourceforge.net, mingo@redhat.com,
+        hpa@zytor.com, bp@alien8.de, linux-serial@vger.kernel.org,
+        agross@kernel.org, tglx@linutronix.de, frowand.list@gmail.com,
+        bjorn.andersson@linaro.org, jslaby@suse.com,
+        catalin.marinas@arm.com, corbet@lwn.net, will@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/9] kgdb: Disable WARN_CONSOLE_UNLOCKED for all kgdb
+Message-ID: <20200427134039.vog2eloyad55cww5@holly.lan>
+References: <20200421211447.193860-1-dianders@chromium.org>
+ <20200421141234.v2.1.Ied2b058357152ebcc8bf68edd6f20a11d98d7d4e@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b4d05ff7-0fe2-67d8-f2a7-6d0c2ab19408@redhat.com>
+In-Reply-To: <20200421141234.v2.1.Ied2b058357152ebcc8bf68edd6f20a11d98d7d4e@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 09:29:41AM -0400, Waiman Long wrote:
-> On 4/27/20 9:18 AM, Waiman Long wrote:
-> > On 4/27/20 8:38 AM, Matthew Wilcox wrote:
-> > > On Sun, Apr 26, 2020 at 10:02:12PM -0400, Waiman Long wrote:
-> > > > In a couple of places in the slub memory allocator, the code uses
-> > > > "s->offset" as a check to see if the free pointer is put right
-> > > > after the
-> > > > object. That check is no longer true with commit 3202fa62fb43 ("slub:
-> > > > relocate freelist pointer to middle of object").
-> > > > 
-> > > > As a result, echoing "1" into the validate sysfs file, e.g. of dentry,
-> > > > may cause a bunch of "Freepointer corrupt" error reports to appear with
-> > > > the system in panic afterwards.
-> > > > 
-> > > > To fix it, use the check "s->offset == s->inuse" instead.
-> > > I think a little refactoring would make this more clear.
-> > > 
-> > > unsigned int track_offset(const struct kmem_cache *s)
-> > > {
-> > >     return s->inuse + (s->offset == s->inuse) ? sizeof(void *) : 0;
-> > > }
-> > 
-> > Yes, that was what I am thinking of doing in v2.
+On Tue, Apr 21, 2020 at 02:14:39PM -0700, Douglas Anderson wrote:
+> In commit 81eaadcae81b ("kgdboc: disable the console lock when in
+> kgdb") we avoided the WARN_CONSOLE_UNLOCKED() yell when we were in
+> kgdboc.  That still works fine, but it turns out that we get a similar
+> yell when using other I/O drivers.  One example is the "I/O driver"
+> for the kgdb test suite (kgdbts).  When I enabled that I again got the
+> same yells.
 > 
-> BTW, "+" has a higher priority than "?:". So we need a parenthesis around
-> "?:".
+> Even though "kgdbts" doesn't actually interact with the user over the
+> console, using it still causes kgdb to print to the consoles.  That
+> trips the same warning:
+>   con_is_visible+0x60/0x68
+>   con_scroll+0x110/0x1b8
+>   lf+0x4c/0xc8
+>   vt_console_print+0x1b8/0x348
+>   vkdb_printf+0x320/0x89c
+>   kdb_printf+0x68/0x90
+>   kdb_main_loop+0x190/0x860
+>   kdb_stub+0x2cc/0x3ec
+>   kgdb_cpu_enter+0x268/0x744
+>   kgdb_handle_exception+0x1a4/0x200
+>   kgdb_compiled_brk_fn+0x34/0x44
+>   brk_handler+0x7c/0xb8
+>   do_debug_exception+0x1b4/0x228
+> 
+> Let's increment/decrement the "ignore_console_lock_warning" variable
+> all the time when we enter the debugger.
+> 
+> This will allow us to later revert commit 81eaadcae81b ("kgdboc:
+> disable the console lock when in kgdb").
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-That seems like a good reason to not use ?:
-
-unsigned int track_offset(const struct kmem_cache *s)
-{
-	if (s->offset != s->inuse)
-		return s->inuse;
-	return s->inuse + sizeof(void *);
-}
-
-Also this needs a comment about why we're doing this ... something about
-the freelist pointer, I think?
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
