@@ -2,71 +2,74 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF73C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0611AC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 425FB20661
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2E8206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:21:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgD0QUD (ORCPT
+        id S1728320AbgD0QVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 12:20:03 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:9451 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726254AbgD0QUD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 12:20:03 -0400
-X-IronPort-AV: E=Sophos;i="5.73,324,1583161200"; 
-   d="scan'208";a="45628506"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 28 Apr 2020 01:20:01 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 275664008560;
-        Tue, 28 Apr 2020 01:19:59 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] ARM: dts: r8a7743: Add missing compatible strings for iic3 node
-Date:   Mon, 27 Apr 2020 17:19:51 +0100
-Message-Id: <1588004391-8461-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 27 Apr 2020 12:21:03 -0400
+Received: from gentwo.org ([3.19.106.255]:35272 "EHLO gentwo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726254AbgD0QVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 12:21:02 -0400
+Received: by gentwo.org (Postfix, from userid 1002)
+        id C6C7A3F4ED; Mon, 27 Apr 2020 16:21:01 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id C4DF23E8A0;
+        Mon, 27 Apr 2020 16:21:01 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 16:21:01 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     Roman Gushchin <guro@fb.com>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/19] mm: slub: implement SLUB version of
+ obj_to_index()
+In-Reply-To: <20200425024625.GA107755@carbon.lan>
+Message-ID: <alpine.DEB.2.21.2004271618340.27701@www.lameter.com>
+References: <20200422204708.2176080-1-guro@fb.com> <20200422204708.2176080-5-guro@fb.com> <alpine.DEB.2.21.2004222349280.20021@www.lameter.com> <20200423000530.GA63356@carbon.lan> <alpine.DEB.2.21.2004250208500.7624@www.lameter.com>
+ <20200425024625.GA107755@carbon.lan>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing compatible strings "renesas,rcar-gen2-iic" and
-"renesas,rmobile-iic" to iic3 node of r8a7743 SoC.
+On Fri, 24 Apr 2020, Roman Gushchin wrote:
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- arch/arm/boot/dts/r8a7743.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> > The patch seems to only use it for setup and debugging? It is used for
+> > every "accounted" allocation???? Where? And what is an "accounted"
+> > allocation?
+> >
+> >
+>
+> Please, take a look at the whole series:
+> https://lore.kernel.org/linux-mm/20200422204708.2176080-1-guro@fb.com/T/#t
+>
+> I'm sorry, I had to cc you directly for the whole thing. Your feedback
+> will be highly appreciated.
+>
+> It's used to calculate the offset of the memcg pointer for every slab
+> object which is charged to a memory cgroup. So it must be quite hot.
 
-diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
-index e8b340b..d54cbfc 100644
---- a/arch/arm/boot/dts/r8a7743.dtsi
-+++ b/arch/arm/boot/dts/r8a7743.dtsi
-@@ -551,7 +551,9 @@
- 			/* doesn't need pinmux */
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--			compatible = "renesas,iic-r8a7743";
-+			compatible = "renesas,iic-r8a7743",
-+				     "renesas,rcar-gen2-iic",
-+				     "renesas,rmobile-iic";
- 			reg = <0 0xe60b0000 0 0x425>;
- 			interrupts = <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 926>;
--- 
-2.7.4
+
+Ahh... Thanks. I just looked at it.
+
+You need this because you have a separate structure attached to a page
+that tracks membership of the slab object to the cgroup. This is used to
+calculate the offset into that array....
+
+Why do you need this? Just slap a pointer to the cgroup as additional
+metadata onto the slab object. Is that not much simpler, safer and faster?
 
