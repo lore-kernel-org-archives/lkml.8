@@ -2,231 +2,166 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F00C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 521B6C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E5BF206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38604206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:59:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbgD0M5I (ORCPT
+        id S1727768AbgD0M7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 08:57:08 -0400
-Received: from mga11.intel.com ([192.55.52.93]:38968 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726539AbgD0M5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 08:57:07 -0400
-IronPort-SDR: RSuiKZAglaqxaO9xvZ7PGigyuX3NsKYeL9oXE5o/2rDLxun1uHoivyyL11L97ODP6abqxGlHHV
- vRM9ciE13AKA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 05:57:06 -0700
-IronPort-SDR: pTXPvxKtDK2frH7dE7054PAnbW3jXQ6OYGQOzWPtrZOnAa/Os6f1TnUMsfABX6XQPvFgiR66e3
- suVjYqyrESmg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,324,1583222400"; 
-   d="scan'208";a="246133750"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 27 Apr 2020 05:57:05 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jT3Jo-000HiW-CC; Mon, 27 Apr 2020 20:57:04 +0800
-Date:   Mon, 27 Apr 2020 20:56:35 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/mm] BUILD SUCCESS
- 21953ee5013d6632bee90ec89f2df59c69050db0
-Message-ID: <5ea6d683.5IKFPaqEDuehVciZ%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Mon, 27 Apr 2020 08:59:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48258 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726539AbgD0M7H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 08:59:07 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF61AC0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 05:59:07 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jT3Lh-0002iK-Oe; Mon, 27 Apr 2020 14:59:02 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id B23FF100606; Mon, 27 Apr 2020 14:59:00 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86 <x86@kernel.org>,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/apic: Fix circular locking dependency between console and hrtimer locks
+In-Reply-To: <20200427113218.GB134660@unreal>
+References: <20200407170925.1775019-1-leon@kernel.org> <20200414054836.GA956407@unreal> <20200414062454.GA84326@gmail.com> <87tv15qj5u.fsf@nanos.tec.linutronix.de> <20200427113218.GB134660@unreal>
+Date:   Mon, 27 Apr 2020 14:59:00 +0200
+Message-ID: <87h7x5qe3v.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/mm
-branch HEAD: 21953ee5013d6632bee90ec89f2df59c69050db0  x86/cpu: Export native_write_cr4() only when CONFIG_LKTDM=m
+Leon Romanovsky <leon@kernel.org> writes:
+> On Mon, Apr 27, 2020 at 01:09:49PM +0200, Thomas Gleixner wrote:
+>> The local APIC timer (in this case the TSC deadline timer) is set up
+>> during early boot on the boot CPU (before SMP setup) with this call
+>> chain:
+>>
+>> smp_prepare_cpus()
+>>  native_smp_prepare_cpus()
+>>    x86_init.timers.setup_percpu_clockev()
+>>      setup_boot_APIC_clock()
+>>        setup_APIC_timer()
+>>          clockevents_config_and_register()
+>>            tick_check_new_device()
+>>              tick_setup_device()
+>>                tick_setup_oneshot()
+>>                  clockevents_switch_state()
+>>                    lapic_timer_set_oneshot()
+>>                      __setup_APIC_LVTT()
+>>                        printk_once(...)
+>>
+>> Nothing holds hrtimer.base_lock in this call chain.
+>
+> Can't printk hold that lock through console/netconsole?
 
-elapsed time: 973m
+How so?
 
-configs tested: 164
-configs skipped: 0
+The lockdep splat is about this:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+ [  735.324154] swapper/3/0 is trying to acquire lock:
+ [  735.324155] ffffffff8442c858 ((console_sem).lock){-...}-{2:2}, at: down_trylock+0x13/0x70
+ [  735.324162]
+ [  735.324164] but task is already holding lock:
+ [  735.324165] ffff88842dfb9958 (hrtimer_bases.lock){-.-.}-{2:2}, at: lock_hrtimer_base+0x71/0x120
 
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-sparc                            allyesconfig
-mips                malta_kvm_guest_defconfig
-powerpc                             defconfig
-ia64                                defconfig
-mips                       capcella_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sparc64                          allmodconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                        generic_defconfig
-ia64                          tiger_defconfig
-ia64                         bigsur_defconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
-c6x                              allyesconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-mips                         tb0287_defconfig
-mips                           ip32_defconfig
-mips                  decstation_64_defconfig
-mips                      loongson3_defconfig
-mips                          ath79_defconfig
-mips                        bcm63xx_defconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                            ar7_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-parisc               randconfig-a001-20200427
-alpha                randconfig-a001-20200427
-mips                 randconfig-a001-20200427
-m68k                 randconfig-a001-20200427
-riscv                randconfig-a001-20200427
-nds32                randconfig-a001-20200427
-nios2                randconfig-a001-20200427
-c6x                  randconfig-a001-20200427
-h8300                randconfig-a001-20200427
-sparc64              randconfig-a001-20200427
-microblaze           randconfig-a001-20200427
-sh                   randconfig-a001-20200427
-csky                 randconfig-a001-20200427
-xtensa               randconfig-a001-20200427
-openrisc             randconfig-a001-20200427
-i386                 randconfig-b002-20200427
-x86_64               randconfig-b001-20200427
-i386                 randconfig-b001-20200427
-i386                 randconfig-b003-20200427
-x86_64               randconfig-b002-20200427
-x86_64               randconfig-b003-20200427
-i386                 randconfig-a003-20200427
-i386                 randconfig-a001-20200427
-i386                 randconfig-a002-20200427
-x86_64               randconfig-a002-20200427
-x86_64               randconfig-d001-20200427
-x86_64               randconfig-d002-20200427
-i386                 randconfig-d002-20200427
-i386                 randconfig-d001-20200427
-x86_64               randconfig-d003-20200427
-i386                 randconfig-d003-20200427
-i386                 randconfig-e003-20200427
-x86_64               randconfig-e002-20200427
-x86_64               randconfig-e003-20200427
-i386                 randconfig-e002-20200427
-i386                 randconfig-e001-20200427
-x86_64               randconfig-e001-20200427
-x86_64               randconfig-f002-20200427
-i386                 randconfig-f002-20200427
-i386                 randconfig-f003-20200427
-i386                 randconfig-f001-20200427
-i386                 randconfig-g001-20200427
-x86_64               randconfig-g001-20200427
-i386                 randconfig-g002-20200427
-x86_64               randconfig-g003-20200427
-i386                 randconfig-g003-20200427
-i386                 randconfig-h003-20200427
-x86_64               randconfig-h002-20200427
-i386                 randconfig-h002-20200427
-i386                 randconfig-h001-20200427
-sparc                randconfig-a001-20200427
-ia64                 randconfig-a001-20200427
-arm                  randconfig-a001-20200427
-arm64                randconfig-a001-20200427
-arc                  randconfig-a001-20200427
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+and the call chain is:
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ [  735.324283]        __lock_acquire+0x374a/0x5210
+ [  735.324284]        lock_acquire+0x1b9/0x920
+ [  735.324286]        _raw_spin_lock_irqsave+0x3c/0x4b
+ [  735.324288]        down_trylock+0x13/0x70
+ [  735.324289]        __down_trylock_console_sem+0x33/0xa0
+ [  735.324291]        console_trylock+0x13/0x60
+ [  735.324292]        vprintk_emit+0xec/0x370
+ [  735.324294]        printk+0x9c/0xc3
+ [  735.324296]        lapic_timer_set_oneshot+0x4e/0x60
+ [  735.324297]        clockevents_switch_state+0x1e1/0x360
+ [  735.324299]        tick_program_event+0xae/0xc0
+ [  735.324301]        hrtimer_start_range_ns+0x4b6/0xaa0
+ [  735.324302]        tick_nohz_idle_stop_tick+0x67c/0xa90
+ [  735.324304]        do_idle+0x326/0x530
+ [  735.324305]        cpu_startup_entry+0x19/0x20
+ [  735.324307]        start_secondary+0x2ee/0x3e0
+ [  735.324309]        secondary_startup_64+0xa4/0xb0
+
+hrtimer_start_range_ns() clearly holds htimer_base::lock
+
+>> But the lockdep splat clearly says:
+>>
+>>  [  735.324357] stack backtrace:
+>>  [  735.324360] CPU: 3 PID: 0 Comm: swapper/3 Not tainted 5.6.0-for-upstream-dbg-2020-04-03_10-44-43-70 #1
+>>
+>> ...
+>>
+>> So how can that be the first invocation of that printk_once()?
+>>
+>> While the patch looks innocent, it papers over the underlying problem
+>> and wild theories are not really helping here.
+>>
+>> Here is a boot log excerpt with lockdep enabled and 'debug' on the
+>> command line:
+>>
+>> [    0.000000] Linux version 5.7.0-rc3 ...
+>> ...
+>> [    3.992125] TSC deadline timer enabled
+>> [    3.995820] smpboot: CPU0: Intel(R) ....
+>> ...
+>> [    4.050766] smp: Bringing up secondary CPUs ...
+>>
+>> No splat nothing. The real question is WHY this triggers on Leons
+>> machine 735 seconds after boot and on CPU3.
+>
+> I want to believe that the timestamp are not correct, have no clue if it
+> is even possible.
+
+It does not matter whether the timestamps are correct or not. Even if
+they are not, then this does not change the fact that this happens on
+CPU3 way after the first invocation of __setup_APIC_LVTT() on CPU0 which
+simply cannot trigger this splat.
+
+Can you please provide the full dmesg with the splat?
+
+> But let's talk about facts:
+> 1. It is started after -rc1 (we don't test linux-next).
+
+Is that a plain kernel from Linus tree or do you have other patches
+applied?
+
+A .config file would be appreciated as well along with information about
+the hardware or whatever this runs on.
+
+> 2. This workaround helped to eliminate the splat.
+
+It's eliminating the symptom, but this does not make the root cause go
+away nor does it explain anything.
+
+> 3. My machine experiences the extra splat all the time
+> https://lore.kernel.org/lkml/20200414070502.GR334007@unreal/
+
+which is completely unrelated.
+
+Thanks,
+
+        tglx
