@@ -2,144 +2,110 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4039CC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB94FC55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2470F206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A594C2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:08:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="W2a981xv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbgD0HEi (ORCPT
+        id S1726625AbgD0HIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 03:04:38 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:56029 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726658AbgD0HDk (ORCPT
+        Mon, 27 Apr 2020 03:08:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbgD0HIM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 03:03:40 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R961e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0Twm27sZ_1587971015;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Twm27sZ_1587971015)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 27 Apr 2020 15:03:35 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
-        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, shakeelb@google.com,
-        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Andrea Arcangeli <aarcange@redhat.com>
-Subject: [PATCH v10 06/15] mm/thp: narrow lru locking
-Date:   Mon, 27 Apr 2020 15:02:55 +0800
-Message-Id: <1587970985-21629-7-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1587970985-21629-1-git-send-email-alex.shi@linux.alibaba.com>
-References: <1587970985-21629-1-git-send-email-alex.shi@linux.alibaba.com>
+        Mon, 27 Apr 2020 03:08:12 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 594ABC061A0F;
+        Mon, 27 Apr 2020 00:08:12 -0700 (PDT)
+Received: from zn.tnic (p200300EC2F05F000D9541802070C4AE1.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:f000:d954:1802:70c:4ae1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F2D5D1EC0CDA;
+        Mon, 27 Apr 2020 09:08:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1587971290;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=3CxZwGBTt+ToXUeMtFGEKT2BZI/KNjbUZlpY/rw/Ztg=;
+        b=W2a981xvH2aNCGTvcwxFjU0F46f/6RRi1rqoV5zYGK9c2LGLloo6nejMad5RsnNg3Yr6+R
+        h3zLgOweECmDHK0Te5ziXOnmPWVOoXM9xyvInwmywrfjvgN7fliS+r2rBH9+Yfj6bqV606
+        repydKjEz666T8RBkLKYkdrNiD0BSHQ=
+Date:   Mon, 27 Apr 2020 09:08:02 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Aristeu Rozanski <aris@redhat.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 06/10] EDAC/ghes: Remove local variable rdr_mask in
+ ghes_edac_dmidecode()
+Message-ID: <20200427070802.GA11036@zn.tnic>
+References: <20200422115814.22205-1-rrichter@marvell.com>
+ <20200422115814.22205-7-rrichter@marvell.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200422115814.22205-7-rrichter@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-lru_lock and page cache xa_lock have no reason with current sequence,
-put them together isn't necessary. let's narrow the lru locking, but
-left the local_irq_disable/preempt_disable to block interrupt
-re-entry and statistic update.
+On Wed, Apr 22, 2020 at 01:58:10PM +0200, Robert Richter wrote:
+> The local variable rdr_mask serves as a static constant here. It hides
+> what the code is doing. Remove it and replace it with the actual logic
+> that checks some bits.
+> 
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+> ---
+>  drivers/edac/ghes_edac.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+> index a5890afa9c71..038e560fd332 100644
+> --- a/drivers/edac/ghes_edac.c
+> +++ b/drivers/edac/ghes_edac.c
+> @@ -191,7 +191,6 @@ static void ghes_edac_dmidecode(const struct dmi_header *dh, void *arg)
+>  	if (dh->type == DMI_ENTRY_MEM_DEVICE) {
+>  		struct memdev_dmi_entry *entry = (struct memdev_dmi_entry *)dh;
+>  		struct dimm_info *dimm = edac_get_dimm(mci, dimm_fill->count, 0, 0);
+> -		u16 rdr_mask = BIT(7) | BIT(13);
+>  
+>  		if (entry->size == 0xffff) {
+>  			pr_info("Can't get DIMM%i size\n",
+> @@ -241,7 +240,8 @@ static void ghes_edac_dmidecode(const struct dmi_header *dh, void *arg)
+>  		default:
+>  			if (entry->type_detail & BIT(6))
+>  				dimm->mtype = MEM_RMBS;
+> -			else if ((entry->type_detail & rdr_mask) == rdr_mask)
+> +			else if ((entry->type_detail & BIT(7)) &&
+> +				 (entry->type_detail & BIT(13)))
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- mm/huge_memory.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+Well, "checks some bits" doesn't make it more telling than checking a
+descriptive name like "rdr_mask" but ok, since we're assigning MEM_RDR
+here, it is still clear what the check does.
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index bd28d68ad3a8..d6952a86acdc 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2607,8 +2607,6 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 	unsigned long offset = 0;
- 	int i;
- 
--	lruvec = mem_cgroup_page_lruvec(head, pgdat);
--
- 	/* complete memcg works before add pages to LRU */
- 	mem_cgroup_split_huge_fixup(head);
- 
-@@ -2620,6 +2618,11 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 		xa_lock(&swap_cache->i_pages);
- 	}
- 
-+	/* lock lru list/PageCompound, isolate freezed by page_ref_freeze */
-+	spin_lock(&pgdat->lru_lock);
-+
-+	lruvec = mem_cgroup_page_lruvec(head, pgdat);
-+
- 	for (i = HPAGE_PMD_NR - 1; i >= 1; i--) {
- 		__split_huge_page_tail(head, i, lruvec, list);
- 		/* Some pages can be beyond i_size: drop them from page cache */
-@@ -2637,8 +2640,8 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 					head + i, 0);
- 		}
- 	}
--
- 	ClearPageCompound(head);
-+	spin_unlock(&pgdat->lru_lock);
- 
- 	split_page_owner(head, HPAGE_PMD_ORDER);
- 
-@@ -2656,8 +2659,8 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 		page_ref_add(head, 2);
- 		xa_unlock(&head->mapping->i_pages);
- 	}
--
--	spin_unlock_irqrestore(&pgdat->lru_lock, flags);
-+	preempt_enable();
-+	local_irq_restore(flags);
- 
- 	remap_page(head);
- 
-@@ -2796,7 +2799,6 @@ bool can_split_huge_page(struct page *page, int *pextra_pins)
- int split_huge_page_to_list(struct page *page, struct list_head *list)
- {
- 	struct page *head = compound_head(page);
--	struct pglist_data *pgdata = NODE_DATA(page_to_nid(head));
- 	struct deferred_split *ds_queue = get_deferred_split_queue(head);
- 	struct anon_vma *anon_vma = NULL;
- 	struct address_space *mapping = NULL;
-@@ -2868,9 +2870,8 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
- 	if (mlocked)
- 		lru_add_drain();
- 
--	/* prevent PageLRU to go away from under us, and freeze lru stats */
--	spin_lock_irqsave(&pgdata->lru_lock, flags);
--
-+	local_irq_save(flags);
-+	preempt_disable();
- 	if (mapping) {
- 		XA_STATE(xas, &mapping->i_pages, page_index(head));
- 
-@@ -2919,7 +2920,8 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
- 		spin_unlock(&ds_queue->split_queue_lock);
- fail:		if (mapping)
- 			xa_unlock(&mapping->i_pages);
--		spin_unlock_irqrestore(&pgdata->lru_lock, flags);
-+		preempt_enable();
-+		local_irq_restore(flags);
- 		remap_page(head);
- 		ret = -EBUSY;
- 	}
+Btw, please write it like this:
+
+			else if (entry->type_detail & (BIT(7) | BIT(13)))
+
+Thx.
+
 -- 
-1.8.3.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
