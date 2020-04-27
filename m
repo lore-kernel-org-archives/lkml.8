@@ -2,68 +2,65 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 499DCC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E82C5519A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29A2E20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9641206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:29:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgD0K3R (ORCPT
+        id S1727097AbgD0K3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 06:29:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:33302 "EHLO foss.arm.com"
+        Mon, 27 Apr 2020 06:29:22 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:39450 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727036AbgD0K3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 06:29:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94D601FB;
-        Mon, 27 Apr 2020 03:29:15 -0700 (PDT)
-Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2BD5F3F68F;
-        Mon, 27 Apr 2020 03:29:14 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 11:29:11 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Todd E Brandt <todd.e.brandt@linux.intel.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] Revert "cpu/hotplug: Ignore pm_wakeup_pending() for
- disable_nonboot_cpus()"
-Message-ID: <20200427102910.b6iysyumiz5pj4sv@e107158-lin>
-References: <20200409112742.3581-1-qais.yousef@arm.com>
- <26038947.HFycnDbHsR@kreacher>
+        id S1727036AbgD0K3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 06:29:20 -0400
+Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1jT0xe-0001ge-Qg; Mon, 27 Apr 2020 20:26:03 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Mon, 27 Apr 2020 20:28:11 +1000
+Date:   Mon, 27 Apr 2020 20:28:11 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Hadar Gat <hadar.gat@arm.com>
+Cc:     Matt Mackall <mpm@selenic.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <ofir.drang@arm.com>
+Subject: Re: [PATCH v2 1/3] hwrng: cctrng - Add dependency on OF
+Message-ID: <20200427102811.GA10473@gondor.apana.org.au>
+References: <1587980946-363-1-git-send-email-hadar.gat@arm.com>
+ <1587980946-363-2-git-send-email-hadar.gat@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <26038947.HFycnDbHsR@kreacher>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <1587980946-363-2-git-send-email-hadar.gat@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/26/20 17:24, Rafael J. Wysocki wrote:
-> I would do this the other way around:
+On Mon, Apr 27, 2020 at 12:49:04PM +0300, Hadar Gat wrote:
+> The cctrng is unusable on non-DT systems so we should depend
+> on it.
 > 
-> 1. Make x86 call freeze_secondary_cpus() directly, rename
->    enable_nonboot_cpus() and drop disable_nonboot_cpus().
+> Signed-off-by: Hadar Gat <hadar.gat@arm.com>
+> ---
+>  drivers/char/hw_random/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-All of this in a single patch?
-
-> 2. Get rid of __freeze_secondary_cpus().
-
-I guess you're implying to drop the revert too and manually unroll it instead.
-
-Could do.
-
-Thanks
-
---
-Qais Yousef
+This breaks compile testing for me so nack.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
