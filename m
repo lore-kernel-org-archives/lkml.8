@@ -2,141 +2,95 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22999C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F01CCC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01F1820728
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C072720663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:29:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P/eSHGWJ"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="Gt7agO8G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgD0N2W (ORCPT
+        id S1727115AbgD0N3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 09:28:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52814 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726769AbgD0N2U (ORCPT
+        Mon, 27 Apr 2020 09:29:10 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:48874 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726769AbgD0N3K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 09:28:20 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81CEDC0610D5;
-        Mon, 27 Apr 2020 06:28:20 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id e6so7437764pjt.4;
-        Mon, 27 Apr 2020 06:28:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GHn5LhhRmzy3sndf78S27qfruwCqi4o/1SdzUaUG+CY=;
-        b=P/eSHGWJI1R3+uwssq2jpcVpDs0STyTfYIjS/6fMuUcoKIU0mq5NqPzlrT8vwwPNAW
-         uWttoIiLsdjqqVFUgcTi1GYSStxqdgmYStqY38agWPApHa+cK/4u2CfH0yRl5SFqVKAv
-         Lr1F/A+HFTmbHrP9nKai236DFWbk6CzIXm1hXRwW7lDktn98mx6HZrofcjh1rRx6lsJT
-         5QegEpUU99h1j5Krd1SLd4YTii50H5tDTxxsdTW5OcElutDBV78VY0szJ6Ogjodm/e59
-         5IkNZ0WklVmQIYsgXD2jWRDMIdKvEsuK5EAhTmM8MChcBuQ0SzdZHqGBhH++PbTkQ3VE
-         jtaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GHn5LhhRmzy3sndf78S27qfruwCqi4o/1SdzUaUG+CY=;
-        b=aeK8Uyr/6fN8u276LP1T5Tu4GaSG9EQTALOBVALSRKahmR60h+1hNTZA7F+P0IgFyb
-         pemHGld97av8l/DmPcblVX/HCJadbfkk/Nbd40K4aJWoDNuCtfpQCXQAohz4EHq8vrip
-         hNkQC7h3wmCPd8/bbZfa2XUVUO6H+KpjsEgK0XE99/y62/Fr3k0KQLZKKLZGRw9gD5wo
-         hj+DK23z7ATcXmNFUWZ072uwmyW8StWMxMn8zgvSaHOdG0+X8W7/4Bh7hXZeFJtzu6Og
-         e8Q9LTD09DqhsV6HkVb/NrcNiz0G6VRCd9dfkgo79+mAeKnrKZD5aSTMKz8HiQ8hj2v4
-         EZ0g==
-X-Gm-Message-State: AGi0PuZsafI9WR+z9hj4BzqbM8g3TidQJ2iQ3W5bfT4ME6S2GQ1ca63V
-        95+xfBnCn9ZHHSurY0gMcfCQUMm5a+CY/AMpGts=
-X-Google-Smtp-Source: APiQypLM5+dnAYGRYo/miUr0skkS1pXmKokJxMTF2OxcJbjIgqi5/Xf//ExfkwcwyxPjQWzVN+J/SlG8Ed/n4uKxqo8=
-X-Received: by 2002:a17:90a:364c:: with SMTP id s70mr23246347pjb.143.1587994099840;
- Mon, 27 Apr 2020 06:28:19 -0700 (PDT)
+        Mon, 27 Apr 2020 09:29:10 -0400
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 12F502E09A3;
+        Mon, 27 Apr 2020 16:29:05 +0300 (MSK)
+Received: from vla1-81430ab5870b.qloud-c.yandex.net (vla1-81430ab5870b.qloud-c.yandex.net [2a02:6b8:c0d:35a1:0:640:8143:ab5])
+        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id K3H49cSzVI-T3nGq4Ee;
+        Mon, 27 Apr 2020 16:29:05 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1587994145; bh=+le2GIAhEIPI8xAIUs+VYbFLSXRRCHe5U0FQ2+oQmVc=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=Gt7agO8GSR83RY2ebFES+sFW0fv1czwqHlihg+F8LIA5J2yXRrBJkD4ssr6xJUc5h
+         LgGIr5lratnhNYBwTSIubala5q0c0ry8AJVXefMBC6tmw6vIJHa7puF4xUyoZevOKM
+         ib+VJHUY4mTk9QX5eepww/6D1d7gx/js9CvIn1nQ=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b080:7208::1:1])
+        by vla1-81430ab5870b.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id xq1YpEXLXr-T3XS2fxu;
+        Mon, 27 Apr 2020 16:29:03 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH] lib/test_lockup.c: make test_inode static
+To:     Jason Yan <yanaijie@huawei.com>, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     Hulk Robot <hulkci@huawei.com>
+References: <20200417074021.46411-1-yanaijie@huawei.com>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <4b210d34-5dae-63c7-4fde-3332b99b0159@yandex-team.ru>
+Date:   Mon, 27 Apr 2020 16:29:03 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <1586942266-21480-1-git-send-email-jprakash@codeaurora.org>
- <1586942266-21480-4-git-send-email-jprakash@codeaurora.org>
- <CAHp75VegoXJmi1rDg_-ePKqoo69Jdt7NBchCTE=bPAdJqrgYQQ@mail.gmail.com> <68d9c770-b190-dd13-0869-fdae9fb1f16f@codeaurora.org>
-In-Reply-To: <68d9c770-b190-dd13-0869-fdae9fb1f16f@codeaurora.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 27 Apr 2020 16:28:13 +0300
-Message-ID: <CAHp75Vdu4HvaTg5ij=DFhwn=y_JCb9ae9L5-iV72Zk-k9CBHuw@mail.gmail.com>
-Subject: Re: [PATCH V2 3/3] iio: adc: Add support for PMIC7 ADC
-To:     Jishnu Prakash <jprakash@codeaurora.org>
-Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        smohanad@codeaurora.org, kgunda@codeaurora.org,
-        aghayal@codeaurora.org, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-arm-msm@vger.kernel.org,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200417074021.46411-1-yanaijie@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 3:56 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
-> On 4/17/2020 3:51 PM, Andy Shevchenko wrote:
-> On Thu, Apr 16, 2020 at 1:48 AM Jishnu Prakash <jprakash@codeaurora.org> wrote:
+On 17/04/2020 10.40, Jason Yan wrote:
+> Fix the following sparse warning:
+> 
+> lib/test_lockup.c:145:14: warning: symbol 'test_inode' was not declared.
+> Should it be static?
 
-Stop using HTML. It breaks badly the reply and discussion.
+Yep, but that's not so important.
 
-...
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> ---
+>   lib/test_lockup.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/lib/test_lockup.c b/lib/test_lockup.c
+> index ea09ca335b21..419fbaceba73 100644
+> --- a/lib/test_lockup.c
+> +++ b/lib/test_lockup.c
+> @@ -142,7 +142,7 @@ module_param(reallocate_pages, bool, 0400);
+>   MODULE_PARM_DESC(reallocate_pages, "free and allocate pages between iterations");
+>   
+>   struct file *test_file;
 
-> +static const struct adc5_data adc7_data_pmic;
->
-> Global variable? Hmm...
->
-> adc7_data_pmic is referenced twice before its actual definition (which was added along with corresponding adc5_data struct for PMIC5 ADC), so I have given the initial declaration here.
+Why you're fixing only this warning? =)
+test_file above should generate the same.
 
-Maybe you can realize how to avoid global variable at all?
-
-...
-
-> +       buf[1] &= 0xff & ~ADC5_USR_FAST_AVG_CTL_SAMPLES_MASK;
->
-> What the point of 0xff & part?
->
-> This was something you suggested in my first post:
->
-> > +       buf[1] &= (u8) ~ADC5_USR_FAST_AVG_CTL_SAMPLES_MASK;
->
-> Use '0xFF ^ _MASK' instead of casting.
->
-> ...
->
-> > +       buf[3] &= (u8) ~ADC5_USR_HW_SETTLE_DELAY_MASK;
->
-> Ditto.
->
-> I think "0xff &" works as intended here in place of casting to (u8)...
-
-Does it work without casting? (Note, I suggested slightly different expression)
-I.o.w. what the problem casting solves?
-
-> +       buf[1] |= prop->avg_samples;
-> +
-> +       /* Select ADC channel */
-> +       buf[2] = prop->channel;
-> +
-> +       /* Select HW settle delay for channel */
-> +       buf[3] &= 0xff & ~ADC5_USR_HW_SETTLE_DELAY_MASK;
->
-> Ditto.
->
-> +       buf[3] |= prop->hw_settle_time;
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+> -struct inode *test_inode;
+> +static struct inode *test_inode;
+>   static char test_file_path[256];
+>   module_param_string(file_path, test_file_path, sizeof(test_file_path), 0400);
+>   MODULE_PARM_DESC(file_path, "file path to test");
+> 
