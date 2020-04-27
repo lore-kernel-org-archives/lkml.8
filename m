@@ -2,206 +2,162 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3FAC7C866
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A53C5519A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 122E02080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1202A2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:51:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kWzVEYgY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbgD0ItM (ORCPT
+        id S1726692AbgD0Ivy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:49:12 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:3131 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726801AbgD0Isn (ORCPT
+        Mon, 27 Apr 2020 04:51:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37842 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726003AbgD0Ivx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 04:48:43 -0400
-X-IronPort-AV: E=Sophos;i="5.73,323,1583164800"; 
-   d="scan'208";a="90547660"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 27 Apr 2020 16:48:37 +0800
-Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
-        by cn.fujitsu.com (Postfix) with ESMTP id C716A4BCC89B;
-        Mon, 27 Apr 2020 16:37:57 +0800 (CST)
-Received: from G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) by
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Mon, 27 Apr 2020 16:48:40 +0800
-Received: from localhost.localdomain (10.167.225.141) by
- G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
- id 15.0.1497.2 via Frontend Transport; Mon, 27 Apr 2020 16:48:39 +0800
-From:   Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
-        <linux-nvdimm@lists.01.org>
-CC:     <linux-mm@kvack.org>, <linux-fsdevel@vger.kernel.org>,
-        <darrick.wong@oracle.com>, <dan.j.williams@intel.com>,
-        <david@fromorbit.com>, <hch@lst.de>, <rgoldwyn@suse.de>,
-        <qi.fuli@fujitsu.com>, <y-goto@fujitsu.com>
-Subject: [RFC PATCH 8/8] fs/xfs: support dedupe for fsdax
-Date:   Mon, 27 Apr 2020 16:47:50 +0800
-Message-ID: <20200427084750.136031-9-ruansy.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200427084750.136031-1-ruansy.fnst@cn.fujitsu.com>
-References: <20200427084750.136031-1-ruansy.fnst@cn.fujitsu.com>
+        Mon, 27 Apr 2020 04:51:53 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59C35C061A41
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 01:51:53 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id t14so19493516wrw.12
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 01:51:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=YPX4x0jDIEDTz7nvc7sn5bHK6BG3ihIkRvdS/BPSLzE=;
+        b=kWzVEYgY/9/widQPXrFcowP4ZjgLQHkdS9enzKduSjdkfx0EjP8bo0XL/1eJr3WKSX
+         JaXngTlXbRhWYn2hX9lTbL3BYOqB19rkhQThOErWAmIF/qonKh6RswR09vTh231Wumen
+         kkhqjmo/YdeXh0zkjImVDbUiZWOQt5OyFIRoy4ZvEENcfdPREtsZ5U6G1/quPfUCxTIt
+         5WXJoK36jKqIJyTxsTPlB5EpFR3KR7+KpsTR2iyPEYyeeX6eEN0rh8FYAJP1NsCNeGda
+         ozRxEpQyGjVLx9eZmfL6/SZ/2VZ5D0pd0rGMWpG6pqLBK3piKAxPdyCLrOe8OBJMZ1fF
+         OK0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=YPX4x0jDIEDTz7nvc7sn5bHK6BG3ihIkRvdS/BPSLzE=;
+        b=iBj+1KSedC2JOB/SNj4ueKMrSc5PAgQ97Zz4ctSvivIGPUfT4QZoz9+sn1CFxv0ZEl
+         DFfaCxWAaH07GmPrTJuXrQVvWuYrtFqYBa0eQ1cnkb/sL3ucGAMf1bOMrQlFmNx9ELVU
+         crH8aXb3/XbtirbbTtfXxoi/atpRnS4qc2nPSzHJ3qvlLrFtK2WxwCjpmhQ3Op1aFz88
+         qywDbm76PUKyXhv6qmXdSx3KOOA0Ygk/VhpUtwNJPTPpganKFZETu6oYrRKDMXbPW2+4
+         z0BLxci+QCFKb870QXSmaBhFOmHSFwrGzGf6oFtFLRFQzS6xPmwvdhDv3+Pk/ZmDj1jh
+         +5yA==
+X-Gm-Message-State: AGi0PubEjoa2ctFbqPBS6cOarsUcoCO9dH9PGEXQx8uJrxDqampudBQ4
+        H6R5BzXwhaIlYw+e2cpRilwdGw==
+X-Google-Smtp-Source: APiQypLxApUbpg3TJ0ILuchowzV4ZZ5EBCvXW4eaI3vv4CK0MLDKEWjIbJVseNky+c8kdrfJlPFTuQ==
+X-Received: by 2002:adf:dd8a:: with SMTP id x10mr26630284wrl.308.1587977511933;
+        Mon, 27 Apr 2020 01:51:51 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id x18sm14507505wmi.29.2020.04.27.01.51.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 01:51:51 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 09:51:49 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     saravanan sekar <sravanhome@gmail.com>
+Cc:     andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        sre@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v9 2/6] mfd: mp2629: Add support for mps battery charger
+Message-ID: <20200427085149.GF3559@dell>
+References: <20200415162030.16414-1-sravanhome@gmail.com>
+ <20200415162030.16414-3-sravanhome@gmail.com>
+ <20200424071822.GM3612@dell>
+ <8ff17d07-8030-fcfe-8d8a-3011e4077778@gmail.com>
+ <20200424093720.GA3542@dell>
+ <864eb6ad-a605-c0a0-c3e7-23c0c70f5ede@gmail.com>
+ <20200424105319.GD8414@dell>
+ <c62cd5f2-6d82-0a2a-5ee5-a3e99e188a05@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-yoursite-MailScanner-ID: C716A4BCC89B.A09FE
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c62cd5f2-6d82-0a2a-5ee5-a3e99e188a05@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use xfs_break_layouts() to break files' layouts when locking them.  And
-call dax_file_range_compare() function to compare range for files both
-DAX.
+On Fri, 24 Apr 2020, saravanan sekar wrote:
 
-Signed-off-by: Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
----
- fs/xfs/xfs_reflink.c | 77 ++++++++++++++++++++++++++------------------
- 1 file changed, 45 insertions(+), 32 deletions(-)
+> 
+> On 24/04/20 12:53 pm, Lee Jones wrote:
+> > On Fri, 24 Apr 2020, saravanan sekar wrote:
+> > 
+> > > Hi Lee,
+> > > 
+> > > On 24/04/20 11:37 am, Lee Jones wrote:
+> > > > On Fri, 24 Apr 2020, saravanan sekar wrote:
+> > > > 
+> > > > > Hi Lee,
+> > > > > 
+> > > > > On 24/04/20 9:18 am, Lee Jones wrote:
+> > > > > > On Wed, 15 Apr 2020, Saravanan Sekar wrote:
+> > > > > > 
+> > > > > > > mp2629 is a highly-integrated switching-mode battery charge management
+> > > > > > > device for single-cell Li-ion or Li-polymer battery.
+> > > > > > > 
+> > > > > > > Add MFD core enables chip access for ADC driver for battery readings,
+> > > > > > > and a power supply battery-charger driver
+> > > > > > > 
+> > > > > > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> > > > > > > ---
+> > > > > > >     drivers/mfd/Kconfig        |  9 ++++
+> > > > > > >     drivers/mfd/Makefile       |  2 +
+> > > > > > >     drivers/mfd/mp2629.c       | 86 ++++++++++++++++++++++++++++++++++++++
+> > > > > > >     include/linux/mfd/mp2629.h | 19 +++++++++
+> > > > > > >     4 files changed, 116 insertions(+)
+> > > > > > >     create mode 100644 drivers/mfd/mp2629.c
+> > > > > > >     create mode 100644 include/linux/mfd/mp2629.h
+> > > > > > How is this driver registered?
+> > > > > > 
+> > > > > > Looks like it has device tree support.  Is there another way?
+> > > > > Yes, only using device tree
+> > > > Then how about using 'simple-mfd' and 'syscon'?
+> > > > 
+> > > > Then you can omit this driver completely.
+> > > The exception is to support for non device tree platform as well, but I have
+> > > tested only for ARM device tree platform.
+> > Is that a reality though?
+> > 
+> > How else do you see this realistically being registered?
+> > 
+> I understand that acpi related device table are not covered here, well I
+> don't have to platform to test so.
+> If you ask me to cover acpi related table, I can do but hard to test.
 
-diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-index f87ab78dd421..efbe3464ae85 100644
---- a/fs/xfs/xfs_reflink.c
-+++ b/fs/xfs/xfs_reflink.c
-@@ -1185,47 +1185,41 @@ xfs_reflink_remap_blocks(
-  * back out both locks.
-  */
- static int
--xfs_iolock_two_inodes_and_break_layout(
--	struct inode		*src,
--	struct inode		*dest)
-+xfs_reflink_remap_lock_and_break_layouts(
-+	struct file		*file_in,
-+	struct file		*file_out)
- {
- 	int			error;
-+	struct inode		*inode_in = file_inode(file_in);
-+	struct xfs_inode	*src = XFS_I(inode_in);
-+	struct inode		*inode_out = file_inode(file_out);
-+	struct xfs_inode	*dest = XFS_I(inode_out);
-+	uint			iolock = XFS_IOLOCK_EXCL | XFS_MMAPLOCK_EXCL;
- 
--	if (src > dest)
-+	if (inode_in > inode_out) {
-+		swap(inode_in, inode_out);
- 		swap(src, dest);
--
--retry:
--	/* Wait to break both inodes' layouts before we start locking. */
--	error = break_layout(src, true);
--	if (error)
--		return error;
--	if (src != dest) {
--		error = break_layout(dest, true);
--		if (error)
--			return error;
- 	}
- 
--	/* Lock one inode and make sure nobody got in and leased it. */
--	inode_lock(src);
--	error = break_layout(src, false);
-+	inode_lock(inode_in);
-+	xfs_ilock(src, XFS_MMAPLOCK_EXCL);
-+	error = xfs_break_layouts(inode_in, &iolock, BREAK_UNMAP);
-+	xfs_iunlock(src, XFS_MMAPLOCK_EXCL);
- 	if (error) {
--		inode_unlock(src);
--		if (error == -EWOULDBLOCK)
--			goto retry;
-+		inode_unlock(inode_in);
- 		return error;
- 	}
- 
--	if (src == dest)
-+	if (inode_in == inode_out)
- 		return 0;
- 
--	/* Lock the other inode and make sure nobody got in and leased it. */
--	inode_lock_nested(dest, I_MUTEX_NONDIR2);
--	error = break_layout(dest, false);
-+	inode_lock_nested(inode_out, I_MUTEX_NONDIR2);
-+	xfs_ilock(dest, XFS_MMAPLOCK_EXCL);
-+	error = xfs_break_layouts(inode_out, &iolock, BREAK_UNMAP);
-+	xfs_iunlock(dest, XFS_MMAPLOCK_EXCL);
- 	if (error) {
--		inode_unlock(src);
--		inode_unlock(dest);
--		if (error == -EWOULDBLOCK)
--			goto retry;
-+		inode_unlock(inode_in);
-+		inode_unlock(inode_out);
- 		return error;
- 	}
- 
-@@ -1244,6 +1238,11 @@ xfs_reflink_remap_unlock(
- 	struct xfs_inode	*dest = XFS_I(inode_out);
- 	bool			same_inode = (inode_in == inode_out);
- 
-+	if (inode_in > inode_out) {
-+		swap(inode_in, inode_out);
-+		swap(src, dest);
-+	}
-+
- 	xfs_iunlock(dest, XFS_MMAPLOCK_EXCL);
- 	if (!same_inode)
- 		xfs_iunlock(src, XFS_MMAPLOCK_EXCL);
-@@ -1274,6 +1273,14 @@ xfs_reflink_zero_posteof(
- 			&xfs_buffered_write_iomap_ops);
- }
- 
-+int xfs_reflink_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
-+					  struct inode *dest, loff_t destoff,
-+					  loff_t len, bool *is_same)
-+{
-+	return dax_file_range_compare(src, srcoff, dest, destoff, len, is_same,
-+				      &xfs_read_iomap_ops);
-+}
-+
- /*
-  * Prepare two files for range cloning.  Upon a successful return both inodes
-  * will have the iolock and mmaplock held, the page cache of the out file will
-@@ -1318,9 +1325,10 @@ xfs_reflink_remap_prep(
- 	struct xfs_inode	*dest = XFS_I(inode_out);
- 	bool			same_inode = (inode_in == inode_out);
- 	ssize_t			ret;
-+	compare_range_t		cmp;
- 
- 	/* Lock both files against IO */
--	ret = xfs_iolock_two_inodes_and_break_layout(inode_in, inode_out);
-+	ret = xfs_reflink_remap_lock_and_break_layouts(file_in, file_out);
- 	if (ret)
- 		return ret;
- 	if (same_inode)
-@@ -1335,12 +1343,17 @@ xfs_reflink_remap_prep(
- 	if (XFS_IS_REALTIME_INODE(src) || XFS_IS_REALTIME_INODE(dest))
- 		goto out_unlock;
- 
--	/* Don't share DAX file data for now. */
--	if (IS_DAX(inode_in) || IS_DAX(inode_out))
-+	/* Don't share DAX file data with non-DAX file. */
-+	if (IS_DAX(inode_in) != IS_DAX(inode_out))
- 		goto out_unlock;
- 
-+	if (IS_DAX(inode_in))
-+		cmp = xfs_reflink_dedupe_file_range_compare;
-+	else
-+		cmp = vfs_dedupe_file_range_compare;
-+
- 	ret = generic_remap_file_range_prep(file_in, pos_in, file_out, pos_out,
--			len, remap_flags, vfs_dedupe_file_range_compare);
-+			len, remap_flags, cmp);
- 	if (ret < 0 || *len == 0)
- 		goto out_unlock;
- 
+I don't know of any reasons why syscon can't be used by ACPI.
+
+Please try to solve this issue using 'simple-mfd' and 'syscon'.
+
+> > > > > > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > > > > > > index 3c547ed575e6..85be799795aa 100644
+> > > > > > > --- a/drivers/mfd/Kconfig
+> > > > > > > +++ b/drivers/mfd/Kconfig
+> > > > > > > @@ -434,6 +434,15 @@ config MFD_MC13XXX_I2C
+> > > > > > >     	help
+> > > > > > >     	  Select this if your MC13xxx is connected via an I2C bus.
+> > > > > > > +config MFD_MP2629
+> > > > > > > +	tristate "Monolithic power system MP2629 ADC and Battery charger"
+> > > > > > > +	depends on I2C
+> > > > > > > +	select REGMAP_I2C
+> > > > > > > +	help
+> > > > > > > +	  Select this option to enable support for monolithic power system
+> > > > > > > +	  battery charger. This provides ADC, thermal, battery charger power
+> > > > > > > +	  management functions on the systems.
+
 -- 
-2.26.2
-
-
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
