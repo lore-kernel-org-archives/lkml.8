@@ -2,134 +2,101 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE09C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C28AEC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F637206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A3B20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:48:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/mGoeBW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HjDhTg1L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgD0Mqk (ORCPT
+        id S1727097AbgD0Msp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 08:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46322 "EHLO
+        Mon, 27 Apr 2020 08:48:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726539AbgD0Mqj (ORCPT
+        by vger.kernel.org with ESMTP id S1726728AbgD0Mso (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 08:46:39 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D024C0610D5;
-        Mon, 27 Apr 2020 05:46:39 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id r17so13687802lff.2;
-        Mon, 27 Apr 2020 05:46:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FYckNb0B+cZG7B36JVxEWqaLbf2JJ1+tQj5efljqrWM=;
-        b=X/mGoeBWWZkOS3wqw0QTgkNqYvIgNK07zHnT9PAcBlZsAICRV3Cy/JLSOHbtKuGsDc
-         USOj3zERIyBx/spuyhcUKVOmax1P0+N6p4e1peqiBA2tWXssdA8nEKUiEc5JFDh18zv+
-         1MCVNAR83gIN6vcXqe+VSBvNQpX9Tsj/5ENYgPlimNt8LBGmAJ55lIUUKrzpbpgN+t3K
-         C2K8LNVUYWS0vV/0xu7DfPSMlWmqjv2ngDsvTcItwnOk0a/tJagPxVYTF2K7xbElP2Fz
-         +YSE3WiQutY5uBW58eTTIeFRgIk1rNE+bT6FvNG9av7SJ3Qi68YB3pTzDansSjyTPEuv
-         CYKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FYckNb0B+cZG7B36JVxEWqaLbf2JJ1+tQj5efljqrWM=;
-        b=gl/v5XByjAFDhncOXN535cCLJdk2UH1ju4qRJsP2rD7KZibsVrJ+/4TbhLveLnObif
-         OU1MP062dmEa9prp2ho1P4Iowl6GMk3aSJ2b7QmTIXjWhnmJo+YE6CqXFO971qtqhI95
-         EB4RunVyOVAdBt4FL8YXMiM1PsL1kjBwKs7pJ+9K6pTBKvkPlBh9TN8IYl/V/u0Cuhuk
-         l0fPTjJEb4E3b81DMDuN0LnmAwTaQTcOXTwazRUx57T/3ngLa6DB7X6zz/3ZtjJSfrwB
-         2XwUHkmYYIHA3g8guDr9Ba+arLrw6f0a5Oz73ryZHdicJ+ozKCufvnneEWSuQFiOP8ES
-         28aw==
-X-Gm-Message-State: AGi0Pub2AmVzvXuXkFpploEh+bJwVQWI6e3T9xClyHE08vrqS4RG+x63
-        rWrqQE+vSdVL+iBRvao0koGI/0/c
-X-Google-Smtp-Source: APiQypIJymiTY3IXtDUEEdPTQaxxrlVOWeNXzfI9rboL+XxbjYH+ooqY11bQi2YDDffKjsA2TFq15w==
-X-Received: by 2002:ac2:550e:: with SMTP id j14mr15067882lfk.188.1587991597830;
-        Mon, 27 Apr 2020 05:46:37 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id j19sm11743119lfe.17.2020.04.27.05.46.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 05:46:36 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
- for a long time
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>
-Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200324191217.1829-1-digetx@gmail.com>
- <20200324191217.1829-2-digetx@gmail.com>
- <1e259e22-c300-663a-e537-18d854e0f478@nvidia.com>
- <f59ba318-8e99-c486-fa4d-1ee28a7b203d@gmail.com>
- <b01cec76-bb39-9fb5-8f6e-4023c075e6b3@gmail.com>
- <8cd085e1-f9fd-6ec0-9f7a-d5463f176a63@nvidia.com>
- <db1132ce-53a8-371c-98e0-cb7cd91d5c7d@gmail.com>
- <fa344989-4cce-0d2c-dc93-4ca546823160@nvidia.com>
- <bba0a93a-8ec4-eda6-97f3-fb2ab0b9b503@gmail.com>
- <6f07e5c8-7916-7ea2-2fe7-d05f8f011471@nvidia.com>
- <77a31b2f-f525-ba9e-f1ae-2b474465bde4@gmail.com>
- <470b4de4-e98a-1bdc-049e-6259ad603507@nvidia.com>
- <d2531fc1-b452-717d-af71-19497e14ef00@gmail.com>
- <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <da5985f4-44b3-336d-207d-4c0388806f95@gmail.com>
-Date:   Mon, 27 Apr 2020 15:46:35 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 27 Apr 2020 08:48:44 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D00FEC0610D5;
+        Mon, 27 Apr 2020 05:48:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=BKTNTPqPREcmXGT5PW5iYYT+ca/npyb86/7EpHWqKOI=; b=HjDhTg1L1OtdVen2udkp2y9E+U
+        aKGOIau3zpYJQaUzLVXoerYxehlPLp4vqyeHkHqrzwBI/fz0Z91RgJUB8OCGAAA+xC4PTaEj5UL8+
+        M2EXA8P5hmIeeZZE1pZyfl/xpIIBwe2ygUV2Jc9ymVDb5tpEVyeISjqQEAHcP5VByue/xqLR8oX6B
+        PS/SnPaB72CwbGUlsRdtkKs+QUaoavtKt/nvFAkqSGzj4ke6Quc1ao+DfXwrtFebUt/vyBVofuvpr
+        JCbBdHCxyx6FP7XIMfq4Z1jZ+lkFTUwoGK515dhxpjoXVW5YyoPxYtdW2jFF5K4sxM1037q6YodDG
+        DwSwAlGg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jT3Bg-0008CA-Ju; Mon, 27 Apr 2020 12:48:40 +0000
+Date:   Mon, 27 Apr 2020 05:48:40 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Shik Chen <shik@chromium.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        notify@kernel.org, Keiichi Watanabe <keiichiw@chromium.org>,
+        Ricky Liang <jcliang@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCH] media: uvcvideo: Use streaming DMA APIs to transfer
+ buffers
+Message-ID: <20200427124840.GA30327@infradead.org>
+References: <20190802131226.123800-1-shik@chromium.org>
+ <CANMq1KD3Pth7LNnVqxSesx3kSFte0eR5JqEBETv45s_9_YKWHw@mail.gmail.com>
+ <20190930082310.GA1750@infradead.org>
+ <20191001063744.GA10402@infradead.org>
+ <CAAFQd5BN63Y-zufQo9_b6kKVX7-1Qf1LwCOKQpMKkQ5KTOf2hw@mail.gmail.com>
+ <CAAFQd5A3iazOo+MordCqKk4+5nfSOT-rFu1ypGXF+geRec0aow@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAFQd5A3iazOo+MordCqKk4+5nfSOT-rFu1ypGXF+geRec0aow@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-23.04.2020 13:56, Jon Hunter пишет:
->>> So I think that part of the problem already existed prior to these
->>> patches. Without your patches I see ...
->>>
->>> [   59.543528] tegra-i2c 7000d000.i2c: i2c transfer timed out
->>> [   59.549036] vdd_sata,avdd_plle: failed to disable
->>> [   59.553778] Failed to disable avdd-plle: -110
->>> [   59.558150] tegra-pcie 3000.pcie: failed to disable regulators: -110
->> Does this I2C timeout happen with my patches? Could you please post full
->> logs of an older and the recent kernel versions?
-> I believe that it does, but I need to check.
+On Tue, Apr 21, 2020 at 01:21:15PM +0200, Tomasz Figa wrote:
+> On Thu, Feb 27, 2020 at 7:28 AM Tomasz Figa <tfiga@chromium.org> wrote:
+> >
+> > +Sergey Senozhatsky who's going to be looking into this.
+> >
+> > Hi Christoph,
+> >
+> > That said, I noticed that you also put a lot of effort into making the
+> > NONCONSISTENT attribute more usable. Perhaps that's the way to go here
+> > then? Of course we would need to make sure that the attribute is
+> > handled properly on ARM and ARM64, which are the most affected
+> > platforms. Right now neither handles them. The former doesn't use the
+> > generic DMA mapping ops, while the latter does, but doesn't enable a
+> > Kconfig option needed to allow generic inconsistent allocations.
+> >
+> > Any hints would be appreciated.
 > 
+> Hi Christoph, would you have some time to check the above?
+> 
+> Hi Catalin, Will, do you know why CONFIG_DMA_NONCOHERENT_CACHE_SYNC is
+> not enabled on arm64?
 
-Jon, could you please confirm that you're seeing those regulator-disable
-errors with my patch? I don't see those errors in yours original log [1].
-
-[1]
-https://lore.kernel.org/lkml/1e259e22-c300-663a-e537-18d854e0f478@nvidia.com/
-
-Again, could you please post the *full* logs?
-
-If regulator's disabling was "failing" before without my patch because
-of the I2C interrupt being force-disabled during of NOIRQ phase, and now
-regulator's disabling succeeds with my patch because IRQ is manually
-handled after the timeout, then this could be bad. It means that
-regulator was actually getting disabled, but I2C driver was timing out
-because interrupt couldn't be handled in NOIRQ phase, which should
-result in a dead PCIe on a resume from suspend since regulator's core
-thinks that regulator is enabled (I2C said it failed to disable), while
-it is actually disabled.
-
-Do you have anything plugged into the PCIe slot in yours testing farm?
-It wouldn't surprise me if the plugged card isn't functional after
-resume from suspend on a stable kernels.
+NONCONSISTENT is still a mess, mostly because dma_cache_sync is such
+a horrible API.  I've been wanting to switch to the normal
+sync_for_device / sync_for_cpu primitives instead.  Let me see if I can
+expedite that.
