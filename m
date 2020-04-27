@@ -2,236 +2,153 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 405EAC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C76AC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20878206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1426B206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:52:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="a/7b4z2q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgD0MwV (ORCPT
+        id S1727891AbgD0Mw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 08:52:21 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:47789 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727823AbgD0MwN (ORCPT
+        Mon, 27 Apr 2020 08:52:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727846AbgD0MwR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 08:52:13 -0400
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 03RCpiGa024058;
-        Mon, 27 Apr 2020 15:51:44 +0300
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
-        id A1E3E639B1; Mon, 27 Apr 2020 15:51:44 +0300 (IDT)
-From:   amirmizi6@gmail.com
-To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
-        jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org,
-        benoit.houyere@st.com, eajames@linux.ibm.com, joel@jms.id.au
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Amir Mizinski <amirmizi6@gmail.com>
-Subject: [PATCH v7 4/7] tpm: tpm_tis: Fix expected bit handling and send all bytes in one shot without last byte in exception
-Date:   Mon, 27 Apr 2020 15:49:28 +0300
-Message-Id: <20200427124931.115697-5-amirmizi6@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200427124931.115697-1-amirmizi6@gmail.com>
-References: <20200427124931.115697-1-amirmizi6@gmail.com>
+        Mon, 27 Apr 2020 08:52:17 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39F48C0610D5;
+        Mon, 27 Apr 2020 05:52:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=npgNBfjXCgdOT6VhrlGrF6mCkBD86EOkn8/hf4N7+Xg=; b=a/7b4z2qzgc5vUXpvfjDqlWFR
+        eHuKJUX5x6kbAaOEUDrXclNWnO1VUMxWUQ0MOpByul2vIZQNYS7W7tyjND0FgJOzJsl2/O0ulNNdd
+        T7ZFUbY9ceu/h7MptFsfE2YzJsYOrIYlqHMMeUMlGK47UOr4inl6q4T2b7pZnsVlBnNHbNouIdv8i
+        TTBkayO3wdgVVnu44j7yAfCTyA9eKf4z4BXlxkCaX1j2vRwV9LVgaDWUQl1BpmdvetjBe6pglYnpO
+        y3pTxvBUFLkfeVQBrfmRye0MfGBTM2tInVpUZSl3fQUfJROARf9+9lSsmBRotIfklRiFatSm5yDLG
+        ZkznR4qJw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56264)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jT3Ev-0002uk-JK; Mon, 27 Apr 2020 13:52:01 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jT3Er-0006fX-0I; Mon, 27 Apr 2020 13:51:57 +0100
+Date:   Mon, 27 Apr 2020 13:51:56 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Florinel Iordache <florinel.iordache@nxp.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [PATCH net-next v2 6/9] net: phy: add backplane kr driver
+ support
+Message-ID: <20200427125156.GD25745@shell.armlinux.org.uk>
+References: <AM0PR04MB54432C98E0CD7FF5B155F446FBAF0@AM0PR04MB5443.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB54432C98E0CD7FF5B155F446FBAF0@AM0PR04MB5443.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Mizinski <amirmizi6@gmail.com>
+On Mon, Apr 27, 2020 at 12:40:37PM +0000, Florinel Iordache wrote:
+> > > +/* Backplane mutex between all KR PHY threads */ static struct mutex
+> > > +backplane_lock;
+> > 
+> > 
+> > > +/* Read AN Link Status */
+> > > +static int is_an_link_up(struct phy_device *phydev) {
+> > > +     struct backplane_device *bpdev = phydev->priv;
+> > > +     int ret, val = 0;
+> > > +
+> > > +     mutex_lock(&bpdev->bpphy_lock);
+> > 
+> > Last time i asked the question about how this mutex and the phy mutex interact.
+> > I don't remember seeing an answer.
+> > 
+> >           Andrew
+> 
+> Hi Andrew,
+> Yes, your question was:
+> <<How does this mutex interact with phydev->lock? It appears both are trying to do the same thing, serialise access to the PHY hardware.>>
+> The answer is: yes, you are right, they both are protecting the critical section related to accessing the PHY hardware for a particular PHY.
+> As you can see the backplane device (bpdev) has associated one phy_device (phydev) so  bpdev->bpphy_lock and phydev->lock are equivalent.
+> Normally your assumption is correct: backplane driver should use the same phydev->lock but there is the following problem:
+> Backplane driver needs to protect all accesses to a PHY hardware including the ones coming from backplane scheduled workqueues for all lanes within a PHY.
+> But phydev->lock is already acquired for a phy_device (from phy.c) before each phy_driver callback is called (e.g.: config_aneg, suspend, ...)
+> So if I would use phydev->lock instead of bpdev->bpphy_lock then this would result in a deadlock when it is called from phy_driver callbacks.
+> However a possible solution would be to remove all these locks using bpphy_lock and use instead only one phydev->lock in backplane kr state machine: (bp_kr_state_machine).
+> But this solution will result in poorer performance, the training total duration will increase because only one single lane can enter the training procedure at a time therefore it would be possible for multi-lane phy training to ultimately fail because training is not finished in under 500ms. So I wanted to avoid this loss of training performance.
+> Yet another possible solution would be to keep the locks where they are, at the lowest level exactly at phy_read/write_mmd calls, in order to allow lanes training running in parallel, but use instead the phydev->lock as would be normal to be and according to your suggestion.
+> But in this case I must avoid the deadlock I mentioned above by differentiating between the calls coming from phy_driver callbacks where the phydev->lock is already acquired for this phy_device by the phy framework so the mutex should be skipped in this case and the calls coming from anywhere else (for example from backplane kr state machine) when the phydev->lock was not already acquired for this phy_device and the mutex must be used.
+> If you agree with this latest solution then I can implement it in next version by using a flag in backplane_device called: 'phy_mutex_already_acquired' or 'skip_phy_mutex' which must be set in all backplane phy_driver callbacks and will be used to skip the locks on phydev->lock used at phy_read/write_mmd calls in these cases.
 
-Incorrect implementation of send message was detected. We polled only
-TPM_STS.stsValid bit and then we single-checked the TPM_STS.expect bit
-value.
-TPM_STS.expected bit should be checked at the same time as
-TPM_STS.stsValid bit, and this should be repeated until timeout_A.
+I think you have a rather big misunderstanding of the locking in phylib
+from what you said above.
 
-To detect a TPM_STS.expected bit reset, the "wait_for_tpm_stat" function is
-modified to "wait_for_tpm_stat_result". This function regularly reads the
-status register and check the bits defined by "mask" to reach the value
-defined in "mask_result".
+The register accessors do not use phydev->lock.
 
-This correct implementation is required for using the new CRC calculation
-on I2C TPM command bytes or I2C TPM answer bytes. TPM_STS.expected bit is
-reset after all bytes are acquired and the CRC result is inserted in the
-dedicated register. It introduces a normal latency for TPM_STS.expected
-bit reset.
+Follow the code.
 
-Respectively, to send a message, as defined in
-TCG_DesignPrinciples_TPM2p0Driver_vp24_pubrev.pdf, all bytes should be
-sent in one shot instead of sending the last byte separately.
+	phy_read_mmd() uses phy_lock_mdio_bus().
 
-Suggested-by: Benoit Houyere <benoit.houyere@st.com>
-Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
----
- drivers/char/tpm/tpm_tis_core.c | 74 +++++++++++++++++------------------------
- 1 file changed, 30 insertions(+), 44 deletions(-)
+	phy_lock_mdio_bus() locks the phydev->mdio.bus->mdio_lock mutex.
 
-diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-index 682f950..f71ecd8 100644
---- a/drivers/char/tpm/tpm_tis_core.c
-+++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -44,9 +44,10 @@ static bool wait_for_tpm_stat_cond(struct tpm_chip *chip, u8 mask,
- 	return false;
- }
- 
--static int wait_for_tpm_stat(struct tpm_chip *chip, u8 mask,
--		unsigned long timeout, wait_queue_head_t *queue,
--		bool check_cancel)
-+static int wait_for_tpm_stat_result(struct tpm_chip *chip, u8 mask,
-+				    u8 mask_result, unsigned long timeout,
-+				    wait_queue_head_t *queue,
-+				    bool check_cancel)
- {
- 	unsigned long stop;
- 	long rc;
-@@ -55,7 +56,7 @@ static int wait_for_tpm_stat(struct tpm_chip *chip, u8 mask,
- 
- 	/* check current status */
- 	status = chip->ops->status(chip);
--	if ((status & mask) == mask)
-+	if ((status & mask) == mask_result)
- 		return 0;
- 
- 	stop = jiffies + timeout;
-@@ -83,7 +84,7 @@ static int wait_for_tpm_stat(struct tpm_chip *chip, u8 mask,
- 			usleep_range(TPM_TIMEOUT_USECS_MIN,
- 				     TPM_TIMEOUT_USECS_MAX);
- 			status = chip->ops->status(chip);
--			if ((status & mask) == mask)
-+			if ((status & mask) == mask_result)
- 				return 0;
- 		} while (time_before(jiffies, stop));
- 	}
-@@ -292,10 +293,13 @@ static int recv_data(struct tpm_chip *chip, u8 *buf, size_t count)
- 	int size = 0, burstcnt, rc;
- 
- 	while (size < count) {
--		rc = wait_for_tpm_stat(chip,
--				 TPM_STS_DATA_AVAIL | TPM_STS_VALID,
--				 chip->timeout_c,
--				 &priv->read_queue, true);
-+		rc = wait_for_tpm_stat_result(chip,
-+					      TPM_STS_DATA_AVAIL |
-+					      TPM_STS_VALID,
-+					      TPM_STS_DATA_AVAIL |
-+					      TPM_STS_VALID,
-+					      chip->timeout_c,
-+					      &priv->read_queue, true);
- 		if (rc < 0)
- 			return rc;
- 		burstcnt = get_burstcount(chip);
-@@ -350,8 +354,9 @@ static int tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
- 			goto out;
- 		}
- 
--		if (wait_for_tpm_stat(chip, TPM_STS_VALID, chip->timeout_c,
--				      &priv->int_queue, false) < 0) {
-+		if (wait_for_tpm_stat_result(chip, TPM_STS_VALID,
-+					     TPM_STS_VALID, chip->timeout_c,
-+					     &priv->int_queue, false) < 0) {
- 			size = -ETIME;
- 			goto out;
- 		}
-@@ -387,61 +392,40 @@ static int tpm_tis_send_data(struct tpm_chip *chip, const u8 *buf, size_t len)
- 	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
- 	int rc, status, burstcnt;
- 	size_t count = 0;
--	bool itpm = priv->flags & TPM_TIS_ITPM_WORKAROUND;
- 
- 	status = tpm_tis_status(chip);
- 	if ((status & TPM_STS_COMMAND_READY) == 0) {
- 		tpm_tis_ready(chip);
--		if (wait_for_tpm_stat
--		    (chip, TPM_STS_COMMAND_READY, chip->timeout_b,
--		     &priv->int_queue, false) < 0) {
-+		if (wait_for_tpm_stat_result(chip, TPM_STS_COMMAND_READY,
-+					     TPM_STS_COMMAND_READY,
-+					     chip->timeout_b,
-+					     &priv->int_queue, false) < 0) {
- 			rc = -ETIME;
- 			goto out_err;
- 		}
- 	}
- 
--	while (count < len - 1) {
-+	while (count < len) {
- 		burstcnt = get_burstcount(chip);
- 		if (burstcnt < 0) {
- 			dev_err(&chip->dev, "Unable to read burstcount\n");
- 			rc = burstcnt;
- 			goto out_err;
- 		}
--		burstcnt = min_t(int, burstcnt, len - count - 1);
-+		burstcnt = min_t(int, burstcnt, len - count);
- 		rc = tpm_tis_write_bytes(priv, TPM_DATA_FIFO(priv->locality),
- 					 burstcnt, buf + count);
- 		if (rc < 0)
- 			goto out_err;
- 
- 		count += burstcnt;
--
--		if (wait_for_tpm_stat(chip, TPM_STS_VALID, chip->timeout_c,
--					&priv->int_queue, false) < 0) {
--			rc = -ETIME;
--			goto out_err;
--		}
--		status = tpm_tis_status(chip);
--		if (!itpm && (status & TPM_STS_DATA_EXPECT) == 0) {
--			rc = -EIO;
--			goto out_err;
--		}
- 	}
--
--	/* write last byte */
--	rc = tpm_tis_write8(priv, TPM_DATA_FIFO(priv->locality), buf[count]);
--	if (rc < 0)
--		goto out_err;
--
--	if (wait_for_tpm_stat(chip, TPM_STS_VALID, chip->timeout_c,
--				&priv->int_queue, false) < 0) {
-+	if (wait_for_tpm_stat_result(chip, TPM_STS_VALID | TPM_STS_DATA_EXPECT,
-+				     TPM_STS_VALID, chip->timeout_a,
-+				     &priv->int_queue, false) < 0) {
- 		rc = -ETIME;
- 		goto out_err;
- 	}
--	status = tpm_tis_status(chip);
--	if (!itpm && (status & TPM_STS_DATA_EXPECT) != 0) {
--		rc = -EIO;
--		goto out_err;
--	}
- 
- 	return 0;
- 
-@@ -498,9 +482,11 @@ static int tpm_tis_send_main(struct tpm_chip *chip, const u8 *buf, size_t len)
- 		ordinal = be32_to_cpu(*((__be32 *) (buf + 6)));
- 
- 		dur = tpm_calc_ordinal_duration(chip, ordinal);
--		if (wait_for_tpm_stat
--		    (chip, TPM_STS_DATA_AVAIL | TPM_STS_VALID, dur,
--		     &priv->read_queue, false) < 0) {
-+		if (wait_for_tpm_stat_result(chip,
-+					     TPM_STS_DATA_AVAIL | TPM_STS_VALID,
-+					     TPM_STS_DATA_AVAIL | TPM_STS_VALID,
-+					     dur,
-+					     &priv->read_queue, false) < 0) {
- 			rc = -ETIME;
- 			goto out_err;
- 		}
+This is the _bus_ level lock, and is entirely different from
+phydev->lock.
+
+It is entirely safe to call phy_read_mmd() from any region of code
+which is holding phydev->lock - indeed, we have many PHY drivers that
+already do this.
+
+So, I think you need to rewrite your entire locking strategy, because
+it seems that you've misunderstood the locking here.
+
+However, it's actually way worse, because of the abuse in your driver
+of a single phy_device struct, which you use to access multiple PHYs,
+randomly changing phydev->mdio.addr according to which PHY needs to be
+accessed - you need to _carefully_ consider how your locking is done
+for that.  I regard this as a big abuse, and I'm very tempted to NAK
+your patches on this abuse alone.
+
+I think you need to take onboard my comments about the (ab)use of
+phy_device here.
+
+An alternative solution to this is to push the phy_* accessors up a
+level to the mdiobus level (we already have some, and I've already
+been converting others) so you don't have to mess with
+phydev->mdio.addr at all.
+
+However, I would still consider your use of struct phy_device to be
+an abuse.
+
 -- 
-2.7.4
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
