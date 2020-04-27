@@ -2,102 +2,103 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EBB7C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F09AC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2977C206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0323E206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:00:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="HIYDC723"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Y2BXpQb1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgD0OAr (ORCPT
+        id S1727909AbgD0OAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 10:00:47 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:46510 "EHLO
+        Mon, 27 Apr 2020 10:00:50 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:55950 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726786AbgD0OAr (ORCPT
+        by vger.kernel.org with ESMTP id S1727808AbgD0OAs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 10:00:47 -0400
+        Mon, 27 Apr 2020 10:00:48 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 06A19C033C;
-        Mon, 27 Apr 2020 14:00:45 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 0EB2F401B3;
+        Mon, 27 Apr 2020 14:00:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1587996046; bh=np9+0SGRO5CaLrwr1Pizf5LJopqBu07ZFdqwDx9Fs1Q=;
-        h=From:To:Cc:Subject:Date:From;
-        b=HIYDC723zkMlQHI8NzCRQP2ThO+woMb/tkOCy8o3bXBb1pa3DpTNV++gMeuQTfsfR
-         wQgu0wipPf792I3GgsQYeSrbY0xFR+ElX00w2CalqK+OHuFecp0L5ski6Bb8nPStux
-         q0r/JVPCI6cl1d5AhgTsZr7Z+nlB4Kqz+Mf73EGSJRw7uxsDfl4xOCxJjCF/knfFUH
-         c7KE0WaCHRqM5LNHyJKOz3S7hegB0cbr0rv7R2ukFLcf36zUXWCtLPH41aQ0xUR1Br
-         1I1ticdTJPhYnLjWANpxJsoqS6RTRtnuV4gxEJ8gKoww55MHa69rxhtiOHEPsyLTrV
-         /5FTguflHuZUw==
+        t=1587996048; bh=TvL6zgUoy3Ma93zOu8++mMy1EHgdvRORz8x84bfFDmM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=Y2BXpQb1pNCWanopEuRgGyuC9Hyv3CNXzfHVjFMXgxbZq181l13fJ1mPrZY3nX+v/
+         caPdSdCuzMyF7ubAkxexP5q9nQ1VMu1dBeQi/Pmqe9Vwy+6Vg3HK+fqdBT5mRvnecV
+         nXhBtQ/UTN1Tv3d4c2d9+qvZOTlUr2dXfJ/6nbjmY34Twmbd1OVWC9VXR4sQ4pGl1i
+         4vNTDqY3eMalrNEVz9U7ndbWfBHd/UC1DLWchVrqr/UnWZ08hPlE3TnVVLyDhSqq8n
+         gsqhWb4lvi94BeZHzofioQb5bIZwKYwfvKinVHcFZmvcUk93MvUk0+t4AT9qzyBg3+
+         G5ogLAeTtLsjQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 2C463A005C;
-        Mon, 27 Apr 2020 14:00:41 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 6B4D8A006D;
+        Mon, 27 Apr 2020 14:00:45 +0000 (UTC)
 From:   Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
 To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
-Subject: [PATCH v3 0/4] drm: Add support for IPK DSI Host Driver
-Date:   Mon, 27 Apr 2020 16:00:32 +0200
-Message-Id: <cover.1587992776.git.angelo.ribeiro@synopsys.com>
+Cc:     Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: [PATCH v3 4/4] MAINTAINERS: Add IPK MIPI DSI Host driver entry
+Date:   Mon, 27 Apr 2020 16:00:36 +0200
+Message-Id: <abe4ca0b0662c17212fc5107080e949f1d3377c1.1587992776.git.angelo.ribeiro@synopsys.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1587992776.git.angelo.ribeiro@synopsys.com>
+References: <cover.1587992776.git.angelo.ribeiro@synopsys.com>
+In-Reply-To: <cover.1587992776.git.angelo.ribeiro@synopsys.com>
+References: <cover.1587992776.git.angelo.ribeiro@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds support for the display subsystem in the Synopsys
-DesignWare IPK devices.
+Creates entry for Synopsys DesignWare IPK DRM driver and
+adds myself as maintainer.
 
-The display pipeline is limited and does not have access to memory, the
-validation is done using a VPG (Video Pattern Generator), as DPI
-stimulus for the DW MIPI DSI Host.
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Signed-off-by: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
+---
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-A Synopsys DesignWare MIPI DSI Host v1.40 is used in the IPK device, that
-so far, is fully compatible with the driver dw-mipi-dsi.
-
-To activate the VPG use the sysfs pattern variable, assigning values from
-0 (shutdown) to 4. The usage of the VPG and the Synopsys DesignWare MIPI
-DSI Host internal video generator is mutually exclusive.
-
-The submission of this driver aims to be used as a work base for the
-submission of enhancements over the Synopsys DesignWare MIPI DSI Host.
-
-Angelo Ribeiro (4):
-  dt-bindings: display: Add IPK DSI subsystem bindings
-  drm: ipk: Add DRM driver for DesignWare IPK DSI
-  drm: ipk: Add extensions for DW MIPI DSI Host driver
-  MAINTAINERS: Add IPK MIPI DSI Host driver entry
-
- .../bindings/display/snps,dw-ipk-dsi.yaml          | 159 ++++++
- .../bindings/display/snps,dw-ipk-vpg.yaml          |  73 +++
- MAINTAINERS                                        |   8 +
- drivers/gpu/drm/Kconfig                            |   2 +
- drivers/gpu/drm/Makefile                           |   1 +
- drivers/gpu/drm/ipk/Kconfig                        |  22 +
- drivers/gpu/drm/ipk/Makefile                       |   6 +
- drivers/gpu/drm/ipk/dw-drv.c                       | 169 +++++++
- drivers/gpu/drm/ipk/dw-ipk.h                       |  26 +
- drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c              | 557 +++++++++++++++++++++
- drivers/gpu/drm/ipk/dw-vpg.c                       | 412 +++++++++++++++
- drivers/gpu/drm/ipk/dw-vpg.h                       |  48 ++
- 12 files changed, 1483 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/snps,dw-ipk-dsi.yaml
- create mode 100644 Documentation/devicetree/bindings/display/snps,dw-ipk-vpg.yaml
- create mode 100644 drivers/gpu/drm/ipk/Kconfig
- create mode 100644 drivers/gpu/drm/ipk/Makefile
- create mode 100644 drivers/gpu/drm/ipk/dw-drv.c
- create mode 100644 drivers/gpu/drm/ipk/dw-ipk.h
- create mode 100644 drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c
- create mode 100644 drivers/gpu/drm/ipk/dw-vpg.c
- create mode 100644 drivers/gpu/drm/ipk/dw-vpg.h
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ad29107..9f4ee9c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5507,6 +5507,14 @@ T:	git git://anongit.freedesktop.org/drm/drm-misc
+ F:	Documentation/devicetree/bindings/display/ste,mcde.txt
+ F:	drivers/gpu/drm/mcde/
+ 
++DRM DRIVER FOR SYNOPSYS DESIGNWARE IPK
++M:	Angelo Ribeiro <angelo.ribeiro@synopsys.com>
++L:	dri-devel@lists.freedesktop.org
++S:	Maintained
++F:	drivers/gpu/drm/ipk/
++F:	Documentation/devicetree/bindings/display/ipk/
++T:	git git://anongit.freedesktop.org/drm/drm-misc
++
+ DRM DRIVER FOR TDFX VIDEO CARDS
+ S:	Orphan / Obsolete
+ F:	drivers/gpu/drm/tdfx/
 -- 
 2.7.4
 
