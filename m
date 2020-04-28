@@ -2,163 +2,103 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 319F8C83003
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A67C83002
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EAB02070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:49:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tMY7Nqx0"
+	by mail.kernel.org (Postfix) with ESMTP id 037892070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:49:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbgD1BtG (ORCPT
+        id S1726410AbgD1BtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 21:49:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726261AbgD1BtE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 21:49:04 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CCB4C03C1A8;
-        Mon, 27 Apr 2020 18:49:03 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 18so9911032pfx.6;
-        Mon, 27 Apr 2020 18:49:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vloW/Le5uTQWcHYDSa4UBFwJd+x/1yJE7+IrW0Uir68=;
-        b=tMY7Nqx0yqobkZe58YFhx1OG8yv4pf1IV9qs+bvamO0ssZ2DNHnvG9NWFBdyJ9zDhq
-         3NhdKMcuGNglY0QeMweyW3U2rebJhB5xvUW03S8hTpb2axpkIL4LmSie7xv3Bz62ZwM1
-         2BMffB9lJb7ZswTHs481noJ5CUOIo//yGyCBf6lVS0VEEeSowKcgM/eOn9EdY2nFKUkq
-         OuxDgnm0HxCUwwMHMvGyGKQwpiGmQzpwRM23EMdJHC83mqrQ09+TuyCh8iShhOD/Uad0
-         QE8Zuj8UnFf0Ani8mhF33kVeWYBepv5F7VAhs2ZOz2yfKR8tuVrSbpNaAa/3885mDRi5
-         uMAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vloW/Le5uTQWcHYDSa4UBFwJd+x/1yJE7+IrW0Uir68=;
-        b=jUR5FBaq2ssqcdUdivAQRrt8U1CLt8wuGaUdmhKNKx9/wBqIfpDDiIfoXSOeSZXsFg
-         MmDszkS+1Gpq0FYZyRqIP2sziK5/9M4ePEyQJjGoARWjyAN+8mTbk66poQru6vUJNY53
-         5MmmOF3A+Na4j84KQRGKPtWX9zCQyD6DD3oCOwdof/4OTkZuKVTHOHlemXHRCrswmmQg
-         8t95UqH47eTE+KDX00EGSmEtAd3ci5xEODzOkYA+SgNA3MeExjHp5yYy+1tJUT0wJaoQ
-         Fe9gYr/E2KwN9fZib8R+535lyRRAU/7mpci+trU8PcApsVkim6kJXCz5E6QAvCd7lira
-         iB0g==
-X-Gm-Message-State: AGi0Pub3IUMxANSAUC6/uvRbRSviNAmgWGO/GR41vSWrFkEqsTsZkB0o
-        gBgmmGXncnyaOpPYJYYCu8k=
-X-Google-Smtp-Source: APiQypIrs/KyEZGo9isIYbNHduvrckXj0XCrJMMoQhBOT/pJSBv9dMK3h8aO2de9vySF1HvRt3aMWg==
-X-Received: by 2002:a63:f958:: with SMTP id q24mr6909810pgk.338.1588038542846;
-        Mon, 27 Apr 2020 18:49:02 -0700 (PDT)
-Received: from gnu-cfl-2.localdomain (c-69-181-90-243.hsd1.ca.comcast.net. [69.181.90.243])
-        by smtp.gmail.com with ESMTPSA id t188sm11667641pgb.80.2020.04.27.18.49.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 18:49:01 -0700 (PDT)
-Received: from gnu-cfl-2.localdomain (localhost [IPv6:::1])
-        by gnu-cfl-2.localdomain (Postfix) with ESMTP id 9E060C034D;
-        Mon, 27 Apr 2020 18:49:00 -0700 (PDT)
-From:   "H.J. Lu" <hjl.tools@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>, Arnd Bergmann <arnd@arndb.de>,
-        linux-arch@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Mon, 27 Apr 2020 21:49:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:44470 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbgD1BtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 21:49:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D80230E;
+        Mon, 27 Apr 2020 18:49:22 -0700 (PDT)
+Received: from [10.163.70.197] (unknown [10.163.70.197])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A02363F305;
+        Mon, 27 Apr 2020 18:49:14 -0700 (PDT)
+Subject: Re: [mm/debug] fa6726c1e7: kernel_BUG_at_include/linux/mm.h
+To:     kernel test robot <lkp@intel.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Qian Cai <cai@lca.pw>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Will Deacon <will@kernel.org>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>,
-        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 2/2] Discard .note.gnu.property sections in generic NOTES
-Date:   Mon, 27 Apr 2020 18:49:00 -0700
-Message-Id: <20200428014900.407098-2-hjl.tools@gmail.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200428014900.407098-1-hjl.tools@gmail.com>
-References: <20200428014900.407098-1-hjl.tools@gmail.com>
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+References: <20200427140706.GC5770@shao2-debian>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <51dcbcbf-6020-6672-05b0-5bb10c6292b5@arm.com>
+Date:   Tue, 28 Apr 2020 07:18:46 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200427140706.GC5770@shao2-debian>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the command-line option, -mx86-used-note=yes, the x86 assembler
-in binutils 2.32 and above generates a program property note in a note
-section, .note.gnu.property, to encode used x86 ISAs and features.  But
-kernel linker script only contains a single NOTE segment:
 
-PHDRS {
- text PT_LOAD FLAGS(5);
- data PT_LOAD FLAGS(6);
- percpu PT_LOAD FLAGS(6);
- init PT_LOAD FLAGS(7);
- note PT_NOTE FLAGS(0);
-}
-SECTIONS
-{
-...
- .notes : AT(ADDR(.notes) - 0xffffffff80000000) { __start_notes = .; KEEP(*(.not
-e.*)) __stop_notes = .; } :text :note
-...
-}
 
-The NOTE segment generated by kernel linker script is aligned to 4 bytes.
-But .note.gnu.property section must be aligned to 8 bytes on x86-64 and
-we get
+On 04/27/2020 07:37 PM, kernel test robot wrote:
+> 
+> [   10.263354] kernel BUG at include/linux/mm.h:699!
+> [   10.264320] invalid opcode: 0000 [#1] SMP
+> [   10.264872] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc2-00230-gfa6726c1e7f01 #2
+> [   10.265928] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+> [   10.267074] EIP: __free_pages+0x4f/0x62
+> [   10.267615] Code: 85 ff 74 0e 89 fa 89 f0 e8 83 ed ff ff 5b 5e 5f 5d c3 89 f0 e8 57 ff ff ff 5b 5e 5f 5d c3 ba fc 86 fc c1 89 f0 e8 ff 2e fe ff <0f> 0b 0f b6 cb ba ff ff ff ff 89 f0 e8 07 8f 01 00 eb bf 55 89 e5
+> [   10.270098] EAX: 0000003e EBX: ee800000 ECX: 00000000 EDX: c0068000
+> [   10.270925] ESI: eece0640 EDI: c016d020 EBP: c0071f10 ESP: c0071f04
+> [   10.271786] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00010286
+> [   10.272724] CR0: 80050033 CR2: b7d6467d CR3: 023d0000 CR4: 000006b0
+> [   10.273572] Call Trace:
+> [   10.273912]  free_pages+0x3d/0x43
+> [   10.274367]  pgd_free+0xea/0x11b
+> [   10.274807]  __mmdrop+0x3c/0xc7
+> [   10.275237]  ? __free_pages+0x3e/0x62
+> [   10.275761]  debug_vm_pgtable+0x411/0x419
+> [   10.276305]  ? rest_init+0x23c/0x23c
+> [   10.276767]  kernel_init+0x15/0xf4
+> [   10.277208]  ? schedule_tail_wrapper+0x9/0xc
+> [   10.277756]  ret_from_fork+0x2e/0x38
+> [   10.278217] Modules linked in: stm_p_basic
+> [   10.278776] ---[ end trace b838f89424113a3a ]---
+This is an unsupported (enabled via CONFIG_EXPERT) X86 platform (CONFIG_X86_PAE)
+and is known to fail. The latest (V17) patch had moved the test invocation into
+a late_initcall() per Linus thus pushing down any possible failures (like this)
+after early boot. Please ignore this report.
 
-[hjl@gnu-skx-1 linux]$ readelf -n vmlinux
+Apart from this X86_PAE based config, no other platform failures have reported
+so far. Assuming that this test robot does have a good platform coverage, the
+CONFIG_EXPERT method of enabling CONFIG_DEBUG_VM_PGTABLE should help in getting
+more platform coverage for this test.
 
-Displaying notes found in: .notes
-  Owner                Data size Description
-  Xen                  0x00000006 Unknown note type: (0x00000006)
-   description data: 6c 69 6e 75 78 00
-  Xen                  0x00000004 Unknown note type: (0x00000007)
-   description data: 32 2e 36 00
-  xen-3.0              0x00000005 Unknown note type: (0x006e6558)
-   description data: 08 00 00 00 03
-readelf: Warning: note with invalid namesz and/or descsz found at offset 0x50
-readelf: Warning:  type: 0xffffffff, namesize: 0x006e6558, descsize:
-0x80000000, alignment: 8
-[hjl@gnu-skx-1 linux]$
-
-Since note.gnu.property section in kernel image is never used, this patch
-discards .note.gnu.property sections in kernel linker script by adding
-
-/DISCARD/ : {
-  *(.note.gnu.property)
-}
-
-before kernel NOTE segment in generic NOTES.
-
-Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
- include/asm-generic/vmlinux.lds.h | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 71e387a5fe90..95cd678428f4 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -833,7 +833,14 @@
- #define TRACEDATA
- #endif
- 
-+/*
-+ * Discard .note.gnu.property sections which are unused and have
-+ * different alignment requirement from kernel note sections.
-+ */
- #define NOTES								\
-+	/DISCARD/ : {							\
-+		*(.note.gnu.property)					\
-+	}								\
- 	.notes : AT(ADDR(.notes) - LOAD_OFFSET) {			\
- 		__start_notes = .;					\
- 		KEEP(*(.note.*))					\
--- 
-2.25.4
-
+- Anshuman
