@@ -2,227 +2,135 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78290C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE14C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB2B2072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D10DE20737
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:56:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgD1Vzv (ORCPT
+        id S1726784AbgD1V4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:55:51 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:34031 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgD1Vzu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:55:50 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MNOZO-1jnzWf0ECw-00OsmQ; Tue, 28 Apr 2020 23:55:43 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] amdgpu: fix gcc-4.8 build warnings
-Date:   Tue, 28 Apr 2020 23:54:27 +0200
-Message-Id: <20200428215541.4144749-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Tue, 28 Apr 2020 17:56:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:59696 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726363AbgD1V4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 17:56:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 687ED31B;
+        Tue, 28 Apr 2020 14:56:17 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17FF33F305;
+        Tue, 28 Apr 2020 14:56:15 -0700 (PDT)
+References: <20200428050242.17717-1-swood@redhat.com> <20200428050242.17717-4-swood@redhat.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Scott Wood <swood@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Rik van Riel <riel@surriel.com>,
+        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
+Subject: Re: [RFC PATCH 3/3] sched,rt: break out of load balancing if an RT task appears
+In-reply-to: <20200428050242.17717-4-swood@redhat.com>
+Date:   Tue, 28 Apr 2020 22:56:13 +0100
+Message-ID: <jhjees7s29u.mognet@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:i1PSi7lDLRUoZn/s8e+nf63pIYSQOtNY+L6yTmkwMTH93YBNi8b
- WeTZZLFfPl0ZMqNvNH6RAwU6VH+KM1UEu2w/X1SXTt2t/e1r+eMa5bSJiUjuzkzgWVGDhY2
- QQqnJg2MJ50Ec5uE0SnSFh1nsBt9y9jzuAviAa5Y3o7xGkoKW6KzXko74aHunSpW2AtEWdA
- p32o3fuYNDSMN1kdBya3Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Kx4agMKc/Kw=:OtdlwUgvsSLj8k+5fRX0bj
- ABGpx+3wNkH9Qq6e+/mZgOpibb15XaQqbOAj+5RN8+aBjehIt/2BKS1/V7ZKQ8+8Gmasfl/By
- kq7lk2Xt/41QD0cj0T81+eqwYIUyJ1yWRQI1MQjGAKXWsJDZd7qgldWwx3oJIf9BVvGftzIIS
- jFH1cKj8ZIUIdeb0k8jfA5yVRc2yz8dfrnrPxacjmWg+D68+k03wDz6CNevYmFxx6uYr2IEMn
- kYLMa5iraIRVs43Sc8ehTjrQMeHF6oYRZN8FFKH24h9MufjOjx5o8YyH1pWk+70hAZJADL5xi
- uc1e1X2D+qryEnIAKrLgYlCN3+MLKzNCNaXfZbRuP1/at5DmESJwrTwFNNEJwh6cdaTGK45ZW
- 27IcGzrsdNY1GeTiFNrNG/Td8CNBrMGdBA63QLC0fgpooy6M+oh+6BdNdidJ0/c1uX/8zm7Z0
- 5q5PFGnQ2rbP923IFo/ubeXWbFsigVZPdaoinJ00p/tIFsQCxCiY1HN5sjg/0ccLzl75FQaM0
- sEJ+KJa2c3cdRbOCmtVhDbVmtFBkie5HsW2tu6Ijh0l2UeCja+hHnCGOiihrM+8TDEyS8MI+c
- 5zLpShE9wCcOOoZBfz6lnDkGe2Zqip63LkUnsWYDX4M3gouveFpRUw1V3q1h0G13lW3eNB1J1
- NlPpnJ8AXgSr82SiKmtuGyAORMIh8kk2RC6BG8eMyelBvNiq0J3NPy7fO23rzXBVDDYDtbqVq
- gqFcFBZzY4hxaGaZ1fmcWET8yPMoAQq1Ia8ZPyPFf5iFJLJxCUtysMPspSt4AvizzehpXOCpe
- q55l57lWc4j40i+pL9LVdRYeWaPcd1u2BNsIfFW4lb+zQg+mVM=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Older compilers warn about initializers with incorrect curly
-braces:
 
-drivers/gpu/drm/drm_dp_mst_topology.c: In function 'drm_dp_mst_dsc_aux_for_port':
-drivers/gpu/drm/drm_dp_mst_topology.c:5497:9: error: missing braces around initializer [-Werror=missing-braces]
-  struct drm_dp_desc desc = { 0 };
-         ^
+On 28/04/20 06:02, Scott Wood wrote:
+> From: Rik van Riel <riel@redhat.com>
+>
+> Bugzilla: 1331562
+>
+> The CFS load balancer can take a little while, to the point of
+> it having a special LBF_NEED_BREAK flag, when the task moving
+> code takes a breather.
+>
+> However, at that point it will jump right back in to load balancing,
+> without checking whether the CPU has gained any runnable real time
+> (or deadline) tasks.
+>
+> Only idle_balance used to check for runnable real time tasks on a
+> CPU. This patch moves that check into a separate inline function,
+> and calls that function in load_balance, at approximately the same
+> granularity that LBF_NEED_BREAK happens.
+>
+> Besides breaking out of load_balance, this patch also clears
+> continue_balancing, in order for rebalance_domains to break out
+> of its loop when a realtime task becomes runnable.
+>
+> Signed-off-by: Rik van Riel <riel@redhat.com>
+> Reported-by: Clark Williams <williams@redhat.com>
+> Signed-off-by: Clark Williams <williams@redhat.com>
+> ---
+>  kernel/sched/fair.c  | 19 +++++++++++++++++--
+>  kernel/sched/sched.h |  6 ++++++
+>  2 files changed, 23 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index dfde7f0ce3db..e7437e4e40b4 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -9394,6 +9400,10 @@ static int should_we_balance(struct lb_env *env)
+>       struct sched_group *sg = env->sd->groups;
+>       int cpu, balance_cpu = -1;
+>
+> +	/* Run the realtime task now; load balance later. */
+> +	if (rq_has_runnable_rt_task(env->dst_rq))
+> +		return 0;
+> +
 
-Change all instances in the amd gpu driver to using the GNU empty
-initializer extension.
+I have a feeling this isn't very nice to CFS tasks, since we would now
+"waste" load-balance attempts if they happen to coincide with an RT task
+being runnable.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c         | 2 +-
- drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c        | 2 +-
- drivers/gpu/drm/amd/display/dc/bios/command_table2.c      | 4 ++--
- drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c | 2 +-
- drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c          | 6 +++---
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hubp.c         | 6 +++---
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c     | 2 +-
- drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c         | 8 ++++----
- 8 files changed, 16 insertions(+), 16 deletions(-)
+On your 72 CPUs machine, the system-wide balance happens (at best) every
+72ms if you have idle time, every ~2300ms otherwise (every balance
+CPU gets to try to balance however, so it's not as horrible as I'm making
+it sound). This is totally worst-case scenario territory, and you'd hope
+newidle_balance() could help here and there (as it isn't gated by any
+balance interval).
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 7f4417981bff..81ce3103d751 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -8695,7 +8695,7 @@ bool amdgpu_dm_psr_enable(struct dc_stream_state *stream)
- {
- 	struct dc_link *link = stream->link;
- 	unsigned int vsync_rate_hz = 0;
--	struct dc_static_screen_params params = {0};
-+	struct dc_static_screen_params params = { };
- 	/* Calculate number of static frames before generating interrupt to
- 	 * enter PSR.
- 	 */
-diff --git a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-index 37fa7b48250e..5484a316eaa8 100644
---- a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-+++ b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-@@ -294,7 +294,7 @@ static enum bp_result bios_parser_get_i2c_info(struct dc_bios *dcb,
- 	struct atom_display_object_path_v2 *object;
- 	struct atom_common_record_header *header;
- 	struct atom_i2c_record *record;
--	struct atom_i2c_record dummy_record = {0};
-+	struct atom_i2c_record dummy_record = { };
- 	struct bios_parser *bp = BP_FROM_DCB(dcb);
- 
- 	if (!info)
-diff --git a/drivers/gpu/drm/amd/display/dc/bios/command_table2.c b/drivers/gpu/drm/amd/display/dc/bios/command_table2.c
-index 8edc2506d49e..5e186c135921 100644
---- a/drivers/gpu/drm/amd/display/dc/bios/command_table2.c
-+++ b/drivers/gpu/drm/amd/display/dc/bios/command_table2.c
-@@ -113,7 +113,7 @@ static void encoder_control_dmcub(
- 		struct dc_dmub_srv *dmcub,
- 		struct dig_encoder_stream_setup_parameters_v1_5 *dig)
- {
--	struct dmub_rb_cmd_digx_encoder_control encoder_control = { 0 };
-+	struct dmub_rb_cmd_digx_encoder_control encoder_control = { };
- 
- 	encoder_control.header.type = DMUB_CMD__VBIOS;
- 	encoder_control.header.sub_type = DMUB_CMD__VBIOS_DIGX_ENCODER_CONTROL;
-@@ -339,7 +339,7 @@ static void set_pixel_clock_dmcub(
- 		struct dc_dmub_srv *dmcub,
- 		struct set_pixel_clock_parameter_v1_7 *clk)
- {
--	struct dmub_rb_cmd_set_pixel_clock pixel_clock = { 0 };
-+	struct dmub_rb_cmd_set_pixel_clock pixel_clock = { };
- 
- 	pixel_clock.header.type = DMUB_CMD__VBIOS;
- 	pixel_clock.header.sub_type = DMUB_CMD__VBIOS_SET_PIXEL_CLOCK;
-diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
-index 24c5765890fa..ee3ef5094fd1 100644
---- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
-+++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
-@@ -698,7 +698,7 @@ void rn_clk_mgr_construct(
- 		struct dccg *dccg)
- {
- 	struct dc_debug_options *debug = &ctx->dc->debug;
--	struct dpm_clocks clock_table = { 0 };
-+	struct dpm_clocks clock_table = { };
- 
- 	clk_mgr->base.ctx = ctx;
- 	clk_mgr->base.funcs = &dcn21_funcs;
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index 9ef9e50a34fa..7cbfe740a947 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -2683,9 +2683,9 @@ static void dp_test_send_link_test_pattern(struct dc_link *link)
- 
- static void dp_test_get_audio_test_data(struct dc_link *link, bool disable_video)
- {
--	union audio_test_mode            dpcd_test_mode = {0};
--	struct audio_test_pattern_type   dpcd_pattern_type = {0};
--	union audio_test_pattern_period  dpcd_pattern_period[AUDIO_CHANNELS_COUNT] = {0};
-+	union audio_test_mode            dpcd_test_mode = { };
-+	struct audio_test_pattern_type   dpcd_pattern_type = { };
-+	union audio_test_pattern_period  dpcd_pattern_period[AUDIO_CHANNELS_COUNT] = { };
- 	enum dp_test_pattern test_pattern = DP_TEST_PATTERN_AUDIO_OPERATOR_DEFINED;
- 
- 	struct pipe_ctx *pipes = link->dc->current_state->res_ctx.pipe_ctx;
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hubp.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hubp.c
-index 84d7ac5dd206..dfa541f0b0d3 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hubp.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hubp.c
-@@ -1253,9 +1253,9 @@ void hubp2_validate_dml_output(struct hubp *hubp,
- 		struct _vcs_dpi_display_ttu_regs_st *dml_ttu_attr)
- {
- 	struct dcn20_hubp *hubp2 = TO_DCN20_HUBP(hubp);
--	struct _vcs_dpi_display_rq_regs_st rq_regs = {0};
--	struct _vcs_dpi_display_dlg_regs_st dlg_attr = {0};
--	struct _vcs_dpi_display_ttu_regs_st ttu_attr = {0};
-+	struct _vcs_dpi_display_rq_regs_st rq_regs = { };
-+	struct _vcs_dpi_display_dlg_regs_st dlg_attr = { };
-+	struct _vcs_dpi_display_ttu_regs_st ttu_attr = { };
- 	DC_LOGGER_INIT(ctx->logger);
- 	DC_LOG_DEBUG("DML Validation | Running Validation");
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-index 63044ae06327..509b07c24758 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-@@ -449,7 +449,7 @@ struct _vcs_dpi_soc_bounding_box_st dcn2_0_nv14_soc = {
- 	.use_urgent_burst_bw = 0
- };
- 
--struct _vcs_dpi_soc_bounding_box_st dcn2_0_nv12_soc = { 0 };
-+struct _vcs_dpi_soc_bounding_box_st dcn2_0_nv12_soc = { };
- 
- #ifndef mmDP0_DP_DPHY_INTERNAL_CTRL
- 	#define mmDP0_DP_DPHY_INTERNAL_CTRL		0x210f
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c
-index d285ba622d61..654ea81b8ad6 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c
-@@ -365,9 +365,9 @@ void hubp21_validate_dml_output(struct hubp *hubp,
- 		struct _vcs_dpi_display_ttu_regs_st *dml_ttu_attr)
- {
- 	struct dcn21_hubp *hubp21 = TO_DCN21_HUBP(hubp);
--	struct _vcs_dpi_display_rq_regs_st rq_regs = {0};
--	struct _vcs_dpi_display_dlg_regs_st dlg_attr = {0};
--	struct _vcs_dpi_display_ttu_regs_st ttu_attr = {0};
-+	struct _vcs_dpi_display_rq_regs_st rq_regs = { };
-+	struct _vcs_dpi_display_dlg_regs_st dlg_attr = { };
-+	struct _vcs_dpi_display_ttu_regs_st ttu_attr = { };
- 	DC_LOGGER_INIT(ctx->logger);
- 	DC_LOG_DEBUG("DML Validation | Running Validation");
- 
-@@ -778,7 +778,7 @@ void dmcub_PLAT_54186_wa(struct hubp *hubp, struct surface_flip_registers *flip_
- {
- 	struct dc_dmub_srv *dmcub = hubp->ctx->dmub_srv;
- 	struct dcn21_hubp *hubp21 = TO_DCN21_HUBP(hubp);
--	struct dmub_rb_cmd_PLAT_54186_wa PLAT_54186_wa = { 0 };
-+	struct dmub_rb_cmd_PLAT_54186_wa PLAT_54186_wa = { };
- 
- 	PLAT_54186_wa.header.type = DMUB_CMD__PLAT_54186_WA;
- 	PLAT_54186_wa.flip.DCSURF_PRIMARY_SURFACE_ADDRESS = flip_regs->DCSURF_PRIMARY_SURFACE_ADDRESS;
--- 
-2.26.0
+Still, even for a single rq, postponing a system-wide balance for a
+full balance interval (i.e. ~2 secs worst case here) just because we had a
+single RT task running when we tried to balance seems a bit much.
 
+It may be possible to hack something to detect those cases and reset the
+interval to "now" when e.g. dequeuing the last RT task (& after having
+previously aborted a load-balance due to RT/DL/foobar).
+
+>       /*
+>        * Ensure the balancing environment is consistent; can happen
+>        * when the softirq triggers 'during' hotplug.
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 3d97c51544d7..a2a01dfd2bea 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -1878,6 +1878,12 @@ static inline struct cpuidle_state *idle_get_state(struct rq *rq)
+>
+>       return rq->idle_state;
+>  }
+> +
+> +/* Is there a task of a high priority class? */
+> +static inline bool rq_has_runnable_rt_task(struct rq *rq)
+> +{
+> +	return unlikely(rq->nr_running != rq->cfs.h_nr_running);
+
+Seeing as that can be RT, DL or stopper, that name is somewhat misleading.
+
+> +}
+>  #else
+>  static inline void idle_set_state(struct rq *rq,
+>                                 struct cpuidle_state *idle_state)
