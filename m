@@ -2,86 +2,160 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADDCC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2513C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66F1E20737
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:12:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="siFziCqI"
+	by mail.kernel.org (Postfix) with ESMTP id B8C3220757
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:12:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgD1JMF (ORCPT
+        id S1726963AbgD1JMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 05:12:05 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:32668 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726462AbgD1JME (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 05:12:04 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588065124; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=fn3H9mKpXT3A+/rYhDOKxcNKIcrs2URjyh96Pk02sMs=;
- b=siFziCqI7Wi8zeScugKN4iHCtszGhTd4nDXgW+mC66HQKBKWfmcVAP+/Ae15WXd9Bg6Kro0u
- 5gTHB+Lx0Fu8dFVSp6RsZaySpTgLXH70fK1g+tHUwejTA8NjBxJ3fl/FCm/CkLLTXqQQr1fC
- aEq6jj5b3X6jnoSNSVEOrtypzUM=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea7f363.7ff444887688-smtp-out-n02;
- Tue, 28 Apr 2020 09:12:03 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DF782C43636; Tue, 28 Apr 2020 09:12:01 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3552DC433D2;
-        Tue, 28 Apr 2020 09:11:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3552DC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 28 Apr 2020 05:12:39 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3363 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726462AbgD1JMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 05:12:39 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6869499AD9B950E77A03;
+        Tue, 28 Apr 2020 17:12:37 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 28 Apr 2020 17:12:30 +0800
+From:   Zou Wei <zou_wei@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, Zou Wei <zou_wei@huawei.com>
+Subject: [PATCH -next] perf tools: Remove unneeded semicolon
+Date:   Tue, 28 Apr 2020 17:18:43 +0800
+Message-ID: <1588065523-71423-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] ath5k: remove conversion to bool in
- ath5k_ani_calibration()
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200426094037.23048-1-yanaijie@huawei.com>
-References: <20200426094037.23048-1-yanaijie@huawei.com>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     <jirislaby@gmail.com>, <mickflemm@gmail.com>, <mcgrof@kernel.org>,
-        <davem@davemloft.net>, <linux-wireless@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jason Yan <yanaijie@huawei.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200428091201.DF782C43636@smtp.codeaurora.org>
-Date:   Tue, 28 Apr 2020 09:12:01 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jason Yan <yanaijie@huawei.com> wrote:
+Fixes coccicheck warnings:
 
-> The '>' expression itself is bool, no need to convert it to bool again.
-> This fixes the following coccicheck warning:
-> 
-> drivers/net/wireless/ath/ath5k/ani.c:504:56-61: WARNING: conversion to
-> bool not needed here
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+tools/perf/builtin-diff.c:1565:2-3: Unneeded semicolon
+tools/perf/builtin-lock.c:778:2-3: Unneeded semicolon
+tools/perf/builtin-mem.c:126:2-3: Unneeded semicolon
+tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c:555:2-3: Unneeded semicolon
+tools/perf/util/ordered-events.c:317:2-3: Unneeded semicolon
+tools/perf/util/synthetic-events.c:1131:2-3: Unneeded semicolon
+tools/perf/util/trace-event-read.c:78:2-3: Unneeded semicolon
 
-Patch applied to ath-next branch of ath.git, thanks.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
+---
+ tools/perf/builtin-diff.c                               | 2 +-
+ tools/perf/builtin-lock.c                               | 2 +-
+ tools/perf/builtin-mem.c                                | 2 +-
+ tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c | 2 +-
+ tools/perf/util/ordered-events.c                        | 2 +-
+ tools/perf/util/synthetic-events.c                      | 2 +-
+ tools/perf/util/trace-event-read.c                      | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
 
-c26b01d5ec1a ath5k: remove conversion to bool in ath5k_ani_calibration()
-
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index c94a002..59d40f0 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -1562,7 +1562,7 @@ hpp__entry_pair(struct hist_entry *he, struct hist_entry *pair,
+ 
+ 	default:
+ 		BUG_ON(1);
+-	};
++	}
+ }
+ 
+ static void
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 474dfd5..543d82f 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -775,7 +775,7 @@ static void dump_threads(void)
+ 		pr_info("%10d: %s\n", st->tid, thread__comm_str(t));
+ 		node = rb_next(node);
+ 		thread__put(t);
+-	};
++	}
+ }
+ 
+ static void dump_map(void)
+diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
+index a13f581..68a7eb8 100644
+--- a/tools/perf/builtin-mem.c
++++ b/tools/perf/builtin-mem.c
+@@ -123,7 +123,7 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem)
+ 
+ 		rec_argv[i++] = "-e";
+ 		rec_argv[i++] = perf_mem_events__name(j);
+-	};
++	}
+ 
+ 	if (all_user)
+ 		rec_argv[i++] = "--all-user";
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
+index 0ccf10a..4ce1099 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
+@@ -552,7 +552,7 @@ static int intel_pt_do_get_packet(const unsigned char *buf, size_t len,
+ 		break;
+ 	default:
+ 		break;
+-	};
++	}
+ 
+ 	if (!(byte & BIT(0))) {
+ 		if (byte == 0)
+diff --git a/tools/perf/util/ordered-events.c b/tools/perf/util/ordered-events.c
+index 359db2b..48c8f60 100644
+--- a/tools/perf/util/ordered-events.c
++++ b/tools/perf/util/ordered-events.c
+@@ -314,7 +314,7 @@ static int __ordered_events__flush(struct ordered_events *oe, enum oe_flush how,
+ 	case OE_FLUSH__NONE:
+ 	default:
+ 		break;
+-	};
++	}
+ 
+ 	pr_oe_time(oe->next_flush, "next_flush - ordered_events__flush PRE  %s, nr_events %u\n",
+ 		   str[how], oe->nr_events);
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index 9d4aa95..2523be6 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -1128,7 +1128,7 @@ void cpu_map_data__synthesize(struct perf_record_cpu_map_data *data, struct perf
+ 		synthesize_mask((struct perf_record_record_cpu_map *)data->data, map, max);
+ 	default:
+ 		break;
+-	};
++	}
+ }
+ 
+ static struct perf_record_cpu_map *cpu_map_event__new(struct perf_cpu_map *map)
+diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-event-read.c
+index 8593d3c..f507dff 100644
+--- a/tools/perf/util/trace-event-read.c
++++ b/tools/perf/util/trace-event-read.c
+@@ -75,7 +75,7 @@ static void skip(int size)
+ 		r = size > BUFSIZ ? BUFSIZ : size;
+ 		do_read(buf, r);
+ 		size -= r;
+-	};
++	}
+ }
+ 
+ static unsigned int read4(struct tep_handle *pevent)
 -- 
-https://patchwork.kernel.org/patch/11510327/
+2.6.2
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
