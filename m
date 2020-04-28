@@ -2,201 +2,133 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00ECEC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3806C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEBC4206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F88F206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:06:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZXQcasNb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JBPK9JRz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727920AbgD1KFt (ORCPT
+        id S1727923AbgD1KGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 06:05:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49144 "EHLO
+        Tue, 28 Apr 2020 06:06:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727820AbgD1KFs (ORCPT
+        by vger.kernel.org with ESMTP id S1727066AbgD1KGg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 06:05:48 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 511E5C03C1AC;
-        Tue, 28 Apr 2020 03:05:48 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id 72so31654171otu.1;
-        Tue, 28 Apr 2020 03:05:48 -0700 (PDT)
+        Tue, 28 Apr 2020 06:06:36 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3A2BC03C1A9;
+        Tue, 28 Apr 2020 03:06:35 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id j2so23936730wrs.9;
+        Tue, 28 Apr 2020 03:06:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=c+huRrl4EMmwLtCydWHPHBwimIQQrSdcPSmlbyOi6ak=;
-        b=ZXQcasNbkucSaQmXTrTSqX7pZUJO2euHRVM05NZzm5TApUC2RLi8uiPoeIXyaeakg8
-         L6s31m697YGtYuo/2tuzhQkt/Hsy+AUjb3rLu2rA2YL9iaQdgRGY1ARTmpQzgheJxVnE
-         HQNWIkhgPajVwvSY9z8CelokxtaWqOuE1qSh8YZJPRyZpIMxiZBOATTvk3UAbwlSuS5W
-         ZlyX+NpB4hN6Y/BZE5qqAAFDLA4OdVFtwAC+PUqFzLBItCIEvDcdfjXhJI/iNXjDuNXE
-         qdnmr8vMnZbJWcm17PQsuhSwhQK9dGIFV696cp8pZJhMh/ImQAJlIebRToOXiZaAa84c
-         DbIA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0NOPRK0/Yhwkuu7bUSlcqL6G+yespVTHDJSREMkCqog=;
+        b=JBPK9JRz84aiA4FcjeQVa53YeTll/0vLhduBNuC3BPHjAnaQOq7/fsfSZF1NRBO3bg
+         QVIUP/tGpw902ClCUlNYJ/bIM/zNzsjlO+9tJ7MMdj9g13G2WtacQjl5EE/jkArnzt/g
+         aiXnVUgjppZ9tNo1b5GOy7ntnOYoLnbkUO4EnxbaZydD5zLl90y0i8eE9VIMvcCe4Gsa
+         GbAlVSRjddGK6Ifuc+gpk1JZlWUURMG8rjbd4nKhEZNEjfrFGFZ+ljO+ZUx+ACVw6UGx
+         4l/fW9Jp/+pA6/w650L/X6mBx5Lh9sdxsxDsY3nCViD5oxji1y6NjrsSiIlJu0zCt8cO
+         afdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=c+huRrl4EMmwLtCydWHPHBwimIQQrSdcPSmlbyOi6ak=;
-        b=Cr2xU40lhFKrmfJD0zLp60qiCoJsq2ZquVSVnmOdvf8BA2ZIYQB9YqUcjm473D5KYP
-         5IiUjz58cJnqXc56OlRuANwX7SuR6SBPwMyongl/9gTCEGlKVCyK8Vbfkxbld6uD06No
-         5sMy8Y6CMhZwMoypdASyWzSfzR/5/V6KA0RohSEIZCuExBP1dyeLCEeBo5xEk3LBSsRz
-         KvgjaASVK/pDShfdQnhpHTk8EqJqL11si95STgwHd3vXjr9LX0UF0xMQMEDUVEJsTIyV
-         FD4kjyKvZ/MgtDStosAs5AjVIBPqBbvn3uSdhNMxqTUFpDW6iCsm66+24U8k4keJ1S4p
-         yacA==
-X-Gm-Message-State: AGi0PuaN3pDhZZbHChzbKbbkFiTKUgJmdoN8QvaIIRVXX4uI0NpKff1D
-        QGdU2hEkPvKJBQ2KAj4cK0B/iRf2SHvCSc9fGzg=
-X-Google-Smtp-Source: APiQypKYwyvKoAhMChnqsyAy72r1GF1221YvLClrEKSSr7ORzSXuco0AdOhukG42X8AkRT3b27d0+Yk1YWS/WZFqPdw=
-X-Received: by 2002:a9d:810:: with SMTP id 16mr21332951oty.56.1588068347645;
- Tue, 28 Apr 2020 03:05:47 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0NOPRK0/Yhwkuu7bUSlcqL6G+yespVTHDJSREMkCqog=;
+        b=G7Uu13NrWM9ltqKKcAahMXQX0awHY+RVbTrIdjgX/J4jCJm8Nmx0Ioskna8cay25Lk
+         TTJjsqVyiI4NJfh8CY+ycKJlHfzjxd29+C/rRdZP3ugXOGuwX5u8Gv+pE8D5IsJSPMHd
+         Cv3U4Zrhle/6imKxumPCYmoLPKahJlJbwpkP9bOmyQOY3tVOQNujHJmeloz72ygT0LXf
+         EQ3l8F2E6tihewGMq/OL8uLrIdYrSyWYnSp9crRb6owkaLx8U3h+afKHc7n9upGUUhly
+         O8yQOAH4bLUUaWywGQ7dYnlkHXhpc9BBPsDmqwqYr/3/S7r+1jF2gRVH/qhW2R+62xwY
+         Ba0g==
+X-Gm-Message-State: AGi0PuY1ZsLrPoW5jiFyJV/RZ75z4aYjT/KzXBtYWcutIiwfQ0J6OFLQ
+        pb6LRNQ/CWRuz70ajMADGuCmbGkD
+X-Google-Smtp-Source: APiQypJi5ZpL1icthw5cAYkTdZLk7nsvaXcwbZzuN4qQcwQWsTAh/CP1Xwvu/LGQvYzH+4s95ERlog==
+X-Received: by 2002:adf:ab1b:: with SMTP id q27mr34705138wrc.220.1588068394689;
+        Tue, 28 Apr 2020 03:06:34 -0700 (PDT)
+Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
+        by smtp.gmail.com with ESMTPSA id t20sm3201391wmi.2.2020.04.28.03.06.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 03:06:33 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 12:06:32 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
+        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 4/8] phy: tegra: xusb: Add USB2 pad power control
+ support for Tegra210
+Message-ID: <20200428100632.GD3592148@ulmo>
+References: <1586939108-10075-1-git-send-email-nkristam@nvidia.com>
+ <1586939108-10075-5-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-References: <1588055009-12677-1-git-send-email-wanpengli@tencent.com>
- <1588055009-12677-7-git-send-email-wanpengli@tencent.com> <15150824.2a36.171c0394538.Coremail.linxl3@wangsu.com>
-In-Reply-To: <15150824.2a36.171c0394538.Coremail.linxl3@wangsu.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 28 Apr 2020 18:05:37 +0800
-Message-ID: <CANRm+Cw0=JU5eJayQ0XM7n2e+q8a8dzHusqtsfNjmWTNai9phg@mail.gmail.com>
-Subject: Re: [PATCH v4 6/7] KVM: X86: TSCDEADLINE MSR emulation fastpath
-To:     =?UTF-8?B?5p6X6ZGr6b6Z?= <linxl3@wangsu.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Haiwei Li <lihaiwei@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wLAMOaPNJ0fu1fTG"
+Content-Disposition: inline
+In-Reply-To: <1586939108-10075-5-git-send-email-nkristam@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 at 17:59, =E6=9E=97=E9=91=AB=E9=BE=99 <linxl3@wangsu.co=
-m> wrote:
->
-> On Tuesday, 28 Apr 2020 at 14:23, Wanpeng Li <kernellwp@gmail.com> wrote:
-> &gt;
-> &gt; From: Wanpeng Li <wanpengli@tencent.com>
-> &gt;
-> &gt; This patch implements tscdealine msr emulation fastpath, after wrmsr
-> &gt; tscdeadline vmexit, handle it as soon as possible and vmentry immedi=
-ately
-> &gt; without checking various kvm stuff when possible.
-> &gt;
-> &gt; Tested-by: Haiwei Li <lihaiwei@tencent.com>
-> &gt; Cc: Haiwei Li <lihaiwei@tencent.com>
-> &gt; Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> &gt; ---
-> &gt;  arch/x86/kvm/lapic.c   | 18 ++++++++++++------
-> &gt;  arch/x86/kvm/vmx/vmx.c | 12 ++++++++----
-> &gt;  arch/x86/kvm/x86.c     | 30 ++++++++++++++++++++++++------
-> &gt;  3 files changed, 44 insertions(+), 16 deletions(-)
-> &gt;
-> &gt; diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> &gt; index 38f7dc9..3589237 100644
-> &gt; --- a/arch/x86/kvm/lapic.c
-> &gt; +++ b/arch/x86/kvm/lapic.c
-> &gt; @@ -1593,7 +1593,7 @@ static void kvm_apic_inject_pending_timer_irqs=
-(struct kvm_lapic *apic)
-> &gt;    }
-> &gt;  }
-> &gt;
-> &gt; -static void apic_timer_expired(struct kvm_lapic *apic)
-> &gt; +static void apic_timer_expired(struct kvm_lapic *apic, bool from_ti=
-mer_fn)
-> &gt;  {
-> &gt;    struct kvm_vcpu *vcpu =3D apic-&gt;vcpu;
-> &gt;    struct kvm_timer *ktimer =3D &amp;apic-&gt;lapic_timer;
-> &gt; @@ -1604,6 +1604,12 @@ static void apic_timer_expired(struct kvm_lap=
-ic *apic)
-> &gt;    if (apic_lvtt_tscdeadline(apic) || ktimer-&gt;hv_timer_in_use)
-> &gt;            ktimer-&gt;expired_tscdeadline =3D ktimer-&gt;tscdeadline=
-;
-> &gt;
-> &gt; +  if (!from_timer_fn &amp;&amp; vcpu-&gt;arch.apicv_active) {
-> &gt; +          WARN_ON(kvm_get_running_vcpu() !=3D vcpu);
-> &gt; +          kvm_apic_inject_pending_timer_irqs(apic);
-> &gt; +          return;
-> &gt; +  }
-> &gt; +
-> &gt;    if (kvm_use_posted_timer_interrupt(apic-&gt;vcpu)) {
-> &gt;            if (apic-&gt;lapic_timer.timer_advance_ns)
-> &gt;                    __kvm_wait_lapic_expire(vcpu);
-> &gt; @@ -1643,7 +1649,7 @@ static void start_sw_tscdeadline(struct kvm_la=
-pic *apic)
-> &gt;            expire =3D ktime_sub_ns(expire, ktimer-&gt;timer_advance_=
-ns);
-> &gt;            hrtimer_start(&amp;ktimer-&gt;timer, expire, HRTIMER_MODE=
-_ABS_HARD);
-> &gt;    } else
-> &gt; -          apic_timer_expired(apic);
-> &gt; +          apic_timer_expired(apic, false);
-> &gt;
-> &gt;    local_irq_restore(flags);
-> &gt;  }
-> &gt; @@ -1751,7 +1757,7 @@ static void start_sw_period(struct kvm_lapic *=
-apic)
-> &gt;
-> &gt;    if (ktime_after(ktime_get(),
-> &gt;                    apic-&gt;lapic_timer.target_expiration)) {
-> &gt; -          apic_timer_expired(apic);
-> &gt; +          apic_timer_expired(apic, false);
-> &gt;
-> &gt;            if (apic_lvtt_oneshot(apic))
-> &gt;                    return;
-> &gt; @@ -1813,7 +1819,7 @@ static bool start_hv_timer(struct kvm_lapic *a=
-pic)
-> &gt;            if (atomic_read(&amp;ktimer-&gt;pending)) {
-> &gt;                    cancel_hv_timer(apic);
-> &gt;            } else if (expired) {
-> &gt; -                  apic_timer_expired(apic);
-> &gt; +                  apic_timer_expired(apic, false);
-> &gt;                    cancel_hv_timer(apic);
-> &gt;            }
-> &gt;    }
-> &gt; @@ -1863,7 +1869,7 @@ void kvm_lapic_expired_hv_timer(struct kvm_vcp=
-u *vcpu)
-> &gt;            goto out;
-> &gt;    WARN_ON(swait_active(&amp;vcpu-&gt;wq));
-> &gt;    cancel_hv_timer(apic);
-> &gt; -  apic_timer_expired(apic);
-> &gt; +  apic_timer_expired(apic, false);
-> &gt;
-> &gt;    if (apic_lvtt_period(apic) &amp;&amp; apic-&gt;lapic_timer.period=
-) {
-> &gt;            advance_periodic_target_expiration(apic);
-> &gt; @@ -2369,7 +2375,7 @@ static enum hrtimer_restart apic_timer_fn(stru=
-ct hrtimer *data)
-> &gt;    struct kvm_timer *ktimer =3D container_of(data, struct kvm_timer,=
- timer);
-> &gt;    struct kvm_lapic *apic =3D container_of(ktimer, struct kvm_lapic,=
- lapic_timer);
-> &gt;
-> &gt; -  apic_timer_expired(apic);
-> &gt; +  apic_timer_expired(apic, true);
-> &gt;
-> &gt;    if (lapic_is_periodic(apic)) {
-> &gt;            advance_periodic_target_expiration(apic);
-> &gt; diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> &gt; index ce19b0e..bb5c4f1 100644
-> &gt; --- a/arch/x86/kvm/vmx/vmx.c
-> &gt; +++ b/arch/x86/kvm/vmx/vmx.c
-> &gt; @@ -5994,7 +5994,8 @@ static int vmx_handle_exit(struct kvm_vcpu *vc=
-pu, fastpath_t exit_fastpath)
-> &gt;    if (exit_fastpath =3D=3D EXIT_FASTPATH_SKIP_EMUL_INS) {
-> &gt;            kvm_skip_emulated_instruction(vcpu);
-> Can we move this kvm_skip_emulated_instruction to handle_fastpath_set_msr=
-_irqoff? This will keep the style consistent.
 
-It can have other users sooner or later.
+--wLAMOaPNJ0fu1fTG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-    Wanpeng
+On Wed, Apr 15, 2020 at 01:55:04PM +0530, Nagarjuna Kristam wrote:
+> Add USB2 pad power on and off API's for TEgra210 and provide its control
+
+"Tegra210"
+
+> via soc ops. It can be used by operations like charger detect to power on
+> and off USB2 pad if needed.
+>=20
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> ---
+> V2:
+>  - Patch re-based.
+> ---
+>  drivers/phy/tegra/xusb-tegra210.c | 190 ++++++++++++++++++++++++++------=
+------
+>  1 file changed, 133 insertions(+), 57 deletions(-)
+
+Again, is there any particular reason why this has to be done with a
+custom API rather than just passing the UTMI PHY to the charging code?
+
+Thierry
+
+--wLAMOaPNJ0fu1fTG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6oACgACgkQ3SOs138+
+s6F9KQ/+M3fL7+wFt2a7E9qXFb9sgMBGcZ60bYeJG5FVGV2Rs3Ec9cPx1cvmJqnG
+esMRcnr6qzKuZtSt+5aoA1q7wRDqrjAFdt4y1KUl8/hjKhqOO/K+/mWXRFem+9HZ
+SDMi2IfNwizsGojMftpg9LXZgJVsr9tI01etxAeJ0xfBtoQSyCtoXfbCXWuTi58E
+KpvwuzpgbK0LAADwTxmwmijgZ8OFHve1AHoT8Ye0cWhXGKWBZLM9hkYaEhPXWYNH
+9ZKzZuzf69ovCNcdJZUOelo4mVGWqwZpYj8z+Kxl+6G4bWE437M3bCHS7q0Ffsda
+34uLaJehBT+UeN6FsVbPbvsy7kUjEs9fPC12zk43ThMg1msgXE661QDU7U7N4d6j
+BgzW6800Ae12vMC1rmLSL1QtfeW9/EUjw7LX0krTOBkJ/Lz8PpWybN2dtkDb3vLJ
+crKgw8jMm08K0/1wAL+McPymKHZLn5UoOupBgyj2bLBM5nXolX3F3yABEW45+7Ur
+djmeUddxwOoR/+ceoDz5tSLDEJ8tR1m636wL+Ao2Zu97jPKCP+R05fOax/qPNdOw
+oCjzAeY14cr3zSwUdKCUmg/f8lLGb+Py36xF7HyO75TY1ZaW5DWpkfKWwtfZwvEF
+8khdnwwHo6oZhnHCy+trucc3Wkyb+IYFQL3b18uzH3YaigPbr/g=
+=tXcG
+-----END PGP SIGNATURE-----
+
+--wLAMOaPNJ0fu1fTG--
