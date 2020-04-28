@@ -2,93 +2,131 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 827D9C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A346C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63B7F206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E17B206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:51:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qY200Gdh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgD1Ltf (ORCPT
+        id S1726759AbgD1Lv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:49:35 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2065 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726285AbgD1Ltf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:49:35 -0400
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 2CE5A9A64A1CC1F80253;
-        Tue, 28 Apr 2020 19:49:33 +0800 (CST)
-Received: from dggeme705-chm.china.huawei.com (10.1.199.101) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Tue, 28 Apr 2020 19:49:32 +0800
-Received: from dggeme756-chm.china.huawei.com (10.3.19.102) by
- dggeme705-chm.china.huawei.com (10.1.199.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Tue, 28 Apr 2020 19:49:32 +0800
-Received: from dggeme756-chm.china.huawei.com ([10.6.80.68]) by
- dggeme756-chm.china.huawei.com ([10.6.80.68]) with mapi id 15.01.1913.007;
- Tue, 28 Apr 2020 19:49:32 +0800
-From:   Hushijie <hushijie3@huawei.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nixiaoming <nixiaoming@huawei.com>,
-        "wangxu (AE)" <wangxu72@huawei.com>,
-        "Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
-        yangerkun <yangerkun@huawei.com>,
-        "Wangle (RTOS FAE)" <wangle6@huawei.com>,
-        "Chengang (L)" <cg.chen@huawei.com>
-Subject: Re [PATCH] [RFC]hugetlbfs: Get unmapped area below TASK_UNMAPPED_BASE
- for hugetlbfs
-Thread-Topic: Re [PATCH] [RFC]hugetlbfs: Get unmapped area below
- TASK_UNMAPPED_BASE for hugetlbfs
-Thread-Index: AdYdUmUl7otGISMhRXK04Qrl9WrqxA==
-Date:   Tue, 28 Apr 2020 11:49:32 +0000
-Message-ID: <2f7fcfd8d66d4df7ac0c972fd9c3abc1@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.67.103.250]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 28 Apr 2020 07:51:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726264AbgD1Lv1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 07:51:27 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01F02C03C1A9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 04:51:27 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id m18so32007989otq.9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 04:51:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YV5X7b0RVx9UtJZqWhbhycNNkPCol2NhsoVPXumvChw=;
+        b=qY200Gdh14KWjuFl7nMHJc5Y6JPsMnKXb+yEm+ncWoJ2UZOZXise3+Js8HeoWMi7cc
+         IgwtEqKjPLAGBnHEg5HKFHjRoxSnELVv8kn45MyI9kIFqYgVS6zPiJ2M85fAOg22GyyE
+         819bOa4POc+oTD+ZXBHOQGapNKnxVaE7fpJUkb9oIedVVdxYBRu0336uweqMWwyfBhRd
+         cg4cmOHFVMgLu/3Xr/MNVw4TRUgxCW2aFT9eVid1r0DJvVrHL5ecakv39CU7qdZADE2/
+         mV9188VWARK8Oe7oA39H1FZ1UhXWmfyCwoT9EmxMJFgimfGqXL9yyKrEStKAlQkAgLsZ
+         rJAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YV5X7b0RVx9UtJZqWhbhycNNkPCol2NhsoVPXumvChw=;
+        b=AVpINAXYlx1W7aC+kqTj00uDXPqhXVFUXBvvElK4xmR1bakYJFWrDSOGOC3ebD7WcD
+         9KviRY3ISopNygaq3DKKaV8NY+BaWiS3ksHpwb30crONZnh7to0Dq1uzwt7ykZvpJFbE
+         VpRvj7NNhJ+PCf2L57QsfkTRd6GHJhGuLsYzlH5FMtmdRVQHwupgXd1RbHhwXcmu6Vl2
+         DsqXh+5JfB7iMvdINr/e/tPQ69HfSetFv0X0fAgmgnyVOK/dUgE5w1DLVev3dLjorJ0G
+         i03LoJJiAnZnvUoy6XuPCY8IXaIDtBHEb4aLZNvgISsXkrWggvB6VDjNfdIi9/NCFLjI
+         xaew==
+X-Gm-Message-State: AGi0PubwPRPZjGi5c5s0PTiz9lgJKGFkjLPeWT/7OBM7pvSBL42OAWpp
+        VnQH/VTT43EGxuWc+itiSx++YmIWq2KvSJYdSc0Vbw==
+X-Google-Smtp-Source: APiQypIGTUh/5sCvlDOhvI/LG4JE8NTFr9y4EW8BlYgrxb5QHasXcsr59vMAsl3o74ezgCVEiF3BiSVV/FTK4Mkh01Y=
+X-Received: by 2002:a05:6830:1e4e:: with SMTP id e14mr21811872otj.91.1588074686391;
+ Tue, 28 Apr 2020 04:51:26 -0700 (PDT)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+References: <20200408110816.2712841-1-robert.foss@linaro.org>
+ <20200408110816.2712841-2-robert.foss@linaro.org> <20200415160729.GA4438@bogus>
+ <20200415162110.bmorj4u4hkqohqjx@pengutronix.de> <CAG3jFysg34=HJ7xefuAKw4Uq6W0POm5TsJmzQku6WwkhH_j=-w@mail.gmail.com>
+ <20200428075504.ovzugt2mbgan7z3k@gilmour.lan> <20200428082505.GA22489@pengutronix.de>
+In-Reply-To: <20200428082505.GA22489@pengutronix.de>
+From:   Robert Foss <robert.foss@linaro.org>
+Date:   Tue, 28 Apr 2020 13:51:15 +0200
+Message-ID: <CAG3jFysKKfu564y4jnfh3unT-6xPLSeBPjfGX5KRY5s=avp1mg@mail.gmail.com>
+Subject: Re: [PATCH v7 1/3] media: dt-bindings: ov8856: Document YAML bindings
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Maxime Ripard <maxime@cerno.tech>, Rob Herring <robh@kernel.org>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IE9uIDQvMjgvMjAgNjo0NiBBTSwgTWlrZSBLcmF2ZXR6IHdyb3RlOg0KPkp1c3QgY3VyaW91cy4g
-IEhhdmUgeW91IGFjdHVhbGx5IHNlZWluZyBhIHByb2JsZW0gd2l0aCB0aGlzIGNvZGUsIG9yIGlz
-DQo+dGhlIHJlYXNvbiBmb3IgdGhlIHByb3Bvc2VkIGNoYW5nZSBqdXN0IHRoZSByZXN1bHQgb2Yg
-Y29kZSBpbnNwZWN0aW9uPyAgSSBhc2sNCj5iZWNhdXNlIG1hbnkgYXJjaGl0ZWN0dXJlcyBoYXZl
-IHRoZWlyIG93biB2ZXJzaW9uIG9mIGh1Z2V0bGJfZ2V0X3VubWFwcGVkX2FyZWEuDQo+U28sIGlm
-IHlvdSBhcmUgc2VlaW5nIHRoaXMgaXNzdWUgaXQgd291bGQgYmUgaW50ZXJlc3RpbmcgdG8ga25v
-dyB3aGF0DQo+YXJjaGl0ZWN0dXJlIHlvdSBhcmUgcnVubmluZy4NCg0KVGhhbmtzIGZvciB5b3Vy
-IHJlcGx5Lg0KDQpXZSBhY3R1YWxseSBmb3VuZCB0aGlzIHByb2JsZW0gb24gYXJtNjQgYXJjaGl0
-ZWN0dXJlLCBydW5uaW5nIGEgMzItYml0IA0KcHJvZ3JhbS4gV2hlbiB0aGUgYWRkcmVzcyBzcGFj
-ZSBiZWxvdyBUQVNLX1VOTUFQUEVEX0JBU0UgaXMgY29tcGxldGVseSANCmV4aGF1c3RlZCwgc2ht
-YXQoKSBmb3IgaHVnZSBwYWdlcyB3aWxsIHJldHVybiBFTk9NRU0sIGJ1dCBzaG1hdCgpIGZvciAN
-Cm5vcm1hbCBwYWdlcyBjYW4gc3RpbGwgc3VjY2Vzcy4NCg0KPlRoZSByb3V0aW5lIGh1Z2V0bGJf
-Z2V0X3VubWFwcGVkX2FyZWEgaGFzIG5vdCBjaGFuZ2VkIG11Y2ggc2luY2UgdGhpcyBmaXJzdA0K
-PmdpdCB2ZXJzaW9uLiAgSSBzdXNwZWN0IHRoaXMgaXMgYmVjYXVzZSBpdCBpcyBtb3N0bHkgdW51
-c2VkLg0KPg0KPkkgbm90aWNlZCB0aGF0IGh1Z2V0bGJfZ2V0X3VubWFwcGVkX2FyZWEgaXMgb25l
-IG9mIG9ubHkgYSBmZXcgcGxhY2VzIGluIGFyY2gNCj5pbmRlcGVuZGVudCBjb2RlIGNhbGxpbmcg
-dm1fdW5tYXBwZWRfYXJlYSgpLiAgVGhlIG90aGVyIGNhbGxlcnMgYXJlIGFyY2gNCj5pbmRlcGVu
-ZGVudCBmYWxsIGJhY2sgcm91dGluZXMgZm9yIGFyY2hfZ2V0X3VubWFwcGVkX2FyZWEqIHJvdXRp
-bmVzLiAgSWYgd2UNCj5tb3ZlIGZvcndhcmQgd2l0aCBjaGFuZ2VzIHRvIHRoaXMgcm91dGluZSwg
-d291bGQgaXQgbWFrZSBtb3JlIHNlbnNlIHRvIHVzZQ0KPnRoZSBhcmNoX2dldF91bm1hcHBlZF9h
-cmVhKiByb3V0aW5lcyBpbnN0ZWFkIG9mIGNhbGxpbmcgdm1fdW5tYXBwZWRfYXJlYQ0KPmRpcmVj
-dGx5PyAgVGhpcyB3b3VsZCB0YWtlIGFkdmFudGFnZSBvZiBhbnkgYXJjaCBzcGVjaWZpYyBpZiBp
-dCBleGlzdHMuDQoNCkkgdG90YWxseSBhZ3JlZSB3aXRoIHlvdS4NCiANCkl0IGlzIG1vcmUgYXBw
-cm9wcmlhdGUgdG8gaW1wbGVtZW50aW5nIGh1Z2V0bGJfZ2V0X3VubWFwcGVkX2FyZWEoKSBmb3Ig
-YSANCnNwZWNpZmljIGFyY2hpdGVjdHVyZSwgaW5zdGVhZCBvZiBjaGFnaW5nIGNvbW1vbiBodWdl
-dGxiX2dldF91bm1hcHBlZF9hcmVhKCkgDQppbnRlcmZhY2UgYXQgImZzL2h1Z2V0bGJmcy9pbm9k
-ZS5jIi4NCg0KSSB3aWxsIHN1Ym1pdCBhbm90aGVyIHBhdGNoIGp1c3QgZm9yIHNwZWNpZmljIGFy
-Y2hpdGVjdHVyZXMgKGFybTY0KSBsYXRlci4gDQpUaGFua3MgZm9yIHlvdXIgcmVwbHkgYW5kIGFk
-dmlzZS4NCg==
+Ah, sorry. I was thinking of the 'port' property and replying to that.
+
+assigned clocks are definitely being removed.
+
+On Tue, 28 Apr 2020 at 10:25, Marco Felsch <m.felsch@pengutronix.de> wrote:
+>
+> On 20-04-28 09:55, Maxime Ripard wrote:
+> > On Mon, Apr 27, 2020 at 05:13:42PM +0200, Robert Foss wrote:
+> > > On Wed, 15 Apr 2020 at 18:21, Marco Felsch <m.felsch@pengutronix.de> wrote:
+> > > >
+> > > > On 20-04-15 11:07, Rob Herring wrote:
+> > > > > On Wed, Apr 08, 2020 at 01:08:14PM +0200, Robert Foss wrote:
+> > > > > > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+>
+> ...
+>
+> > > > > > +  clock-names:
+> > > > > > +    description:
+> > > > > > +      Input clock for the sensor.
+> > > > > > +    items:
+> > > > > > +      - const: xvclk
+> > > > > > +
+> > > > > > +  assigned-clocks:
+> > > > > > +    description:
+> > > > > > +      Input clock for the sensor.
+> > > > > > +
+> > > > > > +  assigned-clock-rates:
+> > > > > > +    description:
+> > > > > > +      Frequency of the xvclk clock in Hertz.
+> > > > >
+> > > > > These 2 should have a 'maxItems: 1'
+> > > >
+> > > > Don't know why those properties are needed here.. IMHO this shouldn't be
+> > > > part of the binding or at least it should be optional and not required.
+> > > > All we need is the clocks and the clock-names property.
+> > >
+> > > Thanks Marco, I'll make it optional for the next revision.
+> >
+> > Well, the whole discussion we had was about removing them entirely?
+>
+> +1 from my side. It is part of the system integration and not part of
+> this device.
+>
+> Regards,
+>   Marco
+>
+> > Maxime
