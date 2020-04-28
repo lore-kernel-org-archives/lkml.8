@@ -2,58 +2,53 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4C4C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE72C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB682085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 991DF208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098999;
-	bh=uRKGWEHffTzz+HeEoRdC6kD4Fwtd9WIkFuzd8NRpf9I=;
+	s=default; t=1588099002;
+	bh=VGOifJHmLgVMAh/k+tNnXuqKA0OK2c3ZLlbJQg8bEKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vezBUeaxPOEeqtHcHcsEFlKnygWcgXO4pl69xvIezouFkChLuEXK65slQG4SyKeNU
-	 +cAhFn5VOpBevC7Hzt8sxddAqYwt5BR5C8MBQjmAli7eOGMfS/cJNwRTP9LuvED42N
-	 ErOUufLJ+nZDx5oaUyFeMpmEe6ciHwAP9JNYUou4=
+	b=i4DcyAnDgsQKdax9BLunpyD9iIGkPxKPP0ktc1dabyXlNYm6PDsLshlDS9adB38L0
+	 Kgc+h/BAoeWBOXV3Egp0iIXR4UzyNAvMdsbI5ECJD+I1lJCUa7Hi4xz0uCnJzEBv6R
+	 WGkdRAHl4vJVID7dAlT76J8dK+JaSCjbawy5BXJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729924AbgD1Sgi (ORCPT
+        id S1730390AbgD1Sgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:36:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53944 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:36:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730111AbgD1Sg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:36:28 -0400
+        id S1729327AbgD1Sgb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:36:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 203F620B80;
-        Tue, 28 Apr 2020 18:36:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B16820575;
+        Tue, 28 Apr 2020 18:36:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098988;
-        bh=uRKGWEHffTzz+HeEoRdC6kD4Fwtd9WIkFuzd8NRpf9I=;
+        s=default; t=1588098991;
+        bh=VGOifJHmLgVMAh/k+tNnXuqKA0OK2c3ZLlbJQg8bEKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tSq+nNhzC6vrzD9UDtq4YBBrsdU2x79Nj7pNdPa16We8Q+E+yR9xbfFvDiHv+QET3
-         bClZI9Q4uOW8jOKfH2dDEpZoQ+DSzfgImJipZfsSqLnGSEjSFisBEV+oOe+GyqiMyx
-         Y1Qs3oD94Df5ExxqeyPkWTNAKnVGBn60lLrM+Aq0=
+        b=tLo+Qz487KxXGSHbEVOsistE9TocGFSCf+AeyqzK16Rccwbm9YBxEzuK6x7hv9uye
+         pQzASRGZyIYaVqz/+zxOuMA6DS+rFoKPcup+Gw0v27SQle7PhtKl3b/HSfwyOSY33c
+         JuF9plWNh+sae52CAb83QvdRi2TMLIWfrW+xs6lw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 036/168] pwm: bcm2835: Dynamically allocate base
-Date:   Tue, 28 Apr 2020 20:23:30 +0200
-Message-Id: <20200428182236.294602204@linuxfoundation.org>
+        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
+Subject: [PATCH 5.6 141/167] staging: vt6656: Fix pairwise key entry save.
+Date:   Tue, 28 Apr 2020 20:25:17 +0200
+Message-Id: <20200428182243.459210929@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,39 +58,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Malcolm Priestley <tvboxspy@gmail.com>
 
-[ Upstream commit 2c25b07e5ec119cab609e41407a1fb3fa61442f5 ]
+commit 0b59f10b1d8fe8d50944f21f5d403df9303095a8 upstream.
 
-The newer 2711 and 7211 chips have two PWM controllers and failure to
-dynamically allocate the PWM base would prevent the second PWM
-controller instance being probed for succeeding with an -EEXIST error
-from alloc_pwms().
+The problem is that the group key was saved as VNT_KEY_DEFAULTKEY
+was over written by the VNT_KEY_GROUP_ADDRESS index.
 
-Fixes: e5a06dc5ac1f ("pwm: Add BCM2835 PWM driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+mac80211 could not clear the mac_addr in the default key.
+
+The VNT_KEY_DEFAULTKEY is not necesscary so remove it and set as
+VNT_KEY_GROUP_ADDRESS.
+
+mac80211 can clear any key using vnt_mac_disable_keyentry.
+
+Fixes: f9ef05ce13e4 ("staging: vt6656: Fix pairwise key for non station modes")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
+Link: https://lore.kernel.org/r/da2f7e7f-1658-1320-6eee-0f55770ca391@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/pwm/pwm-bcm2835.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/vt6656/key.c      |   14 +++-----------
+ drivers/staging/vt6656/main_usb.c |    6 +++++-
+ 2 files changed, 8 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
-index 91e24f01b54ed..d78f86f8e4621 100644
---- a/drivers/pwm/pwm-bcm2835.c
-+++ b/drivers/pwm/pwm-bcm2835.c
-@@ -166,6 +166,7 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
+--- a/drivers/staging/vt6656/key.c
++++ b/drivers/staging/vt6656/key.c
+@@ -83,9 +83,6 @@ static int vnt_set_keymode(struct ieee80
+ 	case  VNT_KEY_PAIRWISE:
+ 		key_mode |= mode;
+ 		key_inx = 4;
+-		/* Don't save entry for pairwise key for station mode */
+-		if (priv->op_mode == NL80211_IFTYPE_STATION)
+-			clear_bit(entry, &priv->key_entry_inuse);
+ 		break;
+ 	default:
+ 		return -EINVAL;
+@@ -109,7 +106,6 @@ static int vnt_set_keymode(struct ieee80
+ int vnt_set_keys(struct ieee80211_hw *hw, struct ieee80211_sta *sta,
+ 		 struct ieee80211_vif *vif, struct ieee80211_key_conf *key)
+ {
+-	struct ieee80211_bss_conf *conf = &vif->bss_conf;
+ 	struct vnt_private *priv = hw->priv;
+ 	u8 *mac_addr = NULL;
+ 	u8 key_dec_mode = 0;
+@@ -151,16 +147,12 @@ int vnt_set_keys(struct ieee80211_hw *hw
+ 		key->flags |= IEEE80211_KEY_FLAG_GENERATE_IV;
+ 	}
  
- 	pc->chip.dev = &pdev->dev;
- 	pc->chip.ops = &bcm2835_pwm_ops;
-+	pc->chip.base = -1;
- 	pc->chip.npwm = 2;
- 	pc->chip.of_xlate = of_pwm_xlate_with_flags;
- 	pc->chip.of_pwm_n_cells = 3;
--- 
-2.20.1
-
+-	if (key->flags & IEEE80211_KEY_FLAG_PAIRWISE) {
++	if (key->flags & IEEE80211_KEY_FLAG_PAIRWISE)
+ 		vnt_set_keymode(hw, mac_addr, key, VNT_KEY_PAIRWISE,
+ 				key_dec_mode, true);
+-	} else {
+-		vnt_set_keymode(hw, mac_addr, key, VNT_KEY_DEFAULTKEY,
++	else
++		vnt_set_keymode(hw, mac_addr, key, VNT_KEY_GROUP_ADDRESS,
+ 				key_dec_mode, true);
+ 
+-		vnt_set_keymode(hw, (u8 *)conf->bssid, key,
+-				VNT_KEY_GROUP_ADDRESS, key_dec_mode, true);
+-	}
+-
+ 	return 0;
+ }
+--- a/drivers/staging/vt6656/main_usb.c
++++ b/drivers/staging/vt6656/main_usb.c
+@@ -865,8 +865,12 @@ static int vnt_set_key(struct ieee80211_
+ 			return -EOPNOTSUPP;
+ 		break;
+ 	case DISABLE_KEY:
+-		if (test_bit(key->hw_key_idx, &priv->key_entry_inuse))
++		if (test_bit(key->hw_key_idx, &priv->key_entry_inuse)) {
+ 			clear_bit(key->hw_key_idx, &priv->key_entry_inuse);
++
++			vnt_mac_disable_keyentry(priv, key->hw_key_idx);
++		}
++
+ 	default:
+ 		break;
+ 	}
 
 
