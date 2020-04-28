@@ -7,87 +7,86 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2499DC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F424C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02F7220730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FFD120730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:30:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgD1Va1 (ORCPT
+        id S1726780AbgD1Vap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:30:27 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:56837 "EHLO
+        Tue, 28 Apr 2020 17:30:45 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:38239 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgD1Va0 (ORCPT
+        with ESMTP id S1725934AbgD1Vap (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:30:26 -0400
+        Tue, 28 Apr 2020 17:30:45 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MIxBc-1jjZY348cM-00KTgy; Tue, 28 Apr 2020 23:30:02 +0200
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1McHM2-1it7ey3lam-00ciSB; Tue, 28 Apr 2020 23:30:37 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] watchdog: iTCO: fix link error
-Date:   Tue, 28 Apr 2020 23:29:11 +0200
-Message-Id: <20200428212959.2993304-1-arnd@arndb.de>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Rishi Gupta <gupt21@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jiri Kosina <jkosina@suse.cz>,
+        Bastien Nocera <bnocera@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] HID: mcp2221: add gpiolib dependency
+Date:   Tue, 28 Apr 2020 23:30:17 +0200
+Message-Id: <20200428213035.3108649-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:B67SrUqOB9QyQpNkAUnJAxyQGtbsgsRckwvq7nUOyxAa1NIaEAa
- jTyPXX3yWUsdsT/C6Vl0l27sBiboHMzExTdPQMoMK0cf2ueP2kRi7L7RzEFnPQmJxKB36v0
- 7KGf1KEEL76cSNUVIGtEjcHvSlIP9oQ5gJM08uKGLizKMR2AYwE6jTHwydX5iSLGWWX+W3d
- BaCf6YkQr9U4hGu6eou4Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zrj2Ds8WBsA=:bbl9HaoipUDM+RSbgDxyaz
- pSx73ot5oTpM8zGDX7AvXQ9LvyCcIXTgOQFuGbxZo9QQ/kItWb3W7o+p9p4QRw1w5FvvGvaLq
- kJGGp9W5Z/a6Df6t2QMjXYrC3Ve24DKuSo3ggEoeLEwar2mgNujTGyQei1fw1gai39Qk/G8nP
- rsDnp1aOVfXimxsiFYHUccgndsCQvjsXdXWxPh3TRtAbeGXLP8wJ9qHNYBYuLRrf59MZtzQ9S
- fdzR2GxuRwltna7U+ZmuFChhiIHCjhe2ukklLIFOWo2KkQKQXi8Rx1W0uz8vKW4cKqR93WpgZ
- r+e1i4MTjiW+hFEa3ZMkvRHzVCx2fXVdn9bno7t7UI9UHdpxPz9DFruNxgC629i8lMkS/6H1O
- aXkd4W8BoVrCmxgTwvTSULbEpvZUH0jH7KMGvNz7hTKd+JnUimDj5DvPf4QoqAdYXWYgV1OYC
- u0mRZ73AM6ZBhJNvkEX11x01yPhqYqj6ycQ5IsrrEHiEYJOxACKDC3KwtqzcuonKYVS+GslZe
- ZHhpYVpNzwvC1hLgr7fc9zpaPnKsb7G0ajLPlGk1i+lwpkXEIaE7zG+kh83miD2XhgTSnyft4
- wO+khlYfugs/+4G0Mx8fwWR4fFNTCTv0SxMgjrVk7nVJDCvWwPEELePDCxjVNQlaEfUmwEFC3
- tbtiOOP1unToBqC2ghpV3b46VLjTHkJ6Flzgbb8+PJUTYVGL9+xd3RbD+DFnXPzPsXcytnW1G
- RqmXa5+82uNPtHWGVbaT5+NVCc25uIEIWC2fbJZOXdJxwDviZ/qDiosJPHzM9sua14o0yLFIX
- H+ZrD1qpLMgkbvmBskkQw0JE/brwCvMCqjYGBYRxQrx6mWdN+M=
+X-Provags-ID: V03:K1:7r62qOoVCPk7gtPEoS7ZCMnWkY3NDUcoFia+LnBLDsJhyS0znYT
+ 8l0MoyYXUWSQ1KXGyDmM+4QXQ2jKT9uDUl4JyDjT1lUR5yWRobTJ30NqcPt8rrtM5Getybt
+ c/gYzc7hs54mFqvfbvGu2tjOMKuQS4EisdokSjBu1B8GGk9zuO7tDOpyXQAgQK1ht/9gybx
+ KwAA2oetBf7QpSDnxHGvQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ZuNYRQiWMEE=:mhP4d/Qfn7PrwxWDgFNNAz
+ aupxDknp6gt1/Ru2AyMiOnsN11+IMPN5JUz0sE5uDFuc0T7P2MgW+eaRjaUuEukRoni9WcvFz
+ IS6a6CBMZ+FPIxClGfY5linu4XdOwhkg4DRV4mf66gX2fDOCDlPXQsxq+/aSH2uWei1TtDpre
+ NgwOCUtN7qL0nAafixszMd/UnJo+v3vL+FwpoiM13ZvGqkuRdC0UgALgip7Kwz3A+crFwXWQy
+ P/cEkHwD0y3/Bu20rala7TfH3o5anT8HYWv60pP5B+nzapyRfCjNpgPJr0lVWWOyNsoDJssm2
+ 7eP2clJDq1FG8RbvYZlrep9zBZrWG+EQmnt2JZALtFPc04GBHhY6dCnK7yBHSYAUWh1NN3Hex
+ jBVyLeBOMa4SAl/ALuhSrXDRxcDc9EOOxmQlk2r9zNoOVTlEWDlGoW6397U9qkNYNGh4TYOqj
+ wheDojTdiWNZxRhxh3An+a+3Kf0za5hAYIbxdSLnpdHqxzM+Bkk8T0R4Q6bl1deMlb/VGSzM3
+ rwGR2VfHaOxd3GJEkKiOXpBQvv3+lLuCIA3y4Nc5KlDp9XkiGwZdjGZ7dScA/7FwmiS1ajnSY
+ /MLWXsxC013uM0T87xvxV/gW7ToDIvwapRnpebPyYvdVopqhoDp7RJpH9+s5O7SEDXO57Y/Ht
+ jJ6LsED0LT9ijiHXQa5wOOkcXENsxnkc37i2wlpQdDS7rbl6jkPN4IgKp4X22+Le+k38yxcny
+ 0j0+Bn+ZSud5bMbzaLy+Bb8y3YVqFrj60ogGG5jOXJhCLIZnQJjcZWgpD9RFA5xRM2GyKd5rf
+ lf17fCNghFntPypm++wYaW1bkrt0YgiIp8xcDvj1eSy6gDJ7wo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the MFD driver is a loadable module, the watchdog driver fails
-to get linked into the kernel:
+Without gpiolib, this driver fails to link:
 
-drivers/watchdog/iTCO_wdt.o: In function `update_no_reboot_bit_pmc':
-iTCO_wdt.c:(.text+0x54f): undefined reference to `intel_pmc_gcr_update'
+arm-linux-gnueabi-ld: drivers/hid/hid-mcp2221.o: in function `mcp2221_probe':
+hid-mcp2221.c:(.text+0x1b0): undefined reference to `devm_gpiochip_add_data'
+arm-linux-gnueabi-ld: drivers/hid/hid-mcp2221.o: in function `mcp_gpio_get':
+hid-mcp2221.c:(.text+0x30c): undefined reference to `gpiochip_get_data'
 
-The code is written to support operation without the MFD driver, so
-add a Kconfig dependency that allows this, while disallowing the watchdog
-to be built-in when the MFD driver is a module.
-
-Fixes: 25f1ca31e230 ("platform/x86: intel_pmc_ipc: Convert to MFD")
+Fixes: 328de1c519c5 ("HID: mcp2221: add GPIO functionality support")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/watchdog/Kconfig | 1 +
+ drivers/hid/Kconfig | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 66ca69f30f01..67a83578810e 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -1217,6 +1217,7 @@ config ITCO_WDT
- 	depends on (X86 || IA64) && PCI
- 	select WATCHDOG_CORE
- 	depends on I2C || I2C=n
-+	depends on MFD_INTEL_PMC_BXT || !MFD_INTEL_PMC_BXT
- 	select LPC_ICH if !EXPERT
- 	select I2C_I801 if !EXPERT && I2C
+diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+index 008bf44bc2c3..d54e7ae80de5 100644
+--- a/drivers/hid/Kconfig
++++ b/drivers/hid/Kconfig
+@@ -1155,6 +1155,7 @@ config HID_ALPS
+ config HID_MCP2221
+ 	tristate "Microchip MCP2221 HID USB-to-I2C/SMbus host support"
+ 	depends on USB_HID && I2C
++	depends on GPIOLIB
  	---help---
+ 	Provides I2C and SMBUS host adapter functionality over USB-HID
+ 	through MCP2221 device.
 -- 
 2.26.0
 
