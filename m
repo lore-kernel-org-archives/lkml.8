@@ -2,311 +2,187 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D09C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0E1C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4B57206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:40:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jnUUCprP"
+	by mail.kernel.org (Postfix) with ESMTP id C1E6C206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:43:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588074229;
+	bh=C3RrHaH4L5nHvpS6TTlCiuxHkFrUFi0ST3B70exKPaE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=0Q6ZJ+Z5GsISPGczJOYrD1PZ829bvCEdvcIrHrkcd8CN/1bhhX5Mtm7yv/ZyFxAoS
+	 OVA7WH0OdHbFeeYkMsHVdS0f/AwdS1Y8TzgJTzCGBZvA2mPtzuHddEvTCNwP/QfPFl
+	 qoZclDtQSE2Hf4R4+a1rOcQy4aMr5CdVywvuuVBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgD1LkX (ORCPT
+        id S1726678AbgD1Lnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:40:23 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:42628 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726774AbgD1LkW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:40:22 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588074022; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=EyRVot7qp3Cdnv4TORCR9Eswn96fUUZzNYySheEGPnQ=; b=jnUUCprPAYbF0+cn8A91AgXh/0pGBGfvmc0JmHCrlfB6HUcs32aSI7o8qhL9id/7dzto3H1G
- jGprVszENh97hyLWEPswm4XPEVr6NaZDOGSzJk6inbVRh4zPcfe4S6lrnGRbIfFsP2CLezjO
- Rm537Swt0Y7t2adDofa8XRGj1uE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea81610.7ff0ed08e688-smtp-out-n03;
- Tue, 28 Apr 2020 11:40:00 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id F0AACC4478F; Tue, 28 Apr 2020 11:39:58 +0000 (UTC)
-Received: from blr-ubuntu-31.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Tue, 28 Apr 2020 07:43:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726426AbgD1Lns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 07:43:48 -0400
+Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: svaddagi)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 00DACC44793;
-        Tue, 28 Apr 2020 11:39:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 00DACC44793
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vatsa@codeaurora.org
-From:   Srivatsa Vaddagiri <vatsa@codeaurora.org>
-To:     konrad.wilk@oracle.com, mst@redhat.com, jasowang@redhat.com,
-        jan.kiszka@siemens.com, will@kernel.org,
-        stefano.stabellini@xilinx.com
-Cc:     iommu@lists.linux-foundation.org,
-        virtualization@lists.linux-foundation.org,
-        virtio-dev@lists.oasis-open.org, tsoni@codeaurora.org,
-        pratikp@codeaurora.org, vatsa@codeaurora.org,
-        christoffer.dall@arm.com, alex.bennee@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] virtio: Add bounce DMA ops
-Date:   Tue, 28 Apr 2020 17:09:18 +0530
-Message-Id: <1588073958-1793-6-git-send-email-vatsa@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588073958-1793-1-git-send-email-vatsa@codeaurora.org>
-References: <1588073958-1793-1-git-send-email-vatsa@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BED7206A1;
+        Tue, 28 Apr 2020 11:43:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588074227;
+        bh=C3RrHaH4L5nHvpS6TTlCiuxHkFrUFi0ST3B70exKPaE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=gJ+OP2dO0LshnikekgssZbBwArnQEgbbqlUxCdMNVB55zlcXhXNYciLXtyEBDsGph
+         A3evgVJOW7hGuSR0cSl7gFBoy2CVXveGRfZ4xa+1IhZJCS5MZfEEdMSA7tX55tB71e
+         exN+R7klP52nSf0PpCt/SJsQ15jEm7KsGuEHHyFc=
+Date:   Tue, 28 Apr 2020 06:43:45 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Yicong Yang <yangyicong@hisilicon.com>
+Cc:     Saheed Bolarinwa <refactormyself@gmail.com>, bjorn@helgaas.com,
+        skhan@linuxfoundation.org, linux-pci@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] pci: Make return value of pcie_capability_read*()
+ consistent
+Message-ID: <20200428114345.GA123615@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4cc16e59-d346-5523-5072-eebe77d06a08@hisilicon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For better security, its desirable that a guest VM's memory is
-not accessible to any entity that executes outside the context of
-guest VM. In case of virtio, backend drivers execute outside the
-context of guest VM and in general will need access to complete
-guest VM memory.  One option to restrict the access provided to
-backend driver is to make use of a bounce buffer. The bounce
-buffer is accessible to both backend and frontend drivers. All IO
-buffers that are in private space of guest VM are bounced to be
-accessible to backend.
+On Tue, Apr 28, 2020 at 10:19:08AM +0800, Yicong Yang wrote:
+> On 2020/4/28 2:13, Bjorn Helgaas wrote:
+> >
+> > I'm starting to think we're approaching this backwards.  I searched
+> > for PCIBIOS_FUNC_NOT_SUPPORTED, PCIBIOS_BAD_VENDOR_ID, and the other
+> > error values.  Almost every use is a *return* in a config accessor.
+> > There are very, very few *tests* for these values.
+> 
+> If we have certain reasons to reserve PCI_BIOS* error to identify
+> PCI errors in PCI drivers, maybe redefine the PCI_BIOS* to generic
+> error codes can solve the issues, and no need to call
+> pcibios_err_to_errno() to do the conversion.  Few changes may be
+> made to current codes. One possible patch may look like below.
+> Otherwise, maybe convert all PCI_BIOS* errors to generic error codes
+> is a better idea.
+> 
+> Not sure it's the best way or not. Just FYI.
 
-This patch proposes a new memory pool to be used for this bounce
-purpose, rather than the default swiotlb memory pool. That will
-avoid any conflicts that may arise in situations where a VM needs
-to use swiotlb pool for driving any pass-through devices (in
-which case swiotlb memory needs not be shared with another VM) as
-well as virtio devices (which will require swiotlb memory to be
-shared with backend VM). As a possible extension to this patch,
-we can provide an option for virtio to make use of default
-swiotlb memory pool itself, where no such conflicts may exist in
-a given deployment.
+That's a brilliant idea!  We should still look carefully at all the
+callers of the config accessors, but this would avoid changing all the
+arch accessors, so the patch would be dramatically smaller.
 
-Signed-off-by: Srivatsa Vaddagiri <vatsa@codeaurora.org>
----
- drivers/virtio/Makefile        |   2 +-
- drivers/virtio/virtio.c        |   2 +
- drivers/virtio/virtio_bounce.c | 150 +++++++++++++++++++++++++++++++++++++++++
- include/linux/virtio.h         |   4 ++
- 4 files changed, 157 insertions(+), 1 deletion(-)
- create mode 100644 drivers/virtio/virtio_bounce.c
-
-diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
-index 29a1386e..3fd3515 100644
---- a/drivers/virtio/Makefile
-+++ b/drivers/virtio/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
--obj-$(CONFIG_VIRTIO) += virtio.o virtio_ring.o
-+obj-$(CONFIG_VIRTIO) += virtio.o virtio_ring.o virtio_bounce.o
- obj-$(CONFIG_VIRTIO_MMIO) += virtio_mmio.o
- obj-$(CONFIG_VIRTIO_PCI) += virtio_pci.o
- virtio_pci-y := virtio_pci_modern.o virtio_pci_common.o
-diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
-index a977e32..bc2f779 100644
---- a/drivers/virtio/virtio.c
-+++ b/drivers/virtio/virtio.c
-@@ -329,6 +329,7 @@ int register_virtio_device(struct virtio_device *dev)
- 
- 	dev->index = err;
- 	dev_set_name(&dev->dev, "virtio%u", dev->index);
-+	virtio_bounce_set_dma_ops(dev);
- 
- 	spin_lock_init(&dev->config_lock);
- 	dev->config_enabled = false;
-@@ -431,6 +432,7 @@ EXPORT_SYMBOL_GPL(virtio_device_restore);
- 
- static int virtio_init(void)
- {
-+	virtio_map_bounce_buffer();
- 	if (bus_register(&virtio_bus) != 0)
- 		panic("virtio bus registration failed");
- 	return 0;
-diff --git a/drivers/virtio/virtio_bounce.c b/drivers/virtio/virtio_bounce.c
-new file mode 100644
-index 0000000..3de8e0e
---- /dev/null
-+++ b/drivers/virtio/virtio_bounce.c
-@@ -0,0 +1,150 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Virtio DMA ops to bounce buffers
-+ *
-+ *  Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ *
-+ * This module allows bouncing of IO buffers to a region which will be
-+ * accessible to backend drivers.
-+ */
-+
-+#include <linux/virtio.h>
-+#include <linux/io.h>
-+#include <linux/swiotlb.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/of_reserved_mem.h>
-+#include <linux/of.h>
-+#include <linux/of_fdt.h>
-+
-+static phys_addr_t bounce_buf_paddr;
-+static void *bounce_buf_vaddr;
-+static size_t bounce_buf_size;
-+struct swiotlb_pool *virtio_pool;
-+
-+#define VIRTIO_MAX_BOUNCE_SIZE	(16*4096)
-+
-+static void *virtio_alloc_coherent(struct device *dev, size_t size,
-+		dma_addr_t *dma_handle, gfp_t gfp_flags, unsigned long attrs)
-+{
-+	phys_addr_t addr;
-+
-+	if (!virtio_pool)
-+		return NULL;
-+
-+	addr = swiotlb_alloc(virtio_pool, size, bounce_buf_paddr, ULONG_MAX);
-+	if (addr == DMA_MAPPING_ERROR)
-+		return NULL;
-+
-+	*dma_handle = (addr - bounce_buf_paddr);
-+
-+	return bounce_buf_vaddr + (addr - bounce_buf_paddr);
-+}
-+
-+static void virtio_free_coherent(struct device *dev, size_t size, void *vaddr,
-+		dma_addr_t dma_handle, unsigned long attrs)
-+{
-+	phys_addr_t addr = (dma_handle + bounce_buf_paddr);
-+
-+	swiotlb_free(virtio_pool, addr, size);
-+}
-+
-+static dma_addr_t virtio_map_page(struct device *dev, struct page *page,
-+		unsigned long offset, size_t size,
-+		enum dma_data_direction dir, unsigned long attrs)
-+{
-+	void *ptr = page_address(page) + offset;
-+	phys_addr_t paddr = virt_to_phys(ptr);
-+	dma_addr_t handle;
-+
-+	if (!virtio_pool)
-+		return DMA_MAPPING_ERROR;
-+
-+	handle = _swiotlb_tbl_map_single(virtio_pool, dev, bounce_buf_paddr,
-+					 paddr, size, size, dir, attrs);
-+	if (handle == (phys_addr_t)DMA_MAPPING_ERROR)
-+		return DMA_MAPPING_ERROR;
-+
-+	return handle - bounce_buf_paddr;
-+}
-+
-+static void virtio_unmap_page(struct device *dev, dma_addr_t dev_addr,
-+		size_t size, enum dma_data_direction dir, unsigned long attrs)
-+{
-+	phys_addr_t addr = dev_addr + bounce_buf_paddr;
-+
-+	_swiotlb_tbl_unmap_single(virtio_pool, dev, addr, size,
-+					size, dir, attrs);
-+}
-+
-+size_t virtio_max_mapping_size(struct device *dev)
-+{
-+	return VIRTIO_MAX_BOUNCE_SIZE;
-+}
-+
-+static const struct dma_map_ops virtio_dma_ops = {
-+	.alloc			= virtio_alloc_coherent,
-+	.free			= virtio_free_coherent,
-+	.map_page		= virtio_map_page,
-+	.unmap_page		= virtio_unmap_page,
-+	.max_mapping_size	= virtio_max_mapping_size,
-+};
-+
-+void virtio_bounce_set_dma_ops(struct virtio_device *vdev)
-+{
-+	if (!bounce_buf_paddr)
-+		return;
-+
-+	set_dma_ops(vdev->dev.parent, &virtio_dma_ops);
-+}
-+
-+int virtio_map_bounce_buffer(void)
-+{
-+	int ret;
-+
-+	if (!bounce_buf_paddr)
-+		return 0;
-+
-+	/*
-+	 * Map region as 'cacheable' memory. This will reduce access latency for
-+	 * backend.
-+	 */
-+	bounce_buf_vaddr = memremap(bounce_buf_paddr,
-+				bounce_buf_size, MEMREMAP_WB);
-+	if (!bounce_buf_vaddr)
-+		return -ENOMEM;
-+
-+	memset(bounce_buf_vaddr, 0, bounce_buf_size);
-+	virtio_pool = swiotlb_register_pool("virtio_swiotlb", bounce_buf_paddr,
-+				bounce_buf_vaddr, bounce_buf_size);
-+	if (IS_ERR(virtio_pool)) {
-+		ret = PTR_ERR(virtio_pool);
-+		virtio_pool = NULL;
-+		memunmap(bounce_buf_vaddr);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+int virtio_register_bounce_buffer(phys_addr_t base, size_t size)
-+{
-+	if (bounce_buf_paddr || !base || size < PAGE_SIZE)
-+		return -EINVAL;
-+
-+	bounce_buf_paddr = base;
-+	bounce_buf_size = size;
-+
-+	return 0;
-+}
-+
-+static int __init virtio_bounce_setup(struct reserved_mem *rmem)
-+{
-+	unsigned long node = rmem->fdt_node;
-+
-+	if (!of_get_flat_dt_prop(node, "no-map", NULL))
-+		return -EINVAL;
-+
-+	return virtio_register_bounce_buffer(rmem->base, rmem->size);
-+}
-+
-+RESERVEDMEM_OF_DECLARE(virtio, "virtio_bounce_pool", virtio_bounce_setup);
-diff --git a/include/linux/virtio.h b/include/linux/virtio.h
-index a493eac..c4970c5 100644
---- a/include/linux/virtio.h
-+++ b/include/linux/virtio.h
-@@ -134,12 +134,16 @@ void virtio_config_changed(struct virtio_device *dev);
- void virtio_config_disable(struct virtio_device *dev);
- void virtio_config_enable(struct virtio_device *dev);
- int virtio_finalize_features(struct virtio_device *dev);
-+int virtio_register_bounce_buffer(phys_addr_t base, size_t size);
-+
- #ifdef CONFIG_PM_SLEEP
- int virtio_device_freeze(struct virtio_device *dev);
- int virtio_device_restore(struct virtio_device *dev);
- #endif
- 
- size_t virtio_max_dma_size(struct virtio_device *vdev);
-+extern int virtio_map_bounce_buffer(void);
-+extern void virtio_bounce_set_dma_ops(struct virtio_device *dev);
- 
- #define virtio_device_for_each_vq(vdev, vq) \
- 	list_for_each_entry(vq, &vdev->vqs, list)
--- 
-2.7.4
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 83ce1cd..843987c 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -675,14 +675,18 @@ static inline bool pci_dev_msi_enabled(struct pci_dev *pci_dev) { return false;
+>  
+>  /* Error values that may be returned by PCI functions */
+>  #define PCIBIOS_SUCCESSFUL		0x00
+> -#define PCIBIOS_FUNC_NOT_SUPPORTED	0x81
+> -#define PCIBIOS_BAD_VENDOR_ID		0x83
+> -#define PCIBIOS_DEVICE_NOT_FOUND	0x86
+> -#define PCIBIOS_BAD_REGISTER_NUMBER	0x87
+> -#define PCIBIOS_SET_FAILED		0x88
+> -#define PCIBIOS_BUFFER_TOO_SMALL	0x89
+> -
+> -/* Translate above to generic errno for passing back through non-PCI code */
+> +#define PCIBIOS_FUNC_NOT_SUPPORTED	-ENOENT
+> +#define PCIBIOS_BAD_VENDOR_ID		-ENOTTY
+> +#define PCIBIOS_DEVICE_NOT_FOUND	-ENODEV
+> +#define PCIBIOS_BAD_REGISTER_NUMBER	-EFAULT
+> +#define PCIBIOS_SET_FAILED		-EIO
+> +#define PCIBIOS_BUFFER_TOO_SMALL	-ENOSPC
+> +
+> +/**
+> + * Translate above to generic errno for passing back through non-PCI code
+> + *
+> + * Deprecated. Use the PCIBIOS_* directly without a translation.
+> + */
+>  static inline int pcibios_err_to_errno(int err)
+>  {
+>  	if (err <= PCIBIOS_SUCCESSFUL)
+> @@ -690,17 +694,12 @@ static inline int pcibios_err_to_errno(int err)
+>  
+>  	switch (err) {
+>  	case PCIBIOS_FUNC_NOT_SUPPORTED:
+> -		return -ENOENT;
+>  	case PCIBIOS_BAD_VENDOR_ID:
+> -		return -ENOTTY;
+>  	case PCIBIOS_DEVICE_NOT_FOUND:
+> -		return -ENODEV;
+>  	case PCIBIOS_BAD_REGISTER_NUMBER:
+> -		return -EFAULT;
+>  	case PCIBIOS_SET_FAILED:
+> -		return -EIO;
+>  	case PCIBIOS_BUFFER_TOO_SMALL:
+> -		return -ENOSPC;
+> +		return err;
+>  	}
+>  
+>  	return -ERANGE;
+> 
+> > For example, the only tests for PCIBIOS_FUNC_NOT_SUPPORTED are in
+> > xen_pcibios_err_to_errno() and pcibios_err_to_errno(), i.e., we're
+> > just converting that value to -ENOENT or the Xen-specific thing.
+> >
+> > So I think the best approach might be to remove the PCIBIOS_* error
+> > values completely and replace them with the corresponding values from
+> > pcibios_err_to_errno().  For example, a part of the patch would look
+> > like this:
+> >
+> > diff --git a/arch/mips/pci/ops-emma2rh.c b/arch/mips/pci/ops-emma2rh.c
+> > index 65f47344536c..d4d9c902c147 100644
+> > --- a/arch/mips/pci/ops-emma2rh.c
+> > +++ b/arch/mips/pci/ops-emma2rh.c
+> > @@ -100,7 +100,7 @@ static int pci_config_read(struct pci_bus *bus, unsigned int devfn, int where,
+> >  		break;
+> >  	default:
+> >  		emma2rh_out32(EMMA2RH_PCI_IWIN0_CTR, backup_win0);
+> > -		return PCIBIOS_FUNC_NOT_SUPPORTED;
+> > +		return -ENOENT;
+> >  	}
+> >  
+> >  	emma2rh_out32(EMMA2RH_PCI_IWIN0_CTR, backup_win0);
+> > @@ -149,7 +149,7 @@ static int pci_config_write(struct pci_bus *bus, unsigned int devfn, int where,
+> >  		break;
+> >  	default:
+> >  		emma2rh_out32(EMMA2RH_PCI_IWIN0_CTR, backup_win0);
+> > -		return PCIBIOS_FUNC_NOT_SUPPORTED;
+> > +		return -ENOENT;
+> >  	}
+> >  	*(volatile u32 *)(base + (PCI_FUNC(devfn) << 8) +
+> >  			  (where & 0xfffffffc)) = data;
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index 83ce1cdf5676..f95637a8d391 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -675,7 +675,6 @@ static inline bool pci_dev_msi_enabled(struct pci_dev *pci_dev) { return false;
+> >  
+> >  /* Error values that may be returned by PCI functions */
+> >  #define PCIBIOS_SUCCESSFUL		0x00
+> > -#define PCIBIOS_FUNC_NOT_SUPPORTED	0x81
+> >  #define PCIBIOS_BAD_VENDOR_ID		0x83
+> >  #define PCIBIOS_DEVICE_NOT_FOUND	0x86
+> >  #define PCIBIOS_BAD_REGISTER_NUMBER	0x87
+> > @@ -689,8 +688,6 @@ static inline int pcibios_err_to_errno(int err)
+> >  		return err; /* Assume already errno */
+> >  
+> >  	switch (err) {
+> > -	case PCIBIOS_FUNC_NOT_SUPPORTED:
+> > -		return -ENOENT;
+> >  	case PCIBIOS_BAD_VENDOR_ID:
+> >  		return -ENOTTY;
+> >  	case PCIBIOS_DEVICE_NOT_FOUND:
+> > .
+> >
+> 
