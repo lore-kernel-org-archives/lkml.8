@@ -2,79 +2,60 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B980CC83006
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9FBC83006
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97255206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26682206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:27:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgD1NZR (ORCPT
+        id S1726939AbgD1N1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:25:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41830 "EHLO mx2.suse.de"
+        Tue, 28 Apr 2020 09:27:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726940AbgD1NZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:25:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id F1D36AD85;
-        Tue, 28 Apr 2020 13:25:09 +0000 (UTC)
-From:   Giovanni Gherdovich <ggherdovich@suse.cz>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
+        id S1726825AbgD1N1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 09:27:43 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8044206D7;
+        Tue, 28 Apr 2020 13:27:42 +0000 (UTC)
+Date:   Tue, 28 Apr 2020 09:27:41 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Scott Wood <swood@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@suse.de>, Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Cc:     x86@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>
-Subject: [PATCH 2/2] x86, sched: Bail out of frequency invariance if turbo frequency is unknown
-Date:   Tue, 28 Apr 2020 15:24:50 +0200
-Message-Id: <20200428132450.24901-3-ggherdovich@suse.cz>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20200428132450.24901-1-ggherdovich@suse.cz>
-References: <20200428132450.24901-1-ggherdovich@suse.cz>
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Rik van Riel <riel@surriel.com>,
+        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/3] newidle_balance() latency mitigation
+Message-ID: <20200428092741.3170d28e@gandalf.local.home>
+In-Reply-To: <20200428050242.17717-1-swood@redhat.com>
+References: <20200428050242.17717-1-swood@redhat.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There may be CPUs that support turbo boost but don't declare any turbo
-ratio, i.e. their MSR_TURBO_RATIO_LIMIT is all zeroes. In that condition
-scale-invariant calculations can't be performed.
+On Tue, 28 Apr 2020 00:02:39 -0500
+Scott Wood <swood@redhat.com> wrote:
 
-Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
-Suggested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Fixes: 1567c3e3467c ("x86, sched: Add support for frequency invariance")
----
- arch/x86/kernel/smpboot.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> There was a note at the end about wanting further discussion on the matter --
+> does anyone remember if that ever happened and what the conclusion was?
+> Are there any other issues with enabling interrupts here and/or moving
+> the newidle_balance() call?
 
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 4718f29a3065..ab2a0df7d1fb 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -1991,9 +1991,11 @@ static bool intel_set_max_freq_ratio(void)
- 	/*
- 	 * Some hypervisors advertise X86_FEATURE_APERFMPERF
- 	 * but then fill all MSR's with zeroes.
-+	 * Some CPUs have turbo boost but don't declare any turbo ratio
-+	 * in MSR_TURBO_RATIO_LIMIT.
- 	 */
--	if (!base_freq) {
--		pr_debug("Couldn't determine cpu base frequency, necessary for scale-invariant accounting.\n");
-+	if (!base_freq || !turbo_freq) {
-+		pr_debug("Couldn't determine cpu base or turbo frequency, necessary for scale-invariant accounting.\n");
- 		return false;
- 	}
- 
--- 
-2.16.4
+Honestly, I think we got distracted by other issues and never revisited
+it :-/
 
+-- Steve
