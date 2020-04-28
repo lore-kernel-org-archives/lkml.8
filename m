@@ -2,71 +2,106 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 367BEC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186AAC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20D0F206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFA12206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:46:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588060016;
+	bh=Yu1yHSEbM7UvnreW4VbWBBp6FDeif1jXQ1bMBO+35AI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=stUWcvCNM2FW6zDMui1piZ+wnTzuBRoQOR3e+mYZ2LEa1gfdac5xBYQ0J+rRrPhna
+	 9YbCddfjEinxoU37jbk0Wi75P76gNsrhpF7E0juU8hlvl2N/ZZs5SCqWGVOouEhb/A
+	 z4n7su+A62IRFQHchq6VlRMNUlKGlzda1En0HuZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgD1Hql (ORCPT
+        id S1726684AbgD1Hq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:46:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55720 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbgD1Hql (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 03:46:41 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A1D7C03C1A9;
-        Tue, 28 Apr 2020 00:46:41 -0700 (PDT)
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.93)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1jTKww-000vXm-5G; Tue, 28 Apr 2020 09:46:38 +0200
-Message-ID: <40afd04ed8fb49088268e7d3316d3fef9aa8dbd9.camel@sipsolutions.net>
-Subject: Re: linux-next: build failure after merge of the mac80211-next tree
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Sergey Matyukevich <geomatsi@gmail.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Wireless <linux-wireless@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Tue, 28 Apr 2020 09:46:37 +0200
-In-Reply-To: <20200428074527.GA3912@curiosity> (sfid-20200428_094101_668130_D6E3CFA4)
-References: <20200428122930.51b6a9c2@canb.auug.org.au>
-         <c3922c972277ff627c0308a94dfe3f25ba3b333f.camel@sipsolutions.net>
-         <20200428072543.GA2630@curiosity>
-         <baae77876a4b73de83aa6dcc27257da231777c22.camel@sipsolutions.net>
-         <20200428074527.GA3912@curiosity> (sfid-20200428_094101_668130_D6E3CFA4)
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 28 Apr 2020 03:46:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40398 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726253AbgD1Hqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 03:46:55 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17626206A5;
+        Tue, 28 Apr 2020 07:46:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588060015;
+        bh=Yu1yHSEbM7UvnreW4VbWBBp6FDeif1jXQ1bMBO+35AI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=g2J9L/Z+US9yUFhggxbwGgaoN7BfTgOzNGAVSF1W5yHTLAAUrfEJlrEUrQcnmb8EF
+         RLN+hTR6fYKIh+o67x++dRLLYAJWkrIpdE/m2b58mO8xyXA+0PhsI+A1akVDTLXjZ6
+         7kDJXwmhsUojV8JTeFGQZMzmIpADrf4RwY2RL1xw=
+Received: by pali.im (Postfix)
+        id 2E053735; Tue, 28 Apr 2020 09:46:53 +0200 (CEST)
+Date:   Tue, 28 Apr 2020 09:46:53 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: exfat upcase table for code points above U+FFFF (Was: Re:
+ [PATCH] staging: exfat: add exfat filesystem code to staging)
+Message-ID: <20200428074653.kcq6ibj6rjlrnau7@pali>
+References: <20190830075647.wvhrx4asnkrfkkwk@pali>
+ <20191016140353.4hrncxa5wkx47oau@pali>
+ <20191016143113.GS31224@sasha-vm>
+ <20191016160349.pwghlg566hh2o7id@pali>
+ <20191016203317.GU31224@sasha-vm>
+ <20191017075008.2uqgdimo3hrktj3i@pali>
+ <20200213000656.hx5wdofkcpg7aoyo@pali>
+ <20200213211847.GA1734@sasha-vm>
+ <20200421213045.skv2dvgm3xuspbl7@pali>
+ <20200427154913.GR13035@sasha-vm>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200427154913.GR13035@sasha-vm>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-28 at 10:45 +0300, Sergey Matyukevich wrote:
+On Monday 27 April 2020 11:49:13 Sasha Levin wrote:
+> On Tue, Apr 21, 2020 at 11:30:45PM +0200, Pali Rohár wrote:
+> > On Thursday 13 February 2020 16:18:47 Sasha Levin wrote:
+> > > On Thu, Feb 13, 2020 at 01:06:56AM +0100, Pali Rohár wrote:
+> > > > In released exFAT specification is not written how are Unicode code
+> > > > points above U+FFFF represented in exFAT upcase table. Normally in
+> > > > UTF-16 are Unicode code points above U+FFFF represented by surrogate
+> > > > pairs but compression format of exFAT upcase table is not clear how to
+> > > > do it there.
+> > > >
+> > > > Are you able to send question about this problem to relevant MS people?
+> > > >
+> > > > New Linux implementation of exfat which is waiting on mailing list just
+> > > > do not support Unicode code points above U+FFFF in exFAT upcase table.
+> > > 
+> > > Sure, I'll forward this question on. I'll see if I can get someone from
+> > > their team who could be available to answer questions such as these in
+> > > the future - Microsoft is interested in maintaining compatiblity between
+> > > Linux and Windows exFAT implementations.
+> > 
+> > Hello Sasha! Have you got any answer from exfat MS team about upcase
+> > table for Unicode code points above U+FFFF?
 > 
-> Looks good. But I have a couple of questions:
-> 
-> - why cleanup vif->mgmt_frame_reg in wilc_mac_open ?
+> Sorry for taking so long. This is my understanding from the Windows
+> folks: Windows filesystems just don't support variable encoding length,
+> and expect UCS-2 strings.
 
-Otherwise wilc_update_mgmt_frame_registrations() will think there are no
-changes whatsoever, and do nothing.
-
-> - previously wilc_wfi_p2p_rx was called only for PROBE_REQ and ACTION,
->   now it will be called for all the other registred frames as well
-
-
-Huh, good catch. How about this?
-
-https://p.sipsolutions.net/51183f5492f05ea6.txt
-
-johannes
-
+Ok, so should I understand your answer as exFAT upcase table does not
+support representing Unicode code points above U+FFFF and therefore
+exFAT implementation should expect that toupper(u) = u and tolower(u) = u
+for any Unicode code point u in range [U+10000, U+10FFFF]? This is how
+current exfat linux driver behave.
