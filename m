@@ -2,105 +2,112 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3794CC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1317C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3A9F20737
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9482A20731
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:20:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ecrgQDUm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VxOM/1Z0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgD1XTF (ORCPT
+        id S1726441AbgD1XUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 19:19:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725853AbgD1XTE (ORCPT
+        Tue, 28 Apr 2020 19:20:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38723 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725853AbgD1XUn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 19:19:04 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20A2AC03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 16:19:03 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id r14so147388pfg.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 16:19:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=FWNfpESHIrlctB2dwl7YeVqe4k+1KC/hfdOSv4N2eR8=;
-        b=ecrgQDUmQiUgqDqwxETkiJePKv2EZR71UqZ9A84VugZwjknEAWph5SiAv5NhixbCng
-         eynRkZ8Ma2qc+i1UaVy1ckfXtdrIoV1EgVftjP4j99SNksNBqxzaAHUK3aJwGRiIXCto
-         U6QnZtpIXQHYhadvi8pytCZfuo6/J8fAWsLr7rFN8ItfrFNIxGLylVoISldnyS1tB+ir
-         PCriSOdN/CwZs2USicquS3FSceLULBSapI/Qdy6Xydh9/2+DYlbZgc5UX6qfEnVVuAex
-         ITeC/TPVs8Snl2AGfHNGg2J01813+B29VRNgSRW00ENKhzhWCqB9ZPbuExF1Crbddo1m
-         E/Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=FWNfpESHIrlctB2dwl7YeVqe4k+1KC/hfdOSv4N2eR8=;
-        b=cDL6YS7CQm6LyP+rQ/pg9bMnTIY5Fom64Ct01dRYrGLLMfJOJlUvMmNuy4KV2UFhYn
-         ZDO2Fd9UThSw8MASYziJoIpHBGEVPXtYdoas6bJlsFaRQVT6gLqVvlFIjywkPxAhyi0Y
-         JlD9kUizfJRa1l8S+CY49S3Wun6Bf33eSfPNyJogijcC0+R+7X2pVlnsx/FCgfHY4q11
-         1VXakXrZ/zWUTQ9SfoKBkQIra9XY725Af1mxm3ylR4oAHJEZd9Hq8qz1Mt56jFENIo1b
-         KyaP+wNQUhCTcUoNdvb25ALbLBc09MRtEq02S2UD30h2eqDmqzL1viFCAN/j3of2Ty/N
-         EuGQ==
-X-Gm-Message-State: AGi0PuYAxl+Vd+60gN96vBe+Jk5gQO6IG6lY9j/WFp/dl46N8unDG+rG
-        cgvtOWjuprxtW2XVOcAqp5w=
-X-Google-Smtp-Source: APiQypIsQwaRVm+rnDHnYJWxfmVDzcf1uVAMlK3kn5ex4yb+paZ+2dveupiR6/HRuvuW5PP3MLcMbQ==
-X-Received: by 2002:a65:6704:: with SMTP id u4mr31348658pgf.263.1588115942389;
-        Tue, 28 Apr 2020 16:19:02 -0700 (PDT)
-Received: from mail.google.com ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id w69sm16017529pff.168.2020.04.28.16.18.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 16:19:01 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 07:18:55 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Kees Cook <keescook@chromium.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Waiman Long <longman@redhat.com>
-Subject: Re: mm/slub: do not place freelist pointer to middle of object if
- redzone is on
-Message-ID: <20200428231855.5czf4penpbowliz6@mail.google.com>
-References: <ca36745b-1939-2640-aeed-390c8c39114e@web.de>
- <20200425235105.sye7fsbndbv24b46@mail.google.com>
- <dc9bcaad-ee13-5359-5d99-7ecb8cb1d46b@web.de>
+        Tue, 28 Apr 2020 19:20:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588116041;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=awX/WDzY4v/mrZcN7vzH0b6aC46+DakYZAFmWm381lc=;
+        b=VxOM/1Z0VXK3kLd30XNn6dEIWGc78lqIjVsU2iLW9+pjmCxbRcxfK/6IMNQCNuGpynQ4S8
+        hvY3din3xA5aBWc+grWJTgqj8frleQ2p3P8dYa5J6hvtSXrj50gnUC3M82M/DlpLG4Gpsw
+        W1yOHJO9wpyEg+UZw63nmQhAuG4zjqo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-510-tV07bsIDNPug05Cx3avFfg-1; Tue, 28 Apr 2020 19:20:36 -0400
+X-MC-Unique: tV07bsIDNPug05Cx3avFfg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81E68800C78;
+        Tue, 28 Apr 2020 23:20:34 +0000 (UTC)
+Received: from ovpn-112-24.phx2.redhat.com (ovpn-112-24.phx2.redhat.com [10.3.112.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D634C5D710;
+        Tue, 28 Apr 2020 23:20:32 +0000 (UTC)
+Message-ID: <89043649a64fc97dd90eb25c85bcc8f65483cf4f.camel@redhat.com>
+Subject: Re: [RFC PATCH 1/3] sched/fair: Call newidle_balance() from
+ finish_task_switch()
+From:   Scott Wood <swood@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Rik van Riel <riel@surriel.com>,
+        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
+Date:   Tue, 28 Apr 2020 18:20:32 -0500
+In-Reply-To: <20200428230204.GE16027@hirez.programming.kicks-ass.net>
+References: <20200428050242.17717-1-swood@redhat.com>
+         <20200428050242.17717-2-swood@redhat.com> <jhjftcns35d.mognet@arm.com>
+         <20200428220917.GB16027@hirez.programming.kicks-ass.net>
+         <c4a8d1f044b721a2c396fa00a0244eff0b851ae4.camel@redhat.com>
+         <20200428230204.GE16027@hirez.programming.kicks-ass.net>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dc9bcaad-ee13-5359-5d99-7ecb8cb1d46b@web.de>
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 07:56:43AM +0200, Markus Elfring wrote:
-> >>> Fixes: 3202fa62fb ("slub: relocate freelist pointer to middle of object")
-> …
-> > I used to give 12 charactors, but this time I lost two. :)
+On Wed, 2020-04-29 at 01:02 +0200, Peter Zijlstra wrote:
+> On Tue, Apr 28, 2020 at 05:55:03PM -0500, Scott Wood wrote:
+> > On Wed, 2020-04-29 at 00:09 +0200, Peter Zijlstra wrote:
+> > > Also, if you move it this late, this is entirely the wrong place. If
+> > > you
+> > > do it after the context switch either use the balance_callback or put
+> > > it
+> > > in the idle path.
+> > > 
+> > > But what Valentin said; this needs a fair bit of support, the whole
+> > > reason we've never done this is to avoid that double context switch...
+> > > 
+> > 
+> > balance_callback() enters with the rq lock held but BH not separately
 > 
-> Would you like to improve details for the change description
-> also at another place?
->
-Waiman just posted another fix for this issue. Let's use that patch instead.
-Thanks.
+> BH? softirqs you mean? Pray tell more.
 
-> Regards,
-> Markus
+In https://lore.kernel.org/lkml/5122CD9C.9070702@oracle.com/ the need to
+keep softirqs disabled during rebalance was brought up, but simply wrapping
+the lock dropping in local_bh_enable()/local_bh_disable() meant that
+local_bh_enable() would be called with interrupts disabled, which isn't
+allowed.
 
--- 
-Cheers,
-Changbin Du
+> > disabled, which interferes with the ability to enable interrupts but not
+> > BH.
+> > It also gets called from rt_mutex_setprio() and __sched_setscheduler(),
+> > and
+> > I didn't want the caller of those to be stuck with the latency.
+> 
+> You're not reading it right.
+
+Could you elaborate?
+
+-Scott
+
+
