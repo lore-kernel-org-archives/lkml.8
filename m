@@ -2,123 +2,79 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE4EC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 413C4C83006
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D2DA206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:03:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EJyWCx+F"
+	by mail.kernel.org (Postfix) with ESMTP id 1DE54206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:03:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588050193;
+	bh=N1HNyStyjFiaOU+5t7xqSf2pJH8YMPv9M0ySO4tvUTs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RqybLzKFQFk69SWUH2TpBbQbN5Ri7lie+SgzvjaCSB6x4GOle82+v9doxCqSPxLxP
+	 6jOI0labK0PzC5QHcEYmK5XYvBMjBICpUwJE0urFkiIVHSu/rwTMpik58rvmIHafzi
+	 3Is6T1DxHHtqc0HYl7DUfc4gehnmZKeUmnx+MjH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbgD1FDE (ORCPT
+        id S1726450AbgD1FDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 01:03:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59314 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726329AbgD1FCx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 01:02:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588050172;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FFf78A3RR1oBJhSQrlT3XMUn2VXqYCmgEn7/7/hlliA=;
-        b=EJyWCx+F56sYDWbPTVYFC7CW3h6lfahg5DVey6KOaFg1rJxwTT8ZVBA7ZDf+A2eeWS+iq8
-        u/aXwR2X1FU8HUrFPUs2UiHL5DXHc0nEL4t9qIPdGNqZ7+Fq1HBpYBFN6JwQMknNWH/EoJ
-        j8cO0HLnNO36erde131qYMjLVA+zgG8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-414-aF9l6dmiOQeQfrNOsfYd8A-1; Tue, 28 Apr 2020 01:02:48 -0400
-X-MC-Unique: aF9l6dmiOQeQfrNOsfYd8A-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 28 Apr 2020 01:03:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57390 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbgD1FDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 01:03:09 -0400
+Received: from localhost (unknown [106.51.110.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3F7F2835B43;
-        Tue, 28 Apr 2020 05:02:47 +0000 (UTC)
-Received: from t460p.redhat.com (ovpn-112-24.phx2.redhat.com [10.3.112.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 612041A924;
-        Tue, 28 Apr 2020 05:02:46 +0000 (UTC)
-From:   Scott Wood <swood@redhat.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Rik van Riel <riel@surriel.com>,
-        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Scott Wood <swood@redhat.com>
-Subject: [RFC PATCH 2/3] sched/fair: Enable interrupts when dropping lock in newidle_balance()
-Date:   Tue, 28 Apr 2020 00:02:41 -0500
-Message-Id: <20200428050242.17717-3-swood@redhat.com>
-In-Reply-To: <20200428050242.17717-1-swood@redhat.com>
-References: <20200428050242.17717-1-swood@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id B9279206A5;
+        Tue, 28 Apr 2020 05:03:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588050189;
+        bh=N1HNyStyjFiaOU+5t7xqSf2pJH8YMPv9M0ySO4tvUTs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PsN8M6WXTSo8162Ajbr9aPD49VWZsl6oWEvdH6kGQstJ7ERIVzIIeXENcZ3w3bKt/
+         tvcpIFGjuw/ge0iLM1SlSUcX3eOIeVcemQzQMIrUDif0oZI+69G0lZeaKy9QiQNnzV
+         yJWAsh99vqtdYOS2PRuBD96g72YMM1ce3PhBYD0Q=
+Date:   Tue, 28 Apr 2020 10:33:05 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] phy: qcom: qmp: Add SM8250 UFS PHY
+Message-ID: <20200428050305.GY56386@vkoul-mobl.Dlink>
+References: <20200415060745.740193-1-bjorn.andersson@linaro.org>
+ <20200420214958.GA23753@bogus>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420214958.GA23753@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When combined with the next patch, which breaks out of rebalancing
-when an RT task is runnable, significant latency reductions are seen
-on systems with many CPUs.
+On 20-04-20, 16:49, Rob Herring wrote:
+> On Tue, 14 Apr 2020 23:07:45 -0700, Bjorn Andersson wrote:
+> > The SM8250 UFS PHY can run off the same initialization sequence as
+> > SM8150, but add the compatible to allow future changes.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> >  Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 5 +++++
+> >  drivers/phy/qualcomm/phy-qcom-qmp.c                    | 3 +++
+> >  2 files changed, 8 insertions(+)
+> > 
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Scott Wood <swood@redhat.com>
----
- kernel/sched/fair.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Applied, thanks
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 74c3c5280d6b..dfde7f0ce3db 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -10376,7 +10376,7 @@ static void nohz_newidle_balance(struct rq *this_=
-rq)
- 	    time_before(jiffies, READ_ONCE(nohz.next_blocked)))
- 		return;
-=20
--	raw_spin_unlock(&this_rq->lock);
-+	raw_spin_unlock_irq(&this_rq->lock);
- 	/*
- 	 * This CPU is going to be idle and blocked load of idle CPUs
- 	 * need to be updated. Run the ilb locally as it is a good
-@@ -10385,7 +10385,7 @@ static void nohz_newidle_balance(struct rq *this_=
-rq)
- 	 */
- 	if (!_nohz_idle_balance(this_rq, NOHZ_STATS_KICK, CPU_NEWLY_IDLE))
- 		kick_ilb(NOHZ_STATS_KICK);
--	raw_spin_lock(&this_rq->lock);
-+	raw_spin_lock_irq(&this_rq->lock);
- }
-=20
- #else /* !CONFIG_NO_HZ_COMMON */
-@@ -10452,7 +10452,7 @@ int newidle_balance(void)
- 		goto out;
- 	}
-=20
--	raw_spin_unlock(&this_rq->lock);
-+	raw_spin_unlock_irq(&this_rq->lock);
-=20
- 	update_blocked_averages(this_cpu);
- 	rcu_read_lock();
-@@ -10493,7 +10493,7 @@ int newidle_balance(void)
- 	}
- 	rcu_read_unlock();
-=20
--	raw_spin_lock(&this_rq->lock);
-+	raw_spin_lock_irq(&this_rq->lock);
-=20
- 	if (curr_cost > this_rq->max_idle_balance_cost)
- 		this_rq->max_idle_balance_cost =3D curr_cost;
---=20
-2.18.2
 
+-- 
+~Vinod
