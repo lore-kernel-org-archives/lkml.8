@@ -2,100 +2,138 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C638C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A07C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62909206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:18:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588072727;
-	bh=cTbH1jyXaJgV0FHofLFJaxzBEqrP3IX3dYt4iQDTkcA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Lk8V3BBtKYLWb5yAtbJ8SH+8GDiF+r2y+eyDF/ALusYOitizBALiZNhysoIPpiTy7
-	 C2No/WRciNViEQDGlW1bdTvLvB6hzerStVKcM4Ujwsdz7vs1ueTLJVlk5nSJPogqp8
-	 ow9IntgOvn3AWUAWEc3GYJ/v0/HnctgemWzSvt8U=
+	by mail.kernel.org (Postfix) with ESMTP id 0E12720B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:18:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgD1LSp (ORCPT
+        id S1726683AbgD1LSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 28 Apr 2020 07:18:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbgD1LSp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Apr 2020 07:18:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726345AbgD1LSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:18:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76334206D6;
-        Tue, 28 Apr 2020 11:18:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588072724;
-        bh=cTbH1jyXaJgV0FHofLFJaxzBEqrP3IX3dYt4iQDTkcA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=y1JLmVMQnEo2l2sL0mUfy8t81I9jhNm+SHA6QJBHCyeYNFRyV0qdt5wtiK4N6DKd4
-         EnCi+QLriR3ovNnlKrzZKRLAaRKaKEG6u3vjRB6OirRbEO3TP4d/z0Q/EVaRlohJXn
-         wl76F2SFH9YI6ZIK+q8X9ZYj28shIdD6Ivzu/CKY=
-Date:   Tue, 28 Apr 2020 13:18:42 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Jiri Slaby <jslaby@suse.cz>, Zou Wei <zou_wei@huawei.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] tty: serial: bcm63xx: fix missing clk_put() in
- bcm63xx_uart
-Message-ID: <20200428111842.GA1159152@kroah.com>
-References: <1587472306-105155-1-git-send-email-zou_wei@huawei.com>
- <4cd8f963-9292-faef-1e24-df90821274d6@suse.cz>
- <73c4cebb-467b-e5d5-89bf-8a6fe29cf858@gmail.com>
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33DD2C03C1A9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 04:18:45 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <afa@pengutronix.de>)
+        id 1jTOG9-0000Qb-Kt; Tue, 28 Apr 2020 13:18:41 +0200
+Received: from afa by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <afa@pengutronix.de>)
+        id 1jTOG8-0006u4-TX; Tue, 28 Apr 2020 13:18:40 +0200
+From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     kernel@pengutronix.de, ceggers@arri.de,
+        Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH v3 0/2] nvmem: skip nodes with compatibles other than "nvmem-cell"
+Date:   Tue, 28 Apr 2020 13:18:25 +0200
+Message-Id: <20200428111829.2215-1-a.fatoum@pengutronix.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <73c4cebb-467b-e5d5-89bf-8a6fe29cf858@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: afa@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 10:29:58AM -0700, Florian Fainelli wrote:
-> 
-> 
-> On 4/26/2020 11:19 PM, Jiri Slaby wrote:
-> > On 21. 04. 20, 14:31, Zou Wei wrote:
-> >> This patch fixes below error reported by coccicheck
-> >>
-> >> drivers/tty/serial/bcm63xx_uart.c:848:2-8: ERROR: missing clk_put;
-> >> clk_get on line 842 and execution via conditional on line 846
-> >>
-> >> Fixes: ab4382d27412 ("tty: move drivers/serial/ to drivers/tty/serial/")
-> >> Reported-by: Hulk Robot <hulkci@huawei.com>
-> >> Signed-off-by: Zou Wei <zou_wei@huawei.com>
-> >> ---
-> >>  drivers/tty/serial/bcm63xx_uart.c | 4 +++-
-> >>  1 file changed, 3 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/tty/serial/bcm63xx_uart.c b/drivers/tty/serial/bcm63xx_uart.c
-> >> index 5674da2..ed0aa5c 100644
-> >> --- a/drivers/tty/serial/bcm63xx_uart.c
-> >> +++ b/drivers/tty/serial/bcm63xx_uart.c
-> >> @@ -843,8 +843,10 @@ static int bcm_uart_probe(struct platform_device *pdev)
-> >>  	if (IS_ERR(clk) && pdev->dev.of_node)
-> >>  		clk = of_clk_get(pdev->dev.of_node, 0);
-> >>  
-> >> -	if (IS_ERR(clk))
-> >> +	if (IS_ERR(clk)) {
-> >> +		clk_put(clk);
-> > 
-> > Why would you want to put an erroneous clk?
-> 
-> Doh, somehow I completely missed, you are right this does not look legit.
+The nvmem cell binding applies to all objects which match "^.*@[0-9a-f]+$",
+without taking a compatible into account. This precludes extension of e.g.
+eeprom nodes by any child nodes other than nvmem. Consider following example:
 
-Ugh, can you send a revert for this please?
+	eeprom@0 {
+		reg = <0 64>;
+		#address-cells = <1>;
+		#size-cells = <1>;
 
-thanks,
+		partitions {
+			compatible = "fixed-partitions";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			bits = <64 64 64>; /* to verify it's skipped */
 
-greg k-h
+			part@0 {
+				reg = <0x00 16>;
+			};
+		};
+
+		no-cell@10 {
+			compatible = "not-nvmem-cell";
+			reg = <0x10 4>;
+			bits = <64 64 64>; /* to verify it's skipped */
+		};
+
+		cell-old@14 {
+			reg = <0x14 0x2>;
+		};
+
+		cell-new@16 {
+			compatible = "nvmem-cell";
+			reg = <0x16 4>;
+		};
+	};
+
+Without this series, the NVMEM driver interprets all direct children of eeprom@0
+as NVMEM cells and driver probe fails, because the partitions node lacks a reg
+property, e.g.:
+
+  nvmem 0-00000: nvmem: invalid reg on /eeprom@0
+
+Running dtbs_check on the snippet will skip partitions (it doesn't match above
+regex), but will flag no-cell@10 and cell-new@16 as invalid.
+
+With this series applied, the driver will skip partitions and no-cell@10,
+because they have a compatible but it's not "nvmem-cell".
+Both cell-old@14 and cell-new@16 will be interpreted as cells.
+
+Likewise, running dtbs_check on the snippet will skip partitions (compatible
+doesn't match and regex doesn't either) and no-cell@10, but accept the other two.
+
+This series resolves an existing clash between this nvmem-cell binding and
+the barebox bootloader binding that extends the fixed-partitions MTD
+binding to EEPROMs[1]. It's also a building block for getting nvmem cells and
+partitions in MTD devices to co-exist in the same device tree node[2].
+
+The changes are backwards-compatible, because, per binding, a compatible
+property in a cell node was so far invalid. More details in the commit
+messages.
+
+[1]: https://www.mail-archive.com/barebox@lists.infradead.org/msg33944.html
+[2]: https://patchwork.ozlabs.org/patch/890741/
+
+v2 -> v3:
+  - use optional compatible property to weed out nodes instead of name
+  - extend binding documentation (Srini)
+v1 -> v2:
+  - use ->full_name instead of ->name as to not break existing correct
+    cells (Christian)
+
+Cheers,
+Ahmad Fatoum (2):
+  dt-bindings: nvmem: skip nodes with compatibles other than
+    "nvmem-cell"
+  nvmem: core: skip nodes with compatibles other than "nvmem-cell"
+
+ Documentation/devicetree/bindings/nvmem/nvmem.yaml | 14 +++++++++++++-
+ drivers/nvmem/core.c                               |  4 ++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+-- 
+2.26.2
+
