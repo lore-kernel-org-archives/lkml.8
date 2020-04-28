@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D59C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DECC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A15A521835
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A78420B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098892;
-	bh=rHeOJyYXcfmyyj7FAJKTI/g4L1nchU3r4O9a39+OQCQ=;
+	s=default; t=1588098897;
+	bh=MP26A2OBUbs1cuhWFwrMTOSqGEDpkxHbfaCiIF/p9fA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hQEFpg+GsxpOM4vzu08mp+m39XPjrJhz31yz7Vro4QyH5UjbuL+IuwYQLFXmT8E4r
-	 bUKxOmYYNGJNN7kwmHddLGunN9R9F6qv9Pncp/Qi1VMQfXe4F3UyFizKf51guriT+M
-	 zWj/1Y4ECmdeMGSejU6smnNGX1m20U4hRPf//Hhk=
+	b=CWe6qR30GTVgFsMMGIkDuODYsjvpx9Pwxa78jibg5RX4n6NhqiPRf5LJz0/GmpX1H
+	 sQUEnwyOvaM76MkwNasEtpgG+gRr/XUO6edJdCOnVAORg0M9hGnvmS4HIi13GzXuEb
+	 K9m4ocnooDA2wbE7B923PcKd/dOYzPw2R0wzbC6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730153AbgD1Seo (ORCPT
+        id S1730173AbgD1Sez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:34:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51448 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:34:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729658AbgD1Seg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:34:36 -0400
+        id S1730163AbgD1Ses (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:34:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3F932085B;
-        Tue, 28 Apr 2020 18:34:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1348420B80;
+        Tue, 28 Apr 2020 18:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098876;
-        bh=rHeOJyYXcfmyyj7FAJKTI/g4L1nchU3r4O9a39+OQCQ=;
+        s=default; t=1588098888;
+        bh=MP26A2OBUbs1cuhWFwrMTOSqGEDpkxHbfaCiIF/p9fA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eY/Tv0LwsPXGl46QzDAs65RmeXg6X3/hLn7IAoiZC4gTXdyUdNikKFtgW4KOmPXT1
-         +GRv2DbsHBwQ44ZjkcKVcbYJhSkKT1hKdfoZiPk8KQ4Ufm93mixE5/EJ4ozdAUEa+1
-         7a5QP2M8t5opQy+aHv31jk8m0u3JWLseD9WdLl10=
+        b=GhuNTvEMUS/NqmqoP9ZbVXFOw7dJl+12acMawK4KGnjPl/dn2wrTzdPkX53HexBGI
+         W4IAGxJ7cIanoHl5dkQqiYQe5a8T0nOkjGrNYB56F5G881PeI+ALspxatI4kezLTqm
+         a6rietua5JgKM5E+aEifAgOelYQuBhahyleTpfb8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.6 123/167] iwlwifi: pcie: actually release queue memory in TVQM
-Date:   Tue, 28 Apr 2020 20:24:59 +0200
-Message-Id: <20200428182240.835995469@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 069/131] net: dsa: b53: b53_arl_rw_op() needs to select IVL or SVL
+Date:   Tue, 28 Apr 2020 20:24:41 +0200
+Message-Id: <20200428182233.601917296@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,47 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit b98b33d5560a2d940f3b80f6768a6177bf3dfbc0 upstream.
+[ Upstream commit 64fec9493f7dc9bdd7233bcfe98985c45bd0e3c1 ]
 
-The iwl_trans_pcie_dyn_txq_free() function only releases the frames
-that may be left on the queue by calling iwl_pcie_gen2_txq_unmap(),
-but doesn't actually free the DMA ring or byte-count tables for the
-queue. This leads to pretty large memory leaks (at least before my
-queue size improvements), in particular in monitor/sniffer mode on
-channel hopping since this happens on every channel change.
+Flip the IVL_SVL_SELECT bit correctly based on the VLAN enable status,
+the default is to perform Shared VLAN learning instead of Individual
+learning.
 
-This was also now more evident after the move to a DMA pool for the
-byte count tables, showing messages such as
-
-  BUG iwlwifi:bc (...): Objects remaining in iwlwifi:bc on __kmem_cache_shutdown()
-
-This fixes https://bugzilla.kernel.org/show_bug.cgi?id=206811.
-
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Fixes: 6b35ff91572f ("iwlwifi: pcie: introduce a000 TX queues management")
-Cc: stable@vger.kernel.org # v4.14+
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/iwlwifi.20200417100405.f5f4c4193ec1.Id5feebc9b4318041913a9c89fc1378bb5454292c@changeid
+Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/dsa/b53/b53_common.c |    4 ++++
+ drivers/net/dsa/b53/b53_regs.h   |    1 +
+ 2 files changed, 5 insertions(+)
 
---- a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
-@@ -1418,6 +1418,9 @@ void iwl_trans_pcie_dyn_txq_free(struct
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -1253,6 +1253,10 @@ static int b53_arl_rw_op(struct b53_devi
+ 		reg |= ARLTBL_RW;
+ 	else
+ 		reg &= ~ARLTBL_RW;
++	if (dev->vlan_enabled)
++		reg &= ~ARLTBL_IVL_SVL_SELECT;
++	else
++		reg |= ARLTBL_IVL_SVL_SELECT;
+ 	b53_write8(dev, B53_ARLIO_PAGE, B53_ARLTBL_RW_CTRL, reg);
  
- 	iwl_pcie_gen2_txq_unmap(trans, queue);
+ 	return b53_arl_op_wait(dev);
+--- a/drivers/net/dsa/b53/b53_regs.h
++++ b/drivers/net/dsa/b53/b53_regs.h
+@@ -292,6 +292,7 @@
+ /* ARL Table Read/Write Register (8 bit) */
+ #define B53_ARLTBL_RW_CTRL		0x00
+ #define    ARLTBL_RW			BIT(0)
++#define    ARLTBL_IVL_SVL_SELECT	BIT(6)
+ #define    ARLTBL_START_DONE		BIT(7)
  
-+	iwl_pcie_gen2_txq_free_memory(trans, trans_pcie->txq[queue]);
-+	trans_pcie->txq[queue] = NULL;
-+
- 	IWL_DEBUG_TX_QUEUES(trans, "Deactivate queue %d\n", queue);
- }
- 
+ /* MAC Address Index Register (48 bit) */
 
 
