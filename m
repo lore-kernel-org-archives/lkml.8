@@ -2,248 +2,235 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9913C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4EDC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4DA8218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C30421BE5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:20:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbgD1PUw (ORCPT
+        id S1728383AbgD1PSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:20:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:53970 "EHLO foss.arm.com"
+        Tue, 28 Apr 2020 11:18:13 -0400
+Received: from 8bytes.org ([81.169.241.247]:37790 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728177AbgD1PUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:20:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 252C230E;
-        Tue, 28 Apr 2020 08:20:40 -0700 (PDT)
-Received: from [10.37.12.125] (unknown [10.37.12.125])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BD30A3F305;
-        Tue, 28 Apr 2020 08:20:33 -0700 (PDT)
-Subject: Re: [PATCH v3 3/4] thermal/drivers/cpuidle_cooling: Change the
- registration function
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rui.zhang@intel.com
-Cc:     amit.kucheria@verdurent.com,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        "open list:THERMAL/CPU_COOLING" <linux-pm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200414220837.9284-1-daniel.lezcano@linaro.org>
- <20200414220837.9284-3-daniel.lezcano@linaro.org>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <4a8483a5-b481-5e97-9d03-f1ad3ae163d5@arm.com>
-Date:   Tue, 28 Apr 2020 16:20:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200414220837.9284-3-daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1728231AbgD1PSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:18:01 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 31A1FEF0; Tue, 28 Apr 2020 17:17:46 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v3 22/75] x86/boot/compressed/64: Add set_page_en/decrypted() helpers
+Date:   Tue, 28 Apr 2020 17:16:32 +0200
+Message-Id: <20200428151725.31091-23-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200428151725.31091-1-joro@8bytes.org>
+References: <20200428151725.31091-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+From: Joerg Roedel <jroedel@suse.de>
 
-I have checked the patches and run them on Juno.
-Please find my comments below.
+The functions are needed to map the GHCB for SEV-ES guests. The GHCB is
+used for communication with the hypervisor, so its content must not be
+encrypted. After the GHCB is not needed anymore it must be mapped
+encrypted again so that the running kernel image can safely re-use the
+memory.
 
-On 4/14/20 11:08 PM, Daniel Lezcano wrote:
-> Today, there is no user for the cpuidle cooling device. The targetted
-> platform is ARM and ARM64.
-> 
-> The cpuidle and the cpufreq cooling device are based on the device tree.
-> 
-> As the cpuidle cooling device can have its own configuration depending
-> on the platform and the available idle states. The DT node description
-> will give the optional properties to set the cooling device up.
-> 
-> Do no longer rely on the CPU node which is prone to error and will
-> lead to a confusion in the DT because the cpufreq cooling device is
-> also using it. Let initialize the cpuidle cooling device with the DT
-> binding.
-> 
-> This was tested on:
->   - hikey960
->   - hikey6220
->   - rock960
->   - db845c
-> 
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->   drivers/thermal/cpuidle_cooling.c | 58 +++++++++++++++++++++++++------
->   include/linux/cpu_cooling.h       |  7 ----
->   2 files changed, 47 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/thermal/cpuidle_cooling.c b/drivers/thermal/cpuidle_cooling.c
-> index 0bb843246f59..b2c81c427f05 100644
-> --- a/drivers/thermal/cpuidle_cooling.c
-> +++ b/drivers/thermal/cpuidle_cooling.c
-> @@ -10,6 +10,7 @@
->   #include <linux/err.h>
->   #include <linux/idle_inject.h>
->   #include <linux/idr.h>
-> +#include <linux/of_device.h>
->   #include <linux/slab.h>
->   #include <linux/thermal.h>
->   
-> @@ -154,22 +155,25 @@ static struct thermal_cooling_device_ops cpuidle_cooling_ops = {
->   };
->   
->   /**
-> - * cpuidle_of_cooling_register - Idle cooling device initialization function
-> + * __cpuidle_cooling_register: register the cooling device
->    * @drv: a cpuidle driver structure pointer
-> - * @np: a node pointer to a device tree cooling device node
-> + * @np: a device node structure pointer used for the thermal binding
->    *
-> - * This function is in charge of creating a cooling device per cpuidle
-> - * driver and register it to thermal framework.
-> + * This function is in charge of allocating the cpuidle cooling device
-> + * structure, the idle injection, initialize them and register the
-> + * cooling device to the thermal framework.
->    *
-> - * Return: zero on success, or negative value corresponding to the
-> - * error detected in the underlying subsystems.
-> + * Return: zero on success, a negative value returned by one of the
-> + * underlying subsystem in case of error
->    */
-> -int cpuidle_of_cooling_register(struct device_node *np,
-> -				struct cpuidle_driver *drv)
-> +static int __cpuidle_cooling_register(struct device_node *np,
-> +				      struct cpuidle_driver *drv)
->   {
->   	struct idle_inject_device *ii_dev;
->   	struct cpuidle_cooling_device *idle_cdev;
->   	struct thermal_cooling_device *cdev;
-> +	unsigned int idle_duration_us = TICK_USEC;
-> +	unsigned int latency_us = UINT_MAX;
->   	char dev_name[THERMAL_NAME_LENGTH];
->   	int id, ret;
->   
-> @@ -191,7 +195,11 @@ int cpuidle_of_cooling_register(struct device_node *np,
->   		goto out_id;
->   	}
->   
-> -	idle_inject_set_duration(ii_dev, TICK_USEC, TICK_USEC);
-> +	of_property_read_u32(np, "duration", &idle_duration_us);
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/boot/compressed/ident_map_64.c | 134 ++++++++++++++++++++++++
+ arch/x86/boot/compressed/misc.h         |   2 +
+ 2 files changed, 136 insertions(+)
 
-This probably is 'duration-us' according to DT bindings.
+diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
+index 5d8b0bffe421..bb68e9c9d87a 100644
+--- a/arch/x86/boot/compressed/ident_map_64.c
++++ b/arch/x86/boot/compressed/ident_map_64.c
+@@ -26,6 +26,7 @@
+ #include <asm/init.h>
+ #include <asm/pgtable.h>
+ #include <asm/trap_defs.h>
++#include <asm/cmpxchg.h>
+ /* Use the static base for this part of the boot process */
+ #undef __PAGE_OFFSET
+ #define __PAGE_OFFSET __PAGE_OFFSET_BASE
+@@ -157,6 +158,139 @@ void initialize_identity_maps(void)
+ 	write_cr3(top_level_pgt);
+ }
+ 
++static pte_t *split_large_pmd(struct x86_mapping_info *info,
++			      pmd_t *pmdp, unsigned long __address)
++{
++	unsigned long page_flags;
++	unsigned long address;
++	pte_t *pte;
++	pmd_t pmd;
++	int i;
++
++	pte = (pte_t *)info->alloc_pgt_page(info->context);
++	if (!pte)
++		return NULL;
++
++	address     = __address & PMD_MASK;
++	/* No large page - clear PSE flag */
++	page_flags  = info->page_flag & ~_PAGE_PSE;
++
++	/* Populate the PTEs */
++	for (i = 0; i < PTRS_PER_PMD; i++) {
++		set_pte(&pte[i], __pte(address | page_flags));
++		address += PAGE_SIZE;
++	}
++
++	/*
++	 * Ideally we need to clear the large PMD first and do a TLB
++	 * flush before we write the new PMD. But the 2M range of the
++	 * PMD might contain the code we execute and/or the stack
++	 * we are on, so we can't do that. But that should be safe here
++	 * because we are going from large to small mappings and we are
++	 * also the only user of the page-table, so there is no chance
++	 * of a TLB multihit.
++	 */
++	pmd = __pmd((unsigned long)pte | info->kernpg_flag);
++	set_pmd(pmdp, pmd);
++	/* Flush TLB to establish the new PMD */
++	write_cr3(top_level_pgt);
++
++	return pte + pte_index(__address);
++}
++
++static void clflush_page(unsigned long address)
++{
++	unsigned int flush_size;
++	char *cl, *start, *end;
++
++	/*
++	 * Hardcode cl-size to 64 - CPUID can't be used here because that might
++	 * cause another #VC exception and the GHCB is not ready to use yet.
++	 */
++	flush_size = 64;
++	start      = (char *)(address & PAGE_MASK);
++	end        = start + PAGE_SIZE;
++
++	/*
++	 * First make sure there are no pending writes on the cache-lines to
++	 * flush.
++	 */
++	asm volatile("mfence" : : : "memory");
++
++	for (cl = start; cl != end; cl += flush_size)
++		clflush(cl);
++}
++
++static int set_clr_page_flags(struct x86_mapping_info *info,
++			      unsigned long address,
++			      pteval_t set, pteval_t clr)
++{
++	unsigned long scratch, *target;
++	pgd_t *pgdp = (pgd_t *)top_level_pgt;
++	p4d_t *p4dp;
++	pud_t *pudp;
++	pmd_t *pmdp;
++	pte_t *ptep, pte;
++
++	/*
++	 * First make sure there is a PMD mapping for 'address'.
++	 * It should already exist, but keep things generic.
++	 *
++	 * To map the page just read from it and fault it in if there is no
++	 * mapping yet. add_identity_map() can't be called here because that
++	 * would unconditionally map the address on PMD level, destroying any
++	 * PTE-level mappings that might already exist.  Also do something
++	 * useless with 'scratch' so the access won't be optimized away.
++	 */
++	target = (unsigned long *)address;
++	scratch = *target;
++	arch_cmpxchg(target, scratch, scratch);
++
++	/*
++	 * The page is mapped at least with PMD size - so skip checks and walk
++	 * directly to the PMD.
++	 */
++	p4dp = p4d_offset(pgdp, address);
++	pudp = pud_offset(p4dp, address);
++	pmdp = pmd_offset(pudp, address);
++
++	if (pmd_large(*pmdp))
++		ptep = split_large_pmd(info, pmdp, address);
++	else
++		ptep = pte_offset_kernel(pmdp, address);
++
++	if (!ptep)
++		return -ENOMEM;
++
++	/*
++	 * Changing encryption attributes of a page requires to flush it from
++	 * the caches.
++	 */
++	if ((set | clr) & _PAGE_ENC)
++		clflush_page(address);
++
++	/* Update PTE */
++	pte = *ptep;
++	pte = pte_set_flags(pte, set);
++	pte = pte_clear_flags(pte, clr);
++	set_pte(ptep, pte);
++
++	/* Flush TLB after changing encryption attribute */
++	write_cr3(top_level_pgt);
++
++	return 0;
++}
++
++int set_page_decrypted(unsigned long address)
++{
++	return set_clr_page_flags(&mapping_info, address, 0, _PAGE_ENC);
++}
++
++int set_page_encrypted(unsigned long address)
++{
++	return set_clr_page_flags(&mapping_info, address, _PAGE_ENC, 0);
++}
++
+ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
+ {
+ 	unsigned long address = native_read_cr2() & PMD_MASK;
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index 65da40777bc1..5e569e8a7d75 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -98,6 +98,8 @@ static inline void choose_random_location(unsigned long input,
+ #endif
+ 
+ #ifdef CONFIG_X86_64
++extern int set_page_decrypted(unsigned long address);
++extern int set_page_encrypted(unsigned long address);
+ extern unsigned char _pgtable[];
+ #endif
+ 
+-- 
+2.17.1
 
-> +	of_property_read_u32(np, "latency", &latency_us);
-
-the same here s/latency/exit-latency-us/
-
-> +
-> +	idle_inject_set_duration(ii_dev, TICK_USEC, idle_duration_us);
-> +	idle_inject_set_latency(ii_dev, latency_us);
->   
->   	idle_cdev->ii_dev = ii_dev;
->   
-> @@ -204,6 +212,9 @@ int cpuidle_of_cooling_register(struct device_node *np,
->   		goto out_unregister;
->   	}
->   
-> +	pr_info("%s: Idle injection set with idle duration=%u, latency=%u\n",
-> +		dev_name, idle_duration_us, latency_us);
-
-1. It is more like a 'debug' rather than 'info', I would change it.
-2. This is going to be printed for every CPU which has the
-'thermal-idle' feature in DT. For platforms with many CPUs, it's a lot
-of log entries
-
-> +
->   	return 0;
->   
->   out_unregister:
-> @@ -221,12 +232,37 @@ int cpuidle_of_cooling_register(struct device_node *np,
->    * @drv: a cpuidle driver structure pointer
->    *
->    * This function is in charge of creating a cooling device per cpuidle
-> - * driver and register it to thermal framework.
-> + * driver and register it to the thermal framework.
->    *
->    * Return: zero on success, or negative value corresponding to the
->    * error detected in the underlying subsystems.
->    */
->   int cpuidle_cooling_register(struct cpuidle_driver *drv)
->   {
-> -	return cpuidle_of_cooling_register(NULL, drv);
-> +	struct device_node *cooling_node;
-> +	struct device_node *cpu_node;
-> +	int cpu, ret;
-> +
-> +	for_each_cpu(cpu, drv->cpumask) {
-> +
-> +		cpu_node = of_cpu_device_node_get(cpu);
-> +
-> +		cooling_node = of_get_child_by_name(cpu_node, "idle-thermal");
-
-In DT binding this is 'thermal-idle'.
-
-> +
-> +		of_node_put(cpu_node);
-> +
-> +		if (!cooling_node)
-> +			continue;
-
-This 'continue' is suspicious because it won't tell if there was no
-node "idle-thermal" but still the function will return 0. This was
-my case when I tried to enable it on Juno.
-
-Maybe a debug print that the node hasn't been found would be a
-good idea. Or somehow return different value than 0 taking into
-account that every CPU was skipped.
-
-> +
-> +		ret = __cpuidle_cooling_register(cooling_node, drv);
-> +
-> +		of_node_put(cooling_node);
-> +
-> +		if (ret)
-> +			return ret;
-> +
-> +		cooling_node = NULL;
-> +	}
-> +
-> +	return 0;
->   }
-> diff --git a/include/linux/cpu_cooling.h b/include/linux/cpu_cooling.h
-> index 65501d8f9778..4d7b4a303327 100644
-> --- a/include/linux/cpu_cooling.h
-> +++ b/include/linux/cpu_cooling.h
-> @@ -64,18 +64,11 @@ struct cpuidle_driver;
->   
->   #ifdef CONFIG_CPU_IDLE_THERMAL
->   int cpuidle_cooling_register(struct cpuidle_driver *drv);
-> -int cpuidle_of_cooling_register(struct device_node *np,
-> -				struct cpuidle_driver *drv);
->   #else /* CONFIG_CPU_IDLE_THERMAL */
->   static inline int cpuidle_cooling_register(struct cpuidle_driver *drv)
->   {
->   	return 0;
->   }
-> -static inline int cpuidle_of_cooling_register(struct device_node *np,
-> -					      struct cpuidle_driver *drv)
-> -{
-> -	return 0;
-> -}
->   #endif /* CONFIG_CPU_IDLE_THERMAL */
->   
->   #endif /* __CPU_COOLING_H__ */
-> 
-
-Apart from that, looks good to me.
-
-Regards,
-Lukasz
