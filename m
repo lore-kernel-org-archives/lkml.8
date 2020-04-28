@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6296AC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2168BC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 386092085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFA65206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:57:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100237;
-	bh=Nc7RsPd8Y5ByX3ptQZ5fohyeTqewNhMV0zhtHF5N9OI=;
+	s=default; t=1588100252;
+	bh=LJPNTG9+CksbqGWw/Lw0H/aPHnvQKgLfs3lHpxgohkI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hkWcPoLsFVSKBfeD9NhEKMD1CWBrrolFKUHA+FJEyKXyZ+kBf6rki/bn9HjgYp11e
-	 jbWrsEFU0XNu4XrkA9OqPqD3gu3pmghWBBighgZTotzMnbo7o3eVOuvXV+qb/eb2Wo
-	 wmukPcQHWZnxC9uwI+It1zcJpsWXdmR5I20JIi6Q=
+	b=Jl8Avt1VOsilk16cb/WF9ACLsrHXjttTkEzMupIcd6/RKyJKKHsN62FRGwhV5lFNF
+	 YILihc5ZkKfzGakZrN7BLTJV8XhfmEHba44ISs/9rUEurtZtARlI9rYz8UVxpcigbO
+	 QIi5Ojyx0bqLhXenqQ+ulNv2tyvkjjsbdrVLl6M0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729542AbgD1San (ORCPT
+        id S1729537AbgD1S5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:30:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45586 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:57:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728702AbgD1Sah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:30:37 -0400
+        id S1729491AbgD1SaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:30:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FA1A217D8;
-        Tue, 28 Apr 2020 18:30:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DE9F2076A;
+        Tue, 28 Apr 2020 18:30:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098636;
-        bh=Nc7RsPd8Y5ByX3ptQZ5fohyeTqewNhMV0zhtHF5N9OI=;
+        s=default; t=1588098621;
+        bh=LJPNTG9+CksbqGWw/Lw0H/aPHnvQKgLfs3lHpxgohkI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pf/zihKXiKhU0kAcpoe0yP5TJkyBd7pTZ62CxwN8yFxZdiWb8mnYD64C5amlAm2Th
-         iYlG0yEVIKNm8rlkf0HWkukMMG0hFFTsIzIUotWmGyz9V6c9OV8bWYGluhup+XUImX
-         p1Pr0OO+g9y5fLJs3CAjcXjUHEEklGRvF3xkIQbY=
+        b=ofhWtR5qzdFtMnB0haR+s6JV0dzbfnNPPERlBXm3vMl82OXucIfZczWw24YbBps2k
+         nUF/C866P+0z8HrUlqHoA2m6wuKRRUcZ27sYrZh+axr7Zi64LN6pwgksOHNBFdUASr
+         WTjU0uBS4Hp9BGg6X9KS/ECeDRtiJHvzOCiWRu7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yongqiang Sun <yongqiang.sun@amd.com>,
-        Tony Cheng <Tony.Cheng@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 032/131] drm/amd/display: Not doing optimize bandwidth if flip pending.
-Date:   Tue, 28 Apr 2020 20:24:04 +0200
-Message-Id: <20200428182229.176565753@linuxfoundation.org>
+Subject: [PATCH 4.19 029/131] perf/core: Disable page faults when getting phys address
+Date:   Tue, 28 Apr 2020 20:24:01 +0200
+Message-Id: <20200428182228.805413119@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
 References: <20200428182224.822179290@linuxfoundation.org>
@@ -62,71 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yongqiang Sun <yongqiang.sun@amd.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-[ Upstream commit 9941b8129030c9202aaf39114477a0e58c0d6ffc ]
+[ Upstream commit d3296fb372bf7497b0e5d0478c4e7a677ec6f6e9 ]
 
-[Why]
-In some scenario like 1366x768 VSR enabled connected with a 4K monitor
-and playing 4K video in clone mode, underflow will be observed due to
-decrease dppclk when previouse surface scan isn't finished
+We hit following warning when running tests on kernel
+compiled with CONFIG_DEBUG_ATOMIC_SLEEP=y:
 
-[How]
-In this use case, surface flip is switching between 4K and 1366x768,
-1366x768 needs smaller dppclk, and when decrease the clk and previous
-surface scan is for 4K and scan isn't done, underflow will happen.  Not
-doing optimize bandwidth in case of flip pending.
+ WARNING: CPU: 19 PID: 4472 at mm/gup.c:2381 __get_user_pages_fast+0x1a4/0x200
+ CPU: 19 PID: 4472 Comm: dummy Not tainted 5.6.0-rc6+ #3
+ RIP: 0010:__get_user_pages_fast+0x1a4/0x200
+ ...
+ Call Trace:
+  perf_prepare_sample+0xff1/0x1d90
+  perf_event_output_forward+0xe8/0x210
+  __perf_event_overflow+0x11a/0x310
+  __intel_pmu_pebs_event+0x657/0x850
+  intel_pmu_drain_pebs_nhm+0x7de/0x11d0
+  handle_pmi_common+0x1b2/0x650
+  intel_pmu_handle_irq+0x17b/0x370
+  perf_event_nmi_handler+0x40/0x60
+  nmi_handle+0x192/0x590
+  default_do_nmi+0x6d/0x150
+  do_nmi+0x2f9/0x3c0
+  nmi+0x8e/0xd7
 
-Signed-off-by: Yongqiang Sun <yongqiang.sun@amd.com>
-Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+While __get_user_pages_fast() is IRQ-safe, it calls access_ok(),
+which warns on:
+
+  WARN_ON_ONCE(!in_task() && !pagefault_disabled())
+
+Peter suggested disabling page faults around __get_user_pages_fast(),
+which gets rid of the warning in access_ok() call.
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20200407141427.3184722-1-jolsa@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ kernel/events/core.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index 2b2efe443c36d..b64ad9e1f0c38 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -996,6 +996,26 @@ bool dc_commit_state(struct dc *dc, struct dc_state *context)
- 	return (result == DC_OK);
- }
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 8c70ee23fbe91..00fb2fe92c4d6 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6411,9 +6411,12 @@ static u64 perf_virt_to_phys(u64 virt)
+ 		 * Try IRQ-safe __get_user_pages_fast first.
+ 		 * If failed, leave phys_addr as 0.
+ 		 */
+-		if ((current->mm != NULL) &&
+-		    (__get_user_pages_fast(virt, 1, 0, &p) == 1))
+-			phys_addr = page_to_phys(p) + virt % PAGE_SIZE;
++		if (current->mm != NULL) {
++			pagefault_disable();
++			if (__get_user_pages_fast(virt, 1, 0, &p) == 1)
++				phys_addr = page_to_phys(p) + virt % PAGE_SIZE;
++			pagefault_enable();
++		}
  
-+static bool is_flip_pending_in_pipes(struct dc *dc, struct dc_state *context)
-+{
-+	int i;
-+	struct pipe_ctx *pipe;
-+
-+	for (i = 0; i < MAX_PIPES; i++) {
-+		pipe = &context->res_ctx.pipe_ctx[i];
-+
-+		if (!pipe->plane_state)
-+			continue;
-+
-+		/* Must set to false to start with, due to OR in update function */
-+		pipe->plane_state->status.is_flip_pending = false;
-+		dc->hwss.update_pending_status(pipe);
-+		if (pipe->plane_state->status.is_flip_pending)
-+			return true;
-+	}
-+	return false;
-+}
-+
- bool dc_post_update_surfaces_to_stream(struct dc *dc)
- {
- 	int i;
-@@ -1003,6 +1023,9 @@ bool dc_post_update_surfaces_to_stream(struct dc *dc)
- 
- 	post_surface_trace(dc);
- 
-+	if (is_flip_pending_in_pipes(dc, context))
-+		return true;
-+
- 	for (i = 0; i < dc->res_pool->pipe_count; i++)
- 		if (context->res_ctx.pipe_ctx[i].stream == NULL ||
- 		    context->res_ctx.pipe_ctx[i].plane_state == NULL) {
+ 		if (p)
+ 			put_page(p);
 -- 
 2.20.1
 
