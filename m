@@ -2,146 +2,107 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA96C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6F2C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C4C821D91
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB80121D79
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:27:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fVgHTUMt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ccyNURpC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgD1UZK (ORCPT
+        id S1726430AbgD1U17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:25:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726286AbgD1UZK (ORCPT
+        Tue, 28 Apr 2020 16:27:59 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21187 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726286AbgD1U16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:25:10 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9BB7C03C1AB;
-        Tue, 28 Apr 2020 13:25:09 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id b11so26229913wrs.6;
-        Tue, 28 Apr 2020 13:25:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tT5d0riiZZ18ek/9DKLrzDdyJ2JQ94/wqzkmlAGoP9k=;
-        b=fVgHTUMtLyN8PrFr/GKj+psd0vGnjoXWpD8FYvJOBmhHAICfHpyCj9oRNiW7tV5fYV
-         K6z/g3Q+6pa3/yIV4vcqzxWxrS9emyprXBxVSiOm5+fA12f2L7LGVym0zyQhM9rmrCn3
-         8OdzwV9PnClKvjLIR4PQ27nKPbbntvMha6ymcbJAFfvD+p8bijamk4EnuwJKLqspCLSm
-         f6MOHSYTQxie75jNZHC+DJ+v5wIUTV6GVSWVDHLMJsKPSSi8xHbpMXCwvfGqE9TEeqPJ
-         2LBKcMS14axkULNn1bGxdT5LYoYCjYbljrioKbPMg7IQN9qIVGjROEMGBfoMa6eq2C3D
-         Zi2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tT5d0riiZZ18ek/9DKLrzDdyJ2JQ94/wqzkmlAGoP9k=;
-        b=KCN96H+DzVKLlICMg5qmDYRrifFic0riBYcAjRuA/FLbvCFFhKp8Xwp8Ft/kcQUx/Q
-         tH4b/F7ZlixItaY6VE3jc9w3dNxkDips2IrKT2CKPwkY1f0GgfgKwXbtOvL9aX1SF5dA
-         nRX+n43sFIGiMKtLDGZes8bmP7yeSuB1ydO4q05K8w4W4ZkdMFyOk9A7GTsGcZSAa6oZ
-         iHwFv69n7xmlgjYwmip1GKp2QCBKilYeyZzVQ4o4/r7WWO4NmEaj/9WGvbfvxRfWcAjw
-         Dqc+kHozlFsmLhJEgvXHwJA/mi1zYJvbEPRk/UxcPrNGQmbFX0rRHIVxvo0/VmGxTOXE
-         Xifw==
-X-Gm-Message-State: AGi0PubFGuUdGIFFF+BjTkWZoPBVD4QKie8WPr6gGADJFgO3gML76Hye
-        1QzspOCYVLcEsSNgzLxjaeyfo5g7TVk=
-X-Google-Smtp-Source: APiQypKx04egV24/uBV75dgEWC3DPqEnSLJTGUt+k+CPuBQHWJLN7dDcxJN2g3h6Hu+b57AMRI7XTA==
-X-Received: by 2002:adf:ab1b:: with SMTP id q27mr37550151wrc.220.1588105507706;
-        Tue, 28 Apr 2020 13:25:07 -0700 (PDT)
-Received: from [192.168.1.23] (afcs235.neoplus.adsl.tpnet.pl. [95.49.70.235])
-        by smtp.gmail.com with ESMTPSA id l16sm26599482wrp.91.2020.04.28.13.25.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 13:25:07 -0700 (PDT)
-Subject: Re: [PATCH v21 04/16] leds: lp50xx: Add the LP50XX family of the RGB
- LED driver
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200428160338.2793-1-dmurphy@ti.com>
- <20200428160338.2793-5-dmurphy@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <d3020c80-90f7-e73a-5ff3-6c503b9fdea9@gmail.com>
-Date:   Tue, 28 Apr 2020 22:25:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 28 Apr 2020 16:27:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588105677;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Eg1xk1qbLOD2jm86OCEQIZspFf2KSHhRV26te2Q2h+g=;
+        b=ccyNURpCidGGCBnYEEdDMbYQTjUxUgpNomKaXY9z+nDVnCY0G0vB07eZgJCLai5ipr7D0W
+        zfQN8gWF2gKcwHFWFpZy4mDKVH3jFx4YDaS60scMxb77OntVPYK2yd34hN3nzSRiBxVjmw
+        VNswHiH/fkndI+t6gqyYWNjLinOuVdU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-181-X_DZxyeYPVy9uo7zIXD4BA-1; Tue, 28 Apr 2020 16:27:52 -0400
+X-MC-Unique: X_DZxyeYPVy9uo7zIXD4BA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4234480058A;
+        Tue, 28 Apr 2020 20:27:51 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-129.rdu2.redhat.com [10.10.113.129])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A756A60CD3;
+        Tue, 28 Apr 2020 20:27:49 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH] Fix use after free in get_tree_bdev()
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     Lukas Czerner <lczerner@redhat.com>, Ian Kent <raven@themaw.net>,
+        torvalds@linux-foundation.org, dhowells@redhat.com,
+        linux-ext4@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 28 Apr 2020 21:27:48 +0100
+Message-ID: <158810566883.1168184.8679527126430822408.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-In-Reply-To: <20200428160338.2793-5-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
+Commit 6fcf0c72e4b9, a fix to get_tree_bdev() put a missing blkdev_put() in
+the wrong place, before a warnf() that displays the bdev under
+consideration rather after it.
 
-Thanks for the update. There is one remnant from the
-previous stages that you already scheduled for removal AFAIR.
+This results in a silent lockup in printk("%pg") called via warnf() from
+get_tree_bdev() under some circumstances when there's a race with the
+blockdev being frozen.  This can be caused by xfstests/tests/generic/085 in
+combination with Lukas Czerner's ext4 mount API conversion patchset.  It
+looks like it ought to occur with other users of get_tree_bdev() such as
+XFS, but apparently doesn't.
 
-On 4/28/20 6:03 PM, Dan Murphy wrote:
-> Introduce the LP5036/30/24/18/12/9 RGB LED driver.
-> The difference in these parts are the number of
-> LED outputs where the:
-> 
-> LP5036 can control 36 LEDs
-> LP5030 can control 30 LEDs
-> LP5024 can control 24 LEDs
-> LP5018 can control 18 LEDs
-> LP5012 can control 12 LEDs
-> LP5009 can control 9 LEDs
-> 
-> The device has the ability to group LED output into control banks
-> so that multiple LED banks can be controlled with the same mixing and
-> brightness.  Inversely the LEDs can also be controlled independently.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-[...]
-> +
-> +		init_data.fwnode = child;
-> +		init_data.devicename = priv->client->name;
+Fix this by switching the order of the lines.
 
-Namely this line. We don't need devicename for new drivers like this.
+Fixes: 6fcf0c72e4b9 ("vfs: add missing blkdev_put() in get_tree_bdev()")
+Reported-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Ian Kent <raven@themaw.net>
+cc: Al Viro <viro@zeniv.linux.org.uk>
+---
 
-> +		fwnode_property_read_string(child, "linux,default-trigger",
-> +				    &led->led_dev.default_trigger);
-> +		num_colors = 0;
-> +
-> +		/* There are only 3 LEDs per module otherwise they should be
-> +		   banked which also is presented as 3 LEDs*/
-> +		mc_led_info = devm_kcalloc(priv->dev, LP50XX_LEDS_PER_MODULE,
-> +					   sizeof(*mc_led_info), GFP_KERNEL);
-> +		if (!mc_led_info)
-> +			return -ENOMEM;
-> +
-> +		fwnode_for_each_child_node(child, led_node) {
-> +			ret = fwnode_property_read_u32(led_node, "color",
-> +						       &color_id);
-> +			if (ret)
-> +				dev_err(priv->dev, "Cannot read color\n");
-> +
-> +			mc_led_info[num_colors].color_index = color_id;
-> +			num_colors++;
-> +		}
-> +
-> +		led->priv = priv;
-> +		led->mc_cdev.num_colors = num_colors;
-> +		led->mc_cdev.subled_info = mc_led_info;
-> +		led_cdev = &led->mc_cdev.led_cdev;
-> +		led_cdev->brightness_set_blocking = lp50xx_brightness_set;
-> +		ret = devm_led_classdev_multicolor_register_ext(&priv->client->dev,
-> +						       &led->mc_cdev,
-> +						       &init_data);
->[...]
--- 
-Best regards,
-Jacek Anaszewski
+ fs/super.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/super.c b/fs/super.c
+index cd352530eca9..a288cd60d2ae 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -1302,8 +1302,8 @@ int get_tree_bdev(struct fs_context *fc,
+ 	mutex_lock(&bdev->bd_fsfreeze_mutex);
+ 	if (bdev->bd_fsfreeze_count > 0) {
+ 		mutex_unlock(&bdev->bd_fsfreeze_mutex);
+-		blkdev_put(bdev, mode);
+ 		warnf(fc, "%pg: Can't mount, blockdev is frozen", bdev);
++		blkdev_put(bdev, mode);
+ 		return -EBUSY;
+ 	}
+ 
+
+
