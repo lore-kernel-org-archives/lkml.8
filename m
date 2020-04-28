@@ -2,129 +2,79 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22883C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A3BC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E539420575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100214;
-	bh=867do9hTzqcEkt0IFww02ROCovyUlEcrtv9bcwkx+/g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1NiKsvukK3PhSbQgk6ZvJ7k68dSqGCowR6bjKmNBCmMxAa4L/O6JNZGrXHjqbHqfn
-	 9RGSdX85tLfuKZCq0LcmVwU+yBjidgRX9kTx5ZkZc9y+bQ/vax5y8UbUOKwgv9Idw2
-	 4PYcika3gxkz9TRFM89gE4fP+enp5FnPGlJWfAtg=
+	by mail.kernel.org (Postfix) with ESMTP id 189A520575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:57:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tmEcTV5w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730056AbgD1S4x (ORCPT
+        id S1729418AbgD1S5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:56:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729609AbgD1SbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:31:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 28 Apr 2020 14:57:05 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:64802 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728663AbgD1S5C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:57:02 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588100221; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=JNRLCO94IcPhS5EP1PF7TeeXll0iKX1oSMuytOLgOgA=; b=tmEcTV5w/HCsDw8l+OgMWgCgsYluRznHgqDvqd/x4vs8OvReh42MkxmpDVrk32y78ANtF+6+
+ WyB4hrvPRFDXwTYXpT/pB7pSsaq4imTZW86Va7E86RKfRWve+SbGhMt18ImHQYO7WXga2wBb
+ aOSGzG4yejpuimvIPTRrXNefF1k=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea87c79.7f843eca5b20-smtp-out-n03;
+ Tue, 28 Apr 2020 18:56:57 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 04B06C433D2; Tue, 28 Apr 2020 18:56:57 +0000 (UTC)
+Received: from [10.46.162.249] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7578B20B80;
-        Tue, 28 Apr 2020 18:31:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098665;
-        bh=867do9hTzqcEkt0IFww02ROCovyUlEcrtv9bcwkx+/g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wc6fL0526WWrpBXCIMhec893SN82qS9XC7PwsYZPwyb4OPfuKUh7xWDTlzoz7Mqc5
-         tU5IOrti5ouBQFfJqIfP6HpqPMR2ZsY2bDoKGncWKuwmzwffe0cLZgy540/rsxCUHX
-         AlF6ymBVsp9lgL3wsOg6HXGIEvUgrLD1L/zErm9s=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Zeng Tao <prime.zeng@hisilicon.com>,
-        William Bader <williambader@hotmail.com>
-Subject: [PATCH 5.6 095/167] USB: hub: Revert commit bd0e6c9614b9 ("usb: hub: try old enumeration scheme first for high speed devices")
-Date:   Tue, 28 Apr 2020 20:24:31 +0200
-Message-Id: <20200428182237.114346325@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Authenticated sender: hemantk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E986DC433F2;
+        Tue, 28 Apr 2020 18:56:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E986DC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
+Subject: Re: [PATCH v3 4/6] bus: mhi: core: Fix typo in comment
+To:     Jeffrey Hugo <jhugo@codeaurora.org>,
+        manivannan.sadhasivam@linaro.org
+Cc:     bbhatt@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1588003153-13139-1-git-send-email-jhugo@codeaurora.org>
+ <1588003153-13139-5-git-send-email-jhugo@codeaurora.org>
+From:   Hemant Kumar <hemantk@codeaurora.org>
+Message-ID: <e50ae083-6dd2-060b-8169-a1eb6cd5626f@codeaurora.org>
+Date:   Tue, 28 Apr 2020 11:56:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1588003153-13139-5-git-send-email-jhugo@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
-
-commit 3155f4f40811c5d7e3c686215051acf504e05565 upstream.
-
-Commit bd0e6c9614b9 ("usb: hub: try old enumeration scheme first for
-high speed devices") changed the way the hub driver enumerates
-high-speed devices.  Instead of using the "new" enumeration scheme
-first and switching to the "old" scheme if that doesn't work, we start
-with the "old" scheme.  In theory this is better because the "old"
-scheme is slightly faster -- it involves resetting the device only
-once instead of twice.
-
-However, for a long time Windows used only the "new" scheme.  Zeng Tao
-said that Windows 8 and later use the "old" scheme for high-speed
-devices, but apparently there are some devices that don't like it.
-William Bader reports that the Ricoh webcam built into his Sony Vaio
-laptop not only doesn't enumerate under the "old" scheme, it gets hung
-up so badly that it won't then enumerate under the "new" scheme!  Only
-a cold reset will fix it.
-
-Therefore we will revert the commit and go back to trying the "new"
-scheme first for high-speed devices.
-
-Reported-and-tested-by: William Bader <williambader@hotmail.com>
-Ref: https://bugzilla.kernel.org/show_bug.cgi?id=207219
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Fixes: bd0e6c9614b9 ("usb: hub: try old enumeration scheme first for high speed devices")
-CC: Zeng Tao <prime.zeng@hisilicon.com>
-CC: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2004221611230.11262-100000@iolanthe.rowland.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- Documentation/admin-guide/kernel-parameters.txt |    3 +--
- drivers/usb/core/hub.c                          |    4 +---
- 2 files changed, 2 insertions(+), 5 deletions(-)
-
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5085,8 +5085,7 @@
- 
- 	usbcore.old_scheme_first=
- 			[USB] Start with the old device initialization
--			scheme,  applies only to low and full-speed devices
--			 (default 0 = off).
-+			scheme (default 0 = off).
- 
- 	usbcore.usbfs_memory_mb=
- 			[USB] Memory limit (in MB) for buffers allocated by
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -2728,13 +2728,11 @@ static bool use_new_scheme(struct usb_de
- {
- 	int old_scheme_first_port =
- 		port_dev->quirks & USB_PORT_QUIRK_OLD_SCHEME;
--	int quick_enumeration = (udev->speed == USB_SPEED_HIGH);
- 
- 	if (udev->speed >= USB_SPEED_SUPER)
- 		return false;
- 
--	return USE_NEW_SCHEME(retry, old_scheme_first_port || old_scheme_first
--			      || quick_enumeration);
-+	return USE_NEW_SCHEME(retry, old_scheme_first_port || old_scheme_first);
- }
- 
- /* Is a USB 3.0 port in the Inactive or Compliance Mode state?
 
 
+On 4/27/20 8:59 AM, Jeffrey Hugo wrote:
+> There is a typo - "runtimet" should be "runtime".  Fix it.
+> 
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> ---
+Reviewed-by: Hemant Kumar <hemantk@codeaurora.org>
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
