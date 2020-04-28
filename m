@@ -2,159 +2,136 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 673FBC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD397C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44159206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4CC2206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:38:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JeZv+NxO"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="mBrX3lU7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbgD1Hhv (ORCPT
+        id S1726575AbgD1HiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:37:51 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:51370 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbgD1Hhv (ORCPT
+        Tue, 28 Apr 2020 03:38:15 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:37375 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726253AbgD1HiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 03:37:51 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03S7bkRO101845;
-        Tue, 28 Apr 2020 02:37:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588059466;
-        bh=O9oTLB3jQJfcVXDqg1A605+vTcYSVQlvUCOUCgtMw7M=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=JeZv+NxO08ND9ofrlVteGz2EadykJerIiT9RRY7+/iVZ1xCVDbw/1uJyKdJQKCn4Z
-         4DZ+BPIhAvUupo9Aded3ywm7n2Zo7Psnf2ZeveU/a0RPF6O71QnHHJ9BOFAWWybZtH
-         fL/lQ2za4yuFOGGHcgSoxdA8xo0zlV96lWvtjZag=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03S7bkuw086112;
-        Tue, 28 Apr 2020 02:37:46 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
- Apr 2020 02:37:45 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 28 Apr 2020 02:37:45 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03S7bhlt121897;
-        Tue, 28 Apr 2020 02:37:43 -0500
-Subject: Re: [PATCH] arm: dts: am33xx-l4: add gpio-line-names to gpio
- controllers
-To:     Drew Fustini <drew@beagleboard.org>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-omap@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>
-References: <20200427233116.GA18917@x1>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <b15f2577-8a7d-4c18-1633-d47133247f49@ti.com>
-Date:   Tue, 28 Apr 2020 10:37:43 +0300
+        Tue, 28 Apr 2020 03:38:14 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id TKohjjwJplKa1TKoljkB2C; Tue, 28 Apr 2020 09:38:11 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1588059492; bh=+nAgS30c07wDN6lSEWd2/CCFrQtC4lXyHeV3iYFeXr8=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=mBrX3lU7q134xiasmBAak+ZWfmaAQQrJetv44aekDE+ksxsm8RXWBLJ1Use1JCl1I
+         BNuw0PeUOY9yC8G8KpXKYvjaoWL6EF9bWY6mcY4gClBI4AZMAkIpBHVztc2QZ55FXQ
+         hqWMlu9XFOpTiCm/THBGdcluPNCw8z9/ulLHdPO3zBmDxNx8GuKTMOHsIZQRy3i1Qr
+         DG9NwevQ5K+bk1iU3tWo5kkmQN2NzghndxPOh2sB9lqm2fGjd0ToxEl+08T4tsqVBa
+         XWuWsr42mhUyZOmHB5fjFR+g0jkbKbq+rX8zKv4jTYPVqn5w1yn3PuL7W/+rfXm1de
+         zxwD9Uv85jWAA==
+Subject: Re: [RFC PATCH v1 0/5] media: tegra: Tegra video driver follow-up
+ patches
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com
+Cc:     digetx@gmail.com, linux-media@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1588047650-29402-1-git-send-email-skomatineni@nvidia.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <5f065fc5-0f45-6b9e-068c-28d0a2e4684e@xs4all.nl>
+Date:   Tue, 28 Apr 2020 09:38:07 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200427233116.GA18917@x1>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <1588047650-29402-1-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-CMAE-Envelope: MS4wfNnYN4mXESrKOpzlixmWEfZewJ9vePxyXiaZ6eW8U8sCyiqmmBh4L32L7ha5AdhsZGvLriTlcjavNogmiOF5LjXDr2At4PGJsV+wyFJ6oVTyHgLXXlE3
+ lFXrY3m1G3Ek/L39otmz3XNqNPgLiN+8UWLeeJ9oQFu0gp7oUHuR05FWFDVbvG1G6rSV8v+6aR5PfiBZQNFim6rs8eXkhVKMdkuC5KUWY+SkEBrYaLJmjkP1
+ AwEMi5Gn4fQpYifQsawYhLphF3CH1o3ueY5AGW5VEWUkIm0mA4aoMomZjhgiI7S5tdouZEwVreO8DvynFMnPcdMI6NhUaDIqwPLypDaULPyWhPfWqGpOAUrC
+ AiwCUkqDCfAwoFVKTHgrToY5yrAnAF9NoKNV8TX8098zQMQItqIp3mOEAqNlWJ44PlYRfjLJ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 28/04/2020 02:31, Drew Fustini wrote:
-> Add gpio-line-names properties to the gpio controller nodes.  The names
-> correspond to the AM335x pin names which are also the muxmode 0 signal
-> names.  Refer to "Table 4-2. Pin Attributes" in the TI AM335x Sitara
-> Processors datasheet:
-> 
-> http://www.ti.com/lit/ds/symlink/am3358.pdf
+On 28/04/2020 06:20, Sowjanya Komatineni wrote:
+> This is a fllow-up to some last feedback received for Tegra VI driver RFC
+> v10 patches.
+> https://patchwork.linuxtv.org/cover/63334/
 > 
 > 
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> ---
->   arch/arm/boot/dts/am33xx-l4.dtsi | 134 +++++++++++++++++++++++++++++++
->   1 file changed, 134 insertions(+)
+> Sowjanya Komatineni (5):
+>   MAINTAINERS: Rename Tegra Video driver path
+>   media: tegra: Rename driver path to tegra-video
+>   media: tegra-video: Move PM runtime handle to streaming
+>   media: tegra-video: Rearrange SoC specific to Tegra210 and cleanup
+>     files
+>   media: tegra-video: Remove module macros for vi and csi driver
 > 
-> diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-> index 5ed7f3c58c0f..1ac574ebfe74 100644
-> --- a/arch/arm/boot/dts/am33xx-l4.dtsi
-> +++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-> @@ -157,6 +157,39 @@
->   				#interrupt-cells = <2>;
->   				reg = <0x0 0x1000>;
->   				interrupts = <96>;
-> +				gpio-line-names =
-> +					"MDIO_DATA",
-> +					"MDIO_CLK",
-> +					"SPI0_SCLK",
-> +					"SPI0_D0",
-> +					"SPI0_D1",
-> +					"SPI0_CS0",
-> +					"SPI0_CS1",
-> +					"ECAP0_IN_PWM0_OUT",
-> +					"LCD_DATA12",
-> +					"LCD_DATA13",
-> +					"LCD_DATA14",
-> +					"LCD_DATA15",
-> +					"UART1_CTSN",
-> +					"UART1_RTSN",
-> +					"UART1_RXD",
-> +					"UART1_TXD",
-> +					"GMII1_TXD3",
-> +					"GMII1_TXD2",
-> +					"USB0_DRVVBUS",
-> +					"XDMA_EVENT_INTR0",
-> +					"XDMA_EVENT_INTR1",
-> +					"GMII1_TXD1",
-> +					"GPMC_AD8",
-> +					"GPMC_AD9",
-> +					"NC",
-> +					"NC",
-> +					"GPMC_AD10",
-> +					"GPMC_AD11",
-> +					"GMII1_TXD0",
-> +					"RMII1_REFCLK",
-> +					"GPMC_WAIT0",
-> +					"GPMC_WPN";
->   			};
-This misuse GPIO DT bindings:
-"
-Optionally, a GPIO controller may have a "gpio-line-names" property. This is
-an array of strings defining the names of the GPIO lines going out of the
-GPIO controller. This name should be the most meaningful producer name
-for the system, such as a rail name indicating the usage. Package names
-such as pin name are discouraged: such lines have opaque names (since they
-are by definition generic purpose) and such names are usually not very
-helpful. For example "MMC-CD", "Red LED Vdd" and "ethernet reset" are
-reasonable line names as they describe what the line is used for. "GPIO0"
-is not a good name to give to a GPIO line. Placeholders are discouraged:
-rather use the "" (blank string) if the use of the GPIO line is undefined
-in your design. The names are assigned starting from line offset 0 from
-left to right from the passed array. An incomplete array (where the number
-of passed named are less than ngpios) will still be used up until the last
-provided valid line index.
-"
+>  MAINTAINERS                                  |    2 +-
+>  drivers/staging/media/Kconfig                |    2 +-
+>  drivers/staging/media/Makefile               |    2 +-
+>  drivers/staging/media/tegra-video/Kconfig    |   12 +
+>  drivers/staging/media/tegra-video/Makefile   |    8 +
+>  drivers/staging/media/tegra-video/TODO       |   10 +
+>  drivers/staging/media/tegra-video/csi.c      |  536 ++++++++++++
+>  drivers/staging/media/tegra-video/csi.h      |  146 ++++
+>  drivers/staging/media/tegra-video/tegra210.c | 1080 ++++++++++++++++++++++++
+>  drivers/staging/media/tegra-video/vi.c       | 1082 +++++++++++++++++++++++++
+>  drivers/staging/media/tegra-video/vi.h       |  258 ++++++
+>  drivers/staging/media/tegra-video/video.c    |  155 ++++
+>  drivers/staging/media/tegra-video/video.h    |   29 +
+>  drivers/staging/media/tegra/Kconfig          |   12 -
+>  drivers/staging/media/tegra/Makefile         |    8 -
+>  drivers/staging/media/tegra/TODO             |   10 -
+>  drivers/staging/media/tegra/common.h         |  259 ------
+>  drivers/staging/media/tegra/csi.c            |  604 --------------
+>  drivers/staging/media/tegra/csi.h            |  144 ----
+>  drivers/staging/media/tegra/tegra210.c       |  708 ----------------
+>  drivers/staging/media/tegra/tegra210.h       |  190 -----
+>  drivers/staging/media/tegra/vi.c             | 1127 --------------------------
+>  drivers/staging/media/tegra/vi.h             |   72 --
+>  drivers/staging/media/tegra/video.c          |  153 ----
+>  drivers/staging/media/tegra/video.h          |   29 -
+>  25 files changed, 3319 insertions(+), 3319 deletions(-)
 
+I thought that the follow-up series was just a rename of a directory
+and perhaps one or two smaller changes, but this is too much change.
+I prefer to have a v11 instead with all these changes incorporated.
 
-Additional note. On other TI SoCs like am437x the same gpio line can be routed to more
-than one pin (but only one pin can be used).
-gpio0_0 GPIO IO -> A17, D16
+Sorry about that,
 
+	Hans
 
--- 
-Best regards,
-grygorii
+>  create mode 100644 drivers/staging/media/tegra-video/Kconfig
+>  create mode 100644 drivers/staging/media/tegra-video/Makefile
+>  create mode 100644 drivers/staging/media/tegra-video/TODO
+>  create mode 100644 drivers/staging/media/tegra-video/csi.c
+>  create mode 100644 drivers/staging/media/tegra-video/csi.h
+>  create mode 100644 drivers/staging/media/tegra-video/tegra210.c
+>  create mode 100644 drivers/staging/media/tegra-video/vi.c
+>  create mode 100644 drivers/staging/media/tegra-video/vi.h
+>  create mode 100644 drivers/staging/media/tegra-video/video.c
+>  create mode 100644 drivers/staging/media/tegra-video/video.h
+>  delete mode 100644 drivers/staging/media/tegra/Kconfig
+>  delete mode 100644 drivers/staging/media/tegra/Makefile
+>  delete mode 100644 drivers/staging/media/tegra/TODO
+>  delete mode 100644 drivers/staging/media/tegra/common.h
+>  delete mode 100644 drivers/staging/media/tegra/csi.c
+>  delete mode 100644 drivers/staging/media/tegra/csi.h
+>  delete mode 100644 drivers/staging/media/tegra/tegra210.c
+>  delete mode 100644 drivers/staging/media/tegra/tegra210.h
+>  delete mode 100644 drivers/staging/media/tegra/vi.c
+>  delete mode 100644 drivers/staging/media/tegra/vi.h
+>  delete mode 100644 drivers/staging/media/tegra/video.c
+>  delete mode 100644 drivers/staging/media/tegra/video.h
+> 
+
