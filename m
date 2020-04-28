@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BE6C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E25F5C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E45F20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACBB920575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099775;
-	bh=Ue9oNTy9Oq40zi5GBiH7Z4hIpfAqI/nfYyVazPMhCy0=;
+	s=default; t=1588099783;
+	bh=xEfiGp962UeN7kUvT6zNM7UWw343DFk0w0KZsgijnW0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KyCQbFgAYFUgAq/hjoE/VO+g0z9sl4ODXpWjMhtrjASPMt8u675FFm+QSEweULI4b
-	 2cRrFgiIgB1+lPr/YReby+3CwuQTDI9LaOjSkv2xvJ7XkVcJHcXwbE34i1uVi3cYOJ
-	 vVTom4Mb95x+AsPu/ApdO7zAeF9SzOU2he6AMVqM=
+	b=C6Px6elOAhJr7uyRQ9onHsSPMfi2PmfM2GdNDrYKP98NCRhVlEvexkNkBenLLQw26
+	 XNiOt8GgShohEqOUIVeKe1ix+SPNQ1Vi6R4h4gnWmhQBk9KMIKGIQyCDRgqLa5+JIJ
+	 OMolYMv2Nz1IhnDo4w/mu8FA+6Ci+cM6N6safeD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731500AbgD1Ste (ORCPT
+        id S1731031AbgD1Stm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:49:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59130 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:49:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730762AbgD1SkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:40:08 -0400
+        id S1730415AbgD1Sjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:39:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F02E620575;
-        Tue, 28 Apr 2020 18:40:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D18D20575;
+        Tue, 28 Apr 2020 18:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099207;
-        bh=Ue9oNTy9Oq40zi5GBiH7Z4hIpfAqI/nfYyVazPMhCy0=;
+        s=default; t=1588099192;
+        bh=xEfiGp962UeN7kUvT6zNM7UWw343DFk0w0KZsgijnW0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rZNWitJl4nnVaOf2EPWz4EvTrMKmF4Ck6EDMP7JP9U3EgJQptBQ7KF09+nVPYQcrc
-         9p+uY0lcJ8oDaOCyA+kXuczcn0Bpz87E5zwprqU7KZyqq7SBHqZuDPxxYZDBrd+/1I
-         TeUz6xDBjEoxApzgatez8YpSj1o9ICiB/XCIg7yI=
+        b=mC/77zjBZOdU0x1lLiL+JeCftynrT2ibUUFtPuLadbFzzls7Ji+QEMckQDpYMYC0D
+         n47JJ7eKHnjTfQgDh5Gnqb1f6tGE++U56cnbLOeqIC1hbeU9ILLgJpAzXmzO+xAkdR
+         hBrmJ/3Svu2s9SXSTPogkc0pEIvKzE37dimWxMM8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 073/168] vrf: Fix IPv6 with qdisc and xfrm
-Date:   Tue, 28 Apr 2020 20:24:07 +0200
-Message-Id: <20200428182241.291061422@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Clemens Gruber <clemens.gruber@pqgruber.com>,
+        Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Roland Hieber <rhi@pengutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.19 111/131] ARM: imx: provide v7_cpu_resume() only on ARM_CPU_SUSPEND=y
+Date:   Tue, 28 Apr 2020 20:25:23 +0200
+Message-Id: <20200428182239.183816463@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,36 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-[ Upstream commit a53c102872ad6e34e1518e25899dc9498c27f8b1 ]
+commit f1baca8896ae18e12c45552a4c4ae2086aa7e02c upstream.
 
-When a qdisc is attached to the VRF device, the packet goes down the ndo
-xmit function which is setup to send the packet back to the VRF driver
-which does a lookup to send the packet out. The lookup in the VRF driver
-is not considering xfrm policies. Change it to use ip6_dst_lookup_flow
-rather than ip6_route_output.
+512a928affd5 ("ARM: imx: build v7_cpu_resume() unconditionally")
+introduced an unintended linker error for i.MX6 configurations that have
+ARM_CPU_SUSPEND=n which can happen if neither CONFIG_PM, CONFIG_CPU_IDLE,
+nor ARM_PSCI_FW are selected.
 
-Fixes: 35402e313663 ("net: Add IPv6 support to VRF device")
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fix this by having v7_cpu_resume() compiled only when cpu_resume() it
+calls is available as well.
+
+The C declaration for the function remains unguarded to avoid future code
+inadvertently using a stub and introducing a regression to the bug the
+original commit fixed.
+
+Cc: <stable@vger.kernel.org>
+Fixes: 512a928affd5 ("ARM: imx: build v7_cpu_resume() unconditionally")
+Reported-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Tested-by: Roland Hieber <rhi@pengutronix.de>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/vrf.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/vrf.c
-+++ b/drivers/net/vrf.c
-@@ -188,8 +188,8 @@ static netdev_tx_t vrf_process_v6_outbou
- 	fl6.flowi6_proto = iph->nexthdr;
- 	fl6.flowi6_flags = FLOWI_FLAG_SKIP_NH_OIF;
+---
+ arch/arm/mach-imx/Makefile |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/arch/arm/mach-imx/Makefile
++++ b/arch/arm/mach-imx/Makefile
+@@ -89,8 +89,10 @@ AFLAGS_suspend-imx6.o :=-Wa,-march=armv7
+ obj-$(CONFIG_SOC_IMX6) += suspend-imx6.o
+ obj-$(CONFIG_SOC_IMX53) += suspend-imx53.o
+ endif
++ifeq ($(CONFIG_ARM_CPU_SUSPEND),y)
+ AFLAGS_resume-imx6.o :=-Wa,-march=armv7-a
+ obj-$(CONFIG_SOC_IMX6) += resume-imx6.o
++endif
+ obj-$(CONFIG_SOC_IMX6) += pm-imx6.o
  
--	dst = ip6_route_output(net, NULL, &fl6);
--	if (dst == dst_null)
-+	dst = ip6_dst_lookup_flow(net, NULL, &fl6, NULL);
-+	if (IS_ERR(dst) || dst == dst_null)
- 		goto err;
- 
- 	skb_dst_drop(skb);
+ obj-$(CONFIG_SOC_IMX1) += mach-imx1.o
 
 
