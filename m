@@ -2,106 +2,91 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24849C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF51C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F303E206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:27:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="D0NXw6Ke"
+	by mail.kernel.org (Postfix) with ESMTP id B07CA206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:28:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588084085;
+	bh=D7QNgWTGi3LFiveU1UlSuH8oqtvhgNGqKALwImoVYkY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hk3quCCJYOjgfRVY736f+vJjyd3wCbmmtAt8pHWvQQDXVHRtfDR/ZHS8GUHU/4hGi
+	 S2Du4LMUGKFyNZQ1HzmRj67St1m3KtVdLWsRaN5U0EnlkU6hrvlG+/ez2oaP51CMYC
+	 YLUL7QjuqOHgLTukuhQ19yVhxi8Mo0Xjmq8WJz7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgD1O1s (ORCPT
+        id S1727961AbgD1O2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:27:48 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:53528 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726900AbgD1O1r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:27:47 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588084067; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=DzYwKPXEkmphkl14ZmOq9ivMq1C4gQZY6RKv6+b/FPw=; b=D0NXw6KeEpdnaJkKQ1YOnwOm64GSjI92uOUHEJrFj+wCOT/Eb7/51adgzj5KxJtElAwJYa+u
- 4t5xYzWPEbPQlsr30QctrJuSv1pp2g3p2KrL7rNx4v4a0awTEYCpggxvC8gBIOjhj5M1b9LW
- AgZ0xwUb2mH2mD5FesBxUH6ph5E=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea83d55.7fe57b838768-smtp-out-n03;
- Tue, 28 Apr 2020 14:27:33 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CD985C432C2; Tue, 28 Apr 2020 14:27:32 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        Tue, 28 Apr 2020 10:28:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56326 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726900AbgD1O2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 10:28:04 -0400
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2E546C433CB;
-        Tue, 28 Apr 2020 14:27:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2E546C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v2 4/8] bus: mhi: core: Handle firmware load using state
- worker
-To:     Bhaumik Bhatt <bbhatt@codeaurora.org>, mani@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hemantk@codeaurora.org
-References: <1588042766-17496-1-git-send-email-bbhatt@codeaurora.org>
- <1588042766-17496-5-git-send-email-bbhatt@codeaurora.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <407b5720-b1df-c7e0-b676-baad3d148d56@codeaurora.org>
-Date:   Tue, 28 Apr 2020 08:27:30 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 029E2206E2;
+        Tue, 28 Apr 2020 14:28:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588084084;
+        bh=D7QNgWTGi3LFiveU1UlSuH8oqtvhgNGqKALwImoVYkY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=o29hVvvQad0SDi9yf0TpO1MvWtpwYZqpd618/5yEjDqWmjCyASAVgED8qreXsCwJ6
+         pcjomR4yyq7assm3J+isPP0SgXijqTklM/ILcQhMOnvia80RWdj+wTzAbPqTGXzcOp
+         hB1VoplClc9b9cPdQ4oqVX4wYoPzFaBl3t+jSxJY=
+Received: by mail-ot1-f50.google.com with SMTP id m18so32846836otq.9;
+        Tue, 28 Apr 2020 07:28:03 -0700 (PDT)
+X-Gm-Message-State: AGi0PubPO6F5cX1OybNPgbTqCkWWTW6O/JBomtOk+VDr6xhtAgYPRetE
+        cTx1gf3BDUQz5R9cx2xj2i758KHHVVCwf60xoQ==
+X-Google-Smtp-Source: APiQypK3X4aUyiYhPAHhaTh4SayCKXYiLxNTHCd8y/oQZhydp53nEzkfEni/GtmVYYFLz/z1zRBGLXTAo3ngLC2yGQU=
+X-Received: by 2002:a9d:1441:: with SMTP id h59mr23106980oth.192.1588084083280;
+ Tue, 28 Apr 2020 07:28:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1588042766-17496-5-git-send-email-bbhatt@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200420215728.1927434-1-bjorn.andersson@linaro.org> <20200425175842.GA3773@ravnborg.org>
+In-Reply-To: <20200425175842.GA3773@ravnborg.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 28 Apr 2020 09:27:51 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqL6bMwrXZqvGz_H_aJi+EeoikBwKznLP2VomJ=Wn822Rg@mail.gmail.com>
+Message-ID: <CAL_JsqL6bMwrXZqvGz_H_aJi+EeoikBwKznLP2VomJ=Wn822Rg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: display: simple: Add IVO M133NWF4 R0
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Err, you fixed the SOB on patches 1-3, but now broke 4+.
+On Sat, Apr 25, 2020 at 12:58 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Bj=C3=B6rn.
+>
+> On Mon, Apr 20, 2020 at 02:57:27PM -0700, Bjorn Andersson wrote:
+> > Define the vendor prefix for InfoVision Optoelectronics and add their
+> > M133NWF4 R0 13.3" FHD (1920x1080) TFT LCD panel to the compatible list
+> > of panel-simple.
+> >
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>
+> I got OK for the vendor prefix on irc so patch is now added to
+> drm-misc-next.
+> Another time please use a dedicated patch for vendor-prefix
+> so it is not hidden with other stuff. This way the chance
+> to get the attention of the right people is better.
 
-On 4/27/2020 8:59 PM, Bhaumik Bhatt wrote:
+I should have mentioned there's basically one thing to check:
+alphabetical order.
 
-No "From: ..." means you are the author.
+The good news is both files got it wrong, so at least we're consistent. :)
 
-> Upon power up, driver queues firmware worker thread if the execution
-> environment is PBL. Firmware worker is blocked with a timeout until
-> state worker gets a chance to run and unblock firmware worker. An
-> endpoint power up failure can be seen if state worker gets a chance to
-> run after firmware worker has timed out. Remove this dependency and
-> handle firmware load directly using state worker thread.
-> 
-> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
-
-SOB from you meets the developers certificate of origin.
-
-> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
-
-SOB from Hemant here, is confusing.  This would normally signal that 
-Hemant is sending a patch you authored (ie patches 1-3 are authored by 
-Hemant but you posted them to list), and he is attesting that he has the 
-right to do so (certificate of origin), but this email came from you. 
-This doesn't add up.
-
-If you are trying to imply that Hemant wrote this change with you, there 
-is a Co-authored-by tag you can use (goes before the SOB) to indicate 
-multiple authors since git only has a single author field.  The 
-Documentation/process/submitting-patches I pointed out on v1 should have 
-the details for this.
-
-Otherwise, you are listed as the author, and the patch has your SOB, 
-therefore nothing else is needed.
-
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Rob
