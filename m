@@ -2,141 +2,278 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53AA4C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DC2C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23DB7206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2AEE206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:15:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="MVgTvgZv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U5diXMQa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbgD1QPn (ORCPT
+        id S1728389AbgD1QPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:15:43 -0400
-Received: from mout.web.de ([212.227.15.3]:48103 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728130AbgD1QPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Apr 2020 12:15:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1588090527;
-        bh=8xAdLHi22Afye50tIMhbKEqj7g/+TQevJSFjaSxYdqg=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=MVgTvgZvgNJuS+z2cPeCyp5fB56haCGx4xZoItRrxErQakN6XkP00lcqHyIcseqZ2
-         jvxkvf66X1tjgYXATOu6MciNW2j07T1PmbAc5xI4dWD89I4ZZIUDDt0G7h7Tog4ZFx
-         FtyOXr7LhUEj3yBd5cswCu9zTWXTUwyOuw6sV8OU=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.179.255]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0M8iK4-1jJbX92qE8-00C713; Tue, 28
- Apr 2020 18:15:27 +0200
-To:     Wei Yongjun <weiyongjun1@huawei.com>,
-        dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] drm/mcde: dsi: Fix a return value check in
- mcde_dsi_bind()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <1900157b-39fe-e6fe-6fe7-26053a32f507@web.de>
-Date:   Tue, 28 Apr 2020 18:15:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50880 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728225AbgD1QPl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 12:15:41 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12BFDC03C1AB;
+        Tue, 28 Apr 2020 09:15:41 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id z90so17706103qtd.10;
+        Tue, 28 Apr 2020 09:15:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=rDRxVYoqu4jBaHjL5nQgf4JCTrI8hpo4fCoe5mCi1VY=;
+        b=U5diXMQaQ+jUdquhp3DncLsRDg3FzZOMxBGIGHLhVDQRNaSecGBAOx1bs6+OAtHGgT
+         JhIDMrffKZr08/u8CfyfBan6NXy3spYxF5z9VfCYm9RmUb3VsC5C4guUdZo6bZm9vOM7
+         SKLXoxeJSJhIhuGMZ7ZeP4KqLo3TY2+XWoB2AexYvgn38x7wd8flXF4GT7rF0YqNSkFY
+         PH4Ktt30Mar3F4Txq2SPLBRUiR76voOf3LdHYLs8/B1yVKQzvjQSMU/oFnercfmYsfAF
+         yCZIgGq18PUv57d5PVBbskx8ekJOthBXbxOlOy7S7HOJG+eSHAmJ1NOn/ZAPJ8IG4mZO
+         r2Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rDRxVYoqu4jBaHjL5nQgf4JCTrI8hpo4fCoe5mCi1VY=;
+        b=oHry/VrNuT9K9Egxzd91INcP8z1NRv+sZBS++2FDbZpsqB4UshKkfPl7VSsPrrBIlW
+         HKMgB6ol3Bkzt/8yjO3etvzjJ1HZ78uj6VUNZ8bt5iXiBJcwtrD+ZqxRXGbxEv8xHN87
+         cDrg7Dyn31fZd0WFl+HD8/UEa+zSaxuL0qFaoDbzGbAN5YS/6gUMrpZW3n41MQJ+cZ8T
+         guAZtuVuR7S+oGZJfl2RK4gR8coQT096u2MQnBkUayG+kG8kT8D3guwMMAYA6GFfrfRZ
+         sBSzb+eGs/6a/ueE+akSw1Al+/90+k4LV8jWCVy+kB9+dAs+AFqwGR+CH9x8jjwa95gT
+         mhUg==
+X-Gm-Message-State: AGi0PuYahToY42SWH5L/9ZnVkoi1lu1x9BZr11EH7jZE6JUYzxFl81WB
+        X1o7wfZNQrX9lTQSSv6gZsw=
+X-Google-Smtp-Source: APiQypIPgkRvpQaND2Zr8BfaFrEliFkoA2SGsGJdNwLNb39pGObry7krD8EOEyYAufEUengUoqRAdg==
+X-Received: by 2002:ac8:3403:: with SMTP id u3mr197920qtb.274.1588090538743;
+        Tue, 28 Apr 2020 09:15:38 -0700 (PDT)
+Received: from dschatzberg-fedora-PC0Y6AEN.thefacebook.com ([2620:10d:c091:480::1:3e4a])
+        by smtp.gmail.com with ESMTPSA id z2sm14087421qkc.28.2020.04.28.09.15.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 09:15:37 -0700 (PDT)
+From:   Dan Schatzberg <schatzberg.dan@gmail.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <guro@fb.com>, Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Dan Schatzberg <schatzberg.dan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-block@vger.kernel.org (open list:BLOCK LAYER),
+        linux-kernel@vger.kernel.org (open list),
+        linux-fsdevel@vger.kernel.org (open list:FILESYSTEMS (VFS and
+        infrastructure)),
+        cgroups@vger.kernel.org (open list:CONTROL GROUP (CGROUP)),
+        linux-mm@kvack.org (open list:CONTROL GROUP - MEMORY RESOURCE
+        CONTROLLER (MEMCG))
+Subject: [PATCH v5 2/4] mm: support nesting memalloc_use_memcg()
+Date:   Tue, 28 Apr 2020 12:13:48 -0400
+Message-Id: <20200428161355.6377-3-schatzberg.dan@gmail.com>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200428161355.6377-1-schatzberg.dan@gmail.com>
+References: <20200428161355.6377-1-schatzberg.dan@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:5FSzJc0UFp6D0EjhmLJsAt414KiTEdB8XeMKnL+B1QqzWX01Sci
- ALM2gq3tuJCroG6vhkBs953+cNGmvtbyjGzY6lMjmMba0WrY5YRpy+B5Y8yUhvfXUwgFAVn
- H2FlIq24bqqvqmsULR9DreYsjFKUd8FkxRQwLRcN5I2fIHDicn+xOiONqPGCCO7GRuEDPoP
- VCKJkTAF2xfDVC+3uf7zg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+05hwj3gRN0=:5sVYyphrgIkiZWH8cDYeFI
- NxnXgdTF2OnOPFAJlZqQyI8yQYlOhPzVKivirIqk9z3HNgWVPJem+KvCzMO4Wislw8go1Q+Rm
- jYPITCQEC+Hoh0zbCJaiZFdv6XefO/QszCFBBX/JwHT5KFohpbcw5VYKEihMMlngxQFVsvrLW
- 1QpIwyFwt7atXXy3tYMEcC53xHg/emSsex+CTmk9FgZDx5obsXCE04D8+4UkVVco0LD+nThv/
- l+ZmYvJiLt0ACqjcniZkrBFzCDPtm0+p5PLwBjO2DSxlyoPNYGncQPjMy80g+hv3CxTMbskPX
- ZKcMZUgE+jX8TCBf84FBWqRk80c+d19/AUp/K1unWzzwFwuPpwg9vbOoP3sw8arMJMXIvLW+P
- vS3qh9KfFtjz8DMzI0FS32JnIFW8TaO/t1p9Wb1Ewz2Aru/rreLr6oyLdjBworEKJuXHD8Y1c
- P1XIbzQfeL5P8rb+eO78LEM3W4nUu5BEhpduBF+JGwYbJxa4RqXmLl3YO7TPwW5RHaBMXas2m
- Psfiq+wNxV9nmhAT2IUWDDjYboVmyCqtHTCrWzEbGOoqluvnRWjfNEjOpAf9CIaCHGtBEEGUF
- IvI/V5cI9/I64trOtaUP+BHzSdAfdfkPhWH4+vfGPiICXy1Nb7rsYOPchha2twovQZ5kr0vkx
- 9dMlQPLHgHYSYJqR0yKY5GRWWIhJ66frD+X5uLlyoLQdkSm7vdXpPzeRE7uj18jsgUnOTlU+Q
- uP0kyx4n71mviLkPuo4HkDt70YLzw2DQ3LGY/yaYnMWlmlj1FHJpBlQNcWP6CjHU7Ty2Otd1g
- sxw0EP28F8/YyIs6GMZu1OfW1hsbFU6iizys0kNDSnE1UZT2QwmR0n+dxyjvAWxaXWtB7lmXM
- ay3CR/mgxR3chr78pwQyaZXmRgyu/e6ccCOVX4P+0bFhETSdvit+gUUYSF6PIdnW/EGuOhjMQ
- kCYBCghN+3I3/T3MiF5KCiRQAz01PSMPnTPYe+hHVeSOuRiNHCLMjjeJKKzAw+4Xd09Sna50p
- BxxknXklaCAuAOf3E4vBdCnir89KiH6CoVGuB6iz3WHZGFz91iwLI1MVffFNG5/GJmQeTejBm
- szo0Q0W2vc4xQRAu4jPLBArDdvV2YkdL8o9WCMQGV3R6Mp5sNWhncrP0ZSNfHYEGT5+sK5Z1d
- mrolh92At5emAhNUcb1PF03O4KJQ6EV6nCjnSRTTuLBI9JxjrQdJ+yqPKEnInSdvIHmT/UlTF
- T3WNGQrptvhKroaHL
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> In case of error, the function of_drm_find_bridge() returns NULL pointer
-> not ERR_PTR().
+From: Johannes Weiner <hannes@cmpxchg.org>
 
-Such information is helpful.
+The memalloc_use_memcg() function to override the default memcg
+accounting context currently doesn't nest. But the patches to make the
+loop driver cgroup-aware will end up nesting:
 
+[   98.137605]  alloc_page_buffers+0x210/0x288
+[   98.141799]  __getblk_gfp+0x1d4/0x400
+[   98.145475]  ext4_read_block_bitmap_nowait+0x148/0xbc8
+[   98.150628]  ext4_mb_init_cache+0x25c/0x9b0
+[   98.154821]  ext4_mb_init_group+0x270/0x390
+[   98.159014]  ext4_mb_good_group+0x264/0x270
+[   98.163208]  ext4_mb_regular_allocator+0x480/0x798
+[   98.168011]  ext4_mb_new_blocks+0x958/0x10f8
+[   98.172294]  ext4_ext_map_blocks+0xec8/0x1618
+[   98.176660]  ext4_map_blocks+0x1b8/0x8a0
+[   98.180592]  ext4_writepages+0x830/0xf10
+[   98.184523]  do_writepages+0xb4/0x198
+[   98.188195]  __filemap_fdatawrite_range+0x170/0x1c8
+[   98.193086]  filemap_write_and_wait_range+0x40/0xb0
+[   98.197974]  ext4_punch_hole+0x4a4/0x660
+[   98.201907]  ext4_fallocate+0x294/0x1190
+[   98.205839]  loop_process_work+0x690/0x1100
+[   98.210032]  loop_workfn+0x2c/0x110
+[   98.213529]  process_one_work+0x3e0/0x648
+[   98.217546]  worker_thread+0x70/0x670
+[   98.221217]  kthread+0x1b8/0x1c0
+[   98.224452]  ret_from_fork+0x10/0x18
 
-> The IS_ERR() test in the return value check should be
-> replaced with NULL test.
+where loop_process_work() sets the memcg override to the memcg that
+submitted the IO request, and alloc_page_buffers() sets the override
+to the memcg that instantiated the cache page, which may differ.
 
-* Would you like to convert this description into an imperative wording?
+Make memalloc_use_memcg() return the old memcg and convert existing
+users to a stacking model. Delete the unused memalloc_unuse_memcg().
 
-* Please fix the patch subject according to a function name.
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+---
+ fs/buffer.c                          |  6 +++---
+ fs/notify/fanotify/fanotify.c        |  5 +++--
+ fs/notify/inotify/inotify_fsnotify.c |  5 +++--
+ include/linux/sched/mm.h             | 28 +++++++++-------------------
+ 4 files changed, 18 insertions(+), 26 deletions(-)
 
-* How do you think about to add the tag =E2=80=9CFixes=E2=80=9D to the com=
-mit message
-  because of an adjustment for the error detection?
+diff --git a/fs/buffer.c b/fs/buffer.c
+index 599a0bf7257b..b4e99c6b52ec 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -851,13 +851,13 @@ struct buffer_head *alloc_page_buffers(struct page *page, unsigned long size,
+ 	struct buffer_head *bh, *head;
+ 	gfp_t gfp = GFP_NOFS | __GFP_ACCOUNT;
+ 	long offset;
+-	struct mem_cgroup *memcg;
++	struct mem_cgroup *memcg, *old_memcg;
+ 
+ 	if (retry)
+ 		gfp |= __GFP_NOFAIL;
+ 
+ 	memcg = get_mem_cgroup_from_page(page);
+-	memalloc_use_memcg(memcg);
++	old_memcg = memalloc_use_memcg(memcg);
+ 
+ 	head = NULL;
+ 	offset = PAGE_SIZE;
+@@ -876,7 +876,7 @@ struct buffer_head *alloc_page_buffers(struct page *page, unsigned long size,
+ 		set_bh_page(bh, page, offset);
+ 	}
+ out:
+-	memalloc_unuse_memcg();
++	memalloc_use_memcg(old_memcg);
+ 	mem_cgroup_put(memcg);
+ 	return head;
+ /*
+diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
+index 5435a40f82be..54c787cd6efb 100644
+--- a/fs/notify/fanotify/fanotify.c
++++ b/fs/notify/fanotify/fanotify.c
+@@ -353,6 +353,7 @@ struct fanotify_event *fanotify_alloc_event(struct fsnotify_group *group,
+ 	gfp_t gfp = GFP_KERNEL_ACCOUNT;
+ 	struct inode *id = fanotify_fid_inode(inode, mask, data, data_type);
+ 	const struct path *path = fsnotify_data_path(data, data_type);
++	struct mem_cgroup *oldmemcg;
+ 
+ 	/*
+ 	 * For queues with unlimited length lost events are not expected and
+@@ -366,7 +367,7 @@ struct fanotify_event *fanotify_alloc_event(struct fsnotify_group *group,
+ 		gfp |= __GFP_RETRY_MAYFAIL;
+ 
+ 	/* Whoever is interested in the event, pays for the allocation. */
+-	memalloc_use_memcg(group->memcg);
++	oldmemcg = memalloc_use_memcg(group->memcg);
+ 
+ 	if (fanotify_is_perm_event(mask)) {
+ 		struct fanotify_perm_event *pevent;
+@@ -451,7 +452,7 @@ struct fanotify_event *fanotify_alloc_event(struct fsnotify_group *group,
+ 		}
+ 	}
+ out:
+-	memalloc_unuse_memcg();
++	memalloc_use_memcg(oldmemcg);
+ 	return event;
+ }
+ 
+diff --git a/fs/notify/inotify/inotify_fsnotify.c b/fs/notify/inotify/inotify_fsnotify.c
+index 2ebc89047153..d27c6e83cea6 100644
+--- a/fs/notify/inotify/inotify_fsnotify.c
++++ b/fs/notify/inotify/inotify_fsnotify.c
+@@ -69,6 +69,7 @@ int inotify_handle_event(struct fsnotify_group *group,
+ 	int ret;
+ 	int len = 0;
+ 	int alloc_len = sizeof(struct inotify_event_info);
++	struct mem_cgroup *oldmemcg;
+ 
+ 	if (WARN_ON(fsnotify_iter_vfsmount_mark(iter_info)))
+ 		return 0;
+@@ -93,9 +94,9 @@ int inotify_handle_event(struct fsnotify_group *group,
+ 	 * trigger OOM killer in the target monitoring memcg as it may have
+ 	 * security repercussion.
+ 	 */
+-	memalloc_use_memcg(group->memcg);
++	oldmemcg = memalloc_use_memcg(group->memcg);
+ 	event = kmalloc(alloc_len, GFP_KERNEL_ACCOUNT | __GFP_RETRY_MAYFAIL);
+-	memalloc_unuse_memcg();
++	memalloc_use_memcg(oldmemcg);
+ 
+ 	if (unlikely(!event)) {
+ 		/*
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index c49257a3b510..95e8bfb0cab1 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -316,31 +316,21 @@ static inline void memalloc_nocma_restore(unsigned int flags)
+  * __GFP_ACCOUNT allocations till the end of the scope will be charged to the
+  * given memcg.
+  *
+- * NOTE: This function is not nesting safe.
++ * NOTE: This function can nest. Users must save the return value and
++ * reset the previous value after their own charging scope is over
+  */
+-static inline void memalloc_use_memcg(struct mem_cgroup *memcg)
++static inline struct mem_cgroup *
++memalloc_use_memcg(struct mem_cgroup *memcg)
+ {
+-	WARN_ON_ONCE(current->active_memcg);
++	struct mem_cgroup *old = current->active_memcg;
+ 	current->active_memcg = memcg;
+-}
+-
+-/**
+- * memalloc_unuse_memcg - Ends the remote memcg charging scope.
+- *
+- * This function marks the end of the remote memcg charging scope started by
+- * memalloc_use_memcg().
+- */
+-static inline void memalloc_unuse_memcg(void)
+-{
+-	current->active_memcg = NULL;
++	return old;
+ }
+ #else
+-static inline void memalloc_use_memcg(struct mem_cgroup *memcg)
+-{
+-}
+-
+-static inline void memalloc_unuse_memcg(void)
++static inline struct mem_cgroup *
++memalloc_use_memcg(struct mem_cgroup *memcg)
+ {
++	return NULL;
+ }
+ #endif
+ 
+-- 
+2.24.1
 
-Regards,
-Markus
