@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C046C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A306C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D457C2085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BD5020B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099226;
-	bh=RnPKc0SdEG8Si+1C69T0KswytITC9KksuBC2LYRxA1A=;
+	s=default; t=1588099232;
+	bh=0sOTq4s30ooeuz5sbfz4jOZfhxiqi4UmbeG8VQrVoww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BYddHIN06/oVa6iYi8eShffhyNtSzxAf9lAIJilSwvr7ObvvS5FDvTHTIhVfw8BfA
-	 MxduNQwGjPU30xQ8WDdvpeJ2vlN2J2qJtO+dBKKbXElVmFKS18uLPgur4p5l1n82Rz
-	 4yfIYztunvCy4jC02jW1icE5Zyu16W5oxFEfwE8E=
+	b=Ex3tes9ulLPW88Yg/68m408sQJIFq7cVYzxIWE6hWV1xiVhsRV8vvdARylY3Sl1Pg
+	 Cv+qnZL199mDHL4h6xYsuj6AIszJW4RpCACSDSTJzuVmm8AfxdGmBbxmOKvUgm0JtZ
+	 ciRF+DN3SQol9poeevMAA0iZbuniOw1FyqL9XRSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730924AbgD1SkZ (ORCPT
+        id S1729745AbgD1Skb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:40:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58016 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:40:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730262AbgD1SjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:39:14 -0400
+        id S1728628AbgD1SjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:39:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D13A120730;
-        Tue, 28 Apr 2020 18:39:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33FFB20575;
+        Tue, 28 Apr 2020 18:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099153;
-        bh=RnPKc0SdEG8Si+1C69T0KswytITC9KksuBC2LYRxA1A=;
+        s=default; t=1588099143;
+        bh=0sOTq4s30ooeuz5sbfz4jOZfhxiqi4UmbeG8VQrVoww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G1WweFJEK8H0r38962yhAf1WfByilEtenXlpkF6B68rU0wZxgZjShihEw8lqAphCQ
-         LXuVVlZ2u58LluPhuVvaBUkRhZW8x+Gbh0/Z3QFT+fj9HkUrfyckF2PlnMGl2EC9pB
-         4RHVpMuQjKVQLJ1qg3uSn3FqDfiUETZEAw/WlyLQ=
+        b=DDwbKPRjpFjUA3dqNsQtWm1fqhAt04CVeid5qgmiROAqEtzqfiVsN6rV8DZ4aR+W8
+         8D2JZ2qxkdtz3Es3tVV/4QhahVan11+bQAGtIzc1KbsB5wN6JiOJiy0YvcheUSXGzy
+         +Xj7zjMwbtoHtoOL72wgwS4m566LZSYbml0Keqoc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 5.6 163/167] Revert "serial: uartps: Register own uart console and driver structures"
-Date:   Tue, 28 Apr 2020 20:25:39 +0200
-Message-Id: <20200428182246.220843811@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH 5.6 137/167] vt: dont use kmalloc() for the unicode screen buffer
+Date:   Tue, 28 Apr 2020 20:25:13 +0200
+Message-Id: <20200428182242.833106263@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
 References: <20200428182225.451225420@linuxfoundation.org>
@@ -59,215 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Simek <michal.simek@xilinx.com>
+From: Nicolas Pitre <nico@fluxnic.net>
 
-commit 18cc7ac8a28e28cd005c2475f52576cfe10cabfb upstream.
+commit 9a98e7a80f95378c9ee0c644705e3b5aa54745f1 upstream.
 
-This reverts commit 024ca329bfb9a948f76eaff3243e21b7e70182f2.
+Even if the actual screen size is bounded in vc_do_resize(), the unicode
+buffer is still a little more than twice the size of the glyph buffer
+and may exceed MAX_ORDER down the kmalloc() path. This can be triggered
+from user space.
 
-As Johan says, this driver needs a lot more work and these changes are
-only going in the wrong direction:
-  https://lkml.kernel.org/r/20190523091839.GC568@localhost
+Since there is no point having a physically contiguous buffer here,
+let's avoid the above issue as well as reducing pressure on high order
+allocations by using vmalloc() instead.
 
-Reported-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1ee35667e36a8efddee381df5fe495ad65f4d15c.1585905873.git.michal.simek@xilinx.com
+Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
+Cc: <stable@vger.kernel.org>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.2003282214210.2671@knanqh.ubzr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/xilinx_uartps.c |   95 +++++++++++++++----------------------
- 1 file changed, 40 insertions(+), 55 deletions(-)
+ drivers/tty/vt/vt.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -27,6 +27,7 @@
- #define CDNS_UART_TTY_NAME	"ttyPS"
- #define CDNS_UART_NAME		"xuartps"
- #define CDNS_UART_MAJOR		0	/* use dynamic node allocation */
-+#define CDNS_UART_MINOR		0	/* works best with devtmpfs */
- #define CDNS_UART_NR_PORTS	16
- #define CDNS_UART_FIFO_SIZE	64	/* FIFO size */
- #define CDNS_UART_REGISTER_SPACE	0x1000
-@@ -1144,6 +1145,8 @@ static const struct uart_ops cdns_uart_o
- #endif
- };
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -81,6 +81,7 @@
+ #include <linux/errno.h>
+ #include <linux/kd.h>
+ #include <linux/slab.h>
++#include <linux/vmalloc.h>
+ #include <linux/major.h>
+ #include <linux/mm.h>
+ #include <linux/console.h>
+@@ -350,7 +351,7 @@ static struct uni_screen *vc_uniscr_allo
+ 	/* allocate everything in one go */
+ 	memsize = cols * rows * sizeof(char32_t);
+ 	memsize += rows * sizeof(char32_t *);
+-	p = kmalloc(memsize, GFP_KERNEL);
++	p = vmalloc(memsize);
+ 	if (!p)
+ 		return NULL;
  
-+static struct uart_driver cdns_uart_uart_driver;
-+
- #ifdef CONFIG_SERIAL_XILINX_PS_UART_CONSOLE
- /**
-  * cdns_uart_console_putchar - write the character to the FIFO buffer
-@@ -1283,6 +1286,16 @@ static int cdns_uart_console_setup(struc
+@@ -366,7 +367,7 @@ static struct uni_screen *vc_uniscr_allo
  
- 	return uart_set_options(port, co, baud, parity, bits, flow);
- }
-+
-+static struct console cdns_uart_console = {
-+	.name	= CDNS_UART_TTY_NAME,
-+	.write	= cdns_uart_console_write,
-+	.device	= uart_console_device,
-+	.setup	= cdns_uart_console_setup,
-+	.flags	= CON_PRINTBUFFER,
-+	.index	= -1, /* Specified on the cmdline (e.g. console=ttyPS ) */
-+	.data	= &cdns_uart_uart_driver,
-+};
- #endif /* CONFIG_SERIAL_XILINX_PS_UART_CONSOLE */
- 
- #ifdef CONFIG_PM_SLEEP
-@@ -1414,6 +1427,9 @@ static const struct of_device_id cdns_ua
- };
- MODULE_DEVICE_TABLE(of, cdns_uart_of_match);
- 
-+/* Temporary variable for storing number of instances */
-+static int instances;
-+
- /**
-  * cdns_uart_probe - Platform driver probe
-  * @pdev: Pointer to the platform device structure
-@@ -1427,11 +1443,6 @@ static int cdns_uart_probe(struct platfo
- 	struct resource *res;
- 	struct cdns_uart *cdns_uart_data;
- 	const struct of_device_id *match;
--	struct uart_driver *cdns_uart_uart_driver;
--	char *driver_name;
--#ifdef CONFIG_SERIAL_XILINX_PS_UART_CONSOLE
--	struct console *cdns_uart_console;
--#endif
- 
- 	cdns_uart_data = devm_kzalloc(&pdev->dev, sizeof(*cdns_uart_data),
- 			GFP_KERNEL);
-@@ -1441,12 +1452,6 @@ static int cdns_uart_probe(struct platfo
- 	if (!port)
- 		return -ENOMEM;
- 
--	cdns_uart_uart_driver = devm_kzalloc(&pdev->dev,
--					     sizeof(*cdns_uart_uart_driver),
--					     GFP_KERNEL);
--	if (!cdns_uart_uart_driver)
--		return -ENOMEM;
--
- 	/* Look for a serialN alias */
- 	id = of_alias_get_id(pdev->dev.of_node, "serial");
- 	if (id < 0)
-@@ -1457,50 +1462,25 @@ static int cdns_uart_probe(struct platfo
- 		return -ENODEV;
- 	}
- 
--	/* There is a need to use unique driver name */
--	driver_name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%s%d",
--				     CDNS_UART_NAME, id);
--	if (!driver_name)
--		return -ENOMEM;
--
--	cdns_uart_uart_driver->owner = THIS_MODULE;
--	cdns_uart_uart_driver->driver_name = driver_name;
--	cdns_uart_uart_driver->dev_name	= CDNS_UART_TTY_NAME;
--	cdns_uart_uart_driver->major = CDNS_UART_MAJOR;
--	cdns_uart_uart_driver->minor = id;
--	cdns_uart_uart_driver->nr = 1;
--
-+	if (!cdns_uart_uart_driver.state) {
-+		cdns_uart_uart_driver.owner = THIS_MODULE;
-+		cdns_uart_uart_driver.driver_name = CDNS_UART_NAME;
-+		cdns_uart_uart_driver.dev_name = CDNS_UART_TTY_NAME;
-+		cdns_uart_uart_driver.major = CDNS_UART_MAJOR;
-+		cdns_uart_uart_driver.minor = CDNS_UART_MINOR;
-+		cdns_uart_uart_driver.nr = CDNS_UART_NR_PORTS;
- #ifdef CONFIG_SERIAL_XILINX_PS_UART_CONSOLE
--	cdns_uart_console = devm_kzalloc(&pdev->dev, sizeof(*cdns_uart_console),
--					 GFP_KERNEL);
--	if (!cdns_uart_console)
--		return -ENOMEM;
--
--	strncpy(cdns_uart_console->name, CDNS_UART_TTY_NAME,
--		sizeof(cdns_uart_console->name));
--	cdns_uart_console->index = id;
--	cdns_uart_console->write = cdns_uart_console_write;
--	cdns_uart_console->device = uart_console_device;
--	cdns_uart_console->setup = cdns_uart_console_setup;
--	cdns_uart_console->flags = CON_PRINTBUFFER;
--	cdns_uart_console->data = cdns_uart_uart_driver;
--	cdns_uart_uart_driver->cons = cdns_uart_console;
-+		cdns_uart_uart_driver.cons = &cdns_uart_console;
- #endif
- 
--	rc = uart_register_driver(cdns_uart_uart_driver);
--	if (rc < 0) {
--		dev_err(&pdev->dev, "Failed to register driver\n");
--		return rc;
-+		rc = uart_register_driver(&cdns_uart_uart_driver);
-+		if (rc < 0) {
-+			dev_err(&pdev->dev, "Failed to register driver\n");
-+			return rc;
-+		}
- 	}
- 
--	cdns_uart_data->cdns_uart_driver = cdns_uart_uart_driver;
--
--	/*
--	 * Setting up proper name_base needs to be done after uart
--	 * registration because tty_driver structure is not filled.
--	 * name_base is 0 by default.
--	 */
--	cdns_uart_uart_driver->tty_driver->name_base = id;
-+	cdns_uart_data->cdns_uart_driver = &cdns_uart_uart_driver;
- 
- 	match = of_match_node(cdns_uart_of_match, pdev->dev.of_node);
- 	if (match && match->data) {
-@@ -1578,6 +1558,7 @@ static int cdns_uart_probe(struct platfo
- 	port->ops	= &cdns_uart_ops;
- 	port->fifosize	= CDNS_UART_FIFO_SIZE;
- 	port->has_sysrq = IS_ENABLED(CONFIG_SERIAL_XILINX_PS_UART_CONSOLE);
-+	port->line	= id;
- 
- 	/*
- 	 * Register the port.
-@@ -1609,7 +1590,7 @@ static int cdns_uart_probe(struct platfo
- 		console_port = port;
- #endif
- 
--	rc = uart_add_one_port(cdns_uart_uart_driver, port);
-+	rc = uart_add_one_port(&cdns_uart_uart_driver, port);
- 	if (rc) {
- 		dev_err(&pdev->dev,
- 			"uart_add_one_port() failed; err=%i\n", rc);
-@@ -1619,12 +1600,15 @@ static int cdns_uart_probe(struct platfo
- #ifdef CONFIG_SERIAL_XILINX_PS_UART_CONSOLE
- 	/* This is not port which is used for console that's why clean it up */
- 	if (console_port == port &&
--	    !(cdns_uart_uart_driver->cons->flags & CON_ENABLED))
-+	    !(cdns_uart_uart_driver.cons->flags & CON_ENABLED))
- 		console_port = NULL;
- #endif
- 
- 	cdns_uart_data->cts_override = of_property_read_bool(pdev->dev.of_node,
- 							     "cts-override");
-+
-+	instances++;
-+
- 	return 0;
- 
- err_out_pm_disable:
-@@ -1640,8 +1624,8 @@ err_out_clk_disable:
- err_out_clk_dis_pclk:
- 	clk_disable_unprepare(cdns_uart_data->pclk);
- err_out_unregister_driver:
--	uart_unregister_driver(cdns_uart_data->cdns_uart_driver);
--
-+	if (!instances)
-+		uart_unregister_driver(cdns_uart_data->cdns_uart_driver);
- 	return rc;
- }
- 
-@@ -1676,7 +1660,8 @@ static int cdns_uart_remove(struct platf
- 		console_port = NULL;
- #endif
- 
--	uart_unregister_driver(cdns_uart_data->cdns_uart_driver);
-+	if (!--instances)
-+		uart_unregister_driver(cdns_uart_data->cdns_uart_driver);
- 	return rc;
+ static void vc_uniscr_set(struct vc_data *vc, struct uni_screen *new_uniscr)
+ {
+-	kfree(vc->vc_uni_screen);
++	vfree(vc->vc_uni_screen);
+ 	vc->vc_uni_screen = new_uniscr;
  }
  
 
