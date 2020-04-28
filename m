@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12633C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B113C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDFBE20730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF44E2085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099495;
-	bh=ZXxlLXot414EDHihifIljWOjv3p9nYRitp0q9iYYUfw=;
+	s=default; t=1588099498;
+	bh=aXQgl0ZNfrWXCQb6+w320BVyC8lkIiecHEU16PpLw9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KTTCFxu+tJ2Gk6mxcmBk11hzi98v7fQdW3LTBoVMgwqfzYIXrv9P0TxHGioScpuEa
-	 wkywPNH6rhH3ztd7bukCy6lYetmQ9bvUxFHhb67NeTITcg8RdBv41ZW5Q9WfWYio90
-	 nHLABbhNeOTZlPrvQqIskL1jNoLienxfZlV8f/oo=
+	b=M+iPzYrQR1OIod++sIFYq4CK9BVZbmRTwUodNBeTFe2KiGcterxFT8hZbvpRdX8oC
+	 fPFl3KIATJ6IDeVKn2DXYjTap6V2tsK8iLlZrMN1pl69qS5rYZC2ylucTmIU9iRqoz
+	 6KIFS+idBbXNtD1/kiudYZsrnzPy87EJEI6pcD+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731543AbgD1Soy (ORCPT
+        id S1731550AbgD1So5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:44:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37940 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:44:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730788AbgD1Sow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:44:52 -0400
+        id S1729239AbgD1Soy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:44:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC2102137B;
-        Tue, 28 Apr 2020 18:44:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51BA720730;
+        Tue, 28 Apr 2020 18:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099491;
-        bh=ZXxlLXot414EDHihifIljWOjv3p9nYRitp0q9iYYUfw=;
+        s=default; t=1588099493;
+        bh=aXQgl0ZNfrWXCQb6+w320BVyC8lkIiecHEU16PpLw9E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bj49/1/0+dB//pSwQXAIIzjIY47DVhefsgfDWcDPsehM0n2d1EO3dqwKvEBKmYBU1
-         wmNo0PIuRkga6atIShjJdAzvn/8X5+RJmiDJAr2OOEiV71xUxKNahgk30QsK6u6tb9
-         sypTsYDn4dJoBbooHm/tk3mR6VGagfFLlfa+3BdM=
+        b=cHc5ISelz6MqifANtVCbC0iuz2Cx/CW8CGV+MSEzs/ihgTV/lKG64NSjUYBFgV0UY
+         mvrj0arbhEWW56DdWvlvFXp/ZCEgY0pXD6Cw9nhjgA7mjQmKUUahL2YmlYWvcSPzqf
+         MqBNWHxIb2YjSfF9oJkAe74YZm+LTJW2IZ939sHk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 5.4 143/168] staging: vt6656: Fix pairwise key entry save.
-Date:   Tue, 28 Apr 2020 20:25:17 +0200
-Message-Id: <20200428182249.782846027@linuxfoundation.org>
+Subject: [PATCH 5.4 144/168] staging: vt6656: Power save stop wake_up_count wrap around.
+Date:   Tue, 28 Apr 2020 20:25:18 +0200
+Message-Id: <20200428182249.874550070@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -60,84 +60,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Malcolm Priestley <tvboxspy@gmail.com>
 
-commit 0b59f10b1d8fe8d50944f21f5d403df9303095a8 upstream.
+commit ea81c3486442f4643fc9825a2bb1b430b829bccd upstream.
 
-The problem is that the group key was saved as VNT_KEY_DEFAULTKEY
-was over written by the VNT_KEY_GROUP_ADDRESS index.
+conf.listen_interval can sometimes be zero causing wake_up_count
+to wrap around up to many beacons too late causing
+CTRL-EVENT-BEACON-LOSS as in.
 
-mac80211 could not clear the mac_addr in the default key.
+wpa_supplicant[795]: message repeated 45 times: [..CTRL-EVENT-BEACON-LOSS ]
 
-The VNT_KEY_DEFAULTKEY is not necesscary so remove it and set as
-VNT_KEY_GROUP_ADDRESS.
-
-mac80211 can clear any key using vnt_mac_disable_keyentry.
-
-Fixes: f9ef05ce13e4 ("staging: vt6656: Fix pairwise key for non station modes")
+Fixes: 43c93d9bf5e2 ("staging: vt6656: implement power saving code.")
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/da2f7e7f-1658-1320-6eee-0f55770ca391@gmail.com
+Link: https://lore.kernel.org/r/fce47bb5-7ca6-7671-5094-5c6107302f2b@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6656/key.c      |   14 +++-----------
- drivers/staging/vt6656/main_usb.c |    6 +++++-
- 2 files changed, 8 insertions(+), 12 deletions(-)
+ drivers/staging/vt6656/int.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/vt6656/key.c
-+++ b/drivers/staging/vt6656/key.c
-@@ -83,9 +83,6 @@ static int vnt_set_keymode(struct ieee80
- 	case  VNT_KEY_PAIRWISE:
- 		key_mode |= mode;
- 		key_inx = 4;
--		/* Don't save entry for pairwise key for station mode */
--		if (priv->op_mode == NL80211_IFTYPE_STATION)
--			clear_bit(entry, &priv->key_entry_inuse);
- 		break;
- 	default:
- 		return -EINVAL;
-@@ -109,7 +106,6 @@ static int vnt_set_keymode(struct ieee80
- int vnt_set_keys(struct ieee80211_hw *hw, struct ieee80211_sta *sta,
- 		 struct ieee80211_vif *vif, struct ieee80211_key_conf *key)
- {
--	struct ieee80211_bss_conf *conf = &vif->bss_conf;
- 	struct vnt_private *priv = hw->priv;
- 	u8 *mac_addr = NULL;
- 	u8 key_dec_mode = 0;
-@@ -151,16 +147,12 @@ int vnt_set_keys(struct ieee80211_hw *hw
- 		key->flags |= IEEE80211_KEY_FLAG_GENERATE_IV;
- 	}
+--- a/drivers/staging/vt6656/int.c
++++ b/drivers/staging/vt6656/int.c
+@@ -145,7 +145,8 @@ void vnt_int_process_data(struct vnt_pri
+ 				priv->wake_up_count =
+ 					priv->hw->conf.listen_interval;
  
--	if (key->flags & IEEE80211_KEY_FLAG_PAIRWISE) {
-+	if (key->flags & IEEE80211_KEY_FLAG_PAIRWISE)
- 		vnt_set_keymode(hw, mac_addr, key, VNT_KEY_PAIRWISE,
- 				key_dec_mode, true);
--	} else {
--		vnt_set_keymode(hw, mac_addr, key, VNT_KEY_DEFAULTKEY,
-+	else
-+		vnt_set_keymode(hw, mac_addr, key, VNT_KEY_GROUP_ADDRESS,
- 				key_dec_mode, true);
+-			--priv->wake_up_count;
++			if (priv->wake_up_count)
++				--priv->wake_up_count;
  
--		vnt_set_keymode(hw, (u8 *)conf->bssid, key,
--				VNT_KEY_GROUP_ADDRESS, key_dec_mode, true);
--	}
--
- 	return 0;
- }
---- a/drivers/staging/vt6656/main_usb.c
-+++ b/drivers/staging/vt6656/main_usb.c
-@@ -866,8 +866,12 @@ static int vnt_set_key(struct ieee80211_
- 			return -EOPNOTSUPP;
- 		break;
- 	case DISABLE_KEY:
--		if (test_bit(key->hw_key_idx, &priv->key_entry_inuse))
-+		if (test_bit(key->hw_key_idx, &priv->key_entry_inuse)) {
- 			clear_bit(key->hw_key_idx, &priv->key_entry_inuse);
-+
-+			vnt_mac_disable_keyentry(priv, key->hw_key_idx);
-+		}
-+
- 	default:
- 		break;
- 	}
+ 			/* Turn on wake up to listen next beacon */
+ 			if (priv->wake_up_count == 1)
 
 
