@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACD2C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 686BBC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49C3520575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BCD2206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099421;
-	bh=HYsQ9JIU9Fsat3k7Hi/+HkG+kVINNcgWMUAtSB2DgDo=;
+	s=default; t=1588099424;
+	bh=uXlG7zY2R4nQkPMFSwhbfOPelFo9eV73KDF2pnAMz+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zIfZJFcvKycGyxRJeKyI+om08PM5Tx3fBCqAmgqkBI6oh7lGUvo73Kjw8J5bSBFJr
-	 Vyhvc4IvchCKb3fXCYBctmWa6/YWrgizmyE+ihXsKlGJ90AvbCjn97ZmPW8v/etxBG
-	 8dOhXsulos+MG8XYuzaYUhNbhKICR6035lFvypUs=
+	b=yGrJbscht4g4IoEqsAxC2cAN3mDR8qPLVixITeNi/dBC5kdfmVtIx90rUGBn994sV
+	 zW45EPrCRR5d4TXlV2KPxYqsehWQz250wUmmyebrp4XUOh60eVCBEzHPWSup2mFjsI
+	 PKLNEyGgEn8Wb5hQpNMAUIp4U7UcLXvGh+gf8CV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731272AbgD1Snk (ORCPT
+        id S1731280AbgD1Snn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:43:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36058 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:43:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731260AbgD1Sng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:43:36 -0400
+        id S1731260AbgD1Snl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:43:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15C8820575;
-        Tue, 28 Apr 2020 18:43:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E56AE20575;
+        Tue, 28 Apr 2020 18:43:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099415;
-        bh=HYsQ9JIU9Fsat3k7Hi/+HkG+kVINNcgWMUAtSB2DgDo=;
+        s=default; t=1588099420;
+        bh=uXlG7zY2R4nQkPMFSwhbfOPelFo9eV73KDF2pnAMz+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UY6/uZbIF0tnZqUPXbhrrWHFv9w6+UvQxvKIbB4Ar8n4cWNfAdXSdP47ttcJtuEzn
-         mtpHP0D8l1uOIFJmYqJkF1QYlvnzbuNi1HfYJM9x8QKwjyj74OABp35fLgON+ZsmN5
-         PJr2gk6eN/OCFrQFKYKZ+q2miOEKjbJJAwvoU/AM=
+        b=RVtBiVaaXw/YQIjSrLNdXMN6IQEJeLrEHZI/vMydC5IsuTgGH3W8A2sWp6UubuAjF
+         06RbelcwO+uQ/gdncXF77ewoneUh/0wjiEjtW9a2wwppJjppDJB8ptgEuBFVs0eBn6
+         vpOnCBu1Z3g1dM8Dkl6foM5QOm3ZdaTbcgO8QAxM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Paul Zimmerman <pauldzim@gmail.com>,
-        Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 5.4 099/168] USB: hub: Fix handling of connect changes during sleep
-Date:   Tue, 28 Apr 2020 20:24:33 +0200
-Message-Id: <20200428182244.871650455@linuxfoundation.org>
+        stable@vger.kernel.org, Amit Singh Tomar <amittomer25@gmail.com>
+Subject: [PATCH 5.4 101/168] tty: serial: owl: add "much needed" clk_prepare_enable()
+Date:   Tue, 28 Apr 2020 20:24:35 +0200
+Message-Id: <20200428182245.145709355@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -60,78 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Amit Singh Tomar <amittomer25@gmail.com>
 
-commit 9f952e26295d977dbfc6fedeaf8c4f112c818d37 upstream.
+commit abf42d2f333b21bf8d33b2fbb8a85fa62037ac01 upstream.
 
-Commit 8099f58f1ecd ("USB: hub: Don't record a connect-change event
-during reset-resume") wasn't very well conceived.  The problem it
-tried to fix was that if a connect-change event occurred while the
-system was asleep (such as a device disconnecting itself from the bus
-when it is suspended and then reconnecting when it resumes)
-requiring a reset-resume during the system wakeup transition, the hub
-port's change_bit entry would remain set afterward.  This would cause
-the hub driver to believe another connect-change event had occurred
-after the reset-resume, which was wrong and would lead the driver to
-send unnecessary requests to the device (which could interfere with a
-firmware update).
+commit 8ba92cf59335 ("arm64: dts: actions: s700: Add Clock Management Unit")
+breaks the UART on Cubieboard7-lite (based on S700 SoC), This is due to the
+fact that generic clk routine clk_disable_unused() disables the gate clks,
+and that in turns disables OWL UART (but UART driver never enables it). To
+prove this theory, Andre suggested to use "clk_ignore_unused" in kernel
+commnd line and it worked (Kernel happily lands into RAMFS world :)).
 
-The commit tried to fix this by not setting the change_bit during the
-wakeup.  But this was the wrong thing to do; it means that when a
-device is unplugged while the system is asleep, the hub driver doesn't
-realize anything has happened: The change_bit flag which would tell it
-to handle the disconnect event is clear.
+This commit fix this up by adding clk_prepare_enable().
 
-The commit needs to be reverted and the problem fixed in a different
-way.  Fortunately an alternative solution was noted in the commit's
-Changelog: We can continue to set the change_bit entry in
-hub_activate() but then clear it when a reset-resume occurs.  That way
-the the hub driver will see the change_bit when a device is
-disconnected but won't see it when the device is still present.
-
-That's what this patch does.
-
-Reported-and-tested-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Fixes: 8099f58f1ecd ("USB: hub: Don't record a connect-change event during reset-resume")
-Tested-by: Paul Zimmerman <pauldzim@gmail.com>
-CC: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2004221602480.11262-100000@iolanthe.rowland.org
+Fixes: 8ba92cf59335 ("arm64: dts: actions: s700: Add Clock Management Unit")
+Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1587067917-1400-1-git-send-email-amittomer25@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/hub.c |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/tty/serial/owl-uart.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -1222,6 +1222,11 @@ static void hub_activate(struct usb_hub
- #ifdef CONFIG_PM
- 			udev->reset_resume = 1;
- #endif
-+			/* Don't set the change_bits when the device
-+			 * was powered off.
-+			 */
-+			if (test_bit(port1, hub->power_bits))
-+				set_bit(port1, hub->change_bits);
- 
- 		} else {
- 			/* The power session is gone; tell hub_wq */
-@@ -3087,6 +3092,15 @@ static int check_port_resume_type(struct
- 		if (portchange & USB_PORT_STAT_C_ENABLE)
- 			usb_clear_port_feature(hub->hdev, port1,
- 					USB_PORT_FEAT_C_ENABLE);
-+
-+		/*
-+		 * Whatever made this reset-resume necessary may have
-+		 * turned on the port1 bit in hub->change_bits.  But after
-+		 * a successful reset-resume we want the bit to be clear;
-+		 * if it was on it would indicate that something happened
-+		 * following the reset-resume.
-+		 */
-+		clear_bit(port1, hub->change_bits);
+--- a/drivers/tty/serial/owl-uart.c
++++ b/drivers/tty/serial/owl-uart.c
+@@ -680,6 +680,12 @@ static int owl_uart_probe(struct platfor
+ 		return PTR_ERR(owl_port->clk);
  	}
  
- 	return status;
++	ret = clk_prepare_enable(owl_port->clk);
++	if (ret) {
++		dev_err(&pdev->dev, "could not enable clk\n");
++		return ret;
++	}
++
+ 	owl_port->port.dev = &pdev->dev;
+ 	owl_port->port.line = pdev->id;
+ 	owl_port->port.type = PORT_OWL;
+@@ -712,6 +718,7 @@ static int owl_uart_remove(struct platfo
+ 
+ 	uart_remove_one_port(&owl_uart_driver, &owl_port->port);
+ 	owl_uart_ports[pdev->id] = NULL;
++	clk_disable_unprepare(owl_port->clk);
+ 
+ 	return 0;
+ }
 
 
