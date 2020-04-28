@@ -2,101 +2,108 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B98BCC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC42C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92612206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E17BF2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:15:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MIiTkf5i"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eCyi1KQ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgD1EHn (ORCPT
+        id S1726284AbgD1EPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 00:07:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49868 "EHLO
+        Tue, 28 Apr 2020 00:15:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbgD1EHn (ORCPT
+        with ESMTP id S1725275AbgD1EPQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 00:07:43 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8603CC03C1A9;
-        Mon, 27 Apr 2020 21:07:41 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id x25so1131356wmc.0;
-        Mon, 27 Apr 2020 21:07:41 -0700 (PDT)
+        Tue, 28 Apr 2020 00:15:16 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 895C8C03C1AC
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 21:15:16 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id e6so554039pjt.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 21:15:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LSKLs+uH/nXJXVRVF9wLRK1/PW3bgortq15p+iwdX9I=;
-        b=MIiTkf5iKNGuIMwLqKyx7DEjjzjvUMovzaXbiUoVaDKJsqXWuXjZKOk6xVZn1TEcb4
-         CG9VeNNsaNMZtZTWr5WC3tggHz5Yrqh60YqPa/x9Nq12tHykkv3QZ85KIA23PYf+H8IE
-         y8AIvBGTfLEzFc5DXqOr2Csynmv+ZUbsiTzbu7ctaMgyxTwh4K0Qe6ivUXthNJg9kRfF
-         9UnsRxGnkJAtYSccPc6eppmNzy19Ertmn6uu7oV2KGm5ymZVBlJDX9DlsdMPUD/3r5T3
-         Nu8nZKJvnE3Uh2KVpRJSQrdnI4rBHKULgoEdhZ6acfBwHzJrTBcdib6cCyndKg4JxLCo
-         kr2g==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fb3EFsD2bZpljctpIMaRg7cg/sbgMTBtFSzZZIOBqzw=;
+        b=eCyi1KQ3lLoj8jPxo2jyoo7NdvnJH7nnPkJ1Jset9stBRdLpSEU7kxDiN7XoQbC2n5
+         76d+P+/c8AOhBdAhuDhKNrp7FSqN2KYvsOfnkEBXBUJzSCNfH+T6pEUQbOsbuO5kUaDU
+         EGEWQSkmsxbNwrbWzgbSjKg9KuOUnAtxNuyrcsK8PknrRSv6euVUd6NrtskGcig3Bh3D
+         bZqxyhNQYoU3KvxdlWGeNJeN/2K7WdjfwrayDGnCJ+TsX6M66ob0c4fq8QYC0g9vlbib
+         V4eeqbhjtculExwj3ZZ9a6MgP/z0HLynANqmHcxqKJpP0DxQczO3Pf1W8wCusE0kM2dB
+         eOBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LSKLs+uH/nXJXVRVF9wLRK1/PW3bgortq15p+iwdX9I=;
-        b=KLYRqHscVnOk2ewdcYG0tPw+AXHNf1XSvymLJDYKvzm5l+Ck3AGmouANXpdN65x6Zd
-         bjGv6UUcZqfj7vVYFoFK2vcXqSJ8iF80s92CT+fsgYPRqomfCwN17qHk/7IjpWNLX/or
-         E9wjBkyb8NF4J3Kv3WMb7STGuVDjCAL3HsVlzzzKC96KIK6CD2fgkaroU9fP6OZ1s/VE
-         4/bp8m2Q9PDKiP1ZI9LenKp6/Ou21ISfo7gninfjac2LHppne7xOpeMDOtCJ3NJvgQbZ
-         8ZkZNOXxB8AXx3ksV0V0QeJfVMBWkCFtCpmXuL8G9mNljREnNCwbWBD03xziUiyqLS5r
-         ziXQ==
-X-Gm-Message-State: AGi0Pua/Pl2L1oY4vgXLyuq4NT5FCeuXgZdSpSkFDAw4VUeJ0DxH6Fin
-        bQ85vWpecJC8oL4gRcMM2Zn4ANVD
-X-Google-Smtp-Source: APiQypJ1OE0RgimC8V/dkU/ECeKwZbO3NfvMvHXCoBylN36m0uekgF9eW5JEO2yKMXgSnWky0nm0lQ==
-X-Received: by 2002:a7b:c944:: with SMTP id i4mr2344325wml.144.1588046859892;
-        Mon, 27 Apr 2020 21:07:39 -0700 (PDT)
-Received: from [10.230.188.26] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id b22sm2427152wmj.1.2020.04.27.21.07.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 21:07:38 -0700 (PDT)
-Subject: Re: [PATCH-next] net: phy: bcm54140: Make a bunch of functions static
-To:     ChenTao <chentao107@huawei.com>, andrew@lunn.ch,
-        hkallweit1@gmail.com
-Cc:     linux@armlinux.org.uk, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200428014804.54944-1-chentao107@huawei.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <2cc91b0a-049e-95db-b9d9-21da25b022d9@gmail.com>
-Date:   Mon, 27 Apr 2020 21:07:36 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fb3EFsD2bZpljctpIMaRg7cg/sbgMTBtFSzZZIOBqzw=;
+        b=I1n7yt512IFF9V2jFhbGQawVUd08LfQZ0RFmEF3smGqcT3dC4y4mFtkWrMhlaujnmy
+         iw9MSoLjngdr5y1QMq8X+B6Bm9H5d0f1fqbW87nExPr18uD8dwhYJW2AB6bslLColR8s
+         SUpCrQEL3Cokzm/HEjAMaEEHAS/IC8fugA9JbhetDoQizA5AJOFEOfPeB7eJeIFFWiAf
+         lzaZ/D/mJu/fD4Kg/jYzUjty6rkKUxntVcxOn990JzEyZE2dWrBDoMBYpKWLhmSqjHXo
+         xSFBHdK6kKX/SX0fkVZlCvTUFjfvDuavmeK04h9qwCwfohfWe7m2Z0780qT4/FGRPX3R
+         zUfg==
+X-Gm-Message-State: AGi0PuYHpriw+iFHI2n7D0oKmqN81rPtSns96EnYS8wWm8JR1UMibk+H
+        p8hM7+3x++hlyLeGGX9JlxYOmQ==
+X-Google-Smtp-Source: APiQypIZIqGkq8jg1GEKCshppipgTRGbqcy6ym6OtKkwWJ2Zpsd+pPaFRNwGK8ZQXD4A6aPYj+OHgg==
+X-Received: by 2002:a17:90a:7a83:: with SMTP id q3mr2490951pjf.162.1588047315839;
+        Mon, 27 Apr 2020 21:15:15 -0700 (PDT)
+Received: from localhost ([122.171.118.46])
+        by smtp.gmail.com with ESMTPSA id 28sm733064pjh.43.2020.04.27.21.15.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 Apr 2020 21:15:15 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 09:45:10 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] cpufreq: dt: Add support for r8a7742
+Message-ID: <20200428041510.ezypspd5givv6pv2@vireshk-i7>
+References: <1587992010-7203-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <20200428014804.54944-1-chentao107@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587992010-7203-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/27/2020 6:48 PM, ChenTao wrote:
-> Fix the following warning:
+On 27-04-20, 13:53, Lad Prabhakar wrote:
+> Add the compatible strings for supporting the generic cpufreq driver on
+> the Renesas RZ/G1H (R8A7742) SoC.
 > 
-> drivers/net/phy/bcm54140.c:663:5: warning:
-> symbol 'bcm54140_did_interrupt' was not declared. Should it be static?
-> drivers/net/phy/bcm54140.c:672:5: warning:
-> symbol 'bcm54140_ack_intr' was not declared. Should it be static?
-> drivers/net/phy/bcm54140.c:684:5: warning:
-> symbol 'bcm54140_config_intr' was not declared. Should it be static?
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: ChenTao <chentao107@huawei.com>
+> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+> index cb9db16..148aa66 100644
+> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
+> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+> @@ -53,6 +53,7 @@ static const struct of_device_id whitelist[] __initconst = {
+>  	{ .compatible = "renesas,r7s72100", },
+>  	{ .compatible = "renesas,r8a73a4", },
+>  	{ .compatible = "renesas,r8a7740", },
+> +	{ .compatible = "renesas,r8a7742", },
+>  	{ .compatible = "renesas,r8a7743", },
+>  	{ .compatible = "renesas,r8a7744", },
+>  	{ .compatible = "renesas,r8a7745", },
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Applied. Thanks.
+
 -- 
-Florian
+viresh
