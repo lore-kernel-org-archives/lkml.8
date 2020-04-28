@@ -2,126 +2,70 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B015C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD90C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62F4F2051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E394206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgD1Ge2 (ORCPT
+        id S1726778AbgD1Gee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 02:34:28 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45578 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbgD1Ge2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 02:34:28 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 5A18127E99E;
-        Tue, 28 Apr 2020 07:34:26 +0100 (BST)
-Date:   Tue, 28 Apr 2020 08:34:23 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     masonccyang@mxic.com.tw
-Cc:     "Pratyush Yadav" <me@yadavpratyush.com>, broonie@kernel.org,
-        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        miquel.raynal@bootlin.com, "Pratyush Yadav" <p.yadav@ti.com>,
-        richard@nod.at, tudor.ambarus@microchip.com, vigneshr@ti.com
-Subject: Re: [PATCH v2 0/5] mtd: spi-nor: Add support for Octal 8D-8D-8D
- mode
-Message-ID: <20200428083423.4fafd187@collabora.com>
-In-Reply-To: <OF18214CA5.6A9B2B30-ON48258558.001D894C-48258558.002249E0@mxic.com.tw>
-References: <1587451187-6889-1-git-send-email-masonccyang@mxic.com.tw>
-        <20200421092328.129308f6@collabora.com>
-        <20200427175536.2mmei2fy6f7bg6jm@yadavpratyush.com>
-        <OF18214CA5.6A9B2B30-ON48258558.001D894C-48258558.002249E0@mxic.com.tw>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 28 Apr 2020 02:34:34 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3321 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726391AbgD1Gee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 02:34:34 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 978DB28D69898C69969B;
+        Tue, 28 Apr 2020 14:34:28 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Tue, 28 Apr 2020
+ 14:34:20 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <Julia.Lawall@inria.fr>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>
+Subject: [PATCH] usb: gadget: omap_udc: remove unneeded semicolon
+Date:   Tue, 28 Apr 2020 14:33:46 +0800
+Message-ID: <20200428063346.9867-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 14:14:31 +0800
-masonccyang@mxic.com.tw wrote:
+Fix the following coccicheck warning:
 
-> Hi Pratyush,
-> 
-> > > On Tue, 21 Apr 2020 14:39:42 +0800
-> > > Mason Yang <masonccyang@mxic.com.tw> wrote:
-> > >   
-> > > > Hello,
-> > > > 
-> > > > This is repost of patchset from Boris Brezillon's
-> > > > [RFC,00/18] mtd: spi-nor: Proposal for 8-8-8 mode support [1].  
-> > > 
-> > > I only quickly went through the patches you sent and saying it's a
-> > > repost of the RFC is a bit of a lie. You completely ignored the state
-> > > tracking I was trying to do to avoid leaving the flash in 8D mode when
-> > > suspending/resetting the board, and I think that part is crucial. If I
-> > > remember correctly, we already had this discussion so I must say I'm a
-> > > bit disappointed.
-> > > 
-> > > Can you sync with Pratyush? I think his series [1] is better in that   
-> it
-> > > tries to restore the flash in single-SPI mode before suspend (it's
-> > > missing the shutdown case, but that can be easily added I think). Of
-> > > course that'd be even better to have proper state tracking at the SPI
-> > > NOR level.  
-> > 
-> > Hi Mason,
-> > 
-> > I posted a re-roll of my series here [0]. Could you please base your 
-> > changes on top of it? Let me know if the series is missing something you   
-> 
-> > need.
-> > 
-> > [0]    
-> https://lore.kernel.org/linux-mtd/20200424184410.8578-1-p.yadav@ti.com/
-> 
-> 
-> Our mx25uw51245g supports BFPT DWORD-18,19 and 20 data and xSPI profile 
-> 1.0,
-> and it comply with BFPT DWORD-19, octal mode enable sequences by write CFG 
-> Reg2 
-> with instruction 0x72. Therefore, I can't apply your patches.
-> 
-> I quickly went through your patches but can't reply them in each your 
-> patches.
+drivers/usb/gadget/udc/omap_udc.c:2579:2-3: Unneeded semicolon
 
-Why?!! Aren't you registered to the MTD mailing list? Sorry but having
-reviews outside of the original thread is far from ideal. Please find a
-way to reply to the original patchset.
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+---
+ drivers/usb/gadget/udc/omap_udc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> i.e,.
-> 1) [v4,03/16] spi: spi-mem: allow specifying a command's extension
-> 
-> -                                u8 opcode;
-> +                                u16 opcode;
-> 
-> big/little Endian issue, right?
-
-There's no endianness issue since it's SPI controller responsibility to
-interpret this field.
+diff --git a/drivers/usb/gadget/udc/omap_udc.c b/drivers/usb/gadget/udc/omap_udc.c
+index bf87c6c0d7f6..4139da885651 100644
+--- a/drivers/usb/gadget/udc/omap_udc.c
++++ b/drivers/usb/gadget/udc/omap_udc.c
+@@ -2576,7 +2576,7 @@ omap_ep_setup(char *name, u8 addr, u8 type,
+ 	case USB_ENDPOINT_XFER_INT:
+ 		ep->ep.caps.type_int = true;
+ 		break;
+-	};
++	}
  
-> why not just u8 ext_opcode;
-
-Because I see the ext_ext_code comimg, and it's also more consistent
-with the addr field if we use an u16 and a number of cmd cycles.
-
-> No any impact for exist code and actually only xSPI device use extension 
-> command.
-
-And extending the opcode field to an u16 has no impact either.
+ 	if (addr & USB_DIR_IN)
+ 		ep->ep.caps.dir_in = true;
+-- 
+2.21.1
 
