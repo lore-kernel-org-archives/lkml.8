@@ -2,100 +2,72 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B364C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B52F2C83006
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7457E206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EAF4206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:06:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgD1NG0 (ORCPT
+        id S1726946AbgD1NGd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:06:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:51134 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726746AbgD1NG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:06:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 145BA31B;
-        Tue, 28 Apr 2020 06:06:25 -0700 (PDT)
-Received: from [10.57.33.170] (unknown [10.57.33.170])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 710363F68F;
-        Tue, 28 Apr 2020 06:06:21 -0700 (PDT)
-Subject: Re: [PATCH v3 02/16] mfd: mfd-core: Don't overwrite the dma_mask of
- the child device
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Tue, 28 Apr 2020 09:06:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726909AbgD1NGb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 09:06:31 -0400
+Received: from wp148.webpack.hosteurope.de (wp148.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:849b::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29163C03C1A9;
+        Tue, 28 Apr 2020 06:06:31 -0700 (PDT)
+Received: from ip1f126570.dynamic.kabel-deutschland.de ([31.18.101.112] helo=roelofs-mbp.fritz.box); authenticated
+        by wp148.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1jTPw8-00082n-TE; Tue, 28 Apr 2020 15:06:08 +0200
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH] lan743x: Added fixed_phy support
+From:   Roelof Berg <rberg@berg-solutions.de>
+In-Reply-To: <20200427215209.GP1250287@lunn.ch>
+Date:   Tue, 28 Apr 2020 15:06:07 +0200
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Bryan Whitehead <bryan.whitehead@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Russell King <linux@armlinux.org.uk>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-3-michael@walle.cc>
- <20200428124548.GS185537@smile.fi.intel.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <3cd3705a-4f48-6a46-e869-3ee11dc17323@arm.com>
-Date:   Tue, 28 Apr 2020 14:06:20 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200428124548.GS185537@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <1AD2250A-45D3-43D7-926C-829094F1721A@berg-solutions.de>
+References: <rberg@berg-solutions.de>
+ <20200425234320.32588-1-rberg@berg-solutions.de>
+ <20200426143116.GC1140627@lunn.ch>
+ <6C2E44BB-F4D1-4BC3-9FCB-55F01DA4A3C9@berg-solutions.de>
+ <20200427215209.GP1250287@lunn.ch>
+To:     Andrew Lunn <andrew@lunn.ch>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
+X-bounce-key: webpack.hosteurope.de;rberg@berg-solutions.de;1588079191;8ccd58ed;
+X-HE-SMSGID: 1jTPw8-00082n-TE
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-28 1:45 pm, Andy Shevchenko wrote:
-> On Thu, Apr 23, 2020 at 07:45:29PM +0200, Michael Walle wrote:
->> Commit cdfee5623290 ("driver core: initialize a default DMA mask for
->> platform device") initialize the DMA of a platform device. But if the
->> parent doesn't have a dma_mask set, for example if it's an I2C device,
->> the dma_mask of the child platform device will be set to zero again.
->> Which leads to many "DMA mask not set" warnings, if the MFD cell has the
->> of_compatible property set.
+
+> What is the MCU? ARM?
+
+Yes, i.mx6 with ARM.
+
 > 
-> I'm wondering why parent doesn't have it.
-
-Because the parent isn't on a DMA-capable bus, and thus really shouldn't 
-have a valid DMA configuration ever.
-
-> I remember we have explicit patches in the past for buses such as PCI and AMBA
-> to set default DMA mask for all physical devices on the respective bus, of
-> course they can individually override it later.
+>> […]
 > 
-> So, this seems to me a paper over the real issue (absence of default DMA mask
-> where it's needed) and devices should explicitly define it if they disagree
-> with default.
+> If you are using ARM, device tree is the way to go.
+> 	  Andrew
 > 
-> If I'm wrong, you really need elaborate commit message much better.
 
-The problem here is that MFD children are created as platform devices 
-(regardless of what their parent is) and assigned an of_node, at which 
-point they look pretty much indistinguishable from SoC devices created 
-by the of_platform code, that *do* have to be assumed to be DMA-capable 
-to prevent ~90% of existing devicetrees from breaking.
+Sounds reasonable, I’ll move the fixed_phy configuration for lan743x from .config to the device tree, thanks a lot Andrew.
 
-Of course the real fundamental issue is the platform bus itself, but 
-it's way too late to fix that :(
-
-Robin.
+Roelof
