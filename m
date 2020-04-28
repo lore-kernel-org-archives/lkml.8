@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E687AC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB984C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5EDE2085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA2C520575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099307;
-	bh=dBQ0T4PkvmwXpAxEz8xIZFwhmeRg2Eec4TtdC+P/jQw=;
+	s=default; t=1588099314;
+	bh=3+ofRS7RE8FekExK6l1Hstl3mc2F4usOKMv2qO5BNHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MHAd6fW8Jk/f35D69aPLzZ/bRINMyFIuMDx+mnRZXoBno8u4wRe1ZjS4UucGcNr6r
-	 FvyRAKW45ZHqFCB5T0CCLG2x8/j/k7rTPQJUc8UfIKAWpEZSfVaIzWi5J6ev9/TOK3
-	 hekOOo/0zCHcu92OuKb1POLcAE6ceIkA4GfLV85E=
+	b=kJi9lFknn1Gocneg9eTAIFuP4Ie6ws+EGWILURR4LBRqGjH7dQkgaR2mCsflKubq2
+	 87F9Tn7nlNgj6EzlzPvSh+wgcRnmPh0i2WKGAZxs5bbj9KH5WWeUAVDNvEAgDS3ZI/
+	 e9jHEscyitbKgSi17pSpYBKKj+N2TLc2nNUrq/cY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731028AbgD1Slq (ORCPT
+        id S1731041AbgD1Slx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:41:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33330 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:41:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731023AbgD1Sln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:41:43 -0400
+        id S1729804AbgD1Sls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:41:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 901F220730;
-        Tue, 28 Apr 2020 18:41:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 760AA2076A;
+        Tue, 28 Apr 2020 18:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099303;
-        bh=dBQ0T4PkvmwXpAxEz8xIZFwhmeRg2Eec4TtdC+P/jQw=;
+        s=default; t=1588099307;
+        bh=3+ofRS7RE8FekExK6l1Hstl3mc2F4usOKMv2qO5BNHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=luhDITGLLDUbpsDf51WjvjbutXKA7ASMliPAUYOJSb5g/oazD/7FWheMLgYxVKaTX
-         +rdDbTl0pZYSv2xPHynwKL0X2kzwSMl2V2GgQ+PER38a4k225fMXwTKb3asfySC26v
-         MzhIN8ROx7CGulnwxzTThvA99yA3H1MNr5EQZiGQ=
+        b=yeeEkuipv3yOFFIKvT8tcPAABirfAn8zVWfGzw1GaK6RsIEuC9BK9CR/0zXyHY6FW
+         Ph+RvJQ5KUfpGHnrhIR5yVpts0J//3hDRSDat7zPcr6i/Ap+VrSkTB7RWaEJ5qSqNt
+         ntjPlLZlGmAOK7g7ygIj88WK/QswPYAITw2P6adk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.4 091/168] iio: xilinx-xadc: Fix ADC-B powerdown
-Date:   Tue, 28 Apr 2020 20:24:25 +0200
-Message-Id: <20200428182243.844610381@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
+Subject: [PATCH 4.19 105/131] tty: rocket, avoid OOB access
+Date:   Tue, 28 Apr 2020 20:25:17 +0200
+Message-Id: <20200428182238.369940644@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,42 +58,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit e44ec7794d88f918805d700240211a9ec05ed89d upstream.
+commit 7127d24372bf23675a36edc64d092dc7fd92ebe8 upstream.
 
-The check for shutting down the second ADC is inverted. This causes it to
-be powered down when it should be enabled. As a result channels that are
-supposed to be handled by the second ADC return invalid conversion results.
+init_r_port can access pc104 array out of bounds. pc104 is a 2D array
+defined to have 4 members. Each member has 8 submembers.
+* we can have more than 4 (PCI) boards, i.e. [board] can be OOB
+* line is not modulo-ed by anything, so the first line on the second
+  board can be 4, on the 3rd 12 or alike (depending on previously
+  registered boards). It's zero only on the first line of the first
+  board. So even [line] can be OOB, quite soon (with the 2nd registered
+  board already).
 
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Fixes: bdc8cda1d010 ("iio:adc: Add Xilinx XADC driver")
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+This code is broken for ages, so just avoid the OOB accesses and don't
+try to fix it as we would need to find out the correct line number. Use
+the default: RS232, if we are out.
+
+Generally, if anyone needs to set the interface types, a module parameter
+is past the last thing that should be used for this purpose. The
+parameters' description says it's for ISA cards anyway.
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Cc: stable <stable@vger.kernel.org>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Link: https://lore.kernel.org/r/20200417105959.15201-2-jslaby@suse.cz
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/xilinx-xadc-core.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/tty/rocket.c |   25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
 
---- a/drivers/iio/adc/xilinx-xadc-core.c
-+++ b/drivers/iio/adc/xilinx-xadc-core.c
-@@ -722,13 +722,14 @@ static int xadc_power_adc_b(struct xadc
- {
- 	uint16_t val;
+--- a/drivers/tty/rocket.c
++++ b/drivers/tty/rocket.c
+@@ -632,18 +632,21 @@ init_r_port(int board, int aiop, int cha
+ 	tty_port_init(&info->port);
+ 	info->port.ops = &rocket_port_ops;
+ 	info->flags &= ~ROCKET_MODE_MASK;
+-	switch (pc104[board][line]) {
+-	case 422:
+-		info->flags |= ROCKET_MODE_RS422;
+-		break;
+-	case 485:
+-		info->flags |= ROCKET_MODE_RS485;
+-		break;
+-	case 232:
+-	default:
++	if (board < ARRAY_SIZE(pc104) && line < ARRAY_SIZE(pc104_1))
++		switch (pc104[board][line]) {
++		case 422:
++			info->flags |= ROCKET_MODE_RS422;
++			break;
++		case 485:
++			info->flags |= ROCKET_MODE_RS485;
++			break;
++		case 232:
++		default:
++			info->flags |= ROCKET_MODE_RS232;
++			break;
++		}
++	else
+ 		info->flags |= ROCKET_MODE_RS232;
+-		break;
+-	}
  
-+	/* Powerdown the ADC-B when it is not needed. */
- 	switch (seq_mode) {
- 	case XADC_CONF1_SEQ_SIMULTANEOUS:
- 	case XADC_CONF1_SEQ_INDEPENDENT:
--		val = XADC_CONF2_PD_ADC_B;
-+		val = 0;
- 		break;
- 	default:
--		val = 0;
-+		val = XADC_CONF2_PD_ADC_B;
- 		break;
- 	}
- 
+ 	info->intmask = RXF_TRIG | TXFIFO_MT | SRC_INT | DELTA_CD | DELTA_CTS | DELTA_DSR;
+ 	if (sInitChan(ctlp, &info->channel, aiop, chan) == 0) {
 
 
