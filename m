@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28819C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C89C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 046D9206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E988206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:23:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="na1g+X5k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V4vrhTp+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbgD1GXv (ORCPT
+        id S1726524AbgD1GX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 02:23:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42670 "EHLO
+        Tue, 28 Apr 2020 02:23:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726463AbgD1GXq (ORCPT
+        by vger.kernel.org with ESMTP id S1726355AbgD1GXz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 02:23:46 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3C3EC03C1A9;
-        Mon, 27 Apr 2020 23:23:45 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id l20so1886467pgb.11;
-        Mon, 27 Apr 2020 23:23:45 -0700 (PDT)
+        Tue, 28 Apr 2020 02:23:55 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E713DC03C1AA;
+        Mon, 27 Apr 2020 23:23:54 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id d24so7940090pll.8;
+        Mon, 27 Apr 2020 23:23:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=oQfltYNxiPjEH77FfOHpysAJQ9qhxIF+HiwY5HDOYEg=;
-        b=na1g+X5kfYLb3TSDeKHaz9nHOucdv8OBXFIYXvDOTe0/LDDQpP7S+ngzWqWkMFF8P2
-         +EEtmI+zlu5C5KBfm+/htgzONU+jf+GKEevYCdSstpf4OdbGsOkKxQkllYcIo4O48fP1
-         ImqWa7uJzyJnKm2g5QXpUIULaxlE3wFTK6lsqHvXD8fteSAD7W7Qfl4/1M9lfTTWT1se
-         7qX+eMYgrSEjkAq2N7m1qtZ2l9t4RxG23M19y5H/vtsW0y3+8QD7anTOgi265fWt0NsD
-         bI3FDiKz3OVg9gMj93babGkkJ/vsUXNABFShyI4SwL3OGZNLuEj6gKOIjtd1iK8eM6is
-         wSZw==
+        bh=dASjRXsAg6WzAae5CXACCO5RVvFv8dsS43RJHmTgzTs=;
+        b=V4vrhTp+G2YuztWgbTcOG0kzgrR8Rjq27TRZj4WM+JH7ENf17cEXehRD3QYP8/7Io9
+         TRzTzUTcGwsFd8wED53Al5Lf1e9d6fEci2seRTv/bsTzredAB3ZKNrNTPkD1jkw6TRwg
+         Pj9e5lD/VwwVjGqPTWTa+6FvuJ8NZC2vT/DQW8Sp6NPERTXP8XtybizKH9Jh5sIxGy7I
+         mj0Gak2SH8YCpk3XP2AeT6W606c8NNb5UgBZpLOj+uCk7r2eTebi8COcq2ybxhTvX5GR
+         nMvZdgTkhKo64RckR88JvNc6mkMCmOywxBrDdTARontdbMxvHjbNWblRrPkMYdOTgq0U
+         GH0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=oQfltYNxiPjEH77FfOHpysAJQ9qhxIF+HiwY5HDOYEg=;
-        b=XPNdUzPZ3PI3/lY1dpfOTZ7vIp2LXMoK1DUVeXngFo0zkoaL3CEIkZdQTJcSYM45FZ
-         3BJ9zPXHeycVC4tYJSifv9jT8vbFl6L3xVLALHL15eYennZ3U+tYtU3I6hXWqdcL0KjL
-         XWoahoRJlwd9bk5kggWwRvKbcCKs2a9V3/G4beHERx3Jl8dJxg6cbZRQhfSCte0u1ETi
-         Vd4QawSKBpOX1VeGQHMQt4YUL1eO8PdaEBQZXYViqEC7FwW99VUJybtMhoo1Zrs0rQFf
-         8q32Mnh46xNvmLwxpJYee1tPeK7N7z5CRlUKPM803ZLtXJcaXeunk/hHdjBEYyJbHLMG
-         xliQ==
-X-Gm-Message-State: AGi0PubsgvZbKZGXRy8/JXhgZt++gGMQVbtq648ov1W3oKwC5e7SI3d2
-        pPDOah5/4TaOCl11bAy2rwYlQvOR
-X-Google-Smtp-Source: APiQypKp1hI4VWMsNDTx5ZJ2YDneopaWSbNacQZzEDnVuNIoRpzvPLBXOQoCT+NgPVoa0SdmA4aqAg==
-X-Received: by 2002:a63:d806:: with SMTP id b6mr2196905pgh.72.1588055025038;
-        Mon, 27 Apr 2020 23:23:45 -0700 (PDT)
+        bh=dASjRXsAg6WzAae5CXACCO5RVvFv8dsS43RJHmTgzTs=;
+        b=ZqMtS/8E8KHXDwr9xGPiD+kpmCWK2riqIhbhOWrBsPPkCZlMDvZW+g1SllLRhM/vLz
+         XoMTDEg9opTYcPwIUzdVevDtYGVJhI6kfzsQz+vg3qNjCzTiFsyZmz9vxRHH+tZ/y/Rt
+         4KumQUOkLZq3lfP/MXjj9wRx3GxdAy4j4/STWZk8sbapr9XB6XV09IQ/sQkvGLoFFPOC
+         a3safBPn7TsyG35CiC+AezmbriiwHnOB3ccdBs6R6B2XrihFd9qqDHXXNO7M/soXfp34
+         4D2c4Kxd1A+CR41IKZJ/tVdfZ35eVSBUyNz/E5sRfKx91X93Sla1Dpx578TrP2wghq4a
+         e9Jw==
+X-Gm-Message-State: AGi0PuYFTAU36ZegTlSLiVkgjKz3WqkfGjrv/TAcl06uqLbuFpL57R8F
+        bVf4/tBnyh4Fo1xbE9G06hz3DVFp
+X-Google-Smtp-Source: APiQypJ2dyHcYY2mJa3PGa2d76ad4Tri/9ZR7Ip0tE6jflFVGWTKZMBwmKayZxw5sbVUvfCPgkM9ng==
+X-Received: by 2002:a17:90a:b293:: with SMTP id c19mr3093890pjr.22.1588055030740;
+        Mon, 27 Apr 2020 23:23:50 -0700 (PDT)
 Received: from localhost.localdomain ([103.7.29.6])
-        by smtp.googlemail.com with ESMTPSA id u188sm14183071pfu.33.2020.04.27.23.23.42
+        by smtp.googlemail.com with ESMTPSA id u188sm14183071pfu.33.2020.04.27.23.23.48
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 Apr 2020 23:23:44 -0700 (PDT)
+        Mon, 27 Apr 2020 23:23:50 -0700 (PDT)
 From:   Wanpeng Li <kernellwp@gmail.com>
 X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
@@ -69,9 +69,9 @@ Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>,
         Haiwei Li <lihaiwei@tencent.com>
-Subject: [PATCH v4 2/7] KVM: X86: Enable fastpath when APICv is enabled
-Date:   Tue, 28 Apr 2020 14:23:24 +0800
-Message-Id: <1588055009-12677-3-git-send-email-wanpengli@tencent.com>
+Subject: [PATCH v4 4/7] KVM: X86: Introduce kvm_vcpu_exit_request() helper
+Date:   Tue, 28 Apr 2020 14:23:26 +0800
+Message-Id: <1588055009-12677-5-git-send-email-wanpengli@tencent.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1588055009-12677-1-git-send-email-wanpengli@tencent.com>
 References: <1588055009-12677-1-git-send-email-wanpengli@tencent.com>
@@ -82,44 +82,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wanpeng Li <wanpengli@tencent.com>
 
-We can't observe benefit from single target IPI fastpath when APICv is
-disabled, let's just enable IPI and Timer fastpath when APICv is enabled
-for now.
+Introduce kvm_vcpu_exit_request() helper, we need to check some conditions
+before enter guest again immediately, we skip invoking the exit handler and
+go through full run loop if complete fastpath but there is stuff preventing
+we enter guest again immediately.
 
 Tested-by: Haiwei Li <lihaiwei@tencent.com>
 Cc: Haiwei Li <lihaiwei@tencent.com>
 Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
- arch/x86/kvm/svm/svm.c | 2 +-
- arch/x86/kvm/vmx/vmx.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kvm/vmx/vmx.c |  3 +++
+ arch/x86/kvm/x86.c     | 10 ++++++++--
+ arch/x86/kvm/x86.h     |  1 +
+ 3 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 8f8fc65..1e7220e 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -3344,7 +3344,7 @@ static void svm_cancel_injection(struct kvm_vcpu *vcpu)
- 
- static enum exit_fastpath_completion svm_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
- {
--	if (!is_guest_mode(vcpu) &&
-+	if (!is_guest_mode(vcpu) && vcpu->arch.apicv_active &&
- 	    to_svm(vcpu)->vmcb->control.exit_code == SVM_EXIT_MSR &&
- 	    to_svm(vcpu)->vmcb->control.exit_info_1)
- 		return handle_fastpath_set_msr_irqoff(vcpu);
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 9b5adb4..f207004 100644
+index e12a42e..24cadf4 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6585,7 +6585,7 @@ void vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp)
+@@ -6777,6 +6777,9 @@ static fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 	vmx_complete_interrupts(vmx);
  
- static enum exit_fastpath_completion vmx_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
- {
--	if (!is_guest_mode(vcpu)) {
-+	if (!is_guest_mode(vcpu) && vcpu->arch.apicv_active) {
- 		switch (to_vmx(vcpu)->exit_reason) {
- 		case EXIT_REASON_MSR_WRITE:
- 			return handle_fastpath_set_msr_irqoff(vcpu);
+ 	exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
++	if (exit_fastpath == EXIT_FASTPATH_REENTER_GUEST &&
++	    kvm_vcpu_exit_request(vcpu))
++		exit_fastpath = EXIT_FASTPATH_NOP;
+ 
+ 	return exit_fastpath;
+ }
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index df38b40..afe052c 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1581,6 +1581,13 @@ int kvm_emulate_wrmsr(struct kvm_vcpu *vcpu)
+ }
+ EXPORT_SYMBOL_GPL(kvm_emulate_wrmsr);
+ 
++bool kvm_vcpu_exit_request(struct kvm_vcpu *vcpu)
++{
++	return vcpu->mode == EXITING_GUEST_MODE || kvm_request_pending(vcpu) ||
++		need_resched() || signal_pending(current);
++}
++EXPORT_SYMBOL_GPL(kvm_vcpu_exit_request);
++
+ /*
+  * The fast path for frequent and performance sensitive wrmsr emulation,
+  * i.e. the sending of IPI, sending IPI early in the VM-Exit flow reduces
+@@ -8366,8 +8373,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 	if (kvm_lapic_enabled(vcpu) && vcpu->arch.apicv_active)
+ 		kvm_x86_ops.sync_pir_to_irr(vcpu);
+ 
+-	if (vcpu->mode == EXITING_GUEST_MODE || kvm_request_pending(vcpu)
+-	    || need_resched() || signal_pending(current)) {
++	if (kvm_vcpu_exit_request(vcpu)) {
+ 		vcpu->mode = OUTSIDE_GUEST_MODE;
+ 		smp_wmb();
+ 		local_irq_enable();
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index 2f02dc0..6eb62e9 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -364,5 +364,6 @@ static inline bool kvm_dr7_valid(u64 data)
+ void kvm_load_guest_xsave_state(struct kvm_vcpu *vcpu);
+ void kvm_load_host_xsave_state(struct kvm_vcpu *vcpu);
+ u64 kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu);
++bool kvm_vcpu_exit_request(struct kvm_vcpu *vcpu);
+ 
+ #endif
 -- 
 2.7.4
 
