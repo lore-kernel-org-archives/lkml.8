@@ -2,56 +2,58 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 569C6C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1FBC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F1E321707
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF2F620BED
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098614;
-	bh=YL6nTEoKaObranvHZ0CHYwaKUbCoDoNoOlaCNDWQbdw=;
+	s=default; t=1588098623;
+	bh=xcrADyEDg2EnQ7Xpdv5Hhi8g3f0y/fZgGhF4abv15RU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s50NfCIfVDjOVZ8lFyposm6PTkJrhQfzjooAApqMJFKWkcbM2LX+skho56ic36tXL
-	 OEYOoR2SbR05KTIdqaOHZH6dwgnoaB5xyyXsjcRQIt9mV0tFIeCn5q9B7TjsvHJ5Zr
-	 tTwIm2oHrA3Wq0CbIJAvwVpFDLwqhIY/QHNysgtU=
+	b=GW4hHJqPbSiV8LwtCVXObTXSpGC5bH5aZh0bhy1NK3ii5/UxlD1M2ryfDoDZg4B9N
+	 AnEsJxFqBhgx0MLxqHYMymy4C/IDSQ21eT6si5N4elPUCScBTkHk5WGHL6gAKha7qB
+	 NR2lXSQw8savi6TfnwTTXyKXkm4lcp6WTP7znZLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728953AbgD1SaM (ORCPT
+        id S1728995AbgD1SaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:30:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44536 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:30:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729459AbgD1SaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:30:08 -0400
+        id S1728966AbgD1SaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:30:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E675720B80;
-        Tue, 28 Apr 2020 18:30:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D08D21744;
+        Tue, 28 Apr 2020 18:30:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098607;
-        bh=YL6nTEoKaObranvHZ0CHYwaKUbCoDoNoOlaCNDWQbdw=;
+        s=default; t=1588098614;
+        bh=xcrADyEDg2EnQ7Xpdv5Hhi8g3f0y/fZgGhF4abv15RU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aa/wYpgB2ngZd3jKNQjl5tc9ZoC1Tn23VjGuR0Cvqf3zn2h/OPyQWx30OcQRGbF9m
-         G9DvR4bivMCz5Rwo7C1zY7KwjRwsbdqjZrvEfDG5jxagAvkxnanWnitn08uCUhbegE
-         sUxya1EpApC1IsRrgY1dBoU32Sr+nQcVFxOR3em0=
+        b=fDwhMeF96KBJLT3EGRnzbrJBVmh7Hx6XAPTyG7TMCLoFIXh9KkVq7fVIvJkPStcfL
+         4HxvBnHT7lKgW5+CtOD6OI1cwKEVowuSo9/RgMqFZEjjLf+t6it4KPImbE3faGp9Dq
+         SjTAC9pzxeeGqsp9oJWyUmqVZ+kOkuxcq8/uUJRg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.6 084/167] iio: adc: stm32-adc: fix sleep in atomic context
-Date:   Tue, 28 Apr 2020 20:24:20 +0200
-Message-Id: <20200428182235.606738542@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 028/131] pwm: bcm2835: Dynamically allocate base
+Date:   Tue, 28 Apr 2020 20:24:00 +0200
+Message-Id: <20200428182228.656110733@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,82 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olivier Moysan <olivier.moysan@st.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit e2042d2936dfc84e9c600fe9b9d0039ca0e54b7d upstream.
+[ Upstream commit 2c25b07e5ec119cab609e41407a1fb3fa61442f5 ]
 
-This commit fixes the following error:
-"BUG: sleeping function called from invalid context at kernel/irq/chip.c"
+The newer 2711 and 7211 chips have two PWM controllers and failure to
+dynamically allocate the PWM base would prevent the second PWM
+controller instance being probed for succeeding with an -EEXIST error
+from alloc_pwms().
 
-In DMA mode suppress the trigger irq handler, and make the buffer
-transfers directly in DMA callback, instead.
-
-Fixes: 2763ea0585c9 ("iio: adc: stm32: add optional dma support")
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: e5a06dc5ac1f ("pwm: Add BCM2835 PWM driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/stm32-adc.c |   31 ++++++++++++++++++++++++++++---
- 1 file changed, 28 insertions(+), 3 deletions(-)
+ drivers/pwm/pwm-bcm2835.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/iio/adc/stm32-adc.c
-+++ b/drivers/iio/adc/stm32-adc.c
-@@ -1418,8 +1418,30 @@ static unsigned int stm32_adc_dma_residu
- static void stm32_adc_dma_buffer_done(void *data)
- {
- 	struct iio_dev *indio_dev = data;
-+	struct stm32_adc *adc = iio_priv(indio_dev);
-+	int residue = stm32_adc_dma_residue(adc);
-+
-+	/*
-+	 * In DMA mode the trigger services of IIO are not used
-+	 * (e.g. no call to iio_trigger_poll).
-+	 * Calling irq handler associated to the hardware trigger is not
-+	 * relevant as the conversions have already been done. Data
-+	 * transfers are performed directly in DMA callback instead.
-+	 * This implementation avoids to call trigger irq handler that
-+	 * may sleep, in an atomic context (DMA irq handler context).
-+	 */
-+	dev_dbg(&indio_dev->dev, "%s bufi=%d\n", __func__, adc->bufi);
-+
-+	while (residue >= indio_dev->scan_bytes) {
-+		u16 *buffer = (u16 *)&adc->rx_buf[adc->bufi];
+diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
+index db001cba937fd..e340ad79a1ec9 100644
+--- a/drivers/pwm/pwm-bcm2835.c
++++ b/drivers/pwm/pwm-bcm2835.c
+@@ -166,6 +166,7 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
  
--	iio_trigger_poll_chained(indio_dev->trig);
-+		iio_push_to_buffers(indio_dev, buffer);
-+
-+		residue -= indio_dev->scan_bytes;
-+		adc->bufi += indio_dev->scan_bytes;
-+		if (adc->bufi >= adc->rx_buf_sz)
-+			adc->bufi = 0;
-+	}
- }
- 
- static int stm32_adc_dma_start(struct iio_dev *indio_dev)
-@@ -1845,6 +1867,7 @@ static int stm32_adc_probe(struct platfo
- {
- 	struct iio_dev *indio_dev;
- 	struct device *dev = &pdev->dev;
-+	irqreturn_t (*handler)(int irq, void *p) = NULL;
- 	struct stm32_adc *adc;
- 	int ret;
- 
-@@ -1911,9 +1934,11 @@ static int stm32_adc_probe(struct platfo
- 	if (ret < 0)
- 		return ret;
- 
-+	if (!adc->dma_chan)
-+		handler = &stm32_adc_trigger_handler;
-+
- 	ret = iio_triggered_buffer_setup(indio_dev,
--					 &iio_pollfunc_store_time,
--					 &stm32_adc_trigger_handler,
-+					 &iio_pollfunc_store_time, handler,
- 					 &stm32_adc_buffer_setup_ops);
- 	if (ret) {
- 		dev_err(&pdev->dev, "buffer setup failed\n");
+ 	pc->chip.dev = &pdev->dev;
+ 	pc->chip.ops = &bcm2835_pwm_ops;
++	pc->chip.base = -1;
+ 	pc->chip.npwm = 2;
+ 	pc->chip.of_xlate = of_pwm_xlate_with_flags;
+ 	pc->chip.of_pwm_n_cells = 3;
+-- 
+2.20.1
+
 
 
