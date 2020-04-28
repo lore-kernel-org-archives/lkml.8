@@ -2,55 +2,52 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D46C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 630A0C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62E73208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37D2D20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098491;
-	bh=K+Mwk65K/La2MVoY7m+jquMfV89IRWr8P72jJHI8WZ0=;
+	s=default; t=1588098493;
+	bh=PDn7z5TjoQE7tSSAS//QLkvjBMmkHUo1fAqHroZxP34=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tXU+NyGV1Yntu83PMzpC5zsfmcbfImfyCZNxIMX5C9bQeQUYS81BIQOlGN+uA9Ual
-	 oz9fpe6CIzEBqoVhZ8jpBuWy3x/Avpu75v4UC469vvdS+NVbc8tMgk9/9VWg+WcH3b
-	 191Nr7jnauq2/iVHd+NpcHJm+eXUL+gmMIx1+uNk=
+	b=yvUVkovym3gCtUiufXl9LAAl+f3clBZWTFzxqD9oeJm17NWHWE2lfvTev9cXScrsp
+	 ncCrQ6VOCUdgPH9cgyG5LVRRBYVWgUGbCAJmIWliDYCUUzVnpPtLA+jMHuNkvu3Tw7
+	 1Yk0epeLxFWaPoEyxF1EOhWyAcIEYr4vW3nPo+60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbgD1S2I (ORCPT
+        id S1729152AbgD1S2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:28:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40332 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:28:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729096AbgD1S14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:27:56 -0400
+        id S1729111AbgD1S2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:28:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6151A20B80;
-        Tue, 28 Apr 2020 18:27:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37DCF20730;
+        Tue, 28 Apr 2020 18:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098475;
-        bh=K+Mwk65K/La2MVoY7m+jquMfV89IRWr8P72jJHI8WZ0=;
+        s=default; t=1588098480;
+        bh=PDn7z5TjoQE7tSSAS//QLkvjBMmkHUo1fAqHroZxP34=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cymiya41KNRl6bt6JyDD38V47N/rTsJH8ExtcXSbp+pIVGBQdcgutghckhWwAe/kF
-         ARmZZjCF8DDH0td0LSmZyqvgirJwYOQcilgIRGx0MhADdFJGwaLVn6eufq6KbCM7/s
-         c+AtF9MyEeVhHt3Wrmz6D5V34hMLilmnJ3nO2K2k=
+        b=fl5neKqG2hCPuwXtD+DguT+0EAViexcFMc4fbabTeweWTdfnmXqS44ZSV5dWQ+Qru
+         zbJeX/l01UYSpQ6D2xXOwjREdbwmEfihW8wC6HrDkKd6Wt+b1aT8LIx6KmwUAsiF4F
+         5vTK7VZ8h+S/VRZxiIO8hnp6RvOS93PaOVH4IZAc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Aric Cyr <Aric.Cyr@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 038/167] drm/amd/display: Calculate scaling ratios on every medium/full update
-Date:   Tue, 28 Apr 2020 20:23:34 +0200
-Message-Id: <20200428182229.943561352@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 057/167] net/x25: Fix x25_neigh refcnt leak when receiving frame
+Date:   Tue, 28 Apr 2020 20:23:53 +0200
+Message-Id: <20200428182232.201265461@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
 References: <20200428182225.451225420@linuxfoundation.org>
@@ -63,69 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 3bae20137cae6c03f58f96c0bc9f3d46f0bc17d4 ]
+[ Upstream commit f35d12971b4d814cdb2f659d76b42f0c545270b6 ]
 
-[Why]
-If a plane isn't being actively enabled or disabled then DC won't
-always recalculate scaling rects and ratios for the primary plane.
+x25_lapb_receive_frame() invokes x25_get_neigh(), which returns a
+reference of the specified x25_neigh object to "nb" with increased
+refcnt.
 
-This results in only a partial or corrupted rect being displayed on
-the screen instead of scaling to fit the screen.
+When x25_lapb_receive_frame() returns, local variable "nb" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
 
-[How]
-Add back the logic to recalculate the scaling rects into
-dc_commit_updates_for_stream since this is the expected place to
-do it in DC.
+The reference counting issue happens in one path of
+x25_lapb_receive_frame(). When pskb_may_pull() returns false, the
+function forgets to decrease the refcnt increased by x25_get_neigh(),
+causing a refcnt leak.
 
-This was previously removed a few years ago to fix an underscan issue
-but underscan is still functional now with this change - and it should
-be, since this is only updating to the latest plane state getting passed
-in.
+Fix this issue by calling x25_neigh_put() when pskb_may_pull() returns
+false.
 
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: cb101ed2c3c7 ("x25: Handle undersized/fragmented skbs")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ net/x25/x25_dev.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index fc25600107050..188e51600070b 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -2349,7 +2349,7 @@ void dc_commit_updates_for_stream(struct dc *dc,
- 	enum surface_update_type update_type;
- 	struct dc_state *context;
- 	struct dc_context *dc_ctx = dc->ctx;
--	int i;
-+	int i, j;
- 
- 	stream_status = dc_stream_get_status(stream);
- 	context = dc->current_state;
-@@ -2387,6 +2387,17 @@ void dc_commit_updates_for_stream(struct dc *dc,
- 
- 		copy_surface_update_to_plane(surface, &srf_updates[i]);
- 
-+		if (update_type >= UPDATE_TYPE_MED) {
-+			for (j = 0; j < dc->res_pool->pipe_count; j++) {
-+				struct pipe_ctx *pipe_ctx =
-+					&context->res_ctx.pipe_ctx[j];
-+
-+				if (pipe_ctx->plane_state != surface)
-+					continue;
-+
-+				resource_build_scaling_params(pipe_ctx);
-+			}
-+		}
+--- a/net/x25/x25_dev.c
++++ b/net/x25/x25_dev.c
+@@ -115,8 +115,10 @@ int x25_lapb_receive_frame(struct sk_buf
+ 		goto drop;
  	}
  
- 	copy_stream_update_to_stream(dc, context, stream, stream_update);
--- 
-2.20.1
-
+-	if (!pskb_may_pull(skb, 1))
++	if (!pskb_may_pull(skb, 1)) {
++		x25_neigh_put(nb);
+ 		return 0;
++	}
+ 
+ 	switch (skb->data[0]) {
+ 
 
 
