@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B370EC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1268FC83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 910D0206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3134206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588085419;
-	bh=KQVhaFJwaQDI1LQ4GB7LyZpVuA9l1lrKtbwaO9ObaOo=;
+	s=default; t=1588085425;
+	bh=+2uEQ5jvQ4UxBlh92CGWag4inP7/rNpwFZ6aC1jFuMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fF/dJQm3v4kgzyiGusqZelS+SYZZtpSFqVqOiZ8W13UFB5mjUi/uWXfNuRRnXpGtk
-	 4ylqjrvyA/mptwTuY2Au2zQhlAKiEoc43Qonc+Ni+5MHT5lTInzHrHKmsZppb5LzxW
-	 xIqRD8DT1f3ryQO6iQ2f7ev83oe0w68vCRZJfFSo=
+	b=Dub8+GdNcP0dtpVKUhfc3LnYHSbI7es8GhORg7uW/frwYbqGu/LHGJrYs6lbATA8R
+	 bjoFCNXb+1ZOJx74U9T0mGNP82ATS+O15mLpc+q59NbZXqShGE94j5M+HTvcBTpGN0
+	 54s/YC/q30HQRIR2hf4fVDXXvzApdAYP8HMDXHIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728161AbgD1OuH (ORCPT
+        id S1728193AbgD1OuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:50:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46484 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 10:50:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728129AbgD1OuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:50:00 -0400
+        id S1728111AbgD1Ot4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 10:49:56 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7770C206D6;
-        Tue, 28 Apr 2020 14:49:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0E6D206C0;
+        Tue, 28 Apr 2020 14:49:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588085399;
-        bh=KQVhaFJwaQDI1LQ4GB7LyZpVuA9l1lrKtbwaO9ObaOo=;
+        s=default; t=1588085396;
+        bh=+2uEQ5jvQ4UxBlh92CGWag4inP7/rNpwFZ6aC1jFuMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SbNi47LSVdZKZiCKx5OXieBgFz0DUjpnCJw+d8ky+EBGf/9hMTjEH5FQdSwfpa4dz
-         dVo8xHQgEcPIUhqEjBh0wR0hxCG1DDXBQZg/IaeTxSJQM/iBVtvBqUrSyeB4Lgof7O
-         wIjlNWqIjUTtMeeXcGO5/k0pZ+DkMhnzJRVdj1OE=
+        b=OYvzKlwV/caAVRS6ehwRKnrHiHxaz3/jtm7hABUvTOH/cL7dBP5NHyKP4wY4FO2Pi
+         VHA26yye6972XZDe9WfiSd9FOLTTUaYyKp8CeWVeJ1iTx5lwNZnoMKQSjlNAv7VwJk
+         g0b4sYzSTIy7S9vQl35ARhIV/2CGt2Ka0CJlpXc4=
 From:   Will Deacon <will@kernel.org>
-To:     George Spelvin <lkml@SDF.ORG>
+To:     Gavin Shan <gshan@redhat.com>, linux-arm-kernel@lists.infradead.org
 Cc:     catalin.marinas@arm.com, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        lkml@sdf.org, Hsin-Yi Wang <hsinyi@chromium.org>
-Subject: Re: [PATCH v2] arm64: kexec_file: Avoid temp buffer for RNG seed
-Date:   Tue, 28 Apr 2020 15:49:39 +0100
-Message-Id: <158807855142.208424.6865350866606582490.b4-ty@kernel.org>
+        mark.rutland@arm.com, shan.gavin@gmail.com, steve.capper@arm.com,
+        broonie@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] arm64/kernel: Fix range on invalidating dcache for boot page tables
+Date:   Tue, 28 Apr 2020 15:49:37 +0100
+Message-Id: <158808168421.218901.8759664423433870069.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200330173801.GA9199@SDF.ORG>
-References: <202003281643.02SGhMtr029198@sdf.org> <20200330133701.GA10633@willie-the-truck> <20200330173801.GA9199@SDF.ORG>
+In-Reply-To: <20200427235700.112220-1-gshan@redhat.com>
+References: <20200427235700.112220-1-gshan@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,19 +57,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Mar 2020 17:38:01 +0000, George Spelvin wrote:
-> After using get_random_bytes(), you want to wipe the buffer
-> afterward so the seed remains secret.
+On Tue, 28 Apr 2020 09:57:00 +1000, Gavin Shan wrote:
+> Prior to commit 8eb7e28d4c642c31 ("arm64/mm: move runtime pgds to
+> rodata"), idmap_pgd_dir, tramp_pg_dir, reserved_ttbr0, swapper_pg_dir,
+> and init_pg_dir were contiguous at the end of the kernel image. The
+> maintenance at the end of __create_page_tables assumed these were
+> contiguous, and affected everything from the start of idmap_pg_dir
+> to the end of init_pg_dir.
 > 
-> In this case, we can eliminate the temporary buffer entirely.
-> fdt_setprop_placeholder() returns a pointer to the property value
-> buffer, allowing us to put the random data directly in there without
-> using a temporary buffer at all.  Faster and less stack all in one.
+> [...]
 
 Applied to arm64 (for-next/misc), thanks!
 
-[1/1] arm64: kexec_file: Avoid temp buffer for RNG seed
-      https://git.kernel.org/arm64/c/99ee28d99607
+[1/1] arm64/kernel: Fix range on invalidating dcache for boot page tables
+      https://git.kernel.org/arm64/c/9d2d75ede59b
 
 Cheers,
 -- 
