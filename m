@@ -2,93 +2,213 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65585C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5568C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28DB4206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:50:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="NPZ/FQ8P"
+	by mail.kernel.org (Postfix) with ESMTP id 8173C206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:50:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588099843;
+	bh=U6hfCKu4VrLDOD8g9QDkTLm3FSi8gFvlg1e705NQIHI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZjeGSd5teHmbQrprrgy2sATAuJ7nTw4AMYehE9TKPE9D8NjENvZv7FYpjpVAX2BnM
+	 9Y7rcicaSyv2w2e03HSrNzPfbUp66qXivJxljB72G5xm59pn3Iqhli20bF8wDyK9ng
+	 RbgYsHcxxA461lgh9aksD4fjtSa8i8yGA9fhQhos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731210AbgD1Suk (ORCPT
+        id S1730596AbgD1SiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:50:40 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:37384 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730829AbgD1Suh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:50:37 -0400
-Received: from mailhost.synopsys.com (sv2-mailhost1.synopsys.com [10.205.2.133])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Tue, 28 Apr 2020 14:38:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56426 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730573AbgD1SiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:38:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 163B84050C;
-        Tue, 28 Apr 2020 18:50:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1588099837; bh=iaYI21+MnPBrnDuud0zQCEFIVFhiyAVqgsYhvsjm76Q=;
-        h=From:To:Cc:Subject:Date:From;
-        b=NPZ/FQ8PFcvqtKXrrau3mjBxXZIDkJujA7FKYvL5yahbSevgpngaz3xqVs+YtfCyV
-         KpqCZAAEuoPatXb2R4aNoUAUVQB90gKHAXqqF4M86NK0dAz2IZjnU8QGDEEUTclh4O
-         g661tyOK/DLjLH4p0N8cdTFo+pYi6l+l+z/Xu18TshwzNDhh0uJdK1X7clP8Q0wNu3
-         l2qRXBrTiRo9+qaSrJUQq3BIp5aa4AvprA/PvpW8Vn0mx1WE3DVAUrXFHoPEK2g+jw
-         uS0LxTuf3b4AC9zjS3fzaG/qn3MgZaIEzhNg4VS2HWPWYLFfT2ZncaknlM/hXwsDEF
-         CW8YJgUaPyOdQ==
-Received: from paltsev-e7480.internal.synopsys.com (ru20-e7250.internal.synopsys.com [10.116.33.250])
-        by mailhost.synopsys.com (Postfix) with ESMTP id E8392A007C;
-        Tue, 28 Apr 2020 18:50:31 +0000 (UTC)
-From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-To:     linux-snps-arc@lists.infradead.org,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH] ARC: guard dsp early init against non ARCv2
-Date:   Tue, 28 Apr 2020 21:50:24 +0300
-Message-Id: <20200428185024.5168-1-Eugeniy.Paltsev@synopsys.com>
-X-Mailer: git-send-email 2.21.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BC2F20B1F;
+        Tue, 28 Apr 2020 18:38:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588099084;
+        bh=U6hfCKu4VrLDOD8g9QDkTLm3FSi8gFvlg1e705NQIHI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DxMD20oZDoE4N+tkhC8j+5gK4LIAFg15LOzYVmjcaUOx73HpMU5kOtlZOASYC/M2f
+         IbliQY7DS15mbt3bByzPaF/NeTTHgijA7a51UzAyqQMky5dldsbflnBMQdhz7r68nZ
+         tJyKksBzn3QlrFXLm8psNKlA69gxlneBDW7N4ARI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Jeremy Compostella <jeremy.compostella@intel.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 5.6 153/167] xhci: Fix handling halted endpoint even if endpoint ring appears empty
+Date:   Tue, 28 Apr 2020 20:25:29 +0200
+Message-Id: <20200428182244.916228870@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As of today we guard early DSP init code with
-ARC_AUX_DSP_BUILD (0x7A) BCR check to verify that we have
-CPU with DSP configured. However that's not enough as in
-ARCv1 CPU the same BCR (0x7A) is used for checking MUL/MAC
-instructions presence.
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-So, let's guard DSP early init against non ARCv2.
+commit 93ceaa808e8defc67ebca1396e2f42f812a2efc0 upstream.
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+If a class driver cancels its only URB then the endpoint ring buffer will
+appear empty to the xhci driver. xHC hardware may still process cached
+TRBs, and complete with a STALL, halting the endpoint.
+
+This halted endpoint was not handled correctly by xhci driver as events on
+empty rings were all assumed to be spurious events.
+xhci driver refused to restart the ring with EP_HALTED flag set, so class
+driver was never informed the endpoint halted even if it queued new URBs.
+
+The host side of the endpoint needs to be reset, and dequeue pointer should
+be moved in order to clear the cached TRBs and resetart the endpoint.
+
+Small adjustments in finding the new dequeue pointer are needed to support
+the case of stall on an empty ring and unknown current TD.
+
+Cc: <stable@vger.kernel.org>
+cc: Jeremy Compostella <jeremy.compostella@intel.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200421140822.28233-2-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arc/include/asm/dsp-impl.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/host/xhci-ring.c |   30 +++++++++++++++++++++++++++++-
+ drivers/usb/host/xhci.c      |   14 +++++++-------
+ drivers/usb/host/xhci.h      |    5 +++--
+ 3 files changed, 39 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arc/include/asm/dsp-impl.h b/arch/arc/include/asm/dsp-impl.h
-index e1aa212ca6eb..e64d945ae7df 100644
---- a/arch/arc/include/asm/dsp-impl.h
-+++ b/arch/arc/include/asm/dsp-impl.h
-@@ -15,12 +15,14 @@
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -547,6 +547,23 @@ void xhci_find_new_dequeue_state(struct
+ 				stream_id);
+ 		return;
+ 	}
++	/*
++	 * A cancelled TD can complete with a stall if HW cached the trb.
++	 * In this case driver can't find cur_td, but if the ring is empty we
++	 * can move the dequeue pointer to the current enqueue position.
++	 */
++	if (!cur_td) {
++		if (list_empty(&ep_ring->td_list)) {
++			state->new_deq_seg = ep_ring->enq_seg;
++			state->new_deq_ptr = ep_ring->enqueue;
++			state->new_cycle_state = ep_ring->cycle_state;
++			goto done;
++		} else {
++			xhci_warn(xhci, "Can't find new dequeue state, missing cur_td\n");
++			return;
++		}
++	}
++
+ 	/* Dig out the cycle state saved by the xHC during the stop ep cmd */
+ 	xhci_dbg_trace(xhci, trace_xhci_dbg_cancel_urb,
+ 			"Finding endpoint context");
+@@ -592,6 +609,7 @@ void xhci_find_new_dequeue_state(struct
+ 	state->new_deq_seg = new_seg;
+ 	state->new_deq_ptr = new_deq;
  
- /* clobbers r5 register */
- .macro DSP_EARLY_INIT
-+#if defined(CONFIG_ISA_ARCV2)
- 	lr	r5, [ARC_AUX_DSP_BUILD]
- 	bmsk	r5, r5, 7
- 	breq    r5, 0, 1f
- 	mov	r5, DSP_CTRL_DISABLED_ALL
- 	sr	r5, [ARC_AUX_DSP_CTRL]
- 1:
-+#endif
- .endm
++done:
+ 	/* Don't update the ring cycle state for the producer (us). */
+ 	xhci_dbg_trace(xhci, trace_xhci_dbg_cancel_urb,
+ 			"Cycle state = 0x%x", state->new_cycle_state);
+@@ -1852,7 +1870,8 @@ static void xhci_cleanup_halted_endpoint
  
- /* clobbers r10, r11 registers pair */
--- 
-2.21.1
+ 	if (reset_type == EP_HARD_RESET) {
+ 		ep->ep_state |= EP_HARD_CLEAR_TOGGLE;
+-		xhci_cleanup_stalled_ring(xhci, ep_index, stream_id, td);
++		xhci_cleanup_stalled_ring(xhci, slot_id, ep_index, stream_id,
++					  td);
+ 		xhci_clear_hub_tt_buffer(xhci, td, ep);
+ 	}
+ 	xhci_ring_cmd_db(xhci);
+@@ -2531,6 +2550,15 @@ static int handle_tx_event(struct xhci_h
+ 				xhci_dbg(xhci, "td_list is empty while skip flag set. Clear skip flag for slot %u ep %u.\n",
+ 					 slot_id, ep_index);
+ 			}
++			if (trb_comp_code == COMP_STALL_ERROR ||
++			    xhci_requires_manual_halt_cleanup(xhci, ep_ctx,
++							      trb_comp_code)) {
++				xhci_cleanup_halted_endpoint(xhci, slot_id,
++							     ep_index,
++							     ep_ring->stream_id,
++							     NULL,
++							     EP_HARD_RESET);
++			}
+ 			goto cleanup;
+ 		}
+ 
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -3031,19 +3031,19 @@ static void xhci_setup_input_ctx_for_qui
+ 			added_ctxs, added_ctxs);
+ }
+ 
+-void xhci_cleanup_stalled_ring(struct xhci_hcd *xhci, unsigned int ep_index,
+-			       unsigned int stream_id, struct xhci_td *td)
++void xhci_cleanup_stalled_ring(struct xhci_hcd *xhci, unsigned int slot_id,
++			       unsigned int ep_index, unsigned int stream_id,
++			       struct xhci_td *td)
+ {
+ 	struct xhci_dequeue_state deq_state;
+-	struct usb_device *udev = td->urb->dev;
+ 
+ 	xhci_dbg_trace(xhci, trace_xhci_dbg_reset_ep,
+ 			"Cleaning up stalled endpoint ring");
+ 	/* We need to move the HW's dequeue pointer past this TD,
+ 	 * or it will attempt to resend it on the next doorbell ring.
+ 	 */
+-	xhci_find_new_dequeue_state(xhci, udev->slot_id,
+-			ep_index, stream_id, td, &deq_state);
++	xhci_find_new_dequeue_state(xhci, slot_id, ep_index, stream_id, td,
++				    &deq_state);
+ 
+ 	if (!deq_state.new_deq_ptr || !deq_state.new_deq_seg)
+ 		return;
+@@ -3054,7 +3054,7 @@ void xhci_cleanup_stalled_ring(struct xh
+ 	if (!(xhci->quirks & XHCI_RESET_EP_QUIRK)) {
+ 		xhci_dbg_trace(xhci, trace_xhci_dbg_reset_ep,
+ 				"Queueing new dequeue state");
+-		xhci_queue_new_dequeue_state(xhci, udev->slot_id,
++		xhci_queue_new_dequeue_state(xhci, slot_id,
+ 				ep_index, &deq_state);
+ 	} else {
+ 		/* Better hope no one uses the input context between now and the
+@@ -3065,7 +3065,7 @@ void xhci_cleanup_stalled_ring(struct xh
+ 		xhci_dbg_trace(xhci, trace_xhci_dbg_quirks,
+ 				"Setting up input context for "
+ 				"configure endpoint command");
+-		xhci_setup_input_ctx_for_quirk(xhci, udev->slot_id,
++		xhci_setup_input_ctx_for_quirk(xhci, slot_id,
+ 				ep_index, &deq_state);
+ 	}
+ }
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -2116,8 +2116,9 @@ void xhci_find_new_dequeue_state(struct
+ void xhci_queue_new_dequeue_state(struct xhci_hcd *xhci,
+ 		unsigned int slot_id, unsigned int ep_index,
+ 		struct xhci_dequeue_state *deq_state);
+-void xhci_cleanup_stalled_ring(struct xhci_hcd *xhci, unsigned int ep_index,
+-		unsigned int stream_id, struct xhci_td *td);
++void xhci_cleanup_stalled_ring(struct xhci_hcd *xhci, unsigned int slot_id,
++			       unsigned int ep_index, unsigned int stream_id,
++			       struct xhci_td *td);
+ void xhci_stop_endpoint_command_watchdog(struct timer_list *t);
+ void xhci_handle_command_timeout(struct work_struct *work);
+ 
+
 
