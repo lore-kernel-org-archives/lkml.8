@@ -2,146 +2,217 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C10C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA40C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74DA52054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:22:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qXhWPL5O"
+	by mail.kernel.org (Postfix) with ESMTP id 7BD7C2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:23:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728307AbgD1QWr (ORCPT
+        id S1728380AbgD1QXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:22:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728035AbgD1QWr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:22:47 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 842FAC03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 09:22:46 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id r26so3586437wmh.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 09:22:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QZ3V+kSzSOvh3yPLaUGq339r3FXngS2JfBwbre6zrhE=;
-        b=qXhWPL5O7QAlv2qAlEN7m7ou3SRfXay58XLzapUHPOrqFq57kRVrnAzyNaGqh0bdcT
-         uiUDpYM+PCcW+uNeiiV1PYYfD2ZfHjhEvIQhhoqqiJ0KeDHG3kZUjXl4MfKlTjAfVuIe
-         dkwhWQN/n2d7ZCrIC44jjhiVvc0O9z8yYk4Mspwztl1qzB4z2nK6zbYiijDhavRbx0ku
-         ah3ajFogcn4fC/aTM48Eiq4MLrUhzDADKX33b7Wj5M3a8WtYnbT8a/KxUGc0+mTstRoa
-         C1JbOFU2h0y1kg1tUKWJGCUF9Z1uYkdiDOykvYngQnHUHQjXICAXSV6IuWKcL7nvMnMv
-         eySw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QZ3V+kSzSOvh3yPLaUGq339r3FXngS2JfBwbre6zrhE=;
-        b=tFupC10sHSiNp8FTSuQGh5gtNKeRoLOGE9r43p2tCEG2HrsRG0+2owoMFZ0bku54xs
-         LQjynRoNuLIWoSDgqSosZAxWeDXnPjC+eOZttJCYWCaGX9TGuEwnE2MYML0DvNa6LCSD
-         Nl1n1oxiTOWDbWYgxkT8OF8imfU94vHT/MB7sxlWHKEw2HjmOiB4aOcE5SPodBTyr50U
-         HcHKwAxVihjTHdP4Jm0fm26Ck5VJZLETs4HjJGbUzmE4ZKsyqMVg7TIfvrXuo243pxUc
-         /bbP2Rv+XMNcB/qLbBGVjSTCQ0TLm05lA1rM9U/nv0zapAMYRlCYorhbaKThOrvPUfFD
-         uj1w==
-X-Gm-Message-State: AGi0PuZzdSa+fjg0b2vP3ycVI3LuayJVfRnjbjTQ4UJvBFKlnxDrlOFV
-        CdtFHs+ZQKB/zs910s4S3WTm0w==
-X-Google-Smtp-Source: APiQypL+DZ5U8Se/92OpfKlWfoY0M5q66E1XNeANbqXCYI9gMYeEmYEHp30ZLcpfBz/YNt7hw8TgYA==
-X-Received: by 2002:a1c:9a81:: with SMTP id c123mr5124445wme.115.1588090965173;
-        Tue, 28 Apr 2020 09:22:45 -0700 (PDT)
-Received: from wychelm.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id o6sm17736097wrw.63.2020.04.28.09.22.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 09:22:44 -0700 (PDT)
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patches@linaro.org
-Subject: [PATCH] serial: earlycon: Allow earlier DT scan is acpi=off
-Date:   Tue, 28 Apr 2020 17:22:27 +0100
-Message-Id: <20200428162227.687978-1-daniel.thompson@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        Tue, 28 Apr 2020 12:23:00 -0400
+Received: from mga05.intel.com ([192.55.52.43]:32130 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728258AbgD1QXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 12:23:00 -0400
+IronPort-SDR: 1kTSiiAkYgUA88yo/34GeAl1dQeb07uWimenpnaAhwG8u8867q1zVVYzUOLTqzAgVjx9LMjeCx
+ mUyJBMX3pByw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 09:22:59 -0700
+IronPort-SDR: yTi58/c547ybn2Lw0pGAbp2cFMAkMs0cQmMx5e+sanRFSKlU/LPVCZVv8MriFGEUjcKQ889RYd
+ YlinVH9a1tVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
+   d="scan'208";a="275890436"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 28 Apr 2020 09:22:57 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jTT0a-0003sA-VH; Wed, 29 Apr 2020 00:22:56 +0800
+Date:   Wed, 29 Apr 2020 00:22:05 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ cf14a924b8f60e0a60f404dc3a0f023ee5f9e64c
+Message-ID: <5ea8582d.NCoKXSJhokiQp07h%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently if the kernel has support for ACPI SPCR parsing then earlycon
-without arguments is processed later than the full earlycon=...
-alternative.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: cf14a924b8f60e0a60f404dc3a0f023ee5f9e64c  Merge branch 'core/core'
 
-If ACPI has been explicitly disabled on the kernel command line then
-there is not need to defer since the ACPI code (both x86 and arm64)
-will never actually run.
+elapsed time: 486m
 
-Or, put another way it allows lazy people to throw "acpi=off earlycon"
-onto the command line of a DT systems and be confident the console will
-start as early as possible without them having to lookup the driver
-and address needed for a specific platform.
+configs tested: 150
+configs skipped: 0
 
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+sparc                            allyesconfig
+um                             i386_defconfig
+sh                                allnoconfig
+powerpc                             defconfig
+ia64                                defconfig
+nios2                         3c120_defconfig
+mips                  decstation_64_defconfig
+m68k                           sun3_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                        generic_defconfig
+ia64                          tiger_defconfig
+ia64                         bigsur_defconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                          multi_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                            ar7_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+mips                malta_kvm_guest_defconfig
+mips                         tb0287_defconfig
+mips                       capcella_defconfig
+mips                           ip32_defconfig
+mips                      loongson3_defconfig
+mips                          ath79_defconfig
+mips                        bcm63xx_defconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+parisc               randconfig-a001-20200428
+m68k                 randconfig-a001-20200428
+alpha                randconfig-a001-20200428
+nds32                randconfig-a001-20200428
+riscv                randconfig-a001-20200428
+sh                   randconfig-a001-20200428
+csky                 randconfig-a001-20200428
+s390                 randconfig-a001-20200428
+xtensa               randconfig-a001-20200428
+openrisc             randconfig-a001-20200428
+i386                 randconfig-c002-20200428
+i386                 randconfig-c001-20200428
+x86_64               randconfig-c001-20200428
+i386                 randconfig-c003-20200428
+x86_64               randconfig-c003-20200428
+x86_64               randconfig-a001-20200428
+i386                 randconfig-a003-20200428
+x86_64               randconfig-a003-20200428
+i386                 randconfig-a002-20200428
+i386                 randconfig-a001-20200428
+x86_64               randconfig-a002-20200428
+x86_64               randconfig-d001-20200428
+i386                 randconfig-d002-20200428
+i386                 randconfig-d001-20200428
+x86_64               randconfig-d003-20200428
+i386                 randconfig-d003-20200428
+x86_64               randconfig-f002-20200428
+i386                 randconfig-f002-20200428
+i386                 randconfig-f003-20200428
+x86_64               randconfig-f003-20200428
+i386                 randconfig-f001-20200428
+x86_64               randconfig-f001-20200428
+i386                 randconfig-g003-20200428
+x86_64               randconfig-g001-20200428
+i386                 randconfig-g001-20200428
+x86_64               randconfig-g002-20200428
+i386                 randconfig-g002-20200428
+x86_64               randconfig-g003-20200428
+ia64                 randconfig-a001-20200428
+powerpc              randconfig-a001-20200428
+arm64                randconfig-a001-20200428
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                          debug_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                           x86_64_defconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
 ---
- drivers/tty/serial/earlycon.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
-index 2ae9190b64bb..ebb648aacb47 100644
---- a/drivers/tty/serial/earlycon.c
-+++ b/drivers/tty/serial/earlycon.c
-@@ -215,6 +215,31 @@ int __init setup_earlycon(char *buf)
-  */
- bool earlycon_acpi_spcr_enable __initdata;
-
-+/*
-+ * This takes a sneaky peek at other boot arguments (which may not have
-+ * been parsed at this point in the boot) to check whether ACPI has
-+ * been explicitly disabled. If it is explicitly disabled then there is
-+ * no reason to defer initialization of the early console.
-+ */
-+static bool earlycon_check_for_acpi_off(void)
-+{
-+	static const char token[] = "acpi=off";
-+	const char *arg;
-+	char before, after;
-+
-+	arg = strstr(boot_command_line, token);
-+	while (arg) {
-+		before = arg == boot_command_line ? ' ' : arg[-1];
-+		after = arg[sizeof(token)-1];
-+		if (isspace(before) && (isspace(after) || after == '\0'))
-+			return true;
-+
-+		arg = strstr(arg+1, token);
-+	}
-+
-+	return false;
-+}
-+
- /* early_param wrapper for setup_earlycon() */
- static int __init param_setup_earlycon(char *buf)
- {
-@@ -222,7 +247,8 @@ static int __init param_setup_earlycon(char *buf)
-
- 	/* Just 'earlycon' is a valid param for devicetree and ACPI SPCR. */
- 	if (!buf || !buf[0]) {
--		if (IS_ENABLED(CONFIG_ACPI_SPCR_TABLE)) {
-+		if (IS_ENABLED(CONFIG_ACPI_SPCR_TABLE) &&
-+		    !earlycon_check_for_acpi_off()) {
- 			earlycon_acpi_spcr_enable = true;
- 			return 0;
- 		} else if (!buf) {
---
-2.25.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
