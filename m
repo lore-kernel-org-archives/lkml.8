@@ -2,111 +2,66 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E953CC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C4DC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C71AE20731
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:30:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OlWmcw+p"
+	by mail.kernel.org (Postfix) with ESMTP id 13A3020731
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:31:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgD1Uay (ORCPT
+        id S1726580AbgD1UbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:30:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34270 "EHLO
+        Tue, 28 Apr 2020 16:31:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726284AbgD1Uax (ORCPT
+        by vger.kernel.org with ESMTP id S1726284AbgD1UbH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:30:53 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15CE3C03C1AB;
-        Tue, 28 Apr 2020 13:30:52 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id h4so195237wmb.4;
-        Tue, 28 Apr 2020 13:30:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EfCALQsisEWExBul5hRZQyex6oqNrlHX2cTncObwOtQ=;
-        b=OlWmcw+pwrmTksUvBEvTcL6bU648KdxiZRkP1YS5OC8dtjPsFgkAqgJVCAnLf3zKDO
-         MGvD3+yG1B+ej5Sw2knl22eY0sidMcHAqro1N1/9UMl74Sla1UpqLkYl4K3mXmizNHex
-         x1Jg8i/Al5dMNASvu+fQLv9iEQosinR0glhY+WTHHYNtt3VRvJwJYZ1S1miNSLG7bpZe
-         P60hEeVBXUnobCR48dQwEGntJCNO/EvpLR+zEn2OINnKAmiMg43ahDr0ltWZwoqjLB3j
-         Oj2mc0qUgvWLwtf5FHeh9q022nfVLAa3xFF503QFyEHhGxq39OHzsYuKdBoZMfaGVXtO
-         h17w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EfCALQsisEWExBul5hRZQyex6oqNrlHX2cTncObwOtQ=;
-        b=uGxJvNnPwEkT+oRRzkyP2HrvXrBgmSqv+ZU7Vaf+kOzq7EzqFrpX2OJxcUTb8UgiXA
-         5SSONPVV8QUDNCWW3KEcRBRpAhoOxrZjj5GpmwyiGsefQlKebos9STvldFo/RDV+LcNg
-         dRPpTQcyc95GgxmqkXL8XNodcazzlpceMWDorsK1srspouFBdgtldmCwcX39XzOv8FM+
-         1rqWn8PYNdnB6Rr6+oXnCtwSomGhuJo/Kwzaqu+nGyvG+85z8pAXbQRk1yDKASkN9TUk
-         SdGUQU9K0n9mW+cOvoZXTUdRosaMxHT/OZF+8xfNIOjFNv8oJNG19+g7eVzewpfuKR7U
-         7DzQ==
-X-Gm-Message-State: AGi0PubLlvNAxzRJLHoO3GoDOPtuFTisAWvnqaoAdClC5V9eWky6p0NZ
-        hmSS/Is8RCalNcKI1NBUbD0=
-X-Google-Smtp-Source: APiQypISI2zzH3TIvD4uM63Re8kNkFo2dbW58vzuUVbRx8SSABu3Z23VJehBNO76vGxmipJqvh4AxQ==
-X-Received: by 2002:a1c:2b81:: with SMTP id r123mr6449020wmr.34.1588105850883;
-        Tue, 28 Apr 2020 13:30:50 -0700 (PDT)
-Received: from [192.168.1.23] (afcs235.neoplus.adsl.tpnet.pl. [95.49.70.235])
-        by smtp.gmail.com with ESMTPSA id 36sm28040257wrc.35.2020.04.28.13.30.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 13:30:50 -0700 (PDT)
-Subject: Re: [PATCH v21 01/16] dt: bindings: Add multicolor class dt bindings
- documention
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-References: <20200428160338.2793-1-dmurphy@ti.com>
- <20200428160338.2793-2-dmurphy@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <919e7c4d-0b4e-4335-0a9b-670752fd4845@gmail.com>
-Date:   Tue, 28 Apr 2020 22:30:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200428160338.2793-2-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Tue, 28 Apr 2020 16:31:07 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEDADC03C1AB;
+        Tue, 28 Apr 2020 13:31:06 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id F3D5A120ED578;
+        Tue, 28 Apr 2020 13:31:04 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 13:31:04 -0700 (PDT)
+Message-Id: <20200428.133104.2167354110776431026.davem@davemloft.net>
+To:     kuba@kernel.org
+Cc:     keescook@chromium.org, shuah@kernel.org, netdev@vger.kernel.org,
+        luto@amacapital.net, wad@chromium.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, Tim.Bird@sony.com
+Subject: Re: [PATCH net-next v6 0/5] kselftest: add fixture parameters
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200428010351.331260-1-kuba@kernel.org>
+References: <20200428010351.331260-1-kuba@kernel.org>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 28 Apr 2020 13:31:05 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
+From: Jakub Kicinski <kuba@kernel.org>
+Date: Mon, 27 Apr 2020 18:03:46 -0700
 
-On 4/28/20 6:03 PM, Dan Murphy wrote:
-> Add DT bindings for the LEDs multicolor class framework.
-> Add multicolor ID to the color ID list for device tree bindings.
+> This set is an attempt to make running tests for different
+> sets of data easier. The direct motivation is the tls
+> test which we'd like to run for TLS 1.2 and TLS 1.3,
+> but currently there is no easy way to invoke the same
+> tests with different parameters.
 > 
-> CC: Rob Herring <robh@kernel.org>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->   .../bindings/leds/leds-class-multicolor.txt   | 98 +++++++++++++++++++
->   drivers/leds/led-core.c                       |  1 +
->   include/dt-bindings/leds/common.h             |  3 +-
->   3 files changed, 101 insertions(+), 1 deletion(-)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+> Tested all users of kselftest_harness.h.
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
-> new file mode 100644
-> index 000000000000..4b1bd82f2a42
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+> Dave, would it be possible to take these via net-next?
+> It seems we're failing to get Shuah's attention.
 
-Why isn't it yaml?
-
--- 
-Best regards,
-Jacek Anaszewski
+Sure, series applied, thanks Jakub.
