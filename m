@@ -2,112 +2,154 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D33C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF0BC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAB9220661
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD09206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:17:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TmnTM02F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FvDxgdGJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbgD1HQw (ORCPT
+        id S1726423AbgD1HRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:16:52 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32768 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725867AbgD1HQw (ORCPT
+        Tue, 28 Apr 2020 03:17:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51078 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgD1HRn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 03:16:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588058211;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0B3gnfAi+vC2wNO8K4I/DfPuZmGhtWSGMZXgFSeqqJA=;
-        b=TmnTM02FZkvw3FiJSOb01mbRKqrPYsYi7yD06BBxEQObplgrgy0Rs95LQBED7sekuyiaPW
-        hmXUBNJ6Lf1JZuAZ6GttsXi34IOFeNyiDIcuM0Y6hPQKLNHTRN6j7JRzzxXFzkOb2SvHOm
-        Vx+FnF6Mja54BCYfNYF456Ug8sM76Uw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-40-NMKKXlh1OaaR_bN8nV9F5A-1; Tue, 28 Apr 2020 03:16:45 -0400
-X-MC-Unique: NMKKXlh1OaaR_bN8nV9F5A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9C04F107ACCD;
-        Tue, 28 Apr 2020 07:16:43 +0000 (UTC)
-Received: from treble (ovpn-112-209.rdu2.redhat.com [10.10.112.209])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4814F5C1B2;
-        Tue, 28 Apr 2020 07:16:41 +0000 (UTC)
-Date:   Tue, 28 Apr 2020 02:16:40 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH] x86/unwind/orc: Move ORC sorting variables under
- CONFIG_MODULE
-Message-ID: <20200428071640.psn5m7eh3zt2in4v@treble>
-References: <20200428162910.0dee6f52@canb.auug.org.au>
+        Tue, 28 Apr 2020 03:17:43 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECC08C03C1A9;
+        Tue, 28 Apr 2020 00:17:41 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id i27so30929861ota.7;
+        Tue, 28 Apr 2020 00:17:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+qoRw4sNtKeON7FHmVZdwqZNioDMYulAX/VsZESJF8I=;
+        b=FvDxgdGJgQM7T1VASWRIDYHdwDKAhqJ3GYjM32cOEYT2SuCCl6lRENorYhT5zKAiVB
+         IyUOx/Y5uWHcnYxB8owwWlfWK2O1xlWMyLVgQegHR3LiO3QkNZ0+alxMZbGtzfJFzK41
+         a4rOCHHiDuGVLgTZJsKaRh17ZMxqORcPZCVxqCu0TAZKcBonBOYe/87140TAGNhkh0uV
+         mo7RzvG9OpL15c34Ogl3nlkIYaCzYYN8vo1SCWpDMWpk0EMy+CotNncSXSWqU/EaeYTy
+         HsKsBPeuKQxkoEszlJ80VsgS8UdDuo67UtE8IyI7IBLSzGXOeCEODONB8hfWdGPaxOqp
+         TrAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+qoRw4sNtKeON7FHmVZdwqZNioDMYulAX/VsZESJF8I=;
+        b=tH3HUlbSJyynXPUhV+gSwUUJ68o/Euw8yvCW3kWvnap74MDmSPtd211Fyqvw2p/c+Y
+         bbGa2CdLt/kBDagywf0sTAeqU6LxPw7sJILC0vYkfuuEujQj0+zl9oVeGblBONb00q9t
+         tnBODK6ds/PjafFR0wql1m8kcj/fHjFzpKi2OCAOE9Kw7u1nhysqJQdEpwYZbv91g1wW
+         4LbCAT7GHiiLnd9w8XOw8VWnNTQwUphNeORG6KkbXyK+1a00O1fSSNo5UPkv3eNv4y5q
+         bhcu3eS8FG5rTGx2bxNsNvS5AYn/4C8rqNOMCHMHmfdxGBOxMwInOnRJPSyR4AzoIFnj
+         HQhQ==
+X-Gm-Message-State: AGi0PuYTJzod757kIofkT2l2/Nnu7bJzxRiyK5SVDjq4IIO4fZSkCJ9N
+        qx0emVXn23Aovj4WwfQ8zNkgAAZHDXk+OFs52cI=
+X-Google-Smtp-Source: APiQypJUXTnJiPqIZ99D5rHkPZMUmFGMBwDmtbd57BHOsCvcgctEALeqNLsAIFDh0FQpoIHzmN3EwyEdmNmXtxWCjTA=
+X-Received: by 2002:a05:6830:20d9:: with SMTP id z25mr13560177otq.254.1588058261338;
+ Tue, 28 Apr 2020 00:17:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200428162910.0dee6f52@canb.auug.org.au>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <1587709364-19090-1-git-send-email-wanpengli@tencent.com>
+ <1587709364-19090-3-git-send-email-wanpengli@tencent.com> <20200427183013.GN14870@linux.intel.com>
+In-Reply-To: <20200427183013.GN14870@linux.intel.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 28 Apr 2020 15:17:30 +0800
+Message-ID: <CANRm+CxfYB9TULkZdnUVyhFgLLWBScDXFRBrFo0Nig_H0VH_1w@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] KVM: X86: Introduce need_cancel_enter_guest helper
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Haiwei Li <lihaiwei@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following warnings seen with !CONFIG_MODULE:
+On Tue, 28 Apr 2020 at 02:30, Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Fri, Apr 24, 2020 at 02:22:41PM +0800, Wanpeng Li wrote:
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Introduce need_cancel_enter_guest() helper, we need to check some
+> > conditions before doing CONT_RUN, in addition, it can also catch
+> > the case vmexit occurred while another event was being delivered
+> > to guest software since vmx_complete_interrupts() adds the request
+> > bit.
+> >
+> > Tested-by: Haiwei Li <lihaiwei@tencent.com>
+> > Cc: Haiwei Li <lihaiwei@tencent.com>
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> >  arch/x86/kvm/vmx/vmx.c | 12 +++++++-----
+> >  arch/x86/kvm/x86.c     | 10 ++++++++--
+> >  arch/x86/kvm/x86.h     |  1 +
+> >  3 files changed, 16 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index f1f6638..5c21027 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -6577,7 +6577,7 @@ bool __vmx_vcpu_run(struct vcpu_vmx *vmx, unsigned long *regs, bool launched);
+> >
+> >  static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> >  {
+> > -     enum exit_fastpath_completion exit_fastpath;
+> > +     enum exit_fastpath_completion exit_fastpath = EXIT_FASTPATH_NONE;
+> >       struct vcpu_vmx *vmx = to_vmx(vcpu);
+> >       unsigned long cr3, cr4;
+> >
+> > @@ -6754,10 +6754,12 @@ static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> >       vmx_recover_nmi_blocking(vmx);
+> >       vmx_complete_interrupts(vmx);
+> >
+> > -     exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
+> > -     /* static call is better with retpolines */
+> > -     if (exit_fastpath == EXIT_FASTPATH_CONT_RUN)
+> > -             goto cont_run;
+> > +     if (!kvm_need_cancel_enter_guest(vcpu)) {
+> > +             exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
+> > +             /* static call is better with retpolines */
+> > +             if (exit_fastpath == EXIT_FASTPATH_CONT_RUN)
+> > +                     goto cont_run;
+> > +     }
+> >
+> >       return exit_fastpath;
+> >  }
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index 59958ce..4561104 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -1581,6 +1581,13 @@ int kvm_emulate_wrmsr(struct kvm_vcpu *vcpu)
+> >  }
+> >  EXPORT_SYMBOL_GPL(kvm_emulate_wrmsr);
+> >
+> > +bool kvm_need_cancel_enter_guest(struct kvm_vcpu *vcpu)
+>
+> What about kvm_vcpu_<???>_pending()?  Not sure what a good ??? would be.
+> The "cancel_enter_guest" wording is a bit confusing when this is called
+> from the VM-Exit path.
+>
+> > +{
+> > +     return (vcpu->mode == EXITING_GUEST_MODE || kvm_request_pending(vcpu)
+> > +         || need_resched() || signal_pending(current));
+>
+> Parantheses around the whole statement are unnecessary.  Personal preference
+> is to put the || before the newline.
 
-  arch/x86/kernel/unwind_orc.c:29:26: warning: 'cur_orc_table' defined but not used [-Wunused-variable]
-     29 | static struct orc_entry *cur_orc_table = __start_orc_unwind;
-        |                          ^~~~~~~~~~~~~
-  arch/x86/kernel/unwind_orc.c:28:13: warning: 'cur_orc_ip_table' defined but not used [-Wunused-variable]
-     28 | static int *cur_orc_ip_table = __start_orc_unwind_ip;
-        |             ^~~~~~~~~~~~~~~~
+Handle the comments in v4.
 
-Fixes: 153eb2223c79 ("x86/unwind/orc: Convert global variables to static")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
- arch/x86/kernel/unwind_orc.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 0ebc11a8bb45..5b0bd8581fe6 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -24,10 +24,6 @@ extern struct orc_entry __stop_orc_unwind[];
- static bool orc_init __ro_after_init;
- static unsigned int lookup_num_blocks __ro_after_init;
- 
--static DEFINE_MUTEX(sort_mutex);
--static int *cur_orc_ip_table = __start_orc_unwind_ip;
--static struct orc_entry *cur_orc_table = __start_orc_unwind;
--
- static inline unsigned long orc_ip(const int *ip)
- {
- 	return (unsigned long)ip + *ip;
-@@ -192,6 +188,10 @@ static struct orc_entry *orc_find(unsigned long ip)
- 
- #ifdef CONFIG_MODULES
- 
-+static DEFINE_MUTEX(sort_mutex);
-+static int *cur_orc_ip_table = __start_orc_unwind_ip;
-+static struct orc_entry *cur_orc_table = __start_orc_unwind;
-+
- static void orc_sort_swap(void *_a, void *_b, int size)
- {
- 	struct orc_entry *orc_a, *orc_b;
--- 
-2.21.1
-
+    Wanpeng
