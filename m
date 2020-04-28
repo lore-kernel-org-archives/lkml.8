@@ -2,112 +2,118 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DE2C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1D7C83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43024206F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B60A206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:39:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YyPweggN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgD1Nju (ORCPT
+        id S1728085AbgD1Njy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:39:50 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41949 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728039AbgD1Njr (ORCPT
+        Tue, 28 Apr 2020 09:39:54 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:11654 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728065AbgD1Njw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:39:47 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g13so24685534wrb.8
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 06:39:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5a2eKTENfxkdvpOt5VzR6SvytBF+3s88viN7AKjLVdk=;
-        b=X4mERtsUpLN89OtJNPbgq35oh5DlVcYukaBObzKx6rnf6Bk70a/2zoosWL7NCW9vYO
-         sLpSF3qJ290F+l1CFfEv10yAfU2TLQpftKX7MhVnaGOXnJzWs1tHLIoATr6hVQI7X5Ru
-         26FPaNYwikSg+9SdA2tqCqDcJH1qpjwV44msnA3G1zzKKQnMC0Gx0p+0krfz+4TivinF
-         ReJVA/u7tQFZBRz5qYXa9mSF7ccz8y8ccOZN95G+QLBB0/HQ//HWgF7JL1+cGkKzs1rr
-         cV/gg1p6G/yepYY6LSAtvCYSFPXlN73qoBJgVK7OFv+/sAbA0PQuJo1mx180i/MfoSoz
-         klkg==
-X-Gm-Message-State: AGi0Puasx1WGJj4ezKJWIlvzHdyHSV50GkI6z0iDKZE46jH3408AbWzn
-        CCY1PyZIXCn9ou6T6TN5xCXUTbNR1FjpDDFPQpAQ
-X-Google-Smtp-Source: APiQypKJ7Znr8xxbFupiDIbeDll7/mUifz2A7jx6hPicMw/uEvMh3pLQxhSgEGbao/4OCBqSoJuvk7DcpKLXX/Mx2Bk=
-X-Received: by 2002:adf:fe45:: with SMTP id m5mr35638988wrs.124.1588081185601;
- Tue, 28 Apr 2020 06:39:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200426161319.23941-1-john.oldman@polehill.co.uk> <20200426170719.GA2138855@kroah.com>
-In-Reply-To: <20200426170719.GA2138855@kroah.com>
-From:   John Oldman <john.oldman@polehill.co.uk>
-Date:   Tue, 28 Apr 2020 14:39:34 +0100
-Message-ID: <CA+JojbrD5F6foCUGZT_fKW+MnJnuQsFH87bfy9V+WUXwxqKyXw@mail.gmail.com>
-Subject: Re: [PATCH] Staging: mt7621-dma: mtk-hsdma.c: Fix Missing a blank
- line after declarations
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 28 Apr 2020 09:39:52 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588081192; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=VRGQEHAggMo2ZFV3fV+HlcaX0fQgAnre1gFyy7VTB8c=; b=YyPweggNgpd0lCDZpeNVbTEjpm3DGA9/fU9VvOLwfIg5bZR8T6SH+SQM+xV3ytq+lMByKHOU
+ hHgJViYKuuwY+QIleYm0vvb1NOyZWtYnrT9g5cjJQwO1JV983cosPqkAupSj0LN3iCHQzNfS
+ Co2SW82javQSUTGfknnEEMguB2E=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea8321e.7f91eb2c5228-smtp-out-n04;
+ Tue, 28 Apr 2020 13:39:42 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 69ABFC432C2; Tue, 28 Apr 2020 13:39:41 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B1206C38569;
+        Tue, 28 Apr 2020 13:39:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B1206C38569
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v3 16/17] arm64: dts: sdm845: Add qspi opps and power-domains
+Date:   Tue, 28 Apr 2020 19:03:04 +0530
+Message-Id: <1588080785-6812-17-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
+References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(this time sent as plain text)
+Add the power domain supporting performance state and the corresponding
+OPP tables for the qspi device on sdm845
 
-I was not so happy about this one, even though I went and committed it.
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-Without the blank line checkpatch reports:
-
-WARNING: Missing a blank line after declarations
-#160: FILE: drivers/staging/mt7621-dma/mtk-hsdma.c:160:
-+ struct tasklet_struct task;
-+ volatile unsigned long chan_issued;
-
-So I dumly inserted a blank line to silence checkpatch.
-
-In hindsight maybe a false positive, blank lines in a struct!
-
-Someone may have been there before as there is a previous blank line
-in the struct mtk_hsdam_engine :o)
-
-Cheers
-John
-
-
-On Sun, 26 Apr 2020 at 18:07, Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Sun, Apr 26, 2020 at 05:13:19PM +0100, John Oldman wrote:
-> > Fixed coding style issue
->
-> No you didn't :)
->
-> >
-> > Signed-off-by: John Oldman <john.oldman@polehill.co.uk>
-> > ---
-> >  drivers/staging/mt7621-dma/mtk-hsdma.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/staging/mt7621-dma/mtk-hsdma.c b/drivers/staging/mt7621-dma/mtk-hsdma.c
-> > index 14592ed9ce98..dd35d0bce6ca 100644
-> > --- a/drivers/staging/mt7621-dma/mtk-hsdma.c
-> > +++ b/drivers/staging/mt7621-dma/mtk-hsdma.c
-> > @@ -157,6 +157,7 @@ struct mtk_hsdam_engine {
-> >       struct device_dma_parameters dma_parms;
-> >       void __iomem *base;
-> >       struct tasklet_struct task;
-> > +
-> >       volatile unsigned long chan_issued;
-> >
-> >       struct mtk_hsdma_chan chan[1];
->
-> This file seems to be the "does the submitter look at the patch they are
-> sending" litmus test.
->
-> Does that really do what you think it does?
->
-> thanks,
->
-> greg k-h
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 67e3b90..1843123 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -3017,6 +3017,30 @@
+ 			status = "disabled";
+ 		};
+ 
++		qspi_opp_table: qspi-opp-table {
++			compatible = "operating-points-v2";
++
++			opp-19200000 {
++				opp-hz = /bits/ 64 <19200000>;
++				required-opps = <&rpmhpd_opp_min_svs>;
++			};
++
++			opp-100000000 {
++				opp-hz = /bits/ 64 <100000000>;
++				required-opps = <&rpmhpd_opp_low_svs>;
++			};
++
++			opp-150000000 {
++				opp-hz = /bits/ 64 <150000000>;
++				required-opps = <&rpmhpd_opp_svs>;
++			};
++
++			opp-300000000 {
++				opp-hz = /bits/ 64 <300000000>;
++				required-opps = <&rpmhpd_opp_nom>;
++			};
++		};
++
+ 		qspi: spi@88df000 {
+ 			compatible = "qcom,sdm845-qspi", "qcom,qspi-v1";
+ 			reg = <0 0x088df000 0 0x600>;
+@@ -3026,6 +3050,8 @@
+ 			clocks = <&gcc GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
+ 				 <&gcc GCC_QSPI_CORE_CLK>;
+ 			clock-names = "iface", "core";
++			power-domains = <&rpmhpd SDM845_CX>;
++			operating-points-v2 = <&qspi_opp_table>;
+ 			status = "disabled";
+ 		};
+ 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
