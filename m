@@ -2,148 +2,166 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B80C8300C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F22D2C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02F9E206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D10B5206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:02:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="f65ebsSB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="N5AWIvge"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KYA62r0Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgD1IAa (ORCPT
+        id S1726750AbgD1ICC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 04:00:30 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:60207 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726253AbgD1IAZ (ORCPT
+        Tue, 28 Apr 2020 04:02:02 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2687 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbgD1ICC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 04:00:25 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 7D59D580305;
-        Tue, 28 Apr 2020 04:00:24 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 28 Apr 2020 04:00:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=QKnGsgk4OM0TOmaItjELfauJeFA
-        9d1+f5+xcE296M/w=; b=f65ebsSBuYtNvUzQD1D/EKKPdF7I4mR18U6NcIicujK
-        7pEHbeW6Z2u7Nd3WjPH0wKdMKrxF9yGtt1XDFHslN2xjlIN1SCW1RZXcNBRRsYJ0
-        /ADAwcNpeD6+9UrVgkigOCh8U+D+AqDX+zMSbqkk6mOOu8KAl2CU6FMFQJiy/c+n
-        bV6SILCzbPXecC2aEOp26y+jc4aP+BOT4A9jW/6fOeZOYkRKs4C1Lj3UQp/DOl1q
-        x2SvazWn1pjzTPdzifW3dJZqafVrhcvaFGMLb3cDjSmHprH3w+dmtVlf6GlvFEmY
-        oj0IGlqXzHIjhRTD0RQRMBW52VMg7+//cRqK1UXZGxQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=QKnGsg
-        k4OM0TOmaItjELfauJeFA9d1+f5+xcE296M/w=; b=N5AWIvge0CixkUA4JOg+0U
-        Rnm7noh+st93ixLYq4lhVEZbD1Mpl4JTEs+sTfeeXPO6SY56E8RDbc5+XW1BPWXJ
-        mVyHrbVJKJ+9qA0B25xCfT8kSBCc55ZmtLBs1WMaUYim0BKGFYvbmxF/Ta948plH
-        Lv5Uql0NWvS11Q3fHkzbSJsM8tW9VWe2PJD6bFTJ63XwvFpNwcIzFraPxTaOFl0l
-        4n1OgHAAqebDzTR9hDKAYFnRd4+OOhATKKVOf2zuwk9L67eZ3prOyTMRGSvleStF
-        1hIcKoO6M+R9FpizMYfNp7ys0A3F5Yqe2VCLWIFn0iebka1ItnxmmFCGbjMW1YaQ
-        ==
-X-ME-Sender: <xms:l-KnXoyUO1XN3ffF3xnEd7HHPe9yeZ-OseJDr6mNtoWWa4rZUvI86w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedtgdduvdefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddunecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:l-KnXs91k7lnVuYQAjLtdkPJbsBG34LFPAAjrncgcT2VBJdn9R5YzQ>
-    <xmx:l-KnXoj3KeSihdw2k43jvBVlm_suW6AOgfhOab1MBXCk6DuJqe2WjA>
-    <xmx:l-KnXrH0700yoQE9hAaubCUwvDeHNBVTurPnVUmxtUNiKO_2OR4pZw>
-    <xmx:mOKnXrmGsRPT5O5irMYC50hvK-Nu-adIK3BIFGBZzmENBTRnRczDGw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3BE253065E8D;
-        Tue, 28 Apr 2020 04:00:21 -0400 (EDT)
-Date:   Tue, 28 Apr 2020 10:00:20 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Marcus Cooper <codekipper@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: Re: [PATCH 4/7] arm64: dts: allwinner: a64: Add HDMI audio
-Message-ID: <20200428080020.35qcuylwq2ylmubu@gilmour.lan>
-References: <20200426120442.11560-1-peron.clem@gmail.com>
- <20200426120442.11560-5-peron.clem@gmail.com>
+        Tue, 28 Apr 2020 04:02:02 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea7e2ed0001>; Tue, 28 Apr 2020 01:01:49 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 28 Apr 2020 01:02:02 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 28 Apr 2020 01:02:02 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Apr
+ 2020 08:02:01 +0000
+Received: from [10.26.73.101] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Apr
+ 2020 08:01:58 +0000
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Wolfram Sang <wsa@the-dreams.de>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, <linux-i2c@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <d2531fc1-b452-717d-af71-19497e14ef00@gmail.com>
+ <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
+ <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
+ <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
+ <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
+ <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
+ <20200427074837.GC3451400@ulmo>
+ <c1190858-eaea-8e94-b4d1-1cf28076c330@gmail.com>
+ <20200427110033.GC3464906@ulmo>
+ <3a06811c-02dc-ce72-ebef-78c3fc3f4f7c@gmail.com>
+ <20200427151234.GE3464906@ulmo>
+ <1ab276cf-c2b0-e085-49d8-b8ce3dba8fbe@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <4981d7eb-b41e-c597-04ff-3d3295804d5a@nvidia.com>
+Date:   Tue, 28 Apr 2020 09:01:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="l7t7g67wc3rnzd33"
-Content-Disposition: inline
-In-Reply-To: <20200426120442.11560-5-peron.clem@gmail.com>
+In-Reply-To: <1ab276cf-c2b0-e085-49d8-b8ce3dba8fbe@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588060909; bh=SuOXM9i4Bv7u14fQMgKhs9vk/w2mcphzL5YP92I8jGc=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=KYA62r0YlSY/jqHyhpkjNwQMXSQLFYubtlQED9pjrixh+PGnXztC7H7f9ux5+2ZfQ
+         6vwgwNt66bl46LbEyhpbSZFHFxp0npztDppZ7uCvA1szvMlQEh57se7ZXDArObKIDc
+         Vppw8AHfXO2qi8gBxzG/Bd+Xam8OWVY0JmmrAb1fwntkMu9o9oCO4jGN6Hqzf7CE2g
+         LD8XZHqc38+XYTkTWy6ZS4cMuvuWlkiVKBAujfqfrB6/wRicZlv0cwJN2s/sCuw2Vl
+         4KHeHxcG1B/I4LBUg12OcUkB9HenjH/hac7W2oNWpeEzIyH6EHKU0+H8/NfnPefkpi
+         q6gphXJnEZESw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---l7t7g67wc3rnzd33
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Apr 26, 2020 at 02:04:39PM +0200, Cl=E9ment P=E9ron wrote:
-> From: Marcus Cooper <codekipper@gmail.com>
+On 27/04/2020 16:18, Dmitry Osipenko wrote:
+> 27.04.2020 18:12, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On Mon, Apr 27, 2020 at 05:21:30PM +0300, Dmitry Osipenko wrote:
+>>> 27.04.2020 14:00, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> On Mon, Apr 27, 2020 at 12:52:10PM +0300, Dmitry Osipenko wrote:
+>>>>> 27.04.2020 10:48, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> ...
+>>>>>>> Maybe but all these other problems appear to have existed for somet=
+ime
+>>>>>>> now. We need to fix all, but for the moment we need to figure out w=
+hat's
+>>>>>>> best for v5.7.
+>>>>>>
+>>>>>> To me it doesn't sound like we have a good handle on what exactly is
+>>>>>> going on here and we're mostly just poking around.
+>>>>>>
+>>>>>> And even if things weren't working quite properly before, it sounds =
+to
+>>>>>> me like this patch actually made things worse.
+>>>>>
+>>>>> There is a plenty of time to work on the proper fix now. To me it sou=
+nds
+>>>>> like you're giving up on fixing the root of the problem, sorry.
+>>>>
+>>>> We're at -rc3 now and I haven't seen any promising progress in the las=
+t
+>>>> week. All the while suspend/resume is now broken on at least one board
+>>>> and that may end up hiding any other issues that could creep in in the
+>>>> meantime.
+>>>>
+>>>> Furthermore we seem to have a preexisting issue that may very well
+>>>> interfere with this patch, so I think the cautious thing is to revert
+>>>> for now and then fix the original issue first. We can always come back
+>>>> to this once everything is back to normal.
+>>>>
+>>>> Also, people are now looking at backporting this to v5.6. Unless we
+>>>> revert this from v5.7 it may get picked up for backports to other
+>>>> kernels and then I have to notify stable kernel maintainers that they
+>>>> shouldn't and they have to back things out again. That's going to caus=
+e
+>>>> a lot of wasted time for a lot of people.
+>>>>
+>>>> So, sorry, I disagree. I don't think we have "plenty of time".
+>>>
+>>> There is about a month now before the 5.7 release. It's a bit too early
+>>> to start the panic, IMO :)
+>>
+>> There's no panic. A patch got merged and it broken something, so we
+>> revert it and try again. It's very much standard procedure.
+>>
+>>> Jon already proposed a reasonable simple solution: to keep PCIe
+>>> regulators always-ON. In a longer run we may want to have I2C atomic
+>>> transfers supported for a late suspend phase.
+>>
+>> That's not really a solution, though, is it? It's just papering over
+>> an issue that this patch introduced or uncovered. I'm much more in
+>> favour of fixing problems at the root rather than keep papering over
+>> until we loose track of what the actual problems are.
 >=20
-> Add a simple-soundcard to link audio between HDMI and I2S.
->=20
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 21 +++++++++++++++++++
->  1 file changed, 21 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/b=
-oot/dts/allwinner/sun50i-a64.dtsi
-> index e56e1e3d4b73..08ab6b5e72a5 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -102,6 +102,25 @@
->  		status =3D "disabled";
->  	};
-> =20
-> +	hdmi_sound: hdmi-sound {
-> +		compatible =3D "simple-audio-card";
-> +		simple-audio-card,format =3D "i2s";
-> +		simple-audio-card,name =3D "allwinner,hdmi";
+> It's not "papering over an issue". The bug can't be fixed properly
+> without introducing I2C atomic transfers support for a late suspend
+> phase, I don't see any other solutions for now. Stable kernels do not
+> support atomic transfers at all, that proper solution won't be backportab=
+le.
 
-I'm not sure what the usual card name should be like though. I would assume=
- that
-this should be something specific enough so that you're able to differentia=
-te
-between boards / SoC so that the userspace can choose a different configura=
-tion
-based on it?
 
-If so, it's really too generic.
+There are a few issues here, but the issue Thierry and I are referring
+to is the regression introduced by this change. Yes this exposes other
+problems, but we first need to understand why this breaks resume in
+general, regardless of what the PCIe driver is doing. I will look at
+this a bit more later this week.
 
-Maxime
+Cheers
+Jon
 
---l7t7g67wc3rnzd33
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqfilAAKCRDj7w1vZxhR
-xUrBAQCbumUlWsmdgdc+kpR+FkqE+YcGoZOrfRXqGiqZpskC0gD/Xu0cJh7MGRSA
-crG2mlpqdCmsMDhoXZAU05/rhM98oQA=
-=Yq8j
------END PGP SIGNATURE-----
-
---l7t7g67wc3rnzd33--
+--=20
+nvpublic
