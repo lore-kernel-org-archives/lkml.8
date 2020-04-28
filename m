@@ -2,156 +2,130 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B98DAC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D46C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 932F920730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:28:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n29TFIPK"
+	by mail.kernel.org (Postfix) with ESMTP id 62E73208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:28:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588098491;
+	bh=K+Mwk65K/La2MVoY7m+jquMfV89IRWr8P72jJHI8WZ0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tXU+NyGV1Yntu83PMzpC5zsfmcbfImfyCZNxIMX5C9bQeQUYS81BIQOlGN+uA9Ual
+	 oz9fpe6CIzEBqoVhZ8jpBuWy3x/Avpu75v4UC469vvdS+NVbc8tMgk9/9VWg+WcH3b
+	 191Nr7jnauq2/iVHd+NpcHJm+eXUL+gmMIx1+uNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729129AbgD1S2F (ORCPT
+        id S1729140AbgD1S2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:28:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43272 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729093AbgD1S1z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:27:55 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07A96C03C1AB
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:27:55 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id e18so4908275oot.9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:27:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fDqv3R9cE9Y5n/V2wUs8Y32OjnZ/aKdvT0h6Lgiz/HY=;
-        b=n29TFIPK+JhYt+TPWIz1/KhNtyqQ7L5/rZxHlp7HpJQZGYlLqpRpOnGf0iPajeKYqy
-         tVZ/Q1POb6DEHqWsQqdi0tdxUTcZmLPkq+2U719TbJyj7uhKm3s6pa4/PpHxbuNbZjIS
-         u2bscJLu51H71kntdVPEglWvHDfWfZPCmXlfELFR5SmVifInYuOSjWZ85cNSH7HgX98W
-         AIgMewWq5YPwtUbDb7IkeoQs9aZl8IA1uhdC/s883fjhxDd59Tg6eZRNMP8JY4mZbLxg
-         FsWihl7ryjCoMDcaqpobRT8Y1RY81wCK0sevyUkOByuVkjCit5Zy75qq7mNpCPSErd2Q
-         Wn2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fDqv3R9cE9Y5n/V2wUs8Y32OjnZ/aKdvT0h6Lgiz/HY=;
-        b=FZZHSiUMvWhyytf9fkClQcUE0y4GX0mCNJdcMro1OWLrxfy8c6A/bUGcAoaYZ11Z0d
-         rcmF3qPFhzIyGXbavV/REdDdg1prf7EII2Ev4bgGLDr9LIuBPUREyiqg8PP0Qh238PgV
-         9zIM3GmeehCgUcqjLq8CxtyUrlN+GxmrYyL/4YA2Andhz/Gqxk3wfiHg8UEEQjYcNhcC
-         9T/nHq2fEfV9pf4t/ky7rxdEld6QZz7HuPbtcBToKq/wxdqFf0esLhoZrSsHY8alSO0W
-         kb4SH+hfzNDnRHOgKqngeb8Q+R6bty1CkGyRvyZJvQjmMORNIO+Uhv3fYf+utjqgpHrf
-         Uziw==
-X-Gm-Message-State: AGi0PuaHZYhlt0dl7KJOBU8ymPYMKae7VMV86+SG1U8R22PWMacD6Z0m
-        VvwwJHiWf4uJtk7AWth19y//Xi0dH39j1MFhxTHbLw==
-X-Google-Smtp-Source: APiQypIjxc9zzxbXdsZPSPNo55/H/IOTaFV2ac11jvrMkl9FRsIxseYy/mB4h80YD9VH1Suqm/zPue0vPRtWPx1jeVA=
-X-Received: by 2002:a4a:615d:: with SMTP id u29mr24640962ooe.15.1588098474005;
- Tue, 28 Apr 2020 11:27:54 -0700 (PDT)
+        Tue, 28 Apr 2020 14:28:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40332 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729096AbgD1S14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:27:56 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6151A20B80;
+        Tue, 28 Apr 2020 18:27:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588098475;
+        bh=K+Mwk65K/La2MVoY7m+jquMfV89IRWr8P72jJHI8WZ0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Cymiya41KNRl6bt6JyDD38V47N/rTsJH8ExtcXSbp+pIVGBQdcgutghckhWwAe/kF
+         ARmZZjCF8DDH0td0LSmZyqvgirJwYOQcilgIRGx0MhADdFJGwaLVn6eufq6KbCM7/s
+         c+AtF9MyEeVhHt3Wrmz6D5V34hMLilmnJ3nO2K2k=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Aric Cyr <Aric.Cyr@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 038/167] drm/amd/display: Calculate scaling ratios on every medium/full update
+Date:   Tue, 28 Apr 2020 20:23:34 +0200
+Message-Id: <20200428182229.943561352@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <CGME20200331022842eucas1p29e52dc93c4bd0b6e470c41aef19c9a86@eucas1p2.samsung.com>
- <20200331022832.209618-1-saravanak@google.com> <781eefdc-c926-7566-5305-bb9633e6fac0@samsung.com>
- <CAGETcx8aW-EY+bGEPr+20bZUF-=ghZDPyQ8AdU7eYYd-wOvekA@mail.gmail.com>
- <20200331072910.GC854501@kroah.com> <CAGETcx9r_t0AWVaTt5hk9s6Tti0UcNAersjXCJ_A04yJKNPtDA@mail.gmail.com>
- <20200428155222.GA1584194@kroah.com>
-In-Reply-To: <20200428155222.GA1584194@kroah.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 28 Apr 2020 11:27:18 -0700
-Message-ID: <CAGETcx8nbz-J1gLvoEKE_HgCcVGyV2o8rZeq_USFKM6=s7WmNg@mail.gmail.com>
-Subject: Re: [PATCH v1] driver core: Fix handling of fw_devlink=permissive
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 8:52 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Apr 16, 2020 at 11:25:47AM -0700, Saravana Kannan wrote:
-> > On Tue, Mar 31, 2020 at 12:29 AM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Mon, Mar 30, 2020 at 11:18:01PM -0700, Saravana Kannan wrote:
-> > > > On Mon, Mar 30, 2020 at 10:43 PM Marek Szyprowski
-> > > > <m.szyprowski@samsung.com> wrote:
-> > > > >
-> > > > > Hi,
-> > > > >
-> > > > > On 2020-03-31 04:28, Saravana Kannan wrote:
-> > > > > > When commit 8375e74f2bca ("driver core: Add fw_devlink kernel
-> > > > > > commandline option") added fw_devlink, it didn't implement "permissive"
-> > > > > > mode correctly.
-> > > > > >
-> > > > > > That commit got the device links flags correct to make sure unprobed
-> > > > > > suppliers don't block the probing of a consumer. However, if a consumer
-> > > > > > is waiting for mandatory suppliers to register, that could still block a
-> > > > > > consumer from probing.
-> > > > > >
-> > > > > > This commit fixes that by making sure in permissive mode, all suppliers
-> > > > > > to a consumer are treated as a optional suppliers. So, even if a
-> > > > > > consumer is waiting for suppliers to register and link itself (using the
-> > > > > > DL_FLAG_SYNC_STATE_ONLY flag) to the supplier, the consumer is never
-> > > > > > blocked from probing.
-> > > > > >
-> > > > > > Fixes: 8375e74f2bca ("driver core: Add fw_devlink kernel commandline option")
-> > > > > > Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > > > > ---
-> > > > > > Hi Marek,
-> > > > > >
-> > > > > > If you pull in this patch and then add back in my patch that created the
-> > > > > > boot problem for you, can you see if that fixes the boot issue for you?
-> > > > >
-> > > > > Indeed, this fixes booting on my Raspberry Pi3/4 boards with linux
-> > > > > next-20200327. Thanks! :)
-> > > >
-> > > > Hi Marek,
-> > > >
-> > > > Thanks for testing, but I'm not able to find the tag next-20200327. I
-> > > > can only find next-20200326 and next-20200330. I was just trying to
-> > > > make sure that next-20200327 doesn't have the revert Greg did. I'm
-> > > > guessing you meant next-20200326?
-> > > >
-> > > > > Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > >
-> > > > Thanks!
-> > > >
-> > > > Greg,
-> > > >
-> > > > Can you pull in my fix and then revert the revert?
-> > >
-> > > After 5.7-rc1 is out I will, thanks.
-> >
-> > Hi Greg,
-> >
-> > Just to clarify, this patch is a bug fix and I think this patch should
-> > go into all the stable branches that support fw_devlink.
-> >
-> > The only risky change that you needed to wait on for 5.7-rc1 is the
-> > patch [1] that sets fw_devlink=permissive by default. Well, a revert
-> > of the revert of [1].
-> >
-> > [1] - https://lore.kernel.org/lkml/20200321210305.28937-1-saravanak@google.com/
->
-> I don't understand, what kernels should this go back to?  Your "Fixes:"
-> line just shows for a 5.7-rc1 patch, nothing older.
+From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
 
-That's all. I was just stating the obvious I guess -- to pull this
-into all the releases that have the "Fixes" commit. Btw you had
-reverted the "Fixes" commit. So you'll have to revert the revert and
-then apply this patch. Hope that makes sense.
+[ Upstream commit 3bae20137cae6c03f58f96c0bc9f3d46f0bc17d4 ]
 
--Saravana
+[Why]
+If a plane isn't being actively enabled or disabled then DC won't
+always recalculate scaling rects and ratios for the primary plane.
+
+This results in only a partial or corrupted rect being displayed on
+the screen instead of scaling to fit the screen.
+
+[How]
+Add back the logic to recalculate the scaling rects into
+dc_commit_updates_for_stream since this is the expected place to
+do it in DC.
+
+This was previously removed a few years ago to fix an underscan issue
+but underscan is still functional now with this change - and it should
+be, since this is only updating to the latest plane state getting passed
+in.
+
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index fc25600107050..188e51600070b 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -2349,7 +2349,7 @@ void dc_commit_updates_for_stream(struct dc *dc,
+ 	enum surface_update_type update_type;
+ 	struct dc_state *context;
+ 	struct dc_context *dc_ctx = dc->ctx;
+-	int i;
++	int i, j;
+ 
+ 	stream_status = dc_stream_get_status(stream);
+ 	context = dc->current_state;
+@@ -2387,6 +2387,17 @@ void dc_commit_updates_for_stream(struct dc *dc,
+ 
+ 		copy_surface_update_to_plane(surface, &srf_updates[i]);
+ 
++		if (update_type >= UPDATE_TYPE_MED) {
++			for (j = 0; j < dc->res_pool->pipe_count; j++) {
++				struct pipe_ctx *pipe_ctx =
++					&context->res_ctx.pipe_ctx[j];
++
++				if (pipe_ctx->plane_state != surface)
++					continue;
++
++				resource_build_scaling_params(pipe_ctx);
++			}
++		}
+ 	}
+ 
+ 	copy_stream_update_to_stream(dc, context, stream, stream_update);
+-- 
+2.20.1
+
+
+
