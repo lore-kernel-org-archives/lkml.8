@@ -2,127 +2,116 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D8AC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D58F2C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51EDA20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:47:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rO220pzN"
+	by mail.kernel.org (Postfix) with ESMTP id ACBFA20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:47:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588099655;
+	bh=okFhcd/SyvEwUKm90K1+K90VGZtWh3QimsVJ6c3i+xQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AA4JRGndMGua1HKouR9scNpRQ1Xm4/o5CITBhVT5rEB+lGPB2fESuIZiiOF2g60E1
+	 8pcgPFz0jq+KfE7XXYgVH3h6O+p6/Fj3kDkR08OrZEzhIZ2Zd4Lwy3i/goUj4v/2c1
+	 6bW4EZ2s78yFXyNGvotee7K4Ut7chtEyZsKRdHSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731238AbgD1Sra (ORCPT
+        id S1731050AbgD1SmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:47:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46350 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730851AbgD1SrX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:47:23 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 447F9C03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:47:23 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id c18so6387037ile.5
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:47:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KoCNgzdwIuXjlJSUOdO4yyYJyVpoTgFZrzjKxnpEZi8=;
-        b=rO220pzNzM3a+H1KYm5QBMcl/fEuqAh35tLkRk1QNXkpdeaL2kKwvxSpg6bZX4GZXD
-         yUveR7vUOW+O2g7f/F5sr7mUbZPDtS98ERIWq2CeqZ0U9bLovZ3WEmFXmfhWK4wzsaqa
-         VNbdjVrPbg7mjuZtz5tU25cKpIPJ695O0qVMm2sTLFCysbQgTh3jH1ymfGPCdLp4vaTI
-         69vdjF1k9BGEEE3Ys0zBQ96OIOslNyKI55I1wMpyA9hCWOX61Nh/54vQ8LNxLhjSzDDq
-         ib4Xc7lMTdg0KEIHwcBMyThE0Zptq4j5HIx9lZPRBbzqdAqowE5MHfMIlJ04sm4Uuk8g
-         Mgbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KoCNgzdwIuXjlJSUOdO4yyYJyVpoTgFZrzjKxnpEZi8=;
-        b=t+TUD8IpBesb8n3BmD9AijL46mVC0DRXHd14Gwct7Tjk7c5+iiHQAOk4BfNIcf8gtG
-         ssIkWKnx8oEpIY6oqq428E7tnV5ca7gptSk2sh6Ls1pKRjNAC0yFCJ+KhcSV59/CTsGI
-         zY85mfNysh2glOXW5U2KupqJ6pgJnv89BDgfw2sfrxSXB6dwcl6YHGoFmi+ReGPdJ0Pb
-         yJXpF8kT+uVHjetWNDkryOOmcxR0fQWNhgPawpDf975Y1KuL9/50B7F4QdyPVHXbuR74
-         dNManZiyimBfOQJVXf4EPck+6w2wgnkqCvvf2iaT5Q2v+0RFda5p81JQh7fx0V3uPNZ9
-         GHDA==
-X-Gm-Message-State: AGi0PubwiwA3sInpzdRQLSKaJVXTXcHaDefC49lezq1uaNbowRLwooHp
-        EAwXTozsQ+PRPRHDM53OvIO/vBe3tFFDG1T+Ceh3hg==
-X-Google-Smtp-Source: APiQypKCil1UPL1+1J/3/O1rhnojP17NOIllMYWa0RqW4VJTJHHWAbOZsy2NrekLO5Nlr5bL9MWczKgMt5cNr1VcE8E=
-X-Received: by 2002:a92:d186:: with SMTP id z6mr26810990ilz.119.1588099642177;
- Tue, 28 Apr 2020 11:47:22 -0700 (PDT)
+        Tue, 28 Apr 2020 14:42:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33618 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731046AbgD1Sl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:41:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE45D20B1F;
+        Tue, 28 Apr 2020 18:41:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588099315;
+        bh=okFhcd/SyvEwUKm90K1+K90VGZtWh3QimsVJ6c3i+xQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=W4npwtWCBjFzYH6C9eUzymQqwx5pRIrEufLZY/DxTjQkxokT7HzATh9sPVoFmsTtk
+         Oesr46EZUe9XlcNdbdiLvfZd/AZZrSnSIk99LsCU9pbUf063362cM1c+HFavHMDVhp
+         3gbIJYvSa+GzdEE/8PpDLZQFuZsBP+gCB81TVK78=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.4 093/168] iio: xilinx-xadc: Fix sequencer configuration for aux channels in simultaneous mode
+Date:   Tue, 28 Apr 2020 20:24:27 +0200
+Message-Id: <20200428182244.088837946@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200428173217.5430-1-sean.j.christopherson@intel.com>
-In-Reply-To: <20200428173217.5430-1-sean.j.christopherson@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 28 Apr 2020 11:47:11 -0700
-Message-ID: <CALMp9eQp4sMbQ0Sa_BL2fd0m8=_M61XRS8KhN6uiNod4OrtwXQ@mail.gmail.com>
-Subject: Re: [PATCH v2] KVM: nVMX: Tweak handling of failure code for nested
- VM-Enter failure
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 10:32 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Use an enum for passing around the failure code for a failed VM-Enter
-> that results in VM-Exit to provide a level of indirection from the final
-> resting place of the failure code, vmcs.EXIT_QUALIFICATION.  The exit
-> qualification field is an unsigned long, e.g. passing around
-> 'u32 exit_qual' throws up red flags as it suggests KVM may be dropping
-> bits when reporting errors to L1.  This is a red herring because the
-> only defined failure codes are 0, 2, 3, and 4, i.e. don't come remotely
-> close to overflowing a u32.
->
-> Setting vmcs.EXIT_QUALIFICATION on entry failure is further complicated
-> by the MSR load list, which returns the (1-based) entry that failed, and
-> the number of MSRs to load is a 32-bit VMCS field.  At first blush, it
-> would appear that overflowing a u32 is possible, but the number of MSRs
-> that can be loaded is hardcapped at 4096 (limited by MSR_IA32_VMX_MISC).
->
-> In other words, there are two completely disparate types of data that
-> eventually get stuffed into vmcs.EXIT_QUALIFICATION, neither of which is
-> an 'unsigned long' in nature.  This was presumably the reasoning for
-> switching to 'u32' when the related code was refactored in commit
-> ca0bde28f2ed6 ("kvm: nVMX: Split VMCS checks from nested_vmx_run()").
->
-> Using an enum for the failure code addresses the technically-possible-
-> but-will-never-happen scenario where Intel defines a failure code that
-> doesn't fit in a 32-bit integer.  The enum variables and values will
-> either be automatically sized (gcc 5.4 behavior) or be subjected to some
-> combination of truncation.  The former case will simply work, while the
-> latter will trigger a compile-time warning unless the compiler is being
-> particularly unhelpful.
->
-> Separating the failure code from the failed MSR entry allows for
-> disassociating both from vmcs.EXIT_QUALIFICATION, which avoids the
-> conundrum where KVM has to choose between 'u32 exit_qual' and tracking
-> values as 'unsigned long' that have no business being tracked as such.
-> To cement the split, set vmcs12->exit_qualification directly from the
-> entry error code or failed MSR index instead of bouncing through a local
-> variable.
->
-> Opportunistically rename the variables in load_vmcs12_host_state() and
-> vmx_set_nested_state() to call out that they're ignored, set exit_reason
-> on demand on nested VM-Enter failure, and add a comment in
-> nested_vmx_load_msr() to call out that returning 'i + 1' can't wrap.
->
-> No functional change intended.
->
-> Reported-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Cc: Jim Mattson <jmattson@google.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+
+commit 8bef455c8b1694547ee59e8b1939205ed9d901a6 upstream.
+
+The XADC has two internal ADCs. Depending on the mode it is operating in
+either one or both of them are used. The device manual calls this
+continuous (one ADC) and simultaneous (both ADCs) mode.
+
+The meaning of the sequencing register for the aux channels changes
+depending on the mode.
+
+In continuous mode each bit corresponds to one of the 16 aux channels. And
+the single ADC will convert them one by one in order.
+
+In simultaneous mode the aux channels are split into two groups the first 8
+channels are assigned to the first ADC and the other 8 channels to the
+second ADC. The upper 8 bits of the sequencing register are unused and the
+lower 8 bits control both ADCs. This means a bit needs to be set if either
+the corresponding channel from the first group or the second group (or
+both) are set.
+
+Currently the driver does not have the special handling required for
+simultaneous mode. Add it.
+
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Fixes: bdc8cda1d010 ("iio:adc: Add Xilinx XADC driver")
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/iio/adc/xilinx-xadc-core.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+--- a/drivers/iio/adc/xilinx-xadc-core.c
++++ b/drivers/iio/adc/xilinx-xadc-core.c
+@@ -798,6 +798,16 @@ static int xadc_preenable(struct iio_dev
+ 	if (ret)
+ 		goto err;
+ 
++	/*
++	 * In simultaneous mode the upper and lower aux channels are samples at
++	 * the same time. In this mode the upper 8 bits in the sequencer
++	 * register are don't care and the lower 8 bits control two channels
++	 * each. As such we must set the bit if either the channel in the lower
++	 * group or the upper group is enabled.
++	 */
++	if (seq_mode == XADC_CONF1_SEQ_SIMULTANEOUS)
++		scan_mask = ((scan_mask >> 8) | scan_mask) & 0xff0000;
++
+ 	ret = xadc_write_adc_reg(xadc, XADC_REG_SEQ(1), scan_mask >> 16);
+ 	if (ret)
+ 		goto err;
+
+
