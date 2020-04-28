@@ -2,59 +2,55 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7C9C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E96C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEF0D21744
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 794D820B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:33:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098803;
-	bh=pee3zUleh4ZtCgWyYYLwuFN+JFW53m0iamtGFVqoGCI=;
+	s=default; t=1588098806;
+	bh=VCzq+jLQXYilQpSP9NHKJeyHC1337mr9NgytlMARjMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a78pNHTTPMN4Zi3t3n4+IXEhF2adCRDpYihZsu0drhxab87AfrKMmkaIPzKIYHFfU
-	 4xBxZK0EFCC9n0g5JvVO8IsTIeWhQcicACPCrHCPMPSxUYFCxeqz2xA2ejqb9RjngS
-	 GcJD+J8jO0V5DHp7TUL005xxS+jdnYAQc8F6KvWk=
+	b=xcvtuu7CWzzYQiFcyPycD0GKfWMks/cWTFoamQvDYorMIf38a+ZaeaDE94P4OpW0p
+	 Z9jhLrfHO99J2DD4x5/J+wrvPW1uLwkwEOFME/RQQ9kbsjX5vyH5SObN5fm2tuqAzx
+	 OLYl63dIW6+OB74AbVAhSHIWl2D9VtJOHyeXUqvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729400AbgD1SdW (ORCPT
+        id S1729941AbgD1SdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:33:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49598 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:33:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729916AbgD1SdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:33:15 -0400
+        id S1729930AbgD1SdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:33:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0D7220B80;
-        Tue, 28 Apr 2020 18:33:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2A9720B80;
+        Tue, 28 Apr 2020 18:33:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098795;
-        bh=pee3zUleh4ZtCgWyYYLwuFN+JFW53m0iamtGFVqoGCI=;
+        s=default; t=1588098800;
+        bh=VCzq+jLQXYilQpSP9NHKJeyHC1337mr9NgytlMARjMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DqEtVdl1SEKFw/PEG6SG6nY7M2Rk9qbna2783lv69Cfx5rh0/V/pwLKYdstsWPh8a
-         C59gL2AhUoUrC7a5u+NY8FvrF0JV3BmOUwXOosiY9uS5rV0cnFASWEzFgEbB7cXPm9
-         FqpmHOwzr0P+OHmrp+5ORpgSP7kELcYf/Q1VTYOw=
+        b=Ry3TXMhnFZyZgXe0eLimR5oQDGNNiNesNmSUULPKlEKvQ+arbP7kPj35iW/MBVTRC
+         we/Xozobm+rRpDAwC3FLaQiSSqAHV2z7VMb/FwXvyU5G/kMzxoQth4eoxw984oLh8b
+         M5gpAiEIIALn9znYF9ghZYbeX8k9bqnxitJS/XMw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 016/168] pwm: rcar: Fix late Runtime PM enablement
-Date:   Tue, 28 Apr 2020 20:23:10 +0200
-Message-Id: <20200428182233.749983709@linuxfoundation.org>
+        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 058/131] net: bcmgenet: correct per TX/RX ring statistics
+Date:   Tue, 28 Apr 2020 20:24:30 +0200
+Message-Id: <20200428182232.275798781@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -64,63 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit 1451a3eed24b5fd6a604683f0b6995e0e7e16c79 ]
+[ Upstream commit a6d0b83f25073bdf08b8547aeff961a62c6ab229 ]
 
-Runtime PM should be enabled before calling pwmchip_add(), as PWM users
-can appear immediately after the PWM chip has been added.
-Likewise, Runtime PM should be disabled after the removal of the PWM
-chip.
+The change to track net_device_stats per ring to better support SMP
+missed updating the rx_dropped member.
 
-Fixes: ed6c1476bf7f16d5 ("pwm: Add support for R-Car PWM Timer")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The ndo_get_stats method is also needed to combine the results for
+ethtool statistics (-S) before filling in the ethtool structure.
+
+Fixes: 37a30b435b92 ("net: bcmgenet: Track per TX/RX rings statistics")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/pwm/pwm-rcar.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
-index 852eb2347954d..b98ec8847b488 100644
---- a/drivers/pwm/pwm-rcar.c
-+++ b/drivers/pwm/pwm-rcar.c
-@@ -228,24 +228,28 @@ static int rcar_pwm_probe(struct platform_device *pdev)
- 	rcar_pwm->chip.base = -1;
- 	rcar_pwm->chip.npwm = 1;
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -998,6 +998,8 @@ static void bcmgenet_get_ethtool_stats(s
+ 	if (netif_running(dev))
+ 		bcmgenet_update_mib_counters(priv);
  
-+	pm_runtime_enable(&pdev->dev);
++	dev->netdev_ops->ndo_get_stats(dev);
 +
- 	ret = pwmchip_add(&rcar_pwm->chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to register PWM chip: %d\n", ret);
-+		pm_runtime_disable(&pdev->dev);
- 		return ret;
- 	}
- 
--	pm_runtime_enable(&pdev->dev);
--
- 	return 0;
+ 	for (i = 0; i < BCMGENET_STATS_LEN; i++) {
+ 		const struct bcmgenet_stats *s;
+ 		char *p;
+@@ -3211,6 +3213,7 @@ static struct net_device_stats *bcmgenet
+ 	dev->stats.rx_packets = rx_packets;
+ 	dev->stats.rx_errors = rx_errors;
+ 	dev->stats.rx_missed_errors = rx_errors;
++	dev->stats.rx_dropped = rx_dropped;
+ 	return &dev->stats;
  }
  
- static int rcar_pwm_remove(struct platform_device *pdev)
- {
- 	struct rcar_pwm_chip *rcar_pwm = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&rcar_pwm->chip);
- 
- 	pm_runtime_disable(&pdev->dev);
- 
--	return pwmchip_remove(&rcar_pwm->chip);
-+	return ret;
- }
- 
- static const struct of_device_id rcar_pwm_of_table[] = {
--- 
-2.20.1
-
 
 
