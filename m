@@ -2,75 +2,95 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 770D7C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63ADEC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B771206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B533206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbgD1FE1 (ORCPT
+        id S1726343AbgD1FF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 01:04:27 -0400
-Received: from mga14.intel.com ([192.55.52.115]:10411 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726042AbgD1FE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 01:04:27 -0400
-IronPort-SDR: st8HWoiB/PiRtIxcsMIZZ+y6+xK/NiJnBbQRq2/c7UDIRubmDoh0s3+RwqOFosOVAiVdoEpiQ9
- W5HBQticXTGw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 22:04:26 -0700
-IronPort-SDR: iPxTFM3ev1MWeMRC4aiL1oaNO47gnWGI3rOc8ZJrQ92tzn+Uf/L/rHO+D2h+9Xn5ybqKGfqhVk
- cxEq5b450dog==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,326,1583222400"; 
-   d="scan'208";a="302607777"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by FMSMGA003.fm.intel.com with ESMTP; 27 Apr 2020 22:04:25 -0700
-Date:   Tue, 28 Apr 2020 13:01:35 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     linux-fpga@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, mdf@kernel.org
-Subject: How to update a piece of flash for FPGA firmware?
-Message-ID: <20200428050135.GA27416@yilunxu-OptiPlex-7050>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Tue, 28 Apr 2020 01:05:27 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:53195 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726042AbgD1FF1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 01:05:27 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R691e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TwvHWrt_1588050323;
+Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TwvHWrt_1588050323)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 28 Apr 2020 13:05:24 +0800
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+To:     jeyu@kernel.org, corbet@lwn.net, rdunlap@infradead.org,
+        mchehab+samsung@kernel.org, tglx@linutronix.de,
+        akpm@linux-foundation.org, gregkh@linuxfoundation.org,
+        pawan.kumar.gupta@linux.intel.com, jgross@suse.com
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        tianjia.zhang@linux.alibaba.com
+Subject: [PATCH v2] module: Allow to disable modsign in kernel cmdline
+Date:   Tue, 28 Apr 2020 13:05:23 +0800
+Message-Id: <20200428050523.47253-1-tianjia.zhang@linux.alibaba.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This option allows to disable modsign completely at the beginning,
+and turn off by set the kernel cmdline `no_modsig_enforce` when
+`CONFIG_MODULE_SIG_FORCE` is enabled.
 
-I wonder if an updating of FPGA Flash (but cannot reload) could be
-implemented as fpga-mgr?
+Yet another change allows to always show the current status of
+modsign through `/sys/module/module/parameters/sig_enforce`.
 
-I have the pcie based FPGA card. The bitstream for FPGA static region is
-stored on flash chip. Board will load the bitstream to FPGA on system
-power cycle. The flash chip could be accessed through "PCIE -> ... ->
-Flash update engine -> Flash". So the update of the FPGA static region is
-basicly updating the flash chip through PCIE and rebooting system.
+Signed-off-by: Jia Zhang <zhang.jia@linux.alibaba.com>
+Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+---
+ Documentation/admin-guide/kernel-parameters.txt | 6 ++++++
+ kernel/module.c                                 | 8 ++++++++
+ 2 files changed, 14 insertions(+)
 
-Should I implement the flash update engine as a fpga-mgr device? On one
-hand it is just a flash write, FPGA functionality is actually not
-changed before reboot. Does fpga-mgr requires bitstream takes function
-immediately after write_complete()? On the other hand, the flash write
-do affects FPGA static region on next boot. Operating on the
-corresponding fpga region makes kernel fully aware of what is being
-done.
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 7bc83f3d9bdf..00ed7566959f 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3190,6 +3190,12 @@
+ 	noirqdebug	[X86-32] Disables the code which attempts to detect and
+ 			disable unhandled interrupt sources.
+ 
++	no_modsig_enforce
++			[KNL] When CONFIG_MODULE_SIG_FORCE is set, this option
++			allows to disable modsign completely at the beginning.
++			This means that modules without (valid) signatures will
++			success to load.
++
+ 	no_timer_check	[X86,APIC] Disables the code which tests for
+ 			broken timer IRQ sources.
+ 
+diff --git a/kernel/module.c b/kernel/module.c
+index 646f1e2330d2..0e68e1286377 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -269,6 +269,14 @@ static void module_assert_mutex_or_preempt(void)
+ 
+ static bool sig_enforce = IS_ENABLED(CONFIG_MODULE_SIG_FORCE);
+ module_param(sig_enforce, bool_enable_only, 0644);
++#ifdef CONFIG_MODULE_SIG_FORCE
++static int __init set_no_modsig_enforce(char *str)
++{
++	sig_enforce = false;
++	return 1;
++}
++__setup("no_modsig_enforce", set_no_modsig_enforce);
++#endif /* !CONFIG_MODULE_SIG_FORCE */
+ 
+ /*
+  * Export sig_enforce kernel cmdline parameter to allow other subsystems rely
+-- 
+2.17.1
 
-Actually the FPGA card do has the capability to reload bitstream at
-runtime. But it will cause the whole PCIE device lost, static region is
-also destroyed. We need to rescan PCI to get it back. So I think
-basically this is the same case as system reboot from FPGA's
-perspective.
-
-Thanks
-Yilun
