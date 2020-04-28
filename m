@@ -2,126 +2,129 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD8BC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88675C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD2A206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F5EE206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:16:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="dy+skcaG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbgD1NPc (ORCPT
+        id S1727026AbgD1NQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:15:32 -0400
-Received: from relay.sw.ru ([185.231.240.75]:51234 "EHLO relay.sw.ru"
+        Tue, 28 Apr 2020 09:16:49 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:16939 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726764AbgD1NPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:15:32 -0400
-Received: from [192.168.15.93] (helo=iris.lishka.ru)
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <den@openvz.org>)
-        id 1jTQ4u-0005SY-Dh; Tue, 28 Apr 2020 16:15:12 +0300
-From:   "Denis V. Lunev" <den@openvz.org>
-Cc:     "Denis V. Lunev" <den@openvz.org>,
-        Konstantin Khorenko <khorenko@virtuozzo.com>,
-        Faisal Latif <faisal.latif@intel.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] i40iw: remove bogus call to netdev_master_upper_dev_get
-Date:   Tue, 28 Apr 2020 16:15:11 +0300
-Message-Id: <20200428131511.11049-1-den@openvz.org>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        id S1726764AbgD1NQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 09:16:48 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49BMcF42Gcz9tyZy;
+        Tue, 28 Apr 2020 15:16:45 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=dy+skcaG; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id moQddnqFTmZz; Tue, 28 Apr 2020 15:16:45 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49BMcF2YPZz9tyb5;
+        Tue, 28 Apr 2020 15:16:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1588079805; bh=j2evlJVbC4DblvaOZbL9aC5MHHjN3Brop8EHn8xM2LY=;
+        h=From:Subject:To:Cc:Date:From;
+        b=dy+skcaG+aamFAjpi4FX0JOVppUyIIwwj4QjmWk8xaqvtue5byUWNU4fUZaRcw3zQ
+         9NdNwgEcOW91kbzO5WaxmbFeZDEbmpXIVcocAAq1GNlCR6QEsCy0J9c+VTzfSb2C/X
+         hVStv4eOviZLqxyo7RDFU6QkipVdjR0HQQ1GokQo=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DE5228B82C;
+        Tue, 28 Apr 2020 15:16:46 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id yvysETkW__7X; Tue, 28 Apr 2020 15:16:46 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 938688B82D;
+        Tue, 28 Apr 2020 15:16:46 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 2666F658AD; Tue, 28 Apr 2020 13:16:46 +0000 (UTC)
+Message-Id: <cover.1588079622.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v8 0/8] powerpc: switch VDSO to C implementation
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        arnd@arndb.de, tglx@linutronix.de, vincenzo.frascino@arm.com,
+        luto@kernel.org, linux-arch@vger.kernel.org
+Date:   Tue, 28 Apr 2020 13:16:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Local variable netdev is not used in these calls.
+This is the seventh version of a series to switch powerpc VDSO to
+generic C implementation.
 
-It should be noted, that this change is required to work in bonded mode.
-In the other case we would get the following assert:
- "RTNL: assertion failed at net/core/dev.c (5665)"
-with the calltrace as follows:
-	dump_stack+0x19/0x1b
-	netdev_master_upper_dev_get+0x61/0x70
-	i40iw_addr_resolve_neigh+0x1e8/0x220
-	i40iw_make_cm_node+0x296/0x700
-	? i40iw_find_listener.isra.10+0xcc/0x110
-	i40iw_receive_ilq+0x3d4/0x810
-	i40iw_puda_poll_completion+0x341/0x420
-	i40iw_process_ceq+0xa5/0x280
-	i40iw_ceq_dpc+0x1e/0x40
-	tasklet_action+0x83/0x140
-	__do_softirq+0x125/0x2bb
-	call_softirq+0x1c/0x30
-	do_softirq+0x65/0xa0
-	irq_exit+0x105/0x110
-	do_IRQ+0x56/0xf0
-	common_interrupt+0x16a/0x16a
-	? cpuidle_enter_state+0x57/0xd0
-	cpuidle_idle_call+0xde/0x230
-	arch_cpu_idle+0xe/0xc0
-	cpu_startup_entry+0x14a/0x1e0
-	start_secondary+0x1f7/0x270
-	start_cpu+0x5/0x14
+Main changes since v7 are:
+- Added gettime64 on PPC32
 
-Signed-off-by: Denis V. Lunev <den@openvz.org>
-CC: Konstantin Khorenko <khorenko@virtuozzo.com>
-CC: Faisal Latif <faisal.latif@intel.com>
-CC: Shiraz Saleem <shiraz.saleem@intel.com>
-CC: Doug Ledford <dledford@redhat.com>
-CC: Jason Gunthorpe <jgg@ziepe.ca>
-CC: linux-rdma@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
----
- drivers/infiniband/hw/i40iw/i40iw_cm.c | 8 --------
- 1 file changed, 8 deletions(-)
+This series applies on today's powerpc/merge branch.
 
-diff --git a/drivers/infiniband/hw/i40iw/i40iw_cm.c b/drivers/infiniband/hw/i40iw/i40iw_cm.c
-index bb78d3280acc..fa7a5ff498c7 100644
---- a/drivers/infiniband/hw/i40iw/i40iw_cm.c
-+++ b/drivers/infiniband/hw/i40iw/i40iw_cm.c
-@@ -1987,7 +1987,6 @@ static int i40iw_addr_resolve_neigh(struct i40iw_device *iwdev,
- 	struct rtable *rt;
- 	struct neighbour *neigh;
- 	int rc = arpindex;
--	struct net_device *netdev = iwdev->netdev;
- 	__be32 dst_ipaddr = htonl(dst_ip);
- 	__be32 src_ipaddr = htonl(src_ip);
- 
-@@ -1997,9 +1996,6 @@ static int i40iw_addr_resolve_neigh(struct i40iw_device *iwdev,
- 		return rc;
- 	}
- 
--	if (netif_is_bond_slave(netdev))
--		netdev = netdev_master_upper_dev_get(netdev);
--
- 	neigh = dst_neigh_lookup(&rt->dst, &dst_ipaddr);
- 
- 	rcu_read_lock();
-@@ -2065,7 +2061,6 @@ static int i40iw_addr_resolve_neigh_ipv6(struct i40iw_device *iwdev,
- {
- 	struct neighbour *neigh;
- 	int rc = arpindex;
--	struct net_device *netdev = iwdev->netdev;
- 	struct dst_entry *dst;
- 	struct sockaddr_in6 dst_addr;
- 	struct sockaddr_in6 src_addr;
-@@ -2086,9 +2081,6 @@ static int i40iw_addr_resolve_neigh_ipv6(struct i40iw_device *iwdev,
- 		return rc;
- 	}
- 
--	if (netif_is_bond_slave(netdev))
--		netdev = netdev_master_upper_dev_get(netdev);
--
- 	neigh = dst_neigh_lookup(dst, dst_addr.sin6_addr.in6_u.u6_addr32);
- 
- 	rcu_read_lock();
+See the last patches for details on changes and performance.
+
+Christophe Leroy (8):
+  powerpc/vdso64: Switch from __get_datapage() to get_datapage inline
+    macro
+  powerpc/vdso: Remove __kernel_datapage_offset and simplify
+    __get_datapage()
+  powerpc/vdso: Remove unused \tmp param in __get_datapage()
+  powerpc/processor: Move cpu_relax() into asm/vdso/processor.h
+  powerpc/vdso: Prepare for switching VDSO to generic C implementation.
+  powerpc/vdso: Switch VDSO to generic C implementation.
+  lib/vdso: force inlining of __cvdso_clock_gettime_common()
+  powerpc/vdso: Provide __kernel_clock_gettime64() on vdso32
+
+ arch/powerpc/Kconfig                         |   2 +
+ arch/powerpc/include/asm/clocksource.h       |   7 +
+ arch/powerpc/include/asm/processor.h         |  10 +-
+ arch/powerpc/include/asm/vdso/clocksource.h  |   7 +
+ arch/powerpc/include/asm/vdso/gettimeofday.h | 175 +++++++++++
+ arch/powerpc/include/asm/vdso/processor.h    |  23 ++
+ arch/powerpc/include/asm/vdso/vsyscall.h     |  25 ++
+ arch/powerpc/include/asm/vdso_datapage.h     |  50 ++--
+ arch/powerpc/kernel/asm-offsets.c            |  49 +--
+ arch/powerpc/kernel/time.c                   |  91 +-----
+ arch/powerpc/kernel/vdso.c                   |  58 +---
+ arch/powerpc/kernel/vdso32/Makefile          |  32 +-
+ arch/powerpc/kernel/vdso32/cacheflush.S      |   2 +-
+ arch/powerpc/kernel/vdso32/config-fake32.h   |  34 +++
+ arch/powerpc/kernel/vdso32/datapage.S        |   7 +-
+ arch/powerpc/kernel/vdso32/gettimeofday.S    | 300 +------------------
+ arch/powerpc/kernel/vdso32/vdso32.lds.S      |   8 +-
+ arch/powerpc/kernel/vdso32/vgettimeofday.c   |  35 +++
+ arch/powerpc/kernel/vdso64/Makefile          |  23 +-
+ arch/powerpc/kernel/vdso64/cacheflush.S      |   9 +-
+ arch/powerpc/kernel/vdso64/datapage.S        |  31 +-
+ arch/powerpc/kernel/vdso64/gettimeofday.S    | 243 +--------------
+ arch/powerpc/kernel/vdso64/vdso64.lds.S      |   7 +-
+ arch/powerpc/kernel/vdso64/vgettimeofday.c   |  29 ++
+ lib/vdso/gettimeofday.c                      |   2 +-
+ 25 files changed, 460 insertions(+), 799 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/clocksource.h
+ create mode 100644 arch/powerpc/include/asm/vdso/clocksource.h
+ create mode 100644 arch/powerpc/include/asm/vdso/gettimeofday.h
+ create mode 100644 arch/powerpc/include/asm/vdso/processor.h
+ create mode 100644 arch/powerpc/include/asm/vdso/vsyscall.h
+ create mode 100644 arch/powerpc/kernel/vdso32/config-fake32.h
+ create mode 100644 arch/powerpc/kernel/vdso32/vgettimeofday.c
+ create mode 100644 arch/powerpc/kernel/vdso64/vgettimeofday.c
+
 -- 
-2.17.1
+2.25.0
 
