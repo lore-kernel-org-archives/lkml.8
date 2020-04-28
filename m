@@ -2,221 +2,108 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23569C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE109C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F32E320730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:49:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J7O+4qOI"
+	by mail.kernel.org (Postfix) with ESMTP id D460C206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:51:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgD1Wtd (ORCPT
+        id S1726477AbgD1WvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:49:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56114 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726272AbgD1Wtd (ORCPT
+        Tue, 28 Apr 2020 18:51:08 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46842 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725934AbgD1WvH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:49:33 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE8BBC03C1AE
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:49:32 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id a5so151961pjh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:49:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eJnAlqksatEHIST9lZG2+gAOgyHcm2ZZEAuU4doQ9ac=;
-        b=J7O+4qOIfeyYpfaKAdtp9OUVue2BhqJFJmQEH1X+REMbqOMLIVyZ+0jvDnAmTLyoHn
-         e4TmmJOi3PuorckIKaU+Z/6V1OFUTtehYGpvvPYZfRXEKDleMD+Zus8cQfp1Gv2RHpqL
-         s4BnHn9B3oF60yqXkLwV9RgZQy2c4QJtsXR1M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eJnAlqksatEHIST9lZG2+gAOgyHcm2ZZEAuU4doQ9ac=;
-        b=DvZW7wn5hbr21JoOZAY6hxEGNjbbrpAZTV8f8zhcOs9aD7fnNF00f561B+H50V2eHf
-         AD7MFzXK4VQ/FLepu5abZ/5egiiDJqJ5qZe/OD4WTmrgnbU1xQbPL9O7Nq0uuwiKP/Zl
-         DzeAC2Yh7Oid2qRqpitYbiC9sKQ5WQNvG4iOgx3GtP1nBVI5oyhNODgM7eXgFTh6UNNy
-         fs2JvIkcOa3w4lPk/trQtCVqug2N7pPFCFkqqMbPwicf8FybjsO4LgkLrktzhMWmhx+F
-         s5dxasiC5jmVqoP/7PGIp+OmVoXJNMAZsQQzPtPYvNFFvxaDsJU2OYhGFziECjrx7VUP
-         oRPg==
-X-Gm-Message-State: AGi0PuYEnWOVn1thh8A0ARPNBObCvAmlOciLgxIE6OrLWcAtl+5vJMtK
-        XJy6TP1WxrrV6XYg1wIxOmI9TQ==
-X-Google-Smtp-Source: APiQypIQ5jCs/L6Z9oSlBgqQyVA0pVA5OF/ygSl4g2VWHZq3oQc1umzyJXLzgRrlSkDPDoPXhgGN6A==
-X-Received: by 2002:a17:90a:24ea:: with SMTP id i97mr7864651pje.189.1588114171970;
-        Tue, 28 Apr 2020 15:49:31 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id h8sm2505525pfo.143.2020.04.28.15.49.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 15:49:30 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 15:49:29 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v3 01/17] tty: serial: qcom_geni_serial: Use OPP API to
- set clk/perf state
-Message-ID: <20200428224929.GI4525@google.com>
-References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
- <1588080785-6812-2-git-send-email-rnayak@codeaurora.org>
+        Tue, 28 Apr 2020 18:51:07 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03SMXIPx025824;
+        Tue, 28 Apr 2020 18:50:51 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mguwftgp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 18:50:50 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03SMXW1k026169;
+        Tue, 28 Apr 2020 18:50:50 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mguwftg3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 18:50:50 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03SMeNJ1012807;
+        Tue, 28 Apr 2020 22:50:48 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma01fra.de.ibm.com with ESMTP id 30mcu8d8yk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 22:50:47 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03SMojJj61538642
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 22:50:45 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EED7752057;
+        Tue, 28 Apr 2020 22:50:44 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.4.15])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 43CCC5204F;
+        Tue, 28 Apr 2020 22:50:44 +0000 (GMT)
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     akpm@linux-foundation.org, jack@suse.cz, kirill@shutemov.name
+Cc:     borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
+        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
+        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, dave.hansen@intel.com,
+        peterz@infradead.org, sean.j.christopherson@intel.com
+Subject: [PATCH v1 1/1] fs/splice: add missing callback for inaccessible pages
+Date:   Wed, 29 Apr 2020 00:50:43 +0200
+Message-Id: <20200428225043.3091359-1-imbrenda@linux.ibm.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1588080785-6812-2-git-send-email-rnayak@codeaurora.org>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-28_15:2020-04-28,2020-04-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 clxscore=1015 mlxlogscore=968 mlxscore=0 suspectscore=0
+ bulkscore=0 adultscore=0 impostorscore=0 phishscore=0 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 07:02:49PM +0530, Rajendra Nayak wrote:
-> geni serial needs to express a perforamnce state requirement on CX
-> powerdomain depending on the frequency of the clock rates.
-> Use OPP table from DT to register with OPP framework and use
-> dev_pm_opp_set_rate() to set the clk/perf state.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Akash Asthana <akashast@codeaurora.org>
-> Cc: linux-serial@vger.kernel.org
-> ---
->  drivers/tty/serial/qcom_geni_serial.c | 34 +++++++++++++++++++++++++++++-----
->  include/linux/qcom-geni-se.h          |  4 ++++
->  2 files changed, 33 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-> index 6119090..c4de3ff 100644
-> --- a/drivers/tty/serial/qcom_geni_serial.c
-> +++ b/drivers/tty/serial/qcom_geni_serial.c
-> @@ -9,6 +9,7 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
-> +#include <linux/pm_opp.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/pm_wakeirq.h>
-> @@ -961,7 +962,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
->  		goto out_restart_rx;
->  
->  	uport->uartclk = clk_rate;
-> -	clk_set_rate(port->se.clk, clk_rate);
-> +	dev_pm_opp_set_rate(uport->dev, clk_rate);
->  	ser_clk_cfg = SER_CLK_EN;
->  	ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
->  
-> @@ -1198,8 +1199,11 @@ static void qcom_geni_serial_pm(struct uart_port *uport,
->  	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF)
->  		geni_se_resources_on(&port->se);
->  	else if (new_state == UART_PM_STATE_OFF &&
-> -			old_state == UART_PM_STATE_ON)
-> +			old_state == UART_PM_STATE_ON) {
-> +		/* Drop the performance state vote */
-> +		dev_pm_opp_set_rate(uport->dev, 0);
->  		geni_se_resources_off(&port->se);
-> +	}
->  }
->  
->  static const struct uart_ops qcom_geni_console_pops = {
-> @@ -1318,13 +1322,25 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
->  	if (of_property_read_bool(pdev->dev.of_node, "cts-rts-swap"))
->  		port->cts_rts_swap = true;
->  
-> +	port->se.opp_table = dev_pm_opp_set_clkname(&pdev->dev, "se");
-> +	if (IS_ERR(port->se.opp_table))
-> +		return PTR_ERR(port->se.opp_table);
-> +	/* OPP table is optional */
-> +	ret = dev_pm_opp_of_add_table(&pdev->dev);
-> +	if (!ret) {
-> +		port->se.has_opp_table = true;
-> +	} else if (ret != -ENODEV) {
-> +		dev_err(&pdev->dev, "Invalid OPP table in Device tree\n");
-> +		return ret;
-> +	}
-> +
->  	uport->private_data = drv;
->  	platform_set_drvdata(pdev, port);
->  	port->handle_rx = console ? handle_rx_console : handle_rx_uart;
->  
->  	ret = uart_add_one_port(drv, uport);
->  	if (ret)
-> -		return ret;
-> +		goto err;
->  
->  	irq_set_status_flags(uport->irq, IRQ_NOAUTOEN);
->  	ret = devm_request_irq(uport->dev, uport->irq, qcom_geni_serial_isr,
-> @@ -1332,7 +1348,7 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
->  	if (ret) {
->  		dev_err(uport->dev, "Failed to get IRQ ret %d\n", ret);
->  		uart_remove_one_port(drv, uport);
-> -		return ret;
-> +		goto err;
->  	}
->  
->  	/*
-> @@ -1349,11 +1365,16 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
->  		if (ret) {
->  			device_init_wakeup(&pdev->dev, false);
->  			uart_remove_one_port(drv, uport);
-> -			return ret;
-> +			goto err;
->  		}
->  	}
->  
->  	return 0;
-> +err:
-> +	if (port->se.has_opp_table)
-> +		dev_pm_opp_of_remove_table(&pdev->dev);
-> +	dev_pm_opp_put_clkname(port->se.opp_table);
-> +	return ret;
->  }
->  
->  static int qcom_geni_serial_remove(struct platform_device *pdev)
-> @@ -1361,6 +1382,9 @@ static int qcom_geni_serial_remove(struct platform_device *pdev)
->  	struct qcom_geni_serial_port *port = platform_get_drvdata(pdev);
->  	struct uart_driver *drv = port->uport.private_data;
->  
-> +	if (port->se.has_opp_table)
-> +		dev_pm_opp_of_remove_table(&pdev->dev);
-> +	dev_pm_opp_put_clkname(port->se.opp_table);
->  	dev_pm_clear_wake_irq(&pdev->dev);
->  	device_init_wakeup(&pdev->dev, false);
->  	uart_remove_one_port(drv, &port->uport);
-> diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
-> index dd46494..cce71f3 100644
-> --- a/include/linux/qcom-geni-se.h
-> +++ b/include/linux/qcom-geni-se.h
-> @@ -33,6 +33,8 @@ struct clk;
->   * @clk:		Handle to the core serial engine clock
->   * @num_clk_levels:	Number of valid clock levels in clk_perf_tbl
->   * @clk_perf_tbl:	Table of clock frequency input to serial engine clock
-> + * @opp_table:		Pointer to the OPP table
-> + * @has_opp_table:	Specifies if the SE has an OPP table
->   */
->  struct geni_se {
->  	void __iomem *base;
-> @@ -41,6 +43,8 @@ struct geni_se {
->  	struct clk *clk;
->  	unsigned int num_clk_levels;
->  	unsigned long *clk_perf_tbl;
-> +	struct opp_table *opp_table;
-> +	bool has_opp_table;
->  };
->  
->  /* Common SE registers */
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+If a page is inaccesible and it is used for things like sendfile, then
+the content of the page is not always touched, and can be passed
+directly to a driver, causing issues.
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+This patch fixes the issue by adding a call to arch_make_page_accessible
+in page_cache_pipe_buf_confirm; this fixes the issue.
+
+Fixes: f28d43636d6f ("mm/gup/writeback: add callbacks for inaccessible pages")
+Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+---
+ fs/splice.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/fs/splice.c b/fs/splice.c
+index 4735defc46ee..f026e0ce9acd 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -106,6 +106,9 @@ static int page_cache_pipe_buf_confirm(struct pipe_inode_info *pipe,
+ 	struct page *page = buf->page;
+ 	int err;
+ 
++	if (arch_make_page_accessible(page))
++		return -EIO;
++
+ 	if (!PageUptodate(page)) {
+ 		lock_page(page);
+ 
+-- 
+2.25.4
+
