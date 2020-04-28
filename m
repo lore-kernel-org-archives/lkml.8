@@ -2,117 +2,93 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFE5C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3924C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AAD62072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:48:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pmOSABxH"
+	by mail.kernel.org (Postfix) with ESMTP id A43032076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:48:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgD1Vs2 (ORCPT
+        id S1726636AbgD1Vsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:48:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46510 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725934AbgD1Vs2 (ORCPT
+        Tue, 28 Apr 2020 17:48:54 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:40589 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbgD1Vsy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:48:28 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03B2BC03C1AE
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 14:48:28 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id p25so15632pfn.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 14:48:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=dqAZuKTJWpaP05zkAPKfvVDCpl8ANdrvGruwthh838k=;
-        b=pmOSABxHHiNio50lxIic4qwP9WYI6VAnjEJdNj3CIRNSv/qhFErqyzLrDgzP54fVQG
-         jY/EwsdJGtcBF51kGChBHDO4NW4DZ8lLrpPx7az5sDeIeRXAG3HFf+ledNrcxwk5uY9f
-         9GkOw0p2TSqF0AbuVbzmlxibAliWOYiIm+K4JKCumQVjJvGoD4CWX6/0RI81j8fcnVj3
-         1RWDGEA7l36wamt9QA2jvJ5+HnFU30+FK5lyUgyV4KBVhtMXXd50VAAezNu0YV8ovhmE
-         xZWMTeP6ckwgR7c4Uv3Og8j239e5DB+EgEbrdseHMd4b4aCEoAxFCeIRmbaJI6JUOOwJ
-         whlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=dqAZuKTJWpaP05zkAPKfvVDCpl8ANdrvGruwthh838k=;
-        b=IyI6zlH3YmXr6B/+SDlRUG7Z7Fmq7s7/mjYj1vEKFn5l60zl8DuK3+DKajLNxQ7ZsF
-         WhlV9hFgj3tDh8Bk6k+bP4z1YsIL+SEgog9uJZylBvgylqLdTtyVelx+GfGHx098t2xE
-         OUSUhFV1+Vbuxq0El5q4kLO1N0cchnvhualxqx62EDW1sTLyNOF1x+Vs+RdfqQXPpI0D
-         GOOFSX6FlcvaSkorOyZpY1IizSN83MH0hI0muA7/NgC8k53xMronRgBRUBchxEBjBOaE
-         LDZM69ocw+TcTdr6Vo5RDRbC6/hbOSfx3cbcXQ7S1N+MJlyxWC+HXOZTvI+F1kCNpKHK
-         a1VA==
-X-Gm-Message-State: AGi0PuYb+GKrCWoM6Dz4VMmDvE7ixxm+UbfR9IiPwTrVgNgcL/nUkNt0
-        icEzIxiYgb2tMH/UF+sISPqWIQ==
-X-Google-Smtp-Source: APiQypKqrTPBNb6ixbHq6v58KY/gOdS/uMedCRi//Pq39dZ4/iXN5tqNLwo23B3PjW/4uTzXa48ChA==
-X-Received: by 2002:a62:cf06:: with SMTP id b6mr33582254pfg.9.1588110507142;
-        Tue, 28 Apr 2020 14:48:27 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id a138sm15825113pfd.32.2020.04.28.14.48.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 14:48:26 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 14:48:25 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Vlastimil Babka <vbabka@suse.cz>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>
-Subject: Re: [patch] mm, oom: stop reclaiming if GFP_ATOMIC will start failing
- soon
-In-Reply-To: <28e35a8b-400e-9320-5a97-accfccf4b9a8@suse.cz>
-Message-ID: <alpine.DEB.2.22.394.2004281436280.131129@chino.kir.corp.google.com>
-References: <alpine.DEB.2.22.394.2004241347310.70176@chino.kir.corp.google.com> <20200425172706.26b5011293e8dc77b1dccaf3@linux-foundation.org> <alpine.DEB.2.22.394.2004261959310.80211@chino.kir.corp.google.com> <20200427133051.b71f961c1bc53a8e72c4f003@linux-foundation.org>
- <28e35a8b-400e-9320-5a97-accfccf4b9a8@suse.cz>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Tue, 28 Apr 2020 17:48:54 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MLi0U-1jlDUS435U-00HhCE; Tue, 28 Apr 2020 23:47:57 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Shreyas NC <shreyas.nc@intel.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: component: suppress uninitialized-variable warning
+Date:   Tue, 28 Apr 2020 23:47:31 +0200
+Message-Id: <20200428214754.3925368-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:CwaJqqI8UP3UYQa9QLeTXBcxWgnAERLM8vCOxjOOEAo6dfRILDf
+ LeO9h10wirIWDwv/JYCpujsz5ihmwXnxr5ZVnF6fjlXBTOrFpjkS7YaQllg/u4+ORwbI1DA
+ kxCRbtdDyAV9QhcaU6Ziis4Gf2mVE3FsnWg1aXZZw9CUh5bIjY2/t57C93Zp4lBmTZ7TttH
+ +ODOByIu1hjDFoMEOa2qA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6OOAtvjEG8Y=:39ln5prj9KTgnldiZQ01UN
+ 4E3DgmxckBBa2DYf+ZhSgu5LP8rnoU4Hn209TkYgCfE1JcUIQUVKc/WxtcufErSo5Cc7wuQ0C
+ HzlYNLD3iSHxe5f1tCMwO8ru5sj5J/nmxJyQgnRJBVi8lw1vkMQkGitCz+OLeOY+Xkm7LQHj+
+ V91Wxldp5CR+OCHKLSESyA5Nj6Rzkrh4nqMngtnppNsj2qvsL9xrnD2Iga7qBJaHX/dL+PStU
+ dtKwcK1elD3BzM2KXiqaHTMVVuFlCz1zUpsUv/cikpiuzJamzjci0ZWzeBdl6RiWJiHjH+lsM
+ hx3dh4hwNbG2rLrazrEwtbyddf5jJ/nAkstwqCtI0eLABTQw2U3fFUd8uTvw6hkJXQJy1RsHp
+ 6hfMFZo5TnxcX6XNMqRQ0wyGPO0xDafn/aDE0+zEY0JnYszQKfE85vev6MjWpsKXu8Vff+iY/
+ CU4S0ZY0Dqo0udPP37uRzHRDaPBBCezqthWPPmnYPOxpIKRoZpQeqOxjJVqshsVgo/eS/XOhz
+ sVaaRy6A9tzG6A/Fr3p6EEbmQlKG7/Coa6/JJX2HNLK7iCBoiqtV1Krye5+yFtr5g/qx44Vjn
+ JI0JvW5voZeBQ7Z3Wg6rkaQwb4KjEIq8PIcqU6rHlwMQcACLtK1cKXHsD4RtvxI1cbLwsNrem
+ gjSO8tyhRV/HJgNb/CJDwwLG3BcVxxs3gNsQHaCBW2oxsagTe4FiE7kCNQ96DGWhLp0m/g6HK
+ cPul8V6+pl7neS9mdT0KYU4hbbof7Giftobzl2I8G7gB/qL5AIBUhBfchAoLWZkBBgZyLdXyK
+ 7RbxwSNM9GBeW26VXpc/C6BmMmULaQ6gPa4JRNaynwd9MnuCKQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020, Vlastimil Babka wrote:
+Old versions of gcc (tested on gcc-4.8) produce a warning for
+correct code:
 
-> > I took a look at doing a quick-fix for the
-> > direct-reclaimers-get-their-stuff-stolen issue about a million years
-> > ago.  I don't recall where it ended up.  It's pretty trivial for the
-> > direct reclaimer to free pages into current->reclaimed_pages and to
-> > take a look in there on the allocation path, etc.  But it's only
-> > practical for order-0 pages.
-> 
-> FWIW there's already such approach added to compaction by Mel some time ago,
-> so order>0 allocations are covered to some extent. But in this case I imagine
-> that compaction won't even start because order-0 watermarks are too low.
-> 
-> The order-0 reclaim capture might work though - as a result the GFP_ATOMIC
-> allocations would more likely fail and defer to their fallback context.
-> 
+sound/soc/soc-compress.c: In function 'soc_compr_open':
+sound/soc/soc-compress.c:75:28: error: 'component' is used uninitialized in this function [-Werror=uninitialized]
+  struct snd_soc_component *component, *save = NULL;
 
-Yes, order-0 reclaim capture is interesting since the issue being reported 
-here is userspace going out to lunch because it loops for an unbounded 
-amount of time trying to get above a watermark where it's allowed to 
-allocate and other consumers are depleting that resource.
+Change the for_each_rtd_components() macro to ensure 'component'
+gets initialized to a value the compiler does not complain about.
 
-We actually prefer to oom kill earlier rather than being put in a 
-perpetual state of aggressive reclaim that affects all allocators and the 
-unbounded nature of those allocations leads to very poor results for 
-everybody.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ include/sound/soc.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'm happy to scope this solely to an order-0 reclaim capture.  I'm not 
-sure if I'm clear on whether this has been worked on before and patches 
-existed in the past?
+diff --git a/include/sound/soc.h b/include/sound/soc.h
+index 907afbc652f2..69a82487fa9b 100644
+--- a/include/sound/soc.h
++++ b/include/sound/soc.h
+@@ -1179,7 +1179,7 @@ struct snd_soc_pcm_runtime {
+ #define asoc_rtd_to_codec(rtd, n) (rtd)->dais[n + (rtd)->num_cpus]
+ 
+ #define for_each_rtd_components(rtd, i, component)			\
+-	for ((i) = 0;							\
++	for ((i) = 0, component = NULL;					\
+ 	     ((i) < rtd->num_components) && ((component) = rtd->components[i]);\
+ 	     (i)++)
+ #define for_each_rtd_cpu_dais(rtd, i, dai)				\
+-- 
+2.26.0
 
-Somewhat related to what I described in the changelog: we lost the "page 
-allocation stalls" artifacts in the kernel log for 4.15.  The commit 
-description references an asynchronous mechanism for getting this 
-information; I don't know where this mechanism currently lives.
