@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7218EC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6F2C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A403208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C05420B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099347;
-	bh=yy+L2TaQ1fzV8FxZkoyYt4yIaFb/9edhiehY4/YtF6I=;
+	s=default; t=1588099350;
+	bh=UcH5qtw59qTuXTBw6ECJdi8TpzL+afl6G6oGjx9V0XA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eJ5qWSXxPv398i3ImslbxqHGZX6KS5Ew4Dx8zc+OEWG2lpaEYMPS82VmSvcQjyFrX
-	 qdjwi0CH7MUzSNIkD/Y8p37EtGqE2K2Sdp25aECCs8xvkpbkGEU4lAvZt48UbZrUa1
-	 zHc1KLvf4TYG2FBqdWiMbPByMLcmbwEGC3pklP4E=
+	b=1sX+1hXx+WZ7rGZ6JsnN76QOTpn3WRb/CtzNfjJ9S5s4IVp81/XU5CKDDJsTXRJXx
+	 DPyRtWVk14XbAdgfFxTjvkjzJhdp8/cYM4RYoDOzjIhQOPaNT0dwzfSclXabobit2i
+	 LnFI6CqnmXbEGR3Dga03lz8OkNv4aCTGcB0AjyPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731107AbgD1Sm0 (ORCPT
+        id S1731113AbgD1Sm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:42:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34284 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:42:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731098AbgD1SmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:42:22 -0400
+        id S1731102AbgD1SmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:42:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EC7420575;
-        Tue, 28 Apr 2020 18:42:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB93220B1F;
+        Tue, 28 Apr 2020 18:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099341;
-        bh=yy+L2TaQ1fzV8FxZkoyYt4yIaFb/9edhiehY4/YtF6I=;
+        s=default; t=1588099344;
+        bh=UcH5qtw59qTuXTBw6ECJdi8TpzL+afl6G6oGjx9V0XA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cgs2CCRW8gxaK0bA00xxIWGho7YdzpWvakiBhDqaOrplbHcZUGL7N026b0RRfyOx2
-         aaa5HvrJAltTyVPqSXhMoRDDZaqLxCGgd0lvYXk6GYYC6XnKPmF/qowSInZ6Bg/gwP
-         jBtGEgpYP7xiBHJhufRqKtECsSkP4u4njqQgo2HA=
+        b=VcdsAQTadtWktnmjVyOjdUwFTBew5KB/+SWB+i1HzIYicXM6SMEEVvV98rUi8/Ioh
+         NG92KC8LC0ihKviCue+Coxkl8GeQuvLTnJ6ihWVqyPT/xA8e6xU7B3Z2Gqd8uBwq8b
+         WMF44Qo427L2sT7BWKP09hZZ9xC5IQj3bygz8ZJ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.4 094/168] iio: xilinx-xadc: Make sure not exceed maximum samplerate
-Date:   Tue, 28 Apr 2020 20:24:28 +0200
-Message-Id: <20200428182244.202435826@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 112/168] ALSA: usb-audio: Fix usb audio refcnt leak when getting spdif
+Date:   Tue, 28 Apr 2020 20:24:46 +0200
+Message-Id: <20200428182246.689747900@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -60,180 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-commit 3b7f9dbb827ce8680b98490215e698b6079a9ec5 upstream.
+commit 59e1947ca09ebd1cae147c08c7c41f3141233c84 upstream.
 
-The XADC supports a samplerate of up to 1MSPS. Unfortunately the hardware
-does not have a FIFO, which means it generates an interrupt for each
-conversion sequence. At one 1MSPS this creates an interrupt storm that
-causes the system to soft-lock.
+snd_microii_spdif_default_get() invokes snd_usb_lock_shutdown(), which
+increases the refcount of the snd_usb_audio object "chip".
 
-For this reason the driver limits the maximum samplerate to 150kSPS.
-Currently this check is only done when setting a new samplerate. But it is
-also possible that the initial samplerate configured in the FPGA bitstream
-exceeds the limit.
+When snd_microii_spdif_default_get() returns, local variable "chip"
+becomes invalid, so the refcount should be decreased to keep refcount
+balanced.
 
-In this case when starting to capture data without first changing the
-samplerate the system can overload.
+The reference counting issue happens in several exception handling paths
+of snd_microii_spdif_default_get(). When those error scenarios occur
+such as usb_ifnum_to_if() returns NULL, the function forgets to decrease
+the refcnt increased by snd_usb_lock_shutdown(), causing a refcnt leak.
 
-To prevent this check the currently configured samplerate in the probe
-function and reduce it to the maximum if necessary.
+Fix this issue by jumping to "end" label when those error scenarios
+occur.
 
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Fixes: bdc8cda1d010 ("iio:adc: Add Xilinx XADC driver")
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 447d6275f0c2 ("ALSA: usb-audio: Add sanity checks for endpoint accesses")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1587617711-13200-1-git-send-email-xiyuyang19@fudan.edu.cn
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/xilinx-xadc-core.c |   78 ++++++++++++++++++++++++++++---------
- 1 file changed, 60 insertions(+), 18 deletions(-)
+ sound/usb/mixer_quirks.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/drivers/iio/adc/xilinx-xadc-core.c
-+++ b/drivers/iio/adc/xilinx-xadc-core.c
-@@ -102,6 +102,16 @@ static const unsigned int XADC_ZYNQ_UNMA
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -1508,11 +1508,15 @@ static int snd_microii_spdif_default_get
  
- #define XADC_FLAGS_BUFFERED BIT(0)
- 
-+/*
-+ * The XADC hardware supports a samplerate of up to 1MSPS. Unfortunately it does
-+ * not have a hardware FIFO. Which means an interrupt is generated for each
-+ * conversion sequence. At 1MSPS sample rate the CPU in ZYNQ7000 is completely
-+ * overloaded by the interrupts that it soft-lockups. For this reason the driver
-+ * limits the maximum samplerate 150kSPS. At this rate the CPU is fairly busy,
-+ * but still responsive.
-+ */
-+#define XADC_MAX_SAMPLERATE 150000
-+
- static void xadc_write_reg(struct xadc *xadc, unsigned int reg,
- 	uint32_t val)
- {
-@@ -834,11 +844,27 @@ static const struct iio_buffer_setup_ops
- 	.postdisable = &xadc_postdisable,
- };
- 
-+static int xadc_read_samplerate(struct xadc *xadc)
-+{
-+	unsigned int div;
-+	uint16_t val16;
-+	int ret;
-+
-+	ret = xadc_read_adc_reg(xadc, XADC_REG_CONF2, &val16);
-+	if (ret)
-+		return ret;
-+
-+	div = (val16 & XADC_CONF2_DIV_MASK) >> XADC_CONF2_DIV_OFFSET;
-+	if (div < 2)
-+		div = 2;
-+
-+	return xadc_get_dclk_rate(xadc) / div / 26;
-+}
-+
- static int xadc_read_raw(struct iio_dev *indio_dev,
- 	struct iio_chan_spec const *chan, int *val, int *val2, long info)
- {
- 	struct xadc *xadc = iio_priv(indio_dev);
--	unsigned int div;
- 	uint16_t val16;
- 	int ret;
- 
-@@ -891,41 +917,31 @@ static int xadc_read_raw(struct iio_dev
- 		*val = -((273150 << 12) / 503975);
- 		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_SAMP_FREQ:
--		ret = xadc_read_adc_reg(xadc, XADC_REG_CONF2, &val16);
--		if (ret)
-+		ret = xadc_read_samplerate(xadc);
-+		if (ret < 0)
- 			return ret;
- 
--		div = (val16 & XADC_CONF2_DIV_MASK) >> XADC_CONF2_DIV_OFFSET;
--		if (div < 2)
--			div = 2;
--
--		*val = xadc_get_dclk_rate(xadc) / div / 26;
--
-+		*val = ret;
- 		return IIO_VAL_INT;
- 	default:
- 		return -EINVAL;
- 	}
- }
- 
--static int xadc_write_raw(struct iio_dev *indio_dev,
--	struct iio_chan_spec const *chan, int val, int val2, long info)
-+static int xadc_write_samplerate(struct xadc *xadc, int val)
- {
--	struct xadc *xadc = iio_priv(indio_dev);
- 	unsigned long clk_rate = xadc_get_dclk_rate(xadc);
- 	unsigned int div;
- 
- 	if (!clk_rate)
- 		return -EINVAL;
- 
--	if (info != IIO_CHAN_INFO_SAMP_FREQ)
+ 	/* use known values for that card: interface#1 altsetting#1 */
+ 	iface = usb_ifnum_to_if(chip->dev, 1);
+-	if (!iface || iface->num_altsetting < 2)
 -		return -EINVAL;
--
- 	if (val <= 0)
- 		return -EINVAL;
- 
- 	/* Max. 150 kSPS */
--	if (val > 150000)
--		val = 150000;
-+	if (val > XADC_MAX_SAMPLERATE)
-+		val = XADC_MAX_SAMPLERATE;
- 
- 	val *= 26;
- 
-@@ -938,7 +954,7 @@ static int xadc_write_raw(struct iio_dev
- 	 * limit.
- 	 */
- 	div = clk_rate / val;
--	if (clk_rate / div / 26 > 150000)
-+	if (clk_rate / div / 26 > XADC_MAX_SAMPLERATE)
- 		div++;
- 	if (div < 2)
- 		div = 2;
-@@ -949,6 +965,17 @@ static int xadc_write_raw(struct iio_dev
- 		div << XADC_CONF2_DIV_OFFSET);
- }
- 
-+static int xadc_write_raw(struct iio_dev *indio_dev,
-+	struct iio_chan_spec const *chan, int val, int val2, long info)
-+{
-+	struct xadc *xadc = iio_priv(indio_dev);
-+
-+	if (info != IIO_CHAN_INFO_SAMP_FREQ)
-+		return -EINVAL;
-+
-+	return xadc_write_samplerate(xadc, val);
-+}
-+
- static const struct iio_event_spec xadc_temp_events[] = {
- 	{
- 		.type = IIO_EV_TYPE_THRESH,
-@@ -1236,6 +1263,21 @@ static int xadc_probe(struct platform_de
- 	if (ret)
- 		goto err_free_samplerate_trigger;
- 
-+	/*
-+	 * Make sure not to exceed the maximum samplerate since otherwise the
-+	 * resulting interrupt storm will soft-lock the system.
-+	 */
-+	if (xadc->ops->flags & XADC_FLAGS_BUFFERED) {
-+		ret = xadc_read_samplerate(xadc);
-+		if (ret < 0)
-+			goto err_free_samplerate_trigger;
-+		if (ret > XADC_MAX_SAMPLERATE) {
-+			ret = xadc_write_samplerate(xadc, XADC_MAX_SAMPLERATE);
-+			if (ret < 0)
-+				goto err_free_samplerate_trigger;
-+		}
++	if (!iface || iface->num_altsetting < 2) {
++		err = -EINVAL;
++		goto end;
 +	}
-+
- 	ret = request_irq(xadc->irq, xadc->ops->interrupt_handler, 0,
- 			dev_name(&pdev->dev), indio_dev);
- 	if (ret)
+ 	alts = &iface->altsetting[1];
+-	if (get_iface_desc(alts)->bNumEndpoints < 1)
+-		return -EINVAL;
++	if (get_iface_desc(alts)->bNumEndpoints < 1) {
++		err = -EINVAL;
++		goto end;
++	}
+ 	ep = get_endpoint(alts, 0)->bEndpointAddress;
+ 
+ 	err = snd_usb_ctl_msg(chip->dev,
 
 
