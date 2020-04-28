@@ -2,108 +2,153 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C06C2C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD97C83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB382075A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:41:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588088484;
-	bh=BKDKvSn8LUzBEdgCRA0cYEIBFBCWglHXGBbtNkpxGq8=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=M81m3xXuCvaW82vNKKbZaVdh4J2rGm/zTlNQm2oEELVc/rjdQJNrddQb4cvNue174
-	 w8KIizu4x8LT6VbXp0Umre/z/pNM4MD5DV2CGhnO2Quxi82n+Hj9RDfBEeIXMW8x3p
-	 l1A0LMCxbHWbWwztVXCvzbuGcmModoJwCpa6rZY8=
+	by mail.kernel.org (Postfix) with ESMTP id 39FF5205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbgD1PlX (ORCPT
+        id S1728133AbgD1PpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:41:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47826 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 11:45:11 -0400
+Received: from mga09.intel.com ([134.134.136.24]:23143 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728292AbgD1PlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:41:23 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5196D20746;
-        Tue, 28 Apr 2020 15:41:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588088482;
-        bh=BKDKvSn8LUzBEdgCRA0cYEIBFBCWglHXGBbtNkpxGq8=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=aapNIP/EMASZ2QIesqJaqb1QgQeGZ9IFVIohyszfgsnkCN2v1/oXbhMOlNOPW3tgJ
-         jZ0C81LjMBuvEIOz6NBAMs4PMlLGRh9Fe4SWx0a5PyCcyqMhRX1mLWOEIGGMerOicg
-         vN+3/pHkBMtuApknJSHk8ZPsCTEUvQhI5ua/4b9M=
-Date:   Tue, 28 Apr 2020 16:41:20 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Brent Lu <brent.lu@intel.com>, alsa-devel@alsa-project.org
-Cc:     Ben Zhang <benzh@chromium.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Jie Yang <yang.jie@linux.intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mac Chiang <mac.chiang@intel.com>
-In-Reply-To: <1588007614-25061-1-git-send-email-brent.lu@intel.com>
-References: <1588007614-25061-1-git-send-email-brent.lu@intel.com>
-Subject: Re: [PATCH v2 0/3] add channel constraint for BDW machine drivers
-Message-Id: <158808847385.38342.17676813183484650913.b4-ty@kernel.org>
+        id S1728035AbgD1PpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:45:11 -0400
+IronPort-SDR: FlK3USzNRZyzqpItFtpJNaSES7fWhuopKM6whHov3hHb/YX9AeTWwB/b0UNCH1vlG29RvwSe8y
+ pAhpvbBT4yJA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 08:45:10 -0700
+IronPort-SDR: Y2jjpeQRyMamyyeeqnfCuhoebJpgL2SUnnbusXiXSvRFa4VFWEOKkf6mvdtj8n9SuU5rKO1IT3
+ kYAuCADvdMlQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
+   d="scan'208";a="302740823"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by FMSMGA003.fm.intel.com with SMTP; 28 Apr 2020 08:45:05 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Tue, 28 Apr 2020 18:45:05 +0300
+Date:   Tue, 28 Apr 2020 18:45:05 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Michal Orzel <michalorzel.eng@gmail.com>,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        tzimmermann@suse.de, airlied@linux.ie, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        chris@chris-wilson.co.uk, jose.souza@intel.com,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org
+Subject: Re: [PATCH] Remove drm_display_mode.hsync
+Message-ID: <20200428154505.GK6112@intel.com>
+References: <1587974717-14599-1-git-send-email-michalorzel.eng@gmail.com>
+ <20200428151813.GW3456981@phenom.ffwll.local>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200428151813.GW3456981@phenom.ffwll.local>
+X-Patchwork-Hint: comment
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 01:13:31 +0800, Brent Lu wrote:
-> The machine driver bdw-rt5650 (for Google buddy) supports 2 or 4-channel
-> recording while other two drivers support only 2-channel recording. HW
-> constraints are implemented to reflect the hardware limitation on BDW
-> platform.
+On Tue, Apr 28, 2020 at 05:18:13PM +0200, Daniel Vetter wrote:
+> On Mon, Apr 27, 2020 at 10:05:17AM +0200, Michal Orzel wrote:
+> > As suggested by the TODO list of DRM subsystem:
+> > -remove the member hsync of drm_display_mode
+> > -convert code using hsync member to use drm_mode_hsync()
+> > 
+> > Signed-off-by: Michal Orzel <michalorzel.eng@gmail.com>
 > 
-> Changes since v1:
-> - Change the patch title.
-> - Remove the DUAL_CHANNEL and QUAD_CHANNEL macros which are too obvious.
-> - Follow the naming convertion, using 'bdw_rt5650_' and 'bdw_rt5677_' to
->   name startup functions.
-> - Refine the comments in startup functions.
-> - Redesign the bdw_rt5650_fe_startup() function for readability.
-> - Add an assignment to initialize runtime->hw.channels_max variable.
+> I think Ville has a bunch of patches doing this, we might have some
+> overlap :-/ Adding Ville.
 > 
-> [...]
+> Please sync with him and get either of these patches reviewed.
 
-Applied to
+Yeah, I have the same thing (+ making the function static). I think
+my series is sufficiently reviewed to get most of it pushed. Just need
+to get it past the ci... which apparently means I get to do another
+rebase.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.8
+> 
+> Thanks, Daniel
+> 
+> > ---
+> >  drivers/gpu/drm/drm_modes.c                  |  6 +-----
+> >  drivers/gpu/drm/i915/display/intel_display.c |  1 -
+> >  include/drm/drm_modes.h                      | 10 ----------
+> >  3 files changed, 1 insertion(+), 16 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
+> > index d4d6451..0340079 100644
+> > --- a/drivers/gpu/drm/drm_modes.c
+> > +++ b/drivers/gpu/drm/drm_modes.c
+> > @@ -752,16 +752,12 @@ EXPORT_SYMBOL(drm_mode_set_name);
+> >   * @mode: mode
+> >   *
+> >   * Returns:
+> > - * @modes's hsync rate in kHz, rounded to the nearest integer. Calculates the
+> > - * value first if it is not yet set.
+> > + * @modes's hsync rate in kHz, rounded to the nearest integer.
+> >   */
+> >  int drm_mode_hsync(const struct drm_display_mode *mode)
+> >  {
+> >  	unsigned int calc_val;
+> >  
+> > -	if (mode->hsync)
+> > -		return mode->hsync;
+> > -
+> >  	if (mode->htotal <= 0)
+> >  		return 0;
+> >  
+> > diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
+> > index 3468466..ec7e943 100644
+> > --- a/drivers/gpu/drm/i915/display/intel_display.c
+> > +++ b/drivers/gpu/drm/i915/display/intel_display.c
+> > @@ -8891,7 +8891,6 @@ void intel_mode_from_pipe_config(struct drm_display_mode *mode,
+> >  
+> >  	mode->clock = pipe_config->hw.adjusted_mode.crtc_clock;
+> >  
+> > -	mode->hsync = drm_mode_hsync(mode);
+> >  	mode->vrefresh = drm_mode_vrefresh(mode);
+> >  	drm_mode_set_name(mode);
+> >  }
+> > diff --git a/include/drm/drm_modes.h b/include/drm/drm_modes.h
+> > index 99134d4..7dab7f1 100644
+> > --- a/include/drm/drm_modes.h
+> > +++ b/include/drm/drm_modes.h
+> > @@ -391,16 +391,6 @@ struct drm_display_mode {
+> >  	int vrefresh;
+> >  
+> >  	/**
+> > -	 * @hsync:
+> > -	 *
+> > -	 * Horizontal refresh rate, for debug output in human readable form. Not
+> > -	 * used in a functional way.
+> > -	 *
+> > -	 * This value is in kHz.
+> > -	 */
+> > -	int hsync;
+> > -
+> > -	/**
+> >  	 * @picture_aspect_ratio:
+> >  	 *
+> >  	 * Field for setting the HDMI picture aspect ratio of a mode.
+> > -- 
+> > 2.7.4
+> > 
+> 
+> -- 
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
 
-Thanks!
-
-[1/3] ASoC: bdw-rt5677: add channel constraint
-      commit: e241f8e77958de2b7708e72d7159952d2bd1f0fe
-[2/3] ASoC: bdw-rt5650: add channel constraint
-      commit: 08d6713a4056cab5b29eb135eecb2e97492fc8d8
-[3/3] ASoC: broadwell: add channel constraint
-      commit: ad18763f46835b768714ac6de6dcf42384a261ca
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+-- 
+Ville Syrjälä
+Intel
