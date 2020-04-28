@@ -2,114 +2,151 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4217C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7316BC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6DD721D7B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 571E220BED
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:43:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbgD1TiS (ORCPT
+        id S1728921AbgD1Tnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 15:38:18 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:36930 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728474AbgD1TiR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 15:38:17 -0400
-Received: by mail-io1-f71.google.com with SMTP id c26so25563148ioa.4
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 12:38:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=eDc8NZEKFhvGM6dQ3kv1NE06m1a7uFN0dbkh7RytWGA=;
-        b=Fq10NL4y2IJLG8GB+vUzXThSjth3N/bYw2BPd0kxDgOBFtRvtiiQqh7P4qpu0nB1qc
-         qZ8VMEwQXxBuHgcYQ4bjvv2IESUJXgk5+OuUkYECtYZABzVW0O1X359aRcn4bZ5rUJyQ
-         uiUhqK3U4oOSLwnfkTqurRZjWXqFhMCuUeQWCI8y119kG5vU8726PlqhocpHh0IieSe5
-         PunU+pnUy+eOS2R7JJn3iM0xQd5tS6oVsQyx1AaYg8UBWwnnkniDPQQS0F++puUi4LG8
-         mFDZypWhqM4aFmjC+4I/yatDSFTCYPIDBfXak1TtRCmNw+gtl4uLbal5tSatkiEVKEdO
-         IlJA==
-X-Gm-Message-State: AGi0Pub6bSJgFG40KJyiEA2sq99eWdcFhyWxkMPcQ693TZeJ7WGK7Skg
-        RsFsliOoFLS/2yNQCEF+WVDGwXF49YMqb7GiIEnEBhpz2lVg
-X-Google-Smtp-Source: APiQypIEFXc6pRBKZG5veE+k1ZMkPrZdlFSYtHt4b+M+rJ3vtx2X+beJ6e6vYmreUCgHtZcT7jfIf2I4WjT50f61CK5A5jAoWbFJ
+        Tue, 28 Apr 2020 15:43:47 -0400
+Received: from mga02.intel.com ([134.134.136.20]:5414 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728392AbgD1Tnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 15:43:46 -0400
+IronPort-SDR: mT3NNkrtxs+HfuwWpLsJyulLjXijn5QhW9fBfR7iG5VsWja+1CPe5y9Qyt/mNNyA1NFw2eYLBm
+ Vr9LX4ik8MEg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 12:43:45 -0700
+IronPort-SDR: YNafAoLdvh608aA+tMLQbG9KBS8iBO0+cvQWLK7pt4bINeqXoIhgIIVfqAeNVxCg3jWoi1rV3o
+ taxN4i+mYYvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
+   d="scan'208";a="261205442"
+Received: from meis-mobl1.amr.corp.intel.com (HELO [10.255.231.186]) ([10.255.231.186])
+  by orsmga006.jf.intel.com with ESMTP; 28 Apr 2020 12:43:45 -0700
+Subject: Re: [PATCH v4 2/2] mm/gup/writeback: add callbacks for inaccessible
+ pages
+From:   Dave Hansen <dave.hansen@intel.com>
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>, linux-next@vger.kernel.org,
+        akpm@linux-foundation.org, jack@suse.cz, kirill@shutemov.name,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
+        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
+        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, Will Deacon <will@kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>
+References: <20200306132537.783769-1-imbrenda@linux.ibm.com>
+ <20200306132537.783769-3-imbrenda@linux.ibm.com>
+ <3ae46945-0c7b-03cd-700a-a6fe8003c6ab@intel.com>
+ <20200415221754.GM2483@worktop.programming.kicks-ass.net>
+ <a7c2eb84-94c2-a608-4b04-a740fa9a389d@intel.com>
+ <20200416141547.29be5ea0@p-imbrenda>
+ <de56aa8e-9035-4b68-33cb-15682d073e26@intel.com>
+ <20200416165900.68bd4dba@p-imbrenda>
+ <a6b8728d-7382-9316-412d-dd48b5e7c41a@intel.com>
+ <20200416183431.7216e1d1@p-imbrenda>
+ <396a4ece-ec66-d023-2c7e-f09f84b358bc@intel.com>
+ <cbaddd28-c5d3-61a2-84d8-c883fb3d6290@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <42fccd01-7e16-b18f-cd81-4040857d80d4@intel.com>
+Date:   Tue, 28 Apr 2020 12:43:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:cb4c:: with SMTP id f12mr28882461ilq.263.1588102694984;
- Tue, 28 Apr 2020 12:38:14 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 12:38:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000000638405a45ef96d@google.com>
-Subject: KMSAN: uninit-value in ax25_connect
-From:   syzbot <syzbot+c82752228ed975b0a623@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, glider@google.com, jreuter@yaina.de,
-        kuba@kernel.org, linux-hams@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        ralf@linux-mips.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <cbaddd28-c5d3-61a2-84d8-c883fb3d6290@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 4/21/20 2:31 PM, Dave Hansen wrote:
+> On 4/16/20 12:02 PM, Dave Hansen wrote:
+>> On 4/16/20 9:34 AM, Claudio Imbrenda wrote:
+>>>> Ahh, so this is *just* intended to precede I/O done on the page, when
+>>>> a non-host entity is touching the memory?
+>>> yep
+>> OK, so we've got to do an action that precedes *all* I/O to a page.
+>> That's not too bad.
+>>
+>> I still don't understand how this could work generally, though  There
+>> are lots of places where I/O is done to a page without either going
+>> through __test_set_page_writeback() or gup() with FOLL_PIN set.
+>>
+>> sendfile() is probably the best example of this:
+>>
+>> 	fd = open("/normal/ext4/file", O_RDONLY);
+>> 	sendfile(socket_fd, fd, &off, count);
+>>
+>> There's no gup in sight since the file doesn't have an address and it's
+>> not being written to so there's no writeback.
+>>
+>> How does sendfile work?
+> 
+> Did you manage to see if sendfile works (or any other operation that
+> DMAs file-backed data without being preceded by a gup)?
 
-syzbot found the following crash on:
+It's been a couple of weeks with no response on this.
 
-HEAD commit:    8bbbc5cf kmsan: don't compile memmove
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=14c92275e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cd0e9a6b0e555cc3
-dashboard link: https://syzkaller.appspot.com/bug?extid=c82752228ed975b0a623
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-userspace arch: i386
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11d74a75e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14694b45e00000
+From where I'm standing, we have a hook in the core VM that can't
+possibly work with some existing kernel functionality and has virtually
+no chance of getting used on a second architecture.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c82752228ed975b0a623@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in ax25_connect+0x92d/0x1e00 net/ax25/af_ax25.c:1203
-CPU: 1 PID: 11844 Comm: syz-executor808 Not tainted 5.6.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- ax25_connect+0x92d/0x1e00 net/ax25/af_ax25.c:1203
- __sys_connect_file net/socket.c:1857 [inline]
- __sys_connect+0x6f7/0x770 net/socket.c:1874
- __do_sys_connect net/socket.c:1885 [inline]
- __se_sys_connect net/socket.c:1882 [inline]
- __ia32_sys_connect+0xdb/0x130 net/socket.c:1882
- do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
- do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
- entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
-RIP: 0023:0xf7ff7d99
-Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000ff80833c EFLAGS: 00000246 ORIG_RAX: 000000000000016a
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000020000000
-RDX: 000000000000003c RSI: 00000000080ea078 RDI: 00000000ff808390
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-
-Local variable ----address@__sys_connect created at:
- __sys_connect+0xf7/0x770 net/socket.c:1870
- __sys_connect+0xf7/0x770 net/socket.c:1870
-=====================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+It sounds like there may need to be some additional work here, but
+should these hooks stay in for 5.7?  Or, should we revert this patch and
+try again for 5.8?
