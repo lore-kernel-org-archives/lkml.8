@@ -2,141 +2,262 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55084C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A95F7C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DDCE206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70DF7206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:59:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R9IFHoc2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TywRN+RP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgD1L50 (ORCPT
+        id S1726761AbgD1L7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:57:26 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:48194 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726505AbgD1L50 (ORCPT
+        Tue, 28 Apr 2020 07:59:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726505AbgD1L7H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:57:26 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SBrfwl005143;
-        Tue, 28 Apr 2020 11:57:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=KHi6fvaD2uJvu2rcnQ4wc0VGBk37Fi+D8Jgv6syjzbg=;
- b=R9IFHoc2PgFLX0WlZrlJPbJRE/DD/bv+X/Oom16IvazmwUOPi4oO+JLHh8g+2jLJnMUm
- XkeisqmUIH4RsAyj7eP6bDkrgO2+L/cNJuOnjdbWwiQkCeYQLImpn/nO2J9vnOVPL7JS
- kdnZSSzWQMVL3jHpb/Bt0Ekg9CXK6PZEQnlpq9otssivt5536CzG5H09rhnZVEx7Wl2j
- LdQkOVk2JQfW0wNRxuhaFfJzcvWC58dNNikE+bmRVR4gDagTV5uXMtjdjU88iiQhMpwX
- /65eF3Mi9Jf4zg1VsqUUuKWkOfEhCAcmjc3n1eBuUTKPA9yZIfuG9sPa8k4j3X0+f0za Zw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 30p2p04p6k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 11:57:21 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SBgxLQ153203;
-        Tue, 28 Apr 2020 11:55:20 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 30my0cvxv5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 11:55:20 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03SBtHQ3011532;
-        Tue, 28 Apr 2020 11:55:18 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 Apr 2020 04:55:17 -0700
-Date:   Tue, 28 Apr 2020 14:55:10 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     richard.gong@linux.intel.com, gregkh@linuxfoundation.org,
-        atull@kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] firmware: stratix10-svc: Fix some error handling paths
- in 'stratix10_svc_drv_probe()'
-Message-ID: <20200428115510.GA2014@kadam>
-References: <20200426190307.40840-1-christophe.jaillet@wanadoo.fr>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200426190307.40840-1-christophe.jaillet@wanadoo.fr>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
- suspectscore=2 adultscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004280096
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1011
- bulkscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
- mlxscore=0 suspectscore=2 mlxlogscore=999 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004280096
+        Tue, 28 Apr 2020 07:59:07 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E135AC03C1A9;
+        Tue, 28 Apr 2020 04:59:06 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u16so2526715wmc.5;
+        Tue, 28 Apr 2020 04:59:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LeC1uaevuakthMhzvAUTMRfuS/b7b0QfaVq2uJ7LUCY=;
+        b=TywRN+RPYjVnFc3yk8OarP1C+B1IVik0/IiTiBpVCbu/drxuCyFSxHpKbE6qhD4Jcj
+         f6obmFkhEfRVA9eF1Df2eKHGS29LqySWjKYCGlrjpt383oovyQZVwZCgeqJ6EAZOLyXH
+         /o8i9tZVjOkq8+StYYcHrP21YolyzUulY2XBB9V2Z+j12XWzoVtpPNMAfDo0v+OWrDtT
+         isX1WyChfEOBeoATaQxMr9OjsQcCYXf+GibJslla0Vm9KjqmVV70XfK4ctbC1rbgmLMw
+         mIfP7pA4bPRkKkQqibjqfABomRPQdu9MfAQUkVgXK3f1PTvdmkAd0ozCeENQZK5Q78/f
+         ArWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LeC1uaevuakthMhzvAUTMRfuS/b7b0QfaVq2uJ7LUCY=;
+        b=MfBPz+WFrAGUKhJJiFfMSma5cSJmMoZNLPYAEtMdAkBH/qJsU1/7IZKXiUHviSqzdc
+         kpkU1psOhqM8IkRfyO/6kUBvP6/+hgzhffzRtrAQCP+hi/7715UaxFm8z+6Uh13ZCq6a
+         jrIuHYmw/3loAsE0lSLSqOd6y3DhEDsEqYn0tQ96IByKMzib8NIJOoOp3wYMV3aR2gou
+         XGuL1NS1lrPVV0VnLwzz9fZ7EOoiK7cvo4w8udKiMzLo8dzOSFEEvF1f2mCi3PBCApyQ
+         y5qFebMhc2NZ6nrHu4MDs+kw9XUxrkxbOCXLzBGN8FCbMrPw674/+Uov1BAgbThM3pFj
+         5urw==
+X-Gm-Message-State: AGi0PuZZDgkLAnytE1jFBGh3momop8bBmTXFEhM7w+RlBNUUzRvph98S
+        8V//8M3T1uqJOszAjWyx7YI=
+X-Google-Smtp-Source: APiQypIuNZ/GGKsSlrW8gmgiGjhK0HFlX5J2zPAurDYW45POsdWK9tFbo4qZu79K4Uy7KdPQu2lQLQ==
+X-Received: by 2002:a7b:c858:: with SMTP id c24mr4419878wml.51.1588075145606;
+        Tue, 28 Apr 2020 04:59:05 -0700 (PDT)
+Received: from ubuntu-G3 (ip5f5bfcc8.dynamic.kabel-deutschland.de. [95.91.252.200])
+        by smtp.googlemail.com with ESMTPSA id z2sm24510753wrm.77.2020.04.28.04.59.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Apr 2020 04:59:04 -0700 (PDT)
+Message-ID: <15eca4dd2ec8a4ba210ce0844e9f5027251fa6f2.camel@gmail.com>
+Subject: Re: [PATCH v2 5/5] scsi: ufs: UFS Host Performance Booster(HPB)
+ driver
+From:   Bean Huo <huobean@gmail.com>
+To:     Avri Altman <Avri.Altman@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Tue, 28 Apr 2020 13:59:03 +0200
+In-Reply-To: <SN6PR04MB464009AFAC8F7EFC04184826FCAC0@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <20200416203126.1210-1-beanhuo@micron.com>
+         <20200416203126.1210-6-beanhuo@micron.com>
+         <8921adc3-0c1e-eb16-4a22-1a2a583fc8b3@acm.org>
+         <SN6PR04MB4640851C163648C54EB274C5FCD00@SN6PR04MB4640.namprd04.prod.outlook.com>
+         <SN6PR04MB4640ABB2BB5D2CE5AA2C3778FCD10@SN6PR04MB4640.namprd04.prod.outlook.com>
+         <12e8ad61-caa4-3d28-c1d7-febe99a488fb@acm.org>
+         <SN6PR04MB4640A33BBE0CD58107D7FC69FCAF0@SN6PR04MB4640.namprd04.prod.outlook.com>
+         <b2584ba8-3542-1aae-5802-e59d218e1553@acm.org>
+         <SN6PR04MB464009AFAC8F7EFC04184826FCAC0@SN6PR04MB4640.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 09:03:07PM +0200, Christophe JAILLET wrote:
-> If an error occurs after calling 'kfifo_alloc()', the allocated memory
-> should be freed with 'kfifo_free()', as already done in the remove
-> function.
+On Tue, 2020-04-28 at 08:14 +0000, Avri Altman wrote:
+> > 
+> > On 2020-04-26 23:13, Avri Altman wrote:
+> > > > On 2020-04-25 01:59, Avri Altman wrote:
+> > > 
+> > > HPB support is comprised of 4 main duties:
+> > > 1) Read the device HPB configuration
+> > > 2) Attend the device's recommendations that are embedded in the
+> > > sense
+> > 
+> > buffer
+> > > 3) L2P cache management - This entails sending 2 new scsi
+> > > commands
+> > 
+> > (opcodes were taken from the vendor pool):
+> > >       a. HPB-READ-BUFFER - read L2P physical addresses for a
+> > > subregion
+> > >       b. HPB-WRITE-BUFFER - notify the device that a region is
+> > > inactive (in
+> > 
+> > host-managed mode)
+> > > 4) Use HPB-READ: a 3rd new scsi command (again - uses the vendor
+> > > pool)
+> > 
+> > to perform read operation instead of READ10.  HPB-READ carries both
+> > the
+> > logical and the physical addresses.
+> > > 
+> > > I will let Bean defend the Samsung approach of using a single LLD
+> > > to attend
+> > 
+> > all 4 duties.
+> > > 
+> > > Another approach might be to split those duties between 2
+> > > modules:
+> > >  - A LLD that will perform the first 2 - those can be done only
+> > > using ufs
+> > 
+> > privet stuff, and
+> > >  - another module in scsi mid-layer that will be responsible of
+> > > L2P cache
+> > 
+> > management,
+> > >   and HPB-READ command setup.
+> > > A framework to host the scsi mid-layer module can be the scsi
+> > > device
+> > 
+> > handler.
+> > > 
+> > > The scsi-device-handler infrastructure was added to the kernel
+> > > mainly to
+> > 
+> > facilitate multiple paths for storage devices.
+> > > The HPB framework, although far from the original intention of
+> > > the
+> > 
+> > authors, might as well fit in.
+> > > In that sense, using READs and HPB_READs intermittently, can be
+> > > perceived
+> > 
+> > as a multi-path.
+> > > 
+> > > Scsi device handlers are also attached to a specific scsi_device
+> > > (lun).
+> > > This can serve as the glue linking between the ufs LLD and the
+> > > device
+> > 
+> > handler which resides in the scsi level.
+> > > 
+> > > Device handlers comes with a rich and handy set of APIs & ops,
+> > > which we
+> > 
+> > can use to support HPB.
+> > > Specifically we can use it to attach & activate the device
+> > > handler,
+> > > only after the ufs driver verified that HPB is supported by both
+> > > the platform
+> > 
+> > and the device.
+> > > 
+> > > The 2 modules can communicate using the handler_data opaque
+> > > pointer,
+> > > and the handler’s set_params op-mode: which is an open protocol
+> > 
+> > essentially,
+> > > and we can use it to pass the sense buffer in its full or just a
+> > > parsed version.
+> > > 
+> > > Being a scsi mid-layer module, it will not break anything while
+> > > sending
+> > > HPB-READ-BUFFER and HPB-WRITE-BUFFER as part of the L2P cache
+> > 
+> > management duties.
+> > > 
+> > > Last but not least, the device handler is already hooked in the
+> > > scsi
+> > 
+> > command setup flow - scsi_setup_fs_cmnd(),
+> > > So we get the hook into HPB-READ prep_fn for free.
+> > > 
+> > > Later on, we might want to export the L2P cache management logic
+> > > to
+> > 
+> > user-space.
+> > > Locating the L2P cache management in scsi mid-layer will enable
+> > > us to do
+> > 
+> > so, using the scsi-netlink or some other means.
+> > 
+> > Hi Avri,
+> > 
+> > I'm not sure that I agree that HPB can be perceived as multi-path.
+> > Anyway, the above approach sounds interesting to me. A few
+> > questions
+> > though:
+> > - The only in-tree caller of scsi_dh_attach() I am aware of exists
+> > in
+> >   the dm-mpath driver. I think that call is triggered by
+> > multipathd.
+> >   I don't think that it is acceptable to require that multipathd is
+> >   running to use the UFS HPB functionality. What is the plan for
+> >   attaching the UFS device handler to UFS devices?
 > 
-> Fixes: b5dc75c915cd ("firmware: stratix10-svc: extend svc to support new RSU features")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
->  drivers/firmware/stratix10-svc.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
+> Right.
+> Device handlers are meant to be called as part of the device mapper
+> multi-path code.  We can’t do that – we need to attach & activate the
+> device handler manually, only after the ufs driver verified that HPB
+> is
+> supported by both the platform and the device.
 > 
-> diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
-> index d5f0769f3761..cc9df9589195 100644
-> --- a/drivers/firmware/stratix10-svc.c
-> +++ b/drivers/firmware/stratix10-svc.c
-> @@ -1043,24 +1043,31 @@ static int stratix10_svc_drv_probe(struct platform_device *pdev)
->  
->  	/* add svc client device(s) */
->  	svc = devm_kzalloc(dev, sizeof(*svc), GFP_KERNEL);
-> -	if (!svc)
-> -		return -ENOMEM;
-> +	if (!svc) {
-> +		ret = -ENOMEM;
-> +		goto err_free_kfifo;
-> +	}
->  
->  	svc->stratix10_svc_rsu = platform_device_alloc(STRATIX10_RSU, 0);
->  	if (!svc->stratix10_svc_rsu) {
->  		dev_err(dev, "failed to allocate %s device\n", STRATIX10_RSU);
-> -		return -ENOMEM;
-> +		ret = -ENOMEM;
-> +		goto err_free_kfifo;
->  	}
->  
->  	ret = platform_device_add(svc->stratix10_svc_rsu);
->  	if (ret) {
->  		platform_device_put(svc->stratix10_svc_rsu);
+> I was thinking to rely on the ufs's 2-phase boot:
+> The ufs boot process is essentially comprised of 2 parts: first
+> a                                                                    
+>                                                                      
+>                                                                  
+> handshake with the device, and then, scsi scans and assign a scsi
+> device                                                               
+>                                                                      
+>                                                                
+> to each lun.  The latter, although running a-synchronically,
+> is                                                                   
+>                                                                      
+>                                                                     
+> happening right after reading the device configuration - lun by
+> lun.                                                                 
+>                                                                      
+>                                                                  
+>                                                                      
+>                                                                      
+>                                                                      
+>                                                                
+> By now we've read the device HPB configuration, and we are ready  to
+> attach a scsi device to our HPB luns.  A perfect timing might be
+> while
+> scsi is performing its .slave_alloc() or .slave_configure().
+> 
 
-Why not move this to the unwind code as well and do "goto put_platform;"?
+hi, Avri
+That means HPB memory allocation done in .scan_finished() ?
+and sd_init_command() needs to change as well, add a new request
+type REQ_OP_HPB_READ?
 
-regards,
-dan carpenter
 
-> -		return ret;
-> +		goto err_free_kfifo;
->  	}
->  	dev_set_drvdata(dev, svc);
->  
->  	pr_info("Intel Service Layer Driver Initialized\n");
->  
-> +	return 0;
-> +
-> +err_free_kfifo:
-> +	kfifo_free(&controller->svc_fifo);
->  	return ret;
->  }
+Bean
+
 
