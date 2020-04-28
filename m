@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E4BC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39000C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64A4E20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DA62085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099209;
-	bh=stN9rP4HgKIFrPN1xz/O73Hsp6NVHW7nqXAQ5WzJH24=;
+	s=default; t=1588099212;
+	bh=oQzH92Nu3rnEIWIs/DPXqzVb2aXpghGfFLFQYUmobTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f7BGJNSS2pTCwFjhVb7JZ7AthFEQpzeUEgcMyJJ2cv5GOCEfGWF6cvjA6gbd9UsOI
-	 ubXpvKiqaOzHgdtQ1Jkv5SD1Bm8Dr6mLLWca025gpY7Z+r/wJudqiISe/9D2EA/XVK
-	 6nSM24RgVb/lCf7nuQjCBdmRkNvjtN5RtUUPcvVU=
+	b=fVR9l5XKMxJHFrlp+s723BEpNjvFzgUbEzhsVBw7QLRA0IZaSrhz8aQD83rXQ317a
+	 GxHdyRVvyc62d+puhPsP8a+eyS+fEhKTgx4TgA9dL+j4AQtJH7NtyU6xpThcMMdxpC
+	 ksS1WagsECoXsAiOWomdrkWzZqjUYKT19Sgd16fQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730891AbgD1SkI (ORCPT
+        id S1730897AbgD1SkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:40:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59018 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:40:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730113AbgD1SkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:40:03 -0400
+        id S1730759AbgD1SkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:40:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B86F20730;
-        Tue, 28 Apr 2020 18:39:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77A1920575;
+        Tue, 28 Apr 2020 18:40:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099200;
-        bh=stN9rP4HgKIFrPN1xz/O73Hsp6NVHW7nqXAQ5WzJH24=;
+        s=default; t=1588099204;
+        bh=oQzH92Nu3rnEIWIs/DPXqzVb2aXpghGfFLFQYUmobTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IakRQ2TMoY39nP2oSmWEhb9/fsGsOx5Zek/q0hbjasKEl5BhrdwBNGXcRjpqFQZSb
-         tqF5k1ncR9EUcvgm0PEL0S/YBk1cIuf2/htDmzoHO1nn82t9J/Ot9ipoAZ5E+uKDay
-         5Svidt6p2xPmoPifgX6bCYsEU95fXKWl/iXgZgVk=
+        b=lw6Kx6JgFMgrP9HCIciZu89Sz4ZrL95//fU7jmy+dgzCotq4cioiWjY6v6Sdkb6Tl
+         TuNsmZioYpr091gfMzXBJZ/xmtQ4cs8JbuzITNtXFF2Iey1DQln/3GvLQsHNcH6v5X
+         nyE34t08tEZYnp7ignXWsOz4XQy4I94NBNVQZ6Pc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 072/168] team: fix hang in team_mode_get()
-Date:   Tue, 28 Apr 2020 20:24:06 +0200
-Message-Id: <20200428182241.153327566@linuxfoundation.org>
+Subject: [PATCH 5.4 063/168] net: bcmgenet: correct per TX/RX ring statistics
+Date:   Tue, 28 Apr 2020 20:23:57 +0200
+Message-Id: <20200428182239.895987908@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -60,89 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit 1c30fbc76b8f0c07c92a8ca4cd7c456612e17eb5 ]
+[ Upstream commit a6d0b83f25073bdf08b8547aeff961a62c6ab229 ]
 
-When team mode is changed or set, the team_mode_get() is called to check
-whether the mode module is inserted or not. If the mode module is not
-inserted, it calls the request_module().
-In the request_module(), it creates a child process, which is
-the "modprobe" process and waits for the done of the child process.
-At this point, the following locks were used.
-down_read(&cb_lock()); by genl_rcv()
-    genl_lock(); by genl_rcv_msc()
-        rtnl_lock(); by team_nl_cmd_options_set()
-            mutex_lock(&team->lock); by team_nl_team_get()
+The change to track net_device_stats per ring to better support SMP
+missed updating the rx_dropped member.
 
-Concurrently, the team module could be removed by rmmod or "modprobe -r"
-The __exit function of team module is team_module_exit(), which calls
-team_nl_fini() and it tries to acquire following locks.
-down_write(&cb_lock);
-    genl_lock();
-Because of the genl_lock() and cb_lock, this process can't be finished
-earlier than request_module() routine.
+The ndo_get_stats method is also needed to combine the results for
+ethtool statistics (-S) before filling in the ethtool structure.
 
-The problem secenario.
-CPU0                                     CPU1
-team_mode_get
-    request_module()
-                                         modprobe -r team_mode_roundrobin
-                                                     team <--(B)
-        modprobe team <--(A)
-            team_mode_roundrobin
-
-By request_module(), the "modprobe team_mode_roundrobin" command
-will be executed. At this point, the modprobe process will decide
-that the team module should be inserted before team_mode_roundrobin.
-Because the team module is being removed.
-
-By the module infrastructure, the same module insert/remove operations
-can't be executed concurrently.
-So, (A) waits for (B) but (B) also waits for (A) because of locks.
-So that the hang occurs at this point.
-
-Test commands:
-    while :
-    do
-        teamd -d &
-	killall teamd &
-	modprobe -rv team_mode_roundrobin &
-    done
-
-The approach of this patch is to hold the reference count of the team
-module if the team module is compiled as a module. If the reference count
-of the team module is not zero while request_module() is being called,
-the team module will not be removed at that moment.
-So that the above scenario could not occur.
-
-Fixes: 3d249d4ca7d0 ("net: introduce ethernet teaming device")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Fixes: 37a30b435b92 ("net: bcmgenet: Track per TX/RX rings statistics")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/team/team.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/team/team.c
-+++ b/drivers/net/team/team.c
-@@ -468,6 +468,9 @@ static const struct team_mode *team_mode
- 	struct team_mode_item *mitem;
- 	const struct team_mode *mode = NULL;
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -995,6 +995,8 @@ static void bcmgenet_get_ethtool_stats(s
+ 	if (netif_running(dev))
+ 		bcmgenet_update_mib_counters(priv);
  
-+	if (!try_module_get(THIS_MODULE))
-+		return NULL;
++	dev->netdev_ops->ndo_get_stats(dev);
 +
- 	spin_lock(&mode_list_lock);
- 	mitem = __find_mode(kind);
- 	if (!mitem) {
-@@ -483,6 +486,7 @@ static const struct team_mode *team_mode
- 	}
- 
- 	spin_unlock(&mode_list_lock);
-+	module_put(THIS_MODULE);
- 	return mode;
+ 	for (i = 0; i < BCMGENET_STATS_LEN; i++) {
+ 		const struct bcmgenet_stats *s;
+ 		char *p;
+@@ -3204,6 +3206,7 @@ static struct net_device_stats *bcmgenet
+ 	dev->stats.rx_packets = rx_packets;
+ 	dev->stats.rx_errors = rx_errors;
+ 	dev->stats.rx_missed_errors = rx_errors;
++	dev->stats.rx_dropped = rx_dropped;
+ 	return &dev->stats;
  }
  
 
