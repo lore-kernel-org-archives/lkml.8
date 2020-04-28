@@ -2,103 +2,118 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FC7C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127EBC83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0993208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4091206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:02:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rkQ2Izzk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fYgGHly7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728623AbgD1R63 (ORCPT
+        id S1728598AbgD1SCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 13:58:29 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:47288 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727827AbgD1R61 (ORCPT
+        Tue, 28 Apr 2020 14:02:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39362 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728023AbgD1SCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 13:58:27 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SHrGHc156636;
-        Tue, 28 Apr 2020 17:58:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=bMHDr+peVKNDWx4zqP+LW/B+GykIpmD+phvceywSp1w=;
- b=rkQ2IzzkF8PqzV2M1/XQEJNFSKjbV3RC61KpVOGXVMkUQG/RnY2Oa2AnAEDRSMaxfrKy
- vamxqO6OidRyrN9xSHAKUY37tuFSrKkiIway9FM71uCq3SEam5iXyUivWDGZjJ8T8Aly
- tnQXFHgvImDeZV87HFKx3xjtWXgo61nkoIcmN0pTIcp7bytTdQCCQ9csCuGmlp+llPLz
- nYxi5xcwLDzPfynQo3eVUpYbFLeZnSELK3QCB5Th8+PzHLcbupnSsAqjVzK/JV8TQ19q
- x77bId0TfcFhMX95sfsrercyf9kkcuZ5+lMrJVp4PbX7HazicSeOAoueqODzM6SEkCLq VA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 30p2p06x0c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 17:58:24 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SHw14j154893;
-        Tue, 28 Apr 2020 17:58:23 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 30mxrt3krk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 17:58:23 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03SHwLO4024934;
-        Tue, 28 Apr 2020 17:58:21 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 Apr 2020 10:58:21 -0700
-Date:   Tue, 28 Apr 2020 20:58:14 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] usb: phy: twl6030-usb: Fix a resource leak in an error
- handling path in 'twl6030_usb_probe()'
-Message-ID: <20200428175814.GI2014@kadam>
-References: <20200427202116.94380-1-christophe.jaillet@wanadoo.fr>
+        Tue, 28 Apr 2020 14:02:42 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 341EDC03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:02:42 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id n16so10731445pgb.7
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:02:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=mENmQ6Pb7H8tmR1MjtMLs0ubXE4BKzkIreYYg9JTmwQ=;
+        b=fYgGHly79Oyel+aDS8shmE3wA06fO5kZLL/u3s85DS992pSDgr08Jx2wajFH7j1jHC
+         Dm1K5xERcf6FhGPMuwNcv14JeebOPQZorvUlcLz9r0RxfDLF+gRc1j1BvIQq3RNpOm6Q
+         9EMp+/yW1t/Q54ZgaBMcfsk1FEOfsZMCpkjScN0nwNDQzMFzUhf4HwlvdsjFpCVrgXEi
+         EYB+aGQalOJeufMo73XeoDc9GtUPILpD4ag+vQctucSuvpTuQySVWKSYNmE/AT+LcaHE
+         kI7bunItPbbWP55YlZJPCWyIY1A8G2+MqmrVUznPsc3Sd/HNKegH3CuGA+CTuEFt/kBt
+         Fmrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=mENmQ6Pb7H8tmR1MjtMLs0ubXE4BKzkIreYYg9JTmwQ=;
+        b=GYDdALHfcfRk9sDlVETcEiR0Xj1fz3DVVb6h93navziG07ziuCsZIf04296jJV3jG3
+         ppUlQZljLo/IeQ0baxrhBndRvJRupfF/d2MiKjToUiYQF4rGsVVqQR9v38X2J2ylZviP
+         hRvMEpcK6prJN2s/Zxx6kxjmosZM5UGALbDSs0C2h4/+M/X2LFR6wRRMEeOK/vC8Up7d
+         Z4SkDjjb3aa6noeukR4O/7wJyXm82p2lafmzUm7wCARnNPgLsfCAPnMrNpbMGoOkEZt4
+         y0ddnjyAOhkoeQ1C3lBFyseVjGXH3ojimhiFrbjLc+N+tULnBAgKCIeq55nWrRiqBTxH
+         RBcw==
+X-Gm-Message-State: AGi0Pua0Ud2qGISP8mg+O8nyeFfFsfNal2frIDGJYPDHocRe4V5d6AC0
+        1/KIuBRCkQa39KyKprPGAC7zVg==
+X-Google-Smtp-Source: APiQypJTI6DwHabWRQCA/LwS+jwG4QtUCwBuv+PQUF/I35yfyK+EKVAsd6jfQyV+7Qv9CI1ziwgX/w==
+X-Received: by 2002:aa7:8593:: with SMTP id w19mr30860532pfn.97.1588096961545;
+        Tue, 28 Apr 2020 11:02:41 -0700 (PDT)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id h197sm16248994pfe.208.2020.04.28.11.02.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 11:02:40 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 11:02:38 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: display: simple: Add IVO M133NWF4 R0
+Message-ID: <20200428180238.GK987656@yoga>
+References: <20200420215728.1927434-1-bjorn.andersson@linaro.org>
+ <20200425175842.GA3773@ravnborg.org>
+ <CAL_JsqL6bMwrXZqvGz_H_aJi+EeoikBwKznLP2VomJ=Wn822Rg@mail.gmail.com>
+ <20200428170559.GC27234@ravnborg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200427202116.94380-1-christophe.jaillet@wanadoo.fr>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=2
- mlxlogscore=938 malwarescore=0 bulkscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004280143
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1015
- bulkscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
- mlxscore=0 suspectscore=2 mlxlogscore=993 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004280142
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200428170559.GC27234@ravnborg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 10:21:16PM +0200, Christophe JAILLET wrote:
-> A call to 'regulator_get()' is hidden in 'twl6030_usb_ldo_init()'. A
-> corresponding put must be performed in the error handling path, as
-> already done in the remove function.
+On Tue 28 Apr 10:05 PDT 2020, Sam Ravnborg wrote:
+
+> Hi Rob.
 > 
-> While at it, also move a 'free_irq()' call in the error handling path in
-> order to be consistent.
+> On Tue, Apr 28, 2020 at 09:27:51AM -0500, Rob Herring wrote:
+> > On Sat, Apr 25, 2020 at 12:58 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+> > >
+> > > Hi Björn.
+> > >
+> > > On Mon, Apr 20, 2020 at 02:57:27PM -0700, Bjorn Andersson wrote:
+> > > > Define the vendor prefix for InfoVision Optoelectronics and add their
+> > > > M133NWF4 R0 13.3" FHD (1920x1080) TFT LCD panel to the compatible list
+> > > > of panel-simple.
+> > > >
+> > > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > >
+> > > I got OK for the vendor prefix on irc so patch is now added to
+> > > drm-misc-next.
+> > > Another time please use a dedicated patch for vendor-prefix
+> > > so it is not hidden with other stuff. This way the chance
+> > > to get the attention of the right people is better.
+> > 
+> > I should have mentioned there's basically one thing to check:
+> > alphabetical order.
+> I thought I checked that, but obviously not - hrmpf..
+
+Sorry about that, I thought I did double check that before posting it...
+
+> I will post a follow-up patch for drm-misc-next to fix it.
 > 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> Maybe adding a 'twl6030_usb_ldo_uninit()' function would be more explicit.
 
-It would be nicer, yes, but probably this is fine too.
-
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-
-regards,
-dan carpenter
-
+Thank you,
+Bjorn
