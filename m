@@ -2,84 +2,67 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E5BC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F82C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 525C5206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4310206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:22:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="wUKG9YqV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbgD1VVp (ORCPT
+        id S1726686AbgD1VWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:21:45 -0400
-Received: from albireo.enyo.de ([37.24.231.21]:52356 "EHLO albireo.enyo.de"
+        Tue, 28 Apr 2020 17:22:14 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:58016 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726274AbgD1VVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:21:44 -0400
-Received: from [172.17.203.2] (helo=deneb.enyo.de)
-        by albireo.enyo.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1jTXfa-0000qq-1U; Tue, 28 Apr 2020 21:21:34 +0000
-Received: from fw by deneb.enyo.de with local (Exim 4.92)
-        (envelope-from <fw@deneb.enyo.de>)
-        id 1jTXeO-000142-Bl; Tue, 28 Apr 2020 23:20:20 +0200
-From:   Florian Weimer <fw@deneb.enyo.de>
-To:     Jann Horn <jannh@google.com>
-Cc:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?iso-8859-1?Q?Micka=EBl_Sala?= =?iso-8859-1?Q?=FCn?= 
-        <mickael.salaun@ssi.gouv.fr>, Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH v3 0/5] Add support for RESOLVE_MAYEXEC
-References: <20200428175129.634352-1-mic@digikod.net>
-        <CAG48ez1bKzh1YvbD_Lcg0AbMCH_cdZmrRRumU7UCJL=qPwNFpQ@mail.gmail.com>
-Date:   Tue, 28 Apr 2020 23:20:20 +0200
-In-Reply-To: <CAG48ez1bKzh1YvbD_Lcg0AbMCH_cdZmrRRumU7UCJL=qPwNFpQ@mail.gmail.com>
-        (Jann Horn's message of "Tue, 28 Apr 2020 21:21:48 +0200")
-Message-ID: <87blnb48a3.fsf@mid.deneb.enyo.de>
+        id S1726274AbgD1VWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 17:22:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=/HEO8iV5zd2rO1zBMobf3wGw/aBe4lt0VpzkcITbvGw=; b=wUKG9YqV2CvYZGGfbJGHVLq131
+        aDS5v95GCcADMiVr59oLHU15cvr4I7q0tGmCcudpyEdZN6FUaL4wlr/llwBzBwuduorDzwBxjQ6g2
+        WMYjK7TPzM8jy6XbuuZPvXyNMj2zBLtVAjkBd7xnQjfdk2IVJZHEzlk0s7bpoycGofwk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jTXgB-000A6P-7y; Tue, 28 Apr 2020 23:22:11 +0200
+Date:   Tue, 28 Apr 2020 23:22:11 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Michael Walle <michael@walle.cc>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next 2/4] net: phy: bcm54140: fix phy_id_mask
+Message-ID: <20200428212211.GC30459@lunn.ch>
+References: <20200428210854.28088-1-michael@walle.cc>
+ <20200428210854.28088-2-michael@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428210854.28088-2-michael@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Jann Horn:
+On Tue, Apr 28, 2020 at 11:08:52PM +0200, Michael Walle wrote:
+> Broadcom defines the bits for this PHY as follows:
+>   { oui[24:3], model[6:0], revision[2:0] }
+> 
+> Thus we have to mask the lower three bits only.
+> 
+> Fixes: 6937602ed3f9 ("net: phy: add Broadcom BCM54140 support")
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-> Just as a comment: You'd probably also have to use RESOLVE_MAYEXEC in
-> the dynamic linker.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Absolutely.  In typical configurations, the kernel does not enforce
-that executable mappings must be backed by files which are executable.
-It's most obvious with using an explicit loader invocation to run
-executables on noexec mounts.  RESOLVE_MAYEXEC is much more useful
-than trying to reimplement the kernel permission checks (or what some
-believe they should be) in userspace.
+    Andrew
