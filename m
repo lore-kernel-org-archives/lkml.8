@@ -2,80 +2,148 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D76CC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01022C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D7B8206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2555206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:39:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="I22JxHrf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgD1NjR (ORCPT
+        id S1727961AbgD1NjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:39:17 -0400
-Received: from mga07.intel.com ([134.134.136.100]:52757 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727823AbgD1NjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:39:16 -0400
-IronPort-SDR: ekGBMTww8ZRmfOlk49gepsTc+L15t84rxS9haT6VPFsBjVb44y9Eto8ekB0vIDJwt1cgU+d8S2
- 6v+oSN5/npHA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 06:39:15 -0700
-IronPort-SDR: xKFpk/LY3rt43qQlURN33PtK48Ij6dtPcHD6+OEkjS5NgVRS7+hp1aeP0K3yC3KsXc5G97+Gcc
- xyaE0EbSTzsQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,327,1583222400"; 
-   d="scan'208";a="302710365"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by FMSMGA003.fm.intel.com with ESMTP; 28 Apr 2020 06:39:12 -0700
-Date:   Tue, 28 Apr 2020 21:41:07 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com,
-        jmattson@google.com, yu.c.zhang@linux.intel.com
-Subject: Re: [PATCH v11 7/9] KVM: X86: Add userspace access interface for CET
- MSRs
-Message-ID: <20200428134107.GA23937@local-michael-cet-test>
-References: <20200326081847.5870-1-weijiang.yang@intel.com>
- <20200326081847.5870-8-weijiang.yang@intel.com>
- <08457f11-f0ac-ff4b-80b7-e5380624eca0@redhat.com>
- <20200426152355.GB29493@local-michael-cet-test.sh.intel.com>
- <f6f8cedf-26ce-70b4-2906-02806698d81b@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f6f8cedf-26ce-70b4-2906-02806698d81b@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Tue, 28 Apr 2020 09:39:23 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:11654 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727901AbgD1NjT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 09:39:19 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588081159; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=SgU4rKSGD2dwYYxSBKEWf1uzpYlsHOnUpLC8NfOEvNM=; b=I22JxHrfJE8nYLDM0f+6Js7KPGBOeYhOK9poDFapVOG/fZCdDPfmUbzLkf7rWbdEU/wuJWV7
+ tiw4w6EGX8rS55n+itsS9n8befTaOTxyDov5Jxh8wjDN+uExKDnn3ADwZu6oM7xITKAGBH5T
+ Wpzoj8CZc97F46q4K5B8VsRjS/o=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea831ff.7fae58c2f880-smtp-out-n05;
+ Tue, 28 Apr 2020 13:39:11 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 676C7C00451; Tue, 28 Apr 2020 13:39:10 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id ED3FCC44BFA;
+        Tue, 28 Apr 2020 13:39:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ED3FCC44BFA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v3 08/17] arm64: dts: sc7180: Add DSI and MDP OPP tables and power-domains
+Date:   Tue, 28 Apr 2020 19:02:56 +0530
+Message-Id: <1588080785-6812-9-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
+References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 04:04:28PM +0200, Paolo Bonzini wrote:
-> On 26/04/20 17:23, Yang Weijiang wrote:
-> > What's the purpose of the selftest? Is it just for Shadow Stack SSP
-> > state transitions in various cases? e.g., L0 SSP<--->L3 SSP,
-> > L0 SSP1<--->L0 SSP2?
-> 
-> No, it checks that the whole state can be extracted and restored from a
-> running VM.  For example, it would have caught immediately that the
-> current SSP could not be saved and restored.
-> 
-> > We now have the KVM unit-test for CET functionalities,
-> > i.e., Shadow Stack and Indirect Branch Tracking for user-mode, I can put the
-> > state test app into the todo list as current patchset is mainly for user-mode
-> > protection, the supervisor-mode CET protection is the next step.
-> 
-> What are the limitations?  Or are you referring to the unit test?
->
-I'm referring to the unit test, I enabled basic CET function test to verify
-if SHSTK/IBT is supported with current platform and KVM, but didn't cover
-what you mentioned above. OK, I put the state
-self-test to my todo list. Thank you for the reminder.
+Add the OPP tables for DSI and MDP based on the perf state/clk
+requirements, and add the power-domains property to specify the
+scalable power domain.
 
-> Paolo
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 48 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index efba600..db5b3b3 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1581,6 +1581,49 @@
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
+ 
++		mdp_opp_table: mdp-opp-table {
++			compatible = "operating-points-v2";
++
++			opp-200000000 {
++				opp-hz = /bits/ 64 <200000000>;
++				required-opps = <&rpmhpd_opp_low_svs>;
++			};
++
++			opp-300000000 {
++				opp-hz = /bits/ 64 <300000000>;
++				required-opps = <&rpmhpd_opp_svs>;
++			};
++
++			opp-345000000 {
++				opp-hz = /bits/ 64 <345000000>;
++				required-opps = <&rpmhpd_opp_svs_l1>;
++			};
++
++			opp-460000000 {
++				opp-hz = /bits/ 64 <460000000>;
++				required-opps = <&rpmhpd_opp_nom>;
++			};
++		};
++
++		dsi_opp_table: dsi-opp-table {
++			compatible = "operating-points-v2";
++
++			opp-187500000 {
++				opp-hz = /bits/ 64 <187500000>;
++				required-opps = <&rpmhpd_opp_low_svs>;
++			};
++
++			opp-300000000 {
++				opp-hz = /bits/ 64 <300000000>;
++				required-opps = <&rpmhpd_opp_svs>;
++			};
++
++			opp-358000000 {
++				opp-hz = /bits/ 64 <358000000>;
++				required-opps = <&rpmhpd_opp_svs_l1>;
++			};
++		};
++
+ 		mdss: mdss@ae00000 {
+ 			compatible = "qcom,sc7180-mdss";
+ 			reg = <0 0x0ae00000 0 0x1000>;
+@@ -1626,6 +1669,8 @@
+ 						  <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
+ 				assigned-clock-rates = <300000000>,
+ 						       <19200000>;
++				operating-points-v2 = <&mdp_opp_table>;
++				power-domains = <&rpmhpd SC7180_CX>;
+ 
+ 				interrupt-parent = <&mdss>;
+ 				interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+@@ -1666,6 +1711,9 @@
+ 					      "iface",
+ 					      "bus";
+ 
++				operating-points-v2 = <&dsi_opp_table>;
++				power-domains = <&rpmhpd SC7180_CX>;
++
+ 				phys = <&dsi_phy>;
+ 				phy-names = "dsi";
+ 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
