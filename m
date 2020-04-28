@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C60C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 320C5C8300B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5B932176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F16E217D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098703;
-	bh=NGkzurwTVy7ztk8Pn1yr/WrJ/bY4T3GZkEAupV5RS5k=;
+	s=default; t=1588098707;
+	bh=MVYol4TeARxm1s9GgiiD64YBSQzGmOSrVGxwYMQgi+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nAbN00nkppKhi9snbM4gM9wGvtqBM0W4AkqgWR6856qqZn09Lcl8IzKnTuMXG5pUK
-	 Fkimq0OynUeOgkacoKLW5xv2Tk5m4VZYhafGdn55YpZCNfc4YP5CNnw5CLlh0kz7s8
-	 cpS+juNLKLf9zz2DLycVFA74vz4oBX4P7d56zB7w=
+	b=EGdcXpuwqEkiu/hEk9FrVYkrCPmARjt+qGcdyZTb0SI5PX9H3ZsnFmW/J3P2tCgMc
+	 eI9Q/9onpERr6s1qH8ys1m9ADVt0z34XwY6mrjEMv7P85XVcCoCkiJ2U+pa7j96gEI
+	 euwZIDlAoIFq4zXXsDGY7hxRCzU2jO4YE4fi2OLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbgD1Sbm (ORCPT
+        id S1729726AbgD1Sbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:31:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47224 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:31:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729182AbgD1Sbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:31:36 -0400
+        id S1729716AbgD1Sbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:31:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B747621775;
-        Tue, 28 Apr 2020 18:31:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C2DA217D8;
+        Tue, 28 Apr 2020 18:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098695;
-        bh=NGkzurwTVy7ztk8Pn1yr/WrJ/bY4T3GZkEAupV5RS5k=;
+        s=default; t=1588098702;
+        bh=MVYol4TeARxm1s9GgiiD64YBSQzGmOSrVGxwYMQgi+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sJINWpIIOgUEQvQBoXaA2Kb558Hhb4NmRyw045Emu7TaEAlDlWcMUwcrMau+/6s6g
-         b83unabEEaaMGK0DqtVYLMb6TfLnS6CLhLQ7r2VB3nKECQf8p7zWNQjX8TZWDU4297
-         66TzadZYoVo4nstmAV80WMakLkI39fXUE99aVfrE=
+        b=P3jl0+TjNK1yT5mmtNcemIRqB3+OLmeGH+U1oPAkv6j1L2TH/6ALBEpd5FMDgGAO7
+         2LO0anKDlBSiIGFKsyVd4fyxehf39CqqgNAcID5HdzkWwDoGgpYyBv9UF57MNJCmsh
+         lYmY6sE/hXn7Q14Vr3rgq16plWpxlN3dgxP/asJQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Monakhov <dmonakhov@gmail.com>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 001/168] ext4: fix extent_status fragmentation for plain files
-Date:   Tue, 28 Apr 2020 20:22:55 +0200
-Message-Id: <20200428182231.887191135@linuxfoundation.org>
+        stable@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 043/131] KVM: nVMX: Always sync GUEST_BNDCFGS when it comes from vmcs01
+Date:   Tue, 28 Apr 2020 20:24:15 +0200
+Message-Id: <20200428182230.477331542@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,120 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Monakhov <dmonakhov@gmail.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit 4068664e3cd2312610ceac05b74c4cf1853b8325 ]
+commit 3b013a2972d5bc344d6eaa8f24fdfe268211e45f upstream.
 
-Extents are cached in read_extent_tree_block(); as a result, extents
-are not cached for inodes with depth == 0 when we try to find the
-extent using ext4_find_extent().  The result of the lookup is cached
-in ext4_map_blocks() but is only a subset of the extent on disk.  As a
-result, the contents of extents status cache can get very badly
-fragmented for certain workloads, such as a random 4k read workload.
+If L1 does not set VM_ENTRY_LOAD_BNDCFGS, then L1's BNDCFGS value must
+be propagated to vmcs02 since KVM always runs with VM_ENTRY_LOAD_BNDCFGS
+when MPX is supported.  Because the value effectively comes from vmcs01,
+vmcs02 must be updated even if vmcs12 is clean.
 
-File size of /mnt/test is 33554432 (8192 blocks of 4096 bytes)
- ext:     logical_offset:        physical_offset: length:   expected: flags:
-   0:        0..    8191:      40960..     49151:   8192:             last,eof
-
-$ perf record -e 'ext4:ext4_es_*' /root/bin/fio --name=t --direct=0 --rw=randread --bs=4k --filesize=32M --size=32M --filename=/mnt/test
-$ perf script | grep ext4_es_insert_extent | head -n 10
-             fio   131 [000]    13.975421:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [494/1) mapped 41454 status W
-             fio   131 [000]    13.975939:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [6064/1) mapped 47024 status W
-             fio   131 [000]    13.976467:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [6907/1) mapped 47867 status W
-             fio   131 [000]    13.976937:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [3850/1) mapped 44810 status W
-             fio   131 [000]    13.977440:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [3292/1) mapped 44252 status W
-             fio   131 [000]    13.977931:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [6882/1) mapped 47842 status W
-             fio   131 [000]    13.978376:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [3117/1) mapped 44077 status W
-             fio   131 [000]    13.978957:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [2896/1) mapped 43856 status W
-             fio   131 [000]    13.979474:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [7479/1) mapped 48439 status W
-
-Fix this by caching the extents for inodes with depth == 0 in
-ext4_find_extent().
-
-[ Renamed ext4_es_cache_extents() to ext4_cache_extents() since this
-  newly added function is not in extents_cache.c, and to avoid
-  potential visual confusion with ext4_es_cache_extent().  -TYT ]
-
-Signed-off-by: Dmitry Monakhov <dmonakhov@gmail.com>
-Link: https://lore.kernel.org/r/20191106122502.19986-1-dmonakhov@gmail.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: 62cf9bd8118c4 ("KVM: nVMX: Fix emulation of VM_ENTRY_LOAD_BNDCFGS")
+Cc: Liran Alon <liran.alon@oracle.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+[bwh: Backported to 4.19: adjust filename, context]
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/extents.c | 47 +++++++++++++++++++++++++++--------------------
- 1 file changed, 27 insertions(+), 20 deletions(-)
+ arch/x86/kvm/vmx.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index 164dbfd40c52d..9bd44588eb77c 100644
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -498,6 +498,30 @@ int ext4_ext_check_inode(struct inode *inode)
- 	return ext4_ext_check(inode, ext_inode_hdr(inode), ext_depth(inode), 0);
- }
+diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+index e4d0ad06790e1..ccbddc80ad55f 100644
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -12137,13 +12137,9 @@ static void prepare_vmcs02_full(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
  
-+static void ext4_cache_extents(struct inode *inode,
-+			       struct ext4_extent_header *eh)
-+{
-+	struct ext4_extent *ex = EXT_FIRST_EXTENT(eh);
-+	ext4_lblk_t prev = 0;
-+	int i;
-+
-+	for (i = le16_to_cpu(eh->eh_entries); i > 0; i--, ex++) {
-+		unsigned int status = EXTENT_STATUS_WRITTEN;
-+		ext4_lblk_t lblk = le32_to_cpu(ex->ee_block);
-+		int len = ext4_ext_get_actual_len(ex);
-+
-+		if (prev && (prev != lblk))
-+			ext4_es_cache_extent(inode, prev, lblk - prev, ~0,
-+					     EXTENT_STATUS_HOLE);
-+
-+		if (ext4_ext_is_unwritten(ex))
-+			status = EXTENT_STATUS_UNWRITTEN;
-+		ext4_es_cache_extent(inode, lblk, len,
-+				     ext4_ext_pblock(ex), status);
-+		prev = lblk + len;
-+	}
-+}
-+
- static struct buffer_head *
- __read_extent_tree_block(const char *function, unsigned int line,
- 			 struct inode *inode, ext4_fsblk_t pblk, int depth,
-@@ -532,26 +556,7 @@ __read_extent_tree_block(const char *function, unsigned int line,
- 	 */
- 	if (!(flags & EXT4_EX_NOCACHE) && depth == 0) {
- 		struct ext4_extent_header *eh = ext_block_hdr(bh);
--		struct ext4_extent *ex = EXT_FIRST_EXTENT(eh);
--		ext4_lblk_t prev = 0;
--		int i;
--
--		for (i = le16_to_cpu(eh->eh_entries); i > 0; i--, ex++) {
--			unsigned int status = EXTENT_STATUS_WRITTEN;
--			ext4_lblk_t lblk = le32_to_cpu(ex->ee_block);
--			int len = ext4_ext_get_actual_len(ex);
--
--			if (prev && (prev != lblk))
--				ext4_es_cache_extent(inode, prev,
--						     lblk - prev, ~0,
--						     EXTENT_STATUS_HOLE);
--
--			if (ext4_ext_is_unwritten(ex))
--				status = EXTENT_STATUS_UNWRITTEN;
--			ext4_es_cache_extent(inode, lblk, len,
--					     ext4_ext_pblock(ex), status);
--			prev = lblk + len;
--		}
-+		ext4_cache_extents(inode, eh);
+ 	set_cr4_guest_host_mask(vmx);
+ 
+-	if (kvm_mpx_supported()) {
+-		if (vmx->nested.nested_run_pending &&
+-			(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_BNDCFGS))
+-			vmcs_write64(GUEST_BNDCFGS, vmcs12->guest_bndcfgs);
+-		else
+-			vmcs_write64(GUEST_BNDCFGS, vmx->nested.vmcs01_guest_bndcfgs);
+-	}
++	if (kvm_mpx_supported() && vmx->nested.nested_run_pending &&
++	    (vmcs12->vm_entry_controls & VM_ENTRY_LOAD_BNDCFGS))
++		vmcs_write64(GUEST_BNDCFGS, vmcs12->guest_bndcfgs);
+ 
+ 	if (enable_vpid) {
+ 		if (nested_cpu_has_vpid(vmcs12) && vmx->nested.vpid02)
+@@ -12207,6 +12203,9 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
+ 		kvm_set_dr(vcpu, 7, vcpu->arch.dr7);
+ 		vmcs_write64(GUEST_IA32_DEBUGCTL, vmx->nested.vmcs01_debugctl);
  	}
- 	return bh;
- errout:
-@@ -899,6 +904,8 @@ ext4_find_extent(struct inode *inode, ext4_lblk_t block,
- 	path[0].p_bh = NULL;
- 
- 	i = depth;
-+	if (!(flags & EXT4_EX_NOCACHE) && depth == 0)
-+		ext4_cache_extents(inode, eh);
- 	/* walk through the tree */
- 	while (i) {
- 		ext_debug("depth %d: num %d, max %d\n",
++	if (kvm_mpx_supported() && (!vmx->nested.nested_run_pending ||
++	    !(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_BNDCFGS)))
++		vmcs_write64(GUEST_BNDCFGS, vmx->nested.vmcs01_guest_bndcfgs);
+ 	if (vmx->nested.nested_run_pending) {
+ 		vmcs_write32(VM_ENTRY_INTR_INFO_FIELD,
+ 			     vmcs12->vm_entry_intr_info_field);
 -- 
 2.20.1
 
