@@ -2,54 +2,63 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95903C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C149DC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68AC42085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94F7D20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098864;
-	bh=C53nPrAhLjddGgLwTWfN4W4rJcmbPsWy9maRs+Hd8pc=;
+	s=default; t=1588098867;
+	bh=no3knKj15K/kqw5BYs/rcA1+Ow+Jsr8lPJT0094hSSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=slds8gCPvokXBNl0TOtNYATYzA4XAFEs0wEjOopvK5XqOH9A/Hqdh/e75rUqiFcF/
-	 2d8tedBelEIBn9oQR26dtJpRp0aol/WfQSPxSozmRkRGsRqNIC1NFTS4hVkJV1GQkE
-	 U0BdiqA3Y/a46uh4sNJH9OS9GVDFKveDYoC2a25o=
+	b=oE/VUCEqItiZ0oh/w8tUtdM3d1HchHn2DSw8vrNP0W4swn3xQhpbHpz+KbbmVidtM
+	 aT05EJG8RNC7W4pFB0pTrXuKTk8lz3jv8Zac9Q2vccYwCyl5FZBapjcyediW7nVzXY
+	 Yj0dmVvK/qiWjVm6aLqwVatizF2cUM/DMnvSosKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729135AbgD1SeX (ORCPT
+        id S1729622AbgD1Se0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:34:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50998 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:34:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729298AbgD1SeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:34:17 -0400
+        id S1728773AbgD1SeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:34:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F24220575;
-        Tue, 28 Apr 2020 18:34:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 587F620B80;
+        Tue, 28 Apr 2020 18:34:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098857;
-        bh=C53nPrAhLjddGgLwTWfN4W4rJcmbPsWy9maRs+Hd8pc=;
+        s=default; t=1588098861;
+        bh=no3knKj15K/kqw5BYs/rcA1+Ow+Jsr8lPJT0094hSSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MNNglB/Iptt6G3bc+q7KODs437gFAL/tJwNzLTbG+OF+3rJHhyyiyLNTEep3vR0RK
-         wajbpUzb8hMKZEmnIMwaUSAdxX3SgoZrdVZszl+2geZavXmYtun1Ekyxd/+ETpq6/F
-         awQxaaEzc3ku27x6naPHc6U/pC+HKDWF0FUtgOoY=
+        b=eVwnma7udfIIoMsYuqFX7HoOkEExMeH/EZnGUEQvg3Vo/c0PR+C4qanritqoy0JTx
+         /5kSCK4tCvQHxjgSFwg2GFRZIrY6Ah2IEsUKCzf+rhewcslU5I4wVygY3eK8S18H+d
+         T4UKiXa+ThGL2n4RCrB1crr8yAaX+wrR36w/ouDM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 065/131] vrf: Fix IPv6 with qdisc and xfrm
-Date:   Tue, 28 Apr 2020 20:24:37 +0200
-Message-Id: <20200428182233.130547569@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        NeilBrown <neilb@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Waiman Long <longman@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 024/168] kernel/gcov/fs.c: gcov_seq_next() should increase position index
+Date:   Tue, 28 Apr 2020 20:23:18 +0200
+Message-Id: <20200428182234.767115767@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,36 +68,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit a53c102872ad6e34e1518e25899dc9498c27f8b1 ]
+[ Upstream commit f4d74ef6220c1eda0875da30457bef5c7111ab06 ]
 
-When a qdisc is attached to the VRF device, the packet goes down the ndo
-xmit function which is setup to send the packet back to the VRF driver
-which does a lookup to send the packet out. The lookup in the VRF driver
-is not considering xfrm policies. Change it to use ip6_dst_lookup_flow
-rather than ip6_route_output.
+If seq_file .next function does not change position index, read after
+some lseek can generate unexpected output.
 
-Fixes: 35402e313663 ("net: Add IPv6 support to VRF device")
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Manfred Spraul <manfred@colorfullife.com>
+Cc: NeilBrown <neilb@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Waiman Long <longman@redhat.com>
+Link: http://lkml.kernel.org/r/f65c6ee7-bd00-f910-2f8a-37cc67e4ff88@virtuozzo.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vrf.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/gcov/fs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/vrf.c
-+++ b/drivers/net/vrf.c
-@@ -192,8 +192,8 @@ static netdev_tx_t vrf_process_v6_outbou
- 	fl6.flowi6_proto = iph->nexthdr;
- 	fl6.flowi6_flags = FLOWI_FLAG_SKIP_NH_OIF;
+diff --git a/kernel/gcov/fs.c b/kernel/gcov/fs.c
+index e5eb5ea7ea598..cc4ee482d3fba 100644
+--- a/kernel/gcov/fs.c
++++ b/kernel/gcov/fs.c
+@@ -108,9 +108,9 @@ static void *gcov_seq_next(struct seq_file *seq, void *data, loff_t *pos)
+ {
+ 	struct gcov_iterator *iter = data;
  
--	dst = ip6_route_output(net, NULL, &fl6);
--	if (dst == dst_null)
-+	dst = ip6_dst_lookup_flow(net, NULL, &fl6, NULL);
-+	if (IS_ERR(dst) || dst == dst_null)
- 		goto err;
++	(*pos)++;
+ 	if (gcov_iter_next(iter))
+ 		return NULL;
+-	(*pos)++;
  
- 	skb_dst_drop(skb);
+ 	return iter;
+ }
+-- 
+2.20.1
+
 
 
