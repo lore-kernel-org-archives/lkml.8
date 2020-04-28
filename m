@@ -2,142 +2,119 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9AFC83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7CDC83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDD4B2063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:45:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="o/zLeawy";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="plxc6RQU"
+	by mail.kernel.org (Postfix) with ESMTP id 64F522063A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:46:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588092419;
+	bh=0SBjeu3Sqkw1ahQ8G4xdzWiNVOAuCTOA951G9ea88Cg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CU2MYW+Q1Prn7jnfBmuoUYwXXHR0JvXUyjxa5NxoxMwa5AMj2D16uVw3HzYJ2XLt0
+	 zqUebnKlpW+QOATzMtpSkX651MZ/Ves8uRPLsHdDqFT1NsaMpv/Ov+Eg3h4BpWHFmw
+	 He+kFWqub4duUWjxDL1sArFYYRgrqUUQp2ud3W44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbgD1Qp3 (ORCPT
+        id S1728511AbgD1Qq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:45:29 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:46579 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728022AbgD1Qp2 (ORCPT
+        Tue, 28 Apr 2020 12:46:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55792 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728293AbgD1Qq6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:45:28 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id A942B5C00ED;
-        Tue, 28 Apr 2020 12:45:27 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 28 Apr 2020 12:45:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=S+DukyifHC2vsrH7Z+Bw4PDmgSK
-        o2q4QVE9pfyHeloc=; b=o/zLeawy0XQRg1eQ7+597/fdWE/olg18atu9Wo9OpAV
-        qzO2RXEsn8o6ljpJCmcHtU3aSPv8TGrdRsl3C/di7b6qEVeuxn++mSeRZJUIp8Q0
-        VuIaPoYH/IqD7GHhKdZWddRa4sVZR4nlrzdkOlVmTxn0n264NaAyWmqKlWUEKxCn
-        yh/sgs4yR53G17xdi+bSLGHGBtSeqL1knY4u70hTGH1JP4nL6yv6GM2qogkN1O8c
-        J3245jYrz9gp0GTvqjJkuTDsSgCXECue0dmOsZKFgPbXAMKTFbDlP2Tcpm76UWZj
-        gxaONyZPXsd6+I5GDkWhO84dpc9daW0yT8vfxKAVilA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=S+Duky
-        ifHC2vsrH7Z+Bw4PDmgSKo2q4QVE9pfyHeloc=; b=plxc6RQUfAVXjjOqju4TEk
-        p87bIvcNyBu/Oy2aIbCzsLzgKQbl1Joq1ZXevIR3YiEbg51CvULI62q8NcFHbpK9
-        jaMKj9+Jjmd4LGLLje5rNhbeTT/xEfGyW9CG/wa/V7N4YSRgqEFn8OGkJmypQ9N6
-        0aeYbI5LaGFw8Efc/psgzzWILoJ77Gt/ITRR7VBh/m2AC4FfcSRMjWwW70Qgry8n
-        9rQZhr8htYwKizqSiDtXu66fCRB9F+yGtpVqEhEcEZC0bPCZEcj2iCMb0QEG1PpI
-        trihGpHK0Ozvl7BDXAdP1Gm0lHDbM3k12EoCOtWaaVK3Qmmd8TBTj+vQ+rJB0C3Q
-        ==
-X-ME-Sender: <xms:pF2oXpnWDItsLSB1PqG7oa1lq9AlwFoCa-vwz5IQl3xjBQNi-BJvJA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedugddutdegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddunecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:pF2oXidgBl28_W9q_r39J5Gz9hOsjAmhKRbR8RsLmONfdxOOMUALdA>
-    <xmx:pF2oXlPAhCNv08hbAdBrrxQieLsf0xwGIamgkJrrSdDdK8Wr0MNu6w>
-    <xmx:pF2oXtOIsWGSMIntahD8XJCDI99GsCuImlHHCdMry537_ogbB-v5HA>
-    <xmx:p12oXmy8Q_Vesgwl9mt6FFYzJ-tX4A6A5Ifj1l4w4eR3eW18vRMs1Q>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 125803280059;
-        Tue, 28 Apr 2020 12:45:23 -0400 (EDT)
-Date:   Tue, 28 Apr 2020 18:45:22 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Piotr Oniszczuk <warpme@o2.pl>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [linux-sunxi] Re: [PATCH v2] arm64: dts: allwinner: h6: Use
- dummy regulator for Tanix TX6
-Message-ID: <20200428164522.p7ypca7zwocc7alq@gilmour.lan>
-References: <20200428142629.8950-1-peron.clem@gmail.com>
- <98246e5d-ebef-bcb5-f0b8-d74b3834b835@arm.com>
- <CAJiuCcco0d_UoWeHqh6oc0rFNAMFynXjLRQ6APsT0WBh7m+GQg@mail.gmail.com>
+        Tue, 28 Apr 2020 12:46:58 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F237BC03C1AB
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 09:46:57 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id e2so17732708eje.13
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 09:46:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lHXIK5KG4MM6NL6ZnqDyJCo1++3O5tMDxa0Oox/FCk0=;
+        b=Qu+2TQv0OYiYE16287sogB8uDjS8JZz9MFHDIwMmE4QWXix8Yj3Rir/mLPwz00RjUg
+         hnk6uNKaE0hzn5zlYIZTWKFCs2u3Lk4U9c8hgRG4h/3lWuPoDD91flVvK19N8QzMsCzs
+         vJ6aDNedAL1ptIzuTwxhsiNW9/aiFum9pNkTk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lHXIK5KG4MM6NL6ZnqDyJCo1++3O5tMDxa0Oox/FCk0=;
+        b=Mpg84VHDhllpicR0qpWSh1OJSchjGlzKYqkLvmxHqSu93iwoPa8kGfdSPEyqnkRW4O
+         zGKNken+2MJ0YLMk0kGR6dRC4oEBQAbEoN1E5F2aNZjBoEBHCRVurODalegnu1kh6gzV
+         2Ny9Ioc+LgyDDy3RhVsWF1ruINrs8zV7m4aSSjRqRDeopTdLjPLhODXCGkR+eh8pRI9P
+         ag1xE1iPEN0N00/a3FDxOBJbGU0y5FQoFHXb+qzOEKRGLjCBWoZpx2DqQ27kb++VnrQC
+         xSvZUufRIV2ggt+GOHsJxURbnYGgFY8z1L6cs7sqto9hOVNdxXFjN0oAv+PknbKsbR/i
+         H6Rg==
+X-Gm-Message-State: AGi0PuYcb4HPPXNKruH2bfZa4uJmlpicU7u3lMHkOdVp+0ASEBhzRQr+
+        1HVBRlpPy9bvOny3MJ+O1rOQYzJqmlo=
+X-Google-Smtp-Source: APiQypLHGz+2/bjKHfeRHjP/I/QpclJ3IINPAXyZXEbhIhL9ymLEd5rY0XdrpOVjbhyVuji5154r8w==
+X-Received: by 2002:a17:906:d0da:: with SMTP id bq26mr24781564ejb.344.1588092416307;
+        Tue, 28 Apr 2020 09:46:56 -0700 (PDT)
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com. [209.85.208.50])
+        by smtp.gmail.com with ESMTPSA id d18sm299566eds.15.2020.04.28.09.46.55
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Apr 2020 09:46:56 -0700 (PDT)
+Received: by mail-ed1-f50.google.com with SMTP id s10so16923458edy.9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 09:46:55 -0700 (PDT)
+X-Received: by 2002:a19:240a:: with SMTP id k10mr19924040lfk.30.1588092037785;
+ Tue, 28 Apr 2020 09:40:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cbn7zzdgl2fsor3b"
-Content-Disposition: inline
-In-Reply-To: <CAJiuCcco0d_UoWeHqh6oc0rFNAMFynXjLRQ6APsT0WBh7m+GQg@mail.gmail.com>
+References: <20200428032745.133556-1-jannh@google.com> <20200428032745.133556-3-jannh@google.com>
+ <CAHk-=wjSYTpTH0X8EcGGJD84tsJS62BN3tC6NfzmjvXdSkFVxg@mail.gmail.com> <94141fbb-9559-1851-54c1-cdc5fc529a1a@landley.net>
+In-Reply-To: <94141fbb-9559-1851-54c1-cdc5fc529a1a@landley.net>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 28 Apr 2020 09:40:21 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg2uw09tJMKTooQBr=AJPzzLTaq95b+SSS513Gm0gy5sw@mail.gmail.com>
+Message-ID: <CAHk-=wg2uw09tJMKTooQBr=AJPzzLTaq95b+SSS513Gm0gy5sw@mail.gmail.com>
+Subject: Re: [PATCH 2/5] coredump: Fix handling of partial writes in dump_emit()
+To:     Rob Landley <rob@landley.net>
+Cc:     Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Mark Salter <msalter@redhat.com>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 28, 2020 at 9:34 AM Rob Landley <rob@landley.net> wrote:
+>
+> Writes to a local filesystem should never be short unless disk full/error.
 
---cbn7zzdgl2fsor3b
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Well, that code is definitely supposed to also write to pipes.
 
-On Tue, Apr 28, 2020 at 06:23:35PM +0200, Cl=E9ment P=E9ron wrote:
-> Hi Robin,
->=20
-> On Tue, 28 Apr 2020 at 17:21, Robin Murphy <robin.murphy@arm.com> wrote:
-> >
-> > On 2020-04-28 3:26 pm, Cl=E9ment P=E9ron wrote:
-> > > Tanix TX6 has a fixed regulator. As DVFS is instructed to change
-> > > voltage to meet OPP table, the DVFS is not working as expected.
-> >
-> > Hmm, isn't that really a bug in the DVFS code? I guess it's just blindly
-> > propagating -EINVAL from the fixed regulators not implementing
-> > set_voltage, but AFAICS it has no real excuse not to be cleverer and
-> > still allow switching frequency as long as the voltage *is* high enough
-> > for the given OPP. I wonder how well it works if the regulator is
-> > programmable but shared with other consumers... that case probably can't
-> > be hacked around in DT.
->=20
-> Like you, I thought that the DVFS was clever enough to understand this
-> but guess not..
->=20
-> Maybe they are some cases where you don't want to leave the voltage high =
-and
-> reduce the frequency. But I don't know such case.
+But it also has "was I interrupted" logic, which stops the core dump.
 
-I assume the intent was to prevent a regulator driver to overshoot and end =
-up
-over-volting the CPU which would be pretty bad.
+So short writes can very much happen, it's just that they also imply
+that the core dump should be aborted.
 
-I guess we could check that the voltage is in the range opp < actual voltag=
-e <
-max opp voltage ?
+So the loop seems to be unnecessary. The situations where short writes
+can happen are all the same situations where we want to abort anyway,
+so the loop count should probably always be just one.
 
-Maxime
+The same would go for any potential network filesystem with the
+traditional NFS intr-like behavior.
 
---cbn7zzdgl2fsor3b
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqhdogAKCRDj7w1vZxhR
-xf6IAP9w+DY1O6bT4B3lg/+eirUFYM1skafnWKyx1f2y49KdYQEA2gJSF//W+64e
-k+em/HwQHNH7fcP/zuv+U6G30n1Ocgs=
-=CEt2
------END PGP SIGNATURE-----
-
---cbn7zzdgl2fsor3b--
+            Linus
