@@ -2,162 +2,119 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F077C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7341BC83009
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E8BB206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53217206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:39:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RpD8r702"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="toML35UX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgD1Oje (ORCPT
+        id S1727977AbgD1Ojt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:39:34 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:38624 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726868AbgD1Oje (ORCPT
+        Tue, 28 Apr 2020 10:39:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35698 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726868AbgD1Ojs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:39:34 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588084773; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=8nUBanThRKnwQsmfbUzm389cnGoaoxc2kAeAY/GUPFo=; b=RpD8r702HHH407GwfmeE5E/JiWdOCVYlbA6i6JgaJz6+SLiCVAbUXzpW/0eIKtVpkCi2CCPN
- QeRFAc6KLq0I1d6Db0YYUNZTyh7q3qoah6wX0Jh3Wf7dTujv4HF7E8bF+1SqcI3TFglgeE5J
- VAz5OZhaHL0CU5RNBVsWHb+LDo4=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea8400c.7f221d720420-smtp-out-n01;
- Tue, 28 Apr 2020 14:39:08 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6C7E9C433F2; Tue, 28 Apr 2020 14:39:08 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 28 Apr 2020 10:39:48 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92726C03C1AB;
+        Tue, 28 Apr 2020 07:39:48 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 67D68C433D2;
-        Tue, 28 Apr 2020 14:39:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 67D68C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v2 1/8] bus: mhi: core: Cache intmod from mhi event to mhi
- channel
-To:     Bhaumik Bhatt <bbhatt@codeaurora.org>, mani@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hemantk@codeaurora.org
-References: <1588042766-17496-1-git-send-email-bbhatt@codeaurora.org>
- <1588042766-17496-2-git-send-email-bbhatt@codeaurora.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <59e6a99b-9fde-cd00-82ba-c8604a11c618@codeaurora.org>
-Date:   Tue, 28 Apr 2020 08:39:05 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        by ssl.serverraum.org (Postfix) with ESMTPSA id DD1D322FE6;
+        Tue, 28 Apr 2020 16:39:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1588084785;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VljnFWRje4D0ru9e1R32t4AeXBUBPd+3TTh0NdwxNg0=;
+        b=toML35UXiuO/pHVOeK9HR/DC0PB0wxQEVGlm7qwqQIB7OAAjl0JywWe+p3OUN++VwB0caY
+        iHa060chUra4KIS7CwEXRsTp17tZkdr1ZKXj1F6sKZ2TR8DcvHK/1RPnJ8Yc/6mdVhb3nO
+        nm0qRY5Ks5FPSrPFg82RuwiH4jv90tI=
 MIME-Version: 1.0
-In-Reply-To: <1588042766-17496-2-git-send-email-bbhatt@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Tue, 28 Apr 2020 16:39:44 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 04/16] dt-bindings: mfd: Add bindings for sl28cpld
+In-Reply-To: <20200428124825.GT185537@smile.fi.intel.com>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-5-michael@walle.cc>
+ <20200428124825.GT185537@smile.fi.intel.com>
+Message-ID: <8cc4a2bd3fcaf836d7f393ce2425c872@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: DD1D322FE6
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[24];
+         NEURAL_HAM(-0.00)[-0.787];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,linaro.org,baylibre.com,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/27/2020 8:59 PM, Bhaumik Bhatt wrote:
-> From: Hemant Kumar <hemantk@codeaurora.org>
+Am 2020-04-28 14:48, schrieb Andy Shevchenko:
+> On Thu, Apr 23, 2020 at 07:45:31PM +0200, Michael Walle wrote:
+>> This adds device tree bindings for the board management controller 
+>> found
+>> on the Kontron SMARC-sAL28 board.
 > 
-> Driver is using zero initialized intmod value from mhi channel when
-> configuring TRE for bei field. This prevents interrupt moderation to
-> take effect in case it is supported by an event ring. Fix this by
-> copying intmod value from associated event ring to mhi channel upon
-> registering mhi controller.
+> I think it should be independent patches (same way as you do for 
+> drivers).
+
+It used to be several patches but Rob suggested to put it into one:
+https://lore.kernel.org/linux-devicetree/20200330223535.GA31402@bogus/
+
+-michael
+
 > 
-> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
-> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
-> ---
->   drivers/bus/mhi/core/init.c | 4 ++++
->   drivers/bus/mhi/core/main.c | 9 ++++++---
->   2 files changed, 10 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
-> index b38359c..4dc7f22 100644
-> --- a/drivers/bus/mhi/core/init.c
-> +++ b/drivers/bus/mhi/core/init.c
-> @@ -864,6 +864,10 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
->   		mutex_init(&mhi_chan->mutex);
->   		init_completion(&mhi_chan->completion);
->   		rwlock_init(&mhi_chan->lock);
-> +
-> +		/* used in setting bei field of TRE */
-> +		mhi_event = &mhi_cntrl->mhi_event[mhi_chan->er_index];
-> +		mhi_chan->intmod = mhi_event->intmod;
->   	}
->   
->   	if (mhi_cntrl->bounce_buf) {
-> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-> index eb4256b..23154f1 100644
-> --- a/drivers/bus/mhi/core/main.c
-> +++ b/drivers/bus/mhi/core/main.c
-> @@ -929,7 +929,7 @@ int mhi_queue_skb(struct mhi_device *mhi_dev, enum dma_data_direction dir,
->   	struct mhi_ring *buf_ring = &mhi_chan->buf_ring;
->   	struct mhi_buf_info *buf_info;
->   	struct mhi_tre *mhi_tre;
-> -	int ret;
-> +	int ret, bei;
->   
->   	/* If MHI host pre-allocates buffers then client drivers cannot queue */
->   	if (mhi_chan->pre_alloc)
-> @@ -966,10 +966,11 @@ int mhi_queue_skb(struct mhi_device *mhi_dev, enum dma_data_direction dir,
->   		goto map_error;
->   
->   	mhi_tre = tre_ring->wp;
-> +	bei = !!(mhi_chan->intmod);
->   
->   	mhi_tre->ptr = MHI_TRE_DATA_PTR(buf_info->p_addr);
->   	mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(buf_info->len);
-> -	mhi_tre->dword[1] = MHI_TRE_DATA_DWORD1(1, 1, 0, 0);
-> +	mhi_tre->dword[1] = MHI_TRE_DATA_DWORD1(bei, 1, 0, 0);
-
-Why are we not using mhi_gen_tre() here?  Its used in mhi_queue_buf(), 
-which seems to be why the issue doesn't appear there.  It looks like we 
-have 3 instances of the same code, which all need to be kept in sync. 
-Seems like this bug exists because they were not in sync.
-
-Simplifying the code by removing the duplication seems to be the better 
-approach by not only addressing this issue, but also preventing future ones.
-
->   
->   	/* increment WP */
->   	mhi_add_ring_element(mhi_cntrl, tre_ring);
-> @@ -1006,6 +1007,7 @@ int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
->   	struct mhi_ring *buf_ring = &mhi_chan->buf_ring;
->   	struct mhi_buf_info *buf_info;
->   	struct mhi_tre *mhi_tre;
-> +	int bei;
->   
->   	/* If MHI host pre-allocates buffers then client drivers cannot queue */
->   	if (mhi_chan->pre_alloc)
-> @@ -1043,10 +1045,11 @@ int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
->   	buf_info->len = len;
->   
->   	mhi_tre = tre_ring->wp;
-> +	bei = !!(mhi_chan->intmod);
->   
->   	mhi_tre->ptr = MHI_TRE_DATA_PTR(buf_info->p_addr);
->   	mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(buf_info->len);
-> -	mhi_tre->dword[1] = MHI_TRE_DATA_DWORD1(1, 1, 0, 0);
-> +	mhi_tre->dword[1] = MHI_TRE_DATA_DWORD1(bei, 1, 0, 0);
->   
->   	/* increment WP */
->   	mhi_add_ring_element(mhi_cntrl, tre_ring);
-> 
-
-
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+>>  .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  51 ++++++
+>>  .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 +++
+>>  .../bindings/mfd/kontron,sl28cpld.yaml        | 162 
+>> ++++++++++++++++++
+>>  .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++++
+>>  .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++++
