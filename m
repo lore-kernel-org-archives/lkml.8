@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD004C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACD2C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 977C020730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C3520575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:43:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099417;
-	bh=btMmoRmbm0aFeh7V8QPWVWglOxt22/y9OzCifBjnb+c=;
+	s=default; t=1588099421;
+	bh=HYsQ9JIU9Fsat3k7Hi/+HkG+kVINNcgWMUAtSB2DgDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FHThRWVki4s3tHIJ670kkVVqlsAO0708XVcZAztryr4nwLQfv5G7ilci9alR4rUB5
-	 CU5O8+/Aetesh4ew+ujm+P0XwAWXFjE23+ObQOEnlXxIhoRI6JHbwV8lbaQgbxMRRg
-	 vwz5LuKSnKJ5uDijRt2Fnbnw1cF62g4KNyYJUEy4=
+	b=zIfZJFcvKycGyxRJeKyI+om08PM5Tx3fBCqAmgqkBI6oh7lGUvo73Kjw8J5bSBFJr
+	 Vyhvc4IvchCKb3fXCYBctmWa6/YWrgizmyE+ihXsKlGJ90AvbCjn97ZmPW8v/etxBG
+	 8dOhXsulos+MG8XYuzaYUhNbhKICR6035lFvypUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730311AbgD1Sng (ORCPT
+        id S1731272AbgD1Snk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:43:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36012 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:43:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731250AbgD1Snd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:43:33 -0400
+        id S1731260AbgD1Sng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:43:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91370206D6;
-        Tue, 28 Apr 2020 18:43:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15C8820575;
+        Tue, 28 Apr 2020 18:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099413;
-        bh=btMmoRmbm0aFeh7V8QPWVWglOxt22/y9OzCifBjnb+c=;
+        s=default; t=1588099415;
+        bh=HYsQ9JIU9Fsat3k7Hi/+HkG+kVINNcgWMUAtSB2DgDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AOctV5R6rnpzMMnvQuNMuKxNshaZTr3HvncHnQ5dULXDfaY1FSlCNnFdRBnjjyNqA
-         2mxAXmMI14LP3oxGDnBSQTBUlQYc0WnKELkTMZfXk6aess1IwmHNQRlBYQ5saWj0Mz
-         ULdsQxesyvvRrBwq3tgj/WvZCRs+/ofRjjlgvE34=
+        b=UY6/uZbIF0tnZqUPXbhrrWHFv9w6+UvQxvKIbB4Ar8n4cWNfAdXSdP47ttcJtuEzn
+         mtpHP0D8l1uOIFJmYqJkF1QYlvnzbuNi1HfYJM9x8QKwjyj74OABp35fLgON+ZsmN5
+         PJr2gk6eN/OCFrQFKYKZ+q2miOEKjbJJAwvoU/AM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Kyungtae Kim <kt0755@gmail.com>
-Subject: [PATCH 5.4 098/168] USB: core: Fix free-while-in-use bug in the USB S-Glibrary
-Date:   Tue, 28 Apr 2020 20:24:32 +0200
-Message-Id: <20200428182244.742339543@linuxfoundation.org>
+        Paul Zimmerman <pauldzim@gmail.com>,
+        Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 5.4 099/168] USB: hub: Fix handling of connect changes during sleep
+Date:   Tue, 28 Apr 2020 20:24:33 +0200
+Message-Id: <20200428182244.871650455@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -61,88 +62,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 056ad39ee9253873522f6469c3364964a322912b upstream.
+commit 9f952e26295d977dbfc6fedeaf8c4f112c818d37 upstream.
 
-FuzzUSB (a variant of syzkaller) found a free-while-still-in-use bug
-in the USB scatter-gather library:
+Commit 8099f58f1ecd ("USB: hub: Don't record a connect-change event
+during reset-resume") wasn't very well conceived.  The problem it
+tried to fix was that if a connect-change event occurred while the
+system was asleep (such as a device disconnecting itself from the bus
+when it is suspended and then reconnecting when it resumes)
+requiring a reset-resume during the system wakeup transition, the hub
+port's change_bit entry would remain set afterward.  This would cause
+the hub driver to believe another connect-change event had occurred
+after the reset-resume, which was wrong and would lead the driver to
+send unnecessary requests to the device (which could interfere with a
+firmware update).
 
-BUG: KASAN: use-after-free in atomic_read
-include/asm-generic/atomic-instrumented.h:26 [inline]
-BUG: KASAN: use-after-free in usb_hcd_unlink_urb+0x5f/0x170
-drivers/usb/core/hcd.c:1607
-Read of size 4 at addr ffff888065379610 by task kworker/u4:1/27
+The commit tried to fix this by not setting the change_bit during the
+wakeup.  But this was the wrong thing to do; it means that when a
+device is unplugged while the system is asleep, the hub driver doesn't
+realize anything has happened: The change_bit flag which would tell it
+to handle the disconnect event is clear.
 
-CPU: 1 PID: 27 Comm: kworker/u4:1 Not tainted 5.5.11 #2
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-1.10.2-1ubuntu1 04/01/2014
-Workqueue: scsi_tmf_2 scmd_eh_abort_handler
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xce/0x128 lib/dump_stack.c:118
- print_address_description.constprop.4+0x21/0x3c0 mm/kasan/report.c:374
- __kasan_report+0x153/0x1cb mm/kasan/report.c:506
- kasan_report+0x12/0x20 mm/kasan/common.c:639
- check_memory_region_inline mm/kasan/generic.c:185 [inline]
- check_memory_region+0x152/0x1b0 mm/kasan/generic.c:192
- __kasan_check_read+0x11/0x20 mm/kasan/common.c:95
- atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
- usb_hcd_unlink_urb+0x5f/0x170 drivers/usb/core/hcd.c:1607
- usb_unlink_urb+0x72/0xb0 drivers/usb/core/urb.c:657
- usb_sg_cancel+0x14e/0x290 drivers/usb/core/message.c:602
- usb_stor_stop_transport+0x5e/0xa0 drivers/usb/storage/transport.c:937
+The commit needs to be reverted and the problem fixed in a different
+way.  Fortunately an alternative solution was noted in the commit's
+Changelog: We can continue to set the change_bit entry in
+hub_activate() but then clear it when a reset-resume occurs.  That way
+the the hub driver will see the change_bit when a device is
+disconnected but won't see it when the device is still present.
 
-This bug occurs when cancellation of the S-G transfer races with
-transfer completion.  When that happens, usb_sg_cancel() may continue
-to access the transfer's URBs after usb_sg_wait() has freed them.
+That's what this patch does.
 
-The bug is caused by the fact that usb_sg_cancel() does not take any
-sort of reference to the transfer, and so there is nothing to prevent
-the URBs from being deallocated while the routine is trying to use
-them.  The fix is to take such a reference by incrementing the
-transfer's io->count field while the cancellation is in progres and
-decrementing it afterward.  The transfer's URBs are not deallocated
-until io->complete is triggered, which happens when io->count reaches
-zero.
-
+Reported-and-tested-by: Peter Chen <peter.chen@nxp.com>
 Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-and-tested-by: Kyungtae Kim <kt0755@gmail.com>
+Fixes: 8099f58f1ecd ("USB: hub: Don't record a connect-change event during reset-resume")
+Tested-by: Paul Zimmerman <pauldzim@gmail.com>
 CC: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2003281615140.14837-100000@netrider.rowland.org
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2004221602480.11262-100000@iolanthe.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/message.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/usb/core/hub.c |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
---- a/drivers/usb/core/message.c
-+++ b/drivers/usb/core/message.c
-@@ -588,12 +588,13 @@ void usb_sg_cancel(struct usb_sg_request
- 	int i, retval;
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -1222,6 +1222,11 @@ static void hub_activate(struct usb_hub
+ #ifdef CONFIG_PM
+ 			udev->reset_resume = 1;
+ #endif
++			/* Don't set the change_bits when the device
++			 * was powered off.
++			 */
++			if (test_bit(port1, hub->power_bits))
++				set_bit(port1, hub->change_bits);
  
- 	spin_lock_irqsave(&io->lock, flags);
--	if (io->status) {
-+	if (io->status || io->count == 0) {
- 		spin_unlock_irqrestore(&io->lock, flags);
- 		return;
- 	}
- 	/* shut everything down */
- 	io->status = -ECONNRESET;
-+	io->count++;		/* Keep the request alive until we're done */
- 	spin_unlock_irqrestore(&io->lock, flags);
- 
- 	for (i = io->entries - 1; i >= 0; --i) {
-@@ -607,6 +608,12 @@ void usb_sg_cancel(struct usb_sg_request
- 			dev_warn(&io->dev->dev, "%s, unlink --> %d\n",
- 				 __func__, retval);
- 	}
+ 		} else {
+ 			/* The power session is gone; tell hub_wq */
+@@ -3087,6 +3092,15 @@ static int check_port_resume_type(struct
+ 		if (portchange & USB_PORT_STAT_C_ENABLE)
+ 			usb_clear_port_feature(hub->hdev, port1,
+ 					USB_PORT_FEAT_C_ENABLE);
 +
-+	spin_lock_irqsave(&io->lock, flags);
-+	io->count--;
-+	if (!io->count)
-+		complete(&io->complete);
-+	spin_unlock_irqrestore(&io->lock, flags);
- }
- EXPORT_SYMBOL_GPL(usb_sg_cancel);
++		/*
++		 * Whatever made this reset-resume necessary may have
++		 * turned on the port1 bit in hub->change_bits.  But after
++		 * a successful reset-resume we want the bit to be clear;
++		 * if it was on it would indicate that something happened
++		 * following the reset-resume.
++		 */
++		clear_bit(port1, hub->change_bits);
+ 	}
  
+ 	return status;
 
 
