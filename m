@@ -2,75 +2,104 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB22EC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 227C8C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BABCE20BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F186A206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588099601;
+	bh=T0bqKDiD0pEiEkKfmreEht0rqWSSsLOrK+hh34wIOiY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uAwPFNotsr4nEBPJWWaq2LVqkxF7bU0Mqgnf4BfHzTvlkCBoYGMK55AocAh+NEE74
+	 /K5Ww/xARd/n+j8c07S9KNP7fuZdgQA1rZ351Cwiy7fbbvuIu8+faycdoNj7o4W7/T
+	 Ev+S9qkyUJbHI504abtHHHuuoG/aHxFzUBOx34xU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731269AbgD1Sqf (ORCPT
+        id S1731177AbgD1Sm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:46:35 -0400
-Received: from ms.lwn.net ([45.79.88.28]:41458 "EHLO ms.lwn.net"
+        Tue, 28 Apr 2020 14:42:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730729AbgD1Sq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:46:28 -0400
-Received: from lwn.net (localhost [127.0.0.1])
+        id S1730789AbgD1Smw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:42:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 8E1452D6;
-        Tue, 28 Apr 2020 18:46:27 +0000 (UTC)
-Date:   Tue, 28 Apr 2020 12:46:26 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Michal Suchanek <msuchanek@suse.de>
-Cc:     linux-nvdimm@lists.01.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] doc: nvdimm: remove reference to non-existent
- CONFIG_NFIT_TEST
-Message-ID: <20200428124626.1e80e23a@lwn.net>
-In-Reply-To: <20200415211654.10827-1-msuchanek@suse.de>
-References: <20200415211654.10827-1-msuchanek@suse.de>
-Organization: LWN.net
+        by mail.kernel.org (Postfix) with ESMTPSA id E64AE2076A;
+        Tue, 28 Apr 2020 18:42:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588099371;
+        bh=T0bqKDiD0pEiEkKfmreEht0rqWSSsLOrK+hh34wIOiY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Rt76/5tgKN2+UJUh9iXOZXDAP+dn+laVAM9hPBGMUXZuwyf8SjCMgnYYFJ1+c+6cZ
+         Q3CzlG2ojahfEbX/9HTZdSw5iqwc4T6lFtJLwvthuRhSmacQYRGu1EAVggSAql90YY
+         47uTXYyRDVOu9SgNuB25NYsHgLtv8rB22lSTbcZ8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Cyril Roelandt <tipecaml@gmail.com>
+Subject: [PATCH 5.4 122/168] usb-storage: Add unusual_devs entry for JMicron JMS566
+Date:   Tue, 28 Apr 2020 20:24:56 +0200
+Message-Id: <20200428182247.844466096@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020 23:16:50 +0200
-Michal Suchanek <msuchanek@suse.de> wrote:
+From: Alan Stern <stern@rowland.harvard.edu>
 
-> The test driver is in tools/testing/nvdimm and cannot be selected by a
-> config option.
-> 
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> ---
->  Documentation/driver-api/nvdimm/nvdimm.rst | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/driver-api/nvdimm/nvdimm.rst b/Documentation/driver-api/nvdimm/nvdimm.rst
-> index 08f855cbb4e6..79c0fd39f2af 100644
-> --- a/Documentation/driver-api/nvdimm/nvdimm.rst
-> +++ b/Documentation/driver-api/nvdimm/nvdimm.rst
-> @@ -278,8 +278,8 @@ by a region device with a dynamically assigned id (REGION0 - REGION5).
->         be contiguous in DPA-space.
->  
->      This bus is provided by the kernel under the device
-> -    /sys/devices/platform/nfit_test.0 when CONFIG_NFIT_TEST is enabled and
-> -    the nfit_test.ko module is loaded.  This not only test LIBNVDIMM but the
-> +    /sys/devices/platform/nfit_test.0 when the nfit_test.ko module from
-> +    tools/testing/nvdimm is loaded.  This not only test LIBNVDIMM but the
->      acpi_nfit.ko driver as well.
+commit 94f9c8c3c404ee1f7aaff81ad4f24aec4e34a78b upstream.
 
-Applied, thanks.
+Cyril Roelandt reports that his JMicron JMS566 USB-SATA bridge fails
+to handle WRITE commands with the FUA bit set, even though it claims
+to support FUA.  (Oddly enough, a later version of the same bridge,
+version 2.03 as opposed to 1.14, doesn't claim to support FUA.  Also
+oddly, the bridge _does_ support FUA when using the UAS transport
+instead of the Bulk-Only transport -- but this device was blacklisted
+for uas in commit bc3bdb12bbb3 ("usb-storage: Disable UAS on JMicron
+SATA enclosure") for apparently unrelated reasons.)
 
-jon
+This patch adds a usb-storage unusual_devs entry with the BROKEN_FUA
+flag.  This allows the bridge to work properly with usb-storage.
+
+Reported-and-tested-by: Cyril Roelandt <tipecaml@gmail.com>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2004221613110.11262-100000@iolanthe.rowland.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/usb/storage/unusual_devs.h |    7 +++++++
+ 1 file changed, 7 insertions(+)
+
+--- a/drivers/usb/storage/unusual_devs.h
++++ b/drivers/usb/storage/unusual_devs.h
+@@ -2323,6 +2323,13 @@ UNUSUAL_DEV(  0x3340, 0xffff, 0x0000, 0x
+ 		USB_SC_DEVICE,USB_PR_DEVICE,NULL,
+ 		US_FL_MAX_SECTORS_64 ),
+ 
++/* Reported by Cyril Roelandt <tipecaml@gmail.com> */
++UNUSUAL_DEV(  0x357d, 0x7788, 0x0114, 0x0114,
++		"JMicron",
++		"USB to ATA/ATAPI Bridge",
++		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
++		US_FL_BROKEN_FUA ),
++
+ /* Reported by Andrey Rahmatullin <wrar@altlinux.org> */
+ UNUSUAL_DEV(  0x4102, 0x1020, 0x0100,  0x0100,
+ 		"iRiver",
+
+
