@@ -2,56 +2,54 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8854DC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4A9C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6305520BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1031920B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:29:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098559;
-	bh=qNus+Aotl4Ykw5mSaayfce2H6rMn0LHCUbNcuJPfFkU=;
+	s=default; t=1588098563;
+	bh=VCDnRq6KNn8pBZy4kFj3bnJQnDEccmaJeGcDMIiba5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PCO6odVFwLK7TEosX/PoxTOM6nnxhA0Sse6c2DKOjh8Lj8jz2ywp3/Yl5URBiE9dK
-	 mQS6G9kwhvu9B1LH5hGw+eDo1jtTipOwANZavMcFXObc66J80ufxa+Fl4em/0snGVn
-	 H06OK2RvH5S8K8wOuNZW75w0p8uGQAdxCqhsHHTk=
+	b=PXvGlJNEfxgYOZRnj/081SVha1tIzQua57G+6q4+m/ePNUjFaj+HmvG6akmWY6Wrm
+	 Nhq9rxtfrCD/FOptcIhDkTP5mPV4iBgYdwYLgeWCf/QkA0lRxbXC9hHH9+pqnVBFng
+	 MoOwfZ0ZVNU3dPSWsHru3v2SWnvQKbvgBYAs//Os=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729330AbgD1S3S (ORCPT
+        id S1729339AbgD1S3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:29:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42650 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:29:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729306AbgD1S3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:29:09 -0400
+        id S1729331AbgD1S3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:29:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24A2120B80;
-        Tue, 28 Apr 2020 18:29:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED36D20B80;
+        Tue, 28 Apr 2020 18:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098548;
-        bh=qNus+Aotl4Ykw5mSaayfce2H6rMn0LHCUbNcuJPfFkU=;
+        s=default; t=1588098558;
+        bh=VCDnRq6KNn8pBZy4kFj3bnJQnDEccmaJeGcDMIiba5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H1FUFKtN3GKC/CGLZU2pqUl8Jm1x6vH5+JsM7fJnkNNNDPqr2c/meVwP+EeiMrLTn
-         bivTgO1PU9ifVNGlNOAzjqzwnNp4nxjhB9QAa4bxlWrncOCFq0rwWKtlq01+/TrGK5
-         KPK2tOIFJyNmpzOqVwHvZVozDFGgOhLjmA2km8SI=
+        b=DGkelCfxd5ZXDgOnIIhOh2isyVDeyyqPwhH7VnbEonqXECrWuQCaQg3Fd2n/LGudL
+         nrLRP9FRyAhkZhr9sGOvqiRctG0MlikPR0o4zOOVM8uDyvuIrR3dSMS6HXPw7J9MS5
+         LrgunHFzwOwayd4dool5d4ksH2QzSOQym9kb8+FU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 012/131] scsi: lpfc: Fix kasan slab-out-of-bounds error in lpfc_unreg_login
-Date:   Tue, 28 Apr 2020 20:23:44 +0200
-Message-Id: <20200428182226.716275284@linuxfoundation.org>
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 072/167] xfrm: Always set XFRM_TRANSFORMED in xfrm{4,6}_output_finish
+Date:   Tue, 28 Apr 2020 20:24:08 +0200
+Message-Id: <20200428182234.043027809@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,62 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit 38503943c89f0bafd9e3742f63f872301d44cbea ]
+[ Upstream commit 0c922a4850eba2e668f73a3f1153196e09abb251 ]
 
-The following kasan bug was called out:
+IPSKB_XFRM_TRANSFORMED and IP6SKB_XFRM_TRANSFORMED are skb flags set by
+xfrm code to tell other skb handlers that the packet has been passed
+through the xfrm output functions. Simplify the code and just always
+set them rather than conditionally based on netfilter enabled thus
+making the flag available for other users.
 
- BUG: KASAN: slab-out-of-bounds in lpfc_unreg_login+0x7c/0xc0 [lpfc]
- Read of size 2 at addr ffff889fc7c50a22 by task lpfc_worker_3/6676
- ...
- Call Trace:
- dump_stack+0x96/0xe0
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- print_address_description.constprop.6+0x1b/0x220
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- __kasan_report.cold.9+0x37/0x7c
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- kasan_report+0xe/0x20
- lpfc_unreg_login+0x7c/0xc0 [lpfc]
- lpfc_sli_def_mbox_cmpl+0x334/0x430 [lpfc]
- ...
-
-When processing the completion of a "Reg Rpi" login mailbox command in
-lpfc_sli_def_mbox_cmpl, a call may be made to lpfc_unreg_login. The vpi is
-extracted from the completing mailbox context and passed as an input for
-the next. However, the vpi stored in the mailbox command context is an
-absolute vpi, which for SLI4 represents both base + offset.  When used with
-a non-zero base component, (function id > 0) this results in an
-out-of-range access beyond the allocated phba->vpi_ids array.
-
-Fix by subtracting the function's base value to get an accurate vpi number.
-
-Link: https://lore.kernel.org/r/20200322181304.37655-2-jsmart2021@gmail.com
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/ipv4/xfrm4_output.c |    2 --
+ net/ipv6/xfrm6_output.c |    2 --
+ 2 files changed, 4 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index a801917d3c193..a56a939792ac1 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -2472,6 +2472,8 @@ lpfc_sli_def_mbox_cmpl(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
- 	    !pmb->u.mb.mbxStatus) {
- 		rpi = pmb->u.mb.un.varWords[0];
- 		vpi = pmb->u.mb.un.varRegLogin.vpi;
-+		if (phba->sli_rev == LPFC_SLI_REV4)
-+			vpi -= phba->sli4_hba.max_cfg_param.vpi_base;
- 		lpfc_unreg_login(phba, vpi, rpi, pmb);
- 		pmb->vport = vport;
- 		pmb->mbox_cmpl = lpfc_sli_def_mbox_cmpl;
--- 
-2.20.1
-
+--- a/net/ipv4/xfrm4_output.c
++++ b/net/ipv4/xfrm4_output.c
+@@ -58,9 +58,7 @@ int xfrm4_output_finish(struct sock *sk,
+ {
+ 	memset(IPCB(skb), 0, sizeof(*IPCB(skb)));
+ 
+-#ifdef CONFIG_NETFILTER
+ 	IPCB(skb)->flags |= IPSKB_XFRM_TRANSFORMED;
+-#endif
+ 
+ 	return xfrm_output(sk, skb);
+ }
+--- a/net/ipv6/xfrm6_output.c
++++ b/net/ipv6/xfrm6_output.c
+@@ -111,9 +111,7 @@ int xfrm6_output_finish(struct sock *sk,
+ {
+ 	memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
+ 
+-#ifdef CONFIG_NETFILTER
+ 	IP6CB(skb)->flags |= IP6SKB_XFRM_TRANSFORMED;
+-#endif
+ 
+ 	return xfrm_output(sk, skb);
+ }
 
 
