@@ -2,143 +2,119 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4C8C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36228C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDBD62075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1451E20746
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:34:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="Hh6rbJ/i"
+	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="P2gmUuJe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgD1Qen (ORCPT
+        id S1728448AbgD1Qes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:34:43 -0400
-Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:41417 "EHLO
-        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727920AbgD1Qem (ORCPT
+        Tue, 28 Apr 2020 12:34:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728425AbgD1Qer (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:34:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1588091682;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=0w6FX0efDJGzaehxYFThqDcH+QYQY0rUFheCeGs7Cu8=;
-  b=Hh6rbJ/iPzcUR7mXtI/JsIkAoONMYJDe1d9dBhzle4u/71WgG1f0Uv/1
-   O+llj8ANszXzQayUR9csmuHioEQ04dnEIeSGyxRCTqbFdlsJTFMvzLIb2
-   ZEWualsGbtiUsgWyD8ZABX1DhR77Az3thzQUEM1/NdyJPgKj4BNuSlZkp
-   0=;
-Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  andrew.cooper3@citrix.com) identity=pra;
-  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="andrew.cooper3@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa1.hc3370-68.iphmx.com: domain of
-  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
-  permitted sender) identity=mailfrom;
-  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="Andrew.Cooper3@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: GfTE0zwlZX/DF1ctKDqrxqeVbE8WVcfOvsjN98osQHnlIj+bOA/2LFcYVb0aH7461lKjAVAfLx
- 7j15tUKm7Q9jukDiXGBXe4JArojeffWncpdbJdc8J++Ucn0eFvbBbxBJWeB9VAlVhEsRfeADRX
- IWdKBPAe2bZuNVhHpQqKaPx3D4feKv58+vQM9FlmpNzLI+AL1Z6D6MtcVx42gwF/6YidSiYLvI
- o3l7R+GG2CLL3cZaUut58uQQSlPrgZH5ynhcWk//W7GtWbcIlSDiJOv63nzSwdEOcFOfFhx9DW
- 9eM=
-X-SBRS: 2.7
-X-MesageID: 16638438
-X-Ironport-Server: esa1.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.73,328,1583211600"; 
-   d="scan'208";a="16638438"
-Subject: Re: Should SEV-ES #VC use IST? (Re: [PATCH] Allow RDTSC and RDTSCP
- from userspace)
-To:     Joerg Roedel <jroedel@suse.de>, Andy Lutomirski <luto@kernel.org>
-CC:     Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Tom Lendacky" <Thomas.Lendacky@amd.com>,
-        Mike Stunes <mstunes@vmware.com>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Juergen Gross" <JGross@suse.com>, Jiri Slaby <jslaby@suse.cz>,
-        Kees Cook <keescook@chromium.org>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Thomas Hellstrom" <thellstrom@vmware.com>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>,
-        "Sean Christopherson" <sean.j.christopherson@intel.com>
-References: <20200425191032.GK21900@8bytes.org>
- <910AE5B4-4522-4133-99F7-64850181FBF9@amacapital.net>
- <20200425202316.GL21900@8bytes.org>
- <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
- <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
- <20200428075512.GP30814@suse.de>
-From:   Andrew Cooper <andrew.cooper3@citrix.com>
-Message-ID: <1b232a8e-af99-4f7b-05c5-584b82853ac5@citrix.com>
-Date:   Tue, 28 Apr 2020 17:34:36 +0100
+        Tue, 28 Apr 2020 12:34:47 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55CCAC03C1AB
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 09:34:46 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id b13so33726435oti.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 09:34:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=landley-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=X1mxB9/IGko7NMD61SzKMJ6N+5CrxseMyS9QSJMcFa8=;
+        b=P2gmUuJe0DstX2vgN0Ni/w0KtohF47LJu+m1YD6o2MhJph3OhDGfCMX3kfeuPbTe6s
+         +Yx0QUbqeydOQ7R9iA0uzl5gRF2b46ZUrZE1tz5dUwhCkrn6Wp65KngYgrgw9k2qoKUw
+         4obGgXJ1hfdWjXXkqPhUc4iVmGZxStY0gNQW4KHPmLkDJlbIjwZ3EhBTRWL+sFFAN+Rs
+         ZBByFIr1qhZi1+pPihwU9diWqs6QNuinXSD2vV5/DGmcbo0Zu25+jRTDpN2P5m9mhnvY
+         XdwSXghIW/jo0xnd2AUb2IRHi853sVeYids/nMK3z0Opm82c3EuBnpHHJT1418slgMnI
+         EuNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=X1mxB9/IGko7NMD61SzKMJ6N+5CrxseMyS9QSJMcFa8=;
+        b=VUAw537sOanTTeTWHD+vcTw1Amms8xR3lPzwfWeMhDU5lINPJSi86zoKWlTn8VrWTm
+         tyZpJQZvuDZolvWnnaTv6IuvA/rnGPit9B37u9SK9/C2Ae5DLJr1DKt+ZTpC7zkhDXke
+         FM5PkoBTaUhNBH8QrNhhHxZcbtSmH7Ju9ier0YMXaYlkXs1L7gn6QRMO/YBqF7/4bG/c
+         lHLFtizP2x8jLczL8El1zOYx3XDWaDFTr39wypue1AutCzZnTkcpbix9QiSno90Q/tBC
+         AhP8Mjjyh69xuvKJ0p8cEngRapSKNxAkgfJFbNQHOAHl2P0EBTXW7BulObqMtsNzUwjz
+         XILQ==
+X-Gm-Message-State: AGi0Pubfei75c90TXPFpwVo/ooeet4eIZFp+JNi2kD+vz7VdssQgLD1k
+        c2ikaPTDYxOpaBGVHMgEFfgYMA==
+X-Google-Smtp-Source: APiQypK7FGUPYjGAbHu5QdczGaQL/SoEhm4DO+FUVP6o2Q54EXAlIjTFWetkuIZfSnB6op9lww1WyQ==
+X-Received: by 2002:a05:6830:108b:: with SMTP id y11mr22380696oto.88.1588091685653;
+        Tue, 28 Apr 2020 09:34:45 -0700 (PDT)
+Received: from [192.168.86.21] ([136.62.4.88])
+        by smtp.gmail.com with ESMTPSA id t5sm5171612oor.36.2020.04.28.09.34.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Apr 2020 09:34:45 -0700 (PDT)
+Subject: Re: [PATCH 2/5] coredump: Fix handling of partial writes in
+ dump_emit()
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Mark Salter <msalter@redhat.com>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>
+References: <20200428032745.133556-1-jannh@google.com>
+ <20200428032745.133556-3-jannh@google.com>
+ <CAHk-=wjSYTpTH0X8EcGGJD84tsJS62BN3tC6NfzmjvXdSkFVxg@mail.gmail.com>
+From:   Rob Landley <rob@landley.net>
+Message-ID: <94141fbb-9559-1851-54c1-cdc5fc529a1a@landley.net>
+Date:   Tue, 28 Apr 2020 11:40:47 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200428075512.GP30814@suse.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+In-Reply-To: <CAHk-=wjSYTpTH0X8EcGGJD84tsJS62BN3tC6NfzmjvXdSkFVxg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/04/2020 08:55, Joerg Roedel wrote:
-> On Mon, Apr 27, 2020 at 10:37:41AM -0700, Andy Lutomirski wrote:
->> I have a somewhat serious question: should we use IST for #VC at all?
->> As I understand it, Rome and Naples make it mandatory for hypervisors
->> to intercept #DB, which means that, due to the MOV SS mess, it's sort
->> of mandatory to use IST for #VC.  But Milan fixes the #DB issue, so,
->> if we're running under a sufficiently sensible hypervisor, we don't
->> need IST for #VC.
-> The reason for #VC being IST is not only #DB, but also SEV-SNP. SNP adds
-> page ownership tracking between guest and host, so that the hypervisor
-> can't remap guest pages without the guest noticing.
->
-> If there is a violation of ownership, which can happen at any memory
-> access, there will be a #VC exception to notify the guest. And as this
-> can happen anywhere, for example on a carefully crafted stack page set
-> by userspace before doing SYSCALL, the only robust choice for #VC is to
-> use IST.
+On 4/27/20 10:35 PM, Linus Torvalds wrote:
+> On Mon, Apr 27, 2020 at 8:28 PM Jann Horn <jannh@google.com> wrote:
+>>
+>> After a partial write, we have to update the input buffer pointer.
+> 
+> Interesting. It seems this partial write case never triggers (except
+> for actually killing the core-dump).
+> 
+> Or did you find a case where it actually matters?
+> 
+> Your fix is obviously correct, but it also makes me go "that function
+> clearly never actually worked for partial writes, maybe we shouldn't
+> even bother?"
 
-The kernel won't ever touch the guest stack before restoring %rsp in the
-syscall path, but the (minimum 2) memory accesses required to save the
-user %rsp and load the kernel stack may be subject to #VC exceptions, as
-are instruction fetches at the head of the SYSCALL path.
+Writes to a local filesystem should never be short unless disk full/error.
 
-So yes - #VC needs IST.
+Once upon a time this was yet another thing that NFS could break that no other
+filesystem would break, but I dunno about now? (I think the page cache collates
+it and defers the flush until the error can't be reported back anyway?)
 
-Sorry for the noise.  (That said, it is unfortunate that the hypervisor
-messing with the memory backing the guest #VC handler results in an
-infinite loop, rather than an ability to cleanly terminate.)
-
-~Andrew
+Rob
