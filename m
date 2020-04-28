@@ -2,209 +2,110 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DBBC83002
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5492BC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B013E206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3565C206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:45:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgD1ChR (ORCPT
+        id S1726309AbgD1CpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 22:37:17 -0400
-Received: from mga06.intel.com ([134.134.136.31]:33262 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726263AbgD1ChR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 22:37:17 -0400
-IronPort-SDR: tGAIC0enJoA0wxwuf4kui24US322IphnHaTeNbmpn+D4SwOZt4XDCNUsr6kmL3/6QPzuCF5qo/
- WTg2MfzPTFOQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 19:37:16 -0700
-IronPort-SDR: MHLSgb9QfWHzePzjt1owK0AshxqFJh558djI8oFxWgEm2rDWlGg9X+DZsSzzQC0bKNUwjk1aNN
- cssbVFYB644w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,326,1583222400"; 
-   d="scan'208";a="281991138"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 27 Apr 2020 19:37:15 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: x86/mmu: Add a helper to consolidate root sp allocation
-Date:   Mon, 27 Apr 2020 19:37:14 -0700
-Message-Id: <20200428023714.31923-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
+        Mon, 27 Apr 2020 22:45:12 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21744 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726264AbgD1CpM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 22:45:12 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03S2UpXs071983;
+        Mon, 27 Apr 2020 22:45:04 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30metvwydm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Apr 2020 22:45:04 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03S2bMC1089232;
+        Mon, 27 Apr 2020 22:45:03 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30metvwydf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Apr 2020 22:45:03 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03S2f8FL024956;
+        Tue, 28 Apr 2020 02:45:02 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma01dal.us.ibm.com with ESMTP id 30mcu6pafq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 02:45:02 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03S2j22m50725228
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 02:45:02 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1E876AC05B;
+        Tue, 28 Apr 2020 02:45:02 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 10130AC059;
+        Tue, 28 Apr 2020 02:44:52 +0000 (GMT)
+Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.85.174.1])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 28 Apr 2020 02:44:51 +0000 (GMT)
+From:   Leonardo Bras <leobras.c@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>, Will Deacon <will@kernel.org>,
+        Chao Yu <chao@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Olof Johansson <olof@lixom.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Quentin Perret <qperret@qperret.net>,
+        Jayachandran C <c.jayachandran@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Paul Burton <paulburton@kernel.org>
+Cc:     Leonardo Bras <leobras.c@gmail.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] mailmap: Add entry for Leonardo Bras
+Date:   Mon, 27 Apr 2020 23:44:40 -0300
+Message-Id: <20200428024439.215806-1-leobras.c@gmail.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-27_17:2020-04-27,2020-04-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=793
+ priorityscore=1501 phishscore=0 mlxscore=0 adultscore=0 lowpriorityscore=0
+ impostorscore=0 clxscore=1034 malwarescore=0 spamscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004280014
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper, mmu_alloc_root(), to consolidate the allocation of a root
-shadow page, which has the same basic mechanics for all flavors of TDP
-and shadow paging.
+Add an entry to connect my email addresses.
 
-Note, __pa(sp->spt) doesn't need to be protected by mmu_lock, sp->spt
-points at a kernel page.
-
-No functional change intended.
-
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
 ---
- arch/x86/kvm/mmu/mmu.c | 88 +++++++++++++++++++-----------------------
- 1 file changed, 39 insertions(+), 49 deletions(-)
+ .mailmap | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index e618472c572b..80205aea296e 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -3685,37 +3685,43 @@ static int mmu_check_root(struct kvm_vcpu *vcpu, gfn_t root_gfn)
- 	return ret;
- }
- 
-+static hpa_t mmu_alloc_root(struct kvm_vcpu *vcpu, gfn_t gfn, gva_t gva,
-+			    u8 level, bool direct)
-+{
-+	struct kvm_mmu_page *sp;
-+
-+	spin_lock(&vcpu->kvm->mmu_lock);
-+
-+	if (make_mmu_pages_available(vcpu)) {
-+		spin_unlock(&vcpu->kvm->mmu_lock);
-+		return INVALID_PAGE;
-+	}
-+	sp = kvm_mmu_get_page(vcpu, gfn, gva, level, direct, ACC_ALL);
-+	++sp->root_count;
-+
-+	spin_unlock(&vcpu->kvm->mmu_lock);
-+	return __pa(sp->spt);
-+}
-+
- static int mmu_alloc_direct_roots(struct kvm_vcpu *vcpu)
- {
--	struct kvm_mmu_page *sp;
-+	u8 shadow_root_level = vcpu->arch.mmu->shadow_root_level;
-+	hpa_t root;
- 	unsigned i;
- 
--	if (vcpu->arch.mmu->shadow_root_level >= PT64_ROOT_4LEVEL) {
--		spin_lock(&vcpu->kvm->mmu_lock);
--		if(make_mmu_pages_available(vcpu) < 0) {
--			spin_unlock(&vcpu->kvm->mmu_lock);
-+	if (shadow_root_level >= PT64_ROOT_4LEVEL) {
-+		root = mmu_alloc_root(vcpu, 0, 0, shadow_root_level, true);
-+		if (!VALID_PAGE(root))
- 			return -ENOSPC;
--		}
--		sp = kvm_mmu_get_page(vcpu, 0, 0,
--				vcpu->arch.mmu->shadow_root_level, 1, ACC_ALL);
--		++sp->root_count;
--		spin_unlock(&vcpu->kvm->mmu_lock);
--		vcpu->arch.mmu->root_hpa = __pa(sp->spt);
--	} else if (vcpu->arch.mmu->shadow_root_level == PT32E_ROOT_LEVEL) {
-+		vcpu->arch.mmu->root_hpa = root;
-+	} else if (shadow_root_level == PT32E_ROOT_LEVEL) {
- 		for (i = 0; i < 4; ++i) {
--			hpa_t root = vcpu->arch.mmu->pae_root[i];
-+			MMU_WARN_ON(VALID_PAGE(vcpu->arch.mmu->pae_root[i]));
- 
--			MMU_WARN_ON(VALID_PAGE(root));
--			spin_lock(&vcpu->kvm->mmu_lock);
--			if (make_mmu_pages_available(vcpu) < 0) {
--				spin_unlock(&vcpu->kvm->mmu_lock);
-+			root = mmu_alloc_root(vcpu, i << (30 - PAGE_SHIFT),
-+					      i << 30, PT32_ROOT_LEVEL, true);
-+			if (!VALID_PAGE(root))
- 				return -ENOSPC;
--			}
--			sp = kvm_mmu_get_page(vcpu, i << (30 - PAGE_SHIFT),
--					i << 30, PT32_ROOT_LEVEL, 1, ACC_ALL);
--			root = __pa(sp->spt);
--			++sp->root_count;
--			spin_unlock(&vcpu->kvm->mmu_lock);
- 			vcpu->arch.mmu->pae_root[i] = root | PT_PRESENT_MASK;
- 		}
- 		vcpu->arch.mmu->root_hpa = __pa(vcpu->arch.mmu->pae_root);
-@@ -3730,9 +3736,9 @@ static int mmu_alloc_direct_roots(struct kvm_vcpu *vcpu)
- 
- static int mmu_alloc_shadow_roots(struct kvm_vcpu *vcpu)
- {
--	struct kvm_mmu_page *sp;
- 	u64 pdptr, pm_mask;
- 	gfn_t root_gfn, root_pgd;
-+	hpa_t root;
- 	int i;
- 
- 	root_pgd = vcpu->arch.mmu->get_guest_pgd(vcpu);
-@@ -3746,20 +3752,12 @@ static int mmu_alloc_shadow_roots(struct kvm_vcpu *vcpu)
- 	 * write-protect the guests page table root.
- 	 */
- 	if (vcpu->arch.mmu->root_level >= PT64_ROOT_4LEVEL) {
--		hpa_t root = vcpu->arch.mmu->root_hpa;
-+		MMU_WARN_ON(VALID_PAGE(vcpu->arch.mmu->root_hpa));
- 
--		MMU_WARN_ON(VALID_PAGE(root));
--
--		spin_lock(&vcpu->kvm->mmu_lock);
--		if (make_mmu_pages_available(vcpu) < 0) {
--			spin_unlock(&vcpu->kvm->mmu_lock);
-+		root = mmu_alloc_root(vcpu, root_gfn, 0,
-+				      vcpu->arch.mmu->shadow_root_level, false);
-+		if (!VALID_PAGE(root))
- 			return -ENOSPC;
--		}
--		sp = kvm_mmu_get_page(vcpu, root_gfn, 0,
--				vcpu->arch.mmu->shadow_root_level, 0, ACC_ALL);
--		root = __pa(sp->spt);
--		++sp->root_count;
--		spin_unlock(&vcpu->kvm->mmu_lock);
- 		vcpu->arch.mmu->root_hpa = root;
- 		goto set_root_pgd;
- 	}
-@@ -3774,9 +3772,7 @@ static int mmu_alloc_shadow_roots(struct kvm_vcpu *vcpu)
- 		pm_mask |= PT_ACCESSED_MASK | PT_WRITABLE_MASK | PT_USER_MASK;
- 
- 	for (i = 0; i < 4; ++i) {
--		hpa_t root = vcpu->arch.mmu->pae_root[i];
--
--		MMU_WARN_ON(VALID_PAGE(root));
-+		MMU_WARN_ON(VALID_PAGE(vcpu->arch.mmu->pae_root[i]));
- 		if (vcpu->arch.mmu->root_level == PT32E_ROOT_LEVEL) {
- 			pdptr = vcpu->arch.mmu->get_pdptr(vcpu, i);
- 			if (!(pdptr & PT_PRESENT_MASK)) {
-@@ -3787,17 +3783,11 @@ static int mmu_alloc_shadow_roots(struct kvm_vcpu *vcpu)
- 			if (mmu_check_root(vcpu, root_gfn))
- 				return 1;
- 		}
--		spin_lock(&vcpu->kvm->mmu_lock);
--		if (make_mmu_pages_available(vcpu) < 0) {
--			spin_unlock(&vcpu->kvm->mmu_lock);
--			return -ENOSPC;
--		}
--		sp = kvm_mmu_get_page(vcpu, root_gfn, i << 30, PT32_ROOT_LEVEL,
--				      0, ACC_ALL);
--		root = __pa(sp->spt);
--		++sp->root_count;
--		spin_unlock(&vcpu->kvm->mmu_lock);
- 
-+		root = mmu_alloc_root(vcpu, root_gfn, i << 30,
-+				      PT32_ROOT_LEVEL, false);
-+		if (!VALID_PAGE(root))
-+			return -ENOSPC;
- 		vcpu->arch.mmu->pae_root[i] = root | pm_mask;
- 	}
- 	vcpu->arch.mmu->root_hpa = __pa(vcpu->arch.mmu->pae_root);
+diff --git a/.mailmap b/.mailmap
+index db3754a41018..4600dcfed0d3 100644
+--- a/.mailmap
++++ b/.mailmap
+@@ -152,6 +152,7 @@ Krzysztof Kozlowski <krzk@kernel.org> <k.kozlowski.k@gmail.com>
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+ Leon Romanovsky <leon@kernel.org> <leon@leon.nu>
+ Leon Romanovsky <leon@kernel.org> <leonro@mellanox.com>
++Leonardo Bras <leobras.c@gmail.com> <leonardo@linux.ibm.com>
+ Leonid I Ananiev <leonid.i.ananiev@intel.com>
+ Linas Vepstas <linas@austin.ibm.com>
+ Linus Lüssing <linus.luessing@c0d3.blue> <linus.luessing@web.de>
 -- 
-2.26.0
+2.25.4
 
