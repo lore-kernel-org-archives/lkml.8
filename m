@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8C4C8300A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EB2C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 218ED20B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E262620575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099769;
-	bh=Jq+43dOowewCe+eyDo+Q0xe3EHHPuoR53eIrtwTUFs8=;
+	s=default; t=1588099772;
+	bh=RatZWJj2molmVc4U4IIdVkhkfYTHFDUQlZN6Amy12T0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aC+0Rg0igdcEEFMZLKpDEQiuGnbGEuWwltl+zQ5eaptg5f4iC5f8IHowRiTt/9PSB
-	 Z33mqlwmKhjijtUSAvwnfYhatDG+5bi6oxaDAd4D9zgRAVfoCaBW+3NLlJYDliFv1b
-	 PePWrQWclfYmqbldbsP4f9EsrUphg8xmBBFxFWg8=
+	b=ULuo4SeqGWyXNKbbK4CrKYegpMAJ2X0BHRfIhQ/NrwCgLaJrf2xkgr93AXddsPOZ9
+	 ak51IDQtcqUq2gYKHjMhwwLBUByv3YxzBy/eU4LdVVnGEC0Ifl88LIlKHCW0RBf2v3
+	 NxsgUT+2+pFDWNPzgdCLcycAtoHDBETJSjicqMn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730886AbgD1SkF (ORCPT
+        id S1731098AbgD1Stb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:40:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59086 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:49:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730177AbgD1SkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:40:03 -0400
+        id S1730479AbgD1SkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:40:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08F9320575;
-        Tue, 28 Apr 2020 18:40:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4084920575;
+        Tue, 28 Apr 2020 18:40:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099202;
-        bh=Jq+43dOowewCe+eyDo+Q0xe3EHHPuoR53eIrtwTUFs8=;
+        s=default; t=1588099214;
+        bh=RatZWJj2molmVc4U4IIdVkhkfYTHFDUQlZN6Amy12T0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EOzD4KZnvhqqGUMtmbSgjLk87TwZjfcVHhPxrHZupzlQmo5IFX/SiQkQupUjp1wF6
-         U0+FMD3o65ON8DmP/Bpw7+GWH47DlNj7nhCT2WOAbxaMteful9EBbusanijhM4y1T+
-         pWMhTalp7bK7nQZZ9ZXV7ErGw4jU8tWmfEHFbjso=
+        b=StBqV7xzLX6pRiI/OFc4uasOEaSifzzzhGjg51qaiwZJQ9F9IaFn7cNWOyUFD5EhA
+         C1AMTZARSQi+kdHiyoStVSWco9/fDXftmSGHxNX8Y7WwYa3dSzpIm8XuSqVvu/EPP9
+         wOv7koMPH0qprkc8lhSOxp0IlyNCRrErDckBy5Es=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.19 113/131] staging: comedi: dt2815: fix writing hi byte of analog output
-Date:   Tue, 28 Apr 2020 20:25:25 +0200
-Message-Id: <20200428182239.408300451@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>
+Subject: [PATCH 4.19 115/131] vt: dont hardcode the mem allocation upper bound
+Date:   Tue, 28 Apr 2020 20:25:27 +0200
+Message-Id: <20200428182239.702907674@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
 References: <20200428182224.822179290@linuxfoundation.org>
@@ -58,62 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Nicolas Pitre <nico@fluxnic.net>
 
-commit ed87d33ddbcd9a1c3b5ae87995da34e6f51a862c upstream.
+commit 2717769e204e83e65b8819c5e2ef3e5b6639b270 upstream.
 
-The DT2815 analog output command is 16 bits wide, consisting of the
-12-bit sample value in bits 15 to 4, the channel number in bits 3 to 1,
-and a voltage or current selector in bit 0.  Both bytes of the 16-bit
-command need to be written in turn to a single 8-bit data register.
-However, the driver currently only writes the low 8-bits.  It is broken
-and appears to have always been broken.
+The code in vc_do_resize() bounds the memory allocation size to avoid
+exceeding MAX_ORDER down the kzalloc() call chain and generating a
+runtime warning triggerable from user space. However, not only is it
+unwise to use a literal value here, but MAX_ORDER may also be
+configurable based on CONFIG_FORCE_MAX_ZONEORDER.
+Let's use KMALLOC_MAX_SIZE instead.
 
-Electronic copies of the DT2815 User's Manual seem impossible to find
-online, but looking at the source code, a best guess for the sequence
-the driver intended to use to write the analog output command is as
-follows:
+Note that prior commit bb1107f7c605 ("mm, slab: make sure that
+KMALLOC_MAX_SIZE will fit into MAX_ORDER") the KMALLOC_MAX_SIZE value
+could not be relied upon.
 
-1. Wait for the status register to read 0x00.
-2. Write the low byte of the command to the data register.
-3. Wait for the status register to read 0x80.
-4. Write the high byte of the command to the data register.
-
-Step 4 is missing from the driver.  Add step 4 to (hopefully) fix the
-driver.
-
-Also add a "FIXME" comment about setting bit 0 of the low byte of the
-command.  Supposedly, it is used to choose between voltage output and
-current output, but the current driver always sets it to 1.
-
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200406142015.126982-1-abbotti@mev.co.uk
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
+Cc: <stable@vger.kernel.org> # v4.10+
+Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.2003281702410.2671@knanqh.ubzr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/dt2815.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/tty/vt/vt.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/comedi/drivers/dt2815.c
-+++ b/drivers/staging/comedi/drivers/dt2815.c
-@@ -92,6 +92,7 @@ static int dt2815_ao_insn(struct comedi_
- 	int ret;
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -1209,7 +1209,7 @@ static int vc_do_resize(struct tty_struc
+ 	if (new_cols == vc->vc_cols && new_rows == vc->vc_rows)
+ 		return 0;
  
- 	for (i = 0; i < insn->n; i++) {
-+		/* FIXME: lo bit 0 chooses voltage output or current output */
- 		lo = ((data[i] & 0x0f) << 4) | (chan << 1) | 0x01;
- 		hi = (data[i] & 0xff0) >> 4;
- 
-@@ -105,6 +106,8 @@ static int dt2815_ao_insn(struct comedi_
- 		if (ret)
- 			return ret;
- 
-+		outb(hi, dev->iobase + DT2815_DATA);
-+
- 		devpriv->ao_readback[chan] = data[i];
- 	}
- 	return i;
+-	if (new_screen_size > (4 << 20))
++	if (new_screen_size > KMALLOC_MAX_SIZE)
+ 		return -EINVAL;
+ 	newscreen = kzalloc(new_screen_size, GFP_USER);
+ 	if (!newscreen)
 
 
