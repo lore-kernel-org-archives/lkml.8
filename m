@@ -2,105 +2,75 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56521C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1C7C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 309CE20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9C4720656
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:10:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DsvMUPLr"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="qlxGJYWG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726662AbgD1XJJ (ORCPT
+        id S1726611AbgD1XKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 19:09:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726044AbgD1XJI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 19:09:08 -0400
-Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com [IPv6:2607:f8b0:4864:20::f2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92199C03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 16:09:08 -0700 (PDT)
-Received: by mail-qv1-xf2e.google.com with SMTP id v38so243646qvf.6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 16:09:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=E34KFh73pSkJa2DRTDrDuu2OnqOCVfxHnB82WTUMpLQ=;
-        b=DsvMUPLr2BXCwYEJNjVAYJEsLj+Sv9Fvy96fJikjwqB67IHXMB6qjCTd5Nt1CTV2DM
-         7mEGJglDpBpm/u7EPlfyCWRVlHCHAZ5IS93SCJzsnivww+FcDK1Ea/JFstTgwwKhVwG+
-         vqGS4CSeSz0K1Wz/00kcwqXb+iLBr3PKqR+tujeNncp9ggG39d3rFrV8J1CYcT4q0UzJ
-         nKks5ype7bNad8iprb90a75Ayzil5CNv7BBtVuVWXSpKmk7Fu6K4w/ykFFBqjjwg389P
-         7UKEdqcgJTaCUKpGS9wyVUQQpKZYKPp3cm1FBb6gig4ilzuh6YeQMadPeNqQ4yE5+jMH
-         bJjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=E34KFh73pSkJa2DRTDrDuu2OnqOCVfxHnB82WTUMpLQ=;
-        b=k7FD7ho6w0Y8ShaPJX+OKlQsYamnHlHdm4qziOLHMlMdfUz07k9rvbE+/ODHGZu6BL
-         7c0Y40EEnhZQF+RY6E87RUgcn65F3Sgj0Fpz09f7FwceXCkwGXqBfZAgGRHVDaKG9Of2
-         7KO/Vq8ff3EQF3PPOeqCVaG3gZh8htCHg7+Ec1bSfwbqoKTDAj9XAkiqZiFuJRv9z0P4
-         w/EGvmajR8otfHtmwKs5pXmHWvXQOYkWIjC4pF7nMFWyjXHzUpa+C7+WGpi9dar5xiKX
-         +owR3sWwR3VQ8rZCXh/v4RQ+FXfM9Hx2M9GTGsUQGqoKB/xi9ETyrMhplzavM+c5p6D0
-         wEXA==
-X-Gm-Message-State: AGi0PuZHi/Q8Zf46uzRDyZjxtUMz0VcNX/qH1Dl7dzOwHNSkJD6+18MU
-        TcjUsgPgn27S5DXur4yjQFc=
-X-Google-Smtp-Source: APiQypLf0Q12QWupyVdf1Ie+vr0NfD2dhUkVNAYlbsbFGryFWBhSonUDQd6fkwOFdQXJz4t24INC/A==
-X-Received: by 2002:ad4:42c9:: with SMTP id f9mr28865871qvr.228.1588115345853;
-        Tue, 28 Apr 2020 16:09:05 -0700 (PDT)
-Received: from [192.168.86.185] ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id i56sm15536862qte.6.2020.04.28.16.09.04
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 Apr 2020 16:09:05 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 20:08:35 -0300
-User-Agent: K-9 Mail for Android
-In-Reply-To: <d367cca3297fc07f5fc155f1e0b9b0e93c1b3cdf.camel@perches.com>
-References: <1587904265-865-1-git-send-email-zou_wei@huawei.com> <20200428175046.GD5460@kernel.org> <d367cca3297fc07f5fc155f1e0b9b0e93c1b3cdf.camel@perches.com>
+        Tue, 28 Apr 2020 19:10:04 -0400
+Received: from mail.zx2c4.com ([192.95.5.64]:41199 "EHLO mail.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726044AbgD1XKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 19:10:03 -0400
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 078fe6c1;
+        Tue, 28 Apr 2020 22:58:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=+pPISQMqFxTrP0qCf0FuggC3lus=; b=qlxGJY
+        WGjse5gcNmibU1zg7WYgXb0/RjibCS2lWFDFwOItuz2ICRpA6pP0XgSMX4oSK2zI
+        lPDjZtg1823vzUmS/wNxKGv/1AW1mgsNsKRHlvMhIStABHh00tHR2SVgwtN80vGU
+        nTeqnfescZsyFbCOg+ghbdROG++vJYRIR0fX2SC4pgsMdb0GiHkbMLiDjuNTqwIy
+        bjKMFdkfiPCSAt2Wfek/OUSww8nGcOyXtJHZUIHP0zXxYF3WOMjoU0EHmCPBoCV+
+        1W3q4C6nw8oRFR+jMXRPySL+F1bAhZdoZQYkLhsZgUUZjBxaYYIFcdSf0mx29lqb
+        a1FRnbEGywcJKFbQ==
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 55194e36 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Tue, 28 Apr 2020 22:58:16 +0000 (UTC)
+Received: by mail-il1-f178.google.com with SMTP id q10so662516ile.0;
+        Tue, 28 Apr 2020 16:09:57 -0700 (PDT)
+X-Gm-Message-State: AGi0Pua390tvs2fRci/PorK/38awMqBJvIVnTHB8PX0V5j6ORUhcPMMT
+        O/1dWJH64BVmphlZIUgnfllkg++9dMaP8xVEaHA=
+X-Google-Smtp-Source: APiQypLFBTEqzIsMWL5IIDmD+RjrMKuT2Kwxq90aLIbknJdICxwCpdyDqftd7SMlsayBnczg1Do3aTutqcTKnU4j77Y=
+X-Received: by 2002:a92:d98c:: with SMTP id r12mr29411687iln.224.1588115397226;
+ Tue, 28 Apr 2020 16:09:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH -next] perf script: remove unneeded conversion to bool
-To:     Joe Perches <joe@perches.com>, Zou Wei <zou_wei@huawei.com>
-CC:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org
-From:   Arnaldo Melo <arnaldo.melo@gmail.com>
-Message-ID: <5388E360-C450-4F54-B4B5-00568165FBC2@gmail.com>
+References: <20200422200344.239462-1-Jason@zx2c4.com> <20200422231854.675965-1-Jason@zx2c4.com>
+ <CAMj1kXHV=ryaFmj0jhQVGBd31nfHs7q5RtSyu7dY6GdEJJsr7A@mail.gmail.com>
+ <20200423184219.GA80650@kroah.com> <CAMj1kXF9uLUE3=rX1i_yYoigB7j-nLMZpGc35ve2KV+NxjRhVQ@mail.gmail.com>
+ <20200423202348.GA2796@gmail.com> <CAMj1kXGAUQ3DT-9roymODC20+GPFv4R280r1BrN=juHtYhnq7g@mail.gmail.com>
+In-Reply-To: <CAMj1kXGAUQ3DT-9roymODC20+GPFv4R280r1BrN=juHtYhnq7g@mail.gmail.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Tue, 28 Apr 2020 17:09:46 -0600
+X-Gmail-Original-Message-ID: <CAHmME9oS5L0GXAUvBAuz7a2WtRT=nBQk6H7-iHKnspao4ckgjA@mail.gmail.com>
+Message-ID: <CAHmME9oS5L0GXAUvBAuz7a2WtRT=nBQk6H7-iHKnspao4ckgjA@mail.gmail.com>
+Subject: Re: [PATCH crypto-stable v3 1/2] crypto: arch/lib - limit simd usage
+ to 4k chunks
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Eric Biggers <ebiggers@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-rt-users@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Herbert,
 
+This v3 patchset has a Reviewed-by from Ard for 1/2 and from Eric for
+2/2, from last week. Could you submit this to Linus for rc4?
 
-On April 28, 2020 6:58:46 PM GMT-03:00, Joe Perches <joe@perches=2Ecom> wr=
-ote:
->On Tue, 2020-04-28 at 14:50 -0300, Arnaldo Carvalho de Melo wrote:
->> Em Sun, Apr 26, 2020 at 08:31:05PM +0800, Zou Wei escreveu:
->> > This issue was detected by using the Coccinelle software:
->> >=20
->> > tools/perf/builtin-script=2Ec:3285:48-53: WARNING: conversion to bool
->not needed here
->> > tools/perf/builtin-script=2Ec:2839:36-41: WARNING: conversion to bool
->not needed here
->> >=20
->> > The conversion to bool is unneeded, remove it
->>=20
->> Thanks, applied,
->
->Did you read the patch?
->It's broken, unless some other patch was applied=2E
-
-Of course I read it, but yeah, I made a mistake, thanks for pointing out, =
-I'll remove it, thanks=2E
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+Thanks,
+Jason
