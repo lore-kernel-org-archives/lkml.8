@@ -2,96 +2,190 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4A6C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3602CC83003
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91EEC2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:34:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EB542070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:44:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="W7P8x6Ns"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OiQeazIF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgD1Ae6 (ORCPT
+        id S1726343AbgD1AoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 20:34:58 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:34082 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbgD1Ae6 (ORCPT
+        Mon, 27 Apr 2020 20:44:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726263AbgD1AoZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 20:34:58 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03S0KDrl167389;
-        Tue, 28 Apr 2020 00:34:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=KEEfHil6dnSLFm1q3xH4L9RLhoQa558GuexLsXCTxaQ=;
- b=W7P8x6NsLSItJeUUvbFhtmXR8iilOawP5GIZiJ1vbYC8qoQDzgZObbAaQ/XVdqtyE8n0
- gOERLM/qlzbAX+M76gL2qCl06PlixtuzNthzaX0L41DwEAIC69TDqT+J9UYSZRskJzfH
- YKFXUOB3Cho3WkMhn/mYNnsQL9yxuU67Y2zihv9yG1LeNbTlQuuntocKhHc8QRhOUHJ7
- CRuClDoE/cm9ONOKoejBSar9BTtLCQ0JqkoRxlDMFbqOGZpVDp6kodwShTt6ynwrIr8g
- +UFOmcWT1a+peOFuvWHDurKHS8qwFRAngYK6GGWQZGSqClNCy1YeGjj20CY2n73CsxXX +A== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 30p01nkabj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 00:34:54 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03S0Gvbq190574;
-        Tue, 28 Apr 2020 00:34:53 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 30my0b4r81-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 00:34:53 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03S0YpxO030137;
-        Tue, 28 Apr 2020 00:34:52 GMT
-Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 27 Apr 2020 17:34:51 -0700
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        kernel@collabora.com, jejb@linux.ibm.com
-Subject: Re: [RESEND PATCH v2] scsi: core: dox: Change function comments to kernel-doc style
-Date:   Mon, 27 Apr 2020 20:34:50 -0400
-Message-Id: <158803405340.29157.1656152074751746659.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200419050148.33371-1-andrealmeid@collabora.com>
-References: <20200419050148.33371-1-andrealmeid@collabora.com>
+        Mon, 27 Apr 2020 20:44:25 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B7EAC03C1A8;
+        Mon, 27 Apr 2020 17:44:25 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id g19so29706778otk.5;
+        Mon, 27 Apr 2020 17:44:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VhGS8dYUF43wLQV+THWnzQsHj2BDh87oypEgi/eQ6Kg=;
+        b=OiQeazIF2D+is/AHjp1Cf0TjfxsAC2pwsqBg7M2opP/nWx3JsneE7+JQ4c4RUaWaVt
+         gOakvIsDK/12Dlyoe3srTPPINtf+EyHumf1GBwHuQBzt69dwvU0ZXqOevZOt3sanyM3s
+         TvNEF4EqKj2oGaRvYahMKienDyiOPM0ApMbRg2Inpef3idPjPm9q06vvWI6ebOmeHIeU
+         zL0FRTw2Q67kN21sdqperJ2OkN9iJMXLGGYznamBomMNU4vMt1bU/yb2BrL7XD3Hw/XH
+         hGouTHbjMyYa36hzazNTcVq7dnP3r3tH7eFYJns/BuRizMuASe1XH3Y0l9OdxQPAt45h
+         oGCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VhGS8dYUF43wLQV+THWnzQsHj2BDh87oypEgi/eQ6Kg=;
+        b=pVKL3FZS0bbjAN1SeAdBsgX4GOyhWQl0Z1guVbwvQ0aOM2dBrGg2AmnoCwRmcHV1+v
+         KbSBX76B9LOqTs7XGeJ7LUtGcQvfaMQJlLGbW+enbAgmYHyrhJegbAL3F6e7K3ibSzeK
+         HHn1trfnreeCwrhu526bE11nU9tSbOSXOZWshNHWuv9BdMqovOJmvj22lnRdQJyVF1nX
+         l+0YiGek7v4tQYntdvLO2e3ZIvbvHSfH/QF6SNzv7vG81bxQPgNV5uLdp+VcAhrYHiT+
+         cwBNbeD93QLSobjQWgRoUC9El38LwcYVg/gksJ0wpX/1+oDCbIyfGP3jry0ELHfOFanR
+         km5g==
+X-Gm-Message-State: AGi0PuYjpox54N9pWICv76sRGQe/YTQ60fbXa/6IC7yPy2dsIP9J5oCz
+        vysD6GwpeV8KQJfx6c4MdsnPBsGKbz1SrYGUdeU=
+X-Google-Smtp-Source: APiQypJk69gEtiyGl45hjwalSRxAbT3qGjO5oQIz5CHWe3/f9MddOpA4ypPsyrtJkhLO+OKkSSMDwhWUPp5Ff0doLBw=
+X-Received: by 2002:a05:6830:20d9:: with SMTP id z25mr12751170otq.254.1588034664624;
+ Mon, 27 Apr 2020 17:44:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
- suspectscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004280000
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 clxscore=1011
- phishscore=0 mlxlogscore=999 adultscore=0 priorityscore=1501 mlxscore=0
- suspectscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004280000
+References: <1587709364-19090-1-git-send-email-wanpengli@tencent.com>
+ <1587709364-19090-3-git-send-email-wanpengli@tencent.com> <CANRm+CwvTrwmJnFWR8UgEkqyE_fyoc6KmrNuHQj=DuJDkR-UGA@mail.gmail.com>
+ <20200427183656.GO14870@linux.intel.com>
+In-Reply-To: <20200427183656.GO14870@linux.intel.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 28 Apr 2020 08:44:13 +0800
+Message-ID: <CANRm+CzdCcz4Vyw-6D5xTc+VmRTr6=O0U=7vfdNLF=LjW5HOEg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] KVM: X86: Introduce need_cancel_enter_guest helper
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Haiwei Li <lihaiwei@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 19 Apr 2020 02:01:48 -0300, =?UTF-8?q?Andr=C3=A9=20Almeida?= wrote:
+On Tue, 28 Apr 2020 at 02:36, Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Sun, Apr 26, 2020 at 10:05:00AM +0800, Wanpeng Li wrote:
+> > On Fri, 24 Apr 2020 at 14:23, Wanpeng Li <kernellwp@gmail.com> wrote:
+> > >
+> > > From: Wanpeng Li <wanpengli@tencent.com>
+> > >
+> > > Introduce need_cancel_enter_guest() helper, we need to check some
+> > > conditions before doing CONT_RUN, in addition, it can also catch
+> > > the case vmexit occurred while another event was being delivered
+> > > to guest software since vmx_complete_interrupts() adds the request
+> > > bit.
+> > >
+> > > Tested-by: Haiwei Li <lihaiwei@tencent.com>
+> > > Cc: Haiwei Li <lihaiwei@tencent.com>
+> > > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > > ---
+> > >  arch/x86/kvm/vmx/vmx.c | 12 +++++++-----
+> > >  arch/x86/kvm/x86.c     | 10 ++++++++--
+> > >  arch/x86/kvm/x86.h     |  1 +
+> > >  3 files changed, 16 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > > index f1f6638..5c21027 100644
+> > > --- a/arch/x86/kvm/vmx/vmx.c
+> > > +++ b/arch/x86/kvm/vmx/vmx.c
+> > > @@ -6577,7 +6577,7 @@ bool __vmx_vcpu_run(struct vcpu_vmx *vmx, unsigned long *regs, bool launched);
+> > >
+> > >  static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> > >  {
+> > > -       enum exit_fastpath_completion exit_fastpath;
+> > > +       enum exit_fastpath_completion exit_fastpath = EXIT_FASTPATH_NONE;
+> > >         struct vcpu_vmx *vmx = to_vmx(vcpu);
+> > >         unsigned long cr3, cr4;
+> > >
+> > > @@ -6754,10 +6754,12 @@ static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> > >         vmx_recover_nmi_blocking(vmx);
+> > >         vmx_complete_interrupts(vmx);
+> > >
+> > > -       exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
+> > > -       /* static call is better with retpolines */
+> > > -       if (exit_fastpath == EXIT_FASTPATH_CONT_RUN)
+> > > -               goto cont_run;
+> > > +       if (!kvm_need_cancel_enter_guest(vcpu)) {
+> > > +               exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
+> > > +               /* static call is better with retpolines */
+> > > +               if (exit_fastpath == EXIT_FASTPATH_CONT_RUN)
+> > > +                       goto cont_run;
+> > > +       }
+> >
+> > The kvm_need_cancel_enter_guest() should not before
+> > vmx_exit_handlers_fastpath() which will break IPI fastpath. How about
+> > applying something like below, otherwise, maybe introduce another
+> > EXIT_FASTPATH_CONT_FAIL to indicate fails due to
+> > kvm_need_cancel_enter_guest() if checking it after
+> > vmx_exit_handlers_fastpath(), then we return 1 in vmx_handle_exit()
+> > directly instead of kvm_skip_emulated_instruction(). VMX-preemption
+> > timer exit doesn't need to skip emulated instruction but wrmsr
+> > TSCDEADLINE MSR exit does which results in a little complex here.
+> >
+> > Paolo, what do you think?
+> >
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 853d3af..9317924 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -6564,6 +6564,9 @@ static enum exit_fastpath_completion
+> > handle_fastpath_preemption_timer(struct kvm
+> >  {
+> >      struct vcpu_vmx *vmx = to_vmx(vcpu);
+> >
+> > +    if (kvm_need_cancel_enter_guest(vcpu))
+> > +        return EXIT_FASTPATH_NONE;
+> > +
+> >      if (!vmx->req_immediate_exit &&
+> >          !unlikely(vmx->loaded_vmcs->hv_timer_soft_disabled)) {
+> >              kvm_lapic_expired_hv_timer(vcpu);
+> > @@ -6771,12 +6774,10 @@ static enum exit_fastpath_completion
+> > vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> >      vmx_recover_nmi_blocking(vmx);
+> >      vmx_complete_interrupts(vmx);
+> >
+> > -    if (!(kvm_need_cancel_enter_guest(vcpu))) {
+> > -        exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
+> > -        if (exit_fastpath == EXIT_FASTPATH_CONT_RUN) {
+> > -            vmx_sync_pir_to_irr(vcpu);
+> > -            goto cont_run;
+> > -        }
+> > +    exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
+> > +    if (exit_fastpath == EXIT_FASTPATH_CONT_RUN) {
+>
+> Relying on the handlers to check kvm_need_cancel_enter_guest() will be
+> error prone and costly to maintain.  I also don't like that it buries the
+> logic.
+>
+> What about adding another flavor, e.g.:
+>
+>         exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
+>         if (exit_fastpath == EXIT_FASTPATH_CONT_RUN &&
+>             kvm_need_cancel_enter_guest(vcpu))
+>                 exit_fastpath = EXIT_FASTPATH_NOP;
+>
+> That would also allow you to enable preemption timer without first having
+> to add CONT_RUN, which would be a very good thing for bisection.
 
-> Despite of functions being documented, they are not in the kernel-doc
-> specification, and could not be included in kernel documentation. Change
-> the style of functions comments to be compliant to the kernel-doc style.
-> When the function comment is outdated, update then.
+I miss understand the second part, do you mean don't need to add
+CONT_RUN in patch 1/5?
 
-Applied to 5.8/scsi-queue, thanks!
-
-[1/1] scsi: core: doc: Change function comments to kernel-doc style
-      https://git.kernel.org/mkp/scsi/c/ea941016abf7
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+    Wanpeng
