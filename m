@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C6BC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 478EFC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6594C21569
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B0D320575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100299;
-	bh=MPhBk2aXHqgv91j67B1ChdciQB186ig6fgBa5Q4UlzU=;
+	s=default; t=1588100304;
+	bh=fgAPi6SmobpQ+fTyTrbXH1oguShDvqB2QYogzj2mDg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j9oLPKvZ00Noj5q3XE/h1csXCJqzZ1sbD1QkDjoqI14zD8U8alyz4Z+R+NVMQMddU
-	 TvPlFMsDZVibam+hHaljIIKCGuBaMMOtSflmKA93czwTBdp6bJwNefVRIk53CvHT7n
-	 338Ha/a9Cw6jD3JLZygfByugeRUsreyd5FMgdyw0=
+	b=zkI69p56VE2+Vfr43SyEx1IxmJWLxmXtAHCSfx513TcncqaxHGDMlbg77H8Vl6Ahg
+	 fv0zYxQEAoyFD5duSnIN8MVW7tuZYRLxNZlTvbvwp6vy4VeSZ4B38vmUsr264h/8jN
+	 1deP9OXFM7Ho3w4psKX51m/yXQoBmvldovh1B+fI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730065AbgD1S6S (ORCPT
+        id S1729348AbgD1S3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:58:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43446 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:29:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729382AbgD1S3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:29:38 -0400
+        id S1729335AbgD1S3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:29:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73E0820757;
-        Tue, 28 Apr 2020 18:29:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6751020757;
+        Tue, 28 Apr 2020 18:29:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098577;
-        bh=MPhBk2aXHqgv91j67B1ChdciQB186ig6fgBa5Q4UlzU=;
+        s=default; t=1588098560;
+        bh=fgAPi6SmobpQ+fTyTrbXH1oguShDvqB2QYogzj2mDg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lwef6vvDpfADJh/DMgSuEefIW3VjJ7TreX633MBcv+lg04B3xYr95TiiAO4zqtaPT
-         kNpnVLmknUknPeZ90/5L2JvyILLLzv4mPOAGrwxraSwRjnX+UFp+Ekg+itcugyo+5b
-         jyGxatvzbJ3Fp4JaCwBMv2+ycbawkPRd2WJ/SGZo=
+        b=oXNa5uDRbw0TouwcQZuemhoy8b9FuwmOK++cCw+rL4t4WdIhDTHAH6THzcKeRNX8Z
+         /BUPxQrpOc+XTFaebR6i2SFH3KGsRrrPxkI0PwX4grUaZV9L08ek6oxToQGAnGQS/e
+         SY+0qKJsx4VTBQulVhAEVRIt0835g4UXnlsnEpPI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Johnathan Smithinovic <johnathan.smithinovic@gmx.at>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 076/167] ALSA: hda: Remove ASUS ROG Zenith from the blacklist
-Date:   Tue, 28 Apr 2020 20:24:12 +0200
-Message-Id: <20200428182234.567917963@linuxfoundation.org>
+        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 014/131] ceph: return ceph_mdsc_do_request() errors from __get_parent()
+Date:   Tue, 28 Apr 2020 20:23:46 +0200
+Message-Id: <20200428182226.973973467@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,46 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-[ Upstream commit a8cf44f085ac12c0b5b8750ebb3b436c7f455419 ]
+[ Upstream commit c6d50296032f0b97473eb2e274dc7cc5d0173847 ]
 
-The commit 3c6fd1f07ed0 ("ALSA: hda: Add driver blacklist") added a
-new blacklist for the devices that are known to have empty codecs, and
-one of the entries was ASUS ROG Zenith II (PCI SSID 1043:874f).
-However, it turned out that the very same PCI SSID is used for the
-previous model that does have the valid HD-audio codecs and the change
-broke the sound on it.
+Return the error returned by ceph_mdsc_do_request(). Otherwise,
+r_target_inode ends up being NULL this ends up returning ENOENT
+regardless of the error.
 
-This patch reverts the corresponding entry as a temporary solution.
-Although Zenith II and co will see get the empty HD-audio bus again,
-it'd be merely resource wastes and won't affect the functionality,
-so it's no end of the world.  We'll need to address this later,
-e.g. by either switching to DMI string matching or using PCI ID &
-SSID pairs.
-
-Fixes: 3c6fd1f07ed0 ("ALSA: hda: Add driver blacklist")
-Reported-by: Johnathan Smithinovic <johnathan.smithinovic@gmx.at>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200419071926.22683-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 1 -
- 1 file changed, 1 deletion(-)
+ fs/ceph/export.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index f41d8b7864c1e..af21e9583c0d3 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2076,7 +2076,6 @@ static void pcm_mmap_prepare(struct snd_pcm_substream *substream,
-  * should be ignored from the beginning.
-  */
- static const struct snd_pci_quirk driver_blacklist[] = {
--	SND_PCI_QUIRK(0x1043, 0x874f, "ASUS ROG Zenith II / Strix", 0),
- 	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
- 	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
- 	{}
+diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+index 3c59ad180ef0b..4cfe1154d4c72 100644
+--- a/fs/ceph/export.c
++++ b/fs/ceph/export.c
+@@ -151,6 +151,11 @@ static struct dentry *__get_parent(struct super_block *sb,
+ 
+ 	req->r_num_caps = 1;
+ 	err = ceph_mdsc_do_request(mdsc, NULL, req);
++	if (err) {
++		ceph_mdsc_put_request(req);
++		return ERR_PTR(err);
++	}
++
+ 	inode = req->r_target_inode;
+ 	if (inode)
+ 		ihold(inode);
 -- 
 2.20.1
 
