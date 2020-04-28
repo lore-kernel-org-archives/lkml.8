@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C0EC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C3DC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC3A020575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E936320575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099585;
-	bh=hBYyPRpUugYM2RKU4wm2ghw09N54/z4/XyL37XBU07E=;
+	s=default; t=1588099588;
+	bh=VoQ9RG6ik9+K4WK3BZWxzUToyv+K9LGBGwQ0IETt9f0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QLERWYKjQQwkKgfSrCX/HciOUMtwg59Tzl0LcEzHMojQho7/6PiwwWbtJogMDhRUz
-	 IY8ftWMEjn7Y+Qy9geacTebOPe+4pCFk8uaseUmtlDuBnInrYEfZvhXYGD16GNItgV
-	 oS61zSeS7zzK6TA5ViLcdJZnKdCgppt6YvG6Jcqw=
+	b=F+OWXdWvRdn9fGWxyh2UvyVPxDfZRxxSEFnYq25KvObvAcuZJBmCK+IOic1n53+qw
+	 vDh0M6DcfQsJn3y08x0cD+0j7TtdNGcpt0i02sSZqKAQ/S22shU6ZSmvqSXMFlPRbR
+	 RxMebtpMIOfS9P74DVM8d+WKC0Ef2HcbebwyEZjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731214AbgD1SnS (ORCPT
+        id S1731208AbgD1SnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:43:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35542 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731202AbgD1SnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Apr 2020 14:43:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35366 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730267AbgD1SnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:43:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E698C20575;
-        Tue, 28 Apr 2020 18:43:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89B6D2085B;
+        Tue, 28 Apr 2020 18:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099393;
-        bh=hBYyPRpUugYM2RKU4wm2ghw09N54/z4/XyL37XBU07E=;
+        s=default; t=1588099386;
+        bh=VoQ9RG6ik9+K4WK3BZWxzUToyv+K9LGBGwQ0IETt9f0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dOd1+BgTVIZI2QcLaNQkFxxvBqDa6mR2jroWN/KJAFrDRpGoPP62m53TgMZ35fWTM
-         lk4ahu+LSEeGKui08Acynrq89yoxRj6+e/KUDS7KrgPg9bDgGpJx4i9VFyLTPylusW
-         N4L9p3AFzpOAACcdxdSLhz479sNjphDEo7zCWVRE=
+        b=OOcTL4wAtqVRrB2Gt2DsnGOItr3yph8LpJKKvisplEWnkOsyCdOLd3agXccn84Trr
+         kGtdcIlqFveQYqXE6LboJoJklLk3r42YjHS0jvMfon4RVfbUEJcjMGBI0MpSwqD1Ii
+         689/hKnunPCQ9HS5IMMhsVgaKaxlfQ7cX+5tV4c4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilan Peer <ilan.peer@intel.com>,
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
         Luca Coelho <luciano.coelho@intel.com>,
         Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 131/168] iwlwifi: mvm: Do not declare support for ACK Enabled Aggregation
-Date:   Tue, 28 Apr 2020 20:25:05 +0200
-Message-Id: <20200428182248.630387041@linuxfoundation.org>
+Subject: [PATCH 5.4 128/168] iwlwifi: pcie: actually release queue memory in TVQM
+Date:   Tue, 28 Apr 2020 20:25:02 +0200
+Message-Id: <20200428182248.371321557@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -60,44 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilan Peer <ilan.peer@intel.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit 38af8d5a90a8c3b41ff0484855e24bd55b43ce9d upstream.
+commit b98b33d5560a2d940f3b80f6768a6177bf3dfbc0 upstream.
 
-As this was not supposed to be enabled to begin with.
+The iwl_trans_pcie_dyn_txq_free() function only releases the frames
+that may be left on the queue by calling iwl_pcie_gen2_txq_unmap(),
+but doesn't actually free the DMA ring or byte-count tables for the
+queue. This leads to pretty large memory leaks (at least before my
+queue size improvements), in particular in monitor/sniffer mode on
+channel hopping since this happens on every channel change.
 
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Ilan Peer <ilan.peer@intel.com>
+This was also now more evident after the move to a DMA pool for the
+byte count tables, showing messages such as
+
+  BUG iwlwifi:bc (...): Objects remaining in iwlwifi:bc on __kmem_cache_shutdown()
+
+This fixes https://bugzilla.kernel.org/show_bug.cgi?id=206811.
+
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 6b35ff91572f ("iwlwifi: pcie: introduce a000 TX queues management")
+Cc: stable@vger.kernel.org # v4.14+
 Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/iwlwifi.20200417100405.53dbc3c6c36b.Idfe118546b92cc31548b2211472a5303c7de5909@changeid
+Link: https://lore.kernel.org/r/iwlwifi.20200417100405.f5f4c4193ec1.Id5feebc9b4318041913a9c89fc1378bb5454292c@changeid
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
-@@ -525,8 +525,7 @@ static struct ieee80211_sband_iftype_dat
- 					IEEE80211_HE_MAC_CAP1_TF_MAC_PAD_DUR_16US |
- 					IEEE80211_HE_MAC_CAP1_MULTI_TID_AGG_RX_QOS_8,
- 				.mac_cap_info[2] =
--					IEEE80211_HE_MAC_CAP2_32BIT_BA_BITMAP |
--					IEEE80211_HE_MAC_CAP2_ACK_EN,
-+					IEEE80211_HE_MAC_CAP2_32BIT_BA_BITMAP,
- 				.mac_cap_info[3] =
- 					IEEE80211_HE_MAC_CAP3_OMI_CONTROL |
- 					IEEE80211_HE_MAC_CAP3_MAX_AMPDU_LEN_EXP_VHT_2,
-@@ -610,8 +609,7 @@ static struct ieee80211_sband_iftype_dat
- 					IEEE80211_HE_MAC_CAP1_TF_MAC_PAD_DUR_16US |
- 					IEEE80211_HE_MAC_CAP1_MULTI_TID_AGG_RX_QOS_8,
- 				.mac_cap_info[2] =
--					IEEE80211_HE_MAC_CAP2_BSR |
--					IEEE80211_HE_MAC_CAP2_ACK_EN,
-+					IEEE80211_HE_MAC_CAP2_BSR,
- 				.mac_cap_info[3] =
- 					IEEE80211_HE_MAC_CAP3_OMI_CONTROL |
- 					IEEE80211_HE_MAC_CAP3_MAX_AMPDU_LEN_EXP_VHT_2,
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
+@@ -1283,6 +1283,9 @@ void iwl_trans_pcie_dyn_txq_free(struct
+ 
+ 	iwl_pcie_gen2_txq_unmap(trans, queue);
+ 
++	iwl_pcie_gen2_txq_free_memory(trans, trans_pcie->txq[queue]);
++	trans_pcie->txq[queue] = NULL;
++
+ 	IWL_DEBUG_TX_QUEUES(trans, "Deactivate queue %d\n", queue);
+ }
+ 
 
 
