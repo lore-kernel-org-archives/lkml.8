@@ -2,107 +2,96 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B7FC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17016C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5563620730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rVn+LZSx"
+	by mail.kernel.org (Postfix) with ESMTP id DB7EE206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588100058;
+	bh=noDKrL1XZ7S66q2XxiX3wRm8Ysr3RMy4fpVkvvvA9UE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iytk1gOx20ItvwMour9rxc9KTBIQn0AxL00ZOhuqvwk4lYU/SSbla4r6eNrDDkKcJ
+	 gDcix1kQoV0UxvmgFgnCjVXrH/0+J322djbywAM5uPbKDqhihLT7grYG5p5zRJ26Iy
+	 MgmT16QrRTo5S6bvP+ZsxGfCJkXf4oJDqpHwm1XE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730661AbgD1SyL (ORCPT
+        id S1730757AbgD1SyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:54:11 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:53225 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730064AbgD1SyH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:54:07 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588100046; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=0e4Q4kCLbMcxnWJZ9yvWd0DliCAIiPdcXMbvbzquWlY=; b=rVn+LZSxekQBZLbZGWUzo7+fII4zQYk/TKy1Io8DW7SnNhyZH9vGWB8Mfqo1zFleGMYjKKU3
- cnMJrZ1nMABbQGu0PZqHnL0VDJBhD417W+pOTYae81amBuCMVTKPpF+Bcpe2fWMRcpsA2/+A
- KDNukBp+r/xtIqX2GEfXCgkIMro=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea87bce.7fef5834e458-smtp-out-n04;
- Tue, 28 Apr 2020 18:54:06 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 21E0DC43637; Tue, 28 Apr 2020 18:54:05 +0000 (UTC)
-Received: from [10.46.162.249] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 28 Apr 2020 14:54:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50640 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729263AbgD1Sd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:33:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: hemantk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4C94AC433D2;
-        Tue, 28 Apr 2020 18:54:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4C94AC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
-Subject: Re: [PATCH v3 2/6] bus: mhi: core: Remove link_status() callback
-To:     Jeffrey Hugo <jhugo@codeaurora.org>,
-        manivannan.sadhasivam@linaro.org
-Cc:     bbhatt@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1588003153-13139-1-git-send-email-jhugo@codeaurora.org>
- <1588003153-13139-3-git-send-email-jhugo@codeaurora.org>
-From:   Hemant Kumar <hemantk@codeaurora.org>
-Message-ID: <b81dd0ff-9c85-ae7e-55db-0055c57df801@codeaurora.org>
-Date:   Tue, 28 Apr 2020 11:54:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mail.kernel.org (Postfix) with ESMTPSA id EFA5020B80;
+        Tue, 28 Apr 2020 18:33:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588098839;
+        bh=noDKrL1XZ7S66q2XxiX3wRm8Ysr3RMy4fpVkvvvA9UE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Oyo8WMYKvNqilE2qNhfsDe6xJLgIqlLnR15TV2HlG2AIuDixQyVBXdlc1sZPxz85z
+         TSdXv5n6mt2SoZ0OMqFgxs47PgZpex3QSAjYdpC7ttSY6r0teG8KA6vtOmrHRr5dC9
+         sdpoFO1uFZ3zfSRI89MiMLXybiW/HPzl4GDIw90I=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 063/131] tcp: cache line align MAX_TCP_HEADER
+Date:   Tue, 28 Apr 2020 20:24:35 +0200
+Message-Id: <20200428182232.875882123@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <1588003153-13139-3-git-send-email-jhugo@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Eric Dumazet <edumazet@google.com>
+
+[ Upstream commit 9bacd256f1354883d3c1402655153367982bba49 ]
+
+TCP stack is dumb in how it cooks its output packets.
+
+Depending on MAX_HEADER value, we might chose a bad ending point
+for the headers.
+
+If we align the end of TCP headers to cache line boundary, we
+make sure to always use the smallest number of cache lines,
+which always help.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Soheil Hassas Yeganeh <soheil@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ include/net/tcp.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -53,7 +53,7 @@ extern struct inet_hashinfo tcp_hashinfo
+ extern struct percpu_counter tcp_orphan_count;
+ void tcp_time_wait(struct sock *sk, int state, int timeo);
+ 
+-#define MAX_TCP_HEADER	(128 + MAX_HEADER)
++#define MAX_TCP_HEADER	L1_CACHE_ALIGN(128 + MAX_HEADER)
+ #define MAX_TCP_OPTION_SPACE 40
+ #define TCP_MIN_SND_MSS		48
+ #define TCP_MIN_GSO_SIZE	(TCP_MIN_SND_MSS - MAX_TCP_OPTION_SPACE)
 
 
-On 4/27/20 8:59 AM, Jeffrey Hugo wrote:
-> If the MHI core detects invalid data due to a PCI read, it calls into
-> the controller via link_status() to double check that the link is infact
-> down.  All in all, this is pretty pointless, and racy.  There are no good
-> reasons for this, and only drawbacks.
-> 
-> Its pointless because chances are, the controller is going to do the same
-> thing to determine if the link is down - attempt a PCI access and compare
-> the result.  This does not make the link status decision any smarter.
-> 
-> Its racy because its possible that the link was down at the time of the
-> MHI core access, but then recovered before the controller access.  In this
-> case, the controller will indicate the link is not down, and the MHI core
-> will precede to use a bad value as the MHI core does not attempt to retry
-> the access.
-> 
-> Retrying the access in the MHI core is a bad idea because again, it is
-> racy - what if the link is down again?  Furthermore, there may be some
-> higher level state associated with the link status, that is now invalid
-> because the link went down.
-> 
-> The only reason why the MHI core could see "invalid" data when doing a PCI
-> access, that is actually valid, is if the register actually contained the
-> PCI spec defined sentinel for an invalid access.  In this case, it is
-> arguable that the MHI implementation broken, and should be fixed, not
-> worked around.
-> 
-> Therefore, remove the link_status() callback before anyone attempts to
-> implement it.
-> 
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
-Reviewed-by: Hemant Kumar <hemantk@codeaurora.org>
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
