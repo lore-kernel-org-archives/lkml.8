@@ -2,199 +2,131 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B1BC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCCDC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1B6B20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839DD20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:29:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="B20eOiTh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbgD1J0g (ORCPT
+        id S1727098AbgD1J2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 05:26:36 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2119 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726904AbgD1J0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 05:26:36 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 47F54C196A9CD38E624F;
-        Tue, 28 Apr 2020 10:26:34 +0100 (IST)
-Received: from [127.0.0.1] (10.47.4.245) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Tue, 28 Apr
- 2020 10:26:32 +0100
-From:   John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v2 3/3] MIPS: Loongson64: Enable PCI_IO_VMMAP
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, <linux-mips@vger.kernel.org>
-CC:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Stephen Kitt <steve@sk2.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Daniel Silsby <dansilsby@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
-        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <20200428021437.2000066-1-jiaxun.yang@flygoat.com>
- <20200428021437.2000066-4-jiaxun.yang@flygoat.com>
-Message-ID: <952a8ec0-036d-40dc-dd04-05f9e72dc2c3@huawei.com>
-Date:   Tue, 28 Apr 2020 10:25:53 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 28 Apr 2020 05:28:21 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:13345 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727052AbgD1J2U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 05:28:20 -0400
+X-UUID: 4a60755f4a87498cac1ad9f5b1dafff0-20200428
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=m3Ksv+ksgjGvXF0pXLMlpIAwkf0dzAHmcRs39NPBbsk=;
+        b=B20eOiTh7l/29srMJjLhvV6XU6dgavF3w0G5qapIRMzTQERJSWLXte/kGX19TPu/goL6PaCf7AHznx0QVxyIeSgqbT45LX3rChPq6vEVyB9bS9Rd/VaAToJ3TVslxM5LKvd+tiBhtlPazL2156Yd0Q/+9usO3eRk207zoAz0/XM=;
+X-UUID: 4a60755f4a87498cac1ad9f5b1dafff0-20200428
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <yong.mao@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 2093172434; Tue, 28 Apr 2020 17:28:08 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 28 Apr
+ 2020 17:28:04 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 28 Apr 2020 17:28:04 +0800
+Message-ID: <1588066038.30914.28.camel@mhfsdcap03>
+Subject: Re: [PATCH 1/3] mmc: core: need do mmc_power_cycle in
+ mmc_sdio_resend_if_cond
+From:   "yong.mao@mediatek.com" <yong.mao@mediatek.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     <mka@chromium.org>, Chaotian Jing <chaotian.jing@mediatek.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Date:   Tue, 28 Apr 2020 17:27:18 +0800
+In-Reply-To: <CAPDyKFo40tBpowmWN3gxH8b=jMmCK8O5ALNQ7y6XZ5AosX=GUA@mail.gmail.com>
+References: <1586835611-13857-1-git-send-email-yong.mao@mediatek.com>
+         <1586835611-13857-2-git-send-email-yong.mao@mediatek.com>
+         <CAPDyKFo40tBpowmWN3gxH8b=jMmCK8O5ALNQ7y6XZ5AosX=GUA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20200428021437.2000066-4-jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.4.245]
-X-ClientProxiedBy: lhreml706-chm.china.huawei.com (10.201.108.55) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+X-TM-SNTS-SMTP: BAFC90E4F4919F58F4A0398CAB2A7E72863110198F1657AD58274E69C3418E782000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/04/2020 03:14, Jiaxun Yang wrote:
-> Finally we are able to elegantly add I/O ports for PCI host bridge
-> via devicetree with logic_pio.
-> 
-> To deal with legacy drivers that have fixed I/O ports range we
-> reserved 0x10000 in PCI_IOBASE, should be enough for i8259 i8042
-> stuff.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->   arch/mips/Kconfig                             |  1 +
->   .../include/asm/mach-loongson64/loongson.h    |  2 ++
->   arch/mips/loongson64/init.c                   | 34 ++++++++++++++++---
->   arch/mips/loongson64/pci.c                    |  2 +-
->   4 files changed, 34 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> index 4e5308178649..1669735dacd8 100644
-> --- a/arch/mips/Kconfig
-> +++ b/arch/mips/Kconfig
-> @@ -479,6 +479,7 @@ config MACH_LOONGSON64
->   	select I8259
->   	select IRQ_MIPS_CPU
->   	select NR_CPUS_DEFAULT_64
-> +	select PCI_IO_VMMAP
->   	select USE_GENERIC_EARLY_PRINTK_8250
->   	select SYS_HAS_CPU_LOONGSON64
->   	select SYS_HAS_EARLY_PRINTK
-> diff --git a/arch/mips/include/asm/mach-loongson64/loongson.h b/arch/mips/include/asm/mach-loongson64/loongson.h
-> index fde1b75c45ea..94035a47be5b 100644
-> --- a/arch/mips/include/asm/mach-loongson64/loongson.h
-> +++ b/arch/mips/include/asm/mach-loongson64/loongson.h
-> @@ -86,6 +86,8 @@ extern int mach_i8259_irq(void);
->   #define LOONGSON_PCIIO_SIZE	0x00100000	/* 1M */
->   #define LOONGSON_PCIIO_TOP	(LOONGSON_PCIIO_BASE+LOONGSON_PCIIO_SIZE-1)
->   
-> +#define MMIO_LOWER_RESERVED	0x10000
-> +
->   /* Loongson Register Bases */
->   
->   #define LOONGSON_PCICONFIGBASE	0x00
-> diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
-> index da38944471f4..4592eb2f78dd 100644
-> --- a/arch/mips/loongson64/init.c
-> +++ b/arch/mips/loongson64/init.c
-> @@ -5,6 +5,7 @@
->    */
->   
->   #include <linux/irqchip.h>
-> +#include <linux/logic_pio.h>
->   #include <linux/memblock.h>
->   #include <asm/bootinfo.h>
->   #include <asm/traps.h>
-> @@ -29,10 +30,6 @@ void __init prom_init(void)
->   	fw_init_cmdline();
->   	prom_init_env();
->   
-> -	/* init base address of io space */
-> -	set_io_port_base((unsigned long)
-> -		ioremap(LOONGSON_PCIIO_BASE, LOONGSON_PCIIO_SIZE));
-> -
->   	prom_init_numa_memory();
->   
->   	/* Hardcode to CPU UART 0 */
-> @@ -46,7 +43,36 @@ void __init prom_free_prom_memory(void)
->   {
->   }
->   
-> +static __init void reserve_pio_range(void)
-> +{
-> +	struct logic_pio_hwaddr *range;
-> +
-> +	range = kzalloc(sizeof(*range), GFP_ATOMIC);
-> +	if (!range)
-> +		return;
-> +
-> +	range->fwnode = &of_root->fwnode;
-> +	range->size = MMIO_LOWER_RESERVED;
-> +	range->hw_start = LOONGSON_PCIIO_BASE;
-> +	range->flags = LOGIC_PIO_CPU_MMIO;
-> +
-> +	if (logic_pio_register_range(range)) {
-> +		pr_err("Failed to reserve PIO range for legacy ISA\n");
-> +		kfree(range);
-> +		return;
-> +	}
-
-I think that you should also check the range->io_start == 0 is returned 
-here, as your code relies on that.
-
-And I would also like to reiterate that this is somewhat fragile and 
-relies on ordering. But I feel better than modifying common code. And I 
-agree that the right thing to do is take care of the logic pio 
-translations for your drivers now, as you mention, below.
-
-Thanks,
-John
-
-> +
-> +	/*
-> +	 * i8259 would access I/O space, so mapping must be done here.
-> +	 * Please remove it when all drivers can be managed by logic_pio.
-> +	 */
-> +	ioremap_page_range(PCI_IO_START, PCI_IO_START + MMIO_LOWER_RESERVED,
-> +				  LOONGSON_PCIIO_BASE,
-> +				  pgprot_device(PAGE_KERNEL));
-> +}
-> +
->   void __init arch_init_irq(void)
->   {
-> +	reserve_pio_range();
->   	irqchip_init();
->   }
-> diff --git a/arch/mips/loongson64/pci.c b/arch/mips/loongson64/pci.c
-> index a440a2725a20..7aecb88dd377 100644
-> --- a/arch/mips/loongson64/pci.c
-> +++ b/arch/mips/loongson64/pci.c
-> @@ -37,7 +37,7 @@ extern int sbx00_acpi_init(void);
->   static int __init pcibios_init(void)
->   {
->   
-> -	loongson_pci_controller.io_map_base = mips_io_port_base;
-> +	loongson_pci_controller.io_map_base = IOPORT_RW_BASE;
->   	loongson_pci_mem_resource.start = loongson_sysconf.pci_mem_start_addr;
->   	loongson_pci_mem_resource.end = loongson_sysconf.pci_mem_end_addr;
->   
-> 
+DQpPbiBGcmksIDIwMjAtMDQtMjQgYXQgMTI6MDkgKzAyMDAsIFVsZiBIYW5zc29uIHdyb3RlOg0K
+PiBPbiBUdWUsIDE0IEFwciAyMDIwIGF0IDA1OjQwLCBZb25nIE1hbyA8eW9uZy5tYW9AbWVkaWF0
+ZWsuY29tPiB3cm90ZToNCj4gPg0KPiA+IEZyb206IHlvbmcgbWFvIDx5b25nLm1hb0BtZWRpYXRl
+ay5jb20+DQo+ID4NCj4gPiBXaGVuIG1tY19zZGlvX3Jlc25lZF9pZl9jb25kIGlzIGludm9rZWQs
+IGl0IGluZGljYXRlcyB0aGUgU0RJTw0KPiA+IGRldmljZSBpcyBub3QgaW4gdGhlIHJpZ2h0IHN0
+YXRlLiBJbiB0aGlzIGNvbmRpdGlvbiwgdGhlIHByZXZpb3VzDQo+ID4gaW1wbGVtZW50YXRpb24g
+b2YgbW1jX3NkaW9fcmVzZW5kX2lmX2NvbmQgY2FuJ3QgbWFrZSBzdXJlIFNESU8NCj4gPiBkZXZp
+Y2UgYmUgYmFjayB0byBpZGxlIHN0YXRlLiBtbWNfcG93ZXJfY3ljbGUgY2FuIHJlc2V0IHRoZSBT
+RElPDQo+ID4gZGV2aWNlIGJ5IEhXIGFuZCBhbHNvIG1ha2Ugc3VyZSBTRElPIGRldmljZSBlbnRl
+ciB0byBpZGxlIHN0YXRlDQo+ID4gY29ycmVjdGx5Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
+WW9uZyBNYW8gPHlvbmcubWFvQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9t
+bWMvY29yZS9zZGlvLmMgfCAxICsNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCsp
+DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tbWMvY29yZS9zZGlvLmMgYi9kcml2ZXJz
+L21tYy9jb3JlL3NkaW8uYw0KPiA+IGluZGV4IGViYjM4N2EuLmFkYTBhODAgMTAwNjQ0DQo+ID4g
+LS0tIGEvZHJpdmVycy9tbWMvY29yZS9zZGlvLmMNCj4gPiArKysgYi9kcml2ZXJzL21tYy9jb3Jl
+L3NkaW8uYw0KPiA+IEBAIC01NDYsNiArNTQ2LDcgQEAgc3RhdGljIGludCBtbWNfc2Rpb19pbml0
+X3Voc19jYXJkKHN0cnVjdCBtbWNfY2FyZCAqY2FyZCkNCj4gPiAgc3RhdGljIHZvaWQgbW1jX3Nk
+aW9fcmVzZW5kX2lmX2NvbmQoc3RydWN0IG1tY19ob3N0ICpob3N0LA0KPiA+ICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBtbWNfY2FyZCAqY2FyZCkNCj4gPiAgew0K
+PiA+ICsgICAgICAgbW1jX3Bvd2VyX2N5Y2xlKGhvc3QsIGhvc3QtPmNhcmQtPm9jcik7DQo+IA0K
+PiBUaGlzIGxvb2tzIHdyb25nIHRvIG1lLiBtbWNfc2Rpb19yZXNlbmRfaWZfY29uZCgpIGlzIGNh
+bGxlZCBmcm9tIHR3byBwbGFjZXMuDQo+IA0KPiAxLiBJbiB0aGUgY2FzZSB3aGVuIG1tY19zZXRf
+dWhzX3ZvbHRhZ2UoKSBmYWlscyBpbg0KPiBtbWNfc2Rpb19pbml0X2NhcmQoKSwgd2hpY2ggbWVh
+bnMgYSBjYWxsIHRvIG1tY19wb3dlcl9jeWNsZSgpIGhhcw0KPiBhbHJlYWR5IGJlZW4gZG9uZS4N
+Cj4gDQogIFRoYW5rcyBmb3IgeW91ciBjb21tZW50Lg0KICBZZXMuIEl0IGlzIHJpZ2h0IHRoYXQg
+bW1jX3Bvd2VyX2N5Y2xlKCkgaGFzIGFscmVhZHkgYmVlbiBkb25lIHdoZW4NCiAgbW1jX3NkaW9f
+cmVzZW5kX2lmX2NvbmQoKSBpcyBjYWxsZWQuIEluIG5vcm1hbCByZS1pbml0aWFsaXphdGlvbiBj
+YXNlLCANCiAgdGhpcyBtbWNfcG93ZXJfY3ljbGUoKSAoY3VycmVudGx5IGluIDEuOHYgdm9sdGFn
+ZSBhbmQgMjA4TWh6IGNsb2NrKSANCiAgY2FuIG1ha2UgU0RJTyBkZXZpY2UgcmVhbGx5IGJhY2sg
+dG8gaWRsZSBzdGF0ZS4gVW5mb3J0dW5hdGVseSwgaW4gc29tZQ0KICBzcGVjaWFsIFNESU8gZGV2
+aWNlLCBpdCB3aWxsIGVudGVyIHRvIHVuc3RhYmxlIHN0YXRlLg0KDQogIEF0IHRoaXMgdW5zdGFi
+bGUgc3RhdGUsIGRldmljZSBtYXkga2VlcCBkYXRhMCBhbHdheXMgbG93IGFmdGVyIHJlY2Vpdmlu
+ZyBDTUQxMS4NCiAgQW5kIHRoZW4gZXZlcnkgb3RoZXIgU0RJTyBDTUQgY2FuJ3QgYmUgc2VudCB0
+byBkZXZpY2UgYW55IG1vcmUgZHVlIHRvIGNhcmQgDQogIGlzIGJ1c3koZGF0YTAgaXMgbG93KS4g
+VGhlcmVmb3JlLCBwcmV2aW91cyBpbXBsZW1lbnRhdGlvbiBjYW4ndCBzYXZlIHRoZSANCiAgZGV2
+aWNlLiBBdCB0aGlzIHRpbWUsIG1tY19wb3dlcl9jeWNsZSgpIG1heSBiZSB0aGUgZmluYWwgc29s
+dXRpb24gdG8gbWFrZSANCiAgc3VyZSBTRElPIGRldmljZSBjYW4gYmFjayB0byBpZGxlIHN0YXRl
+IGNvcnJlY3RseS4NCg0KPiAyLiBXZW4gc2Rpb19yZWFkX2NjY3IoKSBmYWlscyBhbmQgd2hlbiB3
+ZSBkZWNpZGUgdG8gcmV0cnkgdGhlIFVIUy1JDQo+IHZvbHRhZ2Ugc3dpdGNoLiBUaGVuIHBlcmhh
+cHMgaXQgY291bGQgbWFrZSBzZW5zZSB0byBydW4gYSBwb3dlciBjeWNsZS4NCj4gQnV0IGlmIHNv
+LCB3ZSBiZXR0ZXIgZG8gaXQgb25seSBmb3IgdGhhdCBwYXRoLg0KPiANCj4gSSB3aWxsIGNvbnRp
+bnVlIHRvIGxvb2sgYSBiaXQsIGFzIEkgdGhpbmsgdGhlcmUgYXJlIHJlYWxseSBtb3JlIGlzc3Vl
+cw0KPiB0aGF0IHdlIG1heSB3YW50IHRvIGxvb2sgaW50byB3aGlsZSBsb29raW5nIGF0IHRoaXMg
+cGllY2Ugb2YgY29kZS4NCj4gSG93ZXZlciwgYWxsb3cgbWUgc29tZSBtb3JlIHRpbWUgYmVmb3Jl
+IEkgY2FuIHByb3ZpZGUgc29tZSBtb3JlIGlkZWFzDQo+IG9mIGhvdyB0byBtb3ZlIGZvcndhcmQu
+DQogIEluIHRoZSBhY3R1YWwgcHJvamVjdCwgd2UgZG8gZW5jb3VudGVyIG1hbnkgcmVsYXRpdmUg
+aXNzdWVzIGFib3V0IHJlLWluaXRpYWxpemVkIGNhcmQuDQogIFRoZSBmb2xsb3dpbmcgdHdvIGNh
+dGVnb3JpZXMgYXJlIHRoZSBtb3N0IGNvbW1vbiBpc3N1ZSB3ZSBtZXQgYmVmb3JlLg0KICBBLiB0
+aGUgU0RJTyBjYXJkIGlzIGluaXRpYWxpemVkIGJ5IFVIUy1JIG1vZGUgYXQgdGhlIGZpcnN0IHRp
+bWUsIGJ1dCB3aWxsIGJlIA0KICAgICByZS1pbml0aWFsaXplZCBieSBIaWdoIFNwZWVkIG1vZGUg
+YXQgdGhlIHNlY29uZCB0aW1lLg0KICAgICA9PT4gQWxsIHRoaXMgdHlwZSBvZiBpc3N1ZXMgaXMg
+cmVsYXRpdmUgd2l0aCBTMThBIGluIHJlc3BvbnNlIG9mIENNRDUuDQoJIEFuZCBtb3N0IG9mIHRo
+ZSBpc3N1ZXMgYXJlIHJlbGF0ZWQgdG8gdGhlIGludGVydmFsIGJldHdlZW4gcG93ZXJpbmcgb2Zm
+IGFuZCANCiAgICAgICAgIHBvd2VyaW5nIG9uIGNhcmQuDQogIEIuIElmIHRoZXJlIGlzIHNvbWV0
+aGluZyB3cm9uZyBpbiB0aGUgZmxvdyBvZiB2b2x0YWdlIHN3aXRjaChhZnRlciBDTUQxMSksIGNh
+cmQgd2lsbA0KICAgICBhbHdheXMga2VlcCBhbGwgZGF0YSBwaW5zIHRvIGxvdy4gQW5kIHRoZW4g
+aXQgaGFuZ3MgdXAgYmVjYXVzZSBkYXRhMCBpcyBhbHdheXMgbG93Lg0KICBIb3BlIHRoaXMgaW5m
+b3JtYXRpb24gd2lsbCBiZSBoZWxwZnVsIGZvciB5b3UuDQogIA0KICBBbnl3YXksIHdlIHdpbGwg
+d2FpdCBmb3IgeW91ciBhZHZpc2VzLiANCj4gDQo+ID4gICAgICAgICBzZGlvX3Jlc2V0KGhvc3Qp
+Ow0KPiA+ICAgICAgICAgbW1jX2dvX2lkbGUoaG9zdCk7DQo+ID4gICAgICAgICBtbWNfc2VuZF9p
+Zl9jb25kKGhvc3QsIGhvc3QtPm9jcl9hdmFpbCk7DQo+ID4gLS0NCj4gPiAxLjkuMQ0KPiANCj4g
+S2luZCByZWdhcmRzDQo+IFVmZmUNCg0KDQoNCg==
 
