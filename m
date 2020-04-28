@@ -7,21 +7,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4EDC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8DDC83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C30421BE5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23ECA21BE5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:21:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbgD1PSN (ORCPT
+        id S1728762AbgD1PU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:18:13 -0400
-Received: from 8bytes.org ([81.169.241.247]:37790 "EHLO theia.8bytes.org"
+        Tue, 28 Apr 2020 11:20:59 -0400
+Received: from 8bytes.org ([81.169.241.247]:37630 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728231AbgD1PSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:18:01 -0400
+        id S1728367AbgD1PSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:18:13 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 31A1FEF0; Tue, 28 Apr 2020 17:17:46 +0200 (CEST)
+        id E2840F32; Tue, 28 Apr 2020 17:17:51 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -41,9 +41,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 22/75] x86/boot/compressed/64: Add set_page_en/decrypted() helpers
-Date:   Tue, 28 Apr 2020 17:16:32 +0200
-Message-Id: <20200428151725.31091-23-joro@8bytes.org>
+Subject: [PATCH v3 51/75] x86/sev-es: Handle MMIO events
+Date:   Tue, 28 Apr 2020 17:17:01 +0200
+Message-Id: <20200428151725.31091-52-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200428151725.31091-1-joro@8bytes.org>
 References: <20200428151725.31091-1-joro@8bytes.org>
@@ -52,185 +52,250 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-The functions are needed to map the GHCB for SEV-ES guests. The GHCB is
-used for communication with the hypervisor, so its content must not be
-encrypted. After the GHCB is not needed anymore it must be mapped
-encrypted again so that the running kernel image can safely re-use the
-memory.
+Add handler for VC exceptions caused by MMIO intercepts. These
+intercepts come along as nested page faults on pages with reserved
+bits set.
 
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+[ jroedel@suse.de: Adapt to VC handling framework ]
+Co-developed-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/compressed/ident_map_64.c | 134 ++++++++++++++++++++++++
- arch/x86/boot/compressed/misc.h         |   2 +
- 2 files changed, 136 insertions(+)
+ arch/x86/include/uapi/asm/svm.h |   5 +
+ arch/x86/kernel/sev-es.c        | 188 ++++++++++++++++++++++++++++++++
+ 2 files changed, 193 insertions(+)
 
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index 5d8b0bffe421..bb68e9c9d87a 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -26,6 +26,7 @@
- #include <asm/init.h>
- #include <asm/pgtable.h>
- #include <asm/trap_defs.h>
-+#include <asm/cmpxchg.h>
- /* Use the static base for this part of the boot process */
- #undef __PAGE_OFFSET
- #define __PAGE_OFFSET __PAGE_OFFSET_BASE
-@@ -157,6 +158,139 @@ void initialize_identity_maps(void)
- 	write_cr3(top_level_pgt);
+diff --git a/arch/x86/include/uapi/asm/svm.h b/arch/x86/include/uapi/asm/svm.h
+index c68d1618c9b0..8f36ae021a7f 100644
+--- a/arch/x86/include/uapi/asm/svm.h
++++ b/arch/x86/include/uapi/asm/svm.h
+@@ -81,6 +81,11 @@
+ #define SVM_EXIT_AVIC_INCOMPLETE_IPI		0x401
+ #define SVM_EXIT_AVIC_UNACCELERATED_ACCESS	0x402
+ 
++/* SEV-ES software-defined VMGEXIT events */
++#define SVM_VMGEXIT_MMIO_READ			0x80000001
++#define SVM_VMGEXIT_MMIO_WRITE			0x80000002
++#define SVM_VMGEXIT_UNSUPPORTED_EVENT		0x8000ffff
++
+ #define SVM_EXIT_ERR           -1
+ 
+ #define SVM_EXIT_REASONS \
+diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+index f4ce3b475464..e3662723ed76 100644
+--- a/arch/x86/kernel/sev-es.c
++++ b/arch/x86/kernel/sev-es.c
+@@ -294,6 +294,25 @@ static enum es_result vc_read_mem(struct es_em_ctxt *ctxt,
+ 	return ES_EXCEPTION;
  }
  
-+static pte_t *split_large_pmd(struct x86_mapping_info *info,
-+			      pmd_t *pmdp, unsigned long __address)
++static phys_addr_t vc_slow_virt_to_phys(struct ghcb *ghcb, unsigned long vaddr)
 +{
-+	unsigned long page_flags;
-+	unsigned long address;
++	unsigned long va = (unsigned long)vaddr;
++	unsigned int level;
++	phys_addr_t pa;
++	pgd_t *pgd;
 +	pte_t *pte;
-+	pmd_t pmd;
-+	int i;
 +
-+	pte = (pte_t *)info->alloc_pgt_page(info->context);
++	pgd = pgd_offset(current->active_mm, va);
++	pte = lookup_address_in_pgd(pgd, va, &level);
 +	if (!pte)
++		return 0;
++
++	pa = (phys_addr_t)pte_pfn(*pte) << PAGE_SHIFT;
++	pa |= va & ~page_level_mask(level);
++
++	return pa;
++}
++
+ /* Include code shared with pre-decompression boot stage */
+ #include "sev-es-shared.c"
+ 
+@@ -432,6 +451,172 @@ static void __init vc_early_vc_forward_exception(struct es_em_ctxt *ctxt)
+ 	do_early_exception(ctxt->regs, trapnr);
+ }
+ 
++static long *vc_insn_get_reg(struct es_em_ctxt *ctxt)
++{
++	long *reg_array;
++	int offset;
++
++	reg_array = (long *)ctxt->regs;
++	offset    = insn_get_modrm_reg_off(&ctxt->insn, ctxt->regs);
++
++	if (offset < 0)
 +		return NULL;
 +
-+	address     = __address & PMD_MASK;
-+	/* No large page - clear PSE flag */
-+	page_flags  = info->page_flag & ~_PAGE_PSE;
++	offset /= sizeof(long);
 +
-+	/* Populate the PTEs */
-+	for (i = 0; i < PTRS_PER_PMD; i++) {
-+		set_pte(&pte[i], __pte(address | page_flags));
-+		address += PAGE_SIZE;
++	return reg_array + offset;
++}
++
++static enum es_result vc_do_mmio(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
++				 unsigned int bytes, bool read)
++{
++	u64 exit_code, exit_info_1, exit_info_2;
++	unsigned long ghcb_pa = __pa(ghcb);
++	void __user *ref;
++
++	ref = insn_get_addr_ref(&ctxt->insn, ctxt->regs);
++	if (ref == (void __user *)-1L)
++		return ES_UNSUPPORTED;
++
++	exit_code = read ? SVM_VMGEXIT_MMIO_READ : SVM_VMGEXIT_MMIO_WRITE;
++
++	exit_info_1 = vc_slow_virt_to_phys(ghcb, (unsigned long)ref);
++	exit_info_2 = bytes;    /* Can never be greater than 8 */
++
++	ghcb->save.sw_scratch = ghcb_pa + offsetof(struct ghcb, shared_buffer);
++
++	return sev_es_ghcb_hv_call(ghcb, ctxt, exit_code, exit_info_1, exit_info_2);
++}
++
++static enum es_result vc_handle_mmio_twobyte_ops(struct ghcb *ghcb,
++						 struct es_em_ctxt *ctxt)
++{
++	struct insn *insn = &ctxt->insn;
++	unsigned int bytes = 0;
++	enum es_result ret;
++	int sign_byte;
++	long *reg_data;
++
++	switch (insn->opcode.bytes[1]) {
++		/* MMIO Read w/ zero-extension */
++	case 0xb6:
++		bytes = 1;
++		/* Fallthrough */
++	case 0xb7:
++		if (!bytes)
++			bytes = 2;
++
++		ret = vc_do_mmio(ghcb, ctxt, bytes, true);
++		if (ret)
++			break;
++
++		/* Zero extend based on operand size */
++		reg_data = vc_insn_get_reg(ctxt);
++		memset(reg_data, 0, insn->opnd_bytes);
++
++		memcpy(reg_data, ghcb->shared_buffer, bytes);
++		break;
++
++		/* MMIO Read w/ sign-extension */
++	case 0xbe:
++		bytes = 1;
++		/* Fallthrough */
++	case 0xbf:
++		if (!bytes)
++			bytes = 2;
++
++		ret = vc_do_mmio(ghcb, ctxt, bytes, true);
++		if (ret)
++			break;
++
++		/* Sign extend based on operand size */
++		reg_data = vc_insn_get_reg(ctxt);
++		if (bytes == 1) {
++			u8 *val = (u8 *)ghcb->shared_buffer;
++
++			sign_byte = (*val & 0x80) ? 0xff : 0x00;
++		} else {
++			u16 *val = (u16 *)ghcb->shared_buffer;
++
++			sign_byte = (*val & 0x8000) ? 0xff : 0x00;
++		}
++		memset(reg_data, sign_byte, insn->opnd_bytes);
++
++		memcpy(reg_data, ghcb->shared_buffer, bytes);
++		break;
++
++	default:
++		ret = ES_UNSUPPORTED;
 +	}
 +
-+	/*
-+	 * Ideally we need to clear the large PMD first and do a TLB
-+	 * flush before we write the new PMD. But the 2M range of the
-+	 * PMD might contain the code we execute and/or the stack
-+	 * we are on, so we can't do that. But that should be safe here
-+	 * because we are going from large to small mappings and we are
-+	 * also the only user of the page-table, so there is no chance
-+	 * of a TLB multihit.
-+	 */
-+	pmd = __pmd((unsigned long)pte | info->kernpg_flag);
-+	set_pmd(pmdp, pmd);
-+	/* Flush TLB to establish the new PMD */
-+	write_cr3(top_level_pgt);
-+
-+	return pte + pte_index(__address);
++	return ret;
 +}
 +
-+static void clflush_page(unsigned long address)
++static enum es_result vc_handle_mmio(struct ghcb *ghcb,
++				     struct es_em_ctxt *ctxt)
 +{
-+	unsigned int flush_size;
-+	char *cl, *start, *end;
++	struct insn *insn = &ctxt->insn;
++	unsigned int bytes = 0;
++	enum es_result ret;
++	long *reg_data;
 +
-+	/*
-+	 * Hardcode cl-size to 64 - CPUID can't be used here because that might
-+	 * cause another #VC exception and the GHCB is not ready to use yet.
-+	 */
-+	flush_size = 64;
-+	start      = (char *)(address & PAGE_MASK);
-+	end        = start + PAGE_SIZE;
++	switch (insn->opcode.bytes[0]) {
++	/* MMIO Write */
++	case 0x88:
++		bytes = 1;
++		/* Fallthrough */
++	case 0x89:
++		if (!bytes)
++			bytes = insn->opnd_bytes;
 +
-+	/*
-+	 * First make sure there are no pending writes on the cache-lines to
-+	 * flush.
-+	 */
-+	asm volatile("mfence" : : : "memory");
++		reg_data = vc_insn_get_reg(ctxt);
++		memcpy(ghcb->shared_buffer, reg_data, bytes);
 +
-+	for (cl = start; cl != end; cl += flush_size)
-+		clflush(cl);
++		ret = vc_do_mmio(ghcb, ctxt, bytes, false);
++		break;
++
++	case 0xc6:
++		bytes = 1;
++		/* Fallthrough */
++	case 0xc7:
++		if (!bytes)
++			bytes = insn->opnd_bytes;
++
++		memcpy(ghcb->shared_buffer, insn->immediate1.bytes, bytes);
++
++		ret = vc_do_mmio(ghcb, ctxt, bytes, false);
++		break;
++
++		/* MMIO Read */
++	case 0x8a:
++		bytes = 1;
++		/* Fallthrough */
++	case 0x8b:
++		if (!bytes)
++			bytes = insn->opnd_bytes;
++
++		ret = vc_do_mmio(ghcb, ctxt, bytes, true);
++		if (ret)
++			break;
++
++		reg_data = vc_insn_get_reg(ctxt);
++		if (bytes == 4)
++			*reg_data = 0;  /* Zero-extend for 32-bit operation */
++
++		memcpy(reg_data, ghcb->shared_buffer, bytes);
++		break;
++
++		/* Two-Byte Opcodes */
++	case 0x0f:
++		ret = vc_handle_mmio_twobyte_ops(ghcb, ctxt);
++		break;
++	default:
++		ret = ES_UNSUPPORTED;
++	}
++
++	return ret;
 +}
 +
-+static int set_clr_page_flags(struct x86_mapping_info *info,
-+			      unsigned long address,
-+			      pteval_t set, pteval_t clr)
-+{
-+	unsigned long scratch, *target;
-+	pgd_t *pgdp = (pgd_t *)top_level_pgt;
-+	p4d_t *p4dp;
-+	pud_t *pudp;
-+	pmd_t *pmdp;
-+	pte_t *ptep, pte;
-+
-+	/*
-+	 * First make sure there is a PMD mapping for 'address'.
-+	 * It should already exist, but keep things generic.
-+	 *
-+	 * To map the page just read from it and fault it in if there is no
-+	 * mapping yet. add_identity_map() can't be called here because that
-+	 * would unconditionally map the address on PMD level, destroying any
-+	 * PTE-level mappings that might already exist.  Also do something
-+	 * useless with 'scratch' so the access won't be optimized away.
-+	 */
-+	target = (unsigned long *)address;
-+	scratch = *target;
-+	arch_cmpxchg(target, scratch, scratch);
-+
-+	/*
-+	 * The page is mapped at least with PMD size - so skip checks and walk
-+	 * directly to the PMD.
-+	 */
-+	p4dp = p4d_offset(pgdp, address);
-+	pudp = pud_offset(p4dp, address);
-+	pmdp = pmd_offset(pudp, address);
-+
-+	if (pmd_large(*pmdp))
-+		ptep = split_large_pmd(info, pmdp, address);
-+	else
-+		ptep = pte_offset_kernel(pmdp, address);
-+
-+	if (!ptep)
-+		return -ENOMEM;
-+
-+	/*
-+	 * Changing encryption attributes of a page requires to flush it from
-+	 * the caches.
-+	 */
-+	if ((set | clr) & _PAGE_ENC)
-+		clflush_page(address);
-+
-+	/* Update PTE */
-+	pte = *ptep;
-+	pte = pte_set_flags(pte, set);
-+	pte = pte_clear_flags(pte, clr);
-+	set_pte(ptep, pte);
-+
-+	/* Flush TLB after changing encryption attribute */
-+	write_cr3(top_level_pgt);
-+
-+	return 0;
-+}
-+
-+int set_page_decrypted(unsigned long address)
-+{
-+	return set_clr_page_flags(&mapping_info, address, 0, _PAGE_ENC);
-+}
-+
-+int set_page_encrypted(unsigned long address)
-+{
-+	return set_clr_page_flags(&mapping_info, address, _PAGE_ENC, 0);
-+}
-+
- void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
- {
- 	unsigned long address = native_read_cr2() & PMD_MASK;
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 65da40777bc1..5e569e8a7d75 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -98,6 +98,8 @@ static inline void choose_random_location(unsigned long input,
- #endif
- 
- #ifdef CONFIG_X86_64
-+extern int set_page_decrypted(unsigned long address);
-+extern int set_page_encrypted(unsigned long address);
- extern unsigned char _pgtable[];
- #endif
- 
+ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 					 struct ghcb *ghcb,
+ 					 unsigned long exit_code)
+@@ -445,6 +630,9 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 	case SVM_EXIT_IOIO:
+ 		result = vc_handle_ioio(ghcb, ctxt);
+ 		break;
++	case SVM_EXIT_NPF:
++		result = vc_handle_mmio(ghcb, ctxt);
++		break;
+ 	default:
+ 		/*
+ 		 * Unexpected #VC exception
 -- 
 2.17.1
 
