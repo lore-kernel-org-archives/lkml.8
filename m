@@ -2,146 +2,136 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6C7C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 831B5C83006
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD3F20730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:31:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="p1+bx80w"
+	by mail.kernel.org (Postfix) with ESMTP id 65310206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:39:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgD1Fbt (ORCPT
+        id S1726307AbgD1FjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 01:31:49 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:9824 "EHLO pegase1.c-s.fr"
+        Tue, 28 Apr 2020 01:39:24 -0400
+Received: from mga12.intel.com ([192.55.52.136]:63316 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725792AbgD1Fbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 01:31:49 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49B9Hj705jz9txnl;
-        Tue, 28 Apr 2020 07:31:45 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=p1+bx80w; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id ksRWT-6LYTV5; Tue, 28 Apr 2020 07:31:45 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49B9Hj5L7cz9txmQ;
-        Tue, 28 Apr 2020 07:31:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1588051905; bh=L/I6FeppBWpytvPm4oLmvPFKe0s8OVyCqzSRbHYYSwo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=p1+bx80wcRg8QTc6C/G0PB6UfZDDwQGE+E9ltF+Gz7R7CZqDcbQz3HdXV5QLHk1Zw
-         cVwbahXd2lQqVPNIpwx1ag1juZEY/QbIZwAB0i113g+NZ7ygK9wze7riYxxrc6AzWI
-         KOSGOsxnVKoIClMQny4CDgGezzrgtXeynjxMT2RE=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A189D8B7C5;
-        Tue, 28 Apr 2020 07:31:46 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id hZ80UDZ0lPgq; Tue, 28 Apr 2020 07:31:46 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D6D078B75F;
-        Tue, 28 Apr 2020 07:31:45 +0200 (CEST)
-Subject: Re: [PATCH 1/2] powerpc: Discard .rela* sections if
- CONFIG_RELOCATABLE is undefined
-To:     "H.J. Lu" <hjl.tools@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     linux-arch@vger.kernel.org, Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Paul Mackerras <paulus@samba.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Borislav Petkov <bp@suse.de>, linuxppc-dev@lists.ozlabs.org
-References: <20200428014900.407098-1-hjl.tools@gmail.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <55518443-1ab4-1961-beb5-43e9e41e3227@c-s.fr>
-Date:   Tue, 28 Apr 2020 07:31:38 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726210AbgD1FjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 01:39:24 -0400
+IronPort-SDR: KziNq3O3XknjiREGYsv95QBlYyIyXSA/UoCKxsY4eYhtVnIPaCq1frUJ0Rth8GY2iZps5mRHr9
+ FHa4Fvaet7JA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 22:39:23 -0700
+IronPort-SDR: m+H+nb1OaaspRpQgfK0qpLTGXT3lNbUM/ZWNN8QiZ86cMnXOpiJF3KFCLOHseMsG+cxh10KQ4U
+ gD+DK5+hO/gg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,326,1583222400"; 
+   d="scan'208";a="275722694"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 27 Apr 2020 22:39:23 -0700
+Received: from [10.215.240.200] (ekotax-mobl.gar.corp.intel.com [10.215.240.200])
+        by linux.intel.com (Postfix) with ESMTP id 670825807CA;
+        Mon, 27 Apr 2020 22:39:08 -0700 (PDT)
+Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
+ transfers
+To:     Mark Brown <broonie@kernel.org>
+Cc:     robh@kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        daniel.schwierzeck@gmail.com, hauke@hauke-m.de,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+References: <cover.1587702428.git.eswara.kota@linux.intel.com>
+ <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
+ <20200424112505.GD5850@sirena.org.uk>
+ <616a5419-add3-085e-32dc-c83d9d975725@linux.intel.com>
+ <20200427134555.GC4383@sirena.org.uk>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <43ecffb1-4786-c038-09bb-648657c0f5f3@linux.intel.com>
+Date:   Tue, 28 Apr 2020 13:39:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200428014900.407098-1-hjl.tools@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200427134555.GC4383@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-Le 28/04/2020 à 03:48, H.J. Lu a écrit :
-> arch/powerpc/kernel/vmlinux.lds.S has
-> 
->          DISCARDS
->          /DISCARD/ : {
->                  *(*.EMB.apuinfo)
->                  *(.glink .iplt .plt .rela* .comment)
->                  *(.gnu.version*)
->                  *(.gnu.attributes)
->                  *(.eh_frame)
->          }
-> 
-> Since .rela* sections are needed when CONFIG_RELOCATABLE is defined,
-> change to discard .rela* sections if CONFIG_RELOCATABLE is undefined.
+On 4/27/2020 9:45 PM, Mark Brown wrote:
+> On Mon, Apr 27, 2020 at 02:01:29PM +0800, Dilip Kota wrote:
+>> On 4/24/2020 7:25 PM, Mark Brown wrote:
+>>> On Fri, Apr 24, 2020 at 06:42:30PM +0800, Dilip Kota wrote:
+>>>> Synchronize tx, rx and error interrupts by registering to the
+>>>> same interrupt handler. Interrupt handler will recognize and process
+>>>> the appropriate interrupt on the basis of interrupt status register.
+>>>> Also, establish synchronization between the interrupt handler and
+>>>> transfer operation by taking the locks and registering the interrupt
+>>>> handler as thread IRQ which avoids the bottom half.
+>>>> Fixes the wrongly populated interrupt register offsets too.
+>>> This sounds like at least three different changes mixed together in one
+>>> commit, it makes it quite hard to tell what's going on.  If nothing else
+>>> the conversion from a workqueue to threaded interrupts should probably
+>>> be split out from merging the interrupts.
+>> While preparing the patches, i got puzzled to go with separate patches (for
+>> threaded interrupts, unified interrupt handler and fixing the register
+>> offset) or as a single patch!!.
+>> Finally i choose to go with single patch, because establishing
+>> synchronization is the major reason for this change, for that reason
+>> threaded interrupts and unified interrupts changes are done. And the fixing
+>> offset is a single line change, so included in this patch itself. And, on a
+>> lighter note, the whole patch is coming under 45 lines of code changes.
+>> Please let me know your view.
+> The single line change to fix the offset sounds like an especially good
+> candidate for splitting out as a separate patch.  It's not really about
+> the number of lines but rather complexity.
+Sure, i will do as separate patch.
+>
+>>>> -static irqreturn_t lantiq_ssc_err_interrupt(int irq, void *data)
+>>>> +static irqreturn_t lantiq_ssc_err_interrupt(struct lantiq_ssc_spi *spi)
+>>>>    {
+>>>> -	struct lantiq_ssc_spi *spi = data;
+>>>>    	u32 stat = lantiq_ssc_readl(spi, LTQ_SPI_STAT);
+>>>> -	if (!(stat & LTQ_SPI_STAT_ERRORS))
+>>>> -		return IRQ_NONE;
+>>>> -
+>>> Why drop this?
+>> lantiq_ssc_err_interrupt() getting called, only if LTQ_SPI_IRNEN_E is set in
+>> the interrupt status register.
+>> Once the 'LTQ_SPI_IRNEN_E' bit is set, there is no chance of all error bits
+>> being unset in the SPI_STAT register, so the 'if condition' will never be
+>> successful. Hence dropped it.
+> So this is another separate change and TBH it doesn't seem like a huge
+> win in that it's still potentially adding a bit of robustness.
+>
+>>> It's not clear to me that it's a benefit to combine all the interrupts
+>>> unconditionally - obviously where they're shared we need to but could
+>>> that be accomplished with IRQF_SHARED and even if it can't it seems like
+>>> something conditional would be better.
+>> Lets take a case where Tx/Rx transfer interrupt got triggered and followed
+>> by error interrupt(before finishing the tx/rx interrupt execution) which is
+>> very less likely to occur, unified interrupt handler establishes
+>> synchronization.
+>> Comparatively, unified interrupt handler is better for adding support to the
+>> latest SoCs on which SPI have single interrupt line for tx,rx and errors.
+>> On basis of these two points i felt to go with unified interrupt handler.
+> Does the mutex not do this regardless of how the interrupt handlers are
+> wired up?
+Yes, taking mutex and defining in the single ISR will be better i feel 
+while adding support for multiple SoCs with different number of 
+interrupt lines.
 
-Your explanation and especially the subject are unclear.
+Do you suggest to use different ISRs for multiple interrupt lines and 
+single ISR for single interrupt line? I see, this results in writing 
+repetitive code lines.
+Does single ISR looks erroneous! Please let me know.
 
- From the subject you understand that you are adding a discard of the 
-.rela* sections if CONFIG_RELOCATABLE is undefined.
+Regards,
+Dilip
 
-But when reading the patch, you see that it is the contrary: you are 
-removing a discard of the .rela* sections if CONFIG_RELOCATABLE is defined.
-
-
-So I think the subject could instead be:
-
-	Only discard .rela* sections when CONFIG_RELOCATABLE is undefined
-
-Or maybe better:
-
-	Keep .rela* sections when CONFIG_RELOCATABLE is defined
-
-And the explanation could be:
-
-	Since .rela* sections are needed when CONFIG_RELOCATABLE
-	is defined, don't discard .rela* sections if
-	CONFIG_RELOCATABLE is defined.
-
-> 
-> Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
-> Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-> ---
->   arch/powerpc/kernel/vmlinux.lds.S | 5 ++++-
->   1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
-> index 31a0f201fb6f..4ba07734a210 100644
-> --- a/arch/powerpc/kernel/vmlinux.lds.S
-> +++ b/arch/powerpc/kernel/vmlinux.lds.S
-> @@ -366,9 +366,12 @@ SECTIONS
->   	DISCARDS
->   	/DISCARD/ : {
->   		*(*.EMB.apuinfo)
-> -		*(.glink .iplt .plt .rela* .comment)
-> +		*(.glink .iplt .plt .comment)
->   		*(.gnu.version*)
->   		*(.gnu.attributes)
->   		*(.eh_frame)
-> +#ifndef CONFIG_RELOCATABLE
-> +		*(.rela*)
-> +#endif
->   	}
->   }
-> 
-
-Christophe
