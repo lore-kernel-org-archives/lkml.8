@@ -4,23 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 396DBC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CC6C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 249A121841
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3BAA21841
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:20:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbgD1PUH (ORCPT
+        id S1728721AbgD1PUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:20:07 -0400
-Received: from 8bytes.org ([81.169.241.247]:37428 "EHLO theia.8bytes.org"
+        Tue, 28 Apr 2020 11:20:17 -0400
+Received: from 8bytes.org ([81.169.241.247]:38536 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728420AbgD1PSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728419AbgD1PSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Apr 2020 11:18:16 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id B1BD1F3F; Tue, 28 Apr 2020 17:17:53 +0200 (CEST)
+        id 9BF26F3E; Tue, 28 Apr 2020 17:17:53 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -40,9 +41,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 60/75] x86/sev-es: Handle MWAIT/MWAITX Events
-Date:   Tue, 28 Apr 2020 17:17:10 +0200
-Message-Id: <20200428151725.31091-61-joro@8bytes.org>
+Subject: [PATCH v3 59/75] x86/sev-es: Handle MONITOR/MONITORX Events
+Date:   Tue, 28 Apr 2020 17:17:09 +0200
+Message-Id: <20200428151725.31091-60-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200428151725.31091-1-joro@8bytes.org>
 References: <20200428151725.31091-1-joro@8bytes.org>
@@ -53,7 +54,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tom Lendacky <thomas.lendacky@amd.com>
 
-Implement a handler for #VC exceptions caused by MWAIT and MWAITX
+Implement a handler for #VC exceptions caused by MONITOR and MONITORX
 instructions.
 
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
@@ -61,35 +62,42 @@ Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 Co-developed-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/sev-es.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/x86/kernel/sev-es.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 1a961714cd1b..d5d4804d1e17 100644
+index 601554e6360f..1a961714cd1b 100644
 --- a/arch/x86/kernel/sev-es.c
 +++ b/arch/x86/kernel/sev-es.c
-@@ -840,6 +840,15 @@ static enum es_result vc_handle_monitor(struct ghcb *ghcb,
- 	return sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_MONITOR, 0, 0);
+@@ -824,6 +824,22 @@ static enum es_result vc_handle_rdpmc(struct ghcb *ghcb, struct es_em_ctxt *ctxt
+ 	return ES_OK;
  }
  
-+static enum es_result vc_handle_mwait(struct ghcb *ghcb,
-+				      struct es_em_ctxt *ctxt)
++static enum es_result vc_handle_monitor(struct ghcb *ghcb,
++					struct es_em_ctxt *ctxt)
 +{
-+	ghcb_set_rax(ghcb, ctxt->regs->ax);
-+	ghcb_set_rcx(ghcb, ctxt->regs->cx);
++	phys_addr_t monitor_pa;
++	pgd_t *pgd;
 +
-+	return sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_MWAIT, 0, 0);
++	pgd = __va(read_cr3_pa());
++	monitor_pa = vc_slow_virt_to_phys(ghcb, ctxt->regs->ax);
++
++	ghcb_set_rax(ghcb, monitor_pa);
++	ghcb_set_rcx(ghcb, ctxt->regs->cx);
++	ghcb_set_rdx(ghcb, ctxt->regs->dx);
++
++	return sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_MONITOR, 0, 0);
 +}
 +
  static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
  					 struct ghcb *ghcb,
  					 unsigned long exit_code)
-@@ -879,6 +888,9 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 	case SVM_EXIT_MONITOR:
- 		result = vc_handle_monitor(ghcb, ctxt);
+@@ -860,6 +876,9 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 	case SVM_EXIT_WBINVD:
+ 		result = vc_handle_wbinvd(ghcb, ctxt);
  		break;
-+	case SVM_EXIT_MWAIT:
-+		result = vc_handle_mwait(ghcb, ctxt);
++	case SVM_EXIT_MONITOR:
++		result = vc_handle_monitor(ghcb, ctxt);
 +		break;
  	case SVM_EXIT_NPF:
  		result = vc_handle_mmio(ghcb, ctxt);
