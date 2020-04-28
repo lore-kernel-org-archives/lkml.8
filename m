@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AEEC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB0DC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8058E20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC8320575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100075;
-	bh=RvRZy+0vn0RymxPiMiVKt301owknx0EG1BpCtkLJ6w8=;
+	s=default; t=1588100082;
+	bh=ZYpw3M/licVTyXS6XCIAecivS/l6pnab6cd6MiN0fGU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RzoXmP8E3/8JAN9meQNqirqa5Nj1yzYfqj/vu5x4BphtYV7GuyLlttYnypLX+D0Zz
-	 YioZbx8GbXgt8M72/cbB2lX3yL6sD/r/r3WcrYQRf9dwo0WE5t3gNJV8sCVfCDpe8b
-	 Jcifu0hs+Yz/i+bnPObgOVs8XM4KwxguFIkMIyBw=
+	b=1m12Kxtbty+ws8996SCIPOxXzCjtLtg8yUx/DZhLy5lWxigXx0Lm7xWzaqfA3yw5I
+	 xc45641Cw1inoRSzTaza77R8NQgENkuIWBtkFrcKwyNjajG7l8Fe8N9J+q0aESGMmw
+	 73ufK1SK0636Ix5WY2KgqN90f43LTTkunkyQinJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731467AbgD1Sye (ORCPT
+        id S1731495AbgD1Syk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:54:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50432 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:54:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728623AbgD1Sdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:33:52 -0400
+        id S1729485AbgD1Sdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:33:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93A0320575;
-        Tue, 28 Apr 2020 18:33:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3752620575;
+        Tue, 28 Apr 2020 18:33:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098832;
-        bh=RvRZy+0vn0RymxPiMiVKt301owknx0EG1BpCtkLJ6w8=;
+        s=default; t=1588098812;
+        bh=ZYpw3M/licVTyXS6XCIAecivS/l6pnab6cd6MiN0fGU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OP7g82nIdAOYAkGkK9iDr56pXZCJBZGakT7Bhr4J/u9nr2x9v80MVRkjLR85Vvq2b
-         ZwCdTPu1i867goaNw3ntubmyxCkHJSbGolCvW8MFs2HWuoandSd99PbhytrxsU1oDI
-         YlUUXFBc9KeDDUbR5dO7bhWyFRq6Fm8qOh2CweKo=
+        b=f2Z0iii8RQ1JR81BT0mKEIbpup50FCtdoAomIXuyRL1Qysu6mreIxJYyJF5CinNDH
+         WG2PX3JtXqux/isO6EEE1wXrIIK+1ONdbLvFqkZm1FMyeODc/mqfqiq0DaMWtq3ZQg
+         6xk/CXzYuc9qRAUjXDU2pXe+0MVC5oLv/JhQMJ8E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 062/131] sched: etf: do not assume all sockets are full blown
-Date:   Tue, 28 Apr 2020 20:24:34 +0200
-Message-Id: <20200428182232.762223232@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Melnychenko <andrew@daynix.com>
+Subject: [PATCH 5.6 115/167] tty: hvc: fix buffer overflow during hvc_alloc().
+Date:   Tue, 28 Apr 2020 20:24:51 +0200
+Message-Id: <20200428182239.761742701@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,133 +58,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Andrew Melnychenko <andrew@daynix.com>
 
-[ Upstream commit a1211bf9a7774706722ba3b18c6157d980319f79 ]
+commit 9a9fc42b86c06120744555fea43fdcabe297c656 upstream.
 
-skb->sk does not always point to a full blown socket,
-we need to use sk_fullsock() before accessing fields which
-only make sense on full socket.
+If there is a lot(more then 16) of virtio-console devices
+or virtio_console module is reloaded
+- buffers 'vtermnos' and 'cons_ops' are overflowed.
+In older kernels it overruns spinlock which leads to kernel freezing:
+https://bugzilla.redhat.com/show_bug.cgi?id=1786239
 
-BUG: KASAN: use-after-free in report_sock_error+0x286/0x300 net/sched/sch_etf.c:141
-Read of size 1 at addr ffff88805eb9b245 by task syz-executor.5/9630
+To reproduce the issue, you can try simple script that
+loads/unloads module. Something like this:
+while [ 1 ]
+do
+  modprobe virtio_console
+  sleep 2
+  modprobe -r virtio_console
+  sleep 2
+done
 
-CPU: 1 PID: 9630 Comm: syz-executor.5 Not tainted 5.7.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:382
- __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
- kasan_report+0x33/0x50 mm/kasan/common.c:625
- report_sock_error+0x286/0x300 net/sched/sch_etf.c:141
- etf_enqueue_timesortedlist+0x389/0x740 net/sched/sch_etf.c:170
- __dev_xmit_skb net/core/dev.c:3710 [inline]
- __dev_queue_xmit+0x154a/0x30a0 net/core/dev.c:4021
- neigh_hh_output include/net/neighbour.h:499 [inline]
- neigh_output include/net/neighbour.h:508 [inline]
- ip6_finish_output2+0xfb5/0x25b0 net/ipv6/ip6_output.c:117
- __ip6_finish_output+0x442/0xab0 net/ipv6/ip6_output.c:143
- ip6_finish_output+0x34/0x1f0 net/ipv6/ip6_output.c:153
- NF_HOOK_COND include/linux/netfilter.h:296 [inline]
- ip6_output+0x239/0x810 net/ipv6/ip6_output.c:176
- dst_output include/net/dst.h:435 [inline]
- NF_HOOK include/linux/netfilter.h:307 [inline]
- NF_HOOK include/linux/netfilter.h:301 [inline]
- ip6_xmit+0xe1a/0x2090 net/ipv6/ip6_output.c:280
- tcp_v6_send_synack+0x4e7/0x960 net/ipv6/tcp_ipv6.c:521
- tcp_rtx_synack+0x10d/0x1a0 net/ipv4/tcp_output.c:3916
- inet_rtx_syn_ack net/ipv4/inet_connection_sock.c:669 [inline]
- reqsk_timer_handler+0x4c2/0xb40 net/ipv4/inet_connection_sock.c:763
- call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1405
- expire_timers kernel/time/timer.c:1450 [inline]
- __run_timers kernel/time/timer.c:1774 [inline]
- __run_timers kernel/time/timer.c:1741 [inline]
- run_timer_softirq+0x623/0x1600 kernel/time/timer.c:1787
- __do_softirq+0x26c/0x9f7 kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0x192/0x1d0 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:546 [inline]
- smp_apic_timer_interrupt+0x19e/0x600 arch/x86/kernel/apic/apic.c:1140
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
- </IRQ>
-RIP: 0010:des_encrypt+0x157/0x9c0 lib/crypto/des.c:792
-Code: 85 22 06 00 00 41 31 dc 41 8b 4d 04 44 89 e2 41 83 e4 3f 4a 8d 3c a5 60 72 72 88 81 e2 3f 3f 3f 3f 48 89 f8 48 c1 e8 03 31 d9 <0f> b6 34 28 48 89 f8 c1 c9 04 83 e0 07 83 c0 03 40 38 f0 7c 09 40
-RSP: 0018:ffffc90003b5f6c0 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
-RAX: 1ffffffff10e4e55 RBX: 00000000d2f846d0 RCX: 00000000d2f846d0
-RDX: 0000000012380612 RSI: ffffffff839863ca RDI: ffffffff887272a8
-RBP: dffffc0000000000 R08: ffff888091d0a380 R09: 0000000000800081
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000012
-R13: ffff8880a8ae8078 R14: 00000000c545c93e R15: 0000000000000006
- cipher_crypt_one crypto/cipher.c:75 [inline]
- crypto_cipher_encrypt_one+0x124/0x210 crypto/cipher.c:82
- crypto_cbcmac_digest_update+0x1b5/0x250 crypto/ccm.c:830
- crypto_shash_update+0xc4/0x120 crypto/shash.c:119
- shash_ahash_update+0xa3/0x110 crypto/shash.c:246
- crypto_ahash_update include/crypto/hash.h:547 [inline]
- hash_sendmsg+0x518/0xad0 crypto/algif_hash.c:102
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x308/0x7e0 net/socket.c:2362
- ___sys_sendmsg+0x100/0x170 net/socket.c:2416
- __sys_sendmmsg+0x195/0x480 net/socket.c:2506
- __do_sys_sendmmsg net/socket.c:2535 [inline]
- __se_sys_sendmmsg net/socket.c:2532 [inline]
- __x64_sys_sendmmsg+0x99/0x100 net/socket.c:2532
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45c829
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f6d9528ec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
-RAX: ffffffffffffffda RBX: 00000000004fc080 RCX: 000000000045c829
-RDX: 0000000000000001 RSI: 0000000020002640 RDI: 0000000000000004
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000000008d7 R14: 00000000004cb7aa R15: 00007f6d9528f6d4
+Description of problem:
+Guest get 'Call Trace' when loading module "virtio_console"
+and unloading it frequently - clearly reproduced on kernel-4.18.0:
 
-Fixes: 4b15c7075352 ("net/sched: Make etf report drops on error_queue")
-Fixes: 25db26a91364 ("net/sched: Introduce the ETF Qdisc")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Reviewed-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[   81.498208] ------------[ cut here ]------------
+[   81.499263] pvqspinlock: lock 0xffffffff92080020 has corrupted value 0xc0774ca0!
+[   81.501000] WARNING: CPU: 0 PID: 785 at kernel/locking/qspinlock_paravirt.h:500 __pv_queued_spin_unlock_slowpath+0xc0/0xd0
+[   81.503173] Modules linked in: virtio_console fuse xt_CHECKSUM ipt_MASQUERADE xt_conntrack ipt_REJECT nft_counter nf_nat_tftp nft_objref nf_conntrack_tftp tun bridge stp llc nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nf_tables_set nft_chain_nat_ipv6 nf_conntrack_ipv6 nf_defrag_ipv6 nf_nat_ipv6 nft_chain_route_ipv6 nft_chain_nat_ipv4 nf_conntrack_ipv4 nf_defrag_ipv4 nf_nat_ipv4 nf_nat nf_conntrack nft_chain_route_ipv4 ip6_tables nft_compat ip_set nf_tables nfnetlink sunrpc bochs_drm drm_vram_helper ttm drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops drm i2c_piix4 pcspkr crct10dif_pclmul crc32_pclmul joydev ghash_clmulni_intel ip_tables xfs libcrc32c sd_mod sg ata_generic ata_piix virtio_net libata crc32c_intel net_failover failover serio_raw virtio_scsi dm_mirror dm_region_hash dm_log dm_mod [last unloaded: virtio_console]
+[   81.517019] CPU: 0 PID: 785 Comm: kworker/0:2 Kdump: loaded Not tainted 4.18.0-167.el8.x86_64 #1
+[   81.518639] Hardware name: Red Hat KVM, BIOS 1.12.0-5.scrmod+el8.2.0+5159+d8aa4d83 04/01/2014
+[   81.520205] Workqueue: events control_work_handler [virtio_console]
+[   81.521354] RIP: 0010:__pv_queued_spin_unlock_slowpath+0xc0/0xd0
+[   81.522450] Code: 07 00 48 63 7a 10 e8 bf 64 f5 ff 66 90 c3 8b 05 e6 cf d6 01 85 c0 74 01 c3 8b 17 48 89 fe 48 c7 c7 38 4b 29 91 e8 3a 6c fa ff <0f> 0b c3 0f 0b 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 48
+[   81.525830] RSP: 0018:ffffb51a01ffbd70 EFLAGS: 00010282
+[   81.526798] RAX: 0000000000000000 RBX: 0000000000000010 RCX: 0000000000000000
+[   81.528110] RDX: ffff9e66f1826480 RSI: ffff9e66f1816a08 RDI: ffff9e66f1816a08
+[   81.529437] RBP: ffffffff9153ff10 R08: 000000000000026c R09: 0000000000000053
+[   81.530732] R10: 0000000000000000 R11: ffffb51a01ffbc18 R12: ffff9e66cd682200
+[   81.532133] R13: ffffffff9153ff10 R14: ffff9e6685569500 R15: ffff9e66cd682000
+[   81.533442] FS:  0000000000000000(0000) GS:ffff9e66f1800000(0000) knlGS:0000000000000000
+[   81.534914] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   81.535971] CR2: 00005624c55b14d0 CR3: 00000003a023c000 CR4: 00000000003406f0
+[   81.537283] Call Trace:
+[   81.537763]  __raw_callee_save___pv_queued_spin_unlock_slowpath+0x11/0x20
+[   81.539011]  .slowpath+0x9/0xe
+[   81.539585]  hvc_alloc+0x25e/0x300
+[   81.540237]  init_port_console+0x28/0x100 [virtio_console]
+[   81.541251]  handle_control_message.constprop.27+0x1c4/0x310 [virtio_console]
+[   81.542546]  control_work_handler+0x70/0x10c [virtio_console]
+[   81.543601]  process_one_work+0x1a7/0x3b0
+[   81.544356]  worker_thread+0x30/0x390
+[   81.545025]  ? create_worker+0x1a0/0x1a0
+[   81.545749]  kthread+0x112/0x130
+[   81.546358]  ? kthread_flush_work_fn+0x10/0x10
+[   81.547183]  ret_from_fork+0x22/0x40
+[   81.547842] ---[ end trace aa97649bd16c8655 ]---
+[   83.546539] general protection fault: 0000 [#1] SMP NOPTI
+[   83.547422] CPU: 5 PID: 3225 Comm: modprobe Kdump: loaded Tainted: G        W        --------- -  - 4.18.0-167.el8.x86_64 #1
+[   83.549191] Hardware name: Red Hat KVM, BIOS 1.12.0-5.scrmod+el8.2.0+5159+d8aa4d83 04/01/2014
+[   83.550544] RIP: 0010:__pv_queued_spin_lock_slowpath+0x19a/0x2a0
+[   83.551504] Code: c4 c1 ea 12 41 be 01 00 00 00 4c 8d 6d 14 41 83 e4 03 8d 42 ff 49 c1 e4 05 48 98 49 81 c4 40 a5 02 00 4c 03 24 c5 60 48 34 91 <49> 89 2c 24 b8 00 80 00 00 eb 15 84 c0 75 0a 41 0f b6 54 24 14 84
+[   83.554449] RSP: 0018:ffffb51a0323fdb0 EFLAGS: 00010202
+[   83.555290] RAX: 000000000000301c RBX: ffffffff92080020 RCX: 0000000000000001
+[   83.556426] RDX: 000000000000301d RSI: 0000000000000000 RDI: 0000000000000000
+[   83.557556] RBP: ffff9e66f196a540 R08: 000000000000028a R09: ffff9e66d2757788
+[   83.558688] R10: 0000000000000000 R11: 0000000000000000 R12: 646e61725f770b07
+[   83.559821] R13: ffff9e66f196a554 R14: 0000000000000001 R15: 0000000000180000
+[   83.560958] FS:  00007fd5032e8740(0000) GS:ffff9e66f1940000(0000) knlGS:0000000000000000
+[   83.562233] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   83.563149] CR2: 00007fd5022b0da0 CR3: 000000038c334000 CR4: 00000000003406e0
+
+Signed-off-by: Andrew Melnychenko <andrew@daynix.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200414191503.3471783-1-andrew@daynix.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sched/sch_etf.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/net/sched/sch_etf.c
-+++ b/net/sched/sch_etf.c
-@@ -77,7 +77,7 @@ static bool is_packet_valid(struct Qdisc
- 	struct sock *sk = nskb->sk;
- 	ktime_t now;
+---
+ drivers/tty/hvc/hvc_console.c |   23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
+
+--- a/drivers/tty/hvc/hvc_console.c
++++ b/drivers/tty/hvc/hvc_console.c
+@@ -302,10 +302,6 @@ int hvc_instantiate(uint32_t vtermno, in
+ 	vtermnos[index] = vtermno;
+ 	cons_ops[index] = ops;
  
--	if (!sk)
-+	if (!sk || !sk_fullsock(sk))
- 		return false;
+-	/* reserve all indices up to and including this index */
+-	if (last_hvc < index)
+-		last_hvc = index;
+-
+ 	/* check if we need to re-register the kernel console */
+ 	hvc_check_console(index);
  
- 	if (!sock_flag(sk, SOCK_TXTIME))
-@@ -129,8 +129,9 @@ static void report_sock_error(struct sk_
- 	struct sock_exterr_skb *serr;
- 	struct sk_buff *clone;
- 	ktime_t txtime = skb->tstamp;
-+	struct sock *sk = skb->sk;
+@@ -960,13 +956,22 @@ struct hvc_struct *hvc_alloc(uint32_t vt
+ 		    cons_ops[i] == hp->ops)
+ 			break;
  
--	if (!skb->sk || !(skb->sk->sk_txtime_report_errors))
-+	if (!sk || !sk_fullsock(sk) || !(sk->sk_txtime_report_errors))
- 		return;
+-	/* no matching slot, just use a counter */
+-	if (i >= MAX_NR_HVC_CONSOLES)
+-		i = ++last_hvc;
++	if (i >= MAX_NR_HVC_CONSOLES) {
++
++		/* find 'empty' slot for console */
++		for (i = 0; i < MAX_NR_HVC_CONSOLES && vtermnos[i] != -1; i++) {
++		}
++
++		/* no matching slot, just use a counter */
++		if (i == MAX_NR_HVC_CONSOLES)
++			i = ++last_hvc + MAX_NR_HVC_CONSOLES;
++	}
  
- 	clone = skb_clone(skb, GFP_ATOMIC);
-@@ -146,7 +147,7 @@ static void report_sock_error(struct sk_
- 	serr->ee.ee_data = (txtime >> 32); /* high part of tstamp */
- 	serr->ee.ee_info = txtime; /* low part of tstamp */
+ 	hp->index = i;
+-	cons_ops[i] = ops;
+-	vtermnos[i] = vtermno;
++	if (i < MAX_NR_HVC_CONSOLES) {
++		cons_ops[i] = ops;
++		vtermnos[i] = vtermno;
++	}
  
--	if (sock_queue_err_skb(skb->sk, clone))
-+	if (sock_queue_err_skb(sk, clone))
- 		kfree_skb(clone);
- }
- 
+ 	list_add_tail(&(hp->next), &hvc_structs);
+ 	mutex_unlock(&hvc_structs_mutex);
 
 
