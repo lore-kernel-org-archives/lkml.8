@@ -2,71 +2,75 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D417DC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1EEC83006
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABD5F206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F657206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:50:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Of8nBJdk"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="CJ1HWPYa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgD1Mup (ORCPT
+        id S1726949AbgD1Mut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:50:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46908 "EHLO
+        Tue, 28 Apr 2020 08:50:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726620AbgD1Mup (ORCPT
+        by vger.kernel.org with ESMTP id S1726620AbgD1Mur (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:50:45 -0400
+        Tue, 28 Apr 2020 08:50:47 -0400
 Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00B8AC03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 05:50:44 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id v8so2302359wma.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 05:50:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 902C0C03C1A9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 05:50:46 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id e26so2604422wmk.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 05:50:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ivk8pUd5yw65/sV/AvpRxYKjBbQZM0SLzoY/9d09xk4=;
-        b=Of8nBJdkQzrZsQ93VmweFQ2f0VW0tkBt7Arl73GPj7BJQBd1pGk3DpmZi+VE6ZKCHX
-         mlvXb5C9ntOqyF7vCz8Kc9H+FPam1W15Q+oJeHHfeWouz6oG5S6UayP8QY2GQdPUI0My
-         hCPus1kjcwzWMS6LHSUO8Wog5xotwmZfF1Rk01Vh41vN9/i9ZUSamwG/DgN4RGiguFnJ
-         CL8/TmhN+X02+qkqcOoIiXhiT7DosmretDlc6iCO+pUDDyq8V7kpnzS97PK51gjcfusD
-         ErWaiqPmUu5q3PfIhGwF/jg7w8G5VKmMGWvjKaRiugDR4+f7SzGsiWgqBo6832Lb49Tz
-         cGsQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=bS1/sm0XxWUvP6abjHta7A4TuogN+Inw+AeKvST2rX8=;
+        b=CJ1HWPYa6lmeaiOGvITpPEE3yiBBS9ByoXcQet3Ewn7USk0P0L2v6kpGBwwVeAbOFj
+         qaBVV+2OJEDE3NPzqfV0vm9K7As0NHUxa311IdVrZ0pNcKclHW8uy52KshOBmizJ76OR
+         E5ENb5bdFQpElej+VSUYUYv5G481/tNKYFDrFNRmgE8Q9ZlHsaJghyhsFWqQeTDquklo
+         BWc5H2O0F69bpTAjwrPRdszY3TXrWFrhiY0PUV3y+GQn496C55TBA4HzmO8S0+QZlwb0
+         FF5/Yl8RbGFzq3a1GgtEp/vrOkdCDp1AXaM4Myml+k2PMAu9Etnoy8vqrKYGEaUYRy4N
+         jsXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ivk8pUd5yw65/sV/AvpRxYKjBbQZM0SLzoY/9d09xk4=;
-        b=JBK2yx0/kD3Tl0IxlWhY9nVuxJCdYNUt6Mi85Xdbf0wHfwhDnh4cz0Wgw2iWHsfKJD
-         6jN8aJg60AsYFwEiNMhNFnJ5ElpF/762xvA0DIRUhQKUURDmm2CnAAaLXKBbeuwO1VnZ
-         yzz/zQOKoOb/FMh26WsFGPSF352wGlR0y7FtBTshlDqMOt+r3UFhCnhFve958kZcyDfm
-         8zr47CBKH06JQFWBuYEC6DGqBINCTTnCeCx3q/DjjFw/DHDlmgm3XxR07D3aAwigfKtg
-         PZhPiWmVk9DllrI/1bkaOxA0q51DbD/eGS5RWlZ8ad8zoqEzcMaJf1mR0/E+DtnEh/xW
-         tNcA==
-X-Gm-Message-State: AGi0PuZnIMOe94MfEIFSyUdxmZwvYrv1jVe7duow7V6lRZbUXCHK3tpR
-        I8w9+8ZkyqcGCQThrRYfCGE5pA==
-X-Google-Smtp-Source: APiQypJD/8l1OOW0+VgnggdRlxU6EJlqkaxBVKVmSTJRZwFIqdX2QpB1vmlCqT7Ad90mXIEuv/apuA==
-X-Received: by 2002:a1c:99d3:: with SMTP id b202mr4652138wme.126.1588078243182;
-        Tue, 28 Apr 2020 05:50:43 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=bS1/sm0XxWUvP6abjHta7A4TuogN+Inw+AeKvST2rX8=;
+        b=lNkHWFBvZHCqiw/Z8lDTUeWudUvK7DVeDEatlfYYG/E2VcK7OVjQCuA/dzIKwMS94+
+         0DH6kb55YEVhhM2aopVBYNYJlztcWmPfVZ+KnmXn7wrX/bf2KWmt6EAzGDSRmZjCoBfa
+         jZ2uhPMaWV7vwNUZbWxskGBrG7J1PBbtf+fduvv0QmOlZGS8iWGFTGx98h/3zP+q71WS
+         hJX8Ncje03phW0kmGo5Fhi4os0QTYqp3Z0Zn3KZMvIn9+XJc9Va0b7u1vALvJlOv9bKM
+         ARsIo0fbZfGCHMOjHX3PoGEt5zWbewmx6+Na4dnGMAdENpedYF5jPeMAYPLlPqurB2B+
+         Cf5Q==
+X-Gm-Message-State: AGi0PuatCdhUv/Mr2mldTH/HLOHKj4I7Z8mI1vd7aGspZe8X/dDKlz80
+        zVll74fFbYyxiB15/t+eNH01qw==
+X-Google-Smtp-Source: APiQypJ5w0jIkk9TNeGTgbLsSl7iD17zkDITUusCBji+wndwzT9z5UrwElq+jr6HWA18Jr9/fIejuw==
+X-Received: by 2002:a05:600c:20c6:: with SMTP id y6mr4328740wmm.131.1588078245188;
+        Tue, 28 Apr 2020 05:50:45 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e35:2ec0:82b0:4460:3fd3:382:4a71])
-        by smtp.gmail.com with ESMTPSA id q184sm3246115wma.25.2020.04.28.05.50.42
+        by smtp.gmail.com with ESMTPSA id q184sm3246115wma.25.2020.04.28.05.50.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 05:50:42 -0700 (PDT)
+        Tue, 28 Apr 2020 05:50:43 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     linux-media@vger.kernel.org, hverkuil-cisco@xs4all.nl
 Cc:     linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Maxime Jourdan <mjourdan@baylibre.com>,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 0/3] meson: vdec: vp9 & MAINTAINERS fixes
-Date:   Tue, 28 Apr 2020 14:50:33 +0200
-Message-Id: <20200428125036.9401-1-narmstrong@baylibre.com>
+Subject: [PATCH 1/3] media: meson: vdec: enable mcrcc for VP9
+Date:   Tue, 28 Apr 2020 14:50:34 +0200
+Message-Id: <20200428125036.9401-2-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20200428125036.9401-1-narmstrong@baylibre.com>
+References: <20200428125036.9401-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,25 +78,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This serie fixes VP9 decoding :
-- enables the motion compensation reference cache controller
-- fixes buffer shortage on VP9 decoding
+From: Maxime Jourdan <mjourdan@baylibre.com>
 
-And update the MAINTAINERS entry to add myself ad co-maintainer and
-add the missing yaml DT bindings.
+The motion compensation reference cache controller allows caching
+parts of reference frames for faster decoding.
 
-Maxime Jourdan (2):
-  media: meson: vdec: enable mcrcc for VP9
-  media: meson: vdec: fix another case of VP9 buffer shortage
+Fixes: 00c43088aa68 ("media: meson: vdec: add VP9 decoder support")
+Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/staging/media/meson/vdec/codec_vp9.c | 31 ++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-Neil Armstrong (1):
-  MAINTAINERS: update the Amlogic VDEC driver maintainer entry
-
- MAINTAINERS                                  |  2 +
- drivers/staging/media/meson/vdec/codec_vp9.c | 72 ++++++++++++++++----
- drivers/staging/media/meson/vdec/esparser.c  | 24 +++----
- 3 files changed, 71 insertions(+), 27 deletions(-)
-
+diff --git a/drivers/staging/media/meson/vdec/codec_vp9.c b/drivers/staging/media/meson/vdec/codec_vp9.c
+index 60e4fc0052b3..897f5d7a6aad 100644
+--- a/drivers/staging/media/meson/vdec/codec_vp9.c
++++ b/drivers/staging/media/meson/vdec/codec_vp9.c
+@@ -854,6 +854,36 @@ static int codec_vp9_stop(struct amvdec_session *sess)
+ 	return 0;
+ }
+ 
++/*
++ * Program LAST & GOLDEN frames into the motion compensation reference cache
++ * controller
++ */
++static void codec_vp9_set_mcrcc(struct amvdec_session *sess)
++{
++	struct amvdec_core *core = sess->core;
++	struct codec_vp9 *vp9 = sess->priv;
++	u32 val;
++
++	/* Reset mcrcc */
++	amvdec_write_dos(core, HEVCD_MCRCC_CTL1, 0x2);
++	/* Disable on I-frame */
++	if (vp9->cur_frame->type == KEY_FRAME || vp9->cur_frame->intra_only) {
++		amvdec_write_dos(core, HEVCD_MCRCC_CTL1, 0x0);
++		return;
++	}
++
++	amvdec_write_dos(core, HEVCD_MPP_ANC_CANVAS_ACCCONFIG_ADDR, BIT(1));
++	val = amvdec_read_dos(core, HEVCD_MPP_ANC_CANVAS_DATA_ADDR) & 0xffff;
++	val |= (val << 16);
++	amvdec_write_dos(core, HEVCD_MCRCC_CTL2, val);
++	val = amvdec_read_dos(core, HEVCD_MPP_ANC_CANVAS_DATA_ADDR) & 0xffff;
++	val |= (val << 16);
++	amvdec_write_dos(core, HEVCD_MCRCC_CTL3, val);
++
++	/* Enable mcrcc progressive-mode */
++	amvdec_write_dos(core, HEVCD_MCRCC_CTL1, 0xff0);
++}
++
+ static void codec_vp9_set_sao(struct amvdec_session *sess,
+ 			      struct vb2_buffer *vb)
+ {
+@@ -1267,6 +1297,7 @@ static void codec_vp9_process_frame(struct amvdec_session *sess)
+ 
+ 	amvdec_write_dos(core, HEVC_PARSER_PICTURE_SIZE,
+ 			 (vp9->height << 16) | vp9->width);
++	codec_vp9_set_mcrcc(sess);
+ 	codec_vp9_set_sao(sess, &vp9->cur_frame->vbuf->vb2_buf);
+ 
+ 	vp9_loop_filter_frame_init(core, &vp9->seg_4lf,
 -- 
 2.22.0
 
