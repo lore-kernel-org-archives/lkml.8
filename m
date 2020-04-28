@@ -2,97 +2,103 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD435C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0CFC83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA9320757
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD1CD20757
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:50:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YOFpITAA"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uHXUgMQF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbgD1RuK (ORCPT
+        id S1728585AbgD1RuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 13:50:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37372 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727827AbgD1RuI (ORCPT
+        Tue, 28 Apr 2020 13:50:16 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:38252 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728557AbgD1RuO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 13:50:08 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 764E1C03C1AB
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 10:50:08 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id c63so22725356qke.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 10:50:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IO10IaEZnZ3+2CD5x/8DkaNmjwG6l+xlu6W8mVUoegQ=;
-        b=YOFpITAAgodND7TYQsJ1rrh55GlKANe+tM8iX2EwqRMLPdEiS9Wo4eQMBVyI0OlM33
-         XG5yeygKJdBRM+nJqfG2GbCMwbrz+2KvJuoGf984AtdtcLLSprEUAaGHwkjEJTcadnuO
-         1GxWop+jQsNFpmQWZiRrVPVUoEnBCMMV7imI0J7KhdAygf4nidkf4QfckKKgYohJOV21
-         43u6JAg8+AAdhdoIp90Uh+Fx4cAa3/XmmONGIJCXlBNWLa8IhKKSFNR8Jnk0RTfvtKrS
-         bnjzMGLdfbIEN7ewp90Q0rFKFh5dzDgu+qxmTdM57XV8wkMwZT9aA2+10HVQBk0Ptflv
-         yPrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IO10IaEZnZ3+2CD5x/8DkaNmjwG6l+xlu6W8mVUoegQ=;
-        b=FaxsjXl3WkhOtlIbb92dbVdKt6kefHPXYU948xluaTu0JiI7W/UjwESiXH2RywI+qB
-         Qdn5czP7JmOAhtl1A/23Q4haG9G425w7mR+kY84D0NOjU/SdD9eWrT1tbS8H0ZubRBGy
-         Hqo1EI4a34iVvvq3EjqcKU5OGL7LbeM+8wrJZfUzzY8Ci8+rXhvoV1oieBsC/2anUSNk
-         VVCIZARRiJHOEYWoWJkFCCEwxeYeSUvQlypvcOBbH/jO+uo6fMaw+MQqzU6516/XFrTP
-         sXMk8D5ZMMkc6O8YNjm4E5fJOxStEWR7q/Y4dSJIW4Gk5b3V9TqWC2AqgcR2Y5IaMzHJ
-         rEaQ==
-X-Gm-Message-State: AGi0Pub+WwcBP8+bapUAl1KtIQXABI+paCjb/ruo1b4J382cdsNVthu4
-        9LtiPGJEfpBVHd+mDK1p6/8=
-X-Google-Smtp-Source: APiQypK6A6qu5+Y8OFMa14BEt1MJpLR+NTGN9Uf6EUPl0nbSigFkjAhNbVKaEoDUqauUNz9E4HCSaA==
-X-Received: by 2002:a37:a702:: with SMTP id q2mr27949790qke.150.1588096207645;
-        Tue, 28 Apr 2020 10:50:07 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id h13sm12401160qti.32.2020.04.28.10.50.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 10:50:07 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 37B6F409A3; Tue, 28 Apr 2020 14:50:05 -0300 (-03)
-Date:   Tue, 28 Apr 2020 14:50:05 -0300
-To:     Zou Wei <zou_wei@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] perf tools: Remove unneeded semicolon
-Message-ID: <20200428175005.GC5460@kernel.org>
-References: <1588065523-71423-1-git-send-email-zou_wei@huawei.com>
+        Tue, 28 Apr 2020 13:50:14 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588096214; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Reply-To: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=RU7G35ytN1BEFIjXJLTsdCsbIgjwEPp3gbageUwxBUA=; b=uHXUgMQFCKzNWvCslqSJ3mgoYDLvUikTrnKow3d296SFYBVV5HKdJi39+I2Xudja7EUJBo91
+ 3eet8ltre2BN/Hrg4ItHQFTQ0A18ebgeiQzGX0PdhUtBUMZ5bWa0k3V1cuP7rqw3UXTkfR6l
+ r6InaRzNTr8tjgO0h5GuKC9Xz18=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea86cc8.7fdb739bb7d8-smtp-out-n02;
+ Tue, 28 Apr 2020 17:50:00 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6A3E8C44792; Tue, 28 Apr 2020 17:50:00 +0000 (UTC)
+Received: from quicinc.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: svaddagi)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B39A3C433D2;
+        Tue, 28 Apr 2020 17:49:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B39A3C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vatsa@codeaurora.org
+Date:   Tue, 28 Apr 2020 23:19:52 +0530
+From:   Srivatsa Vaddagiri <vatsa@codeaurora.org>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     konrad.wilk@oracle.com, jasowang@redhat.com,
+        jan.kiszka@siemens.com, will@kernel.org,
+        stefano.stabellini@xilinx.com, iommu@lists.linux-foundation.org,
+        virtualization@lists.linux-foundation.org,
+        virtio-dev@lists.oasis-open.org, tsoni@codeaurora.org,
+        pratikp@codeaurora.org, christoffer.dall@arm.com,
+        alex.bennee@linaro.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] virtio: Add bounce DMA ops
+Message-ID: <20200428174952.GA5097@quicinc.com>
+Reply-To: Srivatsa Vaddagiri <vatsa@codeaurora.org>
+References: <1588073958-1793-1-git-send-email-vatsa@codeaurora.org>
+ <1588073958-1793-6-git-send-email-vatsa@codeaurora.org>
+ <20200428121232-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1588065523-71423-1-git-send-email-zou_wei@huawei.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200428121232-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Apr 28, 2020 at 05:18:43PM +0800, Zou Wei escreveu:
-> Fixes coccicheck warnings:
-> 
-> tools/perf/builtin-diff.c:1565:2-3: Unneeded semicolon
-> tools/perf/builtin-lock.c:778:2-3: Unneeded semicolon
-> tools/perf/builtin-mem.c:126:2-3: Unneeded semicolon
-> tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c:555:2-3: Unneeded semicolon
-> tools/perf/util/ordered-events.c:317:2-3: Unneeded semicolon
-> tools/perf/util/synthetic-events.c:1131:2-3: Unneeded semicolon
-> tools/perf/util/trace-event-read.c:78:2-3: Unneeded semicolon
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Zou Wei <zou_wei@huawei.com>
+* Michael S. Tsirkin <mst@redhat.com> [2020-04-28 12:17:57]:
 
-Thanks, applied.
+> Okay, but how is all this virtio specific?  For example, why not allow
+> separate swiotlbs for any type of device?
+> For example, this might make sense if a given device is from a
+> different, less trusted vendor.
+
+Is swiotlb commonly used for multiple devices that may be on different trust
+boundaries (and not behind a hardware iommu)? If so, then yes it sounds like a
+good application of multiple swiotlb pools.
+
+> All this can then maybe be hidden behind the DMA API.
+
+Won't we still need some changes to virtio to make use of its own pool (to
+bounce buffers)? Something similar to its own DMA ops proposed in this patch?
+
+> > +void virtio_bounce_set_dma_ops(struct virtio_device *vdev)
+> > +{
+> > +	if (!bounce_buf_paddr)
+> > +		return;
+> > +
+> > +	set_dma_ops(vdev->dev.parent, &virtio_dma_ops);
+> 
+> 
+> I don't think DMA API maintainers will be happy with new users
+> of set_dma_ops.
+
+Is there an alternate API that is more preffered?
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
