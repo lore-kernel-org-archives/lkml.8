@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB5CC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C365C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5869C2137B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 581352137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098392;
-	bh=ktOL1ydxzqjwgC18kkjSNwKIWzjyXW14+koKA7uZfqk=;
+	s=default; t=1588098394;
+	bh=WwMQnnlr9UFxuKnVYip2MbxhHSDl070mII4XwC96BvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pkBWXURC7829rZag4+75aa32C9G1uV2oVSriNkpIVtRgJbfvcYnaPwuqvkYhpMACZ
-	 YbSxSZoQEDWaERFK82eLG3oudnPRP02Q9eVdWuTiMW9aDmmE5YwOHNHsdSGM9BoaOx
-	 ImUehkefBOi7ELmOEjTuJFBujT1YIPOzjNwWu0o0=
+	b=0gK6uQ6LcZc48VS6Iqv872axpOZRp3kN3M5Isyu5vG6YfF4ljDq4f4CuMBWvCvNYP
+	 BvOA8zK0JuLD+wM19ec3m+jDT9xs46LGnbpTEZmgKhmi21mfwKWhJgejUKgX7sSSRZ
+	 e3lI178jxK9SDCI6EFrXQQzGUCDOOyitO4dy8uDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbgD1S0b (ORCPT
+        id S1728767AbgD1S0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:26:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37924 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:26:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728733AbgD1S00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:26:26 -0400
+        id S1728742AbgD1S02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:26:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4471420B1F;
-        Tue, 28 Apr 2020 18:26:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5B1C208E0;
+        Tue, 28 Apr 2020 18:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098385;
-        bh=ktOL1ydxzqjwgC18kkjSNwKIWzjyXW14+koKA7uZfqk=;
+        s=default; t=1588098388;
+        bh=WwMQnnlr9UFxuKnVYip2MbxhHSDl070mII4XwC96BvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A7af8DqXM1v2gRUVx92esYo62gUwEFupJ1R6czpLL5lxrB9KKhapFzgpEdaa0zWZO
-         fWI9D4M+5rAtcDs3awBZslvTJaVw2rHH1Mv3nfl4UwCFKi9lsjhcnH0RPA7l2Oi/ZA
-         Vj36XNKhQNU4m/X8+jwMfAe3ay6zPfEwK4piDWM8=
+        b=gbhP5OeYWiw7IPJM79Vt250W/3NXY6UzLUZ56ptbqtIjifBfjwnqsszCowOHSGWT8
+         M1h0goctVktTSPpK36p1Y6PEtbMtILB2jfJHPmf1eiabCo/t0U52BqGCn4xebO1mAq
+         RkJtZE45LT14vM6SUK8htCca5IAAXr8u5aKKbmgk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Isabel Zhang <isabel.zhang@amd.com>,
-        Alvin Lee <Alvin.Lee2@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 019/167] drm/amd/display: Update stream adjust in dc_stream_adjust_vmin_vmax
-Date:   Tue, 28 Apr 2020 20:23:15 +0200
-Message-Id: <20200428182227.607773612@linuxfoundation.org>
+Subject: [PATCH 5.6 002/167] tools/testing/nvdimm: Fix compilation failure without CONFIG_DEV_DAX_PMEM_COMPAT
+Date:   Tue, 28 Apr 2020 20:22:58 +0200
+Message-Id: <20200428182225.771266156@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
 References: <20200428182225.451225420@linuxfoundation.org>
@@ -62,40 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Isabel Zhang <isabel.zhang@amd.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 346d8a0a3c91888a412c2735d69daa09c00f0203 ]
+[ Upstream commit c0e71d602053e4e7637e4bc7d0bc9603ea77a33f ]
 
-[Why]
-After v_total_min and max are updated in vrr structure, the changes are
-not reflected in stream adjust. When these values are read from stream
-adjust it does not reflect the actual state of the system.
+When a kernel is configured without CONFIG_DEV_DAX_PMEM_COMPAT, the
+compilation of tools/testing/nvdimm fails with:
 
-[How]
-Set stream adjust values equal to vrr adjust values after vrr adjust
-values are updated.
+  Building modules, stage 2.
+  MODPOST 11 modules
+ERROR: "dax_pmem_compat_test" [tools/testing/nvdimm/test/nfit_test.ko] undefined!
 
-Signed-off-by: Isabel Zhang <isabel.zhang@amd.com>
-Reviewed-by: Alvin Lee <Alvin.Lee2@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fix the problem by calling dax_pmem_compat_test() only if the kernel has
+the required functionality.
+
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200123154720.12097-1-jack@suse.cz
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c | 2 ++
+ tools/testing/nvdimm/test/nfit.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index 04441dbcba76f..fc25600107050 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -283,6 +283,8 @@ bool dc_stream_adjust_vmin_vmax(struct dc *dc,
- 	int i = 0;
- 	bool ret = false;
+diff --git a/tools/testing/nvdimm/test/nfit.c b/tools/testing/nvdimm/test/nfit.c
+index bf6422a6af7ff..a8ee5c4d41ebb 100644
+--- a/tools/testing/nvdimm/test/nfit.c
++++ b/tools/testing/nvdimm/test/nfit.c
+@@ -3164,7 +3164,9 @@ static __init int nfit_test_init(void)
+ 	mcsafe_test();
+ 	dax_pmem_test();
+ 	dax_pmem_core_test();
++#ifdef CONFIG_DEV_DAX_PMEM_COMPAT
+ 	dax_pmem_compat_test();
++#endif
  
-+	stream->adjust = *adjust;
-+
- 	for (i = 0; i < MAX_PIPES; i++) {
- 		struct pipe_ctx *pipe = &dc->current_state->res_ctx.pipe_ctx[i];
+ 	nfit_test_setup(nfit_test_lookup, nfit_test_evaluate_dsm);
  
 -- 
 2.20.1
