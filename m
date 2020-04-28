@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EB2C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BE6C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E262620575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E45F20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099772;
-	bh=RatZWJj2molmVc4U4IIdVkhkfYTHFDUQlZN6Amy12T0=;
+	s=default; t=1588099775;
+	bh=Ue9oNTy9Oq40zi5GBiH7Z4hIpfAqI/nfYyVazPMhCy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ULuo4SeqGWyXNKbbK4CrKYegpMAJ2X0BHRfIhQ/NrwCgLaJrf2xkgr93AXddsPOZ9
-	 ak51IDQtcqUq2gYKHjMhwwLBUByv3YxzBy/eU4LdVVnGEC0Ifl88LIlKHCW0RBf2v3
-	 NxsgUT+2+pFDWNPzgdCLcycAtoHDBETJSjicqMn8=
+	b=KyCQbFgAYFUgAq/hjoE/VO+g0z9sl4ODXpWjMhtrjASPMt8u675FFm+QSEweULI4b
+	 2cRrFgiIgB1+lPr/YReby+3CwuQTDI9LaOjSkv2xvJ7XkVcJHcXwbE34i1uVi3cYOJ
+	 vVTom4Mb95x+AsPu/ApdO7zAeF9SzOU2he6AMVqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731098AbgD1Stb (ORCPT
+        id S1731500AbgD1Ste (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:49:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59286 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:49:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730479AbgD1SkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:40:15 -0400
+        id S1730762AbgD1SkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:40:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4084920575;
-        Tue, 28 Apr 2020 18:40:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F02E620575;
+        Tue, 28 Apr 2020 18:40:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099214;
-        bh=RatZWJj2molmVc4U4IIdVkhkfYTHFDUQlZN6Amy12T0=;
+        s=default; t=1588099207;
+        bh=Ue9oNTy9Oq40zi5GBiH7Z4hIpfAqI/nfYyVazPMhCy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=StBqV7xzLX6pRiI/OFc4uasOEaSifzzzhGjg51qaiwZJQ9F9IaFn7cNWOyUFD5EhA
-         C1AMTZARSQi+kdHiyoStVSWco9/fDXftmSGHxNX8Y7WwYa3dSzpIm8XuSqVvu/EPP9
-         wOv7koMPH0qprkc8lhSOxp0IlyNCRrErDckBy5Es=
+        b=rZNWitJl4nnVaOf2EPWz4EvTrMKmF4Ck6EDMP7JP9U3EgJQptBQ7KF09+nVPYQcrc
+         9p+uY0lcJ8oDaOCyA+kXuczcn0Bpz87E5zwprqU7KZyqq7SBHqZuDPxxYZDBrd+/1I
+         TeUz6xDBjEoxApzgatez8YpSj1o9ICiB/XCIg7yI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>
-Subject: [PATCH 4.19 115/131] vt: dont hardcode the mem allocation upper bound
-Date:   Tue, 28 Apr 2020 20:25:27 +0200
-Message-Id: <20200428182239.702907674@linuxfoundation.org>
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 073/168] vrf: Fix IPv6 with qdisc and xfrm
+Date:   Tue, 28 Apr 2020 20:24:07 +0200
+Message-Id: <20200428182241.291061422@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,40 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Pitre <nico@fluxnic.net>
+From: David Ahern <dsahern@gmail.com>
 
-commit 2717769e204e83e65b8819c5e2ef3e5b6639b270 upstream.
+[ Upstream commit a53c102872ad6e34e1518e25899dc9498c27f8b1 ]
 
-The code in vc_do_resize() bounds the memory allocation size to avoid
-exceeding MAX_ORDER down the kzalloc() call chain and generating a
-runtime warning triggerable from user space. However, not only is it
-unwise to use a literal value here, but MAX_ORDER may also be
-configurable based on CONFIG_FORCE_MAX_ZONEORDER.
-Let's use KMALLOC_MAX_SIZE instead.
+When a qdisc is attached to the VRF device, the packet goes down the ndo
+xmit function which is setup to send the packet back to the VRF driver
+which does a lookup to send the packet out. The lookup in the VRF driver
+is not considering xfrm policies. Change it to use ip6_dst_lookup_flow
+rather than ip6_route_output.
 
-Note that prior commit bb1107f7c605 ("mm, slab: make sure that
-KMALLOC_MAX_SIZE will fit into MAX_ORDER") the KMALLOC_MAX_SIZE value
-could not be relied upon.
-
-Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
-Cc: <stable@vger.kernel.org> # v4.10+
-Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.2003281702410.2671@knanqh.ubzr
+Fixes: 35402e313663 ("net: Add IPv6 support to VRF device")
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/tty/vt/vt.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/vrf.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -1209,7 +1209,7 @@ static int vc_do_resize(struct tty_struc
- 	if (new_cols == vc->vc_cols && new_rows == vc->vc_rows)
- 		return 0;
+--- a/drivers/net/vrf.c
++++ b/drivers/net/vrf.c
+@@ -188,8 +188,8 @@ static netdev_tx_t vrf_process_v6_outbou
+ 	fl6.flowi6_proto = iph->nexthdr;
+ 	fl6.flowi6_flags = FLOWI_FLAG_SKIP_NH_OIF;
  
--	if (new_screen_size > (4 << 20))
-+	if (new_screen_size > KMALLOC_MAX_SIZE)
- 		return -EINVAL;
- 	newscreen = kzalloc(new_screen_size, GFP_USER);
- 	if (!newscreen)
+-	dst = ip6_route_output(net, NULL, &fl6);
+-	if (dst == dst_null)
++	dst = ip6_dst_lookup_flow(net, NULL, &fl6, NULL);
++	if (IS_ERR(dst) || dst == dst_null)
+ 		goto err;
+ 
+ 	skb_dst_drop(skb);
 
 
