@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CA4C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6707C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26B3620575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8367A20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:48:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099729;
-	bh=Qyc+upMyRK5hOlTaziOgUPCg9cJpCHKiPXD7yWXZ/XM=;
+	s=default; t=1588099731;
+	bh=xorfflzJiIQ56ptLu2SlN+wqHbwI5lQWP2HuxQgbK+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CJyZ0nmYwLavFexPaOaESfxyAmH7tSe49RcoTQHt711Gwk8UXJNuwV3s3UgwsqD+f
-	 zIXX+BHE4B9U8wX0+/h7z/L/NKGDUyFIJBiAPcPnDbFcgcNxdgL/Ow7uKEpGgvow3+
-	 WzDp4k2vAhhtPUzfkM0IH0CC2hgWWuxyR3VeU53M=
+	b=Q16lPnyv42lVLZBBR5nALftlaVANTO07nOSk/KuYk7j1pTgyBzdzObj6+MskCs1uP
+	 R1rhGxC8mT3wAXj3SOPjmvT93unfhP+XA/TRmjOEl3thiL1RRh+p7ehyR9UjQbPKsp
+	 PD9DR6CbhzHBIP5tKc6CjJmTU/vFYrXWlq3aj/1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731087AbgD1Ssr (ORCPT
+        id S1730949AbgD1Skg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:48:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59824 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:40:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730749AbgD1Skh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:40:37 -0400
+        id S1730527AbgD1SkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:40:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87BDF20575;
-        Tue, 28 Apr 2020 18:40:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F08E42076A;
+        Tue, 28 Apr 2020 18:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099237;
-        bh=Qyc+upMyRK5hOlTaziOgUPCg9cJpCHKiPXD7yWXZ/XM=;
+        s=default; t=1588099224;
+        bh=xorfflzJiIQ56ptLu2SlN+wqHbwI5lQWP2HuxQgbK+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DaypICs7jIkT+JJc67Ct1srmClvyyZA3P+sbPQ2OSz/3XjodRXseRkrMgHkvtd2Zf
-         b0lQE/GqOy9rmSzQ+wGMRp7VOHM0T/8rOGa5NdBWWSDCMaBtKpdRR4BswaEpav5gQm
-         d6VBkzqDA1JwK/kmNFr8uFgA00cDqn3qppWCUpRc=
+        b=clGxQjlKdJZv4ifCVncUMjMp5GbDJXDszD6CdXLfNPQLs23ChEFfxQYSMh18ZSodC
+         9D98h42WkbGHuo8PxUFVE5OO9/mC1HuoQTrfE6KM0zEmjzlkmceqap/EGOI/du3dWe
+         MgZapSC97YcEnwDYUXjlpo1XaLmCF7J/MZ8ZV6bs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 4.19 119/131] staging: vt6656: Fix drivers TBTT timing counter.
-Date:   Tue, 28 Apr 2020 20:25:31 +0200
-Message-Id: <20200428182240.182426008@linuxfoundation.org>
+Subject: [PATCH 4.19 117/131] staging: vt6656: Dont set RCR_MULTICAST or RCR_BROADCAST by default.
+Date:   Tue, 28 Apr 2020 20:25:29 +0200
+Message-Id: <20200428182239.962505488@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
 References: <20200428182224.822179290@linuxfoundation.org>
@@ -60,43 +60,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Malcolm Priestley <tvboxspy@gmail.com>
 
-commit 09057742af98a39ebffa27fac4f889dc873132de upstream.
+commit 0f8240bfc070033a4823b19883efd3d38c7735cc upstream.
 
-The drivers TBTT counter is not synchronized with mac80211 timestamp.
+mac80211/users control whether multicast is on or off don't enable it by default.
 
-Reorder the functions and use vnt_update_next_tbtt to do the final
-synchronize.
+Fixes an issue when multicast/broadcast is always on allowing other beacons through
+in power save.
 
-Fixes: c15158797df6 ("staging: vt6656: implement TSF counter")
+Fixes: db8f37fa3355 ("staging: vt6656: mac80211 conversion: main_usb add functions...")
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/375d0b25-e8bc-c8f7-9b10-6cc705d486ee@gmail.com
+Link: https://lore.kernel.org/r/2c24c33d-68c4-f343-bd62-105422418eac@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6656/main_usb.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/staging/vt6656/main_usb.c |    8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
 --- a/drivers/staging/vt6656/main_usb.c
 +++ b/drivers/staging/vt6656/main_usb.c
-@@ -740,12 +740,15 @@ static void vnt_bss_info_changed(struct
- 			vnt_mac_reg_bits_on(priv, MAC_REG_TFTCTL,
- 					    TFTCTL_TSFCNTREN);
+@@ -780,15 +780,11 @@ static void vnt_configure(struct ieee802
+ {
+ 	struct vnt_private *priv = hw->priv;
+ 	u8 rx_mode = 0;
+-	int rc;
  
--			vnt_adjust_tsf(priv, conf->beacon_rate->hw_value,
--				       conf->sync_tsf, priv->current_tsf);
+ 	*total_flags &= FIF_ALLMULTI | FIF_OTHER_BSS | FIF_BCN_PRBRESP_PROMISC;
+ 
+-	rc = vnt_control_in(priv, MESSAGE_TYPE_READ, MAC_REG_RCR,
+-			    MESSAGE_REQUEST_MACREG, sizeof(u8), &rx_mode);
 -
- 			vnt_mac_set_beacon_interval(priv, conf->beacon_int);
+-	if (!rc)
+-		rx_mode = RCR_MULTICAST | RCR_BROADCAST;
++	vnt_control_in(priv, MESSAGE_TYPE_READ, MAC_REG_RCR,
++		       MESSAGE_REQUEST_MACREG, sizeof(u8), &rx_mode);
  
- 			vnt_reset_next_tbtt(priv, conf->beacon_int);
-+
-+			vnt_adjust_tsf(priv, conf->beacon_rate->hw_value,
-+				       conf->sync_tsf, priv->current_tsf);
-+
-+			vnt_update_next_tbtt(priv,
-+					     conf->sync_tsf, conf->beacon_int);
- 		} else {
- 			vnt_clear_current_tsf(priv);
+ 	dev_dbg(&priv->usb->dev, "rx mode in = %x\n", rx_mode);
  
 
 
