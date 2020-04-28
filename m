@@ -2,93 +2,87 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE0CC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A497C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0261B20661
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:07:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JMxXKhjn"
+	by mail.kernel.org (Postfix) with ESMTP id E93E42072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:07:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588072036;
+	bh=reBtGK4DS5N3bE52xICX/Blk9UJl3YDkbUOEjVqugGE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DgEwrRevi+bEuQtaScmW/x3hfBLvWSlFIQAWkiJbtDJEMSua1CSIU7cLMilBbINoH
+	 D+Xed0YuQaP4GxLFh/RqCtOak2rkkOWIsUZksLwLoLUXNDcM4Srbnyf4JMz7756Qr5
+	 HG4gr/+UJmObx06w/c2IEn+Nhw/26r1woh4TBcKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbgD1LHK (ORCPT
+        id S1726576AbgD1LHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:07:10 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:47434 "EHLO mail.skyhub.de"
+        Tue, 28 Apr 2020 07:07:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726345AbgD1LHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:07:09 -0400
-Received: from zn.tnic (p200300EC2F0EA50005F31991FCF74C40.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:a500:5f3:1991:fcf7:4c40])
+        id S1726345AbgD1LHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 07:07:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6EB821EC0CE4;
-        Tue, 28 Apr 2020 13:07:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1588072028;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=6yM3ywV4SHYRhMID8a0485MgrxeuX8DEuZQLHvXZu6Q=;
-        b=JMxXKhjn18H3V9nLLHLvhBv7M38fREPnFGpmQ/rKPlrxu3FxzTLqpP8b50grNQYfWT85Cw
-        XgwLzTnKZ3tM6dRdrUvBwrJmkxNPMoIiz82Ihj/jG3OWo/eOhQ9B89fILz4RVTFYORo0RB
-        3y/So7HpASg3dOx1fp6J5wslbr2xbgg=
-Date:   Tue, 28 Apr 2020 13:06:59 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     robh+dt@kernel.org
-Cc:     Talel Shenhar <talel@amazon.com>, mchehab@kernel.org,
-        james.morse@arm.com, davem@davemloft.net,
-        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
-        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        linux-edac@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        dwmw@amazon.co.uk, benh@kernel.crashing.org, hhhawa@amazon.com,
-        ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com,
-        eitan@amazon.com
-Subject: Re: [PATCH v6 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna
- Labs Memory Controller EDAC
-Message-ID: <20200428110659.GA11272@zn.tnic>
-References: <20200224134132.23924-1-talel@amazon.com>
- <20200224134132.23924-2-talel@amazon.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D391206F0;
+        Tue, 28 Apr 2020 11:07:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588072033;
+        bh=reBtGK4DS5N3bE52xICX/Blk9UJl3YDkbUOEjVqugGE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Q3k8a2ptQ2NqKzOzxy9W3LcabrgT8jJGa4J7lUqa1h2X6XpZgUHaNP3bvWGOnelBf
+         /tEM02yh70pyONsjOQFnrRwRPu1O+FA+vKh10ZAjZwswJ0XAgOjmtssR7htq9psI7b
+         +j04jRkkBBF0IoF2YS+a+Y0/6yWk1Jt0QPRiV9Ko=
+Date:   Tue, 28 Apr 2020 13:07:10 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     vladimir.stankovic@displaylink.com
+Cc:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        mausb-host-devel@displaylink.com
+Subject: Re: [PATCH v5 3/8] usb: mausb_host: HCD initialization
+Message-ID: <20200428110710.GC1145239@kroah.com>
+References: <20200327152614.26833-1-vladimir.stankovic@displaylink.com>
+ <20200425091954.1610-1-vladimir.stankovic@displaylink.com>
+ <20200425091954.1610-4-vladimir.stankovic@displaylink.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200224134132.23924-2-talel@amazon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200425091954.1610-4-vladimir.stankovic@displaylink.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 03:41:31PM +0200, Talel Shenhar wrote:
-> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
-> 
-> Signed-off-by: Talel Shenhar <talel@amazon.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  .../bindings/edac/amazon,al-mc-edac.yaml      | 52 +++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-> new file mode 100644
-> index 000000000000..20505f37c9f8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-> @@ -0,0 +1,52 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
+On Sat, Apr 25, 2020 at 11:19:49AM +0200, vladimir.stankovic@displaylink.com wrote:
+> +static long mausb_ioctl(struct file *file, unsigned int ioctl_func,
+> +			unsigned long ioctl_buffer)
+> +{
+> +	return 0;
+> +}
+> +
 
-WARNING: DT binding documents should be licensed (GPL-2.0-only OR BSD-2-Clause)
-#36: FILE: Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml:1:
-+# SPDX-License-Identifier: GPL-2.0-only
+Why do you have an ioctl that does nothing?  Same for the other
+functions that just return "success", if you don't do anything in them,
+don't declare them please.
 
-Hi Rob, should I listen to checkpatch or ignore it?
 
--- 
-Regards/Gruss,
-    Boris.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+> +int mausb_init_hcd(void)
+> +{
+> +	int retval;
+> +
+> +	retval = register_chrdev(0, DEVICE_NAME, &mausb_fops);
+
+But you already have a chardev?  Why use another one?
+
+I don't understand the need for these, it's not obvious at all, please
+provide a lot more information on what is going on with these userspace
+facing interfaces please.
+
+thanks,
+
+greg k-h
