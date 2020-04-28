@@ -2,106 +2,49 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0764C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875F1C83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84213206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:52:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588081929;
-	bh=5DdCwI3stPz5DcXHNz6QeRl8dl1BU5K/ki0kBBLSF+g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nLqKQNik8Z7g2dlDiYNXA78BFN9cRye1Pq/4y99cNqwE4KF/Oi7Kw4GrahJ6BWkxp
-	 lplbTcOqbcuYrtpo5ufypifYTbh/TS60bUBE83cDYNy3SCztNpuY/6rgBLlec+Ml7d
-	 RxpdzJqBgr7yWmZCRGOI0mACuFy1QbG6pxqtGXjw=
+	by mail.kernel.org (Postfix) with ESMTP id 68FD0206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:52:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgD1NwI (ORCPT
+        id S1727895AbgD1Nws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:52:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40764 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 09:52:48 -0400
+Received: from verein.lst.de ([213.95.11.211]:56345 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726946AbgD1NwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:52:01 -0400
-Received: from tleilax.com (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1955206E2;
-        Tue, 28 Apr 2020 13:51:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588081920;
-        bh=5DdCwI3stPz5DcXHNz6QeRl8dl1BU5K/ki0kBBLSF+g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eye04z2GXBaS6y4uVXFqR7zpeMHKS/A7d842gJM3kyTlZYGDkjg/xx1Cs+ICtVGbw
-         FjIvVY+uANXXSHOJ5uay18mIOXrMe9vgjwsUM6zL+IWt00iN0QVo8xwm+B5adhgp+T
-         CuAyfLDXjV58jghwU42H73NSaMO1D5NKtJmmizA4=
-From:   Jeff Layton <jlayton@kernel.org>
-To:     viro@zeniv.linux.org.uk, akpm@linux-foundation.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, andres@anarazel.de, willy@infradead.org,
-        dhowells@redhat.com, hch@infradead.org, jack@suse.cz,
-        david@fromorbit.com
-Subject: [PATCH v6 RESEND 2/2] buffer: record blockdev write errors in super_block that it backs
-Date:   Tue, 28 Apr 2020 09:51:55 -0400
-Message-Id: <20200428135155.19223-3-jlayton@kernel.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200428135155.19223-1-jlayton@kernel.org>
-References: <20200428135155.19223-1-jlayton@kernel.org>
+        id S1726871AbgD1Nws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 09:52:48 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 3C3B868CEC; Tue, 28 Apr 2020 15:52:46 +0200 (CEST)
+Date:   Tue, 28 Apr 2020 15:52:45 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@ozlabs.org, hch@lst.de, jk@ozlabs.org,
+        viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/spufs: Add rcu_read_lock() around fcheck()
+Message-ID: <20200428135245.GA2827@lst.de>
+References: <20200428114811.68436-1-mpe@ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428114811.68436-1-mpe@ellerman.id.au>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@redhat.com>
+On Tue, Apr 28, 2020 at 09:48:11PM +1000, Michael Ellerman wrote:
+> 
+> This comes from fcheck_files() via fcheck().
+> 
+> It's pretty clearly documented that fcheck() must be wrapped with
+> rcu_read_lock(), so fix it.
 
-When syncing out a block device (a'la __sync_blockdev), any error
-encountered will only be recorded in the bd_inode's mapping. When the
-blockdev contains a filesystem however, we'd like to also record the
-error in the super_block that's stored there.
-
-Make mark_buffer_write_io_error also record the error in the
-corresponding super_block when a writeback error occurs and the block
-device contains a mounted superblock.
-
-Since superblocks are RCU freed, hold the rcu_read_lock to ensure
-that the superblock doesn't go away while we're marking it.
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/buffer.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/fs/buffer.c b/fs/buffer.c
-index f73276d746bb..71be7e6cabca 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -1154,12 +1154,19 @@ EXPORT_SYMBOL(mark_buffer_dirty);
- 
- void mark_buffer_write_io_error(struct buffer_head *bh)
- {
-+	struct super_block *sb;
-+
- 	set_buffer_write_io_error(bh);
- 	/* FIXME: do we need to set this in both places? */
- 	if (bh->b_page && bh->b_page->mapping)
- 		mapping_set_error(bh->b_page->mapping, -EIO);
- 	if (bh->b_assoc_map)
- 		mapping_set_error(bh->b_assoc_map, -EIO);
-+	rcu_read_lock();
-+	sb = READ_ONCE(bh->b_bdev->bd_super);
-+	if (sb)
-+		errseq_set(&sb->s_wb_err, -EIO);
-+	rcu_read_unlock();
- }
- EXPORT_SYMBOL(mark_buffer_write_io_error);
- 
--- 
-2.26.1
-
+But for this to actually be useful you'd need the rcu read lock until
+your are done with the file (or got a reference).
