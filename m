@@ -2,133 +2,105 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA65C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C75CC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AFD320575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100088;
-	bh=LLQXHmgmDWfRRwnjm/MV0EgMgOLIQUwx5mlM/0UZwUU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FVRUpPNpllMuC2Q1lQNmuIv/qONvzH85I8MJcFE3YxcDrepMvZ9pgdQJtH+VE8uX9
-	 R5ffaw+EHDBNR1uy28rgdOPFSFB1hHqSl+/A6zp+COcIkOzk75tGj1d8pXGVmhFOLw
-	 Hn1LoUHYyraizI2el989eKadydroRuHY0/7qBGvc=
+	by mail.kernel.org (Postfix) with ESMTP id 1020B20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L9xOTWTy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730228AbgD1Syr (ORCPT
+        id S1731521AbgD1Syv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:54:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729308AbgD1SdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:33:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52AC720B80;
-        Tue, 28 Apr 2020 18:33:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098802;
-        bh=LLQXHmgmDWfRRwnjm/MV0EgMgOLIQUwx5mlM/0UZwUU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iXXh4CKlsH5NY6cp6qpkfGaWLtHTaqxHxfEPvQuZJZ4BcVgjHqGs3xlwKUef/YcI8
-         MpWSxUnTWOYPOqZJmWE2wBLhYtolWVLKft9Eh9JvBzl3BOsa6hgP7pghPW3p2EeZRz
-         5/rjkRnisFlPTH4LZgJgB7ZT7WYPf43gL5QjQFbM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Asleson <tasleson@redhat.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 017/168] nvme-tcp: fix possible crash in write_zeroes processing
-Date:   Tue, 28 Apr 2020 20:23:11 +0200
-Message-Id: <20200428182233.867842327@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 28 Apr 2020 14:54:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731504AbgD1Sys (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:54:48 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26B3CC03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:54:47 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id e9so24371259iok.9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:54:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C18IvcKIUPmqhWrNgGQA3HNdNJlQg6Mgu7oxvCya4yA=;
+        b=L9xOTWTy9tw1EFj+TKRAx32qbXnmGcmWjC9j+1VFE2M+ENXZSCUF5FaAziHTxmF4H0
+         OyMKlGYZ2xM60lfspQhpw9mEylRaIPO32BPXwBYQSIz4taZP3Ui7derpShjsvTSAHNKo
+         hs32y1/Re/uF3tXYVScQ7RyDjnYTLYKpVWNJTtHWTkVaackmgtpv1sDnV1FxOh4uq2F9
+         4RDSvp0pwjqMIry4z+GsOylTQPvWIjwpv3hWcK8HvhFbAt5Xut9zXnDzTAAhtFKdSvV+
+         Ky0ttH1cEZ4Eqly2TWn+V2KcFl11plVaHKk+n7PifWmJegn4DSSsqLOLodv1QIOjOl1E
+         XE/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C18IvcKIUPmqhWrNgGQA3HNdNJlQg6Mgu7oxvCya4yA=;
+        b=fuxlNjwQHIFjC/OhQtPv4XPqdpZ90eiDXlz1hJ6MRhBuZ0fINyLD38eAE4ltosZtLD
+         uc6/qUUmoIOOepdpqykyRYaocu4mEUET/dxkaRxytSRJzwDpo5r8IwI2PgH93x2FL8en
+         PVVyvSjA3Hi60EO5iDeGpHCcsUauwJeFwoc0BGg/jHcZflXzwrCw/SgNgDZpmhyNvSFN
+         o7i4rbz0ml8LJixtDn97sqDezLNPyUcdLInJMmOIBNJID8negUVknpH89m/8Jh9uZXOA
+         K+XvyRYlUgDdAhP5w/BgXYwdQBuJ8lI3994JQ278Xn9orb1sdToD7wtQzwEwnjvsUQk5
+         c7qQ==
+X-Gm-Message-State: AGi0PuaWf0z1riQO4xHIQuG1tJFSTvyIOjbzhi2FxRnG1qrqYljnUAZp
+        ACqIvEcl5Wivvs2Mte4tF6MbmaT8TboeXaDoRPTErA==
+X-Google-Smtp-Source: APiQypKNUmcUlXwHdS61LpkDlzHCZSbCAeLZkmmYY+dHTh5R33ZwUxkPBkV2Jz+PT0FIsbrOye9DX+T7bTM7OrBnW3M=
+X-Received: by 2002:a5e:a610:: with SMTP id q16mr27415990ioi.75.1588100086060;
+ Tue, 28 Apr 2020 11:54:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200423022550.15113-1-sean.j.christopherson@intel.com> <20200423022550.15113-2-sean.j.christopherson@intel.com>
+In-Reply-To: <20200423022550.15113-2-sean.j.christopherson@intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Tue, 28 Apr 2020 11:54:35 -0700
+Message-ID: <CALMp9eRD9py=N9hDSon5GPzuiZw1Z+3xHv9umu1_qKzWczz0PA@mail.gmail.com>
+Subject: Re: [PATCH 01/13] KVM: nVMX: Preserve exception priority irrespective
+ of exiting behavior
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Oliver Upton <oupton@google.com>,
+        Peter Shier <pshier@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
-
-[ Upstream commit 25e5cb780e62bde432b401f312bb847edc78b432 ]
-
-We cannot look at blk_rq_payload_bytes without first checking
-that the request has a mappable physical segments first (e.g.
-blk_rq_nr_phys_segments(rq) != 0) and only then to take the
-request payload bytes. This caused us to send a wrong sgl to
-the target or even dereference a non-existing buffer in case
-we actually got to the data send sequence (if it was in-capsule).
-
-Reported-by: Tony Asleson <tasleson@redhat.com>
-Suggested-by: Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/nvme/host/tcp.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index 244984420b41b..11e84ed4de361 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -164,16 +164,14 @@ static inline bool nvme_tcp_async_req(struct nvme_tcp_request *req)
- static inline bool nvme_tcp_has_inline_data(struct nvme_tcp_request *req)
- {
- 	struct request *rq;
--	unsigned int bytes;
- 
- 	if (unlikely(nvme_tcp_async_req(req)))
- 		return false; /* async events don't have a request */
- 
- 	rq = blk_mq_rq_from_pdu(req);
--	bytes = blk_rq_payload_bytes(rq);
- 
--	return rq_data_dir(rq) == WRITE && bytes &&
--		bytes <= nvme_tcp_inline_data_size(req->queue);
-+	return rq_data_dir(rq) == WRITE && req->data_len &&
-+		req->data_len <= nvme_tcp_inline_data_size(req->queue);
- }
- 
- static inline struct page *nvme_tcp_req_cur_page(struct nvme_tcp_request *req)
-@@ -2090,7 +2088,9 @@ static blk_status_t nvme_tcp_map_data(struct nvme_tcp_queue *queue,
- 
- 	c->common.flags |= NVME_CMD_SGL_METABUF;
- 
--	if (rq_data_dir(rq) == WRITE && req->data_len &&
-+	if (!blk_rq_nr_phys_segments(rq))
-+		nvme_tcp_set_sg_null(c);
-+	else if (rq_data_dir(rq) == WRITE &&
- 	    req->data_len <= nvme_tcp_inline_data_size(queue))
- 		nvme_tcp_set_sg_inline(queue, c, req->data_len);
- 	else
-@@ -2117,7 +2117,8 @@ static blk_status_t nvme_tcp_setup_cmd_pdu(struct nvme_ns *ns,
- 	req->data_sent = 0;
- 	req->pdu_len = 0;
- 	req->pdu_sent = 0;
--	req->data_len = blk_rq_payload_bytes(rq);
-+	req->data_len = blk_rq_nr_phys_segments(rq) ?
-+				blk_rq_payload_bytes(rq) : 0;
- 	req->curr_bio = rq->bio;
- 
- 	if (rq_data_dir(rq) == WRITE &&
--- 
-2.20.1
-
-
-
+On Wed, Apr 22, 2020 at 7:26 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> Short circuit vmx_check_nested_events() if an exception is pending and
+> needs to be injected into L2, priority between coincident events is not
+> dependent on exiting behavior.  This fixes a bug where a single-step #DB
+> that is not intercepted by L1 is incorrectly dropped due to servicing a
+> VMX Preemption Timer VM-Exit.
+>
+> Injected exceptions also need to be blocked if nested VM-Enter is
+> pending or an exception was already injected, otherwise injecting the
+> exception could overwrite an existing event injection from L1.
+> Technically, this scenario should be impossible, i.e. KVM shouldn't
+> inject its own exception during nested VM-Enter.  This will be addressed
+> in a future patch.
+>
+> Note, event priority between SMI, NMI and INTR is incorrect for L2, e.g.
+> SMI should take priority over VM-Exit on NMI/INTR, and NMI that is
+> injected into L2 should take priority over VM-Exit INTR.  This will also
+> be addressed in a future patch.
+>
+> Fixes: b6b8a1451fc4 ("KVM: nVMX: Rework interception of IRQs and NMIs")
+> Reported-by: Jim Mattson <jmattson@google.com>
+> Cc: Oliver Upton <oupton@google.com>
+> Cc: Peter Shier <pshier@google.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
