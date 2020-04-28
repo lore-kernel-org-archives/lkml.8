@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422B9C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 045F0C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 203E82085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D29692085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098846;
-	bh=lu+rWn0DuPCOc6t/Q8s2CXZu/8GtE0gGQvraLXW4+mk=;
+	s=default; t=1588098853;
+	bh=53oGbS7V2+q0CTJXQNdodwI9HqTTXIBs2cItryGtSXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CG67eB1I1YrtiDG8U3+Xip0OdKQgAOIQkJuKa36FwfYZvXOclQskR2pytncmKQvUE
-	 4ks3uf4cqAZf3BGu5zdIVcnFNJ0lLOiY87YwnpKXkVDViCZ4SVKDmO6oDYvaCJsftn
-	 4Lc6aSrJP87+sWedz1+I+0vLgdalx1KHR73F3lRU=
+	b=kvL+A0cqBV3Xs25Ju+1YsCzeg1EWKgTbxcUg2VVRrVNiObr3A8RAjvm2doaVqnHlt
+	 8q8fbG34jo3JRzIBi1Cxa0RRjunyUKN/LY1Np1N4yMRPRpxMzd0D7VpS7VJZw0XnSi
+	 8qGmolQ1xAqx4LY/G0wAwR4mZVmJguQ8ByCz7CcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730022AbgD1SeF (ORCPT
+        id S1729540AbgD1SeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:34:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50692 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:34:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730011AbgD1SeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:34:02 -0400
+        id S1730031AbgD1SeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:34:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67EEC2085B;
-        Tue, 28 Apr 2020 18:34:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF3832085B;
+        Tue, 28 Apr 2020 18:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098841;
-        bh=lu+rWn0DuPCOc6t/Q8s2CXZu/8GtE0gGQvraLXW4+mk=;
+        s=default; t=1588098849;
+        bh=53oGbS7V2+q0CTJXQNdodwI9HqTTXIBs2cItryGtSXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eobwr+Eui/IJTbttVNwjbKWC2kjW2GpgFNNLgC7Hc9og/JIVtnsnfnEOiC70YSTlo
-         j5bsD4/Km6bcoz1UoX9XwB0pMMcLhp9QHctv4u9//0ThJc801FqJ9wv41NNKF0nnhy
-         Jfh4id444wrd5OjYTaalb8PY97AfwdlIQLwCD+Ss=
+        b=T7mkMLfBUSmTSTFIfPdDuBWdlgocnhRAN2DN08qkaEYGRAQVDqzpIoK/i3x3Y0DmA
+         YqMdvCuYIVEL0i0OTe1rh+sPL1PIAxHzCMAdvN+rI46NLYG2u7SGdyOCdirpzK9uiw
+         o/JNuu8uOtWylDHMvw9rBWcheAOa3r04Z2NL9GCU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikita Lipski <mikita.lipski@amd.com>,
-        Lyude Paul <lyude@redhat.com>
-Subject: [PATCH 5.6 119/167] drm/dp_mst: Zero assigned PBN when releasing VCPI slots
-Date:   Tue, 28 Apr 2020 20:24:55 +0200
-Message-Id: <20200428182240.281525612@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 064/131] team: fix hang in team_mode_get()
+Date:   Tue, 28 Apr 2020 20:24:36 +0200
+Message-Id: <20200428182233.014805018@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,35 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikita Lipski <mikita.lipski@amd.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-commit 7bfc1fec1af3e2f0194843855b0d49054fa42fd2 upstream.
+[ Upstream commit 1c30fbc76b8f0c07c92a8ca4cd7c456612e17eb5 ]
 
-Zero Port's PBN together with VCPI slots when releasing
-allocated VCPI slots. That way when disabling the connector
-it will not cause issues in drm_dp_mst_atomic_check verifying
-branch bw limit.
+When team mode is changed or set, the team_mode_get() is called to check
+whether the mode module is inserted or not. If the mode module is not
+inserted, it calls the request_module().
+In the request_module(), it creates a child process, which is
+the "modprobe" process and waits for the done of the child process.
+At this point, the following locks were used.
+down_read(&cb_lock()); by genl_rcv()
+    genl_lock(); by genl_rcv_msc()
+        rtnl_lock(); by team_nl_cmd_options_set()
+            mutex_lock(&team->lock); by team_nl_team_get()
 
-Signed-off-by: Mikita Lipski <mikita.lipski@amd.com>
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Fixes: cd82d82cbc04 ("drm/dp_mst: Add branch bandwidth validation to MST atomic check")
-Cc: <stable@vger.kernel.org> # v5.6+
-Link: https://patchwork.freedesktop.org/patch/msgid/20200407160717.27976-1-mikita.lipski@amd.com
+Concurrently, the team module could be removed by rmmod or "modprobe -r"
+The __exit function of team module is team_module_exit(), which calls
+team_nl_fini() and it tries to acquire following locks.
+down_write(&cb_lock);
+    genl_lock();
+Because of the genl_lock() and cb_lock, this process can't be finished
+earlier than request_module() routine.
+
+The problem secenario.
+CPU0                                     CPU1
+team_mode_get
+    request_module()
+                                         modprobe -r team_mode_roundrobin
+                                                     team <--(B)
+        modprobe team <--(A)
+            team_mode_roundrobin
+
+By request_module(), the "modprobe team_mode_roundrobin" command
+will be executed. At this point, the modprobe process will decide
+that the team module should be inserted before team_mode_roundrobin.
+Because the team module is being removed.
+
+By the module infrastructure, the same module insert/remove operations
+can't be executed concurrently.
+So, (A) waits for (B) but (B) also waits for (A) because of locks.
+So that the hang occurs at this point.
+
+Test commands:
+    while :
+    do
+        teamd -d &
+	killall teamd &
+	modprobe -rv team_mode_roundrobin &
+    done
+
+The approach of this patch is to hold the reference count of the team
+module if the team module is compiled as a module. If the reference count
+of the team module is not zero while request_module() is being called,
+the team module will not be removed at that moment.
+So that the above scenario could not occur.
+
+Fixes: 3d249d4ca7d0 ("net: introduce ethernet teaming device")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/team/team.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -4290,6 +4290,7 @@ int drm_dp_atomic_release_vcpi_slots(str
- 	if (pos->vcpi) {
- 		drm_dp_mst_put_port_malloc(port);
- 		pos->vcpi = 0;
-+		pos->pbn = 0;
+--- a/drivers/net/team/team.c
++++ b/drivers/net/team/team.c
+@@ -475,6 +475,9 @@ static const struct team_mode *team_mode
+ 	struct team_mode_item *mitem;
+ 	const struct team_mode *mode = NULL;
+ 
++	if (!try_module_get(THIS_MODULE))
++		return NULL;
++
+ 	spin_lock(&mode_list_lock);
+ 	mitem = __find_mode(kind);
+ 	if (!mitem) {
+@@ -490,6 +493,7 @@ static const struct team_mode *team_mode
  	}
  
- 	return 0;
+ 	spin_unlock(&mode_list_lock);
++	module_put(THIS_MODULE);
+ 	return mode;
+ }
+ 
 
 
