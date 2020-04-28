@@ -2,51 +2,53 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C618C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D46C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB782137B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCB682137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:29:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098592;
-	bh=Pe1L8dVLg6dmSyWSMeTXLXMbj9DUZKD2yKCpIrM+C3U=;
+	s=default; t=1588098595;
+	bh=bNVdSBgTrAiEhSZBP78RjqSO2iW2UM/yNJ3jlJzalm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ais7Kv6uz2+N2LoqLHECs4lYbUoA5qOFT3spFVwJafDJ4P3b7O1ihgXNGj8Z0LG1C
-	 JuGfd0V1a1DONa/oMk9hcuW1r++02YRebaDONrEBBFVOx7TJpNjT/O+JxcKfyImx3S
-	 Ys3mZZh64h0dIJi/sesqAZ8WKMoRIK4+O4Hi5wjA=
+	b=y8BNeY66CFVYD1iK+5DzAlLdVDn4MofAKWEMjQ2Jk2xot7GJDlJe1m85/s+D/aELR
+	 5FrRnkw5nSAKFwjOXk0bZHWiK7n98zjXhCOJuJbDumljmDoIVrxVSf9ljXaAW4fZ4x
+	 IsXSR4+FvJmGDZfnSCN8elLVdZcRg0TunPfEP4Rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729421AbgD1S3v (ORCPT
+        id S1729430AbgD1S3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:29:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43778 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:29:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729410AbgD1S3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:29:48 -0400
+        id S1729417AbgD1S3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:29:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56CA320730;
-        Tue, 28 Apr 2020 18:29:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C43BC20730;
+        Tue, 28 Apr 2020 18:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098587;
-        bh=Pe1L8dVLg6dmSyWSMeTXLXMbj9DUZKD2yKCpIrM+C3U=;
+        s=default; t=1588098590;
+        bh=bNVdSBgTrAiEhSZBP78RjqSO2iW2UM/yNJ3jlJzalm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FcYkrD21zUK2toNTCOG1rZsSuTiKuH8SkrRlE0nCUl2jgUmlmIQQQNpljkqXDpNDc
-         +whYlpOyL9Nh8Db5yZDccJr87qpjCAygDVy4Y2brHacLj0L7HpUpYeTtX+SRFPa4H/
-         1gRGQZjrtxrLEYRUpgbuzHRepNjkDP2vBJner4j0=
+        b=OqTuc+CDx8WEoRn5G/07BMkNjlmkzlv28N3yuyf6jrP9lMi0srE4ZNlvhNNBTU67q
+         KphkOfGOydhEGloHga//xPXikRPbdE+D15TBd9iACowXicSLA5q8jrxzLRB/5JfyQr
+         gFLc5WEzk/zd/rXk750gwOU60abVUss9HkDNgvUA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Vishal Kulkarni <vishal@chelsio.com>
-Subject: [PATCH 5.6 045/167] cxgb4: fix adapter crash due to wrong MC size
-Date:   Tue, 28 Apr 2020 20:23:41 +0200
-Message-Id: <20200428182230.753937826@linuxfoundation.org>
+        stable@vger.kernel.org, James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 036/167] scsi: lpfc: Fix lockdep error - register non-static key
+Date:   Tue, 28 Apr 2020 20:23:32 +0200
+Message-Id: <20200428182229.706573817@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
 References: <20200428182225.451225420@linuxfoundation.org>
@@ -59,79 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vishal Kulkarni <vishal@chelsio.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit ce222748078592afb51b810dc154531aeba4f512 ]
+[ Upstream commit f861f596714bed06069f1109b89e51f3855c4ddf ]
 
-In the absence of MC1, the size calculation function
-cudbg_mem_region_size() was returing wrong MC size and
-resulted in adapter crash. This patch adds new argument
-to cudbg_mem_region_size() which will have actual size
-and returns error to caller in the absence of MC1.
+The following lockdep error was reported when unloading the lpfc driver:
 
-Fixes: a1c69520f785 ("cxgb4: collect MC memory dump")
-Signed-off-by: Vishal Kulkarni <vishal@chelsio.com>"
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  INFO: trying to register non-static key.
+  the code is fine but needs lockdep annotation.
+  turning off the locking correctness validator.
+  ...
+  Call Trace:
+  dump_stack+0x96/0xe0
+  register_lock_class+0x8b8/0x8c0
+  ? lockdep_hardirqs_on+0x190/0x280
+  ? is_dynamic_key+0x150/0x150
+  ? wait_for_completion_interruptible+0x2a0/0x2a0
+  ? wake_up_q+0xd0/0xd0
+  __lock_acquire+0xda/0x21a0
+  ? register_lock_class+0x8c0/0x8c0
+  ? synchronize_rcu_expedited+0x500/0x500
+  ? __call_rcu+0x850/0x850
+  lock_acquire+0xf3/0x1f0
+  ? del_timer_sync+0x5/0xb0
+  del_timer_sync+0x3c/0xb0
+  ? del_timer_sync+0x5/0xb0
+  lpfc_pci_remove_one.cold.102+0x8b7/0x935 [lpfc]
+  ...
+
+Unloading the driver resulted in a call to del_timer_sync for the
+cpuhp_poll_timer. However the call to setup the timer had never been made,
+so the timer structures used by lockdep checking were not initialized.
+
+Unconditionally call setup_timer for the cpuhp_poll_timer during driver
+initialization. Calls to start the timer remain "as needed".
+
+Link: https://lore.kernel.org/r/20200322181304.37655-3-jsmart2021@gmail.com
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c |   27 ++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
+ drivers/scsi/lpfc/lpfc_init.c | 5 ++---
+ drivers/scsi/lpfc/lpfc_sli.c  | 6 ++----
+ 2 files changed, 4 insertions(+), 7 deletions(-)
 
---- a/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
-@@ -1049,9 +1049,9 @@ static void cudbg_t4_fwcache(struct cudb
- 	}
- }
+diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+index d2bbcf8cae4c3..48fde2b1ebbab 100644
+--- a/drivers/scsi/lpfc/lpfc_init.c
++++ b/drivers/scsi/lpfc/lpfc_init.c
+@@ -11203,11 +11203,9 @@ static void lpfc_cpuhp_add(struct lpfc_hba *phba)
  
--static unsigned long cudbg_mem_region_size(struct cudbg_init *pdbg_init,
--					   struct cudbg_error *cudbg_err,
--					   u8 mem_type)
-+static int cudbg_mem_region_size(struct cudbg_init *pdbg_init,
-+				 struct cudbg_error *cudbg_err,
-+				 u8 mem_type, unsigned long *region_size)
+ 	rcu_read_lock();
+ 
+-	if (!list_empty(&phba->poll_list)) {
+-		timer_setup(&phba->cpuhp_poll_timer, lpfc_sli4_poll_hbtimer, 0);
++	if (!list_empty(&phba->poll_list))
+ 		mod_timer(&phba->cpuhp_poll_timer,
+ 			  jiffies + msecs_to_jiffies(LPFC_POLL_HB));
+-	}
+ 
+ 	rcu_read_unlock();
+ 
+@@ -13173,6 +13171,7 @@ lpfc_pci_probe_one_s4(struct pci_dev *pdev, const struct pci_device_id *pid)
+ 	lpfc_sli4_ras_setup(phba);
+ 
+ 	INIT_LIST_HEAD(&phba->poll_list);
++	timer_setup(&phba->cpuhp_poll_timer, lpfc_sli4_poll_hbtimer, 0);
+ 	cpuhp_state_add_instance_nocalls(lpfc_cpuhp_state, &phba->cpuhp);
+ 
+ 	return 0;
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index de97727458fc7..396e24764a1b1 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -14457,12 +14457,10 @@ static inline void lpfc_sli4_add_to_poll_list(struct lpfc_queue *eq)
  {
- 	struct adapter *padap = pdbg_init->adap;
- 	struct cudbg_meminfo mem_info;
-@@ -1060,15 +1060,23 @@ static unsigned long cudbg_mem_region_si
+ 	struct lpfc_hba *phba = eq->phba;
  
- 	memset(&mem_info, 0, sizeof(struct cudbg_meminfo));
- 	rc = cudbg_fill_meminfo(padap, &mem_info);
--	if (rc)
-+	if (rc) {
-+		cudbg_err->sys_err = rc;
- 		return rc;
-+	}
+-	if (list_empty(&phba->poll_list)) {
+-		timer_setup(&phba->cpuhp_poll_timer, lpfc_sli4_poll_hbtimer, 0);
+-		/* kickstart slowpath processing for this eq */
++	/* kickstart slowpath processing if needed */
++	if (list_empty(&phba->poll_list))
+ 		mod_timer(&phba->cpuhp_poll_timer,
+ 			  jiffies + msecs_to_jiffies(LPFC_POLL_HB));
+-	}
  
- 	cudbg_t4_fwcache(pdbg_init, cudbg_err);
- 	rc = cudbg_meminfo_get_mem_index(padap, &mem_info, mem_type, &mc_idx);
--	if (rc)
-+	if (rc) {
-+		cudbg_err->sys_err = rc;
- 		return rc;
-+	}
-+
-+	if (region_size)
-+		*region_size = mem_info.avail[mc_idx].limit -
-+			       mem_info.avail[mc_idx].base;
- 
--	return mem_info.avail[mc_idx].limit - mem_info.avail[mc_idx].base;
-+	return 0;
- }
- 
- static int cudbg_collect_mem_region(struct cudbg_init *pdbg_init,
-@@ -1076,7 +1084,12 @@ static int cudbg_collect_mem_region(stru
- 				    struct cudbg_error *cudbg_err,
- 				    u8 mem_type)
- {
--	unsigned long size = cudbg_mem_region_size(pdbg_init, cudbg_err, mem_type);
-+	unsigned long size = 0;
-+	int rc;
-+
-+	rc = cudbg_mem_region_size(pdbg_init, cudbg_err, mem_type, &size);
-+	if (rc)
-+		return rc;
- 
- 	return cudbg_read_fw_mem(pdbg_init, dbg_buff, mem_type, size,
- 				 cudbg_err);
+ 	list_add_rcu(&eq->_poll_list, &phba->poll_list);
+ 	synchronize_rcu();
+-- 
+2.20.1
+
 
 
