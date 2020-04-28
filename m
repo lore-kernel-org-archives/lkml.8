@@ -2,188 +2,173 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 810C6C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E63C83009
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CBB5206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCBDF20730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:28:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ls38140q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbgD1P2n (ORCPT
+        id S1728352AbgD1P2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:28:43 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36947 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727917AbgD1P2m (ORCPT
+        Tue, 28 Apr 2020 11:28:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43554 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728314AbgD1P2o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:28:42 -0400
-Received: by mail-ot1-f68.google.com with SMTP id z17so33346334oto.4;
-        Tue, 28 Apr 2020 08:28:42 -0700 (PDT)
+        Tue, 28 Apr 2020 11:28:44 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C82EC03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 08:28:44 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id s10so8512658plr.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 08:28:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bupX4Xeuiln/DjuxcvV53YK6vLVjuUky6WkzRYhlMcY=;
+        b=ls38140qhFqIHiH1VWhQV1JjlPCTVDhgEiCQJeqzoj10IuX4Fxh+KT8CSglGlmQZGy
+         wFYXg9ksMB0mkoRh+tgrSf0EcKN8EuBtdqwMLali2VFuB7fAD4OWBw6PhSLEXq9trlzI
+         zcw8B9j9FwmZWgLgIJrSDOnVQgeQVwNFWMdZc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MW/OWSJ7jnlgJeVyEXGr+UHRHBwvDLhnEj4Gw0Faysc=;
-        b=Nf+fnM+pZcFGWPCTcaEKC4Oz4f5HYkfJfGADgAlBXwMl8bmHeHQaAYxdmVOoYRklDi
-         8lqyQHyNEXUnm1ZNKULaf4km7cvynqmmdc1E70cKhB00Vewt/MneVXnFqatRJUQaageP
-         RR+aDoQwdMpq9Ic5fbyp6vXFaM4glH3IuUIDFLrQKGuY/f/pSKdB9cqox3CyVacx/vX7
-         kXfeaeJ4f+37XPKeqDukP/I0Syt/nFmcgzunZIwJ3JFFklaH7aw2PvPbGV/dM6fgcHt1
-         ZbaOVTGsotKeM6lfnqZ287BX325KfCXFEtndqYBXeIdJT3Hd8B7sMAdD1EWXWfCrGnYw
-         5ZSg==
-X-Gm-Message-State: AGi0Pua1GdWcdwFRRQo0PW+5RQPArB3I4c5EvEhenQ0lO7tAeLi2NQQj
-        6gXzO1hS5rvi4TXO3ivkZnOlhgu/6H+xC8tlx7mWlW7d
-X-Google-Smtp-Source: APiQypLMHJyVIXfFFO2xNpPTu7dzQmo3gqEMYjKRlGRvQ7k6o1mLs/72dhZWPi5STyFqrrxlJOrh3hq9svuLM+e9K0c=
-X-Received: by 2002:a9d:564:: with SMTP id 91mr23004838otw.250.1588087721620;
- Tue, 28 Apr 2020 08:28:41 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bupX4Xeuiln/DjuxcvV53YK6vLVjuUky6WkzRYhlMcY=;
+        b=ctCTbVOqjBcOpte1VlkDDc/t4siDzRLEAow2nBbNtZ3uZMUObolKt4wZsncRhtLmlj
+         EKlax6CSw7ftzMKrFREzGXjnjRjC6dwtgjpre5sIK2Mb3PyVrl8/hbbQn4BHCEtO6YiH
+         Lwj22AW9pFhMDNYJLDLL4e1k/aZsdhj6K8t4wo1TrRGyUEWfMFd0sbbQZ5uQQV7QpCjL
+         D4CVBqrjDQk46PbNY500KuhyAbDpmnHhWdD70T5Yc5AYlqn2ihNChGCZjLGS7MD5jSvy
+         0qdDC4qnn3+r8HB4NpgRULBVRdVR8yI0lBcAUNxxe1i+jMDBfLtK7Ft/dVj1/qtMn+dE
+         oqYA==
+X-Gm-Message-State: AGi0PuaYKga3hlqH23a5zO3njDsoxPVqsN6fKgr90XTXnUSEBHAGful/
+        H/JIs15N27zfp+ivwAHBEQXrm0VvQKw=
+X-Google-Smtp-Source: APiQypK5LNxibTTwgAnq1UH8tV7/wQW/2P5QfBgYpRZBViEZoKjLdkXzCRxvwiChnIc7+fV8LD1RvQ==
+X-Received: by 2002:a17:902:82c6:: with SMTP id u6mr30286582plz.146.1588087723981;
+        Tue, 28 Apr 2020 08:28:43 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id o1sm2387369pjs.35.2020.04.28.08.28.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Apr 2020 08:28:43 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 08:28:42 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     linux-pm@vger.kernel.org, evgreen@chromium.org,
+        bjorn.andersson@linaro.org, akashast@codeaurora.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] interconnect: Add helpers for enabling/disabling a path
+Message-ID: <20200428152842.GG4525@google.com>
+References: <20200428091650.27669-1-georgi.djakov@linaro.org>
 MIME-Version: 1.0
-References: <20200422072137.8517-1-o.rempel@pengutronix.de>
-In-Reply-To: <20200422072137.8517-1-o.rempel@pengutronix.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 28 Apr 2020 17:28:30 +0200
-Message-ID: <CAMuHMdU1ZmSm_tjtWxoFNako2fzmranGVz5qqD2YRNEFRjX0Sw@mail.gmail.com>
-Subject: Re: [PATCH net-next v3] net: phy: micrel: add phy-mode support for
- the KSZ9031 PHY
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        David Jander <david@protonic.nl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200428091650.27669-1-georgi.djakov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Oleksij,
+Hi Georgi,
 
-On Wed, Apr 22, 2020 at 9:24 AM Oleksij Rempel <o.rempel@pengutronix.de> wrote:
-> Add support for following phy-modes: rgmii, rgmii-id, rgmii-txid, rgmii-rxid.
->
-> This PHY has an internal RX delay of 1.2ns and no delay for TX.
->
-> The pad skew registers allow to set the total TX delay to max 1.38ns and
-> the total RX delay to max of 2.58ns (configurable 1.38ns + build in
-> 1.2ns) and a minimal delay of 0ns.
->
-> According to the RGMII v1.3 specification the delay provided by PCB traces
-> should be between 1.5ns and 2.0ns. The RGMII v2.0 allows to provide this
-> delay by MAC or PHY. So, we configure this PHY to the best values we can
-> get by this HW: TX delay to 1.38ns (max supported value) and RX delay to
-> 1.80ns (best calculated delay)
->
-> The phy-modes can still be fine tuned/overwritten by *-skew-ps
-> device tree properties described in:
-> Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
->
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-
-This is now commit bcf3440c6dd78bfe ("net: phy: micrel: add phy-mode
-support for the KSZ9031 PHY") in net-next/master.
-
-> --- a/drivers/net/phy/micrel.c
-> +++ b/drivers/net/phy/micrel.c
-
-> @@ -597,21 +703,33 @@ static int ksz9031_config_init(struct phy_device *phydev)
->         } while (!of_node && dev_walker);
->
->         if (of_node) {
-> +               bool update = false;
+On Tue, Apr 28, 2020 at 12:16:50PM +0300, Georgi Djakov wrote:
+> There is a repeated pattern in multiple drivers where they want to switch
+> the bandwidth between zero and some other value. This is happening often
+> in the suspend/resume callbacks. Let's add helper functions to enable and
+> disable the path, so that callers don't have to take care of remembering
+> the bandwidth values and handle this in the framework instead.
+> 
+> With this patch the users can call icc_disable() and icc_enable() to lower
+> their bandwidth request to zero and then restore it back to it's previous
+> value.
+> 
+> Suggested-by: Evan Green <evgreen@chromium.org>
+> Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+>  drivers/interconnect/core.c     | 50 ++++++++++++++++++++++++++++++++-
+>  drivers/interconnect/internal.h |  2 ++
+>  include/linux/interconnect.h    | 12 ++++++++
+>  3 files changed, 63 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+> index 2c6515e3ecf1..6af68e506ac2 100644
+> --- a/drivers/interconnect/core.c
+> +++ b/drivers/interconnect/core.c
+> @@ -158,6 +158,7 @@ static struct icc_path *path_init(struct device *dev, struct icc_node *dst,
+>  		hlist_add_head(&path->reqs[i].req_node, &node->req_list);
+>  		path->reqs[i].node = node;
+>  		path->reqs[i].dev = dev;
+> +		path->reqs[i].enabled = true;
+>  		/* reference to previous node was saved during path traversal */
+>  		node = node->reverse;
+>  	}
+> @@ -249,9 +250,12 @@ static int aggregate_requests(struct icc_node *node)
+>  	if (p->pre_aggregate)
+>  		p->pre_aggregate(node);
+>  
+> -	hlist_for_each_entry(r, &node->req_list, req_node)
+> +	hlist_for_each_entry(r, &node->req_list, req_node) {
+> +		if (!r->enabled)
+> +			continue;
+>  		p->aggregate(node, r->tag, r->avg_bw, r->peak_bw,
+>  			     &node->avg_bw, &node->peak_bw);
+> +	}
+>  
+>  	return 0;
+>  }
+> @@ -546,6 +550,50 @@ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
+>  }
+>  EXPORT_SYMBOL_GPL(icc_set_bw);
+>  
+> +int icc_disable(struct icc_path *path)
+> +{
+> +	int i;
 > +
-> +               if (phy_interface_is_rgmii(phydev)) {
-> +                       result = ksz9031_config_rgmii_delay(phydev);
-> +                       if (result < 0)
-> +                               return result;
-> +               }
+> +	if (!path)
+> +		return 0;
 > +
->                 ksz9031_of_load_skew_values(phydev, of_node,
->                                 MII_KSZ9031RN_CLK_PAD_SKEW, 5,
-> -                               clk_skews, 2);
-> +                               clk_skews, 2, &update);
->
->                 ksz9031_of_load_skew_values(phydev, of_node,
->                                 MII_KSZ9031RN_CONTROL_PAD_SKEW, 4,
-> -                               control_skews, 2);
-> +                               control_skews, 2, &update);
->
->                 ksz9031_of_load_skew_values(phydev, of_node,
->                                 MII_KSZ9031RN_RX_DATA_PAD_SKEW, 4,
-> -                               rx_data_skews, 4);
-> +                               rx_data_skews, 4, &update);
->
->                 ksz9031_of_load_skew_values(phydev, of_node,
->                                 MII_KSZ9031RN_TX_DATA_PAD_SKEW, 4,
-> -                               tx_data_skews, 4);
-> +                               tx_data_skews, 4, &update);
+> +	if (WARN_ON(IS_ERR(path) || !path->num_nodes))
+> +		return -EINVAL;
 > +
-> +               if (update && phydev->interface != PHY_INTERFACE_MODE_RGMII)
-> +                       phydev_warn(phydev,
-> +                                   "*-skew-ps values should be used only with phy-mode = \"rgmii\"\n");
+> +	mutex_lock(&icc_lock);
+> +
+> +	for (i = 0; i < path->num_nodes; i++)
+> +		path->reqs[i].enabled = false;
+> +
+> +	mutex_unlock(&icc_lock);
+> +
+> +	return icc_set_bw(path, path->reqs[0].avg_bw,
+> +			  path->reqs[0].peak_bw);
+> +}
+> +EXPORT_SYMBOL_GPL(icc_disable);
+> +
+> +int icc_enable(struct icc_path *path)
+> +{
+> +	int i;
+> +
+> +	if (!path)
+> +		return 0;
+> +
+> +	if (WARN_ON(IS_ERR(path) || !path->num_nodes))
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&icc_lock);
+> +
+> +	for (i = 0; i < path->num_nodes; i++)
+> +		path->reqs[i].enabled = true;
+> +
+> +	mutex_unlock(&icc_lock);
+> +
+> +	return icc_set_bw(path, path->reqs[0].avg_bw,
+> +			  path->reqs[0].peak_bw);
+> +}
 
-This triggers on Renesas Salvator-X(S):
-
-    Micrel KSZ9031 Gigabit PHY e6800000.ethernet-ffffffff:00:
-*-skew-ps values should be used only with phy-mode = "rgmii"
-
-which uses:
-
-        phy-mode = "rgmii-txid";
-
-and:
-
-        rxc-skew-ps = <1500>;
-
-If I understand Documentation/devicetree/bindings/net/ethernet-controller.yaml
-correctly:
-
-      # RX and TX delays are added by the MAC when required
-      - rgmii
-
-i.e. any *-skew-ps can be specified.
-
-      # RGMII with internal RX and TX delays provided by the PHY,
-      # the MAC should not add the RX or TX delays in this case
-      - rgmii-id
-
-i.e. *-skew-ps must not be specified.
-
-      # RGMII with internal RX delay provided by the PHY, the MAC
-      # should not add an RX delay in this case
-      - rgmii-rxid
-
-i.e. it's still OK to specify tx*-skew-ps values here...
-
-      # RGMII with internal TX delay provided by the PHY, the MAC
-      # should not add an TX delay in this case
-      - rgmii-txid
-
-... and rx*-skew-ps values here?
-Is my understanding correct, and should the check be updated to take into
-account rxid and txid?
-
-BTW, the example in Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-still specifies *-skew-ps values with phy-mode = "rgmii-id", so I think
-that should be updated, too.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+The two functions are identical except for the assignment of the 'enabled'
+flags. You could add a helper _icc_enable(struct icc_path *path, bool enable)
+and call it from icc_enable/disable().
