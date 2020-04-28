@@ -2,178 +2,185 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79311C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6423EC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53020206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:56:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fxnlsRN9"
+	by mail.kernel.org (Postfix) with ESMTP id 42A76206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:56:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588064199;
+	bh=3+MPMoZfi88aVdRZnemZFVUxTk6GtL658VYkoZtPzq8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GhmgC0uOx7vHJaIAvBROFiiMnpXzWjSMtS2TiK3HUEvMOmEucOv/lXRDraIeAj2Cn
+	 qsQ7HuGnGfiIjgIE0s6TJeh91uFxErKO/qDIoTXdgQA/bjC20BGxl+zI1CqZ9n0+Qs
+	 7GhjeTVRlCfxQYwDREwWRqSAKytyABRjNlbmNJIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgD1I4P (ORCPT
+        id S1726916AbgD1I4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 04:56:15 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27447 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726271AbgD1I4O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 04:56:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588064173;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ag/nIHIIOCwHrm+u9Ds/YPYwbuQscrF+6RvhQwuBjfs=;
-        b=fxnlsRN94AEclEo+lRvogVLqd8NRHlh4yZmEDj8/qp/qp1+22N+mW9zLnjpnUVRPnS25N8
-        3kPBiWlgXv8bexSqQ4zaHgjNxM797XOGUrmBZPoD9b8U+E75EpSyh6D2LuKeuXw3uTVoVV
-        NwsHxdx+KWZzk/LK7L8UgjWLd5yDs4U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-278-7X7UlH-EPGaiqqYM_zNc1g-1; Tue, 28 Apr 2020 04:56:09 -0400
-X-MC-Unique: 7X7UlH-EPGaiqqYM_zNc1g-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 28 Apr 2020 04:56:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726271AbgD1I4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 04:56:38 -0400
+Received: from dragon (unknown [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 46BA6100CC8E;
-        Tue, 28 Apr 2020 08:56:08 +0000 (UTC)
-Received: from localhost.localdomain (vpn2-54-127.bne.redhat.com [10.64.54.127])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D90275D9E2;
-        Tue, 28 Apr 2020 08:56:05 +0000 (UTC)
-Reply-To: Gavin Shan <gshan@redhat.com>
-Subject: Re: [PATCH] arm64/mm: Reject invalid NUMA option
-To:     Will Deacon <will@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Mark Rutland <mark.rutland@arm.com>, catalin.marinas@arm.com,
-        linux-kernel@vger.kernel.org, shan.gavin@gmail.com,
-        linux-arm-kernel@lists.infradead.org
-References: <20200424045314.16017-1-gshan@redhat.com>
- <20200424101132.GC1167@C02TD0UTHF1T.local>
- <f83c0ce1-b1b2-31f4-60c8-15567b87a8ff@redhat.com>
- <20200427225406.7cacc796@gandalf.local.home>
- <20200427225944.185d4431@gandalf.local.home>
- <20200427230920.3d606a2e@gandalf.local.home>
- <7e85ea83-de5f-c789-2e3c-e468a50ed4bd@redhat.com>
- <20200428072509.GA4049@willie-the-truck>
-From:   Gavin Shan <gshan@redhat.com>
-Message-ID: <858cb997-d187-e605-446e-24ac4169b147@redhat.com>
-Date:   Tue, 28 Apr 2020 18:56:02 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        by mail.kernel.org (Postfix) with ESMTPSA id D2015206B9;
+        Tue, 28 Apr 2020 08:56:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588064197;
+        bh=3+MPMoZfi88aVdRZnemZFVUxTk6GtL658VYkoZtPzq8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Lqb5BTF7B0KtyZyNowob7ls482uzjl80lHe5e+h4667nxsSPkFPfXaKI8mQLYOimd
+         W2/kum+XmI3QTl+fZADtIiedyrVYejyvdhjh5/uV0DbKkN/74H8YmhPw4oGRB0bpQA
+         LmxBW9g/y2Cx4mcsuL2EbT8tKiLhMFgFyTSXpNdk=
+Date:   Tue, 28 Apr 2020 16:56:24 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Qiang Zhao <qiang.zhao@nxp.com>
+Cc:     leoyang.li@nxp.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND 1/2] ls1043ardb: add qe node to ls1043ardb
+Message-ID: <20200428085623.GC32592@dragon>
+References: <20200414031029.37879-1-qiang.zhao@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200428072509.GA4049@willie-the-truck>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414031029.37879-1-qiang.zhao@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
+On Tue, Apr 14, 2020 at 11:10:28AM +0800, Qiang Zhao wrote:
+> From: Zhao Qiang <qiang.zhao@nxp.com>
+> 
 
-On 4/28/20 5:25 PM, Will Deacon wrote:
-> On Tue, Apr 28, 2020 at 02:35:20PM +1000, Gavin Shan wrote:
->> On 4/28/20 1:09 PM, Steven Rostedt wrote:
->>
->> [...]
->>
->>>
->>> Could this be a bug in the implementation of strncmp() in
->>> arch/arm64/lib/strncmp.S. As I don't know arm64 assembly, I have no i=
-dea
->>> what it is trying to do.
->>>
->>> But strncmp("o","off",3) returning zero *is* a bug.
->>>
->>
->> I think it's false alarm. The patch has been in my local repo for a wh=
-ile.
->> I checked out 5.7.rc3 and tried passing "numa=3Do" to the kernel, @num=
-a_off
->> is unchanged and its value is false. I also check the return value fro=
-m
->> strncmp() as below, it's correct. Nothing is broken. I should have ret=
-ested
->> before posting it. Sorry for the noise. Please ignore the crap patch :=
-)
->=20
-> Hmm, it's still worrying that you had that patch kicking around though,=
- as
-> it sounds like it /used/ to be broken. Would you be able to test the LT=
-S
-> kernels (5.4, 4.19, 4.14, 4.9, 4.4) to check that we're not missing a
-> backport, please? Sorry to be a pain, but I'd like to get to the bottom=
- of
-> this!
->=20
+Please write a proper commit log.
 
-Sure, There are nothing to worry. I tried the following branches of the s=
-table
-tree. They all looks good in this regard.
+> Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
 
-    linux-5.6.y
-    linux-5.5.y
-    linux-5.4.y
-    linux-5.3.y
-    linux-4.19.y
-    linux-4.9.y
+Subject should be prefixed like 'arm64: dts: ...'
 
-linux-4.4.y isn't tried because the corresponding parameter starts to exi=
-st
-from linux-4.7.y: 1a2db300348b ("arm64, numa: Add NUMA support for arm64 =
-platforms.")
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 16 ++++++
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi    | 66 +++++++++++++++++++++++
+>  2 files changed, 82 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+> index 4223a23..96e87ba 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+> @@ -96,6 +96,22 @@
+>  	};
+>  };
+>  
+> +&uqe {
+> +	ucc_hdlc: ucc@2000 {
+> +		compatible = "fsl,ucc-hdlc";
+> +		rx-clock-name = "clk8";
+> +		tx-clock-name = "clk9";
+> +		fsl,rx-sync-clock = "rsync_pin";
+> +		fsl,tx-sync-clock = "tsync_pin";
+> +		fsl,tx-timeslot-mask = <0xfffffffe>;
+> +		fsl,rx-timeslot-mask = <0xfffffffe>;
+> +		fsl,tdm-framer-type = "e1";
+> +		fsl,tdm-id = <0>;
+> +		fsl,siram-entry-id = <0>;
+> +		fsl,tdm-interface;
+> +	};
+> +};
+> +
+>  &duart0 {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> index c084c7a4..a6f2b15 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> @@ -525,6 +525,72 @@
+>  			#interrupt-cells = <2>;
+>  		};
+>  
+> +		uqe: uqe@2400000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			device_type = "qe";
+> +			compatible = "fsl,qe", "simple-bus";
+> +			ranges = <0x0 0x0 0x2400000 0x40000>;
+> +			reg = <0x0 0x2400000 0x0 0x480>;
+> +			brg-frequency = <100000000>;
+> +			bus-frequency = <200000000>;
+> +
 
-    # git tag --contains 1a2db300348b | sort -V | head -n 3
-    v4.7
-    v4.7-rc1
-    v4.7-rc2
+Drop this newline.
 
-In the experiment, the following pr_info() is added and I got same output
-from above branches:
+Shawn
 
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index b1e42bad69ac..1e0e3491de54 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -44,6 +44,8 @@ static __init int numa_parse_early_param(char *opt)
-         if (!strncmp(opt, "off", 3))
-                 numa_off =3D true;
- =20
-+       pr_info("=3D=3D=3D> numa_off=3D%s\n", numa_off ? "true" : "false"=
-);
-+
-
-
-[    0.000000] NUMA: =3D=3D=3D> numa_off=3Dfalse
-
-
-
-There is unrelated compiling warnings in linux-5.3.y:
-
-drivers/pinctrl/pinctrl-rockchip.c: In function =91rockchip_gpio_set_conf=
-ig=92:
-drivers/pinctrl/pinctrl-rockchip.c:2783:3: warning: this statement may fa=
-ll through [-Wimplicit-fallthrough=3D]
-    rockchip_gpio_set_debounce(gc, offset, true);
-    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/pinctrl/pinctrl-rockchip.c:2795:2: note: here
-   default:
-   ^~~~~~~
-
-
-> Thanks,
->=20
-> Will
->=20
-
-Thanks,
-Gavin
-
+> +			fsl,qe-num-riscs = <1>;
+> +			fsl,qe-num-snums = <28>;
+> +
+> +			qeic: qeic@80 {
+> +				compatible = "fsl,qe-ic";
+> +				reg = <0x80 0x80>;
+> +				#address-cells = <0>;
+> +				interrupt-controller;
+> +				#interrupt-cells = <1>;
+> +				interrupts = <0 77 0x04 0 77 0x04>;
+> +			};
+> +
+> +			si1: si@700 {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				compatible = "fsl,ls1043-qe-si",
+> +						"fsl,t1040-qe-si";
+> +				reg = <0x700 0x80>;
+> +			};
+> +
+> +			siram1: siram@1000 {
+> +				#address-cells = <1>;
+> +				#size-cells = <1>;
+> +				compatible = "fsl,ls1043-qe-siram",
+> +						"fsl,t1040-qe-siram";
+> +				reg = <0x1000 0x800>;
+> +			};
+> +
+> +			ucc@2000 {
+> +				cell-index = <1>;
+> +				reg = <0x2000 0x200>;
+> +				interrupts = <32>;
+> +				interrupt-parent = <&qeic>;
+> +			};
+> +
+> +			ucc@2200 {
+> +				cell-index = <3>;
+> +				reg = <0x2200 0x200>;
+> +				interrupts = <34>;
+> +				interrupt-parent = <&qeic>;
+> +			};
+> +
+> +			muram@10000 {
+> +				#address-cells = <1>;
+> +				#size-cells = <1>;
+> +				compatible = "fsl,qe-muram", "fsl,cpm-muram";
+> +				ranges = <0x0 0x10000 0x6000>;
+> +
+> +				data-only@0 {
+> +					compatible = "fsl,qe-muram-data",
+> +					"fsl,cpm-muram-data";
+> +					reg = <0x0 0x6000>;
+> +				};
+> +			};
+> +		};
+> +
+>  		lpuart0: serial@2950000 {
+>  			compatible = "fsl,ls1021a-lpuart";
+>  			reg = <0x0 0x2950000 0x0 0x1000>;
+> -- 
+> 2.9.5
+> 
