@@ -2,55 +2,63 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD60C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72137C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FCF621835
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C39A21707
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098883;
-	bh=n+/17Ma26qtlsBWNMwijsTBxk4UKAi/EZ1WVUM/oUuk=;
+	s=default; t=1588098888;
+	bh=zL0FdfL38x/EJDuy8U1yKqo4ejxmtZ5FfNqZxUFoe5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ifAcZNpDKN/cbKm/VzvwrptGUXlLtrNSn0oqsyMHR2A+MpaHWxWmvds6US7IzxOpJ
-	 ARVVnxhWGGK6yt7XCh8/ZqKMwcz8y9h+g7OevWSirYcsFkpOvzXfLmCuh/RH3TILrC
-	 tUncRWgT5oJTp5XRgo/fkL6Magc/Itab1g8LWun8=
+	b=NyIqaDqD3wtkhnXVnrGNDBl1FLWGgvFc7ZgIRQsy17TmqChFcd/LxGiuA6kZZRIby
+	 tdnNCB/NlzAi+5T2P5TnCvu/X9S0VTuCLFIGsRePLOK+hSR+RYM64aN3QtWuHj9gG5
+	 zVR1H8ZRDlTWp1FJz5TTQ2M7Zn3njpmvkk27VQnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730147AbgD1Sen (ORCPT
+        id S1730159AbgD1Seq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:34:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51292 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:34:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730140AbgD1Seb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:34:31 -0400
+        id S1730119AbgD1Sej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:34:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1E6A21707;
-        Tue, 28 Apr 2020 18:34:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CDA22085B;
+        Tue, 28 Apr 2020 18:34:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098871;
-        bh=n+/17Ma26qtlsBWNMwijsTBxk4UKAi/EZ1WVUM/oUuk=;
+        s=default; t=1588098878;
+        bh=zL0FdfL38x/EJDuy8U1yKqo4ejxmtZ5FfNqZxUFoe5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QPcGRuQcyXKAJ2BfvsiHCK42B3KHRXM5XVXSN+aQS2cTmfYnlDH0X38KW6h2Thbnw
-         a8Ww17Izhio9x/E/YqGvoqpKmF5Oszsy8Sj99BqdKDZOwkh9XNXIlHCfcobd05LlE5
-         cBHc2bHYrPvHcYMt5wzN3Hs9vD82eFNsaragQ59k=
+        b=fUHm1CQ+bbSG1xnaK4alQTN5NficJC+YcDp+aOj73HWYOBBMjp8Q1Fx4MSOAo8gu2
+         owk62FajoKSFC0K/6NhRA3mRi5mz2e0zdRzm84bbpwLmemigmLUmSeOfMoUuJ4Y7u3
+         iq7P+jYu2KuTaEwbHgrqR42lVgj0l+/cbqUoKwWo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 067/131] net: dsa: b53: Fix ARL register definitions
-Date:   Tue, 28 Apr 2020 20:24:39 +0200
-Message-Id: <20200428182233.367679256@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Waiman Long <longman@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>, NeilBrown <neilb@suse.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 026/168] ipc/util.c: sysvipc_find_ipc() should increase position index
+Date:   Tue, 28 Apr 2020 20:23:20 +0200
+Message-Id: <20200428182235.022176918@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,42 +68,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit c2e77a18a7ed65eb48f6e389b6a59a0fd753646a ]
+[ Upstream commit 89163f93c6f969da5811af5377cc10173583123b ]
 
-The ARL {MAC,VID} tuple and the forward entry were off by 0x10 bytes,
-which means that when we read/wrote from/to ARL bin index 0, we were
-actually accessing the ARLA_RWCTRL register.
+If seq_file .next function does not change position index, read after
+some lseek can generate unexpected output.
 
-Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Waiman Long <longman@redhat.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Manfred Spraul <manfred@colorfullife.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: NeilBrown <neilb@suse.com>
+Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Link: http://lkml.kernel.org/r/b7a20945-e315-8bb0-21e6-3875c14a8494@virtuozzo.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/b53/b53_regs.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ ipc/util.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/dsa/b53/b53_regs.h
-+++ b/drivers/net/dsa/b53/b53_regs.h
-@@ -304,7 +304,7 @@
-  *
-  * BCM5325 and BCM5365 share most definitions below
-  */
--#define B53_ARLTBL_MAC_VID_ENTRY(n)	(0x10 * (n))
-+#define B53_ARLTBL_MAC_VID_ENTRY(n)	((0x10 * (n)) + 0x10)
- #define   ARLTBL_MAC_MASK		0xffffffffffffULL
- #define   ARLTBL_VID_S			48
- #define   ARLTBL_VID_MASK_25		0xff
-@@ -316,7 +316,7 @@
- #define   ARLTBL_VALID_25		BIT(63)
+diff --git a/ipc/util.c b/ipc/util.c
+index d126d156efc64..594871610d454 100644
+--- a/ipc/util.c
++++ b/ipc/util.c
+@@ -764,13 +764,13 @@ static struct kern_ipc_perm *sysvipc_find_ipc(struct ipc_ids *ids, loff_t pos,
+ 			total++;
+ 	}
  
- /* ARL Table Data Entry N Registers (32 bit) */
--#define B53_ARLTBL_DATA_ENTRY(n)	((0x10 * (n)) + 0x08)
-+#define B53_ARLTBL_DATA_ENTRY(n)	((0x10 * (n)) + 0x18)
- #define   ARLTBL_DATA_PORT_ID_MASK	0x1ff
- #define   ARLTBL_TC(tc)			((3 & tc) << 11)
- #define   ARLTBL_AGE			BIT(14)
++	*new_pos = pos + 1;
+ 	if (total >= ids->in_use)
+ 		return NULL;
+ 
+ 	for (; pos < ipc_mni; pos++) {
+ 		ipc = idr_find(&ids->ipcs_idr, pos);
+ 		if (ipc != NULL) {
+-			*new_pos = pos + 1;
+ 			rcu_read_lock();
+ 			ipc_lock_object(ipc);
+ 			return ipc;
+-- 
+2.20.1
+
 
 
