@@ -2,157 +2,331 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69034C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E29BC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 485D2206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:15:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="H6SSYjBw"
+	by mail.kernel.org (Postfix) with ESMTP id 2B20B2192A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:17:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbgD1PPq (ORCPT
+        id S1728035AbgD1PRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:15:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41272 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728129AbgD1PPn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:15:43 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C1E9C03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 08:15:42 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id k12so3210045wmj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 08:15:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Yn8M6g86OIpdWY0eWe5/lYcoIX+3NTjGSgF/ptBwm/o=;
-        b=H6SSYjBwPWWXBB+0KzyoILouyMyDgGP9+FYTr8CMUDXP6C1qvRnD3rAzz7JrynNNb2
-         zfQFn2TUJd4H5r/y8X4bJ2P2CdDKq6CuWHM9nLjY7XNYAzBfTAfXyD0D+k1Z2kL80FB8
-         VCe6GNM5SqtLRv79fcmUAT4YRYKzewnb+mnKE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=Yn8M6g86OIpdWY0eWe5/lYcoIX+3NTjGSgF/ptBwm/o=;
-        b=YwqFxTi2rMEpohe7EqVUCKzo8Dhca69Mh+FzlfmGFsUOM01LrCqmyhLPkieAYOeLXe
-         p0aJTH6KN4lJzKec6cOkOuDIfDoEdx4Z9Y9Nk0hZqEGGi2T9GsJkJZLAFizNoef8LjWJ
-         UeFZZGLksYX1FYM4sTwIUdvxGw618T9dhlxNylUXL2L1NeLMvy/pm5smDlUYK99CFY7G
-         bMIt10GbtI4MxrrQSF1ak5zq/8dO2v//yfySCaBIjrhq76eZPH2OFQ5ir+JHAsnC66eW
-         HjBouoELGt1qdD4Fghm9Accas0a4C+QunHLVnm6Xnl/IvJpdTjksU+9Q5RMIqhm19C85
-         E5gw==
-X-Gm-Message-State: AGi0PubWtzchKaFjnHsjGdIqyPZejIntg5uFrGxgPMJz73u7JMcZd79O
-        B/4c5Uz3G56rb2ajtxoCdLM/wRY1CHY=
-X-Google-Smtp-Source: APiQypLan+NIXwt1O7aY8prkzguSWZNpvGFzg72miI7QE6xRrwrxztj6bOJextickiVknRj1I2zyYA==
-X-Received: by 2002:a7b:c104:: with SMTP id w4mr5112868wmi.8.1588086941313;
-        Tue, 28 Apr 2020 08:15:41 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id s12sm3531003wmc.7.2020.04.28.08.15.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 08:15:40 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 17:15:38 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Michal Orzel <michalorzel.eng@gmail.com>
-Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm: Replace drm_modeset_lock/unlock_all with
- DRM_MODESET_LOCK_ALL_* helpers
-Message-ID: <20200428151538.GV3456981@phenom.ffwll.local>
-Mail-Followup-To: Michal Orzel <michalorzel.eng@gmail.com>,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@linux.ie,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <1587895282-2808-1-git-send-email-michalorzel.eng@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587895282-2808-1-git-send-email-michalorzel.eng@gmail.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+        Tue, 28 Apr 2020 11:17:46 -0400
+Received: from 8bytes.org ([81.169.241.247]:37248 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727875AbgD1PRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:17:45 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 3C9966A7; Tue, 28 Apr 2020 17:17:42 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v3 00/75] x86: SEV-ES Guest Support
+Date:   Tue, 28 Apr 2020 17:16:10 +0200
+Message-Id: <20200428151725.31091-1-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 12:01:22PM +0200, Michal Orzel wrote:
-> As suggested by the TODO list for the kernel DRM subsystem, replace
-> the deprecated functions that take/drop modeset locks with new helpers.
-> 
-> Signed-off-by: Michal Orzel <michalorzel.eng@gmail.com>
+Hi,
 
-Hm can you pls resubmit with intel-gfx mailing list cc'ed? There's a CI
-bot there for checking stuff. Patch looks good, thanks a lot for doing
-this.
+here is the next version of changes to enable Linux to run as an SEV-ES
+guest. The code was rebased to v5.7-rc3 and got a fair number of changes
+since the last version.
 
-Thanks, Daniel
-> ---
->  drivers/gpu/drm/drm_mode_object.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_mode_object.c b/drivers/gpu/drm/drm_mode_object.c
-> index 35c2719..901b078 100644
-> --- a/drivers/gpu/drm/drm_mode_object.c
-> +++ b/drivers/gpu/drm/drm_mode_object.c
-> @@ -402,12 +402,13 @@ int drm_mode_obj_get_properties_ioctl(struct drm_device *dev, void *data,
->  {
->  	struct drm_mode_obj_get_properties *arg = data;
->  	struct drm_mode_object *obj;
-> +	struct drm_modeset_acquire_ctx ctx;
->  	int ret = 0;
->  
->  	if (!drm_core_check_feature(dev, DRIVER_MODESET))
->  		return -EOPNOTSUPP;
->  
-> -	drm_modeset_lock_all(dev);
-> +	DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, ret);
->  
->  	obj = drm_mode_object_find(dev, file_priv, arg->obj_id, arg->obj_type);
->  	if (!obj) {
-> @@ -427,7 +428,7 @@ int drm_mode_obj_get_properties_ioctl(struct drm_device *dev, void *data,
->  out_unref:
->  	drm_mode_object_put(obj);
->  out:
-> -	drm_modeset_unlock_all(dev);
-> +	DRM_MODESET_LOCK_ALL_END(ctx, ret);
->  	return ret;
->  }
->  
-> @@ -449,12 +450,13 @@ static int set_property_legacy(struct drm_mode_object *obj,
->  {
->  	struct drm_device *dev = prop->dev;
->  	struct drm_mode_object *ref;
-> +	struct drm_modeset_acquire_ctx ctx;
->  	int ret = -EINVAL;
->  
->  	if (!drm_property_change_valid_get(prop, prop_value, &ref))
->  		return -EINVAL;
->  
-> -	drm_modeset_lock_all(dev);
-> +	DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, ret);
->  	switch (obj->type) {
->  	case DRM_MODE_OBJECT_CONNECTOR:
->  		ret = drm_connector_set_obj_prop(obj, prop, prop_value);
-> @@ -468,7 +470,7 @@ static int set_property_legacy(struct drm_mode_object *obj,
->  		break;
->  	}
->  	drm_property_change_valid_put(prop, ref);
-> -	drm_modeset_unlock_all(dev);
-> +	DRM_MODESET_LOCK_ALL_END(ctx, ret);
->  
->  	return ret;
->  }
-> -- 
-> 2.7.4
-> 
+What is SEV-ES
+==============
+
+SEV-ES is an acronym for 'Secure Encrypted Virtualization - Encrypted
+State' and means a hardware feature of AMD processors which hides the
+register state of VCPUs to the hypervisor by encrypting it. The
+hypervisor can't read or make changes to the guests register state.
+
+Most intercepts set by the hypervisor do not cause a #VMEXIT of the
+guest anymore, but turn into a VMM Communication Exception (#VC
+exception, vector 29) inside the guest. The error-code of this exception
+is the intercept exit-code that caused the exception.  The guest handles
+the #VC exception by communicating with the hypervisor through a shared
+data structure, the 'Guest-Hypervisor-Communication-Block'.
+
+With SEV-ES an untrusted hypervisor can no longer steal secrets from a
+guest via inspecting guest memory or guest register contents. A
+malicious hypervisor can still interfere with guest operations, but the
+SEV-ES client code does its best to detect such situations and crash the
+VM if it happens. 
+
+More information about the implementation details can be found in the
+cover letter of the initial post of these patches:
+
+	https://lore.kernel.org/lkml/20200211135256.24617-1-joro@8bytes.org/
+
+Current State of the Patches
+============================
+
+The patches posted here are considered feature complete and survived a
+good amount of functional testing:
+
+	1) Booting an SEV-ES guest VM to the graphical desktop.
+
+	2) Running a 16-vcpu SEV-ES VM with 'perf top' and the x86
+	   selftests shipped with the kernel source in a loop in
+	   parallel for 18 hours showed no issues.
+
+	3) Various compile testing has been done, including
+	   allno/allmod/allyes/defconfig for x86-64 and i386.
+
+	4) Compiled every single commit (single .config only) to check
+	   if they build and do not introduce new warnings.
+
+	5) Boot-tested the changes on various machines, including
+	   bare-metal on an AMD (with and without mem_encrypt=on) and
+	   Intel machine.
+
+A git-tree with these patches applied can be found here:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/joro/linux.git/log/?h=sev-es-client-v5.7-rc3
+
+Changes to the previous version
+===============================
+
+Here is an incomplete list of changes to the previous version of this
+patch-set. There have been so many small changes that I havn't kept
+track of all, but the most important ones are listed:
+
+
+	- Rebased to v5.7-rc3
+
+	- Changes the #VC exception handler to use an IST stack. This
+	  includes a couple of additional patches to set up and map the
+	  IST stack, to make dumpstack aware of them and to fix a race
+	  with the NMI handler when shifting the #VC handlers IST entry.
+
+	- The NMI_Complete message to the hypervisor the re-open the NMI
+	  window is now sent at the very beginning of do_nmi().
+
+	- The GHCB used in the pre-decompression code is now re-mapped
+	  encrypted and flushed from the cache before jumping to the
+	  decompressed kernel image. This is needed to make sure the
+	  running kernel can safely re-use the page. Actually the page
+	  is also unmapped after being re-encrypted to catch any
+	  use-after-remap.
+
+	- Added CPUID caching.
+
+	- Mapped the GHCBs to the EFI page-tables as the UEFI BIOS
+	  expects to be able to re-use the OS GHCBs.
+
+	- RDTSC and RDTSCP are now also handled in the pre-decompression
+	  boot code. These instructions are used by KASLR and some
+	  hypervisors might intercept them.
+
+	- Re-implemented nested GHCB handling by keeping a backup GHCB
+	  around. This supports one level of GHCB nesting, which is
+	  sufficient for now.
+
+	- Moved all SEV-ES related per-cpu data into
+	  'struct sev_es_runtime_data'. This struct is allocated and
+	  initialized at boot per cpu.
+
+	- Correctly set the protocol and ghcb_usage information when
+	  talking to the hypervisor.
+
+The previous version of the patch-set can be found here:
+
+	https://lore.kernel.org/lkml/20200319091407.1481-1-joro@8bytes.org/
+
+Please review.
+
+
+Thanks,
+
+	Joerg
+
+Borislav Petkov (1):
+  KVM: SVM: Use __packed shorthand
+
+Doug Covelli (1):
+  x86/vmware: Add VMware specific handling for VMMCALL under SEV-ES
+
+Joerg Roedel (53):
+  KVM: SVM: Add GHCB Accessor functions
+  x86/traps: Move some definitions to <asm/trap_defs.h>
+  x86/insn: Make inat-tables.c suitable for pre-decompression code
+  x86/umip: Factor out instruction fetch
+  x86/umip: Factor out instruction decoding
+  x86/insn: Add insn_get_modrm_reg_off()
+  x86/insn: Add insn_rep_prefix() helper
+  x86/boot/compressed/64: Disable red-zone usage
+  x86/boot/compressed/64: Switch to __KERNEL_CS after GDT is loaded
+  x86/boot/compressed/64: Add IDT Infrastructure
+  x86/boot/compressed/64: Rename kaslr_64.c to ident_map_64.c
+  x86/boot/compressed/64: Add page-fault handler
+  x86/boot/compressed/64: Always switch to own page-table
+  x86/boot/compressed/64: Don't pre-map memory in KASLR code
+  x86/boot/compressed/64: Change add_identity_map() to take start and
+    end
+  x86/boot/compressed/64: Add stage1 #VC handler
+  x86/boot/compressed/64: Call set_sev_encryption_mask earlier
+  x86/boot/compressed/64: Check return value of
+    kernel_ident_mapping_init()
+  x86/boot/compressed/64: Add set_page_en/decrypted() helpers
+  x86/boot/compressed/64: Setup GHCB Based VC Exception handler
+  x86/boot/compressed/64: Unmap GHCB page before booting the kernel
+  x86/fpu: Move xgetbv()/xsetbv() into separate header
+  x86/idt: Move IDT to data segment
+  x86/idt: Split idt_data setup out of set_intr_gate()
+  x86/idt: Move two function from k/idt.c to i/a/desc.h
+  x86/head/64: Install boot GDT
+  x86/head/64: Reload GDT after switch to virtual addresses
+  x86/head/64: Load segment registers earlier
+  x86/head/64: Switch to initial stack earlier
+  x86/head/64: Build k/head64.c with -fno-stack-protector
+  x86/head/64: Load IDT earlier
+  x86/head/64: Move early exception dispatch to C code
+  x86/sev-es: Add SEV-ES Feature Detection
+  x86/sev-es: Print SEV-ES info into kernel log
+  x86/sev-es: Compile early handler code into kernel image
+  x86/sev-es: Setup early #VC handler
+  x86/sev-es: Setup GHCB based boot #VC handler
+  x86/sev-es: Allocate and Map IST stacks for #VC handler
+  x86/dumpstack/64: Handle #VC exception stacks
+  x86/sev-es: Shift #VC IST Stack in nmi_enter()/nmi_exit()
+  x86/sev-es: Wire up existing #VC exit-code handlers
+  x86/sev-es: Handle instruction fetches from user-space
+  x86/sev-es: Do not crash on #VC exceptions from user-space
+  x86/sev-es: Handle MMIO String Instructions
+  x86/sev-es: Handle #AC Events
+  x86/sev-es: Handle #DB Events
+  x86/paravirt: Allow hypervisor specific VMMCALL handling under SEV-ES
+  x86/realmode: Add SEV-ES specific trampoline entry point
+  x86/head/64: Setup TSS early for secondary CPUs
+  x86/head/64: Don't call verify_cpu() on starting APs
+  x86/head/64: Rename start_cpu0
+  x86/sev-es: Support CPU offline/online
+  x86/sev-es: Handle NMI State
+
+Mike Stunes (1):
+  x86/sev-es: Cache CPUID results for improved performance
+
+Tom Lendacky (19):
+  KVM: SVM: Add GHCB definitions
+  x86/cpufeatures: Add SEV-ES CPU feature
+  x86/sev-es: Add support for handling IOIO exceptions
+  x86/sev-es: Add CPUID handling to #VC handler
+  x86/sev-es: Setup per-cpu GHCBs for the runtime handler
+  x86/sev-es: Add Runtime #VC Exception Handler
+  x86/sev-es: Handle MMIO events
+  x86/sev-es: Handle MSR events
+  x86/sev-es: Handle DR7 read/write events
+  x86/sev-es: Handle WBINVD Events
+  x86/sev-es: Handle RDTSC(P) Events
+  x86/sev-es: Handle RDPMC Events
+  x86/sev-es: Handle INVD Events
+  x86/sev-es: Handle MONITOR/MONITORX Events
+  x86/sev-es: Handle MWAIT/MWAITX Events
+  x86/sev-es: Handle VMMCALL Events
+  x86/kvm: Add KVM specific VMMCALL handling under SEV-ES
+  x86/realmode: Setup AP jump table
+  x86/efi: Add GHCB mappings when SEV-ES is active
+
+ arch/x86/Kconfig                           |    1 +
+ arch/x86/boot/Makefile                     |    2 +-
+ arch/x86/boot/compressed/Makefile          |    9 +-
+ arch/x86/boot/compressed/head_64.S         |   40 +-
+ arch/x86/boot/compressed/ident_map_64.c    |  339 +++++
+ arch/x86/boot/compressed/idt_64.c          |   53 +
+ arch/x86/boot/compressed/idt_handlers_64.S |   76 ++
+ arch/x86/boot/compressed/kaslr.c           |   36 +-
+ arch/x86/boot/compressed/kaslr_64.c        |  153 ---
+ arch/x86/boot/compressed/misc.c            |    7 +
+ arch/x86/boot/compressed/misc.h            |   45 +-
+ arch/x86/boot/compressed/sev-es.c          |  210 +++
+ arch/x86/entry/entry_64.S                  |    4 +
+ arch/x86/include/asm/cpu.h                 |    2 +-
+ arch/x86/include/asm/cpu_entry_area.h      |   62 +
+ arch/x86/include/asm/cpufeatures.h         |    1 +
+ arch/x86/include/asm/desc.h                |   30 +
+ arch/x86/include/asm/desc_defs.h           |   10 +
+ arch/x86/include/asm/fpu/internal.h        |   29 +-
+ arch/x86/include/asm/fpu/xcr.h             |   32 +
+ arch/x86/include/asm/hardirq.h             |   14 +
+ arch/x86/include/asm/insn-eval.h           |    6 +
+ arch/x86/include/asm/mem_encrypt.h         |    5 +
+ arch/x86/include/asm/msr-index.h           |    3 +
+ arch/x86/include/asm/page_64_types.h       |    1 +
+ arch/x86/include/asm/pgtable.h             |    2 +-
+ arch/x86/include/asm/processor.h           |    1 +
+ arch/x86/include/asm/realmode.h            |    4 +
+ arch/x86/include/asm/segment.h             |    2 +-
+ arch/x86/include/asm/setup.h               |    1 -
+ arch/x86/include/asm/sev-es.h              |  107 ++
+ arch/x86/include/asm/stacktrace.h          |    4 +
+ arch/x86/include/asm/svm.h                 |  115 +-
+ arch/x86/include/asm/trap_defs.h           |   50 +
+ arch/x86/include/asm/traps.h               |   51 +-
+ arch/x86/include/asm/x86_init.h            |   16 +-
+ arch/x86/include/uapi/asm/svm.h            |   11 +
+ arch/x86/kernel/Makefile                   |    5 +
+ arch/x86/kernel/asm-offsets_64.c           |    1 +
+ arch/x86/kernel/cpu/amd.c                  |    3 +-
+ arch/x86/kernel/cpu/common.c               |    1 +
+ arch/x86/kernel/cpu/scattered.c            |    1 +
+ arch/x86/kernel/cpu/vmware.c               |   50 +-
+ arch/x86/kernel/dumpstack_64.c             |   47 +
+ arch/x86/kernel/head64.c                   |   70 +-
+ arch/x86/kernel/head_32.S                  |    4 +-
+ arch/x86/kernel/head_64.S                  |  176 ++-
+ arch/x86/kernel/idt.c                      |   52 +-
+ arch/x86/kernel/kvm.c                      |   35 +-
+ arch/x86/kernel/nmi.c                      |    8 +
+ arch/x86/kernel/sev-es-shared.c            |  479 +++++++
+ arch/x86/kernel/sev-es.c                   | 1428 ++++++++++++++++++++
+ arch/x86/kernel/smpboot.c                  |    4 +-
+ arch/x86/kernel/traps.c                    |    3 +
+ arch/x86/kernel/umip.c                     |   49 +-
+ arch/x86/lib/insn-eval.c                   |  130 ++
+ arch/x86/mm/extable.c                      |    1 +
+ arch/x86/mm/mem_encrypt.c                  |   39 +-
+ arch/x86/mm/mem_encrypt_identity.c         |    3 +
+ arch/x86/platform/efi/efi_64.c             |   10 +
+ arch/x86/realmode/init.c                   |   12 +
+ arch/x86/realmode/rm/header.S              |    3 +
+ arch/x86/realmode/rm/trampoline_64.S       |   20 +
+ arch/x86/tools/gen-insn-attr-x86.awk       |   50 +-
+ tools/arch/x86/tools/gen-insn-attr-x86.awk |   50 +-
+ 65 files changed, 3842 insertions(+), 426 deletions(-)
+ create mode 100644 arch/x86/boot/compressed/ident_map_64.c
+ create mode 100644 arch/x86/boot/compressed/idt_64.c
+ create mode 100644 arch/x86/boot/compressed/idt_handlers_64.S
+ delete mode 100644 arch/x86/boot/compressed/kaslr_64.c
+ create mode 100644 arch/x86/boot/compressed/sev-es.c
+ create mode 100644 arch/x86/include/asm/fpu/xcr.h
+ create mode 100644 arch/x86/include/asm/sev-es.h
+ create mode 100644 arch/x86/include/asm/trap_defs.h
+ create mode 100644 arch/x86/kernel/sev-es-shared.c
+ create mode 100644 arch/x86/kernel/sev-es.c
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.17.1
+
