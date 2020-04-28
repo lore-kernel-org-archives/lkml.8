@@ -2,101 +2,97 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1879C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2E6C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB14C20730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1F8120731
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:41:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XFPYW2Fl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbgD1VlL (ORCPT
+        id S1726929AbgD1VlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:41:11 -0400
-Received: from mga04.intel.com ([192.55.52.120]:55498 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726774AbgD1VlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:41:10 -0400
-IronPort-SDR: J1ZCH6W2Tf+7k2B3KPvKi5aNK8QMIbJ6F9/Slm7ZMUHx3YbS8KidhE/k9jSjQK3jkqnd6vB+A6
- CQ3tyd5PcPIQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 14:41:09 -0700
-IronPort-SDR: BmShGtgPqO6g9l9TLnBaVqT0N7A8E9oYbKUmaq7A4M6HrJ//OEDzv4VauweuunA2PtV+nzwqSv
- a6P896ZIrZdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
-   d="scan'208";a="247825303"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga007.fm.intel.com with ESMTP; 28 Apr 2020 14:41:09 -0700
-Date:   Tue, 28 Apr 2020 14:41:09 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org
-Subject: Re: [PATCH 1/7] mm: Document x86 uses a linked list of pgds
-Message-ID: <20200428214109.GB406458@iweiny-DESK2.sc.intel.com>
-References: <20200428194449.22615-1-willy@infradead.org>
- <20200428194449.22615-2-willy@infradead.org>
+        Tue, 28 Apr 2020 17:41:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45372 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726256AbgD1VlX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 17:41:23 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63CCDC03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 14:41:23 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id t12so406299ile.9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 14:41:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8ACzZs1Ub+JzPwjWlCZYoqLzSKkXLRHQ5teSCbVf10s=;
+        b=XFPYW2FlDIVWJgOGjHnYsmAIs6v5bOTZkYeIYocvCjVgP550WJIVaORVFld3lr7Z0e
+         slAXY2KTK7LNaYj/wGJ19zMz69GV0kwea/5nhapSWD7JKTxrYUfkJgueJFQscnx59imW
+         gOO8hzWxVPfZrbk4vd8qKlVzvjtUHdYVp9Vx1kwawTZQnX1mmhrhdkqvv00rdIT6yxGw
+         y2yOFWuB1tKgA6AWKi0scouvr26eF0+Gwx5QCW3MHAq5c3Zuzt0ksjCZH+2EfxWsQZ2x
+         ymct5MBpwtQaNMaP6bptME0TjRCAvAqIaAPMPKzPyFgD35bGRiMozRc2uRmCfgzcPCVf
+         EQHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8ACzZs1Ub+JzPwjWlCZYoqLzSKkXLRHQ5teSCbVf10s=;
+        b=PjqNF5oeB+wK55YCuPZu16/j1BpZQQM92KRfPLhwHEKHeojGaXGq/0IUU8ke8jUAYJ
+         TMT0XgYGfYCSMlwMRwdyVeMwn0dTumGCUIw20T/0OiVX0nj0TmiIyw4NHQo+cY58nbcC
+         yxLi0drsbDschqtif2fWBruYqTftv+jTvwVGLopEVAwZRbtt8rsH7YBddRjR8+TQfbQq
+         PmZCGBpi42MJNN/ZtViSzb8aM/qajems7Ce6U3o6p8b4SWHeMsLt1/49P01MRHyXOhDf
+         Vnygf99Tqvl26nYLke3KFZ7KomZC7oszyo3dOSiM8DK6pXTNygkugxrVIKxaUqUcpbRo
+         uhtg==
+X-Gm-Message-State: AGi0Pua2MVsalfxEHmhB3VrpCn5HsTjr7wLK5z/kF8gTvk0ZU69unC1E
+        I3QpWG8jhtFelyFzeDJNXaOSgNx8XR3q5i9iIpayLg==
+X-Google-Smtp-Source: APiQypLBJxGTQ600pk4rW9iLud+TLfvYfvqO2ZQMUlxQ62lebdRmOwhwL5+cYPtQgLRGFxGy/hObNKTAiobNelwKai0=
+X-Received: by 2002:a92:d8ca:: with SMTP id l10mr28452120ilo.118.1588110082556;
+ Tue, 28 Apr 2020 14:41:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428194449.22615-2-willy@infradead.org>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <20200423022550.15113-1-sean.j.christopherson@intel.com> <20200423022550.15113-4-sean.j.christopherson@intel.com>
+In-Reply-To: <20200423022550.15113-4-sean.j.christopherson@intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Tue, 28 Apr 2020 14:41:11 -0700
+Message-ID: <CALMp9eR9bVK4p2ca-N+=PThmMF2UhzE8DvBDUke69ygDE34Uaw@mail.gmail.com>
+Subject: Re: [PATCH 03/13] KVM: x86: Set KVM_REQ_EVENT if run is canceled with
+ req_immediate_exit set
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Oliver Upton <oupton@google.com>,
+        Peter Shier <pshier@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 12:44:43PM -0700, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> x86 uses page->lru of the pages used for pgds, but that's not immediately
-> obvious to anyone looking to make changes.  Add a struct list_head to
-> the union so it's clearly in use for pgds.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  include/linux/mm_types.h | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 4aba6c0c2ba8..9bb34e2cd5a5 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -142,8 +142,13 @@ struct page {
->  			struct list_head deferred_list;
->  		};
->  		struct {	/* Page table pages */
-> -			unsigned long _pt_pad_1;	/* compound_head */
-> -			pgtable_t pmd_huge_pte; /* protected by page->ptl */
-> +			union {
-> +				struct list_head pgd_list;	/* x86 */
-
-Shouldn't pgd_list_{add,del}() use this list head variable instead of lru to
-complete the documentation?
-
-Probably the list iteration loops arch/x86/* as well?
-
-Ira
-
-> +				struct {
-> +					unsigned long _pt_pad_1;
-> +					pgtable_t pmd_huge_pte;
-> +				};
-> +			};
->  			unsigned long _pt_pad_2;	/* mapping */
->  			union {
->  				struct mm_struct *pt_mm; /* x86 pgds only */
-> -- 
-> 2.26.2
-> 
-> 
+On Wed, Apr 22, 2020 at 7:26 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> Re-request KVM_REQ_EVENT if vcpu_enter_guest() bails after processing
+> pending requests and an immediate exit was requested.  This fixes a bug
+> where a pending event, e.g. VMX preemption timer, is delayed and/or lost
+> if the exit was deferred due to something other than a higher priority
+> _injected_ event, e.g. due to a pending nested VM-Enter.  This bug only
+> affects the !injected case as kvm_x86_ops.cancel_injection() sets
+> KVM_REQ_EVENT to redo the injection, but that's purely serendipitous
+> behavior with respect to the deferred event.
+>
+> Note, emulated preemption timer isn't the only event that can be
+> affected, it simply happens to be the only event where not re-requesting
+> KVM_REQ_EVENT is blatantly visible to the guest.
+>
+> Fixes: f4124500c2c13 ("KVM: nVMX: Fully emulate preemption timer")
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
