@@ -2,57 +2,56 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3F9C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AC0C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 989DC20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CFD320575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100112;
-	bh=Au1q+YxF5wXpGR9tG9DyL2Nn00oGiow5jjlqbZMVauA=;
+	s=default; t=1588100115;
+	bh=9sDGtt4AzKAVwBWf89jS6ybRmtp4c5IDIplgFw7is60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sBo9vMPqEek8ROk3BhUbqHGc7GkJ+eacX7r7TBhHYSrMM7XOTntLRr9CnkOWF5Tli
-	 L72aNcyA1MphFiKYtZsRUe05CpGJvRGsMRpeWs0Mxu7AF3Hq1KlV7+FONi5WITFbWj
-	 yDafYOhg4aMKyE0YyLCOq4IgbzyPJm2zB6FNWlvE=
+	b=QeRsiq0x5zM9GTQ61sZ4e9mynFs4Ohil0C+oyrv8a6kU+DmOt2KTUyuzKYy7qrQJV
+	 Jo2rBlMffI06A4HFDWHaxzv2NnY1DTzqqVxz900v7L4L68wjEOwNy01OKyTTm6ikHo
+	 ClLxpzvKLa1pxjQr4/iRZbHGXkfsHb+fmeWGYXe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729878AbgD1SdA (ORCPT
+        id S1730240AbgD1SzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:33:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49166 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:55:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729861AbgD1Scx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:32:53 -0400
+        id S1729872AbgD1Sc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:32:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD5992076A;
-        Tue, 28 Apr 2020 18:32:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A96072186A;
+        Tue, 28 Apr 2020 18:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098773;
-        bh=Au1q+YxF5wXpGR9tG9DyL2Nn00oGiow5jjlqbZMVauA=;
+        s=default; t=1588098778;
+        bh=9sDGtt4AzKAVwBWf89jS6ybRmtp4c5IDIplgFw7is60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZSGCaMJXb2E5e3/XxKG6oCIGft6ZhIzkiS12w8zvCdI27h3/zSqPNKctrfuAx0TFg
-         zwgOP9ydyigVZF+An+LXCs9jr6x/kOU6tXpLO6oLPvRqdkn6knihKGSBTnfxbTrxON
-         ab93zFO2p52CVXbhmlLVLKY+fmgDfOe65H4Tn07A=
+        b=Sy3ZfqPBA5N0uPrEkduPJx3PmKawUUma27SnRdydWFFdIwM0zDXXDTz7kSE6c3xrL
+         gnv7DFV9HwHZStZkuSf0XU9Z1BxNNGn3FFgADmMaKKa2VZqHg2u3NbWZ1jwi0vDFWk
+         C6QuFuqJrT1WaNfGysHegje/pMWNLs2wHcAbCLNM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 5.6 110/167] tpm: fix wrong return value in tpm_pcr_extend
-Date:   Tue, 28 Apr 2020 20:24:46 +0200
-Message-Id: <20200428182239.092034139@linuxfoundation.org>
+        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 014/168] ceph: return ceph_mdsc_do_request() errors from __get_parent()
+Date:   Tue, 28 Apr 2020 20:23:08 +0200
+Message-Id: <20200428182233.502140057@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,37 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-commit 29cb79795e324a8b65e7891d76f8f6ca911ba440 upstream.
+[ Upstream commit c6d50296032f0b97473eb2e274dc7cc5d0173847 ]
 
-For the algorithm that does not match the bank, a positive
-value EINVAL is returned here. I think this is a typo error.
-It is necessary to return an error value.
+Return the error returned by ceph_mdsc_do_request(). Otherwise,
+r_target_inode ends up being NULL this ends up returning ENOENT
+regardless of the error.
 
-Cc: stable@vger.kernel.org # 5.4.x
-Fixes: 9f75c8224631 ("KEYS: trusted: correctly initialize digests and fix locking issue")
-Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Reviewed-by: Roberto Sassu <roberto.sassu@huawei.com>
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/tpm/tpm-interface.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ceph/export.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/char/tpm/tpm-interface.c
-+++ b/drivers/char/tpm/tpm-interface.c
-@@ -323,7 +323,7 @@ int tpm_pcr_extend(struct tpm_chip *chip
+diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+index b6bfa94332c30..79dc06881e78e 100644
+--- a/fs/ceph/export.c
++++ b/fs/ceph/export.c
+@@ -315,6 +315,11 @@ static struct dentry *__get_parent(struct super_block *sb,
  
- 	for (i = 0; i < chip->nr_allocated_banks; i++) {
- 		if (digests[i].alg_id != chip->allocated_banks[i].alg_id) {
--			rc = EINVAL;
-+			rc = -EINVAL;
- 			goto out;
- 		}
- 	}
+ 	req->r_num_caps = 1;
+ 	err = ceph_mdsc_do_request(mdsc, NULL, req);
++	if (err) {
++		ceph_mdsc_put_request(req);
++		return ERR_PTR(err);
++	}
++
+ 	inode = req->r_target_inode;
+ 	if (inode)
+ 		ihold(inode);
+-- 
+2.20.1
+
 
 
