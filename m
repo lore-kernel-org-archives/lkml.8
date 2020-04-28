@@ -2,55 +2,56 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2168BC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC77C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFA65206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29E11206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100252;
-	bh=LJPNTG9+CksbqGWw/Lw0H/aPHnvQKgLfs3lHpxgohkI=;
+	s=default; t=1588100257;
+	bh=HVlooMNtiKSy3RQDjckeLqwmZgxF92lbXT5tCZ8rwnc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jl8Avt1VOsilk16cb/WF9ACLsrHXjttTkEzMupIcd6/RKyJKKHsN62FRGwhV5lFNF
-	 YILihc5ZkKfzGakZrN7BLTJV8XhfmEHba44ISs/9rUEurtZtARlI9rYz8UVxpcigbO
-	 QIi5Ojyx0bqLhXenqQ+ulNv2tyvkjjsbdrVLl6M0=
+	b=BYd2o6vEH9FjrIXZvHLLkO5jGly88lD1dqPPcZr3Idvh7OKivY4IvX9WPlRlc53cS
+	 O8i+ToqWsqGyWlcQLW6ERThTqM2NMO7fAf7xCbMMRtsLoQ8DEZdOWPie1ZzlCsXUdi
+	 TWrChsJgrZl/EBYrjcTnjSmKVz2JzQszBhdVl7w0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbgD1S5b (ORCPT
+        id S1729483AbgD1SaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:57:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45042 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:30:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729491AbgD1SaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:30:22 -0400
+        id S1728945AbgD1SaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:30:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DE9F2076A;
-        Tue, 28 Apr 2020 18:30:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC566214D8;
+        Tue, 28 Apr 2020 18:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098621;
-        bh=LJPNTG9+CksbqGWw/Lw0H/aPHnvQKgLfs3lHpxgohkI=;
+        s=default; t=1588098612;
+        bh=HVlooMNtiKSy3RQDjckeLqwmZgxF92lbXT5tCZ8rwnc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ofhWtR5qzdFtMnB0haR+s6JV0dzbfnNPPERlBXm3vMl82OXucIfZczWw24YbBps2k
-         nUF/C866P+0z8HrUlqHoA2m6wuKRRUcZ27sYrZh+axr7Zi64LN6pwgksOHNBFdUASr
-         WTjU0uBS4Hp9BGg6X9KS/ECeDRtiJHvzOCiWRu7w=
+        b=tNPFfisyyngj3GPdSpAdkBm7OeSRAn6t7B0AxNnVo1e8+bb0yIEa6iGloNe8hzPOw
+         +XdqPu4SgUohbH+RK5FP0c9kzWjoOPGS5U0Am3mXV8J2pUoaQQ3e86JB/Ixsg5v6E3
+         zIOuRVc1H0Xm793BJlauXsitpl4ssBUY8sYm+bKs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 029/131] perf/core: Disable page faults when getting phys address
-Date:   Tue, 28 Apr 2020 20:24:01 +0200
-Message-Id: <20200428182228.805413119@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.6 085/167] iio: adc: ti-ads8344: properly byte swap value
+Date:   Tue, 28 Apr 2020 20:24:21 +0200
+Message-Id: <20200428182235.744145699@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,71 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit d3296fb372bf7497b0e5d0478c4e7a677ec6f6e9 ]
+commit dd7de4c0023e7564cabe39d64b2822a522890792 upstream.
 
-We hit following warning when running tests on kernel
-compiled with CONFIG_DEBUG_ATOMIC_SLEEP=y:
+The first received byte is the MSB, followed by the LSB so the value needs
+to be byte swapped.
 
- WARNING: CPU: 19 PID: 4472 at mm/gup.c:2381 __get_user_pages_fast+0x1a4/0x200
- CPU: 19 PID: 4472 Comm: dummy Not tainted 5.6.0-rc6+ #3
- RIP: 0010:__get_user_pages_fast+0x1a4/0x200
- ...
- Call Trace:
-  perf_prepare_sample+0xff1/0x1d90
-  perf_event_output_forward+0xe8/0x210
-  __perf_event_overflow+0x11a/0x310
-  __intel_pmu_pebs_event+0x657/0x850
-  intel_pmu_drain_pebs_nhm+0x7de/0x11d0
-  handle_pmi_common+0x1b2/0x650
-  intel_pmu_handle_irq+0x17b/0x370
-  perf_event_nmi_handler+0x40/0x60
-  nmi_handle+0x192/0x590
-  default_do_nmi+0x6d/0x150
-  do_nmi+0x2f9/0x3c0
-  nmi+0x8e/0xd7
+Also, the ADC actually has a delay of one clock on the SPI bus. Read three
+bytes to get the last bit.
 
-While __get_user_pages_fast() is IRQ-safe, it calls access_ok(),
-which warns on:
+Fixes: 8dd2d7c0fed7 ("iio: adc: Add driver for the TI ADS8344 A/DC chips")
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  WARN_ON_ONCE(!in_task() && !pagefault_disabled())
-
-Peter suggested disabling page faults around __get_user_pages_fast(),
-which gets rid of the warning in access_ok() call.
-
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20200407141427.3184722-1-jolsa@kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/iio/adc/ti-ads8344.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 8c70ee23fbe91..00fb2fe92c4d6 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -6411,9 +6411,12 @@ static u64 perf_virt_to_phys(u64 virt)
- 		 * Try IRQ-safe __get_user_pages_fast first.
- 		 * If failed, leave phys_addr as 0.
- 		 */
--		if ((current->mm != NULL) &&
--		    (__get_user_pages_fast(virt, 1, 0, &p) == 1))
--			phys_addr = page_to_phys(p) + virt % PAGE_SIZE;
-+		if (current->mm != NULL) {
-+			pagefault_disable();
-+			if (__get_user_pages_fast(virt, 1, 0, &p) == 1)
-+				phys_addr = page_to_phys(p) + virt % PAGE_SIZE;
-+			pagefault_enable();
-+		}
+--- a/drivers/iio/adc/ti-ads8344.c
++++ b/drivers/iio/adc/ti-ads8344.c
+@@ -29,7 +29,7 @@ struct ads8344 {
+ 	struct mutex lock;
  
- 		if (p)
- 			put_page(p);
--- 
-2.20.1
-
+ 	u8 tx_buf ____cacheline_aligned;
+-	u16 rx_buf;
++	u8 rx_buf[3];
+ };
+ 
+ #define ADS8344_VOLTAGE_CHANNEL(chan, si)				\
+@@ -89,11 +89,11 @@ static int ads8344_adc_conversion(struct
+ 
+ 	udelay(9);
+ 
+-	ret = spi_read(spi, &adc->rx_buf, 2);
++	ret = spi_read(spi, adc->rx_buf, sizeof(adc->rx_buf));
+ 	if (ret)
+ 		return ret;
+ 
+-	return adc->rx_buf;
++	return adc->rx_buf[0] << 9 | adc->rx_buf[1] << 1 | adc->rx_buf[2] >> 7;
+ }
+ 
+ static int ads8344_read_raw(struct iio_dev *iio,
 
 
