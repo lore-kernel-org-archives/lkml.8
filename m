@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F25C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA33C83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 183962223E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C825321D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbgD1PSW (ORCPT
+        id S1728507AbgD1PS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:18:22 -0400
-Received: from 8bytes.org ([81.169.241.247]:37428 "EHLO theia.8bytes.org"
+        Tue, 28 Apr 2020 11:18:28 -0400
+Received: from 8bytes.org ([81.169.241.247]:37910 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728277AbgD1PSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:18:06 -0400
+        id S1728348AbgD1PSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:18:12 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id DDC92F1C; Tue, 28 Apr 2020 17:17:48 +0200 (CEST)
+        id 4762EF2F; Tue, 28 Apr 2020 17:17:51 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -40,9 +40,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 36/75] x86/head/64: Load IDT earlier
-Date:   Tue, 28 Apr 2020 17:16:46 +0200
-Message-Id: <20200428151725.31091-37-joro@8bytes.org>
+Subject: [PATCH v3 48/75] x86/sev-es: Wire up existing #VC exit-code handlers
+Date:   Tue, 28 Apr 2020 17:16:58 +0200
+Message-Id: <20200428151725.31091-49-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200428151725.31091-1-joro@8bytes.org>
 References: <20200428151725.31091-1-joro@8bytes.org>
@@ -53,73 +53,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Load the IDT right after switching to virtual addresses in head_64.S
-so that the kernel can handle #VC exceptions.
+Re-use the handlers for CPUID and IOIO caused #VC exceptions in the
+early boot handler.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/head64.c  | 15 +++++++++++++++
- arch/x86/kernel/head_64.S | 17 +++++++++++++++++
- 2 files changed, 32 insertions(+)
+ arch/x86/kernel/sev-es-shared.c | 7 +++----
+ arch/x86/kernel/sev-es.c        | 6 ++++++
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 206a4b6144c2..0ecdf28291fc 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -489,3 +489,18 @@ void __init x86_64_start_reservations(char *real_mode_data)
- 
- 	start_kernel();
+diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
+index 3d2299fb5e3f..3d645662ff10 100644
+--- a/arch/x86/kernel/sev-es-shared.c
++++ b/arch/x86/kernel/sev-es-shared.c
+@@ -324,8 +324,7 @@ static enum es_result vc_ioio_exitinfo(struct es_em_ctxt *ctxt, u64 *exitinfo)
+ 	return ES_OK;
  }
-+
-+void __head early_idt_setup_early_handler(unsigned long physaddr)
-+{
-+	gate_desc *idt = fixup_pointer(idt_table, physaddr);
-+	int i;
-+
-+	for (i = 0; i < NUM_EXCEPTION_VECTORS; i++) {
-+		struct idt_data data;
-+		gate_desc desc;
-+
-+		init_idt_data(&data, i, early_idt_handler_array[i]);
-+		idt_init_desc(&desc, &data);
-+		native_write_idt_entry(idt, i, &desc);
-+	}
-+}
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 301a76f317f3..c63e6bd432da 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -104,6 +104,20 @@ SYM_CODE_START_NOALIGN(startup_64)
- 	leaq	_text(%rip), %rdi
- 	pushq	%rsi
- 	call	__startup_64
-+	/* Save return value */
-+	pushq	%rax
-+
-+	/*
-+	 * Load IDT with early handlers - needed for SEV-ES
-+	 * Do this here because this must only happen on the boot CPU
-+	 * and the code below is shared with secondary CPU bringup.
-+	 */
-+	leaq	_text(%rip), %rdi
-+	call	early_idt_setup_early_handler
-+
-+	/* Restore __startup_64 return value*/
-+	popq	%rax
-+	/* Restore pointer to real_mode_data */
- 	popq	%rsi
  
- 	/* Form the CR3 value being sure to include the CR3 modifier */
-@@ -200,6 +214,9 @@ SYM_CODE_START(secondary_startup_64)
- 	 */
- 	movq initial_stack(%rip), %rsp
+-static enum es_result __maybe_unused
+-vc_handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
++static enum es_result vc_handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
+ {
+ 	struct pt_regs *regs = ctxt->regs;
+ 	u64 exit_info_1, exit_info_2;
+@@ -421,8 +420,8 @@ vc_handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
+ 	return ret;
+ }
  
-+	/* Load IDT */
-+	lidt	idt_descr(%rip)
-+
- 	/* Check if nx is implemented */
- 	movl	$0x80000001, %eax
- 	cpuid
+-static enum es_result __maybe_unused vc_handle_cpuid(struct ghcb *ghcb,
+-						     struct es_em_ctxt *ctxt)
++static enum es_result vc_handle_cpuid(struct ghcb *ghcb,
++				      struct es_em_ctxt *ctxt)
+ {
+ 	struct pt_regs *regs = ctxt->regs;
+ 	u32 cr4 = native_read_cr4();
+diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+index bc3a58427028..85027fb4177e 100644
+--- a/arch/x86/kernel/sev-es.c
++++ b/arch/x86/kernel/sev-es.c
+@@ -424,6 +424,12 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 	enum es_result result;
+ 
+ 	switch (exit_code) {
++	case SVM_EXIT_CPUID:
++		result = vc_handle_cpuid(ghcb, ctxt);
++		break;
++	case SVM_EXIT_IOIO:
++		result = vc_handle_ioio(ghcb, ctxt);
++		break;
+ 	default:
+ 		/*
+ 		 * Unexpected #VC exception
 -- 
 2.17.1
 
