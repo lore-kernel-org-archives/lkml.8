@@ -2,136 +2,143 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD397C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9988C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4CC2206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:38:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="mBrX3lU7"
+	by mail.kernel.org (Postfix) with ESMTP id C0B03206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:40:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgD1HiP (ORCPT
+        id S1726463AbgD1Hk7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:38:15 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:37375 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726253AbgD1HiO (ORCPT
+        Tue, 28 Apr 2020 03:40:59 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:11039 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbgD1Hk6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 03:38:14 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id TKohjjwJplKa1TKoljkB2C; Tue, 28 Apr 2020 09:38:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1588059492; bh=+nAgS30c07wDN6lSEWd2/CCFrQtC4lXyHeV3iYFeXr8=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=mBrX3lU7q134xiasmBAak+ZWfmaAQQrJetv44aekDE+ksxsm8RXWBLJ1Use1JCl1I
-         BNuw0PeUOY9yC8G8KpXKYvjaoWL6EF9bWY6mcY4gClBI4AZMAkIpBHVztc2QZ55FXQ
-         hqWMlu9XFOpTiCm/THBGdcluPNCw8z9/ulLHdPO3zBmDxNx8GuKTMOHsIZQRy3i1Qr
-         DG9NwevQ5K+bk1iU3tWo5kkmQN2NzghndxPOh2sB9lqm2fGjd0ToxEl+08T4tsqVBa
-         XWuWsr42mhUyZOmHB5fjFR+g0jkbKbq+rX8zKv4jTYPVqn5w1yn3PuL7W/+rfXm1de
-         zxwD9Uv85jWAA==
-Subject: Re: [RFC PATCH v1 0/5] media: tegra: Tegra video driver follow-up
- patches
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com
-Cc:     digetx@gmail.com, linux-media@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1588047650-29402-1-git-send-email-skomatineni@nvidia.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <5f065fc5-0f45-6b9e-068c-28d0a2e4684e@xs4all.nl>
-Date:   Tue, 28 Apr 2020 09:38:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 28 Apr 2020 03:40:58 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 65549240008;
+        Tue, 28 Apr 2020 07:40:50 +0000 (UTC)
+Date:   Tue, 28 Apr 2020 09:40:49 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
+        hauke.mehrtens@intel.com, qi-ming.wu@intel.com, vigneshr@ti.com,
+        arnd@arndb.de, richard@nod.at, brendanhiggins@google.com,
+        linux-mips@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
+        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
+Subject: Re: [PATCH v3 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200428094049.3c0d4730@xps13>
+In-Reply-To: <f72b5ae0-b0ac-61b8-8f64-c0e0f48afe02@linux.intel.com>
+References: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200423162113.38055-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200424183612.4cfdbb6a@collabora.com>
+        <20200427175127.0518c193@xps13>
+        <cba30ccb-c190-d4d6-eab9-6083bd5d2aad@linux.intel.com>
+        <20200428082759.25065146@collabora.com>
+        <38334812-21b9-5b2c-db84-01c9eacc84d0@linux.intel.com>
+        <20200428084704.5e04232a@collabora.com>
+        <f72b5ae0-b0ac-61b8-8f64-c0e0f48afe02@linux.intel.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1588047650-29402-1-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfNnYN4mXESrKOpzlixmWEfZewJ9vePxyXiaZ6eW8U8sCyiqmmBh4L32L7ha5AdhsZGvLriTlcjavNogmiOF5LjXDr2At4PGJsV+wyFJ6oVTyHgLXXlE3
- lFXrY3m1G3Ek/L39otmz3XNqNPgLiN+8UWLeeJ9oQFu0gp7oUHuR05FWFDVbvG1G6rSV8v+6aR5PfiBZQNFim6rs8eXkhVKMdkuC5KUWY+SkEBrYaLJmjkP1
- AwEMi5Gn4fQpYifQsawYhLphF3CH1o3ueY5AGW5VEWUkIm0mA4aoMomZjhgiI7S5tdouZEwVreO8DvynFMnPcdMI6NhUaDIqwPLypDaULPyWhPfWqGpOAUrC
- AiwCUkqDCfAwoFVKTHgrToY5yrAnAF9NoKNV8TX8098zQMQItqIp3mOEAqNlWJ44PlYRfjLJ
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/04/2020 06:20, Sowjanya Komatineni wrote:
-> This is a fllow-up to some last feedback received for Tegra VI driver RFC
-> v10 patches.
-> https://patchwork.linuxtv.org/cover/63334/
+Hi Vadivel MuruganX,
+
+"Ramuthevar, Vadivel MuruganX"
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote on Tue, 28 Apr 2020
+14:50:35 +0800:
+
+> Hi Boris,
 > 
+> On 28/4/2020 2:47 pm, Boris Brezillon wrote:
+> > On Tue, 28 Apr 2020 14:40:58 +0800
+> > "Ramuthevar, Vadivel MuruganX"
+> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> >   
+> >> Hi Boris,
+> >>
+> >> On 28/4/2020 2:27 pm, Boris Brezillon wrote:  
+> >>> On Tue, 28 Apr 2020 14:17:30 +0800
+> >>> "Ramuthevar, Vadivel MuruganX"
+> >>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:  
+> >>>    >>>> Hi Miquel,  
+> >>>>
+> >>>>       Thank you very much for the review comments and your time...
+> >>>>
+> >>>> On 27/4/2020 11:51 pm, Miquel Raynal wrote:  
+> >>>>> Hi Ramuthevar,  
+> >>>>>       >>>>>>> +static int ebu_nand_probe(struct platform_device *pdev)  
+> >>>>>>> +{
+> >>>>>>> +	struct device *dev = &pdev->dev;
+> >>>>>>> +	struct ebu_nand_controller *ebu_host;
+> >>>>>>> +	struct nand_chip *nand;
+> >>>>>>> +	phys_addr_t nandaddr_pa;
+> >>>>>>> +	struct mtd_info *mtd;
+> >>>>>>> +	struct resource *res;
+> >>>>>>> +	int ret;
+> >>>>>>> +	u32 cs;
+> >>>>>>> +
+> >>>>>>> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
+> >>>>>>> +	if (!ebu_host)
+> >>>>>>> +		return -ENOMEM;
+> >>>>>>> +
+> >>>>>>> +	ebu_host->dev = dev;
+> >>>>>>> +	nand_controller_init(&ebu_host->controller);
+> >>>>>>> +
+> >>>>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
+> >>>>>>> +	ebu_host->ebu_addr = devm_ioremap_resource(&pdev->dev, res);
+> >>>>>>> +	if (IS_ERR(ebu_host->ebu_addr))
+> >>>>>>> +		return PTR_ERR(ebu_host->ebu_addr);
+> >>>>>>> +
+> >>>>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
+> >>>>>>> +	ebu_host->nand_addr = devm_ioremap_resource(&pdev->dev, res);
+> >>>>>>> +	if (IS_ERR(ebu_host->nand_addr))
+> >>>>>>> +		return PTR_ERR(ebu_host->nand_addr);
+> >>>>>>> +
+> >>>>>>> +	ret = device_property_read_u32(dev, "nand,cs", &cs);  
+> >>>>>>
+> >>>>>> CS ids should be encoded in the reg property (see [1]).  
+> >>>>>
+> >>>>> Is it your choice to only support a single CS or is it actually a
+> >>>>> controller limitation?  
+> >>>>
+> >>>> Yes , its controller limitation to support only one CS  
+> >>>
+> >>> I'm pretty sure that's not true, otherwise you wouldn't have to select
+> >>> the CS you want to use :P.  
+> >>
+> >> At a time it supports only one chip select.  
+> > 
+> > Yes, like 99% of the NAND controllers, but that doesn't mean you can't
+> > support multi-CS chips. All you have to do is attach an array of
+> > ebu_nand_cs to your ebu_nand_chip (as done in the atmel driver I
+> > pointed to). nand_operation.cs tells you which CS (index in your
+> > ebu_nand_cs array) a specific operation is targeting, and you can pick
+> > the right MMIO range/reg value based on that.  
 > 
-> Sowjanya Komatineni (5):
->   MAINTAINERS: Rename Tegra Video driver path
->   media: tegra: Rename driver path to tegra-video
->   media: tegra-video: Move PM runtime handle to streaming
->   media: tegra-video: Rearrange SoC specific to Tegra210 and cleanup
->     files
->   media: tegra-video: Remove module macros for vi and csi driver
-> 
->  MAINTAINERS                                  |    2 +-
->  drivers/staging/media/Kconfig                |    2 +-
->  drivers/staging/media/Makefile               |    2 +-
->  drivers/staging/media/tegra-video/Kconfig    |   12 +
->  drivers/staging/media/tegra-video/Makefile   |    8 +
->  drivers/staging/media/tegra-video/TODO       |   10 +
->  drivers/staging/media/tegra-video/csi.c      |  536 ++++++++++++
->  drivers/staging/media/tegra-video/csi.h      |  146 ++++
->  drivers/staging/media/tegra-video/tegra210.c | 1080 ++++++++++++++++++++++++
->  drivers/staging/media/tegra-video/vi.c       | 1082 +++++++++++++++++++++++++
->  drivers/staging/media/tegra-video/vi.h       |  258 ++++++
->  drivers/staging/media/tegra-video/video.c    |  155 ++++
->  drivers/staging/media/tegra-video/video.h    |   29 +
->  drivers/staging/media/tegra/Kconfig          |   12 -
->  drivers/staging/media/tegra/Makefile         |    8 -
->  drivers/staging/media/tegra/TODO             |   10 -
->  drivers/staging/media/tegra/common.h         |  259 ------
->  drivers/staging/media/tegra/csi.c            |  604 --------------
->  drivers/staging/media/tegra/csi.h            |  144 ----
->  drivers/staging/media/tegra/tegra210.c       |  708 ----------------
->  drivers/staging/media/tegra/tegra210.h       |  190 -----
->  drivers/staging/media/tegra/vi.c             | 1127 --------------------------
->  drivers/staging/media/tegra/vi.h             |   72 --
->  drivers/staging/media/tegra/video.c          |  153 ----
->  drivers/staging/media/tegra/video.h          |   29 -
->  25 files changed, 3319 insertions(+), 3319 deletions(-)
+> Agreed, sure I will add that and update next series of patches .
 
-I thought that the follow-up series was just a rename of a directory
-and perhaps one or two smaller changes, but this is too much change.
-I prefer to have a v11 instead with all these changes incorporated.
+There are also many other places where you assume blindly that there
+is only one CS. You can check the Atmel NAND controller driver as Boris
+said and we will probably propose more little changes to be more
+generic.
 
-Sorry about that,
-
-	Hans
-
->  create mode 100644 drivers/staging/media/tegra-video/Kconfig
->  create mode 100644 drivers/staging/media/tegra-video/Makefile
->  create mode 100644 drivers/staging/media/tegra-video/TODO
->  create mode 100644 drivers/staging/media/tegra-video/csi.c
->  create mode 100644 drivers/staging/media/tegra-video/csi.h
->  create mode 100644 drivers/staging/media/tegra-video/tegra210.c
->  create mode 100644 drivers/staging/media/tegra-video/vi.c
->  create mode 100644 drivers/staging/media/tegra-video/vi.h
->  create mode 100644 drivers/staging/media/tegra-video/video.c
->  create mode 100644 drivers/staging/media/tegra-video/video.h
->  delete mode 100644 drivers/staging/media/tegra/Kconfig
->  delete mode 100644 drivers/staging/media/tegra/Makefile
->  delete mode 100644 drivers/staging/media/tegra/TODO
->  delete mode 100644 drivers/staging/media/tegra/common.h
->  delete mode 100644 drivers/staging/media/tegra/csi.c
->  delete mode 100644 drivers/staging/media/tegra/csi.h
->  delete mode 100644 drivers/staging/media/tegra/tegra210.c
->  delete mode 100644 drivers/staging/media/tegra/tegra210.h
->  delete mode 100644 drivers/staging/media/tegra/vi.c
->  delete mode 100644 drivers/staging/media/tegra/vi.h
->  delete mode 100644 drivers/staging/media/tegra/video.c
->  delete mode 100644 drivers/staging/media/tegra/video.h
-> 
-
+Thanks,
+Miquèl
