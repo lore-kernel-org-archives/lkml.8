@@ -2,82 +2,110 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A45EC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F623C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57167206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:30:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588059037;
-	bh=lt9Ss7Lhe+IkC8Wr+elmsXdyPZ1tUoSwVIeuzTfvlPI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c8CPNYBqP/8aZvDYsE9jLYCZlBq8+6GCSqQhXBBerFFj2y6S7k2BfjSiVODgAX7et
-	 eVFVT53jkTvTto3V15lAGmL0Uqilg3XPjPDzn76C6zDpUL3LMSuvOpUDGag8a/S160
-	 uph+thDQGXMVfK9kFJBlA3dcC0kDlfH9jX7GO/t0=
+	by mail.kernel.org (Postfix) with ESMTP id 18DD0206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:32:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgD1Hag (ORCPT
+        id S1726442AbgD1Hco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:30:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726253AbgD1Hag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 03:30:36 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F5F9206B8;
-        Tue, 28 Apr 2020 07:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588059028;
-        bh=lt9Ss7Lhe+IkC8Wr+elmsXdyPZ1tUoSwVIeuzTfvlPI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c6A8DxJ/RoQ17XqK/nqiSkerPTPQmw6Q19eWiaBtJoYrWK5cf0NcSCPT0lp0iP1ni
-         LOSdbhwMjadscRqRsNMLioRlN3tPMopECuN7vC1vojtpvHXvP7uxAGVAAbRiN87SKv
-         0jxKOQ6qU5+1Xt469H/nO5ul9F0xUTgKPWijGGTk=
-Date:   Tue, 28 Apr 2020 08:30:24 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Oliver Graute <oliver.graute@kococonnector.com>
-Cc:     jason.hui.liu@nxp.com, anson.huang@nxp.com, aisheng.dong@nxp.com,
-        catalin.marinas@arm.com, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        oliver.graute@gmail.com
-Subject: Re: arm64: imx8qm: tlb SW workaround for IMX8QM
-Message-ID: <20200428073023.GB4049@willie-the-truck>
-References: <20200427082348.GA98329@archlinux.localdomain>
- <20200427130328.GA101181@archlinux.localdomain>
+        Tue, 28 Apr 2020 03:32:44 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2117 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726274AbgD1Hcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 03:32:43 -0400
+Received: from lhreml743-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id BA2CFD6E8C5E08530288;
+        Tue, 28 Apr 2020 08:32:41 +0100 (IST)
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ lhreml743-chm.china.huawei.com (10.201.108.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Tue, 28 Apr 2020 08:32:41 +0100
+Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.160)
+ by fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Tue, 28 Apr 2020 09:32:40 +0200
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     <zohar@linux.ibm.com>, <rgoldwyn@suse.de>,
+        <David.Laight@ACULAB.COM>
+CC:     <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
+        <krzysztof.struczynski@huawei.com>, <stable@vger.kernel.org>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [RESEND][PATCH v2 3/6] ima: Fix ima digest hash table key calculation
+Date:   Tue, 28 Apr 2020 09:30:10 +0200
+Message-ID: <20200428073010.25631-1-roberto.sassu@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200427102900.18887-3-roberto.sassu@huawei.com>
+References: <20200427102900.18887-3-roberto.sassu@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427130328.GA101181@archlinux.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.204.65.160]
+X-ClientProxiedBy: lhreml736-chm.china.huawei.com (10.201.108.87) To
+ fraeml714-chm.china.huawei.com (10.206.15.33)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 03:03:28PM +0200, Oliver Graute wrote:
-> On 27/04/20, Oliver Graute wrote:
-> > Hello,
-> > 
-> > is this nxp software workaround already proposed to linux community? can
-> > someone point me to the discussion if available.
-> > 
-> > https://source.codeaurora.org/external/imx/linux-imx/commit/?h=3Dimx_5.4.3_=
-> > 2.0.0&id=3D593bea4e36d8c8a4fd65ef4f07fb8144dab2de1c
-> 
-> sry for the broken link. Here the right one:
-> 
-> https://source.codeaurora.org/external/imx/linux-imx/commit/?h=imx_5.4.3_2.0.0&id=593bea4e36d8c8a4fd65ef4f07fb8144dab2de1c
+From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
 
-Hey, if we're trading links then it should be fixed by:
+Function hash_long() accepts unsigned long, while currently only one byte
+is passed from ima_hash_key(), which calculates a key for ima_htable.
 
-https://www.hobbytronics.co.uk/jumper-kit-140
+Given that hashing the digest does not give clear benefits compared to
+using the digest itself, remove hash_long() and return the modulus
+calculated on the first two bytes of the digest with the number of slots.
+Also reduce the depth of the hash table by doubling the number of slots.
 
-Unfortunately, I don't think there's a gift-wrap option for the hardware
-folks ;)
+Changelog
 
-Will
+v2: directly access the first two bytes of the digest to avoid memory
+    access issues on big endian systems (suggested by David Laight)
+
+Cc: stable@vger.kernel.org
+Fixes: 3323eec921ef ("integrity: IMA as an integrity service provider")
+Co-developed-by: Roberto Sassu <roberto.sassu@huawei.com>
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+---
+ security/integrity/ima/ima.h | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index 467dfdbea25c..02796473238b 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -36,7 +36,7 @@ enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8 };
+ #define IMA_DIGEST_SIZE		SHA1_DIGEST_SIZE
+ #define IMA_EVENT_NAME_LEN_MAX	255
+ 
+-#define IMA_HASH_BITS 9
++#define IMA_HASH_BITS 10
+ #define IMA_MEASURE_HTABLE_SIZE (1 << IMA_HASH_BITS)
+ 
+ #define IMA_TEMPLATE_FIELD_ID_MAX_LEN	16
+@@ -179,9 +179,10 @@ struct ima_h_table {
+ };
+ extern struct ima_h_table ima_htable;
+ 
+-static inline unsigned long ima_hash_key(u8 *digest)
++static inline unsigned int ima_hash_key(u8 *digest)
+ {
+-	return hash_long(*digest, IMA_HASH_BITS);
++	/* there is no point in taking a hash of part of a digest */
++	return (digest[0] | digest[1] << 8) % IMA_MEASURE_HTABLE_SIZE;
+ }
+ 
+ #define __ima_hooks(hook)		\
+-- 
+2.17.1
+
