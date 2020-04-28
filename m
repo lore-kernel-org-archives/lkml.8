@@ -2,99 +2,166 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA29EC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FED0C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBBBA2076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46464206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:53:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d4rtNymu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FriYSZDA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgD1Ww4 (ORCPT
+        id S1726526AbgD1Wxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:52:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56632 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726042AbgD1Wwz (ORCPT
+        Tue, 28 Apr 2020 18:53:37 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:45728 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbgD1Wxh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:52:55 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FB14C03C1AC;
-        Tue, 28 Apr 2020 15:52:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=F9aCSU3b/Wdv+eJFJpzYKn7Vwg6tH9sCBL5A5XUpJ4o=; b=d4rtNymuOqppTdZC6DJck2NtJL
-        kjY0+YaEI3w4ebKpcllV7qIhx/P1D+TCuaw3XpmPMqUZhgkznKZ8dv3o7HSGtFWRi35AM13gWXI2S
-        +oe/7fHyUfs7Zg1Iyx/H86z7wDagVQVC0Vw0zbn9kBL7S6XNudqlpL3qU0hLsMkj9rjjyFlJ3tmyd
-        mdxPiXctEgyIcVboBqHvfOM8AKNoZ2bC+gQC1tYQQcDHXbQf81Hgr33ITRo7Bcm44ykPAgtX6mknN
-        c3xC7RBbMjR3phdMIKElDEQ5j3uTQ4w0MWqdcEk5J8MxHaV542ZrfutfYx3ov4O5RY21sJiVzaivg
-        5RFmQQdw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTZ5w-0008Qz-1R; Tue, 28 Apr 2020 22:52:52 +0000
-Date:   Tue, 28 Apr 2020 15:52:51 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org
-Subject: Re: [PATCH 1/7] mm: Document x86 uses a linked list of pgds
-Message-ID: <20200428225251.GM29705@bombadil.infradead.org>
-References: <20200428194449.22615-1-willy@infradead.org>
- <20200428194449.22615-2-willy@infradead.org>
- <20200428214109.GB406458@iweiny-DESK2.sc.intel.com>
+        Tue, 28 Apr 2020 18:53:37 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03SMrTmW006373;
+        Tue, 28 Apr 2020 17:53:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588114409;
+        bh=vdp97xI44K5xWlxMxBx4f5N9IE1CtlaJ13tCZhnzq2c=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=FriYSZDAcPzprRRFyWMVBPikadf+rd6wdfkLh1XyxiweDrCgd1tmdZIE219Tugcwq
+         BDe1/xF2e4dPk+hdB3Z++kwgCiMFRMsho4A0oM9duC90sKhV0f3KaiMTaTzY5YXoAH
+         JjcP8V7yBY0HtsEabFEZNhxi2mWiExWG6AgM3ZmE=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03SMrTEZ118037
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Apr 2020 17:53:29 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
+ Apr 2020 17:53:29 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 28 Apr 2020 17:53:29 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with SMTP id 03SMrSIT127092;
+        Tue, 28 Apr 2020 17:53:28 -0500
+Date:   Tue, 28 Apr 2020 17:53:28 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@osg.samsung.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] media: ti-vpe: avoid gcc-9 warning
+Message-ID: <20200428225328.phmj4eymkzmyyy2h@ti.com>
+References: <20200428213430.3419189-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200428214109.GB406458@iweiny-DESK2.sc.intel.com>
+In-Reply-To: <20200428213430.3419189-1-arnd@arndb.de>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 02:41:09PM -0700, Ira Weiny wrote:
-> On Tue, Apr 28, 2020 at 12:44:43PM -0700, Matthew Wilcox wrote:
-> > x86 uses page->lru of the pages used for pgds, but that's not immediately
-> > obvious to anyone looking to make changes.  Add a struct list_head to
-> > the union so it's clearly in use for pgds.
+Reviewed-by: Benoit Parrot <bparrot@ti.com>
+
+Arnd Bergmann <arnd@arndb.de> wrote on Tue [2020-Apr-28 23:34:19 +0200]:
+> gcc warns about empty array declarations, which we get in this driver
+> when compile-testing without CONFIG_OF:
 > 
-> Shouldn't pgd_list_{add,del}() use this list head variable instead of lru to
-> complete the documentation?
+> drivers/media/platform/ti-vpe/cal.c:2194:34: warning: array 'cal_of_match' assumed to have one element
+>  2194 | static const struct of_device_id cal_of_match[];
 > 
-> Probably the list iteration loops arch/x86/* as well?
-
-Yes, but I felt that was out of scope for this patchset.  Untangling the
-uses of struct page is a long and messy business; if we have to fix
-everything at once, we'll never get anywhere.  There's also the slab
-users of page->lru instead of page->slab_list.
-
-What I actually want to get to is:
-
-struct page {
-	unsigned long flags;
-	union {
-		struct file_page file;
-		struct anon_page anon;
-		struct pt_page pt;
-		struct slab_page slab;
-		struct tail_page tail;
-		struct rcu_head rcu;
-	};
-	union {
-		atomic_t _mapcount;
-		...
-	};
-	atomic_t refcount;
-	...
-};
-
-and then we can refer to page->pt.list and so on.
+> Since all users of this driver do need CONFIG_OF anyway, there is no
+> point in making the array definition conditional to save space, so
+> just remove the #ifdef and move the array up a little.
+> 
+> Fixes: 343e89a792a5 ("[media] media: ti-vpe: Add CAL v4l2 camera capture driver")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/media/platform/ti-vpe/cal.c | 46 +++++++++++++----------------
+>  1 file changed, 21 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
+> index 49204872e711..9b18db7af6c3 100644
+> --- a/drivers/media/platform/ti-vpe/cal.c
+> +++ b/drivers/media/platform/ti-vpe/cal.c
+> @@ -2237,7 +2237,26 @@ static struct cal_ctx *cal_create_instance(struct cal_dev *dev, int inst)
+>  	return NULL;
+>  }
+>  
+> -static const struct of_device_id cal_of_match[];
+> +static const struct of_device_id cal_of_match[] = {
+> +	{
+> +		.compatible = "ti,dra72-cal",
+> +		.data = (void *)&dra72x_cal_data,
+> +	},
+> +	{
+> +		.compatible = "ti,dra72-pre-es2-cal",
+> +		.data = (void *)&dra72x_es1_cal_data,
+> +	},
+> +	{
+> +		.compatible = "ti,dra76-cal",
+> +		.data = (void *)&dra76x_cal_data,
+> +	},
+> +	{
+> +		.compatible = "ti,am654-cal",
+> +		.data = (void *)&am654_cal_data,
+> +	},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, cal_of_match);
+>  
+>  static int cal_probe(struct platform_device *pdev)
+>  {
+> @@ -2413,29 +2432,6 @@ static int cal_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> -#if defined(CONFIG_OF)
+> -static const struct of_device_id cal_of_match[] = {
+> -	{
+> -		.compatible = "ti,dra72-cal",
+> -		.data = (void *)&dra72x_cal_data,
+> -	},
+> -	{
+> -		.compatible = "ti,dra72-pre-es2-cal",
+> -		.data = (void *)&dra72x_es1_cal_data,
+> -	},
+> -	{
+> -		.compatible = "ti,dra76-cal",
+> -		.data = (void *)&dra76x_cal_data,
+> -	},
+> -	{
+> -		.compatible = "ti,am654-cal",
+> -		.data = (void *)&am654_cal_data,
+> -	},
+> -	{},
+> -};
+> -MODULE_DEVICE_TABLE(of, cal_of_match);
+> -#endif
+> -
+>  static int cal_runtime_resume(struct device *dev)
+>  {
+>  	struct cal_dev *caldev = dev_get_drvdata(dev);
+> @@ -2462,7 +2458,7 @@ static struct platform_driver cal_pdrv = {
+>  	.driver		= {
+>  		.name	= CAL_MODULE_NAME,
+>  		.pm	= &cal_pm_ops,
+> -		.of_match_table = of_match_ptr(cal_of_match),
+> +		.of_match_table = cal_of_match,
+>  	},
+>  };
+>  
+> -- 
+> 2.26.0
+> 
