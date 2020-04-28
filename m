@@ -2,105 +2,91 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A93BC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A15C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7737921744
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098663;
-	bh=vU+2AAZL6lc+EETr5u0F7lT9UJ/xX/iksxwZJPHuOmY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ylqM6yxleWmNAF/M8Fg74shtbyx99/LuF8ellvHIeG1lBACDyC/f4U4yWCBWC/xDx
-	 vjYngGuI+g2FpgTisCyeZVqXJEmKyj9ISXLksYPdFTetCaikkRfoe9+F9r2wrHdu3V
-	 g1nILJlcTJtAVsULM4y2swslllsxBZDIsElrxbTI=
+	by mail.kernel.org (Postfix) with ESMTP id 465D320B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C6DZmlh+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729594AbgD1SbB (ORCPT
+        id S1729124AbgD1SbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:31:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729576AbgD1Say (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:30:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Tue, 28 Apr 2020 14:31:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43760 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729581AbgD1Sa4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:30:56 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A77BCC03C1AB
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:30:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=lGqR9F+kdPJv1A8Me44RtuAlEYognn42SVvVNy+QNK4=; b=C6DZmlh+pr+6ZHDsRi3KCUKFEu
+        7wBKtqQhf0ASPZx0BdvqZoZ/UIn+SQoAPryACfCRo7z323zTcs/OjYM0rw2qclcwDcocj9o8t/kKU
+        wbNXHPtQ6YP0cp3Yoen8GZUr5qpFDQlt4MklKtHUIlHLuITdzs0g726zhdB5B5ibDCwMnrPsr921N
+        Fg5dSl9/U7LhdrbhsVP/lVo9oUYe8ig8QQS8Q13+xwQwpAPqobxee6Xhf2A+ok1AEADBlR365StHu
+        P+/ELE/qgvvGRu8gN00+f8dymVd3/p8sY2HCq6yXgXYz+jvjHzghZ1KI4lTMFx39qivdHOFRU4kgQ
+        wjEr7YDg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTV02-0005eD-SV; Tue, 28 Apr 2020 18:30:31 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6057220B80;
-        Tue, 28 Apr 2020 18:30:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098653;
-        bh=vU+2AAZL6lc+EETr5u0F7lT9UJ/xX/iksxwZJPHuOmY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UciISi3S8JOaICcBhQ/Ne/MmkIy/grvkUl+9kKpOAwf/2V1WGS40pX8vyr640Nt5W
-         wn9RtdN7tRCpQfVBL6robv/bnfeM1rfrQKpNjHg+ZL3Bn2R0SscIQb4Wn0vsLm3URZ
-         oOAmFp4E1L2IOJd5KDBhOFx3jayXZJhQOXgispUw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Benesh <scott.benesh@microsemi.com>,
-        Scott Teel <scott.teel@microsemi.com>,
-        Kevin Barnett <kevin.barnett@microsemi.com>,
-        Murthy Bhat <Murthy.Bhat@microsemi.com>,
-        Don Brace <don.brace@microsemi.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 035/131] scsi: smartpqi: fix call trace in device discovery
-Date:   Tue, 28 Apr 2020 20:24:07 +0200
-Message-Id: <20200428182229.510235336@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A38DF30797F;
+        Tue, 28 Apr 2020 20:30:28 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 874C0201F9F0A; Tue, 28 Apr 2020 20:30:28 +0200 (CEST)
+Date:   Tue, 28 Apr 2020 20:30:28 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     alexandre.chartre@oracle.com, linux-kernel@vger.kernel.org,
+        jthierry@redhat.com, tglx@linutronix.de, x86@kernel.org,
+        mbenes@suse.cz
+Subject: Re: [PATCH 8/8] x86/retpoline: Fix retpoline unwind
+Message-ID: <20200428183028.GB13575@hirez.programming.kicks-ass.net>
+References: <20200423125013.452964352@infradead.org>
+ <20200423125043.129313983@infradead.org>
+ <20200424193028.tecqlugzzue2n5vj@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200424193028.tecqlugzzue2n5vj@treble>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Murthy Bhat <Murthy.Bhat@microsemi.com>
+On Fri, Apr 24, 2020 at 02:30:28PM -0500, Josh Poimboeuf wrote:
+> On Thu, Apr 23, 2020 at 02:47:25PM +0200, Peter Zijlstra wrote:
+> >  .macro CALL_NOSPEC reg:req
+> >  #ifdef CONFIG_RETPOLINE
+> > -	ANNOTATE_NOSPEC_ALTERNATIVE
+> > -	ALTERNATIVE_2 __stringify(ANNOTATE_RETPOLINE_SAFE; call *%\reg),\
+> > -		__stringify(RETPOLINE_CALL %\reg), X86_FEATURE_RETPOLINE,\
+> > -		__stringify(lfence; ANNOTATE_RETPOLINE_SAFE; call *%\reg), X86_FEATURE_RETPOLINE_AMD
+> > +	/*
+> > +	 * This cannot be ALTERNATIVE_2 like with JMP_NOSPEC, because ORC
+> > +	 * unwind data is alternative invariant and needs stack modifying
+> > +	 * instructions to be in the same place for all alternatives.
+> > +	 *
+> > +	 * IOW the CALL instruction must be at the same offset for all cases.
+> > +	 */
+> > +	ALTERNATIVE "", "lfence", X86_FEATURE_RETPOLINE_AMD
+> > +	ALTERNATIVE __stringify(ANNOTATE_RETPOLINE_SAFE; call *%\reg), \
+> > +		    __stringify(call __x86_retpoline_\reg), X86_FEATURE_RETPOLINE
+> 
+> I'm missing why ALTERNATIVE_2 wouldn't work here.  How is the call a
+> "stack modifying instruction"?  It's not an intra-function call so it
+> shouldn't affect ORC at all, right?
 
-[ Upstream commit b969261134c1b990b96ea98fe5e0fcf8ec937c04 ]
-
-Use sas_phy_delete rather than sas_phy_free which, according to
-comments, should not be called for PHYs that have been set up
-successfully.
-
-Link: https://lore.kernel.org/r/157048748876.11757.17773443136670011786.stgit@brunhilda
-Reviewed-by: Scott Benesh <scott.benesh@microsemi.com>
-Reviewed-by: Scott Teel <scott.teel@microsemi.com>
-Reviewed-by: Kevin Barnett <kevin.barnett@microsemi.com>
-Signed-off-by: Murthy Bhat <Murthy.Bhat@microsemi.com>
-Signed-off-by: Don Brace <don.brace@microsemi.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/smartpqi/smartpqi_sas_transport.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/smartpqi/smartpqi_sas_transport.c b/drivers/scsi/smartpqi/smartpqi_sas_transport.c
-index b209a35e482ef..01dfb97b07786 100644
---- a/drivers/scsi/smartpqi/smartpqi_sas_transport.c
-+++ b/drivers/scsi/smartpqi/smartpqi_sas_transport.c
-@@ -50,9 +50,9 @@ static void pqi_free_sas_phy(struct pqi_sas_phy *pqi_sas_phy)
- 	struct sas_phy *phy = pqi_sas_phy->phy;
- 
- 	sas_port_delete_phy(pqi_sas_phy->parent_port->port, phy);
--	sas_phy_free(phy);
- 	if (pqi_sas_phy->added_to_port)
- 		list_del(&pqi_sas_phy->phy_list_entry);
-+	sas_phy_delete(phy);
- 	kfree(pqi_sas_phy);
- }
- 
--- 
-2.20.1
-
-
-
+My bad. I find it hard not to consider CALL a stack modification. Let me
+fix that.
