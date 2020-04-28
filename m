@@ -2,181 +2,188 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D81ADC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E204C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5ADB206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF43206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:01:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="NPw9vlFa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgD1XAY (ORCPT
+        id S1726558AbgD1XBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 19:00:24 -0400
-Received: from mga05.intel.com ([192.55.52.43]:58480 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726312AbgD1XAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 19:00:23 -0400
-IronPort-SDR: 6sdGjw9GtNtHGDi0WaCTxaoy9SU1q28v6jY5fjnZHDHsQ9gOEMd6clR6De75gykZnnTBRxZkTw
- vPXuW2dVVSBg==
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 16:00:23 -0700
-IronPort-SDR: XdQu1T4O+w7tdYK2qGoB/pje7lUhIhCK+zaZQPZtijPvA6alH1AnAEYXmwSywMks5ISfrR8SCX
- JAGfDdavyxtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
-   d="scan'208,223";a="247840359"
-Received: from mdioury-mobl.amr.corp.intel.com (HELO [10.251.153.102]) ([10.251.153.102])
-  by fmsmga007.fm.intel.com with ESMTP; 28 Apr 2020 16:00:20 -0700
-Subject: Re: [PATCH] ASoC: SOF: sort out Kconfig, again
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        sound-open-firmware@alsa-project.org,
-        Shawn Guo <shawnguo@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        NXP Linux Team <linux-imx@nxp.com>
-References: <20200428212752.2901778-1-arnd@arndb.de>
- <6b39fbba-c65d-2c02-14bf-11c2d00547af@linux.intel.com>
- <CAK8P3a24whg2RhJE3Vf5u3EWy+wvFqhXdp7EQZuQx0shPsMARw@mail.gmail.com>
- <f91c9a68-7641-beb8-a23e-bd1b9b8d0acb@linux.intel.com>
-Message-ID: <b784c008-7094-05cb-6200-6b246ff39bb8@linux.intel.com>
-Date:   Tue, 28 Apr 2020 18:00:19 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 28 Apr 2020 19:01:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57972 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725934AbgD1XBe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 19:01:34 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FE1FC03C1AC;
+        Tue, 28 Apr 2020 16:01:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=BsAu9CbTZnYT7McFaL1CunnflUXC01TqVFN2jcTLruY=; b=NPw9vlFaRyuah8iIS1n8Vt8id
+        KuCm92icKQx/5U35DtxwIj4SrqcZ0Av337Of8de0bNhl6X9DdAFmKa5SqULs2CyxJUtD89jOuzkC0
+        N2AqY0ab6oipX7bttova4xLy93TXm4ti88mrdN3RF1YypsTrgz7h0Pi2tJ5YCidKusIGQdeRD9LN1
+        sFxXI94Tnaji9rBhrj23NIocNT9m8s5ikoCoPRcbp2gi3piTfzgIUbw6TQ4Zni+oMi84sDO88LxYa
+        VJH59cVDEbpCLk3OqImVLkiSGkKJn1PhsQg5aoR57JQQD1ASyW5Gge8hrkhD1npJn5kLdZ/HpBCoM
+        Q8+W4Z+3Q==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:57056)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jTZE5-00042I-Pv; Wed, 29 Apr 2020 00:01:17 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jTZE0-00086c-DQ; Wed, 29 Apr 2020 00:01:12 +0100
+Date:   Wed, 29 Apr 2020 00:01:12 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Robert Hancock <hancock@sedsystems.ca>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-kernel@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: Xilinx axienet 1000BaseX support
+Message-ID: <20200428230112.GS25745@shell.armlinux.org.uk>
+References: <20200110152215.GF25745@shell.armlinux.org.uk>
+ <20200110170457.GH25745@shell.armlinux.org.uk>
+ <20200118112258.GT25745@shell.armlinux.org.uk>
+ <3b28dcb4-6e52-9a48-bf9c-ddad4cf5e98a@arm.com>
+ <20200120154554.GD25745@shell.armlinux.org.uk>
+ <20200127170436.5d88ca4f@donnerap.cambridge.arm.com>
+ <20200127185344.GA25745@shell.armlinux.org.uk>
+ <bf2448d0-390c-5045-3503-885240829fbf@sedsystems.ca>
+ <20200422075124.GJ25745@shell.armlinux.org.uk>
+ <8a829647-34a8-6e6a-05cf-76f5e88b8410@sedsystems.ca>
 MIME-Version: 1.0
-In-Reply-To: <f91c9a68-7641-beb8-a23e-bd1b9b8d0acb@linux.intel.com>
-Content-Type: multipart/mixed;
- boundary="------------83E0C404AAA0BEDB5B37198B"
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8a829647-34a8-6e6a-05cf-76f5e88b8410@sedsystems.ca>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------83E0C404AAA0BEDB5B37198B
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-
-
-
->>> Thanks Arnd, do you mind sharing your config?
->>
->> https://pastebin.com/HRX5xi3R
+On Tue, Apr 28, 2020 at 03:59:45PM -0600, Robert Hancock wrote:
+> On 2020-04-22 1:51 a.m., Russell King - ARM Linux admin wrote:
+> > On Tue, Apr 21, 2020 at 07:45:47PM -0600, Robert Hancock wrote:
+> > > Hi Andre/Russell,
+> > > 
+> > > Just wondering where things got to with the changes for SGMII on Xilinx
+> > > axienet that you were discussing (below)? I am looking into our Xilinx setup
+> > > using 1000BaseX SFP and trying to get it working "properly" with newer
+> > > kernels. My understanding is that the requirements for 1000BaseX and SGMII
+> > > are somewhat similar. I gathered that SGMII was working somewhat already,
+> > > but that not all link modes had been tested. However, it appears 1000BaseX
+> > > is not yet working in the stock kernel.
+> > > 
+> > > The way I had this working before with a 4.19-based kernel was basically a
+> > > hack to phylink to allow the Xilinx PCS/PMA PHY to be configured
+> > > sufficiently as a PHY for it to work, and mostly ignored the link status of
+> > > the SFP PHY itself, even though we were using in-band signalling mode with
+> > > an SFP module. That was using this patch:
+> > > 
+> > > https://patchwork.ozlabs.org/project/netdev/patch/1559330285-30246-5-git-send-email-hancock@sedsystems.ca/
+> > > 
+> > > Of course, that's basically just a hack which I suspect mostly worked by
+> > > luck. I see that there are some helpers that were added to phylink to allow
+> > > setting PHY advertisements and reading PHY status from clause 22 PHY
+> > > devices, so I'm guessing that is the way to go in this case? Something like:
+> > > 
+> > > axienet_mac_config: if using in-band mode, use
+> > > phylink_mii_c22_pcs_set_advertisement to configure the Xilinx PHY.
+> > > 
+> > > axienet_mac_pcs_get_state: use phylink_mii_c22_pcs_get_state to get the MAC
+> > > PCS state from the Xilinx PHY
+> > > 
+> > > axienet_mac_an_restart: if using in-band mode, use
+> > > phylink_mii_c22_pcs_an_restart to restart autonegotiation on Xilinx PHY
+> > > 
+> > > To use those c22 functions, we need to find the mdio_device that's
+> > > referenced by the phy-handle in the device tree - I guess we can just use
+> > > some of the guts of of_phy_find_device to do that?
+> > 
+> > Please see the code for DPAA2 - it's changed slightly since I sent a
+> > copy to the netdev mailing list, and it still isn't clear whether this
+> > is the final approach (DPAA2 has some fun stuff such as several
+> > different PHYs at address 0.) NXP basically didn't like the approach
+> > I had in the patches I sent to netdev, we had a call, they presented
+> > an alternative appraoch, I implemented it, then they decided my
+> > original approach was the better solution for their situation.
+> > 
+> > See http://git.armlinux.org.uk/cgit/linux-arm.git/log/?h=cex7
+> > 
+> > specifically the patches from:
+> > 
+> >    "dpaa2-mac: add 1000BASE-X/SGMII PCS support"
+> > 
+> > through to:
+> > 
+> >    "net: phylink: add interface to configure clause 22 PCS PHY"
+> > 
+> > You may also need some of the patches further down in the net-queue
+> > branch:
+> > 
+> >    "net: phylink: avoid mac_config calls"
+> > 
+> > through to:
+> > 
+> >    "net: phylink: rejig link state tracking"
 > 
-> will give it a try, thanks!
+> I've been playing with this a bit on a 5.4 kernel with some of these patches
+> backported. However, I'm running into something that my previous hacks for
+> this basically dealt with as a side effect: when phylink_start is called,
+> sfp_upstream_start gets called, an SFP module is detected,
+> phylink_connect_phy gets called, but then it hits this condition and bails
+> out, because we are using INBAND mode with 1000BaseX:
 > 
->>> We noticed last week that
->>> there's a depend/select confusion might be simpler to fix, see
->>> https://github.com/thesofproject/linux/pull/2047/commits
->>>
->>> If I look at the first line I see a IMX_DSP=n which looks exactly like
->>> what we wanted to fix.
->>
->> Yes, I think that fix addresses the build warning as well, but looking
->> more closely I don't think it's what you want: If you do this on
->> a config that has the IMX_DSP disabled, it would appear to the
->> user that you have enabled the drivers, but the actual code is still
->> disabled.
-> 
-> Are you sure? we added a select IMX_DSP, so not sure how it can be 
-> disabled?
+> 	if (WARN_ON(pl->cfg_link_an_mode == MLO_AN_FIXED ||
+> 		    (pl->cfg_link_an_mode == MLO_AN_INBAND &&
+> 		     phy_interface_mode_is_8023z(interface))))
+> 		return -EINVAL;
 
-I just tested Arnd's config with the patch we came up with for SOF 
-(attached) and it makes the unmet dependency go away and builds fine. 
-the problem is really using select IMX_DSP if it can be disabled by 
-something else. My proposal looks simpler but I will agree it's not 
-necessarily super elegant to move the dependency on IMX_BOX into SOF, so 
-no sustained objection from me on Arnd's proposal.
+I'm expecting SGMII mode to be used when there's an external PHY as
+that gives greatest flexibility (as it allows 10 and 100Mbps speeds
+as well.)  From what I remember, these blocks support SGMII, so it
+should just be a matter of adding that.
 
-Daniel, this is your part of SOF, please chime in.
+> I guess I'm not sure how this is supposed to work when the PHY on the SFP
+> module gets detected, i.e. if there's supposed to be another code path that
+> this is supposed to go down, or this is something that just hasn't been
+> fully implemented yet?
 
-Thanks
--Pierre
+Copper PHYs work fine - using SGMII mode everywhere so far.
 
+The problem is, if you want to use them as 1000BASE-X, you generally
+have to ensure that the PHY is appropriately programmed for 1000BASE-X
+negotiation, and the copper side advertisement only indicates 1G
+support. Not all copper PHYs have the PHY accessible for such
+programming, and in that case it becomes an exercise of "read the
+SFP documentation before buying"!
 
+The other complication is... there's nothing in the module EEPROM
+that really says whether they are 1000BASE-X or SGMII.
 
---------------83E0C404AAA0BEDB5B37198B
-Content-Type: text/x-patch; charset=UTF-8;
- name="0001-ASoC-SOF-imx-fix-depends-select-IMX_DSP-confusion.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename*0="0001-ASoC-SOF-imx-fix-depends-select-IMX_DSP-confusion.patch"
+What saves us thus far is that most copper SFPs use the Marvell
+88E1111 chip, which is I2C accessible, and we drive that using
+phylib - and the phylib Marvell driver knows how to ensure that
+the PHY is configured for SGMII mode.  I'm not sure the same is
+true with 1000BASE-X mode.
 
-From 208e61ae18d3a4aa93ffa73db01c4e3c24a4979f Mon Sep 17 00:00:00 2001
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Date: Wed, 22 Apr 2020 06:21:56 -0500
-Subject: [PATCH] ASoC: SOF: imx: fix depends/select IMX_DSP confusion
-
-The two IMX targets don't use depends/select in a consistent way and
-there's a potential for an unmet dependency. Move the dependency check
-to a higher level and select IMX_DSP to avoid builtin/module issues.
-
-Fixes: afb93d716533dd ("ASoC: SOF: imx: Add i.MX8M HW support")
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
----
- sound/soc/sof/imx/Kconfig | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
-index f76660e91382..a11ecc1d56db 100644
---- a/sound/soc/sof/imx/Kconfig
-+++ b/sound/soc/sof/imx/Kconfig
-@@ -21,7 +21,7 @@ config SND_SOC_SOF_IMX_OF
- 
- config SND_SOC_SOF_IMX8_SUPPORT
- 	bool "SOF support for i.MX8"
--	depends on IMX_SCU
-+	depends on IMX_SCU && IMX_MBOX
- 	help
- 	  This adds support for Sound Open Firmware for NXP i.MX8 platforms
- 	  Say Y if you have such a device.
-@@ -29,7 +29,6 @@ config SND_SOC_SOF_IMX8_SUPPORT
- 
- config SND_SOC_SOF_IMX8
- 	tristate
--	depends on IMX_SCU
- 	select IMX_DSP
- 	help
- 	  This option is not user-selectable but automagically handled by
-@@ -37,6 +36,7 @@ config SND_SOC_SOF_IMX8
- 
- config SND_SOC_SOF_IMX8M_SUPPORT
- 	bool "SOF support for i.MX8M"
-+	depends on IMX_MBOX
- 	help
- 	  This adds support for Sound Open Firmware for NXP i.MX8M platforms
- 	  Say Y if you have such a device.
-@@ -44,7 +44,7 @@ config SND_SOC_SOF_IMX8M_SUPPORT
- 
- config SND_SOC_SOF_IMX8M
- 	tristate
--	depends on IMX_DSP
-+	select IMX_DSP
- 	help
- 	  This option is not user-selectable but automagically handled by
- 	  'select' statements at a higher level
 -- 
-2.20.1
-
-
---------------83E0C404AAA0BEDB5B37198B--
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
