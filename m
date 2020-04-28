@@ -2,55 +2,57 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3A8C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95E7C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27A2C20BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A90D220757
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:29:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098549;
-	bh=n+/17Ma26qtlsBWNMwijsTBxk4UKAi/EZ1WVUM/oUuk=;
+	s=default; t=1588098553;
+	bh=OTZ+ErN3r00KAVGJdxg0S/gLRj0CxBmRG3ZKxw2O9fc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z5TDIgvrgImgLiAEAEpnq/EJQaBhSndNqOm9ntAq4azUrBUaGL1BVt2X9uJNkoTgA
-	 JId0Zb/90yNoZq8voHtkHKys4t02HxpS4U3v+NWENokdmWJ3MwhnXt4oh7c1WdIP4K
-	 DA81ED0tYDe1v3tEGVNOrprItXd5ZP0/LPzScxCA=
+	b=XhHbQxxdScNE2CdFqr8Hzkol1cynuP73kLnCfH1PX3QyTIqIIaWAWBpuTIg4QxvJq
+	 gVg92+VhiMAvvm+o6+UY7Re3/sbTEPJnBmRmDF6ChQfvFJ4MNkAHp4j6ugutR+XeL+
+	 6VwLyZic8/popK5y19NjrFJn8wGAL8DCl258Xq8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbgD1S3I (ORCPT
+        id S1729312AbgD1S3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:29:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42122 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:29:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729255AbgD1S2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:28:51 -0400
+        id S1729278AbgD1S27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:28:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE6EC20730;
-        Tue, 28 Apr 2020 18:28:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49471208E0;
+        Tue, 28 Apr 2020 18:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098531;
-        bh=n+/17Ma26qtlsBWNMwijsTBxk4UKAi/EZ1WVUM/oUuk=;
+        s=default; t=1588098538;
+        bh=OTZ+ErN3r00KAVGJdxg0S/gLRj0CxBmRG3ZKxw2O9fc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GXJTC5X3Zwwhny0H1SKdBiUHf4MxYRhTqdHiFINt40oHcyjVhc1ZzBzeoANOTDpKi
-         H+Bqf77Q7EfGohdmgfXmWouJT4ercqDchU8dBPdTb+cB4dXq/HySv95lpNUK0uEME1
-         9aj2ui9b8JFPkjrMlUP/WYXe84FHaVPG3TtMXCWg=
+        b=P7z/wzfhC4ohoIMqpBwCLq5KVbzWqjJSbdwEWVub+WHYm80L0vOJ25lHqwzpgDimd
+         kPCiu+P77LzgcXu2X6BQI5GtCvVQae3/xmAkNbL+FosM6EQtLZQgGF+aCe3oIZaE85
+         yizhglBjT2DfTP1Q1CnYg3DVKomI3RIjrAhEUQso=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 067/167] net: dsa: b53: Fix ARL register definitions
-Date:   Tue, 28 Apr 2020 20:24:03 +0200
-Message-Id: <20200428182233.449132101@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        James Morse <james.morse@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 010/131] arm64: Silence clang warning on mismatched value/register sizes
+Date:   Tue, 28 Apr 2020 20:23:42 +0200
+Message-Id: <20200428182226.500043031@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,42 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
 
-[ Upstream commit c2e77a18a7ed65eb48f6e389b6a59a0fd753646a ]
+[ Upstream commit: 27a22fbdeedd6c5c451cf5f830d51782bf50c3a2 ]
 
-The ARL {MAC,VID} tuple and the forward entry were off by 0x10 bytes,
-which means that when we read/wrote from/to ARL bin index 0, we were
-actually accessing the ARLA_RWCTRL register.
+Clang reports a warning on the __tlbi(aside1is, 0) macro expansion since
+the value size does not match the register size specified in the inline
+asm. Construct the ASID value using the __TLBI_VADDR() macro.
 
-Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 222fc0c8503d ("arm64: compat: Workaround Neoverse-N1 #1542419 for compat user-space")
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: James Morse <james.morse@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/b53/b53_regs.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/sys_compat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/dsa/b53/b53_regs.h
-+++ b/drivers/net/dsa/b53/b53_regs.h
-@@ -304,7 +304,7 @@
-  *
-  * BCM5325 and BCM5365 share most definitions below
-  */
--#define B53_ARLTBL_MAC_VID_ENTRY(n)	(0x10 * (n))
-+#define B53_ARLTBL_MAC_VID_ENTRY(n)	((0x10 * (n)) + 0x10)
- #define   ARLTBL_MAC_MASK		0xffffffffffffULL
- #define   ARLTBL_VID_S			48
- #define   ARLTBL_VID_MASK_25		0xff
-@@ -316,7 +316,7 @@
- #define   ARLTBL_VALID_25		BIT(63)
+diff --git a/arch/arm64/kernel/sys_compat.c b/arch/arm64/kernel/sys_compat.c
+index 5a9b220aef6cf..3ef9d0a3ac1dc 100644
+--- a/arch/arm64/kernel/sys_compat.c
++++ b/arch/arm64/kernel/sys_compat.c
+@@ -48,7 +48,7 @@ __do_compat_cache_op(unsigned long start, unsigned long end)
+ 			 * The workaround requires an inner-shareable tlbi.
+ 			 * We pick the reserved-ASID to minimise the impact.
+ 			 */
+-			__tlbi(aside1is, 0);
++			__tlbi(aside1is, __TLBI_VADDR(0, 0));
+ 			dsb(ish);
+ 		}
  
- /* ARL Table Data Entry N Registers (32 bit) */
--#define B53_ARLTBL_DATA_ENTRY(n)	((0x10 * (n)) + 0x08)
-+#define B53_ARLTBL_DATA_ENTRY(n)	((0x10 * (n)) + 0x18)
- #define   ARLTBL_DATA_PORT_ID_MASK	0x1ff
- #define   ARLTBL_TC(tc)			((3 & tc) << 11)
- #define   ARLTBL_AGE			BIT(14)
+-- 
+2.20.1
+
 
 
