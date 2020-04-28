@@ -2,56 +2,53 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B88C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AA8C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A90D2184D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8CCD2192A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098689;
-	bh=GAiPwIVVBydPgilToYpHU2FaUBilWjF37l3+JT7AkEg=;
+	s=default; t=1588098692;
+	bh=BHS3e/jKJugNA1/jaut3g7kvGJk+OFVAbUw+Z9klqcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fHmiHR441vwxvHANyufO/pP0y62c7mE+nJMJdVtXHx1qdQUl7xzz1GYaIDNMaNV3j
-	 4uVYI2C42E2OSVsVYEpmkG8TqwjToGH+hBrvtKr1lcz0aaA8EIB0eiHsAz/9twLyk1
-	 b8xrD7Nhl0nrQe3u8PiA+Nz1nO+O8KGJG6AbpP/s=
+	b=OCr9WL9kNqYPvaz++5Vt62Ft1l2UMMWKp8RX7PA1I6l/xnlhEybV/VNRKQTBQXf+D
+	 eoJarH/QXIRsK81pDNZaHW1NgRsG3EVZwHSdHKD3oGn/mABgPkyqx88EQCetjhBrp4
+	 1vO/OVGVcCv6gxyvsEVbiEnfGuxAwWFoYqgNc5Go=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbgD1Sb2 (ORCPT
+        id S1729680AbgD1Sbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:31:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46942 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:31:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729104AbgD1SbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:31:25 -0400
+        id S1729667AbgD1SbX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:31:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D91F121775;
-        Tue, 28 Apr 2020 18:31:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F3B220B80;
+        Tue, 28 Apr 2020 18:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098685;
-        bh=GAiPwIVVBydPgilToYpHU2FaUBilWjF37l3+JT7AkEg=;
+        s=default; t=1588098682;
+        bh=BHS3e/jKJugNA1/jaut3g7kvGJk+OFVAbUw+Z9klqcM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ima9zCME9gbvodkFu2/tz4IyQwZNzYgH2QRp9k4EYTyXYn/WcSHvKIr40hGOCnMyv
-         RszfZ3rrpcl4l2OcFlOUF74yPdzKGXYaIkMadyJPAvmCI6jhFR4DJHO+Ob8tg704a5
-         UuD3/o0v+w2fUaeuTJUYi7qGJ8ytFJ/6aq7ybeYE=
+        b=a8J4jPwMVIOdXgj4OJHACComnNsVPPSuzJZPKBhIap7wzbC+74aeYqqttmwdeGqPL
+         L6DqC1edXcXUZer/CjVpl1nNp9rLfaAwGzlmW/bjRjHjKTxmf72V5iu2nUAd7/uIWM
+         2Jp7J8KgQJMiEf5n4pQ5IeFh1Mdxv8h/W7Ruolm4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randall Huang <huangrandall@google.com>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 041/131] f2fs: fix to avoid memory leakage in f2fs_listxattr
-Date:   Tue, 28 Apr 2020 20:24:13 +0200
-Message-Id: <20200428182230.231555676@linuxfoundation.org>
+        stable@vger.kernel.org, Luis Mendes <luis.p.mendes@gmail.com>
+Subject: [PATCH 5.6 098/167] staging: gasket: Fix incongruency in handling of sysfs entries creation
+Date:   Tue, 28 Apr 2020 20:24:34 +0200
+Message-Id: <20200428182237.551378595@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,68 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randall Huang <huangrandall@google.com>
+From: Luis Mendes <luis.p.mendes@gmail.com>
 
-commit 688078e7f36c293dae25b338ddc9e0a2790f6e06 upstream.
+commit 9195d762042b0e5e4ded63606b4b30a93cba4400 upstream.
 
-In f2fs_listxattr, there is no boundary check before
-memcpy e_name to buffer.
-If the e_name_len is corrupted,
-unexpected memory contents may be returned to the buffer.
+Fix incongruency in handling of sysfs entries creation.
+This issue could cause invalid memory accesses, by not properly
+detecting the end of the sysfs attributes array.
 
-Signed-off-by: Randall Huang <huangrandall@google.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-[bwh: Backported to 4.19: Use f2fs_msg() instead of f2fs_err()]
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 84c45d5f3bf1 ("staging: gasket: Replace macro __ATTR with __ATTR_NULL")
+Signed-off-by: Luis Mendes <luis.p.mendes@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200403151534.20753-1-luis.p.mendes@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/f2fs/xattr.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ drivers/staging/gasket/gasket_sysfs.c |    3 +--
+ drivers/staging/gasket/gasket_sysfs.h |    4 ----
+ 2 files changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
-index 1dae74f7cccac..201e9da1692a4 100644
---- a/fs/f2fs/xattr.c
-+++ b/fs/f2fs/xattr.c
-@@ -538,8 +538,9 @@ out:
- ssize_t f2fs_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size)
- {
- 	struct inode *inode = d_inode(dentry);
-+	nid_t xnid = F2FS_I(inode)->i_xattr_nid;
- 	struct f2fs_xattr_entry *entry;
--	void *base_addr;
-+	void *base_addr, *last_base_addr;
- 	int error = 0;
- 	size_t rest = buffer_size;
+--- a/drivers/staging/gasket/gasket_sysfs.c
++++ b/drivers/staging/gasket/gasket_sysfs.c
+@@ -228,8 +228,7 @@ int gasket_sysfs_create_entries(struct d
+ 	}
  
-@@ -549,6 +550,8 @@ ssize_t f2fs_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size)
- 	if (error)
- 		return error;
+ 	mutex_lock(&mapping->mutex);
+-	for (i = 0; strcmp(attrs[i].attr.attr.name, GASKET_ARRAY_END_MARKER);
+-		i++) {
++	for (i = 0; attrs[i].attr.attr.name != NULL; i++) {
+ 		if (mapping->attribute_count == GASKET_SYSFS_MAX_NODES) {
+ 			dev_err(device,
+ 				"Maximum number of sysfs nodes reached for device\n");
+--- a/drivers/staging/gasket/gasket_sysfs.h
++++ b/drivers/staging/gasket/gasket_sysfs.h
+@@ -30,10 +30,6 @@
+  */
+ #define GASKET_SYSFS_MAX_NODES 196
  
-+	last_base_addr = (void *)base_addr + XATTR_SIZE(xnid, inode);
-+
- 	list_for_each_xattr(entry, base_addr) {
- 		const struct xattr_handler *handler =
- 			f2fs_xattr_handler(entry->e_name_index);
-@@ -556,6 +559,16 @@ ssize_t f2fs_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size)
- 		size_t prefix_len;
- 		size_t size;
- 
-+		if ((void *)(entry) + sizeof(__u32) > last_base_addr ||
-+			(void *)XATTR_NEXT_ENTRY(entry) > last_base_addr) {
-+			f2fs_msg(dentry->d_sb, KERN_ERR,
-+				 "inode (%lu) has corrupted xattr",
-+				 inode->i_ino);
-+			set_sbi_flag(F2FS_I_SB(inode), SBI_NEED_FSCK);
-+			error = -EFSCORRUPTED;
-+			goto cleanup;
-+		}
-+
- 		if (!handler || (handler->list && !handler->list(dentry)))
- 			continue;
- 
--- 
-2.20.1
-
+-/* End markers for sysfs struct arrays. */
+-#define GASKET_ARRAY_END_TOKEN GASKET_RESERVED_ARRAY_END
+-#define GASKET_ARRAY_END_MARKER __stringify(GASKET_ARRAY_END_TOKEN)
+-
+ /*
+  * Terminator struct for a gasket_sysfs_attr array. Must be at the end of
+  * all gasket_sysfs_attribute arrays.
 
 
