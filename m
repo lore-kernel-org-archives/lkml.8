@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B85C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10943C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B60C206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6EAC206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099554;
-	bh=aA6z5Im+fckIqDKy07hv31qtqVKsbkx6P9lhSktTShc=;
+	s=default; t=1588099558;
+	bh=nZOTCztkrvm3VQFpmLiXSlzVzJMlPmcb9EM8YgnLKNc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Smftg06rbcDz09ic4wuwFWc+TwlJUzNjjgAafCQCTxDxxP/i5V0F1bTm48KR5u3/X
-	 wKeA/A9RsUehaAgpgUQPbXqFEcdwfIS1Wiie3OAEWjwtasJ3ngxSNg5n8XkhtLbO8+
-	 mVb7Y2GcbggU27zOvm2M2HAYMTb4N+VUX+AzDZtc=
+	b=AVflRQeNtEYaiVrF2e7BZuvPTRE/c2JGCgplV8uojF/LC0348zChvp+PkMdaDqajS
+	 mfQXj2PuDU+hi9HARxK4hUDck+EnAZfwm7Qbqrzq8cbougbO1NrbvuOcH5Efr0jCvC
+	 OJzV3rV4NaT9Mg+MfqRhLIy5wQ/vb1ZGRTuD8PZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730805AbgD1Snv (ORCPT
+        id S1731004AbgD1Sp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:43:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36486 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:45:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731278AbgD1Sns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:43:48 -0400
+        id S1731286AbgD1Snp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:43:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53CE420730;
-        Tue, 28 Apr 2020 18:43:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD7A9206D6;
+        Tue, 28 Apr 2020 18:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099427;
-        bh=aA6z5Im+fckIqDKy07hv31qtqVKsbkx6P9lhSktTShc=;
+        s=default; t=1588099425;
+        bh=nZOTCztkrvm3VQFpmLiXSlzVzJMlPmcb9EM8YgnLKNc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ad0e4e2gSOfp1gLFzwiwXvHyItMxvXmqzS6ignJOiafIR1LkSDA2AMAJvsSUoPPU3
-         kQUQVTbgMecsb8+UU043BrHFDwicYc0jgpAjSdv+oiCXOxOn6T69aGNXkuSa4/Qidg
-         Bjr8om+R1pVAdgPEP6LovFbt8n4wLJjbz6FdxHVU=
+        b=MlEP6qukCmabBaIpFrK51+F/SQRszHXzj1fTiGjIMXNYjMuS/XQTI69fhBquEmm1E
+         aBWgg6coBNWvH7MCfZf9NpuISu4vdCZn3SncJD+Lw95Lj8MjhVu3Yye1m4djlTKtYP
+         rYqWezhxACfkZnP5kkJZz9+UI8AiQFjo1AQQjYTI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 5.4 147/168] UAS: no use logging any details in case of ENODEV
-Date:   Tue, 28 Apr 2020 20:25:21 +0200
-Message-Id: <20200428182250.173811338@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>
+Subject: [PATCH 5.4 138/168] vt: dont hardcode the mem allocation upper bound
+Date:   Tue, 28 Apr 2020 20:25:12 +0200
+Message-Id: <20200428182249.274231503@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -58,33 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Nicolas Pitre <nico@fluxnic.net>
 
-commit 5963dec98dc52d52476390485f07a29c30c6a582 upstream.
+commit 2717769e204e83e65b8819c5e2ef3e5b6639b270 upstream.
 
-Once a device is gone, the internal state does not matter anymore.
-There is no need to spam the logs.
+The code in vc_do_resize() bounds the memory allocation size to avoid
+exceeding MAX_ORDER down the kzalloc() call chain and generating a
+runtime warning triggerable from user space. However, not only is it
+unwise to use a literal value here, but MAX_ORDER may also be
+configurable based on CONFIG_FORCE_MAX_ZONEORDER.
+Let's use KMALLOC_MAX_SIZE instead.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Cc: stable <stable@vger.kernel.org>
-Fixes: 326349f824619 ("uas: add dead request list")
-Link: https://lore.kernel.org/r/20200415141750.811-1-oneukum@suse.com
+Note that prior commit bb1107f7c605 ("mm, slab: make sure that
+KMALLOC_MAX_SIZE will fit into MAX_ORDER") the KMALLOC_MAX_SIZE value
+could not be relied upon.
+
+Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
+Cc: <stable@vger.kernel.org> # v4.10+
+Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.2003281702410.2671@knanqh.ubzr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/usb/storage/uas.c |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/storage/uas.c
-+++ b/drivers/usb/storage/uas.c
-@@ -190,6 +190,9 @@ static void uas_log_cmd_state(struct scs
- 	struct uas_cmd_info *ci = (void *)&cmnd->SCp;
- 	struct uas_cmd_info *cmdinfo = (void *)&cmnd->SCp;
+---
+ drivers/tty/vt/vt.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -1206,7 +1206,7 @@ static int vc_do_resize(struct tty_struc
+ 	if (new_cols == vc->vc_cols && new_rows == vc->vc_rows)
+ 		return 0;
  
-+	if (status == -ENODEV) /* too late */
-+		return;
-+
- 	scmd_printk(KERN_INFO, cmnd,
- 		    "%s %d uas-tag %d inflight:%s%s%s%s%s%s%s%s%s%s%s%s ",
- 		    prefix, status, cmdinfo->uas_tag,
+-	if (new_screen_size > (4 << 20))
++	if (new_screen_size > KMALLOC_MAX_SIZE)
+ 		return -EINVAL;
+ 	newscreen = kzalloc(new_screen_size, GFP_USER);
+ 	if (!newscreen)
 
 
