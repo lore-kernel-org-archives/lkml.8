@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E67C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DF4C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B07A20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D0402085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099353;
-	bh=ORWh+ng3YBmP//sXxpn+8+rv7EIHwrU2GNBrBcPU4SE=;
+	s=default; t=1588099355;
+	bh=jMJhh2+wu78WkYWNTpnb7aQZRNPelMQ0y1U1sNDZL70=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oHST3bCB39DvgDats79czU58BBK+oPMfyqkpx4cQ6EUjxXphgTS3QIDirIfrAEwSy
-	 YAnI44X4bwuj55hZfEdI47N0W/lPDLoBnMKmYAT5JZH6/AyFSvsdZKp0d3sDfOXImh
-	 LxZvCurZuCogjbMnlujLZYr8z+F0HGqY3r/W7ZAg=
+	b=FV1UyD1JS/Qeu85ksltJDIGsGrWlQxngUdJN8xxBpOiHWXhWTksMZrFRUzg8/z69l
+	 TZwIt7T8X0D/U+fRDtXnUtOV0ka1WQ7Y2WB6hVl26JIp5zrxj1l1/tb30JKBI8dN2R
+	 76Nj0bICeVXfbm4763oQOUf+e2QuFx8VRBrP20q0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731119AbgD1Smc (ORCPT
+        id S1730566AbgD1Sme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:42:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34488 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:42:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730920AbgD1Sm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:42:29 -0400
+        id S1731098AbgD1Sm1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:42:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8D20208E0;
-        Tue, 28 Apr 2020 18:42:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CB342085B;
+        Tue, 28 Apr 2020 18:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099349;
-        bh=ORWh+ng3YBmP//sXxpn+8+rv7EIHwrU2GNBrBcPU4SE=;
+        s=default; t=1588099346;
+        bh=jMJhh2+wu78WkYWNTpnb7aQZRNPelMQ0y1U1sNDZL70=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wZhOynaJJGkfhJPH6Ofcn9lUnLRjmN8bCJtpyf5xw7vCiNJ+m7bi+CZcTeQBi5Swa
-         pvWmaoATDFnhzhkCVdan1e8s7DdtQmn9+XRD0NWFFCZMnIj9kp3lcaY3p6VsK+XzHo
-         n5gn17GZbXN3J5589pYtC4y3L6gxTQcVCa274XbU=
+        b=uhooyz4smj3cgq0zO+XMtWwul9SJoFLpMUSB3IKPa+W8ANy8HDbv4oS0wCbCcOL8H
+         hApmwgcEZIFaQfFKyflTPhemI0R5XtnmwsWZUrbLAMH99rlkeGsIccAtLbV0dlOahM
+         5JzXOEgLdZEFQ8vYhUbGNnDX9BTWpLKW3dVoFJQc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 5.4 114/168] tpm/tpm_tis: Free IRQ if probing fails
-Date:   Tue, 28 Apr 2020 20:24:48 +0200
-Message-Id: <20200428182246.951677289@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Skobkin <skobkin-ru@ya.ru>,
+        Alexander Tsoy <alexander@tsoy.me>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 113/168] ALSA: usb-audio: Filter out unsupported sample rates on Focusrite devices
+Date:   Tue, 28 Apr 2020 20:24:47 +0200
+Message-Id: <20200428182246.817724364@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -59,48 +60,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+From: Alexander Tsoy <alexander@tsoy.me>
 
-commit b160c94be5d2816b62c8ac338605668304242959 upstream.
+commit 1c826792586f526a5a5cd21d55aad388f5bb0b23 upstream.
 
-Call disable_interrupts() if we have to revert to polling in order not to
-unnecessarily reserve the IRQ for the life-cycle of the driver.
+Many Focusrite devices supports a limited set of sample rates per
+altsetting. These includes audio interfaces with ADAT ports:
+ - Scarlett 18i6, 18i8 1st gen, 18i20 1st gen;
+ - Scarlett 18i8 2nd gen, 18i20 2nd gen;
+ - Scarlett 18i8 3rd gen, 18i20 3rd gen;
+ - Clarett 2Pre USB, 4Pre USB, 8Pre USB.
 
-Cc: stable@vger.kernel.org # 4.5.x
-Reported-by: Hans de Goede <hdegoede@redhat.com>
-Fixes: e3837e74a06d ("tpm_tis: Refactor the interrupt setup")
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Maximum rate is exposed in the last 4 bytes of Format Type descriptor
+which has a non-standard bLength = 10.
+
+Tested-by: Alexey Skobkin <skobkin-ru@ya.ru>
+Signed-off-by: Alexander Tsoy <alexander@tsoy.me>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200418175815.12211-1-alexander@tsoy.me
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/tpm/tpm_tis_core.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ sound/usb/format.c |   52 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
---- a/drivers/char/tpm/tpm_tis_core.c
-+++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -433,6 +433,9 @@ static void disable_interrupts(struct tp
- 	u32 intmask;
- 	int rc;
+--- a/sound/usb/format.c
++++ b/sound/usb/format.c
+@@ -227,6 +227,52 @@ static int parse_audio_format_rates_v1(s
+ }
  
-+	if (priv->irq == 0)
-+		return;
+ /*
++ * Many Focusrite devices supports a limited set of sampling rates per
++ * altsetting. Maximum rate is exposed in the last 4 bytes of Format Type
++ * descriptor which has a non-standard bLength = 10.
++ */
++static bool focusrite_valid_sample_rate(struct snd_usb_audio *chip,
++					struct audioformat *fp,
++					unsigned int rate)
++{
++	struct usb_interface *iface;
++	struct usb_host_interface *alts;
++	unsigned char *fmt;
++	unsigned int max_rate;
 +
- 	rc = tpm_tis_read32(priv, TPM_INT_ENABLE(priv->locality), &intmask);
- 	if (rc < 0)
- 		intmask = 0;
-@@ -983,9 +986,12 @@ int tpm_tis_core_init(struct device *dev
- 		if (irq) {
- 			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
- 						 irq);
--			if (!(chip->flags & TPM_CHIP_FLAG_IRQ))
-+			if (!(chip->flags & TPM_CHIP_FLAG_IRQ)) {
- 				dev_err(&chip->dev, FW_BUG
- 					"TPM interrupt not working, polling instead\n");
++	iface = usb_ifnum_to_if(chip->dev, fp->iface);
++	if (!iface)
++		return true;
 +
-+				disable_interrupts(chip);
-+			}
- 		} else {
- 			tpm_tis_probe_irq(chip, intmask);
++	alts = &iface->altsetting[fp->altset_idx];
++	fmt = snd_usb_find_csint_desc(alts->extra, alts->extralen,
++				      NULL, UAC_FORMAT_TYPE);
++	if (!fmt)
++		return true;
++
++	if (fmt[0] == 10) { /* bLength */
++		max_rate = combine_quad(&fmt[6]);
++
++		/* Validate max rate */
++		if (max_rate != 48000 &&
++		    max_rate != 96000 &&
++		    max_rate != 192000 &&
++		    max_rate != 384000) {
++
++			usb_audio_info(chip,
++				"%u:%d : unexpected max rate: %u\n",
++				fp->iface, fp->altsetting, max_rate);
++
++			return true;
++		}
++
++		return rate <= max_rate;
++	}
++
++	return true;
++}
++
++/*
+  * Helper function to walk the array of sample rate triplets reported by
+  * the device. The problem is that we need to parse whole array first to
+  * get to know how many sample rates we have to expect.
+@@ -262,6 +308,11 @@ static int parse_uac2_sample_rate_range(
  		}
+ 
+ 		for (rate = min; rate <= max; rate += res) {
++			/* Filter out invalid rates on Focusrite devices */
++			if (USB_ID_VENDOR(chip->usb_id) == 0x1235 &&
++			    !focusrite_valid_sample_rate(chip, fp, rate))
++				goto skip_rate;
++
+ 			if (fp->rate_table)
+ 				fp->rate_table[nr_rates] = rate;
+ 			if (!fp->rate_min || rate < fp->rate_min)
+@@ -276,6 +327,7 @@ static int parse_uac2_sample_rate_range(
+ 				break;
+ 			}
+ 
++skip_rate:
+ 			/* avoid endless loop */
+ 			if (res == 0)
+ 				break;
 
 
