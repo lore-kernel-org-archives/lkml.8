@@ -2,292 +2,112 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AEDC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B63C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25350206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51B34206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:00:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="NDYM+XGK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UuzYbl5l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729194AbgD1S21 (ORCPT
+        id S1729637AbgD1TAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:28:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729154AbgD1S2N (ORCPT
+        Tue, 28 Apr 2020 15:00:19 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:44940 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729263AbgD1S7R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:28:13 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4479C03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:28:12 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id k22so17206425eds.6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:28:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vh4m10ia5qKklygmqKoy/igtiVWM0C6oz+kPfdfBvPg=;
-        b=NDYM+XGKHsYc6JmR9Bx4riMCq+2oXai+QcTEHYSn5MjTE+8M6VlK9SXNJLg/cNvRUC
-         KbUxkui9MsgKwLqxIHN2gydfT0mUlHVNYDAgeWhPukJzMLmrsUrkwJC1ox+OTltKSU0T
-         23ZZQohc4eB+IMJlOZkozVi/6OtmmmWl+jpKD2lOz2AQ7xd6YUJpU3RDx7EaQlZOJfve
-         t+6tQekr0JzzsnvQws1C7dDuDb53djLu8pDLqmF0J5lDRVhQqYlV2iIT0y8uHf7QGmCL
-         yxYRLZj7uANo5vpyc5bjxMerAAAhYT/PACcJU9yPvv+7AYItILB4y4m14AN611g2WWmX
-         fX8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vh4m10ia5qKklygmqKoy/igtiVWM0C6oz+kPfdfBvPg=;
-        b=a+esKkFbZuarHO9e0ahHd30W85mb/wGBJUBApQkXcuGYeOn8aDDd45jhi+gXesTd7q
-         74MtUQMYu62nRv76nfDk9l42aafmf06h6wWFCRfks19y2SmlBt0cYmEv8SVVQs+rCJt8
-         ELUDe2jOpqTNY387MnjeM11f7KbS6KQPphX48B1rxMuvvpyyO47Xpissa+Hp0oJp7rXY
-         FHejrEl+Psqm46KaQ4ISQm9gW22kBYdcXssPQ+ETXdt4nCMpNKQothzCKBBuEqY0x96w
-         +E+FJQJBIElOgAenbCNto9EWKk+vDMA+Afnb3UAEea4xFDcCDwzbMVkyDnNDGu8qauo1
-         AjYg==
-X-Gm-Message-State: AGi0PuYfyKO6ryNM+qw4ZaqK2QfpCVQPqXg5/EKJ+zbvP1qlGPzc9xsI
-        JAVzskDAG1W041fLFaW0xB1ihcsSfq+5zAA6BFSpYQ==
-X-Google-Smtp-Source: APiQypLduhLjEC3Qmg3Hbk90E/K3NV7x2rVeBuII/0rxNo3h0d4o53/gQf+U+UZh7RhXOWUa9WJIz6JwDjnYjQYhAwk=
-X-Received: by 2002:a05:6402:8c1:: with SMTP id d1mr24577332edz.236.1588098491281;
- Tue, 28 Apr 2020 11:28:11 -0700 (PDT)
+        Tue, 28 Apr 2020 14:59:17 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SItOrH087842;
+        Tue, 28 Apr 2020 18:59:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=6QfPBxRy5q90uwHDhwkUZK3Fz9TlbCsqwMzjQP33fAQ=;
+ b=UuzYbl5loRqRRTDE3pzbcxlp8AoZsd2mvoJ5IB71FBYjz5pBLpDDzUZyWaQBT2lvObEw
+ LMNmexC/MBYW6oGpPjUFxJexF9G+g5eX+ApuvTGiHNObigDRKRCrtV7fNs8dwZqKc0e3
+ q7kiCkk8IKcNOoeNVRHkrcebK9bAG6Y2fFw7AFIynX7SnZ6CuSdhXJSQQ38BKV4b8qZr
+ gLczAyd5Du1ZZKoFTJzvjv8NQuBt2J6TEg7wVambUY7Nn5XdJm5yb7YiRUnsMd6DsW8o
+ QgFp9fYox5ki7zaFJ1j9l/ESOTzDx3cSpxxP3dZM2ykswoHJPbZwD+0Cwyw1uWC/oFqk yw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 30p2p077g6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 18:59:07 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SIv13j173815;
+        Tue, 28 Apr 2020 18:59:06 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 30my0e1hmd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 18:59:06 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03SIx1x2005370;
+        Tue, 28 Apr 2020 18:59:01 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Apr 2020 11:59:01 -0700
+Date:   Tue, 28 Apr 2020 21:58:54 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Oliver Graute <oliver.graute@gmail.com>
+Cc:     devel@driverdev.osuosl.org, linux-fbdev@vger.kernel.org,
+        gregkh@linuxfoundation.org,
+        Oliver Graute <oliver.graute@kococonnector.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v1] staging: fbtft: fb_st7789v: enabled inversion
+Message-ID: <20200428185854.GK2014@kadam>
+References: <1586424250-25897-1-git-send-email-oliver.graute@gmail.com>
+ <20200409101517.GO2001@kadam>
+ <20200427082939.GB18436@portage>
 MIME-Version: 1.0
-References: <00000000000089155205a43d9596@google.com> <20200427131522.8452-1-hdanton@sina.com>
-In-Reply-To: <20200427131522.8452-1-hdanton@sina.com>
-From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Date:   Tue, 28 Apr 2020 15:27:59 -0300
-Message-ID: <CAAEAJfBhJ38vGPv038BU7GnLEgg2h-NQiHY1ZsAaE4CAxbtz_g@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in vkms_dumb_create
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com>,
-        hamohammed.sa@gmail.com, rodrigosiqueiramelo@gmail.com,
-        David Airlie <airlied@linux.ie>,
-        syzkaller-bugs@googlegroups.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linaro-mm-sig@lists.linaro.org,
-        linux-media <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427082939.GB18436@portage>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
+ suspectscore=0 adultscore=0 mlxlogscore=915 bulkscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280150
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1015
+ bulkscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
+ mlxscore=0 suspectscore=0 mlxlogscore=964 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004280149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 at 09:47, Hillf Danton <hdanton@sina.com> wrote:
->
->
-> Sun, 26 Apr 2020 20:48:12 -0700
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    c578ddb3 Merge tag 'linux-kselftest-5.7-rc3' of git://git...
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=10fbf0d8100000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=b7a70e992f2f9b68
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=e3372a2afe1e7ef04bc7
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15438330100000
-> >
-> > Bisection is inconclusive: the first bad commit could be any of:
-> >
-> > 85b5bafb drm/cma-helper: Remove drm_fb_cma_fbdev_init_with_funcs()
-> > dff1c703 drm/tinydrm: Use drm_fbdev_generic_setup()
-> > 23167fa9 drm/panel: simple: Add support for Rocktech RK070ER9427 LCD panel
-> > 9060d7f4 drm/fb-helper: Finish the generic fbdev emulation
-> > 2230ca12 dt-bindings: display: Document the EDT et* displays in one file.
-> > e896c132 drm/debugfs: Add internal client debugfs file
-> > 894a677f drm/cma-helper: Use the generic fbdev emulation
-> > aa7e6455 drm/panel: Add support for the EDT ETM0700G0BDH6
-> > 244007ec drm/pl111: Set .gem_prime_vmap and .gem_prime_mmap
-> > aad34de2 drm/panel: Add support for the EDT ETM0700G0EDH6
-> > 7a6aca49 dt-bindings: Add vendor prefix for DLC Display Co., Ltd.
-> > d536540f drm/fb-helper: Add generic fbdev emulation .fb_probe function
-> > 0ca0c827 drm/panel: simple: Add DLC DLC0700YZG-1 panel
-> > c76f0f7c drm: Begin an API for in-kernel clients
-> > 5ba57bab drm: vkms: select DRM_KMS_HELPER
-> > 5fa8e4a2 drm/panel: Make of_drm_find_panel() return an ERR_PTR() instead of NULL
-> > 008095e0 drm/vc4: Add support for the transposer block
-> > c59eb3cf drm/panel: Let of_drm_find_panel() return -ENODEV when the panel is disabled
-> > 1ebe99a7 drm/vc4: Call drm_atomic_helper_fake_vblank() in the commit path
-> > 2e64a174 drm/of: Make drm_of_find_panel_or_bridge() fail when the device is disabled
-> > 1b9883ea drm/vc4: Support the case where the DSI device is disabled
-> > 6fb42b66 drm/atomic: Call fake_vblank() from the generic commit_tail() helpers
-> > b0b7aa40 dt-bindings: display: Add DT bindings for BOE HV070WSA-100 panel
-> > b25c60af drm/crtc: Add a generic infrastructure to fake VBLANK events
-> > 184d3cf4 drm/vc4: Use wait_for_flip_done() instead of wait_for_vblanks()
-> > ae8cf41b drm/panel: simple: Add support for BOE HV070WSA-100 panel to simple-panel
-> > 814bde99 drm/connector: Make ->atomic_commit() optional
-> > 955f60db drm: Add support for extracting sync signal drive edge from videomode
-> > 3b39ad7a drm/panel: simple: Add newhaven, nhd-4.3-480272ef-atxl LCD
-> > 425132fd drm/connector: Pass a drm_connector_state to ->atomic_commit()
-> > a5d2ade6 drm/panel: simple: Add support for Innolux G070Y2-L01
-> > b82c1f8f drm/atomic: Avoid connector to writeback_connector casts
-> > 03fa9aa3 dt-bindings: Add DataImage, Inc. vendor prefix
-> > 73915b2b drm/writeback: Fix the "overview" section of the doc
-> > 97ceb1fb drm/panel: simple: Add support for DataImage SCF0700C48GGU18
-> > e22e9531 Merge drm-upstream/drm-next into drm-misc-next
-> > 3d5664f9 drm/panel: ili9881c: Fix missing assignment to error return ret
-> > a0120245 drm/crc: Only report a single overflow when a CRC fd is opened
-> > 7ad4e463 drm/panel: p079zca: Refactor panel driver to support multiple panels
-> > 8adbbb2e drm/stm: ltdc: rework reset sequence
-> > 48bd379a drm/panel: p079zca: Add variable unprepare_delay properties
-> > 7868e507 drm/stm: ltdc: filter mode pixel clock vs pad constraint
-> > 731edd4c dt-bindings: Add Innolux P097PFG panel bindings
-> > f8878bb2 drm: print plane state normalized zpos value
-> > ca52bea9 drm/atomic-helper: Use bitwise or for filling a bitmask
-> > de04a462 drm/panel: p079zca: Support Innolux P097PFG panel
-> > 2bb7a39c dt-bindings: Add vendor prefix for kingdisplay
-> > a65020d0 drm/v3d: Fix a grammar nit in the scheduler docs.
-> > 2dd4f211 drm/v3d: Add missing v3d documentation structure.
-> > ebc950fd dt-bindings: Add KINGDISPLAY KD097D04 panel bindings
-> > cd0e0ca6 drm/panel: type promotion bug in s6e8aa0_read_mtp_id()
-> > e0d01811 drm/v3d: Remove unnecessary dma_fence_ops.
-> > 624bb0c0 drm/v3d: Delay the scheduler timeout if we're still making progress.
-> > b6d83fcc drm/panel: p079zca: Use of_device_get_match_data()
-> > 408633d2 drm/v3d: use new return type vm_fault_t in v3d_gem_fault
-> > decac6b0 dt-bindings: display: sun4i-drm: Add R40 display engine compatible
-> > 0b7510d1 drm/tilcdc: Use drm_connector_has_possible_encoder()
-> > d978a94b drm/sun4i: Add R40 display engine compatible
-> > af11942e drm/sun4i: tcon-top: Cleanup clock handling
-> > f8222409 drm/msm: Use drm_connector_has_possible_encoder()
-> > 38cb8d96 drm: Add drm_connector_has_possible_encoder()
-> > da82107e drm/sun4i: tcon: Release node when traversing of graph
-> > 7a667775 dt-bindings: display: sun4i-drm: Add R40 TV TCON description
-> > 7b71ca24 drm/radeon: Use drm_connector_for_each_possible_encoder()
-> > 4a068c5c drm/sun4i: DW HDMI: Release nodes if error happens during CRTC search
-> > ddba766d drm/nouveau: Use drm_connector_for_each_possible_encoder()
-> > 98c0e348 drm/amdgpu: Use drm_connector_for_each_possible_encoder()
-> > e0f56782 drm/sun4i: mixer: Order includes alphabetically
-> > 05db311a drm/sun4i: tcon-top: Add helpers for mux switching
-> > 83aefbb8 drm: Add drm_connector_for_each_possible_encoder()
-> > 20431c05 drm/i915: Nuke intel_mst_best_encoder()
-> > 5e496566 drm/sun4i: tcon-top: Remove mux configuration at probe time
-> > 0d998891 drm/fb-helper: Eliminate the .best_encoder() usage
-> > ac1fe132 dt-bindings: display: sun4i-drm: Fix order of DW HDMI PHY compatibles
-> > 03e3ec9a drm/panel: simple: Add Sharp LQ035Q7DB03 panel support
-> > c91b007e drm/vkms: Add extra information about vkms
-> > 5685ca0c drm/tinydrm: Fix doc build warnings
-> > 854502fa drm/vkms: Add basic CRTC initialization
-> > ae61f61f drm/client: Fix: drm_client_new: Don't require DRM to be registered
-> > c04372ea drm/vkms: Add mode_config initialization
-> > 41111ce1 drm/vkms: vkms_driver can be static
-> > 559e50fd drm/vkms: Add dumb operations
-> > 1c7c5fd9 drm/vkms: Introduce basic VKMS driver
-> > 657cd71e drm: gma500: Changed __attribute__((packed)) to __packed
-> > d1648930 drm/vkms: Add connectors helpers
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17b65cdfe00000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com
-> >
-> > ==================================================================
-> > BUG: KASAN: use-after-free in vkms_dumb_create+0x286/0x290 drivers/gpu/drm/vkms/vkms_gem.c:142
-> > Read of size 8 at addr ffff88809e537110 by task syz-executor.0/9558
-> >
-> > CPU: 0 PID: 9558 Comm: syz-executor.0 Not tainted 5.7.0-rc2-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > Call Trace:
-> >  __dump_stack lib/dump_stack.c:77 [inline]
-> >  dump_stack+0x188/0x20d lib/dump_stack.c:118
-> >  print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:382
-> >  __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
-> >  kasan_report+0x33/0x50 mm/kasan/common.c:625
-> >  vkms_dumb_create+0x286/0x290 drivers/gpu/drm/vkms/vkms_gem.c:142
-> >  drm_mode_create_dumb+0x27c/0x300 drivers/gpu/drm/drm_dumb_buffers.c:94
-> >  drm_ioctl_kernel+0x220/0x2f0 drivers/gpu/drm/drm_ioctl.c:787
-> >  drm_ioctl+0x4c9/0x980 drivers/gpu/drm/drm_ioctl.c:887
-> >  vfs_ioctl fs/ioctl.c:47 [inline]
-> >  ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
-> >  __do_sys_ioctl fs/ioctl.c:772 [inline]
-> >  __se_sys_ioctl fs/ioctl.c:770 [inline]
-> >  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
-> >  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > RIP: 0033:0x45c829
-> > Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> > RSP: 002b:00007f19a3e30c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> > RAX: ffffffffffffffda RBX: 00000000004e2d80 RCX: 000000000045c829
-> > RDX: 0000000020000080 RSI: 00000000c02064b2 RDI: 0000000000000003
-> > RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-> > R13: 000000000000028b R14: 00000000004d3188 R15: 00007f19a3e316d4
-> >
-> > Allocated by task 9558:
-> >  save_stack+0x1b/0x40 mm/kasan/common.c:49
-> >  set_track mm/kasan/common.c:57 [inline]
-> >  __kasan_kmalloc mm/kasan/common.c:495 [inline]
-> >  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:468
-> >  kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
-> >  __vkms_gem_create+0x44/0xf0 include/linux/slab.h:555
-> >  vkms_gem_create drivers/gpu/drm/vkms/vkms_gem.c:111 [inline]
-> >  vkms_gem_create drivers/gpu/drm/vkms/vkms_gem.c:100 [inline]
-> >  vkms_dumb_create+0x110/0x290 drivers/gpu/drm/vkms/vkms_gem.c:138
-> >  drm_mode_create_dumb+0x27c/0x300 drivers/gpu/drm/drm_dumb_buffers.c:94
-> >  drm_ioctl_kernel+0x220/0x2f0 drivers/gpu/drm/drm_ioctl.c:787
-> >  drm_ioctl+0x4c9/0x980 drivers/gpu/drm/drm_ioctl.c:887
-> >  vfs_ioctl fs/ioctl.c:47 [inline]
-> >  ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
-> >  __do_sys_ioctl fs/ioctl.c:772 [inline]
-> >  __se_sys_ioctl fs/ioctl.c:770 [inline]
-> >  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
-> >  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> >
-> > Freed by task 9558:
-> >  save_stack+0x1b/0x40 mm/kasan/common.c:49
-> >  set_track mm/kasan/common.c:57 [inline]
-> >  kasan_set_free_info mm/kasan/common.c:317 [inline]
-> >  __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:456
-> >  __cache_free mm/slab.c:3426 [inline]
-> >  kfree+0x109/0x2b0 mm/slab.c:3757
-> >  drm_gem_object_free+0xf0/0x1f0 drivers/gpu/drm/drm_gem.c:983
-> >  kref_put include/linux/kref.h:65 [inline]
-> >  drm_gem_object_put_unlocked drivers/gpu/drm/drm_gem.c:1017 [inline]
-> >  drm_gem_object_put_unlocked+0x190/0x1c0 drivers/gpu/drm/drm_gem.c:1002
-> >  vkms_gem_create drivers/gpu/drm/vkms/vkms_gem.c:116 [inline]
-> >  vkms_gem_create drivers/gpu/drm/vkms/vkms_gem.c:100 [inline]
-> >  vkms_dumb_create+0x14d/0x290 drivers/gpu/drm/vkms/vkms_gem.c:138
-> >  drm_mode_create_dumb+0x27c/0x300 drivers/gpu/drm/drm_dumb_buffers.c:94
-> >  drm_ioctl_kernel+0x220/0x2f0 drivers/gpu/drm/drm_ioctl.c:787
-> >  drm_ioctl+0x4c9/0x980 drivers/gpu/drm/drm_ioctl.c:887
-> >  vfs_ioctl fs/ioctl.c:47 [inline]
-> >  ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
-> >  __do_sys_ioctl fs/ioctl.c:772 [inline]
-> >  __se_sys_ioctl fs/ioctl.c:770 [inline]
-> >  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
-> >  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> >
-> > The buggy address belongs to the object at ffff88809e537000
-> >  which belongs to the cache kmalloc-1k of size 1024
-> > The buggy address is located 272 bytes inside of
-> >  1024-byte region [ffff88809e537000, ffff88809e537400)
-> > The buggy address belongs to the page:
-> > page:ffffea0002794dc0 refcount:1 mapcount:0 mapping:00000000e8234a18 index:0x0
-> > flags: 0xfffe0000000200(slab)
-> > raw: 00fffe0000000200 ffffea00027a3608 ffffea0002749008 ffff8880aa000c40
-> > raw: 0000000000000000 ffff88809e537000 0000000100000002 0000000000000000
-> > page dumped because: kasan: bad access detected
-> >
-> > Memory state around the buggy address:
-> >  ffff88809e537000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >  ffff88809e537080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > >ffff88809e537100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >                          ^
-> >  ffff88809e537180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >  ffff88809e537200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > ==================================================================
->
-> Nothing to do if we're allowed to do nothing in the error case.
->
+On Mon, Apr 27, 2020 at 10:29:39AM +0200, Oliver Graute wrote:
+> On 09/04/20, Dan Carpenter wrote:
+> > On Thu, Apr 09, 2020 at 11:24:05AM +0200, Oliver Graute wrote:
+> > > From: Oliver Graute <oliver.graute@kococonnector.com>
+> > > 
+> > > Enable inversion mode
+> > 
+> > What the heck is an inversion mode and why would you want it?
+> 
+> 
+> Should I name it:
+> 
+> Enable MIPI_DCS_ENTER_INVERT_MODE
+> 
 
-I submitted the fix after getting a confirmation from syzbot
-that the bad refcounting seemed to be causing this race.
+What I'm saying is the changelog should explain why would want to apply
+the patch.  What does the inversion mode do?  Is it inverting the color
+or flipping something upside down?
 
-Please see https://patchwork.kernel.org/patch/11514431/
+Probably if I had a background in graphics I would know what "Enable
+inversion mode" means...  But three words is not a proper and complete
+commit message normally.
 
-Thanks,
-Ezequiel
+regards,
+dan carpenter
+
