@@ -2,56 +2,56 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 606E8C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39858C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30DF3206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08FB920575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100103;
-	bh=gjLy/9Q4lOrc2IYZnLt4y2P7wQ1MuFdp0dajvQe2jNE=;
+	s=default; t=1588100107;
+	bh=8guGU9y+ILvrWFEO3RhZZta5otVc4xMe8XB8SCTkjCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sfhIWYbi2ELFMG4iVKpduafsDxrapDniIlXKwN6GIhp3wU9+xDlv5Xy7u5OBvM2iw
-	 XVs18hys0560XA441lR4oDMyJKfPaBNCrJKWgI+PoVUlduHdIoish+WdQe6U25Dapa
-	 Xfc/6KbMHpL3tLPjba5e03P2WecOvCDYaUfhH+Pg=
+	b=f1gL5moFsn0W/Dk45Ulh2RWJb8cKRE67MGNwWEsrZ0l4bdG3BGjpw/0ZfFZd+BTcP
+	 OmmXiVLUD/AGI5L3oi3zNcgDWWzBsaR3tvYNIInbJZ55R4AkrG8DwnKi+qDszvbzD9
+	 9xqvzrbApXXN54aofl/FAcPfb87MZfncZWW3ORMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729909AbgD1SdN (ORCPT
+        id S1730218AbgD1SzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:33:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49478 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:55:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729899AbgD1SdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:33:08 -0400
+        id S1729894AbgD1SdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:33:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F58421841;
-        Tue, 28 Apr 2020 18:33:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26B21217D8;
+        Tue, 28 Apr 2020 18:33:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098788;
-        bh=gjLy/9Q4lOrc2IYZnLt4y2P7wQ1MuFdp0dajvQe2jNE=;
+        s=default; t=1588098785;
+        bh=8guGU9y+ILvrWFEO3RhZZta5otVc4xMe8XB8SCTkjCc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=THpQLavcgfKaEDVZrSg3zun0byd1yTj05nMyNrkno2btFLPWIIDuINy/m7uz5cxr8
-         HOF6rFKBb6jrNR8GYPtL4GTZ5bHeXQ8hUf5qyu+0JnD26d8PegwcsbLCnPKN+SKcED
-         J1hiC3VcNL/bhecjnhwkZ5oXSXynU/EUrEfINqbA=
+        b=MafLwsseu5ebtdKzatlKCJAM1PNMR9Nff8YB/+4btekXQMKRjYusEF2A1wWRjqSzk
+         /54cFepM5xW2MUbgesU5404zs0CpkzqOUcUqN5bq3wNkoQPmGR46OBparqUaoBUb3Z
+         dBn97ppzA3vq13/72yI7MmhXwvo9FUEHa4/k9lSw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.6 112/167] KVM: s390: Return last valid slot if approx index is out-of-bounds
-Date:   Tue, 28 Apr 2020 20:24:48 +0200
-Message-Id: <20200428182239.352037251@linuxfoundation.org>
+        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 015/168] ceph: dont skip updating wanted caps when cap is stale
+Date:   Tue, 28 Apr 2020 20:23:09 +0200
+Message-Id: <20200428182233.626844888@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,42 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Yan, Zheng <zyan@redhat.com>
 
-commit 97daa028f3f621adff2c4f7b15fe0874e5b5bd6c upstream.
+[ Upstream commit 0aa971b6fd3f92afef6afe24ef78d9bb14471519 ]
 
-Return the index of the last valid slot from gfn_to_memslot_approx() if
-its binary search loop yielded an out-of-bounds index.  The index can
-be out-of-bounds if the specified gfn is less than the base of the
-lowest memslot (which is also the last valid memslot).
+1. try_get_cap_refs() fails to get caps and finds that mds_wanted
+   does not include what it wants. It returns -ESTALE.
+2. ceph_get_caps() calls ceph_renew_caps(). ceph_renew_caps() finds
+   that inode has cap, so it calls ceph_check_caps().
+3. ceph_check_caps() finds that issued caps (without checking if it's
+   stale) already includes caps wanted by open file, so it skips
+   updating wanted caps.
 
-Note, the sole caller, kvm_s390_get_cmma(), ensures used_slots is
-non-zero.
+Above events can cause an infinite loop inside ceph_get_caps().
 
-Fixes: afdad61615cc3 ("KVM: s390: Fix storage attributes migration with memory slots")
-Cc: stable@vger.kernel.org # 4.19.x: 0774a964ef56: KVM: Fix out of range accesses to memslots
-Cc: stable@vger.kernel.org # 4.19.x
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Message-Id: <20200408064059.8957-3-sean.j.christopherson@intel.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kvm/kvm-s390.c |    3 +++
- 1 file changed, 3 insertions(+)
+ fs/ceph/caps.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -1930,6 +1930,9 @@ static int gfn_to_memslot_approx(struct
- 			start = slot + 1;
- 	}
+diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+index f5a38910a82bf..703945cce0e5d 100644
+--- a/fs/ceph/caps.c
++++ b/fs/ceph/caps.c
+@@ -1976,8 +1976,12 @@ retry_locked:
+ 		}
  
-+	if (start >= slots->used_slots)
-+		return slots->used_slots - 1;
-+
- 	if (gfn >= memslots[start].base_gfn &&
- 	    gfn < memslots[start].base_gfn + memslots[start].npages) {
- 		atomic_set(&slots->lru_slot, start);
+ 		/* want more caps from mds? */
+-		if (want & ~(cap->mds_wanted | cap->issued))
+-			goto ack;
++		if (want & ~cap->mds_wanted) {
++			if (want & ~(cap->mds_wanted | cap->issued))
++				goto ack;
++			if (!__cap_is_valid(cap))
++				goto ack;
++		}
+ 
+ 		/* things we might delay */
+ 		if ((cap->issued & ~retain) == 0)
+-- 
+2.20.1
+
 
 
