@@ -2,146 +2,148 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07521C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D11C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D25DD20731
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:14:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cboZAHaR"
+	by mail.kernel.org (Postfix) with ESMTP id D6CED20731
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:15:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588112103;
+	bh=53P/Jx7WGJ66DDOfW8WB8+PbaNgX+/t+bDg3MILIzEg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Gb481+gHH2T/aF+sJMtSfFW753t/9ezOJwlwo5qXlLaSBW1xx+wJjOuDr+XGSf3lO
+	 AKd3Q+DZBOIkXhBXDhoOaAKJNEMmsFdv3VDvUkrpw2VyiM+UK1VkY8sqjvGlvsId34
+	 jegiSsG5CrDXYdZjiXIHr36/jmNVpl04sbFNDhzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbgD1WO7 (ORCPT
+        id S1727087AbgD1WPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:14:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50706 "EHLO
+        Tue, 28 Apr 2020 18:15:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726946AbgD1WOs (ORCPT
+        by vger.kernel.org with ESMTP id S1726559AbgD1WPA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:14:48 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96ED9C03C1AE;
-        Tue, 28 Apr 2020 15:14:48 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id m13so35588371otf.6;
-        Tue, 28 Apr 2020 15:14:48 -0700 (PDT)
+        Tue, 28 Apr 2020 18:15:00 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5638CC03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:15:00 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id w145so18132374lff.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:15:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7RXicgLKtxfo0xJMhMqi5KWPBmvi4LyzTbOskfEYJQQ=;
-        b=cboZAHaR1XgMdVyexb3ZGscW0yg4jWB0WpJQsyGN+lTcL8lo0DgeHrbARXRAwiBelT
-         fv11CmiuZPcFsPUdZ8Dk+cJFKE8pyoidKR1d3NFr2BdZlfocsEijQwaSXTfJi06/l5hd
-         bghcn7uaGbR50pQ0KULUrZ/37+Xhf1drNozRzBeTLWLqMJN2OItBt7D8ILHkk7qhUv/R
-         FVSPXdnhK/XVrHtHF742d0mlh5PFTggLAAnQhz+u409zzuWp1T2W2dG3BUDYMand6XtU
-         M0E5oV3fpNweYRrDo7ridTW0Qfj/E++JGqWAGbPgSO8EfX8jQx9qmsZ7JzcIP7Qij4H1
-         Sqlg==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D2oghUgdw8FKTw2gbtCLPncxWRlTmFnYYnhIyY7cVD0=;
+        b=GFZyY3OUWl1iOMrNHxSkI0vtAmTEJwc5rLOu6Eefgtq1vu+FWWHu6kobiy4ymJmTth
+         LQiB690O6IiG6VFgp5FgWTi+l2xm3YmC+nTdFGA0vNueM7ylnUtNfo1vcD+GhQ5Vur5x
+         Y3LvLGprBmN3nfCmdDuxMJJbOm26UsScuTfpQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7RXicgLKtxfo0xJMhMqi5KWPBmvi4LyzTbOskfEYJQQ=;
-        b=jTdy/cX5adnxpDedcssbFj6GHk2j55rBwxPJRDs0APjjAIIZXpwDMtlAnU1AFSdUDT
-         SjhIiV5HX4wy9rtPU65TPuqmQGBcNzQrXMLkegBnMsbr5KE3jDgE0InQeOdNEHMqwu/W
-         MO0Ql4ZDPACNN4+dDuqQALJ+ekahxmpIKtZ35lvH4CEyg6LKkRf/hlwLlS+EAXjSHYGo
-         rW2YJJmWGkoZc0c2j7PX6Atbi8j/kihPFsiVwYhLmEza1anMKsVAHmxnv286tRZb0SW1
-         qPYcT39S+nvjaDJfOS+bTzhoTtkaztPlSvbPC+H955dXsqaeUFrPIhK/qfvDIrVNFOKK
-         84UA==
-X-Gm-Message-State: AGi0PuYZDZyJ4LnlohK8iz5PI5YRrdCfhFN+EaEWvdaYDFwqgQNPPLQC
-        KYFXSjh7NqsmW8xEwT/SjWc=
-X-Google-Smtp-Source: APiQypL7QIFgYkaJ3tpdi/WMTCTqv80Zf90fvEaMBmkj0KaYd0MyEcNgUPXo4UrUQWWmFQ5wK66MQQ==
-X-Received: by 2002:a05:6830:92:: with SMTP id a18mr25129047oto.317.1588112087977;
-        Tue, 28 Apr 2020 15:14:47 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id 186sm5267476ooi.30.2020.04.28.15.14.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 15:14:47 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com, linux-kbuild@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH v4 5/5] MIPS: VDSO: Allow ld.lld to link the VDSO
-Date:   Tue, 28 Apr 2020 15:14:19 -0700
-Message-Id: <20200428221419.2530697-6-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428221419.2530697-1-natechancellor@gmail.com>
-References: <20200423171807.29713-1-natechancellor@gmail.com>
- <20200428221419.2530697-1-natechancellor@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D2oghUgdw8FKTw2gbtCLPncxWRlTmFnYYnhIyY7cVD0=;
+        b=FZmcHhxpe10tCdHxRhFGb79uZRCdsbrX/7pfIeingHU/xFizww+4UyfTgQeemOMPDa
+         boxeQI2xn3ZJT84Zdev6abqLMWxvO2jx+bIMRubB/Jc8kfjYOYld7uHTKn2OKnJodWfB
+         9dZJKNuXyPz9GAZ3D5ciGzLpssFY+uMh9Y/h/Ohrgco/ePbrTYTHcCsOo52JSccLVihz
+         i1PYldKvQmuCFfcLfQtXgJMAxJoH9F+w1uOFT3jG4TiNlLBVljrb99n4it2N4+2DrTS7
+         G0rfI0jua/BI4NEV20Z+1odsqvWtXOgMU+Fdl7m4jPGot59Ylrx/iU/NFq5APPkEnXjc
+         hvgA==
+X-Gm-Message-State: AGi0PuZu2gWmTvNAYs2Fy+Xsrqhvi4gCg9UeOx2lu4iTcpGhZfY8qV6g
+        muXrGsTmpax8eIp8H450gG1aUxb4+T8=
+X-Google-Smtp-Source: APiQypKI2WOaucEIs3B9/PMHlIob4YN/S2kxX1w4XdjhNLPYelJffeQkPLrhB6I2k7IKf54p9+NvHg==
+X-Received: by 2002:a05:6512:1082:: with SMTP id j2mr20743033lfg.53.1588112098579;
+        Tue, 28 Apr 2020 15:14:58 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id c21sm551822lfh.16.2020.04.28.15.14.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Apr 2020 15:14:56 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id u10so18119290lfo.8
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:14:56 -0700 (PDT)
+X-Received: by 2002:a19:9109:: with SMTP id t9mr21056059lfd.10.1588112096168;
+ Tue, 28 Apr 2020 15:14:56 -0700 (PDT)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+References: <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com>
+ <87imi8nzlw.fsf@x220.int.ebiederm.org> <CAHk-=wgh4zts+3hdkGzHLJ6pBGumcJ=23gRbMfubDrLstis2Bg@mail.gmail.com>
+ <CAHk-=whKHpERyVv2-C+kxq9KV_mJPW3hkGDpn6f4yOvs+au8SA@mail.gmail.com>
+ <20200411182043.GA3136@redhat.com> <CAHk-=wgwXpKepChGi4ZhQVxZxD0ic8s2CDXvUmqBTMaKGz-fjg@mail.gmail.com>
+ <20200412195049.GA23824@redhat.com> <CAHk-=wiDwR+6ugYaKEGHfYteLF+NH5xu=T7uuUTkK9y-hr6zow@mail.gmail.com>
+ <AM6PR03MB51708CF53D8A02086427DAC2E4AC0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wi_zr9dwX3UBYvgkmm6eVQfRP50orryJ6ZVAxuFqdSG5A@mail.gmail.com>
+ <20200428190836.GC29960@redhat.com> <CAHk-=wi03QRcUR1DfbEr+Pw-DAMENzY-FuRcGawtj9p597=p2w@mail.gmail.com>
+ <CAG48ez03ABTa-KbCtFHqB1hOT7dgAM96c3kiw-e80B+utSEwYw@mail.gmail.com>
+ <CAHk-=wjTLnMuZmBO2foeHhsLAoUTpUi7oBVJ67F4XKB+tdEDbQ@mail.gmail.com> <CAG48ez3EQOvdbzu9aO-cEAJwF_=fJzn1Cg0LMs3ruc=5r1ie5w@mail.gmail.com>
+In-Reply-To: <CAG48ez3EQOvdbzu9aO-cEAJwF_=fJzn1Cg0LMs3ruc=5r1ie5w@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 28 Apr 2020 15:14:39 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whTgFbjGTP=CqMWs_LOkY7bWvLQGYKwKx86amdbMovAkw@mail.gmail.com>
+Message-ID: <CAHk-=whTgFbjGTP=CqMWs_LOkY7bWvLQGYKwKx86amdbMovAkw@mail.gmail.com>
+Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
+To:     Jann Horn <jannh@google.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Waiman Long <longman@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, when linking with ld.lld, this warning pops up:
+On Tue, Apr 28, 2020 at 2:53 PM Jann Horn <jannh@google.com> wrote:
+>
+> You don't need LSM_UNSAFE_PTRACE if the tracer has already passed a
+> ptrace_may_access() check against the post-execve creds of the target
+> - that's no different from having done PTRACE_ATTACH after execve is
+> over.
 
-    arch/mips/vdso/Makefile:70: MIPS VDSO requires binutils >= 2.25
+Hmm. That sounds believable, I guess.
 
-CONFIG_LD_VERSION is set with scripts/ld-version.sh, which is specific
-to GNU ld. It returns 0 for ld.lld so CONFIG_MIPS_LD_CAN_LINK_VDSO does
-not set.
+But along these ways, I'm starting to think that we might perhaps skip
+the lock entirely.
 
-ld.lld has a completely different versioning scheme (as it follows
-LLVM's versioning) and it does not have the issue mentioned in the
-comment block so it should be allowed to link the VDSO.
+What if we made the rule instead be:
 
-With this patch, the VDSO successfully links and shows P_MIPS_PC32 in
-vgettimeofday.o.
+ - we move check_unsafe_exec() down. As far as I can tell, there's no
+reason it's that early - the flags it sets aren't actually used until
+when we actually do that final set_creds..
 
-$ llvm-objdump -Dr arch/mips/vdso/vgettimeofday.o | grep R_MIPS_PC32
-			00000024:  R_MIPS_PC32	_start
-			000000b0:  R_MIPS_PC32	_start
-			000002bc:  R_MIPS_PC32	_start
-			0000036c:  R_MIPS_PC32	_start
-			00000468:  R_MIPS_PC32	_start
+ - we add a "next cred" pointer to the signal struct (or task struct)
 
-Reported-by: Dmitry Golovin <dima@golovin.in>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/785
-Link: https://github.com/llvm/llvm-project/commit/e364e2e9ce50c12eb2bf093560e1a1a8544d455a
----
+ - make the rule be that check_unsafe_exec() checks p->ptrace under
+the tasklist_lock (or sighand lock - whatever ends up being most
+convenient)
 
-v3 -> v4:
+ - set "next cred" to be the known next cred there too under the lock.
+We call this small locked region the "cred sync point".
 
-* No changes.
+ - ptrace will check if we have the "in_exec" flag set and have one of
+those "next cred" pointers, in which case it checks both the old and
+the next credentials.
 
-v2 -> v3:
+No cred_guard_mutex at all, instead the rule is that as execve() goes
+through that "cred sync point", we have two cases
 
-* No changes.
+ (a) either ptrace has attached (because task->ptrace is set), and it
+does the LSM_UNSAFE_PTRACE dance.
 
-v1 -> v2:
+or
 
-* Move into Kconfig so that the warning does not happen.
+ (b) it knows that ptrace will check the next creds if it races with execve.
 
- arch/mips/vdso/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+And then after execve has installed the final new creds, it just
+clears the "next cred" pointer again, because at that point it knows
+that now any subsequent PTRACE_ATTACH will be checking the new creds.
 
-diff --git a/arch/mips/vdso/Kconfig b/arch/mips/vdso/Kconfig
-index 36a52158d849b..7aec721398d59 100644
---- a/arch/mips/vdso/Kconfig
-+++ b/arch/mips/vdso/Kconfig
-@@ -12,7 +12,7 @@
- # the lack of relocations. As such, we disable the VDSO for microMIPS builds.
- 
- config MIPS_LD_CAN_LINK_VDSO
--	def_bool LD_VERSION >= 225000000
-+	def_bool LD_VERSION >= 225000000 || LD_IS_LLD
- 
- config MIPS_DISABLE_VDSO
- 	def_bool CPU_MICROMIPS || (!CPU_MIPSR6 && !MIPS_LD_CAN_LINK_VDSO)
--- 
-2.26.2
+So instead of taking and dropping the cred_guard_mutex, we'd basically
+get rid of it entirely.
 
+Yeah, I didn't look at the seccomp case, but I guess the issues will be similar.
+
+             Linus
