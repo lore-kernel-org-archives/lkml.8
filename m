@@ -7,21 +7,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EE4C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE009C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A845F206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9325C206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:24:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbgD1PRv (ORCPT
+        id S1728906AbgD1PYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:17:51 -0400
+        Tue, 28 Apr 2020 11:24:34 -0400
 Received: from 8bytes.org ([81.169.241.247]:37386 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728091AbgD1PRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:17:48 -0400
+        id S1728132AbgD1PRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:17:50 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 23C2B791; Tue, 28 Apr 2020 17:17:43 +0200 (CEST)
+        id B07BBBFC; Tue, 28 Apr 2020 17:17:43 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -41,9 +41,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 05/75] x86/traps: Move some definitions to <asm/trap_defs.h>
-Date:   Tue, 28 Apr 2020 17:16:15 +0200
-Message-Id: <20200428151725.31091-6-joro@8bytes.org>
+Subject: [PATCH v3 08/75] x86/umip: Factor out instruction decoding
+Date:   Tue, 28 Apr 2020 17:16:18 +0200
+Message-Id: <20200428151725.31091-9-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200428151725.31091-1-joro@8bytes.org>
 References: <20200428151725.31091-1-joro@8bytes.org>
@@ -54,133 +54,124 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Move the definition of x86 trap vector numbers and the page-fault
-error code bits to the new header file asm/trap_defs.h. This makes it
-easier to include them into pre-decompression boot code. No functional
-changes.
+Factor out the code used to decode an instruction with the correct
+address and operand sizes to a helper function.
+
+No functional changes.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/trap_defs.h | 49 ++++++++++++++++++++++++++++++++
- arch/x86/include/asm/traps.h     | 44 +---------------------------
- 2 files changed, 50 insertions(+), 43 deletions(-)
- create mode 100644 arch/x86/include/asm/trap_defs.h
+ arch/x86/include/asm/insn-eval.h |  2 ++
+ arch/x86/kernel/umip.c           | 23 +---------------
+ arch/x86/lib/insn-eval.c         | 45 ++++++++++++++++++++++++++++++++
+ 3 files changed, 48 insertions(+), 22 deletions(-)
 
-diff --git a/arch/x86/include/asm/trap_defs.h b/arch/x86/include/asm/trap_defs.h
-new file mode 100644
-index 000000000000..488f82ac36da
---- /dev/null
-+++ b/arch/x86/include/asm/trap_defs.h
-@@ -0,0 +1,49 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_TRAP_DEFS_H
-+#define _ASM_X86_TRAP_DEFS_H
-+
-+/* Interrupts/Exceptions */
-+enum {
-+	X86_TRAP_DE = 0,	/*  0, Divide-by-zero */
-+	X86_TRAP_DB,		/*  1, Debug */
-+	X86_TRAP_NMI,		/*  2, Non-maskable Interrupt */
-+	X86_TRAP_BP,		/*  3, Breakpoint */
-+	X86_TRAP_OF,		/*  4, Overflow */
-+	X86_TRAP_BR,		/*  5, Bound Range Exceeded */
-+	X86_TRAP_UD,		/*  6, Invalid Opcode */
-+	X86_TRAP_NM,		/*  7, Device Not Available */
-+	X86_TRAP_DF,		/*  8, Double Fault */
-+	X86_TRAP_OLD_MF,	/*  9, Coprocessor Segment Overrun */
-+	X86_TRAP_TS,		/* 10, Invalid TSS */
-+	X86_TRAP_NP,		/* 11, Segment Not Present */
-+	X86_TRAP_SS,		/* 12, Stack Segment Fault */
-+	X86_TRAP_GP,		/* 13, General Protection Fault */
-+	X86_TRAP_PF,		/* 14, Page Fault */
-+	X86_TRAP_SPURIOUS,	/* 15, Spurious Interrupt */
-+	X86_TRAP_MF,		/* 16, x87 Floating-Point Exception */
-+	X86_TRAP_AC,		/* 17, Alignment Check */
-+	X86_TRAP_MC,		/* 18, Machine Check */
-+	X86_TRAP_XF,		/* 19, SIMD Floating-Point Exception */
-+	X86_TRAP_IRET = 32,	/* 32, IRET Exception */
-+};
-+
-+/*
-+ * Page fault error code bits:
-+ *
-+ *   bit 0 ==	 0: no page found	1: protection fault
-+ *   bit 1 ==	 0: read access		1: write access
-+ *   bit 2 ==	 0: kernel-mode access	1: user-mode access
-+ *   bit 3 ==				1: use of reserved bit detected
-+ *   bit 4 ==				1: fault was an instruction fetch
-+ *   bit 5 ==				1: protection keys block access
-+ */
-+enum x86_pf_error_code {
-+	X86_PF_PROT	=		1 << 0,
-+	X86_PF_WRITE	=		1 << 1,
-+	X86_PF_USER	=		1 << 2,
-+	X86_PF_RSVD	=		1 << 3,
-+	X86_PF_INSTR	=		1 << 4,
-+	X86_PF_PK	=		1 << 5,
-+};
-+
-+#endif /* _ASM_X86_TRAP_DEFS_H */
-diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
-index c26a7e1d8a2c..104991c05425 100644
---- a/arch/x86/include/asm/traps.h
-+++ b/arch/x86/include/asm/traps.h
-@@ -5,6 +5,7 @@
- #include <linux/context_tracking_state.h>
- #include <linux/kprobes.h>
+diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
+index b8b9ef1bbd06..b4ff3e3316d1 100644
+--- a/arch/x86/include/asm/insn-eval.h
++++ b/arch/x86/include/asm/insn-eval.h
+@@ -21,5 +21,7 @@ unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx);
+ int insn_get_code_seg_params(struct pt_regs *regs);
+ int insn_fetch_from_user(struct pt_regs *regs,
+ 			 unsigned char buf[MAX_INSN_SIZE]);
++bool insn_decode(struct pt_regs *regs, struct insn *insn,
++		 unsigned char buf[MAX_INSN_SIZE], int buf_size);
  
-+#include <asm/trap_defs.h>
- #include <asm/debugreg.h>
- #include <asm/siginfo.h>			/* TRAP_TRACE, ... */
+ #endif /* _ASM_X86_INSN_EVAL_H */
+diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
+index c9e5345da793..47d4d32e9cad 100644
+--- a/arch/x86/kernel/umip.c
++++ b/arch/x86/kernel/umip.c
+@@ -324,7 +324,6 @@ bool fixup_umip_exception(struct pt_regs *regs)
+ 	unsigned long *reg_addr;
+ 	void __user *uaddr;
+ 	struct insn insn;
+-	int seg_defs;
  
-@@ -129,47 +130,4 @@ void __noreturn handle_stack_overflow(const char *message,
- 				      unsigned long fault_address);
- #endif
+ 	if (!regs)
+ 		return false;
+@@ -339,27 +338,7 @@ bool fixup_umip_exception(struct pt_regs *regs)
+ 	if (!nr_copied)
+ 		return false;
  
--/* Interrupts/Exceptions */
--enum {
--	X86_TRAP_DE = 0,	/*  0, Divide-by-zero */
--	X86_TRAP_DB,		/*  1, Debug */
--	X86_TRAP_NMI,		/*  2, Non-maskable Interrupt */
--	X86_TRAP_BP,		/*  3, Breakpoint */
--	X86_TRAP_OF,		/*  4, Overflow */
--	X86_TRAP_BR,		/*  5, Bound Range Exceeded */
--	X86_TRAP_UD,		/*  6, Invalid Opcode */
--	X86_TRAP_NM,		/*  7, Device Not Available */
--	X86_TRAP_DF,		/*  8, Double Fault */
--	X86_TRAP_OLD_MF,	/*  9, Coprocessor Segment Overrun */
--	X86_TRAP_TS,		/* 10, Invalid TSS */
--	X86_TRAP_NP,		/* 11, Segment Not Present */
--	X86_TRAP_SS,		/* 12, Stack Segment Fault */
--	X86_TRAP_GP,		/* 13, General Protection Fault */
--	X86_TRAP_PF,		/* 14, Page Fault */
--	X86_TRAP_SPURIOUS,	/* 15, Spurious Interrupt */
--	X86_TRAP_MF,		/* 16, x87 Floating-Point Exception */
--	X86_TRAP_AC,		/* 17, Alignment Check */
--	X86_TRAP_MC,		/* 18, Machine Check */
--	X86_TRAP_XF,		/* 19, SIMD Floating-Point Exception */
--	X86_TRAP_IRET = 32,	/* 32, IRET Exception */
--};
+-	insn_init(&insn, buf, nr_copied, user_64bit_mode(regs));
 -
--/*
-- * Page fault error code bits:
-- *
-- *   bit 0 ==	 0: no page found	1: protection fault
-- *   bit 1 ==	 0: read access		1: write access
-- *   bit 2 ==	 0: kernel-mode access	1: user-mode access
-- *   bit 3 ==				1: use of reserved bit detected
-- *   bit 4 ==				1: fault was an instruction fetch
-- *   bit 5 ==				1: protection keys block access
-- */
--enum x86_pf_error_code {
--	X86_PF_PROT	=		1 << 0,
--	X86_PF_WRITE	=		1 << 1,
--	X86_PF_USER	=		1 << 2,
--	X86_PF_RSVD	=		1 << 3,
--	X86_PF_INSTR	=		1 << 4,
--	X86_PF_PK	=		1 << 5,
--};
- #endif /* _ASM_X86_TRAPS_H */
+-	/*
+-	 * Override the default operand and address sizes with what is specified
+-	 * in the code segment descriptor. The instruction decoder only sets
+-	 * the address size it to either 4 or 8 address bytes and does nothing
+-	 * for the operand bytes. This OK for most of the cases, but we could
+-	 * have special cases where, for instance, a 16-bit code segment
+-	 * descriptor is used.
+-	 * If there is an address override prefix, the instruction decoder
+-	 * correctly updates these values, even for 16-bit defaults.
+-	 */
+-	seg_defs = insn_get_code_seg_params(regs);
+-	if (seg_defs == -EINVAL)
+-		return false;
+-
+-	insn.addr_bytes = INSN_CODE_SEG_ADDR_SZ(seg_defs);
+-	insn.opnd_bytes = INSN_CODE_SEG_OPND_SZ(seg_defs);
+-
+-	insn_get_length(&insn);
+-	if (nr_copied < insn.length)
++	if (!insn_decode(regs, &insn, buf, nr_copied))
+ 		return false;
+ 
+ 	umip_inst = identify_insn(&insn);
+diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
+index 0c4f7ebc261b..0bbb814d4851 100644
+--- a/arch/x86/lib/insn-eval.c
++++ b/arch/x86/lib/insn-eval.c
+@@ -1407,3 +1407,48 @@ int insn_fetch_from_user(struct pt_regs *regs, unsigned char buf[MAX_INSN_SIZE])
+ 
+ 	return MAX_INSN_SIZE - not_copied;
+ }
++
++/**
++ * insn_decode() - Decode an instruction
++ * @regs:	Structure with register values as seen when entering kernel mode
++ * @insn:	Structure to store decoded instruction
++ * @buf:	Buffer containing the instruction bytes
++ * @buf_size:   Number of instruction bytes available in buf
++ *
++ * Decodes the instruction provided in buf and stores the decoding results in
++ * insn. Also determines the correct address and operand sizes.
++ *
++ * Returns:
++ *
++ * True if instruction was decoded, False otherwise.
++ */
++bool insn_decode(struct pt_regs *regs, struct insn *insn,
++		 unsigned char buf[MAX_INSN_SIZE], int buf_size)
++{
++	int seg_defs;
++
++	insn_init(insn, buf, buf_size, user_64bit_mode(regs));
++
++	/*
++	 * Override the default operand and address sizes with what is specified
++	 * in the code segment descriptor. The instruction decoder only sets
++	 * the address size it to either 4 or 8 address bytes and does nothing
++	 * for the operand bytes. This OK for most of the cases, but we could
++	 * have special cases where, for instance, a 16-bit code segment
++	 * descriptor is used.
++	 * If there is an address override prefix, the instruction decoder
++	 * correctly updates these values, even for 16-bit defaults.
++	 */
++	seg_defs = insn_get_code_seg_params(regs);
++	if (seg_defs == -EINVAL)
++		return false;
++
++	insn->addr_bytes = INSN_CODE_SEG_ADDR_SZ(seg_defs);
++	insn->opnd_bytes = INSN_CODE_SEG_OPND_SZ(seg_defs);
++
++	insn_get_length(insn);
++	if (buf_size < insn->length)
++		return false;
++
++	return true;
++}
 -- 
 2.17.1
 
