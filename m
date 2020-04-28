@@ -2,112 +2,106 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B8AC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BEDC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE92320731
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0CDE20730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:37:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgD1Vh1 (ORCPT
+        id S1726910AbgD1Vh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:37:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:59422 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726274AbgD1Vh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:37:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2CBD31B;
-        Tue, 28 Apr 2020 14:37:25 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 71FA13F68F;
-        Tue, 28 Apr 2020 14:37:24 -0700 (PDT)
-References: <20200428050242.17717-1-swood@redhat.com> <20200428050242.17717-2-swood@redhat.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Scott Wood <swood@redhat.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Rik van Riel <riel@surriel.com>,
-        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Subject: Re: [RFC PATCH 1/3] sched/fair: Call newidle_balance() from finish_task_switch()
-In-reply-to: <20200428050242.17717-2-swood@redhat.com>
-Date:   Tue, 28 Apr 2020 22:37:18 +0100
-Message-ID: <jhjftcns35d.mognet@arm.com>
+        Tue, 28 Apr 2020 17:37:57 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:33851 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726274AbgD1Vh5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 17:37:57 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MHWvH-1jPPBf34gD-00DTbe; Tue, 28 Apr 2020 23:37:50 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Russell King <linux@armlinux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: oabi-compat: fix epoll_ctl build failure
+Date:   Tue, 28 Apr 2020 23:37:30 +0200
+Message-Id: <20200428213747.3663311-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:QyK016Hxxs2OI4rE97oUpmPh5N6kM6aosbQ68YRzxwtX1/dXUdB
+ 0fLRccOS5TJ87dAmY5lXl9hW1mtKzy1fGKgq9RNLog1tdehYxRSgCgGna6b1uMemS+9wHoe
+ rNWTE6gw/UJL2G2Qn05rWe1T/9MZjqOx6FxxB+6NR8CV4+zXSOgBwl18+6FYbs2xSWNmJee
+ Xqz7IsH8BXfAZ++8EKbIg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:n3DbFsskL/8=:ufFsxFEofaBBL5hPfYnX/M
+ vYmoPRuqG/pTgqLiBKcFYUBpL0n5JYHwrercUv1AGgsWwhImbmeEGiXaj89YPzFUAOynMGTbf
+ SR6p1XMH2qbHfLV2nOB6azj6FCzFsI7nITIsc35DM8GuTJCJ7WLHEJOawhJPXOVAiJaDzluWY
+ Qm1+/d8OsmNnxWhNU1jmAkm5f1qdDEnhg3+idDBqQNaMeb1Sbaa0zfVvNhb8kN2hT3GjhwWDq
+ rxulETf53DdM5nU3rSSl+P1HAPGrDNUEO+9uE6RIpkumvOD0O77GCLTYrH+QJ3vYCv9P6pq1A
+ aYfTENKozkzGUrb6jhupmjhMELSsktlSuUbLPDDN3kgo5wV7PBBNzB1H7BDxIqWp9KKFRNuU2
+ Wg4xCrjlIwb8IglvQJuBzBm71aObtO8S1Gw72zSS+i7zWkx1fjSiCFmHvVrnw0WWleTLLIIMS
+ 4GtGd7Auh7BKCZvP6hbd1cSh43KhvTOBqUknyscRVU0/ZOcjQnXyionmytafK3p1gbXDl5Y8a
+ sExzl0I8J1779HHSP/Gyu52Rb1y7CMLY5IBVOG0qj3r3M8KjlY8oj726h43ROT+op8shNB+TI
+ eWl+MqLE0TznaMCt1gBeDcJbfopyG0FY7bLb9QTQaItss6RDjpFmLarFu8M0govtKnrK8Orho
+ HmwYnz1yVwhYho3JWiCkrCrTcMB1cwRRivcCiAa73ad6+p+ZKhoSlcpDRSmCmW1eMtwYxrCbN
+ n3CIU0EDaBRWyRCsBPxP1Abj7FrDs1yNnMUY0olmw2lBjuAnaDkMa8x57olbjNLVFHgtIUhKu
+ CJHYhqp4uvTPh8lseagc6OACse+P8dNGSBzErGPZbJNyjaJF8E=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Two functions are not declared or defined when CONFIG_EPOLL is
+disabled:
 
-On 28/04/20 06:02, Scott Wood wrote:
-> Thus, newidle_balance() is entered with interrupts enabled, which allows
-> (in the next patch) enabling interrupts when the lock is dropped.
->
-> Signed-off-by: Scott Wood <swood@redhat.com>
-> ---
->  kernel/sched/core.c  |  7 ++++---
->  kernel/sched/fair.c  | 45 ++++++++++++++++----------------------------
->  kernel/sched/sched.h |  6 ++----
->  3 files changed, 22 insertions(+), 36 deletions(-)
->
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 9a2fbf98fd6f..0294beb8d16c 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -3241,6 +3241,10 @@ static struct rq *finish_task_switch(struct task_struct *prev)
->       }
->
->       tick_nohz_task_switch();
-> +
-> +	if (is_idle_task(current))
-> +		newidle_balance();
-> +
+arch/arm/kernel/sys_oabi-compat.c: In function 'sys_oabi_epoll_ctl':
+arch/arm/kernel/sys_oabi-compat.c:258:6: error: implicit declaration of function 'ep_op_has_event' [-Werror=implicit-function-declaration]
+  258 |  if (ep_op_has_event(op) &&
+      |      ^~~~~~~~~~~~~~~
+arch/arm/kernel/sys_oabi-compat.c:265:9: error: implicit declaration of function 'do_epoll_ctl'; did you mean 'sys_epoll_ctl'? [-Werror=implicit-function-declaration]
+  265 |  return do_epoll_ctl(epfd, op, fd, &kernel, false);
+      |         ^~~~~~~~~~~~
+      |         sys_epoll_ctl
 
-This means we must go through a switch_to(idle) before figuring out we
-could've switched to a CFS task, and do it then. I'm curious to see the
-performance impact of that.
+Blank out the entire function contents in this case.
 
->       return rq;
->  }
->
-> @@ -10425,14 +10408,23 @@ static inline void nohz_newidle_balance(struct rq *this_rq) { }
->   *     0 - failed, no new tasks
->   *   > 0 - success, new (fair) tasks present
->   */
-> -int newidle_balance(struct rq *this_rq, struct rq_flags *rf)
-> +int newidle_balance(void)
->  {
->       unsigned long next_balance = jiffies + HZ;
-> -	int this_cpu = this_rq->cpu;
-> +	int this_cpu;
->       struct sched_domain *sd;
-> +	struct rq *this_rq;
->       int pulled_task = 0;
->       u64 curr_cost = 0;
->
-> +	preempt_disable();
-> +	this_rq = this_rq();
-> +	this_cpu = this_rq->cpu;
-> +	local_bh_disable();
-> +	raw_spin_lock_irq(&this_rq->lock);
-> +
-> +	update_rq_clock(this_rq);
-> +
->       update_misfit_status(NULL, this_rq);
+Fixes: c281634c8652 ("ARM: compat: remove KERNEL_DS usage in sys_oabi_epoll_ctl()")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+Alternatively, we could use stub functions in the header file, or
+hide the entire function and use sys_ni_syscall() to provide a
+stub entry point.
+---
+ arch/arm/kernel/sys_oabi-compat.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-I'm thinking this should be moved to where newidle_balance() used to be,
-otherwise we have a window where the rq is flagged as having a misfit
-task despite not having any runnable CFS tasks.
+diff --git a/arch/arm/kernel/sys_oabi-compat.c b/arch/arm/kernel/sys_oabi-compat.c
+index 85a1e95341d8..cdc99bab1a1d 100644
+--- a/arch/arm/kernel/sys_oabi-compat.c
++++ b/arch/arm/kernel/sys_oabi-compat.c
+@@ -252,6 +252,7 @@ struct oabi_epoll_event {
+ asmlinkage long sys_oabi_epoll_ctl(int epfd, int op, int fd,
+ 				   struct oabi_epoll_event __user *event)
+ {
++#ifdef CONFIG_EPOLL
+ 	struct oabi_epoll_event user;
+ 	struct epoll_event kernel;
+ 
+@@ -263,6 +264,9 @@ asmlinkage long sys_oabi_epoll_ctl(int epfd, int op, int fd,
+ 	kernel.data   = user.data;
+ 
+ 	return do_epoll_ctl(epfd, op, fd, &kernel, false);
++#else
++	return -ENOSYS;
++#endif
+ }
+ 
+ asmlinkage long sys_oabi_epoll_wait(int epfd,
+-- 
+2.26.0
 
->       /*
->        * We must set idle_stamp _before_ calling idle_balance(), such that we
