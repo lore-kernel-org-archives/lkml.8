@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2E0C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516E1C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A71121707
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D77921835
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:33:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098786;
-	bh=yLAGhYGGTaE/aZWvbpapAKvvx1vDiFdDP466LI3iGdU=;
+	s=default; t=1588098790;
+	bh=JhjZvLtCuEhKf7j0w0JV88r/hMeS3e+qy+8EgEb0JE4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G26edTv81mhDLNHRYfB35Ch8o+Yau1G16li94y9k547HpTxG9kOyJLdMsZkSNGpA8
-	 lSxefX0WjVEcoBn9y7gxXV3k8HcZEMlaYV2uQaXZvK3FKPByFNl19YankMF76Y4U5w
-	 mJYyt+5yTgwIA2jJOGVv54zQ4cPziZFy6To72e6g=
+	b=FU/S+1dbmmyeWl7njc5PgniZeZ9ZoUeDi081bUD3rUMmlXN/4OyK/GtU/O6MfhOQb
+	 Fyi2c0/P4RaCOvaNzOfzVd0+aARbUJWmT+lLd9NCMg1xi6p5GsnN2gpS8n1xaw+Wlr
+	 Yy2KneVdCrFVNkNWtGtAl0nX7icZWC2noYHeHBRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729887AbgD1SdC (ORCPT
+        id S1729900AbgD1SdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:33:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49224 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:33:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729863AbgD1Sc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:32:56 -0400
+        id S1729874AbgD1SdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:33:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44CCA21841;
-        Tue, 28 Apr 2020 18:32:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B221221841;
+        Tue, 28 Apr 2020 18:33:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098775;
-        bh=yLAGhYGGTaE/aZWvbpapAKvvx1vDiFdDP466LI3iGdU=;
+        s=default; t=1588098783;
+        bh=JhjZvLtCuEhKf7j0w0JV88r/hMeS3e+qy+8EgEb0JE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0RPnGLDZY+VyN+Lew790WqlGY80a1zojXr3gD6hwVMWrVXQBczvKTWqE7bByHmLzS
-         IHSVxqLaKV7vb2GD8L1zWMzs6WY+HOw/BuBaCGBNOvskTqPGZFlyuxSlNBYXRJyg0r
-         yRrPJBmvqZh3FB1DvOH4z+UXRxlBCT42QcJiGFh8=
+        b=rgaAUzgfm9rvc9UwKIs9g2hUiSmtZ06Uy3wsjiitpVuXv3R4xB+MzCqPQYo/vghPN
+         C8zSHjDTM5py2z8lYQrE70hqVDajA7rRQJs+S32YrrlNWAQoNtmA3d7m2iC9fa3qQj
+         B33Gqu3TRp+Koh4JVFURiLXPzhmJmlYqwiZibkZQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Haxby <john.haxby@oracle.com>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 055/131] ipv6: fix restrict IPV6_ADDRFORM operation
-Date:   Tue, 28 Apr 2020 20:24:27 +0200
-Message-Id: <20200428182231.881780044@linuxfoundation.org>
+Subject: [PATCH 4.19 056/131] macsec: avoid to set wrong mtu
+Date:   Tue, 28 Apr 2020 20:24:28 +0200
+Message-Id: <20200428182232.008105283@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
 References: <20200428182224.822179290@linuxfoundation.org>
@@ -59,49 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Haxby <john.haxby@oracle.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 82c9ae440857840c56e05d4fb1427ee032531346 ]
+[ Upstream commit 7f327080364abccf923fa5a5b24e038eb0ba1407 ]
 
-Commit b6f6118901d1 ("ipv6: restrict IPV6_ADDRFORM operation") fixed a
-problem found by syzbot an unfortunate logic error meant that it
-also broke IPV6_ADDRFORM.
+When a macsec interface is created, the mtu is calculated with the lower
+interface's mtu value.
+If the mtu of lower interface is lower than the length, which is needed
+by macsec interface, macsec's mtu value will be overflowed.
+So, if the lower interface's mtu is too low, macsec interface's mtu
+should be set to 0.
 
-Rearrange the checks so that the earlier test is just one of the series
-of checks made before moving the socket from IPv6 to IPv4.
+Test commands:
+    ip link add dummy0 mtu 10 type dummy
+    ip link add macsec0 link dummy0 type macsec
+    ip link show macsec0
 
-Fixes: b6f6118901d1 ("ipv6: restrict IPV6_ADDRFORM operation")
-Signed-off-by: John Haxby <john.haxby@oracle.com>
-Cc: stable@vger.kernel.org
+Before:
+    11: macsec0@dummy0: <BROADCAST,MULTICAST,M-DOWN> mtu 4294967274
+After:
+    11: macsec0@dummy0: <BROADCAST,MULTICAST,M-DOWN> mtu 0
+
+Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/ipv6_sockglue.c |   13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/net/macsec.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/net/ipv6/ipv6_sockglue.c
-+++ b/net/ipv6/ipv6_sockglue.c
-@@ -185,15 +185,14 @@ static int do_ipv6_setsockopt(struct soc
- 					retv = -EBUSY;
- 					break;
- 				}
--			} else if (sk->sk_protocol == IPPROTO_TCP) {
--				if (sk->sk_prot != &tcpv6_prot) {
--					retv = -EBUSY;
--					break;
--				}
--				break;
--			} else {
-+			}
-+			if (sk->sk_protocol == IPPROTO_TCP &&
-+			    sk->sk_prot != &tcpv6_prot) {
-+				retv = -EBUSY;
- 				break;
- 			}
-+			if (sk->sk_protocol != IPPROTO_TCP)
-+				break;
- 			if (sk->sk_state != TCP_ESTABLISHED) {
- 				retv = -ENOTCONN;
- 				break;
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -3238,11 +3238,11 @@ static int macsec_newlink(struct net *ne
+ 			  struct netlink_ext_ack *extack)
+ {
+ 	struct macsec_dev *macsec = macsec_priv(dev);
++	rx_handler_func_t *rx_handler;
++	u8 icv_len = DEFAULT_ICV_LEN;
+ 	struct net_device *real_dev;
+-	int err;
++	int err, mtu;
+ 	sci_t sci;
+-	u8 icv_len = DEFAULT_ICV_LEN;
+-	rx_handler_func_t *rx_handler;
+ 
+ 	if (!tb[IFLA_LINK])
+ 		return -EINVAL;
+@@ -3258,7 +3258,11 @@ static int macsec_newlink(struct net *ne
+ 
+ 	if (data && data[IFLA_MACSEC_ICV_LEN])
+ 		icv_len = nla_get_u8(data[IFLA_MACSEC_ICV_LEN]);
+-	dev->mtu = real_dev->mtu - icv_len - macsec_extra_len(true);
++	mtu = real_dev->mtu - icv_len - macsec_extra_len(true);
++	if (mtu < 0)
++		dev->mtu = 0;
++	else
++		dev->mtu = mtu;
+ 
+ 	rx_handler = rtnl_dereference(real_dev->rx_handler);
+ 	if (rx_handler && rx_handler != macsec_handle_frame)
 
 
