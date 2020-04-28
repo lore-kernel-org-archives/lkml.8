@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6707C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD9CC83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8367A20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0212206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099731;
-	bh=xorfflzJiIQ56ptLu2SlN+wqHbwI5lQWP2HuxQgbK+4=;
+	s=default; t=1588099732;
+	bh=YRPz9qHcObap93jH97qo4aIT3nzat78I2eNfcwvsejg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q16lPnyv42lVLZBBR5nALftlaVANTO07nOSk/KuYk7j1pTgyBzdzObj6+MskCs1uP
-	 R1rhGxC8mT3wAXj3SOPjmvT93unfhP+XA/TRmjOEl3thiL1RRh+p7ehyR9UjQbPKsp
-	 PD9DR6CbhzHBIP5tKc6CjJmTU/vFYrXWlq3aj/1c=
+	b=r23pEsORArr6C5c9PGnlrpMaB9VnTQ9Db+gm4Z/QF4zZqUQHUtvI8nazWQ92glpKB
+	 Jr+rhCEBi1MsGH/uOLUHT3XFmIAnQwxT8YkBwOX4esuF0r0JvnWgFjoLv04T3yH4dy
+	 x83v55VKNk64IGmzzCYPMLgEg4IH04yY8rnj+dB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730949AbgD1Skg (ORCPT
+        id S1730558AbgD1Ske (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:40:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59564 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:40:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730527AbgD1SkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:40:24 -0400
+        id S1730841AbgD1SjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:39:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F08E42076A;
-        Tue, 28 Apr 2020 18:40:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 850C320575;
+        Tue, 28 Apr 2020 18:39:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099224;
-        bh=xorfflzJiIQ56ptLu2SlN+wqHbwI5lQWP2HuxQgbK+4=;
+        s=default; t=1588099163;
+        bh=YRPz9qHcObap93jH97qo4aIT3nzat78I2eNfcwvsejg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=clGxQjlKdJZv4ifCVncUMjMp5GbDJXDszD6CdXLfNPQLs23ChEFfxQYSMh18ZSodC
-         9D98h42WkbGHuo8PxUFVE5OO9/mC1HuoQTrfE6KM0zEmjzlkmceqap/EGOI/du3dWe
-         MgZapSC97YcEnwDYUXjlpo1XaLmCF7J/MZ8ZV6bs=
+        b=ZQH23i8uo2UzANs2OBsmQWMiWZ58p1br48vcqMoeahw98MHAzaaS/HWuA/Vl02okx
+         TX2j4wVSVtrYcGdyRCufR+k75OvrVUQniM1zeQbIIaPXz9ULH6Qbh6/QWM5MPgKXA6
+         e/rcsaNbRQhW3kpfltM00HKBQzRdAKXtXzeX7Wds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 4.19 117/131] staging: vt6656: Dont set RCR_MULTICAST or RCR_BROADCAST by default.
-Date:   Tue, 28 Apr 2020 20:25:29 +0200
-Message-Id: <20200428182239.962505488@linuxfoundation.org>
+        stable@vger.kernel.org, Francisco Jerez <currojerez@riseup.net>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
+        Andi Shyti <andi.shyti@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: [PATCH 5.6 164/167] drm/i915/gt: Update PMINTRMSK holding fw
+Date:   Tue, 28 Apr 2020 20:25:40 +0200
+Message-Id: <20200428182246.345179491@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,45 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit 0f8240bfc070033a4823b19883efd3d38c7735cc upstream.
+commit e1eb075c5051987fbbadbc0fb8211679df657721 upstream.
 
-mac80211/users control whether multicast is on or off don't enable it by default.
+If we use a non-forcewaked write to PMINTRMSK, it does not take effect
+until much later, if at all, causing a loss of RPS interrupts and no GPU
+reclocking, leaving the GPU running at the wrong frequency for long
+periods of time.
 
-Fixes an issue when multicast/broadcast is always on allowing other beacons through
-in power save.
-
-Fixes: db8f37fa3355 ("staging: vt6656: mac80211 conversion: main_usb add functions...")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/2c24c33d-68c4-f343-bd62-105422418eac@gmail.com
+Reported-by: Francisco Jerez <currojerez@riseup.net>
+Suggested-by: Francisco Jerez <currojerez@riseup.net>
+Fixes: 35cc7f32c298 ("drm/i915/gt: Use non-forcewake writes for RPS")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Francisco Jerez <currojerez@riseup.net>
+Cc: Mika Kuoppala <mika.kuoppala@linux.intel.com>
+Cc: Andi Shyti <andi.shyti@intel.com>
+Reviewed-by: Mika Kuoppala <mika.kuoppala@linux.intel.com>
+Reviewed-by: Andi Shyti <andi.shyti@intel.com>
+Reviewed-by: Francisco Jerez <currojerez@riseup.net>
+Cc: <stable@vger.kernel.org> # v5.6+
+Link: https://patchwork.freedesktop.org/patch/msgid/20200415170318.16771-2-chris@chris-wilson.co.uk
+(cherry picked from commit a080bd994c4023042a2b605c65fa10a25933f636)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/staging/vt6656/main_usb.c |    8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/i915/gt/intel_rps.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/staging/vt6656/main_usb.c
-+++ b/drivers/staging/vt6656/main_usb.c
-@@ -780,15 +780,11 @@ static void vnt_configure(struct ieee802
- {
- 	struct vnt_private *priv = hw->priv;
- 	u8 rx_mode = 0;
--	int rc;
+--- a/drivers/gpu/drm/i915/gt/intel_rps.c
++++ b/drivers/gpu/drm/i915/gt/intel_rps.c
+@@ -83,7 +83,8 @@ static void rps_enable_interrupts(struct
+ 	gen6_gt_pm_enable_irq(gt, rps->pm_events);
+ 	spin_unlock_irq(&gt->irq_lock);
  
- 	*total_flags &= FIF_ALLMULTI | FIF_OTHER_BSS | FIF_BCN_PRBRESP_PROMISC;
+-	set(gt->uncore, GEN6_PMINTRMSK, rps_pm_mask(rps, rps->cur_freq));
++	intel_uncore_write(gt->uncore,
++			   GEN6_PMINTRMSK, rps_pm_mask(rps, rps->last_freq));
+ }
  
--	rc = vnt_control_in(priv, MESSAGE_TYPE_READ, MAC_REG_RCR,
--			    MESSAGE_REQUEST_MACREG, sizeof(u8), &rx_mode);
--
--	if (!rc)
--		rx_mode = RCR_MULTICAST | RCR_BROADCAST;
-+	vnt_control_in(priv, MESSAGE_TYPE_READ, MAC_REG_RCR,
-+		       MESSAGE_REQUEST_MACREG, sizeof(u8), &rx_mode);
+ static void gen6_rps_reset_interrupts(struct intel_rps *rps)
+@@ -117,7 +118,8 @@ static void rps_disable_interrupts(struc
  
- 	dev_dbg(&priv->usb->dev, "rx mode in = %x\n", rx_mode);
+ 	rps->pm_events = 0;
  
+-	set(gt->uncore, GEN6_PMINTRMSK, rps_pm_sanitize_mask(rps, ~0u));
++	intel_uncore_write(gt->uncore,
++			   GEN6_PMINTRMSK, rps_pm_sanitize_mask(rps, ~0u));
+ 
+ 	spin_lock_irq(&gt->irq_lock);
+ 	gen6_gt_pm_disable_irq(gt, GEN6_PM_RPS_EVENTS);
 
 
