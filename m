@@ -2,155 +2,123 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E43F3C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A5AC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB49E206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D768206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:09:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qp4LAKom"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgD1IJS (ORCPT
+        id S1726819AbgD1IJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 04:09:18 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25636 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726180AbgD1IJR (ORCPT
+        Tue, 28 Apr 2020 04:09:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726377AbgD1IJV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 04:09:17 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03S831ds118075;
-        Tue, 28 Apr 2020 04:09:16 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh9nahes-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 04:09:15 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03S83DMp119777;
-        Tue, 28 Apr 2020 04:09:15 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh9nahdy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 04:09:15 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03S853dY000878;
-        Tue, 28 Apr 2020 08:09:12 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 30mcu5nmtk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 08:09:12 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03S89Aqr53018636
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 08:09:10 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 07F2F52051;
-        Tue, 28 Apr 2020 08:09:10 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.156.174])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 707715204F;
-        Tue, 28 Apr 2020 08:09:09 +0000 (GMT)
-Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
- resource in use
-To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
- <20200407192015.19887-4-akrowiak@linux.ibm.com>
- <75bcbc06-f38f-1aff-138f-5d2a2dd3f7b6@linux.ibm.com>
- <162f7dbc-9dd0-0a42-0d1a-8412a9a848e7@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <3f7f57fb-c137-4854-3cb0-b234196a9f1e@linux.ibm.com>
-Date:   Tue, 28 Apr 2020 10:09:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 28 Apr 2020 04:09:21 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0295BC03C1A9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 01:09:21 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id j14so16116191lfg.9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 01:09:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Kqa38YVLi7QYLTLJZZ98QduYEyE7k3ch1m+jgKR4ttM=;
+        b=Qp4LAKomQILI/2tAvM4aA0DBEvzilLjP1lu63igtRn3zAu3vcuEZXruRMYKHEtis5p
+         u0Kwte31H8Vzt4w9fRELwsKgRZlD9787lL86lP+i+RdF1jPnG4aslfhhdp6Pc30DOFLD
+         AoWN+Qa8UUl4dQjSZexfDylq1gfw8wJiUJXLj6pBq8FzDqltl3fVDEcCW21/3K9g+d2X
+         zSLHRbz9DLYT5/z1Pm8747clwSiPgl40F/LPYnfBcQzkNhz64hGucLMX33hbaLozo2/B
+         q5owKRkdaN6E9QuiVitkufiMdcflD7sYGtQVdQBcr1KWPwuPDFOtVYzGIpB40H98f9oW
+         cJ2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Kqa38YVLi7QYLTLJZZ98QduYEyE7k3ch1m+jgKR4ttM=;
+        b=fuzI+gpsJSA6qjyWo21IWF5dOEjqM5f7P69QDyH08vCgtZex/0baQQBqjDhpmjY3rk
+         jZOXo2J4NOOcPxPnAByeIFyueu6iSvNwn+8kmfnTrcXAE/+sATErdKCSrZWmZoeHezl4
+         reLGTy7mJf3sppZsv4+JyPOXNlxoXF4od/yEw+8ezf2k7EgSFNNK9AUq/uPuq1uql3kJ
+         0FI/ezVrW5XCBWUYP/WxhNWnLr4L+PHeH47jz15cCGEYOBwfGtxv8cxcTLfGluYZ2qiu
+         mg/G65F8m2pbSY6OlTlF5goMIAIhGzPGwb+30f/YVAI8A1Nk3hJA7/ZrXQ0sCqj7UgtT
+         gxjw==
+X-Gm-Message-State: AGi0PuYUPdX63AhtZtK2uQlmdttSlz0vXS1EKJikZmeQq77YFuwhZVEY
+        6pG4Z9TYpSbqrN5nfCZ1SGEoauMmoUBIDoYq09M=
+X-Google-Smtp-Source: APiQypIcbp/b/DnOyM07Z/UydAFYokUInguVPq1krfdT83rmW4qthkvs5N+288CwxFuCtt7Js7pGXQlnrk1EmEpIDVs=
+X-Received: by 2002:a05:6512:74:: with SMTP id i20mr18261664lfo.104.1588061359536;
+ Tue, 28 Apr 2020 01:09:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <162f7dbc-9dd0-0a42-0d1a-8412a9a848e7@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-28_03:2020-04-27,2020-04-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
- spamscore=0 malwarescore=0 adultscore=0 suspectscore=0 mlxlogscore=999
- impostorscore=0 lowpriorityscore=0 mlxscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004280065
+References: <c2fd765aa388d4510194ba02c017e39bde57c8d4.1587478171.git.baolin.wang7@gmail.com>
+ <CADBw62rJ8VYTgnW_3q4=TkCyZx2B1DHsG+oOmiph8FLsukUROQ@mail.gmail.com>
+ <20200427090518.GG3559@dell> <CADBw62qXtNnoNq0F1iZrvQHryMTy86GEqcD-qXBzsJJL-B8mQg@mail.gmail.com>
+ <20200428071447.GJ3559@dell>
+In-Reply-To: <20200428071447.GJ3559@dell>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Tue, 28 Apr 2020 16:09:08 +0800
+Message-ID: <CADBw62o=D-hmp1yB=oPXPJfBucOEEa87cZado5+1mTKsCWDKfg@mail.gmail.com>
+Subject: Re: [PATCH v3] mfd: syscon: Add Spreadtrum physical regmap bus support
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 28, 2020 at 3:14 PM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Tue, 28 Apr 2020, Baolin Wang wrote:
+>
+> > On Mon, Apr 27, 2020 at 5:05 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > >
+> > > On Mon, 27 Apr 2020, Baolin Wang wrote:
+> > >
+> > > > Hi Arnd and Lee,
+> > > >
+> > > > On Tue, Apr 21, 2020 at 10:13 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > > > >
+> > > > > Some platforms such as Spreadtrum platform, define a special method to
+> > > > > update bits of the registers instead of read-modify-write, which means
+> > > > > we should use a physical regmap bus to define the reg_update_bits()
+> > > > > operation instead of the MMIO regmap bus. Thus we can register a new
+> > > > > physical regmap bus into syscon core to support this.
+> > > > >
+> > > > > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> > > >
+> > > > Do you have any comments for this patch? Thanks.
+> > >
+> > > Yes.  I'm not accepting it, sorry.
+> > >
+> > > I'd rather you duplicate the things you need from of_syscon_register()
+> > > in your own driver than taint this one.
+> >
+> > Thanks for your comments and I can understand your concern. But we
+> > still want to use the standard syscon APIs in syscon.c, which means we
+> > still need insert an callback or registration or other similar methods
+> > to support vendor specific regmap bus. Otherwise we should invent some
+> > similar syscon APIs in our vendor syscon driver, like
+> > sprd_syscon_regmap_lookup_by_phandle/sprd_syscon_regmap_lookup_by_compatible.
+>
+> So long as the generic driver stays generic.  Providing a registration
+> function sounds cleaner than tainting the code with vendor specifics.
 
+So seems my V1 patch set [1] was on the direction as you suggested,
+but Arnd did not like that.
 
-On 2020-04-28 00:24, Tony Krowiak wrote:
-> 
-> 
-> On 4/27/20 4:20 AM, Pierre Morel wrote:
->>
->>
->> On 2020-04-07 21:20, Tony Krowiak wrote:
->>> Introduces a new driver callback to prevent a root user from unbinding
->>> an AP queue from its device driver if the queue is in use. The intent of
->>> this callback is to provide a driver with the means to prevent a root 
->>> user
->>> from inadvertently taking a queue away from a guest and giving it to the
->>> host while the guest is still using it.
-
-...snip...
-
->>
->> This functionality is valid for the host as for the guests and is 
->> handled automatically by the firmware with the CRYCB.
->> The AP bus uses QCI to retrieve the host CRYCB and build the hosts AP 
->> queues.
->>
->> If instead to mix VFIO CRYCB matrix handling and queues at the same 
->> level inside the AP bus we separate these different firmware entities 
->> in two different software entities.
->>
->> If we make the AP bus sit above a CRYCB/Matrix bus, and in the way 
->> virtualize the QCI and test AP queue instructions:
->> - we can directly pass a matrix device to the guest though a VFIO 
->> matrix device
->> - the consistence will be automatic
->> - the VFIO device and parent device will be of the same kind which 
->> would make the design much more clearer.
->> - there will be no need for these callback because the consistence of 
->> the matrix will be guaranteed by firmware
-> 
-> As stated in my response above, the issue here is not consistency. While 
-> the design you describe
-> may be reasonable, it is a major departure from what is out in the 
-> field. In other words, that ship
-> has sailed.
-
-
-The current VFIO-AP driver works as before, without any change, above 
-the Matrix device I suggest.
-
-Aside the old scheme which can continue, the Matrix device can be used 
-directly to build a VFIO Matrix device, usable by QEMU without any 
-modification.
-
-Once the dynamic extensions proposed in this series and the associated 
-tools are out on the field, then yes the ship is really far.
-For now, the existing user's API do not change, the existing tools do 
-not need modifications and we can repair the ship for its long journey.
-
-The inconsistency between device and VFIO device and the resulting 
-complexity is not going to ease future enhancement.
-
-Regards,
-Pierre
-
-
+[1]
+https://lore.kernel.org/patchwork/patch/1226161/
+https://lore.kernel.org/patchwork/patch/1226162/
 
 -- 
-Pierre Morel
-IBM Lab Boeblingen
+Baolin Wang
