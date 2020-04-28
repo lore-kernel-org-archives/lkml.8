@@ -2,67 +2,209 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516A9C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6BCC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28EB7206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:03:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100621;
-	bh=bq2Ry7YDkP+guG9GE3lk3Dcu/BwjlgDRMOvlmkR2+eQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J9PZ7+zVPsm57/4u+DwBwfiEUa2C0VbPKADF3fbr7XuJzqrEQkqj+sW3qekF4fnSa
-	 C29AW5eRFOH4FDlcIH5g0iHQaodBXtHLtcUwbjkpIZ+5LeDsgDPbwUYN5BYDvoTAdj
-	 mk697OC8UZxvGjkZ+JFrXrHZkFvdQ7RbnddNHXW4=
+	by mail.kernel.org (Postfix) with ESMTP id 135CC206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:05:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fdw7gz7M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728667AbgD1TDk (ORCPT
+        id S1728754AbgD1TFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 15:03:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728539AbgD1TDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 15:03:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 026DE206A1;
-        Tue, 28 Apr 2020 19:03:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588100619;
-        bh=bq2Ry7YDkP+guG9GE3lk3Dcu/BwjlgDRMOvlmkR2+eQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lLB3Ve5xabIMRXaegfagjdTWWG43N/8nmRHntZYu70H60rCKCV3vU/GdI2n2BvTaS
-         lW0S43bFHpqRpx9D538wBW3u1yc01q3/io20bIYYf1aL7j0Cqxh1IwlDDbNpBrR2KG
-         XPcZGzsIchhPJ7LuggGodw6Tbo90pvYhrinJV+IY=
-Date:   Tue, 28 Apr 2020 21:03:37 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] drivers: base: Fix NULL pointer exception in
- __platform_driver_probe()
-Message-ID: <20200428190337.GA1719585@kroah.com>
-References: <20200408214003.3356-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+        Tue, 28 Apr 2020 15:05:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728539AbgD1TFF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 15:05:05 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3E4FC03C1AB;
+        Tue, 28 Apr 2020 12:05:04 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id e26so34682167otr.2;
+        Tue, 28 Apr 2020 12:05:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9mawD2gvz/eqn5BFKTza4oVQ2SByQxW/24pgvyCMUE8=;
+        b=Fdw7gz7MMVRw9oItUSWDsiTku21evW1zad4hFmvLnJEQYB25msghyg8QPQMeTxErrg
+         xfhyK4xVf2Nw5qnZLBngikg5i99Mzng3gvVBZlhV1MHkx36wpr0N9dsjmcGz7lKtkYlv
+         R1kPrvqAyfQlciybOZJB9mlsDpBAPp/bsb0/KxKz8fJXMmuP0kH6k+oVtaW8qPthLaJe
+         UMHLt5U8/mn9DQ0v843hXBGhWu5esf3JikvFUxMWgx8fZZP6c6O/Wvd8WLb5vpCDCAYp
+         bAT9VNr2S2TozkuextPiUIFVM0/0OV92JrJg+D61BG//01Yt4OdpMgM8SbiwR/dKn0hh
+         3uZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9mawD2gvz/eqn5BFKTza4oVQ2SByQxW/24pgvyCMUE8=;
+        b=aw/XSBb2UdUbRIoALJUzE+PTa4+rSYAcSqr4MQ9UnfZ19Noes4hmxJesYCwxBdX3Ba
+         Chp7PMw1ipxqFB1S4aBE0eWtwTHOKtbGJdUzg9MDn3vf+jyW0hNyiJdIWAWBUch3dXPF
+         4HWITmAG7bpEf6/SsWCDzIwYUaVy6fk80nCF/h78F4L1YS3Ezilcip4YnwPo/VygHGEo
+         M/PLYpom0KFdHmneaKpCDm6/uzpj3cptPVf7kZTj5zXwnCak+w680JzvEO8EJlzq4OIX
+         CaOQa5ys3t4J52R5rzR6/JqjmklfPBnxFYBUXIbwSp9DF8NqHdCmhdZqtcSJzLz4nFF2
+         UPIg==
+X-Gm-Message-State: AGi0PuYnxCjeVodmjPjX0nPddByziWXVhz80Kp5QaaMODDHzsqKmKosP
+        YP5yMiYeLMWGEJzFZDwYgyw=
+X-Google-Smtp-Source: APiQypKQbJq0XD420xh+OdLmBYlmBeL4TIoGxvn2rlBhDIrLX4rpFLBUzLsA6hEWYXqgEBS8v4qsAw==
+X-Received: by 2002:aca:488a:: with SMTP id v132mr4198275oia.166.1588100704232;
+        Tue, 28 Apr 2020 12:05:04 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id t10sm5186959oou.38.2020.04.28.12.05.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 12:05:01 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 12:04:59 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org
+Subject: Re: linux-next: Tree for Apr 28
+Message-ID: <20200428190459.GA2299615@ubuntu-s3-xlarge-x86>
+References: <20200428181006.06b4e3bc@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200408214003.3356-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20200428181006.06b4e3bc@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 02:40:03PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On Tue, Apr 28, 2020 at 06:10:06PM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> If platform bus driver registration is failed then,
+> Changes since 20200424:
+> 
+> The qcom tree still had its build failure for which I reverted a commit.
+> 
+> The hwmon-staging tree gained a build failure for which I reverted
+> a commit.
+> 
+> The mac80211-next tree gained a build failure so I used the version
+> from next-20200424.
+> 
+> The drm-misc tree still had its build failure for which I disabled a
+> COMPILE_TEST setting.
+> 
+> The akpm-current tree gained a conflict against the risc-v tree.
+> 
+> The akpm tree lost a patch that turned up elsewhere.
+> 
+> Non-merge commits (relative to Linus' tree): 4451
+>  5474 files changed, 151275 insertions(+), 63274 deletions(-)
 
-How is your platform driver registration failing?  What caused that, is
-it an in-kernel problem with something?  How can it be triggered?
+I am seeing the following build error on s390 defconfig, caused by
+commit 743f242d65ec ("mm: support compat_sys_process_madvise").
+Apologies if it has already been reported, I did a search of lore and
+found nothing.
 
-thanks,
+Cheers,
+Nathan
 
-greg k-h
+$ make -j$(nproc) -s ARCH=s390 CROSS_COMPILE=s390x-linux- defconfig all
+...
+mm/madvise.c: In function '__se_compat_sys_process_madvise':
+./include/linux/compiler.h:394:38: error: call to '__compiletime_assert_162' declared with attribute error: BUILD_BUG_ON failed: sizeof(unsigned long) > 4 && !__TYPE_IS_PTR(unsigned long)
+  394 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+      |                                      ^
+./include/linux/compiler.h:375:4: note: in definition of macro '__compiletime_assert'
+  375 |    prefix ## suffix();    \
+      |    ^~~~~~
+./include/linux/compiler.h:394:2: note: in expansion of macro '_compiletime_assert'
+  394 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+./include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+./include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+./arch/s390/include/asm/compat.h:18:2: note: in expansion of macro 'BUILD_BUG_ON'
+   18 |  BUILD_BUG_ON(sizeof(t) > 4 && !__TYPE_IS_PTR(t)); \
+      |  ^~~~~~~~~~~~
+./include/linux/syscalls.h:110:27: note: in expansion of macro '__SC_DELOUSE'
+  110 | #define __MAP3(m,t,a,...) m(t,a), __MAP2(m,__VA_ARGS__)
+      |                           ^
+./include/linux/syscalls.h:111:35: note: in expansion of macro '__MAP3'
+  111 | #define __MAP4(m,t,a,...) m(t,a), __MAP3(m,__VA_ARGS__)
+      |                                   ^~~~~~
+./include/linux/syscalls.h:112:35: note: in expansion of macro '__MAP4'
+  112 | #define __MAP5(m,t,a,...) m(t,a), __MAP4(m,__VA_ARGS__)
+      |                                   ^~~~~~
+./include/linux/syscalls.h:113:35: note: in expansion of macro '__MAP5'
+  113 | #define __MAP6(m,t,a,...) m(t,a), __MAP5(m,__VA_ARGS__)
+      |                                   ^~~~~~
+./include/linux/syscalls.h:114:22: note: in expansion of macro '__MAP6'
+  114 | #define __MAP(n,...) __MAP##n(__VA_ARGS__)
+      |                      ^~~~~
+./arch/s390/include/asm/syscall_wrapper.h:80:36: note: in expansion of macro '__MAP'
+   80 |   long ret = __do_compat_sys##name(__MAP(x,__SC_DELOUSE,__VA_ARGS__));\
+      |                                    ^~~~~
+./include/linux/compat.h:66:2: note: in expansion of macro 'COMPAT_SYSCALL_DEFINEx'
+   66 |  COMPAT_SYSCALL_DEFINEx(6, _##name, __VA_ARGS__)
+      |  ^~~~~~~~~~~~~~~~~~~~~~
+mm/madvise.c:1314:1: note: in expansion of macro 'COMPAT_SYSCALL_DEFINE6'
+ 1314 | COMPAT_SYSCALL_DEFINE6(process_madvise, int, which, compat_pid_t, upid,
+      | ^~~~~~~~~~~~~~~~~~~~~~
+./include/linux/compiler.h:394:38: error: call to '__compiletime_assert_164' declared with attribute error: BUILD_BUG_ON failed: sizeof(unsigned long) > 4 && !__TYPE_IS_PTR(unsigned long)
+  394 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+      |                                      ^
+./include/linux/compiler.h:375:4: note: in definition of macro '__compiletime_assert'
+  375 |    prefix ## suffix();    \
+      |    ^~~~~~
+./include/linux/compiler.h:394:2: note: in expansion of macro '_compiletime_assert'
+  394 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+./include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+./include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+./arch/s390/include/asm/compat.h:18:2: note: in expansion of macro 'BUILD_BUG_ON'
+   18 |  BUILD_BUG_ON(sizeof(t) > 4 && !__TYPE_IS_PTR(t)); \
+      |  ^~~~~~~~~~~~
+./include/linux/syscalls.h:108:27: note: in expansion of macro '__SC_DELOUSE'
+  108 | #define __MAP1(m,t,a,...) m(t,a)
+      |                           ^
+./include/linux/syscalls.h:109:35: note: in expansion of macro '__MAP1'
+  109 | #define __MAP2(m,t,a,...) m(t,a), __MAP1(m,__VA_ARGS__)
+      |                                   ^~~~~~
+./include/linux/syscalls.h:110:35: note: in expansion of macro '__MAP2'
+  110 | #define __MAP3(m,t,a,...) m(t,a), __MAP2(m,__VA_ARGS__)
+      |                                   ^~~~~~
+./include/linux/syscalls.h:111:35: note: in expansion of macro '__MAP3'
+  111 | #define __MAP4(m,t,a,...) m(t,a), __MAP3(m,__VA_ARGS__)
+      |                                   ^~~~~~
+./include/linux/syscalls.h:112:35: note: in expansion of macro '__MAP4'
+  112 | #define __MAP5(m,t,a,...) m(t,a), __MAP4(m,__VA_ARGS__)
+      |                                   ^~~~~~
+./include/linux/syscalls.h:113:35: note: in expansion of macro '__MAP5'
+  113 | #define __MAP6(m,t,a,...) m(t,a), __MAP5(m,__VA_ARGS__)
+      |                                   ^~~~~~
+./include/linux/syscalls.h:114:22: note: in expansion of macro '__MAP6'
+  114 | #define __MAP(n,...) __MAP##n(__VA_ARGS__)
+      |                      ^~~~~
+./arch/s390/include/asm/syscall_wrapper.h:80:36: note: in expansion of macro '__MAP'
+   80 |   long ret = __do_compat_sys##name(__MAP(x,__SC_DELOUSE,__VA_ARGS__));\
+      |                                    ^~~~~
+./include/linux/compat.h:66:2: note: in expansion of macro 'COMPAT_SYSCALL_DEFINEx'
+   66 |  COMPAT_SYSCALL_DEFINEx(6, _##name, __VA_ARGS__)
+      |  ^~~~~~~~~~~~~~~~~~~~~~
+mm/madvise.c:1314:1: note: in expansion of macro 'COMPAT_SYSCALL_DEFINE6'
+ 1314 | COMPAT_SYSCALL_DEFINE6(process_madvise, int, which, compat_pid_t, upid,
+      | ^~~~~~~~~~~~~~~~~~~~~~
+make[2]: *** [scripts/Makefile.build:266: mm/madvise.o] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [Makefile:1723: mm] Error 2
+make[1]: *** Waiting for unfinished jobs....
+...
