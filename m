@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39000C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CE1C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16DA62085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D255B2085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099212;
-	bh=oQzH92Nu3rnEIWIs/DPXqzVb2aXpghGfFLFQYUmobTQ=;
+	s=default; t=1588099216;
+	bh=lmDtm9jdllLum61esOiwhBFGzn+l1a9Y0Ph5OnavGXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fVR9l5XKMxJHFrlp+s723BEpNjvFzgUbEzhsVBw7QLRA0IZaSrhz8aQD83rXQ317a
-	 GxHdyRVvyc62d+puhPsP8a+eyS+fEhKTgx4TgA9dL+j4AQtJH7NtyU6xpThcMMdxpC
-	 ksS1WagsECoXsAiOWomdrkWzZqjUYKT19Sgd16fQ=
+	b=2uTIYMTdHW0FQ8146Xvse6v8BjjzRdsW6lSNeeD6FAaKyJ1tTEcvAM1aOvxz5E7YS
+	 nGzkrJzE6Fu+HcSu7NDAAodoxpoS2QEhMkIT2wkFrPJPvY/eh1g6sU+t17tFdylwFQ
+	 z+qjy02CZ4k3OW9fzwMp9FUBnuq3z8ibwRpZmI2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730897AbgD1SkK (ORCPT
+        id S1730490AbgD1SkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:40:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59108 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:40:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730759AbgD1SkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:40:06 -0400
+        id S1730892AbgD1SkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:40:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77A1920575;
-        Tue, 28 Apr 2020 18:40:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CE4F20730;
+        Tue, 28 Apr 2020 18:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099204;
-        bh=oQzH92Nu3rnEIWIs/DPXqzVb2aXpghGfFLFQYUmobTQ=;
+        s=default; t=1588099209;
+        bh=lmDtm9jdllLum61esOiwhBFGzn+l1a9Y0Ph5OnavGXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lw6Kx6JgFMgrP9HCIciZu89Sz4ZrL95//fU7jmy+dgzCotq4cioiWjY6v6Sdkb6Tl
-         TuNsmZioYpr091gfMzXBJZ/xmtQ4cs8JbuzITNtXFF2Iey1DQln/3GvLQsHNcH6v5X
-         nyE34t08tEZYnp7ignXWsOz4XQy4I94NBNVQZ6Pc=
+        b=UwihRN2u+xoxtB1v1XokDXEwT68s+HAJP/lSYPgHscNTNF3X2++NPmNrfmRd7y395
+         b6m+qthKOd60sq2gDOydpcrxVXoz2f0VnOgWZvnXAXMfc8OnLc0TsAluFcLgRq0FJP
+         BDcA2yXJccZn86FUUrLGNgZVAgPp+Sc2HfZJi/DQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 063/168] net: bcmgenet: correct per TX/RX ring statistics
-Date:   Tue, 28 Apr 2020 20:23:57 +0200
-Message-Id: <20200428182239.895987908@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.19 114/131] staging: comedi: Fix comedi_device refcnt leak in comedi_open
+Date:   Tue, 28 Apr 2020 20:25:26 +0200
+Message-Id: <20200428182239.580994000@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,43 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit a6d0b83f25073bdf08b8547aeff961a62c6ab229 ]
+commit 332e0e17ad49e084b7db670ef43b5eb59abd9e34 upstream.
 
-The change to track net_device_stats per ring to better support SMP
-missed updating the rx_dropped member.
+comedi_open() invokes comedi_dev_get_from_minor(), which returns a
+reference of the COMEDI device to "dev" with increased refcount.
 
-The ndo_get_stats method is also needed to combine the results for
-ethtool statistics (-S) before filling in the ethtool structure.
+When comedi_open() returns, "dev" becomes invalid, so the refcount
+should be decreased to keep refcount balanced.
 
-Fixes: 37a30b435b92 ("net: bcmgenet: Track per TX/RX rings statistics")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The reference counting issue happens in one exception handling path of
+comedi_open(). When "cfp" allocation is failed, the refcnt increased by
+comedi_dev_get_from_minor() is not decreased, causing a refcnt leak.
+
+Fix this issue by calling comedi_dev_put() on this error path when "cfp"
+allocation is failed.
+
+Fixes: 20f083c07565 ("staging: comedi: prepare support for per-file read and write subdevices")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/1587361459-83622-1-git-send-email-xiyuyang19@fudan.edu.cn
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/broadcom/genet/bcmgenet.c |    3 +++
- 1 file changed, 3 insertions(+)
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -995,6 +995,8 @@ static void bcmgenet_get_ethtool_stats(s
- 	if (netif_running(dev))
- 		bcmgenet_update_mib_counters(priv);
+---
+ drivers/staging/comedi/comedi_fops.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/drivers/staging/comedi/comedi_fops.c
++++ b/drivers/staging/comedi/comedi_fops.c
+@@ -2594,8 +2594,10 @@ static int comedi_open(struct inode *ino
+ 	}
  
-+	dev->netdev_ops->ndo_get_stats(dev);
-+
- 	for (i = 0; i < BCMGENET_STATS_LEN; i++) {
- 		const struct bcmgenet_stats *s;
- 		char *p;
-@@ -3204,6 +3206,7 @@ static struct net_device_stats *bcmgenet
- 	dev->stats.rx_packets = rx_packets;
- 	dev->stats.rx_errors = rx_errors;
- 	dev->stats.rx_missed_errors = rx_errors;
-+	dev->stats.rx_dropped = rx_dropped;
- 	return &dev->stats;
- }
+ 	cfp = kzalloc(sizeof(*cfp), GFP_KERNEL);
+-	if (!cfp)
++	if (!cfp) {
++		comedi_dev_put(dev);
+ 		return -ENOMEM;
++	}
+ 
+ 	cfp->dev = dev;
  
 
 
