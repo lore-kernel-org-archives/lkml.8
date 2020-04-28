@@ -2,62 +2,58 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3127C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A1EC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 882BF20B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C79F3218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098681;
-	bh=Hk13QinprYZgIRF1dgkDe9eApvGfNPRK3fwtpheysR4=;
+	s=default; t=1588098685;
+	bh=zDU983lV9ssarBU6MRZRTDQZ3hKmpKdpJadL0LcKvcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CGkSa53BjK7YUb0HIh5/8U+iGJ8VrX3gYi0EO9yPuPy9swz5TSRAJvNFKYqEd3XMg
-	 B2hp53kRlapClPBUEoBdpaoS0eNbpwbWDkWIsjYswOqRvdEtB2OUMG1cCg/HV8p0iK
-	 lHqI0M5nEwl1TMzE7OHx5ZLch67/RnevP1uQyP4Y=
+	b=PlfzGjWxr9uOxj7UwCQnViwxFw+XZZvAPx6LftZROqb1YvDUXDuH6OWlQhejUhmYx
+	 KYDKRMkEdTtiM/nOn1VmxCBp7uCafDaNC99IWk7gRiYdJvEb0f2w/3jCmD7tzNqsKZ
+	 HrMMfj+9zlvyDsL5tLuZuUz74+BJubkfSuiwb+kU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729662AbgD1SbU (ORCPT
+        id S1729172AbgD1SbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:31:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46748 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:31:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729646AbgD1SbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:31:18 -0400
+        id S1729661AbgD1SbU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:31:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 610A02076A;
-        Tue, 28 Apr 2020 18:31:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0E9021744;
+        Tue, 28 Apr 2020 18:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098678;
-        bh=Hk13QinprYZgIRF1dgkDe9eApvGfNPRK3fwtpheysR4=;
+        s=default; t=1588098680;
+        bh=zDU983lV9ssarBU6MRZRTDQZ3hKmpKdpJadL0LcKvcA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u2EUKn+VomXgMUugW9EevGGkRilep+w+aHSb7Uh4Uo8anToX7F7X9LE/nNJr8KMAn
-         oJHASAt65Bc661QBBWP0VvV191cQCazw9GxrgyC8cm082AM7VBT2RFBc2QLsnKYcAV
-         SxH5+KoHiX47pLImO1xtvR9sYw4LYOOZkhPTi4TY=
+        b=Up501uDOD1pwupw5K9IVlm43XNk2vrd6UUU+4Xs18CgQsHuy+hR4r00S8p9hjtOm9
+         eXDf+OQBKdAvdbcMqs6EWiSxjjVXSsyZYhe6lcJBFxjnwPClHwscAbz/O71gUXye0Q
+         yQo1Ip1Wu8j6OfJ3iSZHzK1WpJNkHMrKQGTLC4us=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 097/167] vmalloc: fix remap_vmalloc_range() bounds checks
-Date:   Tue, 28 Apr 2020 20:24:33 +0200
-Message-Id: <20200428182237.414442594@linuxfoundation.org>
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Bob Liu <bob.liu@oracle.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Cengiz Can <cengiz@kernel.wtf>, Jens Axboe <axboe@kernel.dk>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 040/131] blktrace: fix dereference after null check
+Date:   Tue, 28 Apr 2020 20:24:12 +0200
+Message-Id: <20200428182230.107725743@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -67,165 +63,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Cengiz Can <cengiz@kernel.wtf>
 
-commit bdebd6a2831b6fab69eb85cee74a8ba77f1a1cc2 upstream.
+commit 153031a301bb07194e9c37466cfce8eacb977621 upstream.
 
-remap_vmalloc_range() has had various issues with the bounds checks it
-promises to perform ("This function checks that addr is a valid
-vmalloc'ed area, and that it is big enough to cover the vma") over time,
-e.g.:
+There was a recent change in blktrace.c that added a RCU protection to
+`q->blk_trace` in order to fix a use-after-free issue during access.
 
- - not detecting pgoff<<PAGE_SHIFT overflow
+However the change missed an edge case that can lead to dereferencing of
+`bt` pointer even when it's NULL:
 
- - not detecting (pgoff<<PAGE_SHIFT)+usize overflow
+Coverity static analyzer marked this as a FORWARD_NULL issue with CID
+1460458.
 
- - not checking whether addr and addr+(pgoff<<PAGE_SHIFT) are the same
-   vmalloc allocation
+```
+/kernel/trace/blktrace.c: 1904 in sysfs_blk_trace_attr_store()
+1898            ret = 0;
+1899            if (bt == NULL)
+1900                    ret = blk_trace_setup_queue(q, bdev);
+1901
+1902            if (ret == 0) {
+1903                    if (attr == &dev_attr_act_mask)
+>>>     CID 1460458:  Null pointer dereferences  (FORWARD_NULL)
+>>>     Dereferencing null pointer "bt".
+1904                            bt->act_mask = value;
+1905                    else if (attr == &dev_attr_pid)
+1906                            bt->pid = value;
+1907                    else if (attr == &dev_attr_start_lba)
+1908                            bt->start_lba = value;
+1909                    else if (attr == &dev_attr_end_lba)
+```
 
- - comparing a potentially wildly out-of-bounds pointer with the end of
-   the vmalloc region
+Added a reassignment with RCU annotation to fix the issue.
 
-In particular, since commit fc9702273e2e ("bpf: Add mmap() support for
-BPF_MAP_TYPE_ARRAY"), unprivileged users can cause kernel null pointer
-dereferences by calling mmap() on a BPF map with a size that is bigger
-than the distance from the start of the BPF map to the end of the
-address space.
-
-This could theoretically be used as a kernel ASLR bypass, by using
-whether mmap() with a given offset oopses or returns an error code to
-perform a binary search over the possible address range.
-
-To allow remap_vmalloc_range_partial() to verify that addr and
-addr+(pgoff<<PAGE_SHIFT) are in the same vmalloc region, pass the offset
-to remap_vmalloc_range_partial() instead of adding it to the pointer in
-remap_vmalloc_range().
-
-In remap_vmalloc_range_partial(), fix the check against
-get_vm_area_size() by using size comparisons instead of pointer
-comparisons, and add checks for pgoff.
-
-Fixes: 833423143c3a ("[PATCH] mm: introduce remap_vmalloc_range()")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: stable@vger.kernel.org
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: Andrii Nakryiko <andriin@fb.com>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: KP Singh <kpsingh@chromium.org>
-Link: http://lkml.kernel.org/r/20200415222312.236431-1-jannh@google.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: c780e86dd48 ("blktrace: Protect q->blk_trace with RCU")
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/proc/vmcore.c         |    5 +++--
- include/linux/vmalloc.h  |    2 +-
- mm/vmalloc.c             |   16 +++++++++++++---
- samples/vfio-mdev/mdpy.c |    2 +-
- 4 files changed, 18 insertions(+), 7 deletions(-)
+ kernel/trace/blktrace.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -266,7 +266,8 @@ static int vmcoredd_mmap_dumps(struct vm
- 		if (start < offset + dump->size) {
- 			tsz = min(offset + (u64)dump->size - start, (u64)size);
- 			buf = dump->buf + start - offset;
--			if (remap_vmalloc_range_partial(vma, dst, buf, tsz)) {
-+			if (remap_vmalloc_range_partial(vma, dst, buf, 0,
-+							tsz)) {
- 				ret = -EFAULT;
- 				goto out_unlock;
- 			}
-@@ -624,7 +625,7 @@ static int mmap_vmcore(struct file *file
- 		tsz = min(elfcorebuf_sz + elfnotes_sz - (size_t)start, size);
- 		kaddr = elfnotes_buf + start - elfcorebuf_sz - vmcoredd_orig_sz;
- 		if (remap_vmalloc_range_partial(vma, vma->vm_start + len,
--						kaddr, tsz))
-+						kaddr, 0, tsz))
- 			goto fail;
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index 99f6cdbf2f540..6cea8bbca03cb 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -1893,8 +1893,11 @@ static ssize_t sysfs_blk_trace_attr_store(struct device *dev,
+ 	}
  
- 		size -= tsz;
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
-@@ -137,7 +137,7 @@ extern void vunmap(const void *addr);
+ 	ret = 0;
+-	if (bt == NULL)
++	if (bt == NULL) {
+ 		ret = blk_trace_setup_queue(q, bdev);
++		bt = rcu_dereference_protected(q->blk_trace,
++				lockdep_is_held(&q->blk_trace_mutex));
++	}
  
- extern int remap_vmalloc_range_partial(struct vm_area_struct *vma,
- 				       unsigned long uaddr, void *kaddr,
--				       unsigned long size);
-+				       unsigned long pgoff, unsigned long size);
- 
- extern int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
- 							unsigned long pgoff);
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -34,6 +34,7 @@
- #include <linux/llist.h>
- #include <linux/bitops.h>
- #include <linux/rbtree_augmented.h>
-+#include <linux/overflow.h>
- 
- #include <linux/uaccess.h>
- #include <asm/tlbflush.h>
-@@ -3054,6 +3055,7 @@ finished:
-  * @vma:		vma to cover
-  * @uaddr:		target user address to start at
-  * @kaddr:		virtual address of vmalloc kernel memory
-+ * @pgoff:		offset from @kaddr to start at
-  * @size:		size of map area
-  *
-  * Returns:	0 for success, -Exxx on failure
-@@ -3066,9 +3068,15 @@ finished:
-  * Similar to remap_pfn_range() (see mm/memory.c)
-  */
- int remap_vmalloc_range_partial(struct vm_area_struct *vma, unsigned long uaddr,
--				void *kaddr, unsigned long size)
-+				void *kaddr, unsigned long pgoff,
-+				unsigned long size)
- {
- 	struct vm_struct *area;
-+	unsigned long off;
-+	unsigned long end_index;
-+
-+	if (check_shl_overflow(pgoff, PAGE_SHIFT, &off))
-+		return -EINVAL;
- 
- 	size = PAGE_ALIGN(size);
- 
-@@ -3082,8 +3090,10 @@ int remap_vmalloc_range_partial(struct v
- 	if (!(area->flags & (VM_USERMAP | VM_DMA_COHERENT)))
- 		return -EINVAL;
- 
--	if (kaddr + size > area->addr + get_vm_area_size(area))
-+	if (check_add_overflow(size, off, &end_index) ||
-+	    end_index > get_vm_area_size(area))
- 		return -EINVAL;
-+	kaddr += off;
- 
- 	do {
- 		struct page *page = vmalloc_to_page(kaddr);
-@@ -3122,7 +3132,7 @@ int remap_vmalloc_range(struct vm_area_s
- 						unsigned long pgoff)
- {
- 	return remap_vmalloc_range_partial(vma, vma->vm_start,
--					   addr + (pgoff << PAGE_SHIFT),
-+					   addr, pgoff,
- 					   vma->vm_end - vma->vm_start);
- }
- EXPORT_SYMBOL(remap_vmalloc_range);
---- a/samples/vfio-mdev/mdpy.c
-+++ b/samples/vfio-mdev/mdpy.c
-@@ -418,7 +418,7 @@ static int mdpy_mmap(struct mdev_device
- 		return -EINVAL;
- 
- 	return remap_vmalloc_range_partial(vma, vma->vm_start,
--					   mdev_state->memblk,
-+					   mdev_state->memblk, 0,
- 					   vma->vm_end - vma->vm_start);
- }
- 
+ 	if (ret == 0) {
+ 		if (attr == &dev_attr_act_mask)
+-- 
+2.20.1
+
 
 
