@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AC0C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F22C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CFD320575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F14520575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100115;
-	bh=9sDGtt4AzKAVwBWf89jS6ybRmtp4c5IDIplgFw7is60=;
+	s=default; t=1588100123;
+	bh=A/6YDqxK5agMEDP6yVjo4Y1Ip9uYZrhxtIVZS9rsPdc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QeRsiq0x5zM9GTQ61sZ4e9mynFs4Ohil0C+oyrv8a6kU+DmOt2KTUyuzKYy7qrQJV
-	 Jo2rBlMffI06A4HFDWHaxzv2NnY1DTzqqVxz900v7L4L68wjEOwNy01OKyTTm6ikHo
-	 ClLxpzvKLa1pxjQr4/iRZbHGXkfsHb+fmeWGYXe0=
+	b=TUTfFRxwAFSOvkZRP/DxiLRxmhzMO4hwvKFHKPj/yvJ+XtecggQuEp6V4O11U5VXC
+	 0h9efsfLt42furAHa3rocGdPAE6Dtd47RYpKKpivDbkTnHnunJgnqRoRqXyuZLyEh1
+	 bs9jD4f7IveRgoHIpwdOECLpzfIc+SkY9cJONNx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730240AbgD1SzO (ORCPT
+        id S1728931AbgD1SzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:55:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49266 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:55:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729872AbgD1Sc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:32:58 -0400
+        id S1729827AbgD1Scn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:32:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A96072186A;
-        Tue, 28 Apr 2020 18:32:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D583C20B80;
+        Tue, 28 Apr 2020 18:32:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098778;
-        bh=9sDGtt4AzKAVwBWf89jS6ybRmtp4c5IDIplgFw7is60=;
+        s=default; t=1588098763;
+        bh=A/6YDqxK5agMEDP6yVjo4Y1Ip9uYZrhxtIVZS9rsPdc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sy3ZfqPBA5N0uPrEkduPJx3PmKawUUma27SnRdydWFFdIwM0zDXXDTz7kSE6c3xrL
-         gnv7DFV9HwHZStZkuSf0XU9Z1BxNNGn3FFgADmMaKKa2VZqHg2u3NbWZ1jwi0vDFWk
-         C6QuFuqJrT1WaNfGysHegje/pMWNLs2wHcAbCLNM=
+        b=nasp00CkjIAKk7GnYWp+U9IpAoUYeZNeakyqGN4AsCL3oMD1tnRNRDW6E+O8UujEI
+         ED/RSYRfH6Ip11POEeVzRwb2460cTuG831iGUZymbIaLaSYsuoHBMfsWc4nvVTZsyN
+         +xibewAWhk2LsLaS3e0IWVT3z3w4NmDuQEP0iDKg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 014/168] ceph: return ceph_mdsc_do_request() errors from __get_parent()
-Date:   Tue, 28 Apr 2020 20:23:08 +0200
-Message-Id: <20200428182233.502140057@linuxfoundation.org>
+Subject: [PATCH 4.19 018/131] ASoC: Intel: atom: Take the drv->lock mutex before calling sst_send_slot_map()
+Date:   Tue, 28 Apr 2020 20:23:50 +0200
+Message-Id: <20200428182227.436205359@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,38 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit c6d50296032f0b97473eb2e274dc7cc5d0173847 ]
+[ Upstream commit 81630dc042af998b9f58cd8e2c29dab9777ea176 ]
 
-Return the error returned by ceph_mdsc_do_request(). Otherwise,
-r_target_inode ends up being NULL this ends up returning ENOENT
-regardless of the error.
+sst_send_slot_map() uses sst_fill_and_send_cmd_unlocked() because in some
+places it is called with the drv->lock mutex already held.
 
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+So it must always be called with the mutex locked. This commit adds missing
+locking in the sst_set_be_modules() code-path.
+
+Fixes: 24c8d14192cc ("ASoC: Intel: mrfld: add DSP core controls")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200402185359.3424-1-hdegoede@redhat.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/export.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ sound/soc/intel/atom/sst-atom-controls.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/ceph/export.c b/fs/ceph/export.c
-index b6bfa94332c30..79dc06881e78e 100644
---- a/fs/ceph/export.c
-+++ b/fs/ceph/export.c
-@@ -315,6 +315,11 @@ static struct dentry *__get_parent(struct super_block *sb,
+diff --git a/sound/soc/intel/atom/sst-atom-controls.c b/sound/soc/intel/atom/sst-atom-controls.c
+index 737f5d5533139..a1d7f93a08059 100644
+--- a/sound/soc/intel/atom/sst-atom-controls.c
++++ b/sound/soc/intel/atom/sst-atom-controls.c
+@@ -974,7 +974,9 @@ static int sst_set_be_modules(struct snd_soc_dapm_widget *w,
+ 	dev_dbg(c->dev, "Enter: widget=%s\n", w->name);
  
- 	req->r_num_caps = 1;
- 	err = ceph_mdsc_do_request(mdsc, NULL, req);
-+	if (err) {
-+		ceph_mdsc_put_request(req);
-+		return ERR_PTR(err);
-+	}
-+
- 	inode = req->r_target_inode;
- 	if (inode)
- 		ihold(inode);
+ 	if (SND_SOC_DAPM_EVENT_ON(event)) {
++		mutex_lock(&drv->lock);
+ 		ret = sst_send_slot_map(drv);
++		mutex_unlock(&drv->lock);
+ 		if (ret)
+ 			return ret;
+ 		ret = sst_send_pipe_module_params(w, k);
 -- 
 2.20.1
 
