@@ -2,122 +2,87 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18144C83002
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B052AC83006
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7329206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80F1A206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:16:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aw7hWpM6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ci1v01CW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgD1DMy (ORCPT
+        id S1726336AbgD1DQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 23:12:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40866 "EHLO
+        Mon, 27 Apr 2020 23:16:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgD1DMx (ORCPT
+        with ESMTP id S1726047AbgD1DQM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 23:12:53 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C46EC03C1A9;
-        Mon, 27 Apr 2020 20:12:53 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 18so8784665pfv.8;
-        Mon, 27 Apr 2020 20:12:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5DQBGmMU3Xnx4zkIfV2JJgQ1wnCTPo/vNaQ63QI1rwk=;
-        b=Aw7hWpM6yrSAEef95p4A+fq2dxuXjMhWn0bVzpXIAMgQOO1kmH8QMc+O3beMf0M9VG
-         GCAlZ1H6xuAejpvFWGYh8igmPVO2c6bX2vlntcOnxOm4dUmoqZ/zUFvFqN0k6yvj15pd
-         KCQxhm/pwbOQsJjRnKr4O9XA9p5AH+lV9OR9wS+3DkynFKzvBE5+WBJwLF4gkGwfZ/Vj
-         v92b/EcpdvUUD6tmHcDSp7RIvvWhq2sDNqgr2+LGr+rvfgaVngyCxziniCyy14vGE8rk
-         aT7csKTwDpjbgWnSXsxJ/KtVFyjA8I0CSqR6eXbzkJb0KojGWHuGw0M50DACVJrsY2m0
-         zVgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5DQBGmMU3Xnx4zkIfV2JJgQ1wnCTPo/vNaQ63QI1rwk=;
-        b=We9L20sl+NwuKxLg76tB91ZqL+s5wSiMalOrZko/AQbvI0FqBUjFl6AeOvvGxoSIIb
-         DfwfYeDfIByHm9FHtRIWioVF7sDIFfx6YV9K0KogvChCdzCDtrzuAfMRwpJJfAgGWY9q
-         KeHIh+fqvwI5f3nmejwwlD/zrjfkDgt4WnVlNBJwo/4i9uq1D8DShsNp0J6ibujYhUZn
-         kTE6V18ZBY2tkd1dEf6x0CABphau1/h2x2ldzhfCh2dVLp8pJXPfYLrIsvhha0o4fZ2e
-         8SrVURbIxcz214w5a73vPrzOWon7MX/NIDRlPPVOX5gLUb+ZPV2SWwF1LDJyNk1dWKm3
-         /ABg==
-X-Gm-Message-State: AGi0PuZW+/fndiUOFogupV8e27Pdl6O1sL65XxCAvnAf0OSv+rj0wmcb
-        QQz3KRueiU+pAyIto+TmB+o=
-X-Google-Smtp-Source: APiQypIl7xnOpudZlElRdxi10r9mqLmSdmyuizVzXF31o7t6B/x3o6d8tdncC5JAJn0/BXTbrb0BuA==
-X-Received: by 2002:a63:1a1e:: with SMTP id a30mr25261543pga.368.1588043573046;
-        Mon, 27 Apr 2020 20:12:53 -0700 (PDT)
-Received: from localhost ([89.208.244.169])
-        by smtp.gmail.com with ESMTPSA id u13sm601745pjb.45.2020.04.27.20.12.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 Apr 2020 20:12:52 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 11:12:47 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>, jes@trained-monkey.org,
-        linux-acenic@sunsite.dk, netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net v1] net: acenic: fix an issue about leak related
- system resources
-Message-ID: <20200428031247.GB31933@nuc8i5>
-References: <20200425134007.15843-1-zhengdejin5@gmail.com>
- <CAHp75VeAetsZsANoHx7X-g8+LOt0+NNarXheY5AR6L+LrdHavQ@mail.gmail.com>
+        Mon, 27 Apr 2020 23:16:12 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C1E7C03C1A9;
+        Mon, 27 Apr 2020 20:16:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=Mz7QWM707vs0N32HDgEponGOOZMsOtDZrZmmttfw1aQ=; b=ci1v01CWqM0VHb6vVz7eVBoYZT
+        Y8RHbQnKKILxKQgnmixzk/rh8vKzHCvRwSV3PPQWrJI7Rvn043B+qnxrgabfHJ43jg6IcMMPRmZJP
+        IhgF2Yd9mCSkB+k//1+Td3mu22L/RbKFimnj7NAewcSCtCjXtksOI0xjkkwvl1caD3kESL2C0CdXi
+        RmzrHskkULKcmuYLdYqjuPXxs9qCXdnATl39gkzN9vBsT1gi8+IqnGPpI5Sj1Im5HsVTT484ESl1p
+        vGJckS9lkFfaMbHMpPGgJDZmeusOfRoxAdrrfIYZTlenvJcEIu5zc4VqB/Yh0FS9ZOvnnSAG8s4GM
+        pw5Sj0dw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTGjA-00024R-FN; Tue, 28 Apr 2020 03:16:08 +0000
+Subject: Re: [PATCH v4 2/2] mailbox: sprd: Add Spreadtrum mailbox driver
+To:     Baolin Wang <baolin.wang7@gmail.com>, robh+dt@kernel.org,
+        jassisinghbrar@gmail.com
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <8d29eba045ef18c5489e122b3668afc20431f15d.1588043236.git.baolin.wang7@gmail.com>
+ <4b224e7bb703e15469e5cd79a54f7bc00a790fc5.1588043236.git.baolin.wang7@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <62b3d9fc-1cc9-ac42-69e5-1c7bdac7bd0c@infradead.org>
+Date:   Mon, 27 Apr 2020 20:16:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VeAetsZsANoHx7X-g8+LOt0+NNarXheY5AR6L+LrdHavQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <4b224e7bb703e15469e5cd79a54f7bc00a790fc5.1588043236.git.baolin.wang7@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 01:40:02PM +0300, Andy Shevchenko wrote:
-> On Sat, Apr 25, 2020 at 4:40 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
-> >
-> > the function ace_allocate_descriptors() and ace_init() can fail in
-> > the acenic_probe_one(), The related system resources were not
-> > released then. so change the error handling to fix it.
-> 
-> ...
-> 
-> > @@ -568,7 +568,7 @@ static int acenic_probe_one(struct pci_dev *pdev,
-> >  #endif
-> >
-> >         if (ace_allocate_descriptors(dev))
-> > -               goto fail_free_netdev;
-> > +               goto fail_uninit;
-> 
-> Not sure.
-> The code is quite old and requires a lot of refactoring.
-> 
-> Briefly looking the error path there is quite twisted.
->
-> > @@ -580,7 +580,7 @@ static int acenic_probe_one(struct pci_dev *pdev,
-> >  #endif
-> >
-> >         if (ace_init(dev))
-> > -               goto fail_free_netdev;
-> > +               goto fail_uninit;
-> 
-> This change seems incorrect, the ace_init() calls ace_init_cleanup() on error.
-> So, your change makes it call the cleanup() twice.
-> 
-Hi Andy:
+On 4/27/20 8:10 PM, Baolin Wang wrote:
+> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+> index 5a577a6734cf..e03f3fb5caed 100644
+> --- a/drivers/mailbox/Kconfig
+> +++ b/drivers/mailbox/Kconfig
+> @@ -236,4 +236,12 @@ config SUN6I_MSGBOX
+>  	  various Allwinner SoCs. This mailbox is used for communication
+>  	  between the application CPUs and the power management coprocessor.
+>  
+> +config SPRD_MBOX
+> +	tristate "Spreadtrum Mailbox"
+> +	depends on ARCH_SPRD || COMPILE_TEST
+> +	help
+> +	  Mailbox driver implementation for the Spreadtrum platform. It is used
+> +	  to send message between application processors and MCU. Say Y here if
+> +	  you want to build the Spreatrum mailbox controller driver.
 
-Yes, this code is quite old, and There are also some mistakes in my
-patch, abandon this commit first. Thanks!
+	                        ^^typo^^
 
-BR,
-Dejin
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+> +
+>  endif
+
+
+-- 
+~Randy
+
