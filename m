@@ -2,186 +2,110 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED02C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4295C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 544222075A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:06:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="hO81LZGW"
+	by mail.kernel.org (Postfix) with ESMTP id A3B96206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:07:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726507AbgD1HGz (ORCPT
+        id S1726539AbgD1HHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:06:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49374 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbgD1HGy (ORCPT
+        Tue, 28 Apr 2020 03:07:18 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:45412 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726451AbgD1HHS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 03:06:54 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11280C03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 00:06:54 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id k12so1450322wmj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 00:06:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=javigon-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=5xMxzq1+6fPKftxXFu1ru4KGONd/NB7Kh51Ynpspd1U=;
-        b=hO81LZGWWo8vQjLiiioyCkIRbDV6DOkETpCDAwqQdX+A5qxIQgwr1HYewNk54bxA7U
-         VUidLvM9h71FNcWZnNJYZ3yOumKakvofrrqMoUqQuNJ7S80BnFrt1MtCsxiIHLBGb4cO
-         /TddRb91i9lTxuviX7DN+kD+9PvS58iLrlpFqIYwBT7Q93N0FCiNKQFEmUhyq2+dHicN
-         ZNjbd84dQDNMQQUw9JGt9oqx+VP7v1BvscRU593V9qpLgb9ryM4WUBikbEQEXkJ4GqT4
-         qC6/5rkcMwZBBZ0ve117vQ1OEL6fiBT3fkqtDQQFh32D6t2ccFohocb83Vh/DdeY6Wzv
-         eqlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=5xMxzq1+6fPKftxXFu1ru4KGONd/NB7Kh51Ynpspd1U=;
-        b=b+xqvFjVpH8PEfI5K7AMaugVZLbbtealMAzvzX4XwdOGk2M6FW6w7YnoJgzNoj+hm3
-         8sMU8RspavjwFfqrsXKqg6MI9sa06Es8Ajvh/9zkHs/MbWFTll/t2ziUJH+QSEC9CzUP
-         VWwFlSJo3dNa1CbR2lfK2tUq8TO0Q9iYv47br/QeNHaa1Q+LBzmcecPR2gQcZWk8hzAr
-         jPy+yL3KIMaR3t+Rdqr8jTESffWIN7WW+o8FX8VNLrLRUdiW/zAvF6lFKayh1oBGJekI
-         +KMMlVdny2rYLqyUFT26iI02Nm5WJLSk49AXFnLLGap5xjFE82XmN36ABAA+MvMAiSKA
-         Dj6g==
-X-Gm-Message-State: AGi0PubrrUj95vjqipXcnV4M4mxXwWpl+B+prlqtLHS2fPTm9u1u6EAI
-        iws9M8hVu928doAJO3uqig+/Rw==
-X-Google-Smtp-Source: APiQypLJlkHPjon8EswejZeDOa29Qh08hz2eo34BgU9hmyxGa6xTEGyLyDc2U6KDsMGt3wkaBlFeFw==
-X-Received: by 2002:a7b:cf2b:: with SMTP id m11mr2697226wmg.147.1588057612762;
-        Tue, 28 Apr 2020 00:06:52 -0700 (PDT)
-Received: from localhost (ip-5-186-121-52.cgn.fibianet.dk. [5.186.121.52])
-        by smtp.gmail.com with ESMTPSA id l9sm23897081wrq.83.2020.04.28.00.06.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 00:06:52 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 09:06:51 +0200
-From:   Javier =?utf-8?B?R29uesOhbGV6?= <javier@javigon.com>
-To:     Niklas Cassel <Niklas.Cassel@wdc.com>
-Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Igor Konopko <igor.j.konopko@intel.com>,
-        Matias =?utf-8?B?QmrDuHJsaW5n?= <mb@lightnvm.io>,
-        Jens Axboe <axboe@kernel.dk>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] nvme: prevent double free in nvme_alloc_ns() error
- handling
-Message-ID: <20200428070651.qbsyivvaakflipr4@mpHalley.localdomain>
-References: <20200427123443.520469-1-niklas.cassel@wdc.com>
- <20200427180311.nssquibbak5ib4oo@mpHalley.localdomain>
- <20200427182245.GA547726@localhost.localdomain>
+        Tue, 28 Apr 2020 03:07:18 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R331e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TwvxQov_1588057631;
+Received: from 30.27.118.60(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TwvxQov_1588057631)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 28 Apr 2020 15:07:12 +0800
+Subject: Re: [PATCH v3] module: Allow to disable modsign in kernel cmdline
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     jeyu@kernel.org, corbet@lwn.net, rdunlap@infradead.org,
+        mchehab+samsung@kernel.org, tglx@linutronix.de,
+        akpm@linux-foundation.org, pawan.kumar.gupta@linux.intel.com,
+        jgross@suse.com, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+References: <20200428060008.50417-1-tianjia.zhang@linux.alibaba.com>
+ <20200428063522.GA990431@kroah.com>
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Message-ID: <8a0c0ef3-4881-1b9c-6e42-ab379542bc16@linux.alibaba.com>
+Date:   Tue, 28 Apr 2020 15:07:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200427182245.GA547726@localhost.localdomain>
+In-Reply-To: <20200428063522.GA990431@kroah.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.04.2020 18:22, Niklas Cassel wrote:
->On Mon, Apr 27, 2020 at 08:03:11PM +0200, Javier González wrote:
->> On 27.04.2020 14:34, Niklas Cassel wrote:
->> > When jumping to the out_put_disk label, we will call put_disk(), which will
->> > trigger a call to disk_release(), which calls blk_put_queue().
->> >
->> > Later in the cleanup code, we do blk_cleanup_queue(), which will also call
->> > blk_put_queue().
->> >
->> > Putting the queue twice is incorrect, and will generate a KASAN splat.
->> >
->> > Set the disk->queue pointer to NULL, before calling put_disk(), so that the
->> > first call to blk_put_queue() will not free the queue.
->> >
->> > The second call to blk_put_queue() uses another pointer to the same queue,
->> > so this call will still free the queue.
->> >
->> > Fixes: 85136c010285 ("lightnvm: simplify geometry enumeration")
->> > Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
->> > ---
->> > drivers/nvme/host/core.c | 2 ++
->> > 1 file changed, 2 insertions(+)
->> >
->> > diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
->> > index 91c1bd659947..f2adea96b04c 100644
->> > --- a/drivers/nvme/host/core.c
->> > +++ b/drivers/nvme/host/core.c
->> > @@ -3642,6 +3642,8 @@ static void nvme_alloc_ns(struct nvme_ctrl *ctrl, unsigned nsid)
->> >
->> >       return;
->> >  out_put_disk:
->> > +      /* prevent double queue cleanup */
->> > +      ns->disk->queue = NULL;
->> >       put_disk(ns->disk);
->> >  out_unlink_ns:
->> >       mutex_lock(&ctrl->subsys->lock);
->> > --
->> > 2.25.3
->> >
->> What about delaying the assignment of ns->disk?
+
+
+On 2020/4/28 14:35, Greg KH wrote:
+> On Tue, Apr 28, 2020 at 02:00:08PM +0800, Tianjia Zhang wrote:
+>> This option allows to disable modsign completely at the beginning,
+>> and turn off by set the kernel cmdline `no_modsig_enforce` when
+>> `CONFIG_MODULE_SIG_FORCE` is enabled.
 >>
->> diff --git i/drivers/nvme/host/core.c w/drivers/nvme/host/core.c
->> index a4d8c90ee7cc..6da4a9ced945 100644
->> --- i/drivers/nvme/host/core.c
->> +++ w/drivers/nvme/host/core.c
->> @@ -3541,7 +3541,6 @@ static int nvme_alloc_ns(struct nvme_ctrl *ctrl, unsigned nsid)
->>         disk->queue = ns->queue;
->>         disk->flags = flags;
->>         memcpy(disk->disk_name, disk_name, DISK_NAME_LEN);
->> -       ns->disk = disk;
+>> Yet another change allows to always show the current status of
+>> modsign through `/sys/module/module/parameters/sig_enforce`.
 >>
->>         __nvme_revalidate_disk(disk, id);
+>> Signed-off-by: Jia Zhang <zhang.jia@linux.alibaba.com>
+>> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+>> ---
 >>
->> @@ -3553,6 +3552,8 @@ static int nvme_alloc_ns(struct nvme_ctrl *ctrl, unsigned nsid)
->>                 }
->>         }
+>> v3 change:
+>>    Beautify the document description according to the recommendation.
 >>
->> +       ns->disk = disk;
+>> v2 change:
+>>    document this new option.
+>>
+>>   Documentation/admin-guide/kernel-parameters.txt | 6 ++++++
+>>   kernel/module.c                                 | 8 ++++++++
+>>   2 files changed, 14 insertions(+)
+>>
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index 7bc83f3d9bdf..b30f013fb8c5 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -3190,6 +3190,12 @@
+>>   	noirqdebug	[X86-32] Disables the code which attempts to detect and
+>>   			disable unhandled interrupt sources.
+>>   
+>> +	no_modsig_enforce
+>> +			[KNL] When CONFIG_MODULE_SIG_FORCE is set, this option
+>> +			allows to disable modsign completely at the beginning.
+>> +			This means that modules without (valid) signatures will
+>> +			be loaded successfully.
 >> +
->
->Hello Javier!
->
->
->The only case where we jump to the out_put_disk label, is if the
->nvme_nvm_register() call failed.
->
->In that case, we want to undo the alloc_disk_node() operation, i.e.,
->decrease the refcount.
->
->If we don't set "ns->disk = disk;" before the call to nvme_nvm_register(),
->then, if register fails, and we jump to the put_disk(ns->disk) label,
->ns->disk will be NULL, so the recount will not be decreased, so I assume
->that this memory would then be a memory leak.
->
->
->I think that the problem is that the block functions are a bit messy.
->Most drivers seem to do blk_cleanup_queue() first and then do put_disk(),
->but some drivers do it in the opposite way, so I think that we might have
->some more use-after-free bugs in some of these drivers that do it in the
->opposite way.
->
+> 
+> So now we have module.sig_enforce and this one?  That feels really
+> confusing, why can't you just use the existing option?
+> 
+> And why would you want to allow the bootloader to override a kernel
+> build option like this?  That feels risky.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Hi Niklas,
+If CONFIG_MODULE_SIG_FORCE is set, `module.sig_enforce` is always true 
+and read-only. There is indeed a risk in doing this, but it will allow 
+the system to boot normally in some emergency situations, such as 
+certificate expiration.
 
-Yes, the out_put_disk label was introduced at the same time as the
-LightNVM entry point. We can do a better job at separating the cleanup
-functions, but as far as I can see ns->disk is not used in the LightNVM
-initialization, so delaying the initialization should be ok. Part of
-this should be also changing the out_put_disk to put_disk(disk).
+On the other hand, would it be a good solution to make 
+`module.sig_enforce` readable and writable?
 
-Note that initializing other namespace types here do not require
-ns->disk either, so delaying initialization should be ok. We have been
-running with this patch locally for some time.
-
-This said, this is an alternative as your fix works.
-
-Javier
-
+Thanks and best,
+Tianjia
