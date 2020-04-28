@@ -2,55 +2,53 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F7EC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92737C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9E97208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72B672085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099270;
-	bh=NJbMw6Pbe7+GENnJqQLQX7O3iLztQDGPrtaFnqPW2d4=;
+	s=default; t=1588099273;
+	bh=BaVgmSjHEIJgkpOKzHo70T1UmYKAxEl2kDM9lEUxyGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i2MAmwQvWFRo5lMP46YNUsOdV6z4+8lun2XCR263FQArfqsR/1fze98dR2SglMhKs
-	 i40DvecwghuMXL3n6bogSYh0x+laUym9nTeJ8fQfR+MOB/zXKWdKrnr7W3gVCpGFVp
-	 S8gTVA4C/AiKHQAfm+vnOXLDQD0yc6ZSEdhM3o1M=
+	b=gN55ilTlRVwFTTPSHpQuBWRe6jyV3+SgreyKvYQP2vk9im6nuyrP2a+wEXeLccDe2
+	 uBaT626KG+XnQfiMKRI9kJFcIXmuy8+RUm/UTlcaYv8TgUBVmAdGj9ZDKO4Ny/b5kt
+	 6+EOdneEUMFxdIAC60K0YP5jtlyywW81tSjY07Uk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729152AbgD1SlJ (ORCPT
+        id S1730974AbgD1SlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:41:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60628 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:41:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730834AbgD1SlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:41:06 -0400
+        id S1730969AbgD1SlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:41:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3E69208E0;
-        Tue, 28 Apr 2020 18:41:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5260D2085B;
+        Tue, 28 Apr 2020 18:41:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099266;
-        bh=NJbMw6Pbe7+GENnJqQLQX7O3iLztQDGPrtaFnqPW2d4=;
+        s=default; t=1588099268;
+        bh=BaVgmSjHEIJgkpOKzHo70T1UmYKAxEl2kDM9lEUxyGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0OM2fHpJ/T2oy37I1dpNCLsVjMYFOQ3VTB88ExSVoatIrf/W3mS94VvLvl7iMuc7I
-         +1U1YsPZcTG5PtV100QZ9ZDK6ECRHqSWqN4MvuRjdI9XuvvG6UUDdEe3dbfhEBISzP
-         ICB6SEWxzHGxU16QWallu18ey9RKyewvMHG3IHkU=
+        b=RixPxm9qZoRDmVfsEEZ2hXY6p4KVsSxl3SskNZuqV6RzJKwJUEf9zEv1B0g/Z5LGg
+         Sia5JHSIkZepOT2CRjo79mFOOVxfAm2EhoZxgBwnTAYV+ndaQMw5LRKfmBTrNQIUz6
+         yLFGApVvIVgPGBkguqZKfCYiCaksIvuQTReku2qI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Johnathan Smithinovic <johnathan.smithinovic@gmx.at>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 084/168] ALSA: hda: Remove ASUS ROG Zenith from the blacklist
-Date:   Tue, 28 Apr 2020 20:24:18 +0200
-Message-Id: <20200428182242.840957653@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 4.19 125/131] UAS: fix deadlock in error handling and PM flushing work
+Date:   Tue, 28 Apr 2020 20:25:37 +0200
+Message-Id: <20200428182240.988236185@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,48 +58,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit a8cf44f085ac12c0b5b8750ebb3b436c7f455419 ]
+commit f6cc6093a729ede1ff5658b493237c42b82ba107 upstream.
 
-The commit 3c6fd1f07ed0 ("ALSA: hda: Add driver blacklist") added a
-new blacklist for the devices that are known to have empty codecs, and
-one of the entries was ASUS ROG Zenith II (PCI SSID 1043:874f).
-However, it turned out that the very same PCI SSID is used for the
-previous model that does have the valid HD-audio codecs and the change
-broke the sound on it.
+A SCSI error handler and block runtime PM must not allocate
+memory with GFP_KERNEL. Furthermore they must not wait for
+tasks allocating memory with GFP_KERNEL.
+That means that they cannot share a workqueue with arbitrary tasks.
 
-This patch reverts the corresponding entry as a temporary solution.
-Although Zenith II and co will see get the empty HD-audio bus again,
-it'd be merely resource wastes and won't affect the functionality,
-so it's no end of the world.  We'll need to address this later,
-e.g. by either switching to DMI string matching or using PCI ID &
-SSID pairs.
+Fix this for UAS using a private workqueue.
 
-Fixes: 3c6fd1f07ed0 ("ALSA: hda: Add driver blacklist")
-Reported-by: Johnathan Smithinovic <johnathan.smithinovic@gmx.at>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200419071926.22683-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Fixes: f9dc024a2da1f ("uas: pre_reset and suspend: Fix a few races")
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200415141750.811-2-oneukum@suse.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/pci/hda/hda_intel.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/usb/storage/uas.c |   43 ++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 40 insertions(+), 3 deletions(-)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 72bbfeddea24a..dd77b9ffe5fd9 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2024,7 +2024,6 @@ static void pcm_mmap_prepare(struct snd_pcm_substream *substream,
-  * should be ignored from the beginning.
-  */
- static const struct snd_pci_quirk driver_blacklist[] = {
--	SND_PCI_QUIRK(0x1043, 0x874f, "ASUS ROG Zenith II / Strix", 0),
- 	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
- 	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
- 	{}
--- 
-2.20.1
-
+--- a/drivers/usb/storage/uas.c
++++ b/drivers/usb/storage/uas.c
+@@ -81,6 +81,19 @@ static void uas_free_streams(struct uas_
+ static void uas_log_cmd_state(struct scsi_cmnd *cmnd, const char *prefix,
+ 				int status);
+ 
++/*
++ * This driver needs its own workqueue, as we need to control memory allocation.
++ *
++ * In the course of error handling and power management uas_wait_for_pending_cmnds()
++ * needs to flush pending work items. In these contexts we cannot allocate memory
++ * by doing block IO as we would deadlock. For the same reason we cannot wait
++ * for anything allocating memory not heeding these constraints.
++ *
++ * So we have to control all work items that can be on the workqueue we flush.
++ * Hence we cannot share a queue and need our own.
++ */
++static struct workqueue_struct *workqueue;
++
+ static void uas_do_work(struct work_struct *work)
+ {
+ 	struct uas_dev_info *devinfo =
+@@ -109,7 +122,7 @@ static void uas_do_work(struct work_stru
+ 		if (!err)
+ 			cmdinfo->state &= ~IS_IN_WORK_LIST;
+ 		else
+-			schedule_work(&devinfo->work);
++			queue_work(workqueue, &devinfo->work);
+ 	}
+ out:
+ 	spin_unlock_irqrestore(&devinfo->lock, flags);
+@@ -134,7 +147,7 @@ static void uas_add_work(struct uas_cmd_
+ 
+ 	lockdep_assert_held(&devinfo->lock);
+ 	cmdinfo->state |= IS_IN_WORK_LIST;
+-	schedule_work(&devinfo->work);
++	queue_work(workqueue, &devinfo->work);
+ }
+ 
+ static void uas_zap_pending(struct uas_dev_info *devinfo, int result)
+@@ -1236,7 +1249,31 @@ static struct usb_driver uas_driver = {
+ 	.id_table = uas_usb_ids,
+ };
+ 
+-module_usb_driver(uas_driver);
++static int __init uas_init(void)
++{
++	int rv;
++
++	workqueue = alloc_workqueue("uas", WQ_MEM_RECLAIM, 0);
++	if (!workqueue)
++		return -ENOMEM;
++
++	rv = usb_register(&uas_driver);
++	if (rv) {
++		destroy_workqueue(workqueue);
++		return -ENOMEM;
++	}
++
++	return 0;
++}
++
++static void __exit uas_exit(void)
++{
++	usb_deregister(&uas_driver);
++	destroy_workqueue(workqueue);
++}
++
++module_init(uas_init);
++module_exit(uas_exit);
+ 
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR(
 
 
