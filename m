@@ -2,67 +2,85 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBB5C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF2FC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FD26206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97FB6206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:54:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PtNTHlqw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbgD1Jv2 convert rfc822-to-8bit (ORCPT
+        id S1727106AbgD1JyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 05:51:28 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:49320 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727030AbgD1Jv1 (ORCPT
+        Tue, 28 Apr 2020 05:54:06 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:53869 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726974AbgD1JyG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 05:51:27 -0400
-Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id B4A75CECEB;
-        Tue, 28 Apr 2020 12:01:04 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [DO-NOT-MERGE][PATCH v4 3/3] arm64: allwinner: Enable Bluetooth
- and WiFi on sopine baseboard
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200425155531.2816584-3-alistair@alistair23.me>
-Date:   Tue, 28 Apr 2020 11:51:24 +0200
-Cc:     netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-        mripard@kernel.org, wens@csie.org, anarsoul@gmail.com,
-        devicetree@vger.kernel.org, alistair23@gmail.com,
-        linux-arm-kernel@lists.infradead.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <417EB5CB-F57F-4B7E-A81E-9ECE166BE217@holtmann.org>
-References: <20200425155531.2816584-1-alistair@alistair23.me>
- <20200425155531.2816584-3-alistair@alistair23.me>
-To:     Alistair Francis <alistair@alistair23.me>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Tue, 28 Apr 2020 05:54:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588067645;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JDcXgincut8WHXmgN9Oi3Xs1ZRKQ3KlFK8d41RjA30E=;
+        b=PtNTHlqw6aQJNjDhCidAc65dd85frSb2xrYI3wIDy+3UJCfiGY6O15OXoRbZT9h/3VuvIL
+        iUaGr5Rf4xweffU9IakiNahy9S93hJfJDc+ARxc+4k7qHjH6LMFUsiDlBYs2LBsSOFJEUA
+        845MeP3GX7oC1E5S26f4rQ71YmIl5WY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-232-y3OF7pCRNUS5WYVWLlV4iw-1; Tue, 28 Apr 2020 05:54:00 -0400
+X-MC-Unique: y3OF7pCRNUS5WYVWLlV4iw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6313A107ACCA;
+        Tue, 28 Apr 2020 09:53:59 +0000 (UTC)
+Received: from krava (unknown [10.40.196.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 175A41002388;
+        Tue, 28 Apr 2020 09:53:57 +0000 (UTC)
+Date:   Tue, 28 Apr 2020 11:53:55 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Steve MacLean <Steve.MacLean@microsoft.com>
+Cc:     Francois Saint-Jacques <fsaintjacques@gmail.com>,
+        "eranian@google.com" <eranian@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [EXTERNAL] Re: [PATCH v3] perf inject --jit: Remove //anon mmap
+ events
+Message-ID: <20200428095355.GF1476763@krava>
+References: <CABNn7+pYPSfduacOATcKT1X_=qs70i7Bc8pELXDahY7BoB9_wQ@mail.gmail.com>
+ <20191229155112.GA21785@krava>
+ <CH2PR21MB1511DC522EBE2E19C8185FE8F7AF0@CH2PR21MB1511.namprd21.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CH2PR21MB1511DC522EBE2E19C8185FE8F7AF0@CH2PR21MB1511.namprd21.prod.outlook.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alistair,
-
-> The sopine board has an optional RTL8723BS WiFi + BT module that can be
-> connected to UART1. Add this to the device tree so that it will work
-> for users if connected.
+On Mon, Apr 27, 2020 at 10:03:58PM +0000, Steve MacLean wrote:
+> > it's simple enough to revert in case there's any issue
+> >
+> > thanks,
+> > jirka
 > 
-> Signed-off-by: Alistair Francis <alistair@alistair23.me>
-> ---
-> .../allwinner/sun50i-a64-sopine-baseboard.dts | 29 +++++++++++++++++++
-> 1 file changed, 29 insertions(+)
+> Can we go ahead and merge this?
+> 
 
-so I am bit confused on what to do with this series? Do you want me to apply a subset of patches or do you require specific reviews or acks?
+I saw the explanation you posted:
+  https://lore.kernel.org/lkml/CY4PR21MB0632B5EE447DA9B931CB114DF7740@CY4PR21MB0632.namprd21.prod.outlook.com/
 
-Regards
+could you please add it to the patch changelog and repost?
 
-Marcel
+as I said I'm ok with the patch, Stephane?
+
+jirka
 
