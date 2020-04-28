@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDA1C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A18AC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E326520730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ED752085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099198;
-	bh=a7WLY2vyVTy/LLORuijc1xT8Cr1/9sL3V1qrgS6OCfc=;
+	s=default; t=1588099202;
+	bh=mqM1Symd1VmDK+hvDs5OwnRrcB9aFa1eQTsDz4xQ208=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MQWrucN6DgPaxnHVIYX8sppTjQqK4i+aVvgpkfG56aCeiTodyFU7KL/8mNAXzTcip
-	 aOux3e/jqS/jV/6Fk0YMXhfQWTjU9/l2/nY2l+tm1IhlSErK6yJwzdhoFi+bqrnoLP
-	 GvcI4ytTm1TQJyCh54fGA3D/R4Iq0JN6I4LaoGMo=
+	b=2klT8IvjV6W5ULZkukHepzqaPsUYAMIRK/kY2HjnlSITmTMbMh6I558xnLgApbEh2
+	 n8o2oudPg4M4KYW3MtUb3Vq7gFKgH8MI87HFsu1JdqIqFkMwPxFtMZjWzMXpmlXX4k
+	 p+Zx8mYSTqsb2q4NhnHZ7TS0m0s3hzv5p9zFp4ik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729932AbgD1Sj5 (ORCPT
+        id S1730885AbgD1SkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:39:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58896 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:40:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730125AbgD1Sjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:39:55 -0400
+        id S1730881AbgD1Sj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:39:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF2A92085B;
-        Tue, 28 Apr 2020 18:39:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F7AF20575;
+        Tue, 28 Apr 2020 18:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099195;
-        bh=a7WLY2vyVTy/LLORuijc1xT8Cr1/9sL3V1qrgS6OCfc=;
+        s=default; t=1588099197;
+        bh=mqM1Symd1VmDK+hvDs5OwnRrcB9aFa1eQTsDz4xQ208=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sV5x0Vb3v0Ee3S0o9XMSAgJVKpuqVJhzGngxUbuvaq6mK4MT/hdkJCipFTQ2dpzJE
-         BQlRm7t/3dkSzrjrTpUasSgMqgcw1YktAqC2YB+ni0T0sQLkvzDEAZxtX3xDpP2Cln
-         sYKbSAqwdLpzS2J5xGPlS57L6AX7C4/T3XjQ93Ic=
+        b=j+3KlZLjkdm51D4ZgHp4V8nFZIz9Ib++FksxxEtE+8IIrFvDAu9U1Aic02XRXTp2n
+         jX4htaiz/Qx48QdD3we7i1kNkTQophA7OYpn0YxxPYb4RL/HWaqNBAAUnyVYQWNmNu
+         WM7uB3gVYazZngQ5/Po21pZwWAGBQH2PpE+/6Wzg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 071/168] tcp: cache line align MAX_TCP_HEADER
-Date:   Tue, 28 Apr 2020 20:24:05 +0200
-Message-Id: <20200428182240.965775655@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Qian Cai <cai@lca.pw>, Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 112/131] powerpc/setup_64: Set cache-line-size based on cache-block-size
+Date:   Tue, 28 Apr 2020 20:25:24 +0200
+Message-Id: <20200428182239.302297315@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,38 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-[ Upstream commit 9bacd256f1354883d3c1402655153367982bba49 ]
+commit 94c0b013c98583614e1ad911e8795ca36da34a85 upstream.
 
-TCP stack is dumb in how it cooks its output packets.
+If {i,d}-cache-block-size is set and {i,d}-cache-line-size is not, use
+the block-size value for both. Per the devicetree spec cache-line-size
+is only needed if it differs from the block size.
 
-Depending on MAX_HEADER value, we might chose a bad ending point
-for the headers.
+Originally the code would fallback from block size to line size. An
+error message was printed if both properties were missing.
 
-If we align the end of TCP headers to cache line boundary, we
-make sure to always use the smallest number of cache lines,
-which always help.
+Later the code was refactored to use clearer names and logic but it
+inadvertently made line size a required property, meaning on systems
+without a line size property we fall back to the default from the
+cputable.
 
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Soheil Hassas Yeganeh <soheil@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+On powernv (OPAL) platforms, since the introduction of device tree CPU
+features (5a61ef74f269 ("powerpc/64s: Support new device tree binding
+for discovering CPU features")), that has led to the wrong value being
+used, as the fallback value is incorrect for Power8/Power9 CPUs.
+
+The incorrect values flow through to the VDSO and also to the sysconf
+values, SC_LEVEL1_ICACHE_LINESIZE etc.
+
+Fixes: bd067f83b084 ("powerpc/64: Fix naming of cache block vs. cache line")
+Cc: stable@vger.kernel.org # v4.11+
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Reported-by: Qian Cai <cai@lca.pw>
+[mpe: Add even more detail to change log]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200416221908.7886-1-chris.packham@alliedtelesis.co.nz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/tcp.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -50,7 +50,7 @@ extern struct inet_hashinfo tcp_hashinfo
- extern struct percpu_counter tcp_orphan_count;
- void tcp_time_wait(struct sock *sk, int state, int timeo);
- 
--#define MAX_TCP_HEADER	(128 + MAX_HEADER)
-+#define MAX_TCP_HEADER	L1_CACHE_ALIGN(128 + MAX_HEADER)
- #define MAX_TCP_OPTION_SPACE 40
- #define TCP_MIN_SND_MSS		48
- #define TCP_MIN_GSO_SIZE	(TCP_MIN_SND_MSS - MAX_TCP_OPTION_SPACE)
+---
+ arch/powerpc/kernel/setup_64.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/arch/powerpc/kernel/setup_64.c
++++ b/arch/powerpc/kernel/setup_64.c
+@@ -518,6 +518,8 @@ static bool __init parse_cache_info(stru
+ 	lsizep = of_get_property(np, propnames[3], NULL);
+ 	if (bsizep == NULL)
+ 		bsizep = lsizep;
++	if (lsizep == NULL)
++		lsizep = bsizep;
+ 	if (lsizep != NULL)
+ 		lsize = be32_to_cpu(*lsizep);
+ 	if (bsizep != NULL)
 
 
