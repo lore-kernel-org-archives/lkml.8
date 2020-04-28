@@ -2,111 +2,131 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E18C7C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E510C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C201B206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77508206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:04:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dBiajpPt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgD1KEi (ORCPT
+        id S1727878AbgD1KEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 06:04:38 -0400
-Received: from lnfm1.sai.msu.ru ([93.180.26.255]:49917 "EHLO lnfm1.sai.msu.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727107AbgD1KEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 06:04:37 -0400
-Received: from dragon.sai.msu.ru (dragon.sai.msu.ru [93.180.26.172])
-        by lnfm1.sai.msu.ru (8.14.1/8.12.8) with ESMTP id 03SA3tiw019532;
-        Tue, 28 Apr 2020 13:04:00 +0300
-Received: from oak.local (unknown [188.123.231.186])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client did not present a certificate)
-        by dragon.sai.msu.ru (Postfix) with ESMTPSA id 1C034EB39;
-        Tue, 28 Apr 2020 13:03:56 +0300 (MSK)
-From:   "Matwey V. Kornilov" <matwey@sai.msu.ru>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/ZYNQ
-        ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Cc:     matwey.kornilov@gmail.com,
-        "Matwey V. Kornilov" <matwey@sai.msu.ru>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/ZYNQ
-        ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] ARM: dts: zynq: Fix ethernet PHY for v5 schematics
-Date:   Tue, 28 Apr 2020 13:03:49 +0300
-Message-Id: <20200428100350.12699-1-matwey@sai.msu.ru>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <752db40d-5aed-4a97-a050-bc1376547f87@xilinx.com>
-References: <752db40d-5aed-4a97-a050-bc1376547f87@xilinx.com>
+        Tue, 28 Apr 2020 06:04:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48994 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727107AbgD1KEz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 06:04:55 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7D96C03C1A9;
+        Tue, 28 Apr 2020 03:04:54 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id u16so2159539wmc.5;
+        Tue, 28 Apr 2020 03:04:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FZWj3Lysed22PL4Y078VhelfrwEFYvUTFp241hLfoxQ=;
+        b=dBiajpPtLsQdpwuDEw2bnf6HyJiOTwuaLSXbOYVaUbpwkKu3Imwdjtc4iYE5+qpkGh
+         zAnmxl0G1wsBUSo1dx9v9KzgRSjcDS72Qicr/WaEinXnnr06KHR2nUfsgpzggQjl5tu6
+         BWyTQo41EtcGqkr+DgF6Gf0xhcxEqlyBAZtLoWnDUvCcS2k+12+oODug5TBofSMXxLzW
+         CIczvcddiqecK06/eo/lqPCgzmOPpdWhaPxSfmtb6KaipQoXn7vCTxqRDG/actw8k3eR
+         BGOu5Ecf6efLZsFoGySM0BBwAxrTJMWGwsP84kWF39w8ODeQqg0OghQemu0d7HR37CUZ
+         771Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FZWj3Lysed22PL4Y078VhelfrwEFYvUTFp241hLfoxQ=;
+        b=F32QDDNB0gxx44mUJpcpAF3AShmmCU7MmqlJiDZrzRzUj9qrgzMVh42qUC43yP3bEq
+         zMWcbAZS+3MuqGMKLzfbkrfloF7gWmSvwdrBN8slwo2kbjti6F89Zd0BPIh4fbvPTfzV
+         Ven/ipR22aRKQCNYFbKpcQ32fYptjMc74gmQ/wTGcD6HG4kDDD2Ptxsq5IWPYfV73TkS
+         etxfpglU9Jtku13zEsH1vUQBHpohtrCqH/xdUH+GxdtQaWs9j0TJFUUTBBAgePL14xz2
+         dcEF9VBM+WM6RPnZe/h2l3U758ULcSTEG8zO+aQT7qwuh4vmXlwbR+2udnlVpOIuCXQQ
+         hCPw==
+X-Gm-Message-State: AGi0PuabHCQf9wJMgQNq2LpzQzwQw/N4QiiNq68KykM7FAtt/F+2d19r
+        0UKRnTZpROFyZKXlyeP/ZzI=
+X-Google-Smtp-Source: APiQypKOqaTwnSgVcZuq9zDy5UEUMjaevZemWQiNQyqv4++XNHvfQ3PT0Ok6td7Ld0TvJb/lC/PXdA==
+X-Received: by 2002:a1c:4b0a:: with SMTP id y10mr3621379wma.24.1588068293697;
+        Tue, 28 Apr 2020 03:04:53 -0700 (PDT)
+Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
+        by smtp.gmail.com with ESMTPSA id p7sm26117997wrf.31.2020.04.28.03.04.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 03:04:52 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 12:04:51 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
+        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 3/8] phy: tegra: xusb: Add support for UTMI pad power
+ control
+Message-ID: <20200428100451.GC3592148@ulmo>
+References: <1586939108-10075-1-git-send-email-nkristam@nvidia.com>
+ <1586939108-10075-4-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xo44VMWPx7vlQ2+2"
+Content-Disposition: inline
+In-Reply-To: <1586939108-10075-4-git-send-email-nkristam@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are at least two different versions existing for MYIR Zturn:
 
- * v4 schematics has Atheros AR8035 PHY at 0b000
-     http://www.myirtech.com/download/Zynq7000/Z-TURNBOARD_schematic.pdf
- * v5 schematics has Micrel KSZ9031 PHY at 0b011
-     v5 schematics available at DVD disk supplied with the board
+--xo44VMWPx7vlQ2+2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Specify both PHYs to make ethernet interface working for any board
-revision. This commit relies on of_mdiobus_register() behavior.
-When phy-handle is missed, every nested PHY node is considered,
-while ENODEVs are ignored.
+On Wed, Apr 15, 2020 at 01:55:03PM +0530, Nagarjuna Kristam wrote:
+> Add support for UTMI pad power on and off API's via soc ops. These API
+> can be used by operations like charger detect to power on and off UTMI
+> pad if needed. Update powered_on flag in the pad power control API's.
+>=20
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> ---
+> V2:
+>  - Patch re-based.
+> ---
+>  drivers/phy/tegra/xusb-tegra186.c | 51 ++++++++++++++++++---------------=
+------
+>  drivers/phy/tegra/xusb.h          |  2 ++
+>  2 files changed, 26 insertions(+), 27 deletions(-)
 
-Before the patch:
+Can we not simply pass another reference to the UTMI PHY to the charger
+detect code so that we can avoid this custom API?
 
-[   28.295002] macb e000b000.ethernet eth0: Could not attach PHY (-19)
+Thierry
 
-After the patch:
+--xo44VMWPx7vlQ2+2
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[   28.257365] macb e000b000.ethernet eth0: PHY [e000b000.ethernet-ffffffff:00] driver [Micrel KSZ9031 Gigabit PHY] (irq=POLL)
-[   28.257384] macb e000b000.ethernet eth0: configuring for phy/rgmii-id link mode
+-----BEGIN PGP SIGNATURE-----
 
-Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
----
-Changes since v1:
- - reworded commit message
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6n/8MACgkQ3SOs138+
+s6FYKRAAqpXiamm0RvGR2izSuYbKEcEOvzxc1iQ6OjqGlTkQY8qiW0sUQob8c54J
+2+weCIjkd6HhULC4XGi6qdP1MgNBXQiniGmsj1+9cRING/Qg2Ad3sd6mOCfjBmYw
+rkd0erSue+hecchK9PlIdEQc1HRhFMRTKAWAPfFyXjE4y0gUKnTyFYmHmYYd3aJs
+FlNE6tOnNBvGkTndMyYX/ikByJECinH0dyonLcGrrCuGDhVF+qu8YZRJNCAFQ/H8
+HJn2zp3qm4BNs89UF05rs/OB6V7jGk3eAV34YBWw7aMt4TjC8l/AB05m6YAs19yB
+T+wcqzTHFpUm86zcAM5jDBwRGou9C6Gr7CQUDiEVBMo7P0wRlHoj7dQ5CCA9iO17
+ELSvO7svvJaNqqumcB1bOTsD2Oy/XNIeCnoA/PCO2ZmuDjSr2p8onshOpoZbyFvg
+IW8pzi/9QkPcnA1WproUoXOfmUuiTui83/6nv1k167OjyfD2RcjHxxsflEbfn9zP
+u/Hk31VMscbKS4oA+QE5b1OkGYzLGD/YxwuOtnLwMhcEInMEqJrS9SKua6Zyn4jL
+HNKPNcd7sxPbccbWG0+YQhWGTVMdfqppSilUJNQK7jtYsr/2tikA0/zYOoiWVof9
+biMSeF+0rVjSd9UBsbx12onY7p9wUM8EWoAePAB/A1ScEEKWl/I=
+=27Yf
+-----END PGP SIGNATURE-----
 
- arch/arm/boot/dts/zynq-zturn.dts | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/zynq-zturn.dts b/arch/arm/boot/dts/zynq-zturn.dts
-index 5ec616ebca08..07da9cf60d02 100644
---- a/arch/arm/boot/dts/zynq-zturn.dts
-+++ b/arch/arm/boot/dts/zynq-zturn.dts
-@@ -67,10 +67,17 @@
- &gem0 {
- 	status = "okay";
- 	phy-mode = "rgmii-id";
--	phy-handle = <&ethernet_phy>;
- 
--	ethernet_phy: ethernet-phy@0 {
--		reg = <0x0>;
-+	ethernet-phy@0 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <0>;
-+		max-speed = <1000>;
-+	};
-+
-+	ethernet-phy@3 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <3>;
-+		max-speed = <1000>;
- 	};
- };
- 
--- 
-2.16.4
-
+--xo44VMWPx7vlQ2+2--
