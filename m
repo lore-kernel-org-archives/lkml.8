@@ -2,93 +2,112 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D02C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B33C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40AB52070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B9CF2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:20:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MMUHViHj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729186AbgD1TUJ (ORCPT
+        id S1729209AbgD1TUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 15:20:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51460 "EHLO
+        Tue, 28 Apr 2020 15:20:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729135AbgD1TUH (ORCPT
+        by vger.kernel.org with ESMTP id S1729135AbgD1TUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 15:20:07 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A290C03C1AB;
-        Tue, 28 Apr 2020 12:20:07 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id E79792A1F87
-Received: by earth.universe (Postfix, from userid 1000)
-        id 5F2173C08C6; Tue, 28 Apr 2020 21:20:03 +0200 (CEST)
-Date:   Tue, 28 Apr 2020 21:20:03 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Jason Yan <yanaijie@huawei.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] power: supply: ab8500_fg: remove comparison to bool
-Message-ID: <20200428192003.yhqfvezez2kntjwi@earth.universe>
-References: <20200426094250.23995-1-yanaijie@huawei.com>
- <CACRpkdYwu3LnN9KGfbjhnJu75hmKBKgnSWnDCWmdnGWGGGYPTw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ttdcwcb7uw2owqyr"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYwu3LnN9KGfbjhnJu75hmKBKgnSWnDCWmdnGWGGGYPTw@mail.gmail.com>
+        Tue, 28 Apr 2020 15:20:14 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF7C1C03C1AB
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 12:20:12 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id y8so26088249ybn.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 12:20:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Fbbhxh4PPBK5DhbGxek1hM5pONPrv64ZqzBYP6IWdgM=;
+        b=MMUHViHjh2RSu07H0hX9x0wTNbUDw/3YD/fUs/Zol6IKlPKiYE5IUD5kjxdwHxKmEF
+         OKSmLz/l/N4uA28HO1UEqtfSDy2q+TYB/g+6crxozgyuTCLS3c+NGSFZ1OJh7fTPPQQ7
+         EYXvNsYxUkoEN8q5ndnr6ZaNm75URqvOwjQFMx8h3kEL1LllBtBrFD4zGp1XGHHjQbJh
+         wiL52CpeJYQYXtzwvW169Ooex9+paUS0YxQT4uU6GpUJKHwocpq8P5OJp0LENXKOng9V
+         oIODLmxZvk6dT4KkgmkgnbZkNGPGPUpS9I5X8aGGjC0r3CVYOq/azZ4tnliWmctPfbVF
+         ncWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Fbbhxh4PPBK5DhbGxek1hM5pONPrv64ZqzBYP6IWdgM=;
+        b=kKPUBza/SwfW2beI6IRFSMshPIBnwf9ltAx69p32nrw01xAQSr+eu0m1M6Jy7L2Cpm
+         JGfGVB+D2K5gZTyl7ntOn/yPy+88hFP0n+GFeSL8SmrPdlqcZZAebyxcRpzgeE2tU/yd
+         WhHc4isRrHPtnhvn/NngR9rFRVqUmkXqGT5G+JlbM3+cdbj/wAOcTmVAxG6LSlzuyXTo
+         0TvzKb9UzoGgWCzJeTynypReBf7AwW2bDmUoWetc8NKw8qxrofP9IWsCyPXCZ2rpGzzv
+         ekj6C85qh907aSDFFrzgrxqp7ItKsq0vkGv9t2TLGLNPvl6Ga5aybiQEPc2L46abmH78
+         O4jw==
+X-Gm-Message-State: AGi0PuZYGM06AqUN7Uv2WBfzubAbXJZyQpin1b+JrhbEC8lxgdd+1T3U
+        SQR5UamIkoBwOKD0ilBdydhnEVOEWMj4KsU=
+X-Google-Smtp-Source: APiQypIorS2hJ4gmyi9qP95LIYm3KdrbyIHYeqC6pWNsRz34gbx353DPsWQd/IBRveDhJAwEPuidW0iMVEEj2oQ=
+X-Received: by 2002:a25:2583:: with SMTP id l125mr51619838ybl.446.1588101612166;
+ Tue, 28 Apr 2020 12:20:12 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 12:20:05 -0700
+Message-Id: <20200428192006.109006-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
+Subject: [PATCH v1] Revert "Revert "driver core: Set fw_devlink to
+ "permissive" behavior by default""
+From:   Saravana Kannan <saravanak@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        kernel-team@android.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This reverts commit 18555cb6db2373b9a5ec1f7572773fd58c77f9ba.
 
---ttdcwcb7uw2owqyr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The reason[1] for the original revert has now been fixed by
+commit 00b247557858 ("driver core: Fix handling of
+fw_devlink=permissive"). So, this patch reverts the revert. Marek has
+also tested this patch with the fix mentioned above and confirmed that
+the issue has been fixed.
 
-Hi,
+[1] - https://lore.kernel.org/lkml/CAGETcx8nbz-J1gLvoEKE_HgCcVGyV2o8rZeq_USFKM6=s7WmNg@mail.gmail.com/T/#m12dfb5dfd23805b84c49f4bb2238a8cce436c2f7
+[2] - https://lore.kernel.org/lkml/CAGETcx8nbz-J1gLvoEKE_HgCcVGyV2o8rZeq_USFKM6=s7WmNg@mail.gmail.com/T/#m2408a6ce098b2ebf583ca8534329695923ae57fe
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+Greg,
 
-On Tue, Apr 28, 2020 at 04:02:31PM +0200, Linus Walleij wrote:
-> On Sun, Apr 26, 2020 at 11:43 AM Jason Yan <yanaijie@huawei.com> wrote:
->=20
-> > Fix the following coccicheck warning:
-> >
-> > drivers/power/supply/ab8500_fg.c:2402:5-24: WARNING: Comparison to bool
-> >
-> > Signed-off-by: Jason Yan <yanaijie@huawei.com>
->=20
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Can you please queue this for 5.8?
 
-Thanks, queued.
+Thanks,
+Saravana
 
--- Sebastian
+ drivers/base/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---ttdcwcb7uw2owqyr
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 073045cb214e..c9045521596f 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -2345,7 +2345,7 @@ static int device_private_init(struct device *dev)
+ 	return 0;
+ }
+ 
+-static u32 fw_devlink_flags;
++static u32 fw_devlink_flags = DL_FLAG_SYNC_STATE_ONLY;
+ static int __init fw_devlink_setup(char *arg)
+ {
+ 	if (!arg)
+-- 
+2.26.2.303.gf8c07b1a785-goog
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6ogeMACgkQ2O7X88g7
-+prREQ//Y/BVNO+E0LA3tnVd+n5Vf1Q1Th7uxH5p2Ui1B/Onv5qP7o/mr0ELvddb
-1IM5T448L6MgJ0YSepWK3BCzKqun0w5YAa0QZG8TAEJeBrLvFl6zXFWsxgMNSiYZ
-pIlYEg7UFlud7FiUt1V1gir+SI4qjG8RXL2A64Z4EQ6J4dpTPnOk4mX/zzgyR2h0
-LQ9oCHoK+GNkyAo5jVJoVxAE/2l7kDHT0MQJAv4zS7xgxwz5/giQrn5jJTZadeFM
-m/PalOmH1aJ2CQAjlYHr28sKPAIC+mz6i5e9cnYwK7bM7+f53I74xMMrA7YVaTsL
-/Mc3k5oVa/DBNgKAdHrGZ4jv4R01aZhoUQcaKevPuiwQEBhqkOXVshoaE5sDiXpb
-lkEcyG6Q8AJOC5e4Qm/eRv2oh7Xm7yzedAhQD39AKtFl5X7SeB17tWk914RJXIeS
-T/DAm+B8ido7LJZ0myw/k0BwOU3H8mMOkWdmhjnnmbSP8FP4+mtlDZDuH7Y1NOHD
-895rfdMVqNEEyhnD1PuWIKBPixZaxshHrC8cuR3pbL4Z926pHkTUR1ltzmtLuDGg
-x7OJgfXHBTW7C7vn/YgSe5HdOBybOLXqABCLf9cOc/l04oShE7lVzyKJu6uXgaH7
-z/oVfO8VF3uk7SL0JDjKNjujqkECLy77DA1M6QmYNtE2RN1/iPU=
-=ghDH
------END PGP SIGNATURE-----
-
---ttdcwcb7uw2owqyr--
