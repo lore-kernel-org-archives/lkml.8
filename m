@@ -2,137 +2,123 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46740C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AC2C83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2328E206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:26:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e1PNM85k"
+	by mail.kernel.org (Postfix) with ESMTP id DF606206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgD1O0e (ORCPT
+        id S1727838AbgD1O0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:26:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726900AbgD1O0e (ORCPT
+        Tue, 28 Apr 2020 10:26:50 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36815 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbgD1O0t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:26:34 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD13BC03C1AB;
-        Tue, 28 Apr 2020 07:26:33 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id b11so24872285wrs.6;
-        Tue, 28 Apr 2020 07:26:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hG1iewHRLomP7TVu4ek95y5UWXfro8sk9H3gDbdYkFU=;
-        b=e1PNM85kPudrtghx5esFXKTU72xQjtksJL6Cxf/4nXufhl1oWdxTsWEX/sQzVqwAfz
-         zn/8/hXeVC9v2d6fGq/uuidWo5LQvWQGdxAcgErMR8deJaEflxX9NvSrXbiEExJZjUkU
-         h52KUrhA4ZJe7aTj+nbDJtiTG3dq/A61TtI0Gram/0KFNcSQfSB5PksuUH1khvhpTdhw
-         BDxZVMWdpipYzYcZOsaEmD7tR4qUi8LtkckQeORuB0taY1u5xHJtB1UAVN4xaRb4/2O6
-         VjVkb0PgO+Ban1Q1ZGLh2xy424SxSGFn6UB9f1TrlsaOqfPFOh+PnnkSH3za2B8Xz/Uv
-         dmww==
+        Tue, 28 Apr 2020 10:26:49 -0400
+Received: by mail-pf1-f193.google.com with SMTP id z1so9065414pfn.3;
+        Tue, 28 Apr 2020 07:26:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hG1iewHRLomP7TVu4ek95y5UWXfro8sk9H3gDbdYkFU=;
-        b=G3bjHrJ/cH8B7op3G0NmHcDA09L94ZqS86DE1/t1wqv0p2H2IXMumB8Rw6OeRz56+F
-         0ZAtvwx2fkZMSu53eLuOissDgPjc9URUXpUm0sf1tBSqMwMPziN1CHqorgJYOH8x+CSL
-         nr+Rw6YmEvHT5jd6wn5P8whDBQr8O+FjVpdZ+uWOuS4rSET+rP141IzmJP2JULDrUzCs
-         tIy0XpztoDFPQnv1AhtFvLdUcfPEnuRzQF/oJmmUlJlSNwW4k/3Xf0H+Ttvw2NQ2oph6
-         y/P4Zo7lrDlSGZJUx2AUrakxuCy29groYo+eVvZYLbrWDXxXUd0D1GWO1nAO9NgD1yIc
-         3kAA==
-X-Gm-Message-State: AGi0PuZBmvi4kZ+Aeg6fAux8LhUZ9RNd6XmocoRmTGR0jIgiJXoW9ykf
-        Kc8yLenM+r5WASMi6fOejy4=
-X-Google-Smtp-Source: APiQypJ7gR281FtErynXrsmeODO1gY7gzdn3z5Z1gvMXwBRkdEPTT8anxYrfO/GsOajLTJDAcgNnfQ==
-X-Received: by 2002:a5d:4b0a:: with SMTP id v10mr11519520wrq.342.1588083992303;
-        Tue, 28 Apr 2020 07:26:32 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0:9542:27c5:80f1:9810])
-        by smtp.gmail.com with ESMTPSA id h6sm3367106wmf.31.2020.04.28.07.26.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 07:26:31 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
-        Piotr Oniszczuk <warpme@o2.pl>
-Subject: [PATCH v2] arm64: dts: allwinner: h6: Use dummy regulator for Tanix TX6
-Date:   Tue, 28 Apr 2020 16:26:29 +0200
-Message-Id: <20200428142629.8950-1-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Q536HUdRDiwCeFtyBvxsfcPLV6dHJL7EQUA8DH0pwk4=;
+        b=dofea+5K95Dm5q5kAcGTgwL29/bTfhMQWkNwLKTSDIVnAFHKLO0n9KVDa+KHbt0HR3
+         RX9QsfeAgQmJl0kw96M2kAgzuGmQtxtCTJSQ3i/csjLuubtoLY4qGqV5a4d1xbIvvhQB
+         wXeaqWLSWRr926gNGFSAS+ywmnDCvi1ULEP5rLmZiMwH12/7Kq8SrFVNKaYl/njYSnps
+         rZxQKl/cBqBUoH0VLYG39+RQggXLjLb1DXTtIvonQXxbWz8oMF2dgRzlHQmHgAOagVWm
+         28ZS+R7VzGca+RlLx8XQgHO8w9QtLjHytjLhSOWJU2AL1s40BVbl/e6DM6afjcu0/Pfq
+         9Mzw==
+X-Gm-Message-State: AGi0PuZFq3Vt6dc4FP/aDxVuAzq8OvDMUAe2r40KfVjff/hBWYQ6Tc9g
+        K08pNORXQoBMLc+33MzJpx8VR3+n0vyeGg==
+X-Google-Smtp-Source: APiQypKaYa1OICrT5Gzv72KonLdVK19a8CS/obsWPt4MMYBIUsWSbVHGbJG0oRBMavCXDgyfT4rHEg==
+X-Received: by 2002:a62:ee02:: with SMTP id e2mr5444174pfi.161.1588084008048;
+        Tue, 28 Apr 2020 07:26:48 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:1473:9ec8:73db:e572? ([2601:647:4000:d7:1473:9ec8:73db:e572])
+        by smtp.gmail.com with ESMTPSA id y21sm15047059pfm.219.2020.04.28.07.26.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Apr 2020 07:26:47 -0700 (PDT)
+Subject: Re: [PATCH][next] scsi: qla2xxx: make 1 bit bit-fields unsigned int
+To:     Colin King <colin.king@canonical.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        GR-QLogic-Storage-Upstream@marvell.com,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Arun Easi <aeasi@marvell.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        linux-scsi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200428102013.1040598-1-colin.king@canonical.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <0c085901-349e-63f5-2dce-679eca553718@acm.org>
+Date:   Tue, 28 Apr 2020 07:26:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200428102013.1040598-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tanix TX6 has a fixed regulator. As DVFS is instructed to change
-voltage to meet OPP table, the DVFS is not working as expected.
+On 2020-04-28 03:20, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The bitfields mpi_fw_dump_reading and mpi_fw_dumped are currently signed
+> which is not recommended as the representation is an implementation defined
+> behaviour.  Fix this by making the bit-fields unsigned ints.
+> 
+> Fixes: cbb01c2f2f63 ("scsi: qla2xxx: Fix MPI failure AEN (8200) handling")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/scsi/qla2xxx/qla_def.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/scsi/qla2xxx/qla_def.h b/drivers/scsi/qla2xxx/qla_def.h
+> index daa9e936887b..172ea4e5887d 100644
+> --- a/drivers/scsi/qla2xxx/qla_def.h
+> +++ b/drivers/scsi/qla2xxx/qla_def.h
+> @@ -4248,8 +4248,8 @@ struct qla_hw_data {
+>  	int		fw_dump_reading;
+>  	void		*mpi_fw_dump;
+>  	u32		mpi_fw_dump_len;
+> -	int		mpi_fw_dump_reading:1;
+> -	int		mpi_fw_dumped:1;
+> +	unsigned int	mpi_fw_dump_reading:1;
+> +	unsigned int	mpi_fw_dumped:1;
+>  	int		prev_minidump_failed;
+>  	dma_addr_t	eft_dma;
+>  	void		*eft;
 
-Avoid to introduce a new dedicated OPP Table where voltage are
-equals to the fixed regulator as it will only duplicate all the OPPs.
-Instead remove the fixed regulator so the DVFS framework will create
-dummy regulator and will have the same behavior.
-
-Add some comments to explain this in the device-tree.
-
-Reported-by: Piotr Oniszczuk <warpme@o2.pl>
-Fixes: add1e27fb703 ("arm64: dts: allwinner: h6: Enable CPU opp tables for Tanix TX6")
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- .../boot/dts/allwinner/sun50i-h6-tanix-tx6.dts | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-index be81330db14f..3e96fcb317ea 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-@@ -48,7 +48,15 @@
- };
- 
- &cpu0 {
--	cpu-supply = <&reg_vdd_cpu_gpu>;
-+	/*
-+	 * Don't specify the CPU regulator, as it's a fixed
-+	 * regulator DVFS will not work as it is intructed
-+	 * to reach a voltage which can't be reached.
-+	 * Not specifying a regulator will create a dummy
-+	 * regulator allowing all OPPs.
-+	 *
-+	 * cpu-supply = <&reg_vdd_cpu_gpu>;
-+	 */
- };
- 
- &de {
-@@ -68,7 +76,13 @@
- };
- 
- &gpu {
--	mali-supply = <&reg_vdd_cpu_gpu>;
-+	/*
-+	 * Don't specify the GPU regulator, see comment
-+	 * above for the CPU supply.
-+	 *
-+	 * mali-supply = <&reg_vdd_cpu_gpu>;
-+	 */
-+
- 	status = "okay";
- };
- 
--- 
-2.20.1
-
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
