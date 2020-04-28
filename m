@@ -2,210 +2,198 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49826C83000
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B4CC83007
 	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F8B5208E0
+	by mail.kernel.org (Postfix) with ESMTP id 5F1D0206D9
 	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:10:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vhUsyv6d"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="myMriC6A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgD1UKQ (ORCPT
+        id S1726524AbgD1UKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:10:16 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:36486 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbgD1UJr (ORCPT
+        Tue, 28 Apr 2020 16:10:18 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:19051 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726318AbgD1UKN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:09:47 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SJwkYu141282;
-        Tue, 28 Apr 2020 20:09:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=R6CZhV28M+6lk4C99qksrUjkNq5T+6h8siYr5Mc47RE=;
- b=vhUsyv6dFrltgGFh65povAe65d9OfwYvkpKoUhiBq4ARoipLBZu298DR1015+6u2bo71
- AbMDRdIhQNwWrPnBQmLpTBrskwBsMSKUjbId6W4E/0pVy6tDvITDLUsmk0P6SF3TbHoh
- lljmrQilNDxNvSUHVGz0cLbjyV2yJWO1akgyhpFeDPeaLw9krVcpgmnIOwhIa1quP/TE
- RD/j7uyZIieDgmwLyxcdKoXdOrvmscNNULPZXymvc+Bmsxe3nPKswzjxaH+PUN5i8eOH
- fOBJaijoEehNKNmXp/HHC2808DVImDe9CQMeOacCVaM6gNw8ZI+1zg8Uzycn6w/7TBlV UQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 30nucg25jc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 20:09:36 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SK85x7194362;
-        Tue, 28 Apr 2020 20:09:35 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 30mxx0nnkx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 20:09:35 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03SK9X0o016090;
-        Tue, 28 Apr 2020 20:09:33 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 Apr 2020 13:09:32 -0700
-Date:   Tue, 28 Apr 2020 13:09:30 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH V11 10/11] fs: Introduce DCACHE_DONTCACHE
-Message-ID: <20200428200930.GC6742@magnolia>
-References: <20200428002142.404144-1-ira.weiny@intel.com>
- <20200428002142.404144-11-ira.weiny@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428002142.404144-11-ira.weiny@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 bulkscore=0
- suspectscore=1 mlxlogscore=999 phishscore=0 malwarescore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004280157
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
- mlxlogscore=999 impostorscore=0 suspectscore=1 malwarescore=0
- lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004280157
+        Tue, 28 Apr 2020 16:10:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588104612; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=l6vxB0FL68H6IqBd38twbuAt7c/dpIfbeB7J11U68Gc=; b=myMriC6A3xTPwn7GGXg8m5jmTRcgMRipDQwvxH9WaXVYngIuKfKGxpIK+PSGSKP+rHHW1ttj
+ 8cwdy3CBBul+IMubq7220prOr2WL31j503K0BaxoG3qs8JBEz9TtOfXBqoBVb/I4jkLG3RW8
+ WEVd1MGLRFBSh1ECgPCPRq690pY=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea88d93.7f106080c0d8-smtp-out-n02;
+ Tue, 28 Apr 2020 20:09:55 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A4390C432C2; Tue, 28 Apr 2020 20:09:54 +0000 (UTC)
+Received: from th-lint-038.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: psodagud)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5A1ADC433CB;
+        Tue, 28 Apr 2020 20:09:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5A1ADC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=psodagud@codeaurora.org
+From:   Prasad Sodagudi <psodagud@codeaurora.org>
+To:     tglx@linutronix.de, john.stultz@linaro.org, sboyd@kernel.org,
+        tj@kernel.org
+Cc:     linux-kernel@vger.kernel.org, saravanak@google.com,
+        psodagud@codeaurora.org, pkondeti@codeaurora.org,
+        Joonwoo Park <joonwoop@codeaurora.org>
+Subject: [PATCH v2 1/2] timer: make deferrable cpu unbound timers really not bound to a cpu
+Date:   Tue, 28 Apr 2020 13:09:38 -0700
+Message-Id: <1588104579-8712-2-git-send-email-psodagud@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1588104579-8712-1-git-send-email-psodagud@codeaurora.org>
+References: <1588104579-8712-1-git-send-email-psodagud@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 05:21:41PM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> DCACHE_DONTCACHE indicates a dentry should not be cached on final
-> dput().
-> 
-> Also add a helper function to mark DCACHE_DONTCACHE on all dentries
-> pointing to a specific inode when that inode is being set I_DONTCACHE.
-> 
-> This facilitates dropping dentry references to inodes sooner which
-> require eviction to swap S_DAX mode.
-> 
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+From: Joonwoo Park <joonwoop@codeaurora.org>
 
-Seems reasonable to me,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+When a deferrable work (INIT_DEFERRABLE_WORK, etc.) is queued via
+queue_delayed_work() it's probably intended to run the work item on any
+CPU that isn't idle. However, we queue the work to run at a later time
+by starting a deferrable timer that binds to whatever CPU the work is
+queued on which is same with queue_delayed_work_on(smp_processor_id())
+effectively.
 
---D
+As a result WORK_CPU_UNBOUND work items aren't really cpu unbound now.
+In fact this is perfectly fine with UP kernel and also won't affect much a
+system without dyntick with SMP kernel too as every cpus run timers
+periodically.  But on SMP systems with dyntick current implementation leads
+deferrable timers not very scalable because the timer's base which has
+queued the deferrable timer won't wake up till next non-deferrable timer
+expires even though there are possible other non idle cpus are running
+which are able to run expired deferrable timers.
 
-> 
-> ---
-> Changes from V10:
-> 	rename to d_mark_dontcache()
-> 	Move function to fs/dcache.c
-> 
-> Changes from V9:
-> 	modify i_state under i_lock
-> 	Update comment
-> 		"Purge from memory on final dput()"
-> 
-> Changes from V8:
-> 	Update commit message
-> 	Use mark_inode_dontcache in XFS
-> 	Fix locking...  can't use rcu here.
-> 	Change name to mark_inode_dontcache
-> ---
->  fs/dcache.c            | 19 +++++++++++++++++++
->  fs/xfs/xfs_icache.c    |  2 +-
->  include/linux/dcache.h |  2 ++
->  include/linux/fs.h     |  1 +
->  4 files changed, 23 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/dcache.c b/fs/dcache.c
-> index b280e07e162b..0d07fb335b78 100644
-> --- a/fs/dcache.c
-> +++ b/fs/dcache.c
-> @@ -647,6 +647,10 @@ static inline bool retain_dentry(struct dentry *dentry)
->  		if (dentry->d_op->d_delete(dentry))
->  			return false;
->  	}
-> +
-> +	if (unlikely(dentry->d_flags & DCACHE_DONTCACHE))
-> +		return false;
-> +
->  	/* retain; LRU fodder */
->  	dentry->d_lockref.count--;
->  	if (unlikely(!(dentry->d_flags & DCACHE_LRU_LIST)))
-> @@ -656,6 +660,21 @@ static inline bool retain_dentry(struct dentry *dentry)
->  	return true;
->  }
->  
-> +void d_mark_dontcache(struct inode *inode)
-> +{
-> +	struct dentry *de;
-> +
-> +	spin_lock(&inode->i_lock);
-> +	hlist_for_each_entry(de, &inode->i_dentry, d_u.d_alias) {
-> +		spin_lock(&de->d_lock);
-> +		de->d_flags |= DCACHE_DONTCACHE;
-> +		spin_unlock(&de->d_lock);
-> +	}
-> +	inode->i_state |= I_DONTCACHE;
-> +	spin_unlock(&inode->i_lock);
-> +}
-> +EXPORT_SYMBOL(d_mark_dontcache);
-> +
->  /*
->   * Finish off a dentry we've decided to kill.
->   * dentry->d_lock must be held, returns with it unlocked.
-> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-> index de76f7f60695..888646d74d7d 100644
-> --- a/fs/xfs/xfs_icache.c
-> +++ b/fs/xfs/xfs_icache.c
-> @@ -559,7 +559,7 @@ xfs_iget_cache_miss(
->  	 */
->  	iflags = XFS_INEW;
->  	if (flags & XFS_IGET_DONTCACHE)
-> -		VFS_I(ip)->i_state |= I_DONTCACHE;
-> +		d_mark_dontcache(VFS_I(ip));
->  	ip->i_udquot = NULL;
->  	ip->i_gdquot = NULL;
->  	ip->i_pdquot = NULL;
-> diff --git a/include/linux/dcache.h b/include/linux/dcache.h
-> index c1488cc84fd9..a81f0c3cf352 100644
-> --- a/include/linux/dcache.h
-> +++ b/include/linux/dcache.h
-> @@ -177,6 +177,8 @@ struct dentry_operations {
->  
->  #define DCACHE_REFERENCED		0x00000040 /* Recently used, don't discard. */
->  
-> +#define DCACHE_DONTCACHE		0x00000080 /* Purge from memory on final dput() */
-> +
->  #define DCACHE_CANT_MOUNT		0x00000100
->  #define DCACHE_GENOCIDE			0x00000200
->  #define DCACHE_SHRINK_LIST		0x00000400
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 44bd45af760f..7c3e8c0306e0 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -3055,6 +3055,7 @@ static inline int generic_drop_inode(struct inode *inode)
->  	return !inode->i_nlink || inode_unhashed(inode) ||
->  		(inode->i_state & I_DONTCACHE);
->  }
-> +extern void d_mark_dontcache(struct inode *inode);
->  
->  extern struct inode *ilookup5_nowait(struct super_block *sb,
->  		unsigned long hashval, int (*test)(struct inode *, void *),
-> -- 
-> 2.25.1
-> 
+The deferrable work is a good example of the current implementation's
+victim like below.
+
+INIT_DEFERRABLE_WORK(&dwork, fn);
+CPU 0                                 CPU 1
+queue_delayed_work(wq, &dwork, HZ);
+    queue_delayed_work_on(WORK_CPU_UNBOUND);
+        ...
+	__mod_timer() -> queues timer to the
+			 current cpu's timer
+			 base.
+	...
+tick_nohz_idle_enter() -> cpu enters idle.
+A second later
+cpu 0 is now in idle.                 cpu 1 exits idle or wasn't in idle so
+                                      now it's in active but won't
+cpu 0 won't wake up till next         handle cpu unbound deferrable timer
+non-deferrable timer expires.         as it's in cpu 0's timer base.
+
+To make all cpu unbound deferrable timers are scalable, introduce a common
+timer base which is only for cpu unbound deferrable timers to make those
+are indeed cpu unbound so that can be scheduled by any of non idle cpus.
+This common timer fixes scalability issue of delayed work and all other cpu
+unbound deferrable timer using implementations.
+
+Signed-off-by: Joonwoo Park <joonwoop@codeaurora.org>
+Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
+---
+ kernel/time/timer.c | 36 +++++++++++++++++++++++++++++++-----
+ 1 file changed, 31 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index a5221ab..5ab8e33 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -220,6 +220,7 @@ static void timer_update_keys(struct work_struct *work);
+ static DECLARE_WORK(timer_update_work, timer_update_keys);
+ 
+ #ifdef CONFIG_SMP
++struct timer_base timer_base_deferrable;
+ unsigned int sysctl_timer_migration = 1;
+ 
+ DEFINE_STATIC_KEY_FALSE(timers_migration_enabled);
+@@ -841,8 +842,14 @@ static inline struct timer_base *get_timer_cpu_base(u32 tflags, u32 cpu)
+ 	 * If the timer is deferrable and NO_HZ_COMMON is set then we need
+ 	 * to use the deferrable base.
+ 	 */
+-	if (IS_ENABLED(CONFIG_NO_HZ_COMMON) && (tflags & TIMER_DEFERRABLE))
+-		base = per_cpu_ptr(&timer_bases[BASE_DEF], cpu);
++	if (IS_ENABLED(CONFIG_NO_HZ_COMMON) && (tflags & TIMER_DEFERRABLE)) {
++#ifdef CONFIG_SMP
++		base = &timer_base_deferrable;
++#endif
++		if (tflags & TIMER_PINNED)
++			base = per_cpu_ptr(&timer_bases[BASE_DEF], cpu);
++	}
++
+ 	return base;
+ }
+ 
+@@ -854,8 +861,14 @@ static inline struct timer_base *get_timer_this_cpu_base(u32 tflags)
+ 	 * If the timer is deferrable and NO_HZ_COMMON is set then we need
+ 	 * to use the deferrable base.
+ 	 */
+-	if (IS_ENABLED(CONFIG_NO_HZ_COMMON) && (tflags & TIMER_DEFERRABLE))
+-		base = this_cpu_ptr(&timer_bases[BASE_DEF]);
++	if (IS_ENABLED(CONFIG_NO_HZ_COMMON) && (tflags & TIMER_DEFERRABLE)) {
++#ifdef CONFIG_SMP
++		base = &timer_base_deferrable;
++#endif
++		if (tflags & TIMER_PINNED)
++			base = this_cpu_ptr(&timer_bases[BASE_DEF]);
++	}
++
+ 	return base;
+ }
+ 
+@@ -1785,8 +1798,12 @@ static __latent_entropy void run_timer_softirq(struct softirq_action *h)
+ 	struct timer_base *base = this_cpu_ptr(&timer_bases[BASE_STD]);
+ 
+ 	__run_timers(base);
+-	if (IS_ENABLED(CONFIG_NO_HZ_COMMON))
++	if (IS_ENABLED(CONFIG_NO_HZ_COMMON)) {
+ 		__run_timers(this_cpu_ptr(&timer_bases[BASE_DEF]));
++		if (tick_do_timer_cpu == TICK_DO_TIMER_NONE ||
++				tick_do_timer_cpu == smp_processor_id())
++			__run_timers(&timer_base_deferrable);
++	}
+ }
+ 
+ /*
+@@ -2025,6 +2042,14 @@ static void __init init_timer_cpu(int cpu)
+ 	}
+ }
+ 
++static void __init init_timer_deferrable_global(void)
++{
++	timer_base_deferrable.cpu = nr_cpu_ids;
++	raw_spin_lock_init(&timer_base_deferrable.lock);
++	timer_base_deferrable.clk = jiffies;
++	timer_base_init_expiry_lock(&timer_base_deferrable);
++}
++
+ static void __init init_timer_cpus(void)
+ {
+ 	int cpu;
+@@ -2036,6 +2061,7 @@ static void __init init_timer_cpus(void)
+ void __init init_timers(void)
+ {
+ 	init_timer_cpus();
++	init_timer_deferrable_global();
+ 	open_softirq(TIMER_SOFTIRQ, run_timer_softirq);
+ }
+ 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
