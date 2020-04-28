@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF2EC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452F7C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 589B1206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A9820575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099975;
-	bh=00ddRN8yKxFktcawj18Tti3yNrlFwEtVI74FidDtGrE=;
+	s=default; t=1588099980;
+	bh=wQT0NZEs+27u1LF8elCTQvvAaHB5bW7Z7i0FVy5aQ4Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wIMs5iVfFBGh21aNFRb499GSC2uF/JCqkbwe/AheBzZGsFQh/hLnsq+vd/6zDHbtY
-	 XLO2ndn/3GaR32ms5bU4aj3lEwsYMlZ7PINZlEL0kSX+DBE69IdG8PcFL4j+rdwqU2
-	 cdOqkQ3NhkjNTBfYpxGUVzKiZQDwFkHJABxb5WDU=
+	b=W37sLWb1eFk94G3W5gWiWrn4TkyiWSuede2NpE5Usvmct9ejT+DZtnHiLgwkRBbak
+	 qRMw2Wa5PcYM7kl9OXDeEGvse1gTkIoxA/wRGYlZ1lPFJPishiN4q8wTLNqUe27216
+	 uMq2XqKBJQTQHeK3G5dJOPIS2havJb5ZZYlH2/K4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730705AbgD1Swy (ORCPT
+        id S1730964AbgD1Sw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:52:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52952 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:52:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728662AbgD1Sfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:35:43 -0400
+        id S1729767AbgD1Sfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:35:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFAC2217D8;
-        Tue, 28 Apr 2020 18:35:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0AE021707;
+        Tue, 28 Apr 2020 18:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098942;
-        bh=00ddRN8yKxFktcawj18Tti3yNrlFwEtVI74FidDtGrE=;
+        s=default; t=1588098937;
+        bh=wQT0NZEs+27u1LF8elCTQvvAaHB5bW7Z7i0FVy5aQ4Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BQefQJZG5HWWD/9VzFBT/UNP9OT8YGXaipIBC5fpY3KuNpPCERYNegajcCbXqU2f8
-         /sZS1KPRYrUYgnaRGt1OGimjmeMu6lLtTm+k6SHvNypK8OdxMkT+ffZoZQHkJbFSKw
-         pAgvnKD3g8kuCVqu/bAxGV0SvI9+oVEnBjkYNhCo=
+        b=ikrQaYeUB1begBEy8N/euMSsP8KQaJlQuOcy3A3GZNWpAn1f98sx5Xi6hT3oHO9If
+         5cCZoVIEbRQwNoRCJEH6o7yl0Z+62urtc5v9XfCaHwLjY2WZ0CYlGcokbK1V883MAm
+         7d3DF2TQrZivgy7mH+aNTPbMf+tiNQTHzvoY3BTY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Bowler <nbowler@draconx.ca>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 034/168] nvme: fix compat address handling in several ioctls
-Date:   Tue, 28 Apr 2020 20:23:28 +0200
-Message-Id: <20200428182236.043979962@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 075/131] ALSA: usb-audio: Add static mapping table for ALC1220-VB-based mobos
+Date:   Tue, 28 Apr 2020 20:24:47 +0200
+Message-Id: <20200428182234.365733149@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,114 +59,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Bowler <nbowler@draconx.ca>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit c95b708d5fa65b4e51f088ee077d127fd5a57b70 ]
+[ Upstream commit a43c1c41bc5145971d06edc42a6b1e8faa0e2bc3 ]
 
-On a 32-bit kernel, the upper bits of userspace addresses passed via
-various ioctls are silently ignored by the nvme driver.
+TRX40 mobos from MSI and others with ALC1220-VB USB-audio device need
+yet more quirks for the proper control names.
 
-However on a 64-bit kernel running a compat task, these upper bits are
-not ignored and are in fact required to be zero for the ioctls to work.
+This patch provides the mapping table for those boards, correcting the
+FU names for volume and mute controls as well as the terminal names
+for jack controls.  It also improves build_connector_control() not to
+add the directional suffix blindly if the string is given from the
+mapping table.
 
-Unfortunately, this difference matters.  32-bit smartctl submits the
-NVME_IOCTL_ADMIN_CMD ioctl with garbage in these upper bits because it
-seems the pointer value it puts into the nvme_passthru_cmd structure is
-sign extended.  This works fine on 32-bit kernels but fails on a 64-bit
-one because (at least on my setup) the addresses smartctl uses are
-consistently above 2G.  For example:
+With this patch applied, the new UCM profiles will be effective.
 
-  # smartctl -x /dev/nvme0n1
-  smartctl 7.1 2019-12-30 r5022 [x86_64-linux-5.5.11] (local build)
-  Copyright (C) 2002-19, Bruce Allen, Christian Franke, www.smartmontools.org
-
-  Read NVMe Identify Controller failed: NVME_IOCTL_ADMIN_CMD: Bad address
-
-Since changing 32-bit kernels to actually check all of the submitted
-address bits now would break existing userspace, this patch fixes the
-compat problem by explicitly zeroing the upper bits in the compat case.
-This enables 32-bit smartctl to work on a 64-bit kernel.
-
-Signed-off-by: Nick Bowler <nbowler@draconx.ca>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206873
+Link: https://lore.kernel.org/r/20200420062036.28567-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 27 ++++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
+ sound/usb/mixer.c        | 12 +++++++++---
+ sound/usb/mixer_maps.c   | 24 +++++++++++++++++++++---
+ sound/usb/quirks-table.h | 14 ++++++++++++++
+ 3 files changed, 44 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index b8fe42f4b3c5b..f97c48fd3edae 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -6,6 +6,7 @@
- 
- #include <linux/blkdev.h>
- #include <linux/blk-mq.h>
-+#include <linux/compat.h>
- #include <linux/delay.h>
- #include <linux/errno.h>
- #include <linux/hdreg.h>
-@@ -1244,6 +1245,18 @@ static void nvme_enable_aen(struct nvme_ctrl *ctrl)
- 	queue_work(nvme_wq, &ctrl->async_event_work);
- }
- 
-+/*
-+ * Convert integer values from ioctl structures to user pointers, silently
-+ * ignoring the upper bits in the compat case to match behaviour of 32-bit
-+ * kernels.
-+ */
-+static void __user *nvme_to_user_ptr(uintptr_t ptrval)
-+{
-+	if (in_compat_syscall())
-+		ptrval = (compat_uptr_t)ptrval;
-+	return (void __user *)ptrval;
-+}
-+
- static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index 257da95a4ea6a..2638bd2e41f31 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -1770,8 +1770,10 @@ static void build_connector_control(struct usb_mixer_interface *mixer,
  {
- 	struct nvme_user_io io;
-@@ -1267,7 +1280,7 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
+ 	struct snd_kcontrol *kctl;
+ 	struct usb_mixer_elem_info *cval;
++	const struct usbmix_name_map *map;
  
- 	length = (io.nblocks + 1) << ns->lba_shift;
- 	meta_len = (io.nblocks + 1) * ns->ms;
--	metadata = (void __user *)(uintptr_t)io.metadata;
-+	metadata = nvme_to_user_ptr(io.metadata);
+-	if (check_ignored_ctl(find_map(imap, term->id, 0)))
++	map = find_map(imap, term->id, 0);
++	if (check_ignored_ctl(map))
+ 		return;
  
- 	if (ns->ext) {
- 		length += meta_len;
-@@ -1290,7 +1303,7 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
- 	c.rw.appmask = cpu_to_le16(io.appmask);
- 
- 	return nvme_submit_user_cmd(ns->queue, &c,
--			(void __user *)(uintptr_t)io.addr, length,
-+			nvme_to_user_ptr(io.addr), length,
- 			metadata, meta_len, lower_32_bits(io.slba), NULL, 0);
+ 	cval = kzalloc(sizeof(*cval), GFP_KERNEL);
+@@ -1803,8 +1805,12 @@ static void build_connector_control(struct usb_mixer_interface *mixer,
+ 		usb_mixer_elem_info_free(cval);
+ 		return;
+ 	}
+-	get_connector_control_name(mixer, term, is_input, kctl->id.name,
+-				   sizeof(kctl->id.name));
++
++	if (check_mapped_name(map, kctl->id.name, sizeof(kctl->id.name)))
++		strlcat(kctl->id.name, " Jack", sizeof(kctl->id.name));
++	else
++		get_connector_control_name(mixer, term, is_input, kctl->id.name,
++					   sizeof(kctl->id.name));
+ 	kctl->private_free = snd_usb_mixer_elem_free;
+ 	snd_usb_mixer_add_control(&cval->head, kctl);
  }
+diff --git a/sound/usb/mixer_maps.c b/sound/usb/mixer_maps.c
+index bf000e54461b1..3c14ef8fd5a2b 100644
+--- a/sound/usb/mixer_maps.c
++++ b/sound/usb/mixer_maps.c
+@@ -373,6 +373,24 @@ static const struct usbmix_name_map asus_rog_map[] = {
+ 	{}
+ };
  
-@@ -1410,9 +1423,9 @@ static int nvme_user_cmd(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
++/* TRX40 mobos with Realtek ALC1220-VB */
++static const struct usbmix_name_map trx40_mobo_map[] = {
++	{ 18, NULL }, /* OT, IEC958 - broken response, disabled */
++	{ 19, NULL, 12 }, /* FU, Input Gain Pad - broken response, disabled */
++	{ 16, "Speaker" },		/* OT */
++	{ 22, "Speaker Playback" },	/* FU */
++	{ 7, "Line" },			/* IT */
++	{ 19, "Line Capture" },		/* FU */
++	{ 17, "Front Headphone" },	/* OT */
++	{ 23, "Front Headphone Playback" },	/* FU */
++	{ 8, "Mic" },			/* IT */
++	{ 20, "Mic Capture" },		/* FU */
++	{ 9, "Front Mic" },		/* IT */
++	{ 21, "Front Mic Capture" },	/* FU */
++	{ 24, "IEC958 Playback" },	/* FU */
++	{}
++};
++
+ /*
+  * Control map entries
+  */
+@@ -494,7 +512,7 @@ static struct usbmix_ctl_map usbmix_ctl_maps[] = {
+ 	},
+ 	{	/* Gigabyte TRX40 Aorus Pro WiFi */
+ 		.id = USB_ID(0x0414, 0xa002),
+-		.map = asus_rog_map,
++		.map = trx40_mobo_map,
+ 	},
+ 	{	/* ASUS ROG Zenith II */
+ 		.id = USB_ID(0x0b05, 0x1916),
+@@ -506,11 +524,11 @@ static struct usbmix_ctl_map usbmix_ctl_maps[] = {
+ 	},
+ 	{	/* MSI TRX40 Creator */
+ 		.id = USB_ID(0x0db0, 0x0d64),
+-		.map = asus_rog_map,
++		.map = trx40_mobo_map,
+ 	},
+ 	{	/* MSI TRX40 */
+ 		.id = USB_ID(0x0db0, 0x543d),
+-		.map = asus_rog_map,
++		.map = trx40_mobo_map,
+ 	},
+ 	{ 0 } /* terminator */
+ };
+diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
+index 90d4f61cc2308..774aeedde0717 100644
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -3400,4 +3400,18 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge", "HVR-950Q"),
+ 	}
+ },
  
- 	effects = nvme_passthru_start(ctrl, ns, cmd.opcode);
- 	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
--			(void __user *)(uintptr_t)cmd.addr, cmd.data_len,
--			(void __user *)(uintptr_t)cmd.metadata,
--			cmd.metadata_len, 0, &result, timeout);
-+			nvme_to_user_ptr(cmd.addr), cmd.data_len,
-+			nvme_to_user_ptr(cmd.metadata), cmd.metadata_len,
-+			0, &result, timeout);
- 	nvme_passthru_end(ctrl, effects);
- 
- 	if (status >= 0) {
-@@ -1457,8 +1470,8 @@ static int nvme_user_cmd64(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 
- 	effects = nvme_passthru_start(ctrl, ns, cmd.opcode);
- 	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
--			(void __user *)(uintptr_t)cmd.addr, cmd.data_len,
--			(void __user *)(uintptr_t)cmd.metadata, cmd.metadata_len,
-+			nvme_to_user_ptr(cmd.addr), cmd.data_len,
-+			nvme_to_user_ptr(cmd.metadata), cmd.metadata_len,
- 			0, &cmd.result, timeout);
- 	nvme_passthru_end(ctrl, effects);
- 
++#define ALC1220_VB_DESKTOP(vend, prod) { \
++	USB_DEVICE(vend, prod),	\
++	.driver_info = (unsigned long) & (const struct snd_usb_audio_quirk) { \
++		.vendor_name = "Realtek", \
++		.product_name = "ALC1220-VB-DT", \
++		.profile_name = "Realtek-ALC1220-VB-Desktop", \
++		.ifnum = QUIRK_NO_INTERFACE \
++	} \
++}
++ALC1220_VB_DESKTOP(0x0414, 0xa002), /* Gigabyte TRX40 Aorus Pro WiFi */
++ALC1220_VB_DESKTOP(0x0db0, 0x0d64), /* MSI TRX40 Creator */
++ALC1220_VB_DESKTOP(0x0db0, 0x543d), /* MSI TRX40 */
++#undef ALC1220_VB_DESKTOP
++
+ #undef USB_DEVICE_VENDOR_SPEC
 -- 
 2.20.1
 
