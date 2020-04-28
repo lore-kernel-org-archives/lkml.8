@@ -2,107 +2,110 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CE4C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56276C83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42F7C206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:03:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CHcQb9jd"
+	by mail.kernel.org (Postfix) with ESMTP id 33C87206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726348AbgD1BDE (ORCPT
+        id S1726378AbgD1BDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 21:03:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726263AbgD1BDD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 21:03:03 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0A81C03C1A8
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 18:03:03 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id a7so381587pju.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 18:03:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1KP0Ez7hKSnKb+povEU3BzAbH8Pt0yNwSNaVttztrRk=;
-        b=CHcQb9jdYyP6gCgFKoXSog75I+fwwXi8tHwq3opxqfLD6dG55Dk+bqbxAE6/DC0LAL
-         h7jn1mQIl6kqwVpYNyXzUYgmpWsue1PASrSuim/H5yEzov1PrhYU3ZaWEWKGUA2Lrvsp
-         Os2oC73xaWQfiRX49BC2SQKEUbSVbIG6AdZIU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1KP0Ez7hKSnKb+povEU3BzAbH8Pt0yNwSNaVttztrRk=;
-        b=Ot3kGVUHQrscm4YvQDenXE762YwCd15ap/P5oyc/Y5LXNFDEAA8qRDSvMkfEwJQwWj
-         QT3ghl+tUOT7nTEF9OJYa7hlc+5tDz0hGLsISggMRoGD2LGaLyU/VFD/c5Qw88UImLJM
-         Cqi8YqiEVF29/aqLdDzOYjD2UwsGAH+d0AFDOivs/elAQBzuNkZoNZIZ/wEjF2hEqujk
-         M5XO08jQO4jirRJeBbwLs2wVAc7MWKjbfPacOSrCp8VZexmOtGB4MEcJpaYphONXscQd
-         X1HcucyKOc0rlImAWV3FDuOUhn7DRSnYkaT2jRvWHWkGGSif9g6EyJqfjyNP1vjwSRzA
-         Ntxg==
-X-Gm-Message-State: AGi0PuaQ60vqgzYmuiYIdusMfc93cBzMUc2FLkkhS5em/VTzhKJK2fsX
-        NdlgfszaU4ELzy5CHdftIfsWyecz3Vc=
-X-Google-Smtp-Source: APiQypLW7LTz7ruoIMuR0LUUdSjDAZvB0lrl+jFCby4+jUoewb6428yRiCp9YX/6VyhmwAHvc7MXlg==
-X-Received: by 2002:a17:90b:2388:: with SMTP id mr8mr1765611pjb.107.1588035783213;
-        Mon, 27 Apr 2020 18:03:03 -0700 (PDT)
-Received: from dlunevwfh.Home (n1-43-86-194.mas2.nsw.optusnet.com.au. [1.43.86.194])
-        by smtp.gmail.com with ESMTPSA id q6sm9392922pfh.193.2020.04.27.18.03.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 Apr 2020 18:03:02 -0700 (PDT)
-From:   Daniil Lunev <dlunev@chromium.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Prashant Malani <pmalani@chromium.org>,
-        Daniil Lunev <dlunev@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: [PATCH] platform/chrome: cros_ec_typec: Handle NULL EC pointer during probe.
-Date:   Tue, 28 Apr 2020 11:02:56 +1000
-Message-Id: <20200428110253.1.I926f6741079cafb04ecb592130aef75b24ad31ae@changeid>
-X-Mailer: git-send-email 2.24.1
+        Mon, 27 Apr 2020 21:03:16 -0400
+Received: from mga12.intel.com ([192.55.52.136]:48366 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726263AbgD1BDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 21:03:15 -0400
+IronPort-SDR: ss8XX41GWzOej3rlMf/TJQEHlOqx1fUlKpXqhyP2Z7biAbjH3h7ougJkNoDAYyLBRaxW5TLuK1
+ HtfgTELe/fWA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 18:03:15 -0700
+IronPort-SDR: g76t0Djx48ZE6PbBVETOmC4oPnCumQAPrxsqLiw1myb2aC7mQFYgl0A0AL5/YzOBoC42ZrrF0e
+ /16sF2dl88NQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
+   d="scan'208";a="260923278"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga006.jf.intel.com with ESMTP; 27 Apr 2020 18:03:15 -0700
+Date:   Mon, 27 Apr 2020 18:03:15 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Haiwei Li <lihaiwei@tencent.com>
+Subject: Re: [PATCH v3 2/5] KVM: X86: Introduce need_cancel_enter_guest helper
+Message-ID: <20200428010315.GE14870@linux.intel.com>
+References: <1587709364-19090-1-git-send-email-wanpengli@tencent.com>
+ <1587709364-19090-3-git-send-email-wanpengli@tencent.com>
+ <CANRm+CwvTrwmJnFWR8UgEkqyE_fyoc6KmrNuHQj=DuJDkR-UGA@mail.gmail.com>
+ <20200427183656.GO14870@linux.intel.com>
+ <CANRm+CzdCcz4Vyw-6D5xTc+VmRTr6=O0U=7vfdNLF=LjW5HOEg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANRm+CzdCcz4Vyw-6D5xTc+VmRTr6=O0U=7vfdNLF=LjW5HOEg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Missing EC in device hierarchy causes NULL pointer to be returned to the
-probe function which leads to NULL pointer dereference when trying to
-send a command to the EC. This can be the case if the device is missing
-or incorrectly configured in the firmware blob. Even if the situation
-occures, the driver shall not cause a kernel panic as the condition is
-not critical for the system functions.
+On Tue, Apr 28, 2020 at 08:44:13AM +0800, Wanpeng Li wrote:
+> On Tue, 28 Apr 2020 at 02:36, Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > > @@ -6771,12 +6774,10 @@ static enum exit_fastpath_completion
+> > > vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> > >      vmx_recover_nmi_blocking(vmx);
+> > >      vmx_complete_interrupts(vmx);
+> > >
+> > > -    if (!(kvm_need_cancel_enter_guest(vcpu))) {
+> > > -        exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
+> > > -        if (exit_fastpath == EXIT_FASTPATH_CONT_RUN) {
+> > > -            vmx_sync_pir_to_irr(vcpu);
+> > > -            goto cont_run;
+> > > -        }
+> > > +    exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
+> > > +    if (exit_fastpath == EXIT_FASTPATH_CONT_RUN) {
+> >
+> > Relying on the handlers to check kvm_need_cancel_enter_guest() will be
+> > error prone and costly to maintain.  I also don't like that it buries the
+> > logic.
+> >
+> > What about adding another flavor, e.g.:
+> >
+> >         exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
+> >         if (exit_fastpath == EXIT_FASTPATH_CONT_RUN &&
+> >             kvm_need_cancel_enter_guest(vcpu))
+> >                 exit_fastpath = EXIT_FASTPATH_NOP;
+> >
+> > That would also allow you to enable preemption timer without first having
+> > to add CONT_RUN, which would be a very good thing for bisection.
+> 
+> I miss understand the second part, do you mean don't need to add
+> CONT_RUN in patch 1/5?
 
-Signed-off-by: Daniil Lunev <dlunev@chromium.org>
----
+Yes, with the disclaimer that I haven't worked through all the flows to
+ensure it's actually doable and/or a good idea. 
 
- drivers/platform/chrome/cros_ec_typec.c | 5 +++++
- 1 file changed, 5 insertions(+)
+The idea is to add EXIT_FASTPATH_NOP and use that for the preemption timer
+fastpath.  KVM would still go through it's full run loop, but it would skip
+invoking the exit handler.  In theory that would disassociate fast handling
+of the preemption timer from resuming the guest without going back to the
+run loop, i.e. provide a separate bisection point for enabling CONT_RUN.
 
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index 874269c07073..30d99c930445 100644
---- a/drivers/platform/chrome/cros_ec_typec.c
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -301,6 +301,11 @@ static int cros_typec_probe(struct platform_device *pdev)
- 
- 	typec->dev = dev;
- 	typec->ec = dev_get_drvdata(pdev->dev.parent);
-+	if (!typec->ec) {
-+		dev_err(dev, "Failed to get Cros EC data\n");
-+		return -EINVAL;
-+	}
-+
- 	platform_set_drvdata(pdev, typec);
- 
- 	ret = cros_typec_get_cmd_version(typec);
--- 
-2.24.1
+Like I said, might not be a good idea, e.g. if preemption timer ends up
+being the only user of EXIT_FASTPATH_CONT_RUN then EXIT_FASTPATH_NOP is a
+waste of space.
 
+Side topic, what about EXIT_FASTPATH_RESUME instead of CONT_RUN?  Or maybe
+REENTER_GUEST?  Something that start with RE :-)
