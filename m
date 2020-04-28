@@ -2,112 +2,162 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B63C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26844C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51B34206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:00:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UuzYbl5l"
+	by mail.kernel.org (Postfix) with ESMTP id 01EAD206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:00:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588100424;
+	bh=WtFFg+xfv3yp5OaGOzyTKsh0HWEpbRKf3J6sc3YgcPQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FDvaZ2DvsLhB4jkCTkasOA4N+A0F5OjFOL5e7VQZSLVrOF/YN8pRNc5vJ70lyflOG
+	 iVm2J8FB7HJAv/gaCABUr6tD6O/9RguWLFfFdA2TGQGQmu+UuSsT5K5n9YSqy+HhxE
+	 VXQTt/6oikSwTgkKSokW/UaWDIR8c3cItg1312t0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729637AbgD1TAT (ORCPT
+        id S1729035AbgD1S1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 15:00:19 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:44940 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729263AbgD1S7R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:59:17 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SItOrH087842;
-        Tue, 28 Apr 2020 18:59:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=6QfPBxRy5q90uwHDhwkUZK3Fz9TlbCsqwMzjQP33fAQ=;
- b=UuzYbl5loRqRRTDE3pzbcxlp8AoZsd2mvoJ5IB71FBYjz5pBLpDDzUZyWaQBT2lvObEw
- LMNmexC/MBYW6oGpPjUFxJexF9G+g5eX+ApuvTGiHNObigDRKRCrtV7fNs8dwZqKc0e3
- q7kiCkk8IKcNOoeNVRHkrcebK9bAG6Y2fFw7AFIynX7SnZ6CuSdhXJSQQ38BKV4b8qZr
- gLczAyd5Du1ZZKoFTJzvjv8NQuBt2J6TEg7wVambUY7Nn5XdJm5yb7YiRUnsMd6DsW8o
- QgFp9fYox5ki7zaFJ1j9l/ESOTzDx3cSpxxP3dZM2ykswoHJPbZwD+0Cwyw1uWC/oFqk yw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 30p2p077g6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 18:59:07 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SIv13j173815;
-        Tue, 28 Apr 2020 18:59:06 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 30my0e1hmd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 18:59:06 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03SIx1x2005370;
-        Tue, 28 Apr 2020 18:59:01 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 Apr 2020 11:59:01 -0700
-Date:   Tue, 28 Apr 2020 21:58:54 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Oliver Graute <oliver.graute@gmail.com>
-Cc:     devel@driverdev.osuosl.org, linux-fbdev@vger.kernel.org,
-        gregkh@linuxfoundation.org,
-        Oliver Graute <oliver.graute@kococonnector.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v1] staging: fbtft: fb_st7789v: enabled inversion
-Message-ID: <20200428185854.GK2014@kadam>
-References: <1586424250-25897-1-git-send-email-oliver.graute@gmail.com>
- <20200409101517.GO2001@kadam>
- <20200427082939.GB18436@portage>
+        Tue, 28 Apr 2020 14:27:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39784 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729008AbgD1S1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:27:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B85D20B80;
+        Tue, 28 Apr 2020 18:27:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588098454;
+        bh=WtFFg+xfv3yp5OaGOzyTKsh0HWEpbRKf3J6sc3YgcPQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lla+8z9jlM+rXSmen4lyXWjyIQ3CTLyLk/nB0RCcDmJUzW/UCFscKy7/pzaWGP3OK
+         wopUrfIs3xwkSVA4v1hAxM82rRiuxZQp3iplzHD+xsgyFUWmT8JR9TXmpz+ZGVlI8V
+         GGQX2Q2r6bbb772erSEH7/b6iF/1D99qqBC6bK7E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 047/167] ipv4: Update fib_select_default to handle nexthop objects
+Date:   Tue, 28 Apr 2020 20:23:43 +0200
+Message-Id: <20200428182231.025238316@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427082939.GB18436@portage>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
- suspectscore=0 adultscore=0 mlxlogscore=915 bulkscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004280150
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1015
- bulkscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
- mlxscore=0 suspectscore=0 mlxlogscore=964 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004280149
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 10:29:39AM +0200, Oliver Graute wrote:
-> On 09/04/20, Dan Carpenter wrote:
-> > On Thu, Apr 09, 2020 at 11:24:05AM +0200, Oliver Graute wrote:
-> > > From: Oliver Graute <oliver.graute@kococonnector.com>
-> > > 
-> > > Enable inversion mode
-> > 
-> > What the heck is an inversion mode and why would you want it?
-> 
-> 
-> Should I name it:
-> 
-> Enable MIPI_DCS_ENTER_INVERT_MODE
-> 
+From: David Ahern <dsahern@gmail.com>
 
-What I'm saying is the changelog should explain why would want to apply
-the patch.  What does the inversion mode do?  Is it inverting the color
-or flipping something upside down?
+[ Upstream commit 7c74b0bec918c1e0ca0b4208038c156eacf8f13f ]
 
-Probably if I had a background in graphics I would know what "Enable
-inversion mode" means...  But three words is not a proper and complete
-commit message normally.
+A user reported [0] hitting the WARN_ON in fib_info_nh:
 
-regards,
-dan carpenter
+    [ 8633.839816] ------------[ cut here ]------------
+    [ 8633.839819] WARNING: CPU: 0 PID: 1719 at include/net/nexthop.h:251 fib_select_path+0x303/0x381
+    ...
+    [ 8633.839846] RIP: 0010:fib_select_path+0x303/0x381
+    ...
+    [ 8633.839848] RSP: 0018:ffffb04d407f7d00 EFLAGS: 00010286
+    [ 8633.839850] RAX: 0000000000000000 RBX: ffff9460b9897ee8 RCX: 00000000000000fe
+    [ 8633.839851] RDX: 0000000000000000 RSI: 00000000ffffffff RDI: 0000000000000000
+    [ 8633.839852] RBP: ffff946076049850 R08: 0000000059263a83 R09: ffff9460840e4000
+    [ 8633.839853] R10: 0000000000000014 R11: 0000000000000000 R12: ffffb04d407f7dc0
+    [ 8633.839854] R13: ffffffffa4ce3240 R14: 0000000000000000 R15: ffff9460b7681f60
+    [ 8633.839857] FS:  00007fcac2e02700(0000) GS:ffff9460bdc00000(0000) knlGS:0000000000000000
+    [ 8633.839858] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+    [ 8633.839859] CR2: 00007f27beb77e28 CR3: 0000000077734000 CR4: 00000000000006f0
+    [ 8633.839867] Call Trace:
+    [ 8633.839871]  ip_route_output_key_hash_rcu+0x421/0x890
+    [ 8633.839873]  ip_route_output_key_hash+0x5e/0x80
+    [ 8633.839876]  ip_route_output_flow+0x1a/0x50
+    [ 8633.839878]  __ip4_datagram_connect+0x154/0x310
+    [ 8633.839880]  ip4_datagram_connect+0x28/0x40
+    [ 8633.839882]  __sys_connect+0xd6/0x100
+    ...
+
+The WARN_ON is triggered in fib_select_default which is invoked when
+there are multiple default routes. Update the function to use
+fib_info_nhc and convert the nexthop checks to use fib_nh_common.
+
+Add test case that covers the affected code path.
+
+[0] https://github.com/FRRouting/frr/issues/6089
+
+Fixes: 493ced1ac47c ("ipv4: Allow routes to use nexthop objects")
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/ipv4/fib_semantics.c                    |    6 +++---
+ tools/testing/selftests/net/fib_nexthops.sh |   23 +++++++++++++++++++++++
+ 2 files changed, 26 insertions(+), 3 deletions(-)
+
+--- a/net/ipv4/fib_semantics.c
++++ b/net/ipv4/fib_semantics.c
+@@ -2012,7 +2012,7 @@ static void fib_select_default(const str
+ 
+ 	hlist_for_each_entry_rcu(fa, fa_head, fa_list) {
+ 		struct fib_info *next_fi = fa->fa_info;
+-		struct fib_nh *nh;
++		struct fib_nh_common *nhc;
+ 
+ 		if (fa->fa_slen != slen)
+ 			continue;
+@@ -2035,8 +2035,8 @@ static void fib_select_default(const str
+ 		    fa->fa_type != RTN_UNICAST)
+ 			continue;
+ 
+-		nh = fib_info_nh(next_fi, 0);
+-		if (!nh->fib_nh_gw4 || nh->fib_nh_scope != RT_SCOPE_LINK)
++		nhc = fib_info_nhc(next_fi, 0);
++		if (!nhc->nhc_gw_family || nhc->nhc_scope != RT_SCOPE_LINK)
+ 			continue;
+ 
+ 		fib_alias_accessed(fa);
+--- a/tools/testing/selftests/net/fib_nexthops.sh
++++ b/tools/testing/selftests/net/fib_nexthops.sh
+@@ -749,6 +749,29 @@ ipv4_fcnal_runtime()
+ 	run_cmd "ip netns exec me ping -c1 -w1 172.16.101.1"
+ 	log_test $? 0 "Ping - multipath"
+ 
++	run_cmd "$IP ro delete 172.16.101.1/32 nhid 122"
++
++	#
++	# multiple default routes
++	# - tests fib_select_default
++	run_cmd "$IP nexthop add id 501 via 172.16.1.2 dev veth1"
++	run_cmd "$IP ro add default nhid 501"
++	run_cmd "$IP ro add default via 172.16.1.3 dev veth1 metric 20"
++	run_cmd "ip netns exec me ping -c1 -w1 172.16.101.1"
++	log_test $? 0 "Ping - multiple default routes, nh first"
++
++	# flip the order
++	run_cmd "$IP ro del default nhid 501"
++	run_cmd "$IP ro del default via 172.16.1.3 dev veth1 metric 20"
++	run_cmd "$IP ro add default via 172.16.1.2 dev veth1 metric 20"
++	run_cmd "$IP nexthop replace id 501 via 172.16.1.3 dev veth1"
++	run_cmd "$IP ro add default nhid 501 metric 20"
++	run_cmd "ip netns exec me ping -c1 -w1 172.16.101.1"
++	log_test $? 0 "Ping - multiple default routes, nh second"
++
++	run_cmd "$IP nexthop delete nhid 501"
++	run_cmd "$IP ro del default"
++
+ 	#
+ 	# IPv4 with blackhole nexthops
+ 	#
+
 
