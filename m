@@ -2,138 +2,106 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02086C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222FCC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDB5B206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECED7206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:39:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="RRskRblw"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tZF877IX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgD1LfB (ORCPT
+        id S1726575AbgD1LjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:35:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726450AbgD1LfA (ORCPT
+        Tue, 28 Apr 2020 07:39:00 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:17455 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726450AbgD1Li7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:35:00 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04E21C03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 04:34:58 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id k13so24264184wrw.7
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 04:34:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ta9b/8gauzmTI1gIbmZerg7kvPJYi178ogRC123bJng=;
-        b=RRskRblw7O421JDMKdFMipZxdX5l49wk9LmGVv7DG2WqI92bmAxAf07k8jzdM/nwXR
-         h95QKhZkGtM21cvhr8D6wOrDDjDIrEY1cL7ekNokImsPllbcXbfOxj2m6AvR6xMBUkrI
-         8IN0Ms7BtuAaq5VA0a5wl9c9u1MD0O6i12UFg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ta9b/8gauzmTI1gIbmZerg7kvPJYi178ogRC123bJng=;
-        b=fNlMNodcBEHEDGB4ZLSkCev8n6nULfzNoXMPW4G1/pW5lZCfeCCld+ipw744+lKOpG
-         MajAOmgSL8wfw80lef1wxsLn02E3BSsgZra2KTXe7GIpaCDKXTZRn5qUq6zpQi2dlv7p
-         PxZuEpoRoQnZs4jSq3Ld+g7BY8TXD1LWniQ0JrWh1km3K7pJD7glZnx8kEU3DyCARgjv
-         Cu17V4RrUswYsQ7fTh3y0/DW/ClmBF23BhjXYMCvbTCDBXHGtw15W9npuL3Q1N0vVMEA
-         rXuC/Ggx/DgUOkUAa3uegElOnDfDrlzQIFSAlIHho4oidrOVEM/VsvmX5ugSA+CVmdBM
-         +asA==
-X-Gm-Message-State: AGi0Pua6L9am16T42PPAvR+Ug3AfuRbwb81wQQWKHRqpoPQCV08SuHl8
-        cVJ0hJfTGEe/VEkHqrm1kHAb3A==
-X-Google-Smtp-Source: APiQypJ4KyDDnBwcz6hpw/89Oxe5qXytwq5XOI8oPR+V6xK0/Ckt19RXYl/6gv5+eaX6TOoO1VQ8Cw==
-X-Received: by 2002:adf:82a6:: with SMTP id 35mr31359798wrc.378.1588073697690;
-        Tue, 28 Apr 2020 04:34:57 -0700 (PDT)
-Received: from localhost ([2620:10d:c092:180::1:13ec])
-        by smtp.gmail.com with ESMTPSA id f2sm26392729wro.59.2020.04.28.04.34.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 04:34:57 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 12:34:56 +0100
-From:   Chris Down <chris@chrisdown.name>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: PSI poll() support for unprivileged users
-Message-ID: <20200428113456.GA2170292@chrisdown.name>
-References: <20200424153859.GA1481119@chrisdown.name>
- <CAJuCfpGnJBEvQTUeJ_U6+rHmPcMjw_pPL+QFj7Sec5fHZPH67w@mail.gmail.com>
- <CAJuCfpFhsN1=kDK0tU8aWeNt5Dj6U_1rC_dVT-27a4TL_hF0gA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAJuCfpFhsN1=kDK0tU8aWeNt5Dj6U_1rC_dVT-27a4TL_hF0gA@mail.gmail.com>
+        Tue, 28 Apr 2020 07:38:59 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588073939; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=POwfgFIOxtbPju7wD7/s3JdH07w592RY3CAWHfQJRRs=; b=tZF877IXCvQHEcAinGmhiQLwpqv+8c91MCHUQs5O21/ht4KDdXDUzTjb3vuZck8DXDfK18Hd
+ 0RxF+wD/16KOyOqwS/zY0ZlnYSKwVok3IA5/9GTVg82PqpY3O7wphpIRzLwxDbyyScnXnBxg
+ nA7uJmTGq0D90AnPPCPVSWpYALg=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea815c5.7efd193598b8-smtp-out-n02;
+ Tue, 28 Apr 2020 11:38:45 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C4DAFC43637; Tue, 28 Apr 2020 11:38:45 +0000 (UTC)
+Received: from smasetty-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: smasetty)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BFEC2C433D2;
+        Tue, 28 Apr 2020 11:38:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BFEC2C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
+From:   Sharat Masetty <smasetty@codeaurora.org>
+To:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        dianders@chromium.org, robh@kernel.org, robin.murphy@arm.com,
+        saiprakash.ranjan@codeaurora.org,
+        Sharat Masetty <smasetty@codeaurora.org>
+Subject: [PATCH] dt-bindings: arm-smmu: Add a new compatible string and a clock
+Date:   Tue, 28 Apr 2020 17:08:34 +0530
+Message-Id: <1588073914-15712-1-git-send-email-smasetty@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Suren,
+This patch adds a new compatible string for sc7180 and also an
+additional clock listing needed to power the TBUs and the TCU.
 
-Suren Baghdasaryan writes:
->> > I'm building a userspace daemon for desktop users which notifies based on
->> > pressure events, and it's particularly janky to ask people to run such a
->> > notifier as root: the notification mechanism is usually tied to the user's
->> > display server auth, and the surrounding environment is generally pretty
->> > important to maintain. In addition to this, just in general this doesn't feel
->> > like the kind of feature that by its nature needs to be restricted to root --
->> > it seems reasonable that there would be unprivileged users which want to use
->> > this, and that not using RT threads would be acceptable in that scenario.
->>
->> For these cases you can provide a userspace privileged daemon that
->> will relay pressure notifications to its unprivileged clients. This is
->> what we do on Android - Android Management Server registers its PSI
->> triggers and then relays low memory notifications to unprivileged
->> apps.
->> Another approach is taken by Android Low Memory Killer Daemon (lmkd)
->> which is an unprivileged process but registers its PSI triggers. The
->> trick is that the init process executes "chmod 0664
->> /proc/pressure/memory" from its init script and further restrictions
->> are enforced by selinux policy granting only LMKD write access to this
->> file.
->>
->> Would any of these options work for you?
+Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+---
+ Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Hmm, I think these are reasonable options when you have control over the 
-system, but not so great if you don't. For example, I want to get pressure 
-notifications for my logind seat, but that doesn't necessarily imply that I 
-have administrative access to the machine.
-
->> > Have you considered making the per-cgroup RT threads optional? If the
->> > processing isn't done in the FIFO kthread for unprivileged users, I think it
->> > should be safe to allow them to write to pressure files (perhaps with some
->> > additional limits or restrictions on things like the interval, as needed).
->>
->> I didn't consider that as I viewed memory condition tracking that
->> consumes kernel resources as being potentially exploitable. RT threads
->> did make that more of an issue but even without them I'm not sure we
->> should allow unprivileged processes to create unlimited numbers of
->> triggers each of which is not really free.
-
-There's precedent for other similar issues like this in the kernel, eg. rates 
-for some ICMP packets, where we enforce a static limit in the kernel for 
-unprivileged users. I'd imagine we can do something similar here, too.
-
->Thinking some more about this. LMKD in the above-mentioned usecase is
->not a privileged process but it is granted access to PSI triggers by a
->privileged init process+sepolicy and it needs RT threads to react to
->memory pressure promptly without being preempted. If we allow only the
->privileged users to have RT threads for PSI triggers then that
->requirement would break this scenario and LMKD won't be able to use RT
->threads.
-
-Well, fiddlesticks :-)
-
-If we needed to have both, I don't know what the interface would look like, but 
-yes, it sounds overcomplicated. I'll think about it some more.
-
-Thanks,
-
-Chris
+diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+index 6515dbe..15946ac 100644
+--- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
++++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+@@ -28,6 +28,7 @@ properties:
+           - enum:
+               - qcom,msm8996-smmu-v2
+               - qcom,msm8998-smmu-v2
++              - qcom,sc7180-smmu-v2
+               - qcom,sdm845-smmu-v2
+           - const: qcom,smmu-v2
+ 
+@@ -113,16 +114,22 @@ properties:
+       present in such cases.
+ 
+   clock-names:
++    minItems: 2
++    maxItems: 3
+     items:
+       - const: bus
+       - const: iface
++      - const: mem_iface_clk
+ 
+   clocks:
++    minItems: 2
++    maxItems: 3
+     items:
+       - description: bus clock required for downstream bus access and for the
+           smmu ptw
+       - description: interface clock required to access smmu's registers
+           through the TCU's programming interface.
++      - description: clock required for the SMMU TBUs and the TCU
+ 
+   power-domains:
+     maxItems: 1
+-- 
+1.9.1
