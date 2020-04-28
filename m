@@ -2,95 +2,135 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2EF3C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 943E1C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9797B20730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B35206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:08:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E4/lGb36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbgD1TH1 convert rfc822-to-8bit (ORCPT
+        id S1728876AbgD1TIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 15:07:27 -0400
-Received: from mga04.intel.com ([192.55.52.120]:45384 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728547AbgD1TH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 15:07:27 -0400
-IronPort-SDR: ZNywR7xBh6y98kbCcwl7O6hkSRmqErZMF3dnMLQpnbn9cvcs5+7Ermir0Fylp52DTgRxOMOeO0
- jkbXM8k+iZGg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 12:07:26 -0700
-IronPort-SDR: H9WMt1ccVsFYYldEOJJiXYnUjdrg0S5E87Hcxdt2iFCHphHKG0StdfXzj9GjiUZAd+NHrqTEpG
- AJy/ZUPIkUAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
-   d="scan'208";a="459331916"
-Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
-  by fmsmga006.fm.intel.com with ESMTP; 28 Apr 2020 12:07:26 -0700
-Received: from orsmsx160.amr.corp.intel.com (10.22.226.43) by
- ORSMSX103.amr.corp.intel.com (10.22.225.130) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 28 Apr 2020 12:07:26 -0700
-Received: from orsmsx115.amr.corp.intel.com ([169.254.4.83]) by
- ORSMSX160.amr.corp.intel.com ([169.254.13.187]) with mapi id 14.03.0439.000;
- Tue, 28 Apr 2020 12:07:26 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>
-CC:     "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        "David Woodhouse" <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Mehta, Sohil" <sohil.mehta@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>
-Subject: RE: [PATCH 5/7] x86/mmu: Allocate/free PASID
-Thread-Topic: [PATCH 5/7] x86/mmu: Allocate/free PASID
-Thread-Index: AQHWBtMgRqn1rM/ldEi9589O6eqhDKiMHSGAgANeKoCAAAkqgP//jPrQ
-Date:   Tue, 28 Apr 2020 19:07:25 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F608BE9@ORSMSX115.amr.corp.intel.com>
-References: <1585596788-193989-1-git-send-email-fenghua.yu@intel.com>
- <1585596788-193989-6-git-send-email-fenghua.yu@intel.com>
- <87pnbus3du.fsf@nanos.tec.linutronix.de> <20200428112113.000033bd@intel.com>
- <87tv13o306.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87tv13o306.fsf@nanos.tec.linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 28 Apr 2020 15:08:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39451 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728736AbgD1TIE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 15:08:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588100882;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vO4Cm8UdLpQ7CoyazjBPlfiZT+UDKaWc4FxUCYgXU0w=;
+        b=E4/lGb36j6Tz2eo4j0XZipXSPU/PHYjBX21E1Ssr32iSAlN2+gIY//WOgb/kUli19WI4I8
+        8MCQ6FS7x1FZ+aRGY9wMy/oDq2pgKVW4DLtyyRt3M/NqywWlt7tY8jTJWzeaZTkhRVsRho
+        7KK0KnRA74SL9wB2lgRV6cTVHYNThtE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-1-jYGlPKQCNoOI6Dqqt4M9zQ-1; Tue, 28 Apr 2020 15:07:58 -0400
+X-MC-Unique: jYGlPKQCNoOI6Dqqt4M9zQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2CFCC18FE861;
+        Tue, 28 Apr 2020 19:07:55 +0000 (UTC)
+Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 759FE5D71E;
+        Tue, 28 Apr 2020 19:07:53 +0000 (UTC)
+Date:   Tue, 28 Apr 2020 13:07:52 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-mm@kvack.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [regression?] Re: [PATCH v6 06/12] mm/gup: track FOLL_PIN pages
+Message-ID: <20200428130752.75c153bd@w520.home>
+In-Reply-To: <20200428174957.GV26002@ziepe.ca>
+References: <20200211001536.1027652-1-jhubbard@nvidia.com>
+        <20200211001536.1027652-7-jhubbard@nvidia.com>
+        <20200424121846.5ee2685f@w520.home>
+        <5b901542-d949-8d7e-89c7-f8d5ee20f6e9@nvidia.com>
+        <20200424141548.5afdd2bb@w520.home>
+        <665ffb48-d498-90f4-f945-997a922fc370@nvidia.com>
+        <20200428105455.30343fb4@w520.home>
+        <20200428174957.GV26002@ziepe.ca>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> If fd release cleans up then how should there be something in flight at
-> the final mmdrop?
+On Tue, 28 Apr 2020 14:49:57 -0300
+Jason Gunthorpe <jgg@ziepe.ca> wrote:
 
-ENQCMD from the user is only synchronous in that it lets the user know their
-request has been added to a queue (or not).  Execution of the request may happen
-later (if the device is busy working on requests for other users).  The request will
-take some time to complete. Someone told me the theoretical worst case once,
-which I've since forgotten, but it can be a long time.
+> On Tue, Apr 28, 2020 at 10:54:55AM -0600, Alex Williamson wrote:
+> >  static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
+> >  {
+> >  	struct vfio_pci_device *vdev = device_data;
+> > @@ -1253,8 +1323,14 @@ static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
+> >  	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+> >  	vma->vm_pgoff = (pci_resource_start(pdev, index) >> PAGE_SHIFT) + pgoff;
+> >  
+> > +	vma->vm_ops = &vfio_pci_mmap_ops;
+> > +
+> > +#if 1
+> > +	return 0;
+> > +#else
+> >  	return remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
+> > -			       req_len, vma->vm_page_prot);
+> > +			       vma->vm_end - vma->vm_start, vma->vm_page_prot);  
+> 
+> The remap_pfn_range here is what tells get_user_pages this is a
+> non-struct page mapping:
+> 
+> 	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
+> 
+> Which has to be set when the VMA is created, they shouldn't be
+> modified during fault.
 
-So the driver needs to use flush/drain operations to make sure all the in-flight
-work has completed before releasing/re-using the PASID.
+Aha, thanks Jason!  So fundamentally, pin_user_pages_remote() should
+never have been faulting in this vma since the pages are non-struct
+page backed.  Maybe I was just getting lucky before this commit.  For a
+VM_PFNMAP, vaddr_get_pfn() only needs pin_user_pages_remote() to return
+error and the vma information that we setup in vfio_pci_mmap().  We
+only need the fault handler to trigger for user access, which is what I
+see with this change.  That should work for me.
 
--Tony
+> Also the vma code above looked a little strange to me, if you do send
+> something like this cc me and I can look at it. I did some work like
+> this for rdma a while ago..
+
+Cool, I'll do that.  I'd like to be able to zap the vmas from user
+access at a later point and I have doubts that I'm holding the
+refs/locks that I need to for that.  Thanks,
+
+Alex
+
