@@ -2,51 +2,52 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 074CCC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18085C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3F8B20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5E87206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099990;
-	bh=oevnvzzVhtIAe0+tk50HMNaYqv+LWDbIkC5nIJcDM04=;
+	s=default; t=1588099994;
+	bh=bGN3qTLQWcJfrAbyI9zM15kesyXi4jIvWrkQPhcsTbo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cSy0jzNIXvx0HlKsGmkUiQpnaem5wAPJGaL51sNZ0aSKOtkzxEXb0nzY2Gq909X+b
-	 pYC8fjA4MplsJF5ao2btt0SNHyzOi3tciTy2qmrEmMtTlpZRzdFV5VyDsE6fFF0RB1
-	 3wttpN5FrIt1TSNVNu9stDdVWSZVa1KqzTGLCnFs=
+	b=KJtvBBhTs48kTFASE0VtVbg3fxGCiczI4srkCxrIKpjrbA04+oLFsSZECZhA7u64e
+	 S/+944FKsokzEoQGQQbOap6AXQOqmlhXgf6fM23zn9+Bz6Wtti95T0EgjqXNq2tJrJ
+	 S/3jLVVInqC1rVPfJ3DXBcXSQhCMbmSiCpCycKow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730522AbgD1SxK (ORCPT
+        id S1730244AbgD1SfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:53:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52590 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:35:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730234AbgD1Sf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:35:28 -0400
+        id S1729747AbgD1SfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:35:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C9C120B1F;
-        Tue, 28 Apr 2020 18:35:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9DA52085B;
+        Tue, 28 Apr 2020 18:35:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098927;
-        bh=oevnvzzVhtIAe0+tk50HMNaYqv+LWDbIkC5nIJcDM04=;
+        s=default; t=1588098920;
+        bh=bGN3qTLQWcJfrAbyI9zM15kesyXi4jIvWrkQPhcsTbo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fb4WMNOkyYLIEvC0gdqixuJ9TzqRRUti5nJwyOIChRY6naS3wgKDfD/dSRSBlGuxD
-         aywTU70Wu1gCGP8ZafiErcWWsc/o/Esu6Uw5wZXeJGp+4nrjKakncMiqToTIZJMufs
-         gNbbWcGqSkr6tCdw9fmBwuWOQsYUprCR48hzbI7E=
+        b=Lgc1JuWXA42ihzvz24AHojWFDvtVNE+VRH0JY0RU4Sq/Nq8tH86M9Wsl4F2O/jo2S
+         LTn2EScPSLIj4R+MPeeAIm8WwIqF99OIa5wCDSOqtYHi3E/nEi1OcFsojyp1S7mFPK
+         HNBtDFQ79v2Lf1tcNgW4VlU7uWHULtVCU/F2UJ58=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Vishal Kulkarni <vishal@chelsio.com>
-Subject: [PATCH 4.19 053/131] cxgb4: fix adapter crash due to wrong MC size
-Date:   Tue, 28 Apr 2020 20:24:25 +0200
-Message-Id: <20200428182231.629366722@linuxfoundation.org>
+        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 073/131] KEYS: Avoid false positive ENOMEM error on key read
+Date:   Tue, 28 Apr 2020 20:24:45 +0200
+Message-Id: <20200428182234.112222628@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
 References: <20200428182224.822179290@linuxfoundation.org>
@@ -59,79 +60,169 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vishal Kulkarni <vishal@chelsio.com>
+From: Waiman Long <longman@redhat.com>
 
-[ Upstream commit ce222748078592afb51b810dc154531aeba4f512 ]
+[ Upstream commit 4f0882491a148059a52480e753b7f07fc550e188 ]
 
-In the absence of MC1, the size calculation function
-cudbg_mem_region_size() was returing wrong MC size and
-resulted in adapter crash. This patch adds new argument
-to cudbg_mem_region_size() which will have actual size
-and returns error to caller in the absence of MC1.
+By allocating a kernel buffer with a user-supplied buffer length, it
+is possible that a false positive ENOMEM error may be returned because
+the user-supplied length is just too large even if the system do have
+enough memory to hold the actual key data.
 
-Fixes: a1c69520f785 ("cxgb4: collect MC memory dump")
-Signed-off-by: Vishal Kulkarni <vishal@chelsio.com>"
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Moreover, if the buffer length is larger than the maximum amount of
+memory that can be returned by kmalloc() (2^(MAX_ORDER-1) number of
+pages), a warning message will also be printed.
+
+To reduce this possibility, we set a threshold (PAGE_SIZE) over which we
+do check the actual key length first before allocating a buffer of the
+right size to hold it. The threshold is arbitrary, it is just used to
+trigger a buffer length check. It does not limit the actual key length
+as long as there is enough memory to satisfy the memory request.
+
+To further avoid large buffer allocation failure due to page
+fragmentation, kvmalloc() is used to allocate the buffer so that vmapped
+pages can be used when there is not a large enough contiguous set of
+pages available for allocation.
+
+In the extremely unlikely scenario that the key keeps on being changed
+and made longer (still <= buflen) in between 2 __keyctl_read_key()
+calls, the __keyctl_read_key() calling loop in keyctl_read_key() may
+have to be iterated a large number of times, but definitely not infinite.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c |   27 ++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
+ security/keys/internal.h | 12 +++++++++
+ security/keys/keyctl.c   | 58 +++++++++++++++++++++++++++++-----------
+ 2 files changed, 55 insertions(+), 15 deletions(-)
 
---- a/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
-@@ -1065,9 +1065,9 @@ static void cudbg_t4_fwcache(struct cudb
+diff --git a/security/keys/internal.h b/security/keys/internal.h
+index a02742621c8d3..eb50212fbbf84 100644
+--- a/security/keys/internal.h
++++ b/security/keys/internal.h
+@@ -20,6 +20,8 @@
+ #include <linux/keyctl.h>
+ #include <linux/refcount.h>
+ #include <linux/compat.h>
++#include <linux/mm.h>
++#include <linux/vmalloc.h>
+ 
+ struct iovec;
+ 
+@@ -305,4 +307,14 @@ static inline void key_check(const struct key *key)
+ 
+ #endif
+ 
++/*
++ * Helper function to clear and free a kvmalloc'ed memory object.
++ */
++static inline void __kvzfree(const void *addr, size_t len)
++{
++	if (addr) {
++		memset((void *)addr, 0, len);
++		kvfree(addr);
++	}
++}
+ #endif /* _INTERNAL_H */
+diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
+index 4b6a084e323b5..c07c2e2b24783 100644
+--- a/security/keys/keyctl.c
++++ b/security/keys/keyctl.c
+@@ -330,7 +330,7 @@ long keyctl_update_key(key_serial_t id,
+ 	payload = NULL;
+ 	if (plen) {
+ 		ret = -ENOMEM;
+-		payload = kmalloc(plen, GFP_KERNEL);
++		payload = kvmalloc(plen, GFP_KERNEL);
+ 		if (!payload)
+ 			goto error;
+ 
+@@ -351,7 +351,7 @@ long keyctl_update_key(key_serial_t id,
+ 
+ 	key_ref_put(key_ref);
+ error2:
+-	kzfree(payload);
++	__kvzfree(payload, plen);
+ error:
+ 	return ret;
+ }
+@@ -772,7 +772,8 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
+ 	struct key *key;
+ 	key_ref_t key_ref;
+ 	long ret;
+-	char *key_data;
++	char *key_data = NULL;
++	size_t key_data_len;
+ 
+ 	/* find the key first */
+ 	key_ref = lookup_user_key(keyid, 0, 0);
+@@ -823,24 +824,51 @@ can_read_key:
+ 	 * Allocating a temporary buffer to hold the keys before
+ 	 * transferring them to user buffer to avoid potential
+ 	 * deadlock involving page fault and mmap_sem.
++	 *
++	 * key_data_len = (buflen <= PAGE_SIZE)
++	 *		? buflen : actual length of key data
++	 *
++	 * This prevents allocating arbitrary large buffer which can
++	 * be much larger than the actual key length. In the latter case,
++	 * at least 2 passes of this loop is required.
+ 	 */
+-	key_data = kmalloc(buflen, GFP_KERNEL);
++	key_data_len = (buflen <= PAGE_SIZE) ? buflen : 0;
++	for (;;) {
++		if (key_data_len) {
++			key_data = kvmalloc(key_data_len, GFP_KERNEL);
++			if (!key_data) {
++				ret = -ENOMEM;
++				goto key_put_out;
++			}
++		}
+ 
+-	if (!key_data) {
+-		ret = -ENOMEM;
+-		goto key_put_out;
+-	}
+-	ret = __keyctl_read_key(key, key_data, buflen);
++		ret = __keyctl_read_key(key, key_data, key_data_len);
++
++		/*
++		 * Read methods will just return the required length without
++		 * any copying if the provided length isn't large enough.
++		 */
++		if (ret <= 0 || ret > buflen)
++			break;
++
++		/*
++		 * The key may change (unlikely) in between 2 consecutive
++		 * __keyctl_read_key() calls. In this case, we reallocate
++		 * a larger buffer and redo the key read when
++		 * key_data_len < ret <= buflen.
++		 */
++		if (ret > key_data_len) {
++			if (unlikely(key_data))
++				__kvzfree(key_data, key_data_len);
++			key_data_len = ret;
++			continue;	/* Allocate buffer */
++		}
+ 
+-	/*
+-	 * Read methods will just return the required length without
+-	 * any copying if the provided length isn't large enough.
+-	 */
+-	if (ret > 0 && ret <= buflen) {
+ 		if (copy_to_user(buffer, key_data, ret))
+ 			ret = -EFAULT;
++		break;
  	}
- }
+-	kzfree(key_data);
++	__kvzfree(key_data, key_data_len);
  
--static unsigned long cudbg_mem_region_size(struct cudbg_init *pdbg_init,
--					   struct cudbg_error *cudbg_err,
--					   u8 mem_type)
-+static int cudbg_mem_region_size(struct cudbg_init *pdbg_init,
-+				 struct cudbg_error *cudbg_err,
-+				 u8 mem_type, unsigned long *region_size)
- {
- 	struct adapter *padap = pdbg_init->adap;
- 	struct cudbg_meminfo mem_info;
-@@ -1076,15 +1076,23 @@ static unsigned long cudbg_mem_region_si
- 
- 	memset(&mem_info, 0, sizeof(struct cudbg_meminfo));
- 	rc = cudbg_fill_meminfo(padap, &mem_info);
--	if (rc)
-+	if (rc) {
-+		cudbg_err->sys_err = rc;
- 		return rc;
-+	}
- 
- 	cudbg_t4_fwcache(pdbg_init, cudbg_err);
- 	rc = cudbg_meminfo_get_mem_index(padap, &mem_info, mem_type, &mc_idx);
--	if (rc)
-+	if (rc) {
-+		cudbg_err->sys_err = rc;
- 		return rc;
-+	}
-+
-+	if (region_size)
-+		*region_size = mem_info.avail[mc_idx].limit -
-+			       mem_info.avail[mc_idx].base;
- 
--	return mem_info.avail[mc_idx].limit - mem_info.avail[mc_idx].base;
-+	return 0;
- }
- 
- static int cudbg_collect_mem_region(struct cudbg_init *pdbg_init,
-@@ -1092,7 +1100,12 @@ static int cudbg_collect_mem_region(stru
- 				    struct cudbg_error *cudbg_err,
- 				    u8 mem_type)
- {
--	unsigned long size = cudbg_mem_region_size(pdbg_init, cudbg_err, mem_type);
-+	unsigned long size = 0;
-+	int rc;
-+
-+	rc = cudbg_mem_region_size(pdbg_init, cudbg_err, mem_type, &size);
-+	if (rc)
-+		return rc;
- 
- 	return cudbg_read_fw_mem(pdbg_init, dbg_buff, mem_type, size,
- 				 cudbg_err);
+ key_put_out:
+ 	key_put(key);
+-- 
+2.20.1
+
 
 
