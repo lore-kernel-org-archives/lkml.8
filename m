@@ -2,207 +2,203 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D21C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F21A9C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB7A206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D80EA206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:31:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgD1JaN (ORCPT
+        id S1727062AbgD1JbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 05:30:13 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34734 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726824AbgD1JaM (ORCPT
+        Tue, 28 Apr 2020 05:31:23 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:34618 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726951AbgD1JbX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 05:30:12 -0400
-Received: by mail-lj1-f196.google.com with SMTP id f11so16120010ljp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 02:30:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=RMKJe0vs45K008KktXNlTIscxQGnUeyd6oU1z9Nrkq8=;
-        b=E/3ht2aOo38atSlGEg/jnwcos70B7FeUpZXDM8GscD0LfbC8wBKkXnOMeWmKMoElkG
-         ULz3CXqW6cUNr4xa2spm4cXhyBhHtZeOh85HkcaKcGcBM6LJjAvDcFaYEdtsiXf1mVqJ
-         8zThbuWGg/cAjcrMHc5D9r7r8Iilsho4SHlbBvK0FISW+aOWHYxDxFFzFU0uOpEUCehM
-         hKuGXXTeTNqyxvS3+dQ12IDmoDlZ2ViEua5xfOtrInsPDF1vUt+usG5wNkiaYxS3M0YM
-         HNKH6J1rXm3I+W1FHVq5b+g5JQNFgBCXv6OC8s0LNdgq50pNv8fAkUL0vgIvLOBv0Ovx
-         GlHA==
-X-Gm-Message-State: AGi0PuZqEHEsst1CfUdk0MV0eXDlll+oT4abuyv/rZ45KtqZFAtt/X75
-        nlUAgonn7ZjfBzBklYUERrA=
-X-Google-Smtp-Source: APiQypJgH2H5jGUZgLdFAQxJN4fxDgJFb9Ey2aVIzUqMqjLmn4mRdJKnJ1VFLthG/ojOQ0e+wWN1Bw==
-X-Received: by 2002:a2e:a365:: with SMTP id i5mr15617409ljn.293.1588066209143;
-        Tue, 28 Apr 2020 02:30:09 -0700 (PDT)
-Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
-        by smtp.gmail.com with ESMTPSA id i3sm12391412ljg.82.2020.04.28.02.30.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 02:30:07 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 12:29:30 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] regulator: bd718x7: remove voltage change restriction from
- BD71847
-Message-ID: <20200428092930.GA9721@localhost.localdomain>
+        Tue, 28 Apr 2020 05:31:23 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03S9F5og023238;
+        Tue, 28 Apr 2020 05:31:20 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 30pes28jje-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 05:31:20 -0400
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 03S9VIwt002693
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 28 Apr 2020 05:31:18 -0400
+Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
+ SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 28 Apr 2020 02:31:17 -0700
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 28 Apr 2020 02:31:17 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 28 Apr 2020 02:31:16 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03S9VEhP026277;
+        Tue, 28 Apr 2020 05:31:14 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] staging: iio: ad5933: rework probe to use devm_ function variants
+Date:   Tue, 28 Apr 2020 12:31:28 +0300
+Message-ID: <20200428093128.60747-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-28_05:2020-04-27,2020-04-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ mlxscore=0 suspectscore=2 bulkscore=0 phishscore=0 priorityscore=1501
+ clxscore=1015 malwarescore=0 impostorscore=0 lowpriorityscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The BD71837 had a HW "feature" where changing the regulator output
-voltages of other regulators but bucks 1-4 might cause spikes if
-regulators were enabled. Thus SW prohibit voltage changes for other
-regulators except for bucks 1-4 when regulator is enabled.
+This change cleans up the driver's probe function to use only devm_
+function variants. This also gets rid of the remove function and moves the
+clock & regulator de-initializations to the 'ad5933_cleanup()' callback.
 
-The HW colleagues did inadvertly fix this issue for BD71847 and
-BD71850. Remove voltage change restrictions from other PMICs but
-BD71837.
-
-The LDO voltage changing is still restricted. I did not yet receive
-answer whether there is voltage spikes to be expected for LDOs. I
-only know that the power-good detection for LDOs can cause false
-alarms if LDO voltage is changed when LDO is enabled. We might be
-able to work-around this by disabling the power-good monioring for
-the duration of the LDO voltage change - but as I said, I don't
-know yet. Let's fix it later if we can confirm that also LDO voltage
-changes are safe.
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/regulator/bd718x7-regulator.c | 46 ++++++++++++++++++++++++---
- 1 file changed, 41 insertions(+), 5 deletions(-)
+ .../staging/iio/impedance-analyzer/ad5933.c   | 59 ++++++++-----------
+ 1 file changed, 23 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/regulator/bd718x7-regulator.c b/drivers/regulator/bd718x7-regulator.c
-index cf3872837abc..f901eee9492d 100644
---- a/drivers/regulator/bd718x7-regulator.c
-+++ b/drivers/regulator/bd718x7-regulator.c
-@@ -55,10 +55,15 @@ static int bd718xx_buck1234_set_ramp_delay(struct regulator_dev *rdev,
- 				  BUCK_RAMPRATE_MASK, ramp_value << 6);
+diff --git a/drivers/staging/iio/impedance-analyzer/ad5933.c b/drivers/staging/iio/impedance-analyzer/ad5933.c
+index af0bcf95ee8a..06a6dcd7883b 100644
+--- a/drivers/staging/iio/impedance-analyzer/ad5933.c
++++ b/drivers/staging/iio/impedance-analyzer/ad5933.c
+@@ -602,11 +602,12 @@ static const struct iio_buffer_setup_ops ad5933_ring_setup_ops = {
+ 	.postdisable = ad5933_ring_postdisable,
+ };
+ 
+-static int ad5933_register_ring_funcs_and_init(struct iio_dev *indio_dev)
++static int ad5933_register_ring_funcs_and_init(struct device *dev,
++					       struct iio_dev *indio_dev)
+ {
+ 	struct iio_buffer *buffer;
+ 
+-	buffer = iio_kfifo_allocate();
++	buffer = devm_iio_kfifo_allocate(dev);
+ 	if (!buffer)
+ 		return -ENOMEM;
+ 
+@@ -676,6 +677,14 @@ static void ad5933_work(struct work_struct *work)
+ 	}
  }
  
--/* Bucks 1 to 4 support DVS. PWM mode is used when voltage is changed.
-+/*
-+ * On BD71837 (not on BD71847, BD71850, ...)
-+ * Bucks 1 to 4 support DVS. PWM mode is used when voltage is changed.
-  * Bucks 5 to 8 and LDOs can use PFM and must be disabled when voltage
-  * is changed. Hence we return -EBUSY for these if voltage is changed
-  * when BUCK/LDO is enabled.
-+ *
-+ * The LDO operation for BD71847 and BD71850 is icurrently unknown.
-+ * It's safer to still assume they can't be changed when enabled.
-  */
- static int bd718xx_set_voltage_sel_restricted(struct regulator_dev *rdev,
- 						    unsigned int sel)
-@@ -88,6 +93,16 @@ static const struct regulator_ops bd718xx_pickable_range_ldo_ops = {
- };
- 
- static const struct regulator_ops bd718xx_pickable_range_buck_ops = {
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+	.list_voltage = regulator_list_voltage_pickable_linear_range,
-+	.set_voltage_sel = regulator_set_voltage_sel_pickable_regmap,
-+	.get_voltage_sel = regulator_get_voltage_sel_pickable_regmap,
-+	.set_voltage_time_sel = regulator_set_voltage_time_sel,
-+};
++static void ad5933_cleanup(void *data)
++{
++	struct ad5933_state *st = data;
 +
-+static const struct regulator_ops bd71837_pickable_range_buck_ops = {
- 	.enable = regulator_enable_regmap,
- 	.disable = regulator_disable_regmap,
- 	.is_enabled = regulator_is_enabled_regmap,
-@@ -116,6 +131,16 @@ static const struct regulator_ops bd718xx_ldo_regulator_nolinear_ops = {
- };
- 
- static const struct regulator_ops bd718xx_buck_regulator_ops = {
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+	.list_voltage = regulator_list_voltage_linear_range,
-+	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-+	.get_voltage_sel = regulator_get_voltage_sel_regmap,
-+	.set_voltage_time_sel = regulator_set_voltage_time_sel,
-+};
++	clk_disable_unprepare(st->mclk);
++	regulator_disable(st->reg);
++}
 +
-+static const struct regulator_ops bd71837_buck_regulator_ops = {
- 	.enable = regulator_enable_regmap,
- 	.disable = regulator_disable_regmap,
- 	.is_enabled = regulator_is_enabled_regmap,
-@@ -126,6 +151,17 @@ static const struct regulator_ops bd718xx_buck_regulator_ops = {
- };
- 
- static const struct regulator_ops bd718xx_buck_regulator_nolinear_ops = {
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+	.list_voltage = regulator_list_voltage_table,
-+	.map_voltage = regulator_map_voltage_ascend,
-+	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-+	.get_voltage_sel = regulator_get_voltage_sel_regmap,
-+	.set_voltage_time_sel = regulator_set_voltage_time_sel,
-+};
+ static int ad5933_probe(struct i2c_client *client,
+ 			const struct i2c_device_id *id)
+ {
+@@ -703,23 +712,28 @@ static int ad5933_probe(struct i2c_client *client,
+ 		dev_err(&client->dev, "Failed to enable specified VDD supply\n");
+ 		return ret;
+ 	}
 +
-+static const struct regulator_ops bd71837_buck_regulator_nolinear_ops = {
- 	.enable = regulator_enable_regmap,
- 	.disable = regulator_disable_regmap,
- 	.is_enabled = regulator_is_enabled_regmap,
-@@ -805,7 +841,7 @@ static const struct bd718xx_regulator_data bd71837_regulators[] = {
- 			.of_match = of_match_ptr("BUCK5"),
- 			.regulators_node = of_match_ptr("regulators"),
- 			.id = BD718XX_BUCK5,
--			.ops = &bd718xx_pickable_range_buck_ops,
-+			.ops = &bd71837_pickable_range_buck_ops,
- 			.type = REGULATOR_VOLTAGE,
- 			.n_voltages = BD71837_BUCK5_VOLTAGE_NUM,
- 			.linear_ranges = bd71837_buck5_volts,
-@@ -832,7 +868,7 @@ static const struct bd718xx_regulator_data bd71837_regulators[] = {
- 			.of_match = of_match_ptr("BUCK6"),
- 			.regulators_node = of_match_ptr("regulators"),
- 			.id = BD718XX_BUCK6,
--			.ops = &bd718xx_buck_regulator_ops,
-+			.ops = &bd71837_buck_regulator_ops,
- 			.type = REGULATOR_VOLTAGE,
- 			.n_voltages = BD71837_BUCK6_VOLTAGE_NUM,
- 			.linear_ranges = bd71837_buck6_volts,
-@@ -856,7 +892,7 @@ static const struct bd718xx_regulator_data bd71837_regulators[] = {
- 			.of_match = of_match_ptr("BUCK7"),
- 			.regulators_node = of_match_ptr("regulators"),
- 			.id = BD718XX_BUCK7,
--			.ops = &bd718xx_buck_regulator_nolinear_ops,
-+			.ops = &bd71837_buck_regulator_nolinear_ops,
- 			.type = REGULATOR_VOLTAGE,
- 			.volt_table = &bd718xx_3rd_nodvs_buck_volts[0],
- 			.n_voltages = ARRAY_SIZE(bd718xx_3rd_nodvs_buck_volts),
-@@ -878,7 +914,7 @@ static const struct bd718xx_regulator_data bd71837_regulators[] = {
- 			.of_match = of_match_ptr("BUCK8"),
- 			.regulators_node = of_match_ptr("regulators"),
- 			.id = BD718XX_BUCK8,
--			.ops = &bd718xx_buck_regulator_ops,
-+			.ops = &bd71837_buck_regulator_ops,
- 			.type = REGULATOR_VOLTAGE,
- 			.n_voltages = BD718XX_4TH_NODVS_BUCK_VOLTAGE_NUM,
- 			.linear_ranges = bd718xx_4th_nodvs_buck_volts,
++	ret = devm_add_action_or_reset(&client->dev, ad5933_cleanup, st);
++	if (ret)
++		return ret;
++
+ 	ret = regulator_get_voltage(st->reg);
+ 
+ 	if (ret < 0)
+-		goto error_disable_reg;
++		return ret;
+ 
+ 	st->vref_mv = ret / 1000;
+ 
+ 	st->mclk = devm_clk_get(&client->dev, "mclk");
+ 	if (IS_ERR(st->mclk) && PTR_ERR(st->mclk) != -ENOENT) {
+ 		ret = PTR_ERR(st->mclk);
+-		goto error_disable_reg;
++		return ret;
+ 	}
+ 
+ 	if (!IS_ERR(st->mclk)) {
+ 		ret = clk_prepare_enable(st->mclk);
+ 		if (ret < 0)
+-			goto error_disable_reg;
++			return ret;
+ 		ext_clk_hz = clk_get_rate(st->mclk);
+ 	}
+ 
+@@ -742,41 +756,15 @@ static int ad5933_probe(struct i2c_client *client,
+ 	indio_dev->channels = ad5933_channels;
+ 	indio_dev->num_channels = ARRAY_SIZE(ad5933_channels);
+ 
+-	ret = ad5933_register_ring_funcs_and_init(indio_dev);
++	ret = ad5933_register_ring_funcs_and_init(&client->dev, indio_dev);
+ 	if (ret)
+-		goto error_disable_mclk;
++		return ret;
+ 
+ 	ret = ad5933_setup(st);
+ 	if (ret)
+-		goto error_unreg_ring;
+-
+-	ret = iio_device_register(indio_dev);
+-	if (ret)
+-		goto error_unreg_ring;
+-
+-	return 0;
+-
+-error_unreg_ring:
+-	iio_kfifo_free(indio_dev->buffer);
+-error_disable_mclk:
+-	clk_disable_unprepare(st->mclk);
+-error_disable_reg:
+-	regulator_disable(st->reg);
+-
+-	return ret;
+-}
+-
+-static int ad5933_remove(struct i2c_client *client)
+-{
+-	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+-	struct ad5933_state *st = iio_priv(indio_dev);
+-
+-	iio_device_unregister(indio_dev);
+-	iio_kfifo_free(indio_dev->buffer);
+-	regulator_disable(st->reg);
+-	clk_disable_unprepare(st->mclk);
++		return ret;
+ 
+-	return 0;
++	return devm_iio_device_register(&client->dev, indio_dev);
+ }
+ 
+ static const struct i2c_device_id ad5933_id[] = {
+@@ -801,7 +789,6 @@ static struct i2c_driver ad5933_driver = {
+ 		.of_match_table = ad5933_of_match,
+ 	},
+ 	.probe = ad5933_probe,
+-	.remove = ad5933_remove,
+ 	.id_table = ad5933_id,
+ };
+ module_i2c_driver(ad5933_driver);
 -- 
-2.21.0
+2.17.1
 
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
