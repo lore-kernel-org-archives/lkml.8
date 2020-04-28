@@ -2,234 +2,165 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C26FEC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A9EC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 993772053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:55:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="o2owi7eb";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rmOcc2Vn"
+	by mail.kernel.org (Postfix) with ESMTP id 208182053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:55:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbgD1HzJ (ORCPT
+        id S1726830AbgD1HzL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:55:09 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:33417 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726355AbgD1HzI (ORCPT
+        Tue, 28 Apr 2020 03:55:11 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:36119 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbgD1HzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 03:55:08 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id D71FD5801B9;
-        Tue, 28 Apr 2020 03:55:06 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 28 Apr 2020 03:55:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=3Ly4DUDSUpkyQ57Uyx52tImyR/V
-        7cGw1VRugpX+pW4g=; b=o2owi7ebNFkyAxuDt0S0E4gMjDAPl+rlEs413NF3wrZ
-        QD1LxrZMT1bx9d2Xiaht6gsGzwmwE39UCG1jJlPr+LlxzLWfDZC3TSsy5EeG4dBB
-        +Ld7llM3WFIeiQn+ZuobU870M87rwbTpC4bzFGo85lDtxtm/LzY27SLRWRs7RbKV
-        vL0s+ouSm+pLTydOadSYn7pNPkxHWyYIFPdAOBbix61Eyxd0lEMBsvQbxJTpMIWr
-        MAkZSpvQnttVf1DQb1OoAzRpcVBJyquSbmXgZIz081PW4JFbxRSAtOL93jhkKYG7
-        wf3nY/mU8pAqJ14oHC3mokmxqCUctXka1bFpnSFNqww==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=3Ly4DU
-        DSUpkyQ57Uyx52tImyR/V7cGw1VRugpX+pW4g=; b=rmOcc2Vnwerk37bE3zrswg
-        JZZRXT/vUZOSv1thw+gTfqY7sq4K45Dh8UWjurjZaEYhNDXBsW2Ek/yVk5lFdsFa
-        mBF1FsL50xFPW30cFD2s9CLue8c3xG6JC9HnTRCitN9caGh8e+D21TxdM4g6z+Jw
-        pgyt75yoIFYHdncoYOlB+B9y5hRjAAdGQ2QxOBuqzekL4/jdE51RxjhSdep+xsjt
-        7+IVtBaDdMXesFbmSYmc8j2RApLOPdPFeneP7aDN7QrdQ9ha0C1xU8zhctTdSNk1
-        +3WsWVtFSxsMeCIhXsvOknaJnA0+PeDtXKXACnyPQGYTLhl5WrvsrEMq9P94En2A
-        ==
-X-ME-Sender: <xms:WeGnXr2kiIe9Nna4uMsIplj4cWOL8LkAS7YpQUgKGiIVH6O6E18E6g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedtgdduvddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuffhomhgrih
-    hnpeguvghvihgtvghtrhgvvgdrohhrghenucfkphepledtrdekledrieekrdejieenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvg
-    estggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:WeGnXkKXNeQAHdF25E0lMqJFjK8KyV4BTYiOoi9a-n7xlygAo2ykGg>
-    <xmx:WeGnXuwLDE6M2xiVAnbufxzc7f_WjQtfmPAUuqd5KE_YQs12eIT9Uw>
-    <xmx:WeGnXowGzHwORiE6YCTQVXbShNboMDsHPdPWmKMkFirCUqH8uhdflA>
-    <xmx:WuGnXs_B6lTCI76oCVDXt1qyT7caIAhVUlOWIvduG1BvzvG4AujUXg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id AF3543280065;
-        Tue, 28 Apr 2020 03:55:05 -0400 (EDT)
-Date:   Tue, 28 Apr 2020 09:55:04 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     Marco Felsch <m.felsch@pengutronix.de>,
-        Rob Herring <robh@kernel.org>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v7 1/3] media: dt-bindings: ov8856: Document YAML bindings
-Message-ID: <20200428075504.ovzugt2mbgan7z3k@gilmour.lan>
-References: <20200408110816.2712841-1-robert.foss@linaro.org>
- <20200408110816.2712841-2-robert.foss@linaro.org>
- <20200415160729.GA4438@bogus>
- <20200415162110.bmorj4u4hkqohqjx@pengutronix.de>
- <CAG3jFysg34=HJ7xefuAKw4Uq6W0POm5TsJmzQku6WwkhH_j=-w@mail.gmail.com>
+        Tue, 28 Apr 2020 03:55:09 -0400
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 4806A100017;
+        Tue, 28 Apr 2020 07:55:00 +0000 (UTC)
+Date:   Tue, 28 Apr 2020 09:54:59 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
+        hauke.mehrtens@intel.com, qi-ming.wu@intel.com, vigneshr@ti.com,
+        arnd@arndb.de, richard@nod.at, brendanhiggins@google.com,
+        linux-mips@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
+        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
+Subject: Re: [PATCH v3 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200428095459.6727fab0@xps13>
+In-Reply-To: <3ebc42d9-f8a8-0764-ff7f-82beeb0b5bb7@linux.intel.com>
+References: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200423162113.38055-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200424183612.4cfdbb6a@collabora.com>
+        <20200427175127.0518c193@xps13>
+        <cba30ccb-c190-d4d6-eab9-6083bd5d2aad@linux.intel.com>
+        <20200428082759.25065146@collabora.com>
+        <38334812-21b9-5b2c-db84-01c9eacc84d0@linux.intel.com>
+        <20200428084704.5e04232a@collabora.com>
+        <f72b5ae0-b0ac-61b8-8f64-c0e0f48afe02@linux.intel.com>
+        <20200428094049.3c0d4730@xps13>
+        <3ebc42d9-f8a8-0764-ff7f-82beeb0b5bb7@linux.intel.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bgh5jcvervb4fpgs"
-Content-Disposition: inline
-In-Reply-To: <CAG3jFysg34=HJ7xefuAKw4Uq6W0POm5TsJmzQku6WwkhH_j=-w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
---bgh5jcvervb4fpgs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+"Ramuthevar, Vadivel MuruganX"
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote on Tue, 28 Apr 2020
+15:50:06 +0800:
 
-On Mon, Apr 27, 2020 at 05:13:42PM +0200, Robert Foss wrote:
-> On Wed, 15 Apr 2020 at 18:21, Marco Felsch <m.felsch@pengutronix.de> wrot=
-e:
-> >
-> > On 20-04-15 11:07, Rob Herring wrote:
-> > > On Wed, Apr 08, 2020 at 01:08:14PM +0200, Robert Foss wrote:
-> > > > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > > >
-> > > > This patch adds documentation of device tree in YAML schema for the
-> > > > OV8856 CMOS image sensor.
-> > > >
-> > > > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > > > Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> > > > ---
-> > > >
-> > > > - Changes since v6:
-> > > >   * Marco: remove qcom specifics from DT example
-> > > >
-> > > > - Changes since v5:
-> > > >   * Add assigned-clocks and assigned-clock-rates
-> > > >   * robher: dt-schema errors
-> > > >
-> > > > - Changes since v4:
-> > > >   * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in descrip=
-tion
-> > > >   * Add clock-lanes property to example
-> > > >   * robher: Fix syntax error in devicetree example
-> > > >
-> > > > - Changes since v3:
-> > > >   * robher: Fix syntax error
-> > > >   * robher: Removed maxItems
-> > > >   * Fixes yaml 'make dt-binding-check' errors
-> > > >
-> > > > - Changes since v2:
-> > > >   Fixes comments from from Andy, Tomasz, Sakari, Rob.
-> > > >   * Convert text documentation to YAML schema.
-> > > >
-> > > > - Changes since v1:
-> > > >   Fixes comments from Sakari, Tomasz
-> > > >   * Add clock-frequency and link-frequencies in DT
-> > > >
-> > > >  .../devicetree/bindings/media/i2c/ov8856.yaml | 143 ++++++++++++++=
-++++
-> > > >  MAINTAINERS                                   |   1 +
-> > > >  2 files changed, 144 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8=
-856.yaml
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov8856.yam=
-l b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..96bef5403d7e
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> > > > @@ -0,0 +1,143 @@
-> > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > > > +# Copyright (c) 2019 MediaTek Inc.
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/media/i2c/ov8856.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Omnivision OV8856 CMOS Sensor Device Tree Bindings
-> > > > +
-> > > > +maintainers:
-> > > > +  - Ben Kao <ben.kao@intel.com>
-> > > > +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > > > +
-> > > > +description: |-
-> > > > +  The Omnivision OV8856 is a high performance, 1/4-inch, 8 megapix=
-el, CMOS
-> > > > +  image sensor that delivers 3264x2448 at 30fps. It provides full-=
-frame,
-> > > > +  sub-sampled, and windowed 10-bit MIPI images in various formats =
-via the
-> > > > +  Serial Camera Control Bus (SCCB) interface. This chip is program=
-mable
-> > > > +  through I2C and two-wire SCCB. The sensor output is available vi=
-a CSI-2
-> > > > +  serial data output (up to 4-lane).
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    const: ovti,ov8856
-> > > > +
-> > > > +  reg:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  clocks:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  clock-names:
-> > > > +    description:
-> > > > +      Input clock for the sensor.
-> > > > +    items:
-> > > > +      - const: xvclk
-> > > > +
-> > > > +  assigned-clocks:
-> > > > +    description:
-> > > > +      Input clock for the sensor.
-> > > > +
-> > > > +  assigned-clock-rates:
-> > > > +    description:
-> > > > +      Frequency of the xvclk clock in Hertz.
-> > >
-> > > These 2 should have a 'maxItems: 1'
-> >
-> > Don't know why those properties are needed here.. IMHO this shouldn't be
-> > part of the binding or at least it should be optional and not required.
-> > All we need is the clocks and the clock-names property.
->=20
-> Thanks Marco, I'll make it optional for the next revision.
+> Hi Miquel,
+> 
+> On 28/4/2020 3:40 pm, Miquel Raynal wrote:
+> > Hi Vadivel MuruganX,
+> > 
+> > "Ramuthevar, Vadivel MuruganX"
+> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote on Tue, 28 Apr 2020
+> > 14:50:35 +0800:
+> >   
+> >> Hi Boris,
+> >>
+> >> On 28/4/2020 2:47 pm, Boris Brezillon wrote:  
+> >>> On Tue, 28 Apr 2020 14:40:58 +0800
+> >>> "Ramuthevar, Vadivel MuruganX"
+> >>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:  
+> >>>    >>>> Hi Boris,  
+> >>>>
+> >>>> On 28/4/2020 2:27 pm, Boris Brezillon wrote:  
+> >>>>> On Tue, 28 Apr 2020 14:17:30 +0800
+> >>>>> "Ramuthevar, Vadivel MuruganX"
+> >>>>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:  
+> >>>>>     >>>> Hi Miquel,  
+> >>>>>>
+> >>>>>>        Thank you very much for the review comments and your time...
+> >>>>>>
+> >>>>>> On 27/4/2020 11:51 pm, Miquel Raynal wrote:  
+> >>>>>>> Hi Ramuthevar,  
+> >>>>>>>        >>>>>>> +static int ebu_nand_probe(struct platform_device *pdev)  
+> >>>>>>>>> +{
+> >>>>>>>>> +	struct device *dev = &pdev->dev;
+> >>>>>>>>> +	struct ebu_nand_controller *ebu_host;
+> >>>>>>>>> +	struct nand_chip *nand;
+> >>>>>>>>> +	phys_addr_t nandaddr_pa;
+> >>>>>>>>> +	struct mtd_info *mtd;
+> >>>>>>>>> +	struct resource *res;
+> >>>>>>>>> +	int ret;
+> >>>>>>>>> +	u32 cs;
+> >>>>>>>>> +
+> >>>>>>>>> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
+> >>>>>>>>> +	if (!ebu_host)
+> >>>>>>>>> +		return -ENOMEM;
+> >>>>>>>>> +
+> >>>>>>>>> +	ebu_host->dev = dev;
+> >>>>>>>>> +	nand_controller_init(&ebu_host->controller);
+> >>>>>>>>> +
+> >>>>>>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
+> >>>>>>>>> +	ebu_host->ebu_addr = devm_ioremap_resource(&pdev->dev, res);
+> >>>>>>>>> +	if (IS_ERR(ebu_host->ebu_addr))
+> >>>>>>>>> +		return PTR_ERR(ebu_host->ebu_addr);
+> >>>>>>>>> +
+> >>>>>>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
+> >>>>>>>>> +	ebu_host->nand_addr = devm_ioremap_resource(&pdev->dev, res);
+> >>>>>>>>> +	if (IS_ERR(ebu_host->nand_addr))
+> >>>>>>>>> +		return PTR_ERR(ebu_host->nand_addr);
+> >>>>>>>>> +
+> >>>>>>>>> +	ret = device_property_read_u32(dev, "nand,cs", &cs);  
+> >>>>>>>>
+> >>>>>>>> CS ids should be encoded in the reg property (see [1]).  
+> >>>>>>>
+> >>>>>>> Is it your choice to only support a single CS or is it actually a
+> >>>>>>> controller limitation?  
+> >>>>>>
+> >>>>>> Yes , its controller limitation to support only one CS  
+> >>>>>
+> >>>>> I'm pretty sure that's not true, otherwise you wouldn't have to select
+> >>>>> the CS you want to use :P.  
+> >>>>
+> >>>> At a time it supports only one chip select.  
+> >>>
+> >>> Yes, like 99% of the NAND controllers, but that doesn't mean you can't
+> >>> support multi-CS chips. All you have to do is attach an array of
+> >>> ebu_nand_cs to your ebu_nand_chip (as done in the atmel driver I
+> >>> pointed to). nand_operation.cs tells you which CS (index in your
+> >>> ebu_nand_cs array) a specific operation is targeting, and you can pick
+> >>> the right MMIO range/reg value based on that.  
+> >>
+> >> Agreed, sure I will add that and update next series of patches .  
+> > 
+> > There are also many other places where you assume blindly that there
+> > is only one CS. You can check the Atmel NAND controller driver as Boris
+> > said and we will probably propose more little changes to be more
+> > generic.  
+> since LGM EBU_NAND controller supports only one chip select at a time, so assumed like that, will change as generic way if consider like more chip select supports, Thanks!
 
-Well, the whole discussion we had was about removing them entirely?
+What do you mean "at a time"?
 
-Maxime
+Do we have access to the spec or a register map? We could tell you very
+quickly if it is worth the trouble. But I am pretty sure as well that
+the controller supports more than 1 CS.
 
---bgh5jcvervb4fpgs
-Content-Type: application/pgp-signature; name="signature.asc"
+> Sure , I will do the changes as per your review comments.
+> > 
+> > Thanks,
+> > Miquèl
+> >   
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqfhWAAKCRDj7w1vZxhR
-xXg4AP9QpJm1SeDBHxg+crTVi5icwwj1p96ALN1LEBBdS0vlzgD+IHz1H62cHcBI
-cgbH2BwkU2AT26cxWg6C2u5UtOXswQQ=
-=qFiE
------END PGP SIGNATURE-----
-
---bgh5jcvervb4fpgs--
+Thanks,
+Miquèl
