@@ -2,187 +2,264 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1146C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6D5C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B86F02070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1775E206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:44:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbgD1XkW convert rfc822-to-8bit (ORCPT
+        id S1726399AbgD1Xo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 19:40:22 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21630 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726042AbgD1XkV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 19:40:21 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03SNWmNr059304;
-        Tue, 28 Apr 2020 19:40:05 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhr7e0e7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 19:40:05 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03SNZdDf067260;
-        Tue, 28 Apr 2020 19:40:04 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhr7e0dm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 19:40:04 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03SNPQVZ019738;
-        Tue, 28 Apr 2020 23:40:02 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 30mcu6y6c9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 23:40:02 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03SNdwjx64815162
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 23:39:58 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C884AA405F;
-        Tue, 28 Apr 2020 23:39:58 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F123BA405C;
-        Tue, 28 Apr 2020 23:39:57 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.145.4.15])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 28 Apr 2020 23:39:57 +0000 (GMT)
-Date:   Wed, 29 Apr 2020 01:39:55 +0200
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>, linux-next@vger.kernel.org,
-        akpm@linux-foundation.org, jack@suse.cz, kirill@shutemov.name,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
-        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
-        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, Will Deacon <will@kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>, pasic@linux.ibm.com
-Subject: Re: [PATCH v4 2/2] mm/gup/writeback: add callbacks for inaccessible
- pages
-Message-ID: <20200429013955.2b59bd99@p-imbrenda>
-In-Reply-To: <42fccd01-7e16-b18f-cd81-4040857d80d4@intel.com>
-References: <20200306132537.783769-1-imbrenda@linux.ibm.com>
-        <20200306132537.783769-3-imbrenda@linux.ibm.com>
-        <3ae46945-0c7b-03cd-700a-a6fe8003c6ab@intel.com>
-        <20200415221754.GM2483@worktop.programming.kicks-ass.net>
-        <a7c2eb84-94c2-a608-4b04-a740fa9a389d@intel.com>
-        <20200416141547.29be5ea0@p-imbrenda>
-        <de56aa8e-9035-4b68-33cb-15682d073e26@intel.com>
-        <20200416165900.68bd4dba@p-imbrenda>
-        <a6b8728d-7382-9316-412d-dd48b5e7c41a@intel.com>
-        <20200416183431.7216e1d1@p-imbrenda>
-        <396a4ece-ec66-d023-2c7e-f09f84b358bc@intel.com>
-        <cbaddd28-c5d3-61a2-84d8-c883fb3d6290@intel.com>
-        <42fccd01-7e16-b18f-cd81-4040857d80d4@intel.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 28 Apr 2020 19:44:57 -0400
+Received: from mga06.intel.com ([134.134.136.31]:36987 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726181AbgD1Xo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 19:44:56 -0400
+IronPort-SDR: Wr+xiKDxQqVMpBrXZCZpKtt11hshxAjedNatRXmKVWu1cr+hGADfxUvqaEV69CXuMAbKhp4SYP
+ qtEwjSpLkNHA==
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 16:44:52 -0700
+IronPort-SDR: wutMJpQIpb6uLrUfi+5bua/4gqXny3OymUk0ceSPJGnN/8jp5Sp9mLz1cQfXX6PsUi43brOipL
+ ydSOisQP0p5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
+   d="gz'50?scan'50,208,50";a="404859765"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 28 Apr 2020 16:44:49 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jTZuD-0006UN-7G; Wed, 29 Apr 2020 07:44:49 +0800
+Date:   Wed, 29 Apr 2020 07:44:42 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Prasad Sodagudi <psodagud@codeaurora.org>, tglx@linutronix.de,
+        john.stultz@linaro.org, sboyd@kernel.org, tj@kernel.org
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        saravanak@google.com, psodagud@codeaurora.org,
+        pkondeti@codeaurora.org, Joonwoo Park <joonwoop@codeaurora.org>
+Subject: Re: [PATCH v2 1/2] timer: make deferrable cpu unbound timers really
+ not bound to a cpu
+Message-ID: <202004290721.QmYKQWvM%lkp@intel.com>
+References: <1588104579-8712-2-git-send-email-psodagud@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-28_15:2020-04-28,2020-04-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 spamscore=0 mlxscore=0 suspectscore=0 clxscore=1015
- priorityscore=1501 adultscore=0 phishscore=0 mlxlogscore=999
- impostorscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2004280177
+Content-Type: multipart/mixed; boundary="IJpNTDwzlM2Ie8A6"
+Content-Disposition: inline
+In-Reply-To: <1588104579-8712-2-git-send-email-psodagud@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 12:43:45 -0700
-Dave Hansen <dave.hansen@intel.com> wrote:
 
-> On 4/21/20 2:31 PM, Dave Hansen wrote:
-> > On 4/16/20 12:02 PM, Dave Hansen wrote:  
-> >> On 4/16/20 9:34 AM, Claudio Imbrenda wrote:  
-> >>>> Ahh, so this is *just* intended to precede I/O done on the page,
-> >>>> when a non-host entity is touching the memory?  
-> >>> yep  
-> >> OK, so we've got to do an action that precedes *all* I/O to a page.
-> >> That's not too bad.
-> >>
-> >> I still don't understand how this could work generally, though
-> >> There are lots of places where I/O is done to a page without
-> >> either going through __test_set_page_writeback() or gup() with
-> >> FOLL_PIN set.
-> >>
-> >> sendfile() is probably the best example of this:
-> >>
-> >> 	fd = open("/normal/ext4/file", O_RDONLY);
-> >> 	sendfile(socket_fd, fd, &off, count);
-> >>
-> >> There's no gup in sight since the file doesn't have an address and
-> >> it's not being written to so there's no writeback.
-> >>
-> >> How does sendfile work?  
-> > 
-> > Did you manage to see if sendfile works (or any other operation that
-> > DMAs file-backed data without being preceded by a gup)?  
-> 
-> It's been a couple of weeks with no response on this.
+--IJpNTDwzlM2Ie8A6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-sorry, I've been busy with things
+Hi Prasad,
 
-> From where I'm standing, we have a hook in the core VM that can't
-> possibly work with some existing kernel functionality and has
-> virtually no chance of getting used on a second architecture.
+Thank you for the patch! Yet something to improve:
 
-it seems to work at least for us, so it does possibly work :)
+[auto build test ERROR on tip/timers/core]
+[also build test ERROR on tip/auto-latest tip/timers/nohz v5.7-rc3 next-20200428]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-regarding second architectures: when we started sending these patches
-around, there has been interest from some other architectures, so
-just because nobody else needs them now, it doesn't mean nobody will
-use them ever. Moreover this is the only way for us to reasonably
-implement this (see below).
+url:    https://github.com/0day-ci/linux/commits/Prasad-Sodagudi/timer-make-deferrable-cpu-unbound-timers-really-not-bound-to-a-cpu/20200429-060558
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git 4479730e9263befbb9ce9563a09563db2acb8f7c
+config: i386-tinyconfig (attached as .config)
+compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
+reproduce:
+        # save the attached .config to linux build tree
+        make ARCH=i386 
 
-> It sounds like there may need to be some additional work here, but
-> should these hooks stay in for 5.7?  Or, should we revert this patch
-> and try again for 5.8?
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kbuild test robot <lkp@intel.com>
 
-I don't see why we should revert a patch that works as intended and
-poses no overhead for non-users, whereas reverting it would break
-functionality.
+All errors (new ones prefixed by >>):
 
+   kernel/time/timer.c: In function 'run_timer_softirq':
+>> kernel/time/timer.c:1804:18: error: 'timer_base_deferrable' undeclared (first use in this function); did you mean 'timer_base_lock_expiry'?
+       __run_timers(&timer_base_deferrable);
+                     ^~~~~~~~~~~~~~~~~~~~~
+                     timer_base_lock_expiry
+   kernel/time/timer.c:1804:18: note: each undeclared identifier is reported only once for each function it appears in
+   kernel/time/timer.c: In function 'init_timer_deferrable_global':
+   kernel/time/timer.c:2046:2: error: 'timer_base_deferrable' undeclared (first use in this function); did you mean 'timer_base_lock_expiry'?
+     timer_base_deferrable.cpu = nr_cpu_ids;
+     ^~~~~~~~~~~~~~~~~~~~~
+     timer_base_lock_expiry
 
-Now let me elaborate a little on the DMA API. There are some issues
-with some of the bus types used on s390 when it comes to the DMA API.
-Most I/O instructions on s390 need to allocate some small control blocks
-for each operation, and those need to be under 2GB. Those control blocks
-will be accessed directly by the hardware. The rest of the actual I/O
-buffers have no restriction and can be anywhere (64 bits). 
-Setting the DMA mask to 2GB means that all other buffers will be
-almost always bounced, which is unacceptable. Especially since there are
-no bounce buffers set up for s390x hosts anyway (they are set up only in
-protected guests (and not in normal guests), so this was also introduced
-quite recently).
+vim +1804 kernel/time/timer.c
 
-Also notice that, until now, there has been no actual need to use the
-DMA API on most s390 device drivers, hence why it's not being used
-there. I know that you are used to need the DMA API for DMA operations
-otherwise Bad Things™ happen, but this is not the case on s390 (for
-non-PCI devices at least).
+  1791	
+  1792	/*
+  1793	 * This function runs timers and the timer-tq in bottom half context.
+  1794	 */
+  1795	static __latent_entropy void run_timer_softirq(struct softirq_action *h)
+  1796	{
+  1797		struct timer_base *base = this_cpu_ptr(&timer_bases[BASE_STD]);
+  1798	
+  1799		__run_timers(base);
+  1800		if (IS_ENABLED(CONFIG_NO_HZ_COMMON)) {
+  1801			__run_timers(this_cpu_ptr(&timer_bases[BASE_DEF]));
+  1802			if (tick_do_timer_cpu == TICK_DO_TIMER_NONE ||
+  1803					tick_do_timer_cpu == smp_processor_id())
+> 1804				__run_timers(&timer_base_deferrable);
+  1805		}
+  1806	}
+  1807	
 
-So until the DMA API is fixed, there is no way to convert all the
-drivers to the DMA API (which would be quite a lot of work in itself
-already, but that's not the point here). A fix for the DMA API was
-actually proposed by my colleague Halil several months ago now, but it
-did not go through. His proposal was to allow architectures to override
-the GFP flags for DMA allocations, to allow allocating some buffers
-from some areas and some other buffers from other areas.
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
+--IJpNTDwzlM2Ie8A6
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
 
-I hope this clarifies the matter a little :)
+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
+AAA=
 
+--IJpNTDwzlM2Ie8A6--
