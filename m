@@ -2,161 +2,94 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DA6C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A126C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF88120757
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A46620757
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:52:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sst10ryG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbgD1Rvz (ORCPT
+        id S1728668AbgD1RwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 13:51:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37654 "EHLO
+        Tue, 28 Apr 2020 13:52:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728634AbgD1Rvx (ORCPT
+        with ESMTP id S1728645AbgD1Rvy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 13:51:53 -0400
-Received: from smtp-8fa9.mail.infomaniak.ch (smtp-8fa9.mail.infomaniak.ch [IPv6:2001:1600:3:17::8fa9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93E8CC03C1AB
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 10:51:52 -0700 (PDT)
-Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
-        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49BTjg0nNrzlh9H6;
-        Tue, 28 Apr 2020 19:51:51 +0200 (CEST)
-Received: from localhost (unknown [94.23.54.103])
-        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 49BTjf4fKVzmCTtP;
-        Tue, 28 Apr 2020 19:51:50 +0200 (CEST)
-From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?q?Philippe=20Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH v3 5/5] doc: Add documentation for the fs.open_mayexec_enforce sysctl
-Date:   Tue, 28 Apr 2020 19:51:29 +0200
-Message-Id: <20200428175129.634352-6-mic@digikod.net>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428175129.634352-1-mic@digikod.net>
-References: <20200428175129.634352-1-mic@digikod.net>
+        Tue, 28 Apr 2020 13:51:54 -0400
+Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9B39C03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 10:51:53 -0700 (PDT)
+Received: by mail-qk1-x72d.google.com with SMTP id t3so22744401qkg.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 10:51:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=flDFVuexqKoyIqkmAWtBDr+M8tCMbLOHhMvcareArt8=;
+        b=Sst10ryGsYNx9uSgpIPgN5eKD6112WZEwMK3FVoPrZxMBm+yVd54Ezt9p4QkdA5WTq
+         pjqAZDhOdlwepcC952DBl1bOO61iNKkxMnwvv0HIh8PJNNrIgdHOwZlWWsFNKknE71t2
+         V004LRFArnHZ9sZQEjx1vRSj/ra3S5IsAtdcBWYUATVlUeVMR+7z+rqrJE7XsbWCqWEn
+         XAMyfs+DbxSZdjnnPVe2Wr1hEbuxkSOFvE8VKDDUIkVCcX4em5uXJOao/nlXTB7FaJCO
+         1GgEr5AI/ysU7vzHNUAO+3Y6lkTv4co1WOjPzUSRGO/VSFV8NvuahG06P7ZfVq1U2mMZ
+         dS5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=flDFVuexqKoyIqkmAWtBDr+M8tCMbLOHhMvcareArt8=;
+        b=FR8IStFul4tzKPtgqKIbrkwD6i5o9iVArAndMzfb3ua80KJjzu8O6AeCX1kRqQhnNw
+         RYtzBExPBTE7m1caN7PXEN6D2BLYBCxB5A7CBlNOnQNr/w4zxQK6GoZTeAS2H5Pax0q1
+         5PrDBMkFw2FyQFpebhZKiHwtHi1iYndfPmokdh05qTCTBze3ciGXTh7RLM2nzWeJ5iky
+         IYitguFtqYrcKMmjHBuL6bMyO7iyPikamzxy2cY3ufVgqVeXrLpAGwMeA/N+ZQzQ/9QG
+         fDod+mM79XiiNQjn9ezvfqaDqjXYrKK4Y4LzAeoDsZ6q/vx3U8rxVFZ06Txut6aoLGKp
+         UJyA==
+X-Gm-Message-State: AGi0Pub/Gy6Ww8nZbG5Igp+3/4o2M8vjlemuLbmCQWa0ZEmdmWe2F2o5
+        gjge03CION16YnhLrjMcS0U=
+X-Google-Smtp-Source: APiQypJVTFmK3Q1h8uVbuLnnE8k6c+ojs/8anEXhpDX4oUm4rLN2JjDrbG0r0N0AL7L6xe7EhYRRmQ==
+X-Received: by 2002:a37:387:: with SMTP id 129mr28891382qkd.147.1588096312867;
+        Tue, 28 Apr 2020 10:51:52 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id v2sm14906214qth.66.2020.04.28.10.51.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 10:51:51 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id E7B99409A3; Tue, 28 Apr 2020 14:51:49 -0300 (-03)
+Date:   Tue, 28 Apr 2020 14:51:49 -0300
+To:     Zou Wei <zou_wei@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] perf report: fix warning Comparison of 0/1 to bool
+ variable
+Message-ID: <20200428175149.GE5460@kernel.org>
+References: <1587904683-3510-1-git-send-email-zou_wei@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587904683-3510-1-git-send-email-zou_wei@huawei.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Reviewed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
-Cc: Aleksa Sarai <cyphar@cyphar.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Kees Cook <keescook@chromium.org>
----
+Em Sun, Apr 26, 2020 at 08:38:03PM +0800, Zou Wei escreveu:
+> Fixes coccicheck warning:
+> 
+> tools/perf/builtin-report.c:1403:2-34: WARNING: Assignment of 0/1 to bool variable
 
-Changes since v2:
-* Update documentation with the new RESOLVE_MAYEXEC.
-* Improve explanations, including concerns about LD_PRELOAD.
 
-Changes since v1:
-* Move from LSM/Yama to sysctl/fs .
----
- Documentation/admin-guide/sysctl/fs.rst | 43 +++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+Fixed the subject line to have "assignment", not "comparison",
 
-diff --git a/Documentation/admin-guide/sysctl/fs.rst b/Documentation/admin-guide/sysctl/fs.rst
-index 2a45119e3331..1ed65a38d5fb 100644
---- a/Documentation/admin-guide/sysctl/fs.rst
-+++ b/Documentation/admin-guide/sysctl/fs.rst
-@@ -37,6 +37,7 @@ Currently, these files are in /proc/sys/fs:
- - inode-nr
- - inode-state
- - nr_open
-+- open_mayexec_enforce
- - overflowuid
- - overflowgid
- - pipe-user-pages-hard
-@@ -165,6 +166,48 @@ system needs to prune the inode list instead of allocating
- more.
- 
- 
-+open_mayexec_enforce
-+--------------------
-+
-+The ``RESOLVE_MAYEXEC`` flag can be passed to :manpage:`openat2(2)` to only
-+open regular files that are expected to be executable.  If the file is not
-+identified as executable, then the syscall returns -EACCES.  This may allow a
-+script interpreter to check executable permission before reading commands from
-+a file.  One interesting use case is to enforce a "write xor execute" policy
-+through interpreters.
-+
-+The ability to restrict code execution must be thought as a system-wide policy,
-+which first starts by restricting mount points with the ``noexec`` option.
-+This option is also automatically applied to special filesystems such as /proc
-+.  This prevents files on such mount points to be directly executed by the
-+kernel or mapped as executable memory (e.g. libraries).  With script
-+interpreters using the ``RESOLVE_MAYEXEC`` flag, the executable permission can
-+then be checked before reading commands from files. This makes it possible to
-+enforce the ``noexec`` at the interpreter level, and thus propagates this
-+security policy to scripts.  To be fully effective, these interpreters also
-+need to handle the other ways to execute code: command line parameters (e.g.,
-+option ``-e`` for Perl), module loading (e.g., option ``-m`` for Python),
-+stdin, file sourcing, environment variables, configuration files, etc.
-+According to the threat model, it may be acceptable to allow some script
-+interpreters (e.g. Bash) to interpret commands from stdin, may it be a TTY or a
-+pipe, because it may not be enough to (directly) perform syscalls.
-+
-+There are two complementary security policies: enforce the ``noexec`` mount
-+option, and enforce executable file permission.  These policies are handled by
-+the ``fs.open_mayexec_enforce`` sysctl (writable only with ``CAP_MAC_ADMIN``)
-+as a bitmask:
-+
-+1 - Mount restriction: checks that the mount options for the underlying VFS
-+    mount do not prevent execution.
-+
-+2 - File permission restriction: checks that the to-be-opened file is marked as
-+    executable for the current process (e.g., POSIX permissions).
-+
-+Code samples can be found in tools/testing/selftests/openat2/omayexec_test.c
-+and (with the original ``O_MAYEXEC``) at
-+https://github.com/clipos-archive/clipos4_portage-overlay/search?q=O_MAYEXEC .
-+
-+
- overflowgid & overflowuid
- -------------------------
- 
--- 
-2.26.2
+Thanks, applied,
 
+- Arnaldo
