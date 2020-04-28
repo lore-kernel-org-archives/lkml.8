@@ -2,94 +2,98 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45837C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5630BC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F9F12053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30EB7206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:16:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GfSBfNQI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ufQlri23"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbgD1EQV (ORCPT
+        id S1726355AbgD1EQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 00:16:21 -0400
-Received: from ozlabs.org ([203.11.71.1]:33639 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725275AbgD1EQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 00:16:21 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49B7cf4DmSz9sSG;
-        Tue, 28 Apr 2020 14:16:18 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588047379;
-        bh=v0Bu0KndZcFQ+fPMjS/3UyOAN/p29pT9GlM62F1RfXA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=GfSBfNQIBKJUSU0XOTjv8/AGbiNc2R184+xLXnqW/A8i2NVGgCe2THmqXTiQX8eYg
-         XXBkUDp+jyFI7EzLLXgc+X5Jom2MJ96420LCTU0pc+ty553qlyZLNPZQNPk3RsLUTS
-         iOEwFPFTLN8icN2dehYchwzypj9KOlP6CfCRDtH7dHiIvitbytvwbGESg7zvucc5+h
-         FZFZLarswNCN0RsbZzT6bWwSqTREyq28Gm7O4OgikFa/p/hOlM0aEfDPrn79/Lx2wo
-         c4xmiT5dhi9Glsj8Z+gzTIlgX5hhB8SSx/zC3fntCD1pHj04Wy3YQjQxUmKhcQFehh
-         lL9F3vQrGk47Q==
-Date:   Tue, 28 Apr 2020 14:16:11 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sanjay R Mehta <sanju.mehta@amd.com>
-Subject: linux-next: build warning after merge of the spi tree
-Message-ID: <20200428141611.0ed0969a@canb.auug.org.au>
+        Tue, 28 Apr 2020 00:16:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbgD1EQl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 00:16:41 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6ABDC03C1AC
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 21:16:41 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id c21so7018042plz.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 21:16:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zcgS21itL78D0fddZORH8FPW/WTSqwnt4JvHvdMFx7M=;
+        b=ufQlri23Hn5ru/QSTcDsigIaefd5C8Jo5G5DkNvJRr4nSLBva7mhaxr6KHKCH3qeTx
+         /Bc79XJKqxu+ihH4ya/wTgZdOnZywUMQ1JP7qtjss5SWsvyAH7Su9xWwd49NLWmbd4hS
+         5qxZMnb5z7V+twQp5imipUmU2MwThi/RgGG4LLd33jcXNPiI3vy1tgAjd6etrFwyYWwF
+         P/AKKwj6SjqwCUMWQctIla27pnCn3KxHWUkk7i8YF/UbPyEBHrHtiKng33yKzHJuHywy
+         nb3BfPt+Z520YNe/axeSo8pf1paBOXEafEZqqdtGssUlVesX3uOgJ+u4mn66VmcGpgHA
+         pJfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zcgS21itL78D0fddZORH8FPW/WTSqwnt4JvHvdMFx7M=;
+        b=mdH8qk7zfEYNfXMS7gUWJgpdzQRFnW55Aub1KTtG4/nD4ymaiYYR+51sFPv29Vcsl0
+         qjgw7nG1hBm43/dgSnWY0cOxn0x3aZjEdgwc9WcIA9TRD2CWhSYXS3g5WkkP1L7tUE89
+         /MekYy94oNdDQccap8hecYgwBJN/eJCfQw6xlmCTMXblM+wqbCeTwSf2z+t6PGAauwPF
+         UYHB9+zRZ7V8BjE//7VEBFgsWeBo9xyapT6g0c64mqRMoKEaKNsYJeRTqXYtuxY3UsDb
+         oyqEEaNqGrO9+TZ+T0tkNq25tQuA3VWv3gDjRhch3G1RdP00HhC5rOct6Bc2rKk/w3zE
+         yerw==
+X-Gm-Message-State: AGi0Pub4DIwtSm1mSoHEPyLtf13HuSrq+7gFMBPq38YUj80J4bMtAt85
+        rkSqMCNyYwq6ce6FzW5CO/ZxWQ==
+X-Google-Smtp-Source: APiQypLHi61r4xiv8wVJwGtp90je7+VC7t1lXTr4tVyxSHVN84FrrQP9s5jjTw2j/zSh39NDp6sR0A==
+X-Received: by 2002:a17:90a:690b:: with SMTP id r11mr2630271pjj.119.1588047401459;
+        Mon, 27 Apr 2020 21:16:41 -0700 (PDT)
+Received: from localhost ([122.171.118.46])
+        by smtp.gmail.com with ESMTPSA id f30sm752667pje.29.2020.04.27.21.16.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 Apr 2020 21:16:40 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 09:46:36 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc:     Peng Fan <peng.fan@nxp.com>, kernelci@groups.io,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: next/master bisection: baseline.dmesg.alert on imx8mn-ddr4-evk
+Message-ID: <20200428041636.loakok7yfqg3hcsl@vireshk-i7>
+References: <5ea44ff8.1c69fb81.f246c.d02d@mx.google.com>
+ <8af4842d-d576-fd6f-ac6b-2ef3482742b7@collabora.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/9cBb235RP2ZfB53wD7Noz+G";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8af4842d-d576-fd6f-ac6b-2ef3482742b7@collabora.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/9cBb235RP2ZfB53wD7Noz+G
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 27-04-20, 14:00, Guillaume Tucker wrote:
+> Please see the bisection report below about a boot failure.
+> 
+> Reports aren't automatically sent to the public while we're
+> trialing new bisection features on kernelci.org but this one
+> looks valid.
 
-Hi all,
+@Peng: I have dropped your patch now, please resend it once you have
+fixed the issue.
 
-After merging the spi tree, today's linux-next build (x86_64 allmodconfig)
-produced this warning:
-
-drivers/spi/spi-amd.c: In function 'amd_spi_fifo_xfer':
-drivers/spi/spi-amd.c:171:17: warning: unused variable 'opcode' [-Wunused-v=
-ariable]
-  171 |  u8 cmd_opcode, opcode =3D 0;
-      |                 ^~~~~~
-
-Introduced by commit
-
-  bbb336f39efc ("spi: spi-amd: Add AMD SPI controller driver support")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/9cBb235RP2ZfB53wD7Noz+G
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6nrgsACgkQAVBC80lX
-0Gxvowf/fwcYOfEIAp1CyEccBt8rhaolwsGHyLL0Yo7iHRSLCZfYoiOuryHU6+f5
-5D7Wdxfr8EkBUvXpmRoz4iTnWl3wmPdU8zar2ZPV7ioAUO7Jvf5R0UqpE/tQAQLP
-1/m52GutYFjsLaybz/a58mIFuT8zpTOaXfisQ2Ynpt3MGVZj5g+W7pTj++IwZlmh
-R0uCHpekqUEqb3b3xpbGfzsq/awc2Qjsm+xqO9QC1QL4G2F0wHh0hv+EINcMIwp/
-kjY8j7MHhnTX55GOj25rQaxR0YSWilrr6zQ0D5SDd7nc12gR4NnnemApJB6YyIrO
-4ASih7NXr6H1iVjk9FZF9j8S2XDI4A==
-=zbff
------END PGP SIGNATURE-----
-
---Sig_/9cBb235RP2ZfB53wD7Noz+G--
+-- 
+viresh
