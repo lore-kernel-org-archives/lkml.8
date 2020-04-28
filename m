@@ -2,356 +2,124 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D74C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B13F1C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5797A20B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:57:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="afIAYw1m"
+	by mail.kernel.org (Postfix) with ESMTP id 8CEAF206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:58:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588089496;
+	bh=9TW1ekAy/plmUmvDsp58sZbU5BRtwtBDznTog9YdzDs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=USyS4N47BEa2DQnmNkodT6vsScuhAoPN499Kbtqe/eHHXWIWrcZGptFIEJHxImcjC
+	 DAeDTZ/gulIbqufjtzQentxvD1WxpIFeZ7zexjeCul+Rkul3E5w1Jn1bph6jjmpD9O
+	 NpYsmlzXr0aTqXBCBlhoKr8YIIlpzimVWdoWpn50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbgD1P5b (ORCPT
+        id S1728292AbgD1P6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:57:31 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:28190 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727775AbgD1P5a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:57:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588089448;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zmAFNdPPInB0BNzlaWvdz5SJ4OD4Dhy3h9PKZjQlFsU=;
-        b=afIAYw1mdPTZBlUasheE+ZqiqVvHVn0KcGS+kNAYrgnonOJt8I6wKQ87KP1dKdwnEUJwJj
-        Rld59b9IzgD8j1uzYdzg5unkLC9U3OzQIiEciF7UUfNXl5Hy/O9mmZA29upWvb1tO7Yl4R
-        NvdagbLnme0caugyAu2J3Rz11ETK15E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-244-4UNeYxB9OJ2aNzU6u98fVg-1; Tue, 28 Apr 2020 11:57:20 -0400
-X-MC-Unique: 4UNeYxB9OJ2aNzU6u98fVg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 28 Apr 2020 11:58:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54488 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728225AbgD1P6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:58:15 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6E60346B;
-        Tue, 28 Apr 2020 15:57:19 +0000 (UTC)
-Received: from localhost (ovpn-115-22.ams2.redhat.com [10.36.115.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D16025C1D4;
-        Tue, 28 Apr 2020 15:57:16 +0000 (UTC)
-Date:   Tue, 28 Apr 2020 16:57:15 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, linux-block@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, Stefano Garzarella <sgarzare@redhat.com>,
-        Lance Digby <ldigby@redhat.com>
-Subject: Re: [PATCH v2] virtio-blk: handle block_device_operations callbacks
- after hot unplug
-Message-ID: <20200428155715.GA109767@stefanha-x1.localdomain>
-References: <20200428143009.107645-1-stefanha@redhat.com>
- <20200428110515-mutt-send-email-mst@kernel.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E97F20661;
+        Tue, 28 Apr 2020 15:58:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588089494;
+        bh=9TW1ekAy/plmUmvDsp58sZbU5BRtwtBDznTog9YdzDs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vggH6IunjsexihMHuZ1LkEoFGXuw/IsSxeF2VISAqmeWQP8cRjRMT7X2QWbDImWmx
+         OkPGHCXNhAH5LR5or/+ahqXHmRVJV5D9ITw0a745tCajzLCI147NRzZ6E9/fKW6Ldi
+         W1x0zIwY+AggNwLUsuJzGxqokq3OUMBXC0Ow9y10=
+Date:   Tue, 28 Apr 2020 16:58:12 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H . J . Lu " <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v10 00/13] arm64: Branch Target Identification support
+Message-ID: <20200428155808.GJ5677@sirena.org.uk>
+References: <20200316165055.31179-1-broonie@kernel.org>
+ <20200422154436.GJ4898@sirena.org.uk>
+ <20200422162954.GF3585@gaia>
+ <20200428132804.GF6791@willie-the-truck>
+ <20200428151205.GH5677@sirena.org.uk>
+ <20200428151815.GB12697@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <20200428110515-mutt-send-email-mst@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="y0ulUmNC+osPPQO6"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="GvznHscUikHnwW2p"
 Content-Disposition: inline
+In-Reply-To: <20200428151815.GB12697@willie-the-truck>
+X-Cookie: Eschew obfuscation.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---y0ulUmNC+osPPQO6
+
+--GvznHscUikHnwW2p
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 28, 2020 at 11:25:07AM -0400, Michael S. Tsirkin wrote:
-> On Tue, Apr 28, 2020 at 03:30:09PM +0100, Stefan Hajnoczi wrote:
-> > A userspace process holding a file descriptor to a virtio_blk device ca=
-n
-> > still invoke block_device_operations after hot unplug.  For example, a
-> > program that has /dev/vdb open can call ioctl(HDIO_GETGEO) after hot
-> > unplug to invoke virtblk_getgeo().
->=20
->=20
-> which causes what? a use after free?
+On Tue, Apr 28, 2020 at 04:18:16PM +0100, Will Deacon wrote:
+> On Tue, Apr 28, 2020 at 04:12:05PM +0100, Mark Brown wrote:
 
-Yes, use after free.  I will include the kernel panic in the next
-revision.
+> > It's probably easier for me if you just use the existing branch, I've
+> > already got a branch based on a merge down.
 
-virtio_check_driver_offered_feature() accesses vdev->dev.driver, which
-doesn't work after virtblk_remove() has freed vdev :).
+> Okey doke, I'll funnel that in the direction of linux-next then. It does
+> mean that any subsequent patches for 5.8 that depend on BTI will need to
+> be based on this branch, so as long as you're ok with that then it's fine
+> by me (since I won't be able to apply patches if they refer to changes
+> introduced in the recent merge window).
 
-> >=20
-> > Introduce a reference count in struct virtio_blk so that its lifetime
-> > covers both virtio_driver probe/remove and block_device_operations
-> > open/release users.  This ensures that block_device_operations function=
-s
-> > like virtblk_getgeo() can safely access struct virtio_blk.
-> >=20
-> > Add remove_mutex to prevent block_device_operations functions from
-> > accessing vblk->vdev during virtblk_remove() and let the safely check
->=20
-> let the -> let them?
+That's not a problem, that's what I've got already and if I try to send
+everything based off -rc3 directly the series would get unmanagably
+large.  Actually unless you think it's a bad idea I think what I'll do
+is go and send out a couple of the preparatory changes (the insn updates
+and the last bit of annotation conversions) separately for that branch
+while I finalize the revisions of the main BTI kernel bit, hopefully
+that'll make the review a bit more approachable.
 
-Thanks, will fix.
-
->=20
-> > for !vblk->vdev after virtblk_remove() returns.
-> >=20
-> > Switching to a reference count also solves the vd_index_ida leak where
-> > vda, vdb, vdc, etc indices were lost when the device was hot unplugged
-> > while the block device was still open.
->=20
-> Can you move this statement up so we list both issues (use after free
-> and leak) upfront, then discuss the fix?
-
-Thanks, will fix.
-
->=20
-> >=20
-> > Reported-by: Lance Digby <ldigby@redhat.com>
-> > Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
-> > ---
-> > If someone has a simpler solution please let me know.  I looked at
-> > various approaches including reusing device_lock(&vblk->vdev.dev) but
-> > they were more complex and extending the lifetime of virtio_device afte=
-r
-> > remove() has been called seems questionable.
-> > ---
-> >  drivers/block/virtio_blk.c | 85 ++++++++++++++++++++++++++++++++++----
-> >  1 file changed, 77 insertions(+), 8 deletions(-)
-> >=20
-> > diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-> > index 93468b7c6701..3dd53b445cc1 100644
-> > --- a/drivers/block/virtio_blk.c
-> > +++ b/drivers/block/virtio_blk.c
-> > @@ -44,6 +44,13 @@ struct virtio_blk {
-> >  =09/* Process context for config space updates */
-> >  =09struct work_struct config_work;
-> > =20
-> > +=09/*
-> > +=09 * Tracks references from block_device_operations open/release and
-> > +=09 * virtio_driver probe/remove so this object can be freed once no
-> > +=09 * longer in use.
-> > +=09 */
-> > +=09refcount_t refs;
-> > +
-> >  =09/* What host tells us, plus 2 for header & tailer. */
-> >  =09unsigned int sg_elems;
-> > =20
-> > @@ -53,6 +60,9 @@ struct virtio_blk {
-> >  =09/* num of vqs */
-> >  =09int num_vqs;
-> >  =09struct virtio_blk_vq *vqs;
-> > +
-> > +=09/* Provides mutual exclusion with virtblk_remove(). */
->=20
-> This is not the best way to document access rules.
-> Which fields does this protect, exactly?
-> I think it's just vdev. Right?
-> Pls add to the comment.
-
-Yes, vblk->vdev cannot be dereferenced after virtblk_remove() is
-entered.
-
-I'll document this mutex as protecting vdev.
-
->=20
-> > +=09struct mutex remove_mutex;
-> >  };
-> > =20
-> >  struct virtblk_req {
-> > @@ -295,10 +305,54 @@ static int virtblk_get_id(struct gendisk *disk, c=
-har *id_str)
-> >  =09return err;
-> >  }
-> > =20
-> > +static void virtblk_get(struct virtio_blk *vblk)
-> > +{
-> > +=09refcount_inc(&vblk->refs);
-> > +}
-> > +
-> > +static void virtblk_put(struct virtio_blk *vblk)
-> > +{
-> > +=09if (refcount_dec_and_test(&vblk->refs)) {
-> > +=09=09ida_simple_remove(&vd_index_ida, vblk->index);
-> > +=09=09mutex_destroy(&vblk->remove_mutex);
-> > +=09=09kfree(vblk);
-> > +=09}
-> > +}
-> > +
-> > +static int virtblk_open(struct block_device *bd, fmode_t mode)
-> > +{
-> > +=09struct virtio_blk *vblk =3D bd->bd_disk->private_data;
-> > +=09int ret =3D -ENXIO;
->=20
->=20
-> It's more common to do
->=20
-> =09int ret =3D 0;
->=20
-> and on error:
-> =09ret =3D -ENXIO;
->=20
->=20
-> let's do this.
-
-Will fix.
-
-> > +
-> > +=09mutex_lock(&vblk->remove_mutex);
-> > +
-> > +=09if (vblk->vdev) {
-> > +=09=09virtblk_get(vblk);
-> > +=09=09ret =3D 0;
-> > +=09}
->=20
-> I prefer
-> =09else
-> =09=09ret =3D -ENXIO
->=20
-> here.
-
-Got it.
-
-> > +
-> > +=09mutex_unlock(&vblk->remove_mutex);
-> > +=09return ret;
-> > +}
-> > +
-> > +static void virtblk_release(struct gendisk *disk, fmode_t mode)
-> > +{
-> > +=09struct virtio_blk *vblk =3D disk->private_data;
-> > +
-> > +=09virtblk_put(vblk);
-> > +}
-> > +
-> >  /* We provide getgeo only to please some old bootloader/partitioning t=
-ools */
-> >  static int virtblk_getgeo(struct block_device *bd, struct hd_geometry =
-*geo)
-> >  {
-> >  =09struct virtio_blk *vblk =3D bd->bd_disk->private_data;
-> > +=09int ret =3D -ENXIO;
->=20
-> It's more common to do
->=20
-> =09int ret =3D 0;
->=20
-> and on error:
-> =09ret =3D -ENXIO;
->=20
->=20
-> let's do this.
-
-Will fix.
-
->=20
-> > +
-> > +=09mutex_lock(&vblk->remove_mutex);
-> > +
-> > +=09if (!vblk->vdev) {
-> > +=09=09goto out;
-> > +=09}
->=20
->=20
-> single lines are not supposed to use {}.
-> if you add ret =3D -ENXIO here then it won't be a single line anymore
-> though.
-
-Oops, a QEMU coding style habit :).
-
-> > =20
-> >  =09/* see if the host passed in geometry config */
-> >  =09if (virtio_has_feature(vblk->vdev, VIRTIO_BLK_F_GEOMETRY)) {
-> > @@ -314,11 +368,17 @@ static int virtblk_getgeo(struct block_device *bd=
-, struct hd_geometry *geo)
-> >  =09=09geo->sectors =3D 1 << 5;
-> >  =09=09geo->cylinders =3D get_capacity(bd->bd_disk) >> 11;
-> >  =09}
-> > -=09return 0;
-> > +
-> > +=09ret =3D 0;
-> > +out:
-> > +=09mutex_unlock(&vblk->remove_mutex);
-> > +=09return ret;
-> >  }
-> > =20
-> >  static const struct block_device_operations virtblk_fops =3D {
-> >  =09.owner  =3D THIS_MODULE,
-> > +=09.open =3D virtblk_open,
-> > +=09.release =3D virtblk_release,
-> >  =09.getgeo =3D virtblk_getgeo,
-> >  };
-> > =20
-> > @@ -655,6 +715,10 @@ static int virtblk_probe(struct virtio_device *vde=
-v)
-> >  =09=09goto out_free_index;
-> >  =09}
-> > =20
-> > +=09/* This reference is dropped in virtblk_remove(). */
-> > +=09refcount_set(&vblk->refs, 1);
-> > +=09mutex_init(&vblk->remove_mutex);
-> > +
-> >  =09vblk->vdev =3D vdev;
-> >  =09vblk->sg_elems =3D sg_elems;
-> > =20
-> > @@ -820,8 +884,12 @@ static int virtblk_probe(struct virtio_device *vde=
-v)
-> >  static void virtblk_remove(struct virtio_device *vdev)
-> >  {
-> >  =09struct virtio_blk *vblk =3D vdev->priv;
-> > -=09int index =3D vblk->index;
-> > -=09int refc;
-> > +
-> > +=09/*
-> > +=09 * Virtqueue processing is stopped safely here but mutual exclusion=
- is
-> > +=09 * needed for block_device_operations.
-> > +=09 */
-> > +=09mutex_lock(&vblk->remove_mutex);
-> > =20
-> >  =09/* Make sure no work handler is accessing the device. */
-> >  =09flush_work(&vblk->config_work);
-> > @@ -834,15 +902,16 @@ static void virtblk_remove(struct virtio_device *=
-vdev)
-> >  =09/* Stop all the virtqueues. */
-> >  =09vdev->config->reset(vdev);
-> > =20
-> > -=09refc =3D kref_read(&disk_to_dev(vblk->disk)->kobj.kref);
-> > +=09/* Virtqueue are stopped, nothing can use vblk->vdev anymore. */
->=20
-> Virtqueues?
-
-Thanks, will fix.
-
---y0ulUmNC+osPPQO6
+--GvznHscUikHnwW2p
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl6oUloACgkQnKSrs4Gr
-c8gl5wgAmwDcVKA5AuCFLUZIf/5bBk/mKI+8U3eiiM5F3nJvoGNhnpbCC60paAl9
-WaqppfC+EJXcsrnjpMHOoLa4XYeQqRPoxhttJvaMRdnbtxl2gz/pScVg/nQDCvUs
-PBGrLSVR5LGDo1VIWCm7QhS7zJKbiGkJEooTxSJ9ar1C+bwfcvObYYRBc5DbS+uV
-HG4lz6oTIw00fetjdO8qRWtjwB+4a6Quhlm4tyx9qcFlF5lHN9zaksLcw6igEzKI
-jbgv1/BUhbucBT3mvZHXdgQo7jec5GEv3SX9TNNIWvYYiN6ug3YkHRQWJ4lwQI8t
-nqdlk4AQ6FiJSti1TbB12m6pKfWwUA==
-=Oif3
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6oUo8ACgkQJNaLcl1U
+h9ANJwf/WRlo08Mn6rULa8b3pqa1bQzdRN/zAGUfNf93UHKMH2yvxQZ6GTGie8us
+Kw24VCNz5n7f6AjcO0v+vH6pAJxlD2DHraSawXDaEKZJ2YMnFSryzWFrWJr12klT
+DRRRi3+D2+GBFPflADAl2YaCfEV9D2USZGPG6OB/gkF43dmK1VIAon0ixx8WL7dw
+GtmV9U8DZlC9FrJd7gh9jbJGYiIgZ7hcMR2eyuzH5Z2gW4WPwWOkfd+pc9eBuyNl
+vbBauk5tAYnPssGMtNUG7M9gakg5U1GsRBY7E1QUJ97iMAUqiKN2Z1mharmqU6cs
+sswMEKQMo98MespYoImEM/wHQ5GqJw==
+=KIkv
 -----END PGP SIGNATURE-----
 
---y0ulUmNC+osPPQO6--
-
+--GvznHscUikHnwW2p--
