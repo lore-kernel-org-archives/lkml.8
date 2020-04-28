@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 918BEC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A150C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70E4F206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB9B206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100005;
-	bh=EYt52b9E92ZkXpFxMfyto0IaW2Zy5DKRUYWYXpRHGIQ=;
+	s=default; t=1588100009;
+	bh=fO5FI66FHgg+VlGZoyzKaqaj94B5cozUzaWJZwEdd3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GSKke0Ljc/jXW0hRN+NvE2VK6px8pCigZt3NKpxwwVZuTkzOw5frXWubuB47wSx1W
-	 clFZChptL5mIr9Yo8XsLS+dip85Vh2vMi12sX/LNIOoTwLDPgnD2AgvsVi+3gJgweZ
-	 iSjGNI9RO+682CiTyjdhHauRbIyaiEItL5Za9LtM=
+	b=kPH8IjrpgwVedQg4IE2UAHgr3zGSKC3aY5wT8KCgY24AGTIrr/fcuY5Zm8OrLwwlt
+	 fxm903DGFEi1Ud0v1iYSagn/K9MxGNelKzRqPJglCKAuqAZFhL6wGVL7+xQTPpz5j1
+	 YPiyj5z6zrxWNG2yhLcBZZ87sgO2htXj7/gj+aFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730593AbgD1SxY (ORCPT
+        id S1728679AbgD1SfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:53:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52248 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:35:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728668AbgD1SfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:35:13 -0400
+        id S1729675AbgD1Se6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:34:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A65C20575;
-        Tue, 28 Apr 2020 18:35:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E746D20B80;
+        Tue, 28 Apr 2020 18:34:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098913;
-        bh=EYt52b9E92ZkXpFxMfyto0IaW2Zy5DKRUYWYXpRHGIQ=;
+        s=default; t=1588098898;
+        bh=fO5FI66FHgg+VlGZoyzKaqaj94B5cozUzaWJZwEdd3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UFIOYxm51xLaYNQUSwUleAGGkOd2TeDJH7NRKAzZmx0Q89j5l2xw8nnt6F9VwqD0w
-         BSTv6I1z/ov4irGXlojfqsEzIJP8sfGyu7zSK3SfrIuyyJsXUWHlC/Q+xO548zXR9S
-         qnnBG1wjAUHOJAq80lB9mwsF+VwLRuo1kATw6y64=
+        b=d41LW8Ucw0wCuFFW7L1HI8Zk6LI3g8z/QB7GM/V8dj47w1M/tD1bHs2n0CWpZCcEM
+         ANk3A2vWll+Ft7GDHGGMBTbPGVbnvhhQqtct5luIWlsiiHTXmx2+85RezgxnuyiF9x
+         yoKcH8NoRLVblP0QEc9pgYX6NUIRk6bW7wKBBtLs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 072/131] mlxsw: Fix some IS_ERR() vs NULL bugs
-Date:   Tue, 28 Apr 2020 20:24:44 +0200
-Message-Id: <20200428182233.999492732@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.6 126/167] iwlwifi: mvm: limit maximum queue appropriately
+Date:   Tue, 28 Apr 2020 20:25:02 +0200
+Message-Id: <20200428182241.265898742@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,88 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit c391eb8366ae052d571bb2841f1ccb4d39f3ceb8 ]
+commit e5b72e3bc4763152e24bf4b8333bae21cc526c56 upstream.
 
-The mlxsw_sp_acl_rulei_create() function is supposed to return an error
-pointer from mlxsw_afa_block_create().  The problem is that these
-functions both return NULL instead of error pointers.  Half the callers
-expect NULL and half expect error pointers so it could lead to a NULL
-dereference on failure.
+Due to some hardware issues, queue 31 isn't usable on devices that have
+32 queues (7000, 8000, 9000 families), which is correctly reflected in
+the configuration and TX queue initialization.
 
-This patch changes both of them to return error pointers and changes all
-the callers which checked for NULL to check for IS_ERR() instead.
+However, the firmware API and queue allocation code assumes that there
+are 32 queues, and if something actually attempts to use #31 this leads
+to a NULL-pointer dereference since it's not allocated.
 
-Fixes: 4cda7d8d7098 ("mlxsw: core: Introduce flexible actions support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fix this by limiting to 31 in the IWL_MVM_DQA_MAX_DATA_QUEUE, and also
+add some code to catch this earlier in the future, if the configuration
+changes perhaps.
+
+Cc: stable@vger.kernel.org # v4.9+
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/iwlwifi.20200417100405.98a79be2db6a.I3a4af6b03b87a6bc18db9b1ff9a812f397bee1fc@changeid
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_actions.c |    4 ++--
- drivers/net/ethernet/mellanox/mlxsw/spectrum2_acl_tcam.c    |    4 ++--
- drivers/net/ethernet/mellanox/mlxsw/spectrum_acl.c          |    3 ++-
- drivers/net/ethernet/mellanox/mlxsw/spectrum_mr_tcam.c      |    4 ++--
- 4 files changed, 8 insertions(+), 7 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_actions.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_actions.c
-@@ -316,7 +316,7 @@ struct mlxsw_afa_block *mlxsw_afa_block_
+---
+ drivers/net/wireless/intel/iwlwifi/fw/api/txq.h |    6 +++---
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.c    |    5 +++++
+ 2 files changed, 8 insertions(+), 3 deletions(-)
+
+--- a/drivers/net/wireless/intel/iwlwifi/fw/api/txq.h
++++ b/drivers/net/wireless/intel/iwlwifi/fw/api/txq.h
+@@ -8,7 +8,7 @@
+  * Copyright(c) 2007 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
+  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
+- * Copyright(c) 2019 Intel Corporation
++ * Copyright(c) 2019 - 2020 Intel Corporation
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of version 2 of the GNU General Public License as
+@@ -31,7 +31,7 @@
+  * Copyright(c) 2005 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
+  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
+- * Copyright(c) 2019 Intel Corporation
++ * Copyright(c) 2019 - 2020 Intel Corporation
+  * All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+@@ -99,7 +99,7 @@ enum iwl_mvm_dqa_txq {
+ 	IWL_MVM_DQA_MAX_MGMT_QUEUE = 8,
+ 	IWL_MVM_DQA_AP_PROBE_RESP_QUEUE = 9,
+ 	IWL_MVM_DQA_MIN_DATA_QUEUE = 10,
+-	IWL_MVM_DQA_MAX_DATA_QUEUE = 31,
++	IWL_MVM_DQA_MAX_DATA_QUEUE = 30,
+ };
  
- 	block = kzalloc(sizeof(*block), GFP_KERNEL);
- 	if (!block)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 	INIT_LIST_HEAD(&block->resource_list);
- 	block->afa = mlxsw_afa;
+ enum iwl_mvm_tx_fifo {
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
+@@ -722,6 +722,11 @@ static int iwl_mvm_find_free_queue(struc
  
-@@ -344,7 +344,7 @@ err_second_set_create:
- 	mlxsw_afa_set_destroy(block->first_set);
- err_first_set_create:
- 	kfree(block);
--	return NULL;
-+	return ERR_PTR(-ENOMEM);
- }
- EXPORT_SYMBOL(mlxsw_afa_block_create);
+ 	lockdep_assert_held(&mvm->mutex);
  
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum2_acl_tcam.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum2_acl_tcam.c
-@@ -88,8 +88,8 @@ static int mlxsw_sp2_acl_tcam_init(struc
- 	 * to be written using PEFA register to all indexes for all regions.
- 	 */
- 	afa_block = mlxsw_afa_block_create(mlxsw_sp->afa);
--	if (!afa_block) {
--		err = -ENOMEM;
-+	if (IS_ERR(afa_block)) {
-+		err = PTR_ERR(afa_block);
- 		goto err_afa_block;
- 	}
- 	err = mlxsw_afa_block_continue(afa_block);
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl.c
-@@ -442,7 +442,8 @@ mlxsw_sp_acl_rulei_create(struct mlxsw_s
- 
- 	rulei = kzalloc(sizeof(*rulei), GFP_KERNEL);
- 	if (!rulei)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
++	if (WARN(maxq >= mvm->trans->trans_cfg->base_params->num_of_queues,
++		 "max queue %d >= num_of_queues (%d)", maxq,
++		 mvm->trans->trans_cfg->base_params->num_of_queues))
++		maxq = mvm->trans->trans_cfg->base_params->num_of_queues - 1;
 +
- 	rulei->act_block = mlxsw_afa_block_create(acl->mlxsw_sp->afa);
- 	if (IS_ERR(rulei->act_block)) {
- 		err = PTR_ERR(rulei->act_block);
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_mr_tcam.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_mr_tcam.c
-@@ -199,8 +199,8 @@ mlxsw_sp_mr_tcam_afa_block_create(struct
- 	int err;
- 
- 	afa_block = mlxsw_afa_block_create(mlxsw_sp->afa);
--	if (!afa_block)
--		return ERR_PTR(-ENOMEM);
-+	if (IS_ERR(afa_block))
-+		return afa_block;
- 
- 	err = mlxsw_afa_block_append_allocated_counter(afa_block,
- 						       counter_index);
+ 	/* This should not be hit with new TX path */
+ 	if (WARN_ON(iwl_mvm_has_new_tx_api(mvm)))
+ 		return -ENOSPC;
 
 
