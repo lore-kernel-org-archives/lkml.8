@@ -2,163 +2,126 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A100C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D729FC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24657206F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B46BA20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:16:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BbEv0tv/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgD1LOc (ORCPT
+        id S1726595AbgD1LQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:14:32 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:16768 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726759AbgD1LOU (ORCPT
+        Tue, 28 Apr 2020 07:16:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60230 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbgD1LQh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:14:20 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03SBBofY020265;
-        Tue, 28 Apr 2020 07:14:17 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30mj45baag-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 07:14:17 -0400
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 03SBEGDa013689
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 28 Apr 2020 07:14:16 -0400
-Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 28 Apr 2020 07:14:15 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 28 Apr 2020 07:14:15 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 28 Apr 2020 07:14:15 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03SBEAgu032471;
-        Tue, 28 Apr 2020 07:14:12 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, <rachna@ti.com>, <mugunthanvnm@ti.com>,
-        <vigneshr@ti.com>, <afd@ti.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 2/3] iio: adc: ti_am335x_adc: alloc kfifo & IRQ via devm_ functions
-Date:   Tue, 28 Apr 2020 14:14:29 +0300
-Message-ID: <20200428111430.71723-2-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200428111430.71723-1-alexandru.ardelean@analog.com>
-References: <20200428111430.71723-1-alexandru.ardelean@analog.com>
+        Tue, 28 Apr 2020 07:16:37 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35B78C03C1A9;
+        Tue, 28 Apr 2020 04:16:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=u2H9SL+UMErMdRB2YXU6A5uO+y4zqg8b68UfJIqKHUU=; b=BbEv0tv/tpdRIsWJ5h4Vm4N5uQ
+        N6PimFztig63e/oRDUJ0P7VhoKLjfva0KIy4rlZjQ2OheYN1i8n/GKpj2swy49MNk/3u3jcNMaGvn
+        ye/iybuk4S7mglrs/hNIx6WJySktdeNKwPTGx/RPP0xLx6DFnyk4a0jqJCX6BncQiuHkzfusZOPPh
+        bMgyUGN91SR7w+nOOebqqyYc7/cJ5mH98QgOYiw1Yk0d8xv1IGMzJwM0OBwI00wIucyImvp4Lg9um
+        NaXoPXFKBqIYa/RLoTWaGGtZWGiiOvDLiQiQZFwaJAE7rHjxktGJjWcGK1wg+u+micKtkLYptCD2i
+        cVFpmLJw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTOE8-0002zk-5p; Tue, 28 Apr 2020 11:16:36 +0000
+Date:   Tue, 28 Apr 2020 04:16:36 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Ruan Shiyang <ruansy.fnst@cn.fujitsu.com>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "darrick.wong@oracle.com" <darrick.wong@oracle.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "hch@lst.de" <hch@lst.de>, "rgoldwyn@suse.de" <rgoldwyn@suse.de>,
+        "Qi, Fuli" <qi.fuli@fujitsu.com>,
+        "Gotou, Yasunori" <y-goto@fujitsu.com>
+Subject: Re: =?utf-8?B?5Zue5aSNOiBSZQ==?= =?utf-8?Q?=3A?= [RFC PATCH 0/8]
+ dax: Add a dax-rmap tree to support reflink
+Message-ID: <20200428111636.GK29705@bombadil.infradead.org>
+References: <20200427084750.136031-1-ruansy.fnst@cn.fujitsu.com>
+ <20200427122836.GD29705@bombadil.infradead.org>
+ <em33c55fa5-15ca-4c46-8c27-6b0300fa4e51@g08fnstd180058>
+ <20200428064318.GG2040@dread.disaster.area>
+ <259fe633-e1ff-b279-cd8c-1a81eaa40941@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-28_07:2020-04-28,2020-04-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- suspectscore=2 malwarescore=0 spamscore=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 mlxlogscore=856 clxscore=1015
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004280091
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <259fe633-e1ff-b279-cd8c-1a81eaa40941@cn.fujitsu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change attaches the life-cycle of the kfifo buffer & IRQ to the
-parent-device. This in turn cleans up the exit & error paths, since we
-don't need to explicitly cleanup these resources.
+On Tue, Apr 28, 2020 at 05:32:41PM +0800, Ruan Shiyang wrote:
+> On 2020/4/28 下午2:43, Dave Chinner wrote:
+> > On Tue, Apr 28, 2020 at 06:09:47AM +0000, Ruan, Shiyang wrote:
+> > > 在 2020/4/27 20:28:36, "Matthew Wilcox" <willy@infradead.org> 写道:
+> > > > On Mon, Apr 27, 2020 at 04:47:42PM +0800, Shiyang Ruan wrote:
+> > > > >   This patchset is a try to resolve the shared 'page cache' problem for
+> > > > >   fsdax.
+> > > > > 
+> > > > >   In order to track multiple mappings and indexes on one page, I
+> > > > >   introduced a dax-rmap rb-tree to manage the relationship.  A dax entry
+> > > > >   will be associated more than once if is shared.  At the second time we
+> > > > >   associate this entry, we create this rb-tree and store its root in
+> > > > >   page->private(not used in fsdax).  Insert (->mapping, ->index) when
+> > > > >   dax_associate_entry() and delete it when dax_disassociate_entry().
+> > > > 
+> > > > Do we really want to track all of this on a per-page basis?  I would
+> > > > have thought a per-extent basis was more useful.  Essentially, create
+> > > > a new address_space for each shared extent.  Per page just seems like
+> > > > a huge overhead.
+> > > > 
+> > > Per-extent tracking is a nice idea for me.  I haven't thought of it
+> > > yet...
+> > > 
+> > > But the extent info is maintained by filesystem.  I think we need a way
+> > > to obtain this info from FS when associating a page.  May be a bit
+> > > complicated.  Let me think about it...
+> > 
+> > That's why I want the -user of this association- to do a filesystem
+> > callout instead of keeping it's own naive tracking infrastructure.
+> > The filesystem can do an efficient, on-demand reverse mapping lookup
+> > from it's own extent tracking infrastructure, and there's zero
+> > runtime overhead when there are no errors present.
+> > 
+> > At the moment, this "dax association" is used to "report" a storage
+> > media error directly to userspace. I say "report" because what it
+> > does is kill userspace processes dead. The storage media error
+> > actually needs to be reported to the owner of the storage media,
+> > which in the case of FS-DAX is the filesytem.
+> 
+> Understood.
+> 
+> BTW, this is the usage in memory-failure, so what about rmap?  I have not
+> found how to use this tracking in rmap.  Do you have any ideas?
+> 
+> > 
+> > That way the filesystem can then look up all the owners of that bad
+> > media range (i.e. the filesystem block it corresponds to) and take
+> > appropriate action. e.g.
+> 
+> I tried writing a function to look up all the owners' info of one block in
+> xfs for memory-failure use.  It was dropped in this patchset because I found
+> out that this lookup function needs 'rmapbt' to be enabled when mkfs.  But
+> by default, rmapbt is disabled.  I am not sure if it matters...
 
-The main intent here is to remove the explicit cleanup of the
-'indio_dev->buffer' via 'iio_kfifo_free(indio_dev->buffer);'.
-
-As we want to add support for multiple buffers per IIO device, having it
-exposed like this makes it tricky to consider a safe backwards compatible
-approach for it.
-
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/adc/ti_am335x_adc.c | 20 +++++---------------
- 1 file changed, 5 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/iio/adc/ti_am335x_adc.c b/drivers/iio/adc/ti_am335x_adc.c
-index d932fe383a24..03b2ab649cc3 100644
---- a/drivers/iio/adc/ti_am335x_adc.c
-+++ b/drivers/iio/adc/ti_am335x_adc.c
-@@ -377,7 +377,8 @@ static const struct iio_buffer_setup_ops tiadc_buffer_setup_ops = {
- 	.postdisable = &tiadc_buffer_postdisable,
- };
- 
--static int tiadc_iio_buffered_hardware_setup(struct iio_dev *indio_dev,
-+static int tiadc_iio_buffered_hardware_setup(struct device *dev,
-+	struct iio_dev *indio_dev,
- 	irqreturn_t (*pollfunc_bh)(int irq, void *p),
- 	irqreturn_t (*pollfunc_th)(int irq, void *p),
- 	int irq,
-@@ -387,13 +388,13 @@ static int tiadc_iio_buffered_hardware_setup(struct iio_dev *indio_dev,
- 	struct iio_buffer *buffer;
- 	int ret;
- 
--	buffer = iio_kfifo_allocate();
-+	buffer = devm_iio_kfifo_allocate(dev);
- 	if (!buffer)
- 		return -ENOMEM;
- 
- 	iio_device_attach_buffer(indio_dev, buffer);
- 
--	ret = request_threaded_irq(irq,	pollfunc_th, pollfunc_bh,
-+	ret = devm_request_threaded_irq(dev, irq, pollfunc_th, pollfunc_bh,
- 				flags, indio_dev->name, indio_dev);
- 	if (ret)
- 		goto error_kfifo_free;
-@@ -408,15 +409,6 @@ static int tiadc_iio_buffered_hardware_setup(struct iio_dev *indio_dev,
- 	return ret;
- }
- 
--static void tiadc_iio_buffered_hardware_remove(struct iio_dev *indio_dev)
--{
--	struct tiadc_device *adc_dev = iio_priv(indio_dev);
--
--	free_irq(adc_dev->mfd_tscadc->irq, indio_dev);
--	iio_kfifo_free(indio_dev->buffer);
--}
--
--
- static const char * const chan_name_ain[] = {
- 	"AIN0",
- 	"AIN1",
-@@ -636,7 +628,7 @@ static int tiadc_probe(struct platform_device *pdev)
- 	if (err < 0)
- 		return err;
- 
--	err = tiadc_iio_buffered_hardware_setup(indio_dev,
-+	err = tiadc_iio_buffered_hardware_setup(&pdev->dev, indio_dev,
- 		&tiadc_worker_h,
- 		&tiadc_irq_h,
- 		adc_dev->mfd_tscadc->irq,
-@@ -661,7 +653,6 @@ static int tiadc_probe(struct platform_device *pdev)
- err_dma:
- 	iio_device_unregister(indio_dev);
- err_buffer_unregister:
--	tiadc_iio_buffered_hardware_remove(indio_dev);
- err_free_channels:
- 	return err;
- }
-@@ -679,7 +670,6 @@ static int tiadc_remove(struct platform_device *pdev)
- 		dma_release_channel(dma->chan);
- 	}
- 	iio_device_unregister(indio_dev);
--	tiadc_iio_buffered_hardware_remove(indio_dev);
- 
- 	step_en = get_adc_step_mask(adc_dev);
- 	am335x_tsc_se_clr(adc_dev->mfd_tscadc, step_en);
--- 
-2.17.1
-
+I'm pretty sure you can't have shared extents on an XFS filesystem if you
+_don't_ have the rmapbt feature enabled.  I mean, that's why it exists.
