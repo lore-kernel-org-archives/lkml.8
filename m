@@ -2,114 +2,312 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0ACC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC4CC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 419A220B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:10:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="odBlKV08"
+	by mail.kernel.org (Postfix) with ESMTP id 3EA1E20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:10:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728682AbgD1SKR (ORCPT
+        id S1728700AbgD1SKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:10:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728023AbgD1SKO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:10:14 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32D03C03C1AB
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:10:14 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id q124so605269pgq.13
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:10:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=feeBoZmiNK+PqfmUZIUHdcZ4oBKPOjHptWecqjvhfI4=;
-        b=odBlKV081b57bKb3sexaYhZ/qqcstSbg/s2iZYJthN7dEiR/vQ+YpQrlo3lkUvQWy3
-         MjiNjirFDo5mutK+0rE9HWjSjOD4HkEqLHDaGUt7AE2b3OBugG1Ww3EkGpdGis00LY6Q
-         gjCU62klhAJN2mXBhEgl2s/FwKD1XU8iv0xLc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=feeBoZmiNK+PqfmUZIUHdcZ4oBKPOjHptWecqjvhfI4=;
-        b=V4ppgnIXxfEVLqzDi4gTx3Lgma1Rwe6dsLz9UZE7Gq/WWudEO9eVUEo5yPvJnzlCvr
-         sfP2ovWElb/I6YF2YbzxVhx8bEtFdW1UTvoqzFyetM+0jHyNABpksBbyGrl/nfsVw2gs
-         CAcFslIBUXPkjR6bkxNFjuBZpnc/NtupbNU26heneFQFys33a/pdEwFDoIbxBVLzRtYT
-         cevcVgMQ6y9vdsU0mwS8kyM6ITJcrf9weFwf4hYYATDt3KZwZ07lzkKPNAYiJnkX8sRZ
-         XJ07aU74AB+qOwBGzkjdhPGo0FSqX6KJ31E3/C3hsAY8tvCDe8KRPXHyLlfemEN/L7py
-         qkHA==
-X-Gm-Message-State: AGi0PuZl7cMkS9Dcqrl0zeMDMXu2b7C/lC3epY8VW0dd51XglxAWHvnb
-        r7/2jjpxLjCo5FWds6J5A2mTjQ==
-X-Google-Smtp-Source: APiQypIL/096cicyoZjsKpAn19BhU3sgp026+T4Ap3M/8jcviaZEa8JyagUmCZZBtGmw0suU4VD5Xg==
-X-Received: by 2002:a63:3814:: with SMTP id f20mr27969431pga.283.1588097413701;
-        Tue, 28 Apr 2020 11:10:13 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id h197sm16260910pfe.208.2020.04.28.11.10.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 11:10:13 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Joe Perches <joe@perches.com>
-Subject: [PATCH v2 2/2] coresight: Avoid casting void pointers
-Date:   Tue, 28 Apr 2020 11:10:10 -0700
-Message-Id: <20200428181010.170568-3-swboyd@chromium.org>
-X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-In-Reply-To: <20200428181010.170568-1-swboyd@chromium.org>
-References: <20200428181010.170568-1-swboyd@chromium.org>
+        Tue, 28 Apr 2020 14:10:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50714 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728672AbgD1SKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:10:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 1368FAED8;
+        Tue, 28 Apr 2020 18:10:28 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 28 Apr 2020 20:10:28 +0200
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     Jason Baron <jbaron@akamai.com>
+Cc:     Khazhismel Kumykov <khazhy@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] eventpoll: fix missing wakeup for ovflist in
+ ep_poll_callback
+In-Reply-To: <a2f22c3c-c25a-4bda-8339-a7bdaf17849e@akamai.com>
+References: <20200424025057.118641-1-khazhy@google.com>
+ <20200424190039.192373-1-khazhy@google.com>
+ <66f26e74-6c7b-28c2-8b3f-faf8ea5229d4@akamai.com>
+ <CACGdZYLD9ZqJNVktHUVe6N4t28VKy-Z76ZcCdsAOJHZRXaYGSA@mail.gmail.com>
+ <a2f22c3c-c25a-4bda-8339-a7bdaf17849e@akamai.com>
+Message-ID: <c365a245574d4a4ed8a922018bcf4f45@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't need to cast void pointers, such as the amba_id data. Assign to
-a local variable to make the code prettier and also return NULL instead
-of 0 to make sparse happy.
+On 2020-04-27 22:38, Jason Baron wrote:
+> On 4/25/20 4:59 PM, Khazhismel Kumykov wrote:
+>> On Sat, Apr 25, 2020 at 9:17 AM Jason Baron <jbaron@akamai.com> wrote:
+>>> 
+>>> 
+>>> 
+>>> On 4/24/20 3:00 PM, Khazhismel Kumykov wrote:
+>>>> In the event that we add to ovflist, before 339ddb53d373 we would be
+>>>> woken up by ep_scan_ready_list, and did no wakeup in 
+>>>> ep_poll_callback.
+>>>> With that wakeup removed, if we add to ovflist here, we may never 
+>>>> wake
+>>>> up. Rather than adding back the ep_scan_ready_list wakeup - which 
+>>>> was
+>>>> resulting in unnecessary wakeups, trigger a wake-up in 
+>>>> ep_poll_callback.
+>>> 
+>>> I'm just curious which 'wakeup' we are talking about here? There is:
+>>> wake_up(&ep->wq) for the 'ep' and then there is the nested one via:
+>>> ep_poll_safewake(ep, epi). It seems to me that its only about the 
+>>> later
+>>> one being missing not both? Is your workload using nested epoll?
+>>> 
+>>> If so, it might make sense to just do the later, since the point of
+>>> the original patch was to minimize unnecessary wakeups.
+>> 
+>> The missing wake-ups were when we added to ovflist instead of rdllist.
+>> Both are "the ready list" together - so I'd think we'd want the same
+>> wakeups regardless of which specific list we added to.
+>> ep_poll_callback isn't nested specific?
+>> 
+> 
+> So I was thinking that ep_poll() would see these events on the
+> ovflist without an explicit wakeup, b/c the overflow list being active
+> implies that the ep_poll() path would add them to the rdllist in
+> ep_scan_read_list(). Thus, it will see the events either in the
+> current ep_poll() context or via a subsequent syscall to epoll_wait().
+> 
+> However, there are other paths that can call ep_scan_ready_list() thus
+> I agree with you that both wakeups here are necessary.
+> 
+> I do think are are still (smaller) potential races in 
+> ep_scan_ready_list()
+> where we have:
+> 
+>         write_lock_irq(&ep->lock);
+>         list_splice_init(&ep->rdllist, &txlist);
+>         WRITE_ONCE(ep->ovflist, NULL);
+>         write_unlock_irq(&ep->lock);
+> 
+> And in the ep_poll path we have:
+> 
+> static inline int ep_events_available(struct eventpoll *ep)
+> {
+>         return !list_empty_careful(&ep->rdllist) ||
+>                 READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR;
+> }
+> 
+> 
+> Seems to me that first bit needs to be the following, since
+> ep_events_available() is now checked in a lockless way:
+> 
+> 
+>         write_lock_irq(&ep->lock);
+> 	WRITE_ONCE(ep->ovflist, NULL);
+> 	smp_wmb();
+>         list_splice_init(&ep->rdllist, &txlist);
+>         write_unlock_irq(&ep->lock);
 
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Mike Leach <mike.leach@linaro.org>
-Reviewed-by: Joe Perches <joe@perches.com>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
 
-Thanks Joe for finding my thinko!
+Hi Jason,
 
- drivers/hwtracing/coresight/coresight-priv.h | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+For the first chunk you refer the order seems irrelevant.
+Either you see something not empty, you go take the lock
+and then check lists under the lock, either you see all
+lists are empty.
 
-diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-index 5a36f0f50899..36c943ae94d5 100644
---- a/drivers/hwtracing/coresight/coresight-priv.h
-+++ b/drivers/hwtracing/coresight/coresight-priv.h
-@@ -215,9 +215,12 @@ cti_remove_assoc_from_csdev(struct coresight_device *csdev) {}
- /* extract the data value from a UCI structure given amba_id pointer. */
- static inline void *coresight_get_uci_data(const struct amba_id *id)
- {
--	if (id->data)
--		return ((struct amba_cs_uci_id *)(id->data))->data;
--	return 0;
-+	struct amba_cs_uci_id *uci_id = id->data;
-+
-+	if (!uci_id)
-+		return NULL;
-+
-+	return uci_id->data;
- }
- 
- void coresight_release_platform_data(struct coresight_device *csdev,
--- 
-Sent by a computer, using git, on the internet
+> 
+> And also this bit:
+> 
+>         WRITE_ONCE(ep->ovflist, EP_UNACTIVE_PTR);
+> 
+>         /*
+>          * Quickly re-inject items left on "txlist".
+>          */
+>         list_splice(&txlist, &ep->rdllist);
+> 
+> Should I think better be reversed as well to:
+> 
+> list_splice(&txlist, &ep->rdllist);
+> smp_wmb();
+> WRITE_ONCE(ep->ovflist, EP_UNACTIVE_PTR);
+
+But this one is much more interesting.  I understand what you
+are trying to achieve: we can't leave both lists empty for the
+short period of time, if there is something left the caller
+of ep_events_available() should be able to see one of the lists
+is not empty, otherwise it can be too late.
+
+But the problem you've spotted is much worse. Some remains
+can be in the txlist (this can happen if caller of epoll_wait
+wants to harvest only 1 event, but there are more in the ->rdlist).
+And we again get the lost wakeup.
+
+Problem is reproduced by the test below.  The idea is simple:
+we have 10 threads and 10 event fds. Each thread can harvest
+only 1 event. 1 producer fires all 10 events at once and waits
+that all 10 events will be observed by 10 threads.
+
+The fix is basically a revert of 339ddb53d373 with 1 major
+exception: we do wakeups from ep_scan_ready_list() but
+if txlist is not empty && if ep_scan_ready_list() is called
+from the routine, which sends events, not reads it
+(thus we protect ourselves from repeated wake ups)
+
+I will send the code a bit later.
+
+--
+Roman
+
+---- test -------
+
+enum {
+	EPOLL60_EVENTS_NR = 10,
+};
+
+struct epoll60_ctx {
+	volatile int stopped;
+	int ready;
+	int waiters;
+	int epfd;
+	int evfd[EPOLL60_EVENTS_NR];
+};
+
+static inline int count_waiters(struct epoll60_ctx *ctx)
+{
+	return __atomic_load_n(&ctx->waiters, __ATOMIC_ACQUIRE);
+}
+
+static void *epoll60_wait_thread(void *ctx_)
+{
+	struct epoll60_ctx *ctx = ctx_;
+	struct epoll_event e;
+	uint64_t v;
+	int ret;
+
+	while (!ctx->stopped) {
+		/* Mark we are ready */
+		__atomic_fetch_add(&ctx->ready, 1, __ATOMIC_ACQUIRE);
+
+		/* Start when all are ready */
+		while (__atomic_load_n(&ctx->ready, __ATOMIC_ACQUIRE) &&
+		       !ctx->stopped);
+
+		/* Account this waiter */
+		__atomic_fetch_add(&ctx->waiters, 1, __ATOMIC_ACQUIRE);
+again_wait:
+		ret = epoll_wait(ctx->epfd, &e, 1, 1000);
+		if (ret != 1) {
+			/* Should be stopped, otherwise we lost wakeup */
+			assert(ctx->stopped);
+			return NULL;
+		}
+
+		ret = read(e.data.fd, &v, sizeof(v));
+		if (ret != sizeof(v)) {
+			/* Event was stollen by other thread */
+			goto again_wait;
+		}
+		__atomic_fetch_sub(&ctx->waiters, 1, __ATOMIC_RELEASE);
+	}
+
+	return NULL;
+}
+
+static inline unsigned long long msecs(void)
+{
+	struct timespec ts;
+	unsigned long long msecs;
+
+	clock_gettime(CLOCK_REALTIME, &ts);
+	msecs = ts.tv_sec * 1000ull;
+	msecs += ts.tv_nsec / 1000000ull;
+
+	return msecs;
+}
+
+TEST(epoll60)
+{
+	struct epoll60_ctx ctx = { 0 };
+	pthread_t waiters[ARRAY_SIZE(ctx.evfd)];
+	struct epoll_event e;
+	int i, n, ret;
+
+	signal(SIGUSR1, signal_handler);
+
+	ctx.epfd = epoll_create1(0);
+	ASSERT_GE(ctx.epfd, 0);
+
+	/* Create event fds */
+	for (i = 0; i < ARRAY_SIZE(ctx.evfd); i++) {
+		ctx.evfd[i] = eventfd(0, EFD_NONBLOCK);
+		ASSERT_GE(ctx.evfd[i], 0);
+
+		e.events = EPOLLIN | EPOLLERR;
+		e.data.fd = ctx.evfd[i];
+		ASSERT_EQ(epoll_ctl(ctx.epfd, EPOLL_CTL_ADD, ctx.evfd[i], &e), 0);
+	}
+
+	/* Create waiter threads */
+	for (i = 0; i < ARRAY_SIZE(waiters); i++)
+		ASSERT_EQ(pthread_create(&waiters[i], NULL,
+					 epoll60_wait_thread, &ctx), 0);
+
+	for (i = 0; i < 300; i++) {
+		uint64_t v = 1, ms;
+
+		/* Wait for all to be ready */
+		while (__atomic_load_n(&ctx.ready, __ATOMIC_ACQUIRE) !=
+		       ARRAY_SIZE(ctx.evfd))
+			;
+
+		/* Steady, go */
+		__atomic_fetch_sub(&ctx.ready, ARRAY_SIZE(ctx.evfd),
+				   __ATOMIC_ACQUIRE);
+
+		/* Wait all have gone to kernel */
+		while (count_waiters(&ctx) != ARRAY_SIZE(ctx.evfd))
+			;
+
+		/* 1ms should be enough to schedule out */
+		usleep(1000);
+
+		/* Quickly signal all handles at once */
+		for (n = 0; n < ARRAY_SIZE(ctx.evfd); n++) {
+			ret = write(ctx.evfd[n], &v, sizeof(v));
+			ASSERT_EQ(ret, sizeof(v));
+		}
+
+		/* Busy loop for 1s and wait for all waiters to wake up */
+		ms = msecs();
+		while (count_waiters(&ctx) && msecs() < ms + 3000)
+			;
+
+		ASSERT_EQ(count_waiters(&ctx), 0);
+	}
+	ctx.stopped = 1;
+	/* Stop waiters */
+	for (i = 0; i < ARRAY_SIZE(waiters); i++) {
+		pthread_kill(waiters[i], SIGUSR1);
+		pthread_join(waiters[i], NULL);
+	}
+
+	for (i = 0; i < ARRAY_SIZE(waiters); i++)
+		close(ctx.evfd[i]);
+	close(ctx.epfd);
+}
+
 
