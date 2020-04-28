@@ -4,100 +4,124 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE5EC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD8BC83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50388206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BD2A206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:15:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgD1NOu (ORCPT
+        id S1726949AbgD1NPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:14:50 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:53036 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726764AbgD1NOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:14:49 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id E60FA5E7908F185C8AFE;
-        Tue, 28 Apr 2020 21:14:47 +0800 (CST)
-Received: from huawei.com (10.175.105.27) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Tue, 28 Apr 2020
- 21:14:37 +0800
-From:   Wu Bo <wubo40@huawei.com>
-To:     <jlayton@kernel.org>, <sage@redhat.com>, <idryomov@gmail.com>
-CC:     <ceph-devel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <liuzhiqiang26@huawei.com>, <linfeilong@huawei.com>,
-        <wubo40@huawei.com>
-Subject: [PATCH V2] fs/ceph:fix double unlock in handle_cap_export()
-Date:   Tue, 28 Apr 2020 21:13:42 +0800
-Message-ID: <1588079622-423774-1-git-send-email-wubo40@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.27]
-X-CFilter-Loop: Reflected
+        Tue, 28 Apr 2020 09:15:32 -0400
+Received: from relay.sw.ru ([185.231.240.75]:51234 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726764AbgD1NPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 09:15:32 -0400
+Received: from [192.168.15.93] (helo=iris.lishka.ru)
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <den@openvz.org>)
+        id 1jTQ4u-0005SY-Dh; Tue, 28 Apr 2020 16:15:12 +0300
+From:   "Denis V. Lunev" <den@openvz.org>
+Cc:     "Denis V. Lunev" <den@openvz.org>,
+        Konstantin Khorenko <khorenko@virtuozzo.com>,
+        Faisal Latif <faisal.latif@intel.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] i40iw: remove bogus call to netdev_master_upper_dev_get
+Date:   Tue, 28 Apr 2020 16:15:11 +0300
+Message-Id: <20200428131511.11049-1-den@openvz.org>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-if the ceph_mdsc_open_export_target_session() return fails,
-should add a lock to avoid twice unlocking.
-Because the lock will be released at the retry or out_unlock tag.
+Local variable netdev is not used in these calls.
 
---
-v1 -> v2:
-add spin_lock(&ci->i_ceph_lock) before goto out_unlock tag. 
+It should be noted, that this change is required to work in bonded mode.
+In the other case we would get the following assert:
+ "RTNL: assertion failed at net/core/dev.c (5665)"
+with the calltrace as follows:
+	dump_stack+0x19/0x1b
+	netdev_master_upper_dev_get+0x61/0x70
+	i40iw_addr_resolve_neigh+0x1e8/0x220
+	i40iw_make_cm_node+0x296/0x700
+	? i40iw_find_listener.isra.10+0xcc/0x110
+	i40iw_receive_ilq+0x3d4/0x810
+	i40iw_puda_poll_completion+0x341/0x420
+	i40iw_process_ceq+0xa5/0x280
+	i40iw_ceq_dpc+0x1e/0x40
+	tasklet_action+0x83/0x140
+	__do_softirq+0x125/0x2bb
+	call_softirq+0x1c/0x30
+	do_softirq+0x65/0xa0
+	irq_exit+0x105/0x110
+	do_IRQ+0x56/0xf0
+	common_interrupt+0x16a/0x16a
+	? cpuidle_enter_state+0x57/0xd0
+	cpuidle_idle_call+0xde/0x230
+	arch_cpu_idle+0xe/0xc0
+	cpu_startup_entry+0x14a/0x1e0
+	start_secondary+0x1f7/0x270
+	start_cpu+0x5/0x14
 
-Signed-off-by: Wu Bo <wubo40@huawei.com>
+Signed-off-by: Denis V. Lunev <den@openvz.org>
+CC: Konstantin Khorenko <khorenko@virtuozzo.com>
+CC: Faisal Latif <faisal.latif@intel.com>
+CC: Shiraz Saleem <shiraz.saleem@intel.com>
+CC: Doug Ledford <dledford@redhat.com>
+CC: Jason Gunthorpe <jgg@ziepe.ca>
+CC: linux-rdma@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
 ---
- fs/ceph/caps.c | 27 +++++++++++++++------------
- 1 file changed, 15 insertions(+), 12 deletions(-)
+ drivers/infiniband/hw/i40iw/i40iw_cm.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-index 185db76..414c0e2 100644
---- a/fs/ceph/caps.c
-+++ b/fs/ceph/caps.c
-@@ -3731,22 +3731,25 @@ static void handle_cap_export(struct inode *inode, struct ceph_mds_caps *ex,
+diff --git a/drivers/infiniband/hw/i40iw/i40iw_cm.c b/drivers/infiniband/hw/i40iw/i40iw_cm.c
+index bb78d3280acc..fa7a5ff498c7 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw_cm.c
++++ b/drivers/infiniband/hw/i40iw/i40iw_cm.c
+@@ -1987,7 +1987,6 @@ static int i40iw_addr_resolve_neigh(struct i40iw_device *iwdev,
+ 	struct rtable *rt;
+ 	struct neighbour *neigh;
+ 	int rc = arpindex;
+-	struct net_device *netdev = iwdev->netdev;
+ 	__be32 dst_ipaddr = htonl(dst_ip);
+ 	__be32 src_ipaddr = htonl(src_ip);
  
- 	/* open target session */
- 	tsession = ceph_mdsc_open_export_target_session(mdsc, target);
--	if (!IS_ERR(tsession)) {
--		if (mds > target) {
--			mutex_lock(&session->s_mutex);
--			mutex_lock_nested(&tsession->s_mutex,
--					  SINGLE_DEPTH_NESTING);
--		} else {
--			mutex_lock(&tsession->s_mutex);
--			mutex_lock_nested(&session->s_mutex,
--					  SINGLE_DEPTH_NESTING);
--		}
--		new_cap = ceph_get_cap(mdsc, NULL);
--	} else {
-+	if (IS_ERR(tsession)) {
- 		WARN_ON(1);
- 		tsession = NULL;
- 		target = -1;
-+		mutex_lock(&session->s_mutex);
-+		spin_lock(&ci->i_ceph_lock);
-+		goto out_unlock;
-+	}
-+
-+	if (mds > target) {
-+		mutex_lock(&session->s_mutex);
-+		mutex_lock_nested(&tsession->s_mutex,
-+					SINGLE_DEPTH_NESTING);
-+	} else {
-+		mutex_lock(&tsession->s_mutex);
-+		mutex_lock_nested(&session->s_mutex,
-+					SINGLE_DEPTH_NESTING);
+@@ -1997,9 +1996,6 @@ static int i40iw_addr_resolve_neigh(struct i40iw_device *iwdev,
+ 		return rc;
  	}
-+	new_cap = ceph_get_cap(mdsc, NULL);
- 	goto retry;
  
- out_unlock:
+-	if (netif_is_bond_slave(netdev))
+-		netdev = netdev_master_upper_dev_get(netdev);
+-
+ 	neigh = dst_neigh_lookup(&rt->dst, &dst_ipaddr);
+ 
+ 	rcu_read_lock();
+@@ -2065,7 +2061,6 @@ static int i40iw_addr_resolve_neigh_ipv6(struct i40iw_device *iwdev,
+ {
+ 	struct neighbour *neigh;
+ 	int rc = arpindex;
+-	struct net_device *netdev = iwdev->netdev;
+ 	struct dst_entry *dst;
+ 	struct sockaddr_in6 dst_addr;
+ 	struct sockaddr_in6 src_addr;
+@@ -2086,9 +2081,6 @@ static int i40iw_addr_resolve_neigh_ipv6(struct i40iw_device *iwdev,
+ 		return rc;
+ 	}
+ 
+-	if (netif_is_bond_slave(netdev))
+-		netdev = netdev_master_upper_dev_get(netdev);
+-
+ 	neigh = dst_neigh_lookup(dst, dst_addr.sin6_addr.in6_u.u6_addr32);
+ 
+ 	rcu_read_lock();
 -- 
-1.8.3.1
+2.17.1
 
