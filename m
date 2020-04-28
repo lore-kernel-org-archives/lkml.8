@@ -2,105 +2,192 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C75CC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C494C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1020B20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L9xOTWTy"
+	by mail.kernel.org (Postfix) with ESMTP id 5C01720575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588100096;
+	bh=s48c0xA9AWOzYkT8z8qRtALlO98KGhNl0F4y/Xz6oqw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=r9+BCVbzyJguwPBnRCS1fmhRJafRgZzHruiwcYO3ulXTZ/lrgp1kqYM/X2+cVTTIB
+	 7tYF/yndQ1brpBK6XWlls4YsfSSQqSFLPyGSlJFZVAGFs1bCOvMWSWfrCTnXf64jRm
+	 55eUMXoD5W/LT0lxq0k9ys9GZpsVDnAQL7VqMRXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731521AbgD1Syv (ORCPT
+        id S1728804AbgD1SdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:54:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47510 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731504AbgD1Sys (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:54:48 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26B3CC03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:54:47 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id e9so24371259iok.9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:54:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C18IvcKIUPmqhWrNgGQA3HNdNJlQg6Mgu7oxvCya4yA=;
-        b=L9xOTWTy9tw1EFj+TKRAx32qbXnmGcmWjC9j+1VFE2M+ENXZSCUF5FaAziHTxmF4H0
-         OyMKlGYZ2xM60lfspQhpw9mEylRaIPO32BPXwBYQSIz4taZP3Ui7derpShjsvTSAHNKo
-         hs32y1/Re/uF3tXYVScQ7RyDjnYTLYKpVWNJTtHWTkVaackmgtpv1sDnV1FxOh4uq2F9
-         4RDSvp0pwjqMIry4z+GsOylTQPvWIjwpv3hWcK8HvhFbAt5Xut9zXnDzTAAhtFKdSvV+
-         Ky0ttH1cEZ4Eqly2TWn+V2KcFl11plVaHKk+n7PifWmJegn4DSSsqLOLodv1QIOjOl1E
-         XE/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C18IvcKIUPmqhWrNgGQA3HNdNJlQg6Mgu7oxvCya4yA=;
-        b=fuxlNjwQHIFjC/OhQtPv4XPqdpZ90eiDXlz1hJ6MRhBuZ0fINyLD38eAE4ltosZtLD
-         uc6/qUUmoIOOepdpqykyRYaocu4mEUET/dxkaRxytSRJzwDpo5r8IwI2PgH93x2FL8en
-         PVVyvSjA3Hi60EO5iDeGpHCcsUauwJeFwoc0BGg/jHcZflXzwrCw/SgNgDZpmhyNvSFN
-         o7i4rbz0ml8LJixtDn97sqDezLNPyUcdLInJMmOIBNJID8negUVknpH89m/8Jh9uZXOA
-         K+XvyRYlUgDdAhP5w/BgXYwdQBuJ8lI3994JQ278Xn9orb1sdToD7wtQzwEwnjvsUQk5
-         c7qQ==
-X-Gm-Message-State: AGi0PuaWf0z1riQO4xHIQuG1tJFSTvyIOjbzhi2FxRnG1qrqYljnUAZp
-        ACqIvEcl5Wivvs2Mte4tF6MbmaT8TboeXaDoRPTErA==
-X-Google-Smtp-Source: APiQypKNUmcUlXwHdS61LpkDlzHCZSbCAeLZkmmYY+dHTh5R33ZwUxkPBkV2Jz+PT0FIsbrOye9DX+T7bTM7OrBnW3M=
-X-Received: by 2002:a5e:a610:: with SMTP id q16mr27415990ioi.75.1588100086060;
- Tue, 28 Apr 2020 11:54:46 -0700 (PDT)
+        Tue, 28 Apr 2020 14:33:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49572 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729907AbgD1SdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:33:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FD1221835;
+        Tue, 28 Apr 2020 18:33:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588098792;
+        bh=s48c0xA9AWOzYkT8z8qRtALlO98KGhNl0F4y/Xz6oqw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HocLgYQS5bGdUopXnrmfiNZ0Ab8qIgET6or/iuVp34VoyBzxoLdhi39E3n2gf6Z6L
+         k/OkaDplaLIEWh6pOH5dF9qagCQIOVjxmaxyn/x1M8/RHvTnQzRVYsBjJEEG7AI+nt
+         BvwicFOD+p+w3TUa3OZCsGHlphR6lWoVF2/0ZO30=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 051/131] x86/KVM: Make sure KVM_VCPU_FLUSH_TLB flag is not missed
+Date:   Tue, 28 Apr 2020 20:24:23 +0200
+Message-Id: <20200428182231.389944621@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200423022550.15113-1-sean.j.christopherson@intel.com> <20200423022550.15113-2-sean.j.christopherson@intel.com>
-In-Reply-To: <20200423022550.15113-2-sean.j.christopherson@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 28 Apr 2020 11:54:35 -0700
-Message-ID: <CALMp9eRD9py=N9hDSon5GPzuiZw1Z+3xHv9umu1_qKzWczz0PA@mail.gmail.com>
-Subject: Re: [PATCH 01/13] KVM: nVMX: Preserve exception priority irrespective
- of exiting behavior
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Oliver Upton <oupton@google.com>,
-        Peter Shier <pshier@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 7:26 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Short circuit vmx_check_nested_events() if an exception is pending and
-> needs to be injected into L2, priority between coincident events is not
-> dependent on exiting behavior.  This fixes a bug where a single-step #DB
-> that is not intercepted by L1 is incorrectly dropped due to servicing a
-> VMX Preemption Timer VM-Exit.
->
-> Injected exceptions also need to be blocked if nested VM-Enter is
-> pending or an exception was already injected, otherwise injecting the
-> exception could overwrite an existing event injection from L1.
-> Technically, this scenario should be impossible, i.e. KVM shouldn't
-> inject its own exception during nested VM-Enter.  This will be addressed
-> in a future patch.
->
-> Note, event priority between SMI, NMI and INTR is incorrect for L2, e.g.
-> SMI should take priority over VM-Exit on NMI/INTR, and NMI that is
-> injected into L2 should take priority over VM-Exit INTR.  This will also
-> be addressed in a future patch.
->
-> Fixes: b6b8a1451fc4 ("KVM: nVMX: Rework interception of IRQs and NMIs")
-> Reported-by: Jim Mattson <jmattson@google.com>
-> Cc: Oliver Upton <oupton@google.com>
-> Cc: Peter Shier <pshier@google.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
+From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+
+commit b043138246a41064527cf019a3d51d9f015e9796 upstream.
+
+There is a potential race in record_steal_time() between setting
+host-local vcpu->arch.st.steal.preempted to zero (i.e. clearing
+KVM_VCPU_PREEMPTED) and propagating this value to the guest with
+kvm_write_guest_cached(). Between those two events the guest may
+still see KVM_VCPU_PREEMPTED in its copy of kvm_steal_time, set
+KVM_VCPU_FLUSH_TLB and assume that hypervisor will do the right
+thing. Which it won't.
+
+Instad of copying, we should map kvm_steal_time and that will
+guarantee atomicity of accesses to @preempted.
+
+This is part of CVE-2019-3016.
+
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Reviewed-by: Joao Martins <joao.m.martins@oracle.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+[bwh: Backported to 4.19: No tracepoint in record_steal_time().]
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/kvm/x86.c | 49 +++++++++++++++++++++++++++-------------------
+ 1 file changed, 29 insertions(+), 20 deletions(-)
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 6916f46909ab0..d77822e03ff6b 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2397,43 +2397,45 @@ static void kvm_vcpu_flush_tlb(struct kvm_vcpu *vcpu, bool invalidate_gpa)
+ 
+ static void record_steal_time(struct kvm_vcpu *vcpu)
+ {
++	struct kvm_host_map map;
++	struct kvm_steal_time *st;
++
+ 	if (!(vcpu->arch.st.msr_val & KVM_MSR_ENABLED))
+ 		return;
+ 
+-	if (unlikely(kvm_read_guest_cached(vcpu->kvm, &vcpu->arch.st.stime,
+-		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time))))
++	/* -EAGAIN is returned in atomic context so we can just return. */
++	if (kvm_map_gfn(vcpu, vcpu->arch.st.msr_val >> PAGE_SHIFT,
++			&map, &vcpu->arch.st.cache, false))
+ 		return;
+ 
++	st = map.hva +
++		offset_in_page(vcpu->arch.st.msr_val & KVM_STEAL_VALID_BITS);
++
+ 	/*
+ 	 * Doing a TLB flush here, on the guest's behalf, can avoid
+ 	 * expensive IPIs.
+ 	 */
+-	if (xchg(&vcpu->arch.st.steal.preempted, 0) & KVM_VCPU_FLUSH_TLB)
++	if (xchg(&st->preempted, 0) & KVM_VCPU_FLUSH_TLB)
+ 		kvm_vcpu_flush_tlb(vcpu, false);
+ 
+-	if (vcpu->arch.st.steal.version & 1)
+-		vcpu->arch.st.steal.version += 1;  /* first time write, random junk */
++	vcpu->arch.st.steal.preempted = 0;
+ 
+-	vcpu->arch.st.steal.version += 1;
++	if (st->version & 1)
++		st->version += 1;  /* first time write, random junk */
+ 
+-	kvm_write_guest_cached(vcpu->kvm, &vcpu->arch.st.stime,
+-		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time));
++	st->version += 1;
+ 
+ 	smp_wmb();
+ 
+-	vcpu->arch.st.steal.steal += current->sched_info.run_delay -
++	st->steal += current->sched_info.run_delay -
+ 		vcpu->arch.st.last_steal;
+ 	vcpu->arch.st.last_steal = current->sched_info.run_delay;
+ 
+-	kvm_write_guest_cached(vcpu->kvm, &vcpu->arch.st.stime,
+-		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time));
+-
+ 	smp_wmb();
+ 
+-	vcpu->arch.st.steal.version += 1;
++	st->version += 1;
+ 
+-	kvm_write_guest_cached(vcpu->kvm, &vcpu->arch.st.stime,
+-		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time));
++	kvm_unmap_gfn(vcpu, &map, &vcpu->arch.st.cache, true, false);
+ }
+ 
+ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+@@ -3272,18 +3274,25 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ 
+ static void kvm_steal_time_set_preempted(struct kvm_vcpu *vcpu)
+ {
++	struct kvm_host_map map;
++	struct kvm_steal_time *st;
++
+ 	if (!(vcpu->arch.st.msr_val & KVM_MSR_ENABLED))
+ 		return;
+ 
+ 	if (vcpu->arch.st.steal.preempted)
+ 		return;
+ 
+-	vcpu->arch.st.steal.preempted = KVM_VCPU_PREEMPTED;
++	if (kvm_map_gfn(vcpu, vcpu->arch.st.msr_val >> PAGE_SHIFT, &map,
++			&vcpu->arch.st.cache, true))
++		return;
++
++	st = map.hva +
++		offset_in_page(vcpu->arch.st.msr_val & KVM_STEAL_VALID_BITS);
++
++	st->preempted = vcpu->arch.st.steal.preempted = KVM_VCPU_PREEMPTED;
+ 
+-	kvm_write_guest_offset_cached(vcpu->kvm, &vcpu->arch.st.stime,
+-			&vcpu->arch.st.steal.preempted,
+-			offsetof(struct kvm_steal_time, preempted),
+-			sizeof(vcpu->arch.st.steal.preempted));
++	kvm_unmap_gfn(vcpu, &map, &vcpu->arch.st.cache, true, true);
+ }
+ 
+ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
+-- 
+2.20.1
+
+
+
