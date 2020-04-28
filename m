@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DECC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E5CC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A78420B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00D302184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098897;
-	bh=MP26A2OBUbs1cuhWFwrMTOSqGEDpkxHbfaCiIF/p9fA=;
+	s=default; t=1588098899;
+	bh=+Kqz7iBDUfUsOPk7sYgADoGCWo1JAntG1JwD5JFUJFM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CWe6qR30GTVgFsMMGIkDuODYsjvpx9Pwxa78jibg5RX4n6NhqiPRf5LJz0/GmpX1H
-	 sQUEnwyOvaM76MkwNasEtpgG+gRr/XUO6edJdCOnVAORg0M9hGnvmS4HIi13GzXuEb
-	 K9m4ocnooDA2wbE7B923PcKd/dOYzPw2R0wzbC6g=
+	b=17NfpMS8YBQ/WEhLPWG8/lpYKS4T2WAjr4or9NdBt9QbmHnsQ3wYc3x9wPUTIogkl
+	 0tn/8KKbSotn0Q5S5Pt/0zevgGTTyir8FHYSXZ39Ss5ohr+uM4Z7XMlepnNKVByY3A
+	 399gybW/NuaM8ghcEBgo5z0v8eKMtXiQppkgAxNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730173AbgD1Sez (ORCPT
+        id S1729209AbgD1Se6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:34:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51728 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:34:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730163AbgD1Ses (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:34:48 -0400
+        id S1729675AbgD1Sev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:34:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1348420B80;
-        Tue, 28 Apr 2020 18:34:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8075520B80;
+        Tue, 28 Apr 2020 18:34:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098888;
-        bh=MP26A2OBUbs1cuhWFwrMTOSqGEDpkxHbfaCiIF/p9fA=;
+        s=default; t=1588098891;
+        bh=+Kqz7iBDUfUsOPk7sYgADoGCWo1JAntG1JwD5JFUJFM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GhuNTvEMUS/NqmqoP9ZbVXFOw7dJl+12acMawK4KGnjPl/dn2wrTzdPkX53HexBGI
-         W4IAGxJ7cIanoHl5dkQqiYQe5a8T0nOkjGrNYB56F5G881PeI+ALspxatI4kezLTqm
-         a6rietua5JgKM5E+aEifAgOelYQuBhahyleTpfb8=
+        b=usLUCMZoQIve7Eh8E8bvbe1IP/FGQ2ic0z9ZUXtVBWGi/hUF1EHDrQVuqhDuN/YpD
+         hYkj4nfQwv+J0hua7yLgi0cbz9fmnbkmbPXSixMfNQ+8kB7J7wPkYnBBqWuLNNOQXA
+         nOf+fI/TF+vSX+FFl/oabrsd1/Txk9txnsaQIeTA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 069/131] net: dsa: b53: b53_arl_rw_op() needs to select IVL or SVL
-Date:   Tue, 28 Apr 2020 20:24:41 +0200
-Message-Id: <20200428182233.601917296@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.6 125/167] iwlwifi: pcie: indicate correct RB size to device
+Date:   Tue, 28 Apr 2020 20:25:01 +0200
+Message-Id: <20200428182241.117194663@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,45 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 64fec9493f7dc9bdd7233bcfe98985c45bd0e3c1 ]
+commit d8d663970234fe885f29edf4f06394d0928c89f4 upstream.
 
-Flip the IVL_SVL_SELECT bit correctly based on the VLAN enable status,
-the default is to perform Shared VLAN learning instead of Individual
-learning.
+In the context info, we need to indicate the correct RB size
+to the device so that it will not think we have 4k when we
+only use 2k. This seems to not have caused any issues right
+now, likely because the hardware no longer supports putting
+multiple entries into a single RB, and practically all of
+the entries should be smaller than 2k.
 
-Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Nevertheless, it's a bug, and we must advertise the right
+size to the device.
+
+Note that right now we can only tell it 2k vs. 4k, so for
+the cases where we have more, still use 4k. This needs to
+be fixed by the firmware first.
+
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: cfdc20efebdc ("iwlwifi: pcie: use partial pages if applicable")
+Cc: stable@vger.kernel.org # v5.6
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/iwlwifi.20200417100405.ae6cd345764f.I0985c55223decf70182b9ef1d8edf4179f537853@changeid
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/dsa/b53/b53_common.c |    4 ++++
- drivers/net/dsa/b53/b53_regs.h   |    1 +
- 2 files changed, 5 insertions(+)
 
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -1253,6 +1253,10 @@ static int b53_arl_rw_op(struct b53_devi
- 		reg |= ARLTBL_RW;
- 	else
- 		reg &= ~ARLTBL_RW;
-+	if (dev->vlan_enabled)
-+		reg &= ~ARLTBL_IVL_SVL_SELECT;
-+	else
-+		reg |= ARLTBL_IVL_SVL_SELECT;
- 	b53_write8(dev, B53_ARLIO_PAGE, B53_ARLTBL_RW_CTRL, reg);
+---
+ drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c |   18 +++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c
+@@ -129,6 +129,18 @@ int iwl_pcie_ctxt_info_gen3_init(struct
+ 	int cmdq_size = max_t(u32, IWL_CMD_QUEUE_SIZE,
+ 			      trans->cfg->min_txq_size);
  
- 	return b53_arl_op_wait(dev);
---- a/drivers/net/dsa/b53/b53_regs.h
-+++ b/drivers/net/dsa/b53/b53_regs.h
-@@ -292,6 +292,7 @@
- /* ARL Table Read/Write Register (8 bit) */
- #define B53_ARLTBL_RW_CTRL		0x00
- #define    ARLTBL_RW			BIT(0)
-+#define    ARLTBL_IVL_SVL_SELECT	BIT(6)
- #define    ARLTBL_START_DONE		BIT(7)
++	switch (trans_pcie->rx_buf_size) {
++	case IWL_AMSDU_DEF:
++		return -EINVAL;
++	case IWL_AMSDU_2K:
++		break;
++	case IWL_AMSDU_4K:
++	case IWL_AMSDU_8K:
++	case IWL_AMSDU_12K:
++		control_flags |= IWL_PRPH_SCRATCH_RB_SIZE_4K;
++		break;
++	}
++
+ 	/* Allocate prph scratch */
+ 	prph_scratch = dma_alloc_coherent(trans->dev, sizeof(*prph_scratch),
+ 					  &trans_pcie->prph_scratch_dma_addr,
+@@ -143,10 +155,8 @@ int iwl_pcie_ctxt_info_gen3_init(struct
+ 		cpu_to_le16((u16)iwl_read32(trans, CSR_HW_REV));
+ 	prph_sc_ctrl->version.size = cpu_to_le16(sizeof(*prph_scratch) / 4);
  
- /* MAC Address Index Register (48 bit) */
+-	control_flags = IWL_PRPH_SCRATCH_RB_SIZE_4K |
+-			IWL_PRPH_SCRATCH_MTR_MODE |
+-			(IWL_PRPH_MTR_FORMAT_256B &
+-			 IWL_PRPH_SCRATCH_MTR_FORMAT);
++	control_flags |= IWL_PRPH_SCRATCH_MTR_MODE;
++	control_flags |= IWL_PRPH_MTR_FORMAT_256B & IWL_PRPH_SCRATCH_MTR_FORMAT;
+ 
+ 	/* initialize RX default queue */
+ 	prph_sc_ctrl->rbd_cfg.free_rbd_addr =
 
 
