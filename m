@@ -2,210 +2,103 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C754C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DCBC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ACEE208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67FE0208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:07:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hxK9Pf5n"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lxlBvAi5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgD1UGX (ORCPT
+        id S1726436AbgD1UHC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:06:23 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:49668 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbgD1UGW (ORCPT
+        Tue, 28 Apr 2020 16:07:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726259AbgD1UGg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:06:22 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SJxW2s007443;
-        Tue, 28 Apr 2020 20:06:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=lS1jt9qUhtYP/TsyQs7xYd6MSkddoMnKFatL19J2soU=;
- b=hxK9Pf5nAUBUa3vs+r8wovvjXaG1/b8oqIVFBeUY4Y7qneFajxRWlfOkBmB7QV7VEqAA
- qgXIqyItr11TYS68TdXbHQ/PdJZYHlKeYWL5SehzjFLDjWAoRWaZk6zeCz171RaHXY58
- OpjmzlmOSuwrTXTsY9E8ZhlpnbDRDRrkICvVomtjKC4JHiR29YXsxbgT/2cohXjKQsXb
- iwpOAXE/8mrg7RWDhRBlua8x58J7IGa0K+Pstj8CzDYsxfnjNoCCTaBc18RC0MEzEKfW
- QuraLYLjcStpuh0n/C4Leqw04NAw7BUItSGd7pIoI2cDv2qssEHpv80H5gZvlmMdunl/ ag== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 30p2p07hjj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 20:06:08 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SJv056001225;
-        Tue, 28 Apr 2020 20:06:07 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 30my0e7h7y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 20:06:07 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03SK63Sx013414;
-        Tue, 28 Apr 2020 20:06:03 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 Apr 2020 13:06:02 -0700
-Date:   Tue, 28 Apr 2020 13:06:00 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH V11 09/11] fs: Lift XFS_IDONTCACHE to the VFS layer
-Message-ID: <20200428200600.GA6742@magnolia>
-References: <20200428002142.404144-1-ira.weiny@intel.com>
- <20200428002142.404144-10-ira.weiny@intel.com>
+        Tue, 28 Apr 2020 16:06:36 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76326C03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:06:35 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id z16so22772622uae.11
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:06:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NWN2pTS6iB36h7DaRZrhXtMe3/2D3xJNS6+5ajy+5jY=;
+        b=lxlBvAi5+Kp0E1kvuLZIfX3f5amfiRbPoT6rwz3YRt6V2J5+GvjYw+NTGMfqvzrN5e
+         8VVsWcLM3UTsASESHTZPQ57s3QqSBVpqWcc2FO4IpeAbwUgcS0LVqe1vsODS2nG7Bz+d
+         FscPV1JN0QyruGS7iIFxIIT5zT9F53xrKisX4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NWN2pTS6iB36h7DaRZrhXtMe3/2D3xJNS6+5ajy+5jY=;
+        b=cBdyiw96syHvA6hWsRFqOKfHtneDCEGTLYFkQoUeq72iYAplLoOPGE5CXA2ewGHuVa
+         TrGYljF81HlViaBavTL+PAlE6lXM9rXdXJT+d8LpZ+u6exJ4vh+d77v5ofb0AYqVfxXN
+         dG7AbDMOAf3FWUOjVERVqYJb0PjEkIrVCV3mdrnaF2BkHHJL4O0gUbPzmLiKYQQD8BzK
+         n+mSarFg+K/0/vvRYxnPTWAVIq8QLSr3PRDH9r+n4RI1eFYwbfRvhBOQa7RgJOm1Dv+y
+         X48mI3pKbjEyMw5PxjCGqPiAl9gqmW+vER8VUo/LpAjl8IfpSK66Dyyit8s0dsXn9Uft
+         XCTg==
+X-Gm-Message-State: AGi0Pua17fn2EjPc823K3kvBv1HAa4bICfEL5CRVpVjV5vDUbTLko5ux
+        LhcrtBvjuDp1kCcmy9b2+2RJNUZ/VOu52fo0YyHUJQ==
+X-Google-Smtp-Source: APiQypJ5GASwyuTmq6vb+mMs8GlOiPOB+ZU/74cFC69Z5RtuhkUtZGHT2TQvquei4X23XLIf2FoJH6WJiKs+6iDLpWw=
+X-Received: by 2002:ab0:689a:: with SMTP id t26mr24178132uar.105.1588104394359;
+ Tue, 28 Apr 2020 13:06:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428002142.404144-10-ira.weiny@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
- suspectscore=3 adultscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004280157
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1011
- bulkscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
- mlxscore=0 suspectscore=3 mlxlogscore=999 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004280157
+References: <20200423044036.234578-1-evanbenn@chromium.org>
+ <20200423143945.v5.2.Ia92bb4d4ce84bcefeba1d00aaa1c1e919b6164ef@changeid>
+ <CAODwPW9-c8EcZh_zB6SwohzvHtCQasaNLQM0fj2bj5O5KuVPfg@mail.gmail.com> <CAKz_xw0nQL2t1a-ofosLVb72JwSAGXCea5wOuddstOMrULNygg@mail.gmail.com>
+In-Reply-To: <CAKz_xw0nQL2t1a-ofosLVb72JwSAGXCea5wOuddstOMrULNygg@mail.gmail.com>
+From:   Julius Werner <jwerner@chromium.org>
+Date:   Tue, 28 Apr 2020 13:06:21 -0700
+Message-ID: <CAODwPW9STGmh5EZjhxARmY+PFLC_UoQYxbfGoRTD5w4BvMv=0g@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] watchdog: Add new arm_smc_wdt watchdog driver
+To:     Evan Benn <evanbenn@chromium.org>
+Cc:     Julius Werner <jwerner@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Olof Johansson <olof@lixom.net>, Rob Herring <robh@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 05:21:40PM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> DAX effective mode (S_DAX) changes requires inode eviction.
-> 
-> XFS has an advisory flag (XFS_IDONTCACHE) to prevent caching of the
-> inode if no other additional references are taken.  We lift this flag to
-> the VFS layer and change the behavior slightly by allowing the flag to
-> remain even if multiple references are taken.
-> 
-> This will expedite the eviction of inodes to change S_DAX.
-> 
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Reviewed-by: Dave Chinner <dchinner@redhat.com>
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> I think I have misunderstood the device tree json-schema spec.
+> My intention was for the device tree to fill in a default value in the dtb for
+> arm,smc-id if it was omitted in the dts. But now I see that does not seem to
+> happen, I cannot really find any documentation of `default`, so I will just put
+> a documentation string in instead and force the default in the driver.
 
-Looks ok to me,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-
---D
-
-> 
-> ---
-> Changes from V9:
-> 	Fix misspelling in commit subject
-> 	move XFS_IEOFBLOCKS to '9'
-> 
-> Changes from V8:
-> 	Remove XFS_IDONTCACHE
-> ---
->  fs/xfs/xfs_icache.c | 4 ++--
->  fs/xfs/xfs_inode.h  | 3 +--
->  fs/xfs/xfs_super.c  | 2 +-
->  include/linux/fs.h  | 6 +++++-
->  4 files changed, 9 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-> index 17a0b86fe701..de76f7f60695 100644
-> --- a/fs/xfs/xfs_icache.c
-> +++ b/fs/xfs/xfs_icache.c
-> @@ -477,7 +477,7 @@ xfs_iget_cache_hit(
->  		xfs_ilock(ip, lock_flags);
->  
->  	if (!(flags & XFS_IGET_INCORE))
-> -		xfs_iflags_clear(ip, XFS_ISTALE | XFS_IDONTCACHE);
-> +		xfs_iflags_clear(ip, XFS_ISTALE);
->  	XFS_STATS_INC(mp, xs_ig_found);
->  
->  	return 0;
-> @@ -559,7 +559,7 @@ xfs_iget_cache_miss(
->  	 */
->  	iflags = XFS_INEW;
->  	if (flags & XFS_IGET_DONTCACHE)
-> -		iflags |= XFS_IDONTCACHE;
-> +		VFS_I(ip)->i_state |= I_DONTCACHE;
->  	ip->i_udquot = NULL;
->  	ip->i_gdquot = NULL;
->  	ip->i_pdquot = NULL;
-> diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-> index 83073c883fbf..d8ce3eaa246e 100644
-> --- a/fs/xfs/xfs_inode.h
-> +++ b/fs/xfs/xfs_inode.h
-> @@ -218,8 +218,7 @@ static inline bool xfs_inode_has_cow_data(struct xfs_inode *ip)
->  #define XFS_IFLOCK		(1 << __XFS_IFLOCK_BIT)
->  #define __XFS_IPINNED_BIT	8	 /* wakeup key for zero pin count */
->  #define XFS_IPINNED		(1 << __XFS_IPINNED_BIT)
-> -#define XFS_IDONTCACHE		(1 << 9) /* don't cache the inode long term */
-> -#define XFS_IEOFBLOCKS		(1 << 10)/* has the preallocblocks tag set */
-> +#define XFS_IEOFBLOCKS		(1 << 9) /* has the preallocblocks tag set */
->  /*
->   * If this unlinked inode is in the middle of recovery, don't let drop_inode
->   * truncate and free the inode.  This can happen if we iget the inode during
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index e80bd2c4c279..6f91c13fb6ea 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -737,7 +737,7 @@ xfs_fs_drop_inode(
->  		return 0;
->  	}
->  
-> -	return generic_drop_inode(inode) || (ip->i_flags & XFS_IDONTCACHE);
-> +	return generic_drop_inode(inode);
->  }
->  
->  static void
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index a87cc5845a02..44bd45af760f 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -2156,6 +2156,8 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
->   *
->   * I_CREATING		New object's inode in the middle of setting up.
->   *
-> + * I_DONTCACHE		Evict inode as soon as it is not used anymore.
-> + *
->   * Q: What is the difference between I_WILL_FREE and I_FREEING?
->   */
->  #define I_DIRTY_SYNC		(1 << 0)
-> @@ -2178,6 +2180,7 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
->  #define I_WB_SWITCH		(1 << 13)
->  #define I_OVL_INUSE		(1 << 14)
->  #define I_CREATING		(1 << 15)
-> +#define I_DONTCACHE		(1 << 16)
->  
->  #define I_DIRTY_INODE (I_DIRTY_SYNC | I_DIRTY_DATASYNC)
->  #define I_DIRTY (I_DIRTY_INODE | I_DIRTY_PAGES)
-> @@ -3049,7 +3052,8 @@ extern int inode_needs_sync(struct inode *inode);
->  extern int generic_delete_inode(struct inode *inode);
->  static inline int generic_drop_inode(struct inode *inode)
->  {
-> -	return !inode->i_nlink || inode_unhashed(inode);
-> +	return !inode->i_nlink || inode_unhashed(inode) ||
-> +		(inode->i_state & I_DONTCACHE);
->  }
->  
->  extern struct inode *ilookup5_nowait(struct super_block *sb,
-> -- 
-> 2.25.1
-> 
+The bindings in Documentation/device-tree are just for informational
+purposes, they do not have any direct effect on anything. If you want
+there to be a default, you'll have to write the kernel code to fill it
+in.
