@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34916C8300A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECC4C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15F07214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E03C214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098932;
-	bh=yQHRGgg3m1GX/ZcnnSRuq3xEturIrft/FV/zlgGBQcA=;
+	s=default; t=1588098935;
+	bh=yb0vZB48lFDFMQjiYV4XwDurl3e7MMpVsrGD2cNBE3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=we8f5S5vmyPXYRXg6imvd3NQxzGpbzOFzz0fMJvwUQ7/FzbWIfWZrsLDMaDRqFrP8
-	 iyzYEZVMp32ZwEgRWjjVoYbvLC2xVbN6AWJseNOHjvCFl7FfSd5i+ylNDeRPY0SlAg
-	 AJkmCvy33CsOPG6PDDtZncsJ4lqrH4cY2TYJNwpw=
+	b=pEwyX5P/CsYGQlr0LjdekiLEqXbUCAtn5ikWTiX+MlIZTeTvJT35Q+X4d9SWIN++F
+	 Nvgs+P4DzW4hkbXeHXsAlSAlCDzaApKvdgB6yTkg2Wzh7iGXJE3ZVI3J023zUiB6Cl
+	 ytJIVEKrf9i453i9zsw5SVtgqgRIvVMfMMSzS900=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729466AbgD1Sfb (ORCPT
+        id S1730272AbgD1Sfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:35:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52560 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:35:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730245AbgD1Sf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:35:26 -0400
+        id S1728983AbgD1Sfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:35:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C747B208E0;
-        Tue, 28 Apr 2020 18:35:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9849D208E0;
+        Tue, 28 Apr 2020 18:35:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098925;
-        bh=yQHRGgg3m1GX/ZcnnSRuq3xEturIrft/FV/zlgGBQcA=;
+        s=default; t=1588098930;
+        bh=yb0vZB48lFDFMQjiYV4XwDurl3e7MMpVsrGD2cNBE3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OHhwW/YTOQmDuDltVuXO77ktZzc1zhn2jbkfaD/jvjhBZlHiJGKcMApmXH1mb/P9d
-         H6fL9IRX/fxy3vUcQaBsIpeVgUCsGiAZ2Ndgx37zNWGIjO+QD7ZYYG6tE1TQA0EEyp
-         wum0x7zUDZFPs5KqMBVV9zWA3ztTh4mNHOxcWLHQ=
+        b=zk0N1ZcmejxImIEprgRzkEsPrYA2xoEcR+hddOL2mBZ/iDj2NinsdEdxOgfN8ZuUu
+         wzr8RL9y/pTuzcpbeo3Kyn2kZI43y60LQJdpet8tXnyemRlTkKHaiXIi++kdxmdZMe
+         jHN/mb3I6DVbpfQHmU15Vx2cPK+en1ZMrvbCLdJ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 032/168] Revert "powerpc/64: irq_work avoid interrupt when called with hardware irqs enabled"
-Date:   Tue, 28 Apr 2020 20:23:26 +0200
-Message-Id: <20200428182235.783498423@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Johnathan Smithinovic <johnathan.smithinovic@gmx.at>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 074/131] ALSA: hda: Remove ASUS ROG Zenith from the blacklist
+Date:   Tue, 28 Apr 2020 20:24:46 +0200
+Message-Id: <20200428182234.235748668@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,108 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit abc3fce76adbdfa8f87272c784b388cd20b46049 ]
+[ Upstream commit a8cf44f085ac12c0b5b8750ebb3b436c7f455419 ]
 
-This reverts commit ebb37cf3ffd39fdb6ec5b07111f8bb2f11d92c5f.
+The commit 3c6fd1f07ed0 ("ALSA: hda: Add driver blacklist") added a
+new blacklist for the devices that are known to have empty codecs, and
+one of the entries was ASUS ROG Zenith II (PCI SSID 1043:874f).
+However, it turned out that the very same PCI SSID is used for the
+previous model that does have the valid HD-audio codecs and the change
+broke the sound on it.
 
-That commit does not play well with soft-masked irq state
-manipulations in idle, interrupt replay, and possibly others due to
-tracing code sometimes using irq_work_queue (e.g., in
-trace_hardirqs_on()). That can cause PACA_IRQ_DEC to become set when
-it is not expected, and be ignored or cleared or cause warnings.
+This patch reverts the corresponding entry as a temporary solution.
+Although Zenith II and co will see get the empty HD-audio bus again,
+it'd be merely resource wastes and won't affect the functionality,
+so it's no end of the world.  We'll need to address this later,
+e.g. by either switching to DMI string matching or using PCI ID &
+SSID pairs.
 
-The net result seems to be missing an irq_work until the next timer
-interrupt in the worst case which is usually not going to be noticed,
-however it could be a long time if the tick is disabled, which is
-against the spirit of irq_work and might cause real problems.
-
-The idea is still solid, but it would need more work. It's not really
-clear if it would be worth added complexity, so revert this for
-now (not a straight revert, but replace with a comment explaining why
-we might see interrupts happening, and gives git blame something to
-find).
-
-Fixes: ebb37cf3ffd3 ("powerpc/64: irq_work avoid interrupt when called with hardware irqs enabled")
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200402120401.1115883-1-npiggin@gmail.com
+Fixes: 3c6fd1f07ed0 ("ALSA: hda: Add driver blacklist")
+Reported-by: Johnathan Smithinovic <johnathan.smithinovic@gmx.at>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200419071926.22683-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/time.c | 44 +++++++++++---------------------------
- 1 file changed, 13 insertions(+), 31 deletions(-)
+ sound/pci/hda/hda_intel.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
-index 11301a1187f33..0e0a2227af7d7 100644
---- a/arch/powerpc/kernel/time.c
-+++ b/arch/powerpc/kernel/time.c
-@@ -522,35 +522,6 @@ static inline void clear_irq_work_pending(void)
- 		"i" (offsetof(struct paca_struct, irq_work_pending)));
- }
- 
--void arch_irq_work_raise(void)
--{
--	preempt_disable();
--	set_irq_work_pending_flag();
--	/*
--	 * Non-nmi code running with interrupts disabled will replay
--	 * irq_happened before it re-enables interrupts, so setthe
--	 * decrementer there instead of causing a hardware exception
--	 * which would immediately hit the masked interrupt handler
--	 * and have the net effect of setting the decrementer in
--	 * irq_happened.
--	 *
--	 * NMI interrupts can not check this when they return, so the
--	 * decrementer hardware exception is raised, which will fire
--	 * when interrupts are next enabled.
--	 *
--	 * BookE does not support this yet, it must audit all NMI
--	 * interrupt handlers to ensure they call nmi_enter() so this
--	 * check would be correct.
--	 */
--	if (IS_ENABLED(CONFIG_BOOKE) || !irqs_disabled() || in_nmi()) {
--		set_dec(1);
--	} else {
--		hard_irq_disable();
--		local_paca->irq_happened |= PACA_IRQ_DEC;
--	}
--	preempt_enable();
--}
--
- #else /* 32-bit */
- 
- DEFINE_PER_CPU(u8, irq_work_pending);
-@@ -559,16 +530,27 @@ DEFINE_PER_CPU(u8, irq_work_pending);
- #define test_irq_work_pending()		__this_cpu_read(irq_work_pending)
- #define clear_irq_work_pending()	__this_cpu_write(irq_work_pending, 0)
- 
-+#endif /* 32 vs 64 bit */
-+
- void arch_irq_work_raise(void)
- {
-+	/*
-+	 * 64-bit code that uses irq soft-mask can just cause an immediate
-+	 * interrupt here that gets soft masked, if this is called under
-+	 * local_irq_disable(). It might be possible to prevent that happening
-+	 * by noticing interrupts are disabled and setting decrementer pending
-+	 * to be replayed when irqs are enabled. The problem there is that
-+	 * tracing can call irq_work_raise, including in code that does low
-+	 * level manipulations of irq soft-mask state (e.g., trace_hardirqs_on)
-+	 * which could get tangled up if we're messing with the same state
-+	 * here.
-+	 */
- 	preempt_disable();
- 	set_irq_work_pending_flag();
- 	set_dec(1);
- 	preempt_enable();
- }
- 
--#endif /* 32 vs 64 bit */
--
- #else  /* CONFIG_IRQ_WORK */
- 
- #define test_irq_work_pending()	0
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 54a9b391ecce0..0502042c16163 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2215,7 +2215,6 @@ static const struct hdac_io_ops pci_hda_io_ops = {
+  * should be ignored from the beginning.
+  */
+ static const struct snd_pci_quirk driver_blacklist[] = {
+-	SND_PCI_QUIRK(0x1043, 0x874f, "ASUS ROG Zenith II / Strix", 0),
+ 	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
+ 	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
+ 	{}
 -- 
 2.20.1
 
