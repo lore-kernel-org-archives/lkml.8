@@ -2,234 +2,124 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D3AC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A38D7C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36CCE2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B7D42070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:55:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lZDn8hOp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F2bCXtMO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbgD1WyG (ORCPT
+        id S1726634AbgD1WzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:54:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726564AbgD1WyF (ORCPT
+        Tue, 28 Apr 2020 18:55:12 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50706 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726274AbgD1WzM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:54:05 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3667C03C1AD
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:54:05 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id n11so45337pgl.9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:54:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xdhVxVxjCVp6Qqe+xTFCZZzPWjQcwdRMhEMU3zXTXbM=;
-        b=lZDn8hOpe6Orx5vNl0ApTSLRwJXULDkC6rY168+BbIR13IuGkIm6Bjp2a9BydV+OJQ
-         NAjXXsgxk0wGFTKvp/IiW3Q4BCCsNkDftSdqVoQgSax/kgjal9/7NI9TBFZJ6CzOddDE
-         yiJu2Z2IXUyYleZSCtekQITAqGsHikQbBV99DwAoFKbyd5IVP1QYet+YRMbtZVFGCbpm
-         ZplOgxABlp5Pc97RJRDWA6xX36nup+lzOPgY+k6Tv7P88b0sPaqJ7XPWDCQWuftjN87K
-         cm8iAoJOCGcJaUH4URp1Hs+X2+9+TYQ0YqUR0iHWUZ0rtJIUj6Uq+XxL1WZSil02tDuK
-         a7Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xdhVxVxjCVp6Qqe+xTFCZZzPWjQcwdRMhEMU3zXTXbM=;
-        b=kZ8Fs5FEwk8CpoBL7saCG/Cfo7uQt1ntGTeWW7cT/YcNW5tKOHBrhyTEghqng0FBQ9
-         zllZMWG3q7xAzdS/FTJVB45S3Boxs6eryr21Yleac/qVn99vyfBcP7ZEAa3ATNolJEb5
-         dxzTd/BdMNBSRl277OD05x9UIRVEYmoKPk/1I5AMDO6UoxEjp0otgBqw4fOvuUC1cazN
-         nh/Hg+3QBRKQOEAGSCNh9XciQupImVRQoFN5ZDQGt29bsofisoqBo0aenYa0NWIxdh8E
-         Ls55evj+2LIl8cNSfr+q1dtw1JbDT0XzFfUE8OACoQurNBohWKBuEELcVss0hI+pCEat
-         WgEw==
-X-Gm-Message-State: AGi0PuaJksJ6Ab7HKyeDE3HJA0Kk3nSJmALEvO3nqhaY9JkmfN9IIcP9
-        5rT2ruR4ITxDT0Jzwz0WgNXABw==
-X-Google-Smtp-Source: APiQypJNucB0GAu1iaDS0cUINfCTVxRJEvfFFcvSDOLx2zmaCo8f+iE0QAo5svuV0Mv1rpNmPMI3PQ==
-X-Received: by 2002:a63:a35e:: with SMTP id v30mr5973904pgn.134.1588114444821;
-        Tue, 28 Apr 2020 15:54:04 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
-        by smtp.gmail.com with ESMTPSA id p2sm13799090pgh.25.2020.04.28.15.54.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 15:54:04 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 15:54:01 -0700
-From:   Fangrui Song <maskray@google.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com, linux-kbuild@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Subject: Re: [PATCH v4 4/5] MIPS: VDSO: Use $(LD) instead of $(CC) to link
- VDSO
-Message-ID: <20200428225401.7yrld7u2xr67t4xf@google.com>
-References: <20200423171807.29713-1-natechancellor@gmail.com>
- <20200428221419.2530697-1-natechancellor@gmail.com>
- <20200428221419.2530697-5-natechancellor@gmail.com>
+        Tue, 28 Apr 2020 18:55:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588114511;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=u7uAqY8p0pjY0KMACKKK3etw1n75eHJHi1TZE1AVD8U=;
+        b=F2bCXtMO1Exu6EF+xXZtyNfsfHGreF4b55NiZsTM/yNpE2i3zRLl3ptAthlqliSCuR6BWG
+        LWDiERyUyr9KKs9evXPjNCQTixzJVD2Fpq/Mb72cw9FofL4X/nIgy50AeJOl9OGMZXP3wQ
+        sKbJcuf/Pdpzl74R8SnxRfXwmscn/6Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-245-bD6M3SYYNKyG_p9xUVnZ5w-1; Tue, 28 Apr 2020 18:55:09 -0400
+X-MC-Unique: bD6M3SYYNKyG_p9xUVnZ5w-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4C4C5107ACCD;
+        Tue, 28 Apr 2020 22:55:07 +0000 (UTC)
+Received: from ovpn-112-24.phx2.redhat.com (ovpn-112-24.phx2.redhat.com [10.3.112.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D4A311002388;
+        Tue, 28 Apr 2020 22:55:03 +0000 (UTC)
+Message-ID: <c4a8d1f044b721a2c396fa00a0244eff0b851ae4.camel@redhat.com>
+Subject: Re: [RFC PATCH 1/3] sched/fair: Call newidle_balance() from
+ finish_task_switch()
+From:   Scott Wood <swood@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Rik van Riel <riel@surriel.com>,
+        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
+Date:   Tue, 28 Apr 2020 17:55:03 -0500
+In-Reply-To: <20200428220917.GB16027@hirez.programming.kicks-ass.net>
+References: <20200428050242.17717-1-swood@redhat.com>
+         <20200428050242.17717-2-swood@redhat.com> <jhjftcns35d.mognet@arm.com>
+         <20200428220917.GB16027@hirez.programming.kicks-ass.net>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200428221419.2530697-5-natechancellor@gmail.com>
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 2020-04-29 at 00:09 +0200, Peter Zijlstra wrote:
+> On Tue, Apr 28, 2020 at 10:37:18PM +0100, Valentin Schneider wrote:
+> > On 28/04/20 06:02, Scott Wood wrote:
+> > > Thus, newidle_balance() is entered with interrupts enabled, which
+> > > allows
+> > > (in the next patch) enabling interrupts when the lock is dropped.
+> > > 
+> > > Signed-off-by: Scott Wood <swood@redhat.com>
+> > > ---
+> > >  kernel/sched/core.c  |  7 ++++---
+> > >  kernel/sched/fair.c  | 45 ++++++++++++++++---------------------------
+> > > -
+> > >  kernel/sched/sched.h |  6 ++----
+> > >  3 files changed, 22 insertions(+), 36 deletions(-)
+> > > 
+> > > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > > index 9a2fbf98fd6f..0294beb8d16c 100644
+> > > --- a/kernel/sched/core.c
+> > > +++ b/kernel/sched/core.c
+> > > @@ -3241,6 +3241,10 @@ static struct rq *finish_task_switch(struct
+> > > task_struct *prev)
+> > >       }
+> > > 
+> > >       tick_nohz_task_switch();
+> > > +
+> > > +	if (is_idle_task(current))
+> > > +		newidle_balance();
+> > > +
+> > 
+> > This means we must go through a switch_to(idle) before figuring out we
+> > could've switched to a CFS task, and do it then. I'm curious to see the
+> > performance impact of that.
+> 
+> Also, if you move it this late, this is entirely the wrong place. If you
+> do it after the context switch either use the balance_callback or put it
+> in the idle path.
+> 
+> But what Valentin said; this needs a fair bit of support, the whole
+> reason we've never done this is to avoid that double context switch...
+> 
 
-On 2020-04-28, Nathan Chancellor wrote:
->Currently, the VDSO is being linked through $(CC). This does not match
->how the rest of the kernel links objects, which is through the $(LD)
->variable.
->
->When clang is built in a default configuration, it first attempts to use
->the target triple's default linker then the system's default linker,
->unless told otherwise through -fuse-ld=... We do not use -fuse-ld=
->because it can be brittle and we have support for invoking $(LD)
->directly. See commit fe00e50b2db8c ("ARM: 8858/1: vdso: use $(LD)
->instead of $(CC) to link VDSO") and commit 691efbedc60d2 ("arm64: vdso:
->use $(LD) instead of $(CC) to link VDSO") for examples of doing this in
->the VDSO.
->
->Do the same thing here. Replace the custom linking logic with $(cmd_ld)
->and ldflags-y so that $(LD) is respected. We need to explicitly add two
->flags to the linker that were implicitly passed by the compiler:
->-G 0 (which comes from ccflags-vdso) and --eh-frame-hdr.
->
->Before this patch (generated by adding '-v' to VDSO_LDFLAGS):
->
-><gcc_prefix>/libexec/gcc/mips64-linux/9.3.0/collect2 \
->-plugin <gcc_prefix>/libexec/gcc/mips64-linux/9.3.0/liblto_plugin.so \
->-plugin-opt=<gcc_prefix>/libexec/gcc/mips64-linux/9.3.0/lto-wrapper \
->-plugin-opt=-fresolution=/tmp/ccGEi5Ka.res \
->--eh-frame-hdr \
->-G 0 \
->-EB \
->-mips64r2 \
->-shared \
->-melf64btsmip \
->-o arch/mips/vdso/vdso.so.dbg.raw \
->-L<gcc_prefix>/lib/gcc/mips64-linux/9.3.0/64 \
->-L<gcc_prefix>/lib/gcc/mips64-linux/9.3.0 \
->-L<gcc_prefix>/lib/gcc/mips64-linux/9.3.0/../../../../mips64-linux/lib \
->-Bsymbolic \
->--no-undefined \
->-soname=linux-vdso.so.1 \
->-EB \
->--hash-style=sysv \
->--build-id \
->-T arch/mips/vdso/vdso.lds \
->arch/mips/vdso/elf.o \
->arch/mips/vdso/vgettimeofday.o \
->arch/mips/vdso/sigreturn.o
->
->After this patch:
->
-><gcc_prefix>/bin/mips64-linux-ld \
->-m elf64btsmip \
->-Bsymbolic \
->--no-undefined \
->-soname=linux-vdso.so.1 \
->-EB \
->-nostdlib \
->-shared \
->-G 0 \
->--eh-frame-hdr \
->--hash-style=sysv \
->--build-id \
->-T  arch/mips/vdso/vdso.lds \
->arch/mips/vdso/elf.o \
->arch/mips/vdso/vgettimeofday.o
->arch/mips/vdso/sigreturn.o \
->-o arch/mips/vdso/vdso.so.dbg.raw
->
->Note that we leave behind -mips64r2. Turns out that ld ignores it (see
->get_emulation in ld/ldmain.c). This is true of current trunk and 2.23,
->which is the minimum supported version for the kernel:
->
->https://sourceware.org/git/?p=binutils-gdb.git;a=blob;f=ld/ldmain.c;hb=aa4209e7b679afd74a3860ce25659e71cc4847d5#l593
->https://sourceware.org/git/?p=binutils-gdb.git;a=blob;f=ld/ldmain.c;hb=a55e30b51bc6227d8d41f707654d0a5620978dcf#l641
->
->Before this patch, LD=ld.lld did nothing:
->
->$ llvm-readelf -p.comment arch/mips/vdso/vdso.so.dbg | sed 's/(.*//'
->String dump of section '.comment':
->[     0] ClangBuiltLinux clang version 11.0.0
->
->After this patch, it does:
->
->$ llvm-readelf -p.comment arch/mips/vdso/vdso.so.dbg | sed 's/(.*//'
->String dump of section '.comment':
->[     0] Linker: LLD 11.0.0
->[    62] ClangBuiltLinux clang version 11.0.0
->
->Link: https://github.com/ClangBuiltLinux/linux/issues/785
->Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
->---
->
->v3 -> v4:
->
->* Improve commit message to show that ld command is effectively the
->  same as the one generated by GCC.
->
->* Add '-G 0' and '--eh-frame-hdr' because they were added by GCC.
+balance_callback() enters with the rq lock held but BH not separately
+disabled, which interferes with the ability to enable interrupts but not BH.
+It also gets called from rt_mutex_setprio() and __sched_setscheduler(), and
+I didn't want the caller of those to be stuck with the latency.
 
-My understanding is that we start to use more -fasynchronous-unwind-tables to eliminate .eh_frame in object files.
-Without .eh_frame, LD --eh-frame-hdr is really not useful.
+-Scott
 
 
-Sigh...  -G 0. This is an option ignored by LLD. GCC devs probably should
-have used the long option --gpsize rather than take the short option -G.
-Even better, -z gpsize= or similar if this option is specific to ELF.
-
->v2 -> v3:
->
->* New patch.
->
-> arch/mips/vdso/Makefile | 13 ++++---------
-> 1 file changed, 4 insertions(+), 9 deletions(-)
->
->diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
->index 92b53d1df42c3..2e64c7600eead 100644
->--- a/arch/mips/vdso/Makefile
->+++ b/arch/mips/vdso/Makefile
->@@ -60,10 +60,9 @@ ifdef CONFIG_MIPS_DISABLE_VDSO
-> endif
->
-> # VDSO linker flags.
->-VDSO_LDFLAGS := \
->-	-Wl,-Bsymbolic -Wl,--no-undefined -Wl,-soname=linux-vdso.so.1 \
->-	$(addprefix -Wl$(comma),$(filter -E%,$(KBUILD_CFLAGS))) \
->-	-nostdlib -shared -Wl,--hash-style=sysv -Wl,--build-id
->+ldflags-y := -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
->+	$(filter -E%,$(KBUILD_CFLAGS)) -nostdlib -shared \
->+	-G 0 --eh-frame-hdr --hash-style=sysv --build-id -T
->
-> CFLAGS_REMOVE_vdso.o = -pg
->
->@@ -82,11 +81,7 @@ quiet_cmd_vdso_mips_check = VDSOCHK $@
-> #
->
-> quiet_cmd_vdsold_and_vdso_check = LD      $@
->-      cmd_vdsold_and_vdso_check = $(cmd_vdsold); $(cmd_vdso_check); $(cmd_vdso_mips_check)
->-
->-quiet_cmd_vdsold = VDSO    $@
->-      cmd_vdsold = $(CC) $(c_flags) $(VDSO_LDFLAGS) \
->-                   -Wl,-T $(filter %.lds,$^) $(filter %.o,$^) -o $@
->+      cmd_vdsold_and_vdso_check = $(cmd_ld); $(cmd_vdso_check); $(cmd_vdso_mips_check)
->
-> quiet_cmd_vdsoas_o_S = AS      $@
->       cmd_vdsoas_o_S = $(CC) $(a_flags) -c -o $@ $<
->-- 
->2.26.2
->
