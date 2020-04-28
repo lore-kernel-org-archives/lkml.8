@@ -2,87 +2,140 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E0DC83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0086FC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC4820746
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD7992054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:14:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TAGQ4Ja/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fGS2oo0V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbgD1QLG (ORCPT
+        id S1728217AbgD1QO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:11:06 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49480 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728390AbgD1QKD (ORCPT
+        Tue, 28 Apr 2020 12:14:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50684 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728037AbgD1QO2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:10:03 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03SG9rBr098703;
-        Tue, 28 Apr 2020 11:09:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588090193;
-        bh=pWFC6a9Qbh3sjq2KJ7mhohvd+9WakZ3k6mQesnzqtvQ=;
-        h=From:To:CC:Subject:Date;
-        b=TAGQ4Ja/+a7NjRlrjtI5XymI0r5iSuhqG46wjHEwddNEg1PBp32y4/Qy9JVjb5Wsn
-         NknEMLZETtpAXq9F2wUDXMd+d7zmjGaWedumnk9wK6YhMxH/ETowxX7oq6/gHa8NYv
-         JyxvwzTgPKv6+3Hlwsu7Qsjd7VScCWhiduPUGIYo=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03SG9rYL068216
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 Apr 2020 11:09:53 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
- Apr 2020 11:09:52 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 28 Apr 2020 11:09:52 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03SG9qsK068720;
-        Tue, 28 Apr 2020 11:09:52 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>
-CC:     <linux@armlinux.org.uk>, <davem@davemloft.net>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <afd@ti.com>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net v3 0/2]  WoL fixes for DP83822 and DP83tc811
-Date:   Tue, 28 Apr 2020 11:03:52 -0500
-Message-ID: <20200428160354.2879-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 28 Apr 2020 12:14:28 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AF7AC03C1AB;
+        Tue, 28 Apr 2020 09:14:28 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id f18so22091514lja.13;
+        Tue, 28 Apr 2020 09:14:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZnXnmnUGnJoiqmak1qzJ2uo0ETz1Y/4EWDM5M5+McW4=;
+        b=fGS2oo0V4315baKko4RVx1wvx1RkPf6mVsOhdOrIDDYWBQzPnkKlTSp8QHvAj1CDy9
+         nzIxC+HzhXpaIa7msXlP2DMi5d8gpXeO92dOxA7FQ2waSsG3js+AV+/HHAjo/ZlDoJQw
+         hcb9MPNRB8gjqdA06X2g4kJnT47UJptPJsJzQRnzBRzkOgQ4K9xgW14vozetfeDfkS4z
+         PiYhDAK0FEGJjn0A7uVFpN+BKbglLueXcL1gS5csd30zCtQk4+zZhwNbBojouyxNvpah
+         MVMeHsvKv2teVMfuSxNxQDDi643nUKW1KifpFcZbs5cRdQpyLgvy55+a1NCbpap4kJ/N
+         NLIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZnXnmnUGnJoiqmak1qzJ2uo0ETz1Y/4EWDM5M5+McW4=;
+        b=n2BdI3BSFrziwKdD/OFP31BCCzFVnVnt/apNQ3xI3YaOKEOc9qkLIY56in2ZyzKLJc
+         38Vf0zPjX9IB3FGGyYPhw7e57gts+xUrrZ5r6lDSxsxWZtVIe/DvgxlKPh+T1R6FPTet
+         JMLKpskX1maO4Na7COB2hFPe5FEXONtNpTS4fsHRNW2bwjKNndIkIDZL02uMtJ1pirMN
+         DYHz2GNby5gJ0QQJOuAPWWEmwVluS+U7qt6kkLnV1m5qIbf19/sOJgKhH3k6TZjDdl+n
+         sgLAFRYGHs5qt02y4hZ2yRjmJrf7KxLZKaHxr/TvZf3RzPFu+QQ+eTTxjfSSzwVmYwWc
+         ruoA==
+X-Gm-Message-State: AGi0PuYoJdIFxq7m85dX9dhLuWiPZayaWLZ1ZL5wsSq4q/XeQsunQDVa
+        t+gSatM/JFGTmyi5uh6TBX2vkAoKPFriWS9Jsj0=
+X-Google-Smtp-Source: APiQypIXDLASfkazcJ+MQrYti2Ag3mLrjAObISlzH9I+j+TwEOwLu6ohEsL7aLot1tJOG7n4pooQE3SwWHE1K4b6jjM=
+X-Received: by 2002:a2e:9011:: with SMTP id h17mr18597862ljg.138.1588090466535;
+ Tue, 28 Apr 2020 09:14:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <CAK7LNARHd0DXRLONf6vH_ghsYZjzoduzkixqNDpVqqPx0yHbHg@mail.gmail.com>
+In-Reply-To: <CAK7LNARHd0DXRLONf6vH_ghsYZjzoduzkixqNDpVqqPx0yHbHg@mail.gmail.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Tue, 28 Apr 2020 09:14:15 -0700
+Message-ID: <CAADnVQ+RvDq9qvNgSkwaMO8QcDG1gCm-SkGgNHyy1gVC3_0w=A@mail.gmail.com>
+Subject: Re: BPFilter: bit size mismatch between bpfiter_umh and vmliux
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+On Tue, Apr 28, 2020 at 3:54 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Hi.
+>
+> I have a question about potential bit size
+> mismatch between vmlinux and bpfilter_umh.
+>
+>
+> net/bpfilter/bpfilter_umh is compiled for the
+> default machine bit of the compiler.
+> This may not match to the kernel bit size.
+>
+>
+> This happens in the following scenario.
+>
+> GCC can be compiled as bi-arch.
+> If you use GCC that defaults to 64-bit,
+> you can give -m32 flag to produce the 32 bit code.
+>
+> When you build the kernel for 32-bit, -m32 is
+> properly passed for building the kernel space objects.
+> However, it is missing while building the userspace
+> objects for bpfilter_umh.
+>
+>
+> For example, my build host is x86_64 Ubuntu.
+>
+> If I build the kernel for i386
+> with CONFIG_BPFILTER_UMH=y,
+> the embedded bpfilter_umh is 64bit ELF.
+>
+> You can reproduce it by the following command on the
+> mainline kernel.
+>
+> masahiro@oscar:~/ref/linux$ make ARCH=i386 defconfig
+> masahiro@oscar:~/ref/linux$ scripts/config -e BPFILTER
+> masahiro@oscar:~/ref/linux$ scripts/config -e BPFILTER_UMH
+> masahiro@oscar:~/ref/linux$ make $(nproc) ARCH=i386
+>    ...
+> masahiro@oscar:~/ref/linux$ file vmlinux
+> vmlinux: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV),
+> statically linked,
+> BuildID[sha1]=7ac691c67b4fe9b0cd46b45a2dc2d728d7d87686, not stripped
+> masahiro@oscar:~/ref/linux$ file net/bpfilter/bpfilter_umh
+> net/bpfilter/bpfilter_umh: ELF 64-bit LSB executable, x86-64, version
+> 1 (GNU/Linux), statically linked,
+> BuildID[sha1]=baf1ffe26f4c030a99a945fc22924c8c559e60ac, for GNU/Linux
+> 3.2.0, not stripped
+>
+>
+>
+>
+> At least, the build was successful,
+> but does this work at runtime?
+>
+> If this is a bug, I can fix it cleanly.
+>
+> I think the bit size of the user mode helper
+> should match to the kernel bit size. Is this correct?
 
-The WoL feature for each device was enabled during boot or when the PHY was
-brought up which may be undesired.  These patches disable the WoL in the
-config_init.  The disabling and enabling of the WoL is now done though the
-set_wol call.
-
-Dan
-
-Dan Murphy (2):
-  net: phy: DP83822: Fix WoL in config init to be disabled
-  net: phy: DP83TC811: Fix WoL in config init to be disabled
-
- drivers/net/phy/dp83822.c   | 30 ++++++++++++++----------------
- drivers/net/phy/dp83tc811.c | 21 ++++++++++++---------
- 2 files changed, 26 insertions(+), 25 deletions(-)
-
--- 
-2.25.1
-
+yes. they should match.
+In theory we can have -m32 umh running on 64-bit kernel,
+but I wouldn't bother adding support for such thing
+until there is a use case.
+Running 64-bit umh on 32-bit kernel is no go.
