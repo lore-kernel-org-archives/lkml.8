@@ -2,96 +2,165 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D89C83009
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6673C83006
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40989206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1867206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:56:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pM7rz3M7"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="gHEORjTf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgD1Mzc (ORCPT
+        id S1726902AbgD1M4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:55:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47666 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726827AbgD1Mzb (ORCPT
+        Tue, 28 Apr 2020 08:56:31 -0400
+Received: from mail.efficios.com ([167.114.26.124]:58448 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726746AbgD1M4a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:55:31 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 845BDC03C1A9;
-        Tue, 28 Apr 2020 05:55:31 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49BM7g0ggCz9sP7;
-        Tue, 28 Apr 2020 22:55:27 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588078527;
-        bh=Y47UAgUAwN2altZxsVR5r8sQ2CymmGxOKr3zUKWNfCs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pM7rz3M75dursj3FH7FuoCZxCoThX5DOFVapWQlX70HObHiZjpIoLtK4QSyWlDRr2
-         90RWNMbArJWXCYbrFyj539JZRUi4uiqFOuFnjH3Ii4plLWwf094SSy8Ya/24w+Gs+X
-         WixajLCBFtb6y1qN3ybk9K93FuYOMqv3kd+keptlaowLNDIssrt0bM4QcIzsrgA2kO
-         1Lxc76220fHALnEO2HJIws620fuu6GjvDyQ+vQp3a7ryVq0cU61cVXHtnwhQnW8CvK
-         usOImGfniilwRPklwvI+OulpGxPQaHGzjtAg7VGBWMQGmoccyl6fHGjsIbD7cCXYpi
-         IxkF3cDIIaelg==
-Date:   Tue, 28 Apr 2020 22:55:16 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Malcolm Priestley <tvboxspy@gmail.com>
-Subject: Re: linux-next: manual merge of the staging tree with the
- staging.current tree
-Message-ID: <20200428225516.59ad9812@canb.auug.org.au>
-In-Reply-To: <20200428121545.GA1234722@kroah.com>
-References: <20200424151546.4dea83cb@canb.auug.org.au>
-        <20200424064555.GA143960@kroah.com>
-        <20200428121545.GA1234722@kroah.com>
+        Tue, 28 Apr 2020 08:56:30 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 8851627C857;
+        Tue, 28 Apr 2020 08:56:29 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id yy07838jlHYR; Tue, 28 Apr 2020 08:56:29 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 31C7A27C771;
+        Tue, 28 Apr 2020 08:56:29 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 31C7A27C771
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1588078589;
+        bh=wCLQaSXXFHWHOQTdzk9lhf8jXpkpRXiVjr4m5yXdZp0=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=gHEORjTfvJt3R+b8gor73nsmxy3TUV2xG8onL/Drc9WtteeV9fk5x6oR3zGHRPBzz
+         YPrCDh5F1+VvRK0MTyZCMvUQwtjNEWK8GckWqL3zSlUZOJ/NUMs+Rxe7QxFTuMASC8
+         Vo7Mutoj7dKY3FZsVUdp5Abh73+xwtMymYKJp5N294AFcyYV3cCNtNSxp/hUH+e+ME
+         LbKTM7upADUZuFbbEl5ngTM9uq5b3IvZ0uKkBOcv4hSHGuSM6yPBLKnk4s8qpO9Yck
+         f1Ui1G+rzegttYk0Wv7fXppIA7vpafkfkqrGAD5XOQ0EaEtCDOgY0rfMIq4TdG12Vj
+         YX97fNDldv/LQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id FW4KC6PkGCbk; Tue, 28 Apr 2020 08:56:29 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 1DD0B27C965;
+        Tue, 28 Apr 2020 08:56:29 -0400 (EDT)
+Date:   Tue, 28 Apr 2020 08:56:28 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fw@deneb.enyo.de>
+Cc:     Michael Kerrisk <mtk.manpages@gmail.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        carlos <carlos@redhat.com>, Rich Felker <dalias@libc.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>
+Message-ID: <1862775654.72437.1588078588989.JavaMail.zimbra@efficios.com>
+In-Reply-To: <1080028389.72414.1588077193438.JavaMail.zimbra@efficios.com>
+References: <20200326155633.18236-1-mathieu.desnoyers@efficios.com> <20200326155633.18236-6-mathieu.desnoyers@efficios.com> <87ees9z417.fsf@mid.deneb.enyo.de> <284293396.70630.1588005648556.JavaMail.zimbra@efficios.com> <87zhawvphv.fsf@mid.deneb.enyo.de> <2102127737.70791.1588008377292.JavaMail.zimbra@efficios.com> <87ftcnrf7d.fsf@mid.deneb.enyo.de> <1080028389.72414.1588077193438.JavaMail.zimbra@efficios.com>
+Subject: Re: [PATCH glibc 5/9] glibc: Perform rseq(2) registration at C
+ startup and thread creation (v17)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/c3I6eY74TZKPZPf/lkB_W+z";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF75 (Linux)/8.8.15_GA_3895)
+Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v17)
+Thread-Index: z7tk/3iPPlCh9cj1VVKnVHBj0mM1xIMs04Lw
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/c3I6eY74TZKPZPf/lkB_W+z
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+----- On Apr 28, 2020, at 8:33 AM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
 
-Hi Greg,
+> ----- On Apr 28, 2020, at 8:02 AM, Florian Weimer fw@deneb.enyo.de wrote:
+> 
+[...]
+>> 
+>>> x32 should not be an issue as explained above, so I'm very open to
+>>> add this "uptr" for user-space only.
+>> 
+>> Okay, then please use anonymous unions and structs as necessary, to
+>> ensure that the uptr field can be reached on all platforms in the same
+>> way.
+> 
+> OK, will do!
 
-On Tue, 28 Apr 2020 14:15:45 +0200 Greg KH <greg@kroah.com> wrote:
->
-> This should now all be resolved in my staging.next branch.
+What I came up with looks like this. User-space can use rseq_cs.uptr.ptr
+both on 32-bit and 64-bit to update the pointer:
 
-Yep, thanks.
+    /* Restartable sequences rseq_cs field.
 
---=20
-Cheers,
-Stephen Rothwell
+       Contains NULL when no critical section is active for the current
+       thread, or holds a pointer to the currently active struct rseq_cs.
 
---Sig_/c3I6eY74TZKPZPf/lkB_W+z
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+       Updated by user-space, which sets the address of the currently
+       active rseq_cs at the beginning of assembly instruction sequence
+       block, and set to NULL by the kernel when it restarts an assembly
+       instruction sequence block, as well as when the kernel detects that
+       it is preempting or delivering a signal outside of the range
+       targeted by the rseq_cs.  Also needs to be set to NULL by user-space
+       before reclaiming memory that contains the targeted struct rseq_cs.
 
------BEGIN PGP SIGNATURE-----
+       Read and set by the kernel.  Set by user-space with single-copy
+       atomicity semantics.  This field should only be updated by the
+       thread which registered this data structure.  Aligned on 64-bit.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6oJ7UACgkQAVBC80lX
-0Gwh/ggAnC9mj602XOfR51MrtWaeI6Ip4h0HXHl30uqP+S5avDzQquZz6nPQyxFj
-Sqm+DUAWGYteq5pXIbTbB8BIVn7t3RqSLV4QswkJAZ8gTet/Er3fjJwBMhnFds//
-eCDGlEeWgqrWpbvIhL8P9p+57O96ZtSgZGiKuTLzZQn8kavB7lj3Kq03mK8cIH96
-w0aGkFaw3WqRukOrBtCeW3kQ91xPHsouXwyZF/a2km0pKEFfa7SJKHhPndK81Tl7
-7Zrq6VNqLt8otmhNaokvTVrFMr8r4rn9e6eqJgMsfgJSn0rAD6L0bANYVwyHjjJI
-mDkzBXEzCHQydPcG0T26jRnyv0dobw==
-=DDYk
------END PGP SIGNATURE-----
+       User-space may perform the update through the rseq_cs.uptr.ptr
+       field.  The padding needs to be initialized to zero on 32-bit.  */
+    union
+      {
+        uint64_t ptr64;
+#ifdef __LP64__
+        uint64_t ptr;
+#else   
+        struct
+          {
+# if (defined (__BYTE_ORDER) && (__BYTE_ORDER == __BIG_ENDIAN)) || defined (__BIG_ENDIAN)
+            uint32_t padding; /* Initialized to zero.  */
+            uint32_t ptr32;
+# else /* LITTLE */
+            uint32_t ptr32;
+            uint32_t padding; /* Initialized to zero.  */
+# endif /* ENDIAN */
+          } ptr;
+#endif
 
---Sig_/c3I6eY74TZKPZPf/lkB_W+z--
+#ifndef __KERNEL__
+        struct
+          {
+# ifdef __LP64__
+            const struct rseq_cs *ptr;
+# else
+#  if (defined (__BYTE_ORDER) && (__BYTE_ORDER == __BIG_ENDIAN)) || defined (__BIG_ENDIAN)
+            uint32_t padding; /* Initialized to zero.  */
+            const struct rseq_cs *ptr;
+#  else /* LITTLE */
+            const struct rseq_cs *ptr;
+            uint32_t padding; /* Initialized to zero.  */
+#  endif /* ENDIAN */
+# endif
+          } uptr;
+#endif
+      } rseq_cs;
+
+Thanks,
+
+Mathieu
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
