@@ -2,107 +2,138 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3C5C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3CFC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0074206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2204E206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:21:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgD1JVM (ORCPT
+        id S1727094AbgD1JV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 05:21:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:48242 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726840AbgD1JVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 05:21:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 55D9530E;
-        Tue, 28 Apr 2020 02:21:11 -0700 (PDT)
-Received: from gaia (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 16CF83F305;
-        Tue, 28 Apr 2020 02:21:07 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 10:21:05 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Anshuman Khandual <Anshuman.Khandual@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        kernel test robot <lkp@intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Subject: Re: [mm/debug] fa6726c1e7: kernel_BUG_at_include/linux/mm.h
-Message-ID: <20200428092105.GB3868@gaia>
-References: <9e9091b9-6918-d0af-dd92-3bdc0e29a4d5@arm.com>
- <813D7CD3-F31C-4056-92DF-D462633E9D69@lca.pw>
+        Tue, 28 Apr 2020 05:21:27 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34078 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726376AbgD1JV0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 05:21:26 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 72so31476241otu.1;
+        Tue, 28 Apr 2020 02:21:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9M/t2ssNY0JGEJF7n9+3sQ5ye/4v7stz68WoUu6mGLc=;
+        b=MuBPFSk4LNq8/mgcBXATejmiPu4dswIe3/Ox7TbYalFP3XOD+x1tDHVBIQZBFYv8nh
+         iDN6wSTYXkQsnttUU9KIU/8sZ9TAzbq2PGladtiOKYu5+LtbnDfbG6gs1lptJCvTgpF3
+         eRHL4eGmyCyA3tYT9cOjtKKw8nTTnFhHZqwzN2F1qVaFFk2R8k4BrHdKKC4jKvuk+UV1
+         2Te7V4vI9mdjIYj4P6PBVHx6KGV9RvwpgCIzz87/Lelq+/HDZebztspJZPwCeoCCWKPI
+         MH7D3dz4GvfiH4pmhWXWeiU5qYhAieeddzNMaTNq2OjI/lp5kdEcxKLTAqcIXO6fQS58
+         pIpQ==
+X-Gm-Message-State: AGi0Puac25RCFUJdajUv1xmKw2fl9JkTb3dKXWZT8wA4OelLXkaCBPsH
+        diZpvU52lMcMPflh+sNz9+K7QfAdfkA7ipgmFbM=
+X-Google-Smtp-Source: APiQypJDSbJ1DJDFQEdbLtTytIivKB3Crd4cHWR7cth2WfX/fmYiFAGLO+N+PbHKhKzMyhfehDsMKH8W2o7XS2RsbtQ=
+X-Received: by 2002:a9d:7d85:: with SMTP id j5mr20615076otn.107.1588065686013;
+ Tue, 28 Apr 2020 02:21:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <813D7CD3-F31C-4056-92DF-D462633E9D69@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200428090749.31983-1-clay@daemons.net>
+In-Reply-To: <20200428090749.31983-1-clay@daemons.net>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 28 Apr 2020 11:21:15 +0200
+Message-ID: <CAMuHMdXhVcp3j4Sq_4fsqavw1eH_DksN-yjajqC_8pRKnjM0zA@mail.gmail.com>
+Subject: Re: [PATCH] net: Select PTP_1588_CLOCK in PTP-specific drivers
+To:     Clay McClure <clay@daemons.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Nicolas Pitre <nicolas.pitre@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Mao Wenan <maowenan@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Edward Cree <ecree@solarflare.com>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 04:41:11AM -0400, Qian Cai wrote:
-> On Apr 28, 2020, at 1:54 AM, Anshuman Khandual <Anshuman.Khandual@arm.com> wrote:
-> > That is true. There is a slight change in the rules, making it explicit yes
-> > only when both ARCH_HAS_DEBUG_VM_PGTABLE and DEBUG_VM are enabled.
-> > 
-> > +config DEBUG_VM_PGTABLE
-> > +    bool "Debug arch page table for semantics compliance"
-> > +    depends on MMU
-> > +    depends on !IA64 && !ARM
-> > +    depends on ARCH_HAS_DEBUG_VM_PGTABLE || EXPERT
-> > +    default y if ARCH_HAS_DEBUG_VM_PGTABLE && DEBUG_VM
-> > +    help
-> > 
-> > The default is really irrelevant as the config option can be set explicitly.
-> 
-> That could also explain. Since not long time ago, it was only “default
-> y if DEBUG_VM”, that caused the robot saved a .config with
-> DEBUG_VM_PGTABLE=y by default.
-> 
-> Even though you changed the rule recently, it has no effect as the
-> robot could “make oldconfig” from the saved config for each linux-next
-> tree execution and the breakage will go on.
+Hi Clay,
 
-I'm not entirely sure that's the case. This report still points at the
-old commit fa6726c1e7 which has:
+Thanks for your patch!
 
-+       depends on ARCH_HAS_DEBUG_VM_PGTABLE || EXPERT
-+       default n if !ARCH_HAS_DEBUG_VM_PGTABLE
-+       default y if DEBUG_VM
+On Tue, Apr 28, 2020 at 11:14 AM Clay McClure <clay@daemons.net> wrote:
+> Commit d1cbfd771ce8 ("ptp_clock: Allow for it to be optional") changed
+> all PTP-capable Ethernet drivers from `select PTP_1588_CLOCK` to `imply
+> PTP_1588_CLOCK`, "in order to break the hard dependency between the PTP
+> clock subsystem and ethernet drivers capable of being clock providers."
+> As a result it is possible to build PTP-capable Ethernet drivers without
+> the PTP subsystem by deselecting PTP_1588_CLOCK. Drivers are required to
+> handle the missing dependency gracefully.
+>
+> Some PTP-capable Ethernet drivers (e.g., TI_CPSW) factor their PTP code
+> out into separate drivers (e.g., TI_CPTS_MOD). The above commit also
+> changed these PTP-specific drivers to `imply PTP_1588_CLOCK`, making it
+> possible to build them without the PTP subsystem. But as Grygorii
+> Strashko noted in [1]:
+>
+> On Wed, Apr 22, 2020 at 02:16:11PM +0300, Grygorii Strashko wrote:
+>
+> > Another question is that CPTS completely nonfunctional in this case and
+> > it was never expected that somebody will even try to use/run such
+> > configuration (except for random build purposes).
+>
+> In my view, enabling a PTP-specific driver without the PTP subsystem is
+> a configuration error made possible by the above commit. Kconfig should
+> not allow users to create a configuration with missing dependencies that
+> results in "completely nonfunctional" drivers.
+>
+> I audited all network drivers that call ptp_clock_register() and found
+> six that look like PTP-specific drivers that are likely nonfunctional
+> without PTP_1588_CLOCK:
+>
+>     NET_DSA_MV88E6XXX_PTP
+>     NET_DSA_SJA1105_PTP
+>     MACB_USE_HWSTAMP
+>     CAVIUM_PTP
+>     TI_CPTS_MOD
+>     PTP_1588_CLOCK_IXP46X
+>
+> Note how they all reference PTP or timestamping in their name; this is a
+> clue that they depend on PTP_1588_CLOCK.
+>
+> Change these drivers back [2] to `select PTP_1588_CLOCK`. Note that this
+> requires also selecting POSIX_TIMERS, a transitive dependency of
+> PTP_1588_CLOCK.
 
-In -next we now have commit 647d9a0de34c and subsequently modified by
-commit 0a8646638865. So hopefully with the latest -next tree we won't
-see this report.
+If these drivers have a hard dependency on PTP_1588_CLOCK, IMHO they
+should depend on PTP_1588_CLOCK, not select PTP_1588_CLOCK.
 
-We could as well remove the 'depends on ... || EXPERT' part but I'd
-rather leave this around with a default n (as in current -next) in case
-others want to have a go. If that's still causing problems, we can
-remove the '|| EXPERT' part, so there won't be any further regressions.
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Catalin
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
