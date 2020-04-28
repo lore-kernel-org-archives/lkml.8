@@ -2,86 +2,161 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0ACC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E167C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D540F206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:55:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588089317;
-	bh=bX6xkqFtrEKtQYXyFdFO5oEb5JKsubi+2WEG6XMMOEM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pPSo7EAWCqiDqmz2AUcZdu+rF79zEhgkPcn5JlxGaTNauDtkXPmb7oFa6frzNDBqH
-	 Ex6ToVuTouSaQDj+EP5coL5UCsPJfHkGd+HsNwK6WztWXQwzTN4O+RY76uHhdBFb7t
-	 Z9xpte7HAj5KUD7UEmT7nIANGDU5/GOvInd9FqzE=
+	by mail.kernel.org (Postfix) with ESMTP id 4B64E206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:57:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="RLk9EM1C";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hgDtuLch"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbgD1PzR (ORCPT
+        id S1728112AbgD1P5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:55:17 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41169 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727920AbgD1PzR (ORCPT
+        Tue, 28 Apr 2020 11:57:24 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:60067 "EHLO
+        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727775AbgD1P5Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:55:17 -0400
-Received: by mail-ot1-f67.google.com with SMTP id c3so33421426otp.8;
-        Tue, 28 Apr 2020 08:55:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=E/TydElCkArBzhog9A76R0UknEmptmdX1tix+Usu5wU=;
-        b=ossXePJfJSoLIXHPj7kmNgLaKPlvHPAyo2DqOWvyhqZk51nbs6cZKJRdzPMAUz/2Zb
-         cMPJljz5qf4pidBcSDtHMdCmWB7/ZKje2QH2GTJbYInNP8FdqDKY+hJ39rN+8XRxEUWA
-         HDiUmytmci55rkTKCITdlmc0qDcSg5Fr2Pz6lo3rJfRuqAIdKpjweptEfe3CMzIn6AIa
-         L0SxlN2tnjKonKWMFSmPzrf8MYyTrwM7oVj7QMLTQ1tEekRdAnPd7Ox+T7PNtssG1lqA
-         Y3HagiIeUeamKwxZYXAVwaFCUVGUtXvMb9RIWANOk0cejHReNSiBiIyB9QhaW+Y8GaNR
-         1mHw==
-X-Gm-Message-State: AGi0PuZO0Ei8hO6ubdmMMYrTB0Pr0bcj2bX+h1QvYyAfdmtOxkZllZAw
-        yr17CdF64UPnJD3R6EccZq5tHKI=
-X-Google-Smtp-Source: APiQypLk5ukhxmRNHN9chkS+4R+a6N/pjUn+lFfl6zwAhvJu+8TRSrJ7WgfuuegVBXhgFeZ9TxMPWQ==
-X-Received: by 2002:a9d:37a2:: with SMTP id x31mr24139971otb.52.1588089315214;
-        Tue, 28 Apr 2020 08:55:15 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id x82sm4935915oig.55.2020.04.28.08.55.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 08:55:14 -0700 (PDT)
-Received: (nullmailer pid 29682 invoked by uid 1000);
-        Tue, 28 Apr 2020 15:55:13 -0000
-Date:   Tue, 28 Apr 2020 10:55:13 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Rakesh Pillai <pillair@codeaurora.org>
-Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rakesh Pillai <pillair@codeaurora.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: ath10k: Add wifi-firmware subnode
- for wifi node
-Message-ID: <20200428155513.GA29618@bogus>
-References: <1586971906-20985-1-git-send-email-pillair@codeaurora.org>
- <1586971906-20985-2-git-send-email-pillair@codeaurora.org>
+        Tue, 28 Apr 2020 11:57:24 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 59D541C2;
+        Tue, 28 Apr 2020 11:57:22 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 28 Apr 2020 11:57:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=UeapUTooUsi8NUN5twL9bPAz6Yg
+        /DJgy7xJgqDr5Y6c=; b=RLk9EM1C9TJEvZCAU5DJZ0cCSNanK5z1+QD4E7Ut9d4
+        +iLj2VcNxVMWt0IJGCua/Ffy2XMG65Cr0smcaCNQ6MfefND1JC0eaQv3v6t+ene8
+        vIbhO6SStety36zyW+DYBAOxRJk3ZNdbNDjUh2TVPJbvjSNnsy9x0e0xu1c2M8wf
+        jc173DzSwV6rhtL7J6GPBJWzAYYYmxaq+88t2FREtl6AsvVKpYLpeb8N8g5ZpOoB
+        iMh+V5KaT9jpgHvadzvQUNW494RbSEbKw9iWkBglIbr+KvkYquNwqq6F3Plrq3wJ
+        Ks0h3MR/LSe0I+LjgNooNj8NJ/LvKOxkPJ1GFb+8mTg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=UeapUT
+        ooUsi8NUN5twL9bPAz6Yg/DJgy7xJgqDr5Y6c=; b=hgDtuLchjXMz1TEkEUCBHw
+        bUfyNf/9vo+YS+uAIhVpeb8q7R3LMXDl/lb40k0Yt35l9djrIarWIMJXKgBcn/qf
+        67PtECtSJghbPBtG/65qpIsI9X0MMxzmVRqiXYulD3S9L4yq9qeZ280l5EbUpnjD
+        Y1ouItmn4dfEKTg3de42m3Ovn7cu1dN7C6Vv3Mc7vcmI/zjP7kxiLTlAwqCW2/c8
+        o6wX7AjobJ5utOh6qX4GU94rb6jyg1tbHjjI7USQF8COu5oNZ9sMumCVrrV+4zZF
+        SbWZ91JdnCT7dKWMkFvd/Y04TiIBeuXSDtbI/cQAYEzaXjPjej4ziGKLpI4KW8Zg
+        ==
+X-ME-Sender: <xms:XlKoXlpiljCRuyEbI1P70oZLf3sZF27Th0b5wKxhdtwWIzMKTKT1lg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedugdelgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:XlKoXvITVDvxYw84oLi5IlO3HLnZEoiWzIY9G9SS3fmcuVrK0M6bbQ>
+    <xmx:XlKoXoQAdJX7pouiH8Y4iaruQDf4vGU9llAm7J0U8G1xj9sxbGty0Q>
+    <xmx:XlKoXu_ZOxxw57ufXt3rtmZHB_MTP2GeFsXio4LbpWm4q2IasfX4Xw>
+    <xmx:YVKoXoxrLRzekRuL-T3mPvgCesyROqCeLee8hFDJ57WjMcKqHEWEGOqitAg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 124523280068;
+        Tue, 28 Apr 2020 11:57:17 -0400 (EDT)
+Date:   Tue, 28 Apr 2020 17:57:11 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Phil Elwell <phil@raspberrypi.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 79/91] drm/vc4: hdmi: Deal with multiple debugfs files
+Message-ID: <20200428155711.efpq6vbqcq52gjk5@gilmour.lan>
+References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+ <4cd617827cc28875ef36f3632122a83cff2ea4a7.1587742492.git-series.maxime@cerno.tech>
+ <63f9e71a-1beb-7a67-ea48-dbc579fa3161@i2se.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6nlx63qexjyyiyf5"
 Content-Disposition: inline
-In-Reply-To: <1586971906-20985-2-git-send-email-pillair@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <63f9e71a-1beb-7a67-ea48-dbc579fa3161@i2se.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020 23:01:44 +0530, Rakesh Pillai wrote:
-> Add a wifi-firmware subnode for the wifi node.
-> This wifi-firmware subnode is needed for the
-> targets which do not support TrustZone.
-> 
-> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-> ---
->  .../devicetree/bindings/net/wireless/qcom,ath10k.txt       | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
 
-Acked-by: Rob Herring <robh@kernel.org>
+--6nlx63qexjyyiyf5
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Stefan,
+
+On Sat, Apr 25, 2020 at 11:26:31PM +0200, Stefan Wahren wrote:
+> Am 24.04.20 um 17:35 schrieb Maxime Ripard:
+> > The HDMI driver was registering a single debugfs file so far with the n=
+ame
+> > hdmi_regs.
+> >
+> > Obviously, this is not going to work anymore when will have multiple HD=
+MI
+> > controllers since we will end up trying to register two files with the =
+same
+> > name.
+> >
+> > Let's use the ID to avoid that name conflict.
+>=20
+> even with this patch there is a name conflict in debugfs using Linux
+> 5.7-rc1. Dave Stevenson addressed this by using different card names
+> [1]. Since this patch won't apply anymore here is my suggestion:
+>=20
+> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdm=
+i.c
+> index 29287ab..7209397 100644
+> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
+> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+> @@ -1181,9 +1181,14 @@ static int vc4_hdmi_audio_init(struct vc4_hdmi
+> *vc4_hdmi)
+> =A0
+> =A0=A0=A0=A0 card->dai_link =3D dai_link;
+> =A0=A0=A0=A0 card->num_links =3D 1;
+> -=A0=A0=A0 card->name =3D "vc4-hdmi";
+> =A0=A0=A0=A0 card->dev =3D dev;
+> =A0
+> +=A0=A0=A0 if (vc4_hdmi->variant->encoder_type =3D=3D VC4_ENCODER_TYPE_HD=
+MI1) {
+> +=A0=A0=A0 =A0=A0=A0 card->name =3D "vc4-hdmi1";
+> +=A0=A0=A0 } else {
+> +=A0=A0=A0 =A0=A0=A0 card->name =3D "vc4-hdmi";
+> +=A0=A0=A0 }
+> +
+
+Thinking about this some more, we don't really need VC4_ENCODER_TYPE_HDMI0 =
+and
+HDMI1, and it can all work with the same encoder type for both, so I'll drop
+them.
+
+To address this issue though, we can add a card name string to the variant,=
+ like
+I did for debugfs. Is that alright for you?
+
+Maxime
+
+--6nlx63qexjyyiyf5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqhSVwAKCRDj7w1vZxhR
+xXjUAP4soMkyOTFFSXXn/qMZXtJpGyIJR6qHlIruzu9KCXFNogEAqHA7EpmVcFbT
++9FFfp7tSgB32/xDKpblWqG4wa8yaAY=
+=nBTY
+-----END PGP SIGNATURE-----
+
+--6nlx63qexjyyiyf5--
