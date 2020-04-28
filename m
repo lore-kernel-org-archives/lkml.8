@@ -2,111 +2,118 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A64C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6B7C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50C74206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E6DC206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:59:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588100342;
+	bh=CuotRLngCO9FT5A0gb2kCZe4KvFkWTY71lykbHFyFJU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rUpQsl8IbFnCLCMuXa28yoZxB/PWWkl9uA6RQqJn9yAbQLyE4S16nXIdwr+aJ+bkv
+	 Y2dtnvG+p6eXeqwzxYmPhnAQ9tEHmvyoRAc8Kssm03RiM5/AXS4RFo8LpJA2rxTwwN
+	 Q+EovZvzdiBq0GRHDto8iLqDz8nosh2ye4yWC02E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbgD1S2z (ORCPT
+        id S1730207AbgD1S7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:28:55 -0400
-Received: from ms10.pegatroncorp.com ([192.72.126.90]:57742 "EHLO
-        ms9.pegatroncorp.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729192AbgD1S2k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:28:40 -0400
-Received: from pps.filterd (ptwppsf03.pega.corp.pegatron [127.0.0.1])
-        by ptwppsf03.pega.corp.pegatron (8.16.0.21/8.16.0.21) with SMTP id 03SIAIxX033230;
-        Wed, 29 Apr 2020 02:27:48 +0800
-Received: from ptw-ex-hub04.pega.corp.pegatron ([172.18.6.20])
-        by ptwppsf03.pega.corp.pegatron with ESMTP id 30nvwmqa7g-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 29 Apr 2020 02:27:48 +0800
-Received: from PTW-EX-37.PEGA.CORP.PEGATRON ([fe80::5466:11cb:50e:8c0e]) by
- PTW-EX-HUB04.PEGA.CORP.PEGATRON ([fe80::61de:87d8:fb23:fac6%24]) with mapi id
- 14.03.0279.002; Wed, 29 Apr 2020 02:27:47 +0800
-From:   =?utf-8?B?TGVzbGllIEhzaWEo5aSP6YKm6YCyX1BlZ2F0cm9uKQ==?= 
-        <Leslie_Hsia@pegatroncorp.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?utf-8?B?SGVybWVzIEhzaWVoKOisneaXu+WKrV9QZWdhdHJvbik=?= 
-        <Hermes_Hsieh@pegatroncorp.com>,
-        "jesse.sung@canonical.com" <jesse.sung@canonical.com>,
-        "jic23@kernel.org" <jic23@kernel.org>
-Subject: Re: [PATCH] subsystem: Amplifier driver for TAS5805M,Texas
- instruments
-Thread-Topic: [PATCH] subsystem: Amplifier driver for TAS5805M,Texas
- instruments
-Thread-Index: AQHWHVBtGCDb3Z/sSkKJhFF9f0UEJ6iO2ssO
-Date:   Tue, 28 Apr 2020 18:27:45 +0000
-Message-ID: <C84B7899-1FC4-43CC-9FAE-8FECE09E8D4E@pegatroncorp.com>
-References: <754706C925201D4896E92CCAD6B38E4401F0F733E3@PTW-EX-37.PEGA.CORP.PEGATRON>,<20200428113033.GE5677@sirena.org.uk>
-In-Reply-To: <20200428113033.GE5677@sirena.org.uk>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 28 Apr 2020 14:59:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42208 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729262AbgD1S2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:28:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67D8B20730;
+        Tue, 28 Apr 2020 18:28:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588098533;
+        bh=CuotRLngCO9FT5A0gb2kCZe4KvFkWTY71lykbHFyFJU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CiqstQeXwC3Qx86wqbY0JgMVRhcuwa86Hs62ypsZ08o1eoW+U0/hhAo943qhMo+AI
+         mUQFOw67JoBri1zcRRHkodBYittQl+wdk7pSG/+PW5weM333KLf+s7kgxJQkuOvcZc
+         n0MwfhKX+Drpe4WmYoZJY+idIKrfpA/SYVyXPFlM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 009/131] arm64: compat: Workaround Neoverse-N1 #1542419 for compat user-space
+Date:   Tue, 28 Apr 2020 20:23:41 +0200
+Message-Id: <20200428182226.363035019@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWFyaywNCg0KWWVzLCBJIGFncmVlIHRoYXQgdGhlIGNvZGUgZGlkbuKAmXQgaW50ZWdyYXRl
-IHdpdGggQUxTQSBBUEksDQphbmQgd2Ugb25seSBuZWVkIHRvIGluaXRpYWxpemUgaTJjIHJlZ2lz
-dGVycyBkdWUgdG8gbWFrZSB0aGUgYW1wbGlmaWVyIHdvcmtzIHByb3Blcmx5LA0KYW5kIEkgZG8g
-ZmluZCB0aGVyZSBpcyBhbHJlYWR5IGFuIGFtcGxpZmllciBkcml2ZXIgaW4gL2RyaXZlcnMvaWlv
-L2FtcGxpZmllci8sDQp0aGF04oCZcyB3aHkgSSBzZW50IHRoZSBwYXRjaCB0byBKb25hdGhhbiwN
-Ckkgd2FudCB0byBwdXQgdGhpcyBkcml2ZXIgaW50byAvZHJpdmVycy9paW8vYW1wbGlmaWVyLywN
-CmJ1dCBoZSB0aG91Z2h0IHRoYXQgdGhpcyBpcyBhbiBhbXBsaWZpZXIgZHJpdmVyLA0KYW5kIHdl
-IHNob3VsZCBwdXQgaXQgaW50byAvc291bmQvZG9jL2NvZGVjcy8sDQpzbyB3b3VsZCB5b3UgcGxl
-YXNlIGdpdmUgbWUgYW4gYWR2aWNlIGFib3V0IHRoZSBkcml2ZXIgYmVsb25ncyB0byB3aGljaCBz
-dWJzeXN0ZW0/DQpKb25hdGhhbiwgd2hhdCBkbyB5b3UgdGhpbms/DQoNCkJlc3QgUmVnYXJkcywN
-Ckxlc2xpZQ0KDQo+IE1hcmsgQnJvd24gPGJyb29uaWVAa2VybmVsLm9yZz4g5pa8IDIwMjDlubQ0
-5pyIMjjml6Ug5LiL5Y2INzozMCDlr6vpgZPvvJoNCj4NCj4g77u/T24gVHVlLCBBcHIgMjgsIDIw
-MjAgYXQgMTA6NDM6MThBTSArMDAwMCwgTGVzbGllIEhzaWEo5aSP6YKm6YCyX1BlZ2F0cm9uKSB3
-cm90ZToNCj4+ICogICBBdXRob3I6IExlc2xpZSBIc2lhDQo+PiAqICAgQW1wbGlmaWVyIGRyaXZl
-ciBmb3IgVEFTNTgwNU0sIGluaXRpYWwgdGhlIGFtcGxpZmllciBhbmQgc2V0IHRoZSBzb3VuZCBw
-YXJhbWV0ZXIuDQo+PiAqICAgU2lnbmVkLW9mZi1ieTogTGVzbGllIEhzaWEgPExlc2xpZV9Ic2lh
-QHBlZ2F0cm9uY29ycC5jb208bWFpbHRvOkxlc2xpZV9Ic2lhQHBlZ2F0cm9uY29ycC5jb20+Pg0K
-Pg0KPiBQbGVhc2UgZm9sbG93IHRoZSBwYXRjaCBzdWJtaXNzaW9uIHByb2Nlc3MgdGhhdCBpcyBk
-ZXNjcmliZWQgaW4NCj4gRG9jdW1lbnRhdGlvbi9wcm9jZXNzL3N1Ym1pdHRpbmctcGF0Y2hlcy5y
-c3QgaW4gdGhlIGtlcm5lbCBzb3VyY2UuICBUYWtlDQo+IGEgbG9vayBhdCBvdGhlciBzdWJtaXNz
-aW9ucyBvbiB0aGUgbGlzdCBhbmQgZm9sbG93IGEgc2ltaWxhciBwcm9jZXNzLg0KPiBUaGVyZSBh
-bHNvIGFwcGVhciB0byBiZSBib3RoIElJTyBhbmQgQVNvQyBkcml2ZXJzIGluIHRoZXJlIHdoaWNo
-IGlzIGF0DQo+IGJlc3QgYSBiaXQgd2VpcmQuDQo+DQo+IEhhdmluZyBkb25lIGEgcXVpY2sgc2Nh
-biB0aHJvdWdoIHlvdXIgY29kZSBpdCBkb2Vzbid0IGFjdHVhbGx5IHNlZW0gdG8NCj4gaW50ZWdy
-YXRlIHdpdGggdGhlIHN1YnN5c3RlbSBhdCBhbGwgKHRoZXJlJ3Mgbm8NCj4gc25kX3NvY19yZWdp
-c3Rlcl9jb2RlYygpKQ0KPg0KPiBQbGVhc2Ugc3VibWl0IHBhdGNoZXMgdXNpbmcgc3ViamVjdCBs
-aW5lcyByZWZsZWN0aW5nIHRoZSBzdHlsZSBmb3IgdGhlDQo+IHN1YnN5c3RlbSwgdGhpcyBtYWtl
-cyBpdCBlYXNpZXIgZm9yIHBlb3BsZSB0byBpZGVudGlmeSByZWxldmFudCBwYXRjaGVzLg0KPiBM
-b29rIGF0IHdoYXQgZXhpc3RpbmcgY29tbWl0cyBpbiB0aGUgYXJlYSB5b3UncmUgY2hhbmdpbmcg
-YXJlIGRvaW5nIGFuZA0KPiBtYWtlIHN1cmUgeW91ciBzdWJqZWN0IGxpbmVzIHZpc3VhbGx5IHJl
-c2VtYmxlIHdoYXQgdGhleSdyZSBkb2luZy4NCj4gVGhlcmUncyBubyBuZWVkIHRvIHJlc3VibWl0
-IHRvIGZpeCB0aGlzIGFsb25lLg0KDQoNClRoaXMgZS1tYWlsIGFuZCBpdHMgYXR0YWNobWVudCBt
-YXkgY29udGFpbiBpbmZvcm1hdGlvbiB0aGF0IGlzIGNvbmZpZGVudGlhbCBvciBwcml2aWxlZ2Vk
-LCBhbmQgYXJlIHNvbGVseSBmb3IgdGhlIHVzZSBvZiB0aGUgaW5kaXZpZHVhbCB0byB3aG9tIHRo
-aXMgZS1tYWlsIGlzIGFkZHJlc3NlZC4gSWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVkIHJlY2lw
-aWVudCBvciBoYXZlIHJlY2VpdmVkIGl0IGFjY2lkZW50YWxseSwgcGxlYXNlIGltbWVkaWF0ZWx5
-IG5vdGlmeSB0aGUgc2VuZGVyIGJ5IHJlcGx5IGUtbWFpbCBhbmQgZGVzdHJveSBhbGwgY29waWVz
-IG9mIHRoaXMgZW1haWwgYW5kIGl0cyBhdHRhY2htZW50LiBQbGVhc2UgYmUgYWR2aXNlZCB0aGF0
-IGFueSB1bmF1dGhvcml6ZWQgdXNlLCBkaXNjbG9zdXJlLCBkaXN0cmlidXRpb24gb3IgY29weWlu
-ZyBvZiB0aGlzIGVtYWlsIG9yIGl0cyBhdHRhY2htZW50IGlzIHN0cmljdGx5IHByb2hpYml0ZWQu
-DQoNCuacrOmbu+WtkOmDteS7tuWPiuWFtumZhOS7tuWPr+iDveWQq+acieapn+WvhuaIluS+neaz
-leWPl+eJueauiueuoeWItuS5i+izh+ioiu+8jOWDheS+m+acrOmbu+WtkOmDteS7tuS5i+WPl+aW
-h+iAheS9v+eUqOOAguWPsOerr+WmgumdnuacrOmbu+WtkOmDteS7tuS5i+WPl+aWh+iAheaIluiq
-pOaUtuacrOmbu+WtkOmDteS7tu+8jOiri+eri+WNs+WbnuimhumDteS7tumAmuefpeWvhOS7tuS6
-uu+8jOS4pumKt+avgOacrOmbu+WtkOmDteS7tuS5i+aJgOacieikh+acrOWPiumZhOS7tuOAguS7
-u+S9leacque2k+aOiOasiuiAjOS9v+eUqOOAgeaPremcsuOAgeaVo+S9iOaIluikh+ijveacrOmb
-u+WtkOmDteS7tuaIluWFtumZhOS7tuS5i+ihjOeCuu+8jOeahuWatOagvOemgeatoiDjgIINCg0K
+From: James Morse <james.morse@arm.com>
+
+[ Upstream commit: 222fc0c8503d98cec3cb2bac2780cdd21a6e31c0 ]
+
+Compat user-space is unable to perform ICIMVAU instructions from
+user-space. Instead it uses a compat-syscall. Add the workaround for
+Neoverse-N1 #1542419 to this code path.
+
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/kernel/sys_compat.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/arch/arm64/kernel/sys_compat.c b/arch/arm64/kernel/sys_compat.c
+index 010212d35700e..5a9b220aef6cf 100644
+--- a/arch/arm64/kernel/sys_compat.c
++++ b/arch/arm64/kernel/sys_compat.c
+@@ -19,6 +19,7 @@
+  */
+ 
+ #include <linux/compat.h>
++#include <linux/cpufeature.h>
+ #include <linux/personality.h>
+ #include <linux/sched.h>
+ #include <linux/sched/signal.h>
+@@ -28,6 +29,7 @@
+ 
+ #include <asm/cacheflush.h>
+ #include <asm/system_misc.h>
++#include <asm/tlbflush.h>
+ #include <asm/unistd.h>
+ 
+ static long
+@@ -41,6 +43,15 @@ __do_compat_cache_op(unsigned long start, unsigned long end)
+ 		if (fatal_signal_pending(current))
+ 			return 0;
+ 
++		if (cpus_have_const_cap(ARM64_WORKAROUND_1542419)) {
++			/*
++			 * The workaround requires an inner-shareable tlbi.
++			 * We pick the reserved-ASID to minimise the impact.
++			 */
++			__tlbi(aside1is, 0);
++			dsb(ish);
++		}
++
+ 		ret = __flush_cache_user_range(start, start + chunk);
+ 		if (ret)
+ 			return ret;
+-- 
+2.20.1
+
+
+
