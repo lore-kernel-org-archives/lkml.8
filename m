@@ -2,82 +2,227 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D111C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA098C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6EC220575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:48:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QaeipvLq"
+	by mail.kernel.org (Postfix) with ESMTP id 85D68206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:48:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588099701;
+	bh=1dk3KTCDU6EOcCn8O51KsGwI6VoE3fjIwnY5nvJO1yU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QvFyByneYAn145TSi2yNJ46peJY/5ZNBVrb9vvt4cR+eapaFzzZx3wDVJOCwCzbkN
+	 Pv9nIo4IVGaagsqnHL2D3nZp/FvXlLh4zEddKiUEfbjywzY/CLYyVVHH5Vr8iCQ2bw
+	 xsYzba1njSUgDlltfcgSzNZm+FxvSzlUn/Z09WVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731193AbgD1SsR (ORCPT
+        id S1730751AbgD1SlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:48:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33261 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730645AbgD1SlG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:41:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588099265;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=2JvJAM5p12RcumIJnmGpEzfcPG1ShzjNWymeqXsNBPQ=;
-        b=QaeipvLqHfELP3LhF6d1X+GJiGkD8l89y2zd6KQh4W1KC/Z25xtVvlDN9EDBA96UcpHn2m
-        5CLbGoU+r8WtT04A6jN25CSzzWaWh3qDJTNl9nAHQ0Ecs7DsaPtnA97KoSuCDBtJQqVvzZ
-        7POmfgEYt2oUIL4K98yc0p8xu+poHAs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-43-hojDiYcrPpK329HM2OBAGw-1; Tue, 28 Apr 2020 14:41:01 -0400
-X-MC-Unique: hojDiYcrPpK329HM2OBAGw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 28 Apr 2020 14:41:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60544 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730800AbgD1SlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:41:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0110B107ACCA;
-        Tue, 28 Apr 2020 18:41:01 +0000 (UTC)
-Received: from virtlab710.virt.lab.eng.bos.redhat.com (virtlab710.virt.lab.eng.bos.redhat.com [10.19.152.252])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6DC085C1BD;
+        by mail.kernel.org (Postfix) with ESMTPSA id 1598B2076A;
         Tue, 28 Apr 2020 18:41:00 +0000 (UTC)
-From:   Cathy Avery <cavery@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com
-Subject: [PATCH kvm-unit-tests] svm: Fix nmi hlt test to fail test correctly
-Date:   Tue, 28 Apr 2020 14:41:00 -0400
-Message-Id: <20200428184100.5426-1-cavery@redhat.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588099261;
+        bh=1dk3KTCDU6EOcCn8O51KsGwI6VoE3fjIwnY5nvJO1yU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OmCYzG+2jgT0ZGOPvUDNNZNmwkb3dpVrXScSQvJD0BrgKZ2YghXHrIY0bioHOysPY
+         Mom2rMsotWJOztZ/NuoSxmWN84iOkIGtdWs44z4Ml0ig2MET2WjhyoydcJq9dIFMGQ
+         h61c2WkAsTEJ8Dr45TEemo3BZ6Dj+rfjq+S55y04=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 083/168] KEYS: Avoid false positive ENOMEM error on key read
+Date:   Tue, 28 Apr 2020 20:24:17 +0200
+Message-Id: <20200428182242.711179853@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The last test does not return vmmcall on fail resulting
-in passing the entire test.
+From: Waiman Long <longman@redhat.com>
 
-Signed-off-by: Cathy Avery <cavery@redhat.com>
+[ Upstream commit 4f0882491a148059a52480e753b7f07fc550e188 ]
+
+By allocating a kernel buffer with a user-supplied buffer length, it
+is possible that a false positive ENOMEM error may be returned because
+the user-supplied length is just too large even if the system do have
+enough memory to hold the actual key data.
+
+Moreover, if the buffer length is larger than the maximum amount of
+memory that can be returned by kmalloc() (2^(MAX_ORDER-1) number of
+pages), a warning message will also be printed.
+
+To reduce this possibility, we set a threshold (PAGE_SIZE) over which we
+do check the actual key length first before allocating a buffer of the
+right size to hold it. The threshold is arbitrary, it is just used to
+trigger a buffer length check. It does not limit the actual key length
+as long as there is enough memory to satisfy the memory request.
+
+To further avoid large buffer allocation failure due to page
+fragmentation, kvmalloc() is used to allocate the buffer so that vmapped
+pages can be used when there is not a large enough contiguous set of
+pages available for allocation.
+
+In the extremely unlikely scenario that the key keeps on being changed
+and made longer (still <= buflen) in between 2 __keyctl_read_key()
+calls, the __keyctl_read_key() calling loop in keyctl_read_key() may
+have to be iterated a large number of times, but definitely not infinite.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- x86/svm_tests.c | 1 +
- 1 file changed, 1 insertion(+)
+ security/keys/internal.h | 12 +++++++++
+ security/keys/keyctl.c   | 58 +++++++++++++++++++++++++++++-----------
+ 2 files changed, 55 insertions(+), 15 deletions(-)
 
-diff --git a/x86/svm_tests.c b/x86/svm_tests.c
-index 2b84e4d..65008ba 100644
---- a/x86/svm_tests.c
-+++ b/x86/svm_tests.c
-@@ -1480,6 +1480,7 @@ static void nmi_hlt_test(struct svm_test *test)
-     if (!nmi_fired) {
-         report(nmi_fired, "intercepted pending NMI not dispatched");
-         set_test_stage(test, -1);
-+        vmmcall();
-     }
-=20
-     set_test_stage(test, 3);
---=20
+diff --git a/security/keys/internal.h b/security/keys/internal.h
+index c039373488bd9..7e99149436167 100644
+--- a/security/keys/internal.h
++++ b/security/keys/internal.h
+@@ -16,6 +16,8 @@
+ #include <linux/keyctl.h>
+ #include <linux/refcount.h>
+ #include <linux/compat.h>
++#include <linux/mm.h>
++#include <linux/vmalloc.h>
+ 
+ struct iovec;
+ 
+@@ -349,4 +351,14 @@ static inline void key_check(const struct key *key)
+ 
+ #endif
+ 
++/*
++ * Helper function to clear and free a kvmalloc'ed memory object.
++ */
++static inline void __kvzfree(const void *addr, size_t len)
++{
++	if (addr) {
++		memset((void *)addr, 0, len);
++		kvfree(addr);
++	}
++}
+ #endif /* _INTERNAL_H */
+diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
+index 106e16f9006b4..5e01192e222a0 100644
+--- a/security/keys/keyctl.c
++++ b/security/keys/keyctl.c
+@@ -339,7 +339,7 @@ long keyctl_update_key(key_serial_t id,
+ 	payload = NULL;
+ 	if (plen) {
+ 		ret = -ENOMEM;
+-		payload = kmalloc(plen, GFP_KERNEL);
++		payload = kvmalloc(plen, GFP_KERNEL);
+ 		if (!payload)
+ 			goto error;
+ 
+@@ -360,7 +360,7 @@ long keyctl_update_key(key_serial_t id,
+ 
+ 	key_ref_put(key_ref);
+ error2:
+-	kzfree(payload);
++	__kvzfree(payload, plen);
+ error:
+ 	return ret;
+ }
+@@ -827,7 +827,8 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
+ 	struct key *key;
+ 	key_ref_t key_ref;
+ 	long ret;
+-	char *key_data;
++	char *key_data = NULL;
++	size_t key_data_len;
+ 
+ 	/* find the key first */
+ 	key_ref = lookup_user_key(keyid, 0, 0);
+@@ -878,24 +879,51 @@ can_read_key:
+ 	 * Allocating a temporary buffer to hold the keys before
+ 	 * transferring them to user buffer to avoid potential
+ 	 * deadlock involving page fault and mmap_sem.
++	 *
++	 * key_data_len = (buflen <= PAGE_SIZE)
++	 *		? buflen : actual length of key data
++	 *
++	 * This prevents allocating arbitrary large buffer which can
++	 * be much larger than the actual key length. In the latter case,
++	 * at least 2 passes of this loop is required.
+ 	 */
+-	key_data = kmalloc(buflen, GFP_KERNEL);
++	key_data_len = (buflen <= PAGE_SIZE) ? buflen : 0;
++	for (;;) {
++		if (key_data_len) {
++			key_data = kvmalloc(key_data_len, GFP_KERNEL);
++			if (!key_data) {
++				ret = -ENOMEM;
++				goto key_put_out;
++			}
++		}
+ 
+-	if (!key_data) {
+-		ret = -ENOMEM;
+-		goto key_put_out;
+-	}
+-	ret = __keyctl_read_key(key, key_data, buflen);
++		ret = __keyctl_read_key(key, key_data, key_data_len);
++
++		/*
++		 * Read methods will just return the required length without
++		 * any copying if the provided length isn't large enough.
++		 */
++		if (ret <= 0 || ret > buflen)
++			break;
++
++		/*
++		 * The key may change (unlikely) in between 2 consecutive
++		 * __keyctl_read_key() calls. In this case, we reallocate
++		 * a larger buffer and redo the key read when
++		 * key_data_len < ret <= buflen.
++		 */
++		if (ret > key_data_len) {
++			if (unlikely(key_data))
++				__kvzfree(key_data, key_data_len);
++			key_data_len = ret;
++			continue;	/* Allocate buffer */
++		}
+ 
+-	/*
+-	 * Read methods will just return the required length without
+-	 * any copying if the provided length isn't large enough.
+-	 */
+-	if (ret > 0 && ret <= buflen) {
+ 		if (copy_to_user(buffer, key_data, ret))
+ 			ret = -EFAULT;
++		break;
+ 	}
+-	kzfree(key_data);
++	__kvzfree(key_data, key_data_len);
+ 
+ key_put_out:
+ 	key_put(key);
+-- 
 2.20.1
+
+
 
