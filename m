@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE9FC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B61C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D454206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB3D20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100311;
-	bh=hVGd1XVXIQixtTCRrA9xVPLTqm8xr2yA0JSWE2QJe5Y=;
+	s=default; t=1588100316;
+	bh=ywCuuZVchHuljK5/XJ7hU6cICroLR7jkduQE/GKG5GM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OUsXHch3Ora+YrtxWuWfceFw/yKh9KWrGcl0inmOWRd8WGkm3AMkFeweE85/c9zQb
-	 pOQVTnYkDGiQctDG3/nmKF0gsg8Q9mGoJeGpDSxB5TmomywBhydn9HLC3M9XtDniko
-	 rrVD2oSm1zcpjcMiFFC6RMsNMF0lYINoPgqXLRbY=
+	b=oqQHyp0PNkI0SB0MWYe0QSEPCzltA0Rd93do/hTpZh7N6Bh6F67QcLgaInVHQnhs+
+	 xFXLGj7QTc4iVUg4w6VEpWo/OVwCZKv8tbHyku66yMv6xl+qnStuceO4hDahFI1NAh
+	 23SnJrbKMgNWA5znkSvhp2vraixqVa+VI2Go4vnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729676AbgD1S6a (ORCPT
+        id S1729714AbgD1S6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:58:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42898 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:58:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729319AbgD1S3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:29:16 -0400
+        id S1728557AbgD1S3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:29:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A10B20757;
-        Tue, 28 Apr 2020 18:29:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 053AC20BED;
+        Tue, 28 Apr 2020 18:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098555;
-        bh=hVGd1XVXIQixtTCRrA9xVPLTqm8xr2yA0JSWE2QJe5Y=;
+        s=default; t=1588098553;
+        bh=ywCuuZVchHuljK5/XJ7hU6cICroLR7jkduQE/GKG5GM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=drcie2hbmZIcWRTUMNSOsflp1+hUEi2B421VqIcjIRDXAibelHXyJyvQTYktekFPe
-         3yPauGxGETBzEHl912mzC/TsvAQxExlyvmsJD+2s7FxXaX9LoxECoCzIGRum1pKkDG
-         757cnUnruW1c6ElW2ghic4WaLuIKE/2uFG9jOkCs=
+        b=mKklbHEJvSgWe21/XWzThaveYZQozxk5f/D+5IHlzF+ryR2yCnJ7wx8w41+o/pvCy
+         OVOX/+FNqZrIPsVb90ofwN9IEF3QXywhYTta6Hqfbu+qZC24t1DqFRMLXR6oeWQlvh
+         qYxbC6qhZfiMBO1v08HCxKaONV8w0HmbWkAIOtsI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        stable@vger.kernel.org, James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 041/167] xhci: Ensure link state is U3 after setting USB_SS_PORT_LS_U3
-Date:   Tue, 28 Apr 2020 20:23:37 +0200
-Message-Id: <20200428182230.310682627@linuxfoundation.org>
+Subject: [PATCH 4.19 013/131] scsi: lpfc: Fix crash in target side cable pulls hitting WAIT_FOR_UNREG
+Date:   Tue, 28 Apr 2020 20:23:45 +0200
+Message-Id: <20200428182226.838996617@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,52 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit eb002726fac7cefb98ff39ddb89e150a1c24fe85 ]
+[ Upstream commit 807e7353d8a7105ce884d22b0dbc034993c6679c ]
 
-The xHCI spec doesn't specify the upper bound of U3 transition time. For
-some devices 20ms is not enough, so we need to make sure the link state
-is in U3 before further actions.
+Kernel is crashing with the following stacktrace:
 
-I've tried to use U3 Entry Capability by setting U3 Entry Enable in
-config register, however the port change event for U3 transition
-interrupts the system suspend process.
+  BUG: unable to handle kernel NULL pointer dereference at
+    00000000000005bc
+  IP: lpfc_nvme_register_port+0x1a8/0x3a0 [lpfc]
+  ...
+  Call Trace:
+  lpfc_nlp_state_cleanup+0x2b2/0x500 [lpfc]
+  lpfc_nlp_set_state+0xd7/0x1a0 [lpfc]
+  lpfc_cmpl_prli_prli_issue+0x1f7/0x450 [lpfc]
+  lpfc_disc_state_machine+0x7a/0x1e0 [lpfc]
+  lpfc_cmpl_els_prli+0x16f/0x1e0 [lpfc]
+  lpfc_sli_sp_handle_rspiocb+0x5b2/0x690 [lpfc]
+  lpfc_sli_handle_slow_ring_event_s4+0x182/0x230 [lpfc]
+  lpfc_do_work+0x87f/0x1570 [lpfc]
+  kthread+0x10d/0x130
+  ret_from_fork+0x35/0x40
 
-For now let's use the less ideal method by polling PLS.
+During target side fault injections, it is possible to hit the
+NLP_WAIT_FOR_UNREG case in lpfc_nvme_remoteport_delete. A prior commit
+fixed a rebind and delete race condition, but called lpfc_nlp_put
+unconditionally. This triggered a deletion and the crash.
 
-[use usleep_range(), and shorten the delay time while polling -Mathias]
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200312144517.1593-7-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix by movng nlp_put to inside the NLP_WAIT_FOR_UNREG case, where the nlp
+will be being unregistered/removed. Leave the reference if the flag isn't
+set.
+
+Link: https://lore.kernel.org/r/20200322181304.37655-8-jsmart2021@gmail.com
+Fixes: b15bd3e6212e ("scsi: lpfc: Fix nvme remoteport registration race conditions")
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-hub.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_nvme.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-index af92b2576fe91..712cd44f05ace 100644
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -1322,7 +1322,16 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 			xhci_set_link_state(xhci, ports[wIndex], link_state);
+diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
+index f73726e55e44d..e3013858937b7 100644
+--- a/drivers/scsi/lpfc/lpfc_nvme.c
++++ b/drivers/scsi/lpfc/lpfc_nvme.c
+@@ -342,13 +342,15 @@ lpfc_nvme_remoteport_delete(struct nvme_fc_remote_port *remoteport)
+ 	if (ndlp->upcall_flags & NLP_WAIT_FOR_UNREG) {
+ 		ndlp->nrport = NULL;
+ 		ndlp->upcall_flags &= ~NLP_WAIT_FOR_UNREG;
+-	}
+-	spin_unlock_irq(&vport->phba->hbalock);
++		spin_unlock_irq(&vport->phba->hbalock);
  
- 			spin_unlock_irqrestore(&xhci->lock, flags);
--			msleep(20); /* wait device to enter */
-+			if (link_state == USB_SS_PORT_LS_U3) {
-+				int retries = 16;
-+
-+				while (retries--) {
-+					usleep_range(4000, 8000);
-+					temp = readl(ports[wIndex]->addr);
-+					if ((temp & PORT_PLS_MASK) == XDEV_U3)
-+						break;
-+				}
-+			}
- 			spin_lock_irqsave(&xhci->lock, flags);
+-	/* Remove original register reference. The host transport
+-	 * won't reference this rport/remoteport any further.
+-	 */
+-	lpfc_nlp_put(ndlp);
++		/* Remove original register reference. The host transport
++		 * won't reference this rport/remoteport any further.
++		 */
++		lpfc_nlp_put(ndlp);
++	} else {
++		spin_unlock_irq(&vport->phba->hbalock);
++	}
  
- 			temp = readl(ports[wIndex]->addr);
+  rport_err:
+ 	return;
 -- 
 2.20.1
 
