@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F22C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3032EC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F14520575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E12920575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100123;
-	bh=A/6YDqxK5agMEDP6yVjo4Y1Ip9uYZrhxtIVZS9rsPdc=;
+	s=default; t=1588100126;
+	bh=18SqyrRZK49Qas3xT+Wf30YPs7zYAKq0d/e1dxS3KiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TUTfFRxwAFSOvkZRP/DxiLRxmhzMO4hwvKFHKPj/yvJ+XtecggQuEp6V4O11U5VXC
-	 0h9efsfLt42furAHa3rocGdPAE6Dtd47RYpKKpivDbkTnHnunJgnqRoRqXyuZLyEh1
-	 bs9jD4f7IveRgoHIpwdOECLpzfIc+SkY9cJONNx0=
+	b=uSz22gvTF7/rPmMR4KqyG8qpRTIuQN+oZ4aolnBhrUSSFMOqYn/0QiYit8lfHGFQP
+	 sD99alqcXTBDuOFrjtkxIvjWhM0vJr2DJaT4Nrxgzi1upUij9Cc8NimJNyq2KgQFvU
+	 aeaByxOhZEhm2hc15JtT3IpnwnTPO6AF5slk4tJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbgD1SzW (ORCPT
+        id S1728968AbgD1SzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:55:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48962 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:55:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729827AbgD1Scn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:32:43 -0400
+        id S1729834AbgD1Scj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:32:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D583C20B80;
-        Tue, 28 Apr 2020 18:32:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFBAF21707;
+        Tue, 28 Apr 2020 18:32:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098763;
-        bh=A/6YDqxK5agMEDP6yVjo4Y1Ip9uYZrhxtIVZS9rsPdc=;
+        s=default; t=1588098758;
+        bh=18SqyrRZK49Qas3xT+Wf30YPs7zYAKq0d/e1dxS3KiE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nasp00CkjIAKk7GnYWp+U9IpAoUYeZNeakyqGN4AsCL3oMD1tnRNRDW6E+O8UujEI
-         ED/RSYRfH6Ip11POEeVzRwb2460cTuG831iGUZymbIaLaSYsuoHBMfsWc4nvVTZsyN
-         +xibewAWhk2LsLaS3e0IWVT3z3w4NmDuQEP0iDKg=
+        b=rleCxTpB1Z682itU8AaS07S43MAWxOTwMMohCaVPg8RqJMmLP0+n994yx0JBhxWCS
+         CCqbWkT56Rqnzf6dRqAaARDhMIs4Sm7dLRizPoyf0oPe6S6lhSyMT6DY28se2S330k
+         ygUElfL0Yr5PM3T+2ZsrFXAFEGa3sUKA1YyFqJoo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 018/131] ASoC: Intel: atom: Take the drv->lock mutex before calling sst_send_slot_map()
-Date:   Tue, 28 Apr 2020 20:23:50 +0200
-Message-Id: <20200428182227.436205359@linuxfoundation.org>
+Subject: [PATCH 4.19 023/131] kconfig: qconf: Fix a few alignment issues
+Date:   Tue, 28 Apr 2020 20:23:55 +0200
+Message-Id: <20200428182228.012367284@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
 References: <20200428182224.822179290@linuxfoundation.org>
@@ -61,40 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-[ Upstream commit 81630dc042af998b9f58cd8e2c29dab9777ea176 ]
+[ Upstream commit 60969f02f07ae1445730c7b293c421d179da729c ]
 
-sst_send_slot_map() uses sst_fill_and_send_cmd_unlocked() because in some
-places it is called with the drv->lock mutex already held.
+There are a few items with wrong alignments. Solve them.
 
-So it must always be called with the mutex locked. This commit adds missing
-locking in the sst_set_be_modules() code-path.
-
-Fixes: 24c8d14192cc ("ASoC: Intel: mrfld: add DSP core controls")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200402185359.3424-1-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/atom/sst-atom-controls.c | 2 ++
- 1 file changed, 2 insertions(+)
+ scripts/kconfig/qconf.cc | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/intel/atom/sst-atom-controls.c b/sound/soc/intel/atom/sst-atom-controls.c
-index 737f5d5533139..a1d7f93a08059 100644
---- a/sound/soc/intel/atom/sst-atom-controls.c
-+++ b/sound/soc/intel/atom/sst-atom-controls.c
-@@ -974,7 +974,9 @@ static int sst_set_be_modules(struct snd_soc_dapm_widget *w,
- 	dev_dbg(c->dev, "Enter: widget=%s\n", w->name);
- 
- 	if (SND_SOC_DAPM_EVENT_ON(event)) {
-+		mutex_lock(&drv->lock);
- 		ret = sst_send_slot_map(drv);
-+		mutex_unlock(&drv->lock);
- 		if (ret)
- 			return ret;
- 		ret = sst_send_pipe_module_params(w, k);
+diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
+index ef4310f2558b1..8f004db6f6034 100644
+--- a/scripts/kconfig/qconf.cc
++++ b/scripts/kconfig/qconf.cc
+@@ -627,7 +627,7 @@ void ConfigList::updateMenuList(ConfigItem *parent, struct menu* menu)
+ 			last = item;
+ 			continue;
+ 		}
+-	hide:
++hide:
+ 		if (item && item->menu == child) {
+ 			last = parent->firstChild();
+ 			if (last == item)
+@@ -692,7 +692,7 @@ void ConfigList::updateMenuList(ConfigList *parent, struct menu* menu)
+ 			last = item;
+ 			continue;
+ 		}
+-	hide:
++hide:
+ 		if (item && item->menu == child) {
+ 			last = (ConfigItem*)parent->topLevelItem(0);
+ 			if (last == item)
+@@ -1225,10 +1225,11 @@ QMenu* ConfigInfoView::createStandardContextMenu(const QPoint & pos)
+ {
+ 	QMenu* popup = Parent::createStandardContextMenu(pos);
+ 	QAction* action = new QAction("Show Debug Info", popup);
+-	  action->setCheckable(true);
+-	  connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
+-	  connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setOn(bool)));
+-	  action->setChecked(showDebug());
++
++	action->setCheckable(true);
++	connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
++	connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setOn(bool)));
++	action->setChecked(showDebug());
+ 	popup->addSeparator();
+ 	popup->addAction(action);
+ 	return popup;
 -- 
 2.20.1
 
