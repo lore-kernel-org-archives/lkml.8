@@ -2,115 +2,180 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA542C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B94C8300A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7D6F206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D4B6206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:44:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="l4SgabZe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTNPxSCi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbgD1OoY (ORCPT
+        id S1728102AbgD1Oo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:44:24 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:18713 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728073AbgD1OoX (ORCPT
+        Tue, 28 Apr 2020 10:44:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36420 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728073AbgD1Oo2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:44:23 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588085063; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=nQ1Rk345+B1CzRfg7oYPjHw4VBZBtZklp4KplnRGW8k=; b=l4SgabZeZzq+FuRbVP8PcHTFavDyObLnBemPIhxXc+gaZxbaG4zwoXCGJARJHv6Nds8GyBS/
- Tml3QxzY9fcFK6C3F1iLvq6QaInH/0vip8vqpNzRrFBMl8BV5vjMgdDZDhLrHV1QFTZy0Ifd
- J3Cas3davqGD7AYBn8KKG7fAlCc=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea84142.7ff0eeb10ae8-smtp-out-n03;
- Tue, 28 Apr 2020 14:44:18 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7AF56C433F2; Tue, 28 Apr 2020 14:44:17 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7F980C433CB;
-        Tue, 28 Apr 2020 14:44:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7F980C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v2 2/8] bus: mhi: core: Add range check for channel id
- received in event ring
-To:     Bhaumik Bhatt <bbhatt@codeaurora.org>, mani@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hemantk@codeaurora.org
-References: <1588042766-17496-1-git-send-email-bbhatt@codeaurora.org>
- <1588042766-17496-3-git-send-email-bbhatt@codeaurora.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <5dfa3617-644c-42c3-0dfe-4f9f4a6d5ded@codeaurora.org>
-Date:   Tue, 28 Apr 2020 08:44:15 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 28 Apr 2020 10:44:28 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D35BC03C1AB;
+        Tue, 28 Apr 2020 07:44:28 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id d17so10440975pgo.0;
+        Tue, 28 Apr 2020 07:44:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=JsDPihDIradvM9f3uLrw4TfW583mPkxAjR22PUFbNgw=;
+        b=jTNPxSCiyyU0KwKpMbzpSBK4KSkGIk8o1pSKZtwukGLG41ZvNmsGS5VxBVhVsXGGF7
+         Y579jbF3hrNbZ7t1P/5xtvo5AJaAr94aSqIKKfTOhKjt/e6f05fj7IdqJid8ZnP22XVM
+         pn6dgX1n6cfBOj/wurixACb9gk78J0ilz3cGFS/Sc8bDALFKLmlhU+jpiC+3BfbfDuHz
+         Bkpu3URvpdyo02dAiXPfAS/XR6NkkKmJEdbtj+MRgdbQv3uax5VN7GgP/lJnbEzhySLw
+         4Mw3gfGC7C5yOgpCKfIstwyEn3QLP6PcjXUa3qIBeXOm/PioypwSCoM7U9945lbZx6sg
+         n0nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JsDPihDIradvM9f3uLrw4TfW583mPkxAjR22PUFbNgw=;
+        b=l1btFeE5e/v3ppKB8a1Az9uqw653vJaB+KnBB9vq35uyPxhaR366hNMK4TtgUz43rw
+         X+WwirM+zstrIuh6w3X3FZgvvch2NEjjv1S+fpDZQ5qZL1cvEf/gus0HM9eHknKn/6SZ
+         O3B4+0AysitpPfknCVaC25tXe6Uxs09DqXv45LvHXyQJx7isocS7xbPC8Cy8m0TMst4c
+         hlXwwduVGEc32xWcjmlYSzwKf8nsu/IqN0T/w4TZOCDEBu1u6/AwWx0159y+ZPUxYUNe
+         PI8HUuvICCpNUYjyLCqTDyyvzm+KKEnk5RlMKawAt+C52p93DJ2Xvz4j8YaBz0fJKEQM
+         D1Fw==
+X-Gm-Message-State: AGi0PubW9GKxrWLJ3WzhkBoPrkM5iGwsdLNAsKetgS9MsCivZARoQYXj
+        U93VXZzlrbCoAGPHcUmkKrU=
+X-Google-Smtp-Source: APiQypL3iX01wY2OqSHGJMR8Y4yXNEIVYUlcFdcIISd34gE2G8qCPiXj1wmuiQETuwl5OGVPQq8Yag==
+X-Received: by 2002:a63:6f07:: with SMTP id k7mr29916217pgc.274.1588085067622;
+        Tue, 28 Apr 2020 07:44:27 -0700 (PDT)
+Received: from varodek.localdomain ([2401:4900:40f3:10a2:97c1:b981:9f1:d7d0])
+        by smtp.gmail.com with ESMTPSA id d203sm15053203pfd.79.2020.04.28.07.44.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 07:44:26 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Shannon Nelson <snelson@pensando.io>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Martin Habets <mhabets@solarflare.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        netdev@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, rjw@rjwysocki.net
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, skhan@linuxfoundation.org
+Subject: [Linux-kernel-mentees] [PATCH v2 2/2] realtek/8139cp: Remove Legacy Power Management
+Date:   Tue, 28 Apr 2020 20:13:14 +0530
+Message-Id: <20200428144314.24533-3-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428144314.24533-1-vaibhavgupta40@gmail.com>
+References: <20200428144314.24533-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1588042766-17496-3-git-send-email-bbhatt@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/27/2020 8:59 PM, Bhaumik Bhatt wrote:
-> From: Hemant Kumar <hemantk@codeaurora.org>
-> 
-> MHI data completion handler function reads channel id from event
-> ring element. Value is under the control of MHI devices and can be
-> any value between 0 and 255. In order to prevent out of bound access
-> add a bound check against the max channel supported by controller
-> and skip processing of that event ring element.
-> 
-> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
-> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
-> ---
->   drivers/bus/mhi/core/main.c | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-> index 23154f1..1ccd4cc 100644
-> --- a/drivers/bus/mhi/core/main.c
-> +++ b/drivers/bus/mhi/core/main.c
-> @@ -827,6 +827,9 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
->   		enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
->   
->   		chan = MHI_TRE_GET_EV_CHID(local_rp);
-> +		if (WARN_ON(chan >= mhi_cntrl->max_chan))
-> +			goto next_event;
-> +
->   		mhi_chan = &mhi_cntrl->mhi_chan[chan];
->   
->   		if (likely(type == MHI_PKT_TYPE_TX_EVENT)) {
-> @@ -837,6 +840,7 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
->   			event_quota--;
->   		}
->   
-> +next_event:
->   		mhi_recycle_ev_ring_element(mhi_cntrl, ev_ring);
->   		local_rp = ev_ring->rp;
->   		dev_rp = mhi_to_virtual(ev_ring, er_ctxt->rp);
-> 
+Upgrade power management from legacy to generic using dev_pm_ops.
 
-It looks like the same issue exists in mhi_process_ctrl_ev_ring(), and 
-thus some form of this solution needs to be applied there as well. 
-Would you please fix that too?
+Add "__maybe_unused" attribute to resume() and susend() callbacks
+definition to suppress compiler warnings.
 
+Generic callback requires an argument of type "struct device*". Hence,
+convert it to "struct net_device*" using "dev_get_drv_data()" to use
+it in the callback.
+
+Most of the cleaning part is to remove pci_save_state(),
+pci_set_power_state(), etc power management function calls.
+
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/net/ethernet/realtek/8139cp.c | 25 +++++++------------------
+ 1 file changed, 7 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/net/ethernet/realtek/8139cp.c b/drivers/net/ethernet/realtek/8139cp.c
+index 60d342f82fb3..4f2fb1393966 100644
+--- a/drivers/net/ethernet/realtek/8139cp.c
++++ b/drivers/net/ethernet/realtek/8139cp.c
+@@ -2054,10 +2054,9 @@ static void cp_remove_one (struct pci_dev *pdev)
+ 	free_netdev(dev);
+ }
+ 
+-#ifdef CONFIG_PM
+-static int cp_suspend (struct pci_dev *pdev, pm_message_t state)
++static int __maybe_unused cp_suspend(struct device *device)
+ {
+-	struct net_device *dev = pci_get_drvdata(pdev);
++	struct net_device *dev = dev_get_drvdata(device);
+ 	struct cp_private *cp = netdev_priv(dev);
+ 	unsigned long flags;
+ 
+@@ -2075,16 +2074,12 @@ static int cp_suspend (struct pci_dev *pdev, pm_message_t state)
+ 
+ 	spin_unlock_irqrestore (&cp->lock, flags);
+ 
+-	pci_save_state(pdev);
+-	pci_enable_wake(pdev, pci_choose_state(pdev, state), cp->wol_enabled);
+-	pci_set_power_state(pdev, pci_choose_state(pdev, state));
+-
+ 	return 0;
+ }
+ 
+-static int cp_resume (struct pci_dev *pdev)
++static int __maybe_unused cp_resume(struct device *device)
+ {
+-	struct net_device *dev = pci_get_drvdata (pdev);
++	struct net_device *dev = dev_get_drvdata(device);
+ 	struct cp_private *cp = netdev_priv(dev);
+ 	unsigned long flags;
+ 
+@@ -2093,10 +2088,6 @@ static int cp_resume (struct pci_dev *pdev)
+ 
+ 	netif_device_attach (dev);
+ 
+-	pci_set_power_state(pdev, PCI_D0);
+-	pci_restore_state(pdev);
+-	pci_enable_wake(pdev, PCI_D0, 0);
+-
+ 	/* FIXME: sh*t may happen if the Rx ring buffer is depleted */
+ 	cp_init_rings_index (cp);
+ 	cp_init_hw (cp);
+@@ -2111,7 +2102,6 @@ static int cp_resume (struct pci_dev *pdev)
+ 
+ 	return 0;
+ }
+-#endif /* CONFIG_PM */
+ 
+ static const struct pci_device_id cp_pci_tbl[] = {
+         { PCI_DEVICE(PCI_VENDOR_ID_REALTEK,     PCI_DEVICE_ID_REALTEK_8139), },
+@@ -2120,15 +2110,14 @@ static const struct pci_device_id cp_pci_tbl[] = {
+ };
+ MODULE_DEVICE_TABLE(pci, cp_pci_tbl);
+ 
++static SIMPLE_DEV_PM_OPS(cp_pm_ops, cp_suspend, cp_resume);
++
+ static struct pci_driver cp_driver = {
+ 	.name         = DRV_NAME,
+ 	.id_table     = cp_pci_tbl,
+ 	.probe        =	cp_init_one,
+ 	.remove       = cp_remove_one,
+-#ifdef CONFIG_PM
+-	.resume       = cp_resume,
+-	.suspend      = cp_suspend,
+-#endif
++	.driver.pm    = &cp_pm_ops,
+ };
+ 
+ module_pci_driver(cp_driver);
 -- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.26.2
+
