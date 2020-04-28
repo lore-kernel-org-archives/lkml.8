@@ -2,133 +2,143 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6B0C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4C8C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86374206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDBD62075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:34:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VFFuLiv9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="Hh6rbJ/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728389AbgD1Qdj (ORCPT
+        id S1728401AbgD1Qen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:33:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56535 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727920AbgD1Qdj (ORCPT
+        Tue, 28 Apr 2020 12:34:43 -0400
+Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:41417 "EHLO
+        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727920AbgD1Qem (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:33:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588091617;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wSkRhJrdUvPB39G9qnTZVglhIvjNd+74ma1bDbTUagI=;
-        b=VFFuLiv9aYb4z3HhM6qXFLNTgdNWxS6YJf8i9Z6ajhMF1OjZKpK9GqJM9QD3Y6kUpYDzJO
-        DQPJmPodDHO97XHAvD6vNveRIJBifteZ+wpyiu1wbB8ipRCmlUVa/MqCVnlle+Aru7wYAW
-        /39QGAe4Op2OXUWZ1xPot7CM3xmaM98=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-215-G9BrDAggPxGFtA_sAylraA-1; Tue, 28 Apr 2020 12:33:32 -0400
-X-MC-Unique: G9BrDAggPxGFtA_sAylraA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8AA75A0BD7;
-        Tue, 28 Apr 2020 16:33:30 +0000 (UTC)
-Received: from treble (ovpn-112-209.rdu2.redhat.com [10.10.112.209])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E955560300;
-        Tue, 28 Apr 2020 16:33:28 +0000 (UTC)
-Date:   Tue, 28 Apr 2020 11:33:27 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Tue, 28 Apr 2020 12:34:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1588091682;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=0w6FX0efDJGzaehxYFThqDcH+QYQY0rUFheCeGs7Cu8=;
+  b=Hh6rbJ/iPzcUR7mXtI/JsIkAoONMYJDe1d9dBhzle4u/71WgG1f0Uv/1
+   O+llj8ANszXzQayUR9csmuHioEQ04dnEIeSGyxRCTqbFdlsJTFMvzLIb2
+   ZEWualsGbtiUsgWyD8ZABX1DhR77Az3thzQUEM1/NdyJPgKj4BNuSlZkp
+   0=;
+Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  andrew.cooper3@citrix.com) identity=pra;
+  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="andrew.cooper3@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa1.hc3370-68.iphmx.com: domain of
+  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
+  permitted sender) identity=mailfrom;
+  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="Andrew.Cooper3@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: GfTE0zwlZX/DF1ctKDqrxqeVbE8WVcfOvsjN98osQHnlIj+bOA/2LFcYVb0aH7461lKjAVAfLx
+ 7j15tUKm7Q9jukDiXGBXe4JArojeffWncpdbJdc8J++Ucn0eFvbBbxBJWeB9VAlVhEsRfeADRX
+ IWdKBPAe2bZuNVhHpQqKaPx3D4feKv58+vQM9FlmpNzLI+AL1Z6D6MtcVx42gwF/6YidSiYLvI
+ o3l7R+GG2CLL3cZaUut58uQQSlPrgZH5ynhcWk//W7GtWbcIlSDiJOv63nzSwdEOcFOfFhx9DW
+ 9eM=
+X-SBRS: 2.7
+X-MesageID: 16638438
+X-Ironport-Server: esa1.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.73,328,1583211600"; 
+   d="scan'208";a="16638438"
+Subject: Re: Should SEV-ES #VC use IST? (Re: [PATCH] Allow RDTSC and RDTSCP
+ from userspace)
+To:     Joerg Roedel <jroedel@suse.de>, Andy Lutomirski <luto@kernel.org>
+CC:     Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Tom Lendacky" <Thomas.Lendacky@amd.com>,
+        Mike Stunes <mstunes@vmware.com>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        alexandre.chartre@oracle.com
-Subject: Re: x86 entry perf unwinding failure (missing IRET_REGS annotation
- on stack switch?)
-Message-ID: <20200428163327.br43qcontatbrxlf@treble>
-References: <20200302151829.brlkedossh7qs47s@treble>
- <20200302155239.7ww7jfeu4yeevpkb@treble>
- <20200428070450.w5l5ey54dtmqy5ph@treble>
- <20200428124627.GC13558@hirez.programming.kicks-ass.net>
- <20200428141614.GA13616@hirez.programming.kicks-ass.net>
- <20200428143157.nxxrgfpo3leia2kr@treble>
- <20200428152552.GD13592@hirez.programming.kicks-ass.net>
- <20200428154909.4cjwetyyb2zhnq5i@treble>
- <20200428155413.b5xzef4s2kyzg5ed@treble>
- <20200428162551.GF12735@linux.intel.com>
+        "Juergen Gross" <JGross@suse.com>, Jiri Slaby <jslaby@suse.cz>,
+        Kees Cook <keescook@chromium.org>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Thomas Hellstrom" <thellstrom@vmware.com>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        X86 ML <x86@kernel.org>,
+        "Sean Christopherson" <sean.j.christopherson@intel.com>
+References: <20200425191032.GK21900@8bytes.org>
+ <910AE5B4-4522-4133-99F7-64850181FBF9@amacapital.net>
+ <20200425202316.GL21900@8bytes.org>
+ <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
+ <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
+ <20200428075512.GP30814@suse.de>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Message-ID: <1b232a8e-af99-4f7b-05c5-584b82853ac5@citrix.com>
+Date:   Tue, 28 Apr 2020 17:34:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200428162551.GF12735@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200428075512.GP30814@suse.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 09:25:51AM -0700, Sean Christopherson wrote:
-> On Tue, Apr 28, 2020 at 10:54:13AM -0500, Josh Poimboeuf wrote:
-> > On Tue, Apr 28, 2020 at 10:49:09AM -0500, Josh Poimboeuf wrote:
-> > > On Tue, Apr 28, 2020 at 05:25:52PM +0200, Peter Zijlstra wrote:
-> > > > On Tue, Apr 28, 2020 at 09:31:57AM -0500, Josh Poimboeuf wrote:
-> > > > > That's quite the monstrosity, and I still don't see the point.  I
-> > > > > thought we decided to just disallow CFI changes in alternatives anyway?
-> > > > > That can be done much simpler.
-> > > > 
-> > > > Something like so then ?
-> > > > 
-> > > > ---
-> > > > diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> > > > index 8443ec690051..d14d83e6edb0 100644
-> > > > --- a/tools/objtool/check.c
-> > > > +++ b/tools/objtool/check.c
-> > > > @@ -940,6 +940,7 @@ static int handle_group_alt(struct objtool_file *file,
-> > > >  
-> > > >  		last_new_insn = insn;
-> > > >  
-> > > > +		insn->alt_group = true;
-> > > >  		insn->ignore = orig_insn->ignore_alts;
-> > > >  		insn->func = orig_insn->func;
-> > > >  
-> > > > @@ -2242,6 +2243,11 @@ static int handle_insn_ops(struct instruction *insn, struct insn_state *state)
-> > > >  	list_for_each_entry(op, &insn->stack_ops, list) {
-> > > >  		int res;
-> > > >  
-> > > > +		if (insn->alt_group) {
-> > > > +			WARN_FUNC("alternative has CFI", insn->sec, insn->offset);
-> > > > +			return 1;
-> > > > +		}
-> > > > +
-> > > 
-> > > ACK (separate patch)
-> > 
-> > BTW, since most people don't know what CFI is, how about something like
-> > 
-> > 	"unsupported stack change in alternatives code"
-> 
-> Would it be accurate to print
-> 
-> 	"unsupported CFI stack change in alternatives code"?
-> 
-> to give the developer something more explicit to plug into their search
-> engine?
+On 28/04/2020 08:55, Joerg Roedel wrote:
+> On Mon, Apr 27, 2020 at 10:37:41AM -0700, Andy Lutomirski wrote:
+>> I have a somewhat serious question: should we use IST for #VC at all?
+>> As I understand it, Rome and Naples make it mandatory for hypervisors
+>> to intercept #DB, which means that, due to the MOV SS mess, it's sort
+>> of mandatory to use IST for #VC.  But Milan fixes the #DB issue, so,
+>> if we're running under a sufficiently sensible hypervisor, we don't
+>> need IST for #VC.
+> The reason for #VC being IST is not only #DB, but also SEV-SNP. SNP adds
+> page ownership tracking between guest and host, so that the hypervisor
+> can't remap guest pages without the guest noticing.
+>
+> If there is a violation of ownership, which can happen at any memory
+> access, there will be a #VC exception to notify the guest. And as this
+> can happen anywhere, for example on a carefully crafted stack page set
+> by userspace before doing SYSCALL, the only robust choice for #VC is to
+> use IST.
 
-I don't have a strong opinion either way, though this warning is going
-to be documented in stack-validation.txt anyway right Peter? :-)
+The kernel won't ever touch the guest stack before restoring %rsp in the
+syscall path, but the (minimum 2) memory accesses required to save the
+user %rsp and load the kernel stack may be subject to #VC exceptions, as
+are instruction fetches at the head of the SYSCALL path.
 
--- 
-Josh
+So yes - #VC needs IST.
 
+Sorry for the noise.  (That said, it is unfortunate that the hypervisor
+messing with the memory backing the guest #VC handler results in an
+infinite loop, rather than an ability to cleanly terminate.)
+
+~Andrew
