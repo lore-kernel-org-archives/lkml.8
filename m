@@ -2,187 +2,95 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0E1C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1ECC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1E6C206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:43:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588074229;
-	bh=C3RrHaH4L5nHvpS6TTlCiuxHkFrUFi0ST3B70exKPaE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=0Q6ZJ+Z5GsISPGczJOYrD1PZ829bvCEdvcIrHrkcd8CN/1bhhX5Mtm7yv/ZyFxAoS
-	 OVA7WH0OdHbFeeYkMsHVdS0f/AwdS1Y8TzgJTzCGBZvA2mPtzuHddEvTCNwP/QfPFl
-	 qoZclDtQSE2Hf4R4+a1rOcQy4aMr5CdVywvuuVBE=
+	by mail.kernel.org (Postfix) with ESMTP id 2AC65206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:45:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbgD1Lnt (ORCPT
+        id S1726635AbgD1LpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:43:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726426AbgD1Lns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:43:48 -0400
-Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BED7206A1;
-        Tue, 28 Apr 2020 11:43:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588074227;
-        bh=C3RrHaH4L5nHvpS6TTlCiuxHkFrUFi0ST3B70exKPaE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=gJ+OP2dO0LshnikekgssZbBwArnQEgbbqlUxCdMNVB55zlcXhXNYciLXtyEBDsGph
-         A3evgVJOW7hGuSR0cSl7gFBoy2CVXveGRfZ4xa+1IhZJCS5MZfEEdMSA7tX55tB71e
-         exN+R7klP52nSf0PpCt/SJsQ15jEm7KsGuEHHyFc=
-Date:   Tue, 28 Apr 2020 06:43:45 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yicong Yang <yangyicong@hisilicon.com>
-Cc:     Saheed Bolarinwa <refactormyself@gmail.com>, bjorn@helgaas.com,
-        skhan@linuxfoundation.org, linux-pci@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] pci: Make return value of pcie_capability_read*()
- consistent
-Message-ID: <20200428114345.GA123615@google.com>
+        Tue, 28 Apr 2020 07:45:05 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3324 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726285AbgD1LpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 07:45:04 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id ED5169C0DE979926EC9A;
+        Tue, 28 Apr 2020 19:44:59 +0800 (CST)
+Received: from [127.0.0.1] (10.166.213.7) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Tue, 28 Apr 2020
+ 19:44:50 +0800
+Subject: Re: [PATCH] pinctrl: remove unused 'pwm37_pins'
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+References: <20200417092112.12303-1-yanaijie@huawei.com>
+ <CACRpkdb5Ozz_MKAUDoyOxdnu_NkN72vRu=ZY7j_Lb5uMAiS3SA@mail.gmail.com>
+ <20200428113049.GA5259@Mani-XPS-13-9360>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <57bc1105-06e9-2951-45c0-04b048f65d2e@huawei.com>
+Date:   Tue, 28 Apr 2020 19:44:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4cc16e59-d346-5523-5072-eebe77d06a08@hisilicon.com>
+In-Reply-To: <20200428113049.GA5259@Mani-XPS-13-9360>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.213.7]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 10:19:08AM +0800, Yicong Yang wrote:
-> On 2020/4/28 2:13, Bjorn Helgaas wrote:
-> >
-> > I'm starting to think we're approaching this backwards.  I searched
-> > for PCIBIOS_FUNC_NOT_SUPPORTED, PCIBIOS_BAD_VENDOR_ID, and the other
-> > error values.  Almost every use is a *return* in a config accessor.
-> > There are very, very few *tests* for these values.
-> 
-> If we have certain reasons to reserve PCI_BIOS* error to identify
-> PCI errors in PCI drivers, maybe redefine the PCI_BIOS* to generic
-> error codes can solve the issues, and no need to call
-> pcibios_err_to_errno() to do the conversion.  Few changes may be
-> made to current codes. One possible patch may look like below.
-> Otherwise, maybe convert all PCI_BIOS* errors to generic error codes
-> is a better idea.
-> 
-> Not sure it's the best way or not. Just FYI.
 
-That's a brilliant idea!  We should still look carefully at all the
-callers of the config accessors, but this would avoid changing all the
-arch accessors, so the patch would be dramatically smaller.
 
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 83ce1cd..843987c 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -675,14 +675,18 @@ static inline bool pci_dev_msi_enabled(struct pci_dev *pci_dev) { return false;
->  
->  /* Error values that may be returned by PCI functions */
->  #define PCIBIOS_SUCCESSFUL		0x00
-> -#define PCIBIOS_FUNC_NOT_SUPPORTED	0x81
-> -#define PCIBIOS_BAD_VENDOR_ID		0x83
-> -#define PCIBIOS_DEVICE_NOT_FOUND	0x86
-> -#define PCIBIOS_BAD_REGISTER_NUMBER	0x87
-> -#define PCIBIOS_SET_FAILED		0x88
-> -#define PCIBIOS_BUFFER_TOO_SMALL	0x89
-> -
-> -/* Translate above to generic errno for passing back through non-PCI code */
-> +#define PCIBIOS_FUNC_NOT_SUPPORTED	-ENOENT
-> +#define PCIBIOS_BAD_VENDOR_ID		-ENOTTY
-> +#define PCIBIOS_DEVICE_NOT_FOUND	-ENODEV
-> +#define PCIBIOS_BAD_REGISTER_NUMBER	-EFAULT
-> +#define PCIBIOS_SET_FAILED		-EIO
-> +#define PCIBIOS_BUFFER_TOO_SMALL	-ENOSPC
-> +
-> +/**
-> + * Translate above to generic errno for passing back through non-PCI code
-> + *
-> + * Deprecated. Use the PCIBIOS_* directly without a translation.
-> + */
->  static inline int pcibios_err_to_errno(int err)
->  {
->  	if (err <= PCIBIOS_SUCCESSFUL)
-> @@ -690,17 +694,12 @@ static inline int pcibios_err_to_errno(int err)
->  
->  	switch (err) {
->  	case PCIBIOS_FUNC_NOT_SUPPORTED:
-> -		return -ENOENT;
->  	case PCIBIOS_BAD_VENDOR_ID:
-> -		return -ENOTTY;
->  	case PCIBIOS_DEVICE_NOT_FOUND:
-> -		return -ENODEV;
->  	case PCIBIOS_BAD_REGISTER_NUMBER:
-> -		return -EFAULT;
->  	case PCIBIOS_SET_FAILED:
-> -		return -EIO;
->  	case PCIBIOS_BUFFER_TOO_SMALL:
-> -		return -ENOSPC;
-> +		return err;
->  	}
->  
->  	return -ERANGE;
+在 2020/4/28 19:30, Manivannan Sadhasivam 写道:
+> On Tue, Apr 28, 2020 at 11:58:01AM +0200, Linus Walleij wrote:
+>> On Fri, Apr 17, 2020 at 10:54 AM Jason Yan <yanaijie@huawei.com> wrote:
+>>
+>>> Fix the following gcc warning:
+>>>
+>>> drivers/pinctrl/pinctrl-bm1880.c:263:27: warning: ‘pwm37_pins’ defined
+>>> but not used [-Wunused-const-variable=]
+>>>   static const unsigned int pwm37_pins[] = { 110 };
+>>>                             ^~~~~~~~~~
+>>>
+>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>>> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+>>
+>> I'm sceptic about this. I think PWM37 exists and just need to be
+>> properly defined.
+>>
+>> Mani will know the right solution to this.
+>>
 > 
-> > For example, the only tests for PCIBIOS_FUNC_NOT_SUPPORTED are in
-> > xen_pcibios_err_to_errno() and pcibios_err_to_errno(), i.e., we're
-> > just converting that value to -ENOENT or the Xen-specific thing.
-> >
-> > So I think the best approach might be to remove the PCIBIOS_* error
-> > values completely and replace them with the corresponding values from
-> > pcibios_err_to_errno().  For example, a part of the patch would look
-> > like this:
-> >
-> > diff --git a/arch/mips/pci/ops-emma2rh.c b/arch/mips/pci/ops-emma2rh.c
-> > index 65f47344536c..d4d9c902c147 100644
-> > --- a/arch/mips/pci/ops-emma2rh.c
-> > +++ b/arch/mips/pci/ops-emma2rh.c
-> > @@ -100,7 +100,7 @@ static int pci_config_read(struct pci_bus *bus, unsigned int devfn, int where,
-> >  		break;
-> >  	default:
-> >  		emma2rh_out32(EMMA2RH_PCI_IWIN0_CTR, backup_win0);
-> > -		return PCIBIOS_FUNC_NOT_SUPPORTED;
-> > +		return -ENOENT;
-> >  	}
-> >  
-> >  	emma2rh_out32(EMMA2RH_PCI_IWIN0_CTR, backup_win0);
-> > @@ -149,7 +149,7 @@ static int pci_config_write(struct pci_bus *bus, unsigned int devfn, int where,
-> >  		break;
-> >  	default:
-> >  		emma2rh_out32(EMMA2RH_PCI_IWIN0_CTR, backup_win0);
-> > -		return PCIBIOS_FUNC_NOT_SUPPORTED;
-> > +		return -ENOENT;
-> >  	}
-> >  	*(volatile u32 *)(base + (PCI_FUNC(devfn) << 8) +
-> >  			  (where & 0xfffffffc)) = data;
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 83ce1cdf5676..f95637a8d391 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -675,7 +675,6 @@ static inline bool pci_dev_msi_enabled(struct pci_dev *pci_dev) { return false;
-> >  
-> >  /* Error values that may be returned by PCI functions */
-> >  #define PCIBIOS_SUCCESSFUL		0x00
-> > -#define PCIBIOS_FUNC_NOT_SUPPORTED	0x81
-> >  #define PCIBIOS_BAD_VENDOR_ID		0x83
-> >  #define PCIBIOS_DEVICE_NOT_FOUND	0x86
-> >  #define PCIBIOS_BAD_REGISTER_NUMBER	0x87
-> > @@ -689,8 +688,6 @@ static inline int pcibios_err_to_errno(int err)
-> >  		return err; /* Assume already errno */
-> >  
-> >  	switch (err) {
-> > -	case PCIBIOS_FUNC_NOT_SUPPORTED:
-> > -		return -ENOENT;
-> >  	case PCIBIOS_BAD_VENDOR_ID:
-> >  		return -ENOTTY;
-> >  	case PCIBIOS_DEVICE_NOT_FOUND:
-> > .
-> >
+> Sorry for missing this thread before. The original patch didn't land in my
+> inbox.
 > 
+> Anyway the issue is, pwm37 is not added to BM1880_PINCTRL_GRP. So the proper
+> fix would be to add it.
+> 
+> Jason, will you be able to send a patch for adding it? Otherwise I'll do that.
+> 
+
+OK, I will send v2 soon.
+
+Thanks,
+Jason
+
+> Thanks,
+> Mani
+> 
+>> Yours,
+>> Linus Walleij
+> 
+
