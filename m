@@ -2,57 +2,58 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B95D7C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0C9C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 975BD20B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D99B214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098603;
-	bh=0hifaQ70lRgCF0KppeNRWFQqEOv1Xs9uccMIclWC6eo=;
+	s=default; t=1588098609;
+	bh=3AjzAH6sCRBBQIALkZlA3mWNYY6eXAlOgczOsfvavPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DiuM04S5IWzba5hJb+gl+4DWOY1TbqO03JU7c+fLXFO0tjJZNzcHDlKVfSRXlK55M
-	 mR574kqXLm2egLLz6novg83RWX8T+opGRwz7ijdeybB4hU2Q14SWq8NN8szN+J149C
-	 rgoU6CaVVmCZ6dyaS+9Mkeqv3Q4w13Viv4F3uQCc=
+	b=FlKGHV4rmXhCjYkGhI7V7iQlhD+XHnbczr3PMLJZ9AXIw3mk1qQuEziH/eXqMbrWr
+	 6XbOLK8lm2k2Ghb8dHRYUj16wYf00D+U2es99ZhGys7qlDFHp2v5ugP0STEKhxKwku
+	 oyUJD4N9jw3NR3iyjCKRsH4WjR2LzdN6GI+Pf9nM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729445AbgD1SaC (ORCPT
+        id S1729461AbgD1SaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:30:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44124 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:30:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729438AbgD1S36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:29:58 -0400
+        id S1729432AbgD1SaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:30:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BDDC208E0;
-        Tue, 28 Apr 2020 18:29:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98E262137B;
+        Tue, 28 Apr 2020 18:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098597;
-        bh=0hifaQ70lRgCF0KppeNRWFQqEOv1Xs9uccMIclWC6eo=;
+        s=default; t=1588098600;
+        bh=3AjzAH6sCRBBQIALkZlA3mWNYY6eXAlOgczOsfvavPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h0Sgfx7223I8w78xfrhJ6oM5yfeBzE0xFnRi9lZIoDOeMevTmVnAJkoVYHKMXGvcS
-         8f9EgGGr2tKnJcdOq56jIraSQHwDEhQWQX4BXXj5pv2HKj/isEIKPMEY140mbgrrmQ
-         hX/Hz55iwGIiedfRaiTZnqdTKFEp3mP6iCHnkVIQ=
+        b=wyzmHccbIzHrgF62wuLi20hYOU1ixxfqG3Lt4Y3VzL52USZc0tPKqxGDf9ebbQUod
+         fh6HtVwYfJJbr3HjLugrEaksv5pjTdINYHn3udEKzEWZHYyu+gzUiasACFV6V5rp6Z
+         YHUnrJ8HoBptLgmpxDViGwwWSdgmdRS/rGBfae+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mario Tesi <mario.tesi@st.com>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Vitor Soares <vitor.soares@synopsys.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.6 082/167] iio: imu: st_lsm6dsx: flush hw FIFO before resetting the device
-Date:   Tue, 28 Apr 2020 20:24:18 +0200
-Message-Id: <20200428182235.365728512@linuxfoundation.org>
+        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 025/131] loop: Better discard support for block devices
+Date:   Tue, 28 Apr 2020 20:23:57 +0200
+Message-Id: <20200428182228.298249436@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,71 +63,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Evan Green <evgreen@chromium.org>
 
-commit 3a63da26db0a864134f023f088d41deacd509997 upstream.
+[ Upstream commit c52abf563049e787c1341cdf15c7dbe1bfbc951b ]
 
-flush hw FIFO before device reset in order to avoid possible races
-on interrupt line 1. If the first interrupt line is asserted during
-hw reset the device will work in I3C-only mode (if it is supported)
+If the backing device for a loop device is itself a block device,
+then mirror the "write zeroes" capabilities of the underlying
+block device into the loop device. Copy this capability into both
+max_write_zeroes_sectors and max_discard_sectors of the loop device.
 
-Fixes: 801a6e0af0c6 ("iio: imu: st_lsm6dsx: add support to LSM6DSO")
-Fixes: 43901008fde0 ("iio: imu: st_lsm6dsx: add support to LSM6DSR")
-Reported-by: Mario Tesi <mario.tesi@st.com>
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Reviewed-by: Vitor Soares <vitor.soares@synopsys.com>
-Tested-by: Vitor Soares <vitor.soares@synopsys.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The reason for this is that REQ_OP_DISCARD on a loop device translates
+into blkdev_issue_zeroout(), rather than blkdev_issue_discard(). This
+presents a consistent interface for loop devices (that discarded data
+is zeroed), regardless of the backing device type of the loop device.
+There should be no behavior change for loop devices backed by regular
+files.
 
+This change fixes blktest block/003, and removes an extraneous
+error print in block/013 when testing on a loop device backed
+by a block device that does not support discard.
+
+Signed-off-by: Evan Green <evgreen@chromium.org>
+Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+[used updated version of Evan's comment in loop_config_discard()]
+[moved backingq to local scope, removed redundant braces]
+Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c |   24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+ drivers/block/loop.c | 42 +++++++++++++++++++++++++++++++-----------
+ 1 file changed, 31 insertions(+), 11 deletions(-)
 
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -2036,11 +2036,21 @@ static int st_lsm6dsx_init_hw_timer(stru
- 	return 0;
- }
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 9cd231a27328e..c1341c86bcded 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -426,11 +426,12 @@ static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
+ 	 * information.
+ 	 */
+ 	struct file *file = lo->lo_backing_file;
++	struct request_queue *q = lo->lo_queue;
+ 	int ret;
  
--static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
-+static int st_lsm6dsx_reset_device(struct st_lsm6dsx_hw *hw)
- {
- 	const struct st_lsm6dsx_reg *reg;
- 	int err;
+ 	mode |= FALLOC_FL_KEEP_SIZE;
+ 
+-	if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
++	if (!blk_queue_discard(q)) {
+ 		ret = -EOPNOTSUPP;
+ 		goto out;
+ 	}
+@@ -864,28 +865,47 @@ static void loop_config_discard(struct loop_device *lo)
+ 	struct inode *inode = file->f_mapping->host;
+ 	struct request_queue *q = lo->lo_queue;
  
 +	/*
-+	 * flush hw FIFO before device reset in order to avoid
-+	 * possible races on interrupt line 1. If the first interrupt
-+	 * line is asserted during hw reset the device will work in
-+	 * I3C-only mode (if it is supported)
++	 * If the backing device is a block device, mirror its zeroing
++	 * capability. Set the discard sectors to the block device's zeroing
++	 * capabilities because loop discards result in blkdev_issue_zeroout(),
++	 * not blkdev_issue_discard(). This maintains consistent behavior with
++	 * file-backed loop devices: discarded regions read back as zero.
 +	 */
-+	err = st_lsm6dsx_flush_fifo(hw);
-+	if (err < 0 && err != -ENOTSUPP)
-+		return err;
++	if (S_ISBLK(inode->i_mode) && !lo->lo_encrypt_key_size) {
++		struct request_queue *backingq;
 +
- 	/* device sw reset */
- 	reg = &hw->settings->reset;
- 	err = regmap_update_bits(hw->regmap, reg->addr, reg->mask,
-@@ -2059,6 +2069,18 @@ static int st_lsm6dsx_init_device(struct
++		backingq = bdev_get_queue(inode->i_bdev);
++		blk_queue_max_discard_sectors(q,
++			backingq->limits.max_write_zeroes_sectors);
++
++		blk_queue_max_write_zeroes_sectors(q,
++			backingq->limits.max_write_zeroes_sectors);
++
+ 	/*
+ 	 * We use punch hole to reclaim the free space used by the
+ 	 * image a.k.a. discard. However we do not support discard if
+ 	 * encryption is enabled, because it may give an attacker
+ 	 * useful information.
+ 	 */
+-	if ((!file->f_op->fallocate) ||
+-	    lo->lo_encrypt_key_size) {
++	} else if (!file->f_op->fallocate || lo->lo_encrypt_key_size) {
+ 		q->limits.discard_granularity = 0;
+ 		q->limits.discard_alignment = 0;
+ 		blk_queue_max_discard_sectors(q, 0);
+ 		blk_queue_max_write_zeroes_sectors(q, 0);
+-		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
+-		return;
+-	}
  
- 	msleep(50);
+-	q->limits.discard_granularity = inode->i_sb->s_blocksize;
+-	q->limits.discard_alignment = 0;
++	} else {
++		q->limits.discard_granularity = inode->i_sb->s_blocksize;
++		q->limits.discard_alignment = 0;
  
-+	return 0;
-+}
+-	blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
+-	blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
+-	blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
++		blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
++		blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
++	}
 +
-+static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
-+{
-+	const struct st_lsm6dsx_reg *reg;
-+	int err;
-+
-+	err = st_lsm6dsx_reset_device(hw);
-+	if (err < 0)
-+		return err;
-+
- 	/* enable Block Data Update */
- 	reg = &hw->settings->bdu;
- 	err = regmap_update_bits(hw->regmap, reg->addr, reg->mask,
++	if (q->limits.max_write_zeroes_sectors)
++		blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
++	else
++		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
+ }
+ 
+ static void loop_unprepare_queue(struct loop_device *lo)
+-- 
+2.20.1
+
 
 
