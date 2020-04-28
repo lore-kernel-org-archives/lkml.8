@@ -7,62 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C0DC83011
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FA6C83009
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5463D206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D49112073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:28:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X8ZXo00l"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sLC5sUwQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbgD1D2F (ORCPT
+        id S1726484AbgD1D2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 23:28:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43212 "EHLO
+        Mon, 27 Apr 2020 23:28:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbgD1D2E (ORCPT
+        with ESMTP id S1726447AbgD1D2J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 23:28:04 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE5ABC03C1AC
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 20:28:02 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id h129so14094116ybc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 20:28:02 -0700 (PDT)
+        Mon, 27 Apr 2020 23:28:09 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEF22C03C1A9
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 20:28:09 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id i2so21921741qkl.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 20:28:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=I4RZCdzOpcoMpbDN2LqRR4S1SmcrD2Kj55dT+NEDBbE=;
-        b=X8ZXo00ljasm7AZ1Els7stZGHbJUjQ3cYCjBhSxX4NYkV1i4GJ8fn/Dn9b7txZrs4Y
-         rk4PVdLrWzKGTy55PbNAV14mS8eAapCE7OP5rLPuuiM96DTFmYOd2R8B3N+gg8WSfGWv
-         YySTyNNFFpF2KM5Vtkzo4AKQytmhpqKUa3MnS/7ninMjf0Ix4zkRnSJbjAH3lccQA0+j
-         z266kabr7WqjlEia0jfQlMB5LrckgW/C1smlQe3Lthb8du2UNtYHiw6qieDHzFuWydw/
-         71omd7lOenbwJeViL3RPuetWYMY3l4GO7BSCZeqf3sihWLUx95KaDb3dnQkMoSwjUg3f
-         4X1Q==
+        bh=JjVJ6bVnkDD22Kug2lLArucLeDH63cpRkRDdCvmUsgw=;
+        b=sLC5sUwQCO5H8VpQfbr0H4yolym1MeU6fcyvl0GX1tVdSTKXplkYJVOUSPeObsdt1J
+         JNFx6+q7V/UcdjF9kl6aGAwR+65DA5naHvrPlRhD9971fShW/szwPgWHYDi486Wz2jsk
+         4n54HzCwbsCTB0brNiYnCd28IVesQuXtCTGd1S+kk4pCbbakqRMd6Yy+wfjsX6mVg9Ul
+         5/piBlog/ScC96XdEuOmAWtCjjJytAI/OBS1H/Vf1cjHyX7mQZbuEwfvfZYYxbhWQwJV
+         4OaucR4dIV8MFcI9nfy1JhV0PUihfy76zcj3UWEktQgJ9dZEPvmmOG5zdCRO4l3kcB+A
+         iXGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=I4RZCdzOpcoMpbDN2LqRR4S1SmcrD2Kj55dT+NEDBbE=;
-        b=glD+Dotl+ubd/NjsQekfxNq3uZ9sHkSz5pTNMY0tls5Ll2mGrg6MgJjogtIb6+ASrM
-         Bl3EtZ5Zgg3o8r8RT6ZSCY/dDepc3sAYa2SCf7RamyKLAAGuPfhay3feeKvuFSk+MPJA
-         wX6o2Bj9Bs/tblh+PUlJGeLwDEGjN1QY/t6D+k2LF0XaWdCz6l+4hFBaU+oHuH9fyVlW
-         veVca+funcW8pwOz8cvmimJfCmDM2y5HBWtzVh58CgGM56gQxLdc1Re+0DBbqGePiyGf
-         DtYA/zGsV3g9MOW7HtN+ELC6DBbKD+FFE8Ins1JPXfgUdal/RmDeiPvyBa5suWYZRH2/
-         8M/Q==
-X-Gm-Message-State: AGi0PuYEfTH8QZDAz21bJ9FN7ghYQxrE0k38pA/05SaKz6rgU+RfDkmA
-        dveExAUkf0543q7w7c3R+poUFa3X4Q==
-X-Google-Smtp-Source: APiQypIcdn/JR5PlTDtT8WHtlwDwffUFy2NKOR9VROQaek1qOXSfTSnx9Q8ThU+1UmQujkYLWnXr/liimA==
-X-Received: by 2002:a25:c402:: with SMTP id u2mr41378105ybf.82.1588044481799;
- Mon, 27 Apr 2020 20:28:01 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 05:27:41 +0200
+        bh=JjVJ6bVnkDD22Kug2lLArucLeDH63cpRkRDdCvmUsgw=;
+        b=lF42XQkQrmh8HyMHvhY698yfBEUllalINi1aO4ykMkjXm+jfeBF/mvFfFJbR60xjWQ
+         Mzs8RQ3yfyGFqck3W3c+RhXEYxVR3BIKUSDO9FMZlqQCOJSJrRMnoZl8ZQLktk4L6DbB
+         GHzPsQxc9QHTDtMJqrlW73sIwHHZBMSQLMNF5RjBgx4ZxRSo0G781TfduO9Pt3uuM4iK
+         PXFQs9haYe9YKuD2z5hA2YZJNI8kR0V2sidLx4pbPRKQzw6UBm9PjTJT/ivYOqLQYmzi
+         4Kt3z+4Wxs4I7erZvzzf5d6+Ij87YZBMHdsgrLRGiAGfVUpXTLNAZxEfoRz8aNt7dpsB
+         K4MA==
+X-Gm-Message-State: AGi0PuY69A2DudrgL91hSY+Vu1xNwhVypK1Exc4TsccVhnOpV7LZXFUZ
+        iMeQL3mfNd5BRA3G+OsD5x1FgOj53w==
+X-Google-Smtp-Source: APiQypK8E6BiAXKEVW3TpfVgfPj6v9qslU6kHK+WktRMaanVdj0UoaQeTgjCIkPDaA7t5NniPYjJ3E4kEw==
+X-Received: by 2002:a0c:f1d1:: with SMTP id u17mr26207196qvl.146.1588044488930;
+ Mon, 27 Apr 2020 20:28:08 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 05:27:43 +0200
 In-Reply-To: <20200428032745.133556-1-jannh@google.com>
-Message-Id: <20200428032745.133556-2-jannh@google.com>
+Message-Id: <20200428032745.133556-4-jannh@google.com>
 Mime-Version: 1.0
 References: <20200428032745.133556-1-jannh@google.com>
 X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-Subject: [PATCH 1/5] binfmt_elf_fdpic: Stop using dump_emit() on user pointers
- on !MMU
+Subject: [PATCH 3/5] coredump: Refactor page range dumping into common helper
 From:   Jann Horn <jannh@google.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
@@ -84,125 +83,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dump_emit() is for kernel pointers, and VMAs describe userspace memory.
-Let's be tidy here and avoid accessing userspace pointers under KERNEL_DS,
-even if it probably doesn't matter much on !MMU systems - especially given
-that it looks like we can just use the same get_dump_page() as on MMU if
-we move it out of the CONFIG_MMU block.
+Both fs/binfmt_elf.c and fs/binfmt_elf_fdpic.c need to dump ranges of pages
+into the coredump file. Extract that logic into a common helper.
+
+Any other binfmt that actually wants to create coredumps will probably need
+the same function; so stop making get_dump_page() depend on
+CONFIG_ELF_CORE.
 
 Signed-off-by: Jann Horn <jannh@google.com>
 ---
- fs/binfmt_elf_fdpic.c |  8 ------
- mm/gup.c              | 58 +++++++++++++++++++++----------------------
- 2 files changed, 29 insertions(+), 37 deletions(-)
+ fs/binfmt_elf.c          | 22 ++--------------------
+ fs/binfmt_elf_fdpic.c    | 18 +++---------------
+ fs/coredump.c            | 33 +++++++++++++++++++++++++++++++++
+ include/linux/coredump.h |  2 ++
+ mm/gup.c                 |  2 --
+ 5 files changed, 40 insertions(+), 37 deletions(-)
 
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index b29b84595b09f..fb36469848323 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -2323,26 +2323,8 @@ static int elf_core_dump(struct coredump_params *cprm)
+ 
+ 	for (i = 0, vma = first_vma(current, gate_vma); vma != NULL;
+ 			vma = next_vma(vma, gate_vma)) {
+-		unsigned long addr;
+-		unsigned long end;
+-
+-		end = vma->vm_start + vma_filesz[i++];
+-
+-		for (addr = vma->vm_start; addr < end; addr += PAGE_SIZE) {
+-			struct page *page;
+-			int stop;
+-
+-			page = get_dump_page(addr);
+-			if (page) {
+-				void *kaddr = kmap(page);
+-				stop = !dump_emit(cprm, kaddr, PAGE_SIZE);
+-				kunmap(page);
+-				put_page(page);
+-			} else
+-				stop = !dump_skip(cprm, PAGE_SIZE);
+-			if (stop)
+-				goto cleanup;
+-		}
++		if (!dump_user_range(cprm, vma->vm_start, vma_filesz[i++]))
++			goto cleanup;
+ 	}
+ 	dump_truncate(cprm);
+ 
 diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-index c62c17a5c34a9..f5b47076fa762 100644
+index f5b47076fa762..938f66f4de9b2 100644
 --- a/fs/binfmt_elf_fdpic.c
 +++ b/fs/binfmt_elf_fdpic.c
-@@ -1495,14 +1495,11 @@ static bool elf_fdpic_dump_segments(struct coredump_params *cprm)
- 	struct vm_area_struct *vma;
- 
- 	for (vma = current->mm->mmap; vma; vma = vma->vm_next) {
--#ifdef CONFIG_MMU
- 		unsigned long addr;
--#endif
- 
+@@ -1500,21 +1500,9 @@ static bool elf_fdpic_dump_segments(struct coredump_params *cprm)
  		if (!maydump(vma, cprm->mm_flags))
  			continue;
  
--#ifdef CONFIG_MMU
- 		for (addr = vma->vm_start; addr < vma->vm_end;
- 							addr += PAGE_SIZE) {
- 			bool res;
-@@ -1518,11 +1515,6 @@ static bool elf_fdpic_dump_segments(struct coredump_params *cprm)
- 			if (!res)
- 				return false;
- 		}
--#else
--		if (!dump_emit(cprm, (void *) vma->vm_start,
--				vma->vm_end - vma->vm_start))
--			return false;
--#endif
+-		for (addr = vma->vm_start; addr < vma->vm_end;
+-							addr += PAGE_SIZE) {
+-			bool res;
+-			struct page *page = get_dump_page(addr);
+-			if (page) {
+-				void *kaddr = kmap(page);
+-				res = dump_emit(cprm, kaddr, PAGE_SIZE);
+-				kunmap(page);
+-				put_page(page);
+-			} else {
+-				res = dump_skip(cprm, PAGE_SIZE);
+-			}
+-			if (!res)
+-				return false;
+-		}
++		if (!dump_user_range(cprm, vma->vm_start,
++				     vma->vma_end - vma->vm_start))
++			return false;
  	}
  	return true;
  }
+diff --git a/fs/coredump.c b/fs/coredump.c
+index 047f5a11dbee7..3385de8a62302 100644
+--- a/fs/coredump.c
++++ b/fs/coredump.c
+@@ -860,6 +860,39 @@ int dump_skip(struct coredump_params *cprm, size_t nr)
+ }
+ EXPORT_SYMBOL(dump_skip);
+ 
++#ifdef CONFIG_ELF_CORE
++int dump_user_range(struct coredump_params *cprm, unsigned long start,
++		    unsigned long len)
++{
++	unsigned long addr;
++
++	for (addr = start; addr < start + len; addr += PAGE_SIZE) {
++		struct page *page;
++		int stop;
++
++		/*
++		 * To avoid having to allocate page tables for virtual address
++		 * ranges that have never been used yet, use a helper that
++		 * returns NULL when encountering an empty page table entry that
++		 * would otherwise have been filled with the zero page.
++		 */
++		page = get_dump_page(addr);
++		if (page) {
++			void *kaddr = kmap(page);
++
++			stop = !dump_emit(cprm, kaddr, PAGE_SIZE);
++			kunmap(page);
++			put_page(page);
++		} else {
++			stop = !dump_skip(cprm, PAGE_SIZE);
++		}
++		if (stop)
++			return 0;
++	}
++	return 1;
++}
++#endif
++
+ int dump_align(struct coredump_params *cprm, int align)
+ {
+ 	unsigned mod = cprm->pos & (align - 1);
+diff --git a/include/linux/coredump.h b/include/linux/coredump.h
+index abf4b4e65dbb9..4289dc21c04ff 100644
+--- a/include/linux/coredump.h
++++ b/include/linux/coredump.h
+@@ -16,6 +16,8 @@ extern int dump_skip(struct coredump_params *cprm, size_t nr);
+ extern int dump_emit(struct coredump_params *cprm, const void *addr, int nr);
+ extern int dump_align(struct coredump_params *cprm, int align);
+ extern void dump_truncate(struct coredump_params *cprm);
++int dump_user_range(struct coredump_params *cprm, unsigned long start,
++		    unsigned long len);
+ #ifdef CONFIG_COREDUMP
+ extern void do_coredump(const kernel_siginfo_t *siginfo);
+ #else
 diff --git a/mm/gup.c b/mm/gup.c
-index 50681f0286ded..76080c4dbff05 100644
+index 76080c4dbff05..9a7e83772f1fe 100644
 --- a/mm/gup.c
 +++ b/mm/gup.c
-@@ -1490,35 +1490,6 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
- 		up_read(&mm->mmap_sem);
- 	return ret;	/* 0 or negative error code */
- }
--
--/**
-- * get_dump_page() - pin user page in memory while writing it to core dump
-- * @addr: user address
-- *
-- * Returns struct page pointer of user page pinned for dump,
-- * to be freed afterwards by put_page().
-- *
-- * Returns NULL on any kind of failure - a hole must then be inserted into
-- * the corefile, to preserve alignment with its headers; and also returns
-- * NULL wherever the ZERO_PAGE, or an anonymous pte_none, has been found -
-- * allowing a hole to be left in the corefile to save diskspace.
-- *
-- * Called without mmap_sem, but after all other threads have been killed.
-- */
+@@ -1550,7 +1550,6 @@ static long __get_user_pages_locked(struct task_struct *tsk,
+  *
+  * Called without mmap_sem, but after all other threads have been killed.
+  */
 -#ifdef CONFIG_ELF_CORE
--struct page *get_dump_page(unsigned long addr)
--{
--	struct vm_area_struct *vma;
--	struct page *page;
--
--	if (__get_user_pages(current, current->mm, addr, 1,
--			     FOLL_FORCE | FOLL_DUMP | FOLL_GET, &page, &vma,
--			     NULL) < 1)
--		return NULL;
--	flush_cache_page(vma, addr, page_to_pfn(page));
--	return page;
--}
--#endif /* CONFIG_ELF_CORE */
- #else /* CONFIG_MMU */
- static long __get_user_pages_locked(struct task_struct *tsk,
- 		struct mm_struct *mm, unsigned long start,
-@@ -1565,6 +1536,35 @@ static long __get_user_pages_locked(struct task_struct *tsk,
+ struct page *get_dump_page(unsigned long addr)
+ {
+ 	struct vm_area_struct *vma;
+@@ -1563,7 +1562,6 @@ struct page *get_dump_page(unsigned long addr)
+ 	flush_cache_page(vma, addr, page_to_pfn(page));
+ 	return page;
  }
- #endif /* !CONFIG_MMU */
+-#endif /* CONFIG_ELF_CORE */
  
-+/**
-+ * get_dump_page() - pin user page in memory while writing it to core dump
-+ * @addr: user address
-+ *
-+ * Returns struct page pointer of user page pinned for dump,
-+ * to be freed afterwards by put_page().
-+ *
-+ * Returns NULL on any kind of failure - a hole must then be inserted into
-+ * the corefile, to preserve alignment with its headers; and also returns
-+ * NULL wherever the ZERO_PAGE, or an anonymous pte_none, has been found -
-+ * allowing a hole to be left in the corefile to save diskspace.
-+ *
-+ * Called without mmap_sem, but after all other threads have been killed.
-+ */
-+#ifdef CONFIG_ELF_CORE
-+struct page *get_dump_page(unsigned long addr)
-+{
-+	struct vm_area_struct *vma;
-+	struct page *page;
-+
-+	if (__get_user_pages(current, current->mm, addr, 1,
-+			     FOLL_FORCE | FOLL_DUMP | FOLL_GET, &page, &vma,
-+			     NULL) < 1)
-+		return NULL;
-+	flush_cache_page(vma, addr, page_to_pfn(page));
-+	return page;
-+}
-+#endif /* CONFIG_ELF_CORE */
-+
  #if defined(CONFIG_FS_DAX) || defined (CONFIG_CMA)
  static bool check_dax_vmas(struct vm_area_struct **vmas, long nr_pages)
- {
 -- 
 2.26.2.303.gf8c07b1a785-goog
 
