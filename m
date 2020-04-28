@@ -2,126 +2,111 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D28C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D8FC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A19EB20661
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30010206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:02:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="IHFQ/LXI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgD1E6Q (ORCPT
+        id S1726286AbgD1FCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 00:58:16 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:43319 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbgD1E6P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 00:58:15 -0400
-Received: by mail-il1-f199.google.com with SMTP id c15so21381653ilj.10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 21:58:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=7F1aDoPHpWlTaSgIOAU2VyXYU38Q2emXLxNiu+PeuWM=;
-        b=uSmWfl0WInKQcXWQ6Wcxz8ANhRWQ9xijHIMQdDTdXNE1Z+qEbt2KVEEtWj+/zSr0Yg
-         1jv6F2W61R6Brc0N/l3ZCC26QYr50srGVwvdST2jur/5vYS5EY4ULJ+e+5G0GWYUMQlj
-         SjyJgVdxZROamF6dG3XbfUQHHtgoZJjEq3YotuH9EWn2+CUTwIqSgcvdNzpbHDUeCSej
-         2DyUZKC1po8Zw9W8+cr45NirM9L4vUVRHMf05yVi6pkJ6bvwLFnnu8Ad/RqCCghTBlov
-         7hXBY/r/ppNIQaCmV9ORhhQMzmw0jUDdG7j7Gfis7x6TPBABiJZXdbGfRHh39Az+Or1H
-         a0Xg==
-X-Gm-Message-State: AGi0Pub2jPkEeCkgRKN8m8Rls80QiX0IEDr1saLxiZV5tUFLgJlaMOIf
-        x0FSnDQ6GspZN99ywfGAaHzcJi7spFXI9766lxr/r6pPFGL9
-X-Google-Smtp-Source: APiQypKZ/ub7lhv/P7/kfGfe8pCyn9E0MTQFbDcw1TbJsDosJI/Ht5rzL2v6lKHMeiMROvR8F42LhsQBR94HAt4sUGIWd/5H0wC9
+        Tue, 28 Apr 2020 01:02:31 -0400
+Received: from mail-eopbgr680070.outbound.protection.outlook.com ([40.107.68.70]:45999
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725792AbgD1FCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 01:02:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gGfN0l0QAkzqXrpzOKfu6Nkr+gQFWYng/M/BqFnHRgv26BfJ2sDoRBpDH+WklJiElg+dOBy1Q0lzlSM/W4078gaiwbMR8Z1wZ8r1SSv0PHWiDrmIGgHmdt5FHpsehnaekKGBw+7QcjY9Hp3cIpxX1e+k/3Eqak2Cx+/3x2qgXXeH7ECgrvgTZ1wa0u3wxKuxs5B/cr6Szm+XaqwfMHz4Nb/2wx2yO2CDQHGrLRl4caHaW4IUM3HNOUel26XZH15aZoFXNb/r50mpHRaCoqSwzPX+29uVemgbGSsDB7BSmAM5Hwp669bqGTNaE1ydQdKCT/+lqoiVtR7kSjlnFfjDoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W+at1g2m0VyXyxoV2WTS0ruWiKOsJ10Y+70e8usDpz0=;
+ b=FT0Z4LZUQ2ZRhcjMD3dsdHzOSUqsdgK6OYorOHH9LT1SzkkZ11bTLnLIk0++7wsvGnIw2cjscUSWNFS8PmhEqJ+2wrInaRZZXSFAFJArIC7U29OV0LYknqfR6GaHjcRxGkXvDZ3eXr6Js8ccnxkuojRwoBbTpi+AsQolBZTer050a6sFgx9zInwYKeBMYSq4XTCEnLqmpQbnBKKTKXmP1rXxxbUntAMs+uTrzpb/eS2XXc8+MojjE0//efZeXmgjCz7sxf9NrNoMNpRCiVVQtNnZ30M44OPaPvQMOoTv2qjmoTkOeISGiezr/31WfQA4H3etm6IsKoNvZ2rwxn7AJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W+at1g2m0VyXyxoV2WTS0ruWiKOsJ10Y+70e8usDpz0=;
+ b=IHFQ/LXIRLw3zBVYqBHhEr3hNvNQw6kKnwZVGoFn3UznYGQXpGJFuajM5H8jdEdoi++GhPTcrItN9HnHnxmGlXpXx77Y6EWQ26DeW8aZVY1eU8q2Ra9gZreQLIttQmX6xkVVKZUEvWj4Z2c5Zn925k9mpNhQXlLXN9gMslUHUn4=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Sanju.Mehta@amd.com; 
+Received: from DM6PR12MB3420.namprd12.prod.outlook.com (2603:10b6:5:3a::27) by
+ DM6PR12MB3499.namprd12.prod.outlook.com (2603:10b6:5:11e::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2937.22; Tue, 28 Apr 2020 05:02:28 +0000
+Received: from DM6PR12MB3420.namprd12.prod.outlook.com
+ ([fe80::7545:386:8328:18a0]) by DM6PR12MB3420.namprd12.prod.outlook.com
+ ([fe80::7545:386:8328:18a0%6]) with mapi id 15.20.2937.023; Tue, 28 Apr 2020
+ 05:02:28 +0000
+Subject: Re: linux-next: build warning after merge of the spi tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sanjay R Mehta <sanju.mehta@amd.com>
+References: <20200428141611.0ed0969a@canb.auug.org.au>
+From:   Sanjay R Mehta <sanmehta@amd.com>
+Message-ID: <2b6a132c-8659-d2ed-917e-09aef47aeac3@amd.com>
+Date:   Tue, 28 Apr 2020 10:31:56 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <20200428141611.0ed0969a@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BM1PR01CA0135.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:40::29) To DM6PR12MB3420.namprd12.prod.outlook.com
+ (2603:10b6:5:3a::27)
 MIME-Version: 1.0
-X-Received: by 2002:a02:cc19:: with SMTP id n25mr22996968jap.107.1588049893942;
- Mon, 27 Apr 2020 21:58:13 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 21:58:13 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d06aa005a452ad5c@google.com>
-Subject: bpf test error: KASAN: null-ptr-deref Write in x25_disconnect
-From:   syzbot <syzbot+6b89cf96299c875daf8a@syzkaller.appspotmail.com>
-To:     allison@lohutok.net, andrew.hendry@gmail.com, davem@davemloft.net,
-        gregkh@linuxfoundation.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tanxin.ctf@gmail.com, tglx@linutronix.de, xiyuyang19@fudan.edu.cn
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [172.31.32.32] (165.204.159.242) by BM1PR01CA0135.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:40::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Tue, 28 Apr 2020 05:02:25 +0000
+X-Originating-IP: [165.204.159.242]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 94dc526d-27c0-4e2c-813a-08d7eb315908
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3499:|DM6PR12MB3499:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB3499C19C3573C71C73868891E5AC0@DM6PR12MB3499.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2000;
+X-Forefront-PRVS: 0387D64A71
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3420.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(346002)(396003)(366004)(39860400002)(110136005)(66556008)(5660300002)(26005)(478600001)(66476007)(53546011)(956004)(31696002)(6486002)(16576012)(81156014)(54906003)(8936002)(316002)(2616005)(186003)(8676002)(52116002)(2906002)(558084003)(36756003)(31686004)(16526019)(4326008)(66946007)(6666004);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6ULYFiRnWjsz9CAYbeFpx3rhN3F1AsKmVBTI+++10gMANhk1uCpHmUDvG9ovSN5dmbU/h4NU/tHSYfqUh+SMDKHUVYC/Ya+4boK6qpcgUQ03ZqulzHI2lgoWG8x/PN1SIFWTqwCICLS82uEZigp2rjN8YZG3y+8Isa03EvocbejQq1j9yynVbyHbQMu2u7yglBpitPXY0q+HT4LClTrZSgPPCROt24LoE1iCV5hS2+6Lb+ijokTiVj32+cJxZEzN574uA1y7KEx874iGzmYEW3XpHDxrZdveyjsu6AMT4Ko+Iz6EXM6o7Wp4RdFbl8bzCAB4rRrVWrgrE44X2iSeOJFQCDCvxhhbGQdNSY1c8ORq2yL7p68BnIIVZpLLuNjgnRWjwxpLHzigPU0MsYsBhq3diFRl+45MhvDql6iy3MoRB5deaUI99OT/bKQ+vF6t
+X-MS-Exchange-AntiSpam-MessageData: WO8wm8AnBA+eST0P2uXLLrSIQTV+9BKeQc1lTqyv+kNA3S1sHxPgUgT5fGLSCkwHSozzgMl0E9YzFqwIw27qziZ5j1BxUlHECc8Z4w0Pob7wf1LRp6iR71FZYjc6iDn0uRq3dG4s2A5F3ZfWxc/fUeYUb5MyfLGT/dU9MkkTCPVPr/rJp9XgGnL59jdGvDCeYAyovNLrADoyzv4GhYUh7gV4QCYgB1oAavs6gFTL0+tVttXEPwBeqDdzoxpCg23hYiN6VcT+EeP+aZW4+HfMhT94RY99B+XJ+/g8+MpOzjk83+qE/HrFyP6gyisAYaoct3RowU5IP6fIg3T//38/cKvCVKExNL/Wj70QzLgaEBIkOHnVV/+i62XaTAqZ71rzJooXOPgHv6lV35S+d1k/VAccryB0FFCx2fBoXIQFhtEY0/xHsfHDESukfQygvI5zm/5MJGgN4375ic3bpfue0gjhh0MsXJ8FaBK+QWIyYvUIpsKpt5TH5xlAoFYS1RTXuQEeZq3YnZRHiABculoanqF7dh2+EzEnv42ImGXE1fD/dG8Vpby6j/sKXHvibr2BPGW/9Ky0Il/3Vx1IMpoT/zNyFy/Ei4dfhS3DwJfeqscJHNR7IUv+xp1kFbrFKyMpd/zm/2jdYmYcnif2PrBWSo26Hfc/eODQPuB2AabqNuJvDsHoBjYJVfXKSwXbzkCfFuC9ftKhzuYXSSPegYMRJaMmaXpLzpbNs+n3ndQJYO6o9iBs5ibDkwnMUIGcKdQh5NSGEJa538YHFh42YxDnvdccCgAdUK1mYzjLCUEnJ2jYTFHxYjPlZpkhGTH2L9Gt
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 94dc526d-27c0-4e2c-813a-08d7eb315908
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2020 05:02:28.0476
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wSDjL2tdJvxUeWw3ZjOCU8d1bbl8eQUCVwKcZOqkbruLqaFf+/xgVW4Zab96ykhbGXReo15T70BvQklORsXtMw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3499
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Stephen,
 
-syzbot found the following crash on:
+I have just sent a fixup patch for this. Could it still reach 5.8?
 
-HEAD commit:    18f02ad1 bpf: Fix sk_psock refcnt leak when receiving mess..
-git tree:       bpf
-console output: https://syzkaller.appspot.com/x/log.txt?x=14fc2208100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b7a70e992f2f9b68
-dashboard link: https://syzkaller.appspot.com/bug?extid=6b89cf96299c875daf8a
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Thanks & regards
+Sanjay Mehta
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6b89cf96299c875daf8a@syzkaller.appspotmail.com
-
-can: request_module (can-proto-0) failed.
-can: request_module (can-proto-0) failed.
-can: request_module (can-proto-0) failed.
-==================================================================
-BUG: KASAN: null-ptr-deref in atomic_fetch_sub include/asm-generic/atomic-instrumented.h:199 [inline]
-BUG: KASAN: null-ptr-deref in refcount_sub_and_test include/linux/refcount.h:266 [inline]
-BUG: KASAN: null-ptr-deref in refcount_dec_and_test include/linux/refcount.h:294 [inline]
-BUG: KASAN: null-ptr-deref in x25_neigh_put include/net/x25.h:253 [inline]
-BUG: KASAN: null-ptr-deref in x25_disconnect+0x253/0x370 net/x25/x25_subr.c:361
-Write of size 4 at addr 00000000000000d8 by task syz-fuzzer/7029
-
-CPU: 0 PID: 7029 Comm: syz-fuzzer Not tainted 5.7.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- __kasan_report.cold+0x5/0x4d mm/kasan/report.c:515
- kasan_report+0x33/0x50 mm/kasan/common.c:625
- check_memory_region_inline mm/kasan/generic.c:187 [inline]
- check_memory_region+0x141/0x190 mm/kasan/generic.c:193
- atomic_fetch_sub include/asm-generic/atomic-instrumented.h:199 [inline]
- refcount_sub_and_test include/linux/refcount.h:266 [inline]
- refcount_dec_and_test include/linux/refcount.h:294 [inline]
- x25_neigh_put include/net/x25.h:253 [inline]
- x25_disconnect+0x253/0x370 net/x25/x25_subr.c:361
- x25_release+0x345/0x420 net/x25/af_x25.c:665
- __sock_release+0xcd/0x280 net/socket.c:605
- sock_close+0x18/0x20 net/socket.c:1283
- __fput+0x33e/0x880 fs/file_table.c:280
- task_work_run+0xf4/0x1b0 kernel/task_work.c:123
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_usermode_loop+0x2fa/0x360 arch/x86/entry/common.c:165
- prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
- syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
- do_syscall_64+0x6b1/0x7d0 arch/x86/entry/common.c:305
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x4afb40
-Code: 8b 7c 24 10 48 8b 74 24 18 48 8b 54 24 20 49 c7 c2 00 00 00 00 49 c7 c0 00 00 00 00 49 c7 c1 00 00 00 00 48 8b 44 24 08 0f 05 <48> 3d 01 f0 ff ff 76 20 48 c7 44 24 28 ff ff ff ff 48 c7 44 24 30
-RSP: 002b:000000c0001d94f8 EFLAGS: 00000216 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 000000c00002e500 RCX: 00000000004afb40
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 000000c0001d9538 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000216 R12: ffffffffffffffff
-R13: 0000000000000163 R14: 0000000000000162 R15: 0000000000000200
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+On 4/28/2020 9:46 AM, Stephen Rothwell wrote:
+> [CAUTION: External Email]
+> 
