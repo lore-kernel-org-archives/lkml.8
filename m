@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9B6C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D859C8300A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71E01206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A27520575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100139;
-	bh=/Pgjjic5C0EKauwdVzgPf6juUebWhP8kZUQgSEb41Jw=;
+	s=default; t=1588100142;
+	bh=0ai72RUas7AA88Oaqv4xlYhEj4QfUyXkTPaK6hfLJes=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EBIE0J9yf2GaRrmngbLcRJ0h7O5hdmncrUJhUA+3fYPC/X0UCS4nNk4Q5foG/TX9d
-	 +rc05vdeCrbcGybd2TCAJem1GXJF5dIyhcSGcXmgCiLdEr3nwk2dx25pDn1HHg5+ED
-	 7Y2zZadedK2QWZEqIFpCo3vIBfC0SsAjS1DmrFg8=
+	b=xhqly/vp6Zb/Cozz3vwKrIrztkwWiVnzccgGVqDbEO2sf6C58D2IjZo8HhL0AIvCL
+	 thWOdeDzTwIJJvQKwyKIH/FtHbhrvCFwVWMO6KPU+hTNKgSYIa2xtKif/ePgzt7zvg
+	 c7N6LGwivQljVGTZuHTxUn/VI2bT12qbh9nZrDFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729802AbgD1ScV (ORCPT
+        id S1729791AbgD1ScO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:32:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729188AbgD1ScO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Apr 2020 14:32:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729776AbgD1ScJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:32:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AE47218AC;
-        Tue, 28 Apr 2020 18:32:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 949242076A;
+        Tue, 28 Apr 2020 18:32:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098733;
-        bh=/Pgjjic5C0EKauwdVzgPf6juUebWhP8kZUQgSEb41Jw=;
+        s=default; t=1588098729;
+        bh=0ai72RUas7AA88Oaqv4xlYhEj4QfUyXkTPaK6hfLJes=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FIkm4vYxhvdvwgmwD5A/aP5G0ow0StiL+eMhtIPgF60dUajhNbk4jEsT0iUpTD94l
-         zar5WM4+ZKssZe+ovhDjzLUF3VvA9z/wp52/Nrg4++fyZ16T3JoC3wdajAop0ZWJam
-         UfYO4w2qaf5ziY4DqY6FqfQfJbKrbzd+uMCjmrLo=
+        b=kX0I9lJabdBMj+ofTF0QhQOowaYnwKxL1s/UFyfiL+Xt/PhTo+AYM6DhkYKN80x5x
+         md4AVo1ZMxAB137WzjOCavi6icsBirmT202DSRXl4pWP+mU4rl1iBaRC+q4/nkxOUI
+         mZLnfRV/ZWJFdAEWrempCNjkQXxCyE28Yc59i9no=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Kubecek <mkubecek@suse.cz>,
-        KarimAllah Ahmed <karahmed@amazon.de>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 047/131] kvm: fix compile on s390 part 2
-Date:   Tue, 28 Apr 2020 20:24:19 +0200
-Message-Id: <20200428182230.935133221@linuxfoundation.org>
+Subject: [PATCH 5.4 005/168] arm64: Fake the IminLine size on systems affected by Neoverse-N1 #1542419
+Date:   Tue, 28 Apr 2020 20:22:59 +0200
+Message-Id: <20200428182232.362254984@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,38 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: James Morse <james.morse@arm.com>
 
-commit eb1f2f387db8c0d084581fb26e7faffde700bc8e upstream.
+[ Upstream commit ee9d90be9ddace01b7fb126567e4b539fbe1f82f ]
 
-We also need to fence the memunmap part.
+Systems affected by Neoverse-N1 #1542419 support DIC so do not need to
+perform icache maintenance once new instructions are cleaned to the PoU.
+For the errata workaround, the kernel hides DIC from user-space, so that
+the unnecessary cache maintenance can be trapped by firmware.
 
-Fixes: e45adf665a53 ("KVM: Introduce a new guest mapping API")
-Fixes: d30b214d1d0a (kvm: fix compilation on s390)
-Cc: Michal Kubecek <mkubecek@suse.cz>
-Cc: KarimAllah Ahmed <karahmed@amazon.de>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+To reduce the number of traps, produce a fake IminLine value based on
+PAGE_SIZE.
+
+Signed-off-by: James Morse <james.morse@arm.com>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: James Morse <james.morse@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/kvm_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/include/asm/cache.h | 3 ++-
+ arch/arm64/kernel/traps.c      | 8 +++++++-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index f99b99b77a486..5b949aa273de5 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1756,8 +1756,10 @@ void kvm_vcpu_unmap(struct kvm_vcpu *vcpu, struct kvm_host_map *map,
+diff --git a/arch/arm64/include/asm/cache.h b/arch/arm64/include/asm/cache.h
+index 43da6dd295920..806e9dc2a852a 100644
+--- a/arch/arm64/include/asm/cache.h
++++ b/arch/arm64/include/asm/cache.h
+@@ -11,6 +11,7 @@
+ #define CTR_L1IP_MASK		3
+ #define CTR_DMINLINE_SHIFT	16
+ #define CTR_IMINLINE_SHIFT	0
++#define CTR_IMINLINE_MASK	0xf
+ #define CTR_ERG_SHIFT		20
+ #define CTR_CWG_SHIFT		24
+ #define CTR_CWG_MASK		15
+@@ -18,7 +19,7 @@
+ #define CTR_DIC_SHIFT		29
  
- 	if (map->page)
- 		kunmap(map->page);
-+#ifdef CONFIG_HAS_IOMEM
- 	else
- 		memunmap(map->hva);
-+#endif
+ #define CTR_CACHE_MINLINE_MASK	\
+-	(0xf << CTR_DMINLINE_SHIFT | 0xf << CTR_IMINLINE_SHIFT)
++	(0xf << CTR_DMINLINE_SHIFT | CTR_IMINLINE_MASK << CTR_IMINLINE_SHIFT)
  
- 	if (dirty) {
- 		kvm_vcpu_mark_page_dirty(vcpu, map->gfn);
+ #define CTR_L1IP(ctr)		(((ctr) >> CTR_L1IP_SHIFT) & CTR_L1IP_MASK)
+ 
+diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+index 465f0a0f8f0ab..4e3e9d9c81517 100644
+--- a/arch/arm64/kernel/traps.c
++++ b/arch/arm64/kernel/traps.c
+@@ -470,9 +470,15 @@ static void ctr_read_handler(unsigned int esr, struct pt_regs *regs)
+ 	int rt = ESR_ELx_SYS64_ISS_RT(esr);
+ 	unsigned long val = arm64_ftr_reg_user_value(&arm64_ftr_reg_ctrel0);
+ 
+-	if (cpus_have_const_cap(ARM64_WORKAROUND_1542419))
++	if (cpus_have_const_cap(ARM64_WORKAROUND_1542419)) {
++		/* Hide DIC so that we can trap the unnecessary maintenance...*/
+ 		val &= ~BIT(CTR_DIC_SHIFT);
+ 
++		/* ... and fake IminLine to reduce the number of traps. */
++		val &= ~CTR_IMINLINE_MASK;
++		val |= (PAGE_SHIFT - 2) & CTR_IMINLINE_MASK;
++	}
++
+ 	pt_regs_write_reg(regs, rt, val);
+ 
+ 	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
 -- 
 2.20.1
 
