@@ -2,182 +2,183 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B76A5C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 079AAC83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F7F920656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA48820656
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:04:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/0NG8Pw"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jKDnZ33H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgD1XDd (ORCPT
+        id S1726691AbgD1XEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 19:03:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58278 "EHLO
+        Tue, 28 Apr 2020 19:04:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725934AbgD1XDc (ORCPT
+        by vger.kernel.org with ESMTP id S1726431AbgD1XEX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 19:03:32 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 404C4C03C1AC;
-        Tue, 28 Apr 2020 16:03:31 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id z1so125996pfn.3;
-        Tue, 28 Apr 2020 16:03:31 -0700 (PDT)
+        Tue, 28 Apr 2020 19:04:23 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02DC7C035493
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 16:04:23 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id u22so70451plq.12
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 16:04:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=+eb5YBzAF98WZOyXU0W5JrcpxvfZ8QdL+rCMUNBogBs=;
-        b=O/0NG8PwX3dqCAE7rfx8O3nSMOjMBNp9iVLdYyb89n+JKhHj4S3b6rT1SFs6VUg8TO
-         4SCiIYfSZ1XxRzLFCdve1O7apjpLhRFTzRGSoQiEyox4wQ2taYf6FgD5ZP9Aulmwmpw8
-         H3LCU/JfOKq5DOLTVpAGUwJFhmhCY+7433CAtbSBOgwP19+kmfD1LAfaID8A0zQQzVXL
-         u9jslrVS/aDUNtDHHS8GyoP5fsrgudZdaV/qh91IB5uJDTiLfeWg4z4VM0hB+HUFAPbK
-         F5xLvRL/ratvulf6NIij4g1JX4B3DykyWtItpjgce/1QmNaSXEfGSG1SjKPAUruI0inN
-         9BiA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bSsy1ygM1BDs51F1GbcG8UXkEqb70z5oMMLFkPxYsgA=;
+        b=jKDnZ33HB7ZcGRyKUq6bAEk49pA5hrq+M98P3hotNW/sjDg3UVzFz2zZipYauwUi3t
+         h0GTAYzesuGLBbDhYaZxl1d5rsSYyvKnL1btTfXYa8SHa9OGIhs2B9MqQF/U+0xMDKAA
+         depD2eW08eF/lKwYQCdorJgAq97Aag4bpIVAw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=+eb5YBzAF98WZOyXU0W5JrcpxvfZ8QdL+rCMUNBogBs=;
-        b=FAfMjvzQ5rE22TliDdfA0WbWxA8fPLJ2ORdxVccdim/XkNpVuU+COq8W87Cm5Vauhi
-         UpKcFHXkKA95hnkf27fwDAlsM7fWY30RI6Ry6RdWotv+BFusnO5ew1cdFphht6/4D52w
-         Y92htOBLakWHQkxw88gvcyfCWFKw6vJNyZWfwq53yjjYNnfs3y/ke1b+QvcS5EFBzjMK
-         BtoRtBM0DI0Vg+mpAx1pHf9PI/CNkeTwks1hpvFNLKKk2pp7AZcPc6kuua1i1e1Q8ugd
-         M8WitFjQr4HHPEd7Nriuhin1XgqMrl4cNoDuGaGlkFUh8sSO8SJ1cow207DnonhmdNdg
-         zERg==
-X-Gm-Message-State: AGi0PuZcnWKaXF8oIAuzFiWOpPhESqvDp8K355G3XmRu3Ch5KjHpru4l
-        Ub1CnHpT6rWlNkI6s5TcOAA=
-X-Google-Smtp-Source: APiQypJPE+cc4RU52SwdvwJv6fLg/VZd1xU0gwwQyijEzCMwU4XUhna9Mxms6HnaLfQFvRuDeLePLQ==
-X-Received: by 2002:a63:f30a:: with SMTP id l10mr30917710pgh.372.1588115010795;
-        Tue, 28 Apr 2020 16:03:30 -0700 (PDT)
-Received: from syed ([106.202.21.137])
-        by smtp.gmail.com with ESMTPSA id kb10sm3100232pjb.6.2020.04.28.16.03.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 Apr 2020 16:03:30 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 04:33:11 +0530
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     andriy.shevchenko@linux.intel.com, vilhelm.gray@gmail.com,
-        michal.simek@xilinx.com, arnd@arndb.de, rrichter@marvell.com,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        yamada.masahiro@socionext.com, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        linux-arch@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org
-Subject: [PATCH v3 0/4] Introduce the for_each_set_clump macro
-Message-ID: <cover.1588112714.git.syednwaris@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bSsy1ygM1BDs51F1GbcG8UXkEqb70z5oMMLFkPxYsgA=;
+        b=trtS7BOIGHCKNwoM/R/tKuUSNqjzluaH0bqdJMha/kemlbsqASqKN9jBtzwoUfOTs1
+         OSsW9YUZ9YplMiO3in4uh0Vjc+ml+mucwsFlEcacVYXfci6JQm55TKZWo8uOGbuDfHkU
+         56xpRnAr9SZ8VSSgtaFWhd3ykHtebZ92OFxotVxjzbBi3ApR8UkNiSN1dinprlxcd/fS
+         Z0iIr1lvxborTqm9KAI61O3eKHXHTvGmiXNqkL8ppIra2Ds6ljjaA1b6lhG3R9gEV10p
+         TYN3RCrfV2lBZVkSGefughfDMrrHIXPmtPniLNokvEjjHaqMy9vPVc8FwD5TREAF4+DC
+         z8dg==
+X-Gm-Message-State: AGi0Pub+LiCDOKU+KAjMYhUqTWeSd9irkGdVrkzYS4cBmsZqAmKNEXfx
+        USVyRuhyy7uGh5TujMkGAlbhgQ==
+X-Google-Smtp-Source: APiQypJEdKFVlT1c+cl9kFH+eXgc50EVz7/lIRVgEziupIY9ZLK2G+50Qx9FWS7gk15l1MqknfnB4g==
+X-Received: by 2002:a17:902:dc83:: with SMTP id n3mr30555779pld.133.1588115062459;
+        Tue, 28 Apr 2020 16:04:22 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id w125sm14224097pgw.22.2020.04.28.16.04.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Apr 2020 16:04:21 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 16:04:20 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Alok Chauhan <alokc@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH v3 02/17] spi: spi-geni-qcom: Use OPP API to set clk/perf
+ state
+Message-ID: <20200428230420.GJ4525@google.com>
+References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
+ <1588080785-6812-3-git-send-email-rnayak@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1588080785-6812-3-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset introduces a new generic version of for_each_set_clump. 
-The previous version of for_each_set_clump8 used a fixed size 8-bit
-clump, but the new generic version can work with clump of any size but
-less than or equal to BITS_PER_LONG. The patchset utilizes the new macro 
-in several GPIO drivers.
+On Tue, Apr 28, 2020 at 07:02:50PM +0530, Rajendra Nayak wrote:
+> geni spi needs to express a perforamnce state requirement on CX
+> depending on the frequency of the clock rates. Use OPP table from
+> DT to register with OPP framework and use dev_pm_opp_set_rate() to
+> set the clk/perf state.
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Alok Chauhan <alokc@codeaurora.org>
+> Cc: Akash Asthana <akashast@codeaurora.org>
+> Cc: linux-spi@vger.kernel.org
+> ---
+> This patch has a dependency on the 'PATCH 01/17' in this series,
+> due to the changes in include/linux/qcom-geni-se.h
+> Its ideal if this and the previous patch gets merged via the
+> msm tree (once reviewed and ack'ed)
+> Greg has already responded he is fine with it for serial.
+> 
+>  drivers/spi/spi-geni-qcom.c | 26 +++++++++++++++++++++++---
+>  1 file changed, 23 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+> index c397242..51186c3 100644
+> --- a/drivers/spi/spi-geni-qcom.c
+> +++ b/drivers/spi/spi-geni-qcom.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/log2.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_opp.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/qcom-geni-se.h>
+>  #include <linux/spi/spi.h>
+> @@ -95,7 +96,6 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
+>  {
+>  	unsigned long sclk_freq;
+>  	unsigned int actual_hz;
+> -	struct geni_se *se = &mas->se;
+>  	int ret;
+>  
+>  	ret = geni_se_clk_freq_match(&mas->se,
+> @@ -112,9 +112,9 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
+>  
+>  	dev_dbg(mas->dev, "req %u=>%u sclk %lu, idx %d, div %d\n", speed_hz,
+>  				actual_hz, sclk_freq, *clk_idx, *clk_div);
+> -	ret = clk_set_rate(se->clk, sclk_freq);
+> +	ret = dev_pm_opp_set_rate(mas->dev, sclk_freq);
+>  	if (ret)
+> -		dev_err(mas->dev, "clk_set_rate failed %d\n", ret);
+> +		dev_err(mas->dev, "dev_pm_opp_set_rate failed %d\n", ret);
+>  	return ret;
+>  }
+>  
+> @@ -561,6 +561,17 @@ static int spi_geni_probe(struct platform_device *pdev)
+>  	mas->se.wrapper = dev_get_drvdata(dev->parent);
+>  	mas->se.base = base;
+>  	mas->se.clk = clk;
+> +	mas->se.opp_table = dev_pm_opp_set_clkname(&pdev->dev, "se");
+> +	if (IS_ERR(mas->se.opp_table))
+> +		return PTR_ERR(mas->se.opp_table);
+> +	/* OPP table is optional */
+> +	ret = dev_pm_opp_of_add_table(&pdev->dev);
+> +	if (!ret) {
+> +		mas->se.has_opp_table = true;
+> +	} else if (ret != -ENODEV) {
+> +		dev_err(&pdev->dev, "Invalid OPP table in Device tree\n");
+> +		return ret;
+> +	}
+>  
+>  	spi->bus_num = -1;
+>  	spi->dev.of_node = dev->of_node;
+> @@ -596,6 +607,9 @@ static int spi_geni_probe(struct platform_device *pdev)
+>  spi_geni_probe_runtime_disable:
+>  	pm_runtime_disable(dev);
+>  	spi_master_put(spi);
+> +	if (mas->se.has_opp_table)
+> +		dev_pm_opp_of_remove_table(&pdev->dev);
+> +	dev_pm_opp_put_clkname(mas->se.opp_table);
+>  	return ret;
+>  }
+>  
+> @@ -604,6 +618,9 @@ static int spi_geni_remove(struct platform_device *pdev)
+>  	struct spi_master *spi = platform_get_drvdata(pdev);
+>  	struct spi_geni_master *mas = spi_master_get_devdata(spi);
+>  
+> +	if (mas->se.has_opp_table)
+> +		dev_pm_opp_of_remove_table(&pdev->dev);
+> +	dev_pm_opp_put_clkname(mas->se.opp_table);
+>  	/* Unregister _before_ disabling pm_runtime() so we stop transfers */
+>  	spi_unregister_master(spi);
+>  
+> @@ -617,6 +634,9 @@ static int __maybe_unused spi_geni_runtime_suspend(struct device *dev)
+>  	struct spi_master *spi = dev_get_drvdata(dev);
+>  	struct spi_geni_master *mas = spi_master_get_devdata(spi);
+>  
+> +	/* Drop the performance state vote */
+> +	dev_pm_opp_set_rate(dev, 0);
+> +
+>  	return geni_se_resources_off(&mas->se);
+>  }
 
-The earlier 8-bit for_each_set_clump8 facilitated a
-for-loop syntax that iterates over a memory region entire groups of set
-bits at a time.
-
-For example, suppose you would like to iterate over a 32-bit integer 8
-bits at a time, skipping over 8-bit groups with no set bit, where
-XXXXXXXX represents the current 8-bit group:
-
-    Example:        10111110 00000000 11111111 00110011
-    First loop:     10111110 00000000 11111111 XXXXXXXX
-    Second loop:    10111110 00000000 XXXXXXXX 00110011
-    Third loop:     XXXXXXXX 00000000 11111111 00110011
-
-Each iteration of the loop returns the next 8-bit group that has at
-least one set bit.
-
-But with the new for_each_set_clump the clump size can be different from 8 bits.
-Moreover, the clump can be split at word boundary in situations where word 
-size is not multiple of clump size. Following are examples showing the working 
-of new macro for clump sizes of 24 bits and 6 bits.
-
-Example 1:
-clump size: 24 bits, Number of clumps (or ports): 10
-bitmap stores the bit information from where successive clumps are retrieved.
-
-     /* bitmap memory region */
-        0x00aa0000ff000000;  /* Most significant bits */
-        0xaaaaaa0000ff0000;
-        0x000000aa000000aa;
-        0xbbbbabcdeffedcba;  /* Least significant bits */
-
-Different iterations of for_each_set_clump:-
-'offset' is the bit position and 'clump' is the 24 bit clump from the
-above bitmap.
-Iteration first:        offset: 0 clump: 0xfedcba
-Iteration second:       offset: 24 clump: 0xabcdef
-Iteration third:        offset: 48 clump: 0xaabbbb
-Iteration fourth:       offset: 96 clump: 0xaa
-Iteration fifth:        offset: 144 clump: 0xff
-Iteration sixth:        offset: 168 clump: 0xaaaaaa
-Iteration seventh:      offset: 216 clump: 0xff
-Loop breaks because in the end the remaining bits (0x00aa) size was less
-than clump size of 24 bits.
-
-In above example it can be seen that in iteration third, the 24 bit clump
-that was retrieved was split between bitmap[0] and bitmap[1]. This example 
-also shows that 24 bit zeroes if present in between, were skipped (preserving
-the previous for_each_set_macro8 behaviour). 
-
-Example 2:
-clump size = 6 bits, Number of clumps (or ports) = 3.
-
-     /* bitmap memory region */
-        0x00aa0000ff000000;  /* Most significant bits */
-        0xaaaaaa0000ff0000;
-        0x0f00000000000000;
-        0x0000000000000ac0;  /* Least significant bits */
-
-Different iterations of for_each_set_clump:
-'offset' is the bit position and 'clump' is the 6 bit clump from the
-above bitmap.
-Iteration first:        offset: 6 clump: 0x2b
-Loop breaks because 6 * 3 = 18 bits traversed in bitmap.
-Here 6 * 3 is clump size * no. of clumps.
-
-Changes in v3:
- - Patch 3: Change datatype of some variables from u64 to unsigned long
-   in function thunderx_gpio_set_multiple.
-
-CHanges in v2:
- - Patch 2: Unify different tests for 'for_each_set_clump'. Pass test data as
-   function parameters.
- - Patch 2: Remove unnecessary bitmap_zero calls.
-
-Syed Nayyar Waris (4):
-  bitops: Introduce the the for_each_set_clump macro
-  lib/test_bitmap.c: Add for_each_set_clump test cases
-  gpio: thunderx: Utilize for_each_set_clump macro
-  gpio: xilinx: Utilize for_each_set_clump macro
-
- drivers/gpio/gpio-thunderx.c      |  12 ++-
- drivers/gpio/gpio-xilinx.c        |  64 ++++++++--------
- include/asm-generic/bitops/find.h |  19 +++++
- include/linux/bitmap.h            |  61 +++++++++++++++
- include/linux/bitops.h            |  13 ++++
- lib/find_bit.c                    |  14 ++++
- lib/test_bitmap.c                 | 121 ++++++++++++++++++++++++++++++
- 7 files changed, 270 insertions(+), 34 deletions(-)
-
-
-base-commit: a9509b8ee069a06cd14334edca904bd0607622ca
--- 
-2.26.2
-
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
