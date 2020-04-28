@@ -2,96 +2,93 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4ADC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D02C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F84520B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:20:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JxE6PMPs"
+	by mail.kernel.org (Postfix) with ESMTP id 40AB52070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:20:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbgD1TUH (ORCPT
+        id S1729186AbgD1TUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 15:20:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51416 "EHLO
+        Tue, 28 Apr 2020 15:20:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728993AbgD1TTw (ORCPT
+        by vger.kernel.org with ESMTP id S1729135AbgD1TUH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 15:19:52 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59B9AC03C1AB
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 12:19:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=9MwTIMpdaC4VygWnq1XRJh2I8O/EbbREN7voJhdd838=; b=JxE6PMPs3REEx23oqVhEoLAhE2
-        k7HPFKA4UX84OqQrSj9nVeqfSQGqj+xLSawxNXQ+FWgXgdU/gKG6NX89G1jgesXfc0F9d2KkPWF10
-        khDJvHz8hZKoUsmT0zuc3BJA7w7zdxt3LFWrcwLwi4+fguaNA5hQ9D6byTmofX7ZEFDrMKy0I6gek
-        NN4ztJpeKimgLE4rIb9t5R70JxYc0iT95JbBZVYCz2hMv7ZLzfQkN2Sy4Q+EL3s0l4/dKrqzSjzaI
-        ihVhdAl/fixC7WdZycKXphrw106NlXL/FElAG8Gw55CwHIfbnEz2l9/n9PTKNwDPupQoWGkKKb31q
-        7M7ATHng==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTVlP-0007kr-Uq; Tue, 28 Apr 2020 19:19:28 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AC05330767F;
-        Tue, 28 Apr 2020 21:19:26 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 87AEE25D01312; Tue, 28 Apr 2020 21:19:26 +0200 (CEST)
-Message-Id: <20200428191659.677096772@infradead.org>
-User-Agent: quilt/0.65
-Date:   Tue, 28 Apr 2020 21:11:06 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     jpoimboe@redhat.com, alexandre.chartre@oracle.com
-Cc:     linux-kernel@vger.kernel.org, jthierry@redhat.com,
-        tglx@linutronix.de, x86@kernel.org, mbenes@suse.cz,
-        peterz@infradead.org
-Subject: [PATCH v2 05/14] objtool: UNWIND_HINT_RET_OFFSET should not check registers
-References: <20200428191101.886208539@infradead.org>
+        Tue, 28 Apr 2020 15:20:07 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A290C03C1AB;
+        Tue, 28 Apr 2020 12:20:07 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id E79792A1F87
+Received: by earth.universe (Postfix, from userid 1000)
+        id 5F2173C08C6; Tue, 28 Apr 2020 21:20:03 +0200 (CEST)
+Date:   Tue, 28 Apr 2020 21:20:03 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Jason Yan <yanaijie@huawei.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] power: supply: ab8500_fg: remove comparison to bool
+Message-ID: <20200428192003.yhqfvezez2kntjwi@earth.universe>
+References: <20200426094250.23995-1-yanaijie@huawei.com>
+ <CACRpkdYwu3LnN9KGfbjhnJu75hmKBKgnSWnDCWmdnGWGGGYPTw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ttdcwcb7uw2owqyr"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYwu3LnN9KGfbjhnJu75hmKBKgnSWnDCWmdnGWGGGYPTw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Chartre <alexandre.chartre@oracle.com>
 
-UNWIND_HINT_RET_OFFSET will adjust a modified stack. However if a
-callee-saved register was pushed on the stack then the stack frame
-will still appear modified. So stop checking registers when
-UNWIND_HINT_RET_OFFSET is used.
+--ttdcwcb7uw2owqyr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200407073142.20659-3-alexandre.chartre@oracle.com
----
- tools/objtool/check.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+Hi,
 
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -1513,6 +1513,14 @@ static bool has_modified_stack_frame(str
- 	if (cfi->stack_size != initial_func_cfi.cfa.offset + ret_offset)
- 		return true;
- 
-+	/*
-+	 * If there is a ret offset hint then don't check registers
-+	 * because a callee-saved register might have been pushed on
-+	 * the stack.
-+	 */
-+	if (ret_offset)
-+		return false;
-+
- 	for (i = 0; i < CFI_NUM_REGS; i++) {
- 		if (cfi->regs[i].base != initial_func_cfi.regs[i].base ||
- 		    cfi->regs[i].offset != initial_func_cfi.regs[i].offset)
+On Tue, Apr 28, 2020 at 04:02:31PM +0200, Linus Walleij wrote:
+> On Sun, Apr 26, 2020 at 11:43 AM Jason Yan <yanaijie@huawei.com> wrote:
+>=20
+> > Fix the following coccicheck warning:
+> >
+> > drivers/power/supply/ab8500_fg.c:2402:5-24: WARNING: Comparison to bool
+> >
+> > Signed-off-by: Jason Yan <yanaijie@huawei.com>
+>=20
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+Thanks, queued.
 
+-- Sebastian
+
+--ttdcwcb7uw2owqyr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6ogeMACgkQ2O7X88g7
++prREQ//Y/BVNO+E0LA3tnVd+n5Vf1Q1Th7uxH5p2Ui1B/Onv5qP7o/mr0ELvddb
+1IM5T448L6MgJ0YSepWK3BCzKqun0w5YAa0QZG8TAEJeBrLvFl6zXFWsxgMNSiYZ
+pIlYEg7UFlud7FiUt1V1gir+SI4qjG8RXL2A64Z4EQ6J4dpTPnOk4mX/zzgyR2h0
+LQ9oCHoK+GNkyAo5jVJoVxAE/2l7kDHT0MQJAv4zS7xgxwz5/giQrn5jJTZadeFM
+m/PalOmH1aJ2CQAjlYHr28sKPAIC+mz6i5e9cnYwK7bM7+f53I74xMMrA7YVaTsL
+/Mc3k5oVa/DBNgKAdHrGZ4jv4R01aZhoUQcaKevPuiwQEBhqkOXVshoaE5sDiXpb
+lkEcyG6Q8AJOC5e4Qm/eRv2oh7Xm7yzedAhQD39AKtFl5X7SeB17tWk914RJXIeS
+T/DAm+B8ido7LJZ0myw/k0BwOU3H8mMOkWdmhjnnmbSP8FP4+mtlDZDuH7Y1NOHD
+895rfdMVqNEEyhnD1PuWIKBPixZaxshHrC8cuR3pbL4Z926pHkTUR1ltzmtLuDGg
+x7OJgfXHBTW7C7vn/YgSe5HdOBybOLXqABCLf9cOc/l04oShE7lVzyKJu6uXgaH7
+z/oVfO8VF3uk7SL0JDjKNjujqkECLy77DA1M6QmYNtE2RN1/iPU=
+=ghDH
+-----END PGP SIGNATURE-----
+
+--ttdcwcb7uw2owqyr--
