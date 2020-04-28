@@ -2,54 +2,57 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAE9C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD6BC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2440420B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77D9F21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098746;
-	bh=/jrAPI4wNWGF4M34LSkLZCDiQzxw+bs9kZbI0SIKvp0=;
+	s=default; t=1588098752;
+	bh=M0xuTTD2h8wYlWdVpKOED62go8ts3J0hXhOYPDJmHsI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UfgH9y2ZWV2wM9zrrcKP5gu/bg1EMdK8jdebPWWuDMoCxAWgfVFpuBfXWb74xX3s/
-	 irN7iRzTSCFjsHl421fOF5MKgdSqwIraglVrS5OSf4dd1FUeiIjCavb6E//yZy0cdO
-	 wxavnfxDNoLW9mdzf7KWPjZn+uuzfzRKm5wZ0thI=
+	b=Ki7YIinS54xdkdKAzv1eiAt0Igg2awcfC/bAqVKU43rnvYkpne3qVCMMVTr55Z29d
+	 UzD9miR1swelwg31I5LqNKiZvtUzRmx82WbTc9cgtnUupikTS9XjquAagRdASdv5rw
+	 eAEVAIAxw+gmZZNK3UfXzqgj2/2WStH7A/9vRLx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729806AbgD1ScZ (ORCPT
+        id S1729818AbgD1Sca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:32:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48422 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:32:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729797AbgD1ScT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:32:19 -0400
+        id S1728972AbgD1ScY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:32:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EC9321775;
-        Tue, 28 Apr 2020 18:32:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E91A20B80;
+        Tue, 28 Apr 2020 18:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098738;
-        bh=/jrAPI4wNWGF4M34LSkLZCDiQzxw+bs9kZbI0SIKvp0=;
+        s=default; t=1588098743;
+        bh=M0xuTTD2h8wYlWdVpKOED62go8ts3J0hXhOYPDJmHsI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jNiihdIp/S73ZfU1cINb912Jz8h2vXTXy+m8vTINfAPB7YBDP4blbu+9ZGCYXE/OK
-         IyDDSXLPCQiMr2F3xts5swlNL0u53rHCtpIGwlx+rhkfMTS1icjQ3hJ1Z2VREsJS1/
-         j/ROCv5uE93BqwtttLE2YiFmxkqY7WByIST6jQm0=
+        b=ee+148I5OHR5NAgvi8hb4U2AGrLrOkMGYbfQU/JHYz0N/LZrg3zdaXQLaBsEVh4qk
+         uyFWRVxyG2d/abKY7mKFcikJTeZcHznvFfNVkIUmNPI5mxSpOviiYHzfZg4Tu+v8SA
+         zYqJsZmIQ+/3on2ni9gerrMJrl5fbymOQikYRVJM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.6 105/167] ALSA: hda/realtek - Add new codec supported for ALC245
-Date:   Tue, 28 Apr 2020 20:24:41 +0200
-Message-Id: <20200428182238.435565977@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        James Morse <james.morse@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 007/168] arm64: Silence clang warning on mismatched value/register sizes
+Date:   Tue, 28 Apr 2020 20:23:01 +0200
+Message-Id: <20200428182232.589612520@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,47 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
 
-commit 7fbdcd8301a84c09cebfa64f1317a6dafeec9188 upstream.
+[ Upstream commit: 27a22fbdeedd6c5c451cf5f830d51782bf50c3a2 ]
 
-Enable new codec supported for ALC245.
+Clang reports a warning on the __tlbi(aside1is, 0) macro expansion since
+the value size does not match the register size specified in the inline
+asm. Construct the ASID value using the __TLBI_VADDR() macro.
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/8c0804738b2c42439f59c39c8437817f@realtek.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 222fc0c8503d ("arm64: compat: Workaround Neoverse-N1 #1542419 for compat user-space")
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: James Morse <james.morse@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/kernel/sys_compat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -369,6 +369,7 @@ static void alc_fill_eapd_coef(struct hd
- 	case 0x10ec0233:
- 	case 0x10ec0235:
- 	case 0x10ec0236:
-+	case 0x10ec0245:
- 	case 0x10ec0255:
- 	case 0x10ec0256:
- 	case 0x10ec0257:
-@@ -8073,6 +8074,7 @@ static int patch_alc269(struct hda_codec
- 		spec->gen.mixer_nid = 0;
- 		break;
- 	case 0x10ec0215:
-+	case 0x10ec0245:
- 	case 0x10ec0285:
- 	case 0x10ec0289:
- 		spec->codec_variant = ALC269_TYPE_ALC215;
-@@ -9334,6 +9336,7 @@ static const struct hda_device_id snd_hd
- 	HDA_CODEC_ENTRY(0x10ec0234, "ALC234", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0235, "ALC233", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0236, "ALC236", patch_alc269),
-+	HDA_CODEC_ENTRY(0x10ec0245, "ALC245", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0255, "ALC255", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0256, "ALC256", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0257, "ALC257", patch_alc269),
+diff --git a/arch/arm64/kernel/sys_compat.c b/arch/arm64/kernel/sys_compat.c
+index c9fb02927d3e5..3c18c2454089b 100644
+--- a/arch/arm64/kernel/sys_compat.c
++++ b/arch/arm64/kernel/sys_compat.c
+@@ -37,7 +37,7 @@ __do_compat_cache_op(unsigned long start, unsigned long end)
+ 			 * The workaround requires an inner-shareable tlbi.
+ 			 * We pick the reserved-ASID to minimise the impact.
+ 			 */
+-			__tlbi(aside1is, 0);
++			__tlbi(aside1is, __TLBI_VADDR(0, 0));
+ 			dsb(ish);
+ 		}
+ 
+-- 
+2.20.1
+
 
 
