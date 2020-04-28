@@ -2,91 +2,91 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A18C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94475C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46AC1206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BB45206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:09:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JT5Jd0qb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgD1WJG (ORCPT
+        id S1726908AbgD1WJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:09:06 -0400
-Received: from sauhun.de ([88.99.104.3]:47642 "EHLO pokefinder.org"
+        Tue, 28 Apr 2020 18:09:17 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43817 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726286AbgD1WJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:09:06 -0400
-Received: from localhost (p5486CA03.dip0.t-ipconnect.de [84.134.202.3])
-        by pokefinder.org (Postfix) with ESMTPSA id 52F2A2C0710;
-        Wed, 29 Apr 2020 00:09:04 +0200 (CEST)
-Date:   Wed, 29 Apr 2020 00:09:04 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFT] i2c: brcmstb: properly check NACK condition
-Message-ID: <20200428220904.GB7698@kunai>
-References: <20200426081211.10876-1-wsa+renesas@sang-engineering.com>
+        id S1726272AbgD1WJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 18:09:17 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49BbQf3cd9z9sRY;
+        Wed, 29 Apr 2020 08:09:13 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588111755;
+        bh=TViBikPorOaB5TqqtiAjuNVCMV59yaYrMGN1aLmguKA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=JT5Jd0qbw+fhNJ/j2gknOeWxYBVasxKL6OpY+3P6SaPAyOmZBtkjvh8yjgPiE4+dZ
+         EAMAliZE7yCr33FjBmxZJnT8TjyaF6jd7mNSEXvEy8+tWcmeGC2s64FwzzUpS5/l4W
+         VRSVlzjngPagvKJSZiJXf/qpY6nuKMNsPvIqILQtWKVYCSVRm11fFQatZGhBzvMt50
+         3WelOBzVW+RM3axmjrVfjFFrth3esLcQO97A9MCTXH7b6DFJcRCJugKgEHCIw++r76
+         MlJGD788JC3SnlU8K8DNib/HJyhCfmukidH3lcSzeMxt6MKanPpseHj8JBvbz0eEXM
+         P6xmtCCsOvw1A==
+Date:   Wed, 29 Apr 2020 08:09:13 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Amit K Bag <amit.k.bag@intel.com>,
+        "Tumkur Narayan, Chethan" <chethan.tumkur.narayan@intel.com>,
+        "Hegde, Raghuram" <raghuram.hegde@intel.com>
+Subject: linux-next: Signed-off-by missing for commit in the bluetooth tree
+Message-ID: <20200429080913.7d9239f4@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hHWLQfXTYDoKhP50"
-Content-Disposition: inline
-In-Reply-To: <20200426081211.10876-1-wsa+renesas@sang-engineering.com>
+Content-Type: multipart/signed; boundary="Sig_/+0ZH1C3_Cvy06NlFZEqLh7z";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---hHWLQfXTYDoKhP50
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--Sig_/+0ZH1C3_Cvy06NlFZEqLh7z
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 26, 2020 at 10:12:10AM +0200, Wolfram Sang wrote:
-> From: Wolfram Sang <wsa@the-dreams.de>
->=20
-> cppcheck rightfully complains about:
->=20
-> drivers/i2c/busses/i2c-brcmstb.c:319:7: warning: Condition 'CMD_RD' is al=
-ways true [knownConditionTrueFalse]
-> drivers/i2c/busses/i2c-brcmstb.c:319:17: warning: Condition 'CMD_WR' is a=
-lways false [knownConditionTrueFalse]
->  if ((CMD_RD || CMD_WR) &&
->=20
-> Compare the values to the 'cmd' variable.
->=20
-> Fixes: dd1aa2524bc5 ("i2c: brcmstb: Add Broadcom settop SoC i2c controlle=
-r driver")
-> Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Hi all,
 
-Applied to for-current, thanks!
+Commit
 
+  bf1f79470a62 ("Bluetooth: btusb: Add support for Intel Bluetooth Device T=
+yphoon Peak (8087:0032)")
 
---hHWLQfXTYDoKhP50
-Content-Type: application/pgp-signature; name="signature.asc"
+is missing a Signed-off-by from its author.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/+0ZH1C3_Cvy06NlFZEqLh7z
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6oqX8ACgkQFA3kzBSg
-KbYq7Q/7Br16/++9ebjOhm70GQ8PM9ZFe3yeQh+WXJPb+pwCvOvnwRnFg+dn6Kg3
-RPpLJF1PDwS+HJsLrKZGqRyLhtuWY2N2WTbN04SoQaxC71+T7Nv/R63U0m9FpaKM
-U0PmwmOZ2KL8+1/HmzhlCdD8tnbI8udU3FbPEjdgo4DM7fWy2kAy8Ar1AlLfECJr
-sIBSpKw5+0pYAJA1MaFMHMbXZpl01qPEsEpMVgbalXifBxZs/+nZJmRSGQny8Euv
-IxcdCovHhLGfSewgOGB/jQRZo4GzcyZr+2jnyA3wsiDvCip+z/RUzgpPHPjvVJ8i
-qo65Ep++nU2yTgxS+QCb+iPsEYm0B+cD7xnd+Up/XPi6OZseCKjwLBSbruR7v5JF
-m38GSUvBQxapp6FBL2L8E5K8X3jLDAeSdwQ6vH86fardMbh1plXXiR9SRhVLJXpw
-FKo7QWMHEnTTqZ8xmGv2KFcTR8ZCFgDFAMx8nZ2UBCEbT4GSD8AD1spd4wWpJCob
-rLbXuvKbmniIrYYoHDFfTL7NhP5y1akeka/h97KF7n9NwSV81KsnmXysOoT3EPBn
-R49VS65VjGdieBHrJI9BBfU0hLtcKDYsI0KUA/cyINqz403XSThLtGA5RJM3fHPJ
-3mCvMgj+wiLa8kS8p4VUCAzi6Zj1a5VvQEDgV7QpgUgOUBf5Kis=
-=GdAJ
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6oqYkACgkQAVBC80lX
+0GxnXgf8CDdKAMZMqk6c18Yy8RtuFFW1mOxfLm2PttVc92+ypOijdYGRlh/0LzU9
+Uji6/9TS4Hd2QVZvQdmjXB/5xNYuF/ioupoWSbD04dCOB9khW92CM0nbWDRHU7VV
+6tqgdm0GBzs5ZJFYvus3cJp4M+TeyA5SzDww2ucmg4yNiphrYQXHATtEdUrm/lK8
+nY5+mEf1LpMSiQuda1G3nWN2tAMAqjb8tLFYQAHdYg9Sg2XZugpO2fKmUlUADbc8
+KXHbJDmV+CYMoR3PXEoQZGjtafB7iUBZFTRJkidf6T3JTgmjX/po4EEcIdqdYM4s
+vPzmVgPWDB0kJjua/H6EZEsuVHs//Q==
+=Qi8l
 -----END PGP SIGNATURE-----
 
---hHWLQfXTYDoKhP50--
+--Sig_/+0ZH1C3_Cvy06NlFZEqLh7z--
