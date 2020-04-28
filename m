@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD0DC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED45C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 692522085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2BE3206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099946;
-	bh=pPWSAVZuifoUZ2jm5X/KEw5fQZuk+oSpyd1hqiwzJmk=;
+	s=default; t=1588099952;
+	bh=Jq+43dOowewCe+eyDo+Q0xe3EHHPuoR53eIrtwTUFs8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mfKFfrzr0EgCOD8WeM6SgFATirUg4cERoCy1/ZRT2rjA5uMsp4Wt/fbd0TdDRNETz
-	 oEmLRZUiDxQ1BAyjgvTXgLJyDh+Rga1PlDM0zHfo1hdNZWj/Gj8FKa288JsajZEkQI
-	 mjZQF89mSKzXFGfaLm/koFszLV1LRGA5hCZomuOE=
+	b=gleTr760eWVmAZ54pqrXGkRGy7ydAvAdol4b6ctpDV8Ze8TVpJOPewtP/bnnrb4KA
+	 UpPTuzfnPH5c7vylKkXFW53vy5fYqvBAGLxYOA7IXRggTcs5eN9u4Wx1B5B7ioIRY1
+	 611WgFYY45WQ2nj9G16tiZu7JV+ph3vhGDxaWX24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729368AbgD1SgM (ORCPT
+        id S1730349AbgD1SgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:36:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53524 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:36:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730344AbgD1SgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:36:07 -0400
+        id S1730331AbgD1SgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:36:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35C90208E0;
-        Tue, 28 Apr 2020 18:36:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 583082085B;
+        Tue, 28 Apr 2020 18:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098966;
-        bh=pPWSAVZuifoUZ2jm5X/KEw5fQZuk+oSpyd1hqiwzJmk=;
+        s=default; t=1588098961;
+        bh=Jq+43dOowewCe+eyDo+Q0xe3EHHPuoR53eIrtwTUFs8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fASaxovU7S81jfrAfOYQcDVGzIS4kUNRVg5sG7lOFq+1vSfKjgma0PPdaKb2iNjx7
-         RSKyf5mBm2LqFG9uwJMbnahHXxMWApg9ivlkerN7ir9cpxUXb6fJrvMldHNCY/HG49
-         E646biUcgrvI1ox487Hm/1C+tr7Getdsa7Hv5WPk=
+        b=uhs+QBSLD2nooDmG1uwf+U8t5hMsUmr0B+jy1ExHzdeRX+StRXz+bvDbWrRWwCGWc
+         2DwudwEdL1Mgh6cmI293H8IOPZqCiQyOzPmq2bzX3gSu9EaPE8R2vS9LDNuN2VtQk9
+         4c2QoE0vT/xfPXBCW63dQGV/712shKdFxgNFKrao=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 5.6 138/167] staging: vt6656: Dont set RCR_MULTICAST or RCR_BROADCAST by default.
-Date:   Tue, 28 Apr 2020 20:25:14 +0200
-Message-Id: <20200428182242.988631767@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 5.6 134/167] staging: comedi: dt2815: fix writing hi byte of analog output
+Date:   Tue, 28 Apr 2020 20:25:10 +0200
+Message-Id: <20200428182242.389089986@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
 References: <20200428182225.451225420@linuxfoundation.org>
@@ -58,45 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit 0f8240bfc070033a4823b19883efd3d38c7735cc upstream.
+commit ed87d33ddbcd9a1c3b5ae87995da34e6f51a862c upstream.
 
-mac80211/users control whether multicast is on or off don't enable it by default.
+The DT2815 analog output command is 16 bits wide, consisting of the
+12-bit sample value in bits 15 to 4, the channel number in bits 3 to 1,
+and a voltage or current selector in bit 0.  Both bytes of the 16-bit
+command need to be written in turn to a single 8-bit data register.
+However, the driver currently only writes the low 8-bits.  It is broken
+and appears to have always been broken.
 
-Fixes an issue when multicast/broadcast is always on allowing other beacons through
-in power save.
+Electronic copies of the DT2815 User's Manual seem impossible to find
+online, but looking at the source code, a best guess for the sequence
+the driver intended to use to write the analog output command is as
+follows:
 
-Fixes: db8f37fa3355 ("staging: vt6656: mac80211 conversion: main_usb add functions...")
+1. Wait for the status register to read 0x00.
+2. Write the low byte of the command to the data register.
+3. Wait for the status register to read 0x80.
+4. Write the high byte of the command to the data register.
+
+Step 4 is missing from the driver.  Add step 4 to (hopefully) fix the
+driver.
+
+Also add a "FIXME" comment about setting bit 0 of the low byte of the
+command.  Supposedly, it is used to choose between voltage output and
+current output, but the current driver always sets it to 1.
+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
 Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/2c24c33d-68c4-f343-bd62-105422418eac@gmail.com
+Link: https://lore.kernel.org/r/20200406142015.126982-1-abbotti@mev.co.uk
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6656/main_usb.c |    8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/staging/comedi/drivers/dt2815.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/staging/vt6656/main_usb.c
-+++ b/drivers/staging/vt6656/main_usb.c
-@@ -817,15 +817,11 @@ static void vnt_configure(struct ieee802
- {
- 	struct vnt_private *priv = hw->priv;
- 	u8 rx_mode = 0;
--	int rc;
+--- a/drivers/staging/comedi/drivers/dt2815.c
++++ b/drivers/staging/comedi/drivers/dt2815.c
+@@ -92,6 +92,7 @@ static int dt2815_ao_insn(struct comedi_
+ 	int ret;
  
- 	*total_flags &= FIF_ALLMULTI | FIF_OTHER_BSS | FIF_BCN_PRBRESP_PROMISC;
+ 	for (i = 0; i < insn->n; i++) {
++		/* FIXME: lo bit 0 chooses voltage output or current output */
+ 		lo = ((data[i] & 0x0f) << 4) | (chan << 1) | 0x01;
+ 		hi = (data[i] & 0xff0) >> 4;
  
--	rc = vnt_control_in(priv, MESSAGE_TYPE_READ, MAC_REG_RCR,
--			    MESSAGE_REQUEST_MACREG, sizeof(u8), &rx_mode);
--
--	if (!rc)
--		rx_mode = RCR_MULTICAST | RCR_BROADCAST;
-+	vnt_control_in(priv, MESSAGE_TYPE_READ, MAC_REG_RCR,
-+		       MESSAGE_REQUEST_MACREG, sizeof(u8), &rx_mode);
+@@ -105,6 +106,8 @@ static int dt2815_ao_insn(struct comedi_
+ 		if (ret)
+ 			return ret;
  
- 	dev_dbg(&priv->usb->dev, "rx mode in = %x\n", rx_mode);
- 
++		outb(hi, dev->iobase + DT2815_DATA);
++
+ 		devpriv->ao_readback[chan] = data[i];
+ 	}
+ 	return i;
 
 
