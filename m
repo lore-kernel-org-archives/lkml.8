@@ -2,219 +2,125 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E72C83005
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A3AC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F15A1206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4E7A206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:29:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="KUUydT39"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HPB+Mhig"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbgD1C3J (ORCPT
+        id S1726350AbgD1C3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 22:29:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33956 "EHLO
+        Mon, 27 Apr 2020 22:29:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726261AbgD1C3I (ORCPT
+        by vger.kernel.org with ESMTP id S1726261AbgD1C3j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 22:29:08 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22C4BC03C1A9
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 19:29:07 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id x23so15572720lfq.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 19:29:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=+uGJzCGEZzpm9VH9v4SN7yHKhIbgY4iai+hN2gQwj7k=;
-        b=KUUydT39YgoMICFNQ29Gp22uxFO9wPacG05nzpU8Ri9QKU1lmnF/YOVmDYkCseg/xC
-         t0ZKWtHSsGC9GbJQ+F3uAWU3VXe0/3zJD17HXskl9GF4C7WRUlkVZd3o8DxCJuyzBcPt
-         DOz91j6aoWByuRHWJEwfJQBGs8LkpZc2HGp6EcTf0AnRBq1saxtKg/ybeRc6pppGbtNi
-         DN4ZdMeBGUfMiSwSD7WYV/JQaL/ZucoyQItg0xsDcfOjOXzVU4VFBzLx5G2vl8g1dw6C
-         DZ6KimzbeEJ5gvfKL86BpvTHdedylChqwOdIZ9g2sCiMTG/tl8pQZoFzhVg42RFXHiAK
-         82lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=+uGJzCGEZzpm9VH9v4SN7yHKhIbgY4iai+hN2gQwj7k=;
-        b=dTNpK2kCba0AUusLKd0iA06L+ot/UPLJ9BPLNt1etdhZnUPckQWj0lm6KE4Y0RpP7v
-         Z8DbR77DKRpk2k0s4u3fMjag5h/jLwC6mMjBHLVi1wYR9fWA6kOJ/UZOjBfSzvbi+fn/
-         KipEne5GQ02K+5BRXCNH7y1fVbkyz9Yy/HbhZrOtyfGAIaAQYNuI9RF3mIsRD4mxpQTY
-         WdvGi4eVkytZD0wZvwWVHIQvs/H9Jn3z6+ChD8qd0O0gL/ZkRH2rj3U6loKk5goPKzAz
-         zCNsE+re/8Otct8nmmE5BZufJrrVVU81eDTdGRionAfHk1i8l5iLdXhj0M12rkeiQNuS
-         Gnjw==
-X-Gm-Message-State: AGi0Pua0qE/qTlp9Lj6ZNPAesJ3NKTLq/BUExWBRxUFVe/cT491iHG22
-        K3tord+IDGtyFlxd1ztmACI9CA==
-X-Google-Smtp-Source: APiQypIsxF+967Us38v4D2URSli5eYkS88vfjKMguWtQBZcMphNaX0Sjm0AX+vOlPiyoT5NgY0dfWA==
-X-Received: by 2002:ac2:4426:: with SMTP id w6mr17323851lfl.8.1588040945426;
-        Mon, 27 Apr 2020 19:29:05 -0700 (PDT)
-Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
-        by smtp.gmail.com with ESMTPSA id q24sm12683484lfc.29.2020.04.27.19.29.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 19:29:04 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 04:29:04 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: timer: renesas: ostm: Convert to json-schema
-Message-ID: <20200428022904.GC1208690@oden.dyn.berto.se>
-References: <20200427193224.29548-1-geert+renesas@glider.be>
+        Mon, 27 Apr 2020 22:29:39 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 338DFC03C1A8;
+        Mon, 27 Apr 2020 19:29:39 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49B5FW7173z9sSb;
+        Tue, 28 Apr 2020 12:29:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588040976;
+        bh=vox0HHPOqBnsOzPyL0zRJVD1w17UiamGv8nIXzsZhu0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HPB+MhigvYcgrRgUmVUAWSlrcw3t1iwx49cj0yVN0WkI7u72uQrgEtegef1Y3EkBW
+         PXNaPQk/1OfET3ZaLoiO/q2G58Zr+FiBS7vqhHm2yRsJDoVWh+QDRxbk4VPrQ0R2QK
+         hZZRa6Lf7pPYIjrPi8wxaFOTBLilUGjotdK7n3EKYiFoEHDHIHa7UgiZeUTGCBJ13u
+         TzTsr4xugl1Bbq4eJmx3F4AF+pfPqLjZ5NodewP+mVAHTMrNgPh+Zf7qx3H2myltkL
+         N9kLioWxRA0C0BmLFOtz4BpbwdMEhKQw948lOxHKv2+oswmGHxCCEn7Sy+4bymH37q
+         LsDU2sa9ufinQ==
+Date:   Tue, 28 Apr 2020 12:29:30 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        Wireless <linux-wireless@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build failure after merge of the mac80211-next tree
+Message-ID: <20200428122930.51b6a9c2@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200427193224.29548-1-geert+renesas@glider.be>
+Content-Type: multipart/signed; boundary="Sig_/RcmwP9G0Cxk_rW0_E.tyY=o";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+--Sig_/RcmwP9G0Cxk_rW0_E.tyY=o
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for your patch.
+Hi all,
 
-On 2020-04-27 21:32:24 +0200, Geert Uytterhoeven wrote:
-> Convert the Renesas OS Timer (OSTM) Device Tree binding documentation to
-> json-schema.
-> 
-> Document missing properties.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+After merging the mac80211-next tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
+drivers/staging/wilc1000/cfg80211.c:1668:3: error: 'const struct cfg80211_o=
+ps' has no member named 'mgmt_frame_register'
+ 1668 |  .mgmt_frame_register =3D wilc_mgmt_frame_register,
+      |   ^~~~~~~~~~~~~~~~~~~
+drivers/staging/wilc1000/cfg80211.c:1668:25: error: initialization of 'int =
+(*)(struct wiphy *, struct wireless_dev *, u64)' {aka 'int (*)(struct wiphy=
+ *, struct wireless_dev *, long long unsigned int)'} from incompatible poin=
+ter type 'void (*)(struct wiphy *, struct wireless_dev *, u16,  bool)' {aka=
+ 'void (*)(struct wiphy *, struct wireless_dev *, short unsigned int,  _Boo=
+l)'} [-Werror=3Dincompatible-pointer-types]
+ 1668 |  .mgmt_frame_register =3D wilc_mgmt_frame_register,
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~
+drivers/staging/wilc1000/cfg80211.c:1668:25: note: (near initialization for=
+ 'wilc_cfg80211_ops.mgmt_tx_cancel_wait')
+cc1: some warnings being treated as errors
+drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c:3400:3: error: 'struct cf=
+g80211_ops' has no member named 'mgmt_frame_register'
+ 3400 |  .mgmt_frame_register =3D cfg80211_rtw_mgmt_frame_register,
+      |   ^~~~~~~~~~~~~~~~~~~
+drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c:3400:25: error: initializ=
+ation of 'int (*)(struct wiphy *, struct wireless_dev *, u64)' {aka 'int (*=
+)(struct wiphy *, struct wireless_dev *, long long unsigned int)'} from inc=
+ompatible pointer type 'void (*)(struct wiphy *, struct wireless_dev *, u16=
+,  bool)' {aka 'void (*)(struct wiphy *, struct wireless_dev *, short unsig=
+ned int,  _Bool)'} [-Werror=3Dincompatible-pointer-types]
+ 3400 |  .mgmt_frame_register =3D cfg80211_rtw_mgmt_frame_register,
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c:3400:25: note: (near init=
+ialization for 'rtw_cfg80211_ops.mgmt_tx_cancel_wait')
 
-> ---
-> For a clean dtbs_check, this depends on "[PATCH] ARM: dts: r7s9210: Remove
-> bogus clock-names from OSTM nodes"
-> (https://lore.kernel.org/r/20200427192932.28967-1-geert+renesas@glider.be)
-> which I intend to queue as a fix for v5.7.
-> 
->  .../bindings/timer/renesas,ostm.txt           | 31 ----------
->  .../bindings/timer/renesas,ostm.yaml          | 59 +++++++++++++++++++
->  2 files changed, 59 insertions(+), 31 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/timer/renesas,ostm.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/renesas,ostm.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/renesas,ostm.txt b/Documentation/devicetree/bindings/timer/renesas,ostm.txt
-> deleted file mode 100644
-> index 81a78f8bcf170a82..0000000000000000
-> --- a/Documentation/devicetree/bindings/timer/renesas,ostm.txt
-> +++ /dev/null
-> @@ -1,31 +0,0 @@
-> -* Renesas OS Timer (OSTM)
-> -
-> -The OSTM is a multi-channel 32-bit timer/counter with fixed clock
-> -source that can operate in either interval count down timer or free-running
-> -compare match mode.
-> -
-> -Channels are independent from each other.
-> -
-> -Required Properties:
-> -
-> -  - compatible: must be one or more of the following:
-> -    - "renesas,r7s72100-ostm" for the R7S72100 (RZ/A1) OSTM
-> -    - "renesas,r7s9210-ostm" for the R7S9210 (RZ/A2) OSTM
-> -    - "renesas,ostm" for any OSTM
-> -		This is a fallback for the above renesas,*-ostm entries
-> -
-> -  - reg: base address and length of the register block for a timer channel.
-> -
-> -  - interrupts: interrupt specifier for the timer channel.
-> -
-> -  - clocks: clock specifier for the timer channel.
-> -
-> -Example: R7S72100 (RZ/A1H) OSTM node
-> -
-> -	ostm0: timer@fcfec000 {
-> -		compatible = "renesas,r7s72100-ostm", "renesas,ostm";
-> -		reg = <0xfcfec000 0x30>;
-> -		interrupts = <GIC_SPI 102 IRQ_TYPE_EDGE_RISING>;
-> -		clocks = <&mstp5_clks R7S72100_CLK_OSTM0>;
-> -		power-domains = <&cpg_clocks>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/timer/renesas,ostm.yaml b/Documentation/devicetree/bindings/timer/renesas,ostm.yaml
-> new file mode 100644
-> index 0000000000000000..600d47ab7d58570f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/renesas,ostm.yaml
-> @@ -0,0 +1,59 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/timer/renesas,ostm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas OS Timer (OSTM)
-> +
-> +maintainers:
-> +  - Chris Brandt <chris.brandt@renesas.com>
-> +  - Geert Uytterhoeven <geert+renesas@glider.be>
-> +
-> +description:
-> +  The OSTM is a multi-channel 32-bit timer/counter with fixed clock source that
-> +  can operate in either interval count down timer or free-running compare match
-> +  mode.
-> +
-> +  Channels are independent from each other.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - renesas,r7s72100-ostm # RZ/A1H
-> +          - renesas,r7s9210-ostm  # RZ/A2M
-> +      - const: renesas,ostm       # Generic
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - power-domains
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/r7s72100-clock.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    ostm0: timer@fcfec000 {
-> +            compatible = "renesas,r7s72100-ostm", "renesas,ostm";
-> +            reg = <0xfcfec000 0x30>;
-> +            interrupts = <GIC_SPI 102 IRQ_TYPE_EDGE_RISING>;
-> +            clocks = <&mstp5_clks R7S72100_CLK_OSTM0>;
-> +            power-domains = <&cpg_clocks>;
-> +    };
-> -- 
-> 2.17.1
-> 
+Caused by commit
 
--- 
-Regards,
-Niklas Söderlund
+  6cd536fe62ef ("cfg80211: change internal management frame registration AP=
+I")
+
+I have used the mac80211-next from next-20200424 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/RcmwP9G0Cxk_rW0_E.tyY=o
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6nlQoACgkQAVBC80lX
+0GyeMQf9G3QjjjZhzmtu4gkijiF++83UYKHWxF6qFp7Zfpm7NMdNhm6q0PQ8ebxj
+pFom4FidAuCre5rBW6D6rK0BlvE6B2Eic93qfDLdfxT9kPngFJGn3gi8kXIdryJc
+6X0nYIkg9yh/o9u8u7nNhadi5uQv+CzhKyZeiWJxm8F5DASnxzE69/7gBgu41RNh
+//qbXDBArOIDdJwWkoCopCiTmjCCDqdiU0nqvdnzRBhnB7UpGXozA4w7gvCPg+Su
+S5ZI7oRk/iTc4r6MMABOWT0BBkgvMC5Tn61R4f2Xl63lvhiGsuiWGpcElPcDCx0U
+FjSfYnGQ5NjvZMwra3GWhN5jo51qRg==
+=k85i
+-----END PGP SIGNATURE-----
+
+--Sig_/RcmwP9G0Cxk_rW0_E.tyY=o--
