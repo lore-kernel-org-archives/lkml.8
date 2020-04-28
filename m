@@ -2,152 +2,105 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D527C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64553C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 551CB206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:53:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QG1Ei70T"
+	by mail.kernel.org (Postfix) with ESMTP id 4403C206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:53:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbgD1Oxh (ORCPT
+        id S1728118AbgD1Oxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 28 Apr 2020 10:53:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51674 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727775AbgD1Oxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Apr 2020 10:53:37 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:7664 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727775AbgD1Oxg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:53:36 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea842f60000>; Tue, 28 Apr 2020 07:51:34 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 28 Apr 2020 07:53:36 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 28 Apr 2020 07:53:36 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Apr
- 2020 14:53:36 +0000
-Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Apr
- 2020 14:53:35 +0000
-Subject: Re: [RFC PATCH v1 0/5] media: tegra: Tegra video driver follow-up
- patches
-To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>
-CC:     <digetx@gmail.com>, <linux-media@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1588047650-29402-1-git-send-email-skomatineni@nvidia.com>
- <5f065fc5-0f45-6b9e-068c-28d0a2e4684e@xs4all.nl>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <8ae1bfca-e4bf-ed67-8945-646a6121875a@nvidia.com>
-Date:   Tue, 28 Apr 2020 07:52:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 936FB205C9;
+        Tue, 28 Apr 2020 14:53:36 +0000 (UTC)
+Date:   Tue, 28 Apr 2020 10:53:35 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Julien Grall <julien.grall@arm.com>,
+        Daniel Wagner <wagi@monom.org>, John Kacur <jkacur@redhat.com>
+Subject: Re: [PATCH -rt] hrtimer: fix logic for when grabbing
+ softirq_expiry_lock can be elided
+Message-ID: <20200428105335.16011a4a@gandalf.local.home>
+In-Reply-To: <20200428144026.5882-1-rasmus.villemoes@prevas.dk>
+References: <20200428144026.5882-1-rasmus.villemoes@prevas.dk>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <5f065fc5-0f45-6b9e-068c-28d0a2e4684e@xs4all.nl>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588085494; bh=p+kXoWpy+6lidCfK/jU6nAwd2T6v9oCDp2I442hw04E=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=QG1Ei70TnkYDcvOlU4yGcBofHLqeT+hSrFgWQjnYJezhhNEWf5fhl4x/d881flD9e
-         Q6Y6ASs02xQ1vLs+fFbUzXMxl/TNgq89FSfLqRXR/FsiNnzdaZyUv4rH4ATif2/k85
-         zgezNQtXt+Dk3innTsICvNyEWDTIuYy/385Hv+rJIq/JoF6bfXyS7ZFRcJSlPOuoPD
-         zBpKORMoFHqhlSvwvOft86/VlGVkI6O76TXdN1JFWs1rJFC4s+OvBeLs6rrePg/yM9
-         9gbg+ECwZwSgXq5QE8NhGn2twkKsCPjkElgv9E4FYbxB3un1B6S09nxVBhjKwchzta
-         wTYl0zGEb4i7g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 28 Apr 2020 16:40:26 +0200
+Rasmus Villemoes <rasmus.villemoes@prevas.dk> wrote:
 
-On 4/28/20 12:38 AM, Hans Verkuil wrote:
-> External email: Use caution opening links or attachments
->
->
-> On 28/04/2020 06:20, Sowjanya Komatineni wrote:
->> This is a fllow-up to some last feedback received for Tegra VI driver RFC
->> v10 patches.
->> https://patchwork.linuxtv.org/cover/63334/
->>
->>
->> Sowjanya Komatineni (5):
->>    MAINTAINERS: Rename Tegra Video driver path
->>    media: tegra: Rename driver path to tegra-video
->>    media: tegra-video: Move PM runtime handle to streaming
->>    media: tegra-video: Rearrange SoC specific to Tegra210 and cleanup
->>      files
->>    media: tegra-video: Remove module macros for vi and csi driver
->>
->>   MAINTAINERS                                  |    2 +-
->>   drivers/staging/media/Kconfig                |    2 +-
->>   drivers/staging/media/Makefile               |    2 +-
->>   drivers/staging/media/tegra-video/Kconfig    |   12 +
->>   drivers/staging/media/tegra-video/Makefile   |    8 +
->>   drivers/staging/media/tegra-video/TODO       |   10 +
->>   drivers/staging/media/tegra-video/csi.c      |  536 ++++++++++++
->>   drivers/staging/media/tegra-video/csi.h      |  146 ++++
->>   drivers/staging/media/tegra-video/tegra210.c | 1080 ++++++++++++++++++++++++
->>   drivers/staging/media/tegra-video/vi.c       | 1082 +++++++++++++++++++++++++
->>   drivers/staging/media/tegra-video/vi.h       |  258 ++++++
->>   drivers/staging/media/tegra-video/video.c    |  155 ++++
->>   drivers/staging/media/tegra-video/video.h    |   29 +
->>   drivers/staging/media/tegra/Kconfig          |   12 -
->>   drivers/staging/media/tegra/Makefile         |    8 -
->>   drivers/staging/media/tegra/TODO             |   10 -
->>   drivers/staging/media/tegra/common.h         |  259 ------
->>   drivers/staging/media/tegra/csi.c            |  604 --------------
->>   drivers/staging/media/tegra/csi.h            |  144 ----
->>   drivers/staging/media/tegra/tegra210.c       |  708 ----------------
->>   drivers/staging/media/tegra/tegra210.h       |  190 -----
->>   drivers/staging/media/tegra/vi.c             | 1127 --------------------------
->>   drivers/staging/media/tegra/vi.h             |   72 --
->>   drivers/staging/media/tegra/video.c          |  153 ----
->>   drivers/staging/media/tegra/video.h          |   29 -
->>   25 files changed, 3319 insertions(+), 3319 deletions(-)
-> I thought that the follow-up series was just a rename of a directory
-> and perhaps one or two smaller changes, but this is too much change.
-> I prefer to have a v11 instead with all these changes incorporated.
->
-> Sorry about that,
->
->          Hans
-OK Will send v11. Thanks Hans
->
->>   create mode 100644 drivers/staging/media/tegra-video/Kconfig
->>   create mode 100644 drivers/staging/media/tegra-video/Makefile
->>   create mode 100644 drivers/staging/media/tegra-video/TODO
->>   create mode 100644 drivers/staging/media/tegra-video/csi.c
->>   create mode 100644 drivers/staging/media/tegra-video/csi.h
->>   create mode 100644 drivers/staging/media/tegra-video/tegra210.c
->>   create mode 100644 drivers/staging/media/tegra-video/vi.c
->>   create mode 100644 drivers/staging/media/tegra-video/vi.h
->>   create mode 100644 drivers/staging/media/tegra-video/video.c
->>   create mode 100644 drivers/staging/media/tegra-video/video.h
->>   delete mode 100644 drivers/staging/media/tegra/Kconfig
->>   delete mode 100644 drivers/staging/media/tegra/Makefile
->>   delete mode 100644 drivers/staging/media/tegra/TODO
->>   delete mode 100644 drivers/staging/media/tegra/common.h
->>   delete mode 100644 drivers/staging/media/tegra/csi.c
->>   delete mode 100644 drivers/staging/media/tegra/csi.h
->>   delete mode 100644 drivers/staging/media/tegra/tegra210.c
->>   delete mode 100644 drivers/staging/media/tegra/tegra210.h
->>   delete mode 100644 drivers/staging/media/tegra/vi.c
->>   delete mode 100644 drivers/staging/media/tegra/vi.h
->>   delete mode 100644 drivers/staging/media/tegra/video.c
->>   delete mode 100644 drivers/staging/media/tegra/video.h
->>
+> Commit
+> 
+>   hrtimer: Add a missing bracket and hide `migration_base' on !SMP
+> 
+> which is 47b6de0b7f22 in 5.2-rt and 40aae5708e7a in 4.19-rt,
+> inadvertently changed the logic from base != &migration_base to base
+> == &migration_base.
+> 
+> On !CONFIG_SMP, the effect was to effectively always elide this
+> lock/unlock pair (since is_migration_base() is unconditionally false),
+> which for me consistently causes lockups during reboot, and reportedly
+> also often causes a hang during boot.
+> 
+> Adding this logical negation (or, what is effectively the same thing
+> on !CONFIG_SMP, reverting the above commit as well as "hrtimer:
+> Prevent using hrtimer_grab_expiry_lock() on migration_base") fixes
+> that lockup.
+> 
+> Fixes: 40aae5708e7a (hrtimer: Add a missing bracket and hide `migration_base' on !SMP) # 4.19-rt
+> Fixes: 47b6de0b7f22 (hrtimer: Add a missing bracket and hide `migration_base' on !SMP) # 5.2-rt
+> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+> ---
+> Something like this? I wasn't sure what Fixes: tag(s) to include, if
+> any. It's quite possible the same fix is needed on earlier -rt
+> kernels, I didn't check.
+> 
+>  kernel/time/hrtimer.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+> index e54a95de8b79..c3966c090246 100644
+> --- a/kernel/time/hrtimer.c
+> +++ b/kernel/time/hrtimer.c
+> @@ -953,7 +953,7 @@ void hrtimer_grab_expiry_lock(const struct hrtimer *timer)
+>  {
+>  	struct hrtimer_clock_base *base = READ_ONCE(timer->base);
+>  
+> -	if (timer->is_soft && is_migration_base(base)) {
+> +	if (timer->is_soft && !is_migration_base(base)) {
+
+That was my sloppiness in not seeing that 5.2-rt had == and 4.19 had !=.
+
+Thanks for tracking this down!
+
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- Steve
+
+>  		spin_lock(&base->cpu_base->softirq_expiry_lock);
+>  		spin_unlock(&base->cpu_base->softirq_expiry_lock);
+>  	}
+
