@@ -2,56 +2,59 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C70C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60993C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7860208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4174620730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:37:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099060;
-	bh=dyQ/jAoog3/afvIT8/E4Yzhzrzavmt+MBeOOR32Pl3A=;
+	s=default; t=1588099063;
+	bh=Sc1tCz+M5pi4yshK9Rgd9hp0+5jeA3ZmPzLyXf1kmEI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X/wUH/rTpn8hIivKGZtAiQRcKG+gw9IkRZpsMfZkE8H6vAj1iRp+q10uhYBd6NqmN
-	 C+Gs3pj7ecXP0+oELYzKRzVzOYCXujfc/aIrLCUfGSVJtD5CObl/L4gQYvvwglqhFU
-	 i1J4yF1ZPmyBflQKGkfxPb05B56YjkVjq9pzoYns=
+	b=w8krRMqqKn88yaek/Dtrhw9tlKI06PF7hi2jkMiKd5m1SD1imH9AChH3y/NKI8qq4
+	 NpormatbcrR77aoF3x0nMJNRGkyS2fKjPqrHQnJ2KVVT3CBOV5Qj08nsdJHig0HN7G
+	 sFigQjLTiz3AQ3srX/pegZaXMNXnkWdHbKooJIOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729922AbgD1Shk (ORCPT
+        id S1730525AbgD1Shm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:37:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55606 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:37:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730047AbgD1Shb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:37:31 -0400
+        id S1730499AbgD1Shg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:37:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31A91208E0;
-        Tue, 28 Apr 2020 18:37:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2680E208E0;
+        Tue, 28 Apr 2020 18:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099050;
-        bh=dyQ/jAoog3/afvIT8/E4Yzhzrzavmt+MBeOOR32Pl3A=;
+        s=default; t=1588099055;
+        bh=Sc1tCz+M5pi4yshK9Rgd9hp0+5jeA3ZmPzLyXf1kmEI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NN+A8Iw8lBQJfyzXHcYlwIExsZ+WARCX0ZT4FBdXtF1/rTmeLsF+Hp6FBmnyCeWCv
-         E5DRENml4Kqwwc0121Gl6f6PMiVjdr4lb5/OYABGZzKmhcQ0c2yCpA1izyv9hAyDO+
-         TWLq+2C0GJZKnCN0dEtyipSwx5ehW+xslojdEPNw=
+        b=pVEyz/TAd4Evoz58fetR8w2yTI5Fcpw+cdFxrZM/ZRqOknP+lu2HK+qjfdvRKDqoY
+         CrlShU9MuEUpDFTCiFAMKRZr8VjFiZ/Qcj8qLAJJLFPO7tYI/CyRM+AWPSupdFD9HL
+         7SuxJxgICP14wXHxwZW0JOe5cFzMhA4FCoA52Q0c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Halil Pasic <pasic@linux.ibm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 050/168] virtio-blk: improve virtqueue error to BLK_STS
-Date:   Tue, 28 Apr 2020 20:23:44 +0200
-Message-Id: <20200428182238.212252103@linuxfoundation.org>
+        stable@vger.kernel.org, Longpeng <longpeng2@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 091/131] mm/hugetlb: fix a addressing exception caused by huge_pte_offset
+Date:   Tue, 28 Apr 2020 20:25:03 +0200
+Message-Id: <20200428182236.391692264@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,47 +64,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Halil Pasic <pasic@linux.ibm.com>
+From: Longpeng <longpeng2@huawei.com>
 
-[ Upstream commit 3d973b2e9a625996ee997c7303cd793b9d197c65 ]
+commit 3c1d7e6ccb644d517a12f73a7ff200870926f865 upstream.
 
-Let's change the mapping between virtqueue_add errors to BLK_STS
-statuses, so that -ENOSPC, which indicates virtqueue full is still
-mapped to BLK_STS_DEV_RESOURCE, but -ENOMEM which indicates non-device
-specific resource outage is mapped to BLK_STS_RESOURCE.
+Our machine encountered a panic(addressing exception) after run for a
+long time and the calltrace is:
 
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-Link: https://lore.kernel.org/r/20200213123728.61216-3-pasic@linux.ibm.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+    RIP: hugetlb_fault+0x307/0xbe0
+    RSP: 0018:ffff9567fc27f808  EFLAGS: 00010286
+    RAX: e800c03ff1258d48 RBX: ffffd3bb003b69c0 RCX: e800c03ff1258d48
+    RDX: 17ff3fc00eda72b7 RSI: 00003ffffffff000 RDI: e800c03ff1258d48
+    RBP: ffff9567fc27f8c8 R08: e800c03ff1258d48 R09: 0000000000000080
+    R10: ffffaba0704c22a8 R11: 0000000000000001 R12: ffff95c87b4b60d8
+    R13: 00005fff00000000 R14: 0000000000000000 R15: ffff9567face8074
+    FS:  00007fe2d9ffb700(0000) GS:ffff956900e40000(0000) knlGS:0000000000000000
+    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+    CR2: ffffd3bb003b69c0 CR3: 000000be67374000 CR4: 00000000003627e0
+    DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+    DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+    Call Trace:
+      follow_hugetlb_page+0x175/0x540
+      __get_user_pages+0x2a0/0x7e0
+      __get_user_pages_unlocked+0x15d/0x210
+      __gfn_to_pfn_memslot+0x3c5/0x460 [kvm]
+      try_async_pf+0x6e/0x2a0 [kvm]
+      tdp_page_fault+0x151/0x2d0 [kvm]
+     ...
+      kvm_arch_vcpu_ioctl_run+0x330/0x490 [kvm]
+      kvm_vcpu_ioctl+0x309/0x6d0 [kvm]
+      do_vfs_ioctl+0x3f0/0x540
+      SyS_ioctl+0xa1/0xc0
+      system_call_fastpath+0x22/0x27
+
+For 1G hugepages, huge_pte_offset() wants to return NULL or pudp, but it
+may return a wrong 'pmdp' if there is a race.  Please look at the
+following code snippet:
+
+    ...
+    pud = pud_offset(p4d, addr);
+    if (sz != PUD_SIZE && pud_none(*pud))
+        return NULL;
+    /* hugepage or swap? */
+    if (pud_huge(*pud) || !pud_present(*pud))
+        return (pte_t *)pud;
+
+    pmd = pmd_offset(pud, addr);
+    if (sz != PMD_SIZE && pmd_none(*pmd))
+        return NULL;
+    /* hugepage or swap? */
+    if (pmd_huge(*pmd) || !pmd_present(*pmd))
+        return (pte_t *)pmd;
+    ...
+
+The following sequence would trigger this bug:
+
+ - CPU0: sz = PUD_SIZE and *pud = 0 , continue
+ - CPU0: "pud_huge(*pud)" is false
+ - CPU1: calling hugetlb_no_page and set *pud to xxxx8e7(PRESENT)
+ - CPU0: "!pud_present(*pud)" is false, continue
+ - CPU0: pmd = pmd_offset(pud, addr) and maybe return a wrong pmdp
+
+However, we want CPU0 to return NULL or pudp in this case.
+
+We must make sure there is exactly one dereference of pud and pmd.
+
+Signed-off-by: Longpeng <longpeng2@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200413010342.771-1-longpeng2@huawei.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/block/virtio_blk.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ mm/hugetlb.c |   14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index c2ed3e9128e3a..a55383b139df9 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -345,9 +345,14 @@ static blk_status_t virtio_queue_rq(struct blk_mq_hw_ctx *hctx,
- 		if (err == -ENOSPC)
- 			blk_mq_stop_hw_queue(hctx);
- 		spin_unlock_irqrestore(&vblk->vqs[qid].lock, flags);
--		if (err == -ENOMEM || err == -ENOSPC)
-+		switch (err) {
-+		case -ENOSPC:
- 			return BLK_STS_DEV_RESOURCE;
--		return BLK_STS_IOERR;
-+		case -ENOMEM:
-+			return BLK_STS_RESOURCE;
-+		default:
-+			return BLK_STS_IOERR;
-+		}
- 	}
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -4820,8 +4820,8 @@ pte_t *huge_pte_offset(struct mm_struct
+ {
+ 	pgd_t *pgd;
+ 	p4d_t *p4d;
+-	pud_t *pud;
+-	pmd_t *pmd;
++	pud_t *pud, pud_entry;
++	pmd_t *pmd, pmd_entry;
  
- 	if (bd->last && virtqueue_kick_prepare(vblk->vqs[qid].vq))
--- 
-2.20.1
-
+ 	pgd = pgd_offset(mm, addr);
+ 	if (!pgd_present(*pgd))
+@@ -4831,17 +4831,19 @@ pte_t *huge_pte_offset(struct mm_struct
+ 		return NULL;
+ 
+ 	pud = pud_offset(p4d, addr);
+-	if (sz != PUD_SIZE && pud_none(*pud))
++	pud_entry = READ_ONCE(*pud);
++	if (sz != PUD_SIZE && pud_none(pud_entry))
+ 		return NULL;
+ 	/* hugepage or swap? */
+-	if (pud_huge(*pud) || !pud_present(*pud))
++	if (pud_huge(pud_entry) || !pud_present(pud_entry))
+ 		return (pte_t *)pud;
+ 
+ 	pmd = pmd_offset(pud, addr);
+-	if (sz != PMD_SIZE && pmd_none(*pmd))
++	pmd_entry = READ_ONCE(*pmd);
++	if (sz != PMD_SIZE && pmd_none(pmd_entry))
+ 		return NULL;
+ 	/* hugepage or swap? */
+-	if (pmd_huge(*pmd) || !pmd_present(*pmd))
++	if (pmd_huge(pmd_entry) || !pmd_present(pmd_entry))
+ 		return (pte_t *)pmd;
+ 
+ 	return NULL;
 
 
