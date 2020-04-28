@@ -2,154 +2,102 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF0BC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F36C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD09206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:17:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FvDxgdGJ"
+	by mail.kernel.org (Postfix) with ESMTP id 0602320661
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:20:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbgD1HRo (ORCPT
+        id S1726416AbgD1HUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:17:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51078 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbgD1HRn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 03:17:43 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECC08C03C1A9;
-        Tue, 28 Apr 2020 00:17:41 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id i27so30929861ota.7;
-        Tue, 28 Apr 2020 00:17:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+qoRw4sNtKeON7FHmVZdwqZNioDMYulAX/VsZESJF8I=;
-        b=FvDxgdGJgQM7T1VASWRIDYHdwDKAhqJ3GYjM32cOEYT2SuCCl6lRENorYhT5zKAiVB
-         IyUOx/Y5uWHcnYxB8owwWlfWK2O1xlWMyLVgQegHR3LiO3QkNZ0+alxMZbGtzfJFzK41
-         a4rOCHHiDuGVLgTZJsKaRh17ZMxqORcPZCVxqCu0TAZKcBonBOYe/87140TAGNhkh0uV
-         mo7RzvG9OpL15c34Ogl3nlkIYaCzYYN8vo1SCWpDMWpk0EMy+CotNncSXSWqU/EaeYTy
-         HsKsBPeuKQxkoEszlJ80VsgS8UdDuo67UtE8IyI7IBLSzGXOeCEODONB8hfWdGPaxOqp
-         TrAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+qoRw4sNtKeON7FHmVZdwqZNioDMYulAX/VsZESJF8I=;
-        b=tH3HUlbSJyynXPUhV+gSwUUJ68o/Euw8yvCW3kWvnap74MDmSPtd211Fyqvw2p/c+Y
-         bbGa2CdLt/kBDagywf0sTAeqU6LxPw7sJILC0vYkfuuEujQj0+zl9oVeGblBONb00q9t
-         tnBODK6ds/PjafFR0wql1m8kcj/fHjFzpKi2OCAOE9Kw7u1nhysqJQdEpwYZbv91g1wW
-         4LbCAT7GHiiLnd9w8XOw8VWnNTQwUphNeORG6KkbXyK+1a00O1fSSNo5UPkv3eNv4y5q
-         bhcu3eS8FG5rTGx2bxNsNvS5AYn/4C8rqNOMCHMHmfdxGBOxMwInOnRJPSyR4AzoIFnj
-         HQhQ==
-X-Gm-Message-State: AGi0PuYTJzod757kIofkT2l2/Nnu7bJzxRiyK5SVDjq4IIO4fZSkCJ9N
-        qx0emVXn23Aovj4WwfQ8zNkgAAZHDXk+OFs52cI=
-X-Google-Smtp-Source: APiQypJUXTnJiPqIZ99D5rHkPZMUmFGMBwDmtbd57BHOsCvcgctEALeqNLsAIFDh0FQpoIHzmN3EwyEdmNmXtxWCjTA=
-X-Received: by 2002:a05:6830:20d9:: with SMTP id z25mr13560177otq.254.1588058261338;
- Tue, 28 Apr 2020 00:17:41 -0700 (PDT)
+        Tue, 28 Apr 2020 03:20:02 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2116 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726256AbgD1HUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 03:20:02 -0400
+Received: from lhreml723-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 63BC56160F22BE4F602B;
+        Tue, 28 Apr 2020 08:20:00 +0100 (IST)
+Received: from fraeml705-chm.china.huawei.com (10.206.15.54) by
+ lhreml723-chm.china.huawei.com (10.201.108.74) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.1913.5; Tue, 28 Apr 2020 08:19:59 +0100
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Tue, 28 Apr 2020 09:19:59 +0200
+Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
+ fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
+ Tue, 28 Apr 2020 09:19:59 +0200
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
+        "rgoldwyn@suse.de" <rgoldwyn@suse.de>
+CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
+        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH v2 3/6] ima: Fix ima digest hash table key calculation
+Thread-Topic: [PATCH v2 3/6] ima: Fix ima digest hash table key calculation
+Thread-Index: AQHWHH8K4uf8EKnxYkeHh4WY3Jdlg6iMq38AgAA0TFCAAAXnAIABO/Wg
+Date:   Tue, 28 Apr 2020 07:19:59 +0000
+Message-ID: <c998edbed55d4fe78df9a3b224dd0101@huawei.com>
+References: <20200427102900.18887-1-roberto.sassu@huawei.com>
+ <20200427102900.18887-3-roberto.sassu@huawei.com>
+ <84ecd8f2576849b29876448df66824fc@AcuMS.aculab.com>
+ <90e19242fd8445cf93728c0946c03c19@huawei.com>
+ <5786ad88cd184e5791bc285d5cac6ecc@AcuMS.aculab.com>
+In-Reply-To: <5786ad88cd184e5791bc285d5cac6ecc@AcuMS.aculab.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.19.165]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1587709364-19090-1-git-send-email-wanpengli@tencent.com>
- <1587709364-19090-3-git-send-email-wanpengli@tencent.com> <20200427183013.GN14870@linux.intel.com>
-In-Reply-To: <20200427183013.GN14870@linux.intel.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 28 Apr 2020 15:17:30 +0800
-Message-ID: <CANRm+CxfYB9TULkZdnUVyhFgLLWBScDXFRBrFo0Nig_H0VH_1w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] KVM: X86: Introduce need_cancel_enter_guest helper
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Haiwei Li <lihaiwei@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 at 02:30, Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Fri, Apr 24, 2020 at 02:22:41PM +0800, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > Introduce need_cancel_enter_guest() helper, we need to check some
-> > conditions before doing CONT_RUN, in addition, it can also catch
-> > the case vmexit occurred while another event was being delivered
-> > to guest software since vmx_complete_interrupts() adds the request
-> > bit.
-> >
-> > Tested-by: Haiwei Li <lihaiwei@tencent.com>
-> > Cc: Haiwei Li <lihaiwei@tencent.com>
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> >  arch/x86/kvm/vmx/vmx.c | 12 +++++++-----
-> >  arch/x86/kvm/x86.c     | 10 ++++++++--
-> >  arch/x86/kvm/x86.h     |  1 +
-> >  3 files changed, 16 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index f1f6638..5c21027 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -6577,7 +6577,7 @@ bool __vmx_vcpu_run(struct vcpu_vmx *vmx, unsigned long *regs, bool launched);
-> >
-> >  static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
-> >  {
-> > -     enum exit_fastpath_completion exit_fastpath;
-> > +     enum exit_fastpath_completion exit_fastpath = EXIT_FASTPATH_NONE;
-> >       struct vcpu_vmx *vmx = to_vmx(vcpu);
-> >       unsigned long cr3, cr4;
-> >
-> > @@ -6754,10 +6754,12 @@ static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
-> >       vmx_recover_nmi_blocking(vmx);
-> >       vmx_complete_interrupts(vmx);
-> >
-> > -     exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
-> > -     /* static call is better with retpolines */
-> > -     if (exit_fastpath == EXIT_FASTPATH_CONT_RUN)
-> > -             goto cont_run;
-> > +     if (!kvm_need_cancel_enter_guest(vcpu)) {
-> > +             exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
-> > +             /* static call is better with retpolines */
-> > +             if (exit_fastpath == EXIT_FASTPATH_CONT_RUN)
-> > +                     goto cont_run;
-> > +     }
-> >
-> >       return exit_fastpath;
-> >  }
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index 59958ce..4561104 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -1581,6 +1581,13 @@ int kvm_emulate_wrmsr(struct kvm_vcpu *vcpu)
-> >  }
-> >  EXPORT_SYMBOL_GPL(kvm_emulate_wrmsr);
-> >
-> > +bool kvm_need_cancel_enter_guest(struct kvm_vcpu *vcpu)
->
-> What about kvm_vcpu_<???>_pending()?  Not sure what a good ??? would be.
-> The "cancel_enter_guest" wording is a bit confusing when this is called
-> from the VM-Exit path.
->
-> > +{
-> > +     return (vcpu->mode == EXITING_GUEST_MODE || kvm_request_pending(vcpu)
-> > +         || need_resched() || signal_pending(current));
->
-> Parantheses around the whole statement are unnecessary.  Personal preference
-> is to put the || before the newline.
-
-Handle the comments in v4.
-
-    Wanpeng
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBEYXZpZCBMYWlnaHQgW21haWx0
+bzpEYXZpZC5MYWlnaHRAQUNVTEFCLkNPTV0NCj4gU2VudDogTW9uZGF5LCBBcHJpbCAyNywgMjAy
+MCA0OjI4IFBNDQo+IFRvOiBSb2JlcnRvIFNhc3N1IDxyb2JlcnRvLnNhc3N1QGh1YXdlaS5jb20+
+OyB6b2hhckBsaW51eC5pYm0uY29tOw0KPiByZ29sZHd5bkBzdXNlLmRlDQo+IENjOiBsaW51eC1p
+bnRlZ3JpdHlAdmdlci5rZXJuZWwub3JnOyBsaW51eC1zZWN1cml0eS1tb2R1bGVAdmdlci5rZXJu
+ZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBTaWx2aXUgVmxhc2NlYW51
+DQo+IDxTaWx2aXUuVmxhc2NlYW51QGh1YXdlaS5jb20+OyBLcnp5c3p0b2YgU3RydWN6eW5za2kN
+Cj4gPGtyenlzenRvZi5zdHJ1Y3p5bnNraUBodWF3ZWkuY29tPjsgc3RhYmxlQHZnZXIua2VybmVs
+Lm9yZw0KPiBTdWJqZWN0OiBSRTogW1BBVENIIHYyIDMvNl0gaW1hOiBGaXggaW1hIGRpZ2VzdCBo
+YXNoIHRhYmxlIGtleSBjYWxjdWxhdGlvbg0KPiANCj4gRnJvbTogUm9iZXJ0byBTYXNzdQ0KPiA+
+IFNlbnQ6IDI3IEFwcmlsIDIwMjAgMTM6NTENCj4gLi4uDQo+ID4gPiA+IC1zdGF0aWMgaW5saW5l
+IHVuc2lnbmVkIGxvbmcgaW1hX2hhc2hfa2V5KHU4ICpkaWdlc3QpDQo+ID4gPiA+ICtzdGF0aWMg
+aW5saW5lIHVuc2lnbmVkIGludCBpbWFfaGFzaF9rZXkodTggKmRpZ2VzdCkNCj4gPiA+ID4gIHsN
+Cj4gPiA+ID4gLQlyZXR1cm4gaGFzaF9sb25nKCpkaWdlc3QsIElNQV9IQVNIX0JJVFMpOw0KPiA+
+ID4gPiArCXJldHVybiAoKih1bnNpZ25lZCBpbnQgKilkaWdlc3QgJSBJTUFfTUVBU1VSRV9IVEFC
+TEVfU0laRSk7DQo+ID4gPg0KPiA+ID4gVGhhdCBhbG1vc3QgY2VydGFpbmx5IGlzbid0IHJpZ2h0
+Lg0KPiA+ID4gSXQgZmFsbHMgZm91bCBvZiB0aGUgKihpbnRlZ2VyX3R5cGUgKilwdHIgYmVpbmcg
+YWxtb3N0IGFsd2F5cyB3cm9uZy4NCj4gPg0KPiA+IEkgZGlkbid0IGZpbmQgdGhlIHByb2JsZW0u
+IENhbiB5b3UgcGxlYXNlIGV4cGxhaW4/DQo+IA0KPiBUaGUgZ2VuZXJhbCBwcm9ibGVtIHdpdGgg
+KihpbnRfdHlwZSAqKXB0ciBpcyB0aGF0IGl0IGRvZXMgY29tcGxldGVseQ0KPiB0aGUgd3Jvbmcg
+dGhpbmcgaWYgJ3B0cicgaXMgdGhlIGFkZHJlc3Mgb2YgYSBsYXJnZXIgaW50ZWdlciB0eXBlIG9u
+DQo+IGEgYmlnLWVuZGlhbiBzeXN0ZW0uDQo+IFlvdSBtYXkgYWxzbyBnZXQgYSBtaXNhbGlnbmVk
+IGFjY2VzcyB0cmFwLg0KPiANCj4gSW4gdGhpcyBjYXNlIEkgZ3Vlc3MgdGhhdCBkaWdlc3QgaXMg
+YWN0dWFsbHkgdThbU0hBMV9ESUdFU1RfU0laRV0uDQo+IE1heWJlIHdoYXQgeW91IHNob3VsZCBy
+ZXR1cm4gaXM6DQo+IAkoZGlnZXN0WzBdIHwgZGlnZXN0WzFdIDw8IDgpICUgSU1BX01FQVNVUkVf
+SFRBQkxFX1NJWkU7DQo+IGFuZCBjb21tZW50IHRoYXQgdGhlcmUgaXMgbm8gcG9pbnQgdGFraW5n
+IGEgaGFzaCBvZiBwYXJ0IG9mDQo+IGEgU0hBMSBkaWdlc3QuDQoNCk9rLCB0aGFua3MuDQoNClJv
+YmVydG8NCg0KSFVBV0VJIFRFQ0hOT0xPR0lFUyBEdWVzc2VsZG9yZiBHbWJILCBIUkIgNTYwNjMN
+Ck1hbmFnaW5nIERpcmVjdG9yOiBMaSBQZW5nLCBMaSBKaWFuLCBTaGkgWWFubGkNCg0KDQo+IAlE
+YXZpZA0KPiANCj4gLQ0KPiBSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9h
+ZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywNCj4gTUsxIDFQVCwgVUsNCj4gUmVnaXN0cmF0
+aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
