@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F366C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 009A5C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62DD3206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D419C206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100482;
-	bh=zcJtmfhcKpw/H11ES2lD9L7QUnOKJ0if8zjxjDQ4Yok=;
+	s=default; t=1588100488;
+	bh=gepK8epY5y1X2So4zmONyxVbZIzOOcoBP1WVOXiBqls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mcd9zjG5dE3ehMAj9yDVLH/KFWOTHnRjvg6qJ5yRAFutQ5R7IRudXUlGAwru1dMXE
-	 XTy7PtaT/TLrewj9q6KaIVDdXBiiXxy9z182sc2u0AT8Xp4S/v1irtDD6OXTCIqDmV
-	 nKfTueoYqI8gv9eAsPLrFodF0bK3g/zWmv3AIBhc=
+	b=CzT6dS1cfHQBXldRTe5UnmWRUTRB2uVfchtTlb+5byLx+h8LACsLih5McgEbifGyr
+	 3PkFVDOZrz45Rq/cQRV2mor0D0VWwfvCABtyCXdgDOmflzVC1wKf/oy0PI50LL/9/T
+	 XBc/I58ntK34vGJzxD/NQC/V4TnCTnqvLk6BYWGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729220AbgD1TBV (ORCPT
+        id S1728723AbgD1S0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 15:01:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38032 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:26:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728754AbgD1S0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:26:31 -0400
+        id S1728700AbgD1S0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:26:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D078208E0;
-        Tue, 28 Apr 2020 18:26:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D408D2137B;
+        Tue, 28 Apr 2020 18:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098390;
-        bh=zcJtmfhcKpw/H11ES2lD9L7QUnOKJ0if8zjxjDQ4Yok=;
+        s=default; t=1588098378;
+        bh=gepK8epY5y1X2So4zmONyxVbZIzOOcoBP1WVOXiBqls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GDmmbpHSV+RrZn5HrsV4CZnvh6fJWw17IlWdZlk+CyEEa6eQVRZAHWHry40na80aP
-         0MGMjWLwFz7DsGajiC9MyEcQuKl0l/eSBU4vdsRt4G7InAm7K19SwQ3k+k3qEXhh9Y
-         9wxWNzE2fTrxZ7ecUmkU/0RqbdRhc8Bkh6+qu85w=
+        b=vl4z8MefVfuMsFk5pObC85rtwoKbAlaqiIx5JEORS9NN6qtyoW/3/S9wFUkeJMMg9
+         mjUVDKFSPiu319w7W/dP5EnRaVpCx04YORyXZnotVE5RLoCGGJSWEmpVCrIuM1CM95
+         hE6UC7/5hCfZHcsccFciP0PVtit/RF0X0NlGD0jQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 020/167] dma-direct: fix data truncation in dma_direct_get_required_mask()
-Date:   Tue, 28 Apr 2020 20:23:16 +0200
-Message-Id: <20200428182227.715678847@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Santosh Sivaraj <santosh@fossix.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 016/167] tools/test/nvdimm: Fix out of tree build
+Date:   Tue, 28 Apr 2020 20:23:12 +0200
+Message-Id: <20200428182227.276694339@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
 References: <20200428182225.451225420@linuxfoundation.org>
@@ -59,39 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Santosh Sivaraj <santosh@fossix.org>
 
-[ Upstream commit cdcda0d1f8f4ab84efe7cd9921c98364398aefd7 ]
+[ Upstream commit 1f776799628139d0da47e710ad86eb58d987ff66 ]
 
-The upper 32-bit physical address gets truncated inadvertently
-when dma_direct_get_required_mask() invokes phys_to_dma_direct().
-This results in dma_addressing_limited() return incorrect value
-when used in platforms with LPAE enabled.
-Fix it here by explicitly type casting 'max_pfn' to phys_addr_t
-in order to prevent overflow of intermediate value while evaluating
-'(max_pfn - 1) << PAGE_SHIFT'.
+Out of tree build using
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+   make M=tools/test/nvdimm O=/tmp/build -C /tmp/build
+
+fails with the following error
+
+make: Entering directory '/tmp/build'
+  CC [M]  tools/testing/nvdimm/test/nfit.o
+linux/tools/testing/nvdimm/test/nfit.c:19:10: fatal error: nd-core.h: No such file or directory
+   19 | #include <nd-core.h>
+      |          ^~~~~~~~~~~
+compilation terminated.
+
+That is because the kbuild file uses $(src) which points to
+tools/testing/nvdimm, $(srctree) correctly points to root of the linux
+source tree.
+
+Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
+Link: https://lore.kernel.org/r/20200114054051.4115790-1-santosh@fossix.org
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/dma/direct.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/testing/nvdimm/Kbuild      | 4 ++--
+ tools/testing/nvdimm/test/Kbuild | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index ac7956c38f693..4b24275e306a4 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -39,7 +39,8 @@ static inline struct page *dma_direct_to_page(struct device *dev,
+diff --git a/tools/testing/nvdimm/Kbuild b/tools/testing/nvdimm/Kbuild
+index dbebf05f59313..47f9cc9dcd94b 100644
+--- a/tools/testing/nvdimm/Kbuild
++++ b/tools/testing/nvdimm/Kbuild
+@@ -21,8 +21,8 @@ DRIVERS := ../../../drivers
+ NVDIMM_SRC := $(DRIVERS)/nvdimm
+ ACPI_SRC := $(DRIVERS)/acpi/nfit
+ DAX_SRC := $(DRIVERS)/dax
+-ccflags-y := -I$(src)/$(NVDIMM_SRC)/
+-ccflags-y += -I$(src)/$(ACPI_SRC)/
++ccflags-y := -I$(srctree)/drivers/nvdimm/
++ccflags-y += -I$(srctree)/drivers/acpi/nfit/
  
- u64 dma_direct_get_required_mask(struct device *dev)
- {
--	u64 max_dma = phys_to_dma_direct(dev, (max_pfn - 1) << PAGE_SHIFT);
-+	phys_addr_t phys = (phys_addr_t)(max_pfn - 1) << PAGE_SHIFT;
-+	u64 max_dma = phys_to_dma_direct(dev, phys);
+ obj-$(CONFIG_LIBNVDIMM) += libnvdimm.o
+ obj-$(CONFIG_BLK_DEV_PMEM) += nd_pmem.o
+diff --git a/tools/testing/nvdimm/test/Kbuild b/tools/testing/nvdimm/test/Kbuild
+index fb3c3d7cdb9bd..75baebf8f4ba1 100644
+--- a/tools/testing/nvdimm/test/Kbuild
++++ b/tools/testing/nvdimm/test/Kbuild
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+-ccflags-y := -I$(src)/../../../../drivers/nvdimm/
+-ccflags-y += -I$(src)/../../../../drivers/acpi/nfit/
++ccflags-y := -I$(srctree)/drivers/nvdimm/
++ccflags-y += -I$(srctree)/drivers/acpi/nfit/
  
- 	return (1ULL << (fls64(max_dma) - 1)) * 2 - 1;
- }
+ obj-m += nfit_test.o
+ obj-m += nfit_test_iomap.o
 -- 
 2.20.1
 
