@@ -2,108 +2,141 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F58C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55084C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBAAD206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DDCE206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:57:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yqPfDDwK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R9IFHoc2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgD1LzK (ORCPT
+        id S1726679AbgD1L50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:55:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38110 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726505AbgD1LzJ (ORCPT
+        Tue, 28 Apr 2020 07:57:26 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:48194 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726505AbgD1L50 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:55:09 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71060C03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 04:55:09 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f13so24249141wrm.13
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 04:55:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ARhS0rwZ8Alb5Jm0pWQp/cHnoFN2jrQ1u7lV5uPkaIQ=;
-        b=yqPfDDwKZw7djhVzl5OuNoaqC8fFv5dibuLQEe4/NGADPAlpc7ia3b3xNCHs277nOD
-         wobBmC1791F6rWiuwhRrV7BlcpsOZmcc0G0/Ghtu/3/pHzPjOyjq1H7u6J/lXXj6OFle
-         v3jZNOLjPoTZfcyPMGwk0cOi0XLAIE5RWhhAyJ3mmMvFXr+lnUjTDaIK508DjlYcZrqU
-         xhMFB1SFDD1sXHMgx2smoIRPKC00GOPr+XD2nD5FtI8p0M1eUq1Qswzttk87OJ7/aE3x
-         RMU6ytLyZs3AMfJ/nP0lKwosL0Lnsy2a3A7C6RD8BQ+DDqvtGR7diSF28B6etB0H1pXZ
-         i5Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ARhS0rwZ8Alb5Jm0pWQp/cHnoFN2jrQ1u7lV5uPkaIQ=;
-        b=LLAl0FAcX4pUc8Wo1sYIEwspgKNtFQKR6AsOmwr2ta1D+Fy4M7Sn7Dg0dmYJbAdijq
-         utBjq0UGgx4HnEOtRLZARe0TPIG68i/grWpYWLCX+SuCuG2CB2ggZvLcwRAQhWU1jk5C
-         uE7EmE+RLE6cx3OB8s3dzqvv7SJ4pcQtIotFBZid80COS5kLMVumdNStcChewZ2vh8I1
-         C8qWqaKj1fwaBUgR9349mp77mxIlTuQWdmM+7otvJFm4iV0gka0EIIWKekY5d47IvpoY
-         77UsgY/NQxNon/zUiIy46FmlHQKU2T8YSWAPWmL8154w6PKPab1n5WNv7CEfQLzKUnJN
-         n6iw==
-X-Gm-Message-State: AGi0Pubd/yVZdgCPZTy6af05decwxJqc1V0z4OTkuqgj6HQhJqlBeZVY
-        vI8hJBb5NRQAD/Wwx9kqnMheenwcSpU=
-X-Google-Smtp-Source: APiQypLd2NSu0mYIXkv6YI6YC6iYQ4qBfQuvzN3jUInvrcXe/1U8kye3GPBhq/k3JVYMUwXYHLtPPQ==
-X-Received: by 2002:a5d:544f:: with SMTP id w15mr35097664wrv.77.1588074907763;
-        Tue, 28 Apr 2020 04:55:07 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id r2sm3091066wmg.2.2020.04.28.04.55.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 Apr 2020 04:55:07 -0700 (PDT)
-Subject: Re: [PATCH] nvmem: ensure sysfs writes handle write-protect pin
-To:     Michael Auchter <michael.auchter@ni.com>
-Cc:     Khouloud Touil <ktouil@baylibre.com>, linux-kernel@vger.kernel.org
-References: <20200427183914.333587-1-michael.auchter@ni.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <4fa69067-8993-1819-abb5-3ce718e17d36@linaro.org>
-Date:   Tue, 28 Apr 2020 12:55:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 28 Apr 2020 07:57:26 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SBrfwl005143;
+        Tue, 28 Apr 2020 11:57:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=KHi6fvaD2uJvu2rcnQ4wc0VGBk37Fi+D8Jgv6syjzbg=;
+ b=R9IFHoc2PgFLX0WlZrlJPbJRE/DD/bv+X/Oom16IvazmwUOPi4oO+JLHh8g+2jLJnMUm
+ XkeisqmUIH4RsAyj7eP6bDkrgO2+L/cNJuOnjdbWwiQkCeYQLImpn/nO2J9vnOVPL7JS
+ kdnZSSzWQMVL3jHpb/Bt0Ekg9CXK6PZEQnlpq9otssivt5536CzG5H09rhnZVEx7Wl2j
+ LdQkOVk2JQfW0wNRxuhaFfJzcvWC58dNNikE+bmRVR4gDagTV5uXMtjdjU88iiQhMpwX
+ /65eF3Mi9Jf4zg1VsqUUuKWkOfEhCAcmjc3n1eBuUTKPA9yZIfuG9sPa8k4j3X0+f0za Zw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 30p2p04p6k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 11:57:21 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SBgxLQ153203;
+        Tue, 28 Apr 2020 11:55:20 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 30my0cvxv5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 11:55:20 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03SBtHQ3011532;
+        Tue, 28 Apr 2020 11:55:18 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Apr 2020 04:55:17 -0700
+Date:   Tue, 28 Apr 2020 14:55:10 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     richard.gong@linux.intel.com, gregkh@linuxfoundation.org,
+        atull@kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] firmware: stratix10-svc: Fix some error handling paths
+ in 'stratix10_svc_drv_probe()'
+Message-ID: <20200428115510.GA2014@kadam>
+References: <20200426190307.40840-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-In-Reply-To: <20200427183914.333587-1-michael.auchter@ni.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200426190307.40840-1-christophe.jaillet@wanadoo.fr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
+ suspectscore=2 adultscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280096
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1011
+ bulkscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
+ mlxscore=0 suspectscore=2 mlxlogscore=999 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004280096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 27/04/2020 19:39, Michael Auchter wrote:
-> Commit 2a127da461a9d8d97782d6e82b227041393eb4d2 added support for
-> handling write-protect pins to the nvmem core, and commit
-> 1c89074bf85068d1b86f2e0f0c2110fdd9b83c9f retrofitted the at24 driver to
-> use this support.
+On Sun, Apr 26, 2020 at 09:03:07PM +0200, Christophe JAILLET wrote:
+> If an error occurs after calling 'kfifo_alloc()', the allocated memory
+> should be freed with 'kfifo_free()', as already done in the remove
+> function.
 > 
-> These changes broke write() on the nvmem sysfs attribute for eeproms
-> which utilize a write-protect pin, as the write callback invokes the
-> nvmem device's reg_write callback directly which no longer handles
-> changing the state of the write-protect pin.
-> 
-> Change the read and write callbacks for the sysfs attribute to invoke
-> nvmme_reg_read/nvmem_reg_write helpers which handle this, rather than
-> calling reg_read/reg_write directly.
-> 
-> Signed-off-by: Michael Auchter <michael.auchter@ni.com>
+> Fixes: b5dc75c915cd ("firmware: stratix10-svc: extend svc to support new RSU features")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 > ---
->   drivers/nvmem/core.c | 52 ++++++++++++++++++++++----------------------
->   1 file changed, 26 insertions(+), 26 deletions(-)
+>  drivers/firmware/stratix10-svc.c | 15 +++++++++++----
+>  1 file changed, 11 insertions(+), 4 deletions(-)
 > 
+> diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
+> index d5f0769f3761..cc9df9589195 100644
+> --- a/drivers/firmware/stratix10-svc.c
+> +++ b/drivers/firmware/stratix10-svc.c
+> @@ -1043,24 +1043,31 @@ static int stratix10_svc_drv_probe(struct platform_device *pdev)
+>  
+>  	/* add svc client device(s) */
+>  	svc = devm_kzalloc(dev, sizeof(*svc), GFP_KERNEL);
+> -	if (!svc)
+> -		return -ENOMEM;
+> +	if (!svc) {
+> +		ret = -ENOMEM;
+> +		goto err_free_kfifo;
+> +	}
+>  
+>  	svc->stratix10_svc_rsu = platform_device_alloc(STRATIX10_RSU, 0);
+>  	if (!svc->stratix10_svc_rsu) {
+>  		dev_err(dev, "failed to allocate %s device\n", STRATIX10_RSU);
+> -		return -ENOMEM;
+> +		ret = -ENOMEM;
+> +		goto err_free_kfifo;
+>  	}
+>  
+>  	ret = platform_device_add(svc->stratix10_svc_rsu);
+>  	if (ret) {
+>  		platform_device_put(svc->stratix10_svc_rsu);
 
-Applied fixes tag:
-  Fixes: 2a127da461a9 ("nvmem: add support for the write-protect pin")
+Why not move this to the unwind code as well and do "goto put_platform;"?
 
+regards,
+dan carpenter
 
---srini
+> -		return ret;
+> +		goto err_free_kfifo;
+>  	}
+>  	dev_set_drvdata(dev, svc);
+>  
+>  	pr_info("Intel Service Layer Driver Initialized\n");
+>  
+> +	return 0;
+> +
+> +err_free_kfifo:
+> +	kfifo_free(&controller->svc_fifo);
+>  	return ret;
+>  }
+
