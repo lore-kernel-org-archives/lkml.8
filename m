@@ -2,101 +2,103 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9045C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E54C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8602206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 647AF206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:08:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rO+Phk3a"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pnAJk7U/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgD1MH1 (ORCPT
+        id S1726814AbgD1MH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:07:27 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:58576 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgD1MHZ (ORCPT
+        Tue, 28 Apr 2020 08:07:59 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:59314 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgD1MH7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:07:25 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SC3SLM037296;
-        Tue, 28 Apr 2020 12:06:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=OSf6jYhMrgn/dtTnYSI73L6/78HrXWbkBlk67OBSPnA=;
- b=rO+Phk3amJ6wJjrSEgneLJoNdCOWQEChKG8r8NYnFFIEcRQh+MJSJkmsknbCkKd2H5Dx
- ke9TGc7Avzv6OaYyC2rfBqo30QZ47ubVU14ZDYQWPvfuthALUDbfhJp1D8zXGJmbev5P
- EjR8fSc9c/KBJXUQADZZur+ram+UBeV7SxiyDrJA2xc7F5lhrQ/2QmfuWp1fyaatlVYp
- 5Co6yfDSUUZhzlDsOnhmoCuK45U3TPLZmXQqqpQnTp0r2DsV9D05OnHpq0Af6TfEs793
- G7GfRNfx76JLBlIXEBHZtIgXrwgU9YJrprYYxmrmkEnOqiIf7pWB1pFGg8JRL32a/BPM 8w== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 30p2p04qng-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 12:06:57 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SC2AoX004893;
-        Tue, 28 Apr 2020 12:04:56 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 30mxwyk421-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 12:04:56 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03SC4rdL001889;
-        Tue, 28 Apr 2020 12:04:53 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 Apr 2020 05:04:52 -0700
-Date:   Tue, 28 Apr 2020 15:04:45 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Rylan Dmello <mail@rylan.coffee>,
-        Kaaira Gupta <kgupta@es.iitr.ac.in>
-Cc:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Benjamin Poirier <bpoirier@suse.com>,
-        Jiri Pirko <jpirko@redhat.com>
-Subject: Re: [PATCH 1/3] staging: qlge: Remove unnecessary parentheses around
- struct field
-Message-ID: <20200428120445.GB2014@kadam>
-References: <cover.1587959245.git.mail@rylan.coffee>
- <4dea7a7fae6a56c51cc19228b82a3c230029f54b.1587959245.git.mail@rylan.coffee>
+        Tue, 28 Apr 2020 08:07:59 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03SC7sED071334;
+        Tue, 28 Apr 2020 07:07:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588075674;
+        bh=J604Nen4LCpyCHe23MsZVFIHdXnxQhSRkwuocVy4/78=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=pnAJk7U/aPphnf50wlKIH31/1/sVCQoGPzWiub3z32N7fExrLrx8Nq9U2nILA8OMc
+         kKDXArkyRJojQsS1ljmNeK39rWS/H6ci59d71Y+/3/2EuwzugMqjpjB59w2yHf8H80
+         iOE28jZ+SbILFAloP/EsVo4GzipNXb5fvH06y/aI=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03SC7sPa087544
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Apr 2020 07:07:54 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
+ Apr 2020 07:07:54 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 28 Apr 2020 07:07:54 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03SC7sev008231;
+        Tue, 28 Apr 2020 07:07:54 -0500
+Subject: Re: [PATCH v20 02/17] leds: Add multicolor ID to the color ID list
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <jacek.anaszewski@gmail.com>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200423155524.13971-1-dmurphy@ti.com>
+ <20200423155524.13971-3-dmurphy@ti.com> <20200425195242.GA1143@bug>
+ <003891b8-a697-6d55-3862-5773e23a466a@ti.com> <20200428084301.GC20640@amd>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <1166f584-8889-df61-393c-f240b7c3c041@ti.com>
+Date:   Tue, 28 Apr 2020 07:02:01 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4dea7a7fae6a56c51cc19228b82a3c230029f54b.1587959245.git.mail@rylan.coffee>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=25 spamscore=0 bulkscore=0
- suspectscore=0 mlxlogscore=999 phishscore=0 malwarescore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004280097
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1011
- bulkscore=0 adultscore=7 lowpriorityscore=0 impostorscore=0 malwarescore=0
- mlxscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004280097
+In-Reply-To: <20200428084301.GC20640@amd>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 12:14:11AM -0400, Rylan Dmello wrote:
-> Remove unnecessary parentheses around a struct field accessor that
-> causes a build failure when QL_DEV_DUMP is set.
-> 
-> Signed-off-by: Rylan Dmello <mail@rylan.coffee>
+Pavel
 
-Add a Fixes tag.
+On 4/28/20 3:43 AM, Pavel Machek wrote:
+> On Mon 2020-04-27 12:12:18, Dan Murphy wrote:
+>> Pavel
+>>
+>> On 4/25/20 2:52 PM, Pavel Machek wrote:
+>>> On Thu 2020-04-23 10:55:09, Dan Murphy wrote:
+>>>> Add a new color ID that is declared as MULTICOLOR as with the
+>>>> multicolor framework declaring a definitive color is not accurate
+>>>> as the node can contain multiple colors.
+>>>>
+>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>> Please merge with previous patch, and you can keep reviews.
+>> Not sure we should do that.  The previous patches deals directly with the
+>> bindings and this is code.
+>>
+>> I thought the rule was to keep bindings and code separated.
+>>
+>> It made sense to squash the bindings header patch to the bindings document
+>> patch but it does not make sense to squash this patch to the bindings.
+>>
+>> Please let me know if you want me to proceed with the squash.
+> Well, OTOH it seems wrong to have array that is only
+> half-initialized... But it is not a big deal.
 
-Fixes: 67e6cf7338e1 ("staging: qlge: add braces around macro arguments")
+I will squash it into the previous patch as you asked.  Like you said it 
+is not a big deal.
 
-regards,
-dan carpenter
+Dan
 
