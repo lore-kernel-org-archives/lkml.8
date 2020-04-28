@@ -2,153 +2,117 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EAEC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A20AC83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2E1206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4937A206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:56:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="BZjH9ieY"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ql4jS1g+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgD1OzN (ORCPT
+        id S1728120AbgD1Oz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:55:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38078 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727775AbgD1OzM (ORCPT
+        Tue, 28 Apr 2020 10:55:59 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:58836 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727775AbgD1Oz6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:55:12 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FC6BC03C1AB
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 07:55:11 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id x4so3135937wmj.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 07:55:10 -0700 (PDT)
+        Tue, 28 Apr 2020 10:55:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=6jFGKnF82v8suNis8fMuokycBjbhGzKZuUKxIPnz6aU=;
-        b=BZjH9ieYve/gpLatbRDZvJ5mYMgq6YUzTeqo/oWKI+CvmthCFiA2MHvBErEm7R56zX
-         yGznMbgkGKeZ+H/WGkmuaje2vBjRkQceSGF3pHEBbC5mX9V583N7EswiLWe5KsmKjLY1
-         7ME8A6V8IBT7cX79iEnfogPbJkUN3SvScH9Gk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=6jFGKnF82v8suNis8fMuokycBjbhGzKZuUKxIPnz6aU=;
-        b=E1C8krR5qJT7oQuKdtmtX6s55QU/DSAYxggZ4mdgFWqpmdiCabe2c4kJKo5BW7vWzq
-         X7F4A8ZZLHumwSW8jB24xSNzORfodCW3kEKjcwHTFIFM44qdVZau3TfmAqhkrhgTW7mn
-         zlseaognlpYwcYw590lsouxq0sfufcSMCFanGu0jNm+j4eOFAW/3QU/vZ16Iiurklv/L
-         xxXMy6sa4IUD+W28bUGpUhgKAxkUAbfLgn3tbacUoxpOiGmwP/0JAOO6xflXYZ3vt9hD
-         NPqc6gn+Ox5SohIGFpoN0P5ewcHFKWPklXHObss1hLnAzTOLgOtxeUt7eX51MbpoYFPJ
-         7Mkw==
-X-Gm-Message-State: AGi0PuYzYBTarI9tddOms7IHDUSgUO+znBY1ez+R8QYqfWD2N8+iDe+h
-        iiK4O44T9bDdTy6AA5+C7tVJwQ==
-X-Google-Smtp-Source: APiQypLVWUTBQ/2GQLWlB4vZEl5cImSOrQr/pNFn43Y9nr0LlTg+bI/kjjQbJ752mXJz4e4Gw8vG/Q==
-X-Received: by 2002:a7b:c399:: with SMTP id s25mr4825208wmj.169.1588085709816;
-        Tue, 28 Apr 2020 07:55:09 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id p190sm3680671wmp.38.2020.04.28.07.55.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 07:55:09 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 16:55:07 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Subject: Re: [PATCH -next] drm/mediatek: Fix Kconfig warning
-Message-ID: <20200428145507.GQ3456981@phenom.ffwll.local>
-Mail-Followup-To: Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>
-References: <20200420135045.27984-1-yuehaibing@huawei.com>
- <CAAOTY__km=QZQACp8g-Qr+aWZ4r0Yp7O5j7u8ZTpDpTXXfUdNw@mail.gmail.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1588085757; x=1619621757;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=3MZHNktipicg4cEO4n/1/kC9uDxKkqzTZ+Cu+s8r1wc=;
+  b=ql4jS1g+WucsYlhNDnE3cVYKN5CgMcIlV61FKkME9zO1tuRq2Iy9Medw
+   Htsay9IixfahArcvwgJQGMbsHXmn7NhLgTiEVpUvAGtxRG6PDEpiD6X9j
+   X4bK6I83FVme222kiUszYwIofrfd99oBHm+bqaQ8qlPEv5ZPcV1Q3gMds
+   I=;
+IronPort-SDR: LtBqlManQCsvUv43fuj2bj3eOiHr7DJQKk7vzdvSfqUyRaVQDSiM4d7qOF231/mk08ZZzXWy+o
+ ret79dK04ojw==
+X-IronPort-AV: E=Sophos;i="5.73,328,1583193600"; 
+   d="scan'208";a="29085930"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 28 Apr 2020 14:55:42 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id C9A00A1D11;
+        Tue, 28 Apr 2020 14:55:41 +0000 (UTC)
+Received: from EX13D06EUC004.ant.amazon.com (10.43.164.101) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 28 Apr 2020 14:55:41 +0000
+Received: from EX13D28EUC001.ant.amazon.com (10.43.164.4) by
+ EX13D06EUC004.ant.amazon.com (10.43.164.101) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 28 Apr 2020 14:55:40 +0000
+Received: from EX13D28EUC001.ant.amazon.com ([10.43.164.4]) by
+ EX13D28EUC001.ant.amazon.com ([10.43.164.4]) with mapi id 15.00.1497.006;
+ Tue, 28 Apr 2020 14:55:40 +0000
+From:   "Agroskin, Shay" <shayagr@amazon.com>
+To:     Gavin Shan <gshan@redhat.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Belgazal, Netanel" <netanel@amazon.com>,
+        "Kiyanovski, Arthur" <akiyano@amazon.com>,
+        "Tzalik, Guy" <gtzalik@amazon.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "shan.gavin@gmail.com" <shan.gavin@gmail.com>,
+        "agrosshay@gmail.com" <agrosshay@gmail.com>
+Subject: Re: [PATCH v2] net/ena: Fix build warning in ena_xdp_set()
+Thread-Topic: [PATCH v2] net/ena: Fix build warning in ena_xdp_set()
+Thread-Index: AQHWHW0VNHFzEvmdV0OlJCS/s0Kxaw==
+Date:   Tue, 28 Apr 2020 14:55:40 +0000
+Message-ID: <87r1w7fymt.fsf@amazon.com>
+References: <20200428044945.123511-1-gshan@redhat.com>
+In-Reply-To: <20200428044945.123511-1-gshan@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.160.65]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <43391DA55B808C4FBD13B1ED09C84B85@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAOTY__km=QZQACp8g-Qr+aWZ4r0Yp7O5j7u8ZTpDpTXXfUdNw@mail.gmail.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 04:20:39PM +0800, Chun-Kuang Hu wrote:
-> Hi, YueHaibing:
-> 
-> YueHaibing <yuehaibing@huawei.com> 於 2020年4月20日 週一 下午10:04寫道：
-> >
-> > WARNING: unmet direct dependencies detected for MTK_MMSYS
-> >   Depends on [n]: (ARCH_MEDIATEK [=y] || COMPILE_TEST [=n]) && COMMON_CLK_MT8173_MMSYS [=n]
-> >   Selected by [y]:
-> >   - DRM_MEDIATEK [=y] && HAS_IOMEM [=y] && DRM [=y] && (ARCH_MEDIATEK [=y] || ARM && COMPILE_TEST [=n]) && COMMON_CLK [=y] && HAVE_ARM_SMCCC [=y] && OF [=y]
-> >
-> > Add missing dependcy COMMON_CLK_MT8173_MMSYS to fix this.
-> 
-> From the code relationship, mediatek drm has relation with mediatek
-> mmsys, and mediatek mmsys has relation with medaitek clock.
-> So I think it's better that CONFIG_MTK_MMSYS select
-> CONFIG_COMMON_CLK_MT8173_MMSYS.
-
-select is very strongly discouraged and should only be used for Kconfig
-symbols not visible to users.
--Daniel
-
-> 
-> Regards,
-> Chun-Kuang.
-> 
-> >
-> > Fixes: 2c758e301ed9 ("soc / drm: mediatek: Move routing control to mmsys device")
-> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> > ---
-> >  drivers/gpu/drm/mediatek/Kconfig | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/mediatek/Kconfig
-> > index c420f5a3d33b..4d9b5540de68 100644
-> > --- a/drivers/gpu/drm/mediatek/Kconfig
-> > +++ b/drivers/gpu/drm/mediatek/Kconfig
-> > @@ -6,6 +6,7 @@ config DRM_MEDIATEK
-> >         depends on COMMON_CLK
-> >         depends on HAVE_ARM_SMCCC
-> >         depends on OF
-> > +       depends on COMMON_CLK_MT8173_MMSYS
-> >         select DRM_GEM_CMA_HELPER
-> >         select DRM_KMS_HELPER
-> >         select DRM_MIPI_DSI
-> > --
-> > 2.17.1
-> >
-> >
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+DQpHYXZpbiBTaGFuIDxnc2hhbkByZWRoYXQuY29tPiB3cml0ZXM6DQoNCj4gVGhpcyBmaXhlcyB0
+aGUgZm9sbG93aW5nIGJ1aWxkIHdhcm5pbmcgaW4gZW5hX3hkcF9zZXQoKSwgd2hpY2ggaXMNCj4g
+b2JzZXJ2ZWQgb24gYWFyY2g2NCB3aXRoIDY0S0IgcGFnZSBzaXplLg0KPg0KPiAgICBJbiBmaWxl
+IGluY2x1ZGVkIGZyb20gLi9pbmNsdWRlL25ldC9pbmV0X3NvY2suaDoxOSwNCj4gICAgICAgZnJv
+bSAuL2luY2x1ZGUvbmV0L2lwLmg6MjcsDQo+ICAgICAgIGZyb20gZHJpdmVycy9uZXQvZXRoZXJu
+ZXQvYW1hem9uL2VuYS9lbmFfbmV0ZGV2LmM6NDY6DQo+ICAgIGRyaXZlcnMvbmV0L2V0aGVybmV0
+L2FtYXpvbi9lbmEvZW5hX25ldGRldi5jOiBJbiBmdW5jdGlvbiAgICAgICAgIFwNCj4gICAg4oCY
+ZW5hX3hkcF9zZXTigJk6ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIFwNCj4gICAgZHJpdmVycy9uZXQvZXRoZXJuZXQvYW1hem9uL2VuYS9lbmFfbmV0
+ZGV2LmM6NTU3OjY6IHdhcm5pbmc6ICAgICAgXA0KPiAgICBmb3JtYXQg4oCYJWx14oCZICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXA0KPiAgICBl
+eHBlY3RzIGFyZ3VtZW50IG9mIHR5cGUg4oCYbG9uZyB1bnNpZ25lZCBpbnTigJksIGJ1dCBhcmd1
+bWVudCA0ICAgICAgXA0KPiAgICBoYXMgdHlwZSDigJhpbnTigJkgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXA0KPiAgICBbLVdmb3JtYXQ9XSAiRmFp
+bGVkIHRvIHNldCB4ZHAgcHJvZ3JhbSwgdGhlIGN1cnJlbnQgTVRVICglZCkgaXMgICBcDQo+ICAg
+IGxhcmdlciB0aGFuIHRoZSBtYXhpbXVtIGFsbG93ZWQgTVRVICglbHUpIHdoaWxlIHhkcCBpcyBv
+biIsDQo+DQo+IFNpZ25lZC1vZmYtYnk6IEdhdmluIFNoYW4gPGdzaGFuQHJlZGhhdC5jb20+DQo+
+IC0tLQ0KPiB2MjogTWFrZSBFTkFfUEFHRV9TSVpFIHRvIGJlICJ1bnNpZ25lZCBsb25nIiBhbmQg
+dmVyaWZ5IG9uIGFhcmNoNjQNCj4gICAgIHdpdGggNEtCIG9yIDY0S0IgcGFnZSBzaXplIGNvbmZp
+Z3VyYXRpb24NCj4gLS0tDQo+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9hbWF6b24vZW5hL2VuYV9u
+ZXRkZXYuaCB8IDIgKy0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxl
+dGlvbigtKQ0KPg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvYW1hem9uL2Vu
+YS9lbmFfbmV0ZGV2LmggYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9hbWF6b24vZW5hL2VuYV9uZXRk
+ZXYuaA0KPiBpbmRleCA5N2RmZDBjNjdlODQuLjllMTg2MGQ4MTkwOCAxMDA2NDQNCj4gLS0tIGEv
+ZHJpdmVycy9uZXQvZXRoZXJuZXQvYW1hem9uL2VuYS9lbmFfbmV0ZGV2LmgNCj4gKysrIGIvZHJp
+dmVycy9uZXQvZXRoZXJuZXQvYW1hem9uL2VuYS9lbmFfbmV0ZGV2LmgNCj4gQEAgLTY5LDcgKzY5
+LDcgQEANCj4gICAqIDE2a0IuDQo+ICAgKi8NCj4gICNpZiBQQUdFX1NJWkUgPiBTWl8xNksNCj4g
+LSNkZWZpbmUgRU5BX1BBR0VfU0laRSBTWl8xNksNCj4gKyNkZWZpbmUgRU5BX1BBR0VfU0laRSAo
+X0FDKFNaXzE2SywgVUwpKQ0KPiAgI2Vsc2UNCj4gICNkZWZpbmUgRU5BX1BBR0VfU0laRSBQQUdF
+X1NJWkUNCj4gICNlbmRpZg0KDQp0aGFua3MgZm9yIHRoaXMgZml4DQoNCkFja2VkLWJ5OiBTaGF5
+IEFncm9za2luIDxzaGF5YWdyQGFtYXpvbi5jb20+
