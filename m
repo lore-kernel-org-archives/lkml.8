@@ -2,149 +2,66 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C107C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BBFC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0A420730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7691F20730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:29:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="tmwLjMTI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgD1V3Y (ORCPT
+        id S1726756AbgD1V33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:29:24 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:44177 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgD1V3X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:29:23 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1M3UhO-1jU5ja2dxi-000fbP; Tue, 28 Apr 2020 23:27:56 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: SOF: sort out Kconfig, again
-Date:   Tue, 28 Apr 2020 23:27:36 +0200
-Message-Id: <20200428212752.2901778-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Tue, 28 Apr 2020 17:29:29 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:58054 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725934AbgD1V32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 17:29:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=uABev7ksk/0LGLL6iZYY0qzPu2ypUoSvYM+d38tXkO4=; b=tmwLjMTI8z7U5RVmyDF9p85bjQ
+        Pvb82bC+E3tqss6iIHRFCYujnpZIqR/Cyf15qRpdykkROC7zTGwfXb8AkNxklkflQcEFNcRP0qmZs
+        ZVMRB7YWeWBQ1Bd4tTbPD20poZvpAK8H4JlK+BSBaifUyqqnEKbr/pJPsSfSbZQk7dYs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jTXnC-000ABM-2n; Tue, 28 Apr 2020 23:29:26 +0200
+Date:   Tue, 28 Apr 2020 23:29:26 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Michael Walle <michael@walle.cc>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next 4/4] net: phy: bcm54140: add second PHY ID
+Message-ID: <20200428212926.GE30459@lunn.ch>
+References: <20200428210854.28088-1-michael@walle.cc>
+ <20200428210854.28088-4-michael@walle.cc>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:8d7WZ3UBhWpvVPatHjhGkfsTe799EeMmt2kakU1SILlE+Boi8JB
- 2TfmLPolDBGYzmbr3Yno8gLoI+2IK035iR0LCwe1FAmFuobAdsepBIkcpYqlYgax5ACVuex
- BGiDnHlwlsqW7vSHLv20SbOdT6TEtexpnidSwU5d4AunnND0maUcQu6+BQ42oXEn9T/bWNe
- 0JVj/r7tK7Ux78fglAMYA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WvmTsyeNvCQ=:+pPOAQ1B7e8cgF5lZXL9vR
- AV22EdfqUTx2IPCOF5strs645hcHwIhAqY7J7wWwuobCW5hDdl0AngGnX7FJspnZnjegkrt2E
- RmD6/LNADCHxJSUPTqNAKmCZMRs5C5oEsGfLQ4S5+1i3B5jwR83pojGofRG2KonqBp+PQogZ/
- PJ76AC4wMLbAoudpCmN2AhZ56qTajfBaZKm0EPyPuF4BMapfAJ+3fpg+2ThssSqTdS6QhVH3X
- JXWKHebYIyuec84E+TkN/7zMCC4mzRp3S14HC9j/msgVL82IO6kBzDJBPqYcGQaktntpFs1E0
- UREoIKK4vZoyZbMjCuOY/XPm+BL2WakVX7I2vcuiV4zxVmVZWMx867aIodGfIfLUqOAIxl21d
- VzFTMP0BEeJtXhzaLFPYwgPl/PyoLYL7eCNieKKV9A38vtenhz8JzvwSuS2FVYacMXkNEVQEN
- Jdul6s9nst/hq8t7BtXJgFFaU3erH4AZbnj7ZqYckElD5nM4naktKQthw9CFOd2EdQoQP0ZC7
- hF6m/JE4PzxF3YX/pV8bsJrGNzoNSCJb4VUe9CAlPEiebv8tuUwPNrnrmHsw1f3amgWRHm7Y7
- fha9JwYcW2lOjlNSIalKXM1tYG2lpk04lmCKBnivI5JUzyBwXGcCkUl3U1h3WFDWiorQM7mgv
- j53SadC4DntEqIUENeoBK769K10vJLdDz8rtd9t5DXuxSJdx0Uto9LpFm/gKFohRqueOR654x
- tyByEJPuc+7C1bS9fDLIltl45IhTkIe6d+F4/srj7Px7uCwukODTvnxpR4c5bXI8DfbsJBhjC
- NJ8U4aGwH60t84BKXw5NKXImAnQcWYfTIA0izfoNj0lFbO8Ffw=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428210854.28088-4-michael@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The imx8 config keeps causing issues:
+On Tue, Apr 28, 2020 at 11:08:54PM +0200, Michael Walle wrote:
+> This PHY have to PHY IDs depending on its mode. Adjust the mask so that
+> it includes both IDs.
 
-WARNING: unmet direct dependencies detected for SND_SOC_SOF_IMX8M
-  Depends on [n]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=m] && SND_SOC_SOF_TOPLEVEL [=y] && SND_SOC_SOF_IMX_TOPLEVEL [=y] && IMX_DSP [=n]
-  Selected by [m]:
-  - SND_SOC_SOF_IMX_OF [=m] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=m] && SND_SOC_SOF_TOPLEVEL [=y] && SND_SOC_SOF_IMX_TOPLEVEL [=y] && SND_SOC_SOF_IMX8M_SUPPORT [=y]
+Hi Michael
 
-This is complicated by two drivers having dependencies on both
-platform specific drivers and the SND_SOC_SOF_OF framework code,
-and using an somewhat obscure method to build them the same way
-as the SOC_SOF_OF symbol (built-in or modular).
+I don't have a strong opinion, but maybe list it as two different
+PHYs? I do sometimes grep for PHY IDs, and that would not work due to
+the odd mask.
 
-My solution now ensures that the two drivers can only be enabled
-when the dependencies are met:
-
-- When the platform specific drivers are built-in, everything is
-  fine, as SOC_SOF_OF is either =y or =m
-
-- When both are loadable modules, it also works, both for Kconfig
-  and at runtime
-
-- When the hardware drivers are loadable modules or disabled, and
-  SOC_SOF_OF=y, prevent the IMX_SOF_OF drivers from being turned on,
-  as this would be broken.
-
-It seems that this is just an elaborate way to describe two tristate
-symbols that have straight dependencies, but maybe I'm missing some
-subtle point. It seems to always build for me now.
-
-Fixes: fe57a92c8858 ("ASoC: SOF: Add missing dependency on IMX_SCU")
-Fixes: afb93d716533 ("ASoC: SOF: imx: Add i.MX8M HW support")
-Fixes: cb0312f61c3e ("ASoC: SOF: imx: fix undefined reference issue")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- sound/soc/sof/imx/Kconfig | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
-index f76660e91382..66684d7590f4 100644
---- a/sound/soc/sof/imx/Kconfig
-+++ b/sound/soc/sof/imx/Kconfig
-@@ -21,7 +21,8 @@ config SND_SOC_SOF_IMX_OF
- 
- config SND_SOC_SOF_IMX8_SUPPORT
- 	bool "SOF support for i.MX8"
--	depends on IMX_SCU
-+	depends on IMX_SCU=y || IMX_SCU=SND_SOC_SOF_IMX_OF
-+	depends on IMX_DSP=y || IMX_DSP=SND_SOC_SOF_IMX_OF
- 	help
- 	  This adds support for Sound Open Firmware for NXP i.MX8 platforms
- 	  Say Y if you have such a device.
-@@ -29,14 +30,13 @@ config SND_SOC_SOF_IMX8_SUPPORT
- 
- config SND_SOC_SOF_IMX8
- 	tristate
--	depends on IMX_SCU
--	select IMX_DSP
- 	help
- 	  This option is not user-selectable but automagically handled by
- 	  'select' statements at a higher level
- 
- config SND_SOC_SOF_IMX8M_SUPPORT
- 	bool "SOF support for i.MX8M"
-+	depends on IMX_DSP=y || IMX_DSP=SND_SOC_SOF_OF
- 	help
- 	  This adds support for Sound Open Firmware for NXP i.MX8M platforms
- 	  Say Y if you have such a device.
-@@ -44,7 +44,6 @@ config SND_SOC_SOF_IMX8M_SUPPORT
- 
- config SND_SOC_SOF_IMX8M
- 	tristate
--	depends on IMX_DSP
- 	help
- 	  This option is not user-selectable but automagically handled by
- 	  'select' statements at a higher level
--- 
-2.26.0
-
+    Andrew
