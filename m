@@ -2,171 +2,121 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F25C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA18FC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3967321BE5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D8321841
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588087138;
+	bh=b/zBXFGJvz7WjogAPSd0Y+ZzPKY0hHARxvv8R3hHUEw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=T+oYBNjD6iSvhLR1ZQTjMdTaD01XwsA8uYYVCBulTBbzKAClUovZ1+EoaEq42APhF
+	 Eo3b7F4SCkS0uQmxXKygwxeDU/tAjRZS/g/tZEDiqvsT+1dxldMn2AqTrdCnaJsOLo
+	 xmSS1Fk6EmyQutA8BiC9omUF5Pdkd27O0V0skL34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbgD1PSt (ORCPT
+        id S1728630AbgD1PS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:18:49 -0400
-Received: from 8bytes.org ([81.169.241.247]:37386 "EHLO theia.8bytes.org"
+        Tue, 28 Apr 2020 11:18:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727963AbgD1PSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:18:23 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id C5CCEF54; Tue, 28 Apr 2020 17:17:56 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 75/75] x86/efi: Add GHCB mappings when SEV-ES is active
-Date:   Tue, 28 Apr 2020 17:17:25 +0200
-Message-Id: <20200428151725.31091-76-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200428151725.31091-1-joro@8bytes.org>
-References: <20200428151725.31091-1-joro@8bytes.org>
+        id S1728619AbgD1PSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:18:53 -0400
+Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BD5E2186A;
+        Tue, 28 Apr 2020 15:18:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588087133;
+        bh=b/zBXFGJvz7WjogAPSd0Y+ZzPKY0hHARxvv8R3hHUEw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=EA4+tttAfKwyjtD+ShEj9VRYXd8WXJ7s0P4qoHxtBc3RVs2gastLvPr+mB0Kg0Hcx
+         C5aaJru7EArpoREVcC61YXM/mc92dftH1wLZSdHOPUZis89rb+d9WD34HHrV57Fe/2
+         HFZMLRd+zAmkES+HW4pwZWnTyuYDmtfmFjDC6ODY=
+Message-ID: <5684baea7257bfe27960ead094fd346dae019b0a.camel@kernel.org>
+Subject: Re: [PATCH -rt] hrtimer: fix logic for when grabbing
+ softirq_expiry_lock can be elided
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        linux-kernel@vger.kernel.org
+Cc:     linux-rt-users@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Julien Grall <julien.grall@arm.com>,
+        Daniel Wagner <wagi@monom.org>, John Kacur <jkacur@redhat.com>
+Date:   Tue, 28 Apr 2020 10:18:50 -0500
+In-Reply-To: <20200428144026.5882-1-rasmus.villemoes@prevas.dk>
+References: <20200428144026.5882-1-rasmus.villemoes@prevas.dk>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+On Tue, 2020-04-28 at 16:40 +0200, Rasmus Villemoes wrote:
+> Commit
+> 
+>   hrtimer: Add a missing bracket and hide `migration_base' on !SMP
+> 
+> which is 47b6de0b7f22 in 5.2-rt and 40aae5708e7a in 4.19-rt,
+> inadvertently changed the logic from base != &migration_base to base
+> == &migration_base.
+> 
+> On !CONFIG_SMP, the effect was to effectively always elide this
+> lock/unlock pair (since is_migration_base() is unconditionally
+> false),
+> which for me consistently causes lockups during reboot, and
+> reportedly
+> also often causes a hang during boot.
+> 
+> Adding this logical negation (or, what is effectively the same thing
+> on !CONFIG_SMP, reverting the above commit as well as "hrtimer:
+> Prevent using hrtimer_grab_expiry_lock() on migration_base") fixes
+> that lockup.
+> 
+> Fixes: 40aae5708e7a (hrtimer: Add a missing bracket and hide
+> `migration_base' on !SMP) # 4.19-rt
+> Fixes: 47b6de0b7f22 (hrtimer: Add a missing bracket and hide
+> `migration_base' on !SMP) # 5.2-rt
+> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+> ---
+> Something like this? I wasn't sure what Fixes: tag(s) to include, if
+> any. It's quite possible the same fix is needed on earlier -rt
+> kernels, I didn't check.
+> 
 
-Calling down to EFI runtime services can result in the firmware performing
-VMGEXIT calls. The firmware is likely to use the GHCB of the OS (e.g., for
-setting EFI variables), so each GHCB in the system needs to be identity
-mapped in the EFI page tables, as unencrypted, to avoid page faults.
+Yeah, looks good, I'll post a new update with this shortly.
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-[ jroedel@suse.de: Moved GHCB mapping loop to sev-es.c ]
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/boot/compressed/sev-es.c |  1 +
- arch/x86/include/asm/sev-es.h     |  5 +++++
- arch/x86/kernel/sev-es.c          | 25 +++++++++++++++++++++++++
- arch/x86/platform/efi/efi_64.c    | 10 ++++++++++
- 4 files changed, 41 insertions(+)
+Thanks,
 
-diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
-index 12a5d918d837..30b2cebf5fed 100644
---- a/arch/x86/boot/compressed/sev-es.c
-+++ b/arch/x86/boot/compressed/sev-es.c
-@@ -12,6 +12,7 @@
-  */
- #include "misc.h"
- 
-+#include <asm/pgtable_types.h>
- #include <asm/sev-es.h>
- #include <asm/trap_defs.h>
- #include <asm/msr-index.h>
-diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
-index a242d16727f1..ce9a197bf958 100644
---- a/arch/x86/include/asm/sev-es.h
-+++ b/arch/x86/include/asm/sev-es.h
-@@ -87,6 +87,7 @@ void sev_es_nmi_enter(void);
- void sev_es_nmi_exit(void);
- int sev_es_setup_ap_jump_table(struct real_mode_header *rmh);
- void sev_es_nmi_complete(void);
-+int __init sev_es_efi_map_ghcbs(pgd_t *pgd);
- #else /* CONFIG_AMD_MEM_ENCRYPT */
- static inline const char *vc_stack_name(enum stack_type type)
- {
-@@ -97,6 +98,10 @@ static inline int sev_es_setup_ap_jump_table(struct real_mode_header *rmh)
- 	return 0;
- }
- static inline void sev_es_nmi_complete(void) { }
-+static inline int sev_es_efi_map_ghcbs(pgd_t *pgd)
-+{
-+	return 0;
-+}
- #endif /* CONFIG_AMD_MEM_ENCRYPT*/
- 
- #endif
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index eef6e2196ef4..3b62714723b5 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -422,6 +422,31 @@ int sev_es_setup_ap_jump_table(struct real_mode_header *rmh)
- 	return 0;
- }
- 
-+int __init sev_es_efi_map_ghcbs(pgd_t *pgd)
-+{
-+	struct sev_es_runtime_data *data;
-+	unsigned long address, pflags;
-+	int cpu;
-+	u64 pfn;
-+
-+	if (!sev_es_active())
-+		return 0;
-+
-+	pflags = _PAGE_NX | _PAGE_RW;
-+
-+	for_each_possible_cpu(cpu) {
-+		data = per_cpu(runtime_data, cpu);
-+
-+		address = __pa(&data->ghcb_page);
-+		pfn = address >> PAGE_SHIFT;
-+
-+		if (kernel_map_pages_in_pgd(pgd, pfn, address, 1, pflags))
-+			return 1;
-+	}
-+
-+	return 0;
-+}
-+
- static enum es_result vc_handle_msr(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
- {
- 	struct pt_regs *regs = ctxt->regs;
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index c5e393f8bb3f..004a18853dd3 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -48,6 +48,7 @@
- #include <asm/realmode.h>
- #include <asm/time.h>
- #include <asm/pgalloc.h>
-+#include <asm/sev-es.h>
- 
- /*
-  * We allocate runtime services regions top-down, starting from -4G, i.e.
-@@ -239,6 +240,15 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
- 		return 1;
- 	}
- 
-+	/*
-+	 * When SEV-ES is active, the GHCB as set by the kernel will be used
-+	 * by firmware. Create a 1:1 unencrypted mapping for each GHCB.
-+	 */
-+	if (sev_es_efi_map_ghcbs(pgd)) {
-+		pr_err("Failed to create 1:1 mapping for the GHCBs!\n");
-+		return 1;
-+	}
-+
- 	/*
- 	 * When making calls to the firmware everything needs to be 1:1
- 	 * mapped and addressable with 32-bit pointers. Map the kernel
--- 
-2.17.1
+Tom
+
+>  kernel/time/hrtimer.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+> index e54a95de8b79..c3966c090246 100644
+> --- a/kernel/time/hrtimer.c
+> +++ b/kernel/time/hrtimer.c
+> @@ -953,7 +953,7 @@ void hrtimer_grab_expiry_lock(const struct
+> hrtimer *timer)
+>  {
+>  	struct hrtimer_clock_base *base = READ_ONCE(timer->base);
+>  
+> -	if (timer->is_soft && is_migration_base(base)) {
+> +	if (timer->is_soft && !is_migration_base(base)) {
+>  		spin_lock(&base->cpu_base->softirq_expiry_lock);
+>  		spin_unlock(&base->cpu_base->softirq_expiry_lock);
+>  	}
 
