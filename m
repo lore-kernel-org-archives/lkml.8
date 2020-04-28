@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 421FDC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4C4C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20566208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BB682085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098993;
-	bh=sFS1aTN77s462QSqkmbpOiTld0tKgWA3KLsgWWCSkBY=;
+	s=default; t=1588098999;
+	bh=uRKGWEHffTzz+HeEoRdC6kD4Fwtd9WIkFuzd8NRpf9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o0xyd7qPd/alRkxS0BCMirRqvO3rf8Ht5ARyDS+uJRLgqCJmCJfsf0eCqoQ+xJ1uY
-	 h1XZGNywXKH3gYNBsHR7tc1sMtXhzBtarCiY0Zvih/MhsoBVxWdo7dTPSetcc0yWkT
-	 92k15NfohNmtfp82nwMIaZtFrv/hl1ZSRyDLbWvg=
+	b=vezBUeaxPOEeqtHcHcsEFlKnygWcgXO4pl69xvIezouFkChLuEXK65slQG4SyKeNU
+	 +cAhFn5VOpBevC7Hzt8sxddAqYwt5BR5C8MBQjmAli7eOGMfS/cJNwRTP9LuvED42N
+	 ErOUufLJ+nZDx5oaUyFeMpmEe6ciHwAP9JNYUou4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729888AbgD1Sgc (ORCPT
+        id S1729924AbgD1Sgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:36:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53852 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:36:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730377AbgD1SgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:36:24 -0400
+        id S1730111AbgD1Sg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:36:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D5F12085B;
-        Tue, 28 Apr 2020 18:36:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 203F620B80;
+        Tue, 28 Apr 2020 18:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098983;
-        bh=sFS1aTN77s462QSqkmbpOiTld0tKgWA3KLsgWWCSkBY=;
+        s=default; t=1588098988;
+        bh=uRKGWEHffTzz+HeEoRdC6kD4Fwtd9WIkFuzd8NRpf9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=goo0923KluE4U1mpVbaxaIpGlQeaGf+xGaQR9aKcBVinCw558NFGwp+/7SzV1DPuL
-         GSLocM1S2764vsLhgZCgFHLb3N4yTNvBySbnOP7+7x2iB87kBrgLN9DW8nsQHqDfAH
-         paCoBz44Cp8luIQHOpNNM/jwKYsiIbIZb/6WgO5g=
+        b=tSq+nNhzC6vrzD9UDtq4YBBrsdU2x79Nj7pNdPa16We8Q+E+yR9xbfFvDiHv+QET3
+         bClZI9Q4uOW8jOKfH2dDEpZoQ+DSzfgImJipZfsSqLnGSEjSFisBEV+oOe+GyqiMyx
+         Y1Qs3oD94Df5ExxqeyPkWTNAKnVGBn60lLrM+Aq0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 042/168] xhci: Wait until link state trainsits to U0 after setting USB_SS_PORT_LS_U0
-Date:   Tue, 28 Apr 2020 20:23:36 +0200
-Message-Id: <20200428182237.158648468@linuxfoundation.org>
+Subject: [PATCH 5.4 036/168] pwm: bcm2835: Dynamically allocate base
+Date:   Tue, 28 Apr 2020 20:23:30 +0200
+Message-Id: <20200428182236.294602204@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -61,137 +63,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 0200b9f790b0fc9e9a42f685f5ad54b23fe959f4 ]
+[ Upstream commit 2c25b07e5ec119cab609e41407a1fb3fa61442f5 ]
 
-Like U3 case, xHCI spec doesn't specify the upper bound of U0 transition
-time. The 20ms is not enough for some devices.
+The newer 2711 and 7211 chips have two PWM controllers and failure to
+dynamically allocate the PWM base would prevent the second PWM
+controller instance being probed for succeeding with an -EEXIST error
+from alloc_pwms().
 
-Intead of polling PLS or PLC, we can facilitate the port change event to
-know that the link transits to U0 is completed.
-
-While at it, also separate U0 and U3 case to make the code cleaner.
-
-[variable rename to u3exit, and skip completion for usb2 ports -Mathias ]
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200312144517.1593-8-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: e5a06dc5ac1f ("pwm: Add BCM2835 PWM driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-hub.c  | 44 +++++++++++++++++++++++++-----------
- drivers/usb/host/xhci-mem.c  |  1 +
- drivers/usb/host/xhci-ring.c |  1 +
- drivers/usb/host/xhci.h      |  1 +
- 4 files changed, 34 insertions(+), 13 deletions(-)
+ drivers/pwm/pwm-bcm2835.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-index 712cd44f05ace..02f52d4f74df8 100644
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -1306,7 +1306,33 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 					 wIndex, link_state);
- 				goto error;
- 			}
-+
-+			if (link_state == USB_SS_PORT_LS_U0) {
-+				if ((temp & PORT_PLS_MASK) == XDEV_U0)
-+					break;
-+
-+				if (!((temp & PORT_PLS_MASK) == XDEV_U1 ||
-+				    (temp & PORT_PLS_MASK) == XDEV_U2 ||
-+				    (temp & PORT_PLS_MASK) == XDEV_U3)) {
-+					xhci_warn(xhci, "Can only set port %d to U0 from U state\n",
-+							wIndex);
-+					goto error;
-+				}
-+				reinit_completion(&bus_state->u3exit_done[wIndex]);
-+				xhci_set_link_state(xhci, ports[wIndex],
-+						    USB_SS_PORT_LS_U0);
-+				spin_unlock_irqrestore(&xhci->lock, flags);
-+				if (!wait_for_completion_timeout(&bus_state->u3exit_done[wIndex],
-+								 msecs_to_jiffies(100)))
-+					xhci_dbg(xhci, "missing U0 port change event for port %d\n",
-+						 wIndex);
-+				spin_lock_irqsave(&xhci->lock, flags);
-+				temp = readl(ports[wIndex]->addr);
-+				break;
-+			}
-+
- 			if (link_state == USB_SS_PORT_LS_U3) {
-+				int retries = 16;
- 				slot_id = xhci_find_slot_id_by_port(hcd, xhci,
- 						wIndex + 1);
- 				if (slot_id) {
-@@ -1317,26 +1343,18 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 					xhci_stop_device(xhci, slot_id, 1);
- 					spin_lock_irqsave(&xhci->lock, flags);
- 				}
--			}
--
--			xhci_set_link_state(xhci, ports[wIndex], link_state);
--
--			spin_unlock_irqrestore(&xhci->lock, flags);
--			if (link_state == USB_SS_PORT_LS_U3) {
--				int retries = 16;
--
-+				xhci_set_link_state(xhci, ports[wIndex], USB_SS_PORT_LS_U3);
-+				spin_unlock_irqrestore(&xhci->lock, flags);
- 				while (retries--) {
- 					usleep_range(4000, 8000);
- 					temp = readl(ports[wIndex]->addr);
- 					if ((temp & PORT_PLS_MASK) == XDEV_U3)
- 						break;
- 				}
--			}
--			spin_lock_irqsave(&xhci->lock, flags);
--
--			temp = readl(ports[wIndex]->addr);
--			if (link_state == USB_SS_PORT_LS_U3)
-+				spin_lock_irqsave(&xhci->lock, flags);
-+				temp = readl(ports[wIndex]->addr);
- 				bus_state->suspended_ports |= 1 << wIndex;
-+			}
- 			break;
- 		case USB_PORT_FEAT_POWER:
- 			/*
-diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
-index 884c601bfa15f..9764122c9cdf2 100644
---- a/drivers/usb/host/xhci-mem.c
-+++ b/drivers/usb/host/xhci-mem.c
-@@ -2552,6 +2552,7 @@ int xhci_mem_init(struct xhci_hcd *xhci, gfp_t flags)
- 		xhci->usb3_rhub.bus_state.resume_done[i] = 0;
- 		/* Only the USB 2.0 completions will ever be used. */
- 		init_completion(&xhci->usb2_rhub.bus_state.rexit_done[i]);
-+		init_completion(&xhci->usb3_rhub.bus_state.u3exit_done[i]);
- 	}
+diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
+index 91e24f01b54ed..d78f86f8e4621 100644
+--- a/drivers/pwm/pwm-bcm2835.c
++++ b/drivers/pwm/pwm-bcm2835.c
+@@ -166,6 +166,7 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
  
- 	if (scratchpad_alloc(xhci, flags))
-diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index f7a190fb2353d..a952d99f0456b 100644
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -1673,6 +1673,7 @@ static void handle_port_status(struct xhci_hcd *xhci,
- 	     (portsc & PORT_PLS_MASK) == XDEV_U1 ||
- 	     (portsc & PORT_PLS_MASK) == XDEV_U2)) {
- 		xhci_dbg(xhci, "resume SS port %d finished\n", port_id);
-+		complete(&bus_state->u3exit_done[hcd_portnum]);
- 		/* We've just brought the device into U0/1/2 through either the
- 		 * Resume state after a device remote wakeup, or through the
- 		 * U3Exit state after a host-initiated resume.  If it's a device
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 98b98a0cd2a8b..3ad4f80960d08 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1694,6 +1694,7 @@ struct xhci_bus_state {
- 	/* Which ports are waiting on RExit to U0 transition. */
- 	unsigned long		rexit_ports;
- 	struct completion	rexit_done[USB_MAXCHILDREN];
-+	struct completion	u3exit_done[USB_MAXCHILDREN];
- };
- 
- 
+ 	pc->chip.dev = &pdev->dev;
+ 	pc->chip.ops = &bcm2835_pwm_ops;
++	pc->chip.base = -1;
+ 	pc->chip.npwm = 2;
+ 	pc->chip.of_xlate = of_pwm_xlate_with_flags;
+ 	pc->chip.of_pwm_n_cells = 3;
 -- 
 2.20.1
 
