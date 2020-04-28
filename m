@@ -2,121 +2,133 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08575C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6B0C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFF4920656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86374206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:33:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VFFuLiv9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgD1Qcz (ORCPT
+        id S1728389AbgD1Qdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:32:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:55192 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727920AbgD1Qcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:32:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D08FF30E;
-        Tue, 28 Apr 2020 09:32:52 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 657223F305;
-        Tue, 28 Apr 2020 09:32:51 -0700 (PDT)
-References: <20200424041832.11364-1-hdanton@sina.com> <20200424043650.14940-1-hdanton@sina.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Hillf Danton <hdanton@sina.com>
+        Tue, 28 Apr 2020 12:33:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56535 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727920AbgD1Qdj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 12:33:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588091617;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wSkRhJrdUvPB39G9qnTZVglhIvjNd+74ma1bDbTUagI=;
+        b=VFFuLiv9aYb4z3HhM6qXFLNTgdNWxS6YJf8i9Z6ajhMF1OjZKpK9GqJM9QD3Y6kUpYDzJO
+        DQPJmPodDHO97XHAvD6vNveRIJBifteZ+wpyiu1wbB8ipRCmlUVa/MqCVnlle+Aru7wYAW
+        /39QGAe4Op2OXUWZ1xPot7CM3xmaM98=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-215-G9BrDAggPxGFtA_sAylraA-1; Tue, 28 Apr 2020 12:33:32 -0400
+X-MC-Unique: G9BrDAggPxGFtA_sAylraA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8AA75A0BD7;
+        Tue, 28 Apr 2020 16:33:30 +0000 (UTC)
+Received: from treble (ovpn-112-209.rdu2.redhat.com [10.10.112.209])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E955560300;
+        Tue, 28 Apr 2020 16:33:28 +0000 (UTC)
+Date:   Tue, 28 Apr 2020 11:33:27 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Mike Galbraith <efault@gmx.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Phil Auld <pauld@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/4] sched: set new prio after checking schedule policy
-In-reply-to: <20200424043650.14940-1-hdanton@sina.com>
-Date:   Tue, 28 Apr 2020 17:32:45 +0100
-Message-ID: <jhjh7x3sh8y.mognet@arm.com>
+        Jann Horn <jannh@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        alexandre.chartre@oracle.com
+Subject: Re: x86 entry perf unwinding failure (missing IRET_REGS annotation
+ on stack switch?)
+Message-ID: <20200428163327.br43qcontatbrxlf@treble>
+References: <20200302151829.brlkedossh7qs47s@treble>
+ <20200302155239.7ww7jfeu4yeevpkb@treble>
+ <20200428070450.w5l5ey54dtmqy5ph@treble>
+ <20200428124627.GC13558@hirez.programming.kicks-ass.net>
+ <20200428141614.GA13616@hirez.programming.kicks-ass.net>
+ <20200428143157.nxxrgfpo3leia2kr@treble>
+ <20200428152552.GD13592@hirez.programming.kicks-ass.net>
+ <20200428154909.4cjwetyyb2zhnq5i@treble>
+ <20200428155413.b5xzef4s2kyzg5ed@treble>
+ <20200428162551.GF12735@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200428162551.GF12735@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 28, 2020 at 09:25:51AM -0700, Sean Christopherson wrote:
+> On Tue, Apr 28, 2020 at 10:54:13AM -0500, Josh Poimboeuf wrote:
+> > On Tue, Apr 28, 2020 at 10:49:09AM -0500, Josh Poimboeuf wrote:
+> > > On Tue, Apr 28, 2020 at 05:25:52PM +0200, Peter Zijlstra wrote:
+> > > > On Tue, Apr 28, 2020 at 09:31:57AM -0500, Josh Poimboeuf wrote:
+> > > > > That's quite the monstrosity, and I still don't see the point.  I
+> > > > > thought we decided to just disallow CFI changes in alternatives anyway?
+> > > > > That can be done much simpler.
+> > > > 
+> > > > Something like so then ?
+> > > > 
+> > > > ---
+> > > > diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> > > > index 8443ec690051..d14d83e6edb0 100644
+> > > > --- a/tools/objtool/check.c
+> > > > +++ b/tools/objtool/check.c
+> > > > @@ -940,6 +940,7 @@ static int handle_group_alt(struct objtool_file *file,
+> > > >  
+> > > >  		last_new_insn = insn;
+> > > >  
+> > > > +		insn->alt_group = true;
+> > > >  		insn->ignore = orig_insn->ignore_alts;
+> > > >  		insn->func = orig_insn->func;
+> > > >  
+> > > > @@ -2242,6 +2243,11 @@ static int handle_insn_ops(struct instruction *insn, struct insn_state *state)
+> > > >  	list_for_each_entry(op, &insn->stack_ops, list) {
+> > > >  		int res;
+> > > >  
+> > > > +		if (insn->alt_group) {
+> > > > +			WARN_FUNC("alternative has CFI", insn->sec, insn->offset);
+> > > > +			return 1;
+> > > > +		}
+> > > > +
+> > > 
+> > > ACK (separate patch)
+> > 
+> > BTW, since most people don't know what CFI is, how about something like
+> > 
+> > 	"unsupported stack change in alternatives code"
+> 
+> Would it be accurate to print
+> 
+> 	"unsupported CFI stack change in alternatives code"?
+> 
+> to give the developer something more explicit to plug into their search
+> engine?
 
-On 24/04/20 05:36, Hillf Danton wrote:
-> Set newprio the same way as normal_prio() does after checking schedule
-> policy and to MAX_PRIO -1 by default.
->
-> What is also added is boundary checks for RT and fair priorities.
->
-> Cc: Mike Galbraith <efault@gmx.de>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Phil Auld <pauld@redhat.com>
-> Cc: Valentin Schneider <valentin.schneider@arm.com>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Hillf Danton <hdanton@sina.com>
-> ---
->
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -4768,8 +4768,7 @@ static int __sched_setscheduler(struct t
->                               const struct sched_attr *attr,
->                               bool user, bool pi)
->  {
-> -	int newprio = dl_policy(attr->sched_policy) ? MAX_DL_PRIO - 1 :
-> -		      MAX_RT_PRIO - 1 - attr->sched_priority;
-> +	int newprio;
->       int retval, oldprio, oldpolicy = -1, queued, running;
->       int new_effective_prio, policy = attr->sched_policy;
->       const struct sched_class *prev_class;
-> @@ -4800,6 +4799,26 @@ recheck:
->               return -EINVAL;
->
->       /*
-> +	 * compute newprio after checking policy, see normal_prio();
-> +	 * it's used in pi boost below
-> +	 */
-> +	if (dl_policy(policy)) {
-> +		newprio = MAX_DL_PRIO - 1;
-> +	}
-> +	else if (rt_policy(policy)) {
-> +		if (attr->sched_priority > MAX_RT_PRIO - 1)
-> +			return -EINVAL;
-> +		newprio = MAX_RT_PRIO - 1 - attr->sched_priority;
-> +	}
-> +	else if (fair_policy(policy)) {
-> +		if (attr->sched_nice < MIN_NICE ||
-> +		    attr->sched_nice > MAX_NICE)
-> +			return -EINVAL;
+I don't have a strong opinion either way, though this warning is going
+to be documented in stack-validation.txt anyway right Peter? :-)
 
+-- 
+Josh
 
-We can't hit this with the syscall route, since we (silently) clamp those
-values in sched_copy_attr(). setpriority() does the same. There's this
-comment in sched_copy_attr() that asks whether we should clamp or return an
-error; seems like the current consensus is on clamping, but then we might
-want to get rid of that comment :)
-
-> +		newprio = NICE_TO_PRIO(attr->sched_nice);
-
-This is new, however AFAICT it doesn't change anything for CFS (or about to
-be) tasks since what matters is calling check_class_changed() further
-down.
-
-> +	} else
-> +		newprio = MAX_PRIO - 1;
-> +
-> +	/*
->        * Allow unprivileged RT tasks to decrease priority:
->        */
->       if (user && !capable(CAP_SYS_NICE)) {
