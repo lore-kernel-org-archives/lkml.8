@@ -2,165 +2,130 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6673C83006
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D68C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1867206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA02F206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:56:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="gHEORjTf"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="riB2txC4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgD1M4b (ORCPT
+        id S1726940AbgD1M4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:56:31 -0400
-Received: from mail.efficios.com ([167.114.26.124]:58448 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726746AbgD1M4a (ORCPT
+        Tue, 28 Apr 2020 08:56:50 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:42084 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726746AbgD1M4t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:56:30 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 8851627C857;
-        Tue, 28 Apr 2020 08:56:29 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id yy07838jlHYR; Tue, 28 Apr 2020 08:56:29 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 31C7A27C771;
-        Tue, 28 Apr 2020 08:56:29 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 31C7A27C771
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1588078589;
-        bh=wCLQaSXXFHWHOQTdzk9lhf8jXpkpRXiVjr4m5yXdZp0=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=gHEORjTfvJt3R+b8gor73nsmxy3TUV2xG8onL/Drc9WtteeV9fk5x6oR3zGHRPBzz
-         YPrCDh5F1+VvRK0MTyZCMvUQwtjNEWK8GckWqL3zSlUZOJ/NUMs+Rxe7QxFTuMASC8
-         Vo7Mutoj7dKY3FZsVUdp5Abh73+xwtMymYKJp5N294AFcyYV3cCNtNSxp/hUH+e+ME
-         LbKTM7upADUZuFbbEl5ngTM9uq5b3IvZ0uKkBOcv4hSHGuSM6yPBLKnk4s8qpO9Yck
-         f1Ui1G+rzegttYk0Wv7fXppIA7vpafkfkqrGAD5XOQ0EaEtCDOgY0rfMIq4TdG12Vj
-         YX97fNDldv/LQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id FW4KC6PkGCbk; Tue, 28 Apr 2020 08:56:29 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 1DD0B27C965;
-        Tue, 28 Apr 2020 08:56:29 -0400 (EDT)
-Date:   Tue, 28 Apr 2020 08:56:28 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     Michael Kerrisk <mtk.manpages@gmail.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        carlos <carlos@redhat.com>, Rich Felker <dalias@libc.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>
-Message-ID: <1862775654.72437.1588078588989.JavaMail.zimbra@efficios.com>
-In-Reply-To: <1080028389.72414.1588077193438.JavaMail.zimbra@efficios.com>
-References: <20200326155633.18236-1-mathieu.desnoyers@efficios.com> <20200326155633.18236-6-mathieu.desnoyers@efficios.com> <87ees9z417.fsf@mid.deneb.enyo.de> <284293396.70630.1588005648556.JavaMail.zimbra@efficios.com> <87zhawvphv.fsf@mid.deneb.enyo.de> <2102127737.70791.1588008377292.JavaMail.zimbra@efficios.com> <87ftcnrf7d.fsf@mid.deneb.enyo.de> <1080028389.72414.1588077193438.JavaMail.zimbra@efficios.com>
-Subject: Re: [PATCH glibc 5/9] glibc: Perform rseq(2) registration at C
- startup and thread creation (v17)
+        Tue, 28 Apr 2020 08:56:49 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SCqkWU167004;
+        Tue, 28 Apr 2020 12:56:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=4qhmUDa7F437ChnjAQ6A8+Tyq1qMBj5fTsTxjwYc8pU=;
+ b=riB2txC4dB+WfIbJ8jO8RYQ9znXob3bZ56ZmZBxW7KqkDOga1rfUGMb7qU14dvAOda9d
+ m8WWAxv2bH+Q9HvM9XarrdD6ldFP55+oXWVcDUH72Lr2fuPobjhKN3IJyRM40T2j0Krv
+ Pj6mYhKXRaJIzWc5zofqPhD9/joQefp/VZwpPCiem7UYmOLD32RqQTKchLfYU0c7wE+X
+ LEl0rSBjykJEE1MKJbMCPvL+PTRJieB9jMROEQ4MsjTxHDVdD5nlWnDb2u4LKnLDIU5h
+ KkOFaJl1CbWRnGZycfbvKxi1dAjbIv1t4KvOun/B8zjeKQfx/N1E7YYO5Zbd9w4dWyZ8 0A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 30nucfyqw8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 12:56:38 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SCpt9L182449;
+        Tue, 28 Apr 2020 12:54:37 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 30mxwypfte-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 12:54:37 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03SCsYHe008311;
+        Tue, 28 Apr 2020 12:54:35 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Apr 2020 05:54:34 -0700
+Date:   Tue, 28 Apr 2020 15:54:26 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     okaya@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
+        vkoul@kernel.org, dan.j.williams@intel.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: qcom_hidma: Simplify error handling path in
+ hidma_probe
+Message-ID: <20200428125426.GE2014@kadam>
+References: <20200427111043.70218-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF75 (Linux)/8.8.15_GA_3895)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v17)
-Thread-Index: z7tk/3iPPlCh9cj1VVKnVHBj0mM1xIMs04Lw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427111043.70218-1-christophe.jaillet@wanadoo.fr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 bulkscore=0
+ suspectscore=2 mlxlogscore=999 phishscore=0 malwarescore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004280100
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 priorityscore=1501
+ mlxlogscore=999 impostorscore=0 suspectscore=2 malwarescore=0
+ lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 28, 2020, at 8:33 AM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
-
-> ----- On Apr 28, 2020, at 8:02 AM, Florian Weimer fw@deneb.enyo.de wrote:
+On Mon, Apr 27, 2020 at 01:10:43PM +0200, Christophe JAILLET wrote:
+> There is no need to call 'hidma_debug_uninit()' in the error handling
+> path. 'hidma_debug_init()' has not been called yet.
 > 
-[...]
->> 
->>> x32 should not be an issue as explained above, so I'm very open to
->>> add this "uptr" for user-space only.
->> 
->> Okay, then please use anonymous unions and structs as necessary, to
->> ensure that the uptr field can be reached on all platforms in the same
->> way.
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+>  drivers/dma/qcom/hidma.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> OK, will do!
+> diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
+> index 411f91fde734..87490e125bc3 100644
+> --- a/drivers/dma/qcom/hidma.c
+> +++ b/drivers/dma/qcom/hidma.c
+> @@ -897,7 +897,6 @@ static int hidma_probe(struct platform_device *pdev)
+>  	if (msi)
+            ^^^
+This test doesn't work.  It will call free hidma_free_msis() if the
+hidma_request_msi() call fails.  We should do:
 
-What I came up with looks like this. User-space can use rseq_cs.uptr.ptr
-both on 32-bit and 64-bit to update the pointer:
+	if (msi) {
+		rc = hidma_request_msi(dmadev, pdev);
+		msi = false;
+	}
 
-    /* Restartable sequences rseq_cs field.
-
-       Contains NULL when no critical section is active for the current
-       thread, or holds a pointer to the currently active struct rseq_cs.
-
-       Updated by user-space, which sets the address of the currently
-       active rseq_cs at the beginning of assembly instruction sequence
-       block, and set to NULL by the kernel when it restarts an assembly
-       instruction sequence block, as well as when the kernel detects that
-       it is preempting or delivering a signal outside of the range
-       targeted by the rseq_cs.  Also needs to be set to NULL by user-space
-       before reclaiming memory that contains the targeted struct rseq_cs.
-
-       Read and set by the kernel.  Set by user-space with single-copy
-       atomicity semantics.  This field should only be updated by the
-       thread which registered this data structure.  Aligned on 64-bit.
-
-       User-space may perform the update through the rseq_cs.uptr.ptr
-       field.  The padding needs to be initialized to zero on 32-bit.  */
-    union
-      {
-        uint64_t ptr64;
-#ifdef __LP64__
-        uint64_t ptr;
-#else   
-        struct
-          {
-# if (defined (__BYTE_ORDER) && (__BYTE_ORDER == __BIG_ENDIAN)) || defined (__BIG_ENDIAN)
-            uint32_t padding; /* Initialized to zero.  */
-            uint32_t ptr32;
-# else /* LITTLE */
-            uint32_t ptr32;
-            uint32_t padding; /* Initialized to zero.  */
-# endif /* ENDIAN */
-          } ptr;
-#endif
-
-#ifndef __KERNEL__
-        struct
-          {
-# ifdef __LP64__
-            const struct rseq_cs *ptr;
-# else
-#  if (defined (__BYTE_ORDER) && (__BYTE_ORDER == __BIG_ENDIAN)) || defined (__BIG_ENDIAN)
-            uint32_t padding; /* Initialized to zero.  */
-            const struct rseq_cs *ptr;
-#  else /* LITTLE */
-            const struct rseq_cs *ptr;
-            uint32_t padding; /* Initialized to zero.  */
-#  endif /* ENDIAN */
-# endif
-          } uptr;
-#endif
-      } rseq_cs;
-
-Thanks,
-
-Mathieu
+	if (!msi) {
+		hidma_ll_setup_irq(dmadev->lldev, false);
+		rc = devm_request_irq(&pdev->dev, chirq, hidma_chirq_handler,
+				      0, "qcom-hidma", dmadev->lldev);
+		if (rc)
+			goto uninit;
+	}
 
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+>  		hidma_free_msis(dmadev);
+>  
+> -	hidma_debug_uninit(dmadev);
+>  	hidma_ll_uninit(dmadev->lldev);
+>  dmafree:
+>  	if (dmadev)
+            ^^^^^^
+This test isn't necessary and should be deleted.
+
+regards,
+dan carpenter
