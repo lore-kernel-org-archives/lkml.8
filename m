@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E398DC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C0EC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B560520575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC3A020575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099582;
-	bh=sZhZohU2064bhWgEYZVebd2hh7nsqGdpYbtA9VE2usU=;
+	s=default; t=1588099585;
+	bh=hBYyPRpUugYM2RKU4wm2ghw09N54/z4/XyL37XBU07E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kToB0RNEWF8qKC+X3VxZ8hOvnans++GgCwykiuKW79908Ass/cMVh9Cr/NQbSrHX5
-	 /jZ2KvKW3/1yQex8G1zToQXbjbsOlBW0d9J7si9EL3B34YzzuhzuKDqGfYU7vzWLL5
-	 o9Ixn4Y98pD2Rp8pPRY7I1iWX27KkUJMlkGUgqk0=
+	b=QLERWYKjQQwkKgfSrCX/HciOUMtwg59Tzl0LcEzHMojQho7/6PiwwWbtJogMDhRUz
+	 IY8ftWMEjn7Y+Qy9geacTebOPe+4pCFk8uaseUmtlDuBnInrYEfZvhXYGD16GNItgV
+	 oS61zSeS7zzK6TA5ViLcdJZnKdCgppt6YvG6Jcqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731237AbgD1SqV (ORCPT
+        id S1731214AbgD1SnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:46:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37224 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:43:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730044AbgD1SoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:44:17 -0400
+        id S1731202AbgD1SnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:43:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7F022085B;
-        Tue, 28 Apr 2020 18:44:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E698C20575;
+        Tue, 28 Apr 2020 18:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099457;
-        bh=sZhZohU2064bhWgEYZVebd2hh7nsqGdpYbtA9VE2usU=;
+        s=default; t=1588099393;
+        bh=hBYyPRpUugYM2RKU4wm2ghw09N54/z4/XyL37XBU07E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zRT20zByFkYKcDbErqXIR0GnIK+QCPWORv+IR0qgoIw9Hk6avF1OxqQRD13PpjegK
-         QXeqd7rugEgwF63Y3d7mI6ec+4TR0/CH2yMs36/n8/vSkaCQ+FgkH5ARLHclJfKN7B
-         Oa+RUFlTN1lf1rUkHTZxXa1RwaaI0c2YsujNNl2E=
+        b=dOd1+BgTVIZI2QcLaNQkFxxvBqDa6mR2jroWN/KJAFrDRpGoPP62m53TgMZ35fWTM
+         lk4ahu+LSEeGKui08Acynrq89yoxRj6+e/KUDS7KrgPg9bDgGpJx4i9VFyLTPylusW
+         N4L9p3AFzpOAACcdxdSLhz479sNjphDEo7zCWVRE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 5.4 158/168] Revert "serial: uartps: Fix uartps_major handling"
-Date:   Tue, 28 Apr 2020 20:25:32 +0200
-Message-Id: <20200428182251.102233817@linuxfoundation.org>
+        stable@vger.kernel.org, Ilan Peer <ilan.peer@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.4 131/168] iwlwifi: mvm: Do not declare support for ACK Enabled Aggregation
+Date:   Tue, 28 Apr 2020 20:25:05 +0200
+Message-Id: <20200428182248.630387041@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -59,56 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Simek <michal.simek@xilinx.com>
+From: Ilan Peer <ilan.peer@intel.com>
 
-commit 2e01911b7cf7aa07a304a809eca1b11a4bd35859 upstream.
+commit 38af8d5a90a8c3b41ff0484855e24bd55b43ce9d upstream.
 
-This reverts commit 5e9bd2d70ae7c00a95a22994abf1eef728649e64.
+As this was not supposed to be enabled to begin with.
 
-As Johan says, this driver needs a lot more work and these changes are
-only going in the wrong direction:
-    https://lkml.kernel.org/r/20190523091839.GC568@localhost
-
-Reported-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/310999ab5342f788a7bc1b0e68294d4f052cad07.1585905873.git.michal.simek@xilinx.com
+Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Ilan Peer <ilan.peer@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/iwlwifi.20200417100405.53dbc3c6c36b.Idfe118546b92cc31548b2211472a5303c7de5909@changeid
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/xilinx_uartps.c |    8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -1550,6 +1550,7 @@ static int cdns_uart_probe(struct platfo
- 		goto err_out_id;
- 	}
- 
-+	uartps_major = cdns_uart_uart_driver->tty_driver->major;
- 	cdns_uart_data->cdns_uart_driver = cdns_uart_uart_driver;
- 
- 	/*
-@@ -1679,7 +1680,6 @@ static int cdns_uart_probe(struct platfo
- 		console_port = NULL;
- #endif
- 
--	uartps_major = cdns_uart_uart_driver->tty_driver->major;
- 	cdns_uart_data->cts_override = of_property_read_bool(pdev->dev.of_node,
- 							     "cts-override");
- 	return 0;
-@@ -1741,12 +1741,6 @@ static int cdns_uart_remove(struct platf
- 		console_port = NULL;
- #endif
- 
--	/* If this is last instance major number should be initialized */
--	mutex_lock(&bitmap_lock);
--	if (bitmap_empty(bitmap, MAX_UART_INSTANCES))
--		uartps_major = 0;
--	mutex_unlock(&bitmap_lock);
--
- 	uart_unregister_driver(cdns_uart_data->cdns_uart_driver);
- 	return rc;
- }
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
+@@ -525,8 +525,7 @@ static struct ieee80211_sband_iftype_dat
+ 					IEEE80211_HE_MAC_CAP1_TF_MAC_PAD_DUR_16US |
+ 					IEEE80211_HE_MAC_CAP1_MULTI_TID_AGG_RX_QOS_8,
+ 				.mac_cap_info[2] =
+-					IEEE80211_HE_MAC_CAP2_32BIT_BA_BITMAP |
+-					IEEE80211_HE_MAC_CAP2_ACK_EN,
++					IEEE80211_HE_MAC_CAP2_32BIT_BA_BITMAP,
+ 				.mac_cap_info[3] =
+ 					IEEE80211_HE_MAC_CAP3_OMI_CONTROL |
+ 					IEEE80211_HE_MAC_CAP3_MAX_AMPDU_LEN_EXP_VHT_2,
+@@ -610,8 +609,7 @@ static struct ieee80211_sband_iftype_dat
+ 					IEEE80211_HE_MAC_CAP1_TF_MAC_PAD_DUR_16US |
+ 					IEEE80211_HE_MAC_CAP1_MULTI_TID_AGG_RX_QOS_8,
+ 				.mac_cap_info[2] =
+-					IEEE80211_HE_MAC_CAP2_BSR |
+-					IEEE80211_HE_MAC_CAP2_ACK_EN,
++					IEEE80211_HE_MAC_CAP2_BSR,
+ 				.mac_cap_info[3] =
+ 					IEEE80211_HE_MAC_CAP3_OMI_CONTROL |
+ 					IEEE80211_HE_MAC_CAP3_MAX_AMPDU_LEN_EXP_VHT_2,
 
 
