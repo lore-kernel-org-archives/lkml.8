@@ -2,136 +2,93 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A32AC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65585C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2A00206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:50:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099833;
-	bh=K0uB/Cb13jH+GxhvPq7paXYCJd1UU1gY2wHuRVZW+o8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aIFo120PGGwbey6cjhS3cy6NwJ88ssyZNieGudRzxSuEQ1C11Th75U4iisn0zFzY7
-	 Gd6i8HwB6WGiYYh8XkkWi1zaKBtS7KvQzbCC0Mx/qvZ+5Q05GRhcQ5bMrYpLIhxRhy
-	 DfFKJ7q7HdtIJd+i+F/Y5/ggnco9wSrUrbNfJhmE=
+	by mail.kernel.org (Postfix) with ESMTP id 28DB4206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:50:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="NPZ/FQ8P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731043AbgD1Sud (ORCPT
+        id S1731210AbgD1Suk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:50:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56800 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730614AbgD1SiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:38:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 28 Apr 2020 14:50:40 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:37384 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730829AbgD1Suh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:50:37 -0400
+Received: from mailhost.synopsys.com (sv2-mailhost1.synopsys.com [10.205.2.133])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42BE92076A;
-        Tue, 28 Apr 2020 18:38:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099099;
-        bh=K0uB/Cb13jH+GxhvPq7paXYCJd1UU1gY2wHuRVZW+o8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OeibD5VQPQqevLNjRSiwDtqbTYuYcSEwCDMcxGBkTCWdmm4Sl4sl0zmR1h37/cf4O
-         o/4d15cPsq3SbDCrKqUmjT0GRgp9zoUsQFkavRViM0ehvx/c+M4tkpdaw29yMsclAU
-         Gn9pA6i8SLNLjb2FpvFU450JSKWxozRySddSnHb4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Vishal Kulkarni <vishal@chelsio.com>
-Subject: [PATCH 5.4 056/168] cxgb4: fix adapter crash due to wrong MC size
-Date:   Tue, 28 Apr 2020 20:23:50 +0200
-Message-Id: <20200428182238.982167716@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 163B84050C;
+        Tue, 28 Apr 2020 18:50:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1588099837; bh=iaYI21+MnPBrnDuud0zQCEFIVFhiyAVqgsYhvsjm76Q=;
+        h=From:To:Cc:Subject:Date:From;
+        b=NPZ/FQ8PFcvqtKXrrau3mjBxXZIDkJujA7FKYvL5yahbSevgpngaz3xqVs+YtfCyV
+         KpqCZAAEuoPatXb2R4aNoUAUVQB90gKHAXqqF4M86NK0dAz2IZjnU8QGDEEUTclh4O
+         g661tyOK/DLjLH4p0N8cdTFo+pYi6l+l+z/Xu18TshwzNDhh0uJdK1X7clP8Q0wNu3
+         l2qRXBrTiRo9+qaSrJUQq3BIp5aa4AvprA/PvpW8Vn0mx1WE3DVAUrXFHoPEK2g+jw
+         uS0LxTuf3b4AC9zjS3fzaG/qn3MgZaIEzhNg4VS2HWPWYLFfT2ZncaknlM/hXwsDEF
+         CW8YJgUaPyOdQ==
+Received: from paltsev-e7480.internal.synopsys.com (ru20-e7250.internal.synopsys.com [10.116.33.250])
+        by mailhost.synopsys.com (Postfix) with ESMTP id E8392A007C;
+        Tue, 28 Apr 2020 18:50:31 +0000 (UTC)
+From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+To:     linux-snps-arc@lists.infradead.org,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH] ARC: guard dsp early init against non ARCv2
+Date:   Tue, 28 Apr 2020 21:50:24 +0300
+Message-Id: <20200428185024.5168-1-Eugeniy.Paltsev@synopsys.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vishal Kulkarni <vishal@chelsio.com>
+As of today we guard early DSP init code with
+ARC_AUX_DSP_BUILD (0x7A) BCR check to verify that we have
+CPU with DSP configured. However that's not enough as in
+ARCv1 CPU the same BCR (0x7A) is used for checking MUL/MAC
+instructions presence.
 
-[ Upstream commit ce222748078592afb51b810dc154531aeba4f512 ]
+So, let's guard DSP early init against non ARCv2.
 
-In the absence of MC1, the size calculation function
-cudbg_mem_region_size() was returing wrong MC size and
-resulted in adapter crash. This patch adds new argument
-to cudbg_mem_region_size() which will have actual size
-and returns error to caller in the absence of MC1.
-
-Fixes: a1c69520f785 ("cxgb4: collect MC memory dump")
-Signed-off-by: Vishal Kulkarni <vishal@chelsio.com>"
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c |   27 ++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
+ arch/arc/include/asm/dsp-impl.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
-@@ -1054,9 +1054,9 @@ static void cudbg_t4_fwcache(struct cudb
- 	}
- }
+diff --git a/arch/arc/include/asm/dsp-impl.h b/arch/arc/include/asm/dsp-impl.h
+index e1aa212ca6eb..e64d945ae7df 100644
+--- a/arch/arc/include/asm/dsp-impl.h
++++ b/arch/arc/include/asm/dsp-impl.h
+@@ -15,12 +15,14 @@
  
--static unsigned long cudbg_mem_region_size(struct cudbg_init *pdbg_init,
--					   struct cudbg_error *cudbg_err,
--					   u8 mem_type)
-+static int cudbg_mem_region_size(struct cudbg_init *pdbg_init,
-+				 struct cudbg_error *cudbg_err,
-+				 u8 mem_type, unsigned long *region_size)
- {
- 	struct adapter *padap = pdbg_init->adap;
- 	struct cudbg_meminfo mem_info;
-@@ -1065,15 +1065,23 @@ static unsigned long cudbg_mem_region_si
+ /* clobbers r5 register */
+ .macro DSP_EARLY_INIT
++#if defined(CONFIG_ISA_ARCV2)
+ 	lr	r5, [ARC_AUX_DSP_BUILD]
+ 	bmsk	r5, r5, 7
+ 	breq    r5, 0, 1f
+ 	mov	r5, DSP_CTRL_DISABLED_ALL
+ 	sr	r5, [ARC_AUX_DSP_CTRL]
+ 1:
++#endif
+ .endm
  
- 	memset(&mem_info, 0, sizeof(struct cudbg_meminfo));
- 	rc = cudbg_fill_meminfo(padap, &mem_info);
--	if (rc)
-+	if (rc) {
-+		cudbg_err->sys_err = rc;
- 		return rc;
-+	}
- 
- 	cudbg_t4_fwcache(pdbg_init, cudbg_err);
- 	rc = cudbg_meminfo_get_mem_index(padap, &mem_info, mem_type, &mc_idx);
--	if (rc)
-+	if (rc) {
-+		cudbg_err->sys_err = rc;
- 		return rc;
-+	}
-+
-+	if (region_size)
-+		*region_size = mem_info.avail[mc_idx].limit -
-+			       mem_info.avail[mc_idx].base;
- 
--	return mem_info.avail[mc_idx].limit - mem_info.avail[mc_idx].base;
-+	return 0;
- }
- 
- static int cudbg_collect_mem_region(struct cudbg_init *pdbg_init,
-@@ -1081,7 +1089,12 @@ static int cudbg_collect_mem_region(stru
- 				    struct cudbg_error *cudbg_err,
- 				    u8 mem_type)
- {
--	unsigned long size = cudbg_mem_region_size(pdbg_init, cudbg_err, mem_type);
-+	unsigned long size = 0;
-+	int rc;
-+
-+	rc = cudbg_mem_region_size(pdbg_init, cudbg_err, mem_type, &size);
-+	if (rc)
-+		return rc;
- 
- 	return cudbg_read_fw_mem(pdbg_init, dbg_buff, mem_type, size,
- 				 cudbg_err);
-
+ /* clobbers r10, r11 registers pair */
+-- 
+2.21.1
 
