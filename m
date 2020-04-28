@@ -2,45 +2,47 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D3CC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6532CC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4A12206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40DA2206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:38:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Gy7KXdka"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DODTEzgm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgD1Nin (ORCPT
+        id S1727124AbgD1Nir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:38:43 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:52388 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726846AbgD1Nim (ORCPT
+        Tue, 28 Apr 2020 09:38:47 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:53553 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726975AbgD1Nip (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:38:42 -0400
+        Tue, 28 Apr 2020 09:38:45 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588081122; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=XK1XlfC8Wej1iBzqIag/dJ1a4PtF0Yy+Zp/TpvAjr0s=; b=Gy7KXdkah8onHvkylJpGbamwisTqcocVEgp06iZX4j6ipshYcTZOBk928OUgCOGmkLMOumyt
- NmZ2kL/rhA3aE0tOWSL+ifpRcBsOX5vMX9Tzt5ltHC5Uxz1HlJ7C+JqZqQZ8rQrfoligKPlo
- jKMm7dToVlYK7JdAiw8GZkfGD6g=
-X-Mailgun-Sending-Ip: 104.130.122.27
+ s=smtp; t=1588081125; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=vBBeg6eyBUedW5XC2wn4Xz2i7PE2ZdRYiXbp31tTysE=; b=DODTEzgmWfnPvznm8lknNH/9anQRkcp4RX95KgiFcM32BcfvAQVoc8RA2L+q2PmR5pY5zfVC
+ 8vPWJLKzRd6Kpy8lKpP6y0ObM0sefjU2K4L4q8j4lfJk1FN5mvqRtQWhxt1RZvi9ZtipcsTv
+ JeExaqM64h5OwSk7nznACER/Dw8=
+X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea831dc.7fcd18e9c458-smtp-out-n03;
- Tue, 28 Apr 2020 13:38:36 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5ea831e5.7f7a20dca5e0-smtp-out-n03;
+ Tue, 28 Apr 2020 13:38:45 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 54266C433D2; Tue, 28 Apr 2020 13:38:36 +0000 (UTC)
+        id E3DB7C433D2; Tue, 28 Apr 2020 13:38:44 +0000 (UTC)
 Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E7E78C433CB;
-        Tue, 28 Apr 2020 13:38:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E7E78C433CB
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 78B8CC433F2;
+        Tue, 28 Apr 2020 13:38:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 78B8CC433F2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
 From:   Rajendra Nayak <rnayak@codeaurora.org>
@@ -48,72 +50,122 @@ To:     viresh.kumar@linaro.org, sboyd@kernel.org,
         bjorn.andersson@linaro.org, agross@kernel.org
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, mka@chromium.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v3 00/17] DVFS for IO devices on sdm845 and sc7180
-Date:   Tue, 28 Apr 2020 19:02:48 +0530
-Message-Id: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Mark Brown <broonie@kernel.org>,
+        Alok Chauhan <alokc@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-spi@vger.kernel.org
+Subject: [PATCH v3 02/17] spi: spi-geni-qcom: Use OPP API to set clk/perf state
+Date:   Tue, 28 Apr 2020 19:02:50 +0530
+Message-Id: <1588080785-6812-3-git-send-email-rnayak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
+References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes in v3:
-1. Added better error handling for dev_pm_opp_of_add_table()
-2. Some minor changes and fixes in PATCH 12/17 as compared to v2
-3. Dropped the mmc patch since its picked up by Ulf
+geni spi needs to express a perforamnce state requirement on CX
+depending on the frequency of the clock rates. Use OPP table from
+DT to register with OPP framework and use dev_pm_opp_set_rate() to
+set the clk/perf state.
 
-1. Added error handling for dev_pm_opp_set_clkname()
-and dev_pm_opp_of_add_table()
-2. Used dev_pm_opp_put_clkname() in the cleanup path
-3. Dropped the OPP patch pulled in by Viresh [1]
-4. Dropped the UFS patches since they had some major rework
-needed because of changes that were merged in the merge window
-and I don't have a UFS device currently to validate the changes.
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Alok Chauhan <alokc@codeaurora.org>
+Cc: Akash Asthana <akashast@codeaurora.org>
+Cc: linux-spi@vger.kernel.org
+---
+This patch has a dependency on the 'PATCH 01/17' in this series,
+due to the changes in include/linux/qcom-geni-se.h
+Its ideal if this and the previous patch gets merged via the
+msm tree (once reviewed and ack'ed)
+Greg has already responded he is fine with it for serial.
 
-We have had support added in the OPP core for a while now to support
-DVFS for IO devices, and this series uses that infrastructure to
-add DVFS support for various IO devices in sdm845 and sc7180 SoCs.
+ drivers/spi/spi-geni-qcom.c | 26 +++++++++++++++++++++++---
+ 1 file changed, 23 insertions(+), 3 deletions(-)
 
-[1] https://lkml.org/lkml/2020/4/14/98
-
-Rajendra Nayak (17):
-  tty: serial: qcom_geni_serial: Use OPP API to set clk/perf state
-  spi: spi-geni-qcom: Use OPP API to set clk/perf state
-  arm64: dts: sdm845: Add OPP table for all qup devices
-  arm64: dts: sc7180: Add OPP table for all qup devices
-  drm/msm/dpu: Use OPP API to set clk/perf state
-  drm/msm: dsi: Use OPP API to set clk/perf state
-  arm64: dts: sdm845: Add DSI and MDP OPP tables and power-domains
-  arm64: dts: sc7180: Add DSI and MDP OPP tables and power-domains
-  mmc: sdhci-msm: Fix error handling for dev_pm_opp_of_add_table()
-  arm64: dts: sdm845: Add sdhc opps and power-domains
-  arm64: dts: sc7180: Add sdhc opps and power-domains
-  media: venus: core: Add support for opp tables/perf voting
-  arm64: dts: sdm845: Add OPP tables and power-domains for venus
-  arm64: dts: sc7180: Add OPP tables and power-domains for venus
-  spi: spi-qcom-qspi: Use OPP API to set clk/perf state
-  arm64: dts: sdm845: Add qspi opps and power-domains
-  arm64: dts: sc7180: Add qspi opps and power-domains
-
- arch/arm64/boot/dts/qcom/sc7180.dtsi           | 199 +++++++++++++++++-
- arch/arm64/boot/dts/qcom/sdm845.dtsi           | 266 ++++++++++++++++++++++++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c  |   3 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c        |  25 ++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h        |   4 +
- drivers/gpu/drm/msm/dsi/dsi.h                  |   2 +
- drivers/gpu/drm/msm/dsi/dsi_cfg.c              |   4 +-
- drivers/gpu/drm/msm/dsi/dsi_host.c             |  58 ++++++
- drivers/media/platform/qcom/venus/core.c       |  28 +++
- drivers/media/platform/qcom/venus/core.h       |   5 +
- drivers/media/platform/qcom/venus/pm_helpers.c |  37 +++-
- drivers/mmc/host/sdhci-msm.c                   |  27 ++-
- drivers/spi/spi-geni-qcom.c                    |  26 ++-
- drivers/spi/spi-qcom-qspi.c                    |  29 ++-
- drivers/tty/serial/qcom_geni_serial.c          |  34 +++-
- include/linux/qcom-geni-se.h                   |   4 +
- 16 files changed, 719 insertions(+), 32 deletions(-)
-
+diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+index c397242..51186c3 100644
+--- a/drivers/spi/spi-geni-qcom.c
++++ b/drivers/spi/spi-geni-qcom.c
+@@ -7,6 +7,7 @@
+ #include <linux/log2.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_opp.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/qcom-geni-se.h>
+ #include <linux/spi/spi.h>
+@@ -95,7 +96,6 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
+ {
+ 	unsigned long sclk_freq;
+ 	unsigned int actual_hz;
+-	struct geni_se *se = &mas->se;
+ 	int ret;
+ 
+ 	ret = geni_se_clk_freq_match(&mas->se,
+@@ -112,9 +112,9 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
+ 
+ 	dev_dbg(mas->dev, "req %u=>%u sclk %lu, idx %d, div %d\n", speed_hz,
+ 				actual_hz, sclk_freq, *clk_idx, *clk_div);
+-	ret = clk_set_rate(se->clk, sclk_freq);
++	ret = dev_pm_opp_set_rate(mas->dev, sclk_freq);
+ 	if (ret)
+-		dev_err(mas->dev, "clk_set_rate failed %d\n", ret);
++		dev_err(mas->dev, "dev_pm_opp_set_rate failed %d\n", ret);
+ 	return ret;
+ }
+ 
+@@ -561,6 +561,17 @@ static int spi_geni_probe(struct platform_device *pdev)
+ 	mas->se.wrapper = dev_get_drvdata(dev->parent);
+ 	mas->se.base = base;
+ 	mas->se.clk = clk;
++	mas->se.opp_table = dev_pm_opp_set_clkname(&pdev->dev, "se");
++	if (IS_ERR(mas->se.opp_table))
++		return PTR_ERR(mas->se.opp_table);
++	/* OPP table is optional */
++	ret = dev_pm_opp_of_add_table(&pdev->dev);
++	if (!ret) {
++		mas->se.has_opp_table = true;
++	} else if (ret != -ENODEV) {
++		dev_err(&pdev->dev, "Invalid OPP table in Device tree\n");
++		return ret;
++	}
+ 
+ 	spi->bus_num = -1;
+ 	spi->dev.of_node = dev->of_node;
+@@ -596,6 +607,9 @@ static int spi_geni_probe(struct platform_device *pdev)
+ spi_geni_probe_runtime_disable:
+ 	pm_runtime_disable(dev);
+ 	spi_master_put(spi);
++	if (mas->se.has_opp_table)
++		dev_pm_opp_of_remove_table(&pdev->dev);
++	dev_pm_opp_put_clkname(mas->se.opp_table);
+ 	return ret;
+ }
+ 
+@@ -604,6 +618,9 @@ static int spi_geni_remove(struct platform_device *pdev)
+ 	struct spi_master *spi = platform_get_drvdata(pdev);
+ 	struct spi_geni_master *mas = spi_master_get_devdata(spi);
+ 
++	if (mas->se.has_opp_table)
++		dev_pm_opp_of_remove_table(&pdev->dev);
++	dev_pm_opp_put_clkname(mas->se.opp_table);
+ 	/* Unregister _before_ disabling pm_runtime() so we stop transfers */
+ 	spi_unregister_master(spi);
+ 
+@@ -617,6 +634,9 @@ static int __maybe_unused spi_geni_runtime_suspend(struct device *dev)
+ 	struct spi_master *spi = dev_get_drvdata(dev);
+ 	struct spi_geni_master *mas = spi_master_get_devdata(spi);
+ 
++	/* Drop the performance state vote */
++	dev_pm_opp_set_rate(dev, 0);
++
+ 	return geni_se_resources_off(&mas->se);
+ }
+ 
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
