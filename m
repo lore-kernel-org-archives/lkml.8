@@ -2,260 +2,143 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36736C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC5FC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA382072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C742072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:26:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="WRrM+aH1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgD1WX6 (ORCPT
+        id S1726424AbgD1W0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:23:58 -0400
-Received: from mga01.intel.com ([192.55.52.88]:49009 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725934AbgD1WX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:23:58 -0400
-IronPort-SDR: R5DyCQmAj6d57z5I6ZoA2qn5/mmYZDdeKml1jjstUraxcJZa+cY8ZW2aIuT2Axrsvw+yP/FG23
- Q319WLAuYCWw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 15:23:57 -0700
-IronPort-SDR: TpJ5oDYJud6HIiiRZ5fEXYolDzhC+p/LN42X0IX1xrMH0lLbyuhArh4GVnGjRjXsmv2BtBzGlU
- M4bHXNM8ezwQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
-   d="scan'208";a="247833091"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga007.fm.intel.com with ESMTP; 28 Apr 2020 15:23:56 -0700
-Date:   Tue, 28 Apr 2020 15:23:56 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH V11.1] Documentation/dax: Update Usage section
-Message-ID: <20200428222356.GD406458@iweiny-DESK2.sc.intel.com>
-References: <'20200428002142.404144-5-ira.weiny@intel.com'>
- <20200428221942.409890-1-ira.weiny@intel.com>
+        Tue, 28 Apr 2020 18:26:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52488 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726291AbgD1W0G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 18:26:06 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B588DC03C1AD
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:26:05 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id d16so247019edq.7
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:26:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o5g+0q4i4NXpQKVni4wkZ3eUg4bn6IsxJhsN8wcx+ak=;
+        b=WRrM+aH1PLLyNr7wFOi3+bCocCitOvbc0DiM8A52L04uR+hAWCFOQELO+cLK3d2ARe
+         3fnoaqKW2ZykE2NgKVl3lLwgtBpGf/qrj0xtHF5bdG9kyFPB32X9v3qdNMSWuoDH4eAd
+         P/qeU+BVQ30YADghRTV6I4/0jQ2AHy4p6xZ6OG4UmNFAMI5fsxzQASmA7052i7CKJa5G
+         BQj6HQfbLpIFikiQT9JlifLO5YOTILZpQLGoWS7Sjzdz2TahCbEQM2QNeoNZvj/ot+lP
+         hC6YKzmpd/k2trvrC1FyIOeiLG3HskoHMJPIUfCDKaV8xQYX01n1MGcWYRqFYJcIBTRD
+         Dizw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o5g+0q4i4NXpQKVni4wkZ3eUg4bn6IsxJhsN8wcx+ak=;
+        b=Z/ZlUjjb9gcEPndmcaULc0gdEI+T7aSvKJMd1pLdmAe0EOviDA/wa2b+NDdKsQzL4l
+         x9sCQs/F/XmOxDRM5JPxNDpDQvbWjkT5peRWclzrCZ56MusCAGuVvqbkoOhj/xurVAcz
+         d5XHMiv3ooSAIexIuHJUHKwfGnlToXGw2Tibmwdk197YWbDAjxpGwoTnQDWTxQ70bfV8
+         wl2+KANWfGPlS8P/DegDvU4gcx5E4CptZaHdNcTXkGuS9QXglc7UlrNSUiqryvdY9JK9
+         gSjZ0iqQ3NMze9RxTHi/Ivjs+tRj9Uib3oGxcJydZVmBOQhRJGpdUSw6PEJE1plLMxmi
+         rx1g==
+X-Gm-Message-State: AGi0Pubxn0R9D2gg4cKLG47JVJMT/2uMJ9q2PguzoUW8y5+z53Qc0Qai
+        sB2LmnB6l42F+dE2jiXhWcKoZ+vjO9HCOdlcR5o0nxA=
+X-Google-Smtp-Source: APiQypJdnPD8twnR2I4zFq1PmUsD3icty6Rtrg9MeAig7VH1vYYfF/k1ac08nAwqqrcf6W3VkkknzI+1g9Lre2mmLyY=
+X-Received: by 2002:aa7:cd59:: with SMTP id v25mr22787222edw.135.1588112764208;
+ Tue, 28 Apr 2020 15:26:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428221942.409890-1-ira.weiny@intel.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <cover.1587500467.git.rgb@redhat.com> <b8ba40255978a73ea15e3859d5c945ecd5fede8e.1587500467.git.rgb@redhat.com>
+In-Reply-To: <b8ba40255978a73ea15e3859d5c945ecd5fede8e.1587500467.git.rgb@redhat.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 28 Apr 2020 18:25:53 -0400
+Message-ID: <CAHC9VhR9sNB58A8uQ4FNgAXOgVJ3RaWF4y5MAo=3mcTojaym0Q@mail.gmail.com>
+Subject: Re: [PATCH ghak25 v4 3/3] audit: add subj creds to NETFILTER_CFG
+ record to cover async unregister
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, sgrubb@redhat.com,
+        omosnace@redhat.com, fw@strlen.de, twoerner@redhat.com,
+        Eric Paris <eparis@parisplace.org>, ebiederm@xmission.com,
+        tgraf@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry ignore this one...
+On Wed, Apr 22, 2020 at 5:40 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> Some table unregister actions seem to be initiated by the kernel to
+> garbage collect unused tables that are not initiated by any userspace
+> actions.  It was found to be necessary to add the subject credentials to
+> cover this case to reveal the source of these actions.  A sample record:
+>
+>   type=NETFILTER_CFG msg=audit(2020-03-11 21:25:21.491:269) : table=nat family=bridge entries=0 op=unregister pid=153 uid=root auid=unset tty=(none) ses=unset subj=system_u:system_r:kernel_t:s0 comm=kworker/u4:2 exe=(null)
 
-I got the 'reply to' wrong...
+[I'm going to comment up here instead of in the code because it is a
+bit easier for everyone to see what the actual impact might be on the
+records.]
 
-Ira
+Steve wants subject info in this case, okay, but let's try to trim out
+some of the fields which simply don't make sense in this record; I'm
+thinking of fields that are unset/empty in the kernel case and are
+duplicates of other records in the userspace/syscall case.  I think
+that means we can drop "tty", "ses", "comm", and "exe" ... yes?
 
-On Tue, Apr 28, 2020 at 03:19:42PM -0700, 'Ira Weiny' wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> Update the Usage section to reflect the new individual dax selection
-> functionality.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
+While "auid" is a potential target for removal based on the
+dup-or-unset criteria, I think it falls under Steve's request for
+subject info here, even if it is garbage in this case.
+
+> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
 > ---
-> Changes from V11:
-> 	Minor changes from Darrick
-> 
-> Changes from V10:
-> 	Clarifications from Dave
-> 	Add '-c' to xfs_io examples
-> 
-> Changes from V9:
-> 	Fix missing ')'
-> 	Fix trialing '"'
-> 
-> Changes from V8:
-> 	Updates from Darrick
-> 
-> Changes from V7:
-> 	Cleanups/clarifications from Darrick and Dan
-> 
-> Changes from V6:
-> 	Update to allow setting FS_XFLAG_DAX any time.
-> 	Update with list of behaviors from Darrick
-> 	https://lore.kernel.org/lkml/20200409165927.GD6741@magnolia/
-> 
-> Changes from V5:
-> 	Update to reflect the agreed upon semantics
-> 	https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
-> ---
->  Documentation/filesystems/dax.txt | 142 +++++++++++++++++++++++++++++-
->  1 file changed, 139 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
-> index 679729442fd2..dc1c1aa36cc2 100644
-> --- a/Documentation/filesystems/dax.txt
-> +++ b/Documentation/filesystems/dax.txt
-> @@ -17,11 +17,147 @@ For file mappings, the storage device is mapped directly into userspace.
->  Usage
->  -----
->  
-> -If you have a block device which supports DAX, you can make a filesystem
-> +If you have a block device which supports DAX, you can make a file system
->  on it as usual.  The DAX code currently only supports files with a block
->  size equal to your kernel's PAGE_SIZE, so you may need to specify a block
-> -size when creating the filesystem.  When mounting it, use the "-o dax"
-> -option on the command line or add 'dax' to the options in /etc/fstab.
-> +size when creating the file system.
+>  kernel/auditsc.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>
+> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+> index d281c18d1771..d7a45b181be0 100644
+> --- a/kernel/auditsc.c
+> +++ b/kernel/auditsc.c
+> @@ -2557,12 +2557,30 @@ void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
+>                        enum audit_nfcfgop op)
+>  {
+>         struct audit_buffer *ab;
+> +       const struct cred *cred;
+> +       struct tty_struct *tty;
+> +       char comm[sizeof(current->comm)];
+>
+>         ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_NETFILTER_CFG);
+>         if (!ab)
+>                 return;
+>         audit_log_format(ab, "table=%s family=%u entries=%u op=%s",
+>                          name, af, nentries, audit_nfcfgs[op].s);
 > +
-> +Currently 3 filesystems support DAX: ext2, ext4 and xfs.  Enabling DAX on them
-> +is different.
+> +       cred = current_cred();
+> +       tty = audit_get_tty();
+> +       audit_log_format(ab, " pid=%u uid=%u auid=%u tty=%s ses=%u",
+> +                        task_pid_nr(current),
+> +                        from_kuid(&init_user_ns, cred->uid),
+> +                        from_kuid(&init_user_ns, audit_get_loginuid(current)),
+> +                        tty ? tty_name(tty) : "(none)",
+> +                        audit_get_sessionid(current));
+> +       audit_put_tty(tty);
+> +       audit_log_task_context(ab); /* subj= */
+> +       audit_log_format(ab, " comm=");
+> +       audit_log_untrustedstring(ab, get_task_comm(comm, current));
+> +       audit_log_d_path_exe(ab, current->mm); /* exe= */
 > +
-> +Enabling DAX on ext4 and ext2
-> +-----------------------------
-> +
-> +When mounting the filesystem, use the "-o dax" option on the command line or
-> +add 'dax' to the options in /etc/fstab.  This works to enable DAX on all files
-> +within the filesystem.  It is equivalent to the '-o dax=always' behavior below.
-> +
-> +
-> +Enabling DAX on xfs
-> +-------------------
-> +
-> +Summary
-> +-------
-> +
-> + 1. There exists an in-kernel file access mode flag S_DAX that corresponds to
-> +    the statx flag STATX_ATTR_DAX.  See the manpage for statx(2) for details
-> +    about this access mode.
-> +
-> + 2. There exists a persistent flag FS_XFLAG_DAX that can be applied to regular
-> +    files and directories. This advisory flag can be set or cleared at any
-> +    time, but doing so does not immediately affect the S_DAX state.
-> +
-> + 3. If the persistent FS_XFLAG_DAX flag is set on a directory, this flag will
-> +    be inherited by all regular files and subdirectories that are subsequently
-> +    created in this directory. Files and subdirectories that exist at the time
-> +    this flag is set or cleared on the parent directory are not modified by
-> +    this modification of the parent directory.
-> +
-> + 4. There exists dax mount options which can override FS_XFLAG_DAX in the
-> +    setting of the S_DAX flag.  Given underlying storage which supports DAX the
-> +    following hold:
-> +
-> +    "-o dax=inode"  means "follow FS_XFLAG_DAX" and is the default.
-> +
-> +    "-o dax=never"  means "never set S_DAX, ignore FS_XFLAG_DAX."
-> +
-> +    "-o dax=always" means "always set S_DAX ignore FS_XFLAG_DAX."
-> +
-> +    "-o dax"        is a legacy option which is an alias for "dax=always".
-> +		    This may be removed in the future so "-o dax=always" is
-> +		    the preferred method for specifying this behavior.
-> +
-> +    NOTE: Modifications to and the inheritance behavior of FS_XFLAG_DAX remain
-> +    the same even when the file system is mounted with a dax option.  However,
-> +    in-core inode state (S_DAX) will be overridden until the file system is
-> +    remounted with dax=inode and the inode is evicted from kernel memory.
-> +
-> + 5. The S_DAX policy can be changed via:
-> +
-> +    a) Setting the parent directory FS_XFLAG_DAX as needed before files are
-> +       created
-> +
-> +    b) Setting the appropriate dax="foo" mount option
-> +
-> +    c) Changing the FS_XFLAG_DAX on existing regular files and directories.
-> +       This has runtime constraints and limitations that are described in 6)
-> +       below.
-> +
-> + 6. When changing the S_DAX policy via toggling the persistent FS_XFLAG_DAX flag,
-> +    the change in behaviour for existing regular files may not occur
-> +    immediately.  If the change must take effect immediately, the administrator
-> +    needs to:
-> +
-> +    a) stop the application so there are no active references to the data set
-> +       the policy change will affect
-> +
-> +    b) evict the data set from kernel caches so it will be re-instantiated when
-> +       the application is restarted. This can be achieved by:
-> +
-> +       i. drop-caches
-> +       ii. a filesystem unmount and mount cycle
-> +       iii. a system reboot
-> +
-> +
-> +Details
-> +-------
-> +
-> +There are 2 per-file dax flags.  One is a persistent inode setting (FS_XFLAG_DAX)
-> +and the other is a volatile flag indicating the active state of the feature
-> +(S_DAX).
-> +
-> +FS_XFLAG_DAX is preserved within the file system.  This persistent config
-> +setting can be set, cleared and/or queried using the FS_IOC_FS[GS]ETXATTR ioctl
-> +(see ioctl_xfs_fsgetxattr(2)) or an utility such as 'xfs_io'.
-> +
-> +New files and directories automatically inherit FS_XFLAG_DAX from
-> +their parent directory _when_ _created_.  Therefore, setting FS_XFLAG_DAX at
-> +directory creation time can be used to set a default behavior for an entire
-> +sub-tree.
-> +
-> +To clarify inheritance, here are 3 examples:
-> +
-> +Example A:
-> +
-> +mkdir -p a/b/c
-> +xfs_io -c 'chattr +x' a
-> +mkdir a/b/c/d
-> +mkdir a/e
-> +
-> +	dax: a,e
-> +	no dax: b,c,d
-> +
-> +Example B:
-> +
-> +mkdir a
-> +xfs_io -c 'chattr +x' a
-> +mkdir -p a/b/c/d
-> +
-> +	dax: a,b,c,d
-> +	no dax:
-> +
-> +Example C:
-> +
-> +mkdir -p a/b/c
-> +xfs_io -c 'chattr +x' c
-> +mkdir a/b/c/d
-> +
-> +	dax: c,d
-> +	no dax: a,b
-> +
-> +
-> +The current enabled state (S_DAX) is set when a file inode is instantiated in
-> +memory by the kernel.  It is set based on the underlying media support, the
-> +value of FS_XFLAG_DAX and the file system's dax mount option.
-> +
-> +statx can be used to query S_DAX.  NOTE that only regular files will ever have
-> +S_DAX set and therefore statx will never indicate that S_DAX is set on
-> +directories.
-> +
-> +Setting the FS_XFLAG_DAX (specifically or through inheritance) occurs even if
-> +the underlying media does not support dax and/or the file system is overridden
-> +with a mount option.
-> +
->  
->  
->  Implementation Tips for Block Driver Writers
-> -- 
-> 2.25.1
-> 
+>         audit_log_end(ab);
+>  }
+>  EXPORT_SYMBOL_GPL(__audit_log_nfcfg);
+
+-- 
+paul moore
+www.paul-moore.com
