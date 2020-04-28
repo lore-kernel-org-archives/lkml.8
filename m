@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E393C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBC2C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DEC12085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5AF020730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:37:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099024;
-	bh=SuW/bMeNfeTOi8oPIOlRFwzT/BVrAzPDe9cMItAubWQ=;
+	s=default; t=1588099026;
+	bh=Xy0Pb3mWqIHhg/PXjixWdwwLdI7XClHMTohy2S+A2Ic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b61l48GDUvR8mAT42+zIiSeIzQw91P8iqPjFqiIIrXBu5lXKLSWx3SawInbP0w0QD
-	 UBa8fA9daFDEBAJhjPUj98P4mxvkY7yNA5mfVNoXIy5UcSGLhYMJBY8IE/rUEqIqSV
-	 B5K75+uowZdCdBYK9M+DDIpvhfKrASidohpagUKY=
+	b=EILD7uNAr/ChHNfHi3POzlcXEZjc+Aq01vKH6BGljHU/jm2pGjThNcOF4snkw35W2
+	 STOQImL4ZVWYqxbcR6NPQYIm+M2Iw2899zNGB/vdqnqYJq+H7WIrR1hNxkma+8y6ol
+	 OVA/g1ANzcSIeF67a1rIYZ8ApKziuk/rz5KgHaJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730432AbgD1ShD (ORCPT
+        id S1729736AbgD1ShF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:37:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54666 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:37:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730423AbgD1Sg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:36:56 -0400
+        id S1729011AbgD1ShB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:37:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE30E2176D;
-        Tue, 28 Apr 2020 18:36:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5D8C20730;
+        Tue, 28 Apr 2020 18:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099016;
-        bh=SuW/bMeNfeTOi8oPIOlRFwzT/BVrAzPDe9cMItAubWQ=;
+        s=default; t=1588099021;
+        bh=Xy0Pb3mWqIHhg/PXjixWdwwLdI7XClHMTohy2S+A2Ic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZuP23WEG2PcbIcagYB1DtvgfNR3sAmFp/ZNBVZ5U3oo18JcwG5bgaWbFdwrgwUmHo
-         7DZtdHN+wUJg5PY0tTpHvJ3rhs+fftFbM1dzUnoBoGZfQXmzHo/8RsfPedoNDqlHcl
-         Vb029EO0ulByXFHq/EQRBj0bJ+S/3t/E1NMLebkY=
+        b=LxXSyKWiM64tXy3xMw8j17mvfzhq/9tPVjpEyVKQ9rg4Swoy2+fE3OVvVmgtbBNWk
+         ik7j1Wfe8Rkq/fKhUBOCKROXfUB5pUowTnl4IT1U23Y1Zy9n37bf2MCBZu1ZhPkVEL
+         pRZuguzDQ+p/OF6LTa+bbwyMmVuLi5tsM+PcdcmY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 5.6 135/167] staging: comedi: Fix comedi_device refcnt leak in comedi_open
-Date:   Tue, 28 Apr 2020 20:25:11 +0200
-Message-Id: <20200428182242.522272905@linuxfoundation.org>
+        stable@vger.kernel.org, Jonathan Cox <jonathan@jdcox.net>
+Subject: [PATCH 4.19 086/131] USB: Add USB_QUIRK_DELAY_CTRL_MSG and USB_QUIRK_DELAY_INIT for Corsair K70 RGB RAPIDFIRE
+Date:   Tue, 28 Apr 2020 20:24:58 +0200
+Message-Id: <20200428182235.759008665@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,49 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Jonathan Cox <jonathan@jdcox.net>
 
-commit 332e0e17ad49e084b7db670ef43b5eb59abd9e34 upstream.
+commit be34a5854b4606bd7a160ad3cb43415d623596c7 upstream.
 
-comedi_open() invokes comedi_dev_get_from_minor(), which returns a
-reference of the COMEDI device to "dev" with increased refcount.
+The Corsair K70 RGB RAPIDFIRE needs the USB_QUIRK_DELAY_INIT and
+USB_QUIRK_DELAY_CTRL_MSG to function or it will randomly not
+respond on boot, just like other Corsair keyboards
 
-When comedi_open() returns, "dev" becomes invalid, so the refcount
-should be decreased to keep refcount balanced.
-
-The reference counting issue happens in one exception handling path of
-comedi_open(). When "cfp" allocation is failed, the refcnt increased by
-comedi_dev_get_from_minor() is not decreased, causing a refcnt leak.
-
-Fix this issue by calling comedi_dev_put() on this error path when "cfp"
-allocation is failed.
-
-Fixes: 20f083c07565 ("staging: comedi: prepare support for per-file read and write subdevices")
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Jonathan Cox <jonathan@jdcox.net>
 Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Link: https://lore.kernel.org/r/1587361459-83622-1-git-send-email-xiyuyang19@fudan.edu.cn
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200410212427.2886-1-jonathan@jdcox.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/comedi_fops.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/usb/core/quirks.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/staging/comedi/comedi_fops.c
-+++ b/drivers/staging/comedi/comedi_fops.c
-@@ -2725,8 +2725,10 @@ static int comedi_open(struct inode *ino
- 	}
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -430,6 +430,10 @@ static const struct usb_device_id usb_qu
+ 	/* Corsair K70 LUX */
+ 	{ USB_DEVICE(0x1b1c, 0x1b36), .driver_info = USB_QUIRK_DELAY_INIT },
  
- 	cfp = kzalloc(sizeof(*cfp), GFP_KERNEL);
--	if (!cfp)
-+	if (!cfp) {
-+		comedi_dev_put(dev);
- 		return -ENOMEM;
-+	}
- 
- 	cfp->dev = dev;
- 
++	/* Corsair K70 RGB RAPDIFIRE */
++	{ USB_DEVICE(0x1b1c, 0x1b38), .driver_info = USB_QUIRK_DELAY_INIT |
++	  USB_QUIRK_DELAY_CTRL_MSG },
++
+ 	/* MIDI keyboard WORLDE MINI */
+ 	{ USB_DEVICE(0x1c75, 0x0204), .driver_info =
+ 			USB_QUIRK_CONFIG_INTF_STRINGS },
 
 
