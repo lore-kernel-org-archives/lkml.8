@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F23F6C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9049EC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D101D20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661F020575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099891;
-	bh=eEtZ7W7wVKHqk5qlbSjviH1h2AEOGxlMDLl2PkRvsDI=;
+	s=default; t=1588099894;
+	bh=Kq+XreifIIpU4w3KQ2tNMKSCfMK31xcm0GCcXe8Zs2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z6I1HiwrgpFCqhvikD0Z7+XX71FUv5gup6oVM8x1CTVolf+oF/B7s+UWQRIYyvaQl
-	 TGT4wGYAfunzMM5wYG2EA35jrYMpf+jPtSb4G2EJHTHYMJSI5vgbrTyyKY5DJBD0o8
-	 8ZFNy4ulG7ZUHhFR7vcTIoUybrVT7k7P3OaDLRwc=
+	b=KiNQpzGARBoD+YnEn/W964RnhcivhcrVQkAGDae9uyp7u22ITjoEDM0kn+Q430aHT
+	 mQyW5Y6xrdxCJ0Fy2PgNdC54tk+4aBKIzo7k47NRU1gWr67pJt1chcItTSIbP8ct7N
+	 GF6lNFkMBAd/q6F++3eEnkCZ0GI5h9p3Qab6J2Zk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729746AbgD1ShR (ORCPT
+        id S1730547AbgD1Svd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:37:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55038 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:51:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730433AbgD1ShJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:37:09 -0400
+        id S1730460AbgD1ShQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:37:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1833D20730;
-        Tue, 28 Apr 2020 18:37:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B73D20730;
+        Tue, 28 Apr 2020 18:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099028;
-        bh=eEtZ7W7wVKHqk5qlbSjviH1h2AEOGxlMDLl2PkRvsDI=;
+        s=default; t=1588099035;
+        bh=Kq+XreifIIpU4w3KQ2tNMKSCfMK31xcm0GCcXe8Zs2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BNbTkN7N2HVOg9wVnepjoVOoPQ73Mii8qYcCFg0en58Kci3jp1zTRyIiAy9GNkEdC
-         Tedx9a1cnWspq7HrNSQHitmBP+u/6ULamJX3paBoe8xqKK29j7oEIU8SD7/ekn7tuB
-         RbK/m7fhwsPJEJhjrFkTVr/zf7vov12E2LcpSzso=
+        b=2ttMh+WAdtIOo5qtjoYe15AdxwsdQCItF5ki7iUsX1ChmeHX05YOSXVQn9/5xykS3
+         ALItpeHonlcBBhAN//BPubSCDtcYCgK95xinHZcWLiuUUzQNqTVirQ0p4gspCDMwlU
+         Fa3Rt3OO7NPF6xXfWhKOLXMLbUiXVEVZBDmsy+y8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>
-Subject: [PATCH 4.19 087/131] USB: early: Handle AMDs spec-compliant identifiers, too
-Date:   Tue, 28 Apr 2020 20:24:59 +0200
-Message-Id: <20200428182235.884487722@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 5.6 147/167] UAS: fix deadlock in error handling and PM flushing work
+Date:   Tue, 28 Apr 2020 20:25:23 +0200
+Message-Id: <20200428182244.173122696@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,98 +58,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 7dbdb53d72a51cea9b921d9dbba54be00752212a upstream.
+commit f6cc6093a729ede1ff5658b493237c42b82ba107 upstream.
 
-This fixes a bug that causes the USB3 early console to freeze after
-printing a single line on AMD machines because it can't parse the
-Transfer TRB properly.
+A SCSI error handler and block runtime PM must not allocate
+memory with GFP_KERNEL. Furthermore they must not wait for
+tasks allocating memory with GFP_KERNEL.
+That means that they cannot share a workqueue with arbitrary tasks.
 
-The spec at
-https://www.intel.com/content/dam/www/public/us/en/documents/technical-specifications/extensible-host-controler-interface-usb-xhci.pdf
-says in section "4.5.1 Device Context Index" that the Context Index,
-also known as Endpoint ID according to
-section "1.6 Terms and Abbreviations", is normally computed as
-`DCI = (Endpoint Number * 2) + Direction`, which matches the current
-definitions of XDBC_EPID_OUT and XDBC_EPID_IN.
+Fix this for UAS using a private workqueue.
 
-However, the numbering in a Debug Capability Context data structure is
-supposed to be different:
-Section "7.6.3.2 Endpoint Contexts and Transfer Rings" explains that a
-Debug Capability Context data structure has the endpoints mapped to indices
-0 and 1.
-
-Change XDBC_EPID_OUT/XDBC_EPID_IN to the spec-compliant values, add
-XDBC_EPID_OUT_INTEL/XDBC_EPID_IN_INTEL with Intel's incorrect values, and
-let xdbc_handle_tx_event() handle both.
-
-I have verified that with this patch applied, the USB3 early console works
-on both an Intel and an AMD machine.
-
-Fixes: aeb9dd1de98c ("usb/early: Add driver for xhci debug capability")
-Cc: stable@vger.kernel.org
-Signed-off-by: Jann Horn <jannh@google.com>
-Link: https://lore.kernel.org/r/20200401074619.8024-1-jannh@google.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Fixes: f9dc024a2da1f ("uas: pre_reset and suspend: Fix a few races")
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200415141750.811-2-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/early/xhci-dbc.c |    8 ++++----
- drivers/usb/early/xhci-dbc.h |   18 ++++++++++++++++--
- 2 files changed, 20 insertions(+), 6 deletions(-)
+ drivers/usb/storage/uas.c |   43 ++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 40 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/early/xhci-dbc.c
-+++ b/drivers/usb/early/xhci-dbc.c
-@@ -735,19 +735,19 @@ static void xdbc_handle_tx_event(struct
- 	case COMP_USB_TRANSACTION_ERROR:
- 	case COMP_STALL_ERROR:
- 	default:
--		if (ep_id == XDBC_EPID_OUT)
-+		if (ep_id == XDBC_EPID_OUT || ep_id == XDBC_EPID_OUT_INTEL)
- 			xdbc.flags |= XDBC_FLAGS_OUT_STALL;
--		if (ep_id == XDBC_EPID_IN)
-+		if (ep_id == XDBC_EPID_IN || ep_id == XDBC_EPID_IN_INTEL)
- 			xdbc.flags |= XDBC_FLAGS_IN_STALL;
+--- a/drivers/usb/storage/uas.c
++++ b/drivers/usb/storage/uas.c
+@@ -81,6 +81,19 @@ static void uas_free_streams(struct uas_
+ static void uas_log_cmd_state(struct scsi_cmnd *cmnd, const char *prefix,
+ 				int status);
  
- 		xdbc_trace("endpoint %d stalled\n", ep_id);
- 		break;
++/*
++ * This driver needs its own workqueue, as we need to control memory allocation.
++ *
++ * In the course of error handling and power management uas_wait_for_pending_cmnds()
++ * needs to flush pending work items. In these contexts we cannot allocate memory
++ * by doing block IO as we would deadlock. For the same reason we cannot wait
++ * for anything allocating memory not heeding these constraints.
++ *
++ * So we have to control all work items that can be on the workqueue we flush.
++ * Hence we cannot share a queue and need our own.
++ */
++static struct workqueue_struct *workqueue;
++
+ static void uas_do_work(struct work_struct *work)
+ {
+ 	struct uas_dev_info *devinfo =
+@@ -109,7 +122,7 @@ static void uas_do_work(struct work_stru
+ 		if (!err)
+ 			cmdinfo->state &= ~IS_IN_WORK_LIST;
+ 		else
+-			schedule_work(&devinfo->work);
++			queue_work(workqueue, &devinfo->work);
  	}
+ out:
+ 	spin_unlock_irqrestore(&devinfo->lock, flags);
+@@ -134,7 +147,7 @@ static void uas_add_work(struct uas_cmd_
  
--	if (ep_id == XDBC_EPID_IN) {
-+	if (ep_id == XDBC_EPID_IN || ep_id == XDBC_EPID_IN_INTEL) {
- 		xdbc.flags &= ~XDBC_FLAGS_IN_PROCESS;
- 		xdbc_bulk_transfer(NULL, XDBC_MAX_PACKET, true);
--	} else if (ep_id == XDBC_EPID_OUT) {
-+	} else if (ep_id == XDBC_EPID_OUT || ep_id == XDBC_EPID_OUT_INTEL) {
- 		xdbc.flags &= ~XDBC_FLAGS_OUT_PROCESS;
- 	} else {
- 		xdbc_trace("invalid endpoint id %d\n", ep_id);
---- a/drivers/usb/early/xhci-dbc.h
-+++ b/drivers/usb/early/xhci-dbc.h
-@@ -120,8 +120,22 @@ struct xdbc_ring {
- 	u32			cycle_state;
+ 	lockdep_assert_held(&devinfo->lock);
+ 	cmdinfo->state |= IS_IN_WORK_LIST;
+-	schedule_work(&devinfo->work);
++	queue_work(workqueue, &devinfo->work);
+ }
+ 
+ static void uas_zap_pending(struct uas_dev_info *devinfo, int result)
+@@ -1229,7 +1242,31 @@ static struct usb_driver uas_driver = {
+ 	.id_table = uas_usb_ids,
  };
  
--#define XDBC_EPID_OUT		2
--#define XDBC_EPID_IN		3
-+/*
-+ * These are the "Endpoint ID" (also known as "Context Index") values for the
-+ * OUT Transfer Ring and the IN Transfer Ring of a Debug Capability Context data
-+ * structure.
-+ * According to the "eXtensible Host Controller Interface for Universal Serial
-+ * Bus (xHCI)" specification, section "7.6.3.2 Endpoint Contexts and Transfer
-+ * Rings", these should be 0 and 1, and those are the values AMD machines give
-+ * you; but Intel machines seem to use the formula from section "4.5.1 Device
-+ * Context Index", which is supposed to be used for the Device Context only.
-+ * Luckily the values from Intel don't overlap with those from AMD, so we can
-+ * just test for both.
-+ */
-+#define XDBC_EPID_OUT		0
-+#define XDBC_EPID_IN		1
-+#define XDBC_EPID_OUT_INTEL	2
-+#define XDBC_EPID_IN_INTEL	3
+-module_usb_driver(uas_driver);
++static int __init uas_init(void)
++{
++	int rv;
++
++	workqueue = alloc_workqueue("uas", WQ_MEM_RECLAIM, 0);
++	if (!workqueue)
++		return -ENOMEM;
++
++	rv = usb_register(&uas_driver);
++	if (rv) {
++		destroy_workqueue(workqueue);
++		return -ENOMEM;
++	}
++
++	return 0;
++}
++
++static void __exit uas_exit(void)
++{
++	usb_deregister(&uas_driver);
++	destroy_workqueue(workqueue);
++}
++
++module_init(uas_init);
++module_exit(uas_exit);
  
- struct xdbc_state {
- 	u16			vendor;
+ MODULE_LICENSE("GPL");
+ MODULE_IMPORT_NS(USB_STORAGE);
 
 
