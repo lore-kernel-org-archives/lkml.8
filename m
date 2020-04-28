@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C121C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49629C8300A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B2CC21569
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 295A52186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:59:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fBNRUevw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jpurp9Cl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgD1U7n (ORCPT
+        id S1726858AbgD1U7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:59:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38714 "EHLO
+        Tue, 28 Apr 2020 16:59:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726750AbgD1U7g (ORCPT
+        by vger.kernel.org with ESMTP id S1726805AbgD1U7i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:59:36 -0400
+        Tue, 28 Apr 2020 16:59:38 -0400
 Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 463FEC03C1AE;
-        Tue, 28 Apr 2020 13:59:36 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id b2so244591ljp.4;
-        Tue, 28 Apr 2020 13:59:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DA02C035493;
+        Tue, 28 Apr 2020 13:59:37 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id g4so256668ljl.2;
+        Tue, 28 Apr 2020 13:59:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=sSPDLCw928vWc9z2Vz2mWvGeAMzP8/jPehX8Io29R/M=;
-        b=fBNRUevwPDJSM6q61fYhtsse5IE6E2y49tzY82VPIID1sRrr24Y4C3aaCE9B4T1ysJ
-         mOluuoskKtW7BHBxKOgr9NHqfsm0tFoVS2yZiEKTY/jXHX2nvMQJlIcXwoKnTU43WNfI
-         rfVhpIDwCGbdAbrwRJ9hnIG8ov2eLEn5/PxoYgnyh9/NCqjGM8OvzN5YXwHuOgpPQudb
-         wXIItywWBp9ndAHZ5asj6ggkGlspU+FNJ1tWf1RJ3hfOwwS6RF5xvPHNaI/EBRqoATpG
-         oLR9O8UiOtqpy4TSULHeReidBctk5DOOnqlEdLtR8zvnc2ZMQj6x1wnzz/ToBD3zaXP6
-         HgoQ==
+        bh=0CB7l/SclT28khEWhDaoUOOzb7zLYSSjDTiXz+d76vU=;
+        b=Jpurp9ClV4jnTD0F9m48AGNqTXz1ipQrAnggVWpZFOF++j+brs2BKKdSPUbdX6aZOP
+         BB8HYRVyTSPw91F6rc83G9mQtUbt8i+VsniMWASdZeP4lB0eHTKd1GAxaIoFracSoQ3+
+         F7NRMfQvoTQaOkMDbTk7RM6frPn7zX6fgnxmlX95hAJhKHI6P8XvSJz0jdrT954quNlp
+         dc7nYW9b2hFclqqafaD225XwkP8oDazc0+OJhcOqqA2m1CoVJpFVKvB9+/mbSIQC6RmP
+         1sCltiRVjQyIl+DaJZ13b39p5EgL7BpUtO0Iexqfelc4wWFL2kl9G74dBy8g1jpDUACO
+         T3lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=sSPDLCw928vWc9z2Vz2mWvGeAMzP8/jPehX8Io29R/M=;
-        b=m10o5iTpPSv5MwvlkUlZ6uV/kV6wHm40s0tMpTXR1XzgsHoHuMJyxjRA8jH5xONDyo
-         AaGL6xTCy1r+6oPUZ7hB/BSCLTsBFVKT2PmQSJ55AGSo6EUN3lUNRbyFLT0bT6h570Vp
-         GDzAVq+ZH52xdtX7cOu0FCh3Ga6OiW5YWwEUZrOPo1jUYIi0VBiJOMPRTY6TLG5DUQz3
-         7fknAl6B9OL2GWQNA7VwHNsOcgKa2urVmjIUztuSkE58++le5zY3tpoSpEKsIrsgeldH
-         oOQDaVAQa6EwKbozdiL568IdlBG77CZ15uLT5hKZKtzgbtzjT6gzu3dCgLSR720vFQpY
-         1AGw==
-X-Gm-Message-State: AGi0PuagLdcPRaa6wlrnM7cFAKcJccy9mLJoxVmYvyxn86Xl64h6/OK1
-        OuQoiEGr4rOOW9JBz3vZFUptkA0mqq0wLg==
-X-Google-Smtp-Source: APiQypJOSkeM4KBluNbofCs+yZeBUUC4FcCWL6GUCvKOg8yk0RnaTVgUFbftNLX0tMsTwccEtDwwkw==
-X-Received: by 2002:a2e:b5d2:: with SMTP id g18mr18864979ljn.51.1588107574209;
-        Tue, 28 Apr 2020 13:59:34 -0700 (PDT)
+        bh=0CB7l/SclT28khEWhDaoUOOzb7zLYSSjDTiXz+d76vU=;
+        b=tZ3jIFdz0JvxORBuf5oR5jLZqNlwOfSkeQqbL8b8oaXMqat7FBGhf5+iJ0V1Nl4Nz2
+         /D2lyw52ZNQj3Ut2W+ce29wcsbSkomtur9NCr7z9/C9pDyqAzydoRjJ084HZlPY0F5U6
+         CQEYEdcnDFOyjnlwaxnO1TjiuQsnFgKiG1q7MYGkpf0rrudN5fdDFwGvsP0pvlPbj9ns
+         KkykGaro1mEdkzeUQ+wLHBTysdZLfVk2Pb/Vziv9TGXXbMRFAgGov1Es1eNplYYXOBRa
+         1pf7NWyplLwQ52TRKEqbD7wFF60L2dKeYVCzVkBCL0VHo1rzCItSc5r5XuE6S2RbZlwq
+         BXeg==
+X-Gm-Message-State: AGi0Pua0wtfh2rZRon3ZfApVtNFWgV3GRjFVwl0d8wCURbrbdS/jYHpq
+        Oqsh0yZALKoxy5iPWn3c4m5CA0Nz3MNgZw==
+X-Google-Smtp-Source: APiQypLcBZKomWi/mld0ygXkGSXRF8+JLRFoqb07LLbjRoBNCtmRtZtFo7Ra7QnQjLvb3s+93krp6g==
+X-Received: by 2002:a2e:571a:: with SMTP id l26mr18387002ljb.12.1588107575418;
+        Tue, 28 Apr 2020 13:59:35 -0700 (PDT)
 Received: from pc638.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id z21sm295483ljh.42.2020.04.28.13.59.33
+        by smtp.gmail.com with ESMTPSA id z21sm295483ljh.42.2020.04.28.13.59.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 13:59:33 -0700 (PDT)
+        Tue, 28 Apr 2020 13:59:34 -0700 (PDT)
 From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 To:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
@@ -68,10 +68,11 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Matthew Wilcox <willy@infradead.org>,
         Joel Fernandes <joel@joelfernandes.org>,
         RCU <rcu@vger.kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: [PATCH 05/24] rcu/tree: Simplify debug_objects handling
-Date:   Tue, 28 Apr 2020 22:58:44 +0200
-Message-Id: <20200428205903.61704-6-urezki@gmail.com>
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: [PATCH 06/24] rcu/tree: Simplify KFREE_BULK_MAX_ENTR macro
+Date:   Tue, 28 Apr 2020 22:58:45 +0200
+Message-Id: <20200428205903.61704-7-urezki@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200428205903.61704-1-urezki@gmail.com>
 References: <20200428205903.61704-1-urezki@gmail.com>
@@ -82,118 +83,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+We can simplify KFREE_BULK_MAX_ENTR macro and get rid of
+magic numbers which were used to make the structure to be
+exactly one page.
 
-In order to prepare for future changes for headless RCU support, make the
-debug_objects handling in kfree_rcu use the final 'pointer' value of the
-object, instead of depending on the head.
-
+Suggested-by: Boqun Feng <boqun.feng@gmail.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- kernel/rcu/tree.c | 29 +++++++++++++----------------
- 1 file changed, 13 insertions(+), 16 deletions(-)
+ kernel/rcu/tree.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
 diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 0762ac06f0b7..767aed49d7fd 100644
+index 767aed49d7fd..eebd7f627794 100644
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -2860,13 +2860,11 @@ EXPORT_SYMBOL_GPL(call_rcu);
+@@ -2848,13 +2848,6 @@ EXPORT_SYMBOL_GPL(call_rcu);
+ #define KFREE_DRAIN_JIFFIES (HZ / 50)
+ #define KFREE_N_BATCHES 2
+ 
+-/*
+- * This macro defines how many entries the "records" array
+- * will contain. It is based on the fact that the size of
+- * kfree_rcu_bulk_data structure becomes exactly one page.
+- */
+-#define KFREE_BULK_MAX_ENTR ((PAGE_SIZE / sizeof(void *)) - 3)
+-
+ /**
+  * struct kfree_rcu_bulk_data - single block to store kfree_rcu() pointers
   * @nr_records: Number of active pointers in the array
-  * @records: Array of the kfree_rcu() pointers
-  * @next: Next bulk object in the block chain
-- * @head_free_debug: For debug, when CONFIG_DEBUG_OBJECTS_RCU_HEAD is set
+@@ -2863,10 +2856,18 @@ EXPORT_SYMBOL_GPL(call_rcu);
   */
  struct kfree_rcu_bulk_data {
  	unsigned long nr_records;
- 	void *records[KFREE_BULK_MAX_ENTR];
+-	void *records[KFREE_BULK_MAX_ENTR];
  	struct kfree_rcu_bulk_data *next;
--	struct rcu_head *head_free_debug;
++	void *records[];
  };
  
++/*
++ * This macro defines how many entries the "records" array
++ * will contain. It is based on the fact that the size of
++ * kfree_rcu_bulk_data structure becomes exactly one page.
++ */
++#define KFREE_BULK_MAX_ENTR \
++	((PAGE_SIZE - sizeof(struct kfree_rcu_bulk_data)) / sizeof(void *))
++
  /**
-@@ -2916,11 +2914,13 @@ struct kfree_rcu_cpu {
- static DEFINE_PER_CPU(struct kfree_rcu_cpu, krc);
- 
- static __always_inline void
--debug_rcu_head_unqueue_bulk(struct rcu_head *head)
-+debug_rcu_bhead_unqueue(struct kfree_rcu_bulk_data *bhead)
- {
- #ifdef CONFIG_DEBUG_OBJECTS_RCU_HEAD
--	for (; head; head = head->next)
--		debug_rcu_head_unqueue(head);
-+	int i;
-+
-+	for (i = 0; i < bhead->nr_records; i++)
-+		debug_rcu_head_unqueue((struct rcu_head *)(bhead->records[i]));
- #endif
- }
- 
-@@ -2950,7 +2950,7 @@ static void kfree_rcu_work(struct work_struct *work)
- 	for (; bhead; bhead = bnext) {
- 		bnext = bhead->next;
- 
--		debug_rcu_head_unqueue_bulk(bhead->head_free_debug);
-+		debug_rcu_bhead_unqueue(bhead);
- 
- 		rcu_lock_acquire(&rcu_callback_map);
- 		trace_rcu_invoke_kfree_bulk_callback(rcu_state.name,
-@@ -2972,14 +2972,15 @@ static void kfree_rcu_work(struct work_struct *work)
- 	 */
- 	for (; head; head = next) {
- 		unsigned long offset = (unsigned long)head->func;
-+		void *ptr = (void *)head - offset;
- 
- 		next = head->next;
--		debug_rcu_head_unqueue(head);
-+		debug_rcu_head_unqueue((struct rcu_head *)ptr);
- 		rcu_lock_acquire(&rcu_callback_map);
- 		trace_rcu_invoke_kfree_callback(rcu_state.name, head, offset);
- 
- 		if (!WARN_ON_ONCE(!__is_kfree_rcu_offset(offset)))
--			kfree((void *)head - offset);
-+			kfree(ptr);
- 
- 		rcu_lock_release(&rcu_callback_map);
- 		cond_resched_tasks_rcu_qs();
-@@ -3118,18 +3119,11 @@ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
- 		/* Initialize the new block. */
- 		bnode->nr_records = 0;
- 		bnode->next = krcp->bhead;
--		bnode->head_free_debug = NULL;
- 
- 		/* Attach it to the head. */
- 		krcp->bhead = bnode;
- 	}
- 
--#ifdef CONFIG_DEBUG_OBJECTS_RCU_HEAD
--	head->func = func;
--	head->next = krcp->bhead->head_free_debug;
--	krcp->bhead->head_free_debug = head;
--#endif
--
- 	/* Finally insert. */
- 	krcp->bhead->records[krcp->bhead->nr_records++] =
- 		(void *) head - (unsigned long) func;
-@@ -3153,14 +3147,17 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
- {
- 	unsigned long flags;
- 	struct kfree_rcu_cpu *krcp;
-+	void *ptr;
- 
- 	local_irq_save(flags);	/* For safely calling this_cpu_ptr(). */
- 	krcp = this_cpu_ptr(&krc);
- 	if (krcp->initialized)
- 		raw_spin_lock(&krcp->lock);
- 
-+	ptr = (void *)head - (unsigned long)func;
-+
- 	/* Queue the object but don't yet schedule the batch. */
--	if (debug_rcu_head_queue(head)) {
-+	if (debug_rcu_head_queue(ptr)) {
- 		/* Probable double kfree_rcu(), just leak. */
- 		WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
- 			  __func__, head);
+  * struct kfree_rcu_cpu_work - single batch of kfree_rcu() requests
+  * @rcu_work: Let queue_rcu_work() invoke workqueue handler after grace period
 -- 
 2.20.1
 
