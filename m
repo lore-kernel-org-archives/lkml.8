@@ -6,90 +6,108 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7594C83009
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCCDC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86A7E206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22398206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgD1OtZ (ORCPT
+        id S1728038AbgD1Otg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:49:25 -0400
-Received: from mga14.intel.com ([192.55.52.115]:44321 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727803AbgD1OtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:49:23 -0400
-IronPort-SDR: M3/Xyic/5VujCElqY7alBgdPsNTdir4yfb6nDoNiZpXT+E/oAmiAYl+JnmDRaOsL6piQC0Umky
- ZcwH0rCPLpEg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 07:49:23 -0700
-IronPort-SDR: M7Q2JOL2/2WVi2KG81PKTMYYXt/g2OLOYqwoQAXN4maj5NEy50tqiPlW0IWJuQk3HXmy2PCj+g
- JaFrFUEwuzTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
-   d="scan'208";a="404712385"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 28 Apr 2020 07:49:17 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jTRXz-003ZjC-A2; Tue, 28 Apr 2020 17:49:19 +0300
-Date:   Tue, 28 Apr 2020 17:49:19 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 04/16] dt-bindings: mfd: Add bindings for sl28cpld
-Message-ID: <20200428144919.GY185537@smile.fi.intel.com>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-5-michael@walle.cc>
- <20200428124825.GT185537@smile.fi.intel.com>
- <8cc4a2bd3fcaf836d7f393ce2425c872@walle.cc>
+        Tue, 28 Apr 2020 10:49:36 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:59215 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbgD1Otf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 10:49:35 -0400
+Received: from mail-lf1-f49.google.com ([209.85.167.49]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MAxLT-1jIlMa1wHh-00BIxw for <linux-kernel@vger.kernel.org>; Tue, 28 Apr
+ 2020 16:49:33 +0200
+Received: by mail-lf1-f49.google.com with SMTP id l11so17140785lfc.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 07:49:33 -0700 (PDT)
+X-Gm-Message-State: AGi0PubepukpLjKJFCSyfJ563YSPYd7H8rRgVWmWkzjb58eexCUTPCRY
+        9KtD5uEkrc5Zha1tZQYlF60Qc9B4XpIwymPmBqY=
+X-Google-Smtp-Source: APiQypIgn/QnLQwwzv7K+EAOxxIYujQot/0Ahzey/nbfu4xUbJGAphNWjW9wOhBQ9sygb9FZ/D5ga4QVIdAT7/Icn5g=
+X-Received: by 2002:ac2:4466:: with SMTP id y6mr19644722lfl.125.1588085372765;
+ Tue, 28 Apr 2020 07:49:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8cc4a2bd3fcaf836d7f393ce2425c872@walle.cc>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 28 Apr 2020 16:49:15 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2qLJkokMGt48JRky=WUeAbJRuNmoD1oqfWdrGSC6y1LA@mail.gmail.com>
+Message-ID: <CAK8P3a2qLJkokMGt48JRky=WUeAbJRuNmoD1oqfWdrGSC6y1LA@mail.gmail.com>
+Subject: Remaining randconfig objtool warnings, linux-next-20200428
+To:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:nYMxGuIre/Wd8c/2NBLGKpZuVT+GzEVFc93a0m6I7HNaGHA3czI
+ xszTIYFCQ+4UyzNwsjRngR1OgCS+uJ+SbUnEzWPOgO4fF840+LSzq/kmfRhtaWTltdmQEIv
+ /yYoBys2zs704mWFXXAnhiVP4AESWMej2LcBXoy2VktqT5dZOoiLOrCkCbp/mFbEHJG8G0B
+ +PSr8lQ6bvMRojA6raurw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:rF1lpXrjtDI=:w8b0vWpAyEEzNnTNleLykq
+ 0VioRhnZl22WZIax/VEGD2P29va9C48U20OkUOa1Cm2aoRD3W28bppUjJXshxBp9SBWtHKDcK
+ jq/XQ6K1imje/gAAu9uSItlimcc8ChB4uTxbrdq6CwdlYZQ40SdiAZE8eksdHF/hDmehf+uOb
+ OqsYW6OdF6YtH7lE0GiKzDKoWt2mo+Fh8ii+dquSqBoZ2pmij6nnecquZvjRxLWgbAOOLx+vZ
+ z8oXefhUJTUJVLyKS/d464ctyuNl1W5l8jIf/pUJvlHrYYLkbVyAobEqZFve3S5kvvGAumuyA
+ jEKJrb3rsTd6rkpPg7nCnfl82PJ51mnWgQ+rQ7PZT9A1B1MtPeuFdFdaIYFYrR8QMvNCax6Vr
+ Ocb0UnnHDeGjQWVc4+//10oU62++F9lOY2Dl0BWpemQO9oYC9TQs0LxUyViJBL/YU+VRjv6c7
+ SdXa2d+zxhwIc36UknfNZtR6inI8fUhuxLtAK7ktJnfOQspdsojQA3cCvM8Oqa3uvvbQw3UCm
+ M8RtWyjYekh3SVCykPtFdytVJymqrSdqZ+u9xYJWA1kZG2o6BwotCJOMNRGjqsENfccNWwQET
+ pON+3cbP5EG5cVQcm5XPJ6mORyqC17UraW2Ai3XHbamf49HAS0DWoOQmo677YEFd37zcKFK/6
+ pg5EBMzrHCbRz4EZRHq9Eb9qm22468bbyPvNnPj7i9LWjDTljUSqEJOlitc3AQkHQWT+lo1B1
+ EcF7B46dXLWoqPdI6UzhuYUE4utGiXoIRNyTMuZ+Gc5wMoYcEuB1oWEVyUGthXpVL2GRsbpqa
+ 2tfb0LDLrZXcjke5L7uygCXC+MyJ8V8Gg8KletQvyZZNSixK8U=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 04:39:44PM +0200, Michael Walle wrote:
-> Am 2020-04-28 14:48, schrieb Andy Shevchenko:
-> > On Thu, Apr 23, 2020 at 07:45:31PM +0200, Michael Walle wrote:
-> > > This adds device tree bindings for the board management controller
-> > > found
-> > > on the Kontron SMARC-sAL28 board.
-> > 
-> > I think it should be independent patches (same way as you do for
-> > drivers).
-> 
-> It used to be several patches but Rob suggested to put it into one:
-> https://lore.kernel.org/linux-devicetree/20200330223535.GA31402@bogus/
+I noticed the number of objtool warnings in randconfig kernels have gone down
+ recently, maybe it's possible to eliminate the remaining ones?
 
-Ah, okay.
+Here are the ones I ran into recently, using gcc-9.3:
 
--- 
-With Best Regards,
-Andy Shevchenko
+==> build/x86/0x3D2B5D6D_defconfig/log <==
+arch/x86/kvm/vmx/vmx.o: warning: objtool:
+vmx_handle_exit_irqoff()+0x24: unreachable instruction
 
+==> build/x86/0xE0F2ACFF_defconfig/log <==
+kernel/time/posix-stubs.o: warning: objtool:
+__x64_sys_timer_create()+0x23: sibling call from callable instruction
+with modified stack frame
 
+==> build/x86/0xFD7B7323_defconfig/log <==
+arch/x86/entry/entry_64.o: warning: objtool: .entry.text+0x991:
+unreachable instruction
+
+==> build/x86/0x2EA4CE4F_defconfig/log <==
+kernel/kcov.o: warning: objtool: write_comp_data()+0x1b: call to
+check_kcov_mode() with UACCESS enabled
+kernel/kcov.o: warning: objtool: __sanitizer_cov_trace_pc()+0x15: call
+to check_kcov_mode() with UACCESS enabled
+
+==> build/x86/0x500B1B82_defconfig/log <==
+kernel/bpf/core.o: warning: objtool: ___bpf_prog_run()+0x1269: call
+without frame pointer save/setup
+
+==> build/x86/0x7942F24A_defconfig/log <==
+samples/ftrace/ftrace-direct.o: warning: objtool: .text+0x0:
+unreachable instruction
+samples/ftrace/ftrace-direct-too.o: warning: objtool: .text+0x0:
+unreachable instruction
+samples/ftrace/ftrace-direct-modify.o: warning: objtool: .text+0x0:
+unreachable instruction
+
+I've uploaded the .config and .o files for each one to
+https://drive.google.com/open?id=0B_XQwQ5KlfJAbUtrTVJaRmJIZUk
+Let me know if you need any additional information.
+
+Note that I used a modified linux-next tree (including many build
+fixes) for creating
+these, some of them may not actually happen with mainline or unpatched
+linux-next
+kernels.
+
+        Arnd
