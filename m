@@ -2,186 +2,100 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3169C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CABC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABE52206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7E552074A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:59:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588118355;
+	bh=u/ltYCv1p8OpW209IZjq1/zAWf9Lt/dtQuqXy6qlGD8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wbIlN29vgiZScD7nJr5M+yCJoQ6gmBl/763bBokLK7UtX2NctvO+Fv3ytNwozsdz9
+	 Z3Ou/mFzk6+WzUJX4uMPzTPYMA7nwi4wpBjCzUrXT02HcI3B/HxlOGQq9DrT7lkGXA
+	 VP316dAKxu42d6Fvv7GOi1yrPg1rFzkKI2GX0FTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgD1XwP (ORCPT
+        id S1726422AbgD1X7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 19:52:15 -0400
-Received: from sed198n136.SEDSystems.ca ([198.169.180.136]:21449 "EHLO
-        sed198n136.sedsystems.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726256AbgD1XwP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 19:52:15 -0400
-Received: from barney.sedsystems.ca (barney [198.169.180.121])
-        by sed198n136.sedsystems.ca  with ESMTP id 03SNpxH7030661
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 17:51:59 -0600 (CST)
-Received: from [192.168.233.77] (ovpn77.sedsystems.ca [192.168.233.77])
-        by barney.sedsystems.ca (8.14.7/8.14.4) with ESMTP id 03SNpwW6013339
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Tue, 28 Apr 2020 17:51:58 -0600
-Subject: Re: Xilinx axienet 1000BaseX support
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-kernel@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-arm-kernel@lists.infradead.org
-References: <20200110152215.GF25745@shell.armlinux.org.uk>
- <20200110170457.GH25745@shell.armlinux.org.uk>
- <20200118112258.GT25745@shell.armlinux.org.uk>
- <3b28dcb4-6e52-9a48-bf9c-ddad4cf5e98a@arm.com>
- <20200120154554.GD25745@shell.armlinux.org.uk>
- <20200127170436.5d88ca4f@donnerap.cambridge.arm.com>
- <20200127185344.GA25745@shell.armlinux.org.uk>
- <bf2448d0-390c-5045-3503-885240829fbf@sedsystems.ca>
- <20200422075124.GJ25745@shell.armlinux.org.uk>
- <8a829647-34a8-6e6a-05cf-76f5e88b8410@sedsystems.ca>
- <20200428230112.GS25745@shell.armlinux.org.uk>
-From:   Robert Hancock <hancock@sedsystems.ca>
-Message-ID: <d44d53d1-6718-e2d1-1186-b4f06d2b74cd@sedsystems.ca>
-Date:   Tue, 28 Apr 2020 17:51:58 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200428230112.GS25745@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Tue, 28 Apr 2020 19:59:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57402 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726361AbgD1X7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 19:59:14 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7162720737;
+        Tue, 28 Apr 2020 23:59:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588118353;
+        bh=u/ltYCv1p8OpW209IZjq1/zAWf9Lt/dtQuqXy6qlGD8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=m65GDnRjsU0lHcSgWzFNtw5c3ZB/b0Jrw8m+ErHshFyk+jt70URJA1Wj66MWCmAAs
+         BUfltVs8sxcuUAQ30NYBkBYwdViYHDF/yQMy1P5lTERcMZcl1h9es6FOYz3heDh0+O
+         23pd1ZMGBIzaDM32UYjwEAqkFixws4d52KfH2cyI=
+Date:   Tue, 28 Apr 2020 16:59:12 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Christopher Lameter <cl@linux.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 3/3] mm/page_alloc: Keep memoryless cpuless node 0
+ offline
+Message-Id: <20200428165912.ca1eadefbac56d740e6e8fd1@linux-foundation.org>
+In-Reply-To: <20200428093836.27190-4-srikar@linux.vnet.ibm.com>
+References: <20200428093836.27190-1-srikar@linux.vnet.ibm.com>
+        <20200428093836.27190-4-srikar@linux.vnet.ibm.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.64 on 198.169.180.136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-28 5:01 p.m., Russell King - ARM Linux admin wrote:
-> On Tue, Apr 28, 2020 at 03:59:45PM -0600, Robert Hancock wrote:
->> On 2020-04-22 1:51 a.m., Russell King - ARM Linux admin wrote:
->>> On Tue, Apr 21, 2020 at 07:45:47PM -0600, Robert Hancock wrote:
->>>> Hi Andre/Russell,
->>>>
->>>> Just wondering where things got to with the changes for SGMII on Xilinx
->>>> axienet that you were discussing (below)? I am looking into our Xilinx setup
->>>> using 1000BaseX SFP and trying to get it working "properly" with newer
->>>> kernels. My understanding is that the requirements for 1000BaseX and SGMII
->>>> are somewhat similar. I gathered that SGMII was working somewhat already,
->>>> but that not all link modes had been tested. However, it appears 1000BaseX
->>>> is not yet working in the stock kernel.
->>>>
->>>> The way I had this working before with a 4.19-based kernel was basically a
->>>> hack to phylink to allow the Xilinx PCS/PMA PHY to be configured
->>>> sufficiently as a PHY for it to work, and mostly ignored the link status of
->>>> the SFP PHY itself, even though we were using in-band signalling mode with
->>>> an SFP module. That was using this patch:
->>>>
->>>> https://patchwork.ozlabs.org/project/netdev/patch/1559330285-30246-5-git-send-email-hancock@sedsystems.ca/
->>>>
->>>> Of course, that's basically just a hack which I suspect mostly worked by
->>>> luck. I see that there are some helpers that were added to phylink to allow
->>>> setting PHY advertisements and reading PHY status from clause 22 PHY
->>>> devices, so I'm guessing that is the way to go in this case? Something like:
->>>>
->>>> axienet_mac_config: if using in-band mode, use
->>>> phylink_mii_c22_pcs_set_advertisement to configure the Xilinx PHY.
->>>>
->>>> axienet_mac_pcs_get_state: use phylink_mii_c22_pcs_get_state to get the MAC
->>>> PCS state from the Xilinx PHY
->>>>
->>>> axienet_mac_an_restart: if using in-band mode, use
->>>> phylink_mii_c22_pcs_an_restart to restart autonegotiation on Xilinx PHY
->>>>
->>>> To use those c22 functions, we need to find the mdio_device that's
->>>> referenced by the phy-handle in the device tree - I guess we can just use
->>>> some of the guts of of_phy_find_device to do that?
->>>
->>> Please see the code for DPAA2 - it's changed slightly since I sent a
->>> copy to the netdev mailing list, and it still isn't clear whether this
->>> is the final approach (DPAA2 has some fun stuff such as several
->>> different PHYs at address 0.) NXP basically didn't like the approach
->>> I had in the patches I sent to netdev, we had a call, they presented
->>> an alternative appraoch, I implemented it, then they decided my
->>> original approach was the better solution for their situation.
->>>
->>> See http://git.armlinux.org.uk/cgit/linux-arm.git/log/?h=cex7
->>>
->>> specifically the patches from:
->>>
->>>     "dpaa2-mac: add 1000BASE-X/SGMII PCS support"
->>>
->>> through to:
->>>
->>>     "net: phylink: add interface to configure clause 22 PCS PHY"
->>>
->>> You may also need some of the patches further down in the net-queue
->>> branch:
->>>
->>>     "net: phylink: avoid mac_config calls"
->>>
->>> through to:
->>>
->>>     "net: phylink: rejig link state tracking"
->>
->> I've been playing with this a bit on a 5.4 kernel with some of these patches
->> backported. However, I'm running into something that my previous hacks for
->> this basically dealt with as a side effect: when phylink_start is called,
->> sfp_upstream_start gets called, an SFP module is detected,
->> phylink_connect_phy gets called, but then it hits this condition and bails
->> out, because we are using INBAND mode with 1000BaseX:
->>
->> 	if (WARN_ON(pl->cfg_link_an_mode == MLO_AN_FIXED ||
->> 		    (pl->cfg_link_an_mode == MLO_AN_INBAND &&
->> 		     phy_interface_mode_is_8023z(interface))))
->> 		return -EINVAL;
-> 
-> I'm expecting SGMII mode to be used when there's an external PHY as
-> that gives greatest flexibility (as it allows 10 and 100Mbps speeds
-> as well.)  From what I remember, these blocks support SGMII, so it
-> should just be a matter of adding that.
+On Tue, 28 Apr 2020 15:08:36 +0530 Srikar Dronamraju <srikar@linux.vnet.ibm.com> wrote:
 
-They do support SGMII, but unfortunately it's not a runtime configurable 
-parameter, it's a synthesis-level parameter on the FPGA IP core so you 
-have to pick one or the other for any given build. We want to be able to 
-support various fiber module types as well, and my understanding is that 
-at least some of those only do 1000BaseX, so that ends up being the 
-standard in common that we are using.
+> Currently Linux kernel with CONFIG_NUMA on a system with multiple
+> possible nodes, marks node 0 as online at boot.  However in practice,
+> there are systems which have node 0 as memoryless and cpuless.
+> 
+> This can cause numa_balancing to be enabled on systems with only one node
+> with memory and CPUs. The existence of this dummy node which is cpuless and
+> memoryless node can confuse users/scripts looking at output of lscpu /
+> numactl.
+> 
+> By marking, N_ONLINE as NODE_MASK_NONE, lets stop assuming that Node 0 is
+> always online.
+> 
+> ...
+>
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -116,8 +116,10 @@ EXPORT_SYMBOL(latent_entropy);
+>   */
+>  nodemask_t node_states[NR_NODE_STATES] __read_mostly = {
+>  	[N_POSSIBLE] = NODE_MASK_ALL,
+> +#ifdef CONFIG_NUMA
+> +	[N_ONLINE] = NODE_MASK_NONE,
+> +#else
+>  	[N_ONLINE] = { { [0] = 1UL } },
+> -#ifndef CONFIG_NUMA
+>  	[N_NORMAL_MEMORY] = { { [0] = 1UL } },
+>  #ifdef CONFIG_HIGHMEM
+>  	[N_HIGH_MEMORY] = { { [0] = 1UL } },
 
-> 
->> I guess I'm not sure how this is supposed to work when the PHY on the SFP
->> module gets detected, i.e. if there's supposed to be another code path that
->> this is supposed to go down, or this is something that just hasn't been
->> fully implemented yet?
-> 
-> Copper PHYs work fine - using SGMII mode everywhere so far.
-> 
-> The problem is, if you want to use them as 1000BASE-X, you generally
-> have to ensure that the PHY is appropriately programmed for 1000BASE-X
-> negotiation, and the copper side advertisement only indicates 1G
-> support. Not all copper PHYs have the PHY accessible for such
-> programming, and in that case it becomes an exercise of "read the
-> SFP documentation before buying"!
-> 
-> The other complication is... there's nothing in the module EEPROM
-> that really says whether they are 1000BASE-X or SGMII.
-> 
-> What saves us thus far is that most copper SFPs use the Marvell
-> 88E1111 chip, which is I2C accessible, and we drive that using
-> phylib - and the phylib Marvell driver knows how to ensure that
-> the PHY is configured for SGMII mode.  I'm not sure the same is
-> true with 1000BASE-X mode.
-> 
+So on all other NUMA machines, when does node 0 get marked online?
 
--- 
-Robert Hancock
-Senior Hardware Designer
-SED Systems, a division of Calian Ltd.
-Email: hancock@sedsystems.ca
+This change means that for some time during boot, such machines will
+now be running with node 0 marked as offline.  What are the
+implications of this?  Will something break?
