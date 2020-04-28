@@ -2,145 +2,129 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC44C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22883C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25152206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E539420575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100208;
-	bh=0305n2qo1oQ3Gv0+MWmU1c/cqoXpogKBnneHyGLLyPY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZaTn1VHvnah9SPKK0SE5ryJn7Cfu7AZWprndsB75GVwUzfpJk+Iv9vchJLKupfFVt
-	 nk/zGQxIjb8Pr5Sxolr8/8BoDF3R71ng0iHQnCq1NjYg6DpcjhauMgZTekQIXBqwO2
-	 wT69LkPevMHGbBdYhKFiXpAJlkx7sjriyWzLuKx0=
+	s=default; t=1588100214;
+	bh=867do9hTzqcEkt0IFww02ROCovyUlEcrtv9bcwkx+/g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1NiKsvukK3PhSbQgk6ZvJ7k68dSqGCowR6bjKmNBCmMxAa4L/O6JNZGrXHjqbHqfn
+	 9RGSdX85tLfuKZCq0LcmVwU+yBjidgRX9kTx5ZkZc9y+bQ/vax5y8UbUOKwgv9Idw2
+	 4PYcika3gxkz9TRFM89gE4fP+enp5FnPGlJWfAtg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729945AbgD1S4r (ORCPT
+        id S1730056AbgD1S4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:56:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50250 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:56:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729313AbgD1S4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:56:45 -0400
-Received: from linux-8ccs.fritz.box (p3EE2CE96.dip0.t-ipconnect.de [62.226.206.150])
+        id S1729609AbgD1SbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:31:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41F4D206D6;
-        Tue, 28 Apr 2020 18:56:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7578B20B80;
+        Tue, 28 Apr 2020 18:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588100204;
-        bh=0305n2qo1oQ3Gv0+MWmU1c/cqoXpogKBnneHyGLLyPY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XmppFroab/0dGguUy2yW9Hk84ASbMa+V+IWa0oxQVj1XJ+FCM+G/02uRkxpmN6onG
-         tw9qS4NAgnOx12Svzdl+qDCGlez8Hdx2N4Vn0ipalARdUiPlzSHswOrdmhg+seLH0p
-         rdVL0Rv1DP1YQePgYr/IuLr+Y2KCuihM3UhbdGFQ=
-Date:   Tue, 28 Apr 2020 20:56:40 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>
-Subject: Re: [PATCH v3 09/10] module: Remove module_disable_ro()
-Message-ID: <20200428185639.GC12860@linux-8ccs.fritz.box>
-References: <cover.1587812518.git.jpoimboe@redhat.com>
- <33089a8ffb2e724cecfa51d72887ae9bf70354f9.1587812518.git.jpoimboe@redhat.com>
- <20200428162505.GA12860@linux-8ccs.fritz.box>
- <20200428163602.77t6s2qeh4xeacdq@treble>
- <20200428164155.GB12860@linux-8ccs.fritz.box>
- <20200428170309.xrsmqdwj5qu2q6t6@treble>
+        s=default; t=1588098665;
+        bh=867do9hTzqcEkt0IFww02ROCovyUlEcrtv9bcwkx+/g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wc6fL0526WWrpBXCIMhec893SN82qS9XC7PwsYZPwyb4OPfuKUh7xWDTlzoz7Mqc5
+         tU5IOrti5ouBQFfJqIfP6HpqPMR2ZsY2bDoKGncWKuwmzwffe0cLZgy540/rsxCUHX
+         AlF6ymBVsp9lgL3wsOg6HXGIEvUgrLD1L/zErm9s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Zeng Tao <prime.zeng@hisilicon.com>,
+        William Bader <williambader@hotmail.com>
+Subject: [PATCH 5.6 095/167] USB: hub: Revert commit bd0e6c9614b9 ("usb: hub: try old enumeration scheme first for high speed devices")
+Date:   Tue, 28 Apr 2020 20:24:31 +0200
+Message-Id: <20200428182237.114346325@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200428170309.xrsmqdwj5qu2q6t6@treble>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Josh Poimboeuf [28/04/20 12:03 -0500]:
->On Tue, Apr 28, 2020 at 06:41:55PM +0200, Jessica Yu wrote:
->> +++ Josh Poimboeuf [28/04/20 11:36 -0500]:
->> > On Tue, Apr 28, 2020 at 06:25:05PM +0200, Jessica Yu wrote:
->> > > +++ Josh Poimboeuf [25/04/20 06:07 -0500]:
->> > > > module_disable_ro() has no more users.  Remove it.
->> > > >
->> > > > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
->> > > > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->> > >
->> > > Hm, I guess this means we can also remove the module_enable_ro() stubs
->> > > in module.h and make it a static function again (like the other
->> > > module_enable_* functions) as there are no more outside users. I have to
->> > > remind myself after this patchset is merged :-)
->> >
->> > Ah, true.  I'm respinning the patch set anyway, I can just add this as a
->> > another patch.
->>
->> That would be great. Thanks!
->
->Sneak preview:
->
->From: Josh Poimboeuf <jpoimboe@redhat.com>
->Subject: [PATCH] module: Make module_enable_ro() static again
->
->Now that module_enable_ro() has no more external users, make it static
->again.
->
->Suggested-by: Jessica Yu <jeyu@kernel.org>
->Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
->---
-> include/linux/module.h | 6 ------
-> kernel/module.c        | 4 ++--
-> 2 files changed, 2 insertions(+), 8 deletions(-)
->
->diff --git a/include/linux/module.h b/include/linux/module.h
->index e4ef7b36feda..2c2e988bcf10 100644
->--- a/include/linux/module.h
->+++ b/include/linux/module.h
->@@ -858,12 +858,6 @@ extern int module_sysfs_initialized;
->
-> #define __MODULE_STRING(x) __stringify(x)
->
->-#ifdef CONFIG_STRICT_MODULE_RWX
->-extern void module_enable_ro(const struct module *mod, bool after_init);
->-#else
->-static inline void module_enable_ro(const struct module *mod, bool after_init) { }
->-#endif
->-
-> #ifdef CONFIG_GENERIC_BUG
-> void module_bug_finalize(const Elf_Ehdr *, const Elf_Shdr *,
-> 			 struct module *);
->diff --git a/kernel/module.c b/kernel/module.c
->index f0e414a01d91..6d8aab60943e 100644
->--- a/kernel/module.c
->+++ b/kernel/module.c
->@@ -2016,7 +2016,7 @@ static void frob_writable_data(const struct module_layout *layout,
-> 		   (layout->size - layout->ro_after_init_size) >> PAGE_SHIFT);
-> }
->
->-void module_enable_ro(const struct module *mod, bool after_init)
->+static void module_enable_ro(const struct module *mod, bool after_init)
-> {
-> 	if (!rodata_enabled)
-> 		return;
->@@ -2057,7 +2057,7 @@ static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
-> }
->
-> #else /* !CONFIG_STRICT_MODULE_RWX */
->-/* module_{enable,disable}_ro() stubs are in module.h */
->+void module_enable_ro(const struct module *mod, bool after_init) {}
+From: Alan Stern <stern@rowland.harvard.edu>
 
-Missing static here, but otherwise looks good. Thanks!
+commit 3155f4f40811c5d7e3c686215051acf504e05565 upstream.
 
-> static void module_enable_nx(const struct module *mod) { }
-> static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
-> 				       char *secstrings, struct module *mod)
->-- 
->2.21.1
->
+Commit bd0e6c9614b9 ("usb: hub: try old enumeration scheme first for
+high speed devices") changed the way the hub driver enumerates
+high-speed devices.  Instead of using the "new" enumeration scheme
+first and switching to the "old" scheme if that doesn't work, we start
+with the "old" scheme.  In theory this is better because the "old"
+scheme is slightly faster -- it involves resetting the device only
+once instead of twice.
+
+However, for a long time Windows used only the "new" scheme.  Zeng Tao
+said that Windows 8 and later use the "old" scheme for high-speed
+devices, but apparently there are some devices that don't like it.
+William Bader reports that the Ricoh webcam built into his Sony Vaio
+laptop not only doesn't enumerate under the "old" scheme, it gets hung
+up so badly that it won't then enumerate under the "new" scheme!  Only
+a cold reset will fix it.
+
+Therefore we will revert the commit and go back to trying the "new"
+scheme first for high-speed devices.
+
+Reported-and-tested-by: William Bader <williambader@hotmail.com>
+Ref: https://bugzilla.kernel.org/show_bug.cgi?id=207219
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Fixes: bd0e6c9614b9 ("usb: hub: try old enumeration scheme first for high speed devices")
+CC: Zeng Tao <prime.zeng@hisilicon.com>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2004221611230.11262-100000@iolanthe.rowland.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ Documentation/admin-guide/kernel-parameters.txt |    3 +--
+ drivers/usb/core/hub.c                          |    4 +---
+ 2 files changed, 2 insertions(+), 5 deletions(-)
+
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -5085,8 +5085,7 @@
+ 
+ 	usbcore.old_scheme_first=
+ 			[USB] Start with the old device initialization
+-			scheme,  applies only to low and full-speed devices
+-			 (default 0 = off).
++			scheme (default 0 = off).
+ 
+ 	usbcore.usbfs_memory_mb=
+ 			[USB] Memory limit (in MB) for buffers allocated by
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -2728,13 +2728,11 @@ static bool use_new_scheme(struct usb_de
+ {
+ 	int old_scheme_first_port =
+ 		port_dev->quirks & USB_PORT_QUIRK_OLD_SCHEME;
+-	int quick_enumeration = (udev->speed == USB_SPEED_HIGH);
+ 
+ 	if (udev->speed >= USB_SPEED_SUPER)
+ 		return false;
+ 
+-	return USE_NEW_SCHEME(retry, old_scheme_first_port || old_scheme_first
+-			      || quick_enumeration);
++	return USE_NEW_SCHEME(retry, old_scheme_first_port || old_scheme_first);
+ }
+ 
+ /* Is a USB 3.0 port in the Inactive or Compliance Mode state?
+
+
