@@ -2,122 +2,97 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7004C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A70C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF135206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02DE4206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:24:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aws0RLC8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbgD1VYS (ORCPT
+        id S1726490AbgD1VYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:24:18 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:44631 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726274AbgD1VYR (ORCPT
+        Tue, 28 Apr 2020 17:24:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42796 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726282AbgD1VYv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:24:17 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MwgKC-1jEb1M00Bm-00y6zy; Tue, 28 Apr 2020 23:24:02 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Moshe Shemesh <moshe@mellanox.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net/mlx5: reduce stack usage in qp_read_field
-Date:   Tue, 28 Apr 2020 23:23:47 +0200
-Message-Id: <20200428212357.2708786-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Tue, 28 Apr 2020 17:24:51 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73701C03C1AC;
+        Tue, 28 Apr 2020 14:24:51 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id y24so355021wma.4;
+        Tue, 28 Apr 2020 14:24:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zb7LzoAznLFO4xh93OzPl5Gk/vjaZwZU1XohHV7MrJc=;
+        b=aws0RLC8kF78hcBigDsWrLtx64615jTQ1kP286WBAk3gnucdA/dPcXz+5qx06ab28r
+         8SMeiNTy31aTlWPYuknfa9DL/fzfcFyQDAtB7IV0y7YbqoKbZjI16PvsQ+fnR7vVoI04
+         n8+IV7mwWcEFdkbT0tKImrTRJG26sn1nj0gKtD9yW0NzgqNlONzg9uNWd7XyKBi4oD6N
+         u4k1ZEK1oYB4ofl1vnn4ayBhScEfxI9FlLldXh2KCySlQzNCgQHU8WMvG8LI+NVhxOrR
+         Q2fDiFH9c5OSNN3QHql0rEbY6Iyo/Gv361QL8QFX8Ix3cGOxmr52YruscRmHt7mxn67F
+         MqOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zb7LzoAznLFO4xh93OzPl5Gk/vjaZwZU1XohHV7MrJc=;
+        b=N6STyyTbZcoErgkJLmdDeO8/gxOJVBuHyhmWfWtymHYwNR8oFvPJNWhkiBYfBVdbmU
+         yCru1oD0DvY8fR8NWCc2ta03T+Db/0Gs+i7A4Cj2RF+yp1OJByIOWSBgBySmgJMTwNeN
+         Mpx2YaOFL0pn/k0akB1A5SE6lGr7bZJmdc4vS5r3s4jg0vY4oRIa3xsaT4he7/1q4HS4
+         u+LkG4v7NBIOd//SB/yA5kcVb0heASbKFRXP2AhnPomtvvUn3rrKIsCy7IRLW5oH1nDB
+         KTLP+/TbKN688HOew2eynjiFOnBicxS/4cGqfnEqyIfPIKRRL6eTYle1AA/yNsWZQ3rD
+         dRIg==
+X-Gm-Message-State: AGi0Puam1s+UnrI+UEt29DIyNH6v4MQ0Ye2qz0J63YxbYG9w720v73Kr
+        Qg/xxi1UoV20nmyFnzcR7fc=
+X-Google-Smtp-Source: APiQypIMBVANqX5mS1XhUTfaHLqCbfuUp9eJdnNb6wPSFjXp5rIT+MYNnUAD9kaUtKywbmW2zbvBiQ==
+X-Received: by 2002:a1c:4e15:: with SMTP id g21mr6441082wmh.29.1588109090241;
+        Tue, 28 Apr 2020 14:24:50 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id j13sm26876116wro.51.2020.04.28.14.24.49
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Apr 2020 14:24:49 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 21:24:49 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Wei Yang <richard.weiyang@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/9] XArray: entry in last level is not expected to be a
+ node
+Message-ID: <20200428212449.2ww7ftgvrkcn4c7n@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20200330123643.17120-1-richard.weiyang@gmail.com>
+ <20200330123643.17120-6-richard.weiyang@gmail.com>
+ <20200330124842.GY22483@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Y//QDx6YgP7glygIqcsEZBOzXCjSMjiFTvwLzkZNpCxtzgk5UEP
- 2H37iRtxo8+W6u9R1r/9E1R6iobO65Ywx63Xtvcw6C3BvXtS7uIHLHlowdsCsjx//c+u9eY
- mcydsJSIEJA6sMtvZzCJsL5xzRvei0E4T4fgHACmwPmAqz95pe7E0JFQSKbpHr8AZObj1l9
- +feJa2jMvd3i/Y4tR6xtw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:g9B1afCIYdM=:/Fj51R/eE/4Llx9HHpFosi
- EO75hG5DBB1XvzOox7jLCjP7wZ4GGFKLXZT9qDNEupOP6f2MsP4v4ft/kUl2AT0rZRn9k+/8Q
- beGJ5hNkI9Wp7+q4jPJjrlWaZDmJ/93X3590m3Zy3XxcALvX6K8fqqL7joWN7PoVwxanb8ORP
- HhKI7PS6mHGuHTwd73wWLUpJwyVejEufJnJEUv5nvxcS/+DiqfTtw+P6fvoz6oY144Ca2Pqwj
- DdRQK9VGtD5Lfe+dO/01iNRDVmk7bzMfDqj+7XNbvoVkCdI0UU1PTXlXlivGBrLzh1/i1EwrG
- 8q6xnem8DOwE07VSrbdpVLFwUG+HZqHGAjRl4cXfU/cHOqQNKPewt4YbqbdbjiBsghPnHMlAW
- D2JSY5ctWIiOnejYIyJxbAAq4dz/neLF0lq2+y/o2fhKghdf27G/govIHjeOiXJeGBDdwVK6x
- GpbXDHk8KdrRTrUMbaUwDmOCDhzQZzgHfsqYHz9L0KG0SsdDKJUtB0F1ni1KIibz+DJ3kRx7E
- 0xOYqttZp3qMTQcUJqfoc7RLpKBXjqSFXj0GLp0ylIg5h90tHTbGlH+SqiFzMiqmgxPNeKcvD
- R/35SwSl54qhEmzsx53QAdcJlKw74CGfIi7DlWBlglsmaf5mWDKtAWZI6+mfxEn4+EVkASz0e
- jCa3Zzc/9tDm+h+sbjkpfT0lu2TnC57SELLUCvNnI/p7ckE/1MD3fSXrJHVOCBfexnIlMmkW0
- 9S/5hRaAaRUpWfsLPcv2xH8UqAzG93tM4guBoXx+JPDjSi46mAcVS4RO3D3HWvCKzRFDPQg6R
- yJH1/xmom3QkWEgA3IFDdNtY/cLWpsNxkfm3t4kf5GXKC1oS2M=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330124842.GY22483@bombadil.infradead.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Moving the mlx5_ifc_query_qp_out_bits structure on the stack was a bit
-excessive and now causes the compiler to complain on 32-bit architectures:
+On Mon, Mar 30, 2020 at 05:48:42AM -0700, Matthew Wilcox wrote:
+>On Mon, Mar 30, 2020 at 12:36:39PM +0000, Wei Yang wrote:
+>> If an entry is at the last level, whose parent's shift is 0, it is not
+>> expected to be a node. We can just leverage the xa_is_node() check to
+>> break the loop instead of check shift additionally.
+>
+>I know you didn't run the test suite after making this change.
 
-drivers/net/ethernet/mellanox/mlx5/core/debugfs.c: In function 'qp_read_field':
-drivers/net/ethernet/mellanox/mlx5/core/debugfs.c:274:1: error: the frame size of 1104 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+Hi, Matthew
 
-Revert the previous patch partially to use dynamically allocation as
-the code did before. Unfortunately there is no good error handling
-in case the allocation fails.
+Would you mind picking up this thread again? Or what other concern you have?
 
-Fixes: 57a6c5e992f5 ("net/mlx5: Replace hand written QP context struct with automatic getters")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/ethernet/mellanox/mlx5/core/debugfs.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/debugfs.c b/drivers/net/ethernet/mellanox/mlx5/core/debugfs.c
-index 6409090b3ec5..d2d57213511b 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/debugfs.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/debugfs.c
-@@ -202,18 +202,23 @@ void mlx5_cq_debugfs_cleanup(struct mlx5_core_dev *dev)
- static u64 qp_read_field(struct mlx5_core_dev *dev, struct mlx5_core_qp *qp,
- 			 int index, int *is_str)
- {
--	u32 out[MLX5_ST_SZ_BYTES(query_qp_out)] = {};
-+	int outlen = MLX5_ST_SZ_BYTES(query_qp_out);
- 	u32 in[MLX5_ST_SZ_DW(query_qp_in)] = {};
- 	u64 param = 0;
-+	u32 *out;
- 	int state;
- 	u32 *qpc;
- 	int err;
- 
-+	out = kzalloc(outlen, GFP_KERNEL);
-+	if (!out)
-+		return 0;
-+
- 	MLX5_SET(query_qp_in, in, opcode, MLX5_CMD_OP_QUERY_QP);
- 	MLX5_SET(query_qp_in, in, qpn, qp->qpn);
- 	err = mlx5_cmd_exec_inout(dev, query_qp, in, out);
- 	if (err)
--		return 0;
-+		goto out;
- 
- 	*is_str = 0;
- 
-@@ -269,7 +274,8 @@ static u64 qp_read_field(struct mlx5_core_dev *dev, struct mlx5_core_qp *qp,
- 		param = MLX5_GET(qpc, qpc, remote_qpn);
- 		break;
- 	}
--
-+out:
-+	kfree(out);
- 	return param;
- }
- 
 -- 
-2.26.0
-
+Wei Yang
+Help you, Help me
