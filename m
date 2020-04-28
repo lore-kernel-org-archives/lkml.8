@@ -2,108 +2,96 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55289C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F09C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32E7A206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61347206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:10:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Kf6lgipz"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KRgBWpcc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbgD1WJy (ORCPT
+        id S1726436AbgD1WKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:09:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726333AbgD1WJy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:09:54 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 024E0C03C1AC;
-        Tue, 28 Apr 2020 15:09:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=i0UfKrqGLok7Kx5f2Cnl5Y270Tvst3mtRJd6yLGqJ7Q=; b=Kf6lgipzK8W4jussQcrLvosJGP
-        BWWpUDPQ4c1/fRbFfTLIiMSiRrJv4jMyvhi4dSuZaSXocSoI5VPcjJNMspUEfKsoE/qp6TW7Mb0oY
-        OYDJz3lYCZbAlXbeyzfZzVp0R4cR+0SGTMh+PjdxeGg2ntiapu3vswq28kuD2k2QBTFPveLj4wqeu
-        wHmpRdvu4caEBo3FIgpvlX0t3HOeTUeEqfszfmJfetg9aNe5fUepdPTsk3+38aRagkH7POjETbWl3
-        c2Ca/hPvRG97k4r13U/hBBCDTCsVJQJLvw8FRE7tqOJh0dmBxnwjvUwT+cEt14ezIZnPV3LHLEkQc
-        ISDCgZlQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTYPo-00040d-Ce; Tue, 28 Apr 2020 22:09:20 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B45F2301224;
-        Wed, 29 Apr 2020 00:09:17 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 96CB8286C2DCC; Wed, 29 Apr 2020 00:09:17 +0200 (CEST)
-Date:   Wed, 29 Apr 2020 00:09:17 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Scott Wood <swood@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Rik van Riel <riel@surriel.com>,
-        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Subject: Re: [RFC PATCH 1/3] sched/fair: Call newidle_balance() from
- finish_task_switch()
-Message-ID: <20200428220917.GB16027@hirez.programming.kicks-ass.net>
-References: <20200428050242.17717-1-swood@redhat.com>
- <20200428050242.17717-2-swood@redhat.com>
- <jhjftcns35d.mognet@arm.com>
+        Tue, 28 Apr 2020 18:10:49 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:58569 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726256AbgD1WKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 18:10:48 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49BbSP5QTtz9sRY;
+        Wed, 29 Apr 2020 08:10:45 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588111846;
+        bh=NFHOw8DhkuLXgbLDKqz2gsB1gbmBTqIp6DqHrznV//g=;
+        h=Date:From:To:Cc:Subject:From;
+        b=KRgBWpcchS33S6HiC5MAAh0oDxZPUcvW7OaIJmng8lNUNkiFqKo+zXolPb1BGEXkq
+         AZCzTgv9JHoqvpWVq964MuMNcI4joyvZxCH/uJZHqpZT+3YhEIMNxOqEPcllE2m9SP
+         Oqk47OzBqkyhHQVScVDtOXJp4UBIYJvKA4fMaKecNmRcYAKvk2yqCFpZ1n7k6xyEc9
+         yf2nIogVYB33O9sJviXuGLDWl+4OTwv2mIOm55biafVe2QKMuxvRvASpp+hXgseMWx
+         I1aKJ1DY9RBRbmJLfgfs2EKNm1+pYJiTCrq+D/biG/hnpuvAtIUgefMJQWgPkQ6Hc4
+         OTMJtU0/kO3oA==
+Date:   Wed, 29 Apr 2020 08:10:44 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: linux-next: Fixes tag needs some work in the spi-nor tree
+Message-ID: <20200429081044.0ab542cd@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <jhjftcns35d.mognet@arm.com>
+Content-Type: multipart/signed; boundary="Sig_/bepKriXO+D.MdKYpZ0Ug6JE";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 10:37:18PM +0100, Valentin Schneider wrote:
-> 
-> On 28/04/20 06:02, Scott Wood wrote:
-> > Thus, newidle_balance() is entered with interrupts enabled, which allows
-> > (in the next patch) enabling interrupts when the lock is dropped.
-> >
-> > Signed-off-by: Scott Wood <swood@redhat.com>
-> > ---
-> >  kernel/sched/core.c  |  7 ++++---
-> >  kernel/sched/fair.c  | 45 ++++++++++++++++----------------------------
-> >  kernel/sched/sched.h |  6 ++----
-> >  3 files changed, 22 insertions(+), 36 deletions(-)
-> >
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 9a2fbf98fd6f..0294beb8d16c 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -3241,6 +3241,10 @@ static struct rq *finish_task_switch(struct task_struct *prev)
-> >       }
-> >
-> >       tick_nohz_task_switch();
-> > +
-> > +	if (is_idle_task(current))
-> > +		newidle_balance();
-> > +
-> 
-> This means we must go through a switch_to(idle) before figuring out we
-> could've switched to a CFS task, and do it then. I'm curious to see the
-> performance impact of that.
+--Sig_/bepKriXO+D.MdKYpZ0Ug6JE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Also, if you move it this late, this is entirely the wrong place. If you
-do it after the context switch either use the balance_callback or put it
-in the idle path.
+Hi all,
 
-But what Valentin said; this needs a fair bit of support, the whole
-reason we've never done this is to avoid that double context switch...
+In commit
+
+  1f241ad2a093 ("mtd: spi-nor: fix kernel-doc for spi_nor::spimem")
+
+Fixes tag
+
+  Fixes: b35b9a10362 ("mtd: spi-nor: Move m25p80 code in spi-nor.c")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/bepKriXO+D.MdKYpZ0Ug6JE
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6oqeQACgkQAVBC80lX
+0Gx3qwgAlGGdCWB+eAOhLYnr+OFhva+Q9xrf0abpV5jZwoMdBTORv+0Nk6YEHc/R
+OiOAjaENTl39wXr5MId040mhb+N6YJJEOQq2e8XlaFuQFzu8nbWE/QJZcDhzK8o5
+N03gWTqd2ue56myR/673b5MlP4OgGMAMRXST6l4wUF+Uf6OlcqukC3LBTZV6afSk
++cYWldwWYIKDPTNO53z5fA3qTUaY3PjBnKlhIwu6t1E/8rO+9oQsOAfmHqYRTiF3
+p7FOdKEJmZ40ST30iPpNHWrBfwqRaDPW3rp8m/9QlT+E7+EsD1gip+RwFS5s5oq8
+ZW6NYLTh/589PVlE9vQh9eelQc/B2A==
+=mIsU
+-----END PGP SIGNATURE-----
+
+--Sig_/bepKriXO+D.MdKYpZ0Ug6JE--
