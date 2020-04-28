@@ -2,286 +2,91 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D3FC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5CBC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8A53206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E58D1206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:07:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KO6SmP63"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgD1WG3 (ORCPT
+        id S1726441AbgD1WHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:06:29 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:42994 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726256AbgD1WG3 (ORCPT
+        Tue, 28 Apr 2020 18:07:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49600 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726272AbgD1WHu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:06:29 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 96AD3634C8F;
-        Wed, 29 Apr 2020 01:05:29 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jTYM5-00028u-1o; Wed, 29 Apr 2020 01:05:29 +0300
-Date:   Wed, 29 Apr 2020 01:05:29 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Maxime Ripard <maxime@cerno.tech>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v8 v5 1/3] media: dt-bindings: ov8856: Document YAML
- bindings
-Message-ID: <20200428220528.GX934@valkosipuli.retiisi.org.uk>
-References: <20200428180718.1609826-1-robert.foss@linaro.org>
+        Tue, 28 Apr 2020 18:07:50 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72A94C03C1AD
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:07:50 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id c16so521686ilr.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:07:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tO+DbU6KByMbcPRw+6fwaWiCfeYN7nbol6e4reDVW4I=;
+        b=KO6SmP63VTyTeoVjCJWFexYShARMTWk/xWvofiwo+kHGO9i/UDgHdyyCCoXkK4QH5l
+         ZjT1dkx6I6kmN3S/hKj8qJ9eEDqbmeIL8Po8V0gxgReZgJ6c3LBUv3FMiZ3ofGbtnJJw
+         eDZUCwiRljta71iiCpa4A+H2PO2athl9CEgH0UX8soxSGvvZUo1I89OmlyUQXN8S33KW
+         Oph7WTf1SgbMsQBJGiy1esxg+6s2gw1w4AsWiTpwNFAxfH0phtZLPXk2dyYXiIh4f+v3
+         sEll7nAgPDTmrwiBwjWMcbaHtVNYHOWYMHIxQJHuyow+P3uPA7awaSWg6BdysGz3NyCN
+         sKdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tO+DbU6KByMbcPRw+6fwaWiCfeYN7nbol6e4reDVW4I=;
+        b=uJV8A+cNuk0+Say2DD4lgVkeB965DdHfKg2PxVE/Nt0zCV36u0MQyV8TM/b3fjBFpQ
+         Oue56WruimbAwBVtLVKNGD3BvlHHsrkPQ0Cw6sAi6bMIZz00U8TKOD4vn+ZF6L4Kzn4y
+         X+gwSvkfCAlqbAJbXqbLDv8sfVVQarjlO5AgMxwDDgs3uwfrn2JTTu3VQMgp0ft4K8Ot
+         VYg8oeTKkKhTFvk4emm1r2zg6YS51xNH5v2m2wEEV/nsOVpF/oRf5aiS2aBS2IX6YJV3
+         FgyFMloEkWlS4+26CET6KQADOCvvYWbaU6uf/CSjav45sUY4zmpxXra41ibxKTC5hWzW
+         Mrxw==
+X-Gm-Message-State: AGi0PuYPXBSE+tBXPNCc/IRynRSSCZYXBD0FDjPYHHhT0HQCwdlkclTH
+        iNDH9EEz4/NQVbIGxquSALIcv3EzPJQkLQmWkeIkUA==
+X-Google-Smtp-Source: APiQypKs0cmslzkJ3/IcooJcMOg8zkJMwhBrgReyRcwYDpGk5UtUrhKE6RN9vlWUAMwJZzxOofrOHp1/2jrvavOGpIk=
+X-Received: by 2002:a92:d186:: with SMTP id z6mr27561585ilz.119.1588111669486;
+ Tue, 28 Apr 2020 15:07:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428180718.1609826-1-robert.foss@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200423022550.15113-1-sean.j.christopherson@intel.com> <20200423022550.15113-12-sean.j.christopherson@intel.com>
+In-Reply-To: <20200423022550.15113-12-sean.j.christopherson@intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Tue, 28 Apr 2020 15:07:38 -0700
+Message-ID: <CALMp9eQybxs+Zq66uAfVz3bc=571V7H8YVEhm7AuftpcZ5NLRw@mail.gmail.com>
+Subject: Re: [PATCH 11/13] KVM: VMX: Use vmx_interrupt_blocked() directly from vmx_handle_exit()
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Oliver Upton <oupton@google.com>,
+        Peter Shier <pshier@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
-
-Thanks for the update. Some small matters below.
-
-On Tue, Apr 28, 2020 at 08:07:16PM +0200, Robert Foss wrote:
-> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> 
-> This patch adds documentation of device tree in YAML schema for the
-> OV8856 CMOS image sensor.
-> 
-> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> ---
-> 
-> - Changes since v7:
->   * Marco: Make 'port' property optional
->   * Maxime & Sakari: Add 'link-frequencies' property to dt binding
->   * robher: Improve description for 'port' property
-> 
-> - Changes since v6:
->   * Marco: remove qcom specifics from DT example
->    
-> - Changes since v5:
->   * Add assigned-clocks and assigned-clock-rates
->   * robher: dt-schema errors
-> 
-> - Changes since v4:
->   * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in description
->   * Add clock-lanes property to example
->   * robher: Fix syntax error in devicetree example
-> 
-> - Changes since v3:
->   * robher: Fix syntax error
->   * robher: Removed maxItems
->   * Fixes yaml 'make dt-binding-check' errors
-> 
-> - Changes since v2:
->   Fixes comments from from Andy, Tomasz, Sakari, Rob.
->   * Convert text documentation to YAML schema.
-> 
-> - Changes since v1:
->   Fixes comments from Sakari, Tomasz
->   * Add clock-frequency and link-frequencies in DT
-> 
->  .../devicetree/bindings/media/i2c/ov8856.yaml | 140 ++++++++++++++++++
->  MAINTAINERS                                   |   1 +
->  2 files changed, 141 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov8856.yaml b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> new file mode 100644
-> index 000000000000..f78d3eae81cb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> @@ -0,0 +1,140 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright (c) 2019 MediaTek Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/i2c/ov8856.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Omnivision OV8856 CMOS Sensor Device Tree Bindings
-> +
-> +maintainers:
-> +  - Ben Kao <ben.kao@intel.com>
-> +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
-
-I guess Dongchun would be the maintainer for these bindings, not Ben.
-Please also cc Ben in the next version.
-
-> +
-> +description: |-
-> +  The Omnivision OV8856 is a high performance, 1/4-inch, 8 megapixel, CMOS
-> +  image sensor that delivers 3264x2448 at 30fps. It provides full-frame,
-> +  sub-sampled, and windowed 10-bit MIPI images in various formats via the
-> +  Serial Camera Control Bus (SCCB) interface. This chip is programmable
-> +  through I2C and two-wire SCCB. The sensor output is available via CSI-2
-> +  serial data output (up to 4-lane).
-> +
-> +properties:
-> +  compatible:
-> +    const: ovti,ov8856
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    description:
-> +      Input clock for the sensor.
-> +    items:
-> +      - const: xvclk
-> +
-> +  clock-frequency:
-> +    description:
-> +      Frequency of the xvclk clock in Hertz.
-> +
-> +  dovdd-supply:
-> +    description:
-> +      Definition of the regulator used as interface power supply.
-> +
-> +  avdd-supply:
-> +    description:
-> +      Definition of the regulator used as analog power supply.
-> +
-> +  dvdd-supply:
-> +    description:
-> +      Definition of the regulator used as digital power supply.
-> +
-> +  reset-gpios:
-> +    description:
-> +      The phandle and specifier for the GPIO that controls sensor reset.
-> +      This corresponds to the hardware pin XSHUTDOWN which is physically
-> +      active low.
-> +
-> +  port:
-> +    type: object
-> +    additionalProperties: false
-> +    description:
-> +      A node containing an output port node with an endpoint definition
-> +      as documented in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +    properties:
-> +      endpoint:
-> +        type: object
-> +
-> +        properties:
-> +          clock-lanes:
-
-Does the sensor support lane reordering? If not, please omit this.
-
-> +            maxItems: 1
-> +
-> +          data-lanes:
-> +            maxItems: 1
-
-Hmm. The example has four lanes. Do I miss something?
-
-> +
-> +          link-frequencies:
-> +            maxItems: 1
-
-The number of items in link-frequencies should not be limited to one
-either.
-
-> +
-> +          remote-endpoint: true
-> +
-> +        required:
-> +          - clock-lanes
-> +          - data-lanes
-> +          - remote-endpoint
-> +          - link-frequencies
-> +
-> +    required:
-> +      - endpoint
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - clock-frequency
-> +  - dovdd-supply
-> +  - avdd-supply
-> +  - dvdd-supply
-> +  - reset-gpios
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        ov8856: camera@10 {
-> +            compatible = "ovti,ov8856";
-> +            reg = <0x10>;
-> +
-> +            reset-gpios = <&pio 111 GPIO_ACTIVE_LOW>;
-> +            pinctrl-names = "default";
-> +            pinctrl-0 = <&clk_24m_cam>;
-> +
-> +            clocks = <&cam_osc>;
-> +            clock-names = "xvclk";
-> +            clock-frequency = <19200000>;
-> +
-> +            avdd-supply = <&mt6358_vcama2_reg>;
-> +            dvdd-supply = <&mt6358_vcamd_reg>;
-> +            dovdd-supply = <&mt6358_vcamio_reg>;
-> +
-> +            port {
-> +                wcam_out: endpoint {
-> +                    remote-endpoint = <&mipi_in_wcam>;
-> +                    clock-lanes = <0>;
-> +                    data-lanes = <1 2 3 4>;
-> +                    link-frequencies = /bits/ 64 <360000000 180000000>;
-> +                };
-> +            };
-> +        };
-> +    };
-> +...
-> \ No newline at end of file
-
-^
-
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 26f281d9f32a..84b262afd13d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12489,6 +12489,7 @@ L:	linux-media@vger.kernel.org
->  S:	Maintained
->  T:	git git://linuxtv.org/media_tree.git
->  F:	drivers/media/i2c/ov8856.c
-> +F:	Documentation/devicetree/bindings/media/i2c/ov8856.yaml
->  
->  OMNIVISION OV9640 SENSOR DRIVER
->  M:	Petr Cvek <petrcvekcz@gmail.com>
-
--- 
-Kind regards,
-
-Sakari Ailus
+On Wed, Apr 22, 2020 at 7:26 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> Use vmx_interrupt_blocked() instead of bouncing through
+> vmx_interrupt_allowed() when handling edge cases in vmx_handle_exit().
+> The nested_run_pending check in vmx_interrupt_allowed() should never
+> evaluate true in the VM-Exit path.
+>
+> Hoist the WARN in handle_invalid_guest_state() up to vmx_handle_exit()
+> to enforce the above assumption for the !enable_vnmi case, and to detect
+> any other potential bugs with nested VM-Enter.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
