@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC07C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8171CC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8969F2085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D642085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098474;
-	bh=N/8ImIDdPOEXmtj/+HjjuFy7WgAl9RTHoLobDrIcL0s=;
+	s=default; t=1588098477;
+	bh=Fb3sQa6OCs+P3URJNkaWDvAwPUCo6P0IAoeJ4lkfKvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wUE8x+JWXsuMeElZ2ZChppF40AM2Xtf2FyA9j0u96vHq8XYMk5Q1G3qL2uJg1e0v7
-	 wDw+PTCB1Tgzaisx+sqcka3BwAPO+clZixzCOpCm67FCZJkDEdR3dRbWmPkkkA30Wf
-	 x9QDCqQN4Znm1jRfw5m1hKTmuRA3Qo3ItvI93+Ow=
+	b=ULWis0x7rTe/w+UscbkUzBJSzN+9u4R25mGFCa/5edUA9lmgw2MEq2sn9YgdbhqZL
+	 flHrdNCGS3gNRMIP0DdnVxnQuqzfD0Xr0yYahBWfMnMQ3hCEmdFxcmYtrpPPqAEGBM
+	 7u59WvauCdSmAvjY0Ax+Zis8GmaQpf7IvPRVq6d4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbgD1S1x (ORCPT
+        id S1728392AbgD1S14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:27:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40204 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:27:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729043AbgD1S1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:27:51 -0400
+        id S1729069AbgD1S1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:27:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99FC920730;
-        Tue, 28 Apr 2020 18:27:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AB732085B;
+        Tue, 28 Apr 2020 18:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098471;
-        bh=N/8ImIDdPOEXmtj/+HjjuFy7WgAl9RTHoLobDrIcL0s=;
+        s=default; t=1588098468;
+        bh=Fb3sQa6OCs+P3URJNkaWDvAwPUCo6P0IAoeJ4lkfKvI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i9jltwizaaQ9dqgjYnSBa3l6RhMRiLu8VZqKFcRgled4L+f5BMUYDwaEC3+aWMiMf
-         WKc0RJw/FhpL3PwAljHVBAH+ONlSx4EenTecVaHkoCABun4c2WDMz5uBYRUg96V2gw
-         L4sYaJL8HSJoXeq8c7TD0ruFSDtSGbRxzlBpxC8I=
+        b=SqWeH/lTXU/5Y9Ymu4EHXaGt94xrXY1JIO3P/IacmHq/8KDGTVItEhBzJ311NJ2d6
+         febw8nP/q+YzBopJ7bV6AVUviCYqAh7MLPFOxPUe1UGSRk+19/5DQqP4rEU3FzL3PB
+         uJzsLRaUiO8PrMtIc90T2W8ld0ihfCHU+6GvCKfY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 054/167] net: netrom: Fix potential nr_neigh refcnt leak in nr_add_node
-Date:   Tue, 28 Apr 2020 20:23:50 +0200
-Message-Id: <20200428182231.824760923@linuxfoundation.org>
+Subject: [PATCH 5.6 053/167] net/mlx4_en: avoid indirect call in TX completion
+Date:   Tue, 28 Apr 2020 20:23:49 +0200
+Message-Id: <20200428182231.705932896@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
 References: <20200428182225.451225420@linuxfoundation.org>
@@ -60,41 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit d03f228470a8c0a22b774d1f8d47071e0de4f6dd ]
+[ Upstream commit 310660a14b74c380b0ef5c12b66933d6a3d1b59f ]
 
-nr_add_node() invokes nr_neigh_get_dev(), which returns a local
-reference of the nr_neigh object to "nr_neigh" with increased refcnt.
+Commit 9ecc2d86171a ("net/mlx4_en: add xdp forwarding and data write support")
+brought another indirect call in fast path.
 
-When nr_add_node() returns, "nr_neigh" becomes invalid, so the refcount
-should be decreased to keep refcount balanced.
+Use INDIRECT_CALL_2() helper to avoid the cost of the indirect call
+when/if CONFIG_RETPOLINE=y
 
-The issue happens in one normal path of nr_add_node(), which forgets to
-decrease the refcnt increased by nr_neigh_get_dev() and causes a refcnt
-leak. It should decrease the refcnt before the function returns like
-other normal paths do.
-
-Fix this issue by calling nr_neigh_put() before the nr_add_node()
-returns.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Tariq Toukan <tariqt@mellanox.com>
+Cc: Willem de Bruijn <willemb@google.com>
+Reviewed-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/netrom/nr_route.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/mellanox/mlx4/en_tx.c |   14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
---- a/net/netrom/nr_route.c
-+++ b/net/netrom/nr_route.c
-@@ -208,6 +208,7 @@ static int __must_check nr_add_node(ax25
- 		/* refcount initialized at 1 */
- 		spin_unlock_bh(&nr_node_list_lock);
+--- a/drivers/net/ethernet/mellanox/mlx4/en_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx4/en_tx.c
+@@ -43,6 +43,7 @@
+ #include <linux/ip.h>
+ #include <linux/ipv6.h>
+ #include <linux/moduleparam.h>
++#include <linux/indirect_call_wrapper.h>
  
-+		nr_neigh_put(nr_neigh);
- 		return 0;
+ #include "mlx4_en.h"
+ 
+@@ -261,6 +262,10 @@ static void mlx4_en_stamp_wqe(struct mlx
  	}
- 	nr_node_lock(nr_node);
+ }
+ 
++INDIRECT_CALLABLE_DECLARE(u32 mlx4_en_free_tx_desc(struct mlx4_en_priv *priv,
++						   struct mlx4_en_tx_ring *ring,
++						   int index, u64 timestamp,
++						   int napi_mode));
+ 
+ u32 mlx4_en_free_tx_desc(struct mlx4_en_priv *priv,
+ 			 struct mlx4_en_tx_ring *ring,
+@@ -329,6 +334,11 @@ u32 mlx4_en_free_tx_desc(struct mlx4_en_
+ 	return tx_info->nr_txbb;
+ }
+ 
++INDIRECT_CALLABLE_DECLARE(u32 mlx4_en_recycle_tx_desc(struct mlx4_en_priv *priv,
++						      struct mlx4_en_tx_ring *ring,
++						      int index, u64 timestamp,
++						      int napi_mode));
++
+ u32 mlx4_en_recycle_tx_desc(struct mlx4_en_priv *priv,
+ 			    struct mlx4_en_tx_ring *ring,
+ 			    int index, u64 timestamp,
+@@ -449,7 +459,9 @@ bool mlx4_en_process_tx_cq(struct net_de
+ 				timestamp = mlx4_en_get_cqe_ts(cqe);
+ 
+ 			/* free next descriptor */
+-			last_nr_txbb = ring->free_tx_desc(
++			last_nr_txbb = INDIRECT_CALL_2(ring->free_tx_desc,
++						       mlx4_en_free_tx_desc,
++						       mlx4_en_recycle_tx_desc,
+ 					priv, ring, ring_index,
+ 					timestamp, napi_budget);
+ 
 
 
