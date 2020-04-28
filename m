@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9969C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E426AC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC0220575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7BA020575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099571;
-	bh=aIqj5blt3YU3OyUrxguvMvJPhrjWHMfgcQxf3TQ6lPQ=;
+	s=default; t=1588099575;
+	bh=Wne1lGHm5fLp7dteREIRd/Gq4Hp6cnYH6GeIBgaZwjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pDTHAtxMZ3GRs8sgkCv4ps5/2l8TAp51BnNfGK3u5T8YWnK3K1scwlP+vWDIFq+1q
-	 TGrtIyrvWvkJa/rpWZz56UZF09uDXwf0Aei2sQ8mFmBb0LyCCbtcZiyc6RjMtriR8o
-	 t8Fo5u1LYhUlcfAM86PcoDbIAY2Jn+/cf0KbJYAk=
+	b=kiM0xkKKCRNKif86pCeYh36QbKVaw/g5Z6qf/xNZT66jNqbjgnkJ4CFtVqI1WNlVN
+	 kVCWa1Z57J3cA+UNK9SxfqzHAFy0RO7yLqi8fUDt6d82IxLWgA2xoBYz1ruqD/sS5b
+	 C1uVqJvA6vLj2PhlrymfP+ywfLrIAKWliOlWs2GA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731245AbgD1Sn3 (ORCPT
+        id S1731235AbgD1Sn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:43:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35820 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:43:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730977AbgD1Sn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:43:26 -0400
+        id S1731226AbgD1SnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:43:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3358A2076A;
-        Tue, 28 Apr 2020 18:43:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B28B020730;
+        Tue, 28 Apr 2020 18:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099405;
-        bh=aIqj5blt3YU3OyUrxguvMvJPhrjWHMfgcQxf3TQ6lPQ=;
+        s=default; t=1588099403;
+        bh=Wne1lGHm5fLp7dteREIRd/Gq4Hp6cnYH6GeIBgaZwjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z46NhfxXFlt0AXdwz0E3x9guAzErL/24xVL4KQF7xOEyuzQK9nUC1kkvUMv9luO6i
-         kbGcAZ3PnuhtjtP9X/eI7A/SynghHLu8ou4UMGpCdvbFCPSPyvIMhjBPGRPGkvah7N
-         tFHeshscY82JAlpxLdQgLvGXK15Uvr+/kQ1ySafE=
+        b=u72AgKm0H8mxJAyPNHG5YkDcO0KGIxal9mC3ADFXSlj72nxNlHdtR/KPcTMTFF8aP
+         DJWlbF6Lbkn88P9suGozHezCVyS7cUrXAk7tzqlaLdq0bPYM2EtIbkltWuUh9IaVWE
+         RQe7uJ38k0KaO/tIkPjNdGAv1flrarIrhE0/SQVo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Qian Cai <cai@lca.pw>, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 135/168] powerpc/setup_64: Set cache-line-size based on cache-block-size
-Date:   Tue, 28 Apr 2020 20:25:09 +0200
-Message-Id: <20200428182249.013948869@linuxfoundation.org>
+        Clemens Gruber <clemens.gruber@pqgruber.com>,
+        Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Roland Hieber <rhi@pengutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 5.4 134/168] ARM: imx: provide v7_cpu_resume() only on ARM_CPU_SUSPEND=y
+Date:   Tue, 28 Apr 2020 20:25:08 +0200
+Message-Id: <20200428182248.914159854@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -60,53 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-commit 94c0b013c98583614e1ad911e8795ca36da34a85 upstream.
+commit f1baca8896ae18e12c45552a4c4ae2086aa7e02c upstream.
 
-If {i,d}-cache-block-size is set and {i,d}-cache-line-size is not, use
-the block-size value for both. Per the devicetree spec cache-line-size
-is only needed if it differs from the block size.
+512a928affd5 ("ARM: imx: build v7_cpu_resume() unconditionally")
+introduced an unintended linker error for i.MX6 configurations that have
+ARM_CPU_SUSPEND=n which can happen if neither CONFIG_PM, CONFIG_CPU_IDLE,
+nor ARM_PSCI_FW are selected.
 
-Originally the code would fallback from block size to line size. An
-error message was printed if both properties were missing.
+Fix this by having v7_cpu_resume() compiled only when cpu_resume() it
+calls is available as well.
 
-Later the code was refactored to use clearer names and logic but it
-inadvertently made line size a required property, meaning on systems
-without a line size property we fall back to the default from the
-cputable.
+The C declaration for the function remains unguarded to avoid future code
+inadvertently using a stub and introducing a regression to the bug the
+original commit fixed.
 
-On powernv (OPAL) platforms, since the introduction of device tree CPU
-features (5a61ef74f269 ("powerpc/64s: Support new device tree binding
-for discovering CPU features")), that has led to the wrong value being
-used, as the fallback value is incorrect for Power8/Power9 CPUs.
-
-The incorrect values flow through to the VDSO and also to the sysconf
-values, SC_LEVEL1_ICACHE_LINESIZE etc.
-
-Fixes: bd067f83b084 ("powerpc/64: Fix naming of cache block vs. cache line")
-Cc: stable@vger.kernel.org # v4.11+
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Reported-by: Qian Cai <cai@lca.pw>
-[mpe: Add even more detail to change log]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200416221908.7886-1-chris.packham@alliedtelesis.co.nz
+Cc: <stable@vger.kernel.org>
+Fixes: 512a928affd5 ("ARM: imx: build v7_cpu_resume() unconditionally")
+Reported-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Tested-by: Roland Hieber <rhi@pengutronix.de>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/setup_64.c |    2 ++
+ arch/arm/mach-imx/Makefile |    2 ++
  1 file changed, 2 insertions(+)
 
---- a/arch/powerpc/kernel/setup_64.c
-+++ b/arch/powerpc/kernel/setup_64.c
-@@ -541,6 +541,8 @@ static bool __init parse_cache_info(stru
- 	lsizep = of_get_property(np, propnames[3], NULL);
- 	if (bsizep == NULL)
- 		bsizep = lsizep;
-+	if (lsizep == NULL)
-+		lsizep = bsizep;
- 	if (lsizep != NULL)
- 		lsize = be32_to_cpu(*lsizep);
- 	if (bsizep != NULL)
+--- a/arch/arm/mach-imx/Makefile
++++ b/arch/arm/mach-imx/Makefile
+@@ -91,8 +91,10 @@ AFLAGS_suspend-imx6.o :=-Wa,-march=armv7
+ obj-$(CONFIG_SOC_IMX6) += suspend-imx6.o
+ obj-$(CONFIG_SOC_IMX53) += suspend-imx53.o
+ endif
++ifeq ($(CONFIG_ARM_CPU_SUSPEND),y)
+ AFLAGS_resume-imx6.o :=-Wa,-march=armv7-a
+ obj-$(CONFIG_SOC_IMX6) += resume-imx6.o
++endif
+ obj-$(CONFIG_SOC_IMX6) += pm-imx6.o
+ 
+ obj-$(CONFIG_SOC_IMX1) += mach-imx1.o
 
 
