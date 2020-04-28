@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50799C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D550C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C385206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E2E0206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:40:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Ob+Y97a0"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GSSfGXuC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgD1LkH (ORCPT
+        id S1726791AbgD1LkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:40:07 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:30296 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726750AbgD1LkG (ORCPT
+        Tue, 28 Apr 2020 07:40:14 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:42628 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726750AbgD1LkM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:40:06 -0400
+        Tue, 28 Apr 2020 07:40:12 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588074006; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1588074011; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=+B++ebBAF6JRFSA5Mk6Qhv4WL/YpE+dNWWEEO2SgL98=; b=Ob+Y97a0/Rnu3zDtqkSqvlfFjevLxQapcQrF2gQ52bIs6LhCv8Iuy6dgBrJaAVEM8t7sqzDr
- QfIa3xedZn+sIeyUbb4VAID2aC6X1tUHQTf33i0wOyKlO1QqUtTRIEsGcdwztJJedQJK4jlz
- YUqOVfNCK++el9T9CylS8jie16U=
-X-Mailgun-Sending-Ip: 104.130.122.27
+ bh=Ic5PAM9vc1XfgijUSdoG2PECaN335jbhSTijBUOxs58=; b=GSSfGXuCPFIX5Qo/e7x/Z6IIeTi9daS/jRoZQ78DJ8R/slLqd4njIyc3dEKj/Bm6do2YmFBl
+ okak8ZHEpy4aw3obYC2m49V3Duj/1QppIPtqgkAeyB3e/vKKUFdveRrjXmKVQw845zV6Px06
+ vVNnF3JdGUQPLAd0zI30ukWtf4Q=
+X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea815fd.7ff7e863a180-smtp-out-n05;
- Tue, 28 Apr 2020 11:39:41 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5ea81604.7f19b6b57538-smtp-out-n02;
+ Tue, 28 Apr 2020 11:39:48 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D548BC433CB; Tue, 28 Apr 2020 11:39:40 +0000 (UTC)
+        id BB0BDC4478F; Tue, 28 Apr 2020 11:39:47 +0000 (UTC)
 Received: from blr-ubuntu-31.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: svaddagi)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DD1ABC433D2;
-        Tue, 28 Apr 2020 11:39:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DD1ABC433D2
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A9AA4C433D2;
+        Tue, 28 Apr 2020 11:39:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A9AA4C433D2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vatsa@codeaurora.org
 From:   Srivatsa Vaddagiri <vatsa@codeaurora.org>
@@ -55,9 +55,9 @@ Cc:     iommu@lists.linux-foundation.org,
         pratikp@codeaurora.org, vatsa@codeaurora.org,
         christoffer.dall@arm.com, alex.bennee@linaro.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] swiotlb: Allow for non-linear mapping between paddr and vaddr
-Date:   Tue, 28 Apr 2020 17:09:15 +0530
-Message-Id: <1588073958-1793-3-git-send-email-vatsa@codeaurora.org>
+Subject: [PATCH 3/5] swiotlb: Add alloc and free APIs
+Date:   Tue, 28 Apr 2020 17:09:16 +0530
+Message-Id: <1588073958-1793-4-git-send-email-vatsa@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1588073958-1793-1-git-send-email-vatsa@codeaurora.org>
 References: <1588073958-1793-1-git-send-email-vatsa@codeaurora.org>
@@ -66,120 +66,245 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some of the memory pool managed by swiotlb driver could fall
-outside the direct-mapped range, made accessible via memremap()
-routine. To facilitate easy conversion between virtual and
-physical address of such memory, store the virtual address of
-memory pool in addition to its physical address.
+Move the memory allocation and free portion of swiotlb driver
+into independent routines. They will be useful for drivers that
+need swiotlb driver to just allocate/free memory chunks and not
+additionally bounce memory.
 
 Signed-off-by: Srivatsa Vaddagiri <vatsa@codeaurora.org>
 ---
- include/linux/swiotlb.h |  2 ++
- kernel/dma/swiotlb.c    | 20 ++++++++++++++------
- 2 files changed, 16 insertions(+), 6 deletions(-)
+ include/linux/swiotlb.h |  17 ++++++
+ kernel/dma/swiotlb.c    | 151 ++++++++++++++++++++++++++++--------------------
+ 2 files changed, 106 insertions(+), 62 deletions(-)
 
 diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
-index 8c7843f..c634b4d 100644
+index c634b4d..957697e 100644
 --- a/include/linux/swiotlb.h
 +++ b/include/linux/swiotlb.h
-@@ -61,6 +61,8 @@ struct swiotlb_pool {
+@@ -186,6 +186,10 @@ void __init swiotlb_exit(void);
+ unsigned int swiotlb_max_segment(void);
+ size_t swiotlb_max_mapping_size(struct device *dev);
+ bool is_swiotlb_active(void);
++extern phys_addr_t swiotlb_alloc(struct swiotlb_pool *pool, size_t alloc_size,
++		unsigned long tbl_dma_addr, unsigned long mask);
++extern void swiotlb_free(struct swiotlb_pool *pool,
++			phys_addr_t tlb_addr, size_t alloc_size);
+ #else
+ #define swiotlb_force SWIOTLB_NO_FORCE
  
- 	phys_addr_t io_tlb_start, io_tlb_end;
- 
-+	void *io_tlb_vstart;
-+
- 	/*
- 	 * The number of IO TLB blocks (in groups of 64) between io_tlb_start
- 	 * and io_tlb_end.  This is command line adjustable via
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index 9c504d3..8cf0b57 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -178,6 +178,7 @@ int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int verbose)
- 	default_swiotlb_pool.io_tlb_start = __pa(tlb);
- 	default_swiotlb_pool.io_tlb_end =
- 			default_swiotlb_pool.io_tlb_start + bytes;
-+	default_swiotlb_pool.io_tlb_vstart = tlb;
- 
- 	/*
- 	 * Allocate and initialize the free list array.  This array is used
-@@ -307,6 +308,7 @@ static void swiotlb_cleanup(void)
- 	default_swiotlb_pool.io_tlb_start = 0;
- 	default_swiotlb_pool.io_tlb_nslabs = 0;
- 	default_swiotlb_pool.max_segment = 0;
-+	default_swiotlb_pool.io_tlb_vstart = NULL;
- }
- 
- int
-@@ -320,6 +322,7 @@ swiotlb_late_init_with_tbl(char *tlb, unsigned long nslabs)
- 	default_swiotlb_pool.io_tlb_start = virt_to_phys(tlb);
- 	default_swiotlb_pool.io_tlb_end =
- 			default_swiotlb_pool.io_tlb_start + bytes;
-+	default_swiotlb_pool.io_tlb_vstart = tlb;
- 
- 	set_memory_decrypted((unsigned long)tlb, bytes >> PAGE_SHIFT);
- 	memset(tlb, 0, bytes);
-@@ -400,11 +403,10 @@ void __init swiotlb_exit(void)
- /*
-  * Bounce: copy the swiotlb buffer from or back to the original dma location
-  */
--static void swiotlb_bounce(phys_addr_t orig_addr, phys_addr_t tlb_addr,
-+static void swiotlb_bounce(phys_addr_t orig_addr, void *vaddr,
- 			   size_t size, enum dma_data_direction dir)
+@@ -219,6 +223,19 @@ static inline bool is_swiotlb_active(void)
  {
- 	unsigned long pfn = PFN_DOWN(orig_addr);
--	unsigned char *vaddr = phys_to_virt(tlb_addr);
- 
- 	if (PageHighMem(pfn_to_page(pfn))) {
- 		/* The buffer does not have a mapping.  Map it in and copy */
-@@ -437,6 +439,11 @@ static void swiotlb_bounce(phys_addr_t orig_addr, phys_addr_t tlb_addr,
- 	}
+ 	return false;
  }
- 
-+static inline void *tlb_vaddr(struct swiotlb_pool *pool, phys_addr_t tlb_addr)
++
++static inline phys_addr_t swiotlb_alloc(struct swiotlb_pool *pool,
++		size_t alloc_size, unsigned long tbl_dma_addr,
++		unsigned long mask)
 +{
-+	return pool->io_tlb_vstart + (tlb_addr - pool->io_tlb_start);
++	return DMA_MAPPING_ERROR;
 +}
 +
- phys_addr_t _swiotlb_tbl_map_single(struct swiotlb_pool *pool,
- 				   struct device *hwdev,
- 				   dma_addr_t tbl_dma_addr,
-@@ -569,7 +576,7 @@ phys_addr_t _swiotlb_tbl_map_single(struct swiotlb_pool *pool,
- 						(i << IO_TLB_SHIFT);
- 	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
- 	    (dir == DMA_TO_DEVICE || dir == DMA_BIDIRECTIONAL))
--		swiotlb_bounce(orig_addr, tlb_addr,
-+		swiotlb_bounce(orig_addr, tlb_vaddr(pool, tlb_addr),
- 					mapping_size, DMA_TO_DEVICE);
++static inline void swiotlb_free(struct swiotlb_pool *pool,
++			phys_addr_t tlb_addr, size_t alloc_size)
++{
++}
++
+ #endif /* CONFIG_SWIOTLB */
  
+ extern void swiotlb_print_info(void);
+diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+index 8cf0b57..7411ce5 100644
+--- a/kernel/dma/swiotlb.c
++++ b/kernel/dma/swiotlb.c
+@@ -444,37 +444,14 @@ static inline void *tlb_vaddr(struct swiotlb_pool *pool, phys_addr_t tlb_addr)
+ 	return pool->io_tlb_vstart + (tlb_addr - pool->io_tlb_start);
+ }
+ 
+-phys_addr_t _swiotlb_tbl_map_single(struct swiotlb_pool *pool,
+-				   struct device *hwdev,
+-				   dma_addr_t tbl_dma_addr,
+-				   phys_addr_t orig_addr,
+-				   size_t mapping_size,
+-				   size_t alloc_size,
+-				   enum dma_data_direction dir,
+-				   unsigned long attrs)
++phys_addr_t swiotlb_alloc(struct swiotlb_pool *pool, size_t alloc_size,
++		unsigned long tbl_dma_addr, unsigned long mask)
+ {
+ 	unsigned long flags;
+ 	phys_addr_t tlb_addr;
+-	unsigned int nslots, stride, index, wrap;
+-	int i;
+-	unsigned long mask;
++	unsigned int i, nslots, stride, index, wrap;
+ 	unsigned long offset_slots;
+ 	unsigned long max_slots;
+-	unsigned long tmp_io_tlb_used;
+-
+-	if (pool->no_iotlb_memory)
+-		panic("Can not allocate SWIOTLB buffer earlier and can't now provide you with the DMA bounce buffer");
+-
+-	if (mem_encrypt_active())
+-		pr_warn_once("Memory encryption is active and system is using DMA bounce buffers\n");
+-
+-	if (mapping_size > alloc_size) {
+-		dev_warn_once(hwdev, "Invalid sizes (mapping: %zd bytes, alloc: %zd bytes)",
+-			      mapping_size, alloc_size);
+-		return (phys_addr_t)DMA_MAPPING_ERROR;
+-	}
+-
+-	mask = dma_get_seg_boundary(hwdev);
+ 
+ 	tbl_dma_addr &= mask;
+ 
+@@ -555,54 +532,23 @@ phys_addr_t _swiotlb_tbl_map_single(struct swiotlb_pool *pool,
+ 	} while (index != wrap);
+ 
+ not_found:
+-	tmp_io_tlb_used = pool->io_tlb_used;
+-
+ 	spin_unlock_irqrestore(&pool->io_tlb_lock, flags);
+-	if (!(attrs & DMA_ATTR_NO_WARN) && printk_ratelimit())
+-		dev_warn(hwdev, "swiotlb buffer is full (sz: %zd bytes), total %lu (slots), used %lu (slots)\n",
+-			 alloc_size, pool->io_tlb_nslabs, tmp_io_tlb_used);
+ 	return (phys_addr_t)DMA_MAPPING_ERROR;
++
+ found:
+ 	pool->io_tlb_used += nslots;
+ 	spin_unlock_irqrestore(&pool->io_tlb_lock, flags);
+ 
+-	/*
+-	 * Save away the mapping from the original address to the DMA address.
+-	 * This is needed when we sync the memory.  Then we sync the buffer if
+-	 * needed.
+-	 */
+-	for (i = 0; i < nslots; i++)
+-		pool->io_tlb_orig_addr[index+i] = orig_addr +
+-						(i << IO_TLB_SHIFT);
+-	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
+-	    (dir == DMA_TO_DEVICE || dir == DMA_BIDIRECTIONAL))
+-		swiotlb_bounce(orig_addr, tlb_vaddr(pool, tlb_addr),
+-					mapping_size, DMA_TO_DEVICE);
+-
  	return tlb_addr;
-@@ -594,7 +601,8 @@ void _swiotlb_tbl_unmap_single(struct swiotlb_pool *pool,
- 	if (orig_addr != INVALID_PHYS_ADDR &&
- 	    !(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
- 	    ((dir == DMA_FROM_DEVICE) || (dir == DMA_BIDIRECTIONAL)))
--		swiotlb_bounce(orig_addr, tlb_addr, mapping_size, DMA_FROM_DEVICE);
-+		swiotlb_bounce(orig_addr, tlb_vaddr(pool, tlb_addr),
-+						mapping_size, DMA_FROM_DEVICE);
+ }
+ 
+-/*
+- * tlb_addr is the physical address of the bounce buffer to unmap.
+- */
+-void _swiotlb_tbl_unmap_single(struct swiotlb_pool *pool,
+-			struct device *hwdev, phys_addr_t tlb_addr,
+-			size_t mapping_size, size_t alloc_size,
+-			enum dma_data_direction dir, unsigned long attrs)
++void swiotlb_free(struct swiotlb_pool *pool,
++			phys_addr_t tlb_addr, size_t alloc_size)
+ {
+ 	unsigned long flags;
+-	int i, count, nslots = ALIGN(alloc_size, 1 << IO_TLB_SHIFT) >> IO_TLB_SHIFT;
++	int i, count;
++	int nslots = ALIGN(alloc_size, 1 << IO_TLB_SHIFT) >> IO_TLB_SHIFT;
+ 	int index = (tlb_addr - pool->io_tlb_start) >> IO_TLB_SHIFT;
+-	phys_addr_t orig_addr = pool->io_tlb_orig_addr[index];
+-
+-	/*
+-	 * First, sync the memory before unmapping the entry
+-	 */
+-	if (orig_addr != INVALID_PHYS_ADDR &&
+-	    !(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
+-	    ((dir == DMA_FROM_DEVICE) || (dir == DMA_BIDIRECTIONAL)))
+-		swiotlb_bounce(orig_addr, tlb_vaddr(pool, tlb_addr),
+-						mapping_size, DMA_FROM_DEVICE);
  
  	/*
  	 * Return the buffer to the free list by setting the corresponding
-@@ -643,14 +651,14 @@ void _swiotlb_tbl_sync_single(struct swiotlb_pool *pool,
- 	switch (target) {
- 	case SYNC_FOR_CPU:
- 		if (likely(dir == DMA_FROM_DEVICE || dir == DMA_BIDIRECTIONAL))
--			swiotlb_bounce(orig_addr, tlb_addr,
-+			swiotlb_bounce(orig_addr, tlb_vaddr(pool, tlb_addr),
- 				       size, DMA_FROM_DEVICE);
- 		else
- 			BUG_ON(dir != DMA_TO_DEVICE);
- 		break;
- 	case SYNC_FOR_DEVICE:
- 		if (likely(dir == DMA_TO_DEVICE || dir == DMA_BIDIRECTIONAL))
--			swiotlb_bounce(orig_addr, tlb_addr,
-+			swiotlb_bounce(orig_addr, tlb_vaddr(pool, tlb_addr),
- 				       size, DMA_TO_DEVICE);
- 		else
- 			BUG_ON(dir != DMA_FROM_DEVICE);
+@@ -636,6 +582,87 @@ void _swiotlb_tbl_unmap_single(struct swiotlb_pool *pool,
+ 	spin_unlock_irqrestore(&pool->io_tlb_lock, flags);
+ }
+ 
++phys_addr_t _swiotlb_tbl_map_single(struct swiotlb_pool *pool,
++				   struct device *hwdev,
++				   dma_addr_t tbl_dma_addr,
++				   phys_addr_t orig_addr,
++				   size_t mapping_size,
++				   size_t alloc_size,
++				   enum dma_data_direction dir,
++				   unsigned long attrs)
++{
++	phys_addr_t tlb_addr;
++	unsigned int nslots, index;
++	int i;
++	unsigned long mask;
++
++	if (pool->no_iotlb_memory)
++		panic("Can not allocate SWIOTLB buffer earlier and can't now provide you with the DMA bounce buffer");
++
++	if (mem_encrypt_active())
++		pr_warn_once("Memory encryption is active and system is using DMA bounce buffers\n");
++
++	if (mapping_size > alloc_size) {
++		dev_warn_once(hwdev, "Invalid sizes (mapping: %zd bytes, alloc: %zd bytes)",
++			      mapping_size, alloc_size);
++		return (phys_addr_t)DMA_MAPPING_ERROR;
++	}
++
++	mask = dma_get_seg_boundary(hwdev);
++
++	tlb_addr = swiotlb_alloc(pool, alloc_size, tbl_dma_addr, mask);
++
++	if (tlb_addr == DMA_MAPPING_ERROR) {
++		if (!(attrs & DMA_ATTR_NO_WARN) && printk_ratelimit())
++			dev_warn(hwdev, "swiotlb buffer is full (sz: %zd "
++				"bytes), total %lu (slots), used %lu (slots)\n",
++				alloc_size, pool->io_tlb_nslabs,
++				pool->io_tlb_used);
++		return (phys_addr_t)DMA_MAPPING_ERROR;
++	}
++
++	nslots = ALIGN(alloc_size, 1 << IO_TLB_SHIFT) >> IO_TLB_SHIFT;
++	index = (tlb_addr - pool->io_tlb_start) >> IO_TLB_SHIFT;
++
++	/*
++	 * Save away the mapping from the original address to the DMA address.
++	 * This is needed when we sync the memory.  Then we sync the buffer if
++	 * needed.
++	 */
++	for (i = 0; i < nslots; i++)
++		pool->io_tlb_orig_addr[index+i] = orig_addr +
++						(i << IO_TLB_SHIFT);
++	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
++	    (dir == DMA_TO_DEVICE || dir == DMA_BIDIRECTIONAL))
++		swiotlb_bounce(orig_addr, tlb_vaddr(pool, tlb_addr),
++					mapping_size, DMA_TO_DEVICE);
++
++	return tlb_addr;
++}
++
++/*
++ * tlb_addr is the physical address of the bounce buffer to unmap.
++ */
++void _swiotlb_tbl_unmap_single(struct swiotlb_pool *pool,
++			struct device *hwdev, phys_addr_t tlb_addr,
++			size_t mapping_size, size_t alloc_size,
++			enum dma_data_direction dir, unsigned long attrs)
++{
++	int index = (tlb_addr - pool->io_tlb_start) >> IO_TLB_SHIFT;
++	phys_addr_t orig_addr = pool->io_tlb_orig_addr[index];
++
++	/*
++	 * First, sync the memory before unmapping the entry
++	 */
++	if (orig_addr != INVALID_PHYS_ADDR &&
++	    !(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
++	    ((dir == DMA_FROM_DEVICE) || (dir == DMA_BIDIRECTIONAL)))
++		swiotlb_bounce(orig_addr, tlb_vaddr(pool, tlb_addr),
++						mapping_size, DMA_FROM_DEVICE);
++
++	swiotlb_free(pool, tlb_addr, alloc_size);
++}
++
+ void _swiotlb_tbl_sync_single(struct swiotlb_pool *pool,
+ 			struct device *hwdev, phys_addr_t tlb_addr,
+ 			size_t size, enum dma_data_direction dir,
 -- 
 2.7.4
 
