@@ -2,125 +2,300 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A22FDC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3ACFC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C3F520730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C91FA2072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:12:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="X7/t914n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbgD1VMK (ORCPT
+        id S1726669AbgD1VM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:12:10 -0400
-Received: from mga18.intel.com ([134.134.136.126]:22927 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726274AbgD1VMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:12:09 -0400
-IronPort-SDR: 0a4K5CDIDSssRM8LbKm0bXSlFi+fHanRkL1fVBEPy/47OtWY6oP93QULHzrgFNePK1ub2iWBZC
- NN8OqwUbwpdQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 14:12:09 -0700
-IronPort-SDR: 3INkQOgdolFGme8Res26guqO3hCdfEYxWfUT/B1aiHCYXpHTGnqYcdAMs33ilqDUQ+Cuk1Q5Q1
- QG9sJdBGznbQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
-   d="scan'208";a="261226601"
-Received: from twinkler-lnx.jer.intel.com ([10.12.91.155])
-  by orsmga006.jf.intel.com with ESMTP; 28 Apr 2020 14:12:07 -0700
-From:   Tomas Winkler <tomas.winkler@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Tomas Winkler <tomas.winkler@intel.com>, stable@vger.kernel.org
-Subject: [char-misc] mei: me: disable mei interface on LBG servers.
-Date:   Wed, 29 Apr 2020 00:12:00 +0300
-Message-Id: <20200428211200.12200-1-tomas.winkler@intel.com>
-X-Mailer: git-send-email 2.21.1
+        Tue, 28 Apr 2020 17:12:56 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:53776 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726274AbgD1VMz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 17:12:55 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SL3HKC120082;
+        Tue, 28 Apr 2020 21:12:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=VNVPJDAdbkMh1W9V8jsrS4bwFmxf64AOFnoK0lDjDlI=;
+ b=X7/t914nYpwnSnpwlpwttxFpYHNn4A0MNbQ46lELupv4vZko0r6OSMFgwT77N3Ah5m//
+ 4Z7YQihcf1Ef2cxaskChraVi4cMUzRwzn7H5h57m08RZD9Lly/SwsFVWzEp0ZP8Vu0dX
+ Ltau1HNBOWt7f6bquQKnvUiddwFIdzsm3y7v0zKYEZolvnQvI/QbWF5p4+g/SVfuI4T2
+ hr2Azn6t/leLW1sHNj5iqUodcKxbzAj31ByWDYUMOh20u5ZJ4iIk8nNE5vp92VKVyjHy
+ P54a/XulSYSEkMJBDWfykOpnoKwTb54kEWFV0J2eU7sjCLmr5SZx+5VVg3iVsu3i76Mz LQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 30p2p07tfy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 21:12:38 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SL79RX054313;
+        Tue, 28 Apr 2020 21:12:38 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 30my0ed7ek-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 21:12:37 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03SLCYko023876;
+        Tue, 28 Apr 2020 21:12:35 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Apr 2020 14:12:34 -0700
+Date:   Tue, 28 Apr 2020 14:12:32 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH V11 04/11] Documentation/dax: Update Usage section
+Message-ID: <20200428211232.GI6733@magnolia>
+References: <20200428002142.404144-1-ira.weiny@intel.com>
+ <20200428002142.404144-5-ira.weiny@intel.com>
+ <20200428202738.GE6742@magnolia>
+ <20200428205309.GA406458@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428205309.GA406458@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
+ suspectscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280165
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1015
+ bulkscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
+ mlxscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004280165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Disable the MEI driver on LBG SPS (server) platforms, some corner
-flows such as recovery mode does not work, and the driver
-doesn't have working use cases.
+On Tue, Apr 28, 2020 at 01:53:10PM -0700, Ira Weiny wrote:
+> On Tue, Apr 28, 2020 at 01:27:38PM -0700, Darrick J. Wong wrote:
+> > On Mon, Apr 27, 2020 at 05:21:35PM -0700, ira.weiny@intel.com wrote:
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> 
+> [snip]
+> 
+> > > +
+> > > + 3. If the persistent FS_XFLAG_DAX flag is set on a directory, this flag will
+> > > +    be inherited by all regular files and sub directories that are subsequently
+> > 
+> > Well, I'm at the level of minor edits: "...and subdirectories that..."
+> 
+> Done.
+> 
+> > 
+> > > +    created in this directory. Files and subdirectories that exist at the time
+> > > +    this flag is set or cleared on the parent directory are not modified by
+> > > +    this modification of the parent directory.
+> > > +
+> > > + 4. There exists dax mount options which can override FS_XFLAG_DAX in the
+> > > +    setting of the S_DAX flag.  Given underlying storage which supports DAX the
+> > > +    following hold.
+> > 
+> > "hold:"
+> 
+> Dene.
+> 
+> > 
+> > > +
+> > > +    "-o dax=inode"  means "follow FS_XFLAG_DAX" and is the default.
+> > > +
+> > > +    "-o dax=never"  means "never set S_DAX, ignore FS_XFLAG_DAX."
+> > > +
+> > > +    "-o dax=always" means "always set S_DAX ignore FS_XFLAG_DAX."
+> > > +
+> > > +    "-o dax"        is a legacy option which is an alias for "dax=always".
+> > > +		    This may be removed in the future so "-o dax=always" is
+> > > +		    the preferred method for specifying this behavior.
+> > > +
+> > > +    NOTE: Setting and inheritance affect FS_XFLAG_DAX at all times even when
+> > > +    the file system is mounted with a dax option.
+> > 
+> > We can also clear the flag at any time no matter the mount option state.
+> > Perhaps:
+> > 
+> > "NOTE: Modifications to and inheritance behavior of FS_XFLAG_DAX remain
+> > the same even when the filesystem is mounted with a dax option."
+> 
+> Done.
+> 
+> > 
+> > > +    However, in-core inode state
+> > > +    (S_DAX) will be overridden until the file system is remounted with
+> > > +    dax=inode and the inode is evicted from kernel memory.
+> > > +
+> > > + 5. The DAX policy can be changed via:
+> > 
+> > "The S_DAX policy".  I don't want people to get confused.
+> 
+> Done.
+> 
+> > 
+> > > +
+> > > +    a) Set the parent directory FS_XFLAG_DAX as needed before files are created
+> > > +
+> > > +    b) Set the appropriate dax="foo" mount option
+> > > +
+> > > +    c) Change the FS_XFLAG_DAX on existing regular files and directories. This
+> > > +       has runtime constraints and limitations that are described in 6) below.
+> > 
+> > "Setting", and "Changing" at the front of these three bullet points?
+> > 
+> > Were you to put these together as full sentences, you'd want them to
+> > read "The DAX policy can be changed via setting the parent directory
+> > FS_XFLAG_DAX..."
+> > 
+> 
+> Done.
+> 
+> > > +
+> > > + 6. When changing the DAX policy via toggling the persistent FS_XFLAG_DAX flag,
+> > 
+> > "When changing the S_DAX policy..."
+> 
+> Done.
+> 
+> > 
+> > > +    the change in behaviour for existing regular files may not occur
+> > > +    immediately.  If the change must take effect immediately, the administrator
+> > > +    needs to:
+> > > +
+> > > +    a) stop the application so there are no active references to the data set
+> > > +       the policy change will affect
+> > > +
+> > > +    b) evict the data set from kernel caches so it will be re-instantiated when
+> > > +       the application is restarted. This can be acheived by:
+> > 
+> > "achieved"
+> 
+> Done.
+> 
+> > 
+> > > +
+> > > +       i. drop-caches
+> > > +       ii. a filesystem unmount and mount cycle
+> > > +       iii. a system reboot
+> > > +
+> > > +
+> > > +Details
+> > > +-------
+> > > +
+> > > +There are 2 per-file dax flags.  One is a persistent inode setting (FS_XFLAG_DAX)
+> > > +and the other is a volatile flag indicating the active state of the feature
+> > > +(S_DAX).
+> > > +
+> > > +FS_XFLAG_DAX is preserved within the file system.  This persistent config
+> > > +setting can be set, cleared and/or queried using the FS_IOC_FS[GS]ETXATTR ioctl
+> > > +(see ioctl_xfs_fsgetxattr(2)) or an utility such as 'xfs_io'.
+> > > +
+> > > +New files and directories automatically inherit FS_XFLAG_DAX from
+> > > +their parent directory _when_ _created_.  Therefore, setting FS_XFLAG_DAX at
+> > > +directory creation time can be used to set a default behavior for an entire
+> > > +sub-tree.
+> > > +
+> > > +To clarify inheritance here are 3 examples:
+> > 
+> > "...inheritance, here are..."
+> 
+> Done.
+> 
+> > 
+> > > +
+> > > +Example A:
+> > > +
+> > > +mkdir -p a/b/c
+> > > +xfs_io -c 'chattr +x' a
+> > > +mkdir a/b/c/d
+> > > +mkdir a/e
+> > > +
+> > > +	dax: a,e
+> > > +	no dax: b,c,d
+> > > +
+> > > +Example B:
+> > > +
+> > > +mkdir a
+> > > +xfs_io -c 'chattr +x' a
+> > > +mkdir -p a/b/c/d
+> > > +
+> > > +	dax: a,b,c,d
+> > > +	no dax:
+> > > +
+> > > +Example C:
+> > > +
+> > > +mkdir -p a/b/c
+> > > +xfs_io -c 'chattr +x' c
+> > > +mkdir a/b/c/d
+> > > +
+> > > +	dax: c,d
+> > > +	no dax: a,b
+> > > +
+> > > +
+> > > +The current enabled state (S_DAX) is set when a file inode is instantiated in
+> > > +memory by the kernel.  It is set based on the underlying media support, the
+> > > +value of FS_XFLAG_DAX and the file systems dax mount option setting.
+> > 
+> > "...and the file system's dax mount option string."
+> 
+> No. I don't think string is the right word here.  It is the setting not the
+> string which is controlling the behavior.  How about:
+> 
+> "...and the file system's dax mount option."
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
----
- drivers/misc/mei/hw-me.c  | 8 ++++++++
- drivers/misc/mei/hw-me.h  | 4 ++++
- drivers/misc/mei/pci-me.c | 2 +-
- 3 files changed, 13 insertions(+), 1 deletion(-)
+Oops.  I miscopied that; all I really wanted was the apostrophe-s after
+"file system".
 
-diff --git a/drivers/misc/mei/hw-me.c b/drivers/misc/mei/hw-me.c
-index 668418d7ea77..f620442addf5 100644
---- a/drivers/misc/mei/hw-me.c
-+++ b/drivers/misc/mei/hw-me.c
-@@ -1465,6 +1465,13 @@ static const struct mei_cfg mei_me_pch12_cfg = {
- 	MEI_CFG_DMA_128,
- };
- 
-+/* LBG with quirk for SPS Firmware exclusion */
-+static const struct mei_cfg mei_me_pch12_sps_cfg = {
-+	MEI_CFG_PCH8_HFS,
-+	MEI_CFG_FW_VER_SUPP,
-+	MEI_CFG_FW_SPS,
-+};
-+
- /* Tiger Lake and newer devices */
- static const struct mei_cfg mei_me_pch15_cfg = {
- 	MEI_CFG_PCH8_HFS,
-@@ -1487,6 +1494,7 @@ static const struct mei_cfg *const mei_cfg_list[] = {
- 	[MEI_ME_PCH8_CFG] = &mei_me_pch8_cfg,
- 	[MEI_ME_PCH8_SPS_CFG] = &mei_me_pch8_sps_cfg,
- 	[MEI_ME_PCH12_CFG] = &mei_me_pch12_cfg,
-+	[MEI_ME_PCH12_SPS_CFG] = &mei_me_pch12_sps_cfg,
- 	[MEI_ME_PCH15_CFG] = &mei_me_pch15_cfg,
- };
- 
-diff --git a/drivers/misc/mei/hw-me.h b/drivers/misc/mei/hw-me.h
-index 4a8d4dcd5a91..b6b94e211464 100644
---- a/drivers/misc/mei/hw-me.h
-+++ b/drivers/misc/mei/hw-me.h
-@@ -80,6 +80,9 @@ struct mei_me_hw {
-  *                         servers platforms with quirk for
-  *                         SPS firmware exclusion.
-  * @MEI_ME_PCH12_CFG:      Platform Controller Hub Gen12 and newer
-+ * @MEI_ME_PCH12_SPS_CFG:  Platform Controller Hub Gen12 and newer
-+ *                         servers platforms with quirk for
-+ *                         SPS firmware exclusion.
-  * @MEI_ME_PCH15_CFG:      Platform Controller Hub Gen15 and newer
-  * @MEI_ME_NUM_CFG:        Upper Sentinel.
-  */
-@@ -93,6 +96,7 @@ enum mei_cfg_idx {
- 	MEI_ME_PCH8_CFG,
- 	MEI_ME_PCH8_SPS_CFG,
- 	MEI_ME_PCH12_CFG,
-+	MEI_ME_PCH12_SPS_CFG,
- 	MEI_ME_PCH15_CFG,
- 	MEI_ME_NUM_CFG,
- };
-diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c
-index 3d21c38e2dbb..d4899a430e9d 100644
---- a/drivers/misc/mei/pci-me.c
-+++ b/drivers/misc/mei/pci-me.c
-@@ -70,7 +70,7 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_2, MEI_ME_PCH8_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H, MEI_ME_PCH8_SPS_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H_2, MEI_ME_PCH8_SPS_CFG)},
--	{MEI_PCI_DEVICE(MEI_DEV_ID_LBG, MEI_ME_PCH12_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_LBG, MEI_ME_PCH12_SPS_CFG)},
- 
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_BXT_M, MEI_ME_PCH8_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_APL_I, MEI_ME_PCH8_CFG)},
--- 
-2.21.1
+"...and the file system's dax mount option setting."
 
+would have been fine.
+
+--D
+
+> 
+> > 
+> > > +
+> > > +statx can be used to query S_DAX.  NOTE that a directory will never have S_DAX
+> > 
+> > "Note that only regular files will ever have S_DAX set..."?
+> 
+> Done.
+> 
+> Ira
+> 
+> > 
+> > --D
+> > 
+> > > +set and therefore statx will never indicate that S_DAX is set on directories.
+> > > +
+> > > +Setting the FS_XFLAG_DAX (specifically or through inheritance) occurs even if
+> > > +the underlying media does not support dax and/or the file system is overridden
+> > > +with a mount option.
+> > > +
+> > >  
+> > >  
+> > >  Implementation Tips for Block Driver Writers
+> > > -- 
+> > > 2.25.1
+> > > 
