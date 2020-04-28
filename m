@@ -2,40 +2,40 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CF4C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E96E0C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56E52206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D19DE206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgD1FHN (ORCPT
+        id S1726463AbgD1FHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 01:07:13 -0400
-Received: from mga07.intel.com ([134.134.136.100]:28385 "EHLO mga07.intel.com"
+        Tue, 28 Apr 2020 01:07:14 -0400
+Received: from mga06.intel.com ([134.134.136.31]:40809 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725792AbgD1FHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 01:07:12 -0400
-IronPort-SDR: KK0D1eBQKzvWp2vlkrTGbugLjpQObnNuvH3ABzwy7VtZAk/2SVTYKp2j4TbcxwFkTF7NBE7ecK
- wFGQYr6xld2g==
+        id S1726303AbgD1FHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 01:07:13 -0400
+IronPort-SDR: ++HF/+JelruREmzZlArItImtnG43BWxhrY8ajHATjcah4QF19lykZuZiU1dztw9ERG3AUaDg+a
+ 7pPTWioLByew==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 22:07:12 -0700
-IronPort-SDR: LhndOMvmy3OMlNNwE0WpgyY+lTgFSgbB/3QGupkQt5Y2JaSUXRuxq6csNWSqk2GUAkUKeMnoMI
- g9e3av3P5FdA==
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 22:07:12 -0700
+IronPort-SDR: AbVx6fGxIgJSjLwTyMz+/XIJjPQLCi/R/POa0FwclT56I9g1i8cQZu6nmy/RN/nDFDLz3p6//Y
+ zYbVdB406mtg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,326,1583222400"; 
-   d="scan'208";a="432049751"
+   d="scan'208";a="246391815"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 27 Apr 2020 22:07:09 -0700
+  by orsmga007.jf.intel.com with ESMTP; 27 Apr 2020 22:07:09 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1jTISa-000Gk9-UA; Tue, 28 Apr 2020 13:07:08 +0800
-Date:   Tue, 28 Apr 2020 13:06:27 +0800
+        id 1jTISa-000GjN-Sy; Tue, 28 Apr 2020 13:07:08 +0800
+Date:   Tue, 28 Apr 2020 13:06:26 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Like Xu <like.xu@linux.intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>
@@ -47,36 +47,61 @@ Cc:     kbuild-all@lists.01.org,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, wei.w.wang@intel.com,
         ak@linux.intel.com
-Subject: [RFC PATCH] KVM: x86/pmu: kvm_pmu_lbr_cleanup() can be static
-Message-ID: <20200428050627.GA26449@41ada6197895>
+Subject: Re: [PATCH v10 09/11] KVM: x86/pmu: Release guest LBR event via vPMU
+ lazy release mechanism
+Message-ID: <202004281230.jQ78RK3f%lkp@intel.com>
 References: <20200423081412.164863-10-like.xu@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20200423081412.164863-10-like.xu@linux.intel.com>
-X-Patchwork-Hint: ignore
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Like,
 
-Signed-off-by: kbuild test robot <lkp@intel.com>
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on tip/perf/core]
+[also build test WARNING on vhost/linux-next v5.7-rc3 next-20200424]
+[cannot apply to kvm/linux-next]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Like-Xu/Guest-Last-Branch-Recording-Enabling/20200426-123735
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git 87cfeb1920f84f465a738d4c6589033eefa20b45
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-191-gc51a0382-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+   arch/x86/kvm/pmu.c:190:18: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   arch/x86/kvm/pmu.c:190:18: sparse:    struct kvm_pmu_event_filter [noderef] <asn:4> *
+   arch/x86/kvm/pmu.c:190:18: sparse:    struct kvm_pmu_event_filter *
+   arch/x86/kvm/pmu.c:251:18: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   arch/x86/kvm/pmu.c:251:18: sparse:    struct kvm_pmu_event_filter [noderef] <asn:4> *
+   arch/x86/kvm/pmu.c:251:18: sparse:    struct kvm_pmu_event_filter *
+>> arch/x86/kvm/pmu.c:455:6: sparse: sparse: symbol 'kvm_pmu_lbr_cleanup' was not declared. Should it be static?
+   arch/x86/kvm/pmu.c:524:18: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   arch/x86/kvm/pmu.c:524:18: sparse:    struct kvm_pmu_event_filter [noderef] <asn:4> *
+   arch/x86/kvm/pmu.c:524:18: sparse:    struct kvm_pmu_event_filter *
+   arch/x86/kvm/pmu.c:524:18: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   arch/x86/kvm/pmu.c:524:18: sparse:    struct kvm_pmu_event_filter [noderef] <asn:4> *
+   arch/x86/kvm/pmu.c:524:18: sparse:    struct kvm_pmu_event_filter *
+
+Please review and possibly fold the followup patch.
+
 ---
- pmu.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index 7dad899850bb3..b9b6d16651c8b 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -452,7 +452,7 @@ static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
- 	return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
- }
- 
--void kvm_pmu_lbr_cleanup(struct kvm_vcpu *vcpu)
-+static void kvm_pmu_lbr_cleanup(struct kvm_vcpu *vcpu)
- {
- 	if (kvm_x86_ops.pmu_ops->lbr_cleanup)
- 		kvm_x86_ops.pmu_ops->lbr_cleanup(vcpu);
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
