@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A18AC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E4BC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ED752085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64A4E20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099202;
-	bh=mqM1Symd1VmDK+hvDs5OwnRrcB9aFa1eQTsDz4xQ208=;
+	s=default; t=1588099209;
+	bh=stN9rP4HgKIFrPN1xz/O73Hsp6NVHW7nqXAQ5WzJH24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2klT8IvjV6W5ULZkukHepzqaPsUYAMIRK/kY2HjnlSITmTMbMh6I558xnLgApbEh2
-	 n8o2oudPg4M4KYW3MtUb3Vq7gFKgH8MI87HFsu1JdqIqFkMwPxFtMZjWzMXpmlXX4k
-	 p+Zx8mYSTqsb2q4NhnHZ7TS0m0s3hzv5p9zFp4ik=
+	b=f7BGJNSS2pTCwFjhVb7JZ7AthFEQpzeUEgcMyJJ2cv5GOCEfGWF6cvjA6gbd9UsOI
+	 ubXpvKiqaOzHgdtQ1Jkv5SD1Bm8Dr6mLLWca025gpY7Z+r/wJudqiISe/9D2EA/XVK
+	 6nSM24RgVb/lCf7nuQjCBdmRkNvjtN5RtUUPcvVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730885AbgD1SkB (ORCPT
+        id S1730891AbgD1SkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:40:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58958 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:40:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730881AbgD1Sj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:39:57 -0400
+        id S1730113AbgD1SkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:40:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F7AF20575;
-        Tue, 28 Apr 2020 18:39:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B86F20730;
+        Tue, 28 Apr 2020 18:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099197;
-        bh=mqM1Symd1VmDK+hvDs5OwnRrcB9aFa1eQTsDz4xQ208=;
+        s=default; t=1588099200;
+        bh=stN9rP4HgKIFrPN1xz/O73Hsp6NVHW7nqXAQ5WzJH24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j+3KlZLjkdm51D4ZgHp4V8nFZIz9Ib++FksxxEtE+8IIrFvDAu9U1Aic02XRXTp2n
-         jX4htaiz/Qx48QdD3we7i1kNkTQophA7OYpn0YxxPYb4RL/HWaqNBAAUnyVYQWNmNu
-         WM7uB3gVYazZngQ5/Po21pZwWAGBQH2PpE+/6Wzg=
+        b=IakRQ2TMoY39nP2oSmWEhb9/fsGsOx5Zek/q0hbjasKEl5BhrdwBNGXcRjpqFQZSb
+         tqF5k1ncR9EUcvgm0PEL0S/YBk1cIuf2/htDmzoHO1nn82t9J/Ot9ipoAZ5E+uKDay
+         5Svidt6p2xPmoPifgX6bCYsEU95fXKWl/iXgZgVk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Qian Cai <cai@lca.pw>, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 112/131] powerpc/setup_64: Set cache-line-size based on cache-block-size
-Date:   Tue, 28 Apr 2020 20:25:24 +0200
-Message-Id: <20200428182239.302297315@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 072/168] team: fix hang in team_mode_get()
+Date:   Tue, 28 Apr 2020 20:24:06 +0200
+Message-Id: <20200428182241.153327566@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,53 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+From: Taehee Yoo <ap420073@gmail.com>
 
-commit 94c0b013c98583614e1ad911e8795ca36da34a85 upstream.
+[ Upstream commit 1c30fbc76b8f0c07c92a8ca4cd7c456612e17eb5 ]
 
-If {i,d}-cache-block-size is set and {i,d}-cache-line-size is not, use
-the block-size value for both. Per the devicetree spec cache-line-size
-is only needed if it differs from the block size.
+When team mode is changed or set, the team_mode_get() is called to check
+whether the mode module is inserted or not. If the mode module is not
+inserted, it calls the request_module().
+In the request_module(), it creates a child process, which is
+the "modprobe" process and waits for the done of the child process.
+At this point, the following locks were used.
+down_read(&cb_lock()); by genl_rcv()
+    genl_lock(); by genl_rcv_msc()
+        rtnl_lock(); by team_nl_cmd_options_set()
+            mutex_lock(&team->lock); by team_nl_team_get()
 
-Originally the code would fallback from block size to line size. An
-error message was printed if both properties were missing.
+Concurrently, the team module could be removed by rmmod or "modprobe -r"
+The __exit function of team module is team_module_exit(), which calls
+team_nl_fini() and it tries to acquire following locks.
+down_write(&cb_lock);
+    genl_lock();
+Because of the genl_lock() and cb_lock, this process can't be finished
+earlier than request_module() routine.
 
-Later the code was refactored to use clearer names and logic but it
-inadvertently made line size a required property, meaning on systems
-without a line size property we fall back to the default from the
-cputable.
+The problem secenario.
+CPU0                                     CPU1
+team_mode_get
+    request_module()
+                                         modprobe -r team_mode_roundrobin
+                                                     team <--(B)
+        modprobe team <--(A)
+            team_mode_roundrobin
 
-On powernv (OPAL) platforms, since the introduction of device tree CPU
-features (5a61ef74f269 ("powerpc/64s: Support new device tree binding
-for discovering CPU features")), that has led to the wrong value being
-used, as the fallback value is incorrect for Power8/Power9 CPUs.
+By request_module(), the "modprobe team_mode_roundrobin" command
+will be executed. At this point, the modprobe process will decide
+that the team module should be inserted before team_mode_roundrobin.
+Because the team module is being removed.
 
-The incorrect values flow through to the VDSO and also to the sysconf
-values, SC_LEVEL1_ICACHE_LINESIZE etc.
+By the module infrastructure, the same module insert/remove operations
+can't be executed concurrently.
+So, (A) waits for (B) but (B) also waits for (A) because of locks.
+So that the hang occurs at this point.
 
-Fixes: bd067f83b084 ("powerpc/64: Fix naming of cache block vs. cache line")
-Cc: stable@vger.kernel.org # v4.11+
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Reported-by: Qian Cai <cai@lca.pw>
-[mpe: Add even more detail to change log]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200416221908.7886-1-chris.packham@alliedtelesis.co.nz
+Test commands:
+    while :
+    do
+        teamd -d &
+	killall teamd &
+	modprobe -rv team_mode_roundrobin &
+    done
+
+The approach of this patch is to hold the reference count of the team
+module if the team module is compiled as a module. If the reference count
+of the team module is not zero while request_module() is being called,
+the team module will not be removed at that moment.
+So that the above scenario could not occur.
+
+Fixes: 3d249d4ca7d0 ("net: introduce ethernet teaming device")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/powerpc/kernel/setup_64.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/team/team.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/powerpc/kernel/setup_64.c
-+++ b/arch/powerpc/kernel/setup_64.c
-@@ -518,6 +518,8 @@ static bool __init parse_cache_info(stru
- 	lsizep = of_get_property(np, propnames[3], NULL);
- 	if (bsizep == NULL)
- 		bsizep = lsizep;
-+	if (lsizep == NULL)
-+		lsizep = bsizep;
- 	if (lsizep != NULL)
- 		lsize = be32_to_cpu(*lsizep);
- 	if (bsizep != NULL)
+--- a/drivers/net/team/team.c
++++ b/drivers/net/team/team.c
+@@ -468,6 +468,9 @@ static const struct team_mode *team_mode
+ 	struct team_mode_item *mitem;
+ 	const struct team_mode *mode = NULL;
+ 
++	if (!try_module_get(THIS_MODULE))
++		return NULL;
++
+ 	spin_lock(&mode_list_lock);
+ 	mitem = __find_mode(kind);
+ 	if (!mitem) {
+@@ -483,6 +486,7 @@ static const struct team_mode *team_mode
+ 	}
+ 
+ 	spin_unlock(&mode_list_lock);
++	module_put(THIS_MODULE);
+ 	return mode;
+ }
+ 
 
 
