@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63850C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF949C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4026620575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9F7720575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099908;
-	bh=vfAHXFAy/Y/q0wkxF7wa7tNLX+mcFSUdnGqu55sY0aU=;
+	s=default; t=1588099912;
+	bh=5rg1mbDvVPgqk2qdN1TJwA1lpQ8pvGe+EL4GcEoRhmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pPQkkq9kpdoH2EYiJipZy1gSA0eZveHMqWZVGgMiDmes7RC+2I+ImjGCBg5cWeWYU
-	 AFtoHZHrtsG0McPz3UtZCkWmnp2YMHD4k1zQGT/fl4Xf+fNjc7cVrz/uDbQ9Zm/XFM
-	 xHWcsMe/Uh9NJ8ybgIokx69khh9Fd6jaDBu99PYQ=
+	b=o5L6vnT/L1lFOjMfErHgAacAMqrcz14i0Twb44pG1jgex/ZsVMsOBF/9Up+9hhRYZ
+	 p1LOpZekJogG5A7QSRV4k/z0b4HJ+RsE42SSuFJwRBChchBGNbTISZ3QwajMF2fehI
+	 hhy6XpTloKqnDO8EnHjVuhrddSwQtdd1WOFhVjpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730762AbgD1Svr (ORCPT
+        id S1730403AbgD1Sgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:51:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54730 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:36:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729392AbgD1Sg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:36:59 -0400
+        id S1730387AbgD1Sgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:36:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59E2920575;
-        Tue, 28 Apr 2020 18:36:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A4152085B;
+        Tue, 28 Apr 2020 18:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099018;
-        bh=vfAHXFAy/Y/q0wkxF7wa7tNLX+mcFSUdnGqu55sY0aU=;
+        s=default; t=1588099000;
+        bh=5rg1mbDvVPgqk2qdN1TJwA1lpQ8pvGe+EL4GcEoRhmI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=khMehWWQElCGPo2Wrc38H4uNj2uB6P7VjgnK9LNa5vCjVZ+bJ2yU2H44JQao0H3t0
-         VYj6yRC8fnNyt3nWZNE9kMmLaIMCodVW1Esyp7eB58vocSI9Xj9/vooWUnjkqwt5YT
-         ISeeOpEB9R3uwwQuZ/zcArpbNtCzw3Wqp2pBCj1M=
+        b=WUF11odStdhHw88SkrjapEZ+MaR9kYCSHLPx3XE3b/yGrpMNaU7wd0ddjhHD5raoe
+         ID2+cBbxRaX8Ysek4VyM1D5BT3K4ovmC9HD9ZYJ0jFgb9G0XEniNGf5u0C1td7ko8D
+         Kga9PNYB7FVFQgDYGTz0mCdS9RcQktdQnOH3fcQo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aurelien Jarno <aurelien@aurel32.net>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Yongqiang Sun <yongqiang.sun@amd.com>,
+        Tony Cheng <Tony.Cheng@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 046/168] libbpf: Fix readelf output parsing on powerpc with recent binutils
-Date:   Tue, 28 Apr 2020 20:23:40 +0200
-Message-Id: <20200428182237.685189790@linuxfoundation.org>
+Subject: [PATCH 5.4 044/168] drm/amd/display: Not doing optimize bandwidth if flip pending.
+Date:   Tue, 28 Apr 2020 20:23:38 +0200
+Message-Id: <20200428182237.448944669@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -61,52 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aurelien Jarno <aurelien@aurel32.net>
+From: Yongqiang Sun <yongqiang.sun@amd.com>
 
-[ Upstream commit 3464afdf11f9a1e031e7858a05351ceca1792fea ]
+[ Upstream commit 9941b8129030c9202aaf39114477a0e58c0d6ffc ]
 
-On powerpc with recent versions of binutils, readelf outputs an extra
-field when dumping the symbols of an object file. For example:
+[Why]
+In some scenario like 1366x768 VSR enabled connected with a 4K monitor
+and playing 4K video in clone mode, underflow will be observed due to
+decrease dppclk when previouse surface scan isn't finished
 
-    35: 0000000000000838    96 FUNC    LOCAL  DEFAULT [<localentry>: 8]     1 btf_is_struct
+[How]
+In this use case, surface flip is switching between 4K and 1366x768,
+1366x768 needs smaller dppclk, and when decrease the clk and previous
+surface scan is for 4K and scan isn't done, underflow will happen.  Not
+doing optimize bandwidth in case of flip pending.
 
-The extra "[<localentry>: 8]" prevents the GLOBAL_SYM_COUNT variable to
-be computed correctly and causes the check_abi target to fail.
-
-Fix that by looking for the symbol name in the last field instead of the
-8th one. This way it should also cope with future extra fields.
-
-Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Tested-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/bpf/20191201195728.4161537-1-aurelien@aurel32.net
+Signed-off-by: Yongqiang Sun <yongqiang.sun@amd.com>
+Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-index 33e2638ef7f0d..122321d549227 100644
---- a/tools/lib/bpf/Makefile
-+++ b/tools/lib/bpf/Makefile
-@@ -145,7 +145,7 @@ PC_FILE		:= $(addprefix $(OUTPUT),$(PC_FILE))
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index 71c574d1e8be2..2028dc017f7a0 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -1182,6 +1182,26 @@ bool dc_commit_state(struct dc *dc, struct dc_state *context)
+ 	return (result == DC_OK);
+ }
  
- GLOBAL_SYM_COUNT = $(shell readelf -s --wide $(BPF_IN_SHARED) | \
- 			   cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | \
--			   awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}' | \
-+			   awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}' | \
- 			   sort -u | wc -l)
- VERSIONED_SYM_COUNT = $(shell readelf -s --wide $(OUTPUT)libbpf.so | \
- 			      grep -Eo '[^ ]+@LIBBPF_' | cut -d@ -f1 | sort -u | wc -l)
-@@ -217,7 +217,7 @@ check_abi: $(OUTPUT)libbpf.so
- 		     "versioned in $(VERSION_SCRIPT)." >&2;		 \
- 		readelf -s --wide $(BPF_IN_SHARED) |			 \
- 		    cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' |	 \
--		    awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}'|   \
-+		    awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}'|  \
- 		    sort -u > $(OUTPUT)libbpf_global_syms.tmp;		 \
- 		readelf -s --wide $(OUTPUT)libbpf.so |			 \
- 		    grep -Eo '[^ ]+@LIBBPF_' | cut -d@ -f1 |		 \
++static bool is_flip_pending_in_pipes(struct dc *dc, struct dc_state *context)
++{
++	int i;
++	struct pipe_ctx *pipe;
++
++	for (i = 0; i < MAX_PIPES; i++) {
++		pipe = &context->res_ctx.pipe_ctx[i];
++
++		if (!pipe->plane_state)
++			continue;
++
++		/* Must set to false to start with, due to OR in update function */
++		pipe->plane_state->status.is_flip_pending = false;
++		dc->hwss.update_pending_status(pipe);
++		if (pipe->plane_state->status.is_flip_pending)
++			return true;
++	}
++	return false;
++}
++
+ bool dc_post_update_surfaces_to_stream(struct dc *dc)
+ {
+ 	int i;
+@@ -1192,6 +1212,9 @@ bool dc_post_update_surfaces_to_stream(struct dc *dc)
+ 
+ 	post_surface_trace(dc);
+ 
++	if (is_flip_pending_in_pipes(dc, context))
++		return true;
++
+ 	for (i = 0; i < dc->res_pool->pipe_count; i++)
+ 		if (context->res_ctx.pipe_ctx[i].stream == NULL ||
+ 		    context->res_ctx.pipe_ctx[i].plane_state == NULL) {
 -- 
 2.20.1
 
