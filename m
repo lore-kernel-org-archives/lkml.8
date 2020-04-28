@@ -2,58 +2,55 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1FBC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECFFC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF2F620BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB90420BED
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:30:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098623;
-	bh=xcrADyEDg2EnQ7Xpdv5Hhi8g3f0y/fZgGhF4abv15RU=;
+	s=default; t=1588098626;
+	bh=dBQ0T4PkvmwXpAxEz8xIZFwhmeRg2Eec4TtdC+P/jQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GW4hHJqPbSiV8LwtCVXObTXSpGC5bH5aZh0bhy1NK3ii5/UxlD1M2ryfDoDZg4B9N
-	 AnEsJxFqBhgx0MLxqHYMymy4C/IDSQ21eT6si5N4elPUCScBTkHk5WGHL6gAKha7qB
-	 NR2lXSQw8savi6TfnwTTXyKXkm4lcp6WTP7znZLE=
+	b=spDDzvQRNcGYbzFM8YcbUZcJMVcvTqilDfuNg7VbuBLhz1XOdA0Lh/PkI0RA3fkNz
+	 39tELNIVryAC+8AJ6+kbqrhu0yfe7qmnscMw88qsgJ4PIfBop6mx7u5DY9t9Y7xDyc
+	 gC0T8OCmd/sM7PURkgSlYFbTscjgO3IqfefjWbJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728995AbgD1SaX (ORCPT
+        id S1729503AbgD1Sa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:30:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44802 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:30:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728966AbgD1SaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:30:15 -0400
+        id S1729468AbgD1SaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:30:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D08D21744;
-        Tue, 28 Apr 2020 18:30:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C85A920B1F;
+        Tue, 28 Apr 2020 18:30:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098614;
-        bh=xcrADyEDg2EnQ7Xpdv5Hhi8g3f0y/fZgGhF4abv15RU=;
+        s=default; t=1588098617;
+        bh=dBQ0T4PkvmwXpAxEz8xIZFwhmeRg2Eec4TtdC+P/jQw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fDwhMeF96KBJLT3EGRnzbrJBVmh7Hx6XAPTyG7TMCLoFIXh9KkVq7fVIvJkPStcfL
-         4HxvBnHT7lKgW5+CtOD6OI1cwKEVowuSo9/RgMqFZEjjLf+t6it4KPImbE3faGp9Dq
-         SjTAC9pzxeeGqsp9oJWyUmqVZ+kOkuxcq8/uUJRg=
+        b=o7Y0SsnYu68lbmFaZ9joGZZyk5aqPOsc55ZyQC2njUHW4g6kHsGD5HIWE/L7hOA5g
+         /HHqjyVInc5TvfBdOHs9rytVptd9SB2L6jD9W5xfV+jTIgCI+uI3TJMnFuSs7nvk8u
+         qj3pC2Cp1cVswjYCNshYefMttvMvPkuvvPbLnuxI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 028/131] pwm: bcm2835: Dynamically allocate base
-Date:   Tue, 28 Apr 2020 20:24:00 +0200
-Message-Id: <20200428182228.656110733@linuxfoundation.org>
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.6 086/167] iio: xilinx-xadc: Fix ADC-B powerdown
+Date:   Tue, 28 Apr 2020 20:24:22 +0200
+Message-Id: <20200428182235.857391705@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,39 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-[ Upstream commit 2c25b07e5ec119cab609e41407a1fb3fa61442f5 ]
+commit e44ec7794d88f918805d700240211a9ec05ed89d upstream.
 
-The newer 2711 and 7211 chips have two PWM controllers and failure to
-dynamically allocate the PWM base would prevent the second PWM
-controller instance being probed for succeeding with an -EEXIST error
-from alloc_pwms().
+The check for shutting down the second ADC is inverted. This causes it to
+be powered down when it should be enabled. As a result channels that are
+supposed to be handled by the second ADC return invalid conversion results.
 
-Fixes: e5a06dc5ac1f ("pwm: Add BCM2835 PWM driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Fixes: bdc8cda1d010 ("iio:adc: Add Xilinx XADC driver")
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/pwm/pwm-bcm2835.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iio/adc/xilinx-xadc-core.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
-index db001cba937fd..e340ad79a1ec9 100644
---- a/drivers/pwm/pwm-bcm2835.c
-+++ b/drivers/pwm/pwm-bcm2835.c
-@@ -166,6 +166,7 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
+--- a/drivers/iio/adc/xilinx-xadc-core.c
++++ b/drivers/iio/adc/xilinx-xadc-core.c
+@@ -722,13 +722,14 @@ static int xadc_power_adc_b(struct xadc
+ {
+ 	uint16_t val;
  
- 	pc->chip.dev = &pdev->dev;
- 	pc->chip.ops = &bcm2835_pwm_ops;
-+	pc->chip.base = -1;
- 	pc->chip.npwm = 2;
- 	pc->chip.of_xlate = of_pwm_xlate_with_flags;
- 	pc->chip.of_pwm_n_cells = 3;
--- 
-2.20.1
-
++	/* Powerdown the ADC-B when it is not needed. */
+ 	switch (seq_mode) {
+ 	case XADC_CONF1_SEQ_SIMULTANEOUS:
+ 	case XADC_CONF1_SEQ_INDEPENDENT:
+-		val = XADC_CONF2_PD_ADC_B;
++		val = 0;
+ 		break;
+ 	default:
+-		val = 0;
++		val = XADC_CONF2_PD_ADC_B;
+ 		break;
+ 	}
+ 
 
 
