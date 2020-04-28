@@ -2,77 +2,121 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90590C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2145C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65CA0206F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0C0D206F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:09:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588072120;
-	bh=Z49se1qYpX3X6jalbuAacnYIZf6qEkiFiIaRwmnl2tw=;
+	s=default; t=1588072186;
+	bh=MGWunbA8swfXX7fdfm8HfW6mgSmyUonlAUB6TuoF+Jg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wtzp2HvxooOMMmGLrrwphufsxd24w1BqOK1yxp/LqC6o64KkzRRH4VyD1XXVzxVTr
-	 oT/ep8t2q1NH+gso30MtvqVTgPVFWwy2TXtHI0rlUtR8VhpKND4wH27U+XVfpHb1Gq
-	 BhGcHU0SkOF3/gF6VluwQyTG4CB+Uoe6bF/WqEVI=
+	b=W493bIcxynyOgiDjHrOFA7Tzt7t3gMkvGamwQ+9psvk0mZ1m2amk/kLrQVoaYzfbq
+	 SckKIwPYredOq/L75NKVgcljt8SQnzmn2Wy6ae/hxeJSQNWFjcnMooWZ51jHHCzQ22
+	 nzO6e3xTpZMg9g1d9SglDnk2jUuq79wRjNJfb7PI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgD1LIj (ORCPT
+        id S1726545AbgD1LJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:08:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60996 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 07:09:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726416AbgD1LIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:08:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726416AbgD1LJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 07:09:45 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 736E320661;
-        Tue, 28 Apr 2020 11:08:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A16920661;
+        Tue, 28 Apr 2020 11:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588072118;
-        bh=Z49se1qYpX3X6jalbuAacnYIZf6qEkiFiIaRwmnl2tw=;
+        s=default; t=1588072185;
+        bh=MGWunbA8swfXX7fdfm8HfW6mgSmyUonlAUB6TuoF+Jg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E9I5y7Z3Zp/pHdRvM2xQfms68jdQ1DtJ3phcptqmMeJcFFSaFxdRbGMYpRgvwZlPX
-         oMYtrUS/b6UoQy/Vw3RNISK+6mfrDMuWqX2kLRpwH9rIjfl1hMc2VlMAOJlIr68nCC
-         rcM1l7lkoEkPS8rOiZclW/BdyCX7wt6vpxIH31g8=
-Date:   Tue, 28 Apr 2020 13:08:36 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     vladimir.stankovic@displaylink.com
-Cc:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        mausb-host-devel@displaylink.com
-Subject: Re: [PATCH v5 7/8] usb: mausb_host: MA-USB PAL events processing
-Message-ID: <20200428110836.GD1145239@kroah.com>
-References: <20200327152614.26833-1-vladimir.stankovic@displaylink.com>
- <20200425091954.1610-1-vladimir.stankovic@displaylink.com>
- <20200425091954.1610-8-vladimir.stankovic@displaylink.com>
+        b=kpOvLK49PTFx1bL0adrxIRN7QJJKw5OLlWEjnKqAtoMgznGBL9n14T49UUJOfvvYi
+         Qbrc8Ys2eY57Ye9gbLsyVdqKQ7359Jcrr3ir3j0M0nKdcKZRR9wY+kV5JfU+OdRvHv
+         cdP+quDPGAJUgLGSCgYDZPuaKs+0CPeFyk/iWV4o=
+Date:   Tue, 28 Apr 2020 12:09:42 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     Nisha Kumari <nishakumari@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, agross@kernel.org, lgirdwood@gmail.com,
+        mark.rutland@arm.com, david.brown@linaro.org,
+        LKML <linux-kernel@vger.kernel.org>, kgunda@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH 4/4] regulator: adding interrupt handling in labibb
+ regulator
+Message-ID: <20200428110942.GC5677@sirena.org.uk>
+References: <1560337252-27193-1-git-send-email-nishakumari@codeaurora.org>
+ <1560337252-27193-5-git-send-email-nishakumari@codeaurora.org>
+ <20190613172738.GO5316@sirena.org.uk>
+ <CAO_48GEYAWBgzeEKx1kjjmLJ+F0chSkRs0EUC86Y2q20kyqjkA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="NU0Ex4SbNnrxsi6C"
 Content-Disposition: inline
-In-Reply-To: <20200425091954.1610-8-vladimir.stankovic@displaylink.com>
+In-Reply-To: <CAO_48GEYAWBgzeEKx1kjjmLJ+F0chSkRs0EUC86Y2q20kyqjkA@mail.gmail.com>
+X-Cookie: Eschew obfuscation.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 11:19:53AM +0200, vladimir.stankovic@displaylink.com wrote:
-> +static int mausb_device_assign_address(struct mausb_device *dev,
-> +				       struct mausb_usb_device_ctx *usb_dev_ctx)
-> +{
-> +	int status =
-> +		mausb_setusbdevaddress_event_to_user(dev,
-> +						     usb_dev_ctx->dev_handle,
-> +						     RESPONSE_TIMEOUT);
-> +
-> +	mausb_pr_info("dev_handle=%#x, status=%d", usb_dev_ctx->dev_handle,
-> +		      status);
 
-When drivers are working properly, they are totally silent.  Please
-remove this type of debugging code from the driver entirely, or change
-it to be dev_dbg().
+--NU0Ex4SbNnrxsi6C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Otherwise this really looks like a very noisy driver.
+On Tue, Apr 28, 2020 at 10:46:52AM +0530, Sumit Semwal wrote:
+> On Thu, 13 Jun 2019 at 22:57, Mark Brown <broonie@kernel.org> wrote:
 
-greg k-h
+> > > +     /*
+> > > +      * The SC(short circuit) fault would trigger PBS(Portable Batch
+> > > +      * System) to disable regulators for protection. This would
+> > > +      * cause the SC_DETECT status being cleared so that it's not
+> > > +      * able to get the SC fault status.
+> > > +      * Check if LAB/IBB regulators are enabled in the driver but
+> > > +      * disabled in hardware, this means a SC fault had happened
+> > > +      * and SCP handling is completed by PBS.
+> > > +      */
+
+> > Let the core worry about this, the driver should just report the problem
+> > to the core like all other devices do (and this driver doesn't...).
+
+> I (and Bjorn too) looked to find the api that allows us to do this
+> short circuit reporting and recovery in the core, but couldn't find
+> anything except REGULATOR_ERROR_OVER_CURRENT which also looks like
+> it's used only once in the code.
+
+A short circuit will generate excessive current (and detection of a
+short circuit is usually current based) so using the same notification
+should be fine.  If you're concerned about this feel free to add a
+specific notification, and add any handling you need in response to that
+notification.  You certainly shouldn't be just reenabling the regulators
+in your driver.
+
+Mostly AFAICT people are fairly happy with the autonomous response of
+the hardware to these issues, it's not like they're expected to happen
+in normal operation or be recoverable.
+
+--NU0Ex4SbNnrxsi6C
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6oDvUACgkQJNaLcl1U
+h9Bw1Af/eH2Xtc+Nb+wOnsuA/ECmwpfLa7PgrSXEc4oqAFvwrzgmGgzJVdGz2ZZv
+nUDk70XTFKy0dHRIUxxeohZRJr/+lEXJOKUQx4LwHRuphGDWhbV63lAVJQJbkUbk
+QABoJ/lj4WWEOsiAmY4BQVuQcEuZxcY6deyeA6s1/Ur0EaoKfQv3I8x2VJjECBDc
+D+weiy/KgJg7OKzUtCPMufdVKwWzKoHqyW8CCEov3iozV9nJ+BoY2F3K8gGMqxEt
+5GCo0EZ/uktvqCo6UroN701E+ne4zsBysVztRE39HTzWCk7nQ0Eg1c3m6C4sL9ki
+DYnE9SroVq3mFjcEirN8Tj9azWExdA==
+=jlOR
+-----END PGP SIGNATURE-----
+
+--NU0Ex4SbNnrxsi6C--
