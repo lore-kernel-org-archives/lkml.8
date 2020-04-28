@@ -2,371 +2,69 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E03C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD98C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2E42051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:33:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="rz8mYvkg"
+	by mail.kernel.org (Postfix) with ESMTP id 0381D2051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:33:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbgD1Gdv (ORCPT
+        id S1726699AbgD1Gdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 02:33:51 -0400
-Received: from vultr.net.flygoat.com ([149.28.68.211]:60604 "EHLO
-        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgD1Gdt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 02:33:49 -0400
-Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id ABD4620CDE;
-        Tue, 28 Apr 2020 06:33:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1588055628; bh=rJ+nxx0HRzw5QmMSo0irBPA4uzMeZNWt4MklV2VeHlc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rz8mYvkg/YoW5kVfnRH1eRKvAoQUG8eoxP7u3ARQkcAg6QrczrRamURnngJujgHfk
-         oj8hsT+98uCW49Tqf58LF6w/vbpw+sfhDAGpz0mIS0pslo13LvQXWB5Na6c78EZZDk
-         oYEoDh+qzKcNYwIG3fyoj9Wn1ISyT73q879BQUpcAHAvPl/mSarywtV/ZBnSDf3sVu
-         z5VU0Q2kN9aoEgW4yRibRVYxJSDIXPZj0RwaolpbGQyYIDeEy7w/YrmAkYtn2r0i4A
-         JDjDbLQPNeTpAyc0JJ+Jt7itTkNzkOv2TYzUW3ykIcfNIIyemZ0YmS5MgF8UEMmiii
-         7o8fIZp+YoWJA==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     maz@kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: [PATCH v2 5/6] irqchip: Add Loongson PCH MSI controller
-Date:   Tue, 28 Apr 2020 14:32:44 +0800
-Message-Id: <20200428063247.2223499-5-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200428063247.2223499-1-jiaxun.yang@flygoat.com>
-References: <20200422142428.1249684-1-jiaxun.yang@flygoat.com>
- <20200428063247.2223499-1-jiaxun.yang@flygoat.com>
+        Tue, 28 Apr 2020 02:33:55 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51102 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726380AbgD1Gdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 02:33:50 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C86B314957E8B6F55505;
+        Tue, 28 Apr 2020 14:33:47 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Tue, 28 Apr 2020
+ 14:33:37 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <ccaulfie@redhat.com>, <teigland@redhat.com>, <tglx@linutronix.de>,
+        <cluster-devel@redhat.com>, <linux-kernel@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>
+Subject: [PATCH] dlm: remove unneeded semicolon in rcom.c
+Date:   Tue, 28 Apr 2020 14:33:03 +0800
+Message-ID: <20200428063303.34246-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This controller appears on Loongson LS7A family of PCH to transform
-interrupts from PCI MSI into HyperTransport vectorized interrrupts
-and send them to procrssor's HT vector controller.
+Fix the following coccicheck warning:
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
---
-v2:
-	- Style clean-ups
-	- Add ack callback
-	- Use bitmap_find_free_region
+fs/dlm/rcom.c:566:2-3: Unneeded semicolon
+
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- drivers/irqchip/Kconfig                |  10 +
- drivers/irqchip/Makefile               |   1 +
- drivers/irqchip/irq-loongson-pch-msi.c | 259 +++++++++++++++++++++++++
- 3 files changed, 270 insertions(+)
- create mode 100644 drivers/irqchip/irq-loongson-pch-msi.c
+ fs/dlm/rcom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 5524a621638c..0b6b826dd843 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -549,4 +549,14 @@ config LOONGSON_PCH_PIC
- 	help
- 	  Support for the Loongson PCH PIC Controller.
+diff --git a/fs/dlm/rcom.c b/fs/dlm/rcom.c
+index e3d9f72c640d..4daf5dc2b51c 100644
+--- a/fs/dlm/rcom.c
++++ b/fs/dlm/rcom.c
+@@ -563,7 +563,7 @@ void dlm_receive_rcom(struct dlm_ls *ls, struct dlm_rcom *rc, int nodeid)
+ 		lock = 1;
+ 		reply = 1;
+ 		break;
+-	};
++	}
  
-+config LOONGSON_PCH_MSI
-+	bool "Loongson PCH PIC Controller"
-+	depends on MACH_LOONGSON64 || COMPILE_TEST
-+	depends on PCI
-+	default MACH_LOONGSON64
-+	select IRQ_DOMAIN_HIERARCHY
-+	select PCI_MSI
-+	help
-+	  Support for the Loongson PCH MSI Controller.
-+
- endmenu
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index acc72331cec8..3a4ce283189a 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -109,3 +109,4 @@ obj-$(CONFIG_LOONGSON_LIOINTC)		+= irq-loongson-liointc.o
- obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
- obj-$(CONFIG_LOONGSON_HTVEC)		+= irq-loongson-htvec.o
- obj-$(CONFIG_LOONGSON_PCH_PIC)		+= irq-loongson-pch-pic.o
-+obj-$(CONFIG_LOONGSON_PCH_MSI)		+= irq-loongson-pch-msi.o
-diff --git a/drivers/irqchip/irq-loongson-pch-msi.c b/drivers/irqchip/irq-loongson-pch-msi.c
-new file mode 100644
-index 000000000000..5b4d607a899e
---- /dev/null
-+++ b/drivers/irqchip/irq-loongson-pch-msi.c
-@@ -0,0 +1,259 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Copyright (C) 2020, Jiaxun Yang <jiaxun.yang@flygoat.com>
-+ *  Loongson PCH MSI support
-+ */
-+
-+#define pr_fmt(fmt) "pch-msi: " fmt
-+
-+#include <linux/irqchip.h>
-+#include <linux/msi.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_pci.h>
-+#include <linux/pci.h>
-+#include <linux/slab.h>
-+
-+struct pch_msi_data {
-+	spinlock_t		msi_map_lock;
-+	phys_addr_t		doorbell;
-+	u32			irq_first;	/* The vector number that MSIs starts */
-+	u32			num_irqs;	/* The number of vectors for MSIs */
-+	unsigned long		*msi_map;
-+};
-+
-+static void pch_msi_mask_msi_irq(struct irq_data *d)
-+{
-+	pci_msi_mask_irq(d);
-+	irq_chip_mask_parent(d);
-+}
-+
-+static void pch_msi_unmask_msi_irq(struct irq_data *d)
-+{
-+	pci_msi_unmask_irq(d);
-+	irq_chip_unmask_parent(d);
-+}
-+
-+static struct irq_chip pch_msi_irq_chip = {
-+	.name			= "PCH MSI",
-+	.irq_mask		= pch_msi_mask_msi_irq,
-+	.irq_unmask		= pch_msi_unmask_msi_irq,
-+	.irq_ack		= irq_chip_ack_parent,
-+	.irq_set_affinity	= irq_chip_set_affinity_parent,
-+};
-+
-+static int pch_msi_allocate_hwirq(struct pch_msi_data *priv, int num_req)
-+{
-+	int first;
-+
-+	spin_lock(&priv->msi_map_lock);
-+
-+	first = bitmap_find_free_region(priv->msi_map, priv->num_irqs,
-+					get_count_order(num_req));
-+	if (first < 0) {
-+		spin_unlock(&priv->msi_map_lock);
-+		return -ENOSPC;
-+	}
-+
-+	bitmap_set(priv->msi_map, first, num_req);
-+	spin_unlock(&priv->msi_map_lock);
-+
-+	return priv->irq_first + first;
-+}
-+
-+static void pch_msi_free_hwirq(struct pch_msi_data *priv,
-+				int hwirq, int num_req)
-+{
-+	int first = hwirq - priv->irq_first;
-+
-+	spin_lock(&priv->msi_map_lock);
-+	bitmap_clear(priv->msi_map, first, num_req);
-+	spin_unlock(&priv->msi_map_lock);
-+}
-+
-+static void pch_msi_compose_msi_msg(struct irq_data *data,
-+					struct msi_msg *msg)
-+{
-+	struct pch_msi_data *priv = irq_data_get_irq_chip_data(data);
-+
-+	msg->address_hi = upper_32_bits(priv->doorbell);
-+	msg->address_lo = lower_32_bits(priv->doorbell);
-+	msg->data = data->hwirq;
-+}
-+
-+static struct msi_domain_info pch_msi_domain_info = {
-+	.flags		= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-+			  MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
-+	.chip	= &pch_msi_irq_chip,
-+};
-+
-+static struct irq_chip middle_irq_chip = {
-+	.name			= "PCH MSI Middle",
-+	.irq_mask		= irq_chip_mask_parent,
-+	.irq_unmask		= irq_chip_unmask_parent,
-+	.irq_ack		= irq_chip_ack_parent,
-+	.irq_set_affinity	= irq_chip_set_affinity_parent,
-+	.irq_compose_msi_msg	= pch_msi_compose_msi_msg,
-+};
-+
-+static int pch_msi_parent_domain_alloc(struct irq_domain *domain,
-+					unsigned int virq, int hwirq)
-+{
-+	struct irq_fwspec fwspec;
-+	int ret;
-+
-+	fwspec.fwnode = domain->parent->fwnode;
-+	fwspec.param_count = 1;
-+	fwspec.param[0] = hwirq;
-+
-+	ret = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
-+	if (ret)
-+		return ret;
-+
-+	irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
-+					&middle_irq_chip, NULL);
-+
-+	return 0;
-+}
-+
-+static int pch_msi_middle_domain_alloc(struct irq_domain *domain,
-+					   unsigned int virq,
-+					   unsigned int nr_irqs, void *args)
-+{
-+	struct pch_msi_data *priv = domain->host_data;
-+	int hwirq, err, i;
-+
-+	hwirq = pch_msi_allocate_hwirq(priv, nr_irqs);
-+	if (hwirq < 0)
-+		return hwirq;
-+
-+	for (i = 0; i < nr_irqs; i++) {
-+		err = pch_msi_parent_domain_alloc(domain, virq + i, hwirq + i);
-+		if (err)
-+			goto err_hwirq;
-+
-+		irq_domain_set_hwirq_and_chip(domain, virq + i, hwirq + i,
-+					      &middle_irq_chip, priv);
-+	}
-+
-+	return 0;
-+
-+err_hwirq:
-+	while (--i >= 0)
-+		irq_domain_free_irqs_parent(domain, virq, i);
-+
-+	pch_msi_free_hwirq(priv, hwirq, nr_irqs);
-+	return err;
-+}
-+
-+static void pch_msi_middle_domain_free(struct irq_domain *domain,
-+					   unsigned int virq,
-+					   unsigned int nr_irqs)
-+{
-+	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
-+	struct pch_msi_data *priv = irq_data_get_irq_chip_data(d);
-+
-+	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
-+	pch_msi_free_hwirq(priv, d->hwirq, nr_irqs);
-+}
-+
-+static const struct irq_domain_ops pch_msi_middle_domain_ops = {
-+	.alloc	= pch_msi_middle_domain_alloc,
-+	.free	= pch_msi_middle_domain_free,
-+};
-+
-+static int pch_msi_init_domains(struct pch_msi_data *priv,
-+				struct device_node *node,
-+				struct device_node *parent)
-+{
-+	struct irq_domain *middle_domain, *msi_domain, *parent_domain;
-+
-+	parent_domain = irq_find_host(parent);
-+	if (!parent_domain) {
-+		pr_err("Failed to find the parent domain\n");
-+		return -ENXIO;
-+	}
-+
-+	middle_domain = irq_domain_add_linear(NULL, priv->num_irqs,
-+						&pch_msi_middle_domain_ops,
-+						priv);
-+	if (!middle_domain) {
-+		pr_err("Failed to create the MSI middle domain\n");
-+		return -ENOMEM;
-+	}
-+
-+	middle_domain->parent = parent_domain;
-+
-+	msi_domain = pci_msi_create_irq_domain(of_node_to_fwnode(node),
-+					       &pch_msi_domain_info,
-+					       middle_domain);
-+	if (!msi_domain) {
-+		pr_err("Failed to create MSI domain\n");
-+		irq_domain_remove(middle_domain);
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+static int pch_msi_init(struct device_node *node,
-+			    struct device_node *parent)
-+{
-+	struct pch_msi_data *priv;
-+	struct resource res;
-+	int ret;
-+
-+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&priv->msi_map_lock);
-+
-+	ret = of_address_to_resource(node, 0, &res);
-+	if (ret) {
-+		pr_err("Failed to allocate resource\n");
-+		goto err_priv;
-+	}
-+
-+	priv->doorbell = res.start;
-+
-+	if (of_property_read_u32(node, "loongson,msi-base-vec",
-+				&priv->irq_first)) {
-+		pr_err("Unable to parse MSI vec base\n");
-+		ret = -EINVAL;
-+		goto err_priv;
-+	}
-+
-+	if (of_property_read_u32(node, "loongson,msi-num-vecs",
-+				&priv->num_irqs)) {
-+		pr_err("Unable to parse MSI vec number\n");
-+		ret = -EINVAL;
-+		goto err_priv;
-+	}
-+
-+	priv->msi_map = kcalloc(BITS_TO_LONGS(priv->num_irqs),
-+				sizeof(*priv->msi_map),
-+				GFP_KERNEL);
-+	if (!priv->msi_map) {
-+		ret = -ENOMEM;
-+		goto err_priv;
-+	}
-+
-+	pr_debug("Registering %d MSIs, starting at %d\n",
-+		 priv->num_irqs, priv->irq_first);
-+
-+	ret = pch_msi_init_domains(priv, node, parent);
-+	if (ret)
-+		goto err_map;
-+
-+	return 0;
-+
-+err_map:
-+	kfree(priv->msi_map);
-+err_priv:
-+	kfree(priv);
-+	return ret;
-+}
-+
-+IRQCHIP_DECLARE(pch_msi, "loongson,pch-msi-1.0", pch_msi_init);
+ 	spin_lock(&ls->ls_recover_lock);
+ 	status = ls->ls_recover_status;
 -- 
-2.26.0.rc2
+2.21.1
 
