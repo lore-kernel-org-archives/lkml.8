@@ -2,678 +2,79 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6FEC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF7FC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6D842076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:28:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h6sItOR6"
+	by mail.kernel.org (Postfix) with ESMTP id DBEBE206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:30:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgD1D2W (ORCPT
+        id S1726318AbgD1DaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 23:28:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726447AbgD1D2O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 23:28:14 -0400
-Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E25BC03C1AC
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 20:28:13 -0700 (PDT)
-Received: by mail-qv1-xf4a.google.com with SMTP id f4so21151778qvu.19
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 20:28:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=w+hbcu739HmI811AIn8u188RMugp30gOckHL/I31PIs=;
-        b=h6sItOR6gIl8yMZtGsc+KvsVlI+KhsruQRIe6oh58cLsmVum5l9wKxoTmyIdqtVdgo
-         yEc6kD5sqRR/gS4NL718J6TSkezc4OKHlfKLFCIwKVdpDxxfZV5MgFT0Mzu+vZhVAKQt
-         052RL8teyQBHk0lq1AYF9MPxf3zL4XPU9gw0NGE7zoQITVg5AUzMQ+UOBM2Vb2y9IDCz
-         B3jF2efq3YASKtJJX63zyanU6b2+yy/AnyRpkInxMz6doYJxWhk3dh7JIZQZB6lBC35u
-         bKk19vYh8vIeH0+8DufEIqzAmRArX1Gf0ujFrXP9p963UhX8+N7F8FMpPTOacony2GWd
-         XZKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=w+hbcu739HmI811AIn8u188RMugp30gOckHL/I31PIs=;
-        b=C+bW/xTi48fOyhvpxeB7Ka4oxH/vV4Gcc74F1Edf2kAa0bRL+Yey/q+Sew/thxuHxo
-         0n4sg3wCQy5PMu1zgTuQVbjTB7AQiepmXGzLWQHPe5hkNfhP00Qg1jhzGpf41+pAN1JV
-         A6cegucPiwov7MAZghVoEdM8Fz16BiqQ3t40FjzRh8X4qSbkP5QmD++Whn2+kPavT6EZ
-         nusLvv/hNJA3rKYL8UnemODpowuPFnQfaAh+RxXA+PzLQEh75kyQ1DI7shUlWnmflXk4
-         hYScRyRhUaUCQqKPPVrMY7Va345608hKZ1rqegLIR4/g4BN+1B9jKRV0GqV/92GVNLjC
-         J/mg==
-X-Gm-Message-State: AGi0PuYZQcVDVMRGgOZHiY68y2GiryVU9N8Lp89kdWt2WfGQiC5M3y6a
-        gEncVzwYNhEwvPFjz7UvjS3CsKdRhA==
-X-Google-Smtp-Source: APiQypJOYW9IMSHyn80lvF9/d8mmeHLcI3xVGJ4nLfSki9gusCiLdI6vfYSG9/6bobsr6VbBiD3ICbBGtw==
-X-Received: by 2002:a0c:b797:: with SMTP id l23mr26280786qve.204.1588044492423;
- Mon, 27 Apr 2020 20:28:12 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 05:27:44 +0200
-In-Reply-To: <20200428032745.133556-1-jannh@google.com>
-Message-Id: <20200428032745.133556-5-jannh@google.com>
-Mime-Version: 1.0
-References: <20200428032745.133556-1-jannh@google.com>
-X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-Subject: [PATCH 4/5] binfmt_elf, binfmt_elf_fdpic: Use a VMA list snapshot
-From:   Jann Horn <jannh@google.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 27 Apr 2020 23:30:11 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3357 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726047AbgD1DaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 23:30:11 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id D54AAEE4D4C2439DAFE6;
+        Tue, 28 Apr 2020 11:30:05 +0800 (CST)
+Received: from huawei.com (10.175.105.27) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Tue, 28 Apr 2020
+ 11:29:59 +0800
+From:   Wu Bo <wubo40@huawei.com>
+To:     <rpeterso@redhat.com>, <agruenba@redhat.com>
+CC:     <cluster-devel@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <liuzhiqiang26@huawei.com>, <linfeilong@huawei.com>,
+        <wubo40@huawei.com>
+Subject: [PATCH] fs/gfs2:lock a spinlock always before returning from do_xmote()
+Date:   Tue, 28 Apr 2020 11:29:05 +0800
+Message-ID: <1588044545-59405-1-git-send-email-wubo40@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.105.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In both binfmt_elf and binfmt_elf_fdpic, use a new helper
-dump_vma_snapshot() to take a snapshot of the VMA list (including the gate
-VMA, if we have one) while protected by the mmap_sem, and then use that
-snapshot instead of walking the VMA list without locking.
+The call stack is as follows:
+finish_xmote()
+        ...
+        spin_lock(&gl->gl_lockref.lock);
+        ...
+	--> do_xmote()
+            spin_unlock(&gl->gl_lockref.lock);
+            ...
+            return;
+        ...
+        spin_unlock(&gl->gl_lockref.lock);
+           
+do_xmote function needs to be locked before returning,
+Otherwise, there will be a double release lock in finish_xmote() function.
 
-An alternative approach would be to keep the mmap_sem held across the
-entire core dumping operation; however, keeping the mmap_sem locked while
-we may be blocked for an unbounded amount of time (e.g. because we're
-dumping to a FUSE filesystem or so) isn't really optimal; the mmap_sem
-blocks things like the ->release handler of userfaultfd, and we don't
-really want critical system daemons to grind to a halt just because someone
-"gifted" them SCM_RIGHTS to an eternally-locked userfaultfd, or something
-like that.
-
-Since both the normal ELF code and the FDPIC ELF code need this
-functionality (and if any other binfmt wants to add coredump support in the
-future, they'd probably need it, too), implement this with a common helper
-in fs/coredump.c.
-
-A downside of this approach is that we now need a bigger amount of kernel
-memory per userspace VMA in the normal ELF case, and that we need O(n)
-kernel memory in the FDPIC ELF case at all; but 40 bytes per VMA shouldn't
-be terribly bad.
-
-Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Wu Bo <wubo40@huawei.com>
 ---
- fs/binfmt_elf.c          | 152 +++++++++++++--------------------------
- fs/binfmt_elf_fdpic.c    |  86 ++++++++++------------
- fs/coredump.c            |  68 ++++++++++++++++++
- include/linux/coredump.h |  10 +++
- 4 files changed, 168 insertions(+), 148 deletions(-)
+ fs/gfs2/glock.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index fb36469848323..dffe9dc8497ca 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1292,8 +1292,12 @@ static bool always_dump_vma(struct vm_area_struct *vma)
- 	return false;
- }
- 
-+#define DUMP_SIZE_MAYBE_ELFHDR_PLACEHOLDER 1
-+
- /*
-  * Decide what to dump of a segment, part, all or none.
-+ * The result must be fixed up via vma_dump_size_fixup() once we're in a context
-+ * that's allowed to sleep arbitrarily long.
-  */
- static unsigned long vma_dump_size(struct vm_area_struct *vma,
- 				   unsigned long mm_flags)
-@@ -1348,30 +1352,15 @@ static unsigned long vma_dump_size(struct vm_area_struct *vma,
- 
- 	/*
- 	 * If this looks like the beginning of a DSO or executable mapping,
--	 * check for an ELF header.  If we find one, dump the first page to
--	 * aid in determining what was mapped here.
-+	 * we'll check for an ELF header. If we find one, we'll dump the first
-+	 * page to aid in determining what was mapped here.
-+	 * However, we shouldn't sleep on userspace reads while holding the
-+	 * mmap_sem, so we just return a placeholder for now that will be fixed
-+	 * up later in vma_dump_size_fixup().
- 	 */
- 	if (FILTER(ELF_HEADERS) &&
--	    vma->vm_pgoff == 0 && (vma->vm_flags & VM_READ)) {
--		u32 __user *header = (u32 __user *) vma->vm_start;
--		u32 word;
--		/*
--		 * Doing it this way gets the constant folded by GCC.
--		 */
--		union {
--			u32 cmp;
--			char elfmag[SELFMAG];
--		} magic;
--		BUILD_BUG_ON(SELFMAG != sizeof word);
--		magic.elfmag[EI_MAG0] = ELFMAG0;
--		magic.elfmag[EI_MAG1] = ELFMAG1;
--		magic.elfmag[EI_MAG2] = ELFMAG2;
--		magic.elfmag[EI_MAG3] = ELFMAG3;
--		if (unlikely(get_user(word, header)))
--			word = 0;
--		if (word == magic.cmp)
--			return PAGE_SIZE;
--	}
-+	    vma->vm_pgoff == 0 && (vma->vm_flags & VM_READ))
-+		return DUMP_SIZE_MAYBE_ELFHDR_PLACEHOLDER;
- 
- #undef	FILTER
- 
-@@ -1381,6 +1370,22 @@ static unsigned long vma_dump_size(struct vm_area_struct *vma,
- 	return vma->vm_end - vma->vm_start;
- }
- 
-+/* Fix up the result from vma_dump_size(), now that we're allowed to sleep. */
-+static void vma_dump_size_fixup(struct core_vma_metadata *meta)
-+{
-+	char elfmag[SELFMAG];
-+
-+	if (meta->dump_size != DUMP_SIZE_MAYBE_ELFHDR_PLACEHOLDER)
-+		return;
-+
-+	if (copy_from_user(elfmag, (void __user *)meta->start, SELFMAG)) {
-+		meta->dump_size = 0;
-+		return;
-+	}
-+	meta->dump_size =
-+		(memcmp(elfmag, ELFMAG, SELFMAG) == 0) ? PAGE_SIZE : 0;
-+}
-+
- /* An ELF note in memory */
- struct memelfnote
- {
-@@ -2124,32 +2129,6 @@ static void free_note_info(struct elf_note_info *info)
- 
- #endif
- 
--static struct vm_area_struct *first_vma(struct task_struct *tsk,
--					struct vm_area_struct *gate_vma)
--{
--	struct vm_area_struct *ret = tsk->mm->mmap;
--
--	if (ret)
--		return ret;
--	return gate_vma;
--}
--/*
-- * Helper function for iterating across a vma list.  It ensures that the caller
-- * will visit `gate_vma' prior to terminating the search.
-- */
--static struct vm_area_struct *next_vma(struct vm_area_struct *this_vma,
--					struct vm_area_struct *gate_vma)
--{
--	struct vm_area_struct *ret;
--
--	ret = this_vma->vm_next;
--	if (ret)
--		return ret;
--	if (this_vma == gate_vma)
--		return NULL;
--	return gate_vma;
--}
--
- static void fill_extnum_info(struct elfhdr *elf, struct elf_shdr *shdr4extnum,
- 			     elf_addr_t e_shoff, int segs)
- {
-@@ -2176,9 +2155,8 @@ static void fill_extnum_info(struct elfhdr *elf, struct elf_shdr *shdr4extnum,
- static int elf_core_dump(struct coredump_params *cprm)
- {
- 	int has_dumped = 0;
--	int segs, i;
-+	int vma_count, segs, i;
- 	size_t vma_data_size = 0;
--	struct vm_area_struct *vma, *gate_vma;
- 	struct elfhdr elf;
- 	loff_t offset = 0, dataoff;
- 	struct elf_note_info info = { };
-@@ -2186,30 +2164,21 @@ static int elf_core_dump(struct coredump_params *cprm)
- 	struct elf_shdr *shdr4extnum = NULL;
- 	Elf_Half e_phnum;
- 	elf_addr_t e_shoff;
--	elf_addr_t *vma_filesz = NULL;
-+	struct core_vma_metadata *vma_meta;
-+
-+	if (dump_vma_snapshot(cprm, &vma_count, &vma_meta, vma_dump_size))
-+		return 0;
-+
-+	for (i = 0; i < vma_count; i++) {
-+		vma_dump_size_fixup(vma_meta + i);
-+		vma_data_size += vma_meta[i].dump_size;
-+	}
- 
--	/*
--	 * We no longer stop all VM operations.
--	 * 
--	 * This is because those proceses that could possibly change map_count
--	 * or the mmap / vma pages are now blocked in do_exit on current
--	 * finishing this core dump.
--	 *
--	 * Only ptrace can touch these memory addresses, but it doesn't change
--	 * the map_count or the pages allocated. So no possibility of crashing
--	 * exists while dumping the mm->vm_next areas to the core file.
--	 */
--  
- 	/*
- 	 * The number of segs are recored into ELF header as 16bit value.
- 	 * Please check DEFAULT_MAX_MAP_COUNT definition when you modify here.
- 	 */
--	segs = current->mm->map_count;
--	segs += elf_core_extra_phdrs();
--
--	gate_vma = get_gate_vma(current->mm);
--	if (gate_vma != NULL)
--		segs++;
-+	segs = vma_count + elf_core_extra_phdrs();
- 
- 	/* for notes section */
- 	segs++;
-@@ -2247,24 +2216,6 @@ static int elf_core_dump(struct coredump_params *cprm)
- 
- 	dataoff = offset = roundup(offset, ELF_EXEC_PAGESIZE);
- 
--	/*
--	 * Zero vma process will get ZERO_SIZE_PTR here.
--	 * Let coredump continue for register state at least.
--	 */
--	vma_filesz = kvmalloc(array_size(sizeof(*vma_filesz), (segs - 1)),
--			      GFP_KERNEL);
--	if (!vma_filesz)
--		goto cleanup;
--
--	for (i = 0, vma = first_vma(current, gate_vma); vma != NULL;
--			vma = next_vma(vma, gate_vma)) {
--		unsigned long dump_size;
--
--		dump_size = vma_dump_size(vma, cprm->mm_flags);
--		vma_filesz[i++] = dump_size;
--		vma_data_size += dump_size;
--	}
--
- 	offset += vma_data_size;
- 	offset += elf_core_extra_data_size();
- 	e_shoff = offset;
-@@ -2285,22 +2236,20 @@ static int elf_core_dump(struct coredump_params *cprm)
- 		goto cleanup;
- 
- 	/* Write program headers for segments dump */
--	for (i = 0, vma = first_vma(current, gate_vma); vma != NULL;
--			vma = next_vma(vma, gate_vma)) {
-+	for (i = 0; i < vma_count; i++) {
-+		struct core_vma_metadata *meta = vma_meta + i;
- 		struct elf_phdr phdr;
- 
- 		phdr.p_type = PT_LOAD;
- 		phdr.p_offset = offset;
--		phdr.p_vaddr = vma->vm_start;
-+		phdr.p_vaddr = meta->start;
- 		phdr.p_paddr = 0;
--		phdr.p_filesz = vma_filesz[i++];
--		phdr.p_memsz = vma->vm_end - vma->vm_start;
-+		phdr.p_filesz = meta->dump_size;
-+		phdr.p_memsz = meta->end - meta->start;
- 		offset += phdr.p_filesz;
--		phdr.p_flags = vma->vm_flags & VM_READ ? PF_R : 0;
--		if (vma->vm_flags & VM_WRITE)
--			phdr.p_flags |= PF_W;
--		if (vma->vm_flags & VM_EXEC)
--			phdr.p_flags |= PF_X;
-+		phdr.p_flags = meta->flags & VM_READ ? PF_R : 0;
-+		phdr.p_flags |= meta->flags & VM_WRITE ? PF_W : 0;
-+		phdr.p_flags |= meta->flags & VM_EXEC ? PF_X : 0;
- 		phdr.p_align = ELF_EXEC_PAGESIZE;
- 
- 		if (!dump_emit(cprm, &phdr, sizeof(phdr)))
-@@ -2321,9 +2270,10 @@ static int elf_core_dump(struct coredump_params *cprm)
- 	if (!dump_skip(cprm, dataoff - cprm->pos))
- 		goto cleanup;
- 
--	for (i = 0, vma = first_vma(current, gate_vma); vma != NULL;
--			vma = next_vma(vma, gate_vma)) {
--		if (!dump_user_range(cprm, vma->vm_start, vma_filesz[i++]))
-+	for (i = 0; i < vma_count; i++) {
-+		struct core_vma_metadata *meta = vma_meta + i;
-+
-+		if (!dump_user_range(cprm, meta->start, meta->dump_size))
- 			goto cleanup;
- 	}
- 	dump_truncate(cprm);
-@@ -2339,7 +2289,7 @@ static int elf_core_dump(struct coredump_params *cprm)
- cleanup:
- 	free_note_info(&info);
- 	kfree(shdr4extnum);
--	kvfree(vma_filesz);
-+	kvfree(vma_meta);
- 	kfree(phdr4note);
- 	return has_dumped;
- }
-diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-index 938f66f4de9b2..bde51f40085b9 100644
---- a/fs/binfmt_elf_fdpic.c
-+++ b/fs/binfmt_elf_fdpic.c
-@@ -1190,7 +1190,8 @@ static int elf_fdpic_map_file_by_direct_mmap(struct elf_fdpic_params *params,
-  *
-  * I think we should skip something. But I am not sure how. H.J.
-  */
--static int maydump(struct vm_area_struct *vma, unsigned long mm_flags)
-+static unsigned long vma_dump_size(struct vm_area_struct *vma,
-+				   unsigned long mm_flags)
- {
- 	int dump_ok;
- 
-@@ -1219,7 +1220,7 @@ static int maydump(struct vm_area_struct *vma, unsigned long mm_flags)
- 			kdcore("%08lx: %08lx: %s (DAX private)", vma->vm_start,
- 			       vma->vm_flags, dump_ok ? "yes" : "no");
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index 29f9b66..7129d10 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -613,6 +613,7 @@ static void do_xmote(struct gfs2_glock *gl, struct gfs2_holder *gh, unsigned int
+ 				fs_err(sdp, "Error %d syncing glock \n", ret);
+ 				gfs2_dump_glock(NULL, gl, true);
+ 			}
++			spin_lock(&gl->gl_lockref.lock);
+ 			return;
  		}
--		return dump_ok;
-+		goto out;
  	}
- 
- 	/* By default, dump shared memory if mapped from an anonymous file. */
-@@ -1228,13 +1229,13 @@ static int maydump(struct vm_area_struct *vma, unsigned long mm_flags)
- 			dump_ok = test_bit(MMF_DUMP_ANON_SHARED, &mm_flags);
- 			kdcore("%08lx: %08lx: %s (share)", vma->vm_start,
- 			       vma->vm_flags, dump_ok ? "yes" : "no");
--			return dump_ok;
-+			goto out;
- 		}
- 
- 		dump_ok = test_bit(MMF_DUMP_MAPPED_SHARED, &mm_flags);
- 		kdcore("%08lx: %08lx: %s (share)", vma->vm_start,
- 		       vma->vm_flags, dump_ok ? "yes" : "no");
--		return dump_ok;
-+		goto out;
- 	}
- 
- #ifdef CONFIG_MMU
-@@ -1243,14 +1244,16 @@ static int maydump(struct vm_area_struct *vma, unsigned long mm_flags)
- 		dump_ok = test_bit(MMF_DUMP_MAPPED_PRIVATE, &mm_flags);
- 		kdcore("%08lx: %08lx: %s (!anon)", vma->vm_start,
- 		       vma->vm_flags, dump_ok ? "yes" : "no");
--		return dump_ok;
-+		goto out;
- 	}
- #endif
- 
- 	dump_ok = test_bit(MMF_DUMP_ANON_PRIVATE, &mm_flags);
- 	kdcore("%08lx: %08lx: %s", vma->vm_start, vma->vm_flags,
- 	       dump_ok ? "yes" : "no");
--	return dump_ok;
-+
-+out:
-+	return dump_ok ? vma->vm_end - vma->vm_start : 0;
- }
- 
- /* An ELF note in memory */
-@@ -1490,31 +1493,30 @@ static void fill_extnum_info(struct elfhdr *elf, struct elf_shdr *shdr4extnum,
- /*
-  * dump the segments for an MMU process
-  */
--static bool elf_fdpic_dump_segments(struct coredump_params *cprm)
-+static bool elf_fdpic_dump_segments(struct coredump_params *cprm,
-+				    struct core_vma_metadata *vma_meta,
-+				    int vma_count)
- {
--	struct vm_area_struct *vma;
-+	int i;
- 
--	for (vma = current->mm->mmap; vma; vma = vma->vm_next) {
--		unsigned long addr;
-+	for (i = 0; i < vma_count; i++) {
-+		struct core_vma_metadata *meta = vma_meta + i;
- 
--		if (!maydump(vma, cprm->mm_flags))
--			continue;
--
--		if (!dump_user_range(cprm, vma->vm_start,
--				     vma->vma_end - vma->vm_start))
-+		if (!dump_user_range(cprm, meta->start, meta->dump_size))
- 			return false;
- 	}
- 	return true;
- }
- 
--static size_t elf_core_vma_data_size(unsigned long mm_flags)
-+static size_t elf_core_vma_data_size(unsigned long mm_flags,
-+				     struct core_vma_metadata *vma_meta,
-+				     int vma_count)
- {
--	struct vm_area_struct *vma;
- 	size_t size = 0;
-+	int i;
- 
--	for (vma = current->mm->mmap; vma; vma = vma->vm_next)
--		if (maydump(vma, mm_flags))
--			size += vma->vm_end - vma->vm_start;
-+	for (i = 0; i < vma_count; i++)
-+		size += vma_meta[i].dump_size;
- 	return size;
- }
- 
-@@ -1529,9 +1531,8 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- {
- #define	NUM_NOTES	6
- 	int has_dumped = 0;
--	int segs;
-+	int vma_count, segs;
- 	int i;
--	struct vm_area_struct *vma;
- 	struct elfhdr *elf = NULL;
- 	loff_t offset = 0, dataoff;
- 	int numnote;
-@@ -1552,18 +1553,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 	elf_addr_t e_shoff;
- 	struct core_thread *ct;
- 	struct elf_thread_status *tmp;
--
--	/*
--	 * We no longer stop all VM operations.
--	 *
--	 * This is because those proceses that could possibly change map_count
--	 * or the mmap / vma pages are now blocked in do_exit on current
--	 * finishing this core dump.
--	 *
--	 * Only ptrace can touch these memory addresses, but it doesn't change
--	 * the map_count or the pages allocated. So no possibility of crashing
--	 * exists while dumping the mm->vm_next areas to the core file.
--	 */
-+	struct core_vma_metadata *vma_meta = NULL;
- 
- 	/* alloc memory for large data structures: too large to be on stack */
- 	elf = kmalloc(sizeof(*elf), GFP_KERNEL);
-@@ -1588,6 +1578,9 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 		goto cleanup;
- #endif
- 
-+	if (dump_vma_snapshot(cprm, &vma_count, &vma_meta, vma_dump_size))
-+		goto cleanup;
-+
- 	for (ct = current->mm->core_state->dumper.next;
- 					ct; ct = ct->next) {
- 		tmp = kzalloc(sizeof(*tmp), GFP_KERNEL);
-@@ -1611,8 +1604,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 	fill_prstatus(prstatus, current, cprm->siginfo->si_signo);
- 	elf_core_copy_regs(&prstatus->pr_reg, cprm->regs);
- 
--	segs = current->mm->map_count;
--	segs += elf_core_extra_phdrs();
-+	segs = vma_count + elf_core_extra_phdrs();
- 
- 	/* for notes section */
- 	segs++;
-@@ -1680,7 +1672,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 	/* Page-align dumped data */
- 	dataoff = offset = roundup(offset, ELF_EXEC_PAGESIZE);
- 
--	offset += elf_core_vma_data_size(cprm->mm_flags);
-+	offset += elf_core_vma_data_size(cprm->mm_flags, vma_meta, vma_count);
- 	offset += elf_core_extra_data_size();
- 	e_shoff = offset;
- 
-@@ -1700,24 +1692,23 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 		goto cleanup;
- 
- 	/* write program headers for segments dump */
--	for (vma = current->mm->mmap; vma; vma = vma->vm_next) {
-+	for (i = 0; i < vma_count; i++) {
-+		struct core_vma_metadata *meta = vma_meta + i;
- 		struct elf_phdr phdr;
- 		size_t sz;
- 
--		sz = vma->vm_end - vma->vm_start;
-+		sz = meta->end - meta->start;
- 
- 		phdr.p_type = PT_LOAD;
- 		phdr.p_offset = offset;
--		phdr.p_vaddr = vma->vm_start;
-+		phdr.p_vaddr = meta->start;
- 		phdr.p_paddr = 0;
--		phdr.p_filesz = maydump(vma, cprm->mm_flags) ? sz : 0;
-+		phdr.p_filesz = meta->dump_size;
- 		phdr.p_memsz = sz;
- 		offset += phdr.p_filesz;
--		phdr.p_flags = vma->vm_flags & VM_READ ? PF_R : 0;
--		if (vma->vm_flags & VM_WRITE)
--			phdr.p_flags |= PF_W;
--		if (vma->vm_flags & VM_EXEC)
--			phdr.p_flags |= PF_X;
-+		phdr.p_flags = meta->flags & VM_READ ? PF_R : 0;
-+		phdr.p_flags |= meta->flags & VM_WRITE ? PF_W : 0;
-+		phdr.p_flags |= meta->flags & VM_EXEC ? PF_X : 0;
- 		phdr.p_align = ELF_EXEC_PAGESIZE;
- 
- 		if (!dump_emit(cprm, &phdr, sizeof(phdr)))
-@@ -1745,7 +1736,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 	if (!dump_skip(cprm, dataoff - cprm->pos))
- 		goto cleanup;
- 
--	if (!elf_fdpic_dump_segments(cprm))
-+	if (!elf_fdpic_dump_segments(cprm, vma_meta, vma_count))
- 		goto cleanup;
- 
- 	if (!elf_core_write_extra_data(cprm))
-@@ -1769,6 +1760,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 		list_del(tmp);
- 		kfree(list_entry(tmp, struct elf_thread_status, list));
- 	}
-+	kvfree(vma_meta);
- 	kfree(phdr4note);
- 	kfree(elf);
- 	kfree(prstatus);
-diff --git a/fs/coredump.c b/fs/coredump.c
-index 3385de8a62302..f1efa0c93b3af 100644
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -919,3 +919,71 @@ void dump_truncate(struct coredump_params *cprm)
- 	}
- }
- EXPORT_SYMBOL(dump_truncate);
-+
-+static struct vm_area_struct *first_vma(struct task_struct *tsk,
-+					struct vm_area_struct *gate_vma)
-+{
-+	struct vm_area_struct *ret = tsk->mm->mmap;
-+
-+	if (ret)
-+		return ret;
-+	return gate_vma;
-+}
-+/*
-+ * Helper function for iterating across a vma list.  It ensures that the caller
-+ * will visit `gate_vma' prior to terminating the search.
-+ */
-+static struct vm_area_struct *next_vma(struct vm_area_struct *this_vma,
-+				       struct vm_area_struct *gate_vma)
-+{
-+	struct vm_area_struct *ret;
-+
-+	ret = this_vma->vm_next;
-+	if (ret)
-+		return ret;
-+	if (this_vma == gate_vma)
-+		return NULL;
-+	return gate_vma;
-+}
-+
-+/*
-+ * Under the mmap_sem, take a snapshot of relevant information about the task's
-+ * VMAs.
-+ */
-+int dump_vma_snapshot(struct coredump_params *cprm, int *vma_count,
-+	struct core_vma_metadata **vma_meta,
-+	unsigned long (*dump_size_cb)(struct vm_area_struct *, unsigned long))
-+{
-+	struct vm_area_struct *vma, *gate_vma;
-+	struct mm_struct *mm = current->mm;
-+	int i;
-+
-+	if (down_read_killable(&mm->mmap_sem))
-+		return -EINTR;
-+
-+	gate_vma = get_gate_vma(mm);
-+	*vma_count = mm->map_count + (gate_vma ? 1 : 0);
-+
-+	*vma_meta = kvmalloc_array(*vma_count, sizeof(**vma_meta), GFP_KERNEL);
-+	if (!*vma_meta) {
-+		up_read(&mm->mmap_sem);
-+		return -ENOMEM;
-+	}
-+
-+	for (i = 0, vma = first_vma(current, gate_vma); vma != NULL;
-+			vma = next_vma(vma, gate_vma)) {
-+		(*vma_meta)[i++] = (struct core_vma_metadata) {
-+			.start = vma->vm_start,
-+			.end = vma->vm_end,
-+			.flags = vma->vm_flags,
-+			.dump_size = dump_size_cb(vma, cprm->mm_flags)
-+		};
-+	}
-+
-+	up_read(&mm->mmap_sem);
-+
-+	if (WARN_ON(i != *vma_count))
-+		return -EFAULT;
-+
-+	return 0;
-+}
-diff --git a/include/linux/coredump.h b/include/linux/coredump.h
-index 4289dc21c04ff..d3387866dce7b 100644
---- a/include/linux/coredump.h
-+++ b/include/linux/coredump.h
-@@ -7,6 +7,13 @@
- #include <linux/fs.h>
- #include <asm/siginfo.h>
- 
-+struct core_vma_metadata {
-+	unsigned long start, end;
-+	unsigned long filesize;
-+	unsigned long flags;
-+	unsigned long dump_size;
-+};
-+
- /*
-  * These are the only things you should do on a core-file: use only these
-  * functions to write out all the necessary info.
-@@ -18,6 +25,9 @@ extern int dump_align(struct coredump_params *cprm, int align);
- extern void dump_truncate(struct coredump_params *cprm);
- int dump_user_range(struct coredump_params *cprm, unsigned long start,
- 		    unsigned long len);
-+int dump_vma_snapshot(struct coredump_params *cprm, int *vma_count,
-+	struct core_vma_metadata **vma_meta,
-+	unsigned long (*dump_size_cb)(struct vm_area_struct *, unsigned long));
- #ifdef CONFIG_COREDUMP
- extern void do_coredump(const kernel_siginfo_t *siginfo);
- #else
 -- 
-2.26.2.303.gf8c07b1a785-goog
+1.8.3.1
 
