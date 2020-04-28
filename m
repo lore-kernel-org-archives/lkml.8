@@ -2,108 +2,125 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE109C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EECC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D460C206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F45206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:52:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HWXUWvka"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgD1WvI (ORCPT
+        id S1726507AbgD1WwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:51:08 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46842 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725934AbgD1WvH (ORCPT
+        Tue, 28 Apr 2020 18:52:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48323 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726042AbgD1WwV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:51:07 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03SMXIPx025824;
-        Tue, 28 Apr 2020 18:50:51 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mguwftgp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 18:50:50 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03SMXW1k026169;
-        Tue, 28 Apr 2020 18:50:50 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mguwftg3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 18:50:50 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03SMeNJ1012807;
-        Tue, 28 Apr 2020 22:50:48 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma01fra.de.ibm.com with ESMTP id 30mcu8d8yk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 22:50:47 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03SMojJj61538642
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 22:50:45 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EED7752057;
-        Tue, 28 Apr 2020 22:50:44 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.4.15])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 43CCC5204F;
-        Tue, 28 Apr 2020 22:50:44 +0000 (GMT)
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     akpm@linux-foundation.org, jack@suse.cz, kirill@shutemov.name
-Cc:     borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
-        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
-        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, dave.hansen@intel.com,
-        peterz@infradead.org, sean.j.christopherson@intel.com
-Subject: [PATCH v1 1/1] fs/splice: add missing callback for inaccessible pages
-Date:   Wed, 29 Apr 2020 00:50:43 +0200
-Message-Id: <20200428225043.3091359-1-imbrenda@linux.ibm.com>
-X-Mailer: git-send-email 2.25.4
+        Tue, 28 Apr 2020 18:52:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588114340;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ufHYW9Szgtlfn6kl1fo0AOdgn3k3qUj3jPCNjzfkXDU=;
+        b=HWXUWvkaViE8CENmKVcw4kK9wxqottkgqUtQqL0U9h9Aq8Zpb6SqdbqJOGQaGsehptQfxZ
+        n6N7oa26RJ9WW7LSmqubfJMltzVHVgbF2NV3CTW/ZYfbxbqme61IBAgPaVA6Zu+adujagT
+        eKXOS5M1insjXzc/Cpi/AghdUUrWnpM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-205-BGnQH7F_PX6ZifZbE81wYg-1; Tue, 28 Apr 2020 18:52:16 -0400
+X-MC-Unique: BGnQH7F_PX6ZifZbE81wYg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A55451005510;
+        Tue, 28 Apr 2020 22:52:14 +0000 (UTC)
+Received: from ovpn-112-24.phx2.redhat.com (ovpn-112-24.phx2.redhat.com [10.3.112.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A0A971001B30;
+        Tue, 28 Apr 2020 22:52:13 +0000 (UTC)
+Message-ID: <fc7efe6dd23ba1d25c29441fc8132ea2bbf7b5fb.camel@redhat.com>
+Subject: Re: [RFC PATCH 3/3] sched,rt: break out of load balancing if an RT
+ task appears
+From:   Scott Wood <swood@redhat.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Rik van Riel <riel@surriel.com>,
+        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
+Date:   Tue, 28 Apr 2020 17:52:13 -0500
+In-Reply-To: <fa406883f0eace37fe7f658814e29f82a4f0addf.camel@redhat.com>
+References: <20200428050242.17717-1-swood@redhat.com>
+         <20200428050242.17717-4-swood@redhat.com> <jhjees7s29u.mognet@arm.com>
+         <fa406883f0eace37fe7f658814e29f82a4f0addf.camel@redhat.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-28_15:2020-04-28,2020-04-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 clxscore=1015 mlxlogscore=968 mlxscore=0 suspectscore=0
- bulkscore=0 adultscore=0 impostorscore=0 phishscore=0 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004280174
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a page is inaccesible and it is used for things like sendfile, then
-the content of the page is not always touched, and can be passed
-directly to a driver, causing issues.
+On Tue, 2020-04-28 at 17:33 -0500, Scott Wood wrote:
+> On Tue, 2020-04-28 at 22:56 +0100, Valentin Schneider wrote:
+> > On 28/04/20 06:02, Scott Wood wrote:
+> > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > > index dfde7f0ce3db..e7437e4e40b4 100644
+> > > --- a/kernel/sched/fair.c
+> > > +++ b/kernel/sched/fair.c
+> > > @@ -9394,6 +9400,10 @@ static int should_we_balance(struct lb_env
+> > > *env)
+> > >       struct sched_group *sg = env->sd->groups;
+> > >       int cpu, balance_cpu = -1;
+> > > 
+> > > +	/* Run the realtime task now; load balance later. */
+> > > +	if (rq_has_runnable_rt_task(env->dst_rq))
+> > > +		return 0;
+> > > +
+> > 
+> > I have a feeling this isn't very nice to CFS tasks, since we would now
+> > "waste" load-balance attempts if they happen to coincide with an RT task
+> > being runnable.
+> > 
+> > On your 72 CPUs machine, the system-wide balance happens (at best) every
+> > 72ms if you have idle time, every ~2300ms otherwise (every balance
+> > CPU gets to try to balance however, so it's not as horrible as I'm
+> > making
+> > it sound). This is totally worst-case scenario territory, and you'd hope
+> > newidle_balance() could help here and there (as it isn't gated by any
+> > balance interval).
+> > 
+> > Still, even for a single rq, postponing a system-wide balance for a
+> > full balance interval (i.e. ~2 secs worst case here) just because we had
+> > a
+> > single RT task running when we tried to balance seems a bit much.
+> > 
+> > It may be possible to hack something to detect those cases and reset the
+> > interval to "now" when e.g. dequeuing the last RT task (& after having
+> > previously aborted a load-balance due to RT/DL/foobar).
+> 
+> Yeah, some way to retry at an appropriate time after aborting a rebalance
+> would be good.
 
-This patch fixes the issue by adding a call to arch_make_page_accessible
-in page_cache_pipe_buf_confirm; this fixes the issue.
+Another option is to limit the bailing out to newidle balancing (as the
+patchset currently stands, it isn't checking the right rq for global
+balancing anyway).  On RT the softirq runs from thread context, so enabling
+interrupts and (on RT) preemption should suffice to avoid latency problems
+in the global rebalance.
 
-Fixes: f28d43636d6f ("mm/gup/writeback: add callbacks for inaccessible pages")
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
----
- fs/splice.c | 3 +++
- 1 file changed, 3 insertions(+)
+-Scott
 
-diff --git a/fs/splice.c b/fs/splice.c
-index 4735defc46ee..f026e0ce9acd 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -106,6 +106,9 @@ static int page_cache_pipe_buf_confirm(struct pipe_inode_info *pipe,
- 	struct page *page = buf->page;
- 	int err;
- 
-+	if (arch_make_page_accessible(page))
-+		return -EIO;
-+
- 	if (!PageUptodate(page)) {
- 		lock_page(page);
- 
--- 
-2.25.4
 
