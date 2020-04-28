@@ -2,58 +2,54 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C3A2C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F36B0C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F172621744
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC38021841
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:32:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098761;
-	bh=nmu8Hw54SRfd3QF6XgfWN9PLfa+RVpM9YtS3Uj4lcog=;
+	s=default; t=1588098763;
+	bh=UcH5qtw59qTuXTBw6ECJdi8TpzL+afl6G6oGjx9V0XA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1mlZHHiZFqkATSSXKxvb/eVIYeUUZ+1Kq/0pWOVACP2raZV8Qj1kaYqE4w/qH0NGR
-	 57ImP6AiFxHfOhgWRKOyOh9i9ZPk8YR//j1jNlHTW0P/KHuQjDkX9Ny5lZpWSJA4a5
-	 TyQvGg4AZIW9l14lqV04X6Np8hhoc8G0BZoZupwc=
+	b=IC/c1xwFSaWJTMxnrU07v6h2sdfy9Zl0t18HIks0M+QyjsFylCfZS5hvlQC682Hhz
+	 s4A54z1uQ6bN+GyRSYdtKh/unULbJVACwIoxOwbrvkqlUlZIfq1vRPsJBzVmO+Jck+
+	 w6Jn/Fno9qr/Zw9vq3mzrEvCjJbp5bK6SG90t/Kg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729836AbgD1Scj (ORCPT
+        id S1729841AbgD1Scm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:32:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48678 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:32:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729807AbgD1Sc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:32:29 -0400
+        id S1729827AbgD1Scg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:32:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15E9020B80;
-        Tue, 28 Apr 2020 18:32:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AD4720B80;
+        Tue, 28 Apr 2020 18:32:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098748;
-        bh=nmu8Hw54SRfd3QF6XgfWN9PLfa+RVpM9YtS3Uj4lcog=;
+        s=default; t=1588098755;
+        bh=UcH5qtw59qTuXTBw6ECJdi8TpzL+afl6G6oGjx9V0XA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oYqtOY7RoJO9LH4yhKq+LqqgmwJoz3/vIwdrkTqRMY60bb5CanLk0N79ojyk4ZCZ/
-         zZ/tdyITqoNSBWt5ofsi/r91VrEZe9UZzjQk+dZiIPrvGr0U2Osp9NDRszDoQm6m9j
-         TGgO0iGSn4xdKnnd+oPfUJWLlMzbmv1Dqq+PuJB0=
+        b=xYblkT0Rra2pjdwFZBpiU6pV3PPwRw7mnCq2L4JF2vpatFcXEUXsjKw+rcnyDFrhj
+         EyqH/GQ4uyDJ+LMh54nTMaFnTi7WNnCFy4o7afp9+YEbZ8qwU+kkwMk5yaFhDOltK7
+         eHmNLI0K2X4BOkI5L097rhpfP/PNqtG6zgy/2Nns=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 049/131] x86/kvm: Introduce kvm_(un)map_gfn()
-Date:   Tue, 28 Apr 2020 20:24:21 +0200
-Message-Id: <20200428182231.170541022@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.6 107/167] ALSA: usb-audio: Fix usb audio refcnt leak when getting spdif
+Date:   Tue, 28 Apr 2020 20:24:43 +0200
+Message-Id: <20200428182238.696554233@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,115 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-commit 1eff70a9abd46f175defafd29bc17ad456f398a7 upstream.
+commit 59e1947ca09ebd1cae147c08c7c41f3141233c84 upstream.
 
-kvm_vcpu_(un)map operates on gfns from any current address space.
-In certain cases we want to make sure we are not mapping SMRAM
-and for that we can use kvm_(un)map_gfn() that we are introducing
-in this patch.
+snd_microii_spdif_default_get() invokes snd_usb_lock_shutdown(), which
+increases the refcount of the snd_usb_audio object "chip".
 
-This is part of CVE-2019-3016.
+When snd_microii_spdif_default_get() returns, local variable "chip"
+becomes invalid, so the refcount should be decreased to keep refcount
+balanced.
 
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Reviewed-by: Joao Martins <joao.m.martins@oracle.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The reference counting issue happens in several exception handling paths
+of snd_microii_spdif_default_get(). When those error scenarios occur
+such as usb_ifnum_to_if() returns NULL, the function forgets to decrease
+the refcnt increased by snd_usb_lock_shutdown(), causing a refcnt leak.
+
+Fix this issue by jumping to "end" label when those error scenarios
+occur.
+
+Fixes: 447d6275f0c2 ("ALSA: usb-audio: Add sanity checks for endpoint accesses")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1587617711-13200-1-git-send-email-xiyuyang19@fudan.edu.cn
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/linux/kvm_host.h |  2 ++
- virt/kvm/kvm_main.c      | 29 ++++++++++++++++++++++++-----
- 2 files changed, 26 insertions(+), 5 deletions(-)
+ sound/usb/mixer_quirks.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index bef95dba14e8b..303c1a6916cea 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -738,8 +738,10 @@ struct kvm_memory_slot *kvm_vcpu_gfn_to_memslot(struct kvm_vcpu *vcpu, gfn_t gfn
- kvm_pfn_t kvm_vcpu_gfn_to_pfn_atomic(struct kvm_vcpu *vcpu, gfn_t gfn);
- kvm_pfn_t kvm_vcpu_gfn_to_pfn(struct kvm_vcpu *vcpu, gfn_t gfn);
- int kvm_vcpu_map(struct kvm_vcpu *vcpu, gpa_t gpa, struct kvm_host_map *map);
-+int kvm_map_gfn(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map);
- struct page *kvm_vcpu_gfn_to_page(struct kvm_vcpu *vcpu, gfn_t gfn);
- void kvm_vcpu_unmap(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty);
-+int kvm_unmap_gfn(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty);
- unsigned long kvm_vcpu_gfn_to_hva(struct kvm_vcpu *vcpu, gfn_t gfn);
- unsigned long kvm_vcpu_gfn_to_hva_prot(struct kvm_vcpu *vcpu, gfn_t gfn, bool *writable);
- int kvm_vcpu_read_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn, void *data, int offset,
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 33b288469c70c..8e29b2e0bf2eb 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1705,12 +1705,13 @@ struct page *gfn_to_page(struct kvm *kvm, gfn_t gfn)
- }
- EXPORT_SYMBOL_GPL(gfn_to_page);
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -1508,11 +1508,15 @@ static int snd_microii_spdif_default_get
  
--static int __kvm_map_gfn(struct kvm_memory_slot *slot, gfn_t gfn,
-+static int __kvm_map_gfn(struct kvm_memslots *slots, gfn_t gfn,
- 			 struct kvm_host_map *map)
- {
- 	kvm_pfn_t pfn;
- 	void *hva = NULL;
- 	struct page *page = KVM_UNMAPPED_PAGE;
-+	struct kvm_memory_slot *slot = __gfn_to_memslot(slots, gfn);
+ 	/* use known values for that card: interface#1 altsetting#1 */
+ 	iface = usb_ifnum_to_if(chip->dev, 1);
+-	if (!iface || iface->num_altsetting < 2)
+-		return -EINVAL;
++	if (!iface || iface->num_altsetting < 2) {
++		err = -EINVAL;
++		goto end;
++	}
+ 	alts = &iface->altsetting[1];
+-	if (get_iface_desc(alts)->bNumEndpoints < 1)
+-		return -EINVAL;
++	if (get_iface_desc(alts)->bNumEndpoints < 1) {
++		err = -EINVAL;
++		goto end;
++	}
+ 	ep = get_endpoint(alts, 0)->bEndpointAddress;
  
- 	if (!map)
- 		return -EINVAL;
-@@ -1739,14 +1740,20 @@ static int __kvm_map_gfn(struct kvm_memory_slot *slot, gfn_t gfn,
- 	return 0;
- }
- 
-+int kvm_map_gfn(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map)
-+{
-+	return __kvm_map_gfn(kvm_memslots(vcpu->kvm), gfn, map);
-+}
-+EXPORT_SYMBOL_GPL(kvm_map_gfn);
-+
- int kvm_vcpu_map(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map)
- {
--	return __kvm_map_gfn(kvm_vcpu_gfn_to_memslot(vcpu, gfn), gfn, map);
-+	return __kvm_map_gfn(kvm_vcpu_memslots(vcpu), gfn, map);
- }
- EXPORT_SYMBOL_GPL(kvm_vcpu_map);
- 
--void kvm_vcpu_unmap(struct kvm_vcpu *vcpu, struct kvm_host_map *map,
--		    bool dirty)
-+static void __kvm_unmap_gfn(struct kvm_memory_slot *memslot,
-+			struct kvm_host_map *map, bool dirty)
- {
- 	if (!map)
- 		return;
-@@ -1762,7 +1769,7 @@ void kvm_vcpu_unmap(struct kvm_vcpu *vcpu, struct kvm_host_map *map,
- #endif
- 
- 	if (dirty) {
--		kvm_vcpu_mark_page_dirty(vcpu, map->gfn);
-+		mark_page_dirty_in_slot(memslot, map->gfn);
- 		kvm_release_pfn_dirty(map->pfn);
- 	} else {
- 		kvm_release_pfn_clean(map->pfn);
-@@ -1771,6 +1778,18 @@ void kvm_vcpu_unmap(struct kvm_vcpu *vcpu, struct kvm_host_map *map,
- 	map->hva = NULL;
- 	map->page = NULL;
- }
-+
-+int kvm_unmap_gfn(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty)
-+{
-+	__kvm_unmap_gfn(gfn_to_memslot(vcpu->kvm, map->gfn), map, dirty);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(kvm_unmap_gfn);
-+
-+void kvm_vcpu_unmap(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty)
-+{
-+	__kvm_unmap_gfn(kvm_vcpu_gfn_to_memslot(vcpu, map->gfn), map, dirty);
-+}
- EXPORT_SYMBOL_GPL(kvm_vcpu_unmap);
- 
- struct page *kvm_vcpu_gfn_to_page(struct kvm_vcpu *vcpu, gfn_t gfn)
--- 
-2.20.1
-
+ 	err = snd_usb_ctl_msg(chip->dev,
 
 
