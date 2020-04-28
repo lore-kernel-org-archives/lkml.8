@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B63C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95903C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C836F2085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68AC42085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098856;
-	bh=VgkjHnQqDZCRXFMl2MkI/WnEv6n7OOoH66nseVDHmXw=;
+	s=default; t=1588098864;
+	bh=C53nPrAhLjddGgLwTWfN4W4rJcmbPsWy9maRs+Hd8pc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vpt9IfoIrY59EDVBr49ZGDNxv6eE1Dn6KVPFgjs1upAkmbD1CyC5PsAFpeISeIXUE
-	 e1Xh2sXJQ2O0vyFkAAUtlKjX+dhIgMA68QWNJTt8y8LBhAPUrTWk/jEGsxWFlErzgq
-	 e0w1o/zb9yUfKvPvxhrPpCxpPZVWTc99KdJ7BSJ4=
+	b=slds8gCPvokXBNl0TOtNYATYzA4XAFEs0wEjOopvK5XqOH9A/Hqdh/e75rUqiFcF/
+	 2d8tedBelEIBn9oQR26dtJpRp0aol/WfQSPxSozmRkRGsRqNIC1NFTS4hVkJV1GQkE
+	 U0BdiqA3Y/a46uh4sNJH9OS9GVDFKveDYoC2a25o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730052AbgD1SeQ (ORCPT
+        id S1729135AbgD1SeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:34:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50876 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:34:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729269AbgD1SeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:34:12 -0400
+        id S1729298AbgD1SeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:34:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D80E20B80;
-        Tue, 28 Apr 2020 18:34:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F24220575;
+        Tue, 28 Apr 2020 18:34:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098851;
-        bh=VgkjHnQqDZCRXFMl2MkI/WnEv6n7OOoH66nseVDHmXw=;
+        s=default; t=1588098857;
+        bh=C53nPrAhLjddGgLwTWfN4W4rJcmbPsWy9maRs+Hd8pc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DYKTxWQvL17q+u/qjlc9uLDnpjLdCRJmgtwVpQZKBegMZ3Qa7+Dhqy/f5uX8bOv+C
-         0Yq9Rd2m1wrQnSt0z6XQZTgp/c6f5EIWjd14XsQVqJyWqUlrCTG26LJfIn0wxasUDe
-         M27wYc9G2zP+msSR8VSAl8xBPXHVZHL27SNqAtvk=
+        b=MNNglB/Iptt6G3bc+q7KODs437gFAL/tJwNzLTbG+OF+3rJHhyyiyLNTEep3vR0RK
+         wajbpUzb8hMKZEmnIMwaUSAdxX3SgoZrdVZszl+2geZavXmYtun1Ekyxd/+ETpq6/F
+         awQxaaEzc3ku27x6naPHc6U/pC+HKDWF0FUtgOoY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+49e69b4d71a420ceda3e@syzkaller.appspotmail.com,
-        Paul Moore <paul@paul-moore.com>
-Subject: [PATCH 5.6 120/167] audit: check the length of userspace generated audit records
-Date:   Tue, 28 Apr 2020 20:24:56 +0200
-Message-Id: <20200428182240.405262148@linuxfoundation.org>
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 065/131] vrf: Fix IPv6 with qdisc and xfrm
+Date:   Tue, 28 Apr 2020 20:24:37 +0200
+Message-Id: <20200428182233.130547569@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,38 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Moore <paul@paul-moore.com>
+From: David Ahern <dsahern@gmail.com>
 
-commit 763dafc520add02a1f4639b500c509acc0ea8e5b upstream.
+[ Upstream commit a53c102872ad6e34e1518e25899dc9498c27f8b1 ]
 
-Commit 756125289285 ("audit: always check the netlink payload length
-in audit_receive_msg()") fixed a number of missing message length
-checks, but forgot to check the length of userspace generated audit
-records.  The good news is that you need CAP_AUDIT_WRITE to submit
-userspace audit records, which is generally only given to trusted
-processes, so the impact should be limited.
+When a qdisc is attached to the VRF device, the packet goes down the ndo
+xmit function which is setup to send the packet back to the VRF driver
+which does a lookup to send the packet out. The lookup in the VRF driver
+is not considering xfrm policies. Change it to use ip6_dst_lookup_flow
+rather than ip6_route_output.
 
-Cc: stable@vger.kernel.org
-Fixes: 756125289285 ("audit: always check the netlink payload length in audit_receive_msg()")
-Reported-by: syzbot+49e69b4d71a420ceda3e@syzkaller.appspotmail.com
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Fixes: 35402e313663 ("net: Add IPv6 support to VRF device")
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- kernel/audit.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/vrf.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -1326,6 +1326,9 @@ static int audit_receive_msg(struct sk_b
- 	case AUDIT_FIRST_USER_MSG2 ... AUDIT_LAST_USER_MSG2:
- 		if (!audit_enabled && msg_type != AUDIT_USER_AVC)
- 			return 0;
-+		/* exit early if there isn't at least one character to print */
-+		if (data_len < 2)
-+			return -EINVAL;
+--- a/drivers/net/vrf.c
++++ b/drivers/net/vrf.c
+@@ -192,8 +192,8 @@ static netdev_tx_t vrf_process_v6_outbou
+ 	fl6.flowi6_proto = iph->nexthdr;
+ 	fl6.flowi6_flags = FLOWI_FLAG_SKIP_NH_OIF;
  
- 		err = audit_filter(msg_type, AUDIT_FILTER_USER);
- 		if (err == 1) { /* match or error */
+-	dst = ip6_route_output(net, NULL, &fl6);
+-	if (dst == dst_null)
++	dst = ip6_dst_lookup_flow(net, NULL, &fl6, NULL);
++	if (IS_ERR(dst) || dst == dst_null)
+ 		goto err;
+ 
+ 	skb_dst_drop(skb);
 
 
