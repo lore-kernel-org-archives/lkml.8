@@ -2,95 +2,173 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 457ABC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B79E4C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4862082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98EB520730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:15:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="WAqEKu+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbgD1RPR (ORCPT
+        id S1728343AbgD1RPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 13:15:17 -0400
-Received: from mga01.intel.com ([192.55.52.88]:28237 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726406AbgD1RPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 13:15:16 -0400
-IronPort-SDR: 40N+oO8S/YCSoqSqxK64CAbBFwlUP7iyhjkGoHR4Sg8rYxQYJE67TqogmUphQ9soxPpMS50R0m
- /D4zwpDVMmXw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 10:15:16 -0700
-IronPort-SDR: RVaP+BjdZg3L05vlNa65kzF0WA73qlGPEQMRAmYsJueS6dW2ZpdyQSyYGX8x7AGPOHKFog39bo
- L2FRWnLSy7GQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
-   d="scan'208";a="249222663"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by fmsmga008.fm.intel.com with ESMTP; 28 Apr 2020 10:15:16 -0700
-Message-ID: <cdc503a023d38b688a254b08d40fe58016d739eb.camel@intel.com>
-Subject: Re: [PATCH v3 01/10] x86/fpu/xstate: Rename
- validate_xstate_header() to validate_user_xstate_header()
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        Tue, 28 Apr 2020 13:15:23 -0400
+Received: from mail.efficios.com ([167.114.26.124]:44046 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgD1RPW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 13:15:22 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id C162D27E927;
+        Tue, 28 Apr 2020 13:15:20 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id m-OwioVHNQqU; Tue, 28 Apr 2020 13:15:20 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 5589727E926;
+        Tue, 28 Apr 2020 13:15:20 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 5589727E926
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1588094120;
+        bh=0smAkb6cp0p+RuLi71ihxVXx+NcGlOLwapAddILSwQ4=;
+        h=From:To:Date:Message-Id;
+        b=WAqEKu+24lm5qRCV5yJwWPHQBgxEAVPrcXpp6/JrG3g48Ec1+62dxKKZDrgtUgYcj
+         cZt1gE2U4N8yxxXhf3F3THD5zpt9di0r6dO0tjr0yS4FAZYKdLd53fnG8bODQLsHlZ
+         SX7X8gsljHNzbQYHzWa9rBecfO36sQvLg4P6QcuKNdnN7saR9UOlp2DZSTwGsnVdk+
+         1htKwyUTZLPz1lzrlu+MmGnuxPH828bdWs7i3Hhc3e4CSSwB71vKlK2aPiLgoS+zPv
+         SxsIMcV1WdMOnH+1ZpXI66I84qDiZGjj8XtgRY5MCsbUHxO5BLvuJygiA3L8TIyli7
+         7LctWSuVrJhkg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id NdISAkAmPADx; Tue, 28 Apr 2020 13:15:20 -0400 (EDT)
+Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
+        by mail.efficios.com (Postfix) with ESMTPSA id 128FC27E91B;
+        Tue, 28 Apr 2020 13:15:20 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Carlos O'Donell <carlos@redhat.com>
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha@sourceware.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
+        Ben Maurer <bmaurer@fb.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Borislav Petkov <bp@suse.de>
-Date:   Tue, 28 Apr 2020 10:15:18 -0700
-In-Reply-To: <20200428171107.GC11272@zn.tnic>
-References: <20200328164307.17497-1-yu-cheng.yu@intel.com>
-         <20200328164307.17497-2-yu-cheng.yu@intel.com>
-         <20200428171107.GC11272@zn.tnic>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Paul Turner <pjt@google.com>, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: [RFC PATCH glibc 2/3] glibc: sched_getcpu(): use rseq cpu_id TLS on Linux (v7)
+Date:   Tue, 28 Apr 2020 13:15:12 -0400
+Message-Id: <20200428171513.22926-2-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200428171513.22926-1-mathieu.desnoyers@efficios.com>
+References: <20200428171513.22926-1-mathieu.desnoyers@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-28 at 19:11 +0200, Borislav Petkov wrote:
-> On Sat, Mar 28, 2020 at 09:42:58AM -0700, Yu-cheng Yu wrote:
-> > From: Fenghua Yu <fenghua.yu@intel.com>
-> > 
-> > The function validate_xstate_header() validates an xstate header coming
-> > from userspace (PTRACE or sigreturn).  To make it clear, rename it to
-> > validate_user_xstate_header().
-> 
-> For the next time: patch version history like this here:
-> 
-> > v3:
-> > - Change validate_xstate_header_from_user() to validate_user_xstate_header().
-> 
-> ... goes ...
-> 
-> > Suggested-by: Dave Hansen <dave.hansen@intel.com>
-> > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> > Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-> > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-> > Reviewed-by: Tony Luck <tony.luck@intel.com>
-> > Reviewed-by: Borislav Petkov <bp@suse.de>
-> > ---
-> 
-> <--- ... here so that, when someone applies the patch, the version
-> history doesn't become part of the commit message.
-> 
+When available, use the cpu_id field from __rseq_abi on Linux to
+implement sched_getcpu(). Fall-back on the vgetcpu vDSO if unavailable.
 
-Yes, I will do that the next time.  Thanks!
+Benchmarks:
+
+x86-64: Intel E5-2630 v3@2.40GHz, 16-core, hyperthreading
+
+glibc sched_getcpu():                     13.7 ns (baseline)
+glibc sched_getcpu() using rseq:           2.5 ns (speedup:  5.5x)
+inline load cpuid from __rseq_abi TLS:     0.8 ns (speedup: 17.1x)
+
+CC: Carlos O'Donell <carlos@redhat.com>
+CC: Florian Weimer <fweimer@redhat.com>
+CC: Joseph Myers <joseph@codesourcery.com>
+CC: Szabolcs Nagy <szabolcs.nagy@arm.com>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Ben Maurer <bmaurer@fb.com>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+CC: Boqun Feng <boqun.feng@gmail.com>
+CC: Will Deacon <will.deacon@arm.com>
+CC: Paul Turner <pjt@google.com>
+CC: libc-alpha@sourceware.org
+CC: linux-kernel@vger.kernel.org
+CC: linux-api@vger.kernel.org
+---
+Changes since v1:
+- rseq is only used if both __NR_rseq and RSEQ_SIG are defined.
+
+Changes since v2:
+- remove duplicated __rseq_abi extern declaration.
+
+Changes since v3:
+- update ChangeLog.
+
+Changes since v4:
+- Use atomic_load_relaxed to load the __rseq_abi.cpu_id field, a
+  consequence of the fact that __rseq_abi is not volatile anymore.
+- Include atomic.h which provides atomic_load_relaxed.
+
+Changes since v5:
+- Use __ASSUME_RSEQ to detect rseq availability.
+
+Changes since v6:
+- Remove use of __ASSUME_RSEQ.
+---
+ sysdeps/unix/sysv/linux/sched_getcpu.c | 27 ++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
+
+diff --git a/sysdeps/unix/sysv/linux/sched_getcpu.c b/sysdeps/unix/sysv/linux/sched_getcpu.c
+index c019cfb3cf..2269c4f2bd 100644
+--- a/sysdeps/unix/sysv/linux/sched_getcpu.c
++++ b/sysdeps/unix/sysv/linux/sched_getcpu.c
+@@ -18,10 +18,15 @@
+ #include <errno.h>
+ #include <sched.h>
+ #include <sysdep.h>
++#include <atomic.h>
+ #include <sysdep-vdso.h>
+ 
+-int
+-sched_getcpu (void)
++#ifdef HAVE_GETCPU_VSYSCALL
++# define HAVE_VSYSCALL
++#endif
++
++static int
++vsyscall_sched_getcpu (void)
+ {
+   unsigned int cpu;
+   int r = -1;
+@@ -32,3 +37,21 @@ sched_getcpu (void)
+ #endif
+   return r == -1 ? r : cpu;
+ }
++
++#include <sys/rseq.h>
++
++#ifdef RSEQ_SIG
++int
++sched_getcpu (void)
++{
++  int cpu_id = atomic_load_relaxed (&__rseq_abi.cpu_id);
++
++  return cpu_id >= 0 ? cpu_id : vsyscall_sched_getcpu ();
++}
++#else
++int
++sched_getcpu (void)
++{
++  return vsyscall_sched_getcpu ();
++}
++#endif
+-- 
+2.17.1
 
