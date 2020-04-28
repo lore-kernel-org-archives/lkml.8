@@ -2,125 +2,106 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2623CC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C8CC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0125B20731
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:29:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="Z4mcO0+4"
+	by mail.kernel.org (Postfix) with ESMTP id F267421D7B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:29:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588105794;
+	bh=6v96lh0d+UWGlWlwjbyvUMq1a3i8X+YFxjvj3LXLg5Y=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=HiOa6LlUw4mZrU1Y00hY+oip3bPyEIYLZcNufzzxWhKtcnIdqIC7BC9vImYxq3rKN
+	 S2QfO2oOIOJ17iMzLMYUqGb6Lbw01wZN4cINqHMfu0uywsi1tScLFSJlUx21zXbwpB
+	 udqR8mPv1xik/iBPBj1QyCl2lXXcRLDxwOUH1ef4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbgD1U3f (ORCPT
+        id S1726507AbgD1U3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:29:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726286AbgD1U3e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:29:34 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 080F9C03C1AB
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:29:32 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id f5so12901158ual.5
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:29:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Pkj7kKKcclLvASvEGyrCI/6i5twP0NxxYNk+RIVUFp8=;
-        b=Z4mcO0+46Tgu18zZ1ILlmbNz2QscI6HGOLUt2jq9eozqAy5T/bsUTxE9llCisBgdq+
-         5Q8HDvyffxiry0/gYfAQjrpVLASdlCL8cJWR9DtHuywPHkbpv5UlZ7yrx0huAeHh3ftC
-         4ppmcha4ZlkJHkdZntWl60jDD3kul+Qv5BesDKBCWQHLpYdPWOGZbK9Ck4YLgF+4xU2c
-         d0smJ1hXHK4q7+TZ834uhiMqXPmGT0UvC8BiFmH9I+C3VwMeqV7fKbPcteAB4h4nFgNG
-         6bGKK1FofR25GczJ3bsbw+Ftw4WKY9bo2sNOtpPjsp6BLPQ1DoW/twAvS9ae2K1NG1TM
-         zXdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Pkj7kKKcclLvASvEGyrCI/6i5twP0NxxYNk+RIVUFp8=;
-        b=fflVfOe5LaDvt+dSLLR9Vmq3XjkOmZVTy3qDGlToQC0ETzkl1BbFM20jF4zDN57ChI
-         d1wXE4dM2MmFZZ/y5CkwGDp30IOuZNtAOBACev1VjHEaf5xKL1RQKMbcqEHJmaQ35gx8
-         8tDwVSj/IIKBa3rZP6p/T4Fv2qUxkVPtpT4EgHFnJmZjrno2VHLqbFxoiQPVhBe6kBrk
-         gNRk9kNrJF5Qz9jDIC3lRsvljw2xjPkpxu9zfaQ5o70Hk8bTB/gevzzMVsKYqHGeS5hT
-         ZnFjf/FSIxJ9ZpbGQhm3CfBT46YAGc7jz2BQdSnvb+2zj+DFtQYa8Sl+7BuYVL30tXGO
-         /ztg==
-X-Gm-Message-State: AGi0PuYNuIwgz6wott3e/Cqr36RYrIyytJnmwq5Iy8J6HJ3N0NN1yhTa
-        jUnpdg4R6DwQX6o3Bj+Fty+evZM9pp0bJqlxPLv8LA==
-X-Google-Smtp-Source: APiQypJRtqhFbG7Rpns7Xg65/400D7gj9RtZJmOOrneoEGGX2VN0LUGpUc52NK91FBqKp4r/OAxibEQH/VFYLqZScB4=
-X-Received: by 2002:a67:e9d9:: with SMTP id q25mr22043390vso.27.1588105771956;
- Tue, 28 Apr 2020 13:29:31 -0700 (PDT)
+        Tue, 28 Apr 2020 16:29:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726286AbgD1U3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 16:29:52 -0400
+Received: from [192.168.1.74] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CC0820731;
+        Tue, 28 Apr 2020 20:29:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588105792;
+        bh=6v96lh0d+UWGlWlwjbyvUMq1a3i8X+YFxjvj3LXLg5Y=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=v05fAS62HunVkF0sqvgwBMdIBsSs8gKRaDxiwqGIYO6z5GDe89QAgD6NnrbUFsWtg
+         jT16Yh0eQ+Hgb+U0yDAVxFpc0iWrIRVaoz30wn9MRQc+lhS7yxWtCvcAQQN3zWLOx7
+         013LyVAqMLBanqkdLoTcqppnGe301I1F9TaMItbg=
+Subject: Re: [PATCH] dmaengine: qcom_hidma: Simplify error handling path in
+ hidma_probe
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        agross@kernel.org, bjorn.andersson@linaro.org, vkoul@kernel.org,
+        dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20200427111043.70218-1-christophe.jaillet@wanadoo.fr>
+ <20200428125426.GE2014@kadam>
+ <1efa0186-7fbe-9cb5-2719-2d7192f99e27@kernel.org>
+ <20200428172116.GG2014@kadam>
+From:   Sinan Kaya <okaya@kernel.org>
+Autocrypt: addr=okaya@kernel.org; keydata=
+ mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
+ uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
+ 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
+ 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
+ V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
+ AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
+ ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
+ AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
+ 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
+ Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
+ ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
+ qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
+ AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
+ eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
+ 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
+ 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
+ gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
+ CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
+ gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
+ e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
+ 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
+ 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
+ L+s0nPaNMKwv/Xhhm6Y=
+Message-ID: <430381bf-4fa5-80f7-4dcb-9e30d24e57ce@kernel.org>
+Date:   Tue, 28 Apr 2020 16:29:49 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <1585232945-23368-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1585232945-23368-1-git-send-email-Anson.Huang@nxp.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Wed, 29 Apr 2020 01:58:56 +0530
-Message-ID: <CAHLCerP7O19cRsK6OfmGm89K7KefRQnCUdNCNQM8mEAbycUjbg@mail.gmail.com>
-Subject: Re: [PATCH V2] thermal: imx: Add missing of_node_put()
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
-        Fabio Estevam <festevam@gmail.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200428172116.GG2014@kadam>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 8:06 PM Anson Huang <Anson.Huang@nxp.com> wrote:
->
-> After finishing using cpu node got from of_get_cpu_node(), of_node_put()
-> needs to be called.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V1:
->         - improve the logic, no need to use got.
-> ---
->  drivers/thermal/imx_thermal.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
-> index e761c9b..1b84ea6 100644
-> --- a/drivers/thermal/imx_thermal.c
-> +++ b/drivers/thermal/imx_thermal.c
-> @@ -649,7 +649,7 @@ MODULE_DEVICE_TABLE(of, of_imx_thermal_match);
->  static int imx_thermal_register_legacy_cooling(struct imx_thermal_data *data)
->  {
->         struct device_node *np;
-> -       int ret;
-> +       int ret = 0;
->
->         data->policy = cpufreq_cpu_get(0);
->         if (!data->policy) {
-> @@ -664,11 +664,12 @@ static int imx_thermal_register_legacy_cooling(struct imx_thermal_data *data)
->                 if (IS_ERR(data->cdev)) {
->                         ret = PTR_ERR(data->cdev);
->                         cpufreq_cpu_put(data->policy);
+On 4/28/2020 1:21 PM, Dan Carpenter wrote:
+> What I meant to say here was:
+> 
+> 	if (msi) {
+> 		rc = hidma_request_msi(dmadev, pdev);
+> 		if (rc)
+> 			msi = false;
+> 
+> Otherwise we end up checking freeing the msi in the error handling
+> code when we did not take it.
+> 
+> Hopefully, that clears things up?
 
-You could move this policy release outside the if block too, no?
-
-> -                       return ret;
->                 }
->         }
->
-> -       return 0;
-> +       of_node_put(np);
-> +
-> +       return ret;
->  }
->
->  static void imx_thermal_unregister_legacy_cooling(struct imx_thermal_data *data)
-> --
-> 2.7.4
->
+Yes, that works. However, I'd rather use a different flag for this
+in order not to mix the meaning of msi capability vs. msi allocation
+failure.
