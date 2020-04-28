@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A88C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2899CC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41D8C20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00C782076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:39:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099172;
-	bh=oejTAAoP9GYkwSOZhVRStKNLtfzkpCadGE700Kd+gpY=;
+	s=default; t=1588099175;
+	bh=9k/FokKsItlcC8TX5V0v7MIKCzs80FLIquJdVEOPSF8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pI1Fe+DDZtSi/CKXH6SQFAvt197gKcDKCqNgLYRKUT2JPUaiN7bOws6GdI9ED17Lj
-	 4GVt+HtY+TGYzQ2omAraZrOByoBUYJGz7erKfQkUamdzJeZorV5sd2jZjr0DqfT1a5
-	 i3fK4LVEtdo9hOgpdadz4UpXyEkCpNj+GHF45tr8=
+	b=fJgeq84J6cspbOSCBRJ8E/J/giTIFgJZQwAWAK7lfwd/21I9DFH7OlyN/PEFm9e1c
+	 IhiSAVl+jYJi9MIZllTx6wpUmEpmd2AwG5TyojAslER+Hc88gEMIRtuF8n7fLLwMs9
+	 iLSe3Yu17yGjyICqtHrYeFiRb40cMvxGinAeparA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730717AbgD1Sja (ORCPT
+        id S1730738AbgD1Sje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:39:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58222 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:39:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730034AbgD1SjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:39:25 -0400
+        id S1730866AbgD1Sja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:39:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBB7A20730;
-        Tue, 28 Apr 2020 18:39:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D058E2076A;
+        Tue, 28 Apr 2020 18:39:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099165;
-        bh=oejTAAoP9GYkwSOZhVRStKNLtfzkpCadGE700Kd+gpY=;
+        s=default; t=1588099170;
+        bh=9k/FokKsItlcC8TX5V0v7MIKCzs80FLIquJdVEOPSF8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pRrplQTt2VqDQjc2ACICGcgK2V1Zy7LH1dG5x6Boq+elzYTTpZOYIKydWyT4N7cJc
-         CbNqIR4m2iHE04CYD0Qea/nZMuKIOen3zWn/WPpZi65nfJqplyiSqcD4jka9/aqw3a
-         nQMCMGZbaHGxAXYPMyHIpynn/dCAzcuCoDGCOaow=
+        b=UsBGJsHW8TV3eTlVCat7qbGDqGphtNw4QQePidLlzNWVdx9S3WDH7TVlQw5gWMLZM
+         TZXtBw6qkEagh14iiinZG9KwQ8XL43sSXNOZ3GebGw0WgVHvTvP18nL5+ZiByUURaR
+         Ke0OYQsAESz8QqEzsQJYpOWM6znDkinu3+AeK5wc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 067/168] net: stmmac: dwmac-meson8b: Add missing boundary to RGMII TX clock array
-Date:   Tue, 28 Apr 2020 20:24:01 +0200
-Message-Id: <20200428182240.399985080@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.6 165/167] powerpc/kuap: PPC_KUAP_DEBUG should depend on PPC_KUAP
+Date:   Tue, 28 Apr 2020 20:25:41 +0200
+Message-Id: <20200428182246.485806480@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,98 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit f0212a5ebfa6cd789ab47666b9cc169e6e688732 ]
+commit 61da50b76b62fd815aa82d853bf82bf4f69568f5 upstream.
 
-Running with KASAN on a VIM3L systems leads to the following splat
-when probing the Ethernet device:
+Currently you can enable PPC_KUAP_DEBUG when PPC_KUAP is disabled,
+even though the former has not effect without the latter.
 
-==================================================================
-BUG: KASAN: global-out-of-bounds in _get_maxdiv+0x74/0xd8
-Read of size 4 at addr ffffa000090615f4 by task systemd-udevd/139
-CPU: 1 PID: 139 Comm: systemd-udevd Tainted: G            E     5.7.0-rc1-00101-g8624b7577b9c #781
-Hardware name: amlogic w400/w400, BIOS 2020.01-rc5 03/12/2020
-Call trace:
- dump_backtrace+0x0/0x2a0
- show_stack+0x20/0x30
- dump_stack+0xec/0x148
- print_address_description.isra.12+0x70/0x35c
- __kasan_report+0xfc/0x1d4
- kasan_report+0x4c/0x68
- __asan_load4+0x9c/0xd8
- _get_maxdiv+0x74/0xd8
- clk_divider_bestdiv+0x74/0x5e0
- clk_divider_round_rate+0x80/0x1a8
- clk_core_determine_round_nolock.part.9+0x9c/0xd0
- clk_core_round_rate_nolock+0xf0/0x108
- clk_hw_round_rate+0xac/0xf0
- clk_factor_round_rate+0xb8/0xd0
- clk_core_determine_round_nolock.part.9+0x9c/0xd0
- clk_core_round_rate_nolock+0xf0/0x108
- clk_core_round_rate_nolock+0xbc/0x108
- clk_core_set_rate_nolock+0xc4/0x2e8
- clk_set_rate+0x58/0xe0
- meson8b_dwmac_probe+0x588/0x72c [dwmac_meson8b]
- platform_drv_probe+0x78/0xd8
- really_probe+0x158/0x610
- driver_probe_device+0x140/0x1b0
- device_driver_attach+0xa4/0xb0
- __driver_attach+0xcc/0x1c8
- bus_for_each_dev+0xf4/0x168
- driver_attach+0x3c/0x50
- bus_add_driver+0x238/0x2e8
- driver_register+0xc8/0x1e8
- __platform_driver_register+0x88/0x98
- meson8b_dwmac_driver_init+0x28/0x1000 [dwmac_meson8b]
- do_one_initcall+0xa8/0x328
- do_init_module+0xe8/0x368
- load_module+0x3300/0x36b0
- __do_sys_finit_module+0x120/0x1a8
- __arm64_sys_finit_module+0x4c/0x60
- el0_svc_common.constprop.2+0xe4/0x268
- do_el0_svc+0x98/0xa8
- el0_svc+0x24/0x68
- el0_sync_handler+0x12c/0x318
- el0_sync+0x158/0x180
+Fix it so that PPC_KUAP_DEBUG can only be enabled when PPC_KUAP is
+enabled, not when the platform could support KUAP (PPC_HAVE_KUAP).
 
-The buggy address belongs to the variable:
- div_table.63646+0x34/0xfffffffffffffa40 [dwmac_meson8b]
-
-Memory state around the buggy address:
- ffffa00009061480: fa fa fa fa 00 00 00 01 fa fa fa fa 00 00 00 00
- ffffa00009061500: 05 fa fa fa fa fa fa fa 00 04 fa fa fa fa fa fa
->ffffa00009061580: 00 03 fa fa fa fa fa fa 00 00 00 00 00 00 fa fa
-                                                             ^
- ffffa00009061600: fa fa fa fa 00 01 fa fa fa fa fa fa 01 fa fa fa
- ffffa00009061680: fa fa fa fa 00 01 fa fa fa fa fa fa 04 fa fa fa
-==================================================================
-
-Digging into this indeed shows that the clock divider array is
-lacking a final fence, and that the clock subsystems goes in the
-weeds. Oh well.
-
-Let's add the empty structure that indicates the end of the array.
-
-Fixes: bd6f48546b9c ("net: stmmac: dwmac-meson8b: Fix the RGMII TX delay on Meson8b/8m2 SoCs")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 890274c2dc4c ("powerpc/64s: Implement KUAP for Radix MMU")
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200301111738.22497-1-mpe@ellerman.id.au
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-@@ -119,6 +119,7 @@ static int meson8b_init_rgmii_tx_clk(str
- 		{ .div = 5, .val = 5, },
- 		{ .div = 6, .val = 6, },
- 		{ .div = 7, .val = 7, },
-+		{ /* end of array */ }
- 	};
+---
+ arch/powerpc/platforms/Kconfig.cputype |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/arch/powerpc/platforms/Kconfig.cputype
++++ b/arch/powerpc/platforms/Kconfig.cputype
+@@ -397,7 +397,7 @@ config PPC_KUAP
  
- 	clk_configs = devm_kzalloc(dev, sizeof(*clk_configs), GFP_KERNEL);
+ config PPC_KUAP_DEBUG
+ 	bool "Extra debugging for Kernel Userspace Access Protection"
+-	depends on PPC_HAVE_KUAP && (PPC_RADIX_MMU || PPC_32)
++	depends on PPC_KUAP && (PPC_RADIX_MMU || PPC_32)
+ 	help
+ 	  Add extra debugging for Kernel Userspace Access Protection (KUAP)
+ 	  If you're unsure, say N.
 
 
