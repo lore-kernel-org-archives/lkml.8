@@ -2,131 +2,126 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1D2C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD52DC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40B05206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A9E2073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:39:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ouxne/II"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbgD1BeN (ORCPT
+        id S1726401AbgD1Bj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 21:34:13 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3315 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726233AbgD1BeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 21:34:12 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D0A9999B00C42AE7E8BD;
-        Tue, 28 Apr 2020 09:34:09 +0800 (CST)
-Received: from [10.65.58.147] (10.65.58.147) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Tue, 28 Apr 2020
- 09:34:07 +0800
-Subject: Re: [PATCH v4 05/16] mtd: spi-nor: default to address width of 3 for
- configurable widths
-To:     Pratyush Yadav <me@yadavpratyush.com>
-References: <20200424184410.8578-1-p.yadav@ti.com>
- <20200424184410.8578-6-p.yadav@ti.com>
- <6b6384ad-d37a-eea6-af29-322e83924912@hisilicon.com>
- <20200427172336.ihezwq3wn75m7k3l@yadavpratyush.com>
-CC:     Pratyush Yadav <p.yadav@ti.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <f6a593ab-8685-18e0-04c8-25edd1cab11a@hisilicon.com>
-Date:   Tue, 28 Apr 2020 09:34:46 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Mon, 27 Apr 2020 21:39:56 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43371 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726259AbgD1Bj4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 21:39:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588037995;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AWt0oKx+pB01zuowl3HYopTA8sOUDIn9j7BD+UlNWuQ=;
+        b=Ouxne/IIEAnH0KL7fRqf8jqXc+MyoCV+MG/DFOHJ2JUOiZWOuIpHSckKTXcIFMkQAxrB7G
+        58ELjB7iHbLsKus6uw70DYwyKKInSklS92JQ/pOnZKSYmGcT+mpp5ETiS+GfH5pZN24O8Y
+        1qHmFOMifiyQz0FKGI+wCgOVSAFj2ss=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-369--721LIx2PCSItKIXH4hrrA-1; Mon, 27 Apr 2020 21:39:53 -0400
+X-MC-Unique: -721LIx2PCSItKIXH4hrrA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0A52B835B40;
+        Tue, 28 Apr 2020 01:39:50 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-112-176.rdu2.redhat.com [10.10.112.176])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F8A4196AE;
+        Tue, 28 Apr 2020 01:39:44 +0000 (UTC)
+Subject: Re: [PATCH v2 4/4] mm/slub: Fix sysfs shrink circular locking
+ dependency
+To:     Qian Cai <cai@lca.pw>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        Juri Lelli <juri.lelli@redhat.com>
+References: <20200427235621.7823-5-longman@redhat.com>
+ <55509F31-A503-4148-B209-B4D062AD0ED7@lca.pw>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <dbbfe685-7374-9a96-b7c2-684142746e30@redhat.com>
+Date:   Mon, 27 Apr 2020 21:39:44 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200427172336.ihezwq3wn75m7k3l@yadavpratyush.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.58.147]
-X-CFilter-Loop: Reflected
+In-Reply-To: <55509F31-A503-4148-B209-B4D062AD0ED7@lca.pw>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pratyush,
-
-
-On 2020/4/28 1:23, Pratyush Yadav wrote:
-> Hi Yicong,
+On 4/27/20 8:13 PM, Qian Cai wrote:
 >
-> On 26/04/20 11:53AM, Yicong Yang wrote:
->> On 2020/4/25 2:43, Pratyush Yadav wrote:
->>> JESD216D.01 says that when the address width can be 3 or 4, it defaults
->>> to 3 and enters 4-byte mode when given the appropriate command. So, when
->>> we see a configurable width, default to 3 and let flash that default to
->>> 4 change it in a post-bfpt fixup.
->>>
->>> This fixes SMPT parsing for flashes with configurable address width. If
->>> the SMPT descriptor advertises variable address width, we use
->>> nor->addr_width as the address width. But since it was not set to any
->>> value from the SFDP table, the read command uses an address width of 0,
->>> resulting in an incorrect read being issued.
->>>
->>> Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
->>> ---
->>>  drivers/mtd/spi-nor/sfdp.c | 1 +
->>>  1 file changed, 1 insertion(+)
->>>
->>> diff --git a/drivers/mtd/spi-nor/sfdp.c b/drivers/mtd/spi-nor/sfdp.c
->>> index f917631c8110..5cecc4ba2141 100644
->>> --- a/drivers/mtd/spi-nor/sfdp.c
->>> +++ b/drivers/mtd/spi-nor/sfdp.c
->>> @@ -460,6 +460,7 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
->>>  	/* Number of address bytes. */
->>>  	switch (bfpt.dwords[BFPT_DWORD(1)] & BFPT_DWORD1_ADDRESS_BYTES_MASK) {
->>>  	case BFPT_DWORD1_ADDRESS_BYTES_3_ONLY:
->>> +	case BFPT_DWORD1_ADDRESS_BYTES_3_OR_4:
->>>  		nor->addr_width = 3;
->>>  		break;
->> Should we also assign address width to 3 in default condition. At least we should not
->> leave it uninitialized here.
-> The default condition would be taken when this field is 3. The value 3 
-> is reserved, and so no current device should use this value. That said, 
-> I don't see any downsides of doing so. If the value 3 means something 
-> else in later revisions of the standard, this code would need to change 
-> anyway. If not, we would use a relatively sane default for devices with 
-> a faulty BFPT.
+>> On Apr 27, 2020, at 7:56 PM, Waiman Long <longman@redhat.com> wrote:
+>>
+>> A lockdep splat is observed by echoing "1" to the shrink sysfs file
+>> and then shutting down the system:
+>>
+>> [  167.473392] Chain exists of:
+>> [  167.473392]   kn->count#279 --> mem_hotplug_lock.rw_sem --> slab_mu=
+tex
+>> [  167.473392]
+>> [  167.484323]  Possible unsafe locking scenario:
+>> [  167.484323]
+>> [  167.490273]        CPU0                    CPU1
+>> [  167.494825]        ----                    ----
+>> [  167.499376]   lock(slab_mutex);
+>> [  167.502530]                                lock(mem_hotplug_lock.rw=
+_sem);
+>> [  167.509356]                                lock(slab_mutex);
+>> [  167.515044]   lock(kn->count#279);
+>> [  167.518462]
+>> [  167.518462]  *** DEADLOCK ***
+>>
+>> It is because of the get_online_cpus() and get_online_mems() calls in
+>> kmem_cache_shrink() invoked via the shrink sysfs file. To fix that, we
+>> have to use trylock to get the memory and cpu hotplug read locks. Sinc=
+e
+>> hotplug events are rare, it should be fine to refuse a kmem caches
+>> shrink operation when some hotplug events are in progress.
+> I don=E2=80=99t understand how trylock could prevent a splat. The funda=
+mental issue is that in sysfs slab store case, the locking order (once tr=
+ylock succeed) is,
+>
+> kn->count =E2=80=94> cpu/memory_hotplug
+>
+> But we have the existing reverse chain everywhere.
+>
+> cpu/memory_hotplug =E2=80=94> slab_mutex =E2=80=94> kn->count
+>
+The sequence that was prevented by this patch is "kn->count -->=20
+mem_hotplug_lock.rwsem". This sequence isn't directly in the splat. Once=20
+this link is broken, the 3-lock circular loop cannot be formed. Maybe I=20
+should modify the commit log to make this point more clear.
 
-The purpose is to set one possible value which may be used later in parsing smpt.
-In current driver, if we do nothing with the post-bfpt fixup, then the width will
-be unset. Otherwise, maybe the width can also be set in spi_nor_smpt_addr_width()
-
-    default:
-   +    if (!nor->addr_width)
-   +        nor->addr_width = 3;
-        return nor->addr_width;
-
-But set when parsing bfpt seems more reasonable.
-
-> I haven't received any comments on my series so far. If end up having to
-> re-roll it, I will add this change. Otherwise, I'm not sure if it is a 
-> good idea to re-roll a 16-patch series for a one liner that isn't fixing 
-> some major bug. In that case, maybe you can send an independent patch 
-> that does this after mine is merged?
-
-Fine. :)
-
-Regards,
-Yicong
-
+Cheers,
+Longman
 
 
