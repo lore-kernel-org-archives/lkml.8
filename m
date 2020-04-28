@@ -2,129 +2,135 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D26DC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F23C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0629E206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A26206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:29:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KM9w+Hnw"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fuyPALxL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgD1M3m (ORCPT
+        id S1726898AbgD1M3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:29:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57316 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726682AbgD1M3l (ORCPT
+        Tue, 28 Apr 2020 08:29:46 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:55674 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726684AbgD1M3o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:29:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588076980;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oUqwe0qNnN6d6+hP/NwlPV2/GYq5zB2TAyoaYG1OVtw=;
-        b=KM9w+Hnw7jWrow/Ep4oAlxrsTKj18zwPHe4b35czmt6TYY+7xkISChfWDufRfqUx7sB0Hd
-        cJGFx2c6pAD1CYZDGtXYZhh390YqZGVXVhtS/S6XOSldU8+oe6cXokV1sXnH+q5SoXExYR
-        NJsGbyTvLKmaIz+kX9x8rJtjJQTrpi8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-148-uUNP38blPseBQUbtLsMSTw-1; Tue, 28 Apr 2020 08:29:38 -0400
-X-MC-Unique: uUNP38blPseBQUbtLsMSTw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E67AE464;
-        Tue, 28 Apr 2020 12:29:36 +0000 (UTC)
-Received: from sandy.ghostprotocols.net (unknown [10.3.128.10])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6CCA15D98C;
-        Tue, 28 Apr 2020 12:29:35 +0000 (UTC)
-Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
-        id 236861C6; Tue, 28 Apr 2020 09:29:31 -0300 (BRT)
-Date:   Tue, 28 Apr 2020 09:29:31 -0300
-From:   Arnaldo Carvalho de Melo <acme@redhat.com>
-To:     Stephane Eranian <eranian@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, mingo@elte.hu,
-        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Liang, Kan" <kan.liang@intel.com>
-Subject: Re: [PATCH] perf/script: remove extraneous newline in
- perf_sample__fprintf_regs()
-Message-ID: <20200428122931.GA2122@redhat.com>
-References: <20200418231908.152212-1-eranian@google.com>
- <CABPqkBRLHx6dbMMcGv4fi-7+Suez29n0qxUCK=g+Fn41iwZBfw@mail.gmail.com>
+        Tue, 28 Apr 2020 08:29:44 -0400
+X-UUID: 96c3c8ec85d2473d86a4d2a61570b222-20200428
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=x82FlLAEXLzeRSBYPB5msRYu1TSUP46MR6Ng6NKD4bQ=;
+        b=fuyPALxLcsRMw4yIfqMLHTANQi4nyKdZ1STTuHSyeLWdWnVqONsKGrIVq6QpkqMqJU65PXD/EUPehAcOK9ekYY6E58eLcXKb9xWi/p1fz/ZjC8UP98uYNqcSU7xmklNeZld12sJCec2ZoIiCxQyTyyWzjtbz4ETr8R5GkH6U8vs=;
+X-UUID: 96c3c8ec85d2473d86a4d2a61570b222-20200428
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <yong.mao@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 215005333; Tue, 28 Apr 2020 20:29:36 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 28 Apr
+ 2020 20:29:34 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 28 Apr 2020 20:29:32 +0800
+Message-ID: <1588076927.730.2.camel@mhfsdcap03>
+Subject: Re: [PATCH v5 3/5] mmc: mediatek: refine msdc timeout api
+From:   "yong.mao@mediatek.com" <yong.mao@mediatek.com>
+To:     Chun-Hung Wu <chun-hung.wu@mediatek.com>
+CC:     <mirq-linux@rere.qmqm.pl>, Jonathan Hunter <jonathanh@nvidia.com>,
+        "Al Cooper" <alcooperx@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Kate Stewart" <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Pan Bian <bianpan2016@163.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Kuohong Wang <kuohong.wang@mediatek.com>,
+        <devicetree@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-tegra@vger.kernel.org>, <kernel-team@android.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 28 Apr 2020 20:28:47 +0800
+In-Reply-To: <1588031768-23677-4-git-send-email-chun-hung.wu@mediatek.com>
+References: <1588031768-23677-1-git-send-email-chun-hung.wu@mediatek.com>
+         <1588031768-23677-4-git-send-email-chun-hung.wu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABPqkBRLHx6dbMMcGv4fi-7+Suez29n0qxUCK=g+Fn41iwZBfw@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.5.20 (2009-12-10)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-TM-SNTS-SMTP: E01AAD61AB5BB27155A77063CBEA1604E31F717DA3D8618061EF502A15332D7C2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Apr 27, 2020 at 02:43:28PM -0700, Stephane Eranian escreveu:
-> On Sat, Apr 18, 2020 at 4:19 PM Stephane Eranian <eranian@google.com> wrote:
-> >
-> > When printing iregs, there was a double newline printed because
-> > perf_sample__fprintf_regs() was printing its own and then at the
-> > end of all fields, perf script was adding one.
-> > This was causing blank line in the output:
-> >
-> > Before:
-> > $ perf script -Fip,iregs
-> >            401b8d ABI:2    DX:0x100    SI:0x4a8340    DI:0x4a9340
-> >
-> >            401b8d ABI:2    DX:0x100    SI:0x4a9340    DI:0x4a8340
-> >
-> >            401b8d ABI:2    DX:0x100    SI:0x4a8340    DI:0x4a9340
-> >
-> >            401b8d ABI:2    DX:0x100    SI:0x4a9340    DI:0x4a8340
-> >
-> > After:
-> > $ perf script -Fip,iregs
-> >            401b8d ABI:2    DX:0x100    SI:0x4a8340    DI:0x4a9340
-> >            401b8d ABI:2    DX:0x100    SI:0x4a9340    DI:0x4a8340
-> >            401b8d ABI:2    DX:0x100    SI:0x4a8340    DI:0x4a9340
-> >
-> > Signed-off-by: Stephane Eranian <eranian@google.com>
-> 
-> 
-> Ping?
-
-I'll process this one today.
-
-Thanks for the reminder,
-
-- Arnaldo
- 
-> >
-> > ---
-> >  tools/perf/builtin-script.c | 2 --
-> >  1 file changed, 2 deletions(-)
-> >
-> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> > index 1f57a7ecdf3d0..0c0b6e807d06e 100644
-> > --- a/tools/perf/builtin-script.c
-> > +++ b/tools/perf/builtin-script.c
-> > @@ -604,8 +604,6 @@ static int perf_sample__fprintf_regs(struct regs_dump *regs, uint64_t mask,
-> >                 printed += fprintf(fp, "%5s:0x%"PRIx64" ", perf_reg_name(r), val);
-> >         }
-> >
-> > -       fprintf(fp, "\n");
-> > -
-> >         return printed;
-> >  }
-> >
-> > --
-> > 2.26.1.301.g55bc3eb7cb9-goog
-> >
+T24gVHVlLCAyMDIwLTA0LTI4IGF0IDA3OjU2ICswODAwLCBDaHVuLUh1bmcgV3Ugd3JvdGU6DQo+
+IEV4dHJhY3QgbXNkYyB0aW1lb3V0IGFwaSBjb21tb24gcGFydCB0byBoYXZlDQo+IGJldHRlciBj
+b2RlIGFyY2hpdGVjdHVyZSBhbmQgYXZvaWQgcmVkdW5kZW50DQpwbGVhc2UgY29ycmVjdCB0aGUg
+d29yZCAicmVkdW5kYW50IiBpbiBuZXh0IHZlcnNpb24NCj4gY29kZS4NCj4gDQo+IFNpZ25lZC1v
+ZmYtYnk6IENodW4tSHVuZyBXdSA8Y2h1bi1odW5nLnd1QG1lZGlhdGVrLmNvbT4NCkFja2VkLWJ5
+OiBZb25nIE1hbyA8eW9uZy5tYW9AbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvbW1j
+L2hvc3QvbXRrLXNkLmMgfCAzMiArKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLQ0KPiAg
+MSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9ucygtKQ0KPiANCj4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbW1jL2hvc3QvbXRrLXNkLmMgYi9kcml2ZXJzL21tYy9ob3N0
+L210ay1zZC5jDQo+IGluZGV4IDc3MjZkY2YuLmEyMzI4ZmIgMTAwNjQ0DQo+IC0tLSBhL2RyaXZl
+cnMvbW1jL2hvc3QvbXRrLXNkLmMNCj4gKysrIGIvZHJpdmVycy9tbWMvaG9zdC9tdGstc2QuYw0K
+PiBAQCAtNjk5LDIxICs2OTksMjEgQEAgc3RhdGljIHZvaWQgbXNkY191bnByZXBhcmVfZGF0YShz
+dHJ1Y3QgbXNkY19ob3N0ICpob3N0LCBzdHJ1Y3QgbW1jX3JlcXVlc3QgKm1ycSkNCj4gIAl9DQo+
+ICB9DQo+ICANCj4gLS8qIGNsb2NrIGNvbnRyb2wgcHJpbWl0aXZlcyAqLw0KPiAtc3RhdGljIHZv
+aWQgbXNkY19zZXRfdGltZW91dChzdHJ1Y3QgbXNkY19ob3N0ICpob3N0LCB1MzIgbnMsIHUzMiBj
+bGtzKQ0KPiArc3RhdGljIHU2NCBtc2RjX3RpbWVvdXRfY2FsKHN0cnVjdCBtc2RjX2hvc3QgKmhv
+c3QsIHU2NCBucywgdTY0IGNsa3MpDQo+ICB7DQo+IC0JdTMyIHRpbWVvdXQsIGNsa19uczsNCj4g
+Kwl1NjQgdGltZW91dCwgY2xrX25zOw0KPiAgCXUzMiBtb2RlID0gMDsNCj4gIA0KPiAtCWhvc3Qt
+PnRpbWVvdXRfbnMgPSBuczsNCj4gLQlob3N0LT50aW1lb3V0X2Nsa3MgPSBjbGtzOw0KPiAgCWlm
+IChob3N0LT5tbWMtPmFjdHVhbF9jbG9jayA9PSAwKSB7DQo+ICAJCXRpbWVvdXQgPSAwOw0KPiAg
+CX0gZWxzZSB7DQo+IC0JCWNsa19ucyAgPSAxMDAwMDAwMDAwVUwgLyBob3N0LT5tbWMtPmFjdHVh
+bF9jbG9jazsNCj4gLQkJdGltZW91dCA9IChucyArIGNsa19ucyAtIDEpIC8gY2xrX25zICsgY2xr
+czsNCj4gKwkJY2xrX25zICA9IDEwMDAwMDAwMDBVTEw7DQo+ICsJCWRvX2RpdihjbGtfbnMsIGhv
+c3QtPm1tYy0+YWN0dWFsX2Nsb2NrKTsNCj4gKwkJdGltZW91dCA9IG5zICsgY2xrX25zIC0gMTsN
+Cj4gKwkJZG9fZGl2KHRpbWVvdXQsIGNsa19ucyk7DQo+ICsJCXRpbWVvdXQgKz0gY2xrczsNCj4g
+IAkJLyogaW4gMTA0ODU3NiBzY2xrIGN5Y2xlIHVuaXQgKi8NCj4gLQkJdGltZW91dCA9ICh0aW1l
+b3V0ICsgKDB4MSA8PCAyMCkgLSAxKSA+PiAyMDsNCj4gKwkJdGltZW91dCA9IERJVl9ST1VORF9V
+UCh0aW1lb3V0LCAoMHgxIDw8IDIwKSk7DQo+ICAJCWlmIChob3N0LT5kZXZfY29tcC0+Y2xrX2Rp
+dl9iaXRzID09IDgpDQo+ICAJCQlzZHJfZ2V0X2ZpZWxkKGhvc3QtPmJhc2UgKyBNU0RDX0NGRywN
+Cj4gIAkJCQkgICAgICBNU0RDX0NGR19DS01PRCwgJm1vZGUpOw0KPiBAQCAtNzIzLDkgKzcyMywy
+MSBAQCBzdGF0aWMgdm9pZCBtc2RjX3NldF90aW1lb3V0KHN0cnVjdCBtc2RjX2hvc3QgKmhvc3Qs
+IHUzMiBucywgdTMyIGNsa3MpDQo+ICAJCS8qRERSIG1vZGUgd2lsbCBkb3VibGUgdGhlIGNsayBj
+eWNsZXMgZm9yIGRhdGEgdGltZW91dCAqLw0KPiAgCQl0aW1lb3V0ID0gbW9kZSA+PSAyID8gdGlt
+ZW91dCAqIDIgOiB0aW1lb3V0Ow0KPiAgCQl0aW1lb3V0ID0gdGltZW91dCA+IDEgPyB0aW1lb3V0
+IC0gMSA6IDA7DQo+IC0JCXRpbWVvdXQgPSB0aW1lb3V0ID4gMjU1ID8gMjU1IDogdGltZW91dDsN
+Cj4gIAl9DQo+IC0Jc2RyX3NldF9maWVsZChob3N0LT5iYXNlICsgU0RDX0NGRywgU0RDX0NGR19E
+VE9DLCB0aW1lb3V0KTsNCj4gKwlyZXR1cm4gdGltZW91dDsNCj4gK30NCj4gKw0KPiArLyogY2xv
+Y2sgY29udHJvbCBwcmltaXRpdmVzICovDQo+ICtzdGF0aWMgdm9pZCBtc2RjX3NldF90aW1lb3V0
+KHN0cnVjdCBtc2RjX2hvc3QgKmhvc3QsIHU2NCBucywgdTY0IGNsa3MpDQo+ICt7DQo+ICsJdTY0
+IHRpbWVvdXQ7DQo+ICsNCj4gKwlob3N0LT50aW1lb3V0X25zID0gbnM7DQo+ICsJaG9zdC0+dGlt
+ZW91dF9jbGtzID0gY2xrczsNCj4gKw0KPiArCXRpbWVvdXQgPSBtc2RjX3RpbWVvdXRfY2FsKGhv
+c3QsIG5zLCBjbGtzKTsNCj4gKwlzZHJfc2V0X2ZpZWxkKGhvc3QtPmJhc2UgKyBTRENfQ0ZHLCBT
+RENfQ0ZHX0RUT0MsDQo+ICsJCSAgICAgICh1MzIpKHRpbWVvdXQgPiAyNTUgPyAyNTUgOiB0aW1l
+b3V0KSk7DQo+ICB9DQo+ICANCj4gIHN0YXRpYyB2b2lkIG1zZGNfZ2F0ZV9jbG9jayhzdHJ1Y3Qg
+bXNkY19ob3N0ICpob3N0KQ0KDQo=
 
