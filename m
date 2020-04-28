@@ -2,101 +2,118 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3BBC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BAD9C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD10B2072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 399982072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:21:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="H1Rfr0+b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgD1WUM (ORCPT
+        id S1726450AbgD1WVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:20:12 -0400
-Received: from mga18.intel.com ([134.134.136.126]:26741 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726312AbgD1WUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:20:11 -0400
-IronPort-SDR: 9eTYK0Ki80pHPzGB9aS+XFf+aN7x33TQ61gd+MtoBe6TQhSl6x6ulvCgjqBP9syLBYc3pPkRzI
- riZukShdDsWQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 15:20:11 -0700
-IronPort-SDR: pTtCLvWjqtF4QvauuVuS6xbdBEQ8G5baHf6iF3cul0p0dYsj9BFlAPk+IeX1OIcF0eoQ3bi+nh
- s+Evr0h4QT0A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
-   d="scan'208";a="367632604"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 28 Apr 2020 15:20:10 -0700
-Date:   Tue, 28 Apr 2020 15:20:10 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        Tue, 28 Apr 2020 18:21:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726044AbgD1WVJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 18:21:09 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AFD4C03C1AC;
+        Tue, 28 Apr 2020 15:21:09 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49BbhJ6K0Kz9sSX;
+        Wed, 29 Apr 2020 08:21:04 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588112465;
+        bh=3WUNfSrS/3iQEnyjoUKmYhjkbiqGenobmh2k/XGSMqc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=H1Rfr0+bkUs+XmIiUl3RRy+H6rV3VKINbzjfkb0Ee/ifrY/Z1/BJWxf7Il6UsHJ8Q
+         XRM8L7u44gMsyjCtNLE4+eHXahX2u0wDt0MLpnM4zEAOPSg1Q6O5F/VMLodz6ajswI
+         vv6VWBARxlmrOhkhohYsJ+EH8fkMEntWkSJRwYIsrqKKOOKYWGZXZ0Ilh6epBD6v1Y
+         DbYTIpRWCE2k0KIUx6N9UqH8DHPAT8HXZ66sjD10Ovw8s5FLokhJVEp32j6PNrmTHU
+         qPBoZFCLxFPFPS1kkG+Oxxsr1aQdOsGOwJBRouOf841O37787zn5RExqLEe0gD1yio
+         dnKWbtye0wJYQ==
+Date:   Wed, 29 Apr 2020 08:21:03 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Oliver Upton <oupton@google.com>,
-        Peter Shier <pshier@google.com>
-Subject: Re: [PATCH 12/13] KVM: x86: Replace late check_nested_events() hack
- with more precise fix
-Message-ID: <20200428222010.GN12735@linux.intel.com>
-References: <20200423022550.15113-1-sean.j.christopherson@intel.com>
- <20200423022550.15113-13-sean.j.christopherson@intel.com>
- <CALMp9eTiGdYPpejAOLNz7zzqP1wPXb_zSL02F27VMHeHGzANJg@mail.gmail.com>
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: Moving linux-phy tree
+Message-ID: <20200429082103.1734518e@canb.auug.org.au>
+In-Reply-To: <20200428051804.GZ56386@vkoul-mobl.Dlink>
+References: <20200428051804.GZ56386@vkoul-mobl.Dlink>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALMp9eTiGdYPpejAOLNz7zzqP1wPXb_zSL02F27VMHeHGzANJg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: multipart/signed; boundary="Sig_/yhUI.YRcbb9iiYCWwc3fhT/";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 03:12:51PM -0700, Jim Mattson wrote:
-> On Wed, Apr 22, 2020 at 7:26 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index 7c49a7dc601f..d9d6028a77e0 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -7755,24 +7755,10 @@ static int inject_pending_event(struct kvm_vcpu *vcpu)
-> >                 --vcpu->arch.nmi_pending;
-> >                 vcpu->arch.nmi_injected = true;
-> >                 kvm_x86_ops.set_nmi(vcpu);
-> > -       } else if (kvm_cpu_has_injectable_intr(vcpu)) {
-> > -               /*
-> > -                * Because interrupts can be injected asynchronously, we are
-> > -                * calling check_nested_events again here to avoid a race condition.
-> > -                * See https://lkml.org/lkml/2014/7/2/60 for discussion about this
-> > -                * proposal and current concerns.  Perhaps we should be setting
-> > -                * KVM_REQ_EVENT only on certain events and not unconditionally?
-> > -                */
-> > -               if (is_guest_mode(vcpu) && kvm_x86_ops.check_nested_events) {
-> > -                       r = kvm_x86_ops.check_nested_events(vcpu);
-> > -                       if (r != 0)
-> > -                               return r;
-> > -               }
-> > -               if (kvm_x86_ops.interrupt_allowed(vcpu)) {
-> > -                       kvm_queue_interrupt(vcpu, kvm_cpu_get_interrupt(vcpu),
-> > -                                           false);
-> > -                       kvm_x86_ops.set_irq(vcpu);
-> > -               }
-> > +       } else if (kvm_cpu_has_injectable_intr(vcpu) &&
-> > +                  kvm_x86_ops.interrupt_injection_allowed(vcpu)) {
-> > +               kvm_queue_interrupt(vcpu, kvm_cpu_get_interrupt(vcpu), false);
-> > +               kvm_x86_ops.set_irq(vcpu);
-> >         }
-> So, that's what this mess was all about! Well, this certainly looks better.
+--Sig_/yhUI.YRcbb9iiYCWwc3fhT/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Right?  I can't count the number of times I've looked at this code and
-wondered what the hell it was doing.
+Hi Vinod,
 
-Side topic, I just realized you're reviewing my original series.  Paolo
-commandeered it to extend it to SVM. https://patchwork.kernel.org/cover/11508679/
+On Tue, 28 Apr 2020 10:48:04 +0530 Vinod Koul <vkoul@kernel.org> wrote:
+>
+> Kishon has asked me to co-maintain the linux-phy subsystem [1], so can
+> you please switch the linux-phy tree to new location [2] and list both
+> of us as as contacts for this tree.
+>=20
+> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git/co=
+mmit/?h=3Dfixes&id=3Dc31cd5a5b2f2e5c645f90a788ca6961a8dbbb2fb
+> [2]: git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git
 
+Changes done.
+
+Thanks for adding your subsystem tree as a participant of linux-next.  As
+you may know, this is not a judgement of your code.  The purpose of
+linux-next is for integration testing and to lower the impact of
+conflicts between subsystems in the next merge window.=20
+
+You will need to ensure that the patches/commits in your tree/series have
+been:
+     * submitted under GPL v2 (or later) and include the Contributor's
+        Signed-off-by,
+     * posted to the relevant mailing list,
+     * reviewed by you (or another maintainer of your subsystem tree),
+     * successfully unit tested, and=20
+     * destined for the current or next Linux merge window.
+
+Basically, this should be just what you would send to Linus (or ask him
+to fetch).  It is allowed to be rebased if you deem it necessary.
+
+--=20
+Cheers,
+Stephen Rothwell=20
+sfr@canb.auug.org.au
+
+--Sig_/yhUI.YRcbb9iiYCWwc3fhT/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6orE8ACgkQAVBC80lX
+0GwJigf+ML/gYTfDRbfmMag5kBQnBUv8o++5TAeB9JFK7DeVd9Lr5+HJa94tCA2i
+ReF43kE4Ll7RiXcMeicuka0Inb49/UAnvDyYplMwHHnDHyQTL6rHNJv+yCuVwUY9
+mNClEGOZgrFIl0/Rj+COv4T05g8m3ygsmdqNuJV/bI9wcoMDUpx4PxAY84j/2zeh
+oiyQCGS5s9PoLAUzHeaPiwH72Uj+ZgRjU6LLYAKR4USMDmV8cuYaUPfK1/YlIVLf
+QnrZfTbYRik38E/Sm0kgigucJu3yl2yT1Lh9BjUm71GvVM3C4fpLJ7SDLyXspYki
+lgFn6d0+Xoxabferu7WC8nWlw3uCkg==
+=Fz0h
+-----END PGP SIGNATURE-----
+
+--Sig_/yhUI.YRcbb9iiYCWwc3fhT/--
