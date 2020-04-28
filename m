@@ -2,1436 +2,2033 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B42FCC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB23C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72B7420731
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:02:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="SmFUaqkZ"
+	by mail.kernel.org (Postfix) with ESMTP id BA53D2072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:03:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgD1VCt (ORCPT
+        id S1727049AbgD1VD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:02:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726750AbgD1VCr (ORCPT
+        Tue, 28 Apr 2020 17:03:29 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:42318 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726678AbgD1VD2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:02:47 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59393C03C1AC;
-        Tue, 28 Apr 2020 14:02:46 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k1so26391811wrx.4;
-        Tue, 28 Apr 2020 14:02:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2cxBd1nD5CO1KcYXc4bQumlrLo8Qq615ilEdZkjePF4=;
-        b=SmFUaqkZBPoJWfZyYRho5iqtfC5dIVR91tP97KxxL6hCUPuvQWupkJlqoSf3cgCpU3
-         SEAW27TgBInrQclJlvWHhrAP/f4vfKekbyEFKwhLADABRNNacJY0PPEZm3lkMLYtFcQj
-         zftKFoKuscJDPbAKAxcxzLc0jy3V/6bdyTkBaisbBelC9MR+Axgl7NLAhvIi+w6ghGph
-         enhIVBBJdz27xetYDIfU8VEYtLvj1B586WBTGQr0uumr3hPAYXx6lOBvXdze35H0SGVK
-         ZtswabJb9/erTqAKPI+W7y5EBjXGCAZxQowbijX0oBMxgo/XBglXkykHN3/s6HvvDjo+
-         CinA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2cxBd1nD5CO1KcYXc4bQumlrLo8Qq615ilEdZkjePF4=;
-        b=YNxKHY+M5wd0trgpKMG8yudhqf36qhXHhqs/QUc+A2stMxXSUopTTAIMpxSFAQOEmd
-         6NVLWYfuvBgLI6nFjAvp8hgBXW9n5H6C1N1le1I7vNwjijZn8479QRd3mqAAu731/BYh
-         McC7DXxOZsbtAB8DGLjrbAX5BJ1N6hRndCjGnfM1wWWy4It8QC+e9n6OJWGxLOnU24OP
-         iV4v/X6NJPVzNYdjU0qePASsoG6eVkW+19ACS11XymMDK4AKcLlQce9d1E0xEQhv7l9Q
-         q/h2E9SmmCevDXm37g59VcjzlwEjKxBWnHfCLkx6xvo6rBsWG5vnKbdtvdaGaddZqOHa
-         VTRQ==
-X-Gm-Message-State: AGi0PubkEwzW0CZ22QUpvgWDB6hBwL67D4N7KlxLyMPOzflTi+AffdoH
-        p+/fMyU92is78363YtIFD7s=
-X-Google-Smtp-Source: APiQypKH6eou9SQGtfoYevV2xmOClHRXA9bmQOPFvCgdek7M9cPkrnhAIDWf2418FvtL/XmfvA0UDA==
-X-Received: by 2002:a5d:634a:: with SMTP id b10mr35950805wrw.263.1588107763965;
-        Tue, 28 Apr 2020 14:02:43 -0700 (PDT)
-Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id x18sm4709243wmi.29.2020.04.28.14.02.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 14:02:43 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org, linux-mmc@vger.kernel.org,
-        ulf.hansson@linaro.org
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
-        jianxin.pan@amlogic.com, linux-kernel@vger.kernel.org,
-        yinxin_1989@aliyun.com, linux-arm-kernel@lists.infradead.org,
-        lnykww@gmail.com, linux.amoon@gmail.com, jbrunet@baylibre.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v6 2/2] mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson SDHC host
-Date:   Tue, 28 Apr 2020 23:02:29 +0200
-Message-Id: <20200428210229.703309-3-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428210229.703309-1-martin.blumenstingl@googlemail.com>
-References: <20200428210229.703309-1-martin.blumenstingl@googlemail.com>
+        Tue, 28 Apr 2020 17:03:28 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 393EE634C90;
+        Wed, 29 Apr 2020 00:02:25 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jTXN2-00027p-Nx; Wed, 29 Apr 2020 00:02:24 +0300
+Date:   Wed, 29 Apr 2020 00:02:24 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Daniel Gomez <daniel@qtec.com>
+Cc:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 3/3] media: imx378: Add imx378 camera sensor driver
+Message-ID: <20200428210224.GW934@valkosipuli.retiisi.org.uk>
+References: <20200414200151.80089-1-daniel@qtec.com>
+ <20200414200151.80089-4-daniel@qtec.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414200151.80089-4-daniel@qtec.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SDHC MMC host controller on Amlogic SoCs provides an eMMC and MMC
-card interface with 1/4/8-bit bus width.
-It supports eMMC spec 4.4x/4.5x including HS200 (up to 100MHz clock).
+Hi Daniel,
 
-The public S805 datasheet [0] contains a short documentation about the
-registers. Unfortunately it does not describe how to use the registers
-to make the hardware work. Thus this driver is based on reading (and
-understanding) the Amlogic 3.10 GPL kernel code.
+On Tue, Apr 14, 2020 at 10:01:51PM +0200, Daniel Gomez wrote:
+> Add a V4L2 sub-device driver for the Sony IMX378 image sensor.
+> This is a camera sensor using the I2C bus for control and the
+> CSI-2 bus for data.
+> 
+> Signed-off-by: Daniel Gomez <daniel@qtec.com>
+> ---
+>  drivers/media/i2c/Kconfig  |   11 +
+>  drivers/media/i2c/Makefile |    1 +
+>  drivers/media/i2c/imx378.c | 1829 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1841 insertions(+)
+>  create mode 100644 drivers/media/i2c/imx378.c
+> 
+> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> index efd12bf4f8eb..8ea630275faf 100644
+> --- a/drivers/media/i2c/Kconfig
+> +++ b/drivers/media/i2c/Kconfig
+> @@ -796,6 +796,17 @@ config VIDEO_IMX355
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called imx355.
+>  
+> +config VIDEO_IMX378
+> +	tristate "Sony IMX378 sensor support"
+> +	depends on GPIOLIB && I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
+> +	depends on V4L2_FWNODE
 
-Some hardware details are not easy to see. Jianxin Pan was kind enough
-to answer my questions:
-The hardware has built-in busy timeout support. The maximum timeout is
-30 seconds. This is only documented in Amlogic's internal
-documentation.
+You'll need to use select on some of these things nowadays. Please see the
+current Kconfig in the media tree master.
 
-The controller only works with very specific clock configurations. The
-details are not part of the public datasheet. In my own words the
-supported configurations are:
-- 399.812kHz:	clkin =  850MHz div = 2126 sd_rx_phase = 63
-- 1MHz:		clkin =  850MHz div = 850  sd_rx_phase = 55
-- 5.986MHz:	clkin =  850MHz div = 142  sd_rx_phase = 24
-- 25MHz:	clkin =  850MHz div = 34   sd_rx_phase = 15
-- 47.222MHz:	clkin =  850MHz div = 18   sd_rx_phase = 11/15 (SDR50/HS)
-- 53.125MHz:	clkin =  850MHz div = 16   sd_rx_phase = (tuning)
-- 70.833MHz:	clkin =  850MHz div = 12   sd_rx_phase = (tuning)
-- 85MHz:	clkin =  850MHz div = 10   sd_rx_phase = (tuning)
-- 94.44MHz:	clkin =  850MHz div = 9    sd_rx_phase = (tuning)
-- 106.25MHz:	clkin =  850MHz div = 8    sd_rx_phase = (tuning)
-- 127.5MHz:     clkin = 1275MHz div = 10   sd_rx_phase = (tuning)
-- 141.667MHz:   clkin =  850MHz div = 6    sd_rx_phase = (tuning)
-- 159.375MHz:	clkin = 1275MHz div = 8    sd_rx_phase = (tuning)
-- 212.5MHz:	clkin = 1275MHz div = 6    sd_rx_phase = (tuning)
-- (sd_tx_phase is always 1, 94.44MHz is not listed in the datasheet
-   but this is what the 3.10 BSP kernel on Odroid-C1 actually uses)
+> +	help
+> +	  This is a Video4Linux2 sensor driver for the Sony
+> +	  IMX378 camera.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called imx378.
+> +
+>  config VIDEO_OV2640
+>  	tristate "OmniVision OV2640 sensor support"
+>  	depends on VIDEO_V4L2 && I2C
+> diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
+> index 77bf7d0b691f..dff1c9ec444f 100644
+> --- a/drivers/media/i2c/Makefile
+> +++ b/drivers/media/i2c/Makefile
+> @@ -117,6 +117,7 @@ obj-$(CONFIG_VIDEO_IMX274)	+= imx274.o
+>  obj-$(CONFIG_VIDEO_IMX290)	+= imx290.o
+>  obj-$(CONFIG_VIDEO_IMX319)	+= imx319.o
+>  obj-$(CONFIG_VIDEO_IMX355)	+= imx355.o
+> +obj-$(CONFIG_VIDEO_IMX378)	+= imx378.o
+>  obj-$(CONFIG_VIDEO_ST_MIPID02) += st-mipid02.o
+>  
+>  obj-$(CONFIG_SDR_MAX2175) += max2175.o
+> diff --git a/drivers/media/i2c/imx378.c b/drivers/media/i2c/imx378.c
+> new file mode 100644
+> index 000000000000..6e22c3b45f72
+> --- /dev/null
+> +++ b/drivers/media/i2c/imx378.c
+> @@ -0,0 +1,1829 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * imx378.c - imx378 sensor driver
+> + *
+> + * Copyright 2019 Qtechnology A/S
+> + *
+> + * Daniel Gomez <daniel@qtec.com>
+> + *
+> + * Based on imx214.c and imx355.c
+> + */
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <media/media-entity.h>
+> +#include <media/v4l2-ctrls.h>
+> +#include <media/v4l2-fwnode.h>
+> +#include <media/v4l2-subdev.h>
+> +
+> +#define IMX378_DEFAULT_CLK_FREQ 24000000
+> +#define IMX378_DEFAULT_LINK_FREQ 480000000
+> +#define IMX378_DEFAULT_LINK_MFREQ (IMX378_DEFAULT_LINK_FREQ / 1000000)
+> +#define IMX378_DEFAULT_PIXEL_RATE ((IMX378_DEFAULT_LINK_FREQ * 8LL) / 10)
+> +#define IMX378_DEFAULT_MBUS_CODE MEDIA_BUS_FMT_SRGGB10_1X10
+> +#define IMX378_DEFAULT_FIVAL {1, 30}
+> +#define IMX378_LINE_LENGTH 4444
+> +#define IMX378_MIN_WIDTH 4
+> +#define IMX378_MIN_HEIGHT 4
+> +#define IMX378_MAX_DEFAULT_WIDTH 4032
+> +#define IMX378_MAX_DEFAULT_HEIGHT 3040
+> +#define IMX378_MAX_BOUNDS_WIDTH 4032
+> +#define IMX378_MAX_BOUNDS_HEIGHT 3104
+> +#define IMX378_CID_CUSTOM_BASE (V4L2_CID_USER_BASE | 0xf000)
+> +#define IMX378_CID_GREEN_BALANCE (IMX378_CID_CUSTOM_BASE + 0)
+> +
+> +static const char * const imx378_supply_name[] = {
+> +	"vdda",
+> +	"vddd",
+> +	"vdddo",
+> +};
+> +
+> +#define IMX378_NUM_SUPPLIES ARRAY_SIZE(imx378_supply_name)
+> +
+> +struct imx378 {
+> +	struct device *dev;
+> +	struct clk *xclk;
+> +	struct regmap *regmap;
+> +
+> +	struct v4l2_subdev sd;
+> +	struct media_pad pad;
+> +	struct v4l2_mbus_framefmt fmt;
+> +	struct v4l2_rect crop;
+> +
+> +	struct v4l2_ctrl_handler ctrls;
+> +	struct v4l2_ctrl *pixel_rate;
+> +	struct v4l2_ctrl *link_freq;
+> +	struct v4l2_ctrl *exposure;
+> +	struct v4l2_ctrl *vflip;
+> +	struct v4l2_ctrl *hflip;
+> +	struct v4l2_ctrl *analogue_gain;
+> +	struct v4l2_ctrl *digital_gain;
+> +	struct v4l2_ctrl *red_balance;
+> +	struct v4l2_ctrl *blue_balance;
+> +	struct v4l2_ctrl *green_balance;
+> +	struct v4l2_ctrl *temperature;
+> +
+> +	struct regulator_bulk_data supplies[IMX378_NUM_SUPPLIES];
+> +
+> +	struct gpio_desc *enable_gpio;
+> +
+> +	struct mutex mutex;
+> +
+> +	struct v4l2_fract fival;
+> +
+> +	bool streaming;
+> +};
+> +
+> +struct reg_8 {
+> +	u16 addr;
+> +	u8 val;
+> +};
+> +
+> +enum {
+> +	IMX378_TABLE_WAIT_MS = 0,
+> +	IMX378_TABLE_END,
+> +	IMX378_MAX_RETRIES,
+> +	IMX378_WAIT_MS
+> +};
+> +
+> +static const struct reg_8 mode_table_common[] = {
+> +	/* software standby settings */
+> +	{0x0100, 0x00},
+> +
+> +	/* software reset */
+> +	{0x0103, 0x01},
+> +
+> +	/* CSI */
+> +	{0x0112, 0x0A},
+> +	{0x0113, 0x0A},
+> +	{0x0114, 0x03},
+> +
+> +	/* global settings */
+> +	{0x0136, 0x18},
+> +	{0x0137, 0x00},
+> +
+> +	{0x0202, 0x20},
+> +	{0x0203, 0xa0},
+> +	{0x0204, 0x03},
+> +	{0x0205, 0xd2},
+> +	{0x020e, 0x01},
+> +	{0x020f, 0x00},
+> +	{0x0210, 0x02},
+> +	{0x0211, 0x21},
+> +	{0x0212, 0x01},
+> +	{0x0213, 0xee},
+> +	{0x0214, 0x01},
+> +	{0x0215, 0x00},
+> +	{0x0220, 0x00},
+> +	{0x0221, 0x11},
+> +
+> +	{0x0301, 0x05},
+> +	{0x0303, 0x02},
+> +	{0x0305, 0x03},
+> +	{0x0306, 0x00},
+> +	{0x0307, 0x96},
+> +
+> +	{0x0309, 0x0a},
+> +	{0x030b, 0x01},
+> +	{0x030d, 0x02},
+> +	{0x030e, 0x00},
+> +	{0x030f, 0xf6},
+> +	{0x0310, 0x00},
+> +	{0x0340, 0x04},
+> +	{0x0341, 0xb0},
+> +	{0x0342, 0x20},
+> +	{0x0343, 0x08},
+> +	{0x0344, 0x00},
+> +	{0x0345, 0x00},
+> +	{0x0346, 0x01},
+> +	{0x0347, 0x78},
+> +	{0x0348, 0x0f},
+> +	{0x0349, 0xd7},
+> +	{0x0350, 0x01},
+> +	{0x034a, 0x0a},
+> +	{0x034b, 0x67},
+> +	{0x034c, 0x07},
+> +	{0x034d, 0x80},
+> +	{0x034e, 0x04},
+> +	{0x034f, 0x38},
+> +	{0x0381, 0x01},
+> +	{0x0383, 0x01},
+> +	{0x0385, 0x01},
+> +	{0x0387, 0x01},
+> +
+> +	{0x0401, 0x00},
+> +	{0x0404, 0x00},
+> +	{0x0405, 0x10},
+> +	{0x0408, 0x00},
+> +	{0x0409, 0x6c},
+> +	{0x040a, 0x00},
+> +	{0x040b, 0x40},
+> +	{0x040c, 0x07},
+> +	{0x040d, 0x80},
+> +	{0x040e, 0x04},
+> +	{0x040f, 0x38},
+> +
+> +	{0x0900, 0x00},
+> +	{0x0901, 0x11},
+> +	{0x0902, 0x02},
+> +
+> +	{0x0c1a, 0x01},
+> +	{0x0c1b, 0x01},
+> +
+> +	{0x3030, 0x01},
+> +	{0x3032, 0x00},
+> +	{0x3033, 0x40},
+> +	{0x3140, 0x02},
+> +	{0x38a8, 0x1f},
+> +	{0x38a9, 0xff},
+> +	{0x38aa, 0x1f},
+> +	{0x38ab, 0xff},
+> +	{0x3c00, 0x00},
+> +	{0x3c01, 0x03},
+> +	{0x3c02, 0xdc},
+> +	{0x3d8a, 0x01},
+> +	{0x3e20, 0x01},
+> +	{0x3e37, 0x01},
+> +	{0x3f0d, 0x00},
+> +	{0x3f50, 0x00},
+> +	{0x3f56, 0x00},
+> +	{0x3f57, 0x01},
+> +	{0x3ff9, 0x00},
+> +
+> +	{0x4421, 0x08},
+> +	{0x4ae9, 0x18},
+> +	{0x4ae9, 0x21},
+> +	{0x4aea, 0x08},
+> +	{0x4aea, 0x80},
+> +
+> +	{0x55d4, 0x00},
+> +	{0x55d5, 0x00},
+> +	{0x55d6, 0x07},
+> +	{0x55d7, 0xff},
+> +	{0x55e8, 0x07},
+> +	{0x55e9, 0xff},
+> +	{0x55ea, 0x00},
+> +	{0x55eb, 0x00},
+> +	{0x5748, 0x07},
+> +	{0x5749, 0xff},
+> +	{0x574a, 0x00},
+> +	{0x574b, 0x00},
+> +	{0x574c, 0x07},
+> +	{0x574d, 0xff},
+> +	{0x574e, 0x00},
+> +	{0x574f, 0x00},
+> +	{0x5754, 0x00},
+> +	{0x5755, 0x00},
+> +	{0x5756, 0x07},
+> +	{0x5757, 0xff},
+> +	{0x5973, 0x04},
+> +	{0x5974, 0x01},
+> +	{0x5d13, 0xc3},
+> +	{0x5d14, 0x58},
+> +	{0x5d15, 0xa3},
+> +	{0x5d16, 0x1d},
+> +	{0x5d17, 0x65},
+> +	{0x5d18, 0x8c},
+> +	{0x5d1a, 0x06},
+> +	{0x5d1b, 0xa9},
+> +	{0x5d1c, 0x45},
+> +	{0x5d1d, 0x3a},
+> +	{0x5d1e, 0xab},
+> +	{0x5d1f, 0x15},
+> +	{0x5d21, 0x0e},
+> +	{0x5d22, 0x52},
+> +	{0x5d23, 0xaa},
+> +	{0x5d24, 0x7d},
+> +	{0x5d25, 0x57},
+> +	{0x5d26, 0xa8},
+> +	{0x5d37, 0x5a},
+> +	{0x5d38, 0x5a},
+> +	{0x5d77, 0x7f},
+> +
+> +	{0x7b3b, 0x01},
+> +	{0x7b4c, 0x00},
+> +	{0x7b53, 0x01},
+> +	{0x7b75, 0x0e},
+> +	{0x7b76, 0x0b},
+> +	{0x7b77, 0x08},
+> +	{0x7b78, 0x0a},
+> +	{0x7b79, 0x47},
+> +	{0x7b7c, 0x00},
+> +	{0x7b7d, 0x00},
+> +
+> +	{0x8d1f, 0x00},
+> +	{0x8d27, 0x00},
+> +
+> +	{0x9004, 0x03},
+> +	{0x9200, 0x50},
+> +	{0x9201, 0x6c},
+> +	{0x9202, 0x71},
+> +	{0x9203, 0x00},
+> +	{0x9204, 0x71},
+> +	{0x9205, 0x01},
+> +	{0x9304, 0x03},
+> +	{0x9305, 0x00},
+> +	{0x9369, 0x5a},
+> +	{0x936b, 0x55},
+> +	{0x936d, 0x28},
+> +	{0x9371, 0x6a},
+> +	{0x9373, 0x6a},
+> +	{0x9375, 0x64},
+> +	{0x9905, 0x00},
+> +	{0x9907, 0x00},
+> +	{0x9909, 0x00},
+> +	{0x990b, 0x00},
+> +	{0x991a, 0x00},
+> +	{0x9944, 0x3c},
+> +	{0x9947, 0x3c},
+> +	{0x994a, 0x8c},
+> +	{0x994b, 0x50},
+> +	{0x994c, 0x1b},
+> +	{0x994d, 0x8c},
+> +	{0x994e, 0x50},
+> +	{0x994f, 0x1b},
+> +	{0x9950, 0x8c},
+> +	{0x9951, 0x1b},
+> +	{0x9952, 0x0a},
+> +	{0x9953, 0x8c},
+> +	{0x9954, 0x1b},
+> +	{0x9955, 0x0a},
+> +	{0x996b, 0x8c},
+> +	{0x996c, 0x64},
+> +	{0x996d, 0x50},
+> +	{0x9a13, 0x04},
+> +	{0x9a14, 0x04},
+> +	{0x9a19, 0x00},
+> +	{0x9a1c, 0x04},
+> +	{0x9a1d, 0x04},
+> +	{0x9a26, 0x05},
+> +	{0x9a27, 0x05},
+> +	{0x9a2c, 0x01},
+> +	{0x9a2d, 0x03},
+> +	{0x9a2f, 0x05},
+> +	{0x9a30, 0x05},
+> +	{0x9a41, 0x00},
+> +	{0x9a46, 0x00},
+> +	{0x9a47, 0x00},
+> +	{0x9a4c, 0x0d},
+> +	{0x9a4d, 0x0d},
+> +	{0x9c17, 0x35},
+> +	{0x9c1d, 0x31},
+> +	{0x9c29, 0x50},
+> +	{0x9c3b, 0x2f},
+> +	{0x9c41, 0x6b},
+> +	{0x9c47, 0x2d},
+> +	{0x9c4d, 0x40},
+> +	{0x9c6b, 0x00},
+> +	{0x9c71, 0xc8},
+> +	{0x9c73, 0x32},
+> +	{0x9c75, 0x04},
+> +	{0x9c7d, 0x2d},
+> +	{0x9c83, 0x40},
+> +	{0x9c94, 0x3f},
+> +	{0x9c95, 0x3f},
+> +	{0x9c96, 0x3f},
+> +	{0x9c97, 0x00},
+> +	{0x9c98, 0x00},
+> +	{0x9c99, 0x00},
+> +	{0x9c9a, 0x3f},
+> +	{0x9c9b, 0x3f},
+> +	{0x9c9c, 0x3f},
+> +	{0x9ca0, 0x0f},
+> +	{0x9ca1, 0x0f},
+> +	{0x9ca2, 0x0f},
+> +	{0x9ca3, 0x00},
+> +	{0x9ca4, 0x00},
+> +	{0x9ca5, 0x00},
+> +	{0x9ca6, 0x1e},
+> +	{0x9ca7, 0x1e},
+> +	{0x9ca8, 0x1e},
+> +	{0x9ca9, 0x00},
+> +	{0x9caa, 0x00},
+> +	{0x9cab, 0x00},
+> +	{0x9cac, 0x09},
+> +	{0x9cad, 0x09},
+> +	{0x9cae, 0x09},
+> +	{0x9cbd, 0x50},
+> +	{0x9cbf, 0x50},
+> +	{0x9cc1, 0x50},
+> +	{0x9cc3, 0x40},
+> +	{0x9cc5, 0x40},
+> +	{0x9cc7, 0x40},
+> +	{0x9cc9, 0x0a},
+> +	{0x9ccb, 0x0a},
+> +	{0x9ccd, 0x0a},
+> +	{0x9d17, 0x35},
+> +	{0x9d1d, 0x31},
+> +	{0x9d29, 0x50},
+> +	{0x9d3b, 0x2f},
+> +	{0x9d41, 0x6b},
+> +	{0x9d47, 0x42},
+> +	{0x9d4d, 0x5a},
+> +	{0x9d6b, 0x00},
+> +	{0x9d71, 0xc8},
+> +	{0x9d73, 0x32},
+> +	{0x9d75, 0x04},
+> +	{0x9d7d, 0x42},
+> +	{0x9d83, 0x5a},
+> +	{0x9d94, 0x3f},
+> +	{0x9d95, 0x3f},
+> +	{0x9d96, 0x3f},
+> +	{0x9d97, 0x00},
+> +	{0x9d98, 0x00},
+> +	{0x9d99, 0x00},
+> +	{0x9d9a, 0x3f},
+> +	{0x9d9b, 0x3f},
+> +	{0x9d9c, 0x3f},
+> +	{0x9d9d, 0x1f},
+> +	{0x9d9e, 0x1f},
+> +	{0x9d9f, 0x1f},
+> +	{0x9da0, 0x0f},
+> +	{0x9da1, 0x0f},
+> +	{0x9da2, 0x0f},
+> +	{0x9da3, 0x00},
+> +	{0x9da4, 0x00},
+> +	{0x9da5, 0x00},
+> +	{0x9da6, 0x1e},
+> +	{0x9da7, 0x1e},
+> +	{0x9da8, 0x1e},
+> +	{0x9da9, 0x00},
+> +	{0x9daa, 0x00},
+> +	{0x9dab, 0x00},
+> +	{0x9dac, 0x09},
+> +	{0x9dad, 0x09},
+> +	{0x9dae, 0x09},
+> +	{0x9dc9, 0x0a},
+> +	{0x9dcb, 0x0a},
+> +	{0x9dcd, 0x0a},
+> +	{0x9e17, 0x35},
+> +	{0x9e1d, 0x31},
+> +	{0x9e29, 0x50},
+> +	{0x9e3b, 0x2f},
+> +	{0x9e41, 0x6b},
+> +	{0x9e47, 0x2d},
+> +	{0x9e4d, 0x40},
+> +	{0x9e6b, 0x00},
+> +	{0x9e71, 0xc8},
+> +	{0x9e73, 0x32},
+> +	{0x9e75, 0x04},
+> +	{0x9e94, 0x0f},
+> +	{0x9e95, 0x0f},
+> +	{0x9e96, 0x0f},
+> +	{0x9e97, 0x00},
+> +	{0x9e98, 0x00},
+> +	{0x9e99, 0x00},
+> +	{0x9e9a, 0x2f},
+> +	{0x9e9b, 0x2f},
+> +	{0x9e9c, 0x2f},
+> +	{0x9e9d, 0x00},
+> +	{0x9e9e, 0x00},
+> +	{0x9e9f, 0x00},
+> +	{0x9ea0, 0x0f},
+> +	{0x9ea1, 0x0f},
+> +	{0x9ea2, 0x0f},
+> +	{0x9ea3, 0x00},
+> +	{0x9ea4, 0x00},
+> +	{0x9ea5, 0x00},
+> +	{0x9ea6, 0x3f},
+> +	{0x9ea7, 0x3f},
+> +	{0x9ea8, 0x3f},
+> +	{0x9ea9, 0x00},
+> +	{0x9eaa, 0x00},
+> +	{0x9eab, 0x00},
+> +	{0x9eac, 0x09},
+> +	{0x9ead, 0x09},
+> +	{0x9eae, 0x09},
+> +	{0x9ec9, 0x0a},
+> +	{0x9ecb, 0x0a},
+> +	{0x9ecd, 0x0a},
+> +	{0x9f17, 0x35},
+> +	{0x9f1d, 0x31},
+> +	{0x9f29, 0x50},
+> +	{0x9f3b, 0x2f},
+> +	{0x9f41, 0x6b},
+> +	{0x9f47, 0x42},
+> +	{0x9f4d, 0x5a},
+> +	{0x9f6b, 0x00},
+> +	{0x9f71, 0xc8},
+> +	{0x9f73, 0x32},
+> +	{0x9f75, 0x04},
+> +	{0x9f94, 0x0f},
+> +	{0x9f95, 0x0f},
+> +	{0x9f96, 0x0f},
+> +	{0x9f97, 0x00},
+> +	{0x9f98, 0x00},
+> +	{0x9f99, 0x00},
+> +	{0x9f9a, 0x2f},
+> +	{0x9f9b, 0x2f},
+> +	{0x9f9c, 0x2f},
+> +	{0x9f9d, 0x00},
+> +	{0x9f9e, 0x00},
+> +	{0x9f9f, 0x00},
+> +	{0x9fa0, 0x0f},
+> +	{0x9fa1, 0x0f},
+> +	{0x9fa2, 0x0f},
+> +	{0x9fa3, 0x00},
+> +	{0x9fa4, 0x00},
+> +	{0x9fa5, 0x00},
+> +	{0x9fa6, 0x1e},
+> +	{0x9fa7, 0x1e},
+> +	{0x9fa8, 0x1e},
+> +	{0x9fa9, 0x00},
+> +	{0x9faa, 0x00},
+> +	{0x9fab, 0x00},
+> +	{0x9fac, 0x09},
+> +	{0x9fad, 0x09},
+> +	{0x9fae, 0x09},
+> +	{0x9fc9, 0x0a},
+> +	{0x9fcb, 0x0a},
+> +	{0x9fcd, 0x0a},
+> +
+> +	{0xa001, 0x0a},
+> +	{0xa003, 0x0a},
+> +	{0xa005, 0x0a},
+> +	{0xa006, 0x01},
+> +	{0xa007, 0xc0},
+> +	{0xa009, 0xc0},
+> +	{0xa14b, 0xff},
+> +	{0xa151, 0x0c},
+> +	{0xa153, 0x50},
+> +	{0xa155, 0x02},
+> +	{0xa157, 0x00},
+> +	{0xa1ad, 0xff},
+> +	{0xa1b3, 0x0c},
+> +	{0xa1b5, 0x50},
+> +	{0xa1b9, 0x00},
+> +	{0xa24b, 0xff},
+> +	{0xa257, 0x00},
+> +	{0xa2a9, 0x60},
+> +	{0xa2ad, 0xff},
+> +	{0xa2b7, 0x00},
+> +	{0xa2b9, 0x00},
+> +
+> +	{0xb21f, 0x04},
+> +	{0xb35c, 0x00},
+> +	{0xb35e, 0x08},
+> +	{0xbcf1, 0x02},
+> +	{0xe000, 0x00},
+> +	{0xf61c, 0x04},
+> +	{0xf61e, 0x04},
+> +
+> +	{IMX378_TABLE_END, 0x00}
+> +};
+> +
+> +static inline struct imx378 *to_imx378(struct v4l2_subdev *sd)
+> +{
+> +	return container_of(sd, struct imx378, sd);
+> +}
+> +
+> +static int imx378_set_flip_mode(struct imx378 *imx378, u32 code)
+> +{
+> +	/* WORKAROUND to update controls */
+> +	imx378->vflip->flags &= ~V4L2_CTRL_FLAG_READ_ONLY;
+> +	imx378->hflip->flags &= ~V4L2_CTRL_FLAG_READ_ONLY;
+> +
+> +	switch (code) {
+> +	case MEDIA_BUS_FMT_SBGGR10_1X10:
+> +		v4l2_ctrl_s_ctrl(imx378->vflip, 1);
+> +		v4l2_ctrl_s_ctrl(imx378->hflip, 1);
 
-NOTE: CMD23 support is disabled for now because it results in command
-timeouts and thus decreases read performance.
+Other raw sensor drivers which support flip controls change the format
+based on those controls, not the other way around. Could you do the same in
+this one, please?
 
-Tested-by: Wei Wang <lnykww@gmail.com>
-Tested-by: Xin Yin <yinxin_1989@aliyun.com>
-Reviewed-by: Xin Yin <yinxin_1989@aliyun.com>
-Tested-by: Anand Moon <linux.amoon@gmail.com>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/mmc/host/Kconfig              |  14 +
- drivers/mmc/host/Makefile             |   1 +
- drivers/mmc/host/meson-mx-sdhc-clkc.c | 188 ++++++
- drivers/mmc/host/meson-mx-sdhc.c      | 916 ++++++++++++++++++++++++++
- drivers/mmc/host/meson-mx-sdhc.h      | 138 ++++
- 5 files changed, 1257 insertions(+)
- create mode 100644 drivers/mmc/host/meson-mx-sdhc-clkc.c
- create mode 100644 drivers/mmc/host/meson-mx-sdhc.c
- create mode 100644 drivers/mmc/host/meson-mx-sdhc.h
+> +		break;
+> +	case MEDIA_BUS_FMT_SGBRG10_1X10:
+> +		v4l2_ctrl_s_ctrl(imx378->vflip, 1);
+> +		v4l2_ctrl_s_ctrl(imx378->hflip, 0);
+> +		break;
+> +	case MEDIA_BUS_FMT_SGRBG10_1X10:
+> +		v4l2_ctrl_s_ctrl(imx378->vflip, 0);
+> +		v4l2_ctrl_s_ctrl(imx378->hflip, 1);
+> +		break;
+> +	case MEDIA_BUS_FMT_SRGGB10_1X10:
+> +		v4l2_ctrl_s_ctrl(imx378->vflip, 0);
+> +		v4l2_ctrl_s_ctrl(imx378->hflip, 0);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	/* WORKAROUND to update controls */
+> +	imx378->vflip->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> +	imx378->hflip->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> +
+> +	return 0;
+> +}
+> +
+> +static u32 imx378_get_format_code(struct imx378 *imx378)
+> +{
+> +	/*
+> +	 * Only one bayer order is supported.
+> +	 * It depends on the flip settings.
+> +	 */
+> +	u32 code;
+> +	static const u32 codes[2][2] = {
+> +		{ MEDIA_BUS_FMT_SRGGB10_1X10, MEDIA_BUS_FMT_SGRBG10_1X10, },
+> +		{ MEDIA_BUS_FMT_SGBRG10_1X10, MEDIA_BUS_FMT_SBGGR10_1X10, },
+> +	};
+> +
+> +	lockdep_assert_held(&imx378->mutex);
+> +	code = codes[imx378->vflip->val][imx378->hflip->val];
+> +
+> +	return code;
+> +}
+> +
+> +static int imx378_read_reg16(struct imx378 *imx378, u16 addr, u16 *val)
+> +{
+> +	int ret;
+> +	u32 h_val = 0, l_val = 0;
+> +
+> +	ret = regmap_read(imx378->regmap, addr + 1, &l_val);
 
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index 462b5352fea7..df3fc572f842 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -405,6 +405,20 @@ config MMC_MESON_GX
- 
- 	  If you have a controller with this interface, say Y here.
- 
-+config MMC_MESON_MX_SDHC
-+	tristate "Amlogic Meson SDHC Host Controller support"
-+	depends on (ARM && ARCH_MESON) || COMPILE_TEST
-+	depends on COMMON_CLK
-+	depends on OF
-+	help
-+	  This selects support for the SDHC Host Controller on
-+	  Amlogic Meson6, Meson8, Meson8b and Meson8m2 SoCs.
-+	  The controller supports the SD/SDIO Spec 3.x and eMMC Spec 4.5x
-+	  with 1, 4, and 8 bit bus widths.
-+
-+	  If you have a controller with this interface, say Y or M here.
-+	  If unsure, say N.
-+
- config MMC_MESON_MX_SDIO
- 	tristate "Amlogic Meson6/Meson8/Meson8b SD/MMC Host Controller support"
- 	depends on ARCH_MESON || COMPILE_TEST
-diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-index b929ef941208..8bcb420e071c 100644
---- a/drivers/mmc/host/Makefile
-+++ b/drivers/mmc/host/Makefile
-@@ -68,6 +68,7 @@ obj-$(CONFIG_MMC_VUB300)	+= vub300.o
- obj-$(CONFIG_MMC_USHC)		+= ushc.o
- obj-$(CONFIG_MMC_WMT)		+= wmt-sdmmc.o
- obj-$(CONFIG_MMC_MESON_GX)	+= meson-gx-mmc.o
-+obj-$(CONFIG_MMC_MESON_MX_SDHC)	+= meson-mx-sdhc-clkc.o meson-mx-sdhc.o
- obj-$(CONFIG_MMC_MESON_MX_SDIO)	+= meson-mx-sdio.o
- obj-$(CONFIG_MMC_MOXART)	+= moxart-mmc.o
- obj-$(CONFIG_MMC_SUNXI)		+= sunxi-mmc.o
-diff --git a/drivers/mmc/host/meson-mx-sdhc-clkc.c b/drivers/mmc/host/meson-mx-sdhc-clkc.c
-new file mode 100644
-index 000000000000..1e9dea94f9dc
---- /dev/null
-+++ b/drivers/mmc/host/meson-mx-sdhc-clkc.c
-@@ -0,0 +1,188 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Amlogic Meson SDHC clock controller
-+ *
-+ * Copyright (C) 2020 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-+ */
-+
-+#include <dt-bindings/clock/meson-mx-sdhc-clkc.h>
-+
-+#include <linux/clk-provider.h>
-+#include <linux/device.h>
-+#include <linux/platform_device.h>
-+
-+#include "meson-mx-sdhc.h"
-+
-+#define MESON_SDHC_NUM_BUILTIN_CLKS	6
-+
-+struct meson_mx_sdhc_clkc {
-+	struct clk_mux			src_sel;
-+	struct clk_divider		div;
-+	struct clk_gate			mod_clk_en;
-+	struct clk_gate			tx_clk_en;
-+	struct clk_gate			rx_clk_en;
-+	struct clk_gate			sd_clk_en;
-+	struct clk_hw_onecell_data	hw_onecell_data;
-+};
-+
-+static const struct clk_div_table meson_mx_sdhc_div_table[] = {
-+	{ .div = 6, .val = 5, },
-+	{ .div = 8, .val = 7, },
-+	{ .div = 9, .val = 8, },
-+	{ .div = 10, .val = 9, },
-+	{ .div = 12, .val = 11, },
-+	{ .div = 16, .val = 15, },
-+	{ .div = 18, .val = 17, },
-+	{ .div = 34, .val = 33, },
-+	{ .div = 142, .val = 141, },
-+	{ .div = 850, .val = 849, },
-+	{ .div = 2126, .val = 2125, },
-+	{ .div = 4096, .val = 4095, },
-+	{ /* sentinel */ }
-+};
-+
-+static const struct meson_mx_sdhc_clkc meson_mx_sdhc_clkc_data = {
-+	.src_sel = {
-+		.mask = 0x3,
-+		.shift = 16,
-+	},
-+	.div = {
-+		.shift = 0,
-+		.width = 12,
-+		.table = meson_mx_sdhc_div_table,
-+	},
-+	.mod_clk_en = {
-+		.bit_idx = 15,
-+	},
-+	.tx_clk_en = {
-+		.bit_idx = 14,
-+	},
-+	.rx_clk_en = {
-+		.bit_idx = 13,
-+	},
-+	.sd_clk_en = {
-+		.bit_idx = 12,
-+	},
-+};
-+
-+static const struct clk_init_data meson_mx_sdhc_clkc_init_data[] = {
-+	[SDHC_CLKID_SRC_SEL] = {
-+		.name = "sdhc_src_sel",
-+		.ops = &clk_mux_ops,
-+		.parent_data = (const struct clk_parent_data[]) {
-+			{ .fw_name = "clkin0" },
-+			{ .fw_name = "clkin1" },
-+			{ .fw_name = "clkin2" },
-+			{ .fw_name = "clkin3" },
-+		},
-+		.num_parents = 4,
-+	},
-+	[SDHC_CLKID_DIV] = {
-+		.name = "sdhc_div",
-+		.ops = &clk_divider_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&meson_mx_sdhc_clkc_data.src_sel.hw,
-+		},
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+	[SDHC_CLKID_MOD_CLK] = {
-+		.name = "sdhc_mod_clk_on",
-+		.ops = &clk_gate_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&meson_mx_sdhc_clkc_data.div.hw,
-+		},
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+	[SDHC_CLKID_SD_CLK] = {
-+		.name = "sdhc_tx_clk_on",
-+		.ops = &clk_gate_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&meson_mx_sdhc_clkc_data.div.hw,
-+		},
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+	[SDHC_CLKID_TX_CLK] = {
-+		.name = "sdhc_rx_clk_on",
-+		.ops = &clk_gate_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&meson_mx_sdhc_clkc_data.div.hw,
-+		},
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+	[SDHC_CLKID_RX_CLK] = {
-+		.name = "sdhc_sd_clk_on",
-+		.ops = &clk_gate_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&meson_mx_sdhc_clkc_data.div.hw,
-+		},
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+int meson_mx_sdhc_register_clkc(struct device *dev, void __iomem *base)
-+{
-+	const struct clk_hw *div_parents[1], *gate_parents[1];
-+	struct clk_hw_onecell_data *onecell_data;
-+	struct meson_mx_sdhc_clkc *clkc_data;
-+	struct clk_init_data init_data;
-+	int i, ret;
-+
-+	clkc_data = devm_kzalloc(dev, struct_size(clkc_data,
-+						  hw_onecell_data.hws,
-+						  MESON_SDHC_NUM_BUILTIN_CLKS),
-+				 GFP_KERNEL);
-+	if (!clkc_data)
-+		return -ENOMEM;
-+
-+	memcpy(clkc_data, &meson_mx_sdhc_clkc_data,
-+	       sizeof(meson_mx_sdhc_clkc_data));
-+
-+	div_parents[0] = &clkc_data->src_sel.hw;
-+	gate_parents[0] = &clkc_data->div.hw;
-+
-+	clkc_data->src_sel.reg = base + MESON_SDHC_CLKC;
-+	clkc_data->div.reg = base + MESON_SDHC_CLKC;
-+	clkc_data->mod_clk_en.reg = base + MESON_SDHC_CLKC;
-+	clkc_data->sd_clk_en.reg = base + MESON_SDHC_CLKC;
-+	clkc_data->tx_clk_en.reg = base + MESON_SDHC_CLKC;
-+	clkc_data->rx_clk_en.reg = base + MESON_SDHC_CLKC;
-+
-+	onecell_data = &clkc_data->hw_onecell_data;
-+	onecell_data->hws[SDHC_CLKID_SRC_SEL] = &clkc_data->src_sel.hw;
-+	onecell_data->hws[SDHC_CLKID_DIV] = &clkc_data->div.hw;
-+	onecell_data->hws[SDHC_CLKID_MOD_CLK] = &clkc_data->mod_clk_en.hw;
-+	onecell_data->hws[SDHC_CLKID_SD_CLK] = &clkc_data->sd_clk_en.hw;
-+	onecell_data->hws[SDHC_CLKID_TX_CLK] = &clkc_data->tx_clk_en.hw;
-+	onecell_data->hws[SDHC_CLKID_RX_CLK] = &clkc_data->rx_clk_en.hw;
-+
-+	for (i = 0; i < MESON_SDHC_NUM_BUILTIN_CLKS; i++) {
-+		init_data = meson_mx_sdhc_clkc_init_data[i];
-+
-+		if (i == SDHC_CLKID_SRC_SEL)
-+			/* uses clk_parent_data instead */
-+			init_data.parent_hws = NULL;
-+		else if (i == SDHC_CLKID_DIV)
-+			init_data.parent_hws = div_parents;
-+		else
-+			init_data.parent_hws = gate_parents;
-+
-+		onecell_data->hws[i]->init = &init_data;
-+
-+		ret = devm_clk_hw_register(dev, onecell_data->hws[i]);
-+		if (ret) {
-+			dev_err(dev, "Registration of SDHC clock %d failed\n",
-+				i);
-+			return ret;
-+		}
-+	}
-+
-+	onecell_data->num = MESON_SDHC_NUM_BUILTIN_CLKS;
-+
-+	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
-+					   onecell_data);
-+}
-diff --git a/drivers/mmc/host/meson-mx-sdhc.c b/drivers/mmc/host/meson-mx-sdhc.c
-new file mode 100644
-index 000000000000..3c54d5f91fbc
---- /dev/null
-+++ b/drivers/mmc/host/meson-mx-sdhc.c
-@@ -0,0 +1,916 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Amlogic Meson6/Meson8/Meson8b/Meson8m2 SDHC MMC host controller driver.
-+ *
-+ * Copyright (C) 2020 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/interrupt.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/types.h>
-+
-+#include <linux/mmc/host.h>
-+#include <linux/mmc/mmc.h>
-+#include <linux/mmc/sdio.h>
-+#include <linux/mmc/slot-gpio.h>
-+
-+#include "meson-mx-sdhc.h"
-+
-+#define MESON_SDHC_NUM_BULK_CLKS				4
-+#define MESON_SDHC_MAX_BLK_SIZE					512
-+#define MESON_SDHC_NUM_TUNING_TRIES				10
-+
-+#define MESON_SDHC_WAIT_CMD_READY_SLEEP_US			1
-+#define MESON_SDHC_WAIT_CMD_READY_TIMEOUT_US			100000
-+#define MESON_SDHC_WAIT_BEFORE_SEND_SLEEP_US			1
-+#define MESON_SDHC_WAIT_BEFORE_SEND_TIMEOUT_US			200
-+
-+struct meson_mx_sdhc_data {
-+	void		(*init_hw)(struct mmc_host *mmc);
-+	void		(*set_pdma)(struct mmc_host *mmc);
-+	void		(*wait_before_send)(struct mmc_host *mmc);
-+	bool		hardware_flush_all_cmds;
-+};
-+
-+struct meson_mx_sdhc_host {
-+	struct mmc_host			*mmc;
-+
-+	struct mmc_request		*mrq;
-+	struct mmc_command		*cmd;
-+	int				error;
-+
-+	struct regmap			*regmap;
-+
-+	struct clk			*pclk;
-+	struct clk			*sd_clk;
-+	struct clk_bulk_data		bulk_clks[MESON_SDHC_NUM_BULK_CLKS];
-+	bool				bulk_clks_enabled;
-+
-+	const struct meson_mx_sdhc_data	*platform;
-+};
-+
-+static const struct regmap_config meson_mx_sdhc_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+	.max_register = MESON_SDHC_CLK2,
-+};
-+
-+static void meson_mx_sdhc_hw_reset(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+
-+	regmap_write(host->regmap, MESON_SDHC_SRST, MESON_SDHC_SRST_MAIN_CTRL |
-+		     MESON_SDHC_SRST_RXFIFO | MESON_SDHC_SRST_TXFIFO |
-+		     MESON_SDHC_SRST_DPHY_RX | MESON_SDHC_SRST_DPHY_TX |
-+		     MESON_SDHC_SRST_DMA_IF);
-+	usleep_range(10, 100);
-+
-+	regmap_write(host->regmap, MESON_SDHC_SRST, 0);
-+	usleep_range(10, 100);
-+}
-+
-+static void meson_mx_sdhc_clear_fifo(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+	u32 stat;
-+
-+	regmap_read(host->regmap, MESON_SDHC_STAT, &stat);
-+	if (!FIELD_GET(MESON_SDHC_STAT_RXFIFO_CNT, stat) &&
-+	    !FIELD_GET(MESON_SDHC_STAT_TXFIFO_CNT, stat))
-+		return;
-+
-+	regmap_write(host->regmap, MESON_SDHC_SRST, MESON_SDHC_SRST_RXFIFO |
-+		     MESON_SDHC_SRST_TXFIFO | MESON_SDHC_SRST_MAIN_CTRL);
-+	udelay(5);
-+
-+	regmap_read(host->regmap, MESON_SDHC_STAT, &stat);
-+	if (FIELD_GET(MESON_SDHC_STAT_RXFIFO_CNT, stat) ||
-+	    FIELD_GET(MESON_SDHC_STAT_TXFIFO_CNT, stat))
-+		dev_warn(mmc_dev(host->mmc),
-+			 "Failed to clear FIFOs, RX: %lu, TX: %lu\n",
-+			 FIELD_GET(MESON_SDHC_STAT_RXFIFO_CNT, stat),
-+			 FIELD_GET(MESON_SDHC_STAT_TXFIFO_CNT, stat));
-+}
-+
-+static void meson_mx_sdhc_wait_cmd_ready(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+	u32 stat, esta;
-+	int ret;
-+
-+	ret = regmap_read_poll_timeout(host->regmap, MESON_SDHC_STAT, stat,
-+				       !(stat & MESON_SDHC_STAT_CMD_BUSY),
-+				       MESON_SDHC_WAIT_CMD_READY_SLEEP_US,
-+				       MESON_SDHC_WAIT_CMD_READY_TIMEOUT_US);
-+	if (ret) {
-+		dev_warn(mmc_dev(mmc),
-+			 "Failed to poll for CMD_BUSY while processing CMD%d\n",
-+			 host->cmd->opcode);
-+		meson_mx_sdhc_hw_reset(mmc);
-+	}
-+
-+	ret = regmap_read_poll_timeout(host->regmap, MESON_SDHC_ESTA, esta,
-+				       !(esta & MESON_SDHC_ESTA_11_13),
-+				       MESON_SDHC_WAIT_CMD_READY_SLEEP_US,
-+				       MESON_SDHC_WAIT_CMD_READY_TIMEOUT_US);
-+	if (ret) {
-+		dev_warn(mmc_dev(mmc),
-+			 "Failed to poll for ESTA[13:11] while processing CMD%d\n",
-+			 host->cmd->opcode);
-+		meson_mx_sdhc_hw_reset(mmc);
-+	}
-+}
-+
-+static void meson_mx_sdhc_start_cmd(struct mmc_host *mmc,
-+				    struct mmc_command *cmd)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+	u32 ictl, send;
-+	int pack_len;
-+
-+	host->cmd = cmd;
-+
-+	ictl = MESON_SDHC_ICTL_DATA_TIMEOUT | MESON_SDHC_ICTL_DATA_ERR_CRC |
-+	       MESON_SDHC_ICTL_RXFIFO_FULL | MESON_SDHC_ICTL_TXFIFO_EMPTY |
-+	       MESON_SDHC_ICTL_RESP_TIMEOUT | MESON_SDHC_ICTL_RESP_ERR_CRC;
-+
-+	send = FIELD_PREP(MESON_SDHC_SEND_CMD_INDEX, cmd->opcode);
-+
-+	if (cmd->data) {
-+		send |= MESON_SDHC_SEND_CMD_HAS_DATA;
-+		send |= FIELD_PREP(MESON_SDHC_SEND_TOTAL_PACK,
-+				   cmd->data->blocks - 1);
-+
-+		if (cmd->data->blksz < MESON_SDHC_MAX_BLK_SIZE)
-+			pack_len = cmd->data->blksz;
-+		else
-+			pack_len = 0;
-+
-+		if (cmd->data->flags & MMC_DATA_WRITE)
-+			send |= MESON_SDHC_SEND_DATA_DIR;
-+
-+		/*
-+		 * If command with no data, just wait response done
-+		 * interrupt(int[0]), and if command with data transfer, just
-+		 * wait dma done interrupt(int[11]), don't need care about
-+		 * dat0 busy or not.
-+		 */
-+		if (host->platform->hardware_flush_all_cmds ||
-+		    cmd->data->flags & MMC_DATA_WRITE)
-+			/* hardware flush: */
-+			ictl |= MESON_SDHC_ICTL_DMA_DONE;
-+		else
-+			/* software flush: */
-+			ictl |= MESON_SDHC_ICTL_DATA_XFER_OK;
-+	} else {
-+		pack_len = 0;
-+
-+		ictl |= MESON_SDHC_ICTL_RESP_OK;
-+	}
-+
-+	if (cmd->opcode == MMC_STOP_TRANSMISSION)
-+		send |= MESON_SDHC_SEND_DATA_STOP;
-+
-+	if (cmd->flags & MMC_RSP_PRESENT)
-+		send |= MESON_SDHC_SEND_CMD_HAS_RESP;
-+
-+	if (cmd->flags & MMC_RSP_136) {
-+		send |= MESON_SDHC_SEND_RESP_LEN;
-+		send |= MESON_SDHC_SEND_RESP_NO_CRC;
-+	}
-+
-+	if (!(cmd->flags & MMC_RSP_CRC))
-+		send |= MESON_SDHC_SEND_RESP_NO_CRC;
-+
-+	if (cmd->flags & MMC_RSP_BUSY)
-+		send |= MESON_SDHC_SEND_R1B;
-+
-+	/* enable the new IRQs and mask all pending ones */
-+	regmap_write(host->regmap, MESON_SDHC_ICTL, ictl);
-+	regmap_write(host->regmap, MESON_SDHC_ISTA, MESON_SDHC_ISTA_ALL_IRQS);
-+
-+	regmap_write(host->regmap, MESON_SDHC_ARGU, cmd->arg);
-+
-+	regmap_update_bits(host->regmap, MESON_SDHC_CTRL,
-+			   MESON_SDHC_CTRL_PACK_LEN,
-+			   FIELD_PREP(MESON_SDHC_CTRL_PACK_LEN, pack_len));
-+
-+	if (cmd->data)
-+		regmap_write(host->regmap, MESON_SDHC_ADDR,
-+			     sg_dma_address(cmd->data->sg));
-+
-+	meson_mx_sdhc_wait_cmd_ready(mmc);
-+
-+	if (cmd->data)
-+		host->platform->set_pdma(mmc);
-+
-+	if (host->platform->wait_before_send)
-+		host->platform->wait_before_send(mmc);
-+
-+	regmap_write(host->regmap, MESON_SDHC_SEND, send);
-+}
-+
-+static void meson_mx_sdhc_disable_clks(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+
-+	if (!host->bulk_clks_enabled)
-+		return;
-+
-+	clk_bulk_disable_unprepare(MESON_SDHC_NUM_BULK_CLKS, host->bulk_clks);
-+
-+	host->bulk_clks_enabled = false;
-+}
-+
-+static int meson_mx_sdhc_enable_clks(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+	int ret;
-+
-+	if (host->bulk_clks_enabled)
-+		return 0;
-+
-+	ret = clk_bulk_prepare_enable(MESON_SDHC_NUM_BULK_CLKS,
-+				      host->bulk_clks);
-+	if (ret)
-+		return ret;
-+
-+	host->bulk_clks_enabled = true;
-+
-+	return 0;
-+}
-+
-+static int meson_mx_sdhc_set_clk(struct mmc_host *mmc, struct mmc_ios *ios)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+	u32 rx_clk_phase;
-+	int ret;
-+
-+	meson_mx_sdhc_disable_clks(mmc);
-+
-+	if (ios->clock) {
-+		ret = clk_set_rate(host->sd_clk, ios->clock);
-+		if (ret) {
-+			dev_warn(mmc_dev(mmc),
-+				 "Failed to set MMC clock to %uHz: %d\n",
-+				 ios->clock, host->error);
-+			return ret;
-+		}
-+
-+		ret = meson_mx_sdhc_enable_clks(mmc);
-+		if (ret)
-+			return ret;
-+
-+		mmc->actual_clock = clk_get_rate(host->sd_clk);
-+
-+		/*
-+		 * according to Amlogic the following latching points are
-+		 * selected with empirical values, there is no (known) formula
-+		 * to calculate these.
-+		 */
-+		if (mmc->actual_clock > 100000000) {
-+			rx_clk_phase = 1;
-+		} else if (mmc->actual_clock > 45000000) {
-+			if (ios->signal_voltage == MMC_SIGNAL_VOLTAGE_330)
-+				rx_clk_phase = 15;
-+			else
-+				rx_clk_phase = 11;
-+		} else if (mmc->actual_clock >= 25000000) {
-+			rx_clk_phase = 15;
-+		} else if (mmc->actual_clock > 5000000) {
-+			rx_clk_phase = 23;
-+		} else if (mmc->actual_clock > 1000000) {
-+			rx_clk_phase = 55;
-+		} else {
-+			rx_clk_phase = 1061;
-+		}
-+
-+		regmap_update_bits(host->regmap, MESON_SDHC_CLK2,
-+				   MESON_SDHC_CLK2_RX_CLK_PHASE,
-+				   FIELD_PREP(MESON_SDHC_CLK2_RX_CLK_PHASE,
-+					      rx_clk_phase));
-+	} else {
-+		mmc->actual_clock = 0;
-+	}
-+
-+	return 0;
-+}
-+
-+static void meson_mx_sdhc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+	unsigned short vdd = ios->vdd;
-+
-+	switch (ios->power_mode) {
-+	case MMC_POWER_OFF:
-+		vdd = 0;
-+		fallthrough;
-+
-+	case MMC_POWER_UP:
-+		if (!IS_ERR(mmc->supply.vmmc)) {
-+			host->error = mmc_regulator_set_ocr(mmc,
-+							    mmc->supply.vmmc,
-+							    vdd);
-+			if (host->error)
-+				return;
-+		}
-+
-+		break;
-+
-+	case MMC_POWER_ON:
-+		break;
-+	}
-+
-+	host->error = meson_mx_sdhc_set_clk(mmc, ios);
-+	if (host->error)
-+		return;
-+
-+	switch (ios->bus_width) {
-+	case MMC_BUS_WIDTH_1:
-+		regmap_update_bits(host->regmap, MESON_SDHC_CTRL,
-+				   MESON_SDHC_CTRL_DAT_TYPE,
-+				   FIELD_PREP(MESON_SDHC_CTRL_DAT_TYPE, 0));
-+		break;
-+
-+	case MMC_BUS_WIDTH_4:
-+		regmap_update_bits(host->regmap, MESON_SDHC_CTRL,
-+				   MESON_SDHC_CTRL_DAT_TYPE,
-+				   FIELD_PREP(MESON_SDHC_CTRL_DAT_TYPE, 1));
-+		break;
-+
-+	case MMC_BUS_WIDTH_8:
-+		regmap_update_bits(host->regmap, MESON_SDHC_CTRL,
-+				   MESON_SDHC_CTRL_DAT_TYPE,
-+				   FIELD_PREP(MESON_SDHC_CTRL_DAT_TYPE, 2));
-+		break;
-+
-+	default:
-+		dev_err(mmc_dev(mmc), "unsupported bus width: %d\n",
-+			ios->bus_width);
-+		host->error = -EINVAL;
-+		return;
-+	}
-+}
-+
-+static int meson_mx_sdhc_map_dma(struct mmc_host *mmc, struct mmc_request *mrq)
-+{
-+	struct mmc_data *data = mrq->data;
-+	int dma_len;
-+
-+	if (!data)
-+		return 0;
-+
-+	dma_len = dma_map_sg(mmc_dev(mmc), data->sg, data->sg_len,
-+			     mmc_get_dma_dir(data));
-+	if (dma_len <= 0) {
-+		dev_err(mmc_dev(mmc), "dma_map_sg failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+static void meson_mx_sdhc_request(struct mmc_host *mmc, struct mmc_request *mrq)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+	struct mmc_command *cmd = mrq->cmd;
-+
-+	if (!host->error)
-+		host->error = meson_mx_sdhc_map_dma(mmc, mrq);
-+
-+	if (host->error) {
-+		cmd->error = host->error;
-+		mmc_request_done(mmc, mrq);
-+		return;
-+	}
-+
-+	host->mrq = mrq;
-+
-+	meson_mx_sdhc_start_cmd(mmc, mrq->cmd);
-+}
-+
-+static int meson_mx_sdhc_card_busy(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+	u32 stat;
-+
-+	regmap_read(host->regmap, MESON_SDHC_STAT, &stat);
-+	return FIELD_GET(MESON_SDHC_STAT_DAT3_0, stat) == 0;
-+}
-+
-+static bool meson_mx_sdhc_tuning_point_matches(struct mmc_host *mmc,
-+					       u32 opcode)
-+{
-+	unsigned int i, num_matches = 0;
-+	int ret;
-+
-+	for (i = 0; i < MESON_SDHC_NUM_TUNING_TRIES; i++) {
-+		ret = mmc_send_tuning(mmc, opcode, NULL);
-+		if (!ret)
-+			num_matches++;
-+	}
-+
-+	return num_matches == MESON_SDHC_NUM_TUNING_TRIES;
-+}
-+
-+static int meson_mx_sdhc_execute_tuning(struct mmc_host *mmc, u32 opcode)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+	int div, start, len, best_start, best_len;
-+	int curr_phase, old_phase, new_phase;
-+	u32 val;
-+
-+	len = 0;
-+	start = 0;
-+	best_len = 0;
-+
-+	regmap_read(host->regmap, MESON_SDHC_CLK2, &val);
-+	old_phase = FIELD_GET(MESON_SDHC_CLK2_RX_CLK_PHASE, val);
-+
-+	regmap_read(host->regmap, MESON_SDHC_CLKC, &val);
-+	div = FIELD_GET(MESON_SDHC_CLKC_CLK_DIV, val);
-+
-+	for (curr_phase = 0; curr_phase <= div; curr_phase++) {
-+		regmap_update_bits(host->regmap, MESON_SDHC_CLK2,
-+				   MESON_SDHC_CLK2_RX_CLK_PHASE,
-+				   FIELD_PREP(MESON_SDHC_CLK2_RX_CLK_PHASE,
-+					      curr_phase));
-+
-+		if (meson_mx_sdhc_tuning_point_matches(mmc, opcode)) {
-+			if (!len) {
-+				start = curr_phase;
-+
-+				dev_dbg(mmc_dev(mmc),
-+					"New RX phase window starts at %u\n",
-+					start);
-+			}
-+
-+			len++;
-+		} else {
-+			if (len > best_len) {
-+				best_start = start;
-+				best_len = len;
-+
-+				dev_dbg(mmc_dev(mmc),
-+					"New best RX phase window: %u - %u\n",
-+					best_start, best_start + best_len);
-+			}
-+
-+			/* reset the current window */
-+			len = 0;
-+		}
-+	}
-+
-+	if (len > best_len)
-+		/* the last window is the best (or possibly only) window */
-+		new_phase = start + (len / 2);
-+	else if (best_len)
-+		/* there was a better window than the last */
-+		new_phase = best_start + (best_len / 2);
-+	else
-+		/* no window was found at all, reset to the original phase */
-+		new_phase = old_phase;
-+
-+	regmap_update_bits(host->regmap, MESON_SDHC_CLK2,
-+			   MESON_SDHC_CLK2_RX_CLK_PHASE,
-+			   FIELD_PREP(MESON_SDHC_CLK2_RX_CLK_PHASE,
-+				      new_phase));
-+
-+	if (!len && !best_len)
-+		return -EIO;
-+
-+	dev_dbg(mmc_dev(mmc), "Tuned RX clock phase to %u\n", new_phase);
-+
-+	return 0;
-+}
-+
-+static const struct mmc_host_ops meson_mx_sdhc_ops = {
-+	.hw_reset			= meson_mx_sdhc_hw_reset,
-+	.request			= meson_mx_sdhc_request,
-+	.set_ios			= meson_mx_sdhc_set_ios,
-+	.card_busy			= meson_mx_sdhc_card_busy,
-+	.execute_tuning			= meson_mx_sdhc_execute_tuning,
-+	.get_cd				= mmc_gpio_get_cd,
-+	.get_ro				= mmc_gpio_get_ro,
-+};
-+
-+static void meson_mx_sdhc_request_done(struct meson_mx_sdhc_host *host)
-+{
-+	struct mmc_request *mrq = host->mrq;
-+	struct mmc_host *mmc = host->mmc;
-+
-+	/* disable interrupts and mask all pending ones */
-+	regmap_update_bits(host->regmap, MESON_SDHC_ICTL,
-+			   MESON_SDHC_ICTL_ALL_IRQS, 0);
-+	regmap_update_bits(host->regmap, MESON_SDHC_ISTA,
-+			   MESON_SDHC_ISTA_ALL_IRQS, MESON_SDHC_ISTA_ALL_IRQS);
-+
-+	host->mrq = NULL;
-+	host->cmd = NULL;
-+
-+	mmc_request_done(mmc, mrq);
-+}
-+
-+static u32 meson_mx_sdhc_read_response(struct meson_mx_sdhc_host *host, u8 idx)
-+{
-+	u32 val;
-+
-+	regmap_update_bits(host->regmap, MESON_SDHC_PDMA,
-+			   MESON_SDHC_PDMA_DMA_MODE, 0);
-+
-+	regmap_update_bits(host->regmap, MESON_SDHC_PDMA,
-+			   MESON_SDHC_PDMA_PIO_RDRESP,
-+			   FIELD_PREP(MESON_SDHC_PDMA_PIO_RDRESP, idx));
-+
-+	regmap_read(host->regmap, MESON_SDHC_ARGU, &val);
-+
-+	return val;
-+}
-+
-+static irqreturn_t meson_mx_sdhc_irq(int irq, void *data)
-+{
-+	struct meson_mx_sdhc_host *host = data;
-+	struct mmc_command *cmd = host->cmd;
-+	u32 ictl, ista;
-+
-+	regmap_read(host->regmap, MESON_SDHC_ICTL, &ictl);
-+	regmap_read(host->regmap, MESON_SDHC_ISTA, &ista);
-+
-+	if (!(ictl & ista))
-+		return IRQ_NONE;
-+
-+	if (ista & MESON_SDHC_ISTA_RXFIFO_FULL ||
-+	    ista & MESON_SDHC_ISTA_TXFIFO_EMPTY)
-+		cmd->error = -EIO;
-+	else if (ista & MESON_SDHC_ISTA_RESP_ERR_CRC)
-+		cmd->error = -EILSEQ;
-+	else if (ista & MESON_SDHC_ISTA_RESP_TIMEOUT)
-+		cmd->error = -ETIMEDOUT;
-+
-+	if (cmd->data) {
-+		if (ista & MESON_SDHC_ISTA_DATA_ERR_CRC)
-+			cmd->data->error = -EILSEQ;
-+		else if (ista & MESON_SDHC_ISTA_DATA_TIMEOUT)
-+			cmd->data->error = -ETIMEDOUT;
-+	}
-+
-+	if (cmd->error || (cmd->data && cmd->data->error))
-+		dev_dbg(mmc_dev(host->mmc), "CMD%d error, ISTA: 0x%08x\n",
-+			cmd->opcode, ista);
-+
-+	return IRQ_WAKE_THREAD;
-+}
-+
-+static irqreturn_t meson_mx_sdhc_irq_thread(int irq, void *irq_data)
-+{
-+	struct meson_mx_sdhc_host *host = irq_data;
-+	struct mmc_command *cmd;
-+	u32 val;
-+
-+	cmd = host->cmd;
-+	if (WARN_ON(!cmd))
-+		return IRQ_HANDLED;
-+
-+	if (cmd->data && !cmd->data->error) {
-+		if (!host->platform->hardware_flush_all_cmds &&
-+		    cmd->data->flags & MMC_DATA_READ) {
-+			meson_mx_sdhc_wait_cmd_ready(host->mmc);
-+
-+			val = FIELD_PREP(MESON_SDHC_PDMA_RXFIFO_MANUAL_FLUSH,
-+					 2);
-+			regmap_update_bits(host->regmap, MESON_SDHC_PDMA,
-+					   MESON_SDHC_PDMA_RXFIFO_MANUAL_FLUSH,
-+					   val);
-+		}
-+
-+		dma_unmap_sg(mmc_dev(host->mmc), cmd->data->sg,
-+			     cmd->data->sg_len, mmc_get_dma_dir(cmd->data));
-+
-+		cmd->data->bytes_xfered = cmd->data->blksz * cmd->data->blocks;
-+	}
-+
-+	meson_mx_sdhc_wait_cmd_ready(host->mmc);
-+
-+	if (cmd->flags & MMC_RSP_136) {
-+		cmd->resp[0] = meson_mx_sdhc_read_response(host, 4);
-+		cmd->resp[1] = meson_mx_sdhc_read_response(host, 3);
-+		cmd->resp[2] = meson_mx_sdhc_read_response(host, 2);
-+		cmd->resp[3] = meson_mx_sdhc_read_response(host, 1);
-+	} else {
-+		cmd->resp[0] = meson_mx_sdhc_read_response(host, 0);
-+	}
-+
-+	if (cmd->error == -EIO || cmd->error == -ETIMEDOUT)
-+		meson_mx_sdhc_hw_reset(host->mmc);
-+	else if (cmd->data)
-+		/*
-+		 * Clear the FIFOs after completing data transfers to prevent
-+		 * corrupting data on write access. It's not clear why this is
-+		 * needed (for reads and writes), but it mimics what the BSP
-+		 * kernel did.
-+		 */
-+		meson_mx_sdhc_clear_fifo(host->mmc);
-+
-+	meson_mx_sdhc_request_done(host);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void meson_mx_sdhc_init_hw_meson8(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+
-+	regmap_write(host->regmap, MESON_SDHC_MISC,
-+		     FIELD_PREP(MESON_SDHC_MISC_TXSTART_THRES, 7) |
-+		     FIELD_PREP(MESON_SDHC_MISC_WCRC_ERR_PATT, 5) |
-+		     FIELD_PREP(MESON_SDHC_MISC_WCRC_OK_PATT, 2));
-+
-+	regmap_write(host->regmap, MESON_SDHC_ENHC,
-+		     FIELD_PREP(MESON_SDHC_ENHC_RXFIFO_TH, 63) |
-+		     MESON_SDHC_ENHC_MESON6_DMA_WR_RESP |
-+		     FIELD_PREP(MESON_SDHC_ENHC_MESON6_RX_TIMEOUT, 255) |
-+		     FIELD_PREP(MESON_SDHC_ENHC_SDIO_IRQ_PERIOD, 12));
-+};
-+
-+static void meson_mx_sdhc_set_pdma_meson8(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+
-+	if (host->cmd->data->flags & MMC_DATA_WRITE)
-+		regmap_update_bits(host->regmap, MESON_SDHC_PDMA,
-+				   MESON_SDHC_PDMA_DMA_MODE |
-+				   MESON_SDHC_PDMA_RD_BURST |
-+				   MESON_SDHC_PDMA_TXFIFO_FILL,
-+				   MESON_SDHC_PDMA_DMA_MODE |
-+				   FIELD_PREP(MESON_SDHC_PDMA_RD_BURST, 31) |
-+				   MESON_SDHC_PDMA_TXFIFO_FILL);
-+	else
-+		regmap_update_bits(host->regmap, MESON_SDHC_PDMA,
-+				   MESON_SDHC_PDMA_DMA_MODE |
-+				   MESON_SDHC_PDMA_RXFIFO_MANUAL_FLUSH,
-+				   MESON_SDHC_PDMA_DMA_MODE |
-+				   FIELD_PREP(MESON_SDHC_PDMA_RXFIFO_MANUAL_FLUSH,
-+					      1));
-+
-+	if (host->cmd->data->flags & MMC_DATA_WRITE)
-+		regmap_update_bits(host->regmap, MESON_SDHC_PDMA,
-+				   MESON_SDHC_PDMA_RD_BURST,
-+				   FIELD_PREP(MESON_SDHC_PDMA_RD_BURST, 15));
-+}
-+
-+static void meson_mx_sdhc_wait_before_send_meson8(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+	u32 val;
-+	int ret;
-+
-+	ret = regmap_read_poll_timeout(host->regmap, MESON_SDHC_ESTA, val,
-+				       val == 0,
-+				       MESON_SDHC_WAIT_BEFORE_SEND_SLEEP_US,
-+				       MESON_SDHC_WAIT_BEFORE_SEND_TIMEOUT_US);
-+	if (ret)
-+		dev_warn(mmc_dev(mmc),
-+			 "Failed to wait for ESTA to clear: 0x%08x\n", val);
-+
-+	if (host->cmd->data && host->cmd->data->flags & MMC_DATA_WRITE) {
-+		ret = regmap_read_poll_timeout(host->regmap, MESON_SDHC_STAT,
-+					val, val & MESON_SDHC_STAT_TXFIFO_CNT,
-+					MESON_SDHC_WAIT_BEFORE_SEND_SLEEP_US,
-+					MESON_SDHC_WAIT_BEFORE_SEND_TIMEOUT_US);
-+		if (ret)
-+			dev_warn(mmc_dev(mmc),
-+				 "Failed to wait for TX FIFO to fill\n");
-+	}
-+}
-+
-+static void meson_mx_sdhc_init_hw_meson8m2(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+
-+	regmap_write(host->regmap, MESON_SDHC_MISC,
-+		     FIELD_PREP(MESON_SDHC_MISC_TXSTART_THRES, 6) |
-+		     FIELD_PREP(MESON_SDHC_MISC_WCRC_ERR_PATT, 5) |
-+		     FIELD_PREP(MESON_SDHC_MISC_WCRC_OK_PATT, 2));
-+
-+	regmap_write(host->regmap, MESON_SDHC_ENHC,
-+		     FIELD_PREP(MESON_SDHC_ENHC_RXFIFO_TH, 64) |
-+		     FIELD_PREP(MESON_SDHC_ENHC_MESON8M2_DEBUG, 1) |
-+		     MESON_SDHC_ENHC_MESON8M2_WRRSP_MODE |
-+		     FIELD_PREP(MESON_SDHC_ENHC_SDIO_IRQ_PERIOD, 12));
-+}
-+
-+static void meson_mx_sdhc_set_pdma_meson8m2(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+
-+	regmap_update_bits(host->regmap, MESON_SDHC_PDMA,
-+			   MESON_SDHC_PDMA_DMA_MODE, MESON_SDHC_PDMA_DMA_MODE);
-+}
-+
-+static void meson_mx_sdhc_init_hw(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+
-+	meson_mx_sdhc_hw_reset(mmc);
-+
-+	regmap_write(host->regmap, MESON_SDHC_CTRL,
-+		     FIELD_PREP(MESON_SDHC_CTRL_RX_PERIOD, 0xf) |
-+		     FIELD_PREP(MESON_SDHC_CTRL_RX_TIMEOUT, 0x7f) |
-+		     FIELD_PREP(MESON_SDHC_CTRL_RX_ENDIAN, 0x7) |
-+		     FIELD_PREP(MESON_SDHC_CTRL_TX_ENDIAN, 0x7));
-+
-+	/*
-+	 * start with a valid divider and enable the memory (un-setting
-+	 * MESON_SDHC_CLKC_MEM_PWR_OFF).
-+	 */
-+	regmap_write(host->regmap, MESON_SDHC_CLKC, MESON_SDHC_CLKC_CLK_DIV);
-+
-+	regmap_write(host->regmap, MESON_SDHC_CLK2,
-+		     FIELD_PREP(MESON_SDHC_CLK2_SD_CLK_PHASE, 1));
-+
-+	regmap_write(host->regmap, MESON_SDHC_PDMA,
-+		     MESON_SDHC_PDMA_DMA_URGENT |
-+		     FIELD_PREP(MESON_SDHC_PDMA_WR_BURST, 7) |
-+		     FIELD_PREP(MESON_SDHC_PDMA_TXFIFO_TH, 49) |
-+		     FIELD_PREP(MESON_SDHC_PDMA_RD_BURST, 15) |
-+		     FIELD_PREP(MESON_SDHC_PDMA_RXFIFO_TH, 7));
-+
-+	/* some initialization bits depend on the SoC: */
-+	host->platform->init_hw(mmc);
-+
-+	/* disable and mask all interrupts: */
-+	regmap_write(host->regmap, MESON_SDHC_ICTL, 0);
-+	regmap_write(host->regmap, MESON_SDHC_ISTA, MESON_SDHC_ISTA_ALL_IRQS);
-+}
-+
-+static int meson_mx_sdhc_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct meson_mx_sdhc_host *host;
-+	struct mmc_host *mmc;
-+	void __iomem *base;
-+	int ret, irq;
-+
-+	mmc = mmc_alloc_host(sizeof(*host), dev);
-+	if (!mmc)
-+		return -ENOMEM;
-+
-+	ret = devm_add_action_or_reset(dev, (void(*)(void *))mmc_free_host,
-+				       mmc);
-+	if (ret) {
-+		dev_err(dev, "Failed to register mmc_free_host action\n");
-+		return ret;
-+	}
-+
-+	host = mmc_priv(mmc);
-+	host->mmc = mmc;
-+
-+	platform_set_drvdata(pdev, host);
-+
-+	host->platform = device_get_match_data(dev);
-+	if (!host->platform)
-+		return -EINVAL;
-+
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	host->regmap = devm_regmap_init_mmio(dev, base,
-+					     &meson_mx_sdhc_regmap_config);
-+	if (IS_ERR(host->regmap))
-+		return PTR_ERR(host->regmap);
-+
-+	host->pclk = devm_clk_get(dev, "pclk");
-+	if (IS_ERR(host->pclk))
-+		return PTR_ERR(host->pclk);
-+
-+	/* accessing any register requires the module clock to be enabled: */
-+	ret = clk_prepare_enable(host->pclk);
-+	if (ret) {
-+		dev_err(dev, "Failed to enable 'pclk' clock\n");
-+		return ret;
-+	}
-+
-+	meson_mx_sdhc_init_hw(mmc);
-+
-+	ret = meson_mx_sdhc_register_clkc(dev, base);
-+	if (ret)
-+		goto err_disable_pclk;
-+
-+	host->bulk_clks[0].id = "mod_clk";
-+	host->bulk_clks[1].id = "sd_clk";
-+	host->bulk_clks[2].id = "tx_clk";
-+	host->bulk_clks[3].id = "rx_clk";
-+	ret = devm_clk_bulk_get(dev, MESON_SDHC_NUM_BULK_CLKS,
-+				host->bulk_clks);
-+	if (ret)
-+		goto err_disable_pclk;
-+
-+	host->sd_clk = host->bulk_clks[1].clk;
-+
-+	/* Get regulators and the supported OCR mask */
-+	ret = mmc_regulator_get_supply(mmc);
-+	if (ret)
-+		goto err_disable_pclk;
-+
-+	mmc->max_req_size = SZ_128K;
-+	mmc->max_seg_size = mmc->max_req_size;
-+	mmc->max_blk_count = FIELD_GET(MESON_SDHC_SEND_TOTAL_PACK, ~0);
-+	mmc->max_blk_size = MESON_SDHC_MAX_BLK_SIZE;
-+	mmc->max_busy_timeout = 30 * MSEC_PER_SEC;
-+	mmc->f_min = clk_round_rate(host->sd_clk, 1);
-+	mmc->f_max = clk_round_rate(host->sd_clk, ULONG_MAX);
-+	mmc->max_current_180 = 300;
-+	mmc->max_current_330 = 300;
-+	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_WAIT_WHILE_BUSY | MMC_CAP_HW_RESET;
-+	mmc->ops = &meson_mx_sdhc_ops;
-+
-+	ret = mmc_of_parse(mmc);
-+	if (ret)
-+		goto err_disable_pclk;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	ret = devm_request_threaded_irq(dev, irq, meson_mx_sdhc_irq,
-+					meson_mx_sdhc_irq_thread, IRQF_ONESHOT,
-+					NULL, host);
-+	if (ret)
-+		goto err_disable_pclk;
-+
-+	ret = mmc_add_host(mmc);
-+	if (ret)
-+		goto err_disable_pclk;
-+
-+	return 0;
-+
-+err_disable_pclk:
-+	clk_disable_unprepare(host->pclk);
-+	return ret;
-+}
-+
-+static int meson_mx_sdhc_remove(struct platform_device *pdev)
-+{
-+	struct meson_mx_sdhc_host *host = platform_get_drvdata(pdev);
-+
-+	mmc_remove_host(host->mmc);
-+
-+	meson_mx_sdhc_disable_clks(host->mmc);
-+
-+	clk_disable_unprepare(host->pclk);
-+
-+	return 0;
-+}
-+
-+static const struct meson_mx_sdhc_data meson_mx_sdhc_data_meson8 = {
-+	.init_hw			= meson_mx_sdhc_init_hw_meson8,
-+	.set_pdma			= meson_mx_sdhc_set_pdma_meson8,
-+	.wait_before_send		= meson_mx_sdhc_wait_before_send_meson8,
-+	.hardware_flush_all_cmds	= false,
-+};
-+
-+static const struct meson_mx_sdhc_data meson_mx_sdhc_data_meson8m2 = {
-+	.init_hw			= meson_mx_sdhc_init_hw_meson8m2,
-+	.set_pdma			= meson_mx_sdhc_set_pdma_meson8m2,
-+	.hardware_flush_all_cmds	= true,
-+};
-+
-+static const struct of_device_id meson_mx_sdhc_of_match[] = {
-+	{
-+		.compatible = "amlogic,meson8-sdhc",
-+		.data = &meson_mx_sdhc_data_meson8
-+	},
-+	{
-+		.compatible = "amlogic,meson8b-sdhc",
-+		.data = &meson_mx_sdhc_data_meson8
-+	},
-+	{
-+		.compatible = "amlogic,meson8m2-sdhc",
-+		.data = &meson_mx_sdhc_data_meson8m2
-+	},
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, meson_mx_sdhc_of_match);
-+
-+static struct platform_driver meson_mx_sdhc_driver = {
-+	.probe   = meson_mx_sdhc_probe,
-+	.remove  = meson_mx_sdhc_remove,
-+	.driver  = {
-+		.name = "meson-mx-sdhc",
-+		.of_match_table = of_match_ptr(meson_mx_sdhc_of_match),
-+	},
-+};
-+
-+module_platform_driver(meson_mx_sdhc_driver);
-+
-+MODULE_DESCRIPTION("Meson6, Meson8, Meson8b and Meson8m2 SDHC Host Driver");
-+MODULE_AUTHOR("Martin Blumenstingl <martin.blumenstingl@googlemail.com>");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/mmc/host/meson-mx-sdhc.h b/drivers/mmc/host/meson-mx-sdhc.h
-new file mode 100644
-index 000000000000..2aa1e4401173
---- /dev/null
-+++ b/drivers/mmc/host/meson-mx-sdhc.h
-@@ -0,0 +1,138 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * Copyright (C) 2020 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-+ */
-+
-+#ifndef _MESON_MX_SDHC_H_
-+#define _MESON_MX_SDHC_H_
-+
-+#include <linux/bitfield.h>
-+
-+#define MESON_SDHC_ARGU						0x00
-+
-+#define MESON_SDHC_SEND						0x04
-+	#define MESON_SDHC_SEND_CMD_INDEX			GENMASK(5, 0)
-+	#define MESON_SDHC_SEND_CMD_HAS_RESP			BIT(6)
-+	#define MESON_SDHC_SEND_CMD_HAS_DATA			BIT(7)
-+	#define MESON_SDHC_SEND_RESP_LEN			BIT(8)
-+	#define MESON_SDHC_SEND_RESP_NO_CRC			BIT(9)
-+	#define MESON_SDHC_SEND_DATA_DIR			BIT(10)
-+	#define MESON_SDHC_SEND_DATA_STOP			BIT(11)
-+	#define MESON_SDHC_SEND_R1B				BIT(12)
-+	#define MESON_SDHC_SEND_TOTAL_PACK			GENMASK(31, 16)
-+
-+#define MESON_SDHC_CTRL						0x08
-+	#define MESON_SDHC_CTRL_DAT_TYPE			GENMASK(1, 0)
-+	#define MESON_SDHC_CTRL_DDR_MODE			BIT(2)
-+	#define MESON_SDHC_CTRL_TX_CRC_NOCHECK			BIT(3)
-+	#define MESON_SDHC_CTRL_PACK_LEN			GENMASK(12, 4)
-+	#define MESON_SDHC_CTRL_RX_TIMEOUT			GENMASK(19, 13)
-+	#define MESON_SDHC_CTRL_RX_PERIOD			GENMASK(23, 20)
-+	#define MESON_SDHC_CTRL_RX_ENDIAN			GENMASK(26, 24)
-+	#define MESON_SDHC_CTRL_SDIO_IRQ_MODE			BIT(27)
-+	#define MESON_SDHC_CTRL_DAT0_IRQ_SEL			BIT(28)
-+	#define MESON_SDHC_CTRL_TX_ENDIAN			GENMASK(31, 29)
-+
-+#define MESON_SDHC_STAT						0x0c
-+	#define MESON_SDHC_STAT_CMD_BUSY			BIT(0)
-+	#define MESON_SDHC_STAT_DAT3_0				GENMASK(4, 1)
-+	#define MESON_SDHC_STAT_CMD				BIT(5)
-+	#define MESON_SDHC_STAT_RXFIFO_CNT			GENMASK(12, 6)
-+	#define MESON_SDHC_STAT_TXFIFO_CNT			GENMASK(19, 13)
-+	#define MESON_SDHC_STAT_DAT7_4				GENMASK(23, 20)
-+
-+#define MESON_SDHC_CLKC						0x10
-+	#define MESON_SDHC_CLKC_CLK_DIV				GENMASK(11, 0)
-+	#define MESON_SDHC_CLKC_CLK_JIC				BIT(24)
-+	#define MESON_SDHC_CLKC_MEM_PWR_OFF			GENMASK(26, 25)
-+
-+#define MESON_SDHC_ADDR						0x14
-+
-+#define MESON_SDHC_PDMA						0x18
-+	#define MESON_SDHC_PDMA_DMA_MODE			BIT(0)
-+	#define MESON_SDHC_PDMA_PIO_RDRESP			GENMASK(3, 1)
-+	#define MESON_SDHC_PDMA_DMA_URGENT			BIT(4)
-+	#define MESON_SDHC_PDMA_WR_BURST			GENMASK(9, 5)
-+	#define MESON_SDHC_PDMA_RD_BURST			GENMASK(14, 10)
-+	#define MESON_SDHC_PDMA_RXFIFO_TH			GENMASK(21, 15)
-+	#define MESON_SDHC_PDMA_TXFIFO_TH			GENMASK(28, 22)
-+	#define MESON_SDHC_PDMA_RXFIFO_MANUAL_FLUSH		GENMASK(30, 29)
-+	#define MESON_SDHC_PDMA_TXFIFO_FILL			BIT(31)
-+
-+#define MESON_SDHC_MISC						0x1c
-+	#define MESON_SDHC_MISC_WCRC_ERR_PATT			GENMASK(6, 4)
-+	#define MESON_SDHC_MISC_WCRC_OK_PATT			GENMASK(9, 7)
-+	#define MESON_SDHC_MISC_BURST_NUM			GENMASK(21, 16)
-+	#define MESON_SDHC_MISC_THREAD_ID			GENMASK(27, 22)
-+	#define MESON_SDHC_MISC_MANUAL_STOP			BIT(28)
-+	#define MESON_SDHC_MISC_TXSTART_THRES			GENMASK(31, 29)
-+
-+#define MESON_SDHC_DATA						0x20
-+
-+#define MESON_SDHC_ICTL						0x24
-+	#define MESON_SDHC_ICTL_RESP_OK				BIT(0)
-+	#define MESON_SDHC_ICTL_RESP_TIMEOUT			BIT(1)
-+	#define MESON_SDHC_ICTL_RESP_ERR_CRC			BIT(2)
-+	#define MESON_SDHC_ICTL_RESP_OK_NOCLEAR			BIT(3)
-+	#define MESON_SDHC_ICTL_DATA_1PACK_OK			BIT(4)
-+	#define MESON_SDHC_ICTL_DATA_TIMEOUT			BIT(5)
-+	#define MESON_SDHC_ICTL_DATA_ERR_CRC			BIT(6)
-+	#define MESON_SDHC_ICTL_DATA_XFER_OK			BIT(7)
-+	#define MESON_SDHC_ICTL_RX_HIGHER			BIT(8)
-+	#define MESON_SDHC_ICTL_RX_LOWER			BIT(9)
-+	#define MESON_SDHC_ICTL_DAT1_IRQ			BIT(10)
-+	#define MESON_SDHC_ICTL_DMA_DONE			BIT(11)
-+	#define MESON_SDHC_ICTL_RXFIFO_FULL			BIT(12)
-+	#define MESON_SDHC_ICTL_TXFIFO_EMPTY			BIT(13)
-+	#define MESON_SDHC_ICTL_ADDI_DAT1_IRQ			BIT(14)
-+	#define MESON_SDHC_ICTL_ALL_IRQS			GENMASK(14, 0)
-+	#define MESON_SDHC_ICTL_DAT1_IRQ_DELAY			GENMASK(17, 16)
-+
-+#define MESON_SDHC_ISTA						0x28
-+	#define MESON_SDHC_ISTA_RESP_OK				BIT(0)
-+	#define MESON_SDHC_ISTA_RESP_TIMEOUT			BIT(1)
-+	#define MESON_SDHC_ISTA_RESP_ERR_CRC			BIT(2)
-+	#define MESON_SDHC_ISTA_RESP_OK_NOCLEAR			BIT(3)
-+	#define MESON_SDHC_ISTA_DATA_1PACK_OK			BIT(4)
-+	#define MESON_SDHC_ISTA_DATA_TIMEOUT			BIT(5)
-+	#define MESON_SDHC_ISTA_DATA_ERR_CRC			BIT(6)
-+	#define MESON_SDHC_ISTA_DATA_XFER_OK			BIT(7)
-+	#define MESON_SDHC_ISTA_RX_HIGHER			BIT(8)
-+	#define MESON_SDHC_ISTA_RX_LOWER			BIT(9)
-+	#define MESON_SDHC_ISTA_DAT1_IRQ			BIT(10)
-+	#define MESON_SDHC_ISTA_DMA_DONE			BIT(11)
-+	#define MESON_SDHC_ISTA_RXFIFO_FULL			BIT(12)
-+	#define MESON_SDHC_ISTA_TXFIFO_EMPTY			BIT(13)
-+	#define MESON_SDHC_ISTA_ADDI_DAT1_IRQ			BIT(14)
-+	#define MESON_SDHC_ISTA_ALL_IRQS			GENMASK(14, 0)
-+
-+#define MESON_SDHC_SRST						0x2c
-+	#define MESON_SDHC_SRST_MAIN_CTRL			BIT(0)
-+	#define MESON_SDHC_SRST_RXFIFO				BIT(1)
-+	#define MESON_SDHC_SRST_TXFIFO				BIT(2)
-+	#define MESON_SDHC_SRST_DPHY_RX				BIT(3)
-+	#define MESON_SDHC_SRST_DPHY_TX				BIT(4)
-+	#define MESON_SDHC_SRST_DMA_IF				BIT(5)
-+
-+#define MESON_SDHC_ESTA						0x30
-+	#define MESON_SDHC_ESTA_11_13				GENMASK(13, 11)
-+
-+#define MESON_SDHC_ENHC						0x34
-+	#define MESON_SDHC_ENHC_MESON8M2_WRRSP_MODE		BIT(0)
-+	#define MESON_SDHC_ENHC_MESON8M2_CHK_WRRSP		BIT(1)
-+	#define MESON_SDHC_ENHC_MESON8M2_CHK_DMA		BIT(2)
-+	#define MESON_SDHC_ENHC_MESON8M2_DEBUG			GENMASK(5, 3)
-+	#define MESON_SDHC_ENHC_MESON6_RX_TIMEOUT		GENMASK(7, 0)
-+	#define MESON_SDHC_ENHC_MESON6_DMA_RD_RESP		BIT(16)
-+	#define MESON_SDHC_ENHC_MESON6_DMA_WR_RESP		BIT(17)
-+	#define MESON_SDHC_ENHC_SDIO_IRQ_PERIOD			GENMASK(15, 8)
-+	#define MESON_SDHC_ENHC_RXFIFO_TH			GENMASK(24, 18)
-+	#define MESON_SDHC_ENHC_TXFIFO_TH			GENMASK(31, 25)
-+
-+#define MESON_SDHC_CLK2						0x38
-+	#define MESON_SDHC_CLK2_RX_CLK_PHASE			GENMASK(11, 0)
-+	#define MESON_SDHC_CLK2_SD_CLK_PHASE			GENMASK(23, 12)
-+
-+int meson_mx_sdhc_register_clkc(struct device *dev, void __iomem *base);
-+
-+#endif /* _MESON_MX_SDHC_H_ */
+Is there a reason to read just 8 bits at a time? Same for writing.
+
+> +	if (ret) {
+> +		pr_err("%s:i2c read failed, %x\n", __func__, addr + 1);
+> +		return ret;
+> +	}
+> +
+> +	*val = l_val & 0xFF;
+> +
+> +	ret = regmap_read(imx378->regmap, addr, &h_val);
+> +	if (ret) {
+> +		pr_err("%s:i2c read failed, %x\n", __func__, addr);
+> +		return ret;
+> +	}
+> +
+> +	*val |= (h_val & 0xFF) << 8;
+> +
+> +	return ret;
+> +}
+> +
+> +static int imx378_write_reg16(struct imx378 *imx378, u16 addr, u16 val)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_write(imx378->regmap, addr + 1, val);
+> +	if (ret) {
+> +		pr_err("%s:i2c write failed, %x = %x\n",
+> +			__func__, addr + 1, val);
+> +		return ret;
+> +	}
+> +
+> +	ret = regmap_write(imx378->regmap, addr, val >> 8);
+> +	if (ret) {
+> +		pr_err("%s:i2c write failed, %x = %x\n",
+> +			__func__, addr, val >> 8);
+> +		return ret;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int __maybe_unused imx378_power_on(struct device *dev)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> +	struct imx378 *imx378 = to_imx378(sd);
+> +	int ret;
+> +
+> +	gpiod_set_value_cansleep(imx378->enable_gpio, 0);
+> +
+> +	ret = regulator_bulk_enable(IMX378_NUM_SUPPLIES, imx378->supplies);
+> +	if (ret < 0) {
+> +		dev_err(imx378->dev, "failed to enable regulators: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	usleep_range(2000, 3000);
+> +
+> +	ret = clk_prepare_enable(imx378->xclk);
+> +	if (ret < 0) {
+> +		regulator_bulk_disable(IMX378_NUM_SUPPLIES, imx378->supplies);
+> +		dev_err(imx378->dev, "clk prepare enable failed\n");
+> +		return ret;
+> +	}
+> +
+> +	gpiod_set_value_cansleep(imx378->enable_gpio, 1);
+> +	usleep_range(12000, 15000);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused imx378_power_off(struct device *dev)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> +	struct imx378 *imx378 = to_imx378(sd);
+> +
+> +	gpiod_set_value_cansleep(imx378->enable_gpio, 0);
+> +
+> +	clk_disable_unprepare(imx378->xclk);
+> +
+> +	regulator_bulk_disable(IMX378_NUM_SUPPLIES, imx378->supplies);
+> +	usleep_range(10, 20);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx378_enum_mbus_code(struct v4l2_subdev *sd,
+> +				 struct v4l2_subdev_pad_config *cfg,
+> +				 struct v4l2_subdev_mbus_code_enum *code)
+> +{
+> +	struct imx378 *imx378 = container_of(sd, struct imx378, sd);
+> +
+> +	if (code->index != 0 || code->pad != 0)
+> +		return -EINVAL;
+> +
+> +	code->code = imx378_get_format_code(imx378);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx378_enum_frame_size(struct v4l2_subdev *sd,
+> +				  struct v4l2_subdev_pad_config *cfg,
+> +				  struct v4l2_subdev_frame_size_enum *fse)
+> +{
+> +	struct imx378 *imx378 = container_of(sd, struct imx378, sd);
+> +
+> +	if (fse->index != 0)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&imx378->mutex);
+> +	if (fse->code != imx378_get_format_code(imx378)) {
+> +		mutex_unlock(&imx378->mutex);
+> +		return -EINVAL;
+> +	}
+> +	mutex_unlock(&imx378->mutex);
+> +
+> +	fse->min_width = IMX378_MIN_WIDTH;
+> +	fse->max_width = IMX378_MAX_BOUNDS_WIDTH;
+> +	fse->min_height = IMX378_MIN_HEIGHT;
+> +	fse->max_height = IMX378_MAX_BOUNDS_HEIGHT;
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_VIDEO_ADV_DEBUG
+> +static int imx378_s_register(struct v4l2_subdev *sd,
+> +			     const struct v4l2_dbg_register *reg)
+> +{
+> +	struct imx378 *imx378 = container_of(sd, struct imx378, sd);
+> +
+> +	return regmap_write(imx378->regmap, reg->reg, reg->val);
+> +}
+> +
+> +static int imx378_g_register(struct v4l2_subdev *sd,
+> +			     struct v4l2_dbg_register *reg)
+> +{
+> +	struct imx378 *imx378 = container_of(sd, struct imx378, sd);
+> +	unsigned int aux;
+> +	int ret;
+> +
+> +	reg->size = 1;
+> +	ret = regmap_read(imx378->regmap, reg->reg, &aux);
+> +	reg->val = aux;
+> +
+> +	return ret;
+> +}
+> +#endif
+> +
+> +static const struct v4l2_subdev_core_ops imx378_core_ops = {
+> +#ifdef CONFIG_VIDEO_ADV_DEBUG
+> +	.g_register = imx378_g_register,
+> +	.s_register = imx378_s_register,
+> +#endif
+> +};
+> +
+> +static int imx378_set_img_size(struct imx378 *imx378)
+> +{
+> +	u32 frame_length;
+> +	int ret;
+> +
+> +	ret = imx378_write_reg16(imx378, 0x34c, imx378->fmt.width);
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	ret = imx378_write_reg16(imx378, 0x34e, imx378->fmt.height);
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	ret = imx378_write_reg16(imx378, 0x40c, imx378->fmt.width);
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	ret = imx378_write_reg16(imx378, 0x40e, imx378->fmt.height);
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	ret = imx378_write_reg16(imx378, 0x342, IMX378_LINE_LENGTH);
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	frame_length = IMX378_DEFAULT_LINK_FREQ /
+> +		       ((imx378->fival.denominator / imx378->fival.numerator)
+> +		       * IMX378_LINE_LENGTH);
+
+Do you ensure somewhere you won't be dividing by zero here?
+
+> +
+> +	ret = imx378_write_reg16(imx378, 0x340, frame_length);
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	ret = imx378_write_reg16(imx378, 0x344, imx378->crop.left);
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	ret = imx378_write_reg16(imx378, 0x348, imx378->crop.left +
+> +				 imx378->fmt.width - 1);
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	ret = imx378_write_reg16(imx378, 0x346, imx378->crop.top);
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	ret = imx378_write_reg16(imx378, 0x34a, imx378->crop.top +
+> +				 imx378->fmt.height - 1);
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	ret = imx378_write_reg16(imx378, 0x408, 0);
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	ret = imx378_write_reg16(imx378, 0x40a, 0);
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	ret = regmap_write(imx378->regmap, 0xb04, 1);
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	return ret;
+> +
+> +error:
+> +	dev_err(imx378->dev, "could not set image size %d\n", ret);
+> +	return ret;
+> +}
+> +
+> +static struct v4l2_mbus_framefmt *
+> +__imx378_get_pad_format(struct imx378 *imx378,
+> +			struct v4l2_subdev_pad_config *cfg,
+> +			unsigned int pad,
+> +			enum v4l2_subdev_format_whence which)
+> +{
+> +	switch (which) {
+> +	case V4L2_SUBDEV_FORMAT_TRY:
+> +		return v4l2_subdev_get_try_format(&imx378->sd, cfg, pad);
+> +	case V4L2_SUBDEV_FORMAT_ACTIVE:
+> +		return &imx378->fmt;
+> +	default:
+> +		return NULL;
+> +	}
+> +}
+> +
+> +static int imx378_get_fmt(struct v4l2_subdev *sd,
+> +			  struct v4l2_subdev_pad_config *cfg,
+> +			  struct v4l2_subdev_format *fmt)
+> +{
+> +	struct imx378 *imx378 = to_imx378(sd);
+> +
+> +	mutex_lock(&imx378->mutex);
+> +	fmt->format = *__imx378_get_pad_format(imx378, cfg, fmt->pad,
+> +					       fmt->which);
+> +	mutex_unlock(&imx378->mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct v4l2_rect *
+> +__imx378_get_pad_crop(struct imx378 *imx378, struct v4l2_subdev_pad_config *cfg,
+> +		      unsigned int pad, enum v4l2_subdev_format_whence which)
+> +{
+> +	switch (which) {
+> +	case V4L2_SUBDEV_FORMAT_TRY:
+> +		return v4l2_subdev_get_try_crop(&imx378->sd, cfg, pad);
+> +	case V4L2_SUBDEV_FORMAT_ACTIVE:
+> +		return &imx378->crop;
+> +	default:
+> +		return NULL;
+> +	}
+> +}
+> +
+> +static int imx378_min_interval(struct imx378 *imx378,
+> +			       struct v4l2_fract *fival)
+> +{
+> +	fival->numerator = IMX378_LINE_LENGTH * (imx378->fmt.height);
+> +	fival->denominator = IMX378_DEFAULT_LINK_FREQ;
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx378_max_interval(struct v4l2_fract *fival)
+> +{
+> +	fival->numerator = IMX378_LINE_LENGTH * 0xffff;
+> +	fival->denominator = IMX378_DEFAULT_LINK_FREQ;
+> +
+> +	return 0;
+> +}
+> +
+> +#define FRACT_CMP(a, OP, b)	\
+> +	((u64)(a).numerator * (b).denominator OP \
+> +	 (u64)(b).numerator * (a).denominator)
+> +static int imx378_clamp_interval(struct imx378 *imx378,
+> +				 struct v4l2_fract *fival)
+> +{
+> +	struct v4l2_fract interval;
+> +	int ret;
+> +
+> +	ret = imx378_min_interval(imx378, &interval);
+> +	if (ret)
+> +		return ret;
+> +	if (FRACT_CMP(*fival, <, interval))
+> +		*fival = interval;
+> +
+> +	ret = imx378_max_interval(&interval);
+> +	if (ret)
+> +		return ret;
+> +	if (FRACT_CMP(*fival, >, interval))
+> +		*fival = interval;
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx378_g_frame_interval(struct v4l2_subdev *sd,
+> +				   struct v4l2_subdev_frame_interval *fival)
+> +{
+> +	struct imx378 *imx378 = to_imx378(sd);
+> +
+> +	fival->interval = imx378->fival;
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx378_s_frame_interval(struct v4l2_subdev *sd,
+> +				   struct v4l2_subdev_frame_interval *fival)
+> +{
+> +	struct imx378 *imx378 = to_imx378(sd);
+> +	u64 max_exposure;
+> +
+> +	if (fival->interval.denominator == 0)
+> +		fival->interval = (struct v4l2_fract) IMX378_DEFAULT_FIVAL;
+> +
+> +	imx378_clamp_interval(imx378, &fival->interval);
+> +
+> +	imx378->fival = fival->interval;
+> +
+> +	/* Update exposure limits */
+> +	max_exposure = (IMX378_DEFAULT_LINK_FREQ /
+> +			((imx378->fival.denominator / imx378->fival.numerator)
+> +			* IMX378_LINE_LENGTH)) - 20;
+
+Ditto.
+
+> +
+> +	__v4l2_ctrl_modify_range(imx378->exposure, imx378->exposure->minimum,
+> +				 max_exposure, imx378->exposure->step,
+> +				 max_exposure);
+
+I believe you should be acquiring the control handler lock here, i.e. use
+the locked variant. This function is called by the V4L2 subdev framework,
+including through the IOCTL handler.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int
+> +imx378_enum_frame_interval(struct v4l2_subdev *sd,
+> +			   struct v4l2_subdev_pad_config *cfg,
+> +			   struct v4l2_subdev_frame_interval_enum *fie)
+> +{
+> +	struct imx378 *imx378 = to_imx378(sd);
+> +	int ret;
+> +
+> +	if (fie->index != 0)
+> +		return -EINVAL;
+> +
+> +	if (fie->width > IMX378_MAX_BOUNDS_WIDTH ||
+> +	    fie->width < IMX378_MIN_WIDTH)
+> +		return -EINVAL;
+> +
+> +	if (fie->height > IMX378_MAX_BOUNDS_HEIGHT ||
+> +	    fie->height < IMX378_MIN_HEIGHT)
+> +		return -EINVAL;
+
+The frame interval should be specific to a given size, i.e. you can return
+an error if this is being enumerated for something else than an enumerated
+size.
+
+> +
+> +	mutex_lock(&imx378->mutex);
+> +	if (fie->code != imx378_get_format_code(imx378)) {
+> +		mutex_unlock(&imx378->mutex);
+> +		return -EINVAL;
+> +	}
+> +	mutex_unlock(&imx378->mutex);
+> +
+> +	ret = imx378_min_interval(imx378, &fie->min_interval);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = imx378_max_interval(&fie->max_interval);
+> +	if (ret)
+> +		return ret;
+> +
+> +	fie->interval = (struct v4l2_fract) IMX378_DEFAULT_FIVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx378_set_fmt(struct v4l2_subdev *sd,
+> +			  struct v4l2_subdev_pad_config *cfg,
+> +			  struct v4l2_subdev_format *fmt)
+> +{
+> +	struct imx378 *imx378 = to_imx378(sd);
+> +	struct v4l2_mbus_framefmt *__fmt;
+> +	struct v4l2_rect *__crop;
+> +	struct v4l2_subdev_frame_interval fival = { };
+> +
+> +	mutex_lock(&imx378->mutex);
+> +
+> +	if (imx378->streaming && fmt->which != V4L2_SUBDEV_FORMAT_TRY)
+> +		return -EBUSY;
+
+Oops!
+
+> +
+> +	__crop = __imx378_get_pad_crop(imx378, cfg, fmt->pad, fmt->which);
+> +
+> +	v4l_bound_align_image(&fmt->format.width, IMX378_MIN_WIDTH,
+> +			      IMX378_MAX_BOUNDS_WIDTH, ilog2(4),
+> +			      &fmt->format.height, IMX378_MIN_HEIGHT,
+> +			      IMX378_MAX_BOUNDS_HEIGHT, ilog2(8), 0);
+> +
+> +	__crop->width = fmt->format.width;
+> +	__crop->height = fmt->format.height;
+> +
+> +	v4l_bound_align_image(&__crop->left, 0,
+> +			      IMX378_MAX_BOUNDS_WIDTH - __crop->width, ilog2(4),
+> +			      &__crop->top, 0,
+> +			      IMX378_MAX_BOUNDS_HEIGHT - __crop->height,
+> +			      ilog2(8), 0);
+> +
+> +	__fmt = __imx378_get_pad_format(imx378, cfg, fmt->pad, fmt->which);
+> +
+> +	__fmt->width = __crop->width;
+> +	__fmt->height = __crop->height;
+> +
+> +	if (fmt->format.code && fmt->which != V4L2_SUBDEV_FORMAT_TRY)
+> +		imx378_set_flip_mode(imx378, fmt->format.code);
+> +
+> +	__fmt->code = imx378_get_format_code(imx378);
+> +
+> +	__fmt->field = V4L2_FIELD_NONE;
+> +	__fmt->colorspace = V4L2_COLORSPACE_SRGB;
+> +	__fmt->ycbcr_enc = V4L2_MAP_YCBCR_ENC_DEFAULT(fmt->format.colorspace);
+> +	__fmt->quantization = V4L2_MAP_QUANTIZATION_DEFAULT(true,
+> +			      __fmt->colorspace, __fmt->ycbcr_enc);
+> +	__fmt->xfer_func = V4L2_MAP_XFER_FUNC_DEFAULT(__fmt->colorspace);
+> +
+> +	fmt->format = *__fmt;
+> +
+> +	/* Frame interval depends on the format so, update it accordingly */
+> +	if (fmt->which != V4L2_SUBDEV_FORMAT_TRY) {
+> +		fival.interval = imx378->fival;
+> +		imx378_s_frame_interval(sd, &fival);
+> +	}
+> +
+> +	mutex_unlock(&imx378->mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx378_get_selection(struct v4l2_subdev *sd,
+> +				struct v4l2_subdev_pad_config *cfg,
+> +				struct v4l2_subdev_selection *s)
+> +{
+> +	struct imx378 *imx378 = to_imx378(sd);
+> +
+> +	switch (s->target) {
+> +	case V4L2_SEL_TGT_CROP:
+> +	case V4L2_SEL_TGT_COMPOSE:
+> +		s->r = imx378->crop;
+
+s->which should be taken into account here, just as in set_fmt above.
+
+> +		return 0;
+> +	case V4L2_SEL_TGT_COMPOSE_DEFAULT:
+> +	case V4L2_SEL_TGT_CROP_DEFAULT:
+> +		s->r.width = IMX378_MAX_DEFAULT_WIDTH;
+> +		s->r.height = IMX378_MAX_DEFAULT_HEIGHT;
+> +		s->r.left = 0;
+> +		s->r.top = 0;
+> +		return 0;
+> +	case V4L2_SEL_TGT_COMPOSE_BOUNDS:
+> +	case V4L2_SEL_TGT_CROP_BOUNDS:
+> +		s->r.width = IMX378_MAX_BOUNDS_WIDTH;
+> +		s->r.height = IMX378_MAX_BOUNDS_HEIGHT;
+> +		s->r.left = 0;
+> +		s->r.top = 0;
+> +		return 0;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx378_set_selection(struct v4l2_subdev *sd,
+> +				struct v4l2_subdev_pad_config *cfg,
+> +				struct v4l2_subdev_selection *s)
+> +{
+> +	struct imx378 *imx378 = to_imx378(sd);
+> +	int ret;
+> +
+> +	if (s->target == V4L2_SEL_TGT_COMPOSE)
+> +		return 0;
+> +
+> +	if (s->target != V4L2_SEL_TGT_CROP)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&imx378->mutex);
+> +
+> +	s->r.width = imx378->crop.width;
+> +	s->r.height = imx378->crop.height;
+> +
+> +	v4l_bound_align_image(&s->r.left, 0,
+> +			      IMX378_MAX_BOUNDS_WIDTH - s->r.width, ilog2(4),
+> +			      &s->r.top, 0,
+> +			      IMX378_MAX_BOUNDS_HEIGHT - s->r.height, ilog2(8),
+> +			      0);
+> +
+> +	imx378->crop.left = s->r.left;
+> +	imx378->crop.top = s->r.top;
+> +
+> +	if (imx378->streaming) {
+> +		ret = imx378_set_img_size(imx378);
+> +		if (ret < 0) {
+> +			dev_err(imx378->dev, "could not set image size\n");
+> +			mutex_unlock(&imx378->mutex);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	mutex_unlock(&imx378->mutex);
+> +	return 0;
+> +}
+> +
+> +static int imx378_set_exposure(struct imx378 *imx378)
+> +{
+> +	int ret;
+> +
+> +	/* Set group hold */
+> +	ret = regmap_write(imx378->regmap, 0x104, 1);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = imx378_write_reg16(imx378, 0x202, imx378->exposure->val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Release group hold */
+> +	return regmap_write(imx378->regmap, 0x104, 0);
+> +}
+> +
+> +static int imx378_set_analogue_gain(struct imx378 *imx378)
+> +{
+> +	int ret;
+> +
+> +	/* Set group hold */
+> +	ret = regmap_write(imx378->regmap, 0x104, 1);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = imx378_write_reg16(imx378, 0x204, imx378->analogue_gain->val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Release group hold */
+> +	return regmap_write(imx378->regmap, 0x104, 0);
+> +}
+> +
+> +static int imx378_set_digital_gain_global(struct imx378 *imx378)
+> +{
+> +	int ret;
+> +
+> +	/* Set group hold */
+> +	ret = regmap_write(imx378->regmap, 0x104, 1);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Digital gain control mode all color */
+> +	ret = regmap_write(imx378->regmap, 0x3ff9, 1);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Set digital gain globally */
+> +	ret = imx378_write_reg16(imx378, 0x20e, imx378->digital_gain->val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Release group hold */
+> +	return regmap_write(imx378->regmap, 0x104, 0);
+> +}
+> +
+> +static int imx378_set_digital_gain_by_color(struct imx378 *imx378)
+> +{
+> +	int ret;
+> +
+> +	/* Set group hold */
+> +	ret = regmap_write(imx378->regmap, 0x104, 1);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Digital gain control mode by color */
+> +	ret = regmap_write(imx378->regmap, 0x3ff9, 0);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Digital gain R */
+> +	ret = imx378_write_reg16(imx378, 0x210, imx378->red_balance->val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Digital gain B */
+> +	ret = imx378_write_reg16(imx378, 0x212, imx378->blue_balance->val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Digital gain GR */
+> +	ret = imx378_write_reg16(imx378, 0x20e, imx378->green_balance->val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Digital gain GB */
+> +	ret = imx378_write_reg16(imx378, 0x214, imx378->green_balance->val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Release group hold */
+> +	return regmap_write(imx378->regmap, 0x104, 0);
+> +}
+> +
+> +static int imx378_g_temperature(struct imx378 *imx378, s32 *temperature)
+> +{
+> +	unsigned int aux;
+> +	int ret;
+> +
+> +	if (imx378->streaming) {
+> +		ret = regmap_read(imx378->regmap, 0x13a, &aux);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		if (aux >= 0xec)
+> +			*temperature = (aux - 0xec - 20) * 1000;
+> +		else
+> +			*temperature = (aux * 1000);
+> +	}
+> +
+> +	dev_err(imx378->dev,
+> +	"Sensor is powered off, returning invalid temperature\n");
+
+You could simply return an error here. No kernel messages should be emitted
+unless there's a non-uAPI related problem.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx378_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
+> +{
+> +	struct imx378 *imx378 = container_of(ctrl->handler,
+> +					     struct imx378, ctrls);
+> +	int ret;
+> +
+> +	/*
+> +	 * Applying V4L2 control value only happens
+> +	 * when power is up for streaming
+> +	 */
+> +	if (!pm_runtime_get_if_in_use(imx378->dev))
+> +		return 0;
+> +
+> +	switch (ctrl->id) {
+> +	case V4L2_CID_TEMPERATURE:
+> +		ret = imx378_g_temperature(imx378, &ctrl->val);
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +
+> +	pm_runtime_put(imx378->dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static int imx378_set_ctrl(struct v4l2_ctrl *ctrl)
+> +{
+> +	struct imx378 *imx378 = container_of(ctrl->handler,
+> +					     struct imx378, ctrls);
+> +	int ret;
+> +
+> +	/*
+> +	 * Applying V4L2 control value only happens
+> +	 * when power is up for streaming
+> +	 */
+> +	if (!pm_runtime_get_if_in_use(imx378->dev))
+> +		return 0;
+> +
+> +	switch (ctrl->id) {
+> +	case V4L2_CID_EXPOSURE_ABSOLUTE:
+> +		ret = imx378_set_exposure(imx378);
+> +		break;
+> +	case V4L2_CID_ANALOGUE_GAIN:
+> +		ret = imx378_set_analogue_gain(imx378);
+> +		break;
+> +	case V4L2_CID_DIGITAL_GAIN:
+> +		ret = imx378_set_digital_gain_global(imx378);
+> +		break;
+> +	case V4L2_CID_RED_BALANCE:
+> +	case V4L2_CID_BLUE_BALANCE:
+> +	case IMX378_CID_GREEN_BALANCE:
+
+Perhaps Hans can correct me, but my understanding is the red and blue
+balances are meant to control the balance of the two while green stays
+constant.
+
+The difference is that the gains that the sensor implements are
+independent. I wouldn't use the existing controls for them. Also, the green
+gain is different for those pixels that are adjacent to blue and red pixels
+horizontally. There's usually no need to set them separately though, but I
+think it could still make sense to have that in the control API for
+completeness.
+
+I'd add four standard controls for these if you need this feature.
+
+> +		ret = imx378_set_digital_gain_by_color(imx378);
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +
+> +	pm_runtime_put(imx378->dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct v4l2_ctrl_ops imx378_ctrl_ops = {
+> +	.g_volatile_ctrl = imx378_g_volatile_ctrl,
+> +	.s_ctrl = imx378_set_ctrl,
+> +};
+> +
+> +#define MAX_CMD 4
+> +static int imx378_write_table(struct imx378 *imx378,
+> +				const struct reg_8 table[])
+> +{
+> +	u8 vals[MAX_CMD];
+> +	int i, ret;
+> +
+> +	for (table = table; table->addr != IMX378_TABLE_END ; table++) {
+> +		if (table->addr == IMX378_TABLE_WAIT_MS) {
+> +			usleep_range(table->val * 1000,
+> +				     table->val * 1000 + 500);
+> +			continue;
+> +		}
+> +
+> +		for (i = 0; i < MAX_CMD; i++) {
+> +			if (table[i].addr != (table[0].addr + i))
+> +				break;
+> +			vals[i] = table[i].val;
+> +		}
+> +
+> +		ret = regmap_bulk_write(imx378->regmap, table->addr, vals, i);
+> +		usleep_range(80, 120);
+> +
+> +		if (ret) {
+> +			dev_err(imx378->dev, "write_table error: %d\n", ret);
+> +			return ret;
+> +		}
+> +
+> +		table += i - 1;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx378_start_streaming(struct imx378 *imx378)
+> +{
+> +	int ret;
+> +
+> +	ret = imx378_write_table(imx378, mode_table_common);
+> +	if (ret < 0) {
+> +		dev_err(imx378->dev, "could not send common table %d\n", ret);
+> +		goto error;
+> +	}
+> +
+> +	ret = __v4l2_ctrl_handler_setup(&imx378->ctrls);
+> +	if (ret < 0) {
+> +		dev_err(imx378->dev, "could not sync v4l2 controls\n");
+> +		goto error;
+> +	}
+> +
+> +	ret = imx378_set_img_size(imx378);
+> +	if (ret < 0) {
+> +		dev_err(imx378->dev, "could not set image size\n");
+> +		goto error;
+> +	}
+> +
+> +	/* set orientation */
+> +	ret = regmap_write(imx378->regmap, 0x101,
+> +			   imx378->hflip->val | imx378->vflip->val << 1);
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	/* set temperature control */
+> +	ret = regmap_write(imx378->regmap, 0x138, 1);
+> +	if (ret < 0)
+> +		goto error;
+
+Could you use v4l2_ctrl_handler_setup() for doing this instead?
+
+Also, in general, using descriptive macros instead of raw register
+addresses is preferred.
+
+> +
+> +	ret = regmap_write(imx378->regmap, 0x100, 1);
+> +	if (ret < 0) {
+> +		dev_err(imx378->dev, "could not send start table %d\n", ret);
+> +		goto error;
+> +	}
+> +
+> +	usleep_range(4000, 6000);
+> +
+> +	return 0;
+> +
+> +error:
+> +	mutex_unlock(&imx378->mutex);
+> +	return ret;
+> +}
+> +
+> +static int imx378_stop_streaming(struct imx378 *imx378)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_write(imx378->regmap, 0x100, 0);
+> +	if (ret < 0)
+> +		dev_err(imx378->dev, "could not send stop table %d\n",	ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static int imx378_s_stream(struct v4l2_subdev *sd, int enable)
+> +{
+> +	struct imx378 *imx378 = to_imx378(sd);
+> +	int ret;
+> +
+> +	mutex_lock(&imx378->mutex);
+> +
+> +	if (imx378->streaming == enable) {
+> +		mutex_unlock(&imx378->mutex);
+> +		return 0;
+> +	}
+> +
+> +	if (enable) {
+> +		ret = pm_runtime_get_sync(imx378->dev);
+> +		if (ret < 0) {
+> +			pm_runtime_put_noidle(imx378->dev);
+> +			goto err_unlock;
+> +		}
+> +
+> +		ret = imx378_start_streaming(imx378);
+> +		if (ret < 0)
+> +			goto err_rpm_put;
+> +	} else {
+> +		ret = imx378_stop_streaming(imx378);
+> +		if (ret < 0)
+> +			goto err_rpm_put;
+> +		pm_runtime_put(imx378->dev);
+> +	}
+> +
+> +	imx378->streaming = enable;
+> +
+> +	mutex_unlock(&imx378->mutex);
+> +
+> +	return 0;
+> +
+> +err_rpm_put:
+> +	pm_runtime_put(imx378->dev);
+> +err_unlock:
+> +	mutex_unlock(&imx378->mutex);
+> +
+> +	return ret;
+> +}
+> +
+> +static int imx378_entity_init_cfg(struct v4l2_subdev *sd,
+> +				  struct v4l2_subdev_pad_config *cfg)
+> +{
+> +	struct v4l2_subdev_format fmt = { };
+> +	struct v4l2_subdev_frame_interval fival = { };
+> +
+> +	if (!cfg) {
+
+This function is never called with cfg being NULL.
+
+> +		fmt.which = cfg ? V4L2_SUBDEV_FORMAT_TRY :
+> +				  V4L2_SUBDEV_FORMAT_ACTIVE;
+
+cfg would be always NULL here.
+
+> +		fmt.format.width = IMX378_MAX_BOUNDS_WIDTH;
+> +		fmt.format.height = IMX378_MAX_BOUNDS_HEIGHT;
+> +
+> +		imx378_set_fmt(sd, cfg, &fmt);
+> +
+> +		fival.interval = (struct v4l2_fract) IMX378_DEFAULT_FIVAL;
+> +		imx378_s_frame_interval(sd, &fival);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct v4l2_subdev_video_ops imx378_video_ops = {
+> +	.s_stream = imx378_s_stream,
+> +	.g_frame_interval = imx378_g_frame_interval,
+> +	.s_frame_interval = imx378_s_frame_interval,
+> +};
+> +
+> +static const struct v4l2_subdev_pad_ops imx378_subdev_pad_ops = {
+> +	.enum_mbus_code = imx378_enum_mbus_code,
+> +	.enum_frame_size = imx378_enum_frame_size,
+> +	.enum_frame_interval = imx378_enum_frame_interval,
+> +	.get_fmt = imx378_get_fmt,
+> +	.set_fmt = imx378_set_fmt,
+> +	.get_selection = imx378_get_selection,
+> +	.set_selection = imx378_set_selection,
+> +	.init_cfg = imx378_entity_init_cfg,
+> +};
+> +
+> +static const struct v4l2_subdev_ops imx378_subdev_ops = {
+> +	.core = &imx378_core_ops,
+> +	.video = &imx378_video_ops,
+> +	.pad = &imx378_subdev_pad_ops,
+> +};
+> +
+> +static const struct regmap_config sensor_regmap_config = {
+> +	.reg_bits = 16,
+> +	.val_bits = 8,
+> +	.cache_type = REGCACHE_RBTREE,
+> +};
+> +
+> +static int imx378_get_regulators(struct device *dev, struct imx378 *imx378)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < IMX378_NUM_SUPPLIES; i++)
+> +		imx378->supplies[i].supply = imx378_supply_name[i];
+> +
+> +	return devm_regulator_bulk_get(dev, IMX378_NUM_SUPPLIES,
+> +				       imx378->supplies);
+> +}
+> +
+> +struct v4l2_ctrl
+> +*imx378_ctrl_new_str_custom(struct v4l2_ctrl_handler *hdl, u32 id, char *name,
+> +			    s64 min, s64 max, u64 step, s64 def)
+> +{
+> +	static struct v4l2_ctrl_config ctrl = {
+> +		.ops = &imx378_ctrl_ops,
+> +		.type = V4L2_CTRL_TYPE_STRING,
+> +	};
+> +
+> +	ctrl.id = id;
+> +	ctrl.name = name;
+> +	ctrl.min = min;
+> +	ctrl.max = max;
+> +	ctrl.step = step;
+> +	ctrl.def = def;
+> +
+> +	return v4l2_ctrl_new_custom(hdl, &ctrl, NULL);
+> +}
+> +
+> +struct v4l2_ctrl
+> +*imx378_ctrl_new_int_custom(struct v4l2_ctrl_handler *hdl, u32 id, char *name,
+> +			    s64 min, s64 max, u64 step, s64 def)
+> +{
+> +	static struct v4l2_ctrl_config ctrl = {
+> +		.ops = &imx378_ctrl_ops,
+> +		.type = V4L2_CTRL_TYPE_INTEGER,
+> +	};
+> +
+> +	ctrl.id = id;
+> +	ctrl.name = name;
+> +	ctrl.min = min;
+> +	ctrl.max = max;
+> +	ctrl.step = step;
+> +	ctrl.def = def;
+> +
+> +	return v4l2_ctrl_new_custom(hdl, &ctrl, NULL);
+> +}
+> +
+> +static int imx378_init_controls(struct imx378 *imx378)
+> +{
+> +	static const s64 link_freq[] = {
+> +		IMX378_DEFAULT_LINK_FREQ,
+> +	};
+> +	int ret;
+> +
+> +	mutex_init(&imx378->mutex);
+> +	imx378->ctrls.lock = &imx378->mutex;
+> +
+> +	v4l2_ctrl_handler_init(&imx378->ctrls, 12);
+> +
+> +	imx378->pixel_rate = v4l2_ctrl_new_std(&imx378->ctrls, NULL,
+> +					       V4L2_CID_PIXEL_RATE, 0,
+> +					       IMX378_DEFAULT_PIXEL_RATE, 1,
+> +					       IMX378_DEFAULT_PIXEL_RATE);
+> +
+> +	imx378->link_freq = v4l2_ctrl_new_int_menu(&imx378->ctrls, NULL,
+> +						   V4L2_CID_LINK_FREQ,
+> +						   ARRAY_SIZE(link_freq) - 1,
+> +						   0, link_freq);
+> +	if (imx378->link_freq)
+> +		imx378->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> +
+> +	imx378->exposure = v4l2_ctrl_new_std(&imx378->ctrls, &imx378_ctrl_ops,
+> +					     V4L2_CID_EXPOSURE_ABSOLUTE,
+> +					     0x8, 0xffff, 1, 0xc70);
+> +
+> +	imx378->hflip = v4l2_ctrl_new_std(&imx378->ctrls, &imx378_ctrl_ops,
+> +					  V4L2_CID_HFLIP, 0, 1, 1, 0);
+> +	if (imx378->hflip)
+> +		imx378->hflip->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> +
+> +	imx378->vflip = v4l2_ctrl_new_std(&imx378->ctrls, &imx378_ctrl_ops,
+> +					  V4L2_CID_VFLIP, 0, 1, 1, 0);
+> +	if (imx378->vflip)
+> +		imx378->vflip->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> +
+> +	imx378->analogue_gain = v4l2_ctrl_new_std(&imx378->ctrls,
+> +						  &imx378_ctrl_ops,
+> +						  V4L2_CID_ANALOGUE_GAIN,
+> +						  0, 978, 1, 0);
+> +
+> +	imx378->digital_gain = v4l2_ctrl_new_std(&imx378->ctrls,
+> +					&imx378_ctrl_ops, V4L2_CID_DIGITAL_GAIN,
+> +					0x100, 0xfff, 1, 0x100);
+> +
+> +	imx378->red_balance = v4l2_ctrl_new_std(&imx378->ctrls,
+> +					&imx378_ctrl_ops, V4L2_CID_RED_BALANCE,
+> +					0x100, 0xfff, 1, 0x221);
+> +
+> +	imx378->blue_balance = v4l2_ctrl_new_std(&imx378->ctrls,
+> +					&imx378_ctrl_ops, V4L2_CID_BLUE_BALANCE,
+> +					0x100, 0xfff, 1, 0x1ee);
+> +
+> +	imx378->green_balance = imx378_ctrl_new_int_custom(&imx378->ctrls,
+> +					IMX378_CID_GREEN_BALANCE,
+> +					"Green Balance",
+> +					0x100, 0xfff, 1, 0x100);
+> +	if (imx378->green_balance)
+> +		imx378->green_balance->flags = V4L2_CTRL_FLAG_SLIDER;
+> +
+> +	imx378->temperature = v4l2_ctrl_new_std(&imx378->ctrls,
+> +					&imx378_ctrl_ops, V4L2_CID_TEMPERATURE,
+> +					-200000, 800000, 1, 250000);
+
+Those are big numbers.
+
+> +	if (imx378->temperature)
+> +		imx378->temperature->name = "Sensor Temperature";
+
+Standard controls do not need to be renamed by drivers.
+
+> +
+> +	ret = imx378->ctrls.error;
+> +	if (ret) {
+> +		dev_err(imx378->dev, "%s control init failed (%d)\n",
+> +				__func__, ret);
+> +		goto error;
+> +	}
+> +
+> +	imx378->sd.ctrl_handler = &imx378->ctrls;
+> +
+> +	return 0;
+> +
+> +error:
+> +	v4l2_ctrl_handler_free(&imx378->ctrls);
+> +	return ret;
+> +}
+> +
+> +static int imx378_parse_fwnode(struct device *dev)
+> +{
+> +	struct fwnode_handle *endpoint;
+> +	struct v4l2_fwnode_endpoint bus_cfg = {
+> +		.bus_type = V4L2_MBUS_CSI2_DPHY,
+> +	};
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(dev), NULL);
+> +	if (!endpoint) {
+> +		dev_err(dev, "endpoint node not found\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = v4l2_fwnode_endpoint_alloc_parse(endpoint, &bus_cfg);
+> +	if (ret) {
+> +		dev_err(dev, "parsing endpoint node failed\n");
+> +		goto done;
+> +	}
+> +
+> +	for (i = 0; i < bus_cfg.nr_of_link_frequencies; i++)
+> +		if (bus_cfg.link_frequencies[i] == IMX378_DEFAULT_LINK_FREQ)
+> +			break;
+> +
+> +	if (i == bus_cfg.nr_of_link_frequencies) {
+> +		dev_err(dev, "link-frequencies %d not supported, Please review your DT\n",
+> +			IMX378_DEFAULT_LINK_FREQ);
+> +		ret = -EINVAL;
+> +		goto done;
+> +	}
+> +
+> +done:
+> +	v4l2_fwnode_endpoint_free(&bus_cfg);
+> +	fwnode_handle_put(endpoint);
+> +	return ret;
+> +}
+> +
+> +static int __maybe_unused imx378_suspend(struct device *dev)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> +	struct imx378 *imx378 = to_imx378(sd);
+> +
+> +	if (imx378->streaming)
+> +		imx378_stop_streaming(imx378);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused imx378_resume(struct device *dev)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> +	struct imx378 *imx378 = to_imx378(sd);
+> +	int ret;
+> +
+> +	if (imx378->streaming) {
+> +		ret = imx378_start_streaming(imx378);
+> +		if (ret)
+> +			goto error;
+> +	}
+> +
+> +	return 0;
+> +
+> +error:
+> +	imx378_stop_streaming(imx378);
+> +	imx378->streaming = 0;
+> +	return ret;
+> +}
+> +
+> +static int imx378_probe(struct i2c_client *client)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct imx378 *imx378;
+> +	int ret;
+> +
+> +	ret = imx378_parse_fwnode(dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	imx378 = devm_kzalloc(dev, sizeof(*imx378), GFP_KERNEL);
+> +	if (!imx378)
+> +		return -ENOMEM;
+> +
+> +	imx378->dev = dev;
+> +
+> +	imx378->xclk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(imx378->xclk)) {
+> +		dev_err(dev, "could not get xclk");
+> +		return PTR_ERR(imx378->xclk);
+> +	}
+> +
+> +	ret = clk_set_rate(imx378->xclk, IMX378_DEFAULT_CLK_FREQ);
+> +	if (ret) {
+> +		dev_err(dev, "could not set xclk frequency\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = imx378_get_regulators(dev, imx378);
+> +	if (ret < 0) {
+> +		dev_err(dev, "could not get regulators\n");
+> +		return ret;
+> +	}
+> +
+> +	imx378->enable_gpio = devm_gpiod_get(dev, "enable", GPIOD_OUT_LOW);
+> +	if (IS_ERR(imx378->enable_gpio)) {
+> +		dev_err(dev, "could get enable gpio\n");
+> +		return PTR_ERR(imx378->enable_gpio);
+> +	}
+> +
+> +	imx378->regmap = devm_regmap_init_i2c(client, &sensor_regmap_config);
+> +	if (IS_ERR(imx378->regmap)) {
+> +		dev_err(dev, "regmap init failed\n");
+> +		return PTR_ERR(imx378->regmap);
+> +	}
+> +
+> +	v4l2_i2c_subdev_init(&imx378->sd, client, &imx378_subdev_ops);
+> +
+> +	imx378_power_on(imx378->dev);
+
+This could fail. Please add error handling.
+
+> +
+> +	pm_runtime_set_active(imx378->dev);
+> +	pm_runtime_enable(imx378->dev);
+> +	pm_runtime_idle(imx378->dev);
+
+Nice. But I'd make them the last operation in probe. You'll need to power
+off the sensor if the rest fails --- think what happens when CONFIG_PM
+disabled.
+
+> +
+> +	ret = imx378_init_controls(imx378);
+> +	if (ret) {
+> +		dev_err(dev, "failed to init controls: %d", ret);
+> +		goto error_probe;
+> +	}
+> +
+> +	imx378->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> +	imx378->pad.flags = MEDIA_PAD_FL_SOURCE;
+> +	imx378->sd.dev = &client->dev;
+> +	imx378->sd.entity.function = MEDIA_ENT_F_CAM_SENSOR;
+> +
+> +	ret = media_entity_pads_init(&imx378->sd.entity, 1, &imx378->pad);
+> +	if (ret < 0) {
+> +		dev_err(dev, "could not register media entity\n");
+> +		goto free_ctrl;
+> +	}
+> +
+> +	imx378_entity_init_cfg(&imx378->sd, NULL);
+> +
+> +	ret = v4l2_async_register_subdev_sensor_common(&imx378->sd);
+> +	if (ret < 0) {
+> +		dev_err(dev, "could not register v4l2 device\n");
+> +		goto free_entity;
+> +	}
+> +
+> +	ret = v4l2_device_register_subdev(&imx378->v4l2_dev, &imx378->sd);
+
+This isn't needed here; it takes place when the async subdevice is bound.
+
+> +	if (ret < 0) {
+> +		dev_err(dev, "could not register v4l2 sd\n");
+> +		goto free_entity;
+> +	}
+> +
+> +	ret = v4l2_device_register_subdev_nodes(&imx378->v4l2_dev);
+
+This shouldn't be called here, but from the bridge driver.
+
+> +	if (ret) {
+> +		dev_err(dev, "imx378 subdev nodes registration failed (err=%d)\n",
+> +		ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +
+> +free_entity:
+> +	media_entity_cleanup(&imx378->sd.entity);
+> +free_ctrl:
+> +	v4l2_ctrl_handler_free(&imx378->ctrls);
+> +error_probe:
+> +	mutex_destroy(&imx378->mutex);
+> +	pm_runtime_disable(imx378->dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static int imx378_remove(struct i2c_client *client)
+> +{
+> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> +	struct imx378 *imx378 = to_imx378(sd);
+> +
+> +	v4l2_async_unregister_subdev(&imx378->sd);
+> +	media_entity_cleanup(&imx378->sd.entity);
+> +	v4l2_ctrl_handler_free(&imx378->ctrls);
+> +
+> +	pm_runtime_disable(&client->dev);
+> +	pm_runtime_set_suspended(&client->dev);
+
+imx378_power_off(imx378);
+
+> +
+> +	mutex_destroy(&imx378->mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id imx378_of_match[] = {
+> +	{ .compatible = "sony,imx378" },
+
+Please add DT bindings for the device.
+
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, imx378_of_match);
+> +
+> +static const struct i2c_device_id imx378_id[] = {
+> +	{"imx378", 0},
+
+Do you really need i2c device table? If not, please use probe_new and omit
+it.
+
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(i2c, imx378_id);
+> +
+> +static const struct dev_pm_ops imx378_pm_ops = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(imx378_suspend, imx378_resume)
+> +	SET_RUNTIME_PM_OPS(imx378_power_off, imx378_power_on, NULL)
+> +};
+> +
+> +static struct i2c_driver imx378_i2c_driver = {
+> +	.driver = {
+> +		.of_match_table = imx378_of_match,
+> +		.pm = &imx378_pm_ops,
+> +		.name  = "imx378",
+> +	},
+> +	.probe_new  = imx378_probe,
+> +	.remove = imx378_remove,
+> +	.id_table = imx378_id,
+> +};
+> +
+> +module_i2c_driver(imx378_i2c_driver);
+> +
+> +MODULE_DESCRIPTION("Sony IMX378 Camera driver");
+> +MODULE_AUTHOR("Daniel Gomez <daniel@qtec.com>");
+> +MODULE_LICENSE("GPL v2");
+
 -- 
-2.26.2
+Kind regards,
 
+Sakari Ailus
