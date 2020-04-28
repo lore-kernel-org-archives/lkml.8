@@ -2,133 +2,103 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B9EC83003
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF49C83002
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4902206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A80E3206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:13:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="en/JylFl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vB6BBBag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726284AbgD1BLj (ORCPT
+        id S1726335AbgD1BN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 21:11:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50174 "EHLO
+        Mon, 27 Apr 2020 21:13:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726233AbgD1BLj (ORCPT
+        by vger.kernel.org with ESMTP id S1726233AbgD1BN1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 21:11:39 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A028EC03C1A8;
-        Mon, 27 Apr 2020 18:11:37 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id d184so9882585pfd.4;
-        Mon, 27 Apr 2020 18:11:37 -0700 (PDT)
+        Mon, 27 Apr 2020 21:13:27 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00D5EC03C1A8
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 18:13:25 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id n11so1402956pgl.9
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 18:13:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=iv9VG1ml9YtdubxTkSVKWnfhCAm26tdpMZmL56nVCYc=;
-        b=en/JylFl8KERUCoB06g3lH9RTFt6u/pTLuDKe6cjSmoQ/jz0G8pmGFKwYMOT4X0fn3
-         EEwjVaRfYwGFygNhQZNxFnWQ4y4K/g7TQwr9HCUw/YaW66/Yb44ptlT8uiXlxypxao6D
-         3TE/MngCCXMHbpwafPDK9jg0BRrVuet52wxuH7uC/n2PUKW4AgpNT5F2nwrg2xSmVWlT
-         ji7pfJhI8LHCfbV2mRBtMXEK0yM1yoKgwcA+S2NFJyYQgi52v88JaqEISqezul0Um9FO
-         yrzvSZMH3W/YAyogV070gXVIo7aa3GqChkh7WZYanrXfTGbOE7BJQqdfOpq7bz6KJ8uP
-         2PiA==
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=Y3GGZmbxLoB4/ky/zvuMJizsm3y5Ahq0Z93yi1/mNik=;
+        b=vB6BBBagJDNdjOQ1Uf4d1ItZKf/yfYwHY/Lx4bBn5067k07IaWYcjHV2b/uF0pmXv7
+         oV6/eTOs1N6BYi+vy36uPtzNUOYAIsVpvjBX5lfLogz6JAzOwld2SA7HRWLoIJQCXRfL
+         M2l11WtPwurHVLAY4oqywzmCJT1J4QaTfvxkdcLOQyz15hSid6YKP4TySrKfNf0gLM50
+         blcQZ6QdcdSQzaKD4M/5tUqELAcaDSlv9hG3ah24B2+36Lv92gBNIX5UiDapmcJkWMsT
+         naqt0aA/gek21E+dEEs7O5xEsCDGHxyXb8vgk07kBSJzBXSUqMPEisZfVZsiS+wjnx4t
+         d10Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iv9VG1ml9YtdubxTkSVKWnfhCAm26tdpMZmL56nVCYc=;
-        b=paimORPPK4KqHMQf2TILNf1p1RdM36kX9TfLErX9Y862pik1aK5VDw2DF9+f7RN727
-         AoUanG/DFFB7yBAzPKyzwMCXDx6bZ+d4dsCGKNNIsLnysAe2wxakTra09PVymf5fjTGn
-         sU2AyHElDWNWSwCzX5d28wVxewU16fdapfuE8QIv/dDKQWd06fFFN61ltXFaf2JDuQDG
-         8MTd3y43O0LL/v4QJeFuItJl+vNcW6Ovsp3f0Cg+eLpycmetF9sdDV07Y20+CU710dhC
-         OZYcfwxUrGVhB1l1ruXmaET+/Bm/VUB9gLCS+RZBZT+khWOBMpcDgASTQ+ynSVKwOqVK
-         io3w==
-X-Gm-Message-State: AGi0PuaiEg4ezBIVoy250MIulRdoUg2c2NWfJxauB2jfGcYxWKWCP4KL
-        1moJNay8xvtFbuez150so+A=
-X-Google-Smtp-Source: APiQypJB9eoHpfKd85W5XG6LcAJS6p+QLoEsa2/CGJqTZyMNhrDTGELNXXx6D+FPslZDHI2wzSjwmQ==
-X-Received: by 2002:a63:4c08:: with SMTP id z8mr25135272pga.175.1588036296910;
-        Mon, 27 Apr 2020 18:11:36 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id 138sm13429682pfz.31.2020.04.27.18.11.36
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=Y3GGZmbxLoB4/ky/zvuMJizsm3y5Ahq0Z93yi1/mNik=;
+        b=QCgoHxmEZc4T4MbS24Fh1NhYg7EW5MLmK70HLxwYPiNKg/4oDNpDt4cAMWlLaYD4hD
+         8otYD5zuHKU0qcAR+6BrLUl6DCEeJ6PPlozguQvjTeuWnE0XlfFqqfvZMUHIwKAnOCJu
+         910U3nriOIm9o1bjHbuBlScMj9shmd6T/3SH0HcrSC+31SjVVGPLL52Mv4Pi/D+yYdOl
+         Z9hIbGJXrnTUB7PTIY48DhcHHmOHGrTrfaASy+HJ5cLBmplStmE0IVNDr/5zJ+mMXiLr
+         vz1sheqiYWMXgr9br5Ppmc1BRgP0Hyzp4BJxkZ3H+UHmB/DXmzT64htPsCsj7xrE3LXh
+         JvyA==
+X-Gm-Message-State: AGi0PuaTmSecQgLwofomt2npGjDbPNSEy8lZTeczieJuegiEqgNXvQA6
+        +Dxl/1fWDmwKjYbL7JVRxw8=
+X-Google-Smtp-Source: APiQypJKpTSK6oyBac2PxQyt9jZI95zOC2NCXv9W9sAxO7BuYSp54SwYztJQt2SAqQcjCBedqNTXIg==
+X-Received: by 2002:a63:d601:: with SMTP id q1mr2176948pgg.452.1588036405434;
+        Mon, 27 Apr 2020 18:13:25 -0700 (PDT)
+Received: from localhost ([203.220.177.17])
+        by smtp.gmail.com with ESMTPSA id q201sm13892911pfq.40.2020.04.27.18.13.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 18:11:36 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 18:11:34 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     stable@vger.kernel.org,
-        Nick Desaulniers <nick.desaulniers@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andrew Duggan <aduggan@synaptics.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: synaptics-rmi4 - Really fix attn_data
- use-after-free
-Message-ID: <20200428011134.GV125362@dtor-ws>
-References: <20200427145537.1.Ic8f898e0147beeee2c005ee7b20f1aebdef1e7eb@changeid>
+        Mon, 27 Apr 2020 18:13:24 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 11:08:54 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [RFC 1/3] powernv/cpuidle : Support for pre-entry and post exit
+ of stop state in firmware
+To:     Abhishek Goel <huntbag@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org
+Cc:     ego@linux.vnet.ibm.com, mikey@neuling.org, mpe@ellerman.id.au,
+        oohall@gmail.com, psampat@linux.ibm.com, svaidy@linux.ibm.com,
+        skiboot@lists.ozlabs.org
+References: <20200427021027.114582-1-huntbag@linux.vnet.ibm.com>
+In-Reply-To: <20200427021027.114582-1-huntbag@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427145537.1.Ic8f898e0147beeee2c005ee7b20f1aebdef1e7eb@changeid>
+Message-Id: <1588035100.usm3gb816q.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 02:55:48PM -0700, Evan Green wrote:
-> Fix a use-after-free noticed by running with KASAN enabled. If
-> rmi_irq_fn() is run twice in a row, then rmi_f11_attention() (among
-> others) will end up reading from drvdata->attn_data.data, which was
-> freed and left dangling in rmi_irq_fn().
-> 
-> Commit 55edde9fff1a ("Input: synaptics-rmi4 - prevent UAF reported by
-> KASAN") correctly identified and analyzed this bug. However the attempted
-> fix only NULLed out a local variable, missing the fact that
-> drvdata->attn_data is a struct, not a pointer.
-> 
-> NULL out the correct pointer in the driver data to prevent the attention
-> functions from copying from it.
-> 
-> Fixes: 55edde9fff1a ("Input: synaptics-rmi4 - prevent UAF reported by KASAN")
-> Fixes: b908d3cd812a ("Input: synaptics-rmi4 - allow to add attention data")
-> 
-> Signed-off-by: Evan Green <evgreen@chromium.org>
-> 
-> Cc: stable@vger.kernel.org
-> Cc: Nick Desaulniers <nick.desaulniers@gmail.com>
+Thanks for picking this up and pushing it along. I do plan to come back=20
+and take another look at it all, but what we do need to do first is get=20
+a coherent approach to this proposed new calling convention and OS ops.
 
-Ugh, this is all kind of ugly, but I guess that's what we have now.
-Applied, thank you.
+It's fine to work on this in the meantime, but to start merging things
+my idea is:
 
-> ---
-> 
->  drivers/input/rmi4/rmi_driver.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_driver.c
-> index 190b9974526bb..c18e1a25bca6e 100644
-> --- a/drivers/input/rmi4/rmi_driver.c
-> +++ b/drivers/input/rmi4/rmi_driver.c
-> @@ -205,7 +205,7 @@ static irqreturn_t rmi_irq_fn(int irq, void *dev_id)
->  
->  	if (count) {
->  		kfree(attn_data.data);
-> -		attn_data.data = NULL;
-> +		drvdata->attn_data.data = NULL;
->  	}
->  
->  	if (!kfifo_is_empty(&drvdata->attn_fifo))
-> -- 
-> 2.24.1
-> 
+- OPAL must leave r13-r15 untouched for the OS.
+- OS ops are made available only for a "v4" OS that uses the new
+  calling convention, including kernel stack.
+- OS ops baseline (all OSes must provide) will be console / printk=20
+  facility, trap handling and crash/symbol decoding on behalf of OPAL,
+  and runtime virtual memory.
 
--- 
-Dmitry
+Other OS ops features can be added in the versioned structure, including=20
+this.
+
+I'm trying to get back to cleaning these things up and start getting=20
+them merged now. Any comments or review on those would be helpful.
+
+Thanks,
+Nick
+
