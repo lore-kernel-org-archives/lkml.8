@@ -2,119 +2,127 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0DDC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3646FC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F19E206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:51:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588060311;
-	bh=fYRsuc0Ae0dKiL0d6kjd3W201rSLRhC7uULkGPtVblQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dwISWytJBpGiPaZHZVvuiTN42NAF/pxjnyjGCFzKHVDdjOlD/rn7BOizrRMHUjHSc
-	 xE09Ewy81XSH7C4udYoNvnnk5lw75q2U66ZEe/1C2+h355XigWahdux1BXeVAaJF8j
-	 S/TnqfNPll3nMbcGom9v1o5c3PAiZSkTAZoFum2Y=
+	by mail.kernel.org (Postfix) with ESMTP id 14075206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:52:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="GN//1xQT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MRBAYWKA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgD1Hvu (ORCPT
+        id S1726654AbgD1HwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:51:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726253AbgD1Hvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 03:51:50 -0400
-Received: from localhost (unknown [106.51.110.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A0172053B;
-        Tue, 28 Apr 2020 07:51:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588060309;
-        bh=fYRsuc0Ae0dKiL0d6kjd3W201rSLRhC7uULkGPtVblQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xa4C6Ee2WJE5lMYYAI6Nn3sH1L9ucDYkdIzacdVf5sF2lXs9EdxQBqTlbSeNaTlFO
-         OXnkLbdkGycxF4puebuZ8D/zeB464DqRdApxT3eSB0bZ/K1AXLolmE+WP5TcVhS0n+
-         JqxDs7oVxp95HZcQ7ugMPro7yxFItSwuXSZE4ITU=
-Date:   Tue, 28 Apr 2020 13:21:45 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
-        slawomir.blauciak@intel.com, mengdong.lin@intel.com
-Subject: Re: [RFC 1/5] soundwire: bus_type: add sdw_master_device support
-Message-ID: <20200428075145.GB56386@vkoul-mobl.Dlink>
-References: <20200416205524.2043-1-yung-chuan.liao@linux.intel.com>
- <20200416205524.2043-2-yung-chuan.liao@linux.intel.com>
- <20200420072631.GW72691@vkoul-mobl>
- <20200423142451.GA4181720@kroah.com>
- <20200428043144.GU56386@vkoul-mobl.Dlink>
- <20200428063736.GB990431@kroah.com>
- <20200428064951.GA56386@vkoul-mobl.Dlink>
- <20200428065524.GA992087@kroah.com>
+        Tue, 28 Apr 2020 03:52:02 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:48727 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726253AbgD1HwB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 03:52:01 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 7FAB65C0242;
+        Tue, 28 Apr 2020 03:52:00 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 28 Apr 2020 03:52:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=V3F6bgU0rAXVY56HsN7kHIpWzuM
+        aEzjdPUeTPKOkaG0=; b=GN//1xQTf4yXhNpbQP8Zc9xxWk2xJ56RdOw6PKZoz9o
+        +E8qbi3XzM/0l5NjjHGni9L2JYmrL71d5+SWiI/VvGkYqFQAEFCqMzAEgYMvWGCJ
+        NhoM6XnhWHQ5evKR2/xaZHPoeJF4qwHYmNNwblSeeIyJInBEX/HXnUJvV5+GDNFT
+        KjMxIqx1mDMJhHPCAclkzhoCbTfHyP7f/lj088nx0ZizFngGObQk0I54AJLv/v/k
+        YRiEGE3DjWi2iUk3hYwrOVSORWaEDtUu7BlI0OrWr3I4wDblqrQg7oEO+GPO4rAd
+        bJcog3vcMQj5jPcfRMszK10HMsDg5mEx08DRLJ0RM/g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=V3F6bg
+        U0rAXVY56HsN7kHIpWzuMaEzjdPUeTPKOkaG0=; b=MRBAYWKAjvaFWz3YsE0ku/
+        DkNYdH2W8vHcXBjxUqP6lV+gftTI7UB/s+QWKzSlGq3RKYPCPk+skGoMf+jxjugq
+        BfFKkE4o612wolzPCWp2o65mvUlrYZZ6sx6ZVXK+T4Q+CdUt1Ul0ywawrfwhhm+d
+        EvyYYEsPoLnOrnoRVEMS4zplri9bo/QguB0tcCA/U8m6SP6cZK/wBZ0HWJ6Gs9cW
+        4qpN3RyasCDP/zGEPFDic/5S4iza6HI5hSReB2L1+/E6HNVHnYwSNnDwcNRnLdc4
+        HB+t0kZUiYQxwTuQpL/2GcxSC+1fDzYShOm9ATWLZL9X3wosb/9cjRQWarRc+EKA
+        ==
+X-ME-Sender: <xms:n-CnXihsqEnrGJ6OHdfqI_LaCGXt45oS_PVy6mlP6a6yrTJhkF7hAA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedtgdduvdduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddunecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:n-CnXn7wEhWJJmoj2mTVuVT6nrrfmoj7LMLFO5iVC1NnxQ9k9YiiRw>
+    <xmx:n-CnXnqqdU2Zd_WRJhmy0R8kMIBsbva2BWQZE_w2_QFHiXUR4LhUHg>
+    <xmx:n-CnXtUBXrMLAiP5tEIrcxRbmhyynOGVX28lmk21_fGKmDn9idb2AA>
+    <xmx:oOCnXoRNxVwYOm0wyWwXdWGslFkNT-bOA2RcB8C18LI9WcdK8zyvRw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 025DA3280068;
+        Tue, 28 Apr 2020 03:51:58 -0400 (EDT)
+Date:   Tue, 28 Apr 2020 09:51:56 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Piotr Oniszczuk <warpme@o2.pl>
+Subject: Re: [PATCH] arm64: dts: allwinner: h6: Use dedicated CPU OPP table
+ for Tanix TX6
+Message-ID: <20200428075156.65okklrupingiza6@gilmour.lan>
+References: <20200426121709.1216-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hy3utu7gd5xuclrb"
 Content-Disposition: inline
-In-Reply-To: <20200428065524.GA992087@kroah.com>
+In-Reply-To: <20200426121709.1216-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28-04-20, 08:55, Greg KH wrote:
-> On Tue, Apr 28, 2020 at 12:19:51PM +0530, Vinod Koul wrote:
-> > On 28-04-20, 08:37, Greg KH wrote:
-> > > On Tue, Apr 28, 2020 at 10:01:44AM +0530, Vinod Koul wrote:
-> > > > > > That is not true for everyone, it is only true for Intel, pls call that
-> > > > > > out as well...
-> > > > > 
-> > > > > Why is it not true for everyone?  How else do you get the pm stuff back
-> > > > > to your hardware?
-> > > > 
-> > > > The rest of the world would do using the real controller device. For
-> > > > example the soundwire controller on Qualcomm devices is enumerated as a
-> > > > DT device and is using these...
-> > > > 
-> > > > If Intel had a standalone controller or enumerated as individual
-> > > > functions, it would have been a PCI device and would manage as such
-> > > 
-> > > If it is not a standalone controller, what exactly is it?  I thought it
-> > > was an acpi device, am I mistaken?
-> > > 
-> > > What is the device that the proper soundwire controller driver binds to
-> > > on an Intel-based system?
-> > 
-> > The HDA controller which is a PCI device. The device represent HDA
-> > function, DSP and Soundwire controller instances (yes it is typically
-> > more than one instance)
-> 
-> Then those "instances" should be split up into individual devices that a
-> driver can bind to.  See the work happening on the "virtual" bus for
-> examples of how that can be done.
 
-Yes removing platform devices is the goal for Intel now :) Pierre & Bard
-have been diligently trying to solve this.
+--hy3utu7gd5xuclrb
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Only difference is the means to end goal. I am not convinced that this
-should be in soundwire subsystem.
+On Sun, Apr 26, 2020 at 02:17:09PM +0200, Cl=E9ment P=E9ron wrote:
+> Tanix TX6 has a fixed regulator. As DVFS is instructed to change
+> voltage to meet OPP table. The DVFS is not working as expected.
+>=20
+> Introduce a dedicated OPP Table where voltage are equals to
+> the fixed regulator.
+>=20
+> Reported-by: Piotr Oniszczuk <warpme@o2.pl>
+> Fixes: add1e27fb703 ("arm64: dts: allwinner: h6: Enable CPU opp tables fo=
+r Tanix TX6")
+> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
 
-Looks like folks are trying to review and port to use this bus. Makes
-sense to me..
-https://lore.kernel.org/netdev/c5197d2f-3840-d304-6b09-d334cae81294@linux.intel.com/
+I'm not really a big fan of duplicating the OPPs, since that would make an
+update of those very likely to be overlooked for that particular board (and
+since it's a board that not a lot of people have, it would be harder to not=
+ice
+too).
 
-> A platform device better not be being used here, I'm afraid to look at
-> the code now...
+IIRC, removing the cpu-supply property should work as well?
 
-Well if the plan for 'virtual-bus' goes well, it should be  a simple
-replacement of platform->virtual for Intel driver. Rest of the driver
-should not be impacted :)
+Maxime
 
-Thanks
--- 
-~Vinod
+--hy3utu7gd5xuclrb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqfgnAAKCRDj7w1vZxhR
+xcKQAQCy9iRfHhgQB0zjFFyIcVr+pNkJu/NoOpUwGHC8OFi59QD/b/ffdd2k2+Gp
+1HaeNUO40UjzCAvU3mSLTulZyrAF0Q8=
+=TWTU
+-----END PGP SIGNATURE-----
+
+--hy3utu7gd5xuclrb--
