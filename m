@@ -2,79 +2,134 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF7FC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24630C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBEBE206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE848206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:31:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tIUU17d6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbgD1DaL (ORCPT
+        id S1726373AbgD1DbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 23:30:11 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3357 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726047AbgD1DaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 23:30:11 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D54AAEE4D4C2439DAFE6;
-        Tue, 28 Apr 2020 11:30:05 +0800 (CST)
-Received: from huawei.com (10.175.105.27) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Tue, 28 Apr 2020
- 11:29:59 +0800
-From:   Wu Bo <wubo40@huawei.com>
-To:     <rpeterso@redhat.com>, <agruenba@redhat.com>
-CC:     <cluster-devel@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <liuzhiqiang26@huawei.com>, <linfeilong@huawei.com>,
-        <wubo40@huawei.com>
-Subject: [PATCH] fs/gfs2:lock a spinlock always before returning from do_xmote()
-Date:   Tue, 28 Apr 2020 11:29:05 +0800
-Message-ID: <1588044545-59405-1-git-send-email-wubo40@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 27 Apr 2020 23:31:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbgD1DbD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 23:31:03 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DA78C03C1A9;
+        Mon, 27 Apr 2020 20:31:03 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id g19so30226608otk.5;
+        Mon, 27 Apr 2020 20:31:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jm8vfJ9EYyWFOVTVK1su6QOP18i2GwWwk6iXxu1Gwqg=;
+        b=tIUU17d61/yZf3H3f7qHle7H6xFFYcz/TYc3xCwWv+zz8GQVMUYUJWtQbqOEBaXVCn
+         SHWgaqnH7BSR/SgNiZc04fix5SZOpRu+36gqtZKds2WYSDllT9DtLDGZ6VNifdw2oNL8
+         NJZOZWb6nm14vdzNMbLVzOnQRwvO3w4jdky7VqdpEZAVfKqTrKsuD1qq910GBhgbsTQS
+         k0XEDmplGZKZWut2od4qJoG64IqiQYy1OkZ2IaZ9YLH3stUnyenxmJS64wtfGNGZJ9j/
+         ZAvkELeBXiPY9GCrLI7jebBu/+ckb31IV12xOg/yjj+OHKpX4U6Xse+H5a0WJl7lV89T
+         ZUuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jm8vfJ9EYyWFOVTVK1su6QOP18i2GwWwk6iXxu1Gwqg=;
+        b=XbbHw/sk6rxTJIWIONYTzrenuFaJ99KU6bwbiO2ZeouB//QoepT22WDweGmZTNisAy
+         g1FoGuilqS16l7uTeottu82DKMMWx06THmh5x34SmsWwiFrUym6dDWx7h+XL0A4vNwfL
+         W9juxoTwJQRlX8suCkVBqGUPyhrJOQTjEok40RGGmlpMTX44QRF9+vKK5ICMtr8eG1iD
+         BmOpbWWBvJIHunAopIjhOjDwe/+h/DkL0T3uEXxd+Q4duX3ObA0kcynYinLyUhBtSrmL
+         49yGpJq5B5oArFTNtQ/q6LmAPAMMwqKok8mlfQn1aY2t+GUV8TzVv/WzuSR/KsVdQUV8
+         AxPg==
+X-Gm-Message-State: AGi0PuZhnU3U75gmRTfumAjfF/RpXYHZhRq/TzKJKWAK73FZJpj6ihtW
+        kw8uCDzwTX4Am4bFY4eC/jQ=
+X-Google-Smtp-Source: APiQypL+AkA11khZIM6HDPAXBFYXba69RckVwzoOGnXcFnSn58KdrLcc0xLwleE4RoRl5yN7hbSKfQ==
+X-Received: by 2002:a05:6830:11c6:: with SMTP id v6mr20618099otq.166.1588044662222;
+        Mon, 27 Apr 2020 20:31:02 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id q8sm1959615oij.36.2020.04.27.20.31.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 20:31:01 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] hv_netvsc: Fix netvsc_start_xmit's return type
+Date:   Mon, 27 Apr 2020 20:30:43 -0700
+Message-Id: <20200428033042.44561-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.27]
-X-CFilter-Loop: Reflected
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The call stack is as follows:
-finish_xmote()
-        ...
-        spin_lock(&gl->gl_lockref.lock);
-        ...
-	--> do_xmote()
-            spin_unlock(&gl->gl_lockref.lock);
-            ...
-            return;
-        ...
-        spin_unlock(&gl->gl_lockref.lock);
-           
-do_xmote function needs to be locked before returning,
-Otherwise, there will be a double release lock in finish_xmote() function.
+netvsc_start_xmit is used as a callback function for the ndo_start_xmit
+function pointer. ndo_start_xmit's return type is netdev_tx_t but
+netvsc_start_xmit's return type is int.
 
-Signed-off-by: Wu Bo <wubo40@huawei.com>
+This causes a failure with Control Flow Integrity (CFI), which requires
+function pointer prototypes and callback function definitions to match
+exactly. When CFI is in enforcing, the kernel panics. When booting a
+CFI kernel with WSL 2, the VM is immediately terminated because of this:
+
+$ wsl.exe -d ubuntu
+The Windows Subsystem for Linux instance has terminated.
+
+Avoid this by using the right return type for netvsc_start_xmit.
+
+Fixes: fceaf24a943d8 ("Staging: hv: add the Hyper-V virtual network driver")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1009
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- fs/gfs2/glock.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index 29f9b66..7129d10 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -613,6 +613,7 @@ static void do_xmote(struct gfs2_glock *gl, struct gfs2_holder *gh, unsigned int
- 				fs_err(sdp, "Error %d syncing glock \n", ret);
- 				gfs2_dump_glock(NULL, gl, true);
- 			}
-+			spin_lock(&gl->gl_lockref.lock);
- 			return;
- 		}
- 	}
+Do note that netvsc_xmit still returns int because netvsc_xmit has a
+potential return from netvsc_vf_xmit, which does not return netdev_tx_t
+because of the call to dev_queue_xmit.
+
+I am not sure if that is an oversight that was introduced by
+commit 0c195567a8f6e ("netvsc: transparent VF management") or if
+everything works properly as it is now.
+
+My patch is purely concerned with making the definition match the
+prototype so it should be NFC aside from avoiding the CFI panic.
+
+ drivers/net/hyperv/netvsc_drv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index d8e86bdbfba1e..ebcfbae056900 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -707,7 +707,8 @@ static int netvsc_xmit(struct sk_buff *skb, struct net_device *net, bool xdp_tx)
+ 	goto drop;
+ }
+ 
+-static int netvsc_start_xmit(struct sk_buff *skb, struct net_device *ndev)
++static netdev_tx_t netvsc_start_xmit(struct sk_buff *skb,
++				     struct net_device *ndev)
+ {
+ 	return netvsc_xmit(skb, ndev, false);
+ }
+
+base-commit: 51184ae37e0518fd90cb437a2fbc953ae558cd0d
 -- 
-1.8.3.1
+2.26.2
 
