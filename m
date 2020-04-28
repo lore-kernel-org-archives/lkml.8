@@ -2,134 +2,75 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3585FC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB22EC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 153AD20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099592;
-	bh=fO5FI66FHgg+VlGZoyzKaqaj94B5cozUzaWJZwEdd3M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uawSIt8xufuS3itD0hapYIfI72YWeh+dikIVkcVgMSt4bckjP3ErLNMqT0Lunz6tm
-	 llg9bwtZAZ3tKQCaZArT2IrBtxk7KYVRwV3pyqMieNOy1cJIoHJDdDa20TxAwJrDbT
-	 Cbf7nlZa4h0p8qUIL0x0UzUT+peI8UyzOzyBLsYo=
+	by mail.kernel.org (Postfix) with ESMTP id BABCE20BED
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731250AbgD1Sqb (ORCPT
+        id S1731269AbgD1Sqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:46:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35470 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:46:35 -0400
+Received: from ms.lwn.net ([45.79.88.28]:41458 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731194AbgD1SnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:43:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1730729AbgD1Sq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:46:28 -0400
+Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 810D720730;
-        Tue, 28 Apr 2020 18:43:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099391;
-        bh=fO5FI66FHgg+VlGZoyzKaqaj94B5cozUzaWJZwEdd3M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aN8qEc8eN3D2bIlzI+TfBauBsPzDg28LvVffApfda6OpXCuRwaUJsEJymyG3GJ4mQ
-         rclRT//hXmU9CDo1tSHc33SLjJdOfq3ytEibPtRsN2lQGRHQrH1dro6MmwiN+4jY2J
-         jo7ypb1BoagKuvf/Q3kdWYskVAEorUUN8XTBk++0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 130/168] iwlwifi: mvm: limit maximum queue appropriately
-Date:   Tue, 28 Apr 2020 20:25:04 +0200
-Message-Id: <20200428182248.533282460@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by ms.lwn.net (Postfix) with ESMTPSA id 8E1452D6;
+        Tue, 28 Apr 2020 18:46:27 +0000 (UTC)
+Date:   Tue, 28 Apr 2020 12:46:26 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Michal Suchanek <msuchanek@suse.de>
+Cc:     linux-nvdimm@lists.01.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] doc: nvdimm: remove reference to non-existent
+ CONFIG_NFIT_TEST
+Message-ID: <20200428124626.1e80e23a@lwn.net>
+In-Reply-To: <20200415211654.10827-1-msuchanek@suse.de>
+References: <20200415211654.10827-1-msuchanek@suse.de>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+On Wed, 15 Apr 2020 23:16:50 +0200
+Michal Suchanek <msuchanek@suse.de> wrote:
 
-commit e5b72e3bc4763152e24bf4b8333bae21cc526c56 upstream.
+> The test driver is in tools/testing/nvdimm and cannot be selected by a
+> config option.
+> 
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> ---
+>  Documentation/driver-api/nvdimm/nvdimm.rst | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/driver-api/nvdimm/nvdimm.rst b/Documentation/driver-api/nvdimm/nvdimm.rst
+> index 08f855cbb4e6..79c0fd39f2af 100644
+> --- a/Documentation/driver-api/nvdimm/nvdimm.rst
+> +++ b/Documentation/driver-api/nvdimm/nvdimm.rst
+> @@ -278,8 +278,8 @@ by a region device with a dynamically assigned id (REGION0 - REGION5).
+>         be contiguous in DPA-space.
+>  
+>      This bus is provided by the kernel under the device
+> -    /sys/devices/platform/nfit_test.0 when CONFIG_NFIT_TEST is enabled and
+> -    the nfit_test.ko module is loaded.  This not only test LIBNVDIMM but the
+> +    /sys/devices/platform/nfit_test.0 when the nfit_test.ko module from
+> +    tools/testing/nvdimm is loaded.  This not only test LIBNVDIMM but the
+>      acpi_nfit.ko driver as well.
 
-Due to some hardware issues, queue 31 isn't usable on devices that have
-32 queues (7000, 8000, 9000 families), which is correctly reflected in
-the configuration and TX queue initialization.
+Applied, thanks.
 
-However, the firmware API and queue allocation code assumes that there
-are 32 queues, and if something actually attempts to use #31 this leads
-to a NULL-pointer dereference since it's not allocated.
-
-Fix this by limiting to 31 in the IWL_MVM_DQA_MAX_DATA_QUEUE, and also
-add some code to catch this earlier in the future, if the configuration
-changes perhaps.
-
-Cc: stable@vger.kernel.org # v4.9+
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/iwlwifi.20200417100405.98a79be2db6a.I3a4af6b03b87a6bc18db9b1ff9a812f397bee1fc@changeid
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/net/wireless/intel/iwlwifi/fw/api/txq.h |    6 +++---
- drivers/net/wireless/intel/iwlwifi/mvm/sta.c    |    5 +++++
- 2 files changed, 8 insertions(+), 3 deletions(-)
-
---- a/drivers/net/wireless/intel/iwlwifi/fw/api/txq.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/api/txq.h
-@@ -8,7 +8,7 @@
-  * Copyright(c) 2007 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
-  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
-- * Copyright(c) 2019 Intel Corporation
-+ * Copyright(c) 2019 - 2020 Intel Corporation
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of version 2 of the GNU General Public License as
-@@ -31,7 +31,7 @@
-  * Copyright(c) 2005 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
-  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
-- * Copyright(c) 2019 Intel Corporation
-+ * Copyright(c) 2019 - 2020 Intel Corporation
-  * All rights reserved.
-  *
-  * Redistribution and use in source and binary forms, with or without
-@@ -99,7 +99,7 @@ enum iwl_mvm_dqa_txq {
- 	IWL_MVM_DQA_MAX_MGMT_QUEUE = 8,
- 	IWL_MVM_DQA_AP_PROBE_RESP_QUEUE = 9,
- 	IWL_MVM_DQA_MIN_DATA_QUEUE = 10,
--	IWL_MVM_DQA_MAX_DATA_QUEUE = 31,
-+	IWL_MVM_DQA_MAX_DATA_QUEUE = 30,
- };
- 
- enum iwl_mvm_tx_fifo {
---- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-@@ -722,6 +722,11 @@ static int iwl_mvm_find_free_queue(struc
- 
- 	lockdep_assert_held(&mvm->mutex);
- 
-+	if (WARN(maxq >= mvm->trans->trans_cfg->base_params->num_of_queues,
-+		 "max queue %d >= num_of_queues (%d)", maxq,
-+		 mvm->trans->trans_cfg->base_params->num_of_queues))
-+		maxq = mvm->trans->trans_cfg->base_params->num_of_queues - 1;
-+
- 	/* This should not be hit with new TX path */
- 	if (WARN_ON(iwl_mvm_has_new_tx_api(mvm)))
- 		return -ENOSPC;
-
-
+jon
