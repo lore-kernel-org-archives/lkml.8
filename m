@@ -2,218 +2,98 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF1FC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCEECC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95A9021841
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E84021841
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:19:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588087153;
+	bh=9oQXKzUc/g5RDIdNHtQ174HwUol535uO19Er/7MH5yw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Rg0WZAWHCXh6SI4yVGuu2y02qdyTDy++Hnhh3OjYZj9R7gjqY4wakmBaxpe5WIjaf
+	 L80f4cWbvRqNqGD2mG5ujBEj3vsmlB2uJpdAcDDVjW8cXqm69DWLM3jStEZ71rQH0S
+	 H3iUFP2npwZdKH23tpJwz37LvM5Nr5LoOevl/Eaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbgD1PS0 (ORCPT
+        id S1728492AbgD1PTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:18:26 -0400
-Received: from 8bytes.org ([81.169.241.247]:37428 "EHLO theia.8bytes.org"
+        Tue, 28 Apr 2020 11:19:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728311AbgD1PSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:18:08 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id D5C5CF25; Tue, 28 Apr 2020 17:17:49 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
+        id S1728476AbgD1PSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:18:24 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6158721D7E;
+        Tue, 28 Apr 2020 15:18:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588087103;
+        bh=9oQXKzUc/g5RDIdNHtQ174HwUol535uO19Er/7MH5yw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xcp870w9uUfWNAP5Q279qYhxIPzCRshrYgFnamYTozhK+oloqXxKG+YBbR7ToARB+
+         OQBaqZz1emiEUG2oQO4j5PPdf2AJQMuFqOVLI30sp6OaLbd0nO6qyn3eHHMGoISqIj
+         GQ6C69MgmQ/+WBhMltBfpIDeF5rVyQuNGPHpxDG0=
+Date:   Tue, 28 Apr 2020 16:18:16 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H . J . Lu " <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
         Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 41/75] x86/sev-es: Setup early #VC handler
-Date:   Tue, 28 Apr 2020 17:16:51 +0200
-Message-Id: <20200428151725.31091-42-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200428151725.31091-1-joro@8bytes.org>
-References: <20200428151725.31091-1-joro@8bytes.org>
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v10 00/13] arm64: Branch Target Identification support
+Message-ID: <20200428151815.GB12697@willie-the-truck>
+References: <20200316165055.31179-1-broonie@kernel.org>
+ <20200422154436.GJ4898@sirena.org.uk>
+ <20200422162954.GF3585@gaia>
+ <20200428132804.GF6791@willie-the-truck>
+ <20200428151205.GH5677@sirena.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428151205.GH5677@sirena.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+On Tue, Apr 28, 2020 at 04:12:05PM +0100, Mark Brown wrote:
+> On Tue, Apr 28, 2020 at 02:28:05PM +0100, Will Deacon wrote:
+> 
+> > I'm happy either way, but it would be nice to base other BTI patches on
+> > top of this branch. Mark -- is it easier for you to refresh the series
+> > against v5.7-rc3, or leave it like it is? Please just let me know either
+> > way.
+> 
+> It's probably easier for me if you just use the existing branch, I've
+> already got a branch based on a merge down.
 
-Setup an early handler for #VC exceptions. There is no GHCB mapped
-yet, so just re-use the vc_no_ghcb_handler. It can only handle CPUID
-exit-codes, but that should be enough to get the kernel through
-verify_cpu() and __startup_64() until it runs on virtual addresses.
+Okey doke, I'll funnel that in the direction of linux-next then. It does
+mean that any subsequent patches for 5.8 that depend on BTI will need to
+be based on this branch, so as long as you're ok with that then it's fine
+by me (since I won't be able to apply patches if they refer to changes
+introduced in the recent merge window).
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/include/asm/desc.h      |  1 +
- arch/x86/include/asm/processor.h |  1 +
- arch/x86/include/asm/sev-es.h    |  2 ++
- arch/x86/kernel/head64.c         | 17 +++++++++++++++
- arch/x86/kernel/head_64.S        | 36 ++++++++++++++++++++++++++++++++
- arch/x86/kernel/idt.c            | 10 +++++++++
- 6 files changed, 67 insertions(+)
-
-diff --git a/arch/x86/include/asm/desc.h b/arch/x86/include/asm/desc.h
-index 80bf63c08007..30e2a0e863b6 100644
---- a/arch/x86/include/asm/desc.h
-+++ b/arch/x86/include/asm/desc.h
-@@ -388,6 +388,7 @@ static inline void set_desc_limit(struct desc_struct *desc, unsigned long limit)
- 
- void update_intr_gate(unsigned int n, const void *addr);
- void alloc_intr_gate(unsigned int n, const void *addr);
-+void set_early_idt_handler(gate_desc *idt, int n, void *handler);
- 
- static inline void init_idt_data(struct idt_data *data, unsigned int n,
- 				 const void *addr)
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 3bcf27caf6c9..e369271bfd33 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -757,6 +757,7 @@ extern int sysenter_setup(void);
- 
- /* Defined in head.S */
- extern struct desc_ptr		early_gdt_descr;
-+extern struct desc_ptr		early_idt_descr;
- 
- extern void switch_to_new_gdt(int);
- extern void load_direct_gdt(int);
-diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
-index 7c0807b84546..b2cbcd40b52e 100644
---- a/arch/x86/include/asm/sev-es.h
-+++ b/arch/x86/include/asm/sev-es.h
-@@ -73,4 +73,6 @@ static inline u64 lower_bits(u64 val, unsigned int bits)
- 	return (val & mask);
- }
- 
-+extern void vc_no_ghcb(void);
-+
- #endif
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 474f121d50f6..9586522bfcb3 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -38,6 +38,7 @@
- #include <asm/fixmap.h>
- #include <asm/extable.h>
- #include <asm/trap_defs.h>
-+#include <asm/sev-es.h>
- 
- /*
-  * Manage page tables very early on.
-@@ -515,3 +516,19 @@ void __head early_idt_setup_early_handler(unsigned long physaddr)
- 		native_write_idt_entry(idt, i, &desc);
- 	}
- }
-+
-+void __head early_idt_setup(unsigned long physbase)
-+{
-+	gate_desc *idt = fixup_pointer(idt_table, physbase);
-+	void __maybe_unused *handler;
-+
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+	/* VMM Communication Exception */
-+	handler = fixup_pointer(vc_no_ghcb, physbase);
-+	set_early_idt_handler(idt, X86_TRAP_VC, handler);
-+#endif
-+
-+	/* Initialize IDT descriptor and load IDT */
-+	early_idt_descr.address = (unsigned long)idt;
-+	native_load_idt(&early_idt_descr);
-+}
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index aca3beb336ce..4d84a0c72e36 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -92,6 +92,12 @@ SYM_CODE_START_NOALIGN(startup_64)
- .Lon_kernel_cs:
- 	UNWIND_HINT_EMPTY
- 
-+	/* Setup IDT - Needed for SEV-ES */
-+	leaq	_text(%rip), %rdi
-+	pushq	%rsi
-+	call	early_idt_setup
-+	popq	%rsi
-+
- 	/* Sanitize CPU configuration */
- 	call verify_cpu
- 
-@@ -370,6 +376,33 @@ SYM_CODE_START_LOCAL(early_idt_handler_common)
- 	jmp restore_regs_and_return_to_kernel
- SYM_CODE_END(early_idt_handler_common)
- 
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+/*
-+ * VC Exception handler used during very early boot. The
-+ * early_idt_handler_array can't be used because it returns via the
-+ * paravirtualized INTERRUPT_RETURN and pv-ops don't work that early.
-+ */
-+SYM_CODE_START_NOALIGN(vc_no_ghcb)
-+	UNWIND_HINT_IRET_REGS offset=8
-+
-+	/* Build pt_regs */
-+	PUSH_AND_CLEAR_REGS
-+
-+	/* Call C handler */
-+	movq    %rsp, %rdi
-+	movq	ORIG_RAX(%rsp), %rsi
-+	call    do_vc_no_ghcb
-+
-+	/* Unwind pt_regs */
-+	POP_REGS
-+
-+	/* Remove Error Code */
-+	addq    $8, %rsp
-+
-+	/* Pure iret required here - don't use INTERRUPT_RETURN */
-+	iretq
-+SYM_CODE_END(vc_no_ghcb)
-+#endif
- 
- #define SYM_DATA_START_PAGE_ALIGNED(name)			\
- 	SYM_START(name, SYM_L_GLOBAL, .balign PAGE_SIZE)
-@@ -511,6 +544,9 @@ SYM_DATA_END(level1_fixmap_pgt)
- SYM_DATA(early_gdt_descr,		.word GDT_ENTRIES*8-1)
- SYM_DATA_LOCAL(early_gdt_descr_base,	.quad INIT_PER_CPU_VAR(gdt_page))
- 
-+SYM_DATA(early_idt_descr,		.word NUM_EXCEPTION_VECTORS * 16)
-+SYM_DATA_LOCAL(early_idt_descr_base,	.quad 0)
-+
- 	.align 16
- /* This must match the first entry in level2_kernel_pgt */
- SYM_DATA(phys_base, .quad 0x0)
-diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
-index 4a2c7791c697..135d208a2d38 100644
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -341,3 +341,13 @@ void alloc_intr_gate(unsigned int n, const void *addr)
- 	if (!test_and_set_bit(n, system_vectors))
- 		set_intr_gate(n, addr);
- }
-+
-+void set_early_idt_handler(gate_desc *idt, int n, void *handler)
-+{
-+	struct idt_data data;
-+	gate_desc desc;
-+
-+	init_idt_data(&data, n, handler);
-+	idt_init_desc(&desc, &data);
-+	native_write_idt_entry(idt, n, &desc);
-+}
--- 
-2.17.1
-
+Will
