@@ -2,118 +2,90 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A9BC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253ABC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1EC420B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:26:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098406;
-	bh=8FF1v0rY69L8p6oHi3x5IgDbWvw9BTh5mmYIlqVDmCE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uqr5iSKZBOC7Bmk0ffEGBUc4h7ye+icHAZZB4lVUXZGAQovk3ZMJiQVk2XkjZ0n7b
-	 AC9eYB+e6PXvOTUr7bKqXQiya+MEFV0qOUES37OaESdULJodYPFfzVRABYJ1zzsRXF
-	 pH00UKQ0ybuuE51JMhI8v7QOz6sv4K5mmgwtndgc=
+	by mail.kernel.org (Postfix) with ESMTP id ECF02214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:26:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="fv22xKHy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728814AbgD1S0p (ORCPT
+        id S1728827AbgD1S0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:26:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728620AbgD1S0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:26:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728791AbgD1S0k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Apr 2020 14:26:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73575208E0;
-        Tue, 28 Apr 2020 18:26:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098399;
-        bh=8FF1v0rY69L8p6oHi3x5IgDbWvw9BTh5mmYIlqVDmCE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZWruPVNkB8HC0NdDkeLAs05AkmfXSsfOd1nLlRgMJiXdFUfOwei2prfhDb6pbP9j3
-         /RhRWzUg+QtI2rRVM5aa3pqXDp9ZO0XS0DMQJM7TrModuwRm3yuL1nenkgKIKoW3RE
-         013WBXPOFAV63/mKaks+aQUF1iYcyjV335dtDSek=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 024/167] kconfig: qconf: Fix a few alignment issues
-Date:   Tue, 28 Apr 2020 20:23:20 +0200
-Message-Id: <20200428182228.242810888@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A0A8C03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:26:40 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id u16so3977509wmc.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:26:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=UefID2OlDLM7XATtSz3mUqUNERRjSOJzh4SyUlDrdHk=;
+        b=fv22xKHyOHTuLkg2qiGirsFBU8GgmId83+5knRJI3ydB77UUfZnOQLl2IPJwBd8Cn0
+         XAFIqD+eY3wN8GeHQaKHks5K+pqC/P5KTWCZ8yKyOkcZ0KE8nLyWPaTNSXSx/A5phVBN
+         4nvE4lcoWNruCSqXzVJoTXE3Sb9SMDUe6yi7M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=UefID2OlDLM7XATtSz3mUqUNERRjSOJzh4SyUlDrdHk=;
+        b=Pq1M2HOCUMpCV4GFTClhsj3oYpMUzpEeVtSavaWq/vX7OldqTIiVfjXcA9EVNCPf9c
+         foXrM0h5sAXpFmbh69bmPD/vZQy77ZJCY6z5QmMBtrAJzrTfjvA+ug6W8U7/ZaldIUqe
+         GssyCJKzELTknFFVU+DCsNTuyuSrvTiKzM5wUEMQB1fRZvODMTQH2+WvQp4Pj32QIzyC
+         AYI0rkVled6SjF0pdMErz2MWP/dYZoqTIWxpjLV0o6EmmvToIsisqnP+cDGGSUv78bp/
+         LgIPtOHgnKDECFTaY+85GPPD/ofpEXP5OuuUAqg2oHndb0TY2xo/Q7+FBLI4X+dxoF2q
+         savw==
+X-Gm-Message-State: AGi0PuYyywvYZnV35xWtjzJUld0qFWYpE7NSesBD3thKlFNy7vPbxisa
+        zIq7gEW3kNgFOJQrFTqyOHUGZQ==
+X-Google-Smtp-Source: APiQypLHoWk0qTwfpysUzM0q8vA2b+q+WLZCal3lFGsR0gVIyDEiREhK+8Cbm3Rdke/9HeCCnL2MFw==
+X-Received: by 2002:a1c:7415:: with SMTP id p21mr5807501wmc.93.1588098398739;
+        Tue, 28 Apr 2020 11:26:38 -0700 (PDT)
+Received: from localhost ([2a01:4b00:8432:8a00:56e1:adff:fe3f:49ed])
+        by smtp.gmail.com with ESMTPSA id q187sm4316031wma.41.2020.04.28.11.26.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 11:26:37 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 19:26:37 +0100
+From:   Chris Down <chris@chrisdown.name>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Yafang Shao <laoar.shao@gmail.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] mm: memcontrol: memory.{low,min} reclaim fix & cleanup
+Message-ID: <cover.1588092152.git.chris@chrisdown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+This series contains a fix for a edge case in my earlier protection
+calculation patches, and a patch to make the area overall a little more
+robust to hopefully help avoid this in future.
 
-[ Upstream commit 60969f02f07ae1445730c7b293c421d179da729c ]
+Chris Down (1):
+  mm, memcg: Decouple e{low,min} state mutations from protection checks
 
-There are a few items with wrong alignments. Solve them.
+Yafang Shao (1):
+  mm: memcontrol: memory.low reclaim fix & cleanup
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- scripts/kconfig/qconf.cc | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ include/linux/memcontrol.h | 48 +++++++++++++++++++++++++++++---------
+ mm/memcontrol.c            | 43 ++++++++++++++++------------------
+ mm/vmscan.c                | 17 ++++----------
+ 3 files changed, 61 insertions(+), 47 deletions(-)
 
-diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index 82773cc35d356..0f8c77f847114 100644
---- a/scripts/kconfig/qconf.cc
-+++ b/scripts/kconfig/qconf.cc
-@@ -627,7 +627,7 @@ void ConfigList::updateMenuList(ConfigItem *parent, struct menu* menu)
- 			last = item;
- 			continue;
- 		}
--	hide:
-+hide:
- 		if (item && item->menu == child) {
- 			last = parent->firstChild();
- 			if (last == item)
-@@ -692,7 +692,7 @@ void ConfigList::updateMenuList(ConfigList *parent, struct menu* menu)
- 			last = item;
- 			continue;
- 		}
--	hide:
-+hide:
- 		if (item && item->menu == child) {
- 			last = (ConfigItem*)parent->topLevelItem(0);
- 			if (last == item)
-@@ -1225,10 +1225,11 @@ QMenu* ConfigInfoView::createStandardContextMenu(const QPoint & pos)
- {
- 	QMenu* popup = Parent::createStandardContextMenu(pos);
- 	QAction* action = new QAction("Show Debug Info", popup);
--	  action->setCheckable(true);
--	  connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
--	  connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setOn(bool)));
--	  action->setChecked(showDebug());
-+
-+	action->setCheckable(true);
-+	connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
-+	connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setOn(bool)));
-+	action->setChecked(showDebug());
- 	popup->addSeparator();
- 	popup->addAction(action);
- 	return popup;
--- 
-2.20.1
-
-
+--
+2.26.2
 
