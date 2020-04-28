@@ -2,125 +2,99 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EECC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA29EC83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29F45206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBBBA2076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:52:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HWXUWvka"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d4rtNymu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726507AbgD1WwW (ORCPT
+        id S1726512AbgD1Ww4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:52:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48323 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726042AbgD1WwV (ORCPT
+        Tue, 28 Apr 2020 18:52:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726042AbgD1Wwz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:52:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588114340;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ufHYW9Szgtlfn6kl1fo0AOdgn3k3qUj3jPCNjzfkXDU=;
-        b=HWXUWvkaViE8CENmKVcw4kK9wxqottkgqUtQqL0U9h9Aq8Zpb6SqdbqJOGQaGsehptQfxZ
-        n6N7oa26RJ9WW7LSmqubfJMltzVHVgbF2NV3CTW/ZYfbxbqme61IBAgPaVA6Zu+adujagT
-        eKXOS5M1insjXzc/Cpi/AghdUUrWnpM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-205-BGnQH7F_PX6ZifZbE81wYg-1; Tue, 28 Apr 2020 18:52:16 -0400
-X-MC-Unique: BGnQH7F_PX6ZifZbE81wYg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A55451005510;
-        Tue, 28 Apr 2020 22:52:14 +0000 (UTC)
-Received: from ovpn-112-24.phx2.redhat.com (ovpn-112-24.phx2.redhat.com [10.3.112.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A0A971001B30;
-        Tue, 28 Apr 2020 22:52:13 +0000 (UTC)
-Message-ID: <fc7efe6dd23ba1d25c29441fc8132ea2bbf7b5fb.camel@redhat.com>
-Subject: Re: [RFC PATCH 3/3] sched,rt: break out of load balancing if an RT
- task appears
-From:   Scott Wood <swood@redhat.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Rik van Riel <riel@surriel.com>,
-        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Date:   Tue, 28 Apr 2020 17:52:13 -0500
-In-Reply-To: <fa406883f0eace37fe7f658814e29f82a4f0addf.camel@redhat.com>
-References: <20200428050242.17717-1-swood@redhat.com>
-         <20200428050242.17717-4-swood@redhat.com> <jhjees7s29u.mognet@arm.com>
-         <fa406883f0eace37fe7f658814e29f82a4f0addf.camel@redhat.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 28 Apr 2020 18:52:55 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FB14C03C1AC;
+        Tue, 28 Apr 2020 15:52:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=F9aCSU3b/Wdv+eJFJpzYKn7Vwg6tH9sCBL5A5XUpJ4o=; b=d4rtNymuOqppTdZC6DJck2NtJL
+        kjY0+YaEI3w4ebKpcllV7qIhx/P1D+TCuaw3XpmPMqUZhgkznKZ8dv3o7HSGtFWRi35AM13gWXI2S
+        +oe/7fHyUfs7Zg1Iyx/H86z7wDagVQVC0Vw0zbn9kBL7S6XNudqlpL3qU0hLsMkj9rjjyFlJ3tmyd
+        mdxPiXctEgyIcVboBqHvfOM8AKNoZ2bC+gQC1tYQQcDHXbQf81Hgr33ITRo7Bcm44ykPAgtX6mknN
+        c3xC7RBbMjR3phdMIKElDEQ5j3uTQ4w0MWqdcEk5J8MxHaV542ZrfutfYx3ov4O5RY21sJiVzaivg
+        5RFmQQdw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTZ5w-0008Qz-1R; Tue, 28 Apr 2020 22:52:52 +0000
+Date:   Tue, 28 Apr 2020 15:52:51 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org
+Subject: Re: [PATCH 1/7] mm: Document x86 uses a linked list of pgds
+Message-ID: <20200428225251.GM29705@bombadil.infradead.org>
+References: <20200428194449.22615-1-willy@infradead.org>
+ <20200428194449.22615-2-willy@infradead.org>
+ <20200428214109.GB406458@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428214109.GB406458@iweiny-DESK2.sc.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-28 at 17:33 -0500, Scott Wood wrote:
-> On Tue, 2020-04-28 at 22:56 +0100, Valentin Schneider wrote:
-> > On 28/04/20 06:02, Scott Wood wrote:
-> > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > > index dfde7f0ce3db..e7437e4e40b4 100644
-> > > --- a/kernel/sched/fair.c
-> > > +++ b/kernel/sched/fair.c
-> > > @@ -9394,6 +9400,10 @@ static int should_we_balance(struct lb_env
-> > > *env)
-> > >       struct sched_group *sg = env->sd->groups;
-> > >       int cpu, balance_cpu = -1;
-> > > 
-> > > +	/* Run the realtime task now; load balance later. */
-> > > +	if (rq_has_runnable_rt_task(env->dst_rq))
-> > > +		return 0;
-> > > +
-> > 
-> > I have a feeling this isn't very nice to CFS tasks, since we would now
-> > "waste" load-balance attempts if they happen to coincide with an RT task
-> > being runnable.
-> > 
-> > On your 72 CPUs machine, the system-wide balance happens (at best) every
-> > 72ms if you have idle time, every ~2300ms otherwise (every balance
-> > CPU gets to try to balance however, so it's not as horrible as I'm
-> > making
-> > it sound). This is totally worst-case scenario territory, and you'd hope
-> > newidle_balance() could help here and there (as it isn't gated by any
-> > balance interval).
-> > 
-> > Still, even for a single rq, postponing a system-wide balance for a
-> > full balance interval (i.e. ~2 secs worst case here) just because we had
-> > a
-> > single RT task running when we tried to balance seems a bit much.
-> > 
-> > It may be possible to hack something to detect those cases and reset the
-> > interval to "now" when e.g. dequeuing the last RT task (& after having
-> > previously aborted a load-balance due to RT/DL/foobar).
+On Tue, Apr 28, 2020 at 02:41:09PM -0700, Ira Weiny wrote:
+> On Tue, Apr 28, 2020 at 12:44:43PM -0700, Matthew Wilcox wrote:
+> > x86 uses page->lru of the pages used for pgds, but that's not immediately
+> > obvious to anyone looking to make changes.  Add a struct list_head to
+> > the union so it's clearly in use for pgds.
 > 
-> Yeah, some way to retry at an appropriate time after aborting a rebalance
-> would be good.
+> Shouldn't pgd_list_{add,del}() use this list head variable instead of lru to
+> complete the documentation?
+> 
+> Probably the list iteration loops arch/x86/* as well?
 
-Another option is to limit the bailing out to newidle balancing (as the
-patchset currently stands, it isn't checking the right rq for global
-balancing anyway).  On RT the softirq runs from thread context, so enabling
-interrupts and (on RT) preemption should suffice to avoid latency problems
-in the global rebalance.
+Yes, but I felt that was out of scope for this patchset.  Untangling the
+uses of struct page is a long and messy business; if we have to fix
+everything at once, we'll never get anywhere.  There's also the slab
+users of page->lru instead of page->slab_list.
 
--Scott
+What I actually want to get to is:
 
+struct page {
+	unsigned long flags;
+	union {
+		struct file_page file;
+		struct anon_page anon;
+		struct pt_page pt;
+		struct slab_page slab;
+		struct tail_page tail;
+		struct rcu_head rcu;
+	};
+	union {
+		atomic_t _mapcount;
+		...
+	};
+	atomic_t refcount;
+	...
+};
 
+and then we can refer to page->pt.list and so on.
