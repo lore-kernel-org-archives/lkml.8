@@ -2,106 +2,116 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C8CC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 550C0C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F267421D7B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:29:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588105794;
-	bh=6v96lh0d+UWGlWlwjbyvUMq1a3i8X+YFxjvj3LXLg5Y=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=HiOa6LlUw4mZrU1Y00hY+oip3bPyEIYLZcNufzzxWhKtcnIdqIC7BC9vImYxq3rKN
-	 S2QfO2oOIOJ17iMzLMYUqGb6Lbw01wZN4cINqHMfu0uywsi1tScLFSJlUx21zXbwpB
-	 udqR8mPv1xik/iBPBj1QyCl2lXXcRLDxwOUH1ef4=
+	by mail.kernel.org (Postfix) with ESMTP id 302F120731
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:30:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rrkNHj9E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726507AbgD1U3x (ORCPT
+        id S1726530AbgD1UaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:29:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40360 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726286AbgD1U3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:29:52 -0400
-Received: from [192.168.1.74] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CC0820731;
-        Tue, 28 Apr 2020 20:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588105792;
-        bh=6v96lh0d+UWGlWlwjbyvUMq1a3i8X+YFxjvj3LXLg5Y=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=v05fAS62HunVkF0sqvgwBMdIBsSs8gKRaDxiwqGIYO6z5GDe89QAgD6NnrbUFsWtg
-         jT16Yh0eQ+Hgb+U0yDAVxFpc0iWrIRVaoz30wn9MRQc+lhS7yxWtCvcAQQN3zWLOx7
-         013LyVAqMLBanqkdLoTcqppnGe301I1F9TaMItbg=
-Subject: Re: [PATCH] dmaengine: qcom_hidma: Simplify error handling path in
- hidma_probe
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        agross@kernel.org, bjorn.andersson@linaro.org, vkoul@kernel.org,
-        dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20200427111043.70218-1-christophe.jaillet@wanadoo.fr>
- <20200428125426.GE2014@kadam>
- <1efa0186-7fbe-9cb5-2719-2d7192f99e27@kernel.org>
- <20200428172116.GG2014@kadam>
-From:   Sinan Kaya <okaya@kernel.org>
-Autocrypt: addr=okaya@kernel.org; keydata=
- mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
- uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
- 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
- 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
- V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
- AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
- ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
- AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
- 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
- Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
- ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
- qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
- AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
- eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
- 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
- 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
- gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
- CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
- gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
- e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
- 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
- 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
- L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <430381bf-4fa5-80f7-4dcb-9e30d24e57ce@kernel.org>
-Date:   Tue, 28 Apr 2020 16:29:49 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200428172116.GG2014@kadam>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 28 Apr 2020 16:30:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34164 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726286AbgD1UaN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 16:30:13 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE694C03C1AB;
+        Tue, 28 Apr 2020 13:30:12 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u16so197728wmc.5;
+        Tue, 28 Apr 2020 13:30:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=cSI0lJVql2Godh5zstmOBUn+hBPwk2VKytQsLRGY6S8=;
+        b=rrkNHj9EW6rx2BahfISMNiMkVomM9Xt6MisdacEJOvmKVG8yocdgwK66FIId9zxmbC
+         WbOFy0Cyrm21Gk+VSqO1SixJPBoGuPBW5WTpczsg8Qy4H/vqvru8SsP0pogxssj5DZ5l
+         st7uA9aGSLzT4AbJ3VYBkKldJTat7eZhRKmk9n6jOqk4IWTKmpdHCrJtSvavf2jVWBQW
+         JPXvbZgZ/FYO2n1DX6SKFfEyhv8m6hPzD+FuiZ56KXRAY2TVoZWT0uPs7bBDVSoaP5RB
+         SoSkRwaobMVatYrGr6LYeUxxtA2fTU+wSTnhCmeBJuBUmpcR8sfVqUA6ffwSG7nuGCQK
+         CaUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=cSI0lJVql2Godh5zstmOBUn+hBPwk2VKytQsLRGY6S8=;
+        b=KkjWRhxnQL6FRDzwnc9drWcFORlEKW4nOO22Ov/WFKf1Dkv5yJB6NA4g2LM/BbPn/D
+         B5/ueDyXjxZgyd+zKNS31kon+8KYgT3ygftpIS6s4LcqG/yjGMUFzjhKOZB4ya4G9uno
+         jjdBIJJny6OlE0/vHJBATN9WnwNTmLr4rhVwVnivqmnKdizramY7rWd4O+9G8J/JgTBe
+         coI7m9BVUHppyNGLNyrBkiEjwGvXt0XAVu3O9kVvhRVy6cITHk/dXy9lP/nQ6PcBXFSm
+         y8f3IjmvC3nll2WTDCsd75zd87mkuIIsC2xgR5Ii3PamYAh7e5he9+QxgYiflLRY1opo
+         Mxuw==
+X-Gm-Message-State: AGi0PuZXK+gnY0fjkxkMDlv4PbvQxftDgpK+snXIokPibBPNkN6EYY0f
+        noeBuPiFIxCIoyNLX2iRagA=
+X-Google-Smtp-Source: APiQypKtek0DZbQSQGByss4wVXiUG3XROnJUmkprc3ttQG8iX87SZgIl6SM9qavb5oim4rNrmlC/Sg==
+X-Received: by 2002:a7b:c459:: with SMTP id l25mr6335877wmi.52.1588105811692;
+        Tue, 28 Apr 2020 13:30:11 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id 1sm4797801wmz.13.2020.04.28.13.30.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 Apr 2020 13:30:10 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] arm64: dts: rockchip: fix defines in pd_vio node for rk3399
+Date:   Tue, 28 Apr 2020 22:30:02 +0200
+Message-Id: <20200428203003.3318-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/28/2020 1:21 PM, Dan Carpenter wrote:
-> What I meant to say here was:
-> 
-> 	if (msi) {
-> 		rc = hidma_request_msi(dmadev, pdev);
-> 		if (rc)
-> 			msi = false;
-> 
-> Otherwise we end up checking freeing the msi in the error handling
-> code when we did not take it.
-> 
-> Hopefully, that clears things up?
+A test with the command below gives for example this error:
 
-Yes, that works. However, I'd rather use a different flag for this
-in order not to mix the meaning of msi capability vs. msi allocation
-failure.
+arch/arm64/boot/dts/rockchip/rk3399-evb.dt.yaml: pd_vio@15:
+'pd_tcpc0@RK3399_PD_TCPC0', 'pd_tcpc1@RK3399_PD_TCPC1'
+do not match any of the regexes:
+'.*-names$', '.*-supply$', '^#.*-cells$',
+'^#[a-zA-Z0-9,+\\-._]{0,63}$',
+'^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}$',
+'^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-fA-F]+(,[0-9a-fA-F]+)*$',
+'^__.*__$', 'pinctrl-[0-9]+'
+
+Fix error by replacing the wrong defines by the ones
+mentioned in 'rk3399-power.h'.
+
+make -k ARCH=arm64 dtbs_check
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 2e7164c82..37279db53 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -1088,12 +1088,12 @@
+ 					pm_qos = <&qos_isp1_m0>,
+ 						 <&qos_isp1_m1>;
+ 				};
+-				pd_tcpc0@RK3399_PD_TCPC0 {
++				pd_tcpc0@RK3399_PD_TCPD0 {
+ 					reg = <RK3399_PD_TCPD0>;
+ 					clocks = <&cru SCLK_UPHY0_TCPDCORE>,
+ 						 <&cru SCLK_UPHY0_TCPDPHY_REF>;
+ 				};
+-				pd_tcpc1@RK3399_PD_TCPC1 {
++				pd_tcpc1@RK3399_PD_TCPD1 {
+ 					reg = <RK3399_PD_TCPD1>;
+ 					clocks = <&cru SCLK_UPHY1_TCPDCORE>,
+ 						 <&cru SCLK_UPHY1_TCPDPHY_REF>;
+-- 
+2.11.0
+
