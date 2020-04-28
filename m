@@ -2,180 +2,123 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F53C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92999C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4F2B206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:31:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588048310;
-	bh=SVypUuySP3KVuH00k703NoSZ+VXSI11QixZYSNEUqLo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MgsiUq573heSdkLi2QJZEQoFc9Kx94K50/TxzaQDGix8FR3LPzkAXjz+uEUqdMsN/
-	 X3IVQJKKV4Jjwi6gX/rZEEKMSL9yPdo0UVROM2NOfcQzaqrJMQcG8+rtv1d8sAlbDa
-	 lYSihDkxd/0rLhmghMvZGu/shjkDy1lC39Sbwe5c=
+	by mail.kernel.org (Postfix) with ESMTP id 5CB5E206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:35:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QDCr600x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgD1Ebu (ORCPT
+        id S1726318AbgD1Eff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 00:31:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49428 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725803AbgD1Ebt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 00:31:49 -0400
-Received: from localhost (unknown [106.51.110.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 28 Apr 2020 00:35:35 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27322 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725803AbgD1Eff (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 00:35:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588048533;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7HOk8Yr6S3xlCmaSoOzLqX7HGoHGUwpA1okgxRGClTk=;
+        b=QDCr600xggCL4FFJPRIkqSOjMKdK63z/UlAM6NFLRL8fb5kyNOn/dLthuMi3Ffa85oL8JT
+        81vPL6aLht2+w4SAMepR5wqUEqxBGDFYWhmhAuqHeuSOgx2mq4j4VWeDXMfaPbxmp4T8D3
+        n1Q4fGDWPK9MFqxw9tbYL/lIHgV8jIY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-18-PmAvVPc_NI6x2PYmjDXjJA-1; Tue, 28 Apr 2020 00:35:27 -0400
+X-MC-Unique: PmAvVPc_NI6x2PYmjDXjJA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3556A206A5;
-        Tue, 28 Apr 2020 04:31:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588048309;
-        bh=SVypUuySP3KVuH00k703NoSZ+VXSI11QixZYSNEUqLo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ssgwx8oIB+vsDNG5polZmG/EJ9mfO1IKZdGznBt8pXrvTfBPI2fJP5wGqDkkkiiyp
-         efthw7OHDQxEio0JkMilLD3cCg5znvxI6sC+B7KNMH2DlXonBM427/2vyBwDSUgh94
-         7IEAv0cSNs5jq7jkzYbqo1uDtK34ZMwl5MpAd1yk=
-Date:   Tue, 28 Apr 2020 10:01:44 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
-        slawomir.blauciak@intel.com, mengdong.lin@intel.com
-Subject: Re: [RFC 1/5] soundwire: bus_type: add sdw_master_device support
-Message-ID: <20200428043144.GU56386@vkoul-mobl.Dlink>
-References: <20200416205524.2043-1-yung-chuan.liao@linux.intel.com>
- <20200416205524.2043-2-yung-chuan.liao@linux.intel.com>
- <20200420072631.GW72691@vkoul-mobl>
- <20200423142451.GA4181720@kroah.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3B1FD107ACCA;
+        Tue, 28 Apr 2020 04:35:26 +0000 (UTC)
+Received: from localhost.localdomain (vpn2-54-127.bne.redhat.com [10.64.54.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 81AE010013D9;
+        Tue, 28 Apr 2020 04:35:23 +0000 (UTC)
+Reply-To: Gavin Shan <gshan@redhat.com>
+Subject: Re: [PATCH] arm64/mm: Reject invalid NUMA option
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, catalin.marinas@arm.com,
+        linux-kernel@vger.kernel.org, shan.gavin@gmail.com,
+        will@kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200424045314.16017-1-gshan@redhat.com>
+ <20200424101132.GC1167@C02TD0UTHF1T.local>
+ <f83c0ce1-b1b2-31f4-60c8-15567b87a8ff@redhat.com>
+ <20200427225406.7cacc796@gandalf.local.home>
+ <20200427225944.185d4431@gandalf.local.home>
+ <20200427230920.3d606a2e@gandalf.local.home>
+From:   Gavin Shan <gshan@redhat.com>
+Message-ID: <7e85ea83-de5f-c789-2e3c-e468a50ed4bd@redhat.com>
+Date:   Tue, 28 Apr 2020 14:35:20 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423142451.GA4181720@kroah.com>
+In-Reply-To: <20200427230920.3d606a2e@gandalf.local.home>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Hi Steven and Mark,
 
-On 23-04-20, 16:24, Greg KH wrote:
-> On Mon, Apr 20, 2020 at 12:56:31PM +0530, Vinod Koul wrote:
-> > Hello Bard,
-> > 
-> > On 17-04-20, 04:55, Bard Liao wrote:
-> > > From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> > > 
-> > > In the existing SoundWire code, Master Devices are not explicitly
-> > > represented - only SoundWire Slave Devices are exposed (the use of
-> > > capital letters follows the SoundWire specification conventions).
-> > > 
-> > > The SoundWire Master Device provides the clock, synchronization
-> > > information and command/control channels. When multiple links are
-> > > supported, a Controller may expose more than one Master Device; they
-> > > are typically embedded inside a larger audio cluster (be it in an
-> > > SOC/chipset or an external audio codec), and we need to describe it
-> > > using the Linux device and driver model.  This will allow for
-> > > configuration functions to account for external dependencies such as
-> > > power rails, clock sources or wake-up mechanisms. This transition will
-> > > also allow for better sysfs support without the reference count issues
-> > > mentioned in the initial reviews.
-> > 
-> > Well the primary reason for doing sdw_master_device for creating a
-> > adding sysfs representation.
-> 
-> -ENOPARSE :(
+On 4/28/20 1:09 PM, Steven Rostedt wrote:
 
-Oops, sorry!
-
-> > It *also* helps some vendors due to
-> > inherent model should not be constructed as the primary approach for the
-> > sdw_master_device.
-> 
-> No, the PRIMARY reason is "it is the correct thing to do".  It's how to
-> tie into the driver model correctly, without it, crazy things happen as
-> we have seen.
-
-I agree it is *the* right this to do!
-
-> > > In this patch, we convert the existing code to use an explicit
-> > > sdw_slave_type, then define a sdw_master_device structure.
-> > 
-> > Please split that up, we should do the conversions required first and
-> > then do addition of new things.
-> 
-> Can you really do that in two different steps?
-
-Looking at it, the move of existing types first and then adding the new
-type
+[...]
 
 > 
-> > > +struct device_type sdw_master_type = {
-> > > +	.name =		"soundwire_master",
-> > > +	.release =	sdw_master_device_release,
-> > > +};
-> > > +
-> > > +/**
-> > > + * sdw_master_device_add() - create a Linux Master Device representation.
-> > > + * @parent: the parent Linux device (e.g. a PCI device)
-> > > + * @fwnode: the parent fwnode (e.g. an ACPI companion device to the parent)
-> > > + * @link_ops: link-specific ops (optional)
-> > > + * @link_id: link index as defined by MIPI DisCo specification
-> > > + * @pdata: private data (e.g. register base, offsets, platform quirks, etc).
-> > > + *
-> > > + * The link_ops argument can be NULL, it is only used when link-specific
-> > > + * initializations and power-management are required.
-> > > + */
-> > > +struct sdw_master_device
-> > > +*sdw_master_device_add(struct device *parent,
-> > > +		       struct fwnode_handle *fwnode,
-> > > +		       struct sdw_link_ops *link_ops,
-> > > +		       int link_id,
-> > > +		       void *pdata)
-> > > +{
-> > > +	struct sdw_master_device *md;
-> > > +	int ret;
-> > > +
-> > > +	md = kzalloc(sizeof(*md), GFP_KERNEL);
-> > > +	if (!md)
-> > > +		return ERR_PTR(-ENOMEM);
-> > > +
-> > > +	md->link_id = link_id;
-> > > +	md->pdata = pdata;
-> > > +	md->link_ops = link_ops;
-> > > +
-> > > +	md->dev.parent = parent;
-> > > +	md->dev.fwnode = fwnode;
-> > > +	md->dev.bus = &sdw_bus_type;
-> > > +	md->dev.type = &sdw_master_type;
-> > > +	md->dev.dma_mask = md->dev.parent->dma_mask;
-> > > +	dev_set_name(&md->dev, "sdw-master-%d", md->link_id);
-> > > +
-> > > +	if (link_ops && link_ops->driver) {
-> > > +		/*
-> > > +		 * A driver is only needed for ASoC integration (need
-> > > +		 * driver->name) and for link-specific power management
-> > > +		 * w/ a pm_dev_ops structure.
-> > 
-> > That is not true for everyone, it is only true for Intel, pls call that
-> > out as well...
+> Could this be a bug in the implementation of strncmp() in
+> arch/arm64/lib/strncmp.S. As I don't know arm64 assembly, I have no idea
+> what it is trying to do.
 > 
-> Why is it not true for everyone?  How else do you get the pm stuff back
-> to your hardware?
+> But strncmp("o","off",3) returning zero *is* a bug.
+> 
 
-The rest of the world would do using the real controller device. For
-example the soundwire controller on Qualcomm devices is enumerated as a
-DT device and is using these...
+I think it's false alarm. The patch has been in my local repo for a while.
+I checked out 5.7.rc3 and tried passing "numa=o" to the kernel, @numa_off
+is unchanged and its value is false. I also check the return value from
+strncmp() as below, it's correct. Nothing is broken. I should have retested
+before posting it. Sorry for the noise. Please ignore the crap patch :)
 
-If Intel had a standalone controller or enumerated as individual
-functions, it would have been a PCI device and would manage as such
+diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+index 4decf1659700..a8e5c6f7ba25 100644
+--- a/arch/arm64/mm/numa.c
++++ b/arch/arm64/mm/numa.c
+@@ -32,6 +32,13 @@ static __init int numa_parse_early_param(char *opt)
+         if (str_has_prefix(opt, "off"))
+                 numa_off = true;
+  
++       pr_info("numa_off=%s\n", numa_off ? "true" : "false");
++       pr_info("opt=%s\n", opt);
++       pr_info("len=%d\n", (int)strlen("off"));
++       pr_info("\n");
++       pr_info("================================\n");
++       pr_info("strncmp(opt, 'off', 3)=%d\n", strncmp(opt, "off", 3));
++
 
-Thanks
--- 
-~Vinod
+[    0.000000] NUMA: numa_off=false
+[    0.000000] NUMA: opt=o
+[    0.000000] NUMA: len=3
+[    0.000000] NUMA:
+[    0.000000] NUMA: ================================
+[    0.000000] NUMA: strncmp(opt, 'off', 3)=-102
+
+Thanks,
+Gavin
+
+
+
