@@ -2,59 +2,62 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 197F8C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80692C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2A2B206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D492206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099864;
-	bh=aBiKRtEwJSJ8EawSUmhre+WjRJEOrBukB4zaQ//1MYU=;
+	s=default; t=1588099868;
+	bh=BfKwiKDO/dOCHROJ+CUFKNI5gX904UaBmJjVHL9/XjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wTXX4rfgLwyEfEKz/vbk2OhN0C456rs0fj6bnXiDuk/zSln7+yPGYn2vz1YYBF7u7
-	 Xtuok+uYbNQOzClegfQ2ER4KB2HIWi8m4RX+83Rqkmz5p/uJhGU1EDmV33Ajt422Mu
-	 r+FY38fpZy+hThQhWRuABMNz+h/6rRxEAW9We1Ok=
+	b=YLg+N0ykJl3rZQtxJMWqiI7qZdxegxvrYeYR3dDO5xYHbMy3vh3Dfc9aHtWO5I7jl
+	 OuW7lsWL9C4mFhQ8kAC4Qn1JpXlqqsT+UQqHFkHxcJy0pt+DGT1p0O0Jpj0cl42zpG
+	 cuaSiHte8pFJK7v1qonsiidaIJq7WUY1BxAjXsXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730950AbgD1SvD (ORCPT
+        id S1728895AbgD1SvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:51:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55944 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:51:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730530AbgD1Shp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:37:45 -0400
+        id S1730126AbgD1Shn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:37:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB82E2085B;
-        Tue, 28 Apr 2020 18:37:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47F3B20575;
+        Tue, 28 Apr 2020 18:37:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099065;
-        bh=aBiKRtEwJSJ8EawSUmhre+WjRJEOrBukB4zaQ//1MYU=;
+        s=default; t=1588099062;
+        bh=BfKwiKDO/dOCHROJ+CUFKNI5gX904UaBmJjVHL9/XjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gE006a8pb3n0c4C81V3f2u0ablGIYLi1fvsxqonhJLw2H81dtJpS14z23rdoOgiqh
-         FDqeP2qlX46O9WFQ4GDAnsF4feeDwGXKKAvvpAEfzHuUwrh4j1xNJV2QrmxcJjRHqY
-         2Jjzww3fqN3Zf8hr69+5FahVO75/9wqtFaYDs7i0=
+        b=s7OoeJ3QubF3saXSRdlCnWOE5wa0i4RjLfy6dm5Qx6+t4LygFNdjOof4Bn6LoAJDT
+         39mSywQ/dNyonSgsHYp2jaS+fhv0GxcmOSf1kf4egN8H93z2ecdAfbWYxZF9i/MAIs
+         T0d/rglzawuNBVsMOS05h4Zvtlc2d6XiSKOLY2wg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Benesh <scott.benesh@microsemi.com>,
-        Scott Teel <scott.teel@microsemi.com>,
-        Kevin Barnett <kevin.barnett@microsemi.com>,
-        Murthy Bhat <Murthy.Bhat@microsemi.com>,
-        Don Brace <don.brace@microsemi.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 052/168] scsi: smartpqi: fix call trace in device discovery
-Date:   Tue, 28 Apr 2020 20:23:46 +0200
-Message-Id: <20200428182238.474840377@linuxfoundation.org>
+        stable@vger.kernel.org, Muchun Song <songmuchun@bytedance.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Hugh Dickins <hughd@google.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Claudio Imbrenda <imbrenda@linux.vnet.ibm.com>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Xiongchun Duan <duanxiongchun@bytedance.com>
+Subject: [PATCH 4.19 092/131] mm/ksm: fix NULL pointer dereference when KSM zero page is enabled
+Date:   Tue, 28 Apr 2020 20:25:04 +0200
+Message-Id: <20200428182236.507384500@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -64,43 +67,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Murthy Bhat <Murthy.Bhat@microsemi.com>
+From: Muchun Song <songmuchun@bytedance.com>
 
-[ Upstream commit b969261134c1b990b96ea98fe5e0fcf8ec937c04 ]
+commit 56df70a63ed5d989c1d36deee94cae14342be6e9 upstream.
 
-Use sas_phy_delete rather than sas_phy_free which, according to
-comments, should not be called for PHYs that have been set up
-successfully.
+find_mergeable_vma() can return NULL.  In this case, it leads to a crash
+when we access vm_mm(its offset is 0x40) later in write_protect_page.
+And this case did happen on our server.  The following call trace is
+captured in kernel 4.19 with the following patch applied and KSM zero
+page enabled on our server.
 
-Link: https://lore.kernel.org/r/157048748876.11757.17773443136670011786.stgit@brunhilda
-Reviewed-by: Scott Benesh <scott.benesh@microsemi.com>
-Reviewed-by: Scott Teel <scott.teel@microsemi.com>
-Reviewed-by: Kevin Barnett <kevin.barnett@microsemi.com>
-Signed-off-by: Murthy Bhat <Murthy.Bhat@microsemi.com>
-Signed-off-by: Don Brace <don.brace@microsemi.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  commit e86c59b1b12d ("mm/ksm: improve deduplication of zero pages with colouring")
+
+So add a vma check to fix it.
+
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000040
+  Oops: 0000 [#1] SMP NOPTI
+  CPU: 9 PID: 510 Comm: ksmd Kdump: loaded Tainted: G OE 4.19.36.bsk.9-amd64 #4.19.36.bsk.9
+  RIP: try_to_merge_one_page+0xc7/0x760
+  Code: 24 58 65 48 33 34 25 28 00 00 00 89 e8 0f 85 a3 06 00 00 48 83 c4
+        60 5b 5d 41 5c 41 5d 41 5e 41 5f c3 48 8b 46 08 a8 01 75 b8 <49>
+        8b 44 24 40 4c 8d 7c 24 20 b9 07 00 00 00 4c 89 e6 4c 89 ff 48
+  RSP: 0018:ffffadbdd9fffdb0 EFLAGS: 00010246
+  RAX: ffffda83ffd4be08 RBX: ffffda83ffd4be40 RCX: 0000002c6e800000
+  RDX: 0000000000000000 RSI: ffffda83ffd4be40 RDI: 0000000000000000
+  RBP: ffffa11939f02ec0 R08: 0000000094e1a447 R09: 00000000abe76577
+  R10: 0000000000000962 R11: 0000000000004e6a R12: 0000000000000000
+  R13: ffffda83b1e06380 R14: ffffa18f31f072c0 R15: ffffda83ffd4be40
+  FS: 0000000000000000(0000) GS:ffffa0da43b80000(0000) knlGS:0000000000000000
+  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000040 CR3: 0000002c77c0a003 CR4: 00000000007626e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  PKRU: 55555554
+  Call Trace:
+    ksm_scan_thread+0x115e/0x1960
+    kthread+0xf5/0x130
+    ret_from_fork+0x1f/0x30
+
+[songmuchun@bytedance.com: if the vma is out of date, just exit]
+  Link: http://lkml.kernel.org/r/20200416025034.29780-1-songmuchun@bytedance.com
+[akpm@linux-foundation.org: add the conventional braces, replace /** with /*]
+Fixes: e86c59b1b12d ("mm/ksm: improve deduplication of zero pages with colouring")
+Co-developed-by: Xiongchun Duan <duanxiongchun@bytedance.com>
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Yang Shi <yang.shi@linux.alibaba.com>
+Cc: Claudio Imbrenda <imbrenda@linux.vnet.ibm.com>
+Cc: Markus Elfring <Markus.Elfring@web.de>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200416025034.29780-1-songmuchun@bytedance.com
+Link: http://lkml.kernel.org/r/20200414132905.83819-1-songmuchun@bytedance.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/smartpqi/smartpqi_sas_transport.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/ksm.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/smartpqi/smartpqi_sas_transport.c b/drivers/scsi/smartpqi/smartpqi_sas_transport.c
-index 6776dfc1d317c..b7e28b9f8589f 100644
---- a/drivers/scsi/smartpqi/smartpqi_sas_transport.c
-+++ b/drivers/scsi/smartpqi/smartpqi_sas_transport.c
-@@ -45,9 +45,9 @@ static void pqi_free_sas_phy(struct pqi_sas_phy *pqi_sas_phy)
- 	struct sas_phy *phy = pqi_sas_phy->phy;
+--- a/mm/ksm.c
++++ b/mm/ksm.c
+@@ -2106,8 +2106,16 @@ static void cmp_and_merge_page(struct pa
  
- 	sas_port_delete_phy(pqi_sas_phy->parent_port->port, phy);
--	sas_phy_free(phy);
- 	if (pqi_sas_phy->added_to_port)
- 		list_del(&pqi_sas_phy->phy_list_entry);
-+	sas_phy_delete(phy);
- 	kfree(pqi_sas_phy);
- }
- 
--- 
-2.20.1
-
+ 		down_read(&mm->mmap_sem);
+ 		vma = find_mergeable_vma(mm, rmap_item->address);
+-		err = try_to_merge_one_page(vma, page,
+-					    ZERO_PAGE(rmap_item->address));
++		if (vma) {
++			err = try_to_merge_one_page(vma, page,
++					ZERO_PAGE(rmap_item->address));
++		} else {
++			/*
++			 * If the vma is out of date, we do not need to
++			 * continue.
++			 */
++			err = 0;
++		}
+ 		up_read(&mm->mmap_sem);
+ 		/*
+ 		 * In case of failure, the page was not really empty, so we
 
 
