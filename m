@@ -2,55 +2,57 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4E6C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB63C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97B3021707
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B295B2076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098673;
-	bh=psWuYx6KrdTEJ1QXZEjgcXCDgSQUaFrz3iTBrBHzfBc=;
+	s=default; t=1588098676;
+	bh=sDy84/9S0SVR+cStma7Q8DyMDzSJwxBQfsiDI1sTIro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=konfIfakjokix1idL7oqhHkmmhMoctUysr0G839VObgUFarSa9/Rcb7Xaejp+nYGK
-	 mK23aTpsAm/O6RnnNQYIOQ6RfZ8jlyInwn4Y3XI9qqe90bvhE5zTjDmH4mWd0Ihzfj
-	 qd5ycWVWPWPZjQB2dAo2WUTuYlQObJd76Ge3MBU8=
+	b=DMbZjI/3Cwkfi3lipfs4sdDcQbTBTxDgOiCB08zEMhyl4/ct0JJs/SttgKAUIPFch
+	 FLppiolcj7jcx1crJqDvugBleqK+NEc1G273tKR3ogcPKV9HDaU7XTyXSqMoUHhfhu
+	 DiGWSHYUlHEJ0In8Fj9oaZSWhJTOSgTQU2wzHrWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729628AbgD1SbM (ORCPT
+        id S1729644AbgD1SbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:31:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46278 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:31:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729595AbgD1SbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:31:01 -0400
+        id S1729615AbgD1SbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:31:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ADB421707;
-        Tue, 28 Apr 2020 18:31:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAF6321707;
+        Tue, 28 Apr 2020 18:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098661;
-        bh=psWuYx6KrdTEJ1QXZEjgcXCDgSQUaFrz3iTBrBHzfBc=;
+        s=default; t=1588098668;
+        bh=sDy84/9S0SVR+cStma7Q8DyMDzSJwxBQfsiDI1sTIro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1FxiGz6m5EALYLj7ywQxNTwERYO1QbUSsZhkn2fzH8raEHM9cn5NNOsnDY2iL3Ccz
-         QQNubaiMUaDZQmi06UiNVFFPDR78IuR1EmCmEClGFMTQ1OgIpnZ6zmlzqvyAvi+Ey0
-         yQ+HGKJP3oYIDvuMC3sFuC9wfm6p0yiOJKNZdu8w=
+        b=NhKLHwCucXQ2DXE9wk+iRq+lnobFgnjyjxZoumljb2xKRhZy+cz0P9BdqowQlL06p
+         JZd6xAwlOZtqYziRSNLUbDP6kt+pRSQMz5jmbUM/nLuA10OJqJLoDKfHWXVRnLnngV
+         HKTcKy3kpU0XHAUNBbYFgo1W50H24csHIWH0MOtQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Paul Zimmerman <pauldzim@gmail.com>,
-        Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 5.6 094/167] USB: hub: Fix handling of connect changes during sleep
-Date:   Tue, 28 Apr 2020 20:24:30 +0200
-Message-Id: <20200428182236.944807952@linuxfoundation.org>
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 038/131] net: ipv6_stub: use ip6_dst_lookup_flow instead of ip6_dst_lookup
+Date:   Tue, 28 Apr 2020 20:24:10 +0200
+Message-Id: <20200428182229.867724410@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,78 +62,270 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-commit 9f952e26295d977dbfc6fedeaf8c4f112c818d37 upstream.
+commit 6c8991f41546c3c472503dff1ea9daaddf9331c2 upstream.
 
-Commit 8099f58f1ecd ("USB: hub: Don't record a connect-change event
-during reset-resume") wasn't very well conceived.  The problem it
-tried to fix was that if a connect-change event occurred while the
-system was asleep (such as a device disconnecting itself from the bus
-when it is suspended and then reconnecting when it resumes)
-requiring a reset-resume during the system wakeup transition, the hub
-port's change_bit entry would remain set afterward.  This would cause
-the hub driver to believe another connect-change event had occurred
-after the reset-resume, which was wrong and would lead the driver to
-send unnecessary requests to the device (which could interfere with a
-firmware update).
+ipv6_stub uses the ip6_dst_lookup function to allow other modules to
+perform IPv6 lookups. However, this function skips the XFRM layer
+entirely.
 
-The commit tried to fix this by not setting the change_bit during the
-wakeup.  But this was the wrong thing to do; it means that when a
-device is unplugged while the system is asleep, the hub driver doesn't
-realize anything has happened: The change_bit flag which would tell it
-to handle the disconnect event is clear.
+All users of ipv6_stub->ip6_dst_lookup use ip_route_output_flow (via the
+ip_route_output_key and ip_route_output helpers) for their IPv4 lookups,
+which calls xfrm_lookup_route(). This patch fixes this inconsistent
+behavior by switching the stub to ip6_dst_lookup_flow, which also calls
+xfrm_lookup_route().
 
-The commit needs to be reverted and the problem fixed in a different
-way.  Fortunately an alternative solution was noted in the commit's
-Changelog: We can continue to set the change_bit entry in
-hub_activate() but then clear it when a reset-resume occurs.  That way
-the the hub driver will see the change_bit when a device is
-disconnected but won't see it when the device is still present.
+This requires some changes in all the callers, as these two functions
+take different arguments and have different return types.
 
-That's what this patch does.
-
-Reported-and-tested-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Fixes: 8099f58f1ecd ("USB: hub: Don't record a connect-change event during reset-resume")
-Tested-by: Paul Zimmerman <pauldzim@gmail.com>
-CC: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2004221602480.11262-100000@iolanthe.rowland.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 5f81bd2e5d80 ("ipv6: export a stub for IPv6 symbols used by vxlan")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 4.19:
+ - Drop change in lwt_bpf.c
+ - Delete now-unused "ret" in mlx5e_route_lookup_ipv6()
+ - Initialise "out_dev" in mlx5e_create_encap_header_ipv6() to avoid
+   introducing a spurious "may be used uninitialised" warning
+ - Adjust filenames, context, indentation]
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/core/hub.c |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/infiniband/core/addr.c                  |  7 +++----
+ drivers/infiniband/sw/rxe/rxe_net.c             |  8 +++++---
+ drivers/net/ethernet/mellanox/mlx5/core/en_tc.c | 11 +++++------
+ drivers/net/geneve.c                            |  4 +++-
+ drivers/net/vxlan.c                             |  8 +++-----
+ include/net/addrconf.h                          |  6 ++++--
+ net/ipv6/addrconf_core.c                        | 11 ++++++-----
+ net/ipv6/af_inet6.c                             |  2 +-
+ net/mpls/af_mpls.c                              |  7 +++----
+ net/tipc/udp_media.c                            |  9 ++++++---
+ 10 files changed, 39 insertions(+), 34 deletions(-)
 
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -1223,6 +1223,11 @@ static void hub_activate(struct usb_hub
- #ifdef CONFIG_PM
- 			udev->reset_resume = 1;
- #endif
-+			/* Don't set the change_bits when the device
-+			 * was powered off.
-+			 */
-+			if (test_bit(port1, hub->power_bits))
-+				set_bit(port1, hub->change_bits);
+diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/addr.c
+index 6e96a2fb97dc4..df8f5ceea2dd4 100644
+--- a/drivers/infiniband/core/addr.c
++++ b/drivers/infiniband/core/addr.c
+@@ -408,16 +408,15 @@ static int addr6_resolve(struct sockaddr_in6 *src_in,
+ 	struct flowi6 fl6;
+ 	struct dst_entry *dst;
+ 	struct rt6_info *rt;
+-	int ret;
  
- 		} else {
- 			/* The power session is gone; tell hub_wq */
-@@ -3088,6 +3093,15 @@ static int check_port_resume_type(struct
- 		if (portchange & USB_PORT_STAT_C_ENABLE)
- 			usb_clear_port_feature(hub->hdev, port1,
- 					USB_PORT_FEAT_C_ENABLE);
-+
-+		/*
-+		 * Whatever made this reset-resume necessary may have
-+		 * turned on the port1 bit in hub->change_bits.  But after
-+		 * a successful reset-resume we want the bit to be clear;
-+		 * if it was on it would indicate that something happened
-+		 * following the reset-resume.
-+		 */
-+		clear_bit(port1, hub->change_bits);
+ 	memset(&fl6, 0, sizeof fl6);
+ 	fl6.daddr = dst_in->sin6_addr;
+ 	fl6.saddr = src_in->sin6_addr;
+ 	fl6.flowi6_oif = addr->bound_dev_if;
+ 
+-	ret = ipv6_stub->ipv6_dst_lookup(addr->net, NULL, &dst, &fl6);
+-	if (ret < 0)
+-		return ret;
++	dst = ipv6_stub->ipv6_dst_lookup_flow(addr->net, NULL, &fl6, NULL);
++	if (IS_ERR(dst))
++		return PTR_ERR(dst);
+ 
+ 	rt = (struct rt6_info *)dst;
+ 	if (ipv6_addr_any(&src_in->sin6_addr)) {
+diff --git a/drivers/infiniband/sw/rxe/rxe_net.c b/drivers/infiniband/sw/rxe/rxe_net.c
+index 54add70c22b5c..7903bd5c639ea 100644
+--- a/drivers/infiniband/sw/rxe/rxe_net.c
++++ b/drivers/infiniband/sw/rxe/rxe_net.c
+@@ -154,10 +154,12 @@ static struct dst_entry *rxe_find_route6(struct net_device *ndev,
+ 	memcpy(&fl6.daddr, daddr, sizeof(*daddr));
+ 	fl6.flowi6_proto = IPPROTO_UDP;
+ 
+-	if (unlikely(ipv6_stub->ipv6_dst_lookup(sock_net(recv_sockets.sk6->sk),
+-						recv_sockets.sk6->sk, &ndst, &fl6))) {
++	ndst = ipv6_stub->ipv6_dst_lookup_flow(sock_net(recv_sockets.sk6->sk),
++					       recv_sockets.sk6->sk, &fl6,
++					       NULL);
++	if (unlikely(IS_ERR(ndst))) {
+ 		pr_err_ratelimited("no route to %pI6\n", daddr);
+-		goto put;
++		return NULL;
  	}
  
- 	return status;
+ 	if (unlikely(ndst->error)) {
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+index c8928ce69185f..3050853774ee0 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+@@ -2217,12 +2217,11 @@ static int mlx5e_route_lookup_ipv6(struct mlx5e_priv *priv,
+ #if IS_ENABLED(CONFIG_INET) && IS_ENABLED(CONFIG_IPV6)
+ 	struct mlx5e_rep_priv *uplink_rpriv;
+ 	struct mlx5_eswitch *esw = priv->mdev->priv.eswitch;
+-	int ret;
+ 
+-	ret = ipv6_stub->ipv6_dst_lookup(dev_net(mirred_dev), NULL, &dst,
+-					 fl6);
+-	if (ret < 0)
+-		return ret;
++	dst = ipv6_stub->ipv6_dst_lookup_flow(dev_net(mirred_dev), NULL, fl6,
++					      NULL);
++	if (IS_ERR(dst))
++		return PTR_ERR(dst);
+ 
+ 	if (!(*out_ttl))
+ 		*out_ttl = ip6_dst_hoplimit(dst);
+@@ -2428,7 +2427,7 @@ static int mlx5e_create_encap_header_ipv6(struct mlx5e_priv *priv,
+ 	int max_encap_size = MLX5_CAP_ESW(priv->mdev, max_encap_header_size);
+ 	int ipv6_encap_size = ETH_HLEN + sizeof(struct ipv6hdr) + VXLAN_HLEN;
+ 	struct ip_tunnel_key *tun_key = &e->tun_info.key;
+-	struct net_device *out_dev;
++	struct net_device *out_dev = NULL;
+ 	struct neighbour *n = NULL;
+ 	struct flowi6 fl6 = {};
+ 	u8 nud_state, tos, ttl;
+diff --git a/drivers/net/geneve.c b/drivers/net/geneve.c
+index ff83408733d45..36444de701cd9 100644
+--- a/drivers/net/geneve.c
++++ b/drivers/net/geneve.c
+@@ -801,7 +801,9 @@ static struct dst_entry *geneve_get_v6_dst(struct sk_buff *skb,
+ 		if (dst)
+ 			return dst;
+ 	}
+-	if (ipv6_stub->ipv6_dst_lookup(geneve->net, gs6->sock->sk, &dst, fl6)) {
++	dst = ipv6_stub->ipv6_dst_lookup_flow(geneve->net, gs6->sock->sk, fl6,
++					      NULL);
++	if (IS_ERR(dst)) {
+ 		netdev_dbg(dev, "no route to %pI6\n", &fl6->daddr);
+ 		return ERR_PTR(-ENETUNREACH);
+ 	}
+diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
+index 64751b089482b..7ee0bad184662 100644
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -1963,7 +1963,6 @@ static struct dst_entry *vxlan6_get_route(struct vxlan_dev *vxlan,
+ 	bool use_cache = ip_tunnel_dst_cache_usable(skb, info);
+ 	struct dst_entry *ndst;
+ 	struct flowi6 fl6;
+-	int err;
+ 
+ 	if (!sock6)
+ 		return ERR_PTR(-EIO);
+@@ -1986,10 +1985,9 @@ static struct dst_entry *vxlan6_get_route(struct vxlan_dev *vxlan,
+ 	fl6.fl6_dport = dport;
+ 	fl6.fl6_sport = sport;
+ 
+-	err = ipv6_stub->ipv6_dst_lookup(vxlan->net,
+-					 sock6->sock->sk,
+-					 &ndst, &fl6);
+-	if (unlikely(err < 0)) {
++	ndst = ipv6_stub->ipv6_dst_lookup_flow(vxlan->net, sock6->sock->sk,
++					       &fl6, NULL);
++	if (unlikely(IS_ERR(ndst))) {
+ 		netdev_dbg(dev, "no route to %pI6\n", daddr);
+ 		return ERR_PTR(-ENETUNREACH);
+ 	}
+diff --git a/include/net/addrconf.h b/include/net/addrconf.h
+index 6def0351bcc33..c8d5bb8b36169 100644
+--- a/include/net/addrconf.h
++++ b/include/net/addrconf.h
+@@ -235,8 +235,10 @@ struct ipv6_stub {
+ 				 const struct in6_addr *addr);
+ 	int (*ipv6_sock_mc_drop)(struct sock *sk, int ifindex,
+ 				 const struct in6_addr *addr);
+-	int (*ipv6_dst_lookup)(struct net *net, struct sock *sk,
+-			       struct dst_entry **dst, struct flowi6 *fl6);
++	struct dst_entry *(*ipv6_dst_lookup_flow)(struct net *net,
++						  const struct sock *sk,
++						  struct flowi6 *fl6,
++						  const struct in6_addr *final_dst);
+ 
+ 	struct fib6_table *(*fib6_get_table)(struct net *net, u32 id);
+ 	struct fib6_info *(*fib6_lookup)(struct net *net, int oif,
+diff --git a/net/ipv6/addrconf_core.c b/net/ipv6/addrconf_core.c
+index 5cd0029d930e2..66a1a0eb2ed05 100644
+--- a/net/ipv6/addrconf_core.c
++++ b/net/ipv6/addrconf_core.c
+@@ -127,11 +127,12 @@ int inet6addr_validator_notifier_call_chain(unsigned long val, void *v)
+ }
+ EXPORT_SYMBOL(inet6addr_validator_notifier_call_chain);
+ 
+-static int eafnosupport_ipv6_dst_lookup(struct net *net, struct sock *u1,
+-					struct dst_entry **u2,
+-					struct flowi6 *u3)
++static struct dst_entry *eafnosupport_ipv6_dst_lookup_flow(struct net *net,
++							   const struct sock *sk,
++							   struct flowi6 *fl6,
++							   const struct in6_addr *final_dst)
+ {
+-	return -EAFNOSUPPORT;
++	return ERR_PTR(-EAFNOSUPPORT);
+ }
+ 
+ static struct fib6_table *eafnosupport_fib6_get_table(struct net *net, u32 id)
+@@ -169,7 +170,7 @@ eafnosupport_ip6_mtu_from_fib6(struct fib6_info *f6i, struct in6_addr *daddr,
+ }
+ 
+ const struct ipv6_stub *ipv6_stub __read_mostly = &(struct ipv6_stub) {
+-	.ipv6_dst_lookup   = eafnosupport_ipv6_dst_lookup,
++	.ipv6_dst_lookup_flow = eafnosupport_ipv6_dst_lookup_flow,
+ 	.fib6_get_table    = eafnosupport_fib6_get_table,
+ 	.fib6_table_lookup = eafnosupport_fib6_table_lookup,
+ 	.fib6_lookup       = eafnosupport_fib6_lookup,
+diff --git a/net/ipv6/af_inet6.c b/net/ipv6/af_inet6.c
+index 5db88be8b6ecb..5c2351deedc8f 100644
+--- a/net/ipv6/af_inet6.c
++++ b/net/ipv6/af_inet6.c
+@@ -904,7 +904,7 @@ static struct pernet_operations inet6_net_ops = {
+ static const struct ipv6_stub ipv6_stub_impl = {
+ 	.ipv6_sock_mc_join = ipv6_sock_mc_join,
+ 	.ipv6_sock_mc_drop = ipv6_sock_mc_drop,
+-	.ipv6_dst_lookup   = ip6_dst_lookup,
++	.ipv6_dst_lookup_flow = ip6_dst_lookup_flow,
+ 	.fib6_get_table	   = fib6_get_table,
+ 	.fib6_table_lookup = fib6_table_lookup,
+ 	.fib6_lookup       = fib6_lookup,
+diff --git a/net/mpls/af_mpls.c b/net/mpls/af_mpls.c
+index d5a4db5b3fe7b..7623d9aec6364 100644
+--- a/net/mpls/af_mpls.c
++++ b/net/mpls/af_mpls.c
+@@ -618,16 +618,15 @@ static struct net_device *inet6_fib_lookup_dev(struct net *net,
+ 	struct net_device *dev;
+ 	struct dst_entry *dst;
+ 	struct flowi6 fl6;
+-	int err;
+ 
+ 	if (!ipv6_stub)
+ 		return ERR_PTR(-EAFNOSUPPORT);
+ 
+ 	memset(&fl6, 0, sizeof(fl6));
+ 	memcpy(&fl6.daddr, addr, sizeof(struct in6_addr));
+-	err = ipv6_stub->ipv6_dst_lookup(net, NULL, &dst, &fl6);
+-	if (err)
+-		return ERR_PTR(err);
++	dst = ipv6_stub->ipv6_dst_lookup_flow(net, NULL, &fl6, NULL);
++	if (IS_ERR(dst))
++		return ERR_CAST(dst);
+ 
+ 	dev = dst->dev;
+ 	dev_hold(dev);
+diff --git a/net/tipc/udp_media.c b/net/tipc/udp_media.c
+index 382c84d9339d6..1d62354797061 100644
+--- a/net/tipc/udp_media.c
++++ b/net/tipc/udp_media.c
+@@ -189,10 +189,13 @@ static int tipc_udp_xmit(struct net *net, struct sk_buff *skb,
+ 			.saddr = src->ipv6,
+ 			.flowi6_proto = IPPROTO_UDP
+ 		};
+-		err = ipv6_stub->ipv6_dst_lookup(net, ub->ubsock->sk, &ndst,
+-						 &fl6);
+-		if (err)
++		ndst = ipv6_stub->ipv6_dst_lookup_flow(net,
++						       ub->ubsock->sk,
++						       &fl6, NULL);
++		if (IS_ERR(ndst)) {
++			err = PTR_ERR(ndst);
+ 			goto tx_error;
++		}
+ 		ttl = ip6_dst_hoplimit(ndst);
+ 		err = udp_tunnel6_xmit_skb(ndst, ub->ubsock->sk, skb, NULL,
+ 					   &src->ipv6, &dst->ipv6, 0, ttl, 0,
+-- 
+2.20.1
+
 
 
