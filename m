@@ -2,145 +2,103 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 082F8C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A43C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0C4E206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48892206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:10:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgD1GDF (ORCPT
+        id S1726386AbgD1GKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 02:03:05 -0400
-Received: from mga02.intel.com ([134.134.136.20]:22916 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbgD1GDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 02:03:05 -0400
-IronPort-SDR: Wggo6RUXqFgr70xtfXqtBrrLJXq+++Yp8ZM/Ai2Yl6qSTya6VDj/huJoHdvrGb3QzYYKQSPHhH
- LDoaZVD/ZHhA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 23:03:04 -0700
-IronPort-SDR: +pp6cGsVEXqpd9ZqUu2n1YXyEU8algll4co6CQBi2HZI9B3qgTIh1Nwn7LkLSYWzkQcSnyD/OI
- htXcp8Sx7XgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,327,1583222400"; 
-   d="scan'208";a="246403763"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 27 Apr 2020 23:03:04 -0700
-Received: from [10.215.240.200] (ekotax-mobl.gar.corp.intel.com [10.215.240.200])
-        by linux.intel.com (Postfix) with ESMTP id 40AA4580B9A;
-        Mon, 27 Apr 2020 23:03:01 -0700 (PDT)
-Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
- transfers
-To:     Hauke Mehrtens <hauke@hauke-m.de>, broonie@kernel.org,
-        robh@kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, daniel.schwierzeck@gmail.com,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-References: <cover.1587702428.git.eswara.kota@linux.intel.com>
- <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
- <1536b752-13d1-128b-1393-80cf175df5e2@hauke-m.de>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <4ba16d3e-0441-b3a7-11d3-7da40d630914@linux.intel.com>
-Date:   Tue, 28 Apr 2020 14:03:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <1536b752-13d1-128b-1393-80cf175df5e2@hauke-m.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Tue, 28 Apr 2020 02:10:06 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:27722 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726210AbgD1GKG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 02:10:06 -0400
+X-IronPort-AV: E=Sophos;i="5.73,326,1583164800"; 
+   d="scan'208";a="90612535"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 28 Apr 2020 14:09:50 +0800
+Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
+        by cn.fujitsu.com (Postfix) with ESMTP id A9EE050A9991;
+        Tue, 28 Apr 2020 14:09:48 +0800 (CST)
+Received: from G08CNEXMBPEKD05.g08.fujitsu.local (10.167.33.204) by
+ G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Tue, 28 Apr 2020 14:09:47 +0800
+Received: from G08CNEXMBPEKD05.g08.fujitsu.local ([fe80::15e2:f6f4:7314:fd88])
+ by G08CNEXMBPEKD05.g08.fujitsu.local ([fe80::15e2:f6f4:7314:fd88%14]) with
+ mapi id 15.00.1497.000; Tue, 28 Apr 2020 14:09:47 +0800
+From:   "Ruan, Shiyang" <ruansy.fnst@cn.fujitsu.com>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "darrick.wong@oracle.com" <darrick.wong@oracle.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "david@fromorbit.com" <david@fromorbit.com>,
+        "hch@lst.de" <hch@lst.de>, "rgoldwyn@suse.de" <rgoldwyn@suse.de>,
+        "Qi, Fuli" <qi.fuli@fujitsu.com>,
+        "Gotou, Yasunori" <y-goto@fujitsu.com>
+Subject: =?utf-8?B?5Zue5aSNOiBSZTogW1JGQyBQQVRDSCAwLzhdIGRheDogQWRkIGEgZGF4LXJt?=
+ =?utf-8?Q?ap_tree_to_support_reflink?=
+Thread-Topic: Re: [RFC PATCH 0/8] dax: Add a dax-rmap tree to support reflink
+Thread-Index: AQHWHHCrvTehP1uFMkqHUwaMK6beO6iMX8EAgAEofYA=
+Date:   Tue, 28 Apr 2020 06:09:47 +0000
+Message-ID: <em33c55fa5-15ca-4c46-8c27-6b0300fa4e51@g08fnstd180058>
+References: <20200427084750.136031-1-ruansy.fnst@cn.fujitsu.com>
+ <20200427122836.GD29705@bombadil.infradead.org>
+In-Reply-To: <20200427122836.GD29705@bombadil.infradead.org>
+Reply-To: "Ruan, Shiyang" <ruansy.fnst@cn.fujitsu.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.167.225.141]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <431D96282EC2FB4DA394D352951FF28C@fujitsu.local>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-yoursite-MailScanner-ID: A9EE050A9991.AE63C
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 4/28/2020 5:52 AM, Hauke Mehrtens wrote:
-> On 4/24/20 12:42 PM, Dilip Kota wrote:
->> Synchronize tx, rx and error interrupts by registering to the
->> same interrupt handler. Interrupt handler will recognize and process
->> the appropriate interrupt on the basis of interrupt status register.
->> Also, establish synchronization between the interrupt handler and
->> transfer operation by taking the locks and registering the interrupt
->> handler as thread IRQ which avoids the bottom half.
->> Fixes the wrongly populated interrupt register offsets too.
->>
->> Fixes: 17f84b793c01 ("spi: lantiq-ssc: add support for Lantiq SSC SPI controller")
->> Fixes: ad2fca0721d1 ("spi: lantiq-ssc: add LTQ_ prefix to defines")
->> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
->> ---
->>   drivers/spi/spi-lantiq-ssc.c | 89 ++++++++++++++++++++++----------------------
->>   1 file changed, 45 insertions(+), 44 deletions(-)
->>
-> Hi,
->
-> I tried this patch series on a TP-LINK TD-W8970 (VRX200 with SPI flash)
-> and the SPI controller is failing like this:
-> -----
-> [    6.947194] printk: bootconsole [early0] disabled
-> [    6.964210] spi-lantiq-ssc 1e100800.spi: Lantiq SSC SPI controller
-> (Rev 8, TXFS 8, RXFS 8, DMA 1)
-> [    7.175188] spi-nor spi0.4: SPI transfer timed out
-> [    7.178558] spi_master spi0: failed to transfer one message from queue
-> [    7.185120] spi-nor spi0.4: error -145 reading JEDEC ID
-> [    7.190378] spi-nor: probe of spi0.4 failed with error -2
-> [    7.199729] libphy: Fixed MDIO Bus: probed
-> ------
-> It already fails when applying this first patch only.
-This change is working successfully on Lightning Mountain SoC.(along 
-with other changes in the patch series, as this alone doesnt configure 
-SPI controller on LGM).
-
-The major changes this patch does is: Finding out the appropriate 
-interrupt by reading the LTQ_SPI_IRNCR register. So i think, this 
-failure could be at interrupt handling. And offsets of LTQ_SPI_IRNICR 
-and LTQ_SPI_IRNCR  registers also corrected.
-When i added you in the internal review of this patch, i remember you 
-are saying Interrupt controller on VR9/xrx200 is different and 
-acknowledges the interrupts inside the IP  automatically. Does this 
-leads to clearing the interrupt registers LTQ_SPI_IRNCR and 
-LTQ_SPI_IRNICR? If it is the case, the SPI driver cannot figure out the 
-cause of the interrupt and result in timeout.
-
-Could you please print the LTQ_SPI_IRNCR and LTQ_SPI_IRNICR register 
-values in the ISR and share the logs.
-
-Regards,
-Dilip
-
->
->
-> Without this patch is works like this:
-> -----
-> [    6.939498] printk: bootconsole [early0] disabled
-> [    6.954016] spi-lantiq-ssc 1e100800.spi: Lantiq SSC SPI controller
-> (Rev 8, TXFS 8, RXFS 8, DMA 1)
-> [    6.975465] spi-nor spi0.4: s25fl064k (8192 Kbytes)
-> [    6.979066] 4 fixed-partitions partitions found on MTD device spi0.4
-> [    6.985338] Creating 4 MTD partitions on "spi0.4":
-> [    6.990127] 0x000000000000-0x000000020000 : "u-boot"
-> [    6.997422] 0x000000020000-0x0000007c0000 : "firmware"
-> [    7.212304] random: crng init done
-> [    8.796128] 2 tplink-fw partitions found on MTD device firmware
-> [    8.800674] 0x000000020000-0x00000027878f : "kernel"
-> [    8.807776] 0x000000278790-0x0000007c0000 : "rootfs"
-> [    8.813611] mtd: device 3 (rootfs) set to be root filesystem
-> [    8.818268] 1 squashfs-split partitions found on MTD device rootfs
-> [    8.824123] 0x000000590000-0x0000007c0000 : "rootfs_data"
-> [    8.831772] 0x0000007c0000-0x0000007d0000 : "config"
-> [    8.837785] 0x0000007d0000-0x000000800000 : "boardconfig"
-> [    8.848193] libphy: Fixed MDIO Bus: probed
-> ------
->
-> This was done by applying your patches on top of kernel 5.4.35 and
-> adding this: "spi: lantiq-ssc: Use devm_platform_ioremap_resource() in
-> lantiq_ssc_probe()" in OpenWrt master.
->
-> Hauke
+DQrlnKggMjAyMC80LzI3IDIwOjI4OjM2LCAiTWF0dGhldyBXaWxjb3giIDx3
+aWxseUBpbmZyYWRlYWQub3JnPiDlhpnpgZM6DQoNCj5PbiBNb24sIEFwciAy
+NywgMjAyMCBhdCAwNDo0Nzo0MlBNICswODAwLCBTaGl5YW5nIFJ1YW4gd3Jv
+dGU6DQo+PiAgVGhpcyBwYXRjaHNldCBpcyBhIHRyeSB0byByZXNvbHZlIHRo
+ZSBzaGFyZWQgJ3BhZ2UgY2FjaGUnIHByb2JsZW0gZm9yDQo+PiAgZnNkYXgu
+DQo+Pg0KPj4gIEluIG9yZGVyIHRvIHRyYWNrIG11bHRpcGxlIG1hcHBpbmdz
+IGFuZCBpbmRleGVzIG9uIG9uZSBwYWdlLCBJDQo+PiAgaW50cm9kdWNlZCBh
+IGRheC1ybWFwIHJiLXRyZWUgdG8gbWFuYWdlIHRoZSByZWxhdGlvbnNoaXAu
+ICBBIGRheCBlbnRyeQ0KPj4gIHdpbGwgYmUgYXNzb2NpYXRlZCBtb3JlIHRo
+YW4gb25jZSBpZiBpcyBzaGFyZWQuICBBdCB0aGUgc2Vjb25kIHRpbWUgd2UN
+Cj4+ICBhc3NvY2lhdGUgdGhpcyBlbnRyeSwgd2UgY3JlYXRlIHRoaXMgcmIt
+dHJlZSBhbmQgc3RvcmUgaXRzIHJvb3QgaW4NCj4+ICBwYWdlLT5wcml2YXRl
+KG5vdCB1c2VkIGluIGZzZGF4KS4gIEluc2VydCAoLT5tYXBwaW5nLCAtPmlu
+ZGV4KSB3aGVuDQo+PiAgZGF4X2Fzc29jaWF0ZV9lbnRyeSgpIGFuZCBkZWxl
+dGUgaXQgd2hlbiBkYXhfZGlzYXNzb2NpYXRlX2VudHJ5KCkuDQo+DQo+RG8g
+d2UgcmVhbGx5IHdhbnQgdG8gdHJhY2sgYWxsIG9mIHRoaXMgb24gYSBwZXIt
+cGFnZSBiYXNpcz8gIEkgd291bGQNCj5oYXZlIHRob3VnaHQgYSBwZXItZXh0
+ZW50IGJhc2lzIHdhcyBtb3JlIHVzZWZ1bC4gIEVzc2VudGlhbGx5LCBjcmVh
+dGUNCj5hIG5ldyBhZGRyZXNzX3NwYWNlIGZvciBlYWNoIHNoYXJlZCBleHRl
+bnQuICBQZXIgcGFnZSBqdXN0IHNlZW1zIGxpa2UNCj5hIGh1Z2Ugb3Zlcmhl
+YWQuDQo+DQpQZXItZXh0ZW50IHRyYWNraW5nIGlzIGEgbmljZSBpZGVhIGZv
+ciBtZS4gIEkgaGF2ZW4ndCB0aG91Z2h0IG9mIGl0IA0KeWV0Li4uDQoNCkJ1
+dCB0aGUgZXh0ZW50IGluZm8gaXMgbWFpbnRhaW5lZCBieSBmaWxlc3lzdGVt
+LiAgSSB0aGluayB3ZSBuZWVkIGEgd2F5IA0KdG8gb2J0YWluIHRoaXMgaW5m
+byBmcm9tIEZTIHdoZW4gYXNzb2NpYXRpbmcgYSBwYWdlLiAgTWF5IGJlIGEg
+Yml0IA0KY29tcGxpY2F0ZWQuICBMZXQgbWUgdGhpbmsgYWJvdXQgaXQuLi4N
+Cg0KDQotLQ0KVGhhbmtzLA0KUnVhbiBTaGl5YW5nLgoK
