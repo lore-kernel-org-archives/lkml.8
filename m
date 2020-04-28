@@ -2,121 +2,109 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA18FC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD611C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96D8321841
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588087138;
-	bh=b/zBXFGJvz7WjogAPSd0Y+ZzPKY0hHARxvv8R3hHUEw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=T+oYBNjD6iSvhLR1ZQTjMdTaD01XwsA8uYYVCBulTBbzKAClUovZ1+EoaEq42APhF
-	 Eo3b7F4SCkS0uQmxXKygwxeDU/tAjRZS/g/tZEDiqvsT+1dxldMn2AqTrdCnaJsOLo
-	 xmSS1Fk6EmyQutA8BiC9omUF5Pdkd27O0V0skL34=
+	by mail.kernel.org (Postfix) with ESMTP id 8CD7021841
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:19:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728630AbgD1PS5 (ORCPT
+        id S1728586AbgD1PSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:18:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37882 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 11:18:44 -0400
+Received: from 8bytes.org ([81.169.241.247]:37630 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728619AbgD1PSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:18:53 -0400
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BD5E2186A;
-        Tue, 28 Apr 2020 15:18:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588087133;
-        bh=b/zBXFGJvz7WjogAPSd0Y+ZzPKY0hHARxvv8R3hHUEw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=EA4+tttAfKwyjtD+ShEj9VRYXd8WXJ7s0P4qoHxtBc3RVs2gastLvPr+mB0Kg0Hcx
-         C5aaJru7EArpoREVcC61YXM/mc92dftH1wLZSdHOPUZis89rb+d9WD34HHrV57Fe/2
-         HFZMLRd+zAmkES+HW4pwZWnTyuYDmtfmFjDC6ODY=
-Message-ID: <5684baea7257bfe27960ead094fd346dae019b0a.camel@kernel.org>
-Subject: Re: [PATCH -rt] hrtimer: fix logic for when grabbing
- softirq_expiry_lock can be elided
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        linux-kernel@vger.kernel.org
-Cc:     linux-rt-users@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Julien Grall <julien.grall@arm.com>,
-        Daniel Wagner <wagi@monom.org>, John Kacur <jkacur@redhat.com>
-Date:   Tue, 28 Apr 2020 10:18:50 -0500
-In-Reply-To: <20200428144026.5882-1-rasmus.villemoes@prevas.dk>
-References: <20200428144026.5882-1-rasmus.villemoes@prevas.dk>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1728450AbgD1PSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:18:21 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 0A386F4C; Tue, 28 Apr 2020 17:17:55 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v3 71/75] x86/head/64: Don't call verify_cpu() on starting APs
+Date:   Tue, 28 Apr 2020 17:17:21 +0200
+Message-Id: <20200428151725.31091-72-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200428151725.31091-1-joro@8bytes.org>
+References: <20200428151725.31091-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-28 at 16:40 +0200, Rasmus Villemoes wrote:
-> Commit
-> 
->   hrtimer: Add a missing bracket and hide `migration_base' on !SMP
-> 
-> which is 47b6de0b7f22 in 5.2-rt and 40aae5708e7a in 4.19-rt,
-> inadvertently changed the logic from base != &migration_base to base
-> == &migration_base.
-> 
-> On !CONFIG_SMP, the effect was to effectively always elide this
-> lock/unlock pair (since is_migration_base() is unconditionally
-> false),
-> which for me consistently causes lockups during reboot, and
-> reportedly
-> also often causes a hang during boot.
-> 
-> Adding this logical negation (or, what is effectively the same thing
-> on !CONFIG_SMP, reverting the above commit as well as "hrtimer:
-> Prevent using hrtimer_grab_expiry_lock() on migration_base") fixes
-> that lockup.
-> 
-> Fixes: 40aae5708e7a (hrtimer: Add a missing bracket and hide
-> `migration_base' on !SMP) # 4.19-rt
-> Fixes: 47b6de0b7f22 (hrtimer: Add a missing bracket and hide
-> `migration_base' on !SMP) # 5.2-rt
-> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-> ---
-> Something like this? I wasn't sure what Fixes: tag(s) to include, if
-> any. It's quite possible the same fix is needed on earlier -rt
-> kernels, I didn't check.
-> 
+From: Joerg Roedel <jroedel@suse.de>
 
-Yeah, looks good, I'll post a new update with this shortly.
+The APs are not ready to handle exceptions when verify_cpu() is called
+in secondary_startup_64.
 
-Thanks,
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/include/asm/realmode.h | 1 +
+ arch/x86/kernel/head_64.S       | 1 +
+ arch/x86/realmode/init.c        | 6 ++++++
+ 3 files changed, 8 insertions(+)
 
-Tom
-
->  kernel/time/hrtimer.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-> index e54a95de8b79..c3966c090246 100644
-> --- a/kernel/time/hrtimer.c
-> +++ b/kernel/time/hrtimer.c
-> @@ -953,7 +953,7 @@ void hrtimer_grab_expiry_lock(const struct
-> hrtimer *timer)
->  {
->  	struct hrtimer_clock_base *base = READ_ONCE(timer->base);
->  
-> -	if (timer->is_soft && is_migration_base(base)) {
-> +	if (timer->is_soft && !is_migration_base(base)) {
->  		spin_lock(&base->cpu_base->softirq_expiry_lock);
->  		spin_unlock(&base->cpu_base->softirq_expiry_lock);
->  	}
+diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
+index 6590394af309..5c97807c38a4 100644
+--- a/arch/x86/include/asm/realmode.h
++++ b/arch/x86/include/asm/realmode.h
+@@ -69,6 +69,7 @@ extern unsigned char startup_32_smp[];
+ extern unsigned char boot_gdt[];
+ #else
+ extern unsigned char secondary_startup_64[];
++extern unsigned char secondary_startup_64_no_verify[];
+ #endif
+ 
+ static inline size_t real_mode_size_needed(void)
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 7f2d5e14db73..72b8f0834de1 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -150,6 +150,7 @@ SYM_CODE_START(secondary_startup_64)
+ 	/* Sanitize CPU configuration */
+ 	call verify_cpu
+ 
++SYM_INNER_LABEL(secondary_startup_64_no_verify, SYM_L_GLOBAL)
+ 	/*
+ 	 * Retrieve the modifier (SME encryption mask if SME is active) to be
+ 	 * added to the initial pgdir entry that will be programmed into CR3.
+diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
+index 1c5cbfd102d5..030c38268069 100644
+--- a/arch/x86/realmode/init.c
++++ b/arch/x86/realmode/init.c
+@@ -109,6 +109,12 @@ static void __init setup_real_mode(void)
+ 		trampoline_header->flags |= TH_FLAGS_SME_ACTIVE;
+ 
+ 	if (sev_es_active()) {
++		/*
++		 * Skip the call to verify_cpu() in secondary_startup_64 as it
++		 * will cause #VC exceptions when the AP can't handle them yet.
++		 */
++		trampoline_header->start = (u64) secondary_startup_64_no_verify;
++
+ 		if (sev_es_setup_ap_jump_table(real_mode_header))
+ 			panic("Failed to update SEV-ES AP Jump Table");
+ 	}
+-- 
+2.17.1
 
