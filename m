@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECC4C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D1FC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E03C214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C6721707
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098935;
-	bh=yb0vZB48lFDFMQjiYV4XwDurl3e7MMpVsrGD2cNBE3w=;
+	s=default; t=1588098940;
+	bh=2M5vHab+njp3Ao4dy6+B1X01krlwjCcGCpWvxZxw13Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pEwyX5P/CsYGQlr0LjdekiLEqXbUCAtn5ikWTiX+MlIZTeTvJT35Q+X4d9SWIN++F
-	 Nvgs+P4DzW4hkbXeHXsAlSAlCDzaApKvdgB6yTkg2Wzh7iGXJE3ZVI3J023zUiB6Cl
-	 ytJIVEKrf9i453i9zsw5SVtgqgRIvVMfMMSzS900=
+	b=vQI6LoH3BOw7kI/F8l00YFgNq4CVl7AKUkNWBGwQuJZ6GNfXTji4sr9C6xknm1IuX
+	 kU+e6sMM+wfcp9VbE4UHMMSShiH2Cd4Z8oD3zsKQSkN+btSjwggnXlVb+lOAz/LHEN
+	 9pJIl+K0yUmde8mmO23gxWItJmlfsxJugiVT7E3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730272AbgD1Sfe (ORCPT
+        id S1730274AbgD1Sfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:35:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52682 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:35:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728983AbgD1Sfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:35:31 -0400
+        id S1728983AbgD1Sff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:35:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9849D208E0;
-        Tue, 28 Apr 2020 18:35:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 791B7208E0;
+        Tue, 28 Apr 2020 18:35:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098930;
-        bh=yb0vZB48lFDFMQjiYV4XwDurl3e7MMpVsrGD2cNBE3w=;
+        s=default; t=1588098934;
+        bh=2M5vHab+njp3Ao4dy6+B1X01krlwjCcGCpWvxZxw13Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zk0N1ZcmejxImIEprgRzkEsPrYA2xoEcR+hddOL2mBZ/iDj2NinsdEdxOgfN8ZuUu
-         wzr8RL9y/pTuzcpbeo3Kyn2kZI43y60LQJdpet8tXnyemRlTkKHaiXIi++kdxmdZMe
-         jHN/mb3I6DVbpfQHmU15Vx2cPK+en1ZMrvbCLdJ0=
+        b=bq8QVkbtlZxpvSzaBRcNz1OrbDb7A4WR7bpvVxTYeHT6UGz+10TJIQ6mFoac7iKKQ
+         UR7kexDbV4iWKObGeSwpzoHtAhvZVdc8MPUe8XB80Rz5MKKknqnFcYPZe3Jkvwzxg1
+         OhdEPtj6d+DFM0Y2mrvmZ1Dym/Hg4MY+X20l5JWU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Johnathan Smithinovic <johnathan.smithinovic@gmx.at>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 074/131] ALSA: hda: Remove ASUS ROG Zenith from the blacklist
-Date:   Tue, 28 Apr 2020 20:24:46 +0200
-Message-Id: <20200428182234.235748668@linuxfoundation.org>
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Ganesh Goudar <ganeshgr@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 033/168] powerpc/pseries: Fix MCE handling on pseries
+Date:   Tue, 28 Apr 2020 20:23:27 +0200
+Message-Id: <20200428182235.911446416@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,46 +63,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Ganesh Goudar <ganeshgr@linux.ibm.com>
 
-[ Upstream commit a8cf44f085ac12c0b5b8750ebb3b436c7f455419 ]
+[ Upstream commit a95a0a1654f16366360399574e10efd87e867b39 ]
 
-The commit 3c6fd1f07ed0 ("ALSA: hda: Add driver blacklist") added a
-new blacklist for the devices that are known to have empty codecs, and
-one of the entries was ASUS ROG Zenith II (PCI SSID 1043:874f).
-However, it turned out that the very same PCI SSID is used for the
-previous model that does have the valid HD-audio codecs and the change
-broke the sound on it.
+MCE handling on pSeries platform fails as recent rework to use common
+code for pSeries and PowerNV in machine check error handling tries to
+access per-cpu variables in realmode. The per-cpu variables may be
+outside the RMO region on pSeries platform and needs translation to be
+enabled for access. Just moving these per-cpu variable into RMO region
+did'nt help because we queue some work to workqueues in real mode, which
+again tries to touch per-cpu variables. Also fwnmi_release_errinfo()
+cannot be called when translation is not enabled.
 
-This patch reverts the corresponding entry as a temporary solution.
-Although Zenith II and co will see get the empty HD-audio bus again,
-it'd be merely resource wastes and won't affect the functionality,
-so it's no end of the world.  We'll need to address this later,
-e.g. by either switching to DMI string matching or using PCI ID &
-SSID pairs.
+This patch fixes this by enabling translation in the exception handler
+when all required real mode handling is done. This change only affects
+the pSeries platform.
 
-Fixes: 3c6fd1f07ed0 ("ALSA: hda: Add driver blacklist")
-Reported-by: Johnathan Smithinovic <johnathan.smithinovic@gmx.at>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200419071926.22683-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Without this fix below kernel crash is seen on injecting
+SLB multihit:
+
+BUG: Unable to handle kernel data access on read at 0xc00000027b205950
+Faulting instruction address: 0xc00000000003b7e0
+Oops: Kernel access of bad area, sig: 11 [#1]
+LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+Modules linked in: mcetest_slb(OE+) af_packet(E) xt_tcpudp(E) ip6t_rpfilter(E) ip6t_REJECT(E) ipt_REJECT(E) xt_conntrack(E) ip_set(E) nfnetlink(E) ebtable_nat(E) ebtable_broute(E) ip6table_nat(E) ip6table_mangle(E) ip6table_raw(E) ip6table_security(E) iptable_nat(E) nf_nat(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) iptable_mangle(E) iptable_raw(E) iptable_security(E) ebtable_filter(E) ebtables(E) ip6table_filter(E) ip6_tables(E) iptable_filter(E) ip_tables(E) x_tables(E) xfs(E) ibmveth(E) vmx_crypto(E) gf128mul(E) uio_pdrv_genirq(E) uio(E) crct10dif_vpmsum(E) rtc_generic(E) btrfs(E) libcrc32c(E) xor(E) zstd_decompress(E) zstd_compress(E) raid6_pq(E) sr_mod(E) sd_mod(E) cdrom(E) ibmvscsi(E) scsi_transport_srp(E) crc32c_vpmsum(E) dm_mod(E) sg(E) scsi_mod(E)
+CPU: 34 PID: 8154 Comm: insmod Kdump: loaded Tainted: G OE 5.5.0-mahesh #1
+NIP: c00000000003b7e0 LR: c0000000000f2218 CTR: 0000000000000000
+REGS: c000000007dcb960 TRAP: 0300 Tainted: G OE (5.5.0-mahesh)
+MSR: 8000000000001003 <SF,ME,RI,LE> CR: 28002428 XER: 20040000
+CFAR: c0000000000f2214 DAR: c00000027b205950 DSISR: 40000000 IRQMASK: 0
+GPR00: c0000000000f2218 c000000007dcbbf0 c000000001544800 c000000007dcbd70
+GPR04: 0000000000000001 c000000007dcbc98 c008000000d00258 c0080000011c0000
+GPR08: 0000000000000000 0000000300000003 c000000001035950 0000000003000048
+GPR12: 000000027a1d0000 c000000007f9c000 0000000000000558 0000000000000000
+GPR16: 0000000000000540 c008000001110000 c008000001110540 0000000000000000
+GPR20: c00000000022af10 c00000025480fd70 c008000001280000 c00000004bfbb300
+GPR24: c000000001442330 c00800000800000d c008000008000000 4009287a77000510
+GPR28: 0000000000000000 0000000000000002 c000000001033d30 0000000000000001
+NIP [c00000000003b7e0] save_mce_event+0x30/0x240
+LR [c0000000000f2218] pseries_machine_check_realmode+0x2c8/0x4f0
+Call Trace:
+Instruction dump:
+3c4c0151 38429050 7c0802a6 60000000 fbc1fff0 fbe1fff8 f821ffd1 3d42ffaf
+3fc2ffaf e98d0030 394a1150 3bdef530 <7d6a62aa> 1d2b0048 2f8b0063 380b0001
+---[ end trace 46fd63f36bbdd940 ]---
+
+Fixes: 9ca766f9891d ("powerpc/64s/pseries: machine check convert to use common event code")
+Reviewed-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Ganesh Goudar <ganeshgr@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200320110119.10207-1-ganeshgr@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/powerpc/platforms/pseries/ras.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 54a9b391ecce0..0502042c16163 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2215,7 +2215,6 @@ static const struct hdac_io_ops pci_hda_io_ops = {
-  * should be ignored from the beginning.
-  */
- static const struct snd_pci_quirk driver_blacklist[] = {
--	SND_PCI_QUIRK(0x1043, 0x874f, "ASUS ROG Zenith II / Strix", 0),
- 	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
- 	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
- 	{}
+diff --git a/arch/powerpc/platforms/pseries/ras.c b/arch/powerpc/platforms/pseries/ras.c
+index 3acdcc3bb908c..753adeb624f23 100644
+--- a/arch/powerpc/platforms/pseries/ras.c
++++ b/arch/powerpc/platforms/pseries/ras.c
+@@ -683,6 +683,17 @@ static int mce_handle_error(struct pt_regs *regs, struct rtas_error_log *errp)
+ #endif
+ 
+ out:
++	/*
++	 * Enable translation as we will be accessing per-cpu variables
++	 * in save_mce_event() which may fall outside RMO region, also
++	 * leave it enabled because subsequently we will be queuing work
++	 * to workqueues where again per-cpu variables accessed, besides
++	 * fwnmi_release_errinfo() crashes when called in realmode on
++	 * pseries.
++	 * Note: All the realmode handling like flushing SLB entries for
++	 *       SLB multihit is done by now.
++	 */
++	mtmsr(mfmsr() | MSR_IR | MSR_DR);
+ 	save_mce_event(regs, disposition == RTAS_DISP_FULLY_RECOVERED,
+ 			&mce_err, regs->nip, eaddr, paddr);
+ 
 -- 
 2.20.1
 
