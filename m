@@ -2,281 +2,83 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6847C8300B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA31C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1C8E206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 534E8206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgD1IKS (ORCPT
+        id S1726702AbgD1IMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 04:10:18 -0400
-Received: from mga07.intel.com ([134.134.136.100]:37237 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726377AbgD1IKQ (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 04:10:16 -0400
-IronPort-SDR: Q6LhvMGYuY7Ers9L2++s6RQcz5NPn6HU7FxwwWOcj1ep8TA0x8/RQuGCd5ElsxetCBYUNh6c47
- otnM5ZtHaF4Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 01:10:15 -0700
-IronPort-SDR: CjZd/6KZIipPq+ntLgxh4XThTLyklQPN42fzO/WLWtPI9Zw6lVJBP7mN9EdZty+1839WmEfDvU
- 31o1CsWjqlVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,327,1583222400"; 
-   d="scan'208";a="367427144"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.4.151]) ([10.238.4.151])
-  by fmsmga001.fm.intel.com with ESMTP; 28 Apr 2020 01:10:13 -0700
-Subject: Re: [PATCH v3 0/7] perf: Stream comparison
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200420010451.24405-1-yao.jin@linux.intel.com>
- <20200427101044.GA1457790@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <d2fc66e5-d33a-0ed2-e46b-6cfbc4a941a6@linux.intel.com>
-Date:   Tue, 28 Apr 2020 16:10:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 28 Apr 2020 04:12:01 -0400
+Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:44325 "EHLO
+        smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726442AbgD1IMB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 04:12:01 -0400
+Received: from pro2.mail.ovh.net (unknown [10.108.1.145])
+        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id BD66F4FEFD68;
+        Tue, 28 Apr 2020 10:11:59 +0200 (CEST)
+Received: from localhost (89.70.31.203) by DAG2EX1.emp2.local (172.16.2.11)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Tue, 28 Apr
+ 2020 10:11:59 +0200
+Date:   Tue, 28 Apr 2020 10:10:30 +0200
+From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        <jic23@kernel.org>
+Subject: Re: [PATCH 5/6] dt-bindings: iio: scd30: add device binding file
+Message-ID: <20200428081030.GC6908@arch>
+References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
+ <20200422141135.86419-6-tomasz.duszynski@octakon.com>
+ <20200427212826.GA25672@bogus>
 MIME-Version: 1.0
-In-Reply-To: <20200427101044.GA1457790@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20200427212826.GA25672@bogus>
+X-Originating-IP: [89.70.31.203]
+X-ClientProxiedBy: DAG1EX2.emp2.local (172.16.2.2) To DAG2EX1.emp2.local
+ (172.16.2.11)
+X-Ovh-Tracer-Id: 16523425560079719618
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedriedugddtudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkfhggtggujghisehttdertddttdejnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecuffhomhgrihhnpehoiihlrggsshdrohhrghdpghhithhhuhgsrdgtohhmnecukfhppedtrddtrddtrddtpdekledrjedtrdefuddrvddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehjihgtvdefsehkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
+On Mon, Apr 27, 2020 at 04:28:26PM -0500, Rob Herring wrote:
+> On Wed, 22 Apr 2020 16:11:34 +0200, Tomasz Duszynski wrote:
+> > Add SCD30 sensor binding file.
+> >
+> > Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> > ---
+> >  .../iio/chemical/sensirion,scd30.yaml         | 71 +++++++++++++++++++
+> >  1 file changed, 71 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+> >
+>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.example.dt.yaml: scd30@61: 'interrupt-parrent' does not match any of the regexes: 'pinctrl-[0-9]+'
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.example.dt.yaml: scd30: 'interrupt-parrent' does not match any of the regexes: 'pinctrl-[0-9]+'
 
-On 4/27/2020 6:10 PM, Jiri Olsa wrote:
-> On Mon, Apr 20, 2020 at 09:04:44AM +0800, Jin Yao wrote:
-> 
-> SNIP
-> 
->>                compute_flag div.c:25                   compute_flag div.c:25
->>                compute_flag div.c:22                   compute_flag div.c:22
->>                        main div.c:40                           main div.c:40
->>                        main div.c:40                           main div.c:40
->>                        main div.c:39                           main div.c:39*
->>
->> [ Hot chains in old perf data only ]
->>
->> hot chain 1:
->>               cycles: 2, hits: 4.08%
->>           --------------------------
->>                        main div.c:42
->>                compute_flag div.c:28
->>
->> [ Hot chains in new perf data only ]
->>
->> hot chain 1:
->>                                                      cycles: 36, hits: 3.36%
->>                                                   --------------------------
->>                                                    __random_r random_r.c:357
->>                                                        __random random.c:293
->>                                                        __random random.c:293
->>                                                        __random random.c:291
->>                                                        __random random.c:291
->>                                                        __random random.c:291
->>                                                        __random random.c:288
->>                                                               rand rand.c:27
->>                                                               rand rand.c:26
->>                                                                     rand@plt
->>                                                                     rand@plt
->>                                                        compute_flag div.c:25
->>                                                        compute_flag div.c:22
->>                                                                main div.c:40
->>                                                                main div.c:40
->>
->> Now we can see, following streams pair is moved to another section
->> "[ Hot chains in old perf data but source line changed (*) in new perf data ]"
->>
->>              cycles: 1, hits: 26.80%                 cycles: 1, hits: 27.30%
->>          ---------------------------              --------------------------
->>                        main div.c:39                           main div.c:39*
->>                        main div.c:44                           main div.c:44
->>
-> 
-> 
-> so I tried following:
-> 
->    # ./perf record -e cycles:u -b ./perf bench sched pipe
->    # ./perf record -e cycles:u -b ./perf bench sched pipe
->    # ./perf diff -f --stream --before $PWD --after $PWD >out 2>&1
-> 
-> and the out file looks like this:
-> 
->    [ Matched hot chains between old perf data and new perf data ]
-> 
->    [ Hot chains in old perf data but source line changed (*) in new perf data ]
-> 
->    [ Hot chains in old perf data only ]
-> 
->    hot chain 1:
->                 cycles: 0, hits: 4.20%
->             --------------------------
->                     0xffffffff89c00163
-> 
->    hot chain 2:
->                 cycles: 0, hits: 4.11%
->             --------------------------
->                     0xffffffff89c00163
-> 
->    hot chain 3:
->                 cycles: 0, hits: 8.22%
->             --------------------------
->                     0xffffffff89c00163
-> 
->    hot chain 4:
->                 cycles: 0, hits: 5.54%
->             --------------------------
->                     0xffffffff89c00163
-> 
->    hot chain 5:
->                 cycles: 0, hits: 6.10%
->             --------------------------
->                     0xffffffff89c00163
-> 
->    [ Hot chains in new perf data only ]
-> 
->    hot chain 1:
->                                                         cycles: 0, hits: 5.21%
->                                                     --------------------------
->                                                             0xffffffff89c00163
-> 
->    hot chain 2:
->                                                         cycles: 0, hits: 4.79%
->                                                     --------------------------
->                                                             0xffffffff89c00163
-> 
->    hot chain 3:
->                                                         cycles: 0, hits: 5.44%
->                                                     --------------------------
->                                                             0xffffffff89c00163
-> 
->    hot chain 4:
->                                                         cycles: 0, hits: 5.50%
->                                                     --------------------------
->                                                             0xffffffff89c00163
-> 
->    hot chain 5:
->                                                         cycles: 0, hits: 7.14%
->                                                     --------------------------
->                                                             0xffffffff89c00163
-> 
-> 
-> I'd expected more common paths, from what I can see from 'perf report --branch-history'
-> on bpth perf.data and perf.data.old
-> 
-> jirka
-> 
+Well, a typo here.
 
-I used the same command line but I can see more callchain entries.
-
-  perf record -e cycles:u -b perf bench sched pipe
-  perf record -e cycles:u -b perf bench sched pipe
-  perf diff --stream
-
-[ Matched hot chains between old perf data and new perf data ]
-
-hot chain pair 1:
-              cycles: 0, hits: 7.95%                  cycles: 0, hits: 6.61%
-         ---------------------------              --------------------------
-               __libc_read read.c:27                   __libc_read read.c:27
-                  0xffffffffa9800163                      0xffffffffa9800163
-
-[ Hot chains in old perf data but source line changed (*) in new perf data ]
-
-[ Hot chains in old perf data only ]
-
-hot chain 1:
-             cycles: 49, hits: 4.98%
-          --------------------------
-       worker_thread sched-pipe.c:64
-       worker_thread sched-pipe.c:63
-               __libc_read read.c:28
-               __libc_read read.c:27
-                  0xffffffffa9800163
-
-hot chain 2:
-              cycles: 0, hits: 6.68%
-          --------------------------
-                  0xffffffffa9800163
-
-hot chain 3:
-              cycles: 0, hits: 6.57%
-          --------------------------
-                  0xffffffffa9800163
-
-hot chain 4:
-             cycles: 60, hits: 5.20%
-          --------------------------
-       worker_thread sched-pipe.c:67
-       worker_thread sched-pipe.c:60
-       worker_thread sched-pipe.c:70
-       worker_thread sched-pipe.c:70
-               __libc_read read.c:28
-               __libc_read read.c:27
-                  0xffffffffa9800163
-
-[ Hot chains in new perf data only ]
-
-hot chain 1:
-                                                     cycles: 68, hits: 7.83%
-                                                  --------------------------
-                                               worker_thread sched-pipe.c:68
-                                                     __libc_write write.c:28
-                                                     __libc_write write.c:27
-                                                          0xffffffffa9800163
-                                                     __libc_write write.c:27
-                                                                   write@plt
-                                                                   write@plt
-                                               worker_thread sched-pipe.c:67
-                                               worker_thread sched-pipe.c:60
-                                               worker_thread sched-pipe.c:70
-                                               worker_thread sched-pipe.c:70
-                                                       __libc_read read.c:28
-
-hot chain 2:
-                                                     cycles: 70, hits: 4.34%
-                                                  --------------------------
-                                                   worker_thread unistd.h:44
-                                               worker_thread sched-pipe.c:61
-                                               worker_thread sched-pipe.c:65
-                                                     __libc_write write.c:28
-                                                     __libc_write write.c:27
-                                                          0xffffffffa9800163
-                                                     __libc_write write.c:27
-                                                                   write@plt
-                                                                   write@plt
-                                               worker_thread sched-pipe.c:64
-                                               worker_thread sched-pipe.c:63
-                                                       __libc_read read.c:28
-
-hot chain 3:
-                                                      cycles: 0, hits: 5.67%
-                                                  --------------------------
-                                                          0xffffffffa9800163
-
-hot chain 4:
-                                                      cycles: 0, hits: 5.47%
-                                                  --------------------------
-                                                          0xffffffffa9800163
-
-It's interesting that some leaked kernel address are displayed in callchains 
-even we use the -e cycles:u. Should be the skid issue. I have a patch for 
-processing the kernel leaked samples but have not posted it.
-
-But I'm no idea why only the leaked kernel address displayed in your example. :(
-
-Thanks
-Jin Yao
+>
+> See https://patchwork.ozlabs.org/patch/1275131
+>
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+>
+> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+>
+> Please check and re-submit.
