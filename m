@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF554C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 048DFC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA54020575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED06206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:52:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099917;
-	bh=s6XcISL1TY3nhTD3l8bwB8tGpUxjHneG3fVmYe2L/ig=;
+	s=default; t=1588099920;
+	bh=rVC+EJM3XplJEWmL5dFgbo60x3MgSn+iLQCEjdKXHWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aMqn9GCp4Ic/xm4HO3+HlhaRhDysFH6OS4DJ1FdMJLvxdgLCettIHV0ot1D6z0o5V
-	 FCfsZgB9Kit5ApuJ+uh7bSiuEzvctuXZgkce2PupHKe1vn8n+hM2bY1eU7GJcVq5hw
-	 TuZHuuQnSHUSrftdxBDXPcfiwtLLk6w1PugfC/3E=
+	b=KLlRlcRI8SA0KJhtJa9Wg0M/rSgOYfHZGbp+btixIT+BDUQNr9SwjHcuomslFfxTh
+	 og04mzHLDS1v06lcFXShAGxo3TtrdEqy4/mRXHfQWiHSn4pLQQJzYmsqChUfsOJ+G8
+	 Z99YIZ1rYy6Q2V02oIN4ENQSRHOSI7dy23mPsCPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730855AbgD1Sv4 (ORCPT
+        id S1730099AbgD1Sgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:51:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54392 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:36:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730399AbgD1Sgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:36:46 -0400
+        id S1730103AbgD1Sg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:36:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AC20208E0;
-        Tue, 28 Apr 2020 18:36:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEF082085B;
+        Tue, 28 Apr 2020 18:36:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099006;
-        bh=s6XcISL1TY3nhTD3l8bwB8tGpUxjHneG3fVmYe2L/ig=;
+        s=default; t=1588098986;
+        bh=rVC+EJM3XplJEWmL5dFgbo60x3MgSn+iLQCEjdKXHWw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HBQmZj0+IRXNZfUV3FCpRPeNYc4SA/rWG/cBsGun4HMOjvTCdhVvlPOc+WIY+I0Vb
-         2+wMyyHotquC2ZbPWu2bmv8JmjnkTYMohe0rPBvVIfuaw4BJC2AHRi8br5r46DZEaM
-         qvTOvDdQ43SLhQ0gcUJ2RRAK+cBaeX4KhAltuuEI=
+        b=iaPqylloikS8VxtMT3J3I8Zf2oTlRawtV9uHhH7/AKcqHV2QwaWYfm9JQWhNbayp8
+         vVhDaK/iQhZ4q/ha86N6kVou34MskYS8FcRiH7FdfMW0Trch+cplbatdXG5X3lFOp+
+         GAZmKiIbN2qO8nBijGRQvhbs8UhSdPr4SUqfNUIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benjamin Lee <ben@b1c1l1.com>
-Subject: [PATCH 5.6 143/167] mei: me: fix irq number stored in hw struct
-Date:   Tue, 28 Apr 2020 20:25:19 +0200
-Message-Id: <20200428182243.717421299@linuxfoundation.org>
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.19 082/131] iio: xilinx-xadc: Fix sequencer configuration for aux channels in simultaneous mode
+Date:   Tue, 28 Apr 2020 20:24:54 +0200
+Message-Id: <20200428182235.239003880@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,41 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Lee <ben@b1c1l1.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-commit fec874a81b3ec280b91034d892a432fc71fd1522 upstream.
+commit 8bef455c8b1694547ee59e8b1939205ed9d901a6 upstream.
 
-Commit 261b3e1f2a01 ("mei: me: store irq number in the hw struct.")
-stores the irq number in the hw struct before MSI is enabled.  This
-caused a regression for mei_me_synchronize_irq() waiting for the wrong
-irq number.  On my laptop this causes a hang on shutdown.  Fix the issue
-by storing the irq number after enabling MSI.
+The XADC has two internal ADCs. Depending on the mode it is operating in
+either one or both of them are used. The device manual calls this
+continuous (one ADC) and simultaneous (both ADCs) mode.
 
-Fixes: 261b3e1f2a01 ("mei: me: store irq number in the hw struct.")
-Signed-off-by: Benjamin Lee <ben@b1c1l1.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200417184538.349550-1-ben@b1c1l1.com
+The meaning of the sequencing register for the aux channels changes
+depending on the mode.
+
+In continuous mode each bit corresponds to one of the 16 aux channels. And
+the single ADC will convert them one by one in order.
+
+In simultaneous mode the aux channels are split into two groups the first 8
+channels are assigned to the first ADC and the other 8 channels to the
+second ADC. The upper 8 bits of the sequencing register are unused and the
+lower 8 bits control both ADCs. This means a bit needs to be set if either
+the corresponding channel from the first group or the second group (or
+both) are set.
+
+Currently the driver does not have the special handling required for
+simultaneous mode. Add it.
+
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Fixes: bdc8cda1d010 ("iio:adc: Add Xilinx XADC driver")
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/mei/pci-me.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/iio/adc/xilinx-xadc-core.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/drivers/misc/mei/pci-me.c
-+++ b/drivers/misc/mei/pci-me.c
-@@ -212,11 +212,12 @@ static int mei_me_probe(struct pci_dev *
- 	}
- 	hw = to_me_hw(dev);
- 	hw->mem_addr = pcim_iomap_table(pdev)[0];
--	hw->irq = pdev->irq;
- 	hw->read_fws = mei_me_read_fws;
+--- a/drivers/iio/adc/xilinx-xadc-core.c
++++ b/drivers/iio/adc/xilinx-xadc-core.c
+@@ -799,6 +799,16 @@ static int xadc_preenable(struct iio_dev
+ 	if (ret)
+ 		goto err;
  
- 	pci_enable_msi(pdev);
- 
-+	hw->irq = pdev->irq;
++	/*
++	 * In simultaneous mode the upper and lower aux channels are samples at
++	 * the same time. In this mode the upper 8 bits in the sequencer
++	 * register are don't care and the lower 8 bits control two channels
++	 * each. As such we must set the bit if either the channel in the lower
++	 * group or the upper group is enabled.
++	 */
++	if (seq_mode == XADC_CONF1_SEQ_SIMULTANEOUS)
++		scan_mask = ((scan_mask >> 8) | scan_mask) & 0xff0000;
 +
- 	 /* request and enable interrupt */
- 	irqflags = pci_dev_msi_enabled(pdev) ? IRQF_ONESHOT : IRQF_SHARED;
- 
+ 	ret = xadc_write_adc_reg(xadc, XADC_REG_SEQ(1), scan_mask >> 16);
+ 	if (ret)
+ 		goto err;
 
 
