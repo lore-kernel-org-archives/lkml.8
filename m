@@ -2,77 +2,160 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA17C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FEEC83006
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88AD2206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 436FB206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:18:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbgD1NR6 (ORCPT
+        id S1727832AbgD1NSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:17:58 -0400
-Received: from mail-m17613.qiye.163.com ([59.111.176.13]:58153 "EHLO
-        mail-m17613.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726827AbgD1NR6 (ORCPT
+        Tue, 28 Apr 2020 09:18:15 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:34972 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726859AbgD1NSO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:17:58 -0400
-Received: from ubuntu.localdomain (unknown [157.0.31.122])
-        by mail-m17613.qiye.163.com (Hmail) with ESMTPA id 8F1184829C3;
-        Tue, 28 Apr 2020 21:17:55 +0800 (CST)
-From:   Bernard Zhao <bernard@vivo.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Kevin Hilman <khilman@baylibre.com>,
-        dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     opensource.kernel@vivo.com, Bernard Zhao <bernard@vivo.com>
-Subject: [PATCH] drm/meson: pm resume add return errno branch
-Date:   Tue, 28 Apr 2020 06:17:47 -0700
-Message-Id: <20200428131747.2099-1-bernard@vivo.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 28 Apr 2020 09:18:14 -0400
+Received: by mail-il1-f199.google.com with SMTP id r5so23040138ilq.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 06:18:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=cO1dmFjxj7pHgf6wRSI/Jxa/CJInWZCNMVN5MW1ZKzY=;
+        b=n2y65/VgmVecHy7sFuTtapmK/uOngxMki0JaD/6aL58Rm7PYmHi+jGNlb7EkVuhJAD
+         D0yBdI5shSxvEUhzCURtumCS1ivcNqCajUI/jZ0ZjVgy+CPDaA/HGbxt3+owsAGkbTGz
+         xIVI/bxP7cMV0cMSqyVUoA2MuOi1umwB827PKNtoIFT/OEDnAqY4M+8beCx35LQ3qCMk
+         XZRmGmqw2Idw5Caj+/66NHyBAMepsiSt7W09Obo8ZyJnfX3zlNoXAdTgQ7Hy3FsX6wGO
+         E1RkB5MbUb3Z+NODNu4lmDO+zIgM5TNzBr8qehQiUU5AJ35dXTXtGiB+NZq+OtRBf+9B
+         Sbtg==
+X-Gm-Message-State: AGi0PuYqNWUOOnBpKLrMsmXr+AIUc7jDB2U6o8kkKEvEGTTnV5s3l6XW
+        jlXAIoR5jKsieVKCJwpm8XxxkUycoTrhG7vpRU1X4ZcTxE0T
+X-Google-Smtp-Source: APiQypJBIh6sWAk2VEH67hkKX92uJASxIyEFLfJT+ARXHfA+2StVE5xLgV2uAHqaoDV1NZZBwy9nTgFUgWjVtq3tx3om0yfkOcEJ
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVMSU5CQkJDSElKTkhISVlXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OSo6Kio*DDgrLE4BVk83MQgt
-        KzYwCzpVSlVKTkNDS0xCQ0xOQ0lOVTMWGhIXVRkeCRUaCR87DRINFFUYFBZFWVdZEgtZQVlKTkxV
-        S1VISlVKSUlZV1kIAVlBSUpKSjcG
-X-HM-Tid: 0a71c0efd6a593bakuws8f1184829c3
+X-Received: by 2002:a02:8247:: with SMTP id q7mr3992896jag.68.1588079893206;
+ Tue, 28 Apr 2020 06:18:13 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 06:18:13 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e8dc1d05a459a988@google.com>
+Subject: KMSAN: uninit-value in sctp_rcv
+From:   syzbot <syzbot+95632cde252ddaed5a8e@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, glider@google.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
+        marcelo.leitner@gmail.com, netdev@vger.kernel.org,
+        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
+        vyasevich@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_resump api did not handle drm_mode_config_helper_resume error.
-This change add handle to return drm_mode_config_helper_resume`s
-error number. This code logic is aligned with api pm_suspend.
-After this change, the code maybe a bit readable.
+Hello,
 
-Signed-off-by: Bernard Zhao <bernard@vivo.com>
+syzbot found the following crash on:
+
+HEAD commit:    bfa90a4a kmsan: remove __GFP_NO_KMSAN_SHADOW
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=11d13ca7e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a5915107b3106aaa
+dashboard link: https://syzkaller.appspot.com/bug?extid=95632cde252ddaed5a8e
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13076490100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12996d80100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+95632cde252ddaed5a8e@syzkaller.appspotmail.com
+
+batman_adv: batadv0: Interface activated: batadv_slave_1
+=====================================================
+BUG: KMSAN: uninit-value in __sctp_rcv_walk_lookup net/sctp/input.c:1208 [inline]
+BUG: KMSAN: uninit-value in __sctp_rcv_lookup_harder net/sctp/input.c:1287 [inline]
+BUG: KMSAN: uninit-value in __sctp_rcv_lookup net/sctp/input.c:1307 [inline]
+BUG: KMSAN: uninit-value in sctp_rcv+0x2b2d/0x5410 net/sctp/input.c:159
+CPU: 0 PID: 8827 Comm: syz-executor885 Not tainted 5.6.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ __sctp_rcv_walk_lookup net/sctp/input.c:1208 [inline]
+ __sctp_rcv_lookup_harder net/sctp/input.c:1287 [inline]
+ __sctp_rcv_lookup net/sctp/input.c:1307 [inline]
+ sctp_rcv+0x2b2d/0x5410 net/sctp/input.c:159
+ ip_protocol_deliver_rcu+0x700/0xbc0 net/ipv4/ip_input.c:204
+ ip_local_deliver_finish net/ipv4/ip_input.c:231 [inline]
+ NF_HOOK include/linux/netfilter.h:307 [inline]
+ ip_local_deliver+0x62a/0x7c0 net/ipv4/ip_input.c:252
+ dst_input include/net/dst.h:442 [inline]
+ ip_rcv_finish net/ipv4/ip_input.c:428 [inline]
+ NF_HOOK include/linux/netfilter.h:307 [inline]
+ ip_rcv+0x6cf/0x750 net/ipv4/ip_input.c:538
+ __netif_receive_skb_one_core net/core/dev.c:5187 [inline]
+ __netif_receive_skb net/core/dev.c:5301 [inline]
+ netif_receive_skb_internal net/core/dev.c:5391 [inline]
+ netif_receive_skb+0xbb5/0xf20 net/core/dev.c:5450
+ tun_rx_batched include/linux/skbuff.h:4351 [inline]
+ tun_get_user+0x6aef/0x6f60 drivers/net/tun.c:1997
+ tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2026
+ call_write_iter include/linux/fs.h:1902 [inline]
+ new_sync_write fs/read_write.c:483 [inline]
+ __vfs_write+0xa5a/0xca0 fs/read_write.c:496
+ vfs_write+0x44a/0x8f0 fs/read_write.c:558
+ ksys_write+0x267/0x450 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write+0x92/0xb0 fs/read_write.c:620
+ __x64_sys_write+0x4a/0x70 fs/read_write.c:620
+ do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x443679
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fffee474918 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000003172 RCX: 0000000000443679
+RDX: 000000000000fdef RSI: 0000000020000240 RDI: 0000000000000003
+RBP: 00007fffee474940 R08: 0000000000000000 R09: 0000000000000000
+R10: 000000000000aa14 R11: 0000000000000246 R12: 656c6c616b7a7973
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
+Uninit was created at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
+ kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:80
+ slab_alloc_node mm/slub.c:2801 [inline]
+ __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4420
+ __kmalloc_reserve net/core/skbuff.c:142 [inline]
+ __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
+ alloc_skb include/linux/skbuff.h:1081 [inline]
+ alloc_skb_with_frags+0x18c/0xa70 net/core/skbuff.c:5764
+ sock_alloc_send_pskb+0xada/0xc60 net/core/sock.c:2245
+ tun_alloc_skb drivers/net/tun.c:1529 [inline]
+ tun_get_user+0x10ae/0x6f60 drivers/net/tun.c:1843
+ tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2026
+ call_write_iter include/linux/fs.h:1902 [inline]
+ new_sync_write fs/read_write.c:483 [inline]
+ __vfs_write+0xa5a/0xca0 fs/read_write.c:496
+ vfs_write+0x44a/0x8f0 fs/read_write.c:558
+ ksys_write+0x267/0x450 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write+0x92/0xb0 fs/read_write.c:620
+ __x64_sys_write+0x4a/0x70 fs/read_write.c:620
+ do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+=====================================================
+
+
 ---
- drivers/gpu/drm/meson/meson_drv.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/gpu/drm/meson/meson_drv.c b/drivers/gpu/drm/meson/meson_drv.c
-index b5f5eb7b4bb9..8c2e1b47e81a 100644
---- a/drivers/gpu/drm/meson/meson_drv.c
-+++ b/drivers/gpu/drm/meson/meson_drv.c
-@@ -412,9 +412,7 @@ static int __maybe_unused meson_drv_pm_resume(struct device *dev)
- 	if (priv->afbcd.ops)
- 		priv->afbcd.ops->init(priv);
- 
--	drm_mode_config_helper_resume(priv->drm);
--
--	return 0;
-+	return drm_mode_config_helper_resume(priv->drm);
- }
- 
- static int compare_of(struct device *dev, void *data)
--- 
-2.26.2
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
