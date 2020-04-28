@@ -2,135 +2,100 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 943E1C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E15DC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74B35206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBF6E206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:08:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E4/lGb36"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iU4A37lz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbgD1TIF (ORCPT
+        id S1728801AbgD1TIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 15:08:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39451 "EHLO
+        Tue, 28 Apr 2020 15:08:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47397 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728736AbgD1TIE (ORCPT
+        with ESMTP id S1728643AbgD1TIx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 15:08:04 -0400
+        Tue, 28 Apr 2020 15:08:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588100882;
+        s=mimecast20190719; t=1588100930;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=vO4Cm8UdLpQ7CoyazjBPlfiZT+UDKaWc4FxUCYgXU0w=;
-        b=E4/lGb36j6Tz2eo4j0XZipXSPU/PHYjBX21E1Ssr32iSAlN2+gIY//WOgb/kUli19WI4I8
-        8MCQ6FS7x1FZ+aRGY9wMy/oDq2pgKVW4DLtyyRt3M/NqywWlt7tY8jTJWzeaZTkhRVsRho
-        7KK0KnRA74SL9wB2lgRV6cTVHYNThtE=
+        bh=DmkRvjwC+u8+jIYVrru4c5dbjRS9yf05sZWdTQ7YeX0=;
+        b=iU4A37lzPgyn4ckDsU2JB5vV5HWRGagezU77tj58TPmUMc2IhGIykduULzMBpNvicPJfMG
+        aH6lTQzQBBI62Z0KOtsWbdOLELIyUWOZ/AsOK50yt9gCvM2ECu0RXD3fTemIAVKob6Zvcq
+        JILDWzi+L5+x6A1BAfqLISIh+XiTW98=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-1-jYGlPKQCNoOI6Dqqt4M9zQ-1; Tue, 28 Apr 2020 15:07:58 -0400
-X-MC-Unique: jYGlPKQCNoOI6Dqqt4M9zQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-313-fJURyZAzM7mNEkkjzKzvDg-1; Tue, 28 Apr 2020 15:08:44 -0400
+X-MC-Unique: fJURyZAzM7mNEkkjzKzvDg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2CFCC18FE861;
-        Tue, 28 Apr 2020 19:07:55 +0000 (UTC)
-Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 759FE5D71E;
-        Tue, 28 Apr 2020 19:07:53 +0000 (UTC)
-Date:   Tue, 28 Apr 2020 13:07:52 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-mm@kvack.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [regression?] Re: [PATCH v6 06/12] mm/gup: track FOLL_PIN pages
-Message-ID: <20200428130752.75c153bd@w520.home>
-In-Reply-To: <20200428174957.GV26002@ziepe.ca>
-References: <20200211001536.1027652-1-jhubbard@nvidia.com>
-        <20200211001536.1027652-7-jhubbard@nvidia.com>
-        <20200424121846.5ee2685f@w520.home>
-        <5b901542-d949-8d7e-89c7-f8d5ee20f6e9@nvidia.com>
-        <20200424141548.5afdd2bb@w520.home>
-        <665ffb48-d498-90f4-f945-997a922fc370@nvidia.com>
-        <20200428105455.30343fb4@w520.home>
-        <20200428174957.GV26002@ziepe.ca>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 18F82107ACCD;
+        Tue, 28 Apr 2020 19:08:43 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.231])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 0DA2160CD3;
+        Tue, 28 Apr 2020 19:08:37 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue, 28 Apr 2020 21:08:42 +0200 (CEST)
+Date:   Tue, 28 Apr 2020 21:08:37 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Waiman Long <longman@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>
+Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
+Message-ID: <20200428190836.GC29960@redhat.com>
+References: <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com>
+ <87imi8nzlw.fsf@x220.int.ebiederm.org>
+ <CAHk-=wgh4zts+3hdkGzHLJ6pBGumcJ=23gRbMfubDrLstis2Bg@mail.gmail.com>
+ <CAHk-=whKHpERyVv2-C+kxq9KV_mJPW3hkGDpn6f4yOvs+au8SA@mail.gmail.com>
+ <20200411182043.GA3136@redhat.com>
+ <CAHk-=wgwXpKepChGi4ZhQVxZxD0ic8s2CDXvUmqBTMaKGz-fjg@mail.gmail.com>
+ <20200412195049.GA23824@redhat.com>
+ <CAHk-=wiDwR+6ugYaKEGHfYteLF+NH5xu=T7uuUTkK9y-hr6zow@mail.gmail.com>
+ <AM6PR03MB51708CF53D8A02086427DAC2E4AC0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wi_zr9dwX3UBYvgkmm6eVQfRP50orryJ6ZVAxuFqdSG5A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wi_zr9dwX3UBYvgkmm6eVQfRP50orryJ6ZVAxuFqdSG5A@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 14:49:57 -0300
-Jason Gunthorpe <jgg@ziepe.ca> wrote:
+On 04/28, Linus Torvalds wrote:
+>
+> On Mon, Apr 27, 2020 at 7:56 PM Bernd Edlinger
+> <bernd.edlinger@hotmail.de> wrote:
+> >
+> > was this resolved meanwhile?
+>
+> No. I think the tentative plan is to just apply Oleg's "don't wait for
+> zombie threads with cred_guard_mutex held" patch, hopefully with that
+> de_thread() moved into install_exec_creds() (right after the dropping
+> of the locks).
 
-> On Tue, Apr 28, 2020 at 10:54:55AM -0600, Alex Williamson wrote:
-> >  static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
-> >  {
-> >  	struct vfio_pci_device *vdev = device_data;
-> > @@ -1253,8 +1323,14 @@ static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
-> >  	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
-> >  	vma->vm_pgoff = (pci_resource_start(pdev, index) >> PAGE_SHIFT) + pgoff;
-> >  
-> > +	vma->vm_ops = &vfio_pci_mmap_ops;
-> > +
-> > +#if 1
-> > +	return 0;
-> > +#else
-> >  	return remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
-> > -			       req_len, vma->vm_page_prot);
-> > +			       vma->vm_end - vma->vm_start, vma->vm_page_prot);  
-> 
-> The remap_pfn_range here is what tells get_user_pages this is a
-> non-struct page mapping:
-> 
-> 	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
-> 
-> Which has to be set when the VMA is created, they shouldn't be
-> modified during fault.
+Oops. I can update that old patch but somehow I thought there is a better
+plan which I don't yet understand...
 
-Aha, thanks Jason!  So fundamentally, pin_user_pages_remote() should
-never have been faulting in this vma since the pages are non-struct
-page backed.  Maybe I was just getting lucky before this commit.  For a
-VM_PFNMAP, vaddr_get_pfn() only needs pin_user_pages_remote() to return
-error and the vma information that we setup in vfio_pci_mmap().  We
-only need the fault handler to trigger for user access, which is what I
-see with this change.  That should work for me.
+And, IIRC, Jan had some ideas how to rework the new creds calculation in
+execve paths to avoid the cred_guard_mutex deadlock?
 
-> Also the vma code above looked a little strange to me, if you do send
-> something like this cc me and I can look at it. I did some work like
-> this for rdma a while ago..
-
-Cool, I'll do that.  I'd like to be able to zap the vmas from user
-access at a later point and I have doubts that I'm holding the
-refs/locks that I need to for that.  Thanks,
-
-Alex
+Oleg.
 
