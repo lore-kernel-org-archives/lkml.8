@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A306C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31269C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD5020B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E3E32076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099232;
-	bh=0sOTq4s30ooeuz5sbfz4jOZfhxiqi4UmbeG8VQrVoww=;
+	s=default; t=1588099241;
+	bh=/VeN2kseMO/vJvvp+SL1s1O6roY4rfv52qyfjitNZjU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ex3tes9ulLPW88Yg/68m408sQJIFq7cVYzxIWE6hWV1xiVhsRV8vvdARylY3Sl1Pg
-	 Cv+qnZL199mDHL4h6xYsuj6AIszJW4RpCACSDSTJzuVmm8AfxdGmBbxmOKvUgm0JtZ
-	 ciRF+DN3SQol9poeevMAA0iZbuniOw1FyqL9XRSM=
+	b=zpi/2otwy1rKpvNQ8UyPGNqr9daQaWPjWKs2Du47w7n6GxGVZuZM7lN+qUJa0g/6n
+	 KEJ2jaur4CIFcA1qVpzwBQjXA+MxPYoIzwzFP8NTY2KHOgj61q2IEad6gaAeovc8/b
+	 quAinrAm1DY+btuR1813p/5WZm9HnRILd/GEGitc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729745AbgD1Skb (ORCPT
+        id S1730954AbgD1Skk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:40:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57806 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:40:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728628AbgD1SjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:39:04 -0400
+        id S1730935AbgD1Ska (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:40:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33FFB20575;
-        Tue, 28 Apr 2020 18:39:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 107AB20575;
+        Tue, 28 Apr 2020 18:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099143;
-        bh=0sOTq4s30ooeuz5sbfz4jOZfhxiqi4UmbeG8VQrVoww=;
+        s=default; t=1588099229;
+        bh=/VeN2kseMO/vJvvp+SL1s1O6roY4rfv52qyfjitNZjU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DDwbKPRjpFjUA3dqNsQtWm1fqhAt04CVeid5qgmiROAqEtzqfiVsN6rV8DZ4aR+W8
-         8D2JZ2qxkdtz3Es3tVV/4QhahVan11+bQAGtIzc1KbsB5wN6JiOJiy0YvcheUSXGzy
-         +Xj7zjMwbtoHtoOL72wgwS4m566LZSYbml0Keqoc=
+        b=aEMg1Ehbybj2xwRnEihaVOYGV4YDvZeUsbvKzZRCmKLlrRykYLi5KxSi6AhTWgzlm
+         Ref750pprdMeP4KZRstvGMm4B+6xTam0FHKlj8Lf/5M67mwzb9miDITjDi2DaGxrSn
+         IjfVcK8wxUXT1zyXZGfjOgTSCY19YIC596njl2Vo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH 5.6 137/167] vt: dont use kmalloc() for the unicode screen buffer
-Date:   Tue, 28 Apr 2020 20:25:13 +0200
-Message-Id: <20200428182242.833106263@linuxfoundation.org>
+        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
+Subject: [PATCH 4.19 118/131] staging: vt6656: Fix calling conditions of vnt_set_bss_mode
+Date:   Tue, 28 Apr 2020 20:25:30 +0200
+Message-Id: <20200428182240.071527366@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,56 +58,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Pitre <nico@fluxnic.net>
+From: Malcolm Priestley <tvboxspy@gmail.com>
 
-commit 9a98e7a80f95378c9ee0c644705e3b5aa54745f1 upstream.
+commit 664ba5180234593b4b8517530e8198bf2f7359e2 upstream.
 
-Even if the actual screen size is bounded in vc_do_resize(), the unicode
-buffer is still a little more than twice the size of the glyph buffer
-and may exceed MAX_ORDER down the kmalloc() path. This can be triggered
-from user space.
+vnt_set_bss_mode needs to be called on all changes to BSS_CHANGED_BASIC_RATES,
+BSS_CHANGED_ERP_PREAMBLE and BSS_CHANGED_ERP_SLOT
 
-Since there is no point having a physically contiguous buffer here,
-let's avoid the above issue as well as reducing pressure on high order
-allocations by using vmalloc() instead.
+Remove all other calls and vnt_update_ifs which is called in vnt_set_bss_mode.
 
-Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
-Cc: <stable@vger.kernel.org>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.2003282214210.2671@knanqh.ubzr
+Fixes an issue that preamble mode is not being updated correctly.
+
+Fixes: c12603576e06 ("staging: vt6656: Only call vnt_set_bss_mode on basic rates change.")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
+Link: https://lore.kernel.org/r/44110801-6234-50d8-c583-9388f04b486c@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/vt.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/staging/vt6656/main_usb.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -81,6 +81,7 @@
- #include <linux/errno.h>
- #include <linux/kd.h>
- #include <linux/slab.h>
-+#include <linux/vmalloc.h>
- #include <linux/major.h>
- #include <linux/mm.h>
- #include <linux/console.h>
-@@ -350,7 +351,7 @@ static struct uni_screen *vc_uniscr_allo
- 	/* allocate everything in one go */
- 	memsize = cols * rows * sizeof(char32_t);
- 	memsize += rows * sizeof(char32_t *);
--	p = kmalloc(memsize, GFP_KERNEL);
-+	p = vmalloc(memsize);
- 	if (!p)
- 		return NULL;
+--- a/drivers/staging/vt6656/main_usb.c
++++ b/drivers/staging/vt6656/main_usb.c
+@@ -595,8 +595,6 @@ static int vnt_add_interface(struct ieee
  
-@@ -366,7 +367,7 @@ static struct uni_screen *vc_uniscr_allo
+ 	priv->op_mode = vif->type;
  
- static void vc_uniscr_set(struct vc_data *vc, struct uni_screen *new_uniscr)
- {
--	kfree(vc->vc_uni_screen);
-+	vfree(vc->vc_uni_screen);
- 	vc->vc_uni_screen = new_uniscr;
- }
+-	vnt_set_bss_mode(priv);
+-
+ 	/* LED blink on TX */
+ 	vnt_mac_set_led(priv, LEDSTS_STS, LEDSTS_INTER);
  
+@@ -683,7 +681,6 @@ static void vnt_bss_info_changed(struct
+ 		priv->basic_rates = conf->basic_rates;
+ 
+ 		vnt_update_top_rates(priv);
+-		vnt_set_bss_mode(priv);
+ 
+ 		dev_dbg(&priv->usb->dev, "basic rates %x\n", conf->basic_rates);
+ 	}
+@@ -712,11 +709,14 @@ static void vnt_bss_info_changed(struct
+ 			priv->short_slot_time = false;
+ 
+ 		vnt_set_short_slot_time(priv);
+-		vnt_update_ifs(priv);
+ 		vnt_set_vga_gain_offset(priv, priv->bb_vga[0]);
+ 		vnt_update_pre_ed_threshold(priv, false);
+ 	}
+ 
++	if (changed & (BSS_CHANGED_BASIC_RATES | BSS_CHANGED_ERP_PREAMBLE |
++		       BSS_CHANGED_ERP_SLOT))
++		vnt_set_bss_mode(priv);
++
+ 	if (changed & BSS_CHANGED_TXPOWER)
+ 		vnt_rf_setpower(priv, priv->current_rate,
+ 				conf->chandef.chan->hw_value);
 
 
