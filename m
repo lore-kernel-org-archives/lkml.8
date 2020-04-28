@@ -2,50 +2,52 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D209C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CFFC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D1982076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7640D2076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099375;
-	bh=gYpCN2E60RoWYWQQNwY8vf9911kUG5TcfdItDCLSNYU=;
+	s=default; t=1588099382;
+	bh=MfnMWtZZy4UlrU6mRR+o4ZqcxjwM4uZgbP+GXH38zyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2l4C+rC+abNChG6cbgq3jsA9s/oTVa3eGzzDsNMOxgbBsM1TTHpb2zNfHU3DVka8T
-	 2TyXLKneKVd9YFj92NSPnXjAchOSiU39iVOUaSF+/skfqOi5ag8SgQNQFJBT27Jydx
-	 qfEkOomhHFbBMjLZ1waynTotmqUaX6tYOiTPL/ig=
+	b=ZloeRamlsMH4ChO3TVpXFViqUjYG/a4AdGZbdVZiC8K+KSUaXZzNCtzxilAhrFRF6
+	 ufPQ83PnjvyPRdanRcpxhxZRm1eDzZFkXq/94BGxruQOInwm9GIvju8UqYu5YAw5im
+	 1AyY7Cu/zhJXnmTCyq8BWYLe3Mka+nhj2WUYnxPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731161AbgD1Smy (ORCPT
+        id S1730604AbgD1SnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:42:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34998 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:43:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731152AbgD1Smt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:42:49 -0400
+        id S1731166AbgD1Sm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:42:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8379420575;
-        Tue, 28 Apr 2020 18:42:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C67462085B;
+        Tue, 28 Apr 2020 18:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099369;
-        bh=gYpCN2E60RoWYWQQNwY8vf9911kUG5TcfdItDCLSNYU=;
+        s=default; t=1588099376;
+        bh=MfnMWtZZy4UlrU6mRR+o4ZqcxjwM4uZgbP+GXH38zyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pjtsHJUfyKuGN+4Og5OFwWSv3OwaaBbQoGUxcsOE3YKaqEPGVS9l07FGC/VssvwII
-         hQbiHlkavvYPjOlcArU6xCh4Wt/sEzCctYo9ysTtxWU6sEFCA8OhHY/yfMdZjBjz+w
-         KlG0ej4loy4UnDWbkKjxnUnrrwgm63xDQTkcfuIk=
+        b=nQimQWyIjNO5WzZe6GUevzKFwFA4bpi0bPlh3GhKsQ6tBupqM7f8mlPelBMw1cEcw
+         PiJQa2qjwJQ0J9pxD24DcRcaz/jz0CHoF+LHadKREB471Q3c5TmdRbJKd3A6LSzwCp
+         RAS6Gb25B1TndSwOODBevSVOJbHMVXce2VgdlFZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Changming Liu <liu.changm@northeastern.edu>
-Subject: [PATCH 5.4 095/168] USB: sisusbvga: Change port variable from signed to unsigned
-Date:   Tue, 28 Apr 2020 20:24:29 +0200
-Message-Id: <20200428182244.335896795@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+49e69b4d71a420ceda3e@syzkaller.appspotmail.com,
+        Paul Moore <paul@paul-moore.com>
+Subject: [PATCH 5.4 124/168] audit: check the length of userspace generated audit records
+Date:   Tue, 28 Apr 2020 20:24:58 +0200
+Message-Id: <20200428182248.031809709@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -58,128 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changming Liu <liu.changm@northeastern.edu>
+From: Paul Moore <paul@paul-moore.com>
 
-commit 2df7405f79ce1674d73c2786fe1a8727c905d65b upstream.
+commit 763dafc520add02a1f4639b500c509acc0ea8e5b upstream.
 
-Change a bunch of arguments of wrapper functions which pass signed
-integer to an unsigned integer which might cause undefined behaviors
-when sign integer overflow.
+Commit 756125289285 ("audit: always check the netlink payload length
+in audit_receive_msg()") fixed a number of missing message length
+checks, but forgot to check the length of userspace generated audit
+records.  The good news is that you need CAP_AUDIT_WRITE to submit
+userspace audit records, which is generally only given to trusted
+processes, so the impact should be limited.
 
-Signed-off-by: Changming Liu <liu.changm@northeastern.edu>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/BL0PR06MB45482D71EA822D75A0E60A2EE5D50@BL0PR06MB4548.namprd06.prod.outlook.com
+Cc: stable@vger.kernel.org
+Fixes: 756125289285 ("audit: always check the netlink payload length in audit_receive_msg()")
+Reported-by: syzbot+49e69b4d71a420ceda3e@syzkaller.appspotmail.com
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/sisusbvga/sisusb.c      |   20 ++++++++++----------
- drivers/usb/misc/sisusbvga/sisusb_init.h |   14 +++++++-------
- 2 files changed, 17 insertions(+), 17 deletions(-)
+ kernel/audit.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/misc/sisusbvga/sisusb.c
-+++ b/drivers/usb/misc/sisusbvga/sisusb.c
-@@ -1199,18 +1199,18 @@ static int sisusb_read_mem_bulk(struct s
- /* High level: Gfx (indexed) register access */
+--- a/kernel/audit.c
++++ b/kernel/audit.c
+@@ -1325,6 +1325,9 @@ static int audit_receive_msg(struct sk_b
+ 	case AUDIT_FIRST_USER_MSG2 ... AUDIT_LAST_USER_MSG2:
+ 		if (!audit_enabled && msg_type != AUDIT_USER_AVC)
+ 			return 0;
++		/* exit early if there isn't at least one character to print */
++		if (data_len < 2)
++			return -EINVAL;
  
- #ifdef CONFIG_USB_SISUSBVGA_CON
--int sisusb_setreg(struct sisusb_usb_data *sisusb, int port, u8 data)
-+int sisusb_setreg(struct sisusb_usb_data *sisusb, u32 port, u8 data)
- {
- 	return sisusb_write_memio_byte(sisusb, SISUSB_TYPE_IO, port, data);
- }
- 
--int sisusb_getreg(struct sisusb_usb_data *sisusb, int port, u8 *data)
-+int sisusb_getreg(struct sisusb_usb_data *sisusb, u32 port, u8 *data)
- {
- 	return sisusb_read_memio_byte(sisusb, SISUSB_TYPE_IO, port, data);
- }
- #endif
- 
--int sisusb_setidxreg(struct sisusb_usb_data *sisusb, int port,
-+int sisusb_setidxreg(struct sisusb_usb_data *sisusb, u32 port,
- 		u8 index, u8 data)
- {
- 	int ret;
-@@ -1220,7 +1220,7 @@ int sisusb_setidxreg(struct sisusb_usb_d
- 	return ret;
- }
- 
--int sisusb_getidxreg(struct sisusb_usb_data *sisusb, int port,
-+int sisusb_getidxreg(struct sisusb_usb_data *sisusb, u32 port,
- 		u8 index, u8 *data)
- {
- 	int ret;
-@@ -1230,7 +1230,7 @@ int sisusb_getidxreg(struct sisusb_usb_d
- 	return ret;
- }
- 
--int sisusb_setidxregandor(struct sisusb_usb_data *sisusb, int port, u8 idx,
-+int sisusb_setidxregandor(struct sisusb_usb_data *sisusb, u32 port, u8 idx,
- 		u8 myand, u8 myor)
- {
- 	int ret;
-@@ -1245,7 +1245,7 @@ int sisusb_setidxregandor(struct sisusb_
- }
- 
- static int sisusb_setidxregmask(struct sisusb_usb_data *sisusb,
--		int port, u8 idx, u8 data, u8 mask)
-+		u32 port, u8 idx, u8 data, u8 mask)
- {
- 	int ret;
- 	u8 tmp;
-@@ -1258,13 +1258,13 @@ static int sisusb_setidxregmask(struct s
- 	return ret;
- }
- 
--int sisusb_setidxregor(struct sisusb_usb_data *sisusb, int port,
-+int sisusb_setidxregor(struct sisusb_usb_data *sisusb, u32 port,
- 		u8 index, u8 myor)
- {
- 	return sisusb_setidxregandor(sisusb, port, index, 0xff, myor);
- }
- 
--int sisusb_setidxregand(struct sisusb_usb_data *sisusb, int port,
-+int sisusb_setidxregand(struct sisusb_usb_data *sisusb, u32 port,
- 		u8 idx, u8 myand)
- {
- 	return sisusb_setidxregandor(sisusb, port, idx, myand, 0x00);
-@@ -2785,8 +2785,8 @@ static loff_t sisusb_lseek(struct file *
- static int sisusb_handle_command(struct sisusb_usb_data *sisusb,
- 		struct sisusb_command *y, unsigned long arg)
- {
--	int	retval, port, length;
--	u32	address;
-+	int	retval, length;
-+	u32	port, address;
- 
- 	/* All our commands require the device
- 	 * to be initialized.
---- a/drivers/usb/misc/sisusbvga/sisusb_init.h
-+++ b/drivers/usb/misc/sisusbvga/sisusb_init.h
-@@ -812,17 +812,17 @@ static const struct SiS_VCLKData SiSUSB_
- int SiSUSBSetMode(struct SiS_Private *SiS_Pr, unsigned short ModeNo);
- int SiSUSBSetVESAMode(struct SiS_Private *SiS_Pr, unsigned short VModeNo);
- 
--extern int sisusb_setreg(struct sisusb_usb_data *sisusb, int port, u8 data);
--extern int sisusb_getreg(struct sisusb_usb_data *sisusb, int port, u8 * data);
--extern int sisusb_setidxreg(struct sisusb_usb_data *sisusb, int port,
-+extern int sisusb_setreg(struct sisusb_usb_data *sisusb, u32 port, u8 data);
-+extern int sisusb_getreg(struct sisusb_usb_data *sisusb, u32 port, u8 * data);
-+extern int sisusb_setidxreg(struct sisusb_usb_data *sisusb, u32 port,
- 			    u8 index, u8 data);
--extern int sisusb_getidxreg(struct sisusb_usb_data *sisusb, int port,
-+extern int sisusb_getidxreg(struct sisusb_usb_data *sisusb, u32 port,
- 			    u8 index, u8 * data);
--extern int sisusb_setidxregandor(struct sisusb_usb_data *sisusb, int port,
-+extern int sisusb_setidxregandor(struct sisusb_usb_data *sisusb, u32 port,
- 				 u8 idx, u8 myand, u8 myor);
--extern int sisusb_setidxregor(struct sisusb_usb_data *sisusb, int port,
-+extern int sisusb_setidxregor(struct sisusb_usb_data *sisusb, u32 port,
- 			      u8 index, u8 myor);
--extern int sisusb_setidxregand(struct sisusb_usb_data *sisusb, int port,
-+extern int sisusb_setidxregand(struct sisusb_usb_data *sisusb, u32 port,
- 			       u8 idx, u8 myand);
- 
- void sisusb_delete(struct kref *kref);
+ 		err = audit_filter(msg_type, AUDIT_FILTER_USER);
+ 		if (err == 1) { /* match or error */
 
 
