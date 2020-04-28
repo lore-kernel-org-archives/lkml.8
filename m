@@ -2,153 +2,872 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C18CFC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615C3C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 980362064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:25:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ozCRrozu"
+	by mail.kernel.org (Postfix) with ESMTP id 2AF562064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:27:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgD1IZ4 (ORCPT
+        id S1726811AbgD1I1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 04:25:56 -0400
-Received: from mail-eopbgr70089.outbound.protection.outlook.com ([40.107.7.89]:63643
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726377AbgD1IZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 04:25:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jaPwuwp+LNVMO5sbHRRKw3zb1MbyMhefKPIvpfsY81hJeyvrUJsyuYVNgES2f4tTeJr94vNzFR9oApFmMjHfxMvJvR3DFuwEhNXc2hUIbU9E7Wf8A+LZlsig11tU4A60lyZooGAYL4PajcGYy/8jXgn82D/Xt4YgUCQDGu90sdg5BJOHosyUYWW8Ta6fB35nAn099Qr4G75TgHdqKxuOSOdm8oaELB4SWQDPF21rgBxsYs8ylgj4TiaCeWPbSYPnp391lOG9Hk8+pHMbFUGQOvnWN3YhHzgqhObrDa3h1ZGV/gQNWEBE9UayT2ux1gaOJQKUtmN0ToAvOesmSJ4ozg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dlw8bIFYxUY28tZAnQDAnDvvkdqtZ78OGLsv81bSHCc=;
- b=hznfmm4daLQax9hlivpBd2uwMCSzEqdrnWvIJtq8X7OM33i8/lBdzdGbXxorK4suAWi4XeMa+CUV4VoaMbgFqOyJ081ZHqZl7e4nSib9GV0ab9jzEEBFX3TZznn/l2kSduqqv/maxzHppnd2kwm0UMY2ljPnIjAcku6odIg62n7RxZRcDMNP/YuijgRJdJUxXaYJeor1PxqUHnFILRXiaUO1mF5sWWS18sswKpUfy9fk8SYmDqpdrKa0OG4KrLphoGh5IyY9j2QQToSPU45BMvfK3qhmyeesLqNISAGwcFSYNha+TsoJV0DLlz5ajhfvsAbkFtwYtcq9Hui4ds6MCg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dlw8bIFYxUY28tZAnQDAnDvvkdqtZ78OGLsv81bSHCc=;
- b=ozCRrozuW7lhxMex/g5kIxsJKEN5W9AnVlaI/l+N2UXjY2PjiLT4kmdxlvwk9LBFGQ/dXri0YKkkcBDGbkQZ5ubwBEKXmbYW16Yg1ew3igACX6uvj+dL94N2g1AzQLuqaxkwFGj8uz5g3tsp5aMB73LNNQTkmWahbsDPsGG3Vhc=
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB6PR0402MB2774.eurprd04.prod.outlook.com (2603:10a6:4:96::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19; Tue, 28 Apr
- 2020 08:25:51 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.2937.023; Tue, 28 Apr 2020
- 08:25:51 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>
-CC:     "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] xen/swiotlb: correct the check for
- xen_destroy_contiguous_region
-Thread-Topic: [PATCH] xen/swiotlb: correct the check for
- xen_destroy_contiguous_region
-Thread-Index: AQHWHTCUGLGxU19LnkuMxSfwKxPy/aiOLjMAgAAEXoA=
-Date:   Tue, 28 Apr 2020 08:25:51 +0000
-Message-ID: <DB6PR0402MB2760A05135338B0CBB28123488AC0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
-References: <1588059225-11245-1-git-send-email-peng.fan@nxp.com>
- <1c01e97a-adcd-a703-55b5-8975b4ce4d2c@suse.com>
-In-Reply-To: <1c01e97a-adcd-a703-55b5-8975b4ce4d2c@suse.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: suse.com; dkim=none (message not signed)
- header.d=none;suse.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3c952341-0a09-49f0-1c35-08d7eb4dc2fa
-x-ms-traffictypediagnostic: DB6PR0402MB2774:|DB6PR0402MB2774:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0402MB2774DAE2ED2273FB88D0E18488AC0@DB6PR0402MB2774.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0387D64A71
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(376002)(136003)(346002)(366004)(52536014)(186003)(33656002)(81156014)(8676002)(5660300002)(44832011)(6506007)(53546011)(66556008)(64756008)(66476007)(26005)(7696005)(66446008)(76116006)(66946007)(86362001)(71200400001)(45080400002)(2906002)(316002)(4326008)(9686003)(8936002)(54906003)(478600001)(110136005)(55016002);DIR:OUT;SFP:1101;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wp5M9pRkZTNfLrbzQWLN5xAF4qPHU2zhrJC2H9zEZx6TdtZ+MqwgC/bWFSjXVv6/rC34FM4Co8KucAkwII+8CeUgRRjlgHDz9uL8ZDT4IvRT5iaGMKNa2IiOC0oxvGH6wvj0Yo9fivLxN4dRce36dnAFgPzKB77vq9hARJyWYgz5Ie+yqUbLZe09bqKLR8PjhEhYb7tbQUOwrDdC6S0RtoyGsUxgpZComiFqOVOjJ4RTkKsCy1WdJghuc4br8cGoP8IGuZDvW69kUJF3GL3FU2kcMYeLmU4uDJLU1twH1S6bBplJRxtvbHjw2DWbYNRzN93yQn9SbdsjVtaeeKsRmnIVMggmDEsZk0iAYiOfTs5ToTSTFcXkLMsHNPnY2smmd8hlAnVthUUxwsTF6f3FeCSEOAozBEXYlZ2ljSsMFQfKS7KWPybYLS1Wa/CLoUYy
-x-ms-exchange-antispam-messagedata: 9DTbD4fEBCogK3eME4Bq825PLA2tr3PbNEFE5q7ldawQmCTD2tBgamLD6UdnddwH29bQN8O8/RKIxRYemi63lCC6zLoVC+Z4dZOTWF72GDzuRZ6OvnX45MnmRDx2wVmhoZvPA1WBssbA8b3WBM1r4YcrWp0Op/Aisu1zdBUOwGYmFXU1gKlxnHMVv+3/O15dVpVx5rdiYqQughkgD8QZMQIx70fyGw4nSlRC3qhDEGk9NHOYLrTXGsRfeOl52lA3268bAMSdTUQKb7qb01+IE/b/6sX8RQFkpusJdXeiNJDWE3TNpxMxa1MMhVQi/yMEmUaP2vU7uCRhKHF7eYPZ9YADWsqp+q8BkTKeuaU7JxVg3jv1h3phLuDXiEO2JuDHs9E91vp8wNge+4fWm4Lr7rkQgO6XFSSxs7n0jrapQDwWBMoEigN7nWdPn5CJ1s0WcsU4up/fYM8xBG5WFm7+ve6GyL4SnpkMv5FqpWnVaYsr3+n0FlBH0JeURVHpVtGVBVyUwT2McSHNFjWQVBrwWFdPNooXZ4AZN7VZ+QV6i2hH90YGIVf+27dgaJIxwO9J21IZsnI18gGCWJ28CKFyJaa8pZxPII6blawP4NBdTVv6ReGpcVGK49WyNotHH9YQxPmv6d/CXaJGROJlz4E0E9QptTNVD0sJd+8jrl6SooTGrgaRn1keBYeZkEUCRilzcbKzoqXfCanYe9cYmOkHi/+lTF8Aid6ivKJVU0ijaihseqwsHx7JGvHddUnzBLcQGKGnm0nNBgaFLBpo6TuEBVIqUIR6Jl/W0OgmCq3YSVU=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 28 Apr 2020 04:27:54 -0400
+Received: from mga09.intel.com ([134.134.136.24]:64347 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726377AbgD1I1x (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 04:27:53 -0400
+IronPort-SDR: zkDrO4HDgINSukF9CZCI8usfvUlenLEZJFKj6A+VCKfH3ju7QQ4hkP1zE28qqDZNA+bOMLSUap
+ mVGllxWw7Asg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 01:27:51 -0700
+IronPort-SDR: X821BjfNccLTCMZ6KuVpjGURxa7WKG7IrOw2P2s+nOpsw8mvDWONQMCWOLNXy0E5h0SGw6pyk2
+ JsvRLPkOf0GA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,327,1583222400"; 
+   d="scan'208";a="367432289"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.4.151]) ([10.238.4.151])
+  by fmsmga001.fm.intel.com with ESMTP; 28 Apr 2020 01:27:48 -0700
+Subject: Re: [PATCH v3 1/7] perf util: Create source line mapping table
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20200420010451.24405-1-yao.jin@linux.intel.com>
+ <20200420010451.24405-2-yao.jin@linux.intel.com>
+ <20200427101101.GC1457790@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <96d6fbc2-6464-63f2-a5c8-985a4ced3a3a@linux.intel.com>
+Date:   Tue, 28 Apr 2020 16:27:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c952341-0a09-49f0-1c35-08d7eb4dc2fa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2020 08:25:51.0895
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: J7dODyBu4e4WcytpCWJycYreIF9rtxjPzZXKF59BrTxzikPu8cwCgPkE7S1s9RDlQmREveKlk/PO3GYuaRRTmQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2774
+In-Reply-To: <20200427101101.GC1457790@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIXSB4ZW4vc3dpb3RsYjogY29ycmVjdCB0aGUgY2hlY2sgZm9y
-DQo+IHhlbl9kZXN0cm95X2NvbnRpZ3VvdXNfcmVnaW9uDQo+IA0KPiBPbiAyOC4wNC4yMCAwOToz
-MywgcGVuZy5mYW5AbnhwLmNvbSB3cm90ZToNCj4gPiBGcm9tOiBQZW5nIEZhbiA8cGVuZy5mYW5A
-bnhwLmNvbT4NCj4gPg0KPiA+IFdoZW4gYm9vdGluZyB4ZW4gb24gaS5NWDhRTSwgbWV0Og0KPiA+
-ICINCj4gPiBbICAgIDMuNjAyMTI4XSBVbmFibGUgdG8gaGFuZGxlIGtlcm5lbCBwYWdpbmcgcmVx
-dWVzdCBhdCB2aXJ0dWFsIGFkZHJlc3MNCj4gMDAwMDAwMDAwMDI3MmQ0MA0KPiA+IFsgICAgMy42
-MTA4MDRdIE1lbSBhYm9ydCBpbmZvOg0KPiA+IFsgICAgMy42MTM5MDVdICAgRVNSID0gMHg5NjAw
-MDAwNA0KPiA+IFsgICAgMy42MTczMzJdICAgRUMgPSAweDI1OiBEQUJUIChjdXJyZW50IEVMKSwg
-SUwgPSAzMiBiaXRzDQo+ID4gWyAgICAzLjYyMzIxMV0gICBTRVQgPSAwLCBGblYgPSAwDQo+ID4g
-WyAgICAzLjYyNjYyOF0gICBFQSA9IDAsIFMxUFRXID0gMA0KPiA+IFsgICAgMy42MzAxMjhdIERh
-dGEgYWJvcnQgaW5mbzoNCj4gPiBbICAgIDMuNjMzMzYyXSAgIElTViA9IDAsIElTUyA9IDB4MDAw
-MDAwMDQNCj4gPiBbICAgIDMuNjM3NjMwXSAgIENNID0gMCwgV25SID0gMA0KPiA+IFsgICAgMy42
-NDA5NTVdIFswMDAwMDAwMDAwMjcyZDQwXSB1c2VyIGFkZHJlc3MgYnV0IGFjdGl2ZV9tbSBpcw0K
-PiBzd2FwcGVyDQo+ID4gWyAgICAzLjY0Nzk4M10gSW50ZXJuYWwgZXJyb3I6IE9vcHM6IDk2MDAw
-MDA0IFsjMV0gUFJFRU1QVCBTTVANCj4gPiBbICAgIDMuNjU0MTM3XSBNb2R1bGVzIGxpbmtlZCBp
-bjoNCj4gPiBbICAgIDMuNjc3Mjg1XSBIYXJkd2FyZSBuYW1lOiBGcmVlc2NhbGUgaS5NWDhRTSBN
-RUsgKERUKQ0KPiA+IFsgICAgMy42NzczMDJdIFdvcmtxdWV1ZTogZXZlbnRzIGRlZmVycmVkX3By
-b2JlX3dvcmtfZnVuYw0KPiA+IFsgICAgMy42ODQyNTNdIGlteDZxLXBjaWUgNWYwMDAwMDAucGNp
-ZTogUENJIGhvc3QgYnJpZGdlIHRvIGJ1cyAwMDAwOjAwDQo+ID4gWyAgICAzLjY4ODI5N10gcHN0
-YXRlOiA2MDAwMDAwNSAoblpDdiBkYWlmIC1QQU4gLVVBTykNCj4gPiBbICAgIDMuNjg4MzEwXSBw
-YyA6IHhlbl9zd2lvdGxiX2ZyZWVfY29oZXJlbnQrMHgxODAvMHgxYzANCj4gPiBbICAgIDMuNjkz
-OTkzXSBwY2lfYnVzIDAwMDA6MDA6IHJvb3QgYnVzIHJlc291cmNlIFtidXMgMDAtZmZdDQo+ID4g
-WyAgICAzLjcwMTAwMl0gbHIgOiB4ZW5fc3dpb3RsYl9mcmVlX2NvaGVyZW50KzB4NDQvMHgxYzAN
-Cj4gPiAiDQo+ID4NCj4gPiBJbiB4ZW5fc3dpb3RsYl9hbGxvY19jb2hlcmVudCwgaWYgIShkZXZf
-YWRkciArIHNpemUgLSAxIDw9IGRtYV9tYXNrKQ0KPiA+IG9yIHJhbmdlX3N0cmFkZGxlc19wYWdl
-X2JvdW5kYXJ5KHBoeXMsIHNpemUpIGFyZSB0cnVlLCBpdCB3aWxsIGNyZWF0ZQ0KPiA+IGNvbnRp
-Z3VvdXMgcmVnaW9uLiBTbyB3aGVuIGZyZWUsIHdlIG5lZWQgdG8gZnJlZSBjb250aWd1b3VzIHJl
-Z2lvbiB1c2UNCj4gPiB1cHBlciBjaGVjayBjb25kaXRpb24uDQo+IA0KPiBObywgdGhpcyB3aWxs
-IGJyZWFrIFBWIGd1ZXN0cyBvbiB4ODYuDQoNCkNvdWxkIHlvdSBzaGFyZSBtb3JlIGRldGFpbHMg
-d2h5IGFsbG9jIGFuZCBmcmVlIG5vdCBtYXRjaGluZyBmb3IgdGhlIGNoZWNrPw0KDQpUaGFua3Ms
-DQpQZW5nLg0KDQo+IA0KPiBJIHRoaW5rIHRoZXJlIGlzIHNvbWV0aGluZyB3cm9uZyB3aXRoIHlv
-dXIgc2V0dXAgaW4gY29tYmluYXRpb24gd2l0aCB0aGUgQVJNDQo+IHhlbl9jcmVhdGVfY29udGln
-dW91c19yZWdpb24oKSBpbXBsZW1lbnRhdGlvbi4NCj4gDQo+IFN0ZWZhbm8/DQo+IA0KPiANCj4g
-SnVlcmdlbg0KPiANCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFBlbmcgRmFuIDxwZW5nLmZhbkBu
-eHAuY29tPg0KPiA+IC0tLQ0KPiA+ICAgZHJpdmVycy94ZW4vc3dpb3RsYi14ZW4uYyB8IDQgKyst
-LQ0KPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkN
-Cj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3hlbi9zd2lvdGxiLXhlbi5jIGIvZHJpdmVy
-cy94ZW4vc3dpb3RsYi14ZW4uYw0KPiA+IGluZGV4IGI2ZDI3NzYyYzZmOC4uYWI5NmU0Njg1ODRm
-IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMveGVuL3N3aW90bGIteGVuLmMNCj4gPiArKysgYi9k
-cml2ZXJzL3hlbi9zd2lvdGxiLXhlbi5jDQo+ID4gQEAgLTM0Niw4ICszNDYsOCBAQCB4ZW5fc3dp
-b3RsYl9mcmVlX2NvaGVyZW50KHN0cnVjdCBkZXZpY2UgKmh3ZGV2LA0KPiBzaXplX3Qgc2l6ZSwg
-dm9pZCAqdmFkZHIsDQo+ID4gICAJLyogQ29udmVydCB0aGUgc2l6ZSB0byBhY3R1YWxseSBhbGxv
-Y2F0ZWQuICovDQo+ID4gICAJc2l6ZSA9IDFVTCA8PCAob3JkZXIgKyBYRU5fUEFHRV9TSElGVCk7
-DQo+ID4NCj4gPiAtCWlmICghV0FSTl9PTigoZGV2X2FkZHIgKyBzaXplIC0gMSA+IGRtYV9tYXNr
-KSB8fA0KPiA+IC0JCSAgICAgcmFuZ2Vfc3RyYWRkbGVzX3BhZ2VfYm91bmRhcnkocGh5cywgc2l6
-ZSkpICYmDQo+ID4gKwlpZiAoKChkZXZfYWRkciArIHNpemUgLSAxID4gZG1hX21hc2spIHx8DQo+
-ID4gKwkgICAgcmFuZ2Vfc3RyYWRkbGVzX3BhZ2VfYm91bmRhcnkocGh5cywgc2l6ZSkpICYmDQo+
-ID4gICAJICAgIFRlc3RDbGVhclBhZ2VYZW5SZW1hcHBlZCh2aXJ0X3RvX3BhZ2UodmFkZHIpKSkN
-Cj4gPiAgIAkJeGVuX2Rlc3Ryb3lfY29udGlndW91c19yZWdpb24ocGh5cywgb3JkZXIpOw0KPiA+
-DQo+ID4NCg0K
+Hi Jiri,
+
+On 4/27/2020 6:11 PM, Jiri Olsa wrote:
+> On Mon, Apr 20, 2020 at 09:04:45AM +0800, Jin Yao wrote:
+>> Sometimes, a small change in a hot function reducing the cycles of
+>> this function, but the overall workload doesn't get faster. It is
+>> interesting where the cycles are moved to.
+>>
+>> What it would like is to diff before/after streams. A stream is a
+>> callchain which is aggregated by the branch records from samples.
+>>
+>> By browsing the hot streams, we can understand the hot code flow.
+>> By comparing the cycles variation of same streams between old perf
+>> data and new perf data, we can understand if the cycles are moved to
+>> the unchanged code.
+>>
+>> The before stream is the stream before source line changed
+>> (e.g. streams in perf.data.old). The after stream is the stream
+>> after source line changed (e.g. streams in perf.data).
+>>
+>> Diffing before/after streams compares all streams (or compares top
+>> N hot streams) between two perf data files.
+>>
+>> If all entries of one stream in perf.data.old are fully matched with
+>> all entries of another stream in perf.data, we think these two streams
+>> are matched, otherwise the streams are not matched.
+>>
+>> For example,
+>>
+>>     cycles: 1, hits: 26.80%                 cycles: 1, hits: 27.30%
+>> --------------------------              --------------------------
+>>               main div.c:39                           main div.c:39
+>>               main div.c:44                           main div.c:44
+> 
+> hi,
+> I'm getting compile error with this patch:
+> 
+> 	[jolsa@krava perf]$ make JOBS=1
+> 	  BUILD:   Doing 'make -j1' parallel build
+> 	  CC       util/srclist.o
+> 	util/srclist.c: In function ‘srclist__node_new’:
+> 	util/srclist.c:388:35: error: ‘%s’ directive output may be truncated writing up to 4095 bytes into a region of size 4091 [-Werror=format-truncation=]
+> 	  388 |  snprintf(cmd, sizeof(cmd), "diff %s %s",
+> 	      |                                   ^~
+> 	......
+
+There is no error in my compilation.
+
+But anyway, is it ok to use snprintf(cmd, PATH_MAX, "diff %s %s", b_path, 
+a_path) instead?
+
+Thanks
+Jin Yao
+
+> 	  456 |  ret = init_src_info(b_path, a_path, rel_path, &node->info);
+> 	      |                      ~~~~~~
+> 	In file included from /usr/include/stdio.h:867,
+> 			 from util/srclist.c:8:
+> 	/usr/include/bits/stdio2.h:67:10: note: ‘__builtin___snprintf_chk’ output between 7 and 8197 bytes into a destination of size 4096
+> 	   67 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+> 	      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 	   68 |        __bos (__s), __fmt, __va_arg_pack ());
+> 	      |        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 	cc1: all warnings being treated as errors
+> 	mv: cannot stat 'util/.srclist.o.tmp': No such file or directory
+> 	make[4]: *** [/home/jolsa/kernel/linux-perf/tools/build/Makefile.build:97: util/srclist.o] Error 1
+> 	make[3]: *** [/home/jolsa/kernel/linux-perf/tools/build/Makefile.build:139: util] Error 2
+> 	make[2]: *** [Makefile.perf:617: perf-in.o] Error 2
+> 	make[1]: *** [Makefile.perf:225: sub-make] Error 2
+> 	make: *** [Makefile:70: all] Error 2
+> 
+> thanks,
+> jirka
+> 
+> 
+>>
+>> It looks that two streams are matched and we can see for the same
+>> streams the cycles are equal and the stream hit percents are
+>> slightly changed. That's expected in the normal range.
+>>
+>> But that's not always true if source lines are changed in perf.data
+>> (e.g. div.c:39 is changed). If the source line is changed, they
+>> are different streams, we can't compare them. We just think the
+>> stream in perf.data is a new one.
+>>
+>> The challenge is how to identify the changed source lines. The basic
+>> idea is to use linux command 'diff' to compare the source file A and
+>> source file A* line by line (assume A is used in perf.data.old
+>> and A* is updated in perf.data). Create a source line mapping table.
+>>
+>> For example,
+>>
+>>    Execute 'diff ./before/div.c ./after/div.c'
+>>
+>>    25c25
+>>    <       i = rand() % 2;
+>>    ---
+>>    >       i = rand() % 4;
+>>    39c39
+>>    <       for (i = 0; i < 2000000000; i++) {
+>>    ---
+>>    >       for (i = 0; i < 20000000001; i++) {
+>>
+>>    div.c (after -> before) lines mapping:
+>>    0 -> 0
+>>    1 -> 1
+>>    2 -> 2
+>>    3 -> 3
+>>    4 -> 4
+>>    5 -> 5
+>>    6 -> 6
+>>    7 -> 7
+>>    8 -> 8
+>>    9 -> 9
+>>    ...
+>>    24 -> 24
+>>    25 -> -1
+>>    26 -> 26
+>>    27 -> 27
+>>    28 -> 28
+>>    29 -> 29
+>>    30 -> 30
+>>    31 -> 31
+>>    32 -> 32
+>>    33 -> 33
+>>    34 -> 34
+>>    35 -> 35
+>>    36 -> 36
+>>    37 -> 37
+>>    38 -> 38
+>>    39 -> -1
+>>    40 -> 40
+>>    ...
+>>
+>>  From the table, we can easily know div.c:39 is source line changed.
+>> (it's mapped to -1). So these two streams are not matched.
+>>
+>> This patch can also handle the cases of new source lines insertion
+>> and old source lines deletion. This source line mapping table is a
+>> base for next processing for stream comparison.
+>>
+>> This patch creates a new rblist 'srclist' to manage the source line
+>> mapping tables. Each node contains the source line mapping table of
+>> a before/after source file pair. The node is created on demand as
+>> we process the samples. So it's likely we don't need to create so many
+>> nodes.
+>>
+>>   v2:
+>>   ---
+>>   Refine the code
+>>   1. calloc -> zalloc
+>>   2. Functions operating on a 'struct line_pair' have the
+>>      line_pair__ prefix.
+>>   3. Check get_range() return value.
+>>   4. Use fgets to replace fgetc for getting the number of lines.
+>>   5. Use path__join to generate the full path.
+>>   6. Keep the buffer after calling getline.
+>>
+>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+>> ---
+>>   tools/perf/util/Build     |   1 +
+>>   tools/perf/util/srclist.c | 555 ++++++++++++++++++++++++++++++++++++++
+>>   tools/perf/util/srclist.h |  65 +++++
+>>   3 files changed, 621 insertions(+)
+>>   create mode 100644 tools/perf/util/srclist.c
+>>   create mode 100644 tools/perf/util/srclist.h
+>>
+>> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+>> index c0cf8dff694e..b9bf620b60f0 100644
+>> --- a/tools/perf/util/Build
+>> +++ b/tools/perf/util/Build
+>> @@ -99,6 +99,7 @@ perf-y += call-path.o
+>>   perf-y += rwsem.o
+>>   perf-y += thread-stack.o
+>>   perf-y += spark.o
+>> +perf-y += srclist.o
+>>   perf-$(CONFIG_AUXTRACE) += auxtrace.o
+>>   perf-$(CONFIG_AUXTRACE) += intel-pt-decoder/
+>>   perf-$(CONFIG_AUXTRACE) += intel-pt.o
+>> diff --git a/tools/perf/util/srclist.c b/tools/perf/util/srclist.c
+>> new file mode 100644
+>> index 000000000000..8060e4855d11
+>> --- /dev/null
+>> +++ b/tools/perf/util/srclist.c
+>> @@ -0,0 +1,555 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Manage difference of source lines
+>> + * Copyright (c) 2020, Intel Corporation.
+>> + * Author: Jin Yao
+>> + */
+>> +#include <stdlib.h>
+>> +#include <stdio.h>
+>> +#include <sys/types.h>
+>> +#include <inttypes.h>
+>> +#include <string.h>
+>> +#include <strings.h>
+>> +#include <unistd.h>
+>> +#include <err.h>
+>> +#include <errno.h>
+>> +#include <limits.h>
+>> +#include <stdbool.h>
+>> +#include <linux/zalloc.h>
+>> +#include "strlist.h"
+>> +#include "srclist.h"
+>> +#include "debug.h"
+>> +#include "path.h"
+>> +
+>> +enum {
+>> +	DIFF_LINE_ADD,
+>> +	DIFF_LINE_DEL,
+>> +	DIFF_LINE_CHANGE
+>> +};
+>> +
+>> +static void get_full_path(const char *dir, const char *rel_path,
+>> +			  char *full_path, int size)
+>> +{
+>> +	if (!dir) {
+>> +		snprintf(full_path, size, "%s", rel_path);
+>> +		return;
+>> +	}
+>> +
+>> +	path__join(full_path, size, dir, rel_path);
+>> +}
+>> +
+>> +static int path__number_of_lines(char *path)
+>> +{
+>> +	FILE *fp;
+>> +	char buf[4096], *p, last = 0;
+>> +	int num = 0;
+>> +
+>> +	fp = fopen(path, "r");
+>> +	if (!fp) {
+>> +		pr_debug("Failed to open file %s\n", path);
+>> +		return -1;
+>> +	}
+>> +
+>> +	while (!feof(fp)) {
+>> +		p = fgets(buf, sizeof(buf), fp);
+>> +		if (!p)
+>> +			break;
+>> +
+>> +		last = p[strlen(p) - 1];
+>> +		if (last == '\n')
+>> +			num++;
+>> +	}
+>> +
+>> +	fclose(fp);
+>> +
+>> +	if (last != '\n' && last != 0)
+>> +		num++;
+>> +
+>> +	return num;
+>> +}
+>> +
+>> +static int get_digit(char *str, char **end_str, int *val)
+>> +{
+>> +	int v;
+>> +	char *end;
+>> +
+>> +	errno = 0;
+>> +	v = strtol(str, &end, 10);
+>> +	if ((errno == ERANGE && (v == INT_MAX || v == INT_MIN))
+>> +		|| (errno != 0 && v == 0)) {
+>> +		return -1;
+>> +	}
+>> +
+>> +	if (end == str)
+>> +		return -1;
+>> +
+>> +	*val = v;
+>> +	*end_str = end;
+>> +	return 0;
+>> +}
+>> +
+>> +static int get_range(char *str, int *start_val, int *end_val)
+>> +{
+>> +	int val, ret;
+>> +	char *end, *next;
+>> +
+>> +	*start_val = -1;
+>> +	*end_val = -1;
+>> +
+>> +	ret = get_digit(str, &end, &val);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	*start_val = val;
+>> +
+>> +	if (*end != '\0') {
+>> +		next = end + 1;
+>> +		ret = get_digit(next, &end, &val);
+>> +		if (ret)
+>> +			return ret;
+>> +
+>> +		*end_val = val;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int opr_str_idx(char *str, int len, char ch)
+>> +{
+>> +	int i;
+>> +
+>> +	for (i = 0; i < len; i++) {
+>> +		if (str[i] == ch)
+>> +			break;
+>> +	}
+>> +
+>> +	if (i == len || i == 0 || i == len - 1)
+>> +		return -1;
+>> +
+>> +	if (str[i - 1] >= '0' && str[i - 1] <= '9' &&
+>> +	    str[i + 1] >= '0' && str[i + 1] <= '9') {
+>> +		return i;
+>> +	}
+>> +
+>> +	return -1;
+>> +}
+>> +
+>> +static bool get_diff_operation(char *str, int *opr, int *b_start, int *b_end,
+>> +			       int *a_start, int *a_end)
+>> +{
+>> +	int idx, len;
+>> +
+>> +	if (str[0] == '<' || str[0] == '>' || str[0] == '-')
+>> +		return false;
+>> +
+>> +	len = strlen(str);
+>> +
+>> +	/*
+>> +	 * For example,
+>> +	 * 5,6d4
+>> +	 * 8a7
+>> +	 * 20,21c19
+>> +	 */
+>> +	idx = opr_str_idx(str, len, 'd');
+>> +	if (idx != -1) {
+>> +		*opr = DIFF_LINE_DEL;
+>> +		goto exit;
+>> +	}
+>> +
+>> +	idx = opr_str_idx(str, len, 'a');
+>> +	if (idx != -1) {
+>> +		*opr = DIFF_LINE_ADD;
+>> +		goto exit;
+>> +	}
+>> +
+>> +	idx = opr_str_idx(str, len, 'c');
+>> +	if (idx != -1) {
+>> +		*opr = DIFF_LINE_CHANGE;
+>> +		goto exit;
+>> +	}
+>> +
+>> +exit:
+>> +	if (idx != -1) {
+>> +		str[idx] = 0;
+>> +		if (get_range(str, b_start, b_end) != 0)
+>> +			return false;
+>> +
+>> +		if (get_range(&str[idx + 1], a_start, a_end) != 0)
+>> +			return false;
+>> +
+>> +		return true;
+>> +	}
+>> +
+>> +	return false;
+>> +}
+>> +
+>> +static int line_pair__del_lines(struct line_pair *lines, int b_start, int b_end,
+>> +				int a_start, int a_end __maybe_unused,
+>> +				int *nr_lines, int *b_adjust)
+>> +{
+>> +	int i = *nr_lines;
+>> +	bool set = false;
+>> +
+>> +	/*
+>> +	 * For example, 5,6d4
+>> +	 * It means line 5 ~ line 6 of file1 are not same as line 4 of file2
+>> +	 * because line 5 ~ line 6 are deleted.
+>> +	 */
+>> +
+>> +	if (a_start == i) {
+>> +		lines[i].a_nr = i;
+>> +		lines[i].b_nr = i + *b_adjust;
+>> +		set = true;
+>> +	}
+>> +
+>> +	if (b_end != -1)
+>> +		*b_adjust += b_end - b_start + 1;
+>> +	else
+>> +		*b_adjust += 1;
+>> +
+>> +	if (!set) {
+>> +		lines[i].a_nr = i;
+>> +		lines[i].b_nr = i + *b_adjust;
+>> +	}
+>> +
+>> +	*nr_lines = i + 1;
+>> +	return 0;
+>> +}
+>> +
+>> +static int line_pair__add_lines(struct line_pair *lines,
+>> +				int b_start __maybe_unused,
+>> +				int b_end __maybe_unused,
+>> +				int a_start, int a_end, int *nr_lines,
+>> +				int *b_adjust)
+>> +{
+>> +	int i = *nr_lines;
+>> +
+>> +	/*
+>> +	 * For example, 8a7
+>> +	 * It means line 8 at file1 is not same as line 7 at file2
+>> +	 * because a new line (line 7) is inserted to file2.
+>> +	 */
+>> +	if (a_end != -1) {
+>> +		for (int j = 0; j < a_end - a_start + 1; j++) {
+>> +			lines[i].a_nr = i;
+>> +			lines[i].b_nr = -1;
+>> +			i++;
+>> +		}
+>> +		*b_adjust -= a_end - a_start + 1;
+>> +	} else {
+>> +		lines[i].a_nr = i;
+>> +		lines[i].b_nr = -1;
+>> +		i++;
+>> +		*b_adjust -= 1;
+>> +	}
+>> +
+>> +	*nr_lines = i;
+>> +	return 0;
+>> +}
+>> +
+>> +static int line_pair__change_lines(struct line_pair *lines, int b_start,
+>> +				   int b_end, int a_start, int a_end,
+>> +				   int *nr_lines, int *b_adjust)
+>> +{
+>> +	int i = *nr_lines;
+>> +
+>> +	/*
+>> +	 * For example, 20,21c19
+>> +	 * It means line20~line21 of file1 are not same as line19 of file2
+>> +	 * since they are changed.
+>> +	 */
+>> +
+>> +	if (a_end != -1) {
+>> +		for (int j = 0; j < a_end - a_start + 1; j++) {
+>> +			lines[i].a_nr = i;
+>> +			lines[i].b_nr = -1;
+>> +			i++;
+>> +		}
+>> +	} else {
+>> +		lines[i].a_nr = i;
+>> +		lines[i].b_nr = -1;
+>> +		i++;
+>> +	}
+>> +
+>> +	if (b_end != -1)
+>> +		*b_adjust += b_end - b_start;
+>> +
+>> +	if (a_end != -1)
+>> +		*b_adjust -= a_end - a_start;
+>> +
+>> +	*nr_lines = i;
+>> +	return 0;
+>> +}
+>> +
+>> +static int line_pair__update_lines(struct line_pair *lines, int opr,
+>> +				   int b_start, int b_end, int a_start,
+>> +				   int a_end, int *nr_lines, int *b_adjust)
+>> +{
+>> +	int i = *nr_lines;
+>> +
+>> +	while (i < a_start) {
+>> +		lines[i].a_nr = i;
+>> +		lines[i].b_nr = i + *b_adjust;
+>> +		i++;
+>> +	}
+>> +
+>> +	*nr_lines = i;
+>> +
+>> +	switch (opr) {
+>> +	case DIFF_LINE_DEL:
+>> +		line_pair__del_lines(lines, b_start, b_end, a_start, a_end,
+>> +				     nr_lines, b_adjust);
+>> +		break;
+>> +
+>> +	case DIFF_LINE_ADD:
+>> +		line_pair__add_lines(lines, b_start, b_end, a_start, a_end,
+>> +				     nr_lines, b_adjust);
+>> +		break;
+>> +
+>> +	case DIFF_LINE_CHANGE:
+>> +		line_pair__change_lines(lines, b_start, b_end, a_start,
+>> +					a_end, nr_lines, b_adjust);
+>> +		break;
+>> +
+>> +	default:
+>> +		break;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void line_pair__update_remaining(struct line_pair *lines, int a_num,
+>> +					 int *nr_lines, int b_adjust)
+>> +{
+>> +	int i;
+>> +
+>> +	for (i = *nr_lines; i <= a_num; i++) {
+>> +		lines[i].a_nr = i;
+>> +		lines[i].b_nr = i + b_adjust;
+>> +	}
+>> +
+>> +	*nr_lines = i;
+>> +}
+>> +
+>> +static int build_mapping_table(FILE *fp, struct line_pair *lines,
+>> +			       int *nr_lines, int a_num)
+>> +{
+>> +	char *str = NULL, *p;
+>> +	size_t len = 0;
+>> +	int opr, b_start, b_end, a_start, a_end, b_adjust = 0;
+>> +
+>> +	*nr_lines = 1;  /* First line is reserved */
+>> +
+>> +	while (getline(&str, &len, fp) > 0) {
+>> +		p = strchr(str, '\n');
+>> +		if (p)
+>> +			*p = '\0';
+>> +
+>> +		pr_debug("%s\n", str);
+>> +
+>> +		if (!get_diff_operation(str, &opr, &b_start, &b_end,
+>> +					&a_start, &a_end)) {
+>> +			continue;
+>> +		}
+>> +
+>> +		line_pair__update_lines(lines, opr, b_start, b_end, a_start,
+>> +					a_end, nr_lines, &b_adjust);
+>> +	}
+>> +
+>> +	line_pair__update_remaining(lines, a_num, nr_lines, b_adjust);
+>> +
+>> +	free(str);
+>> +	return 0;
+>> +}
+>> +
+>> +static int src_info__create_line_mapping(struct src_info *info, char *b_path,
+>> +					 char *a_path)
+>> +{
+>> +	char cmd[PATH_MAX];
+>> +	FILE *fp = NULL;
+>> +	int ret = -1;
+>> +
+>> +	info->nr_lines_before = path__number_of_lines(b_path);
+>> +	if (info->nr_lines_before == -1)
+>> +		goto out;
+>> +
+>> +	info->nr_lines_after = path__number_of_lines(a_path);
+>> +	if (info->nr_lines_after == -1)
+>> +		goto out;
+>> +
+>> +	/* Reserve first line */
+>> +	info->nr_max = info->nr_lines_before + info->nr_lines_after + 1;
+>> +	info->lines = calloc(info->nr_max, sizeof(struct line_pair));
+>> +	if (!info->lines) {
+>> +		pr_err("Failed to alloc memory for lines\n");
+>> +		goto out;
+>> +	}
+>> +
+>> +	snprintf(cmd, sizeof(cmd), "diff %s %s",
+>> +		 b_path, a_path);
+>> +
+>> +	pr_debug("Execute '%s'\n", cmd);
+>> +
+>> +	fp = popen(cmd, "r");
+>> +	if (!fp) {
+>> +		pr_err("Failed to execute '%s'\n", cmd);
+>> +		goto out;
+>> +	}
+>> +
+>> +	ret = build_mapping_table(fp, info->lines, &info->nr_lines,
+>> +				  info->nr_lines_after);
+>> +
+>> +out:
+>> +	if (fp)
+>> +		fclose(fp);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static void free_src_info(struct src_info *info)
+>> +{
+>> +	zfree(&info->rel_path);
+>> +	zfree(&info->lines);
+>> +}
+>> +
+>> +static int init_src_info(char *b_path, char *a_path, const char *rel_path,
+>> +			 struct src_info *info)
+>> +{
+>> +	int ret;
+>> +
+>> +	info->rel_path = strdup(rel_path);
+>> +	if (!info->rel_path)
+>> +		return -1;
+>> +
+>> +	ret = src_info__create_line_mapping(info, b_path, a_path);
+>> +	if (ret)
+>> +		free_src_info(info);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static void free_src_node(struct src_node *node)
+>> +{
+>> +	if (!node)
+>> +		return;
+>> +
+>> +	free_src_info(&node->info);
+>> +	free(node);
+>> +}
+>> +
+>> +static struct rb_node *srclist__node_new(struct rblist *rblist,
+>> +					 const void *entry)
+>> +{
+>> +	struct srclist *slist = container_of(rblist, struct srclist, rblist);
+>> +	const char *rel_path = entry;
+>> +	char b_path[PATH_MAX], a_path[PATH_MAX];
+>> +	struct src_node *node;
+>> +	int ret;
+>> +
+>> +	get_full_path(slist->before_dir, rel_path, b_path, PATH_MAX);
+>> +	get_full_path(slist->after_dir, rel_path, a_path, PATH_MAX);
+>> +
+>> +	node = zalloc(sizeof(*node));
+>> +	if (!node)
+>> +		return NULL;
+>> +
+>> +	ret = init_src_info(b_path, a_path, rel_path, &node->info);
+>> +	if (ret)
+>> +		goto err;
+>> +
+>> +	return &node->rb_node;
+>> +
+>> +err:
+>> +	free_src_node(node);
+>> +	return NULL;
+>> +}
+>> +
+>> +static void srclist__node_delete(struct rblist *rblist __maybe_unused,
+>> +				 struct rb_node *rb_node)
+>> +{
+>> +	struct src_node *node = container_of(rb_node, struct src_node, rb_node);
+>> +
+>> +	free_src_info(&node->info);
+>> +	free(node);
+>> +}
+>> +
+>> +static int srclist__node_cmp(struct rb_node *rb_node, const void *entry)
+>> +{
+>> +	struct src_node *node = container_of(rb_node, struct src_node, rb_node);
+>> +	const char *str = entry;
+>> +
+>> +	return strcmp(node->info.rel_path, str);
+>> +}
+>> +
+>> +struct srclist *srclist__new(const char *before_dir, const char *after_dir)
+>> +{
+>> +	struct srclist *slist = zalloc(sizeof(*slist));
+>> +
+>> +	if (!slist)
+>> +		return NULL;
+>> +
+>> +	rblist__init(&slist->rblist);
+>> +	slist->rblist.node_cmp = srclist__node_cmp;
+>> +	slist->rblist.node_new = srclist__node_new;
+>> +	slist->rblist.node_delete = srclist__node_delete;
+>> +
+>> +	slist->before_dir = before_dir;
+>> +	slist->after_dir = after_dir;
+>> +	return slist;
+>> +}
+>> +
+>> +void srclist__delete(struct srclist *slist)
+>> +{
+>> +	if (slist)
+>> +		rblist__delete(&slist->rblist);
+>> +}
+>> +
+>> +struct src_node *srclist__find(struct srclist *slist, char *rel_path,
+>> +			       bool create)
+>> +{
+>> +	struct src_node *node = NULL;
+>> +	struct rb_node *rb_node;
+>> +
+>> +	if (create)
+>> +		rb_node = rblist__findnew(&slist->rblist, (void *)rel_path);
+>> +	else
+>> +		rb_node = rblist__find(&slist->rblist, (void *)rel_path);
+>> +
+>> +	if (rb_node)
+>> +		node = container_of(rb_node, struct src_node, rb_node);
+>> +
+>> +	return node;
+>> +}
+>> +
+>> +struct line_pair *srclist__line_pair(struct src_node *node, int a_nr)
+>> +{
+>> +	struct src_info *info = &node->info;
+>> +
+>> +	if (a_nr < info->nr_lines && a_nr > 0)
+>> +		return &info->lines[a_nr];
+>> +
+>> +	pr_debug("Exceeds line range: nr_lines = %d, a_nr = %d\n",
+>> +		 info->nr_lines, a_nr);
+>> +
+>> +	return NULL;
+>> +}
+>> +
+>> +void srclist__dump(struct srclist *slist)
+>> +{
+>> +	struct src_node *node;
+>> +	struct src_info *info;
+>> +	int i;
+>> +
+>> +	srclist__for_each_entry(node, slist) {
+>> +		info = &node->info;
+>> +
+>> +		pr_debug("%s (after -> before) lines mapping:\n",
+>> +			 info->rel_path);
+>> +
+>> +		for (i = 0; i < info->nr_lines; i++) {
+>> +			pr_debug("%d -> %d\n",
+>> +				 info->lines[i].a_nr,
+>> +				 info->lines[i].b_nr);
+>> +		}
+>> +	}
+>> +}
+>> diff --git a/tools/perf/util/srclist.h b/tools/perf/util/srclist.h
+>> new file mode 100644
+>> index 000000000000..f25b0de91a13
+>> --- /dev/null
+>> +++ b/tools/perf/util/srclist.h
+>> @@ -0,0 +1,65 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#ifndef __PERF_SRCLIST_H
+>> +#define __PERF_SRCLIST_H
+>> +
+>> +#include <linux/types.h>
+>> +#include <linux/rbtree.h>
+>> +#include "rblist.h"
+>> +
+>> +struct line_pair {
+>> +	int a_nr;	/* line nr in after.c */
+>> +	int b_nr;	/* line nr in before.c */
+>> +};
+>> +
+>> +struct src_node;
+>> +
+>> +struct src_info {
+>> +	char *rel_path; /* relative path */
+>> +	struct line_pair *lines;
+>> +	int nr_max;
+>> +	int nr_lines;
+>> +	int nr_lines_before;
+>> +	int nr_lines_after;
+>> +};
+>> +
+>> +struct src_node {
+>> +	struct rb_node rb_node;
+>> +	struct src_info info;
+>> +};
+>> +
+>> +struct srclist {
+>> +	struct rblist rblist;
+>> +	const char *before_dir;
+>> +	const char *after_dir;
+>> +};
+>> +
+>> +struct srclist *srclist__new(const char *before_dir, const char *after_dir);
+>> +void srclist__delete(struct srclist *slist);
+>> +
+>> +struct src_node *srclist__find(struct srclist *slist, char *rel_path,
+>> +			       bool create);
+>> +
+>> +struct line_pair *srclist__line_pair(struct src_node *node, int a_nr);
+>> +void srclist__dump(struct srclist *slist);
+>> +
+>> +static inline struct src_node *srclist__first(struct srclist *slist)
+>> +{
+>> +	struct rb_node *rn = rb_first_cached(&slist->rblist.entries);
+>> +
+>> +	return rn ? rb_entry(rn, struct src_node, rb_node) : NULL;
+>> +}
+>> +
+>> +static inline struct src_node *srclist__next(struct src_node *sn)
+>> +{
+>> +	struct rb_node *rn;
+>> +
+>> +	if (!sn)
+>> +		return NULL;
+>> +	rn = rb_next(&sn->rb_node);
+>> +	return rn ? rb_entry(rn, struct src_node, rb_node) : NULL;
+>> +}
+>> +
+>> +#define srclist__for_each_entry(pos, slist)	\
+>> +	for (pos = srclist__first(slist); pos; pos = srclist__next(pos))
+>> +
+>> +#endif /* __PERF_SRCLIST_H */
+>> -- 
+>> 2.17.1
+>>
+> 
