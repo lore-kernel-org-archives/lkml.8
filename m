@@ -2,105 +2,276 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B27CDC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3CBC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86064206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79819206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:48:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Mk7RK3D8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgD1Opp (ORCPT
+        id S1727906AbgD1OsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:45:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727079AbgD1Opp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:45:45 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B85F1206B9;
-        Tue, 28 Apr 2020 14:45:44 +0000 (UTC)
-Date:   Tue, 28 Apr 2020 10:45:43 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Xiao Yang <yangx.jy@cn.fujitsu.com>
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH] kernel/trace: Stop and wait for kthread on preempt irq
- module unload
-Message-ID: <20200428104543.3926eaaf@gandalf.local.home>
-In-Reply-To: <20200428104409.0995ceb0@gandalf.local.home>
-References: <20200424223630.224895-1-joel@joelfernandes.org>
-        <5EA80319.7080005@cn.fujitsu.com>
-        <20200428104409.0995ceb0@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 28 Apr 2020 10:48:06 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:41055 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727079AbgD1OsG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 10:48:06 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id TRWhjKkVAZJ1DTRWkjxq8m; Tue, 28 Apr 2020 16:48:03 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1588085283; bh=6UTtjoXH7m3ecE8TYYDLIbrgLiXJPKPNUM/ViUXuslg=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=Mk7RK3D8WuVNDLPfQc6DZT16vOI8/EyBb4+nVxzSZT9NUt3WCQc4K6YUByY8DjIyM
+         l8Mi6vZVxKXv6tFjTIYZwiCRp4yL/+R0wx49bm4Q9NEFOVrNbwTXFq1Z0PHV9jQ5G+
+         bVkvl+X711bUQggzqwbTxayUZuJI5Z++Bb/lO1Mn2b+eiAwfKXD86ZIdakXGl3HM1L
+         XlzHZOGWaJMS/gvEjDgfHAXWg67xnSSrY8tcqKJXoFyvrfP1rVCM6GM38E4R59h8tL
+         uDy1x+6874opdquUcGCX+9t2qQ+t6H6zsuP39/rpjtMZmWNOz7WaaUOTWgi95OhjEu
+         EnP7GSKVs0rZg==
+Subject: Re: [PATCHv5 00/13] Implement V4L2_BUF_FLAG_NO_CACHE_* flags
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200424092920.4801-1-sergey.senozhatsky@gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <aa246282-ca02-a20b-8d8e-0c33f4a2259d@xs4all.nl>
+Date:   Tue, 28 Apr 2020 16:47:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200424092920.4801-1-sergey.senozhatsky@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfExhS0SpowdLLC8QbyJICf9ObluL9H+94cpujJcf7c2W5j9j9fnGYigY30KUyAVBo+pCosp+/P438c7591PTgPQk/LSmrp0l+8Y/QxVHHpp9hBNclFnM
+ ndSPO2jpVTkSOAW3vrNN/HOyyAmqjyPJs2EUUUbYHHE21aoas1XnduYvI9jJwBlQ6v7zjtb3QSZVGDg95WPCbQ4+xPrqSalQfNRPF/LKX3ZtQQvGgqDVwcAc
+ 2veWmcjVikDw/FdyySRdTOCZErMFsBOeOE6QU9halEaolIFs80NhkT0Aq8a7C+MUGE9Y+bvrlTNndOm91bMGt//a+d45B/Sovevii1Zty17RFvU8vCD1LRPQ
+ BHsnYEms
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 10:44:09 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi Sergey,
 
-> On Tue, 28 Apr 2020 18:19:05 +0800
-> Xiao Yang <yangx.jy@cn.fujitsu.com> wrote:
+On 24/04/2020 11:29, Sergey Senozhatsky wrote:
+> Hello,
 > 
-> > Hi Joel,
-> > 
-> > Thanks for your quick fix.
-> > 
-> > Unfortunately, it fixes my original panic but introduces other
-> > issues(two wanings and one panic) on my arm64 vm, as below:
-> >  
+> 	v5 with fixes and improvements.
 > 
-> Does the following on top of Joel's patch fix it?
+> I have a simple v4l-compliance patch now (will send it separately) which
+> tests cache and consistency hints. I ran compliance against the vivid
+> test driver, which was additionally extended with cache_hints module param:
+> Trimmed v4l-compliance output:
 > 
-> -- Steve
+> - vivid with disabled cache hints support
 > 
-> diff --git a/kernel/trace/preemptirq_delay_test.c b/kernel/trace/preemptirq_delay_test.c
-> index 1c28ca20e30b..6d9131ae7e8c 100644
-> --- a/kernel/trace/preemptirq_delay_test.c
-> +++ b/kernel/trace/preemptirq_delay_test.c
-> @@ -113,15 +113,27 @@ static int preemptirq_delay_run(void *data)
->  
->  	for (i = 0; i < s; i++)
->  		(testfuncs[i])(i);
-> +
-> +	while (!kthread_should_stop()) {
-> +		schedule();
-> +		set_current_state(TASK_INTERRUPTIBLE);
-> +	}
-> +
-> +	__set_current_state(TASK_RUNNING);
-> +
->  	return 0;
->  }
->  
+> [..]
+> Buffer ioctls (Input 3):
+> 	test V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS: OK
+> 	test V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS: OK
+> 	test V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS: OK
+> 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+> 	test VIDIOC_EXPBUF: OK
+> [..]
+> 
+> - vivid with enabled cache hints (cache_hints=1,...)
+> 
+> [..]
+> Buffer ioctls (Input 3):
+> 	test V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS: OK
+> 	test V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS: OK
+> 	test V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS: OK
+> 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+> 	test VIDIOC_EXPBUF: OK
+> [..]
+> 
+> 
+> v4l-compliance revealed that we cannot reliably report
+> V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS, it's a bit special.
+> Let's look at fill_buf_caps()
+> 
+> 	if (q->allow_cache_hints && q->io_modes & VB2_MMAP)
+> 		*caps |= V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS;
+> 
+> There are several things here. First, if the queue is not setup yet
+> (we didn't call driver's ->queue_setup()) then ->allow_cache_hints
+> is expected to be 0. It's only in the ->queue_setup() that the driver
+> sets ->allow_cache_hints for those queues that can benefit from cache
+> management. What this means, is that if one does
+> 
+> 	q.init(node->g_type(), memory);
+> 	q.reqbufs(node);
+> 	q.g_capabilities();
+> 
+> the cache hints cap will not be reported. We need to setup the queue
+> 
+> 	q.init(node->g_type(), memory);
+> 	q.reqbufs(node, 1);
+> 	q.g_capabilities();
 
+I missed that. What should happen is that q->allow_cache_hints is set by the
+driver before vb2_queue_init is called. And the documentation should be updated
+to say that the V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS flag is only valid when using the
+MMAP streaming I/O model.
 
-The below isn't needed, as the return does check IS_ERR().
+Perhaps the flag should be renamed to V4L2_BUF_CAP_SUPPORTS_MMAP_CACHE_HINTS to
+make this explicit? Other opinions are welcome.
 
--- Steve
+> 
+> Second. Even if the queue is setup, we still can report wrong cache
+> hint values. Let's look at the following code
+> 
+> 	fill_buf_caps(q, &p->capabilities);
+> 	if (!vb2_queue_allows_cache_hints(q))
+> 		p->flags &= ~V4L2_FLAG_MEMORY_NON_CONSISTENT;
 
->  static struct task_struct *preemptirq_start_test(void)
->  {
-> +	struct task_struct *task;
->  	char task_name[50];
->  
->  	snprintf(task_name, sizeof(task_name), "%s_test", test_mode);
-> -	return kthread_run(preemptirq_delay_run, NULL, task_name);
-> +	task = kthread_run(preemptirq_delay_run, NULL, task_name);
-> +	if (IS_ERR(task))
-> +		return NULL;
-> +	return task;
->  }
->  
->  
->  
+The problem here is that vb2_queue_allows_cache_hints(q) uses stale information:
+the current streaming mode instead of the requested streaming mode.
+
+This should read:
+
+	if (!q->allow_cache_hints || p->memory != V4L2_MEMORY_MMAP)
+		p->flags &= ~V4L2_FLAG_MEMORY_NON_CONSISTENT;
+
+And V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS is always set regardless of the
+memory model. It just needs to be documented that this capability applies
+to MMAP mode only.
+
+> 	ret = vb2_core_reqbufs(...);
+> 	return ret;
+> 
+> The thing here is that vb2_core_reqbufs() and vb2_core_create_bufs()
+> can re-initialize the queue and invoke ->queue_setup(), possibly
+> changing its memory model, etc. so cache hints cap which we set or
+> clear before vb2_core_reqbufs() and vb2_core_create_bufs() can become
+> invalid after we call those functions. It's the same with
+> ``req->flags &= ~V4L2_FLAG_MEMORY_NON_CONSISTENT``, we cannot clear
+> it before reqbufs()/create_bufs(). Therefore I added two simple
+> functions which fixup cache hint cap and non_consistent flag after
+> reqbufs()/create_bufs(). So the code looks like this now:
+> 
+> 	fill_buf_caps(q, &p->capabilities);
+> 	ret = vb2_core_reqbufs(...);
+> 	fixup_consistency_attr(q, &p->flags);
+> 	fixup_cache_hints_cap(q, &p->capabilities);
+
+These fixup functions are ugly, unless I missed something I think the
+approach described above works just fine.
+
+With these changes I think it is ready to go in.
+
+Regards,
+
+	Hans
+
+> 	return ret;
+> 
+> 
+> The rest is the pretty much the same.
+> 
+> Previous series:
+> v4 link: https://lore.kernel.org/lkml/20200302041213.27662-1-senozhatsky@chromium.org/
+> v3 link: https://lore.kernel.org/lkml/20200226111529.180197-1-senozhatsky@chromium.org
+> v2 link: https://lore.kernel.org/lkml/20200204025641.218376-1-senozhatsky@chromium.org/
+> v1 link: https://lore.kernel.org/lkml/20191217032034.54897-1-senozhatsky@chromium.org/
+> 
+> Series Intro
+> ========================================================================
+> 
+> 	This is a reworked version of the vb2 cache hints
+> (V4L2_BUF_FLAG_NO_CACHE_INVALIDATE / V4L2_BUF_FLAG_NO_CACHE_CLEAN)
+> support patch series which previsouly was developed by Sakari and
+> Laurent [0].
+> 
+> The patch set attempts to preserve the existing behvaiour - cache
+> sync is performed in ->prepare() and ->finish() (unless the buffer
+> is DMA exported). User space can request “default behavior” override
+> with cache management hints, which are handled on a per-buffer basis
+> and should be supplied with v4l2_buffer ->flags during buffer
+> preparation. There are two possible hints:
+> 
+> - V4L2_BUF_FLAG_NO_CACHE_INVALIDATE
+> 	No cache sync on ->finish()
+> 
+> - V4L2_BUF_FLAG_NO_CACHE_CLEAN
+> 	No cache sync on ->prepare()
+> 
+> In order to keep things on the safe side, we also require driver
+> to explicitly state which of its queues (if any) support user space
+> cache management hints (such queues should have ->allow_cache_hints
+> bit set).
+> 
+> The patch set also (to some extent) simplifies allocators' ->prepare()
+> and ->finish() callbacks. Namely, we move cache management decision
+> making to the upper - core - layer. For example, if, previously, we
+> would have something like this
+> 
+> 	vb2_buffer_done()
+> 	  vb2_dc_finish()
+> 	    if (buf->db_attach)
+> 	      return;
+> 
+> where each allocators' ->finish() callback would either bail
+> out (DMA exported buffer, for instance) or sync, now that "bail
+> out or sync" decision is made before we call into the allocator.
+> 
+> Along with cache management hints, user space is also able to
+> adjust queue's memory consistency attributes. Memory consistency
+> attribute (dma_attrs) is per-queue, yet it plays its role on the
+> allocator level, when we allocate buffers’ private memory (planes).
+> For the time being, only one consistency attribute is supported:
+> DMA_ATTR_NON_CONSISTENT.
+> 
+> [0] https://www.mail-archive.com/linux-media@vger.kernel.org/msg112459.html
+> 
+> Sergey Senozhatsky (13):
+>   videobuf2: use explicit unsigned int in vb2_queue
+>   videobuf2: add cache management members
+>   videobuf2: handle V4L2 buffer cache flags
+>   videobuf2: add V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+>   videobuf2: add queue memory consistency parameter
+>   videobuf2: handle V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+>   videobuf2: factor out planes prepare/finish functions
+>   videobuf2: do not sync caches when we are allowed not to
+>   videobuf2: check ->synced flag in prepare() and finish()
+>   videobuf2: add begin/end cpu_access callbacks to dma-contig
+>   videobuf2: add begin/end cpu_access callbacks to dma-sg
+>   videobuf2: don't test db_attach in dma-contig prepare and finish
+>   media: vivid: add cache_hints module param
+> 
+>  Documentation/admin-guide/media/vivid.rst     |   9 ++
+>  .../userspace-api/media/v4l/buffer.rst        |  41 +++++-
+>  .../media/v4l/vidioc-create-bufs.rst          |   7 +-
+>  .../media/v4l/vidioc-reqbufs.rst              |  20 ++-
+>  .../media/common/videobuf2/videobuf2-core.c   | 121 +++++++++++++-----
+>  .../common/videobuf2/videobuf2-dma-contig.c   |  41 +++++-
+>  .../media/common/videobuf2/videobuf2-dma-sg.c |  38 ++++--
+>  .../media/common/videobuf2/videobuf2-v4l2.c   |  93 +++++++++++++-
+>  drivers/media/dvb-core/dvb_vb2.c              |   2 +-
+>  drivers/media/test-drivers/vivid/vivid-core.c |   9 ++
+>  drivers/media/test-drivers/vivid/vivid-core.h |   1 +
+>  .../media/test-drivers/vivid/vivid-meta-cap.c |   5 +
+>  .../media/test-drivers/vivid/vivid-meta-out.c |   5 +
+>  .../media/test-drivers/vivid/vivid-sdr-cap.c  |   7 +
+>  .../test-drivers/vivid/vivid-touch-cap.c      |   5 +
+>  .../media/test-drivers/vivid/vivid-vbi-cap.c  |   5 +
+>  .../media/test-drivers/vivid/vivid-vbi-out.c  |   5 +
+>  .../media/test-drivers/vivid/vivid-vid-cap.c  |   5 +
+>  .../media/test-drivers/vivid/vivid-vid-out.c  |   5 +
+>  drivers/media/v4l2-core/v4l2-compat-ioctl32.c |   9 +-
+>  drivers/media/v4l2-core/v4l2-ioctl.c          |   5 +-
+>  include/media/videobuf2-core.h                |  47 +++++--
+>  include/uapi/linux/videodev2.h                |  13 +-
+>  23 files changed, 426 insertions(+), 72 deletions(-)
+> 
 
