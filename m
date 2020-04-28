@@ -2,118 +2,112 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127EBC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD84C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4091206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ACEE208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:03:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fYgGHly7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CjkvQD4e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbgD1SCn (ORCPT
+        id S1728603AbgD1SDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:02:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728023AbgD1SCm (ORCPT
+        Tue, 28 Apr 2020 14:03:31 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:38976 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728479AbgD1SD3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:02:42 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 341EDC03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:02:42 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id n16so10731445pgb.7
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:02:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=mENmQ6Pb7H8tmR1MjtMLs0ubXE4BKzkIreYYg9JTmwQ=;
-        b=fYgGHly79Oyel+aDS8shmE3wA06fO5kZLL/u3s85DS992pSDgr08Jx2wajFH7j1jHC
-         Dm1K5xERcf6FhGPMuwNcv14JeebOPQZorvUlcLz9r0RxfDLF+gRc1j1BvIQq3RNpOm6Q
-         9EMp+/yW1t/Q54ZgaBMcfsk1FEOfsZMCpkjScN0nwNDQzMFzUhf4HwlvdsjFpCVrgXEi
-         EYB+aGQalOJeufMo73XeoDc9GtUPILpD4ag+vQctucSuvpTuQySVWKSYNmE/AT+LcaHE
-         kI7bunItPbbWP55YlZJPCWyIY1A8G2+MqmrVUznPsc3Sd/HNKegH3CuGA+CTuEFt/kBt
-         Fmrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=mENmQ6Pb7H8tmR1MjtMLs0ubXE4BKzkIreYYg9JTmwQ=;
-        b=GYDdALHfcfRk9sDlVETcEiR0Xj1fz3DVVb6h93navziG07ziuCsZIf04296jJV3jG3
-         ppUlQZljLo/IeQ0baxrhBndRvJRupfF/d2MiKjToUiYQF4rGsVVqQR9v38X2J2ylZviP
-         hRvMEpcK6prJN2s/Zxx6kxjmosZM5UGALbDSs0C2h4/+M/X2LFR6wRRMEeOK/vC8Up7d
-         Z4SkDjjb3aa6noeukR4O/7wJyXm82p2lafmzUm7wCARnNPgLsfCAPnMrNpbMGoOkEZt4
-         y0ddnjyAOhkoeQ1C3lBFyseVjGXH3ojimhiFrbjLc+N+tULnBAgKCIeq55nWrRiqBTxH
-         RBcw==
-X-Gm-Message-State: AGi0Pua0Ud2qGISP8mg+O8nyeFfFsfNal2frIDGJYPDHocRe4V5d6AC0
-        1/KIuBRCkQa39KyKprPGAC7zVg==
-X-Google-Smtp-Source: APiQypJTI6DwHabWRQCA/LwS+jwG4QtUCwBuv+PQUF/I35yfyK+EKVAsd6jfQyV+7Qv9CI1ziwgX/w==
-X-Received: by 2002:aa7:8593:: with SMTP id w19mr30860532pfn.97.1588096961545;
-        Tue, 28 Apr 2020 11:02:41 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h197sm16248994pfe.208.2020.04.28.11.02.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 11:02:40 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 11:02:38 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: display: simple: Add IVO M133NWF4 R0
-Message-ID: <20200428180238.GK987656@yoga>
-References: <20200420215728.1927434-1-bjorn.andersson@linaro.org>
- <20200425175842.GA3773@ravnborg.org>
- <CAL_JsqL6bMwrXZqvGz_H_aJi+EeoikBwKznLP2VomJ=Wn822Rg@mail.gmail.com>
- <20200428170559.GC27234@ravnborg.org>
+        Tue, 28 Apr 2020 14:03:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588097008;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dTCb6h0ts+855lZZgZ/+Y8y8vm128LBY9jBSlKrK60Q=;
+        b=CjkvQD4e1blAqDr3UUEcbjwwKHfLIrQIhXn4XbJ9d3pSWZ2GtbRD4sbt9rcooQqQs9PuPA
+        vUVeAxAoBwYG3+phQ5OGZnA4aWv44tsykqJDnmM6gnLF3nQ3/psJajA2VcTS5Q1pWesGtV
+        fePuoe0bIRkY44nHPYCoHRVsv1MsPVI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-28-emIfdwxqPbqHIUL8CbYtHA-1; Tue, 28 Apr 2020 14:03:24 -0400
+X-MC-Unique: emIfdwxqPbqHIUL8CbYtHA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 78BA313A1A3;
+        Tue, 28 Apr 2020 18:03:22 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.231])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 0A58A5D9F7;
+        Tue, 28 Apr 2020 18:03:18 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue, 28 Apr 2020 20:03:22 +0200 (CEST)
+Date:   Tue, 28 Apr 2020 20:03:17 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH v3 2/6] posix-cpu-timers: Use PIDTYPE_TGID to simplify
+ the logic in lookup_task
+Message-ID: <20200428180316.GA29960@redhat.com>
+References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
+ <87ftcv1nqe.fsf@x220.int.ebiederm.org>
+ <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
+ <20200424173927.GB26802@redhat.com>
+ <87mu6ymkea.fsf_-_@x220.int.ebiederm.org>
+ <87blnemj5t.fsf_-_@x220.int.ebiederm.org>
+ <20200426172207.GA30118@redhat.com>
+ <878sihjgec.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200428170559.GC27234@ravnborg.org>
+In-Reply-To: <878sihjgec.fsf@x220.int.ebiederm.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 28 Apr 10:05 PDT 2020, Sam Ravnborg wrote:
+On 04/27, Eric W. Biederman wrote:
+>
+> Oleg Nesterov <oleg@redhat.com> writes:
+>
+> > Eric,
+> >
+> > I am sick today and can't read the code, but I feel this patch is not
+> > right ... please correct me.
+>
+>
+> > So, iiuc when posix_cpu_timer_create() is called and CPUCLOCK_PERTHREAD
+> > is false we roughly have
+> >
+> > 	task = pid_task(pid, PIDTYPE_TGID);			// lookup_task()
+> >
+> > 	/* WINDOW */
+> >
+> > 	timer->it.cpu.pid = = get_task_pid(task, PIDTYPE_TGID)	// posix_cpu_timer_create()
+> >
+> > Now suppose that we race with mt-exec and this "task" is the old leader;
+> > it can be release_task()'ed in the WINDOW above and then get_task_pid()
+> > will return NULL.
+>
+> Except it is asking for PIDTYPE_TGID.
+>
+> task->signal
 
-> Hi Rob.
-> 
-> On Tue, Apr 28, 2020 at 09:27:51AM -0500, Rob Herring wrote:
-> > On Sat, Apr 25, 2020 at 12:58 PM Sam Ravnborg <sam@ravnborg.org> wrote:
-> > >
-> > > Hi Björn.
-> > >
-> > > On Mon, Apr 20, 2020 at 02:57:27PM -0700, Bjorn Andersson wrote:
-> > > > Define the vendor prefix for InfoVision Optoelectronics and add their
-> > > > M133NWF4 R0 13.3" FHD (1920x1080) TFT LCD panel to the compatible list
-> > > > of panel-simple.
-> > > >
-> > > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > >
-> > > I got OK for the vendor prefix on irc so patch is now added to
-> > > drm-misc-next.
-> > > Another time please use a dedicated patch for vendor-prefix
-> > > so it is not hidden with other stuff. This way the chance
-> > > to get the attention of the right people is better.
-> > 
-> > I should have mentioned there's basically one thing to check:
-> > alphabetical order.
-> I thought I checked that, but obviously not - hrmpf..
+Ah yes, I knew I missed something...
 
-Sorry about that, I thought I did double check that before posting it...
+Oleg.
 
-> I will post a follow-up patch for drm-misc-next to fix it.
-> 
-
-Thank you,
-Bjorn
