@@ -2,55 +2,57 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDAFC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A85C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF6F2085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3547C20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098913;
-	bh=ENd1jNNo5OkQqzs81452LlPPJZkaniS6ivTo+Kng45o=;
+	s=default; t=1588098917;
+	bh=59ExLV4e8OBoYTLJp6gv5Rvmogu6A7pDA+M2DHt5blg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GQ+3m+nNNu5gwIeM6hpjWah4t3RjjW5vT4tp2zOoMnrilX7ZmMvRsQ+7hIhjfwJo9
-	 KzZ+UDgjpxD4hrCHw0ZQhH7fP+jZ75d1h67145o2sL4NPXzYXhdO2qiXsiWkYjyysL
-	 D8F9nPX5keRqGzobjqoP7dX0fLcYnp9HtquSsSgs=
+	b=xkSoTDEH3u24IyxzwPIfhlb5i3WOQdpBW+gT1xz2XWYVstDtVJQkKI8h27iORAvqq
+	 7fveq9riqLPwDeBUujBb0oL8n40N9SbzFg4XZvsKG8cdQ56dy+RYSGgiIKRfyAMEHZ
+	 0oG0jSC7clzjrIWXfohC+vyuxohNb4VWhP/qFRxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730217AbgD1SfL (ORCPT
+        id S1730222AbgD1SfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:35:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52168 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:35:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728668AbgD1SfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:35:08 -0400
+        id S1730215AbgD1SfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:35:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC07420575;
-        Tue, 28 Apr 2020 18:35:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31BC520575;
+        Tue, 28 Apr 2020 18:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098908;
-        bh=ENd1jNNo5OkQqzs81452LlPPJZkaniS6ivTo+Kng45o=;
+        s=default; t=1588098910;
+        bh=59ExLV4e8OBoYTLJp6gv5Rvmogu6A7pDA+M2DHt5blg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zlKj/voj70zTcETokcR3BKufhjDuAa8/3mZGgm9oRSUNTvBmjduNW3CVt0WZpwI6v
-         5XTw+Y7B4SxQWeFMmCSxfFrMo6UmZ2r75jLf3x4PGYpLMuK5IrRDtEr8TXac1wnDcw
-         Fm9+9ee0FvZTwgoS9TD9AZ1vKkGv1q5kOHhJUYQw=
+        b=OykH0+Ka5IoFONH+kIcDZzjUUvcQuM/tbJrksd2RWTCMjC868v3Stk81ooLHoVIIb
+         rQQt8bmJkgELmW9fbLHXF4Tl+9a4eAtr5PHi4z/pvRwP31KuXlXeRIIrUHNhlHnDKt
+         mnlrJ2onBZfwUqGuofQ9SfoKOfmxY44ZOBS/nDYs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilan Peer <ilan.peer@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.6 127/167] iwlwifi: mvm: Do not declare support for ACK Enabled Aggregation
-Date:   Tue, 28 Apr 2020 20:25:03 +0200
-Message-Id: <20200428182241.412541212@linuxfoundation.org>
+        stable@vger.kernel.org, Boris Fiuczynski <fiuczy@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 030/168] s390/cio: avoid duplicated ADD uevents
+Date:   Tue, 28 Apr 2020 20:23:24 +0200
+Message-Id: <20200428182235.528619245@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,44 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilan Peer <ilan.peer@intel.com>
+From: Cornelia Huck <cohuck@redhat.com>
 
-commit 38af8d5a90a8c3b41ff0484855e24bd55b43ce9d upstream.
+[ Upstream commit 05ce3e53f375295c2940390b2b429e506e07655c ]
 
-As this was not supposed to be enabled to begin with.
+The common I/O layer delays the ADD uevent for subchannels and
+delegates generating this uevent to the individual subchannel
+drivers. The io_subchannel driver will do so when the associated
+ccw_device has been registered -- but unconditionally, so more
+ADD uevents will be generated if a subchannel has been unbound
+from the io_subchannel driver and later rebound.
 
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Ilan Peer <ilan.peer@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/iwlwifi.20200417100405.53dbc3c6c36b.Idfe118546b92cc31548b2211472a5303c7de5909@changeid
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To fix this, only generate the ADD event if uevents were still
+suppressed for the device.
 
+Fixes: fa1a8c23eb7d ("s390: cio: Delay uevents for subchannels")
+Message-Id: <20200327124503.9794-2-cohuck@redhat.com>
+Reported-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
+Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Reviewed-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/s390/cio/device.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
-@@ -532,8 +532,7 @@ static struct ieee80211_sband_iftype_dat
- 					IEEE80211_HE_MAC_CAP1_TF_MAC_PAD_DUR_16US |
- 					IEEE80211_HE_MAC_CAP1_MULTI_TID_AGG_RX_QOS_8,
- 				.mac_cap_info[2] =
--					IEEE80211_HE_MAC_CAP2_32BIT_BA_BITMAP |
--					IEEE80211_HE_MAC_CAP2_ACK_EN,
-+					IEEE80211_HE_MAC_CAP2_32BIT_BA_BITMAP,
- 				.mac_cap_info[3] =
- 					IEEE80211_HE_MAC_CAP3_OMI_CONTROL |
- 					IEEE80211_HE_MAC_CAP3_MAX_AMPDU_LEN_EXP_VHT_2,
-@@ -617,8 +616,7 @@ static struct ieee80211_sband_iftype_dat
- 					IEEE80211_HE_MAC_CAP1_TF_MAC_PAD_DUR_16US |
- 					IEEE80211_HE_MAC_CAP1_MULTI_TID_AGG_RX_QOS_8,
- 				.mac_cap_info[2] =
--					IEEE80211_HE_MAC_CAP2_BSR |
--					IEEE80211_HE_MAC_CAP2_ACK_EN,
-+					IEEE80211_HE_MAC_CAP2_BSR,
- 				.mac_cap_info[3] =
- 					IEEE80211_HE_MAC_CAP3_OMI_CONTROL |
- 					IEEE80211_HE_MAC_CAP3_MAX_AMPDU_LEN_EXP_VHT_2,
+diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
+index 0c6245fc77069..983f9c9e08deb 100644
+--- a/drivers/s390/cio/device.c
++++ b/drivers/s390/cio/device.c
+@@ -849,8 +849,10 @@ static void io_subchannel_register(struct ccw_device *cdev)
+ 	 * Now we know this subchannel will stay, we can throw
+ 	 * our delayed uevent.
+ 	 */
+-	dev_set_uevent_suppress(&sch->dev, 0);
+-	kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
++	if (dev_get_uevent_suppress(&sch->dev)) {
++		dev_set_uevent_suppress(&sch->dev, 0);
++		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
++	}
+ 	/* make it known to the system */
+ 	ret = ccw_device_add(cdev);
+ 	if (ret) {
+@@ -1058,8 +1060,11 @@ static int io_subchannel_probe(struct subchannel *sch)
+ 		 * Throw the delayed uevent for the subchannel, register
+ 		 * the ccw_device and exit.
+ 		 */
+-		dev_set_uevent_suppress(&sch->dev, 0);
+-		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
++		if (dev_get_uevent_suppress(&sch->dev)) {
++			/* should always be the case for the console */
++			dev_set_uevent_suppress(&sch->dev, 0);
++			kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
++		}
+ 		cdev = sch_get_cdev(sch);
+ 		rc = ccw_device_add(cdev);
+ 		if (rc) {
+-- 
+2.20.1
+
 
 
