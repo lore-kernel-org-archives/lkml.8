@@ -2,73 +2,83 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDA6C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3025AC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D67D206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:50:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588063836;
-	bh=hLMWpEDI26F/FaYQHonyCM62/7WmXicw7oJ3Vyoy5fo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qA7Aa+fuHBm/OQBjZkFd13RTda99zg4/ATXWfuccyPgiqJAW+8Wiak02ve6Ux+n9W
-	 ANvLBFKe/jNxZMHQFH1SuZSM7oNSb/TRJsFuCiXkelzPcnan3dz992v6/Mg43FYLJr
-	 O2ZihES10+vQF5s0e+ueEoOfmRS6jbcaCsT7gcrI=
+	by mail.kernel.org (Postfix) with ESMTP id 161CE206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:50:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgD1Iuf (ORCPT
+        id S1726865AbgD1Iux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 04:50:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726567AbgD1Iuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 04:50:35 -0400
-Received: from dragon (unknown [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB15F206B9;
-        Tue, 28 Apr 2020 08:50:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588063834;
-        bh=hLMWpEDI26F/FaYQHonyCM62/7WmXicw7oJ3Vyoy5fo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0c2FJkRrQFDS+eqYj4OIKpDHN/O+HVTEJuLSvCdyLuc1A3nYBOXz9vpoQIK/u6aH/
-         akSB8tH0MdvandMDGmov6mAnJFVwbBamzXgCziHAqvtGnufLTAAnbqo9ih/6AS3FXh
-         GU27XxgSGI/wGzP4ikZxl/VPyFaZ0uPpYOCY5T3E=
-Date:   Tue, 28 Apr 2020 16:50:20 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     peng.fan@nxp.com
-Cc:     s.hauer@pengutronix.de, robh+dt@kernel.org,
-        jaswinder.singh@linaro.org, linux@rempel-privat.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: imx8qxp: support scu mailbox channel
-Message-ID: <20200428085019.GB32592@dragon>
-References: <1586870668-32630-1-git-send-email-peng.fan@nxp.com>
- <1586870668-32630-2-git-send-email-peng.fan@nxp.com>
+        Tue, 28 Apr 2020 04:50:53 -0400
+Received: from ec2-3-21-30-127.us-east-2.compute.amazonaws.com ([3.21.30.127]:38194
+        "EHLO www.teo-en-ming.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbgD1Iux (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 04:50:53 -0400
+Received: from localhost (localhost [IPv6:::1])
+        by www.teo-en-ming.com (Postfix) with ESMTPA id CAC03426B8B;
+        Tue, 28 Apr 2020 16:50:52 +0800 (+08)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586870668-32630-2-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Date:   Tue, 28 Apr 2020 16:50:52 +0800
+From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     ceo@teo-en-ming.com
+Subject: Sophos firewalls' firewall operating system is based on Linux
+Message-ID: <b29ba003ef63a1cbb8413719ac2c134d@teo-en-ming.com>
+X-Sender: ceo@teo-en-ming.com
+User-Agent: Roundcube Webmail/1.2.3
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 09:24:28PM +0800, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> With mailbox driver support i.MX8 SCU MU channel, we could
-> use it to avoid trigger interrupts for each TR/RR registers
-> in one MU, instead, only one RX interrupt for a recv and
-> one TX interrupt for a send.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Good afternoon from Singapore,
 
-Applied, thanks.
+This is an information sharing service from Mr. Turritopsis Dohrnii Teo 
+En Ming.
+
+
+Article: “Asnarök” Trojan targets firewalls
+Link: https://news.sophos.com/en-us/2020/04/26/asnarok/
+
+
+Article: Hackers Mount Zero-Day Attacks on Sophos Firewalls
+Link: 
+https://threatpost.com/hackers-zero-day-attacks-sophos-firewalls/155169/
+
+
+
+
+
+-----BEGIN EMAIL SIGNATURE-----
+
+The Gospel for all Targeted Individuals (TIs):
+
+[The New York Times] Microwave Weapons Are Prime Suspect in Ills of
+U.S. Embassy Workers
+
+Link: 
+https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwave.html
+
+********************************************************************************************
+
+Singaporean Mr. Turritopsis Dohrnii Teo En Ming's Academic
+Qualifications as at 14 Feb 2019 and refugee seeking attempts at the 
+United Nations Refugee Agency Bangkok (21 Mar 2017), in Taiwan (5 Aug 
+2019) and Australia (25 Dec 2019 to 9 Jan 2020):
+
+[1] https://tdtemcerts.wordpress.com/
+
+[2] https://tdtemcerts.blogspot.sg/
+
+[3] https://www.scribd.com/user/270125049/Teo-En-Ming
+
+-----END EMAIL SIGNATURE-----
