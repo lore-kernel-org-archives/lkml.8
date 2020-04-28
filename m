@@ -7,37 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C06C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CE7C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B55FD2072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5072A2072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:09:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="jLu6pGsc"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="rsikoOW6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbgD1VJG (ORCPT
+        id S1726742AbgD1VJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:09:06 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:56553 "EHLO
+        Tue, 28 Apr 2020 17:09:09 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:50637 "EHLO
         ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726274AbgD1VJF (ORCPT
+        with ESMTP id S1726384AbgD1VJG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:09:05 -0400
+        Tue, 28 Apr 2020 17:09:06 -0400
 Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 4647622723;
-        Tue, 28 Apr 2020 23:09:00 +0200 (CEST)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 72F7122727;
+        Tue, 28 Apr 2020 23:09:04 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1588108143;
+        t=1588108144;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=gpXkJHqGGtoLi/kTvzdyHQl12eg8hljlk1ZvOexWd90=;
-        b=jLu6pGscUtllUyNxifoqVueP+QDLn1cmyqVo3oHxPIU0sM+KsWQBoo/hSq4/G4dAssjZrR
-        g2wMGGOwzHpzaLrZK0t83/E9F8YxMC712ZklrCrLbNiOQ3Bp/rwejjyrIQgpOnKKCF7Zhs
-        EY69vpNTaG7lWWFM8AvPOVXb4qKdQKg=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=G8Or1GwmdPmml+wVX3TSQBhgpBzIcthdpQ8T1ot15Vc=;
+        b=rsikoOW6LOknce9VK54zuLGDqf3j5CRvv//EhQnI1V0ML9TFm8Fv9DvTnvatb1r0OIerYV
+        zDSl819mk9cqeRToAILUMdEF4w2IIr8G9l6Ga9C2y3Ujt75PzJroq4T/n0B7xOftbA20ex
+        msv9CZJgfj4i/iNakS925h0TyCnT58E=
 From:   Michael Walle <michael@walle.cc>
 To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Andrew Lunn <andrew@lunn.ch>,
@@ -46,15 +47,17 @@ Cc:     Andrew Lunn <andrew@lunn.ch>,
         Russell King <linux@armlinux.org.uk>,
         "David S . Miller" <davem@davemloft.net>,
         Michael Walle <michael@walle.cc>
-Subject: [PATCH net-next 1/4] net: phy: bcm54140: use genphy_soft_reset()
-Date:   Tue, 28 Apr 2020 23:08:51 +0200
-Message-Id: <20200428210854.28088-1-michael@walle.cc>
+Subject: [PATCH net-next 3/4] net: phy: bcm54140: apply the workaround on b0 chips
+Date:   Tue, 28 Apr 2020 23:08:53 +0200
+Message-Id: <20200428210854.28088-3-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200428210854.28088-1-michael@walle.cc>
+References: <20200428210854.28088-1-michael@walle.cc>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Bar: ++++++
 X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 4647622723
+X-Rspamd-Queue-Id: 72F7122727
 X-Spamd-Result: default: False [6.40 / 15.00];
          FROM_HAS_DN(0.00)[];
          TO_DN_SOME(0.00)[];
@@ -79,26 +82,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the .soft_reset() op to be sure there will be a reset even if there
-is no hardware reset line registered.
+The lower three bits of the phy_id specifies the chip stepping. The
+workaround is specifically for the B0 stepping. Apply it only on these
+chips.
 
 Signed-off-by: Michael Walle <michael@walle.cc>
 ---
- drivers/net/phy/bcm54140.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/phy/bcm54140.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/net/phy/bcm54140.c b/drivers/net/phy/bcm54140.c
-index 7341f0126cc4..eb5dbacc1253 100644
+index edafc9dc2f63..d73cbddbc69b 100644
 --- a/drivers/net/phy/bcm54140.c
 +++ b/drivers/net/phy/bcm54140.c
-@@ -862,6 +862,7 @@ static struct phy_driver bcm54140_drivers[] = {
- 		.probe		= bcm54140_probe,
- 		.suspend	= genphy_suspend,
- 		.resume		= genphy_resume,
-+		.soft_reset	= genphy_soft_reset,
- 		.get_tunable	= bcm54140_get_tunable,
- 		.set_tunable	= bcm54140_set_tunable,
- 	},
+@@ -115,6 +115,9 @@
+ #define BCM54140_HWMON_IN_ALARM_BIT(ch) ((ch) ? BCM54140_RDB_MON_ISR_3V3 \
+ 					      : BCM54140_RDB_MON_ISR_1V0)
+ 
++#define BCM54140_PHY_ID_REV(phy_id)	((phy_id) & 0x7)
++#define BCM54140_REV_B0			1
++
+ #define BCM54140_DEFAULT_DOWNSHIFT 5
+ #define BCM54140_MAX_DOWNSHIFT 9
+ 
+@@ -632,9 +635,11 @@ static int bcm54140_config_init(struct phy_device *phydev)
+ 	int ret;
+ 
+ 	/* Apply hardware errata */
+-	ret = bcm54140_b0_workaround(phydev);
+-	if (ret)
+-		return ret;
++	if (BCM54140_PHY_ID_REV(phydev->phy_id) == BCM54140_REV_B0) {
++		ret = bcm54140_b0_workaround(phydev);
++		if (ret)
++			return ret;
++	}
+ 
+ 	/* Unmask events we are interested in. */
+ 	reg &= ~(BCM54140_RDB_INT_DUPLEX |
 -- 
 2.20.1
 
