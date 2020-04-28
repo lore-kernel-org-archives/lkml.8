@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D58F2C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2FEC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACBFA20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E05AE20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099655;
-	bh=okFhcd/SyvEwUKm90K1+K90VGZtWh3QimsVJ6c3i+xQ=;
+	s=default; t=1588099656;
+	bh=aahOHx1HrhOd24QqWXHAvskGU7qNA+4pMhwXGZq56e4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AA4JRGndMGua1HKouR9scNpRQ1Xm4/o5CITBhVT5rEB+lGPB2fESuIZiiOF2g60E1
-	 8pcgPFz0jq+KfE7XXYgVH3h6O+p6/Fj3kDkR08OrZEzhIZ2Zd4Lwy3i/goUj4v/2c1
-	 6bW4EZ2s78yFXyNGvotee7K4Ut7chtEyZsKRdHSU=
+	b=MwaObcFSbaiFKM8NwgAEeme/kxvZ4F3T0Ejx35ctkzCergwoIA41ipJL1w2pxNhWv
+	 YdOkACtyddIGjTiLa83qROyZDXNnYYyrSzTahlrVCWAB+fRw7+MgaH8+oMn3ZUrmaZ
+	 DYaKk2s5Ckt6iF/JRhlrhzdxoM01kghw+eNLx2OE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731050AbgD1SmB (ORCPT
+        id S1731054AbgD1Sl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:42:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33618 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:41:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731046AbgD1Sl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:41:57 -0400
+        id S1731040AbgD1Slx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:41:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE45D20B1F;
-        Tue, 28 Apr 2020 18:41:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 617982076A;
+        Tue, 28 Apr 2020 18:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099315;
-        bh=okFhcd/SyvEwUKm90K1+K90VGZtWh3QimsVJ6c3i+xQ=;
+        s=default; t=1588099312;
+        bh=aahOHx1HrhOd24QqWXHAvskGU7qNA+4pMhwXGZq56e4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W4npwtWCBjFzYH6C9eUzymQqwx5pRIrEufLZY/DxTjQkxokT7HzATh9sPVoFmsTtk
-         Oesr46EZUe9XlcNdbdiLvfZd/AZZrSnSIk99LsCU9pbUf063362cM1c+HFavHMDVhp
-         3gbIJYvSa+GzdEE/8PpDLZQFuZsBP+gCB81TVK78=
+        b=kr7/8BmVTqHAbADqQ02BZAm8Qv3/Z5QYPma023dYi+OJNYFrlEeHoFb6ZvPFEz1A5
+         gcX8Y0ITyhLQAU3MBzkwEZwF+fFiJnorQSVqzCTnSaPRAjXm5seu6pgPJ0w/7LSc7i
+         r0NDQbk6P5Z98HEWKdVjHiPeXwVp3m2T2/ovwDzQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.4 093/168] iio: xilinx-xadc: Fix sequencer configuration for aux channels in simultaneous mode
-Date:   Tue, 28 Apr 2020 20:24:27 +0200
-Message-Id: <20200428182244.088837946@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+d889b59b2bb87d4047a2@syzkaller.appspotmail.com,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.19 102/131] KVM: Check validity of resolved slot when searching memslots
+Date:   Tue, 28 Apr 2020 20:25:14 +0200
+Message-Id: <20200428182237.965367121@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,58 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 8bef455c8b1694547ee59e8b1939205ed9d901a6 upstream.
+commit b6467ab142b708dd076f6186ca274f14af379c72 upstream.
 
-The XADC has two internal ADCs. Depending on the mode it is operating in
-either one or both of them are used. The device manual calls this
-continuous (one ADC) and simultaneous (both ADCs) mode.
+Check that the resolved slot (somewhat confusingly named 'start') is a
+valid/allocated slot before doing the final comparison to see if the
+specified gfn resides in the associated slot.  The resolved slot can be
+invalid if the binary search loop terminated because the search index
+was incremented beyond the number of used slots.
 
-The meaning of the sequencing register for the aux channels changes
-depending on the mode.
+This bug has existed since the binary search algorithm was introduced,
+but went unnoticed because KVM statically allocated memory for the max
+number of slots, i.e. the access would only be truly out-of-bounds if
+all possible slots were allocated and the specified gfn was less than
+the base of the lowest memslot.  Commit 36947254e5f98 ("KVM: Dynamically
+size memslot array based on number of used slots") eliminated the "all
+possible slots allocated" condition and made the bug embarrasingly easy
+to hit.
 
-In continuous mode each bit corresponds to one of the 16 aux channels. And
-the single ADC will convert them one by one in order.
-
-In simultaneous mode the aux channels are split into two groups the first 8
-channels are assigned to the first ADC and the other 8 channels to the
-second ADC. The upper 8 bits of the sequencing register are unused and the
-lower 8 bits control both ADCs. This means a bit needs to be set if either
-the corresponding channel from the first group or the second group (or
-both) are set.
-
-Currently the driver does not have the special handling required for
-simultaneous mode. Add it.
-
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Fixes: bdc8cda1d010 ("iio:adc: Add Xilinx XADC driver")
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 9c1a5d38780e6 ("kvm: optimize GFN to memslot lookup with large slots amount")
+Reported-by: syzbot+d889b59b2bb87d4047a2@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Message-Id: <20200408064059.8957-2-sean.j.christopherson@intel.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/xilinx-xadc-core.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ include/linux/kvm_host.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/iio/adc/xilinx-xadc-core.c
-+++ b/drivers/iio/adc/xilinx-xadc-core.c
-@@ -798,6 +798,16 @@ static int xadc_preenable(struct iio_dev
- 	if (ret)
- 		goto err;
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -999,7 +999,7 @@ search_memslots(struct kvm_memslots *slo
+ 			start = slot + 1;
+ 	}
  
-+	/*
-+	 * In simultaneous mode the upper and lower aux channels are samples at
-+	 * the same time. In this mode the upper 8 bits in the sequencer
-+	 * register are don't care and the lower 8 bits control two channels
-+	 * each. As such we must set the bit if either the channel in the lower
-+	 * group or the upper group is enabled.
-+	 */
-+	if (seq_mode == XADC_CONF1_SEQ_SIMULTANEOUS)
-+		scan_mask = ((scan_mask >> 8) | scan_mask) & 0xff0000;
-+
- 	ret = xadc_write_adc_reg(xadc, XADC_REG_SEQ(1), scan_mask >> 16);
- 	if (ret)
- 		goto err;
+-	if (gfn >= memslots[start].base_gfn &&
++	if (start < slots->used_slots && gfn >= memslots[start].base_gfn &&
+ 	    gfn < memslots[start].base_gfn + memslots[start].npages) {
+ 		atomic_set(&slots->lru_slot, start);
+ 		return &memslots[start];
 
 
