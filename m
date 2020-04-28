@@ -2,112 +2,173 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6386DC83002
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B35CC83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45A572070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17E3A206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:59:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YKt1hryq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbgD1AzP (ORCPT
+        id S1726337AbgD1A73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 20:55:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726350AbgD1AzP (ORCPT
+        Mon, 27 Apr 2020 20:59:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51578 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726263AbgD1A73 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 20:55:15 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13A85C03C1A8
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 17:55:15 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jTEWa-0005tv-2h; Tue, 28 Apr 2020 02:55:00 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 45FC7100FC0; Tue, 28 Apr 2020 02:54:59 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Raj\, Ashok" <ashok.raj@intel.com>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jacob Jun Pan <jacob.jun.pan@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Sohil Mehta <sohil.mehta@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH 6/7] x86/traps: Fix up invalid PASID
-In-Reply-To: <20200427224646.GA103955@otc-nc-03>
-References: <1585596788-193989-1-git-send-email-fenghua.yu@intel.com> <1585596788-193989-7-git-send-email-fenghua.yu@intel.com> <87mu6ys20d.fsf@nanos.tec.linutronix.de> <20200427224646.GA103955@otc-nc-03>
-Date:   Tue, 28 Apr 2020 02:54:59 +0200
-Message-ID: <874kt4pgyk.fsf@nanos.tec.linutronix.de>
+        Mon, 27 Apr 2020 20:59:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588035567;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eCXtDAIPXE5kafrfekAlH3tsNBYP9X2R1z9BOoq2aRk=;
+        b=YKt1hryqKzUo05yylcpxXYsCc9Wahcu3yB2apuNgIGBO6XqwerZThLoUu9SebE6e1OHxUI
+        gg9VyNAdt7LXUxSjDYqwyRP+Doe9XgsG1nzVb31tgSUzfTG+rEp1T3kKtI5Swg11khYtmh
+        rm0M2AxyeGdtxh1lxt8sjjTtctHpxCU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-249-Z_pq3ejJNnaSiSk3m0hvjw-1; Mon, 27 Apr 2020 20:59:20 -0400
+X-MC-Unique: Z_pq3ejJNnaSiSk3m0hvjw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4D786468;
+        Tue, 28 Apr 2020 00:59:19 +0000 (UTC)
+Received: from localhost.localdomain (vpn2-54-127.bne.redhat.com [10.64.54.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C40F750C22;
+        Tue, 28 Apr 2020 00:59:16 +0000 (UTC)
+Reply-To: Gavin Shan <gshan@redhat.com>
+Subject: Re: [PATCH] arm64/mm: Reject invalid NUMA option
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>, shan.gavin@gmail.com,
+        will@kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200424045314.16017-1-gshan@redhat.com>
+ <20200424101132.GC1167@C02TD0UTHF1T.local>
+From:   Gavin Shan <gshan@redhat.com>
+Message-ID: <f83c0ce1-b1b2-31f4-60c8-15567b87a8ff@redhat.com>
+Date:   Tue, 28 Apr 2020 10:59:14 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20200424101132.GC1167@C02TD0UTHF1T.local>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ashok,
+Hi Mark,
 
-"Raj, Ashok" <ashok.raj@intel.com> writes:
-> On Sun, Apr 26, 2020 at 05:25:06PM +0200, Thomas Gleixner wrote:
->> Just for the record I also suggested to have a proper errorcode in the
->> #GP for ENQCMD and I surely did not suggest to avoid decoding the user
->> instructions.
->
-> We certainly discussed the possiblity of adding an error code to 
-> identiy #GP due to ENQCMD with our HW architects. 
->
-> There are only a few cases that have an error code, like move to segment
-> with an invalid value for instance. There were a few but i don't
-> recall that entire list. 
->
-> Since the error code is 0 in most places, there isn't plumbing in hw to return
-> this value in all cases. It appeared that due to some uarch reasons it
-> wasn't as simple as it appears to /me sw kinds :-)
+On 4/24/20 8:11 PM, Mark Rutland wrote:
+> [Adding Steve, who added str_has_prefix()]
+> 
+> On Fri, Apr 24, 2020 at 02:53:14PM +1000, Gavin Shan wrote:
+>> The NUMA option is parsed by str_has_prefix() and the invalid option
+>> like "numa=o" can be regarded as "numa=off" wrongly.
+> 
+> Are you certain that can pass? If that can happen, str_has_prefix() is
+> misnamed and does not seem to do what its kerneldoc says it does, as
+> "off" is not a prefix of "o".
+> 
 
-Sigh.
+Yes, It's possible. str_has_prefix() depends on strncmp(). In this particular
+case, it's equal to the snippet of code as below: strncmp() returns zero.
+str_has_prefix() returns 3.
 
-> So after some internal discussion we decided to take the current
-> approach. Its possible that if the #GP was due to some other reason
-> we might #GP another time. Since this wasn't perf or speed path we took
-> this lazy approach.
+int strncmp(const char *cs, const char *ct, size_t count)
+{
+         unsigned char c1, c2;
 
-I know that the HW people's mantra is that everything can be fixed in
-software and therefore slapping new features into the CPUs can be done
-without thinking about the consequeses.
+         while (count) {
+                 c1 = *cs++;
+                 c2 = *ct++;
+                 if (c1 != c2)
+                         return c1 < c2 ? -1 : 1;
+                 if (!c1)                             /* break after first character is compared */
+                         break;
+                 count--;
+         }
+         return 0;                                    /* 0 returned */
+}
 
-But we all know from painful experience that this is fundamentally wrong
-unless there is a really compelling reason.
+static __always_inline size_t str_has_prefix(const char *str, const char *prefix)
+{
+         size_t len = strlen("o");
+         return strncmp("o", "off", 1) == 0 ? len : 0;
+}
 
-For new features there is absolutely no reason at all.
+>> This fixes the issue with sysfs_streq(), which have more sanity checks,
+>> to avoid accepting the invalid options.
+> 
+> That doesn't sound immediately right, since this is an early parameter,
+> which has nothing to do with sysfs. Perhaps that's just a misleading
+> name?
+> 
 
-Can HW people pretty please understand that hardware and software have
-to be co-designed and not dictated by 'some uarch reasons'. This is
-nothing fundamentally new. This problem existed 30+ years ago, is well
-documented and has been ignored forever. I'm tired of that, really.
+sysfs_streq() was introduced to compare the parameters received from sysfs
+entry, but I don't think it has to be necessarily tied with sysfs entry.
+So the name is bit misleading. Alternatively, we also can fix it in another
+way (as below) if we try to avoid using sysfs_streq().
 
-But as this seems to be unsolvable for the problem at hand can you
-please document the inability, unwillingness or whatever in the
-changelog?
+diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+index 4decf1659700..b0c1ec78f50f 100644
+--- a/arch/arm64/mm/numa.c
++++ b/arch/arm64/mm/numa.c
+@@ -29,9 +29,13 @@ static __init int numa_parse_early_param(char *opt)
+  {
+         if (!opt)
+                 return -EINVAL;
+-       if (str_has_prefix(opt, "off"))
++
++       if (strlen(opt) >= 3 && str_has_prefix(opt, "off"))
+                 numa_off = true;
 
-The question why this brand new_ ENQCMD + invalid PASID induced #GP does
-not generate an useful error code and needs heuristics to be dealt with
-is pretty obvious.
+> Thanks,
+> Mark.
+> 
 
 Thanks,
+Gavin
 
-        tglx
+>> Signed-off-by: Gavin Shan <gshan@redhat.com>
+>> ---
+>>   arch/arm64/mm/numa.c | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+>> index 4decf1659700..bd458b28616a 100644
+>> --- a/arch/arm64/mm/numa.c
+>> +++ b/arch/arm64/mm/numa.c
+>> @@ -29,7 +29,8 @@ static __init int numa_parse_early_param(char *opt)
+>>   {
+>>   	if (!opt)
+>>   		return -EINVAL;
+>> -	if (str_has_prefix(opt, "off"))
+>> +
+>> +	if (sysfs_streq(opt, "off"))
+>>   		numa_off = true;
+>>   
+>>   	return 0;
+>> -- 
+>> 2.23.0
+>>
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
