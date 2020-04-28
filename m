@@ -2,109 +2,240 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2517C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F649C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE66820B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E03C82070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:09:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KjUGDWC9"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dMLJbQRz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbgD1UHe (ORCPT
+        id S1726484AbgD1UIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:07:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726410AbgD1UH2 (ORCPT
+        Tue, 28 Apr 2020 16:08:38 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:51866 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726286AbgD1UIb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:07:28 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26316C03C1AB
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:07:28 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id r17so17969836lff.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:07:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M1YtACLEe9IuTvLnjysZBZz/m54iNfZsObywrWlf7oE=;
-        b=KjUGDWC9klYlMPXx4Q6IAmywWSeQcbXkwwzOYikFtW+g+kq2qFglZTMOdtK+hTolHm
-         +95eYRT4IQPC9wQ25xEQ/SCOUpJdsiTcw+861799DwWHDH8vvPUt5+I8zdP/ZwSSeH/5
-         0XK2fGAcqUzAOkqu5KGDML5Img3Muwp0A++uH/Ag53yiJmrlnrdZXJ6hy+swQVY/hK5b
-         lX5Z2b32uNS/Kl8jNnNsH0ruVgDtGu05DBwQSZP/ZRdkBy79mMNYWR9dcS7CIocvNPLE
-         70LzUAEHuv/zYF4Ta6uOT4gMGcsGp+FSRfsflhMFCSq0p3nPi0xpZkkNMdM23coeEnCB
-         OXjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M1YtACLEe9IuTvLnjysZBZz/m54iNfZsObywrWlf7oE=;
-        b=jK1VedAeWy4huQ0+D21U1GiyxBf0IU0qc0xlY9VJan+Se3nsu46BAqzUoldsywlp1h
-         1AKJ1yz3PFjnEMGveRG/6o9GtXE0OP0NhBOL39Cc0Gm2dcctmXSz2AI0fFY3jgzKb0fr
-         FkI1OaT0Jt8tAkJqKzMqdsfbgz2SEZ8O6P6y03sKthZykCCbwewJ8QsvpHWkfLkUMaBo
-         5XhpZmKf7sPfkzVR/myTVA4OJM7hIzMhEqzu51VAhzzwJQg0xXf0pqu6t1pV/+uucUGM
-         YV7igf2RZ1Mhk7xKeGhjww3WbL1YMpV+XNmum4Xd/0oqPcp8v3Zk5PBYm2qIE64YH+sA
-         +U3A==
-X-Gm-Message-State: AGi0PuY+ZeIn48odzAIkGVnLZa7f5Pbkk8ax6yYM6lNfAHU+kdGMMkqA
-        6OgTZ+439wW3zWHVuPmYGMITOF4c5n7EDEnn07bDmQ==
-X-Google-Smtp-Source: APiQypI3iiSpP+vuFbfcMhuWh/HEF2kch9czpa3KxmqEEmwzMCc2dSPgMvj85MvOgPehFcfih9BZiBMwVu+AeS8e8lc=
-X-Received: by 2002:ac2:4832:: with SMTP id 18mr20437133lft.162.1588104446347;
- Tue, 28 Apr 2020 13:07:26 -0700 (PDT)
+        Tue, 28 Apr 2020 16:08:31 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SJxG5K007306;
+        Tue, 28 Apr 2020 20:08:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=obAQjQOwpznu0IDV9eQOTSEo+Ud2NPo//XlLR2mtfqI=;
+ b=dMLJbQRzQZWDRF9Ts6l5Fvrhd+ZNNDdEjofFnXezDgfUKozOuxsPOI3Sq8zJijwNpEkB
+ t/JD51mcNr3bW/Efq8/HZs0hatE6R1YEf/NXkY/6JLUPxAjKE8FFtzXT4n9H5x0gbLHL
+ 2YiaiH8YgjAVHfFvfMYSZZQ5Y0UCJEqTPasbhruwXSaI9zFTqzv3fJZZ5YfqFfsL+sJQ
+ k+nB6E/w6J4MVipn9saVHrvTI3e6ToO7fTSVxf6dtmJaCh5fhXb8GXJ7yYe/XFXERIWv
+ vvJCv2thp3Sd8/DqkDLPfIjVMF5HHrgoqTmVrKKK+CoRgDbpsMLsA8UDrQ3hZSf3FAh9 cw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 30p2p07hw8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 20:08:13 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SK84Go194206;
+        Tue, 28 Apr 2020 20:08:13 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 30mxx0nj0b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 20:08:13 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03SK8BHE002188;
+        Tue, 28 Apr 2020 20:08:11 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Apr 2020 13:08:11 -0700
+Date:   Tue, 28 Apr 2020 13:08:09 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH V11 06/11] fs/xfs: Make DAX mount option a tri-state
+Message-ID: <20200428200809.GB6742@magnolia>
+References: <20200428002142.404144-1-ira.weiny@intel.com>
+ <20200428002142.404144-7-ira.weiny@intel.com>
 MIME-Version: 1.0
-References: <20200423022550.15113-1-sean.j.christopherson@intel.com>
- <20200423022550.15113-2-sean.j.christopherson@intel.com> <CALMp9eRD9py=N9hDSon5GPzuiZw1Z+3xHv9umu1_qKzWczz0PA@mail.gmail.com>
-In-Reply-To: <CALMp9eRD9py=N9hDSon5GPzuiZw1Z+3xHv9umu1_qKzWczz0PA@mail.gmail.com>
-From:   Oliver Upton <oupton@google.com>
-Date:   Tue, 28 Apr 2020 13:07:15 -0700
-Message-ID: <CAOQ_Qsi62EL3WZWEnKVNT=9YFsZ3Gmsu3V-JeehGmxbvotiShg@mail.gmail.com>
-Subject: Re: [PATCH 01/13] KVM: nVMX: Preserve exception priority irrespective
- of exiting behavior
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Shier <pshier@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428002142.404144-7-ira.weiny@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 bulkscore=0
+ suspectscore=0 mlxlogscore=999 phishscore=0 malwarescore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004280157
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1015
+ bulkscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
+ mlxscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004280157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 11:54 AM Jim Mattson <jmattson@google.com> wrote:
->
-> On Wed, Apr 22, 2020 at 7:26 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > Short circuit vmx_check_nested_events() if an exception is pending and
-> > needs to be injected into L2, priority between coincident events is not
-> > dependent on exiting behavior.  This fixes a bug where a single-step #DB
-> > that is not intercepted by L1 is incorrectly dropped due to servicing a
-> > VMX Preemption Timer VM-Exit.
-> >
-> > Injected exceptions also need to be blocked if nested VM-Enter is
-> > pending or an exception was already injected, otherwise injecting the
-> > exception could overwrite an existing event injection from L1.
-> > Technically, this scenario should be impossible, i.e. KVM shouldn't
-> > inject its own exception during nested VM-Enter.  This will be addressed
-> > in a future patch.
-> >
-> > Note, event priority between SMI, NMI and INTR is incorrect for L2, e.g.
-> > SMI should take priority over VM-Exit on NMI/INTR, and NMI that is
-> > injected into L2 should take priority over VM-Exit INTR.  This will also
-> > be addressed in a future patch.
-> >
-> > Fixes: b6b8a1451fc4 ("KVM: nVMX: Rework interception of IRQs and NMIs")
-> > Reported-by: Jim Mattson <jmattson@google.com>
-> > Cc: Oliver Upton <oupton@google.com>
-> > Cc: Peter Shier <pshier@google.com>
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Reviewed-by: Jim Mattson <jmattson@google.com>
-Reviewed-by: Oliver Upton <oupton@google.com>
+On Mon, Apr 27, 2020 at 05:21:37PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> As agreed upon[1].  We make the dax mount option a tri-state.  '-o dax'
+> continues to operate the same.  We add 'always', 'never', and 'inode'
+> (default).
+> 
+> [1] https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+Looks good to me,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+
+--D
+
+> 
+> ---
+> Changes from V10:
+> 	Move show options to xfs_info_set array
+> 
+> Changes from V9:
+> 	Fix indentation in xfs_mount_set_dax_mode()
+> 	Do not report dax=inode
+> 
+> Changes from v8:
+> 	Move NEVER bit to 27
+> 	Use xfs signature style
+> 	use xfs_dax_mode enum
+> 
+> Changes from v7:
+> 	Change to XFS_MOUNT_DAX_NEVER
+> 
+> Changes from v6:
+> 	Use 2 flag bits rather than a field.
+> 	change iflag to inode
+> 
+> Changes from v5:
+> 	New Patch
+> ---
+>  fs/xfs/xfs_mount.h |  1 +
+>  fs/xfs/xfs_super.c | 46 ++++++++++++++++++++++++++++++++++++++++++----
+>  2 files changed, 43 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+> index f6123fb0113c..37bfb50db809 100644
+> --- a/fs/xfs/xfs_mount.h
+> +++ b/fs/xfs/xfs_mount.h
+> @@ -238,6 +238,7 @@ typedef struct xfs_mount {
+>  						   allocator */
+>  #define XFS_MOUNT_NOATTR2	(1ULL << 25)	/* disable use of attr2 format */
+>  #define XFS_MOUNT_DAX_ALWAYS	(1ULL << 26)
+> +#define XFS_MOUNT_DAX_NEVER	(1ULL << 27)
+>  
+>  /*
+>   * Max and min values for mount-option defined I/O
+> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> index ce169d1c7474..e80bd2c4c279 100644
+> --- a/fs/xfs/xfs_super.c
+> +++ b/fs/xfs/xfs_super.c
+> @@ -47,6 +47,39 @@ static struct kset *xfs_kset;		/* top-level xfs sysfs dir */
+>  static struct xfs_kobj xfs_dbg_kobj;	/* global debug sysfs attrs */
+>  #endif
+>  
+> +enum xfs_dax_mode {
+> +	XFS_DAX_INODE = 0,
+> +	XFS_DAX_ALWAYS = 1,
+> +	XFS_DAX_NEVER = 2,
+> +};
+> +
+> +static void
+> +xfs_mount_set_dax_mode(
+> +	struct xfs_mount	*mp,
+> +	enum xfs_dax_mode	mode)
+> +{
+> +	switch (mode) {
+> +	case XFS_DAX_INODE:
+> +		mp->m_flags &= ~(XFS_MOUNT_DAX_ALWAYS | XFS_MOUNT_DAX_NEVER);
+> +		break;
+> +	case XFS_DAX_ALWAYS:
+> +		mp->m_flags |= XFS_MOUNT_DAX_ALWAYS;
+> +		mp->m_flags &= ~XFS_MOUNT_DAX_NEVER;
+> +		break;
+> +	case XFS_DAX_NEVER:
+> +		mp->m_flags |= XFS_MOUNT_DAX_NEVER;
+> +		mp->m_flags &= ~XFS_MOUNT_DAX_ALWAYS;
+> +		break;
+> +	}
+> +}
+> +
+> +static const struct constant_table dax_param_enums[] = {
+> +	{"inode",	XFS_DAX_INODE },
+> +	{"always",	XFS_DAX_ALWAYS },
+> +	{"never",	XFS_DAX_NEVER },
+> +	{}
+> +};
+> +
+>  /*
+>   * Table driven mount option parser.
+>   */
+> @@ -59,7 +92,7 @@ enum {
+>  	Opt_filestreams, Opt_quota, Opt_noquota, Opt_usrquota, Opt_grpquota,
+>  	Opt_prjquota, Opt_uquota, Opt_gquota, Opt_pquota,
+>  	Opt_uqnoenforce, Opt_gqnoenforce, Opt_pqnoenforce, Opt_qnoenforce,
+> -	Opt_discard, Opt_nodiscard, Opt_dax,
+> +	Opt_discard, Opt_nodiscard, Opt_dax, Opt_dax_enum,
+>  };
+>  
+>  static const struct fs_parameter_spec xfs_fs_parameters[] = {
+> @@ -103,6 +136,7 @@ static const struct fs_parameter_spec xfs_fs_parameters[] = {
+>  	fsparam_flag("discard",		Opt_discard),
+>  	fsparam_flag("nodiscard",	Opt_nodiscard),
+>  	fsparam_flag("dax",		Opt_dax),
+> +	fsparam_enum("dax",		Opt_dax_enum, dax_param_enums),
+>  	{}
+>  };
+>  
+> @@ -129,7 +163,8 @@ xfs_fs_show_options(
+>  		{ XFS_MOUNT_GRPID,		",grpid" },
+>  		{ XFS_MOUNT_DISCARD,		",discard" },
+>  		{ XFS_MOUNT_LARGEIO,		",largeio" },
+> -		{ XFS_MOUNT_DAX_ALWAYS,		",dax" },
+> +		{ XFS_MOUNT_DAX_ALWAYS,		",dax=always" },
+> +		{ XFS_MOUNT_DAX_NEVER,		",dax=never" },
+>  		{ 0, NULL }
+>  	};
+>  	struct xfs_mount	*mp = XFS_M(root->d_sb);
+> @@ -1261,7 +1296,10 @@ xfs_fc_parse_param(
+>  		return 0;
+>  #ifdef CONFIG_FS_DAX
+>  	case Opt_dax:
+> -		mp->m_flags |= XFS_MOUNT_DAX_ALWAYS;
+> +		xfs_mount_set_dax_mode(mp, XFS_DAX_ALWAYS);
+> +		return 0;
+> +	case Opt_dax_enum:
+> +		xfs_mount_set_dax_mode(mp, result.uint_32);
+>  		return 0;
+>  #endif
+>  	default:
+> @@ -1468,7 +1506,7 @@ xfs_fc_fill_super(
+>  		if (!rtdev_is_dax && !datadev_is_dax) {
+>  			xfs_alert(mp,
+>  			"DAX unsupported by block device. Turning off DAX.");
+> -			mp->m_flags &= ~XFS_MOUNT_DAX_ALWAYS;
+> +			xfs_mount_set_dax_mode(mp, XFS_DAX_NEVER);
+>  		}
+>  		if (xfs_sb_version_hasreflink(&mp->m_sb)) {
+>  			xfs_alert(mp,
+> -- 
+> 2.25.1
+> 
