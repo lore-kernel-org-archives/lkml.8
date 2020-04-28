@@ -2,137 +2,104 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2429C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE5AC83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83A802076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B16E7205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:47:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BHJTeAgx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgD1AqR (ORCPT
+        id S1726397AbgD1ArQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 20:46:17 -0400
-Received: from mout-p-102.mailbox.org ([80.241.56.152]:11350 "EHLO
-        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726337AbgD1AqQ (ORCPT
+        Mon, 27 Apr 2020 20:47:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46382 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726263AbgD1ArQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 20:46:16 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 49B2yB31ClzKmbp;
-        Tue, 28 Apr 2020 02:46:10 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
-        with ESMTP id Hb0F5KawT22P; Tue, 28 Apr 2020 02:46:05 +0200 (CEST)
-Date:   Tue, 28 Apr 2020 10:45:46 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Hagen Paul Pfeifer <hagen@jauu.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Jann Horn <jannh@google.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Brian Gerst <brgerst@gmail.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [RFC v2] ptrace, pidfd: add pidfd_ptrace syscall
-Message-ID: <20200428004546.mlpwixgms2ekpfdm@yavin.dot.cyphar.com>
-References: <20200426130100.306246-1-hagen@jauu.net>
- <20200426163430.22743-1-hagen@jauu.net>
- <20200427170826.mdklazcrn4xaeafm@wittgenstein>
- <CAG48ez0hskhN7OkxwHX-Bo5HGboJaVEk8udFukkTgiC=43ixcw@mail.gmail.com>
- <87zhawdc6w.fsf@x220.int.ebiederm.org>
- <20200427185929.GA1768@laniakea>
- <CAK8P3a2Ux1pDZEBjgRSPMJXvwUAvbPastX2ynVVC2iPTTDK_ow@mail.gmail.com>
- <20200427201303.tbiipopeapxofn6h@wittgenstein>
+        Mon, 27 Apr 2020 20:47:16 -0400
+Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37DA7C03C1A8;
+        Mon, 27 Apr 2020 17:47:16 -0700 (PDT)
+Received: by mail-oo1-xc43.google.com with SMTP id 190so4297016ooa.12;
+        Mon, 27 Apr 2020 17:47:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mg3ylSUl5nTSYGxTWgCy2J6jsay82JWyxDHWJ67sXd0=;
+        b=BHJTeAgxrQcdxgbSnbBQ2r3yUouEpq5tFpfBfLiRMbGMAbOJzp1gwLavi3skk3+Xtb
+         dxrmQdkZHP8gf7Ytiwcy3oNE9Wlg0kzA/CWUZbxRKKcZP+DREC6/sPGzsZvXAmoWKkk7
+         w0CowYAgQeloZl2ELKOxGPjT+xqSZmtw2c8nPDlZ6b72NmCBuV7ouIbpo2uojIEqk2iU
+         9EL5QuLqh5SfOT/24fsJ6IQaq9RSGRBuCwHUQDTdwgd1p/8MopMrdg9ZH6VMQvO29oop
+         sP6JpPREldsbh6DWITEbl5XIwHqlxvCMwqIqf+h8gDUDuaOy1gqv5XgEbZ9e/77o7Kk/
+         2dbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mg3ylSUl5nTSYGxTWgCy2J6jsay82JWyxDHWJ67sXd0=;
+        b=mnJlIOOzlZHyVLMSL1Gx0EYalIQka+d6OJBNks/7vuM3+JmerntnwTZHdcwGdkpQsA
+         JMWBwSJxqKRjaPBuzI45C8DhvR+d5qf5qYHgHOT+vmXwmg8sZICff/ReG1SQm90Spz+H
+         M8OTz6nFRo9I0E1Gq8Qq7iOvOTo2vegXNrd8R6vyCFO7+oXN+FkUwiLCtzmDWE+qTy80
+         GuaHnN1en+vzj7yVUaIFb2oMtUc8CkjCOq61U25t2bL+RWDW8irwgRyFlQ5xIryRFJlJ
+         Y+NK/D5ZdmeT7HntA6AR4dd9bLpu25OdUllSAFsLFdLPDekseCGgvdVdznMFglPetcCE
+         gQsw==
+X-Gm-Message-State: AGi0PuZDp0+kmw3xjvZ8/WTgrASJrjWSrayZk9vF40rqFg6WPOYM//D4
+        mtZk8vQvFVkHjjv26ZI3miBK3iFyp3CCMs1tkbk=
+X-Google-Smtp-Source: APiQypIfTPGQQQfOB5A+EopR4kh38+zyXjtO9KEGC+3ldyqv7OPbmaTqNkuTiK37dBY9a1ss/9o7LJcM3QQ8lLvQ4hU=
+X-Received: by 2002:a4a:d355:: with SMTP id d21mr9857599oos.66.1588034835594;
+ Mon, 27 Apr 2020 17:47:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3oqbxiocwy4jimao"
-Content-Disposition: inline
-In-Reply-To: <20200427201303.tbiipopeapxofn6h@wittgenstein>
-X-Rspamd-Queue-Id: 43C7D1693
-X-Rspamd-Score: -4.76 / 15.00 / 15.00
+References: <1587709364-19090-1-git-send-email-wanpengli@tencent.com>
+ <1587709364-19090-2-git-send-email-wanpengli@tencent.com> <20200427182631.GM14870@linux.intel.com>
+In-Reply-To: <20200427182631.GM14870@linux.intel.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 28 Apr 2020 08:47:05 +0800
+Message-ID: <CANRm+CyNOnCDEwAK04Yr_Yom3ebfKH61_3-fXaCs-LbcTiEd7w@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] KVM: VMX: Introduce generic fastpath handler
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Haiwei Li <lihaiwei@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 28 Apr 2020 at 02:26, Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Fri, Apr 24, 2020 at 02:22:40PM +0800, Wanpeng Li wrote:
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Introduce generic fastpath handler to handle MSR fastpath, VMX-preemption
+> > timer fastpath etc. In addition, we can't observe benefit from single
+> > target IPI fastpath when APICv is disabled, let's just enable IPI and
+> > Timer fastpath when APICv is enabled for now.
+>
+> There are three different changes being squished into a single patch:
+>
+>   - Refactor code to add helper
+>   - Change !APICv behavior for WRMSR fastpath
+>   - Introduce EXIT_FASTPATH_CONT_RUN
+>
+> I don't think you necessarily need to break this into three separate
+> patches, but's the !APICv change needs to be a standalone patch, especially
+> given the shortlog.  E.g. the refactoring could be introduced along with
+> the second fastpath case, and CONT_RUN could be introduced with its first
+> usage.
 
---3oqbxiocwy4jimao
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Agreed, will split to two separate patches.
 
-On 2020-04-27, Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> On Mon, Apr 27, 2020 at 10:08:03PM +0200, Arnd Bergmann wrote:
-> > The way I understood Jann was that instead of a new syscall that duplic=
-ates
-> > everything in ptrace(), there would only need to be a new ptrace request
-> > such as PTRACE_ATTACH_PIDFD that behaves like PTRACE_ATTACH
-> > but takes a pidfd as the second argument, perhaps setting the return va=
-lue
-> > to the pid on success. Same for PTRACE_SEIZE.
->=20
-> That was my initial suggestion, yes. Any enum that identifies a target
-> by a pid will get a new _PIDFD version and the pidfd is passed as pid_t
-> argument. That should work and is similar to what I did for waitid()
-> P_PIDFD. Realistically, there shouldn't be any system where pid_t is
-> smaller than an int that we care about.
->=20
-> > In effect this is not much different from your a), just a variation on =
-the
-> > calling conventions. The main upside is that it avoids adding another
-> > ugly interface, the flip side is that it makes the existing one slightl=
-y worse
-> > by adding complexity.
->=20
-> Basically, if a new syscall than please a proper re-design with real
-> benefits.
->=20
-> In the meantime we could make due with the _PIDFD variant. And then if
-> someone wants to do the nitty gritty work of adding a ptrace variant
-> purely based on pidfds and with a better api and features that e.g. Jann
-> pointed out then by all means, please do so. I'm sure we would all
-> welcome this as well.
-
-I agree. It would be a shame to add a new ptrace syscall and not take
-the opportunity to fix the multitude of problems with the existing API.
-But that's a Pandora's box which we shouldn't open unless we want to
-wait a long time to get an API everyone is okay with -- a pretty high
-price to just get pidfds support in ptrace.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---3oqbxiocwy4jimao
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXqd8tgAKCRCdlLljIbnQ
-EgHUAP0eXsMeBvX6165xj8TEMgh4rB2Aum2qA+WKvKBlmmoq6AD/UQdz5i+S0aA6
-FmHhKfcX0nKnO3Qpss//v+w7UiJH/AQ=
-=FQhY
------END PGP SIGNATURE-----
-
---3oqbxiocwy4jimao--
+    Wanpeng
