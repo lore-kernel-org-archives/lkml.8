@@ -2,73 +2,200 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E412DC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E319DC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2CBD206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C30B1206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:02:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="akJy1tba"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgD1HCE (ORCPT
+        id S1726478AbgD1HCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:02:04 -0400
-Received: from verein.lst.de ([213.95.11.211]:54417 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725867AbgD1HCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 03:02:03 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 10B4D68CEC; Tue, 28 Apr 2020 09:02:01 +0200 (CEST)
-Date:   Tue, 28 Apr 2020 09:02:00 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Martijn Coenen <maco@android.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ming Lei <ming.lei@redhat.com>,
-        Narayan Kamath <narayan@google.com>,
-        Zimuzo Ezeozue <zezeozue@google.com>, kernel-team@android.com,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martijn Coenen <maco@google.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: Re: [PATCH v3 0/9] Add a new LOOP_SET_FD_AND_STATUS ioctl
-Message-ID: <20200428070200.GC18754@lst.de>
-References: <20200427074222.65369-1-maco@android.com> <20200427170613.GA13686@lst.de> <CAB0TPYGZc_n-b5xtNsbJxEiqpLMqE=RcXGuy7C2vbY18mKZ6_A@mail.gmail.com>
+        Tue, 28 Apr 2020 03:02:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725867AbgD1HCQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 03:02:16 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCE16C03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 00:02:14 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id f8so7987995plt.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 00:02:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4/nXkttFFpuCRApbDJrQtkcOv5tbYmzw7WwX94JHLec=;
+        b=akJy1tba1VpIzlH/CXLZlgwmODN/R788RBn+EBkFiZNxPR9HnUenKsz8T7JZ3hBiQs
+         6JxexXdGrkQivjC7Y9LpCP3JuG7fTFRrji8IJor7BprWzLpoplEjU1ufuwh+f1Z/rflv
+         cj8ycSNF6ebqJt7mCKn11SKuViZxnhv1YL6SmKkoG2wggjoB5z3g+EIDR/kjNGSiM52i
+         wmBl6bGfJ9pCt2vdzS74YeyDnawUMQokZMZEpok+2zU4ZBPPHHawFEkcVdqtHwS8SLLm
+         B+0MFC85J0M48ov68PK4QQ0OOIGNv4Zmy9W4+VSV9tgm9A953mb3aQFl+AkIP5omVDyd
+         GGjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4/nXkttFFpuCRApbDJrQtkcOv5tbYmzw7WwX94JHLec=;
+        b=MDRpNEdprcX+i70RVBYM3rxvG99UoA1PMMedxEkfANtTrNebkhU/AdAQKtUpH5Hntl
+         rg3vkvliOBR2Nr/0AShOzoHuMezGPw1vUu3rfy7SrpddzUBn8fQmz2naBo4AXXiv0IGV
+         EQ9qGnd+a8/dD7zvKpnisjCHDP8E6pH0IHieC+IV3N1b35D7hPjgZ41pGFBqSzod9VB6
+         rPKu0K/dO4NT/KrsP+eXd69LBT9hIYIN6YsMauASc0nHExU5OSyrlbgyHsEoAw5+sCpN
+         1sc70nxsP4gfkbnWHmG1dH7gUnaIeH3oEg7tAUnxT78G1x4PCVAjS/L57CpLxhB95deY
+         KpPA==
+X-Gm-Message-State: AGi0PuZE0UZdv3SLbW6a9ZALa2Rc0NAZnrvD/zzaXGbZkIrGpn8ukiGJ
+        0AbksXxucfhAPnDdjKpBXV8aPA==
+X-Google-Smtp-Source: APiQypKJLT+5WEewrpsIGozji9eAxX0I24yBU7u0wC3+voEg1WXhmgIc5VBQVKbIDRa6YQ/bPe8YjA==
+X-Received: by 2002:a17:90a:7105:: with SMTP id h5mr3221811pjk.3.1588057334032;
+        Tue, 28 Apr 2020 00:02:14 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id h193sm14310501pfe.30.2020.04.28.00.02.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 00:02:12 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        Peter Fink <pfink@christ-es.de>
+Cc:     linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: [PATCH] net: usb: ax88179_178a: Implement ethtool_ops set_eeprom
+Date:   Tue, 28 Apr 2020 00:01:39 -0700
+Message-Id: <20200428070139.3465511-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAB0TPYGZc_n-b5xtNsbJxEiqpLMqE=RcXGuy7C2vbY18mKZ6_A@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 10:34:35PM +0200, Martijn Coenen wrote:
-> > Also maybe an explicit direct I/O flag, and maybe
-> > enough padding with a future proof flags bitmap that we can easily
-> > extend it for new features if they pop up?
-> 
-> Sounds good. I'm thinking these flags should be separate from
-> LO_FLAGS_; even though there is already a LO_FLAGS_DIRECT_IO, as far
-> as I can tell it can only be used to tell whether it's enabled, not to
-> actually enable it. And it would just get confusing if we add more
-> flags later. Maybe something like LO_FD_STATUS_FLAG_DIRECT_IO ?
+The vendor driver does upon failing to read a valid MAC address from
+EEPROM write the netdev's address back to EEPROM and invoking a EEPROM
+reload operation. Based on this we can implement the ethtool_ops
+set_eeprom and provide the means to populate the EEPROM from within
+Linux.
 
-I think reusing LO_FLAGS_DIRECT_IO makes sense to me - we have 32
-flags in the existing flags field (at least for loop_info64), so
-we might as well use the field and the flags.  Then we need flags
-validation in that we don't accept new flags through the old
-interface, and the new one validates that no unknown flags are passed.
+It's worth noting that ax88179_get_eeprom() will return some default
+data unless the content of the EEPROM is deemed "complete", so until the
+EEPROM is fully populated (e.g. by running ethtool -e | ethtool -E)
+data written with ax88179_set_eeprom() will appear not to stick.
 
-E.g. in the LOOP_SET_STATUS / LOOP_SET_STATUS64 handler do:
+The implementation is based on asix_set_eeprom(), from asix_common.c
 
-	lo->lo_flags &= ~(LO_LEGACY_FLAGS);
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ drivers/net/usb/ax88179_178a.c | 77 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
 
-and then in the main function reject anything not known.
+diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
+index 93044cf1417a..b05bb11a02cb 100644
+--- a/drivers/net/usb/ax88179_178a.c
++++ b/drivers/net/usb/ax88179_178a.c
+@@ -31,6 +31,7 @@
+ #define AX_ACCESS_PHY				0x02
+ #define AX_ACCESS_EEPROM			0x04
+ #define AX_ACCESS_EFUS				0x05
++#define AX_RELOAD_EEPROM_EFUSE			0x06
+ #define AX_PAUSE_WATERLVL_HIGH			0x54
+ #define AX_PAUSE_WATERLVL_LOW			0x55
+ 
+@@ -611,6 +612,81 @@ ax88179_get_eeprom(struct net_device *net, struct ethtool_eeprom *eeprom,
+ 	return 0;
+ }
+ 
++static int
++ax88179_set_eeprom(struct net_device *net, struct ethtool_eeprom *eeprom,
++		   u8 *data)
++{
++	struct usbnet *dev = netdev_priv(net);
++	u16 *eeprom_buff;
++	int first_word;
++	int last_word;
++	int ret;
++	int i;
++
++	netdev_dbg(net, "write EEPROM len %d, offset %d, magic 0x%x\n",
++		   eeprom->len, eeprom->offset, eeprom->magic);
++
++	if (eeprom->len == 0)
++		return -EINVAL;
++
++	if (eeprom->magic != AX88179_EEPROM_MAGIC)
++		return -EINVAL;
++
++	first_word = eeprom->offset >> 1;
++	last_word = (eeprom->offset + eeprom->len - 1) >> 1;
++
++	eeprom_buff = kmalloc_array(last_word - first_word + 1, sizeof(u16),
++				    GFP_KERNEL);
++	if (!eeprom_buff)
++		return -ENOMEM;
++
++	/* align data to 16 bit boundaries, read the missing data from
++	   the EEPROM */
++	if (eeprom->offset & 1) {
++		ret = ax88179_read_cmd(dev, AX_ACCESS_EEPROM, first_word, 1, 2,
++				       &eeprom_buff[0]);
++		if (ret < 0) {
++			netdev_err(net, "Failed to read EEPROM at offset 0x%02x.\n", first_word);
++			goto free;
++		}
++	}
++
++	if ((eeprom->offset + eeprom->len) & 1) {
++		ret = ax88179_read_cmd(dev, AX_ACCESS_EEPROM, last_word, 1, 2,
++				       &eeprom_buff[last_word - first_word]);
++		if (ret < 0) {
++			netdev_err(net, "Failed to read EEPROM at offset 0x%02x.\n", last_word);
++			goto free;
++		}
++	}
++
++	memcpy((u8 *)eeprom_buff + (eeprom->offset & 1), data, eeprom->len);
++
++	for (i = first_word; i <= last_word; i++) {
++		netdev_dbg(net, "write to EEPROM at offset 0x%02x, data 0x%04x\n",
++			   i, eeprom_buff[i - first_word]);
++		ret = ax88179_write_cmd(dev, AX_ACCESS_EEPROM, i, 1, 2,
++					&eeprom_buff[i - first_word]);
++		if (ret < 0) {
++			netdev_err(net, "Failed to write EEPROM at offset 0x%02x.\n", i);
++			goto free;
++		}
++		msleep(20);
++	}
++
++	/* reload EEPROM data */
++	ret = ax88179_write_cmd(dev, AX_RELOAD_EEPROM_EFUSE, 0x0000, 0, 0, NULL);
++	if (ret < 0) {
++		netdev_err(net, "Failed to reload EEPROM data\n");
++		goto free;
++	}
++
++	ret = 0;
++free:
++	kfree(eeprom_buff);
++	return ret;
++}
++
+ static int ax88179_get_link_ksettings(struct net_device *net,
+ 				      struct ethtool_link_ksettings *cmd)
+ {
+@@ -822,6 +898,7 @@ static const struct ethtool_ops ax88179_ethtool_ops = {
+ 	.set_wol		= ax88179_set_wol,
+ 	.get_eeprom_len		= ax88179_get_eeprom_len,
+ 	.get_eeprom		= ax88179_get_eeprom,
++	.set_eeprom		= ax88179_set_eeprom,
+ 	.get_eee		= ax88179_get_eee,
+ 	.set_eee		= ax88179_set_eee,
+ 	.nway_reset		= usbnet_nway_reset,
+-- 
+2.24.0
 
-And then maybe add something like 64 bytes of padding to the end of the
-new structure, so that we can use flags to expand to it.
