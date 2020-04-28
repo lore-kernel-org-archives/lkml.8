@@ -2,135 +2,105 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	TVD_SUBJ_WIPE_DEBT,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41E7C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7287C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B309D206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4167208FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:44:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="dD/b1Qyb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JpEdhd4c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgD1On2 (ORCPT
+        id S1728028AbgD1OoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:43:28 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:41983 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727124AbgD1On1 (ORCPT
+        Tue, 28 Apr 2020 10:44:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36354 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727803AbgD1OoD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:43:27 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id D244A23E35;
-        Tue, 28 Apr 2020 16:43:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1588085004;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xV8UmXfmKOCo8rfAL1DHuYOW1sEqi/rRvTk8GPWV4YM=;
-        b=dD/b1QybujEq1dnyH/G+lR91pdkgakvlBONpoZS6Xx7NNwYvvX3uFX0eVIbX5Ds7xdM5UZ
-        RxA4N3EXfDOCrKes3GUVj3mPYLA/re4CjAOlkJReUFK95YBLArORW9GADSg5lD02r7drlK
-        3LJQ0MRP5dWCdxqidl4b8Nj4TampY60=
+        Tue, 28 Apr 2020 10:44:03 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D46AC03C1AB;
+        Tue, 28 Apr 2020 07:44:03 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id c21so7633701plz.4;
+        Tue, 28 Apr 2020 07:44:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TmxpJsxXAhcqB+ToVZExhvip4vVPdz5UbfhJp3pb3Rg=;
+        b=JpEdhd4cifBh5c7FfGbQpg7esariuAxGZdmCnyS/MuOKKFBlwHW46H+u1qAsGkWl2h
+         4zsWi/VrJlXbHu2CYHRUPR8FdH6YM7fffG20ZpEkzng0T+DtKmC1H9/5dQLJRCNMRcQa
+         4ED3iCvKAwqCjZNfyGqwfdqN5vXclVNZoOeViUVVt/8pmrJscHsJFlDwK8J43xsZwEt1
+         u/qhIc6lEJyZp8T3pBgvhLjqZpJjnDttudRto6wWbva5vb2YHplTH8wq8Re/V+hYO8Vj
+         USNMAP8K5ZuSDjJD4nEPMj+G2fUUFVQ2z9yRkyupnmoBFtpYnoAJbhf8Va1tuig3gSIX
+         fVaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TmxpJsxXAhcqB+ToVZExhvip4vVPdz5UbfhJp3pb3Rg=;
+        b=M8bCgYQ6zwlPtZEQFasWqyGRFuhTmavTnseT6BdZjxZDq2DihpQllaW7OxN2IFrAR5
+         ECUTUK/ExXE3XRKKn3bYFCPJv96d79Dml0ZMxKanSMVb/rKsT8moNqQj5VMqELwIVH9r
+         Pi0oju/Exs8ZaJQCR83IUKRqHREvNAfjqbZe1aDKOLwd7neVDpaGJ3RpgdYnXttbyNLK
+         +HkE1mcr5jOcoBiI5dW2sj9blawqe33/zJPiyCWZUvAn5a9GV/5Sb+uxgrpBiUpp4ksY
+         qa8QUuWAfSbcRk5fb02ALxmYfIxWZnwJaccOMFJvrPLkjPJ1wTcciIguZGyDtXTBYbaH
+         YTzg==
+X-Gm-Message-State: AGi0PuYj+btVWUxn5vIbVzJHVvsFSp4DDByIOXjhwgw5x+UFYlfb7JvK
+        dr2f0PMUs1GATmxROB1ZhN8=
+X-Google-Smtp-Source: APiQypLErRiVfS2BcM1F3SXg4qY/JpZaLDKctoUkSw9scfkA5By0Gg4GrF2ZF7DuR5iYOoa+PNuylg==
+X-Received: by 2002:a17:902:5ac2:: with SMTP id g2mr13356131plm.167.1588085041193;
+        Tue, 28 Apr 2020 07:44:01 -0700 (PDT)
+Received: from varodek.localdomain ([2401:4900:40f3:10a2:97c1:b981:9f1:d7d0])
+        by smtp.gmail.com with ESMTPSA id d203sm15053203pfd.79.2020.04.28.07.43.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 07:44:00 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Shannon Nelson <snelson@pensando.io>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Martin Habets <mhabets@solarflare.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        netdev@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, rjw@rjwysocki.net
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, skhan@linuxfoundation.org
+Subject: [Linux-kernel-mentees] [PATCH v2 0/2] realtek ethernet : remove legacy power management callbacks.
+Date:   Tue, 28 Apr 2020 20:13:12 +0530
+Message-Id: <20200428144314.24533-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 28 Apr 2020 16:43:24 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 05/16] mfd: Add support for Kontron sl28cpld management
- controller
-In-Reply-To: <20200428125049.GU185537@smile.fi.intel.com>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-6-michael@walle.cc>
- <20200428125049.GU185537@smile.fi.intel.com>
-Message-ID: <5e2d486077f9e2ce8bd9b171cf806fd9@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: D244A23E35
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[24];
-         NEURAL_HAM(-0.00)[-0.819];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,linaro.org,baylibre.com,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-04-28 14:50, schrieb Andy Shevchenko:
-> On Thu, Apr 23, 2020 at 07:45:32PM +0200, Michael Walle wrote:
->> This patch adds core support for the board management controller found
->> on the SMARC-sAL28 board. It consists of the following functions:
->>  - watchdog
->>  - GPIO controller
->>  - PWM controller
->>  - fan sensor
->>  - interrupt controller
-> 
-> ...
-> 
->>  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
->> 
->>  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
->> +
->> +obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
-> 
-> Perhaps keep an order?
+The purpose of this patch series is to remove legacy power management callbacks
+from realtek ethernet drivers.
 
-I don't see any order in that makefile. Looked to me like every new
-file was added at the end.
+The callbacks performing suspend() and resume() operations are still calling
+pci_save_state(), pci_set_power_state(), etc. and handling the powermanagement
+themselves, which is not recommended.
 
-> 
-> ...
-> 
->> +	return devm_mfd_add_devices(dev, -1, sl28cpld_devs,
-> 
-> -1 has its own definition.
+The conversion requires the removal of the those function calls and change the
+callback definition accordingly.
 
-ok, I'll replace that by PLATFORM_DEVID_NONE.
+Vaibhav Gupta (2):
+  realtek/8139too: Remove Legacy Power Management
+  realtek/8139cp: Remove Legacy Power Management
 
-Thanks,
--michael
+ drivers/net/ethernet/realtek/8139cp.c  | 25 +++++++------------------
+ drivers/net/ethernet/realtek/8139too.c | 26 +++++++-------------------
+ 2 files changed, 14 insertions(+), 37 deletions(-)
 
-> 
->> +				    ARRAY_SIZE(sl28cpld_devs), NULL,
->> +				    i2c->irq, NULL);
->> +}
+-- 
+2.26.2
+
