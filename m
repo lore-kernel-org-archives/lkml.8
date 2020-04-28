@@ -2,196 +2,355 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2F5C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA06C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A5B8206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11017206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:49:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c0sO6lRt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgD1Otl (ORCPT
+        id S1728105AbgD1Ott (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:49:41 -0400
-Received: from mga12.intel.com ([192.55.52.136]:30897 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727079AbgD1Otk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:49:40 -0400
-IronPort-SDR: 116a6z/WmpGZ/hcQBSv5gj6oC6aNMQKtO3/6IdBYUjTMfvGZcLP0kWNrwGAKtVOb2QUe+q0eMl
- ctlFZo2Oxrbg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 07:49:37 -0700
-IronPort-SDR: nTiHZ+QKeXVh3/SB61c0U6V6btT6zfCikuVBAXyd3hAQO+IfBavYC6hZpRsmLfu54jVDW898tT
- FFT8wjNHZonA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
-   d="scan'208";a="432207306"
-Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
-  by orsmga005.jf.intel.com with ESMTP; 28 Apr 2020 07:49:38 -0700
-Received: from orsmsx124.amr.corp.intel.com (10.22.240.120) by
- ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 28 Apr 2020 07:49:38 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.204]) by
- ORSMSX124.amr.corp.intel.com ([169.254.2.166]) with mapi id 14.03.0439.000;
- Tue, 28 Apr 2020 07:49:37 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mr.nuke.me@gmail.com" <mr.nuke.me@gmail.com>
-Subject: Re: [PATCH v1 1/1] PCI/AER: Use _OSC negotiation to determine AER
- ownership
-Thread-Topic: [PATCH v1 1/1] PCI/AER: Use _OSC negotiation to determine AER
- ownership
-Thread-Index: AQHWG/i80WXiBjxvV0GlmSmUDGqUuqiOHfGAgAD37gA=
-Date:   Tue, 28 Apr 2020 14:49:36 +0000
-Message-ID: <f3bae1805b4668f2eb0bb636aabde26161d680fe.camel@intel.com>
-References: <20200428000213.GA29631@google.com>
-In-Reply-To: <20200428000213.GA29631@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.255.3.48]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1598CB4BFD7AD741A2C2349256703DD8@intel.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Tue, 28 Apr 2020 10:49:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37218 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727079AbgD1Otn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 10:49:43 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABF9EC03C1AB;
+        Tue, 28 Apr 2020 07:49:42 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id k12so3099746wmj.3;
+        Tue, 28 Apr 2020 07:49:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=J3QFlJHQxyblSAKFcby4n2BdhC/OIDlr14v3xcvEKMs=;
+        b=c0sO6lRtAuqtBjZRSNQfRm/Pzp1kIsKdjOE+HlZN/+k2huybqplV1iSiEkeQ74EoC4
+         sGRnJWZS1DqceFsoKKHaG5yzy00cT+HtC8kiCUAZEY0gJo+LKtQ8r8nRFnkM83x5x1bm
+         SQYILQcYd/F3Ch4pLEUl/nybxigfWDhIOF+BjVDUr1btPNUkFztaUssreBnNg+1+4NDh
+         QXTkXnL1+S/x5Sz6S+gqHGtvG6b7EgaqMB3wTU5xq4JeKv/62uDpAMSx+KSZ2hUAkMU6
+         1r7TgZp8HCIRpevF3+UhrJnJjXQ8TdS/z+JRTXjgdvOoGaV87XMixJjHZ4PH4DRwnCLU
+         lRfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=J3QFlJHQxyblSAKFcby4n2BdhC/OIDlr14v3xcvEKMs=;
+        b=rHKAjW58bIn7GEiG6oC0FdXRh/zJUVtaEA10gbtk4RlAaEzBSvU83OC0zyo7l8shN6
+         T72VTE6j1BgRAHyMqTPt1DkhNnd75QBSw6muuZLHIFDtdnVX/U4fZ/fy4HkVv93oH63K
+         QBam+kFR1RPOy/pqjPqw3oQSPKy2DGN9Z/zORqSpDCGKEQCZu7KdR/kUDW9T9VrIQC25
+         ITRSRWf2pT8D4x08twSgRQZ91eA2eYqlotbQkFp4sGJMA9PzxyWTEfDIUvLyH3HSK6an
+         iCrY7RRSqu+M4ncEeuYPznye6Z7nwvGzSLdfJBkwAxX/syD3aNVOzkzw3U08Ho9w71OT
+         jd+Q==
+X-Gm-Message-State: AGi0PuZflegBLLZu+joebb+odP4+eKphDRJsnHu4Cbtgx90pIKpqUNT9
+        B5KU0Ou+ik4cu0X4eh6pTmLclovV
+X-Google-Smtp-Source: APiQypJAKyJqf2PrCUMAYFRdSOzlF+gZWRuzX6TH1+FLVLdS5km6gvLw0fFUb2v9zmrI5Pw3scoQfw==
+X-Received: by 2002:a1c:4c10:: with SMTP id z16mr5041718wmf.77.1588085381239;
+        Tue, 28 Apr 2020 07:49:41 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id l9sm25458592wrq.83.2020.04.28.07.49.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 Apr 2020 07:49:40 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/2] ARM: dts: rockchip: rename and label gpio-led subnodes
+Date:   Tue, 28 Apr 2020 16:49:32 +0200
+Message-Id: <20200428144933.10953-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-U29ycnkgSSBkaWRuJ3Qgc2VlIHRoaXMgYmVmb3JlIG15IGNvbW1lbnRzIHllc3RlcmRheQ0KDQpG
-b3IgZWl0aGVyIGluZGl2aWR1YWwgb3Igc3BsaXQgc2V0LA0KUmV2aWV3ZWQtYnk6IEpvbiBEZXJy
-aWNrIDxqb25hdGhhbi5kZXJyaWNrQGludGVsLmNvbT4NCg0KVGhhbmtzIEt1cHB1c3dhbXkNCg0K
-T24gTW9uLCAyMDIwLTA0LTI3IGF0IDE5OjAyIC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
-PiBbK2NjIEpvbiwgQWxleGFuZHJ1XQ0KPiANCj4gT24gU3VuLCBBcHIgMjYsIDIwMjAgYXQgMTE6
-MzA6MDZBTSAtMDcwMCwgc2F0aHlhbmFyYXlhbmFuLmt1cHB1c3dhbXlAbGludXguaW50ZWwuY29t
-IHdyb3RlOg0KPiA+IEZyb206IEt1cHB1c3dhbXkgU2F0aHlhbmFyYXlhbmFuIDxzYXRoeWFuYXJh
-eWFuYW4ua3VwcHVzd2FteUBsaW51eC5pbnRlbC5jb20+DQo+ID4gDQo+ID4gQ3VycmVudGx5IFBD
-SWUgQUVSIGRyaXZlciB1c2VzIEhFU1QgRklSTVdBUkVfRklSU1QgYml0IHRvDQo+ID4gZGV0ZXJt
-aW5lIHRoZSBQQ0llIEFFUiBDYXBhYmlsaXR5IG93bmVyc2hpcCBiZXR3ZWVuIE9TIGFuZA0KPiA+
-IGZpcm13YXJlLiBUaGlzIHN1cHBvcnQgaXMgYWRkZWQgYmFzZWQgb24gZm9sbG93aW5nIHNwZWMN
-Cj4gPiByZWZlcmVuY2UuDQo+ID4gDQo+ID4gUGVyIEFDUEkgc3BlYyByNi4zLCB0YWJsZSAxOC0z
-ODcsIDE4LTM4OCwgMTgtMzg5LCBIRVNUIHRhYmxlDQo+ID4gZmxhZ3MgZmllbGQgQklULTAgYW5k
-IEJJVC0xIGNhbiBiZSB1c2VkIHRvIGV4cG9zZSB0aGUNCj4gPiBvd25lcnNoaXAgb2YgZXJyb3Ig
-c291cmNlIGJldHdlZW4gZmlybXdhcmUgYW5kIE9TUE0uDQo+ID4gDQo+ID4gQml0IFswXSAtIEZJ
-Uk1XQVJFX0ZJUlNUOiBJZiBzZXQsIGluZGljYXRlcyB0aGF0IHN5c3RlbQ0KPiA+ICAgICAgICAg
-ICBmaXJtd2FyZSB3aWxsIGhhbmRsZSBlcnJvcnMgZnJvbSB0aGlzIHNvdXJjZQ0KPiA+ICAgICAg
-ICAgICBmaXJzdC4NCj4gPiBCaXQgWzFdIOKAkyBHTE9CQUw6IElmIHNldCwgaW5kaWNhdGVzIHRo
-YXQgdGhlIHNldHRpbmdzDQo+ID4gICAgICAgICAgIGNvbnRhaW5lZCBpbiB0aGlzIHN0cnVjdHVy
-ZSBhcHBseSBnbG9iYWxseSB0byBhbGwNCj4gPiAgICAgICAgICAgUENJIEV4cHJlc3MgQnJpZGdl
-cy4NCj4gPiANCj4gPiBBbHRob3VnaCBhYm92ZSBzcGVjIHJlZmVyZW5jZSBzdGF0ZXMgdGhhdCBz
-ZXR0aW5nDQo+ID4gRklSTVdBUkVfRklSU1QgYml0IG1lYW5zIGZpcm13YXJlIHdpbGwgaGFuZGxl
-IHRoZSBlcnJvciBzb3VyY2UNCj4gPiBmaXJzdCwgaXQgZG9lcyBub3QgZXhwbGljaXRseSBzdGF0
-ZSBhbnl0aGluZyBhYm91dCBBRVINCj4gPiBvd25lcnNoaXAuIFNvIHVzaW5nIEhFU1QgdG8gZGV0
-ZXJtaW5lIEFFUiBvd25lcnNoaXAgaXMNCj4gPiBpbmNvcnJlY3QuDQo+ID4gDQo+ID4gQWxzbywg
-YXMgcGVyIGZvbGxvd2luZyBzcGVjaWZpY2F0aW9uIHJlZmVyZW5jZXMsIF9PU0MgY2FuIGJlDQo+
-ID4gdXNlZCB0byBuZWdvdGlhdGUgdGhlIEFFUiBvd25lcnNoaXAgYmV0d2VlbiBmaXJtd2FyZSBh
-bmQgT1MuDQo+ID4gRGV0YWlscyBhcmUsDQo+ID4gDQo+ID4gUGVyIEFDUEkgc3BlYyByNi4zLCBz
-ZWMgNi4yLjExLjMsIHRhYmxlIHRpdGxlZCDigJxJbnRlcnByZXRhdGlvbg0KPiA+IG9mIF9PU0Mg
-Q29udHJvbCBGaWVsZOKAnSBhbmQgYXMgcGVyIFBDSSBmaXJtd2FyZSBzcGVjaWZpY2F0aW9uIHIz
-LjIsDQo+ID4gc2VjIDQuNS4xLCB0YWJsZSA0LTUsIE9TIGNhbiBzZXQgYml0IDMgb2YgX09TQyBj
-b250cm9sIGZpZWxkDQo+ID4gdG8gcmVxdWVzdCBjb250cm9sIG92ZXIgUENJIEV4cHJlc3MgQUVS
-LiBJZiB0aGUgT1Mgc3VjY2Vzc2Z1bGx5DQo+ID4gcmVjZWl2ZXMgY29udHJvbCBvZiB0aGlzIGZl
-YXR1cmUsIGl0IG11c3QgaGFuZGxlIGVycm9yIHJlcG9ydGluZw0KPiA+IHRocm91Z2ggdGhlIEFF
-UiBDYXBhYmlsaXR5IGFzIGRlc2NyaWJlZCBpbiB0aGUgUENJIEV4cHJlc3MgQmFzZQ0KPiA+IFNw
-ZWNpZmljYXRpb24uDQo+ID4gDQo+ID4gU2luY2UgYWJvdmUgc3BlYyByZWZlcmVuY2VzIGNsZWFy
-bHkgc3RhdGVzIF9PU0MgY2FuIGJlIHVzZWQgdG8NCj4gPiBkZXRlcm1pbmUgQUVSIG93bmVyc2hp
-cCwgZG9uJ3QgZGVwZW5kIG9uIEhFU1QgRklSTVdBUkVfRklSU1QgYml0Lg0KPiANCj4gSSBzcGxp
-dCB0aGlzIHVwIGEgYml0IGFuZCBhcHBsaWVkIHRoZSBmaXJzdCBwYXJ0IHRvIHBjaS9lcnJvciB0
-byBnZXQNCj4gaXQgaW50byAtbmV4dCBzbyB3ZSBjYW4gc3RhcnQgc2VlaW5nIHdoYXQgYnJlYWtz
-LiAgSSB3b24ndCBiZSB0b28NCj4gc3VycHJpc2VkIGlmIHdlIHRyaXAgb3ZlciBzb21ldGhpbmcu
-DQo+IA0KPiBIZXJlJ3MgdGhlIGZpcnN0IHBhcnQgKGVudGlyZSBvcmlnaW5hbCBwYXRjaCBpcyBh
-dA0KPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9yLzY3YWYyOTMxNzA1YmVkOWE1ODhiNWEzOWQz
-NjljYjcwYjk5NDIxOTAuMTU4NzkyNTYzNi5naXQuc2F0aHlhbmFyYXlhbmFuLmt1cHB1c3dhbXlA
-bGludXguaW50ZWwuY29tKS4NCj4gDQo+IGNvbW1pdCA4ZjhlNDJlN2MyZGQgKCJQQ0kvQUVSOiBV
-c2Ugb25seSBfT1NDIHRvIGRldGVybWluZSBBRVIgb3duZXJzaGlwIikNCj4gQXV0aG9yOiBLdXBw
-dXN3YW15IFNhdGh5YW5hcmF5YW5hbiA8c2F0aHlhbmFyYXlhbmFuLmt1cHB1c3dhbXlAbGludXgu
-aW50ZWwuY29tPg0KPiBEYXRlOiAgIE1vbiBBcHIgMjcgMTg6MjU6MTMgMjAyMCAtMDUwMA0KPiAN
-Cj4gICAgIFBDSS9BRVI6IFVzZSBvbmx5IF9PU0MgdG8gZGV0ZXJtaW5lIEFFUiBvd25lcnNoaXAN
-Cj4gICAgIA0KPiAgICAgUGVyIHRoZSBQQ0kgRmlybXdhcmUgc3BlYywgcjMuMiwgc2VjIDQuNS4x
-LCB0aGUgT1MgY2FuIHJlcXVlc3QgY29udHJvbCBvZg0KPiAgICAgQUVSIHZpYSBiaXQgMyBvZiB0
-aGUgX09TQyBDb250cm9sIEZpZWxkLiAgSW4gdGhlIHJldHVybmVkIHZhbHVlIG9mIHRoZQ0KPiAg
-ICAgQ29udHJvbCBGaWVsZDoNCj4gICAgIA0KPiAgICAgICBUaGUgZmlybXdhcmUgc2V0cyBbYml0
-IDNdIHRvIDEgdG8gZ3JhbnQgY29udHJvbCBvdmVyIFBDSSBFeHByZXNzIEFkdmFuY2VkDQo+ICAg
-ICAgIEVycm9yIFJlcG9ydGluZy4gIC4uLiAgYWZ0ZXIgY29udHJvbCBpcyB0cmFuc2ZlcnJlZCB0
-byB0aGUgb3BlcmF0aW5nDQo+ICAgICAgIHN5c3RlbSwgZmlybXdhcmUgbXVzdCBub3QgbW9kaWZ5
-IHRoZSBBZHZhbmNlZCBFcnJvciBSZXBvcnRpbmcgQ2FwYWJpbGl0eS4NCj4gICAgICAgSWYgY29u
-dHJvbCBvZiB0aGlzIGZlYXR1cmUgd2FzIHJlcXVlc3RlZCBhbmQgZGVuaWVkIG9yIHdhcyBub3Qg
-cmVxdWVzdGVkLA0KPiAgICAgICBmaXJtd2FyZSByZXR1cm5zIHRoaXMgYml0IHNldCB0byAwLg0K
-PiAgICAgDQo+ICAgICBQcmV2aW91c2x5IHRoZSBwY2lfcm9vdCBkcml2ZXIgbG9va2VkIGF0IHRo
-ZSBIRVNUIEZJUk1XQVJFX0ZJUlNUIGJpdCB0bw0KPiAgICAgZGV0ZXJtaW5lIHdoZXRoZXIgdG8g
-cmVxdWVzdCBvd25lcnNoaXAgb2YgdGhlIEFFUiBDYXBhYmlsaXR5LiAgVGhpcyB3YXMNCj4gICAg
-IGJhc2VkIG9uIEFDUEkgc3BlYyB2Ni4zLCBzZWMgMTguMy4yLjQsIGFuZCBzaW1pbGFyIHNlY3Rp
-b25zLCB3aGljaCBzYXkNCj4gICAgIHRoaW5ncyBsaWtlOg0KPiAgICAgDQo+ICAgICAgIEJpdCBb
-MF0gLSBGSVJNV0FSRV9GSVJTVDogSWYgc2V0LCBpbmRpY2F0ZXMgdGhhdCBzeXN0ZW0gZmlybXdh
-cmUgd2lsbA0KPiAgICAgICAgICAgICAgICAgaGFuZGxlIGVycm9ycyBmcm9tIHRoaXMgc291cmNl
-IGZpcnN0Lg0KPiAgICAgDQo+ICAgICAgIEJpdCBbMV0gLSBHTE9CQUw6IElmIHNldCwgaW5kaWNh
-dGVzIHRoYXQgdGhlIHNldHRpbmdzIGNvbnRhaW5lZCBpbiB0aGlzDQo+ICAgICAgICAgICAgICAg
-ICBzdHJ1Y3R1cmUgYXBwbHkgZ2xvYmFsbHkgdG8gYWxsIFBDSSBFeHByZXNzIERldmljZXMuDQo+
-ICAgICANCj4gICAgIFRoZXNlIEFDUEkgcmVmZXJlbmNlcyBkb24ndCBzYXkgYW55dGhpbmcgYWJv
-dXQgb3duZXJzaGlwIG9mIHRoZSBBRVINCj4gICAgIENhcGFiaWxpdHkuDQo+ICAgICANCj4gICAg
-IFJlbW92ZSB1c2Ugb2YgdGhlIEZJUk1XQVJFX0ZJUlNUIGJpdCBhbmQgcmVseSBvbmx5IG9uIHRo
-ZSBfT1NDIGJpdCB0bw0KPiAgICAgZGV0ZXJtaW5lIHdoZXRoZXIgd2UgaGF2ZSBjb250cm9sIG9m
-IHRoZSBBRVIgQ2FwYWJpbGl0eS4NCj4gICAgIA0KPiAgICAgTGluazogaHR0cHM6Ly9sb3JlLmtl
-cm5lbC5vcmcvci82N2FmMjkzMTcwNWJlZDlhNTg4YjVhMzlkMzY5Y2I3MGI5OTQyMTkwLjE1ODc5
-MjU2MzYuZ2l0LnNhdGh5YW5hcmF5YW5hbi5rdXBwdXN3YW15QGxpbnV4LmludGVsLmNvbQ0KPiAg
-ICAgW2JoZWxnYWFzOiBjb21taXQgbG9nLCBzcGxpdCBwYXRjaGVzXQ0KPiAgICAgU2lnbmVkLW9m
-Zi1ieTogS3VwcHVzd2FteSBTYXRoeWFuYXJheWFuYW4gPHNhdGh5YW5hcmF5YW5hbi5rdXBwdXN3
-YW15QGxpbnV4LmludGVsLmNvbT4NCj4gICAgIFNpZ25lZC1vZmYtYnk6IEJqb3JuIEhlbGdhYXMg
-PGJoZWxnYWFzQGdvb2dsZS5jb20+DQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9hY3BpL3Bj
-aV9yb290LmMgYi9kcml2ZXJzL2FjcGkvcGNpX3Jvb3QuYw0KPiBpbmRleCBhYzhhZDZjYjgyYWEu
-LjllMjM1YzFhNzVmZiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9hY3BpL3BjaV9yb290LmMNCj4g
-KysrIGIvZHJpdmVycy9hY3BpL3BjaV9yb290LmMNCj4gQEAgLTQ4MywxMyArNDgzLDggQEAgc3Rh
-dGljIHZvaWQgbmVnb3RpYXRlX29zX2NvbnRyb2woc3RydWN0IGFjcGlfcGNpX3Jvb3QgKnJvb3Qs
-IGludCAqbm9fYXNwbSwNCj4gIAlpZiAoSVNfRU5BQkxFRChDT05GSUdfSE9UUExVR19QQ0lfU0hQ
-QykpDQo+ICAJCWNvbnRyb2wgfD0gT1NDX1BDSV9TSFBDX05BVElWRV9IUF9DT05UUk9MOw0KPiAg
-DQo+IC0JaWYgKHBjaV9hZXJfYXZhaWxhYmxlKCkpIHsNCj4gLQkJaWYgKGFlcl9hY3BpX2Zpcm13
-YXJlX2ZpcnN0KCkpDQo+IC0JCQlkZXZfaW5mbygmZGV2aWNlLT5kZXYsDQo+IC0JCQkJICJQQ0ll
-IEFFUiBoYW5kbGVkIGJ5IGZpcm13YXJlXG4iKTsNCj4gLQkJZWxzZQ0KPiAtCQkJY29udHJvbCB8
-PSBPU0NfUENJX0VYUFJFU1NfQUVSX0NPTlRST0w7DQo+IC0JfQ0KPiArCWlmIChwY2lfYWVyX2F2
-YWlsYWJsZSgpKQ0KPiArCQljb250cm9sIHw9IE9TQ19QQ0lfRVhQUkVTU19BRVJfQ09OVFJPTDsN
-Cj4gIA0KPiAgCS8qDQo+ICAJICogUGVyIHRoZSBEb3duc3RyZWFtIFBvcnQgQ29udGFpbm1lbnQg
-UmVsYXRlZCBFbmhhbmNlbWVudHMgRUNOIHRvDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9w
-Y2llL2Flci5jIGIvZHJpdmVycy9wY2kvcGNpZS9hZXIuYw0KPiBpbmRleCBmNDI3NGQzMDEyMzUu
-LmVmYzI2NzczY2M2ZCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9wY2kvcGNpZS9hZXIuYw0KPiAr
-KysgYi9kcml2ZXJzL3BjaS9wY2llL2Flci5jDQo+IEBAIC0zMTgsMzAgKzMxOCw2IEBAIGludCBw
-Y2llX2Flcl9nZXRfZmlybXdhcmVfZmlyc3Qoc3RydWN0IHBjaV9kZXYgKmRldikNCj4gIAkJYWVy
-X3NldF9maXJtd2FyZV9maXJzdChkZXYpOw0KPiAgCXJldHVybiBkZXYtPl9fYWVyX2Zpcm13YXJl
-X2ZpcnN0Ow0KPiAgfQ0KPiAtDQo+IC1zdGF0aWMgYm9vbCBhZXJfZmlybXdhcmVfZmlyc3Q7DQo+
-IC0NCj4gLS8qKg0KPiAtICogYWVyX2FjcGlfZmlybXdhcmVfZmlyc3QgLSBDaGVjayBpZiBBUEVJ
-IHNob3VsZCBjb250cm9sIEFFUi4NCj4gLSAqLw0KPiAtYm9vbCBhZXJfYWNwaV9maXJtd2FyZV9m
-aXJzdCh2b2lkKQ0KPiAtew0KPiAtCXN0YXRpYyBib29sIHBhcnNlZCA9IGZhbHNlOw0KPiAtCXN0
-cnVjdCBhZXJfaGVzdF9wYXJzZV9pbmZvIGluZm8gPSB7DQo+IC0JCS5wY2lfZGV2CT0gTlVMTCwJ
-LyogQ2hlY2sgYWxsIFBDSWUgZGV2aWNlcyAqLw0KPiAtCQkuZmlybXdhcmVfZmlyc3QJPSAwLA0K
-PiAtCX07DQo+IC0NCj4gLQlpZiAocGNpZV9wb3J0c19uYXRpdmUpDQo+IC0JCXJldHVybiBmYWxz
-ZTsNCj4gLQ0KPiAtCWlmICghcGFyc2VkKSB7DQo+IC0JCWFwZWlfaGVzdF9wYXJzZShhZXJfaGVz
-dF9wYXJzZSwgJmluZm8pOw0KPiAtCQlhZXJfZmlybXdhcmVfZmlyc3QgPSBpbmZvLmZpcm13YXJl
-X2ZpcnN0Ow0KPiAtCQlwYXJzZWQgPSB0cnVlOw0KPiAtCX0NCj4gLQlyZXR1cm4gYWVyX2Zpcm13
-YXJlX2ZpcnN0Ow0KPiAtfQ0KPiAgI2VuZGlmDQo+ICANCj4gICNkZWZpbmUJUENJX0VYUF9BRVJf
-RkxBR1MJKFBDSV9FWFBfREVWQ1RMX0NFUkUgfCBQQ0lfRVhQX0RFVkNUTF9ORkVSRSB8IFwNCj4g
-QEAgLTE1MjMsNyArMTQ5OSw3IEBAIHN0YXRpYyBzdHJ1Y3QgcGNpZV9wb3J0X3NlcnZpY2VfZHJp
-dmVyIGFlcmRyaXZlciA9IHsNCj4gICAqLw0KPiAgaW50IF9faW5pdCBwY2llX2Flcl9pbml0KHZv
-aWQpDQo+ICB7DQo+IC0JaWYgKCFwY2lfYWVyX2F2YWlsYWJsZSgpIHx8IGFlcl9hY3BpX2Zpcm13
-YXJlX2ZpcnN0KCkpDQo+ICsJaWYgKCFwY2lfYWVyX2F2YWlsYWJsZSgpKQ0KPiAgCQlyZXR1cm4g
-LUVOWElPOw0KPiAgCXJldHVybiBwY2llX3BvcnRfc2VydmljZV9yZWdpc3RlcigmYWVyZHJpdmVy
-KTsNCj4gIH0NCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvcGNpLWFjcGkuaCBiL2luY2x1
-ZGUvbGludXgvcGNpLWFjcGkuaA0KPiBpbmRleCAyZDE1NWJmYjhmYmYuLjExYzk4ODc1NTM4YSAx
-MDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9wY2ktYWNwaS5oDQo+ICsrKyBiL2luY2x1ZGUv
-bGludXgvcGNpLWFjcGkuaA0KPiBAQCAtMTI1LDEwICsxMjUsNCBAQCBzdGF0aWMgaW5saW5lIHZv
-aWQgYWNwaV9wY2lfYWRkX2J1cyhzdHJ1Y3QgcGNpX2J1cyAqYnVzKSB7IH0NCj4gIHN0YXRpYyBp
-bmxpbmUgdm9pZCBhY3BpX3BjaV9yZW1vdmVfYnVzKHN0cnVjdCBwY2lfYnVzICpidXMpIHsgfQ0K
-PiAgI2VuZGlmCS8qIENPTkZJR19BQ1BJICovDQo+ICANCj4gLSNpZmRlZiBDT05GSUdfQUNQSV9B
-UEVJDQo+IC1leHRlcm4gYm9vbCBhZXJfYWNwaV9maXJtd2FyZV9maXJzdCh2b2lkKTsNCj4gLSNl
-bHNlDQo+IC1zdGF0aWMgaW5saW5lIGJvb2wgYWVyX2FjcGlfZmlybXdhcmVfZmlyc3Qodm9pZCkg
-eyByZXR1cm4gZmFsc2U7IH0NCj4gLSNlbmRpZg0KPiAtDQo+ICAjZW5kaWYJLyogX1BDSV9BQ1BJ
-X0hfICovDQo=
+Current dts files with 'gpio-led' nodes were manually verified.
+In order to automate this process leds-gpio.txt
+has been converted to yaml. With this conversion a check
+for pattern properties was added. A test with the command
+below gives a screen full of warnings like:
+
+arch/arm/boot/dts/rk3188-radxarock.dt.yaml: gpio-leds:
+'blue', 'green', 'sleep'
+do not match any of the regexes:
+'(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
+
+Fix these errors with help of the following rules:
+
+1: Add nodename in the preferred form.
+
+2: Always add a label that ends with '_led' to prevent conflicts
+   with other labels such as 'power' and 'mmc'
+
+3: If leds need pinctrl add a label that ends with '_led_pin'
+   also to prevent conflicts with other labels.
+
+patternProperties:
+  # The first form is preferred, but fall back to just 'led'
+  # anywhere in the node name to at least catch some child nodes.
+  "(^led-[0-9a-f]$|led)":
+
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/leds/
+leds-gpio.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm/boot/dts/rk3036-kylin.dts          |  2 +-
+ arch/arm/boot/dts/rk3066a-mk808.dts         |  2 +-
+ arch/arm/boot/dts/rk3188-radxarock.dts      |  6 +++---
+ arch/arm/boot/dts/rk3229-xms6.dts           |  2 +-
+ arch/arm/boot/dts/rk3288-firefly-reload.dts | 12 ++++++------
+ arch/arm/boot/dts/rk3288-firefly.dtsi       | 12 ++++++------
+ arch/arm/boot/dts/rk3288-miqi.dts           |  2 +-
+ arch/arm/boot/dts/rk3288-phycore-som.dtsi   |  6 +++---
+ arch/arm/boot/dts/rk3288-rock2-square.dts   |  4 ++--
+ arch/arm/boot/dts/rk3288-tinker.dtsi        |  6 +++---
+ 10 files changed, 27 insertions(+), 27 deletions(-)
+
+diff --git a/arch/arm/boot/dts/rk3036-kylin.dts b/arch/arm/boot/dts/rk3036-kylin.dts
+index 2ff9f152d..7154b827e 100644
+--- a/arch/arm/boot/dts/rk3036-kylin.dts
++++ b/arch/arm/boot/dts/rk3036-kylin.dts
+@@ -16,7 +16,7 @@
+ 	leds: gpio-leds {
+ 		compatible = "gpio-leds";
+ 
+-		work {
++		work_led: led-0 {
+ 			gpios = <&gpio2 RK_PD6 GPIO_ACTIVE_HIGH>;
+ 			label = "kylin:red:led";
+ 			pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/rk3066a-mk808.dts b/arch/arm/boot/dts/rk3066a-mk808.dts
+index 365eff621..eed9e60cf 100644
+--- a/arch/arm/boot/dts/rk3066a-mk808.dts
++++ b/arch/arm/boot/dts/rk3066a-mk808.dts
+@@ -22,7 +22,7 @@
+ 	gpio-leds {
+ 		compatible = "gpio-leds";
+ 
+-		blue {
++		blue_led: led-0 {
+ 			label = "mk808:blue:power";
+ 			gpios = <&gpio0 RK_PA3 GPIO_ACTIVE_HIGH>;
+ 			default-state = "off";
+diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts b/arch/arm/boot/dts/rk3188-radxarock.dts
+index c9a7f5409..b0fef82c0 100644
+--- a/arch/arm/boot/dts/rk3188-radxarock.dts
++++ b/arch/arm/boot/dts/rk3188-radxarock.dts
+@@ -33,19 +33,19 @@
+ 	gpio-leds {
+ 		compatible = "gpio-leds";
+ 
+-		green {
++		green_led: led-0 {
+ 			label = "rock:green:user1";
+ 			gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_LOW>;
+ 			default-state = "off";
+ 		};
+ 
+-		blue {
++		blue_led: led-1 {
+ 			label = "rock:blue:user2";
+ 			gpios = <&gpio0 RK_PB6 GPIO_ACTIVE_LOW>;
+ 			default-state = "off";
+ 		};
+ 
+-		sleep {
++		sleep_led: led-2 {
+ 			label = "rock:red:power";
+ 			gpios = <&gpio0 RK_PB7 GPIO_ACTIVE_HIGH>;
+ 			default-state = "off";
+diff --git a/arch/arm/boot/dts/rk3229-xms6.dts b/arch/arm/boot/dts/rk3229-xms6.dts
+index 933ef69da..637245324 100644
+--- a/arch/arm/boot/dts/rk3229-xms6.dts
++++ b/arch/arm/boot/dts/rk3229-xms6.dts
+@@ -33,7 +33,7 @@
+ 	power-led {
+ 		compatible = "gpio-leds";
+ 
+-		blue {
++		blue_led: led-0 {
+ 			gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
+ 			default-state = "on";
+ 		};
+diff --git a/arch/arm/boot/dts/rk3288-firefly-reload.dts b/arch/arm/boot/dts/rk3288-firefly-reload.dts
+index 8c38bda21..9a4a9749c 100644
+--- a/arch/arm/boot/dts/rk3288-firefly-reload.dts
++++ b/arch/arm/boot/dts/rk3288-firefly-reload.dts
+@@ -45,20 +45,20 @@
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+-		power {
++		power_led: led-0 {
+ 			gpios = <&gpio8 RK_PA2 GPIO_ACTIVE_LOW>;
+ 			label = "firefly:blue:power";
+ 			pinctrl-names = "default";
+-			pinctrl-0 = <&power_led>;
++			pinctrl-0 = <&power_led_pin>;
+ 			panic-indicator;
+ 		};
+ 
+-		work {
++		work_led: led-1 {
+ 			gpios = <&gpio8 RK_PA1 GPIO_ACTIVE_LOW>;
+ 			label = "firefly:blue:user";
+ 			linux,default-trigger = "rc-feedback";
+ 			pinctrl-names = "default";
+-			pinctrl-0 = <&work_led>;
++			pinctrl-0 = <&work_led_pin>;
+ 		};
+ 	};
+ 
+@@ -334,11 +334,11 @@
+ 	};
+ 
+ 	leds {
+-		power_led: power-led {
++		power_led_pin: power-led-pin {
+ 			rockchip,pins = <8 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 
+-		work_led: work-led {
++		work_led_pin: work-led-pin {
+ 			rockchip,pins = <8 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi b/arch/arm/boot/dts/rk3288-firefly.dtsi
+index 5e0a19004..e5c4fd4ea 100644
+--- a/arch/arm/boot/dts/rk3288-firefly.dtsi
++++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
+@@ -62,20 +62,20 @@
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+-		work {
++		work_led: led-0 {
+ 			gpios = <&gpio8 RK_PA1 GPIO_ACTIVE_LOW>;
+ 			label = "firefly:blue:user";
+ 			linux,default-trigger = "rc-feedback";
+ 			pinctrl-names = "default";
+-			pinctrl-0 = <&work_led>;
++			pinctrl-0 = <&work_led_pin>;
+ 		};
+ 
+-		power {
++		power_led: led-1 {
+ 			gpios = <&gpio8 RK_PA2 GPIO_ACTIVE_LOW>;
+ 			label = "firefly:green:power";
+ 			linux,default-trigger = "default-on";
+ 			pinctrl-names = "default";
+-			pinctrl-0 = <&power_led>;
++			pinctrl-0 = <&power_led_pin>;
+ 		};
+ 	};
+ 
+@@ -429,11 +429,11 @@
+ 	};
+ 
+ 	leds {
+-		power_led: power-led {
++		power_led_pin: power-led-pin {
+ 			rockchip,pins = <8 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 
+-		work_led: work-led {
++		work_led_pin: work-led-pin {
+ 			rockchip,pins = <8 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/rk3288-miqi.dts b/arch/arm/boot/dts/rk3288-miqi.dts
+index c41d012c8..213c9eb84 100644
+--- a/arch/arm/boot/dts/rk3288-miqi.dts
++++ b/arch/arm/boot/dts/rk3288-miqi.dts
+@@ -30,7 +30,7 @@
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+-		work {
++		work_led: led-0 {
+ 			gpios = <&gpio7 RK_PA2 GPIO_ACTIVE_HIGH>;
+ 			label = "miqi:green:user";
+ 			linux,default-trigger = "timer";
+diff --git a/arch/arm/boot/dts/rk3288-phycore-som.dtsi b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
+index 77a47b9b7..e43887c96 100644
+--- a/arch/arm/boot/dts/rk3288-phycore-som.dtsi
++++ b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
+@@ -36,9 +36,9 @@
+ 	leds: user-leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&user_led>;
++		pinctrl-0 = <&user_led_pin>;
+ 
+-		user {
++		user_led: led-0 {
+ 			label = "green_led";
+ 			gpios = <&gpio7 2 GPIO_ACTIVE_HIGH>;
+ 			linux,default-trigger = "heartbeat";
+@@ -372,7 +372,7 @@
+ 	};
+ 
+ 	leds {
+-		user_led: user-led {
++		user_led_pin: user-led-pin {
+ 			rockchip,pins = <7 RK_PA2 RK_FUNC_GPIO &pcfg_output_high>;
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts b/arch/arm/boot/dts/rk3288-rock2-square.dts
+index cdcdc921e..3cca4d0f9 100644
+--- a/arch/arm/boot/dts/rk3288-rock2-square.dts
++++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
+@@ -41,13 +41,13 @@
+ 	gpio-leds {
+ 		compatible = "gpio-leds";
+ 
+-		heartbeat {
++		heartbeat_led: led-0 {
+ 			gpios = <&gpio7 RK_PB7 GPIO_ACTIVE_LOW>;
+ 			label = "rock2:green:state1";
+ 			linux,default-trigger = "heartbeat";
+ 		};
+ 
+-		mmc {
++		mmc_led: led-1 {
+ 			gpios = <&gpio0 RK_PB3 GPIO_ACTIVE_LOW>;
+ 			label = "rock2:blue:state2";
+ 			linux,default-trigger = "mmc0";
+diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
+index acfaa12ec..90e9be443 100644
+--- a/arch/arm/boot/dts/rk3288-tinker.dtsi
++++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+@@ -46,17 +46,17 @@
+ 	gpio-leds {
+ 		compatible = "gpio-leds";
+ 
+-		act-led {
++		act_led: led-0 {
+ 			gpios = <&gpio1 RK_PD0 GPIO_ACTIVE_HIGH>;
+ 			linux,default-trigger = "mmc0";
+ 		};
+ 
+-		heartbeat-led {
++		heartbeat_led: led-1 {
+ 			gpios = <&gpio1 RK_PD1 GPIO_ACTIVE_HIGH>;
+ 			linux,default-trigger = "heartbeat";
+ 		};
+ 
+-		pwr-led {
++		pwr_led: led-2 {
+ 			gpios = <&gpio0 RK_PA3 GPIO_ACTIVE_HIGH>;
+ 			linux,default-trigger = "default-on";
+ 		};
+-- 
+2.11.0
+
