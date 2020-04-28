@@ -2,134 +2,109 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D55A0C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6EEC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF6542085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A663B2085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:41:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588099304;
+	bh=HVlooMNtiKSy3RQDjckeLqwmZgxF92lbXT5tCZ8rwnc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wrKoBIEBfFAguK5jc0ffEH+wNdpEustASCLryN6xBiFEHt0m06sPolDVDGEa9/xXN
+	 pHDUKNXq1NX1hqIfdArzGJhPj0Ve53/IM6TTNYwXEQq2vQiYAH9f3GlS3xY8BIOcz8
+	 HWMRRT0TW2j6GmGfqY+kW+9ik2yDTJsSrixAQ6uM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731016AbgD1Slk (ORCPT
+        id S1731024AbgD1Sln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:41:40 -0400
-Received: from ms.lwn.net ([45.79.88.28]:41422 "EHLO ms.lwn.net"
+        Tue, 28 Apr 2020 14:41:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730995AbgD1Sle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:41:34 -0400
-Received: from lwn.net (localhost [127.0.0.1])
+        id S1730103AbgD1Sli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:41:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 47A0744A;
-        Tue, 28 Apr 2020 18:41:34 +0000 (UTC)
-Date:   Tue, 28 Apr 2020 12:41:33 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Stephen Kitt <steve@sk2.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 2/3] docs: sysctl/kernel: document ftrace entries
-Message-ID: <20200428124133.0fbaf7c5@lwn.net>
-In-Reply-To: <20200423183651.15365-2-steve@sk2.org>
-References: <20200423183651.15365-1-steve@sk2.org>
-        <20200423183651.15365-2-steve@sk2.org>
-Organization: LWN.net
+        by mail.kernel.org (Postfix) with ESMTPSA id B3E0720730;
+        Tue, 28 Apr 2020 18:41:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588099298;
+        bh=HVlooMNtiKSy3RQDjckeLqwmZgxF92lbXT5tCZ8rwnc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ozbgkO/9+7F38E12L3FqkblYO/Z77XCEyPmcg0wnnylyo7I/QaoDmhtdVTJyyNE6I
+         900H+akJV2Hx4XjBID03gTyepe0z8rye2Vwjj7orDgvf7Aw1JXZgHP88TLG0AjOlO2
+         BfmiFrPaf9Nw5mgqP85wFeXig5SG8ENvq25LMJgg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.4 090/168] iio: adc: ti-ads8344: properly byte swap value
+Date:   Tue, 28 Apr 2020 20:24:24 +0200
+Message-Id: <20200428182243.717966856@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Apr 2020 20:36:50 +0200
-Stephen Kitt <steve@sk2.org> wrote:
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-> Based on the ftrace documentation, the tp_printk boot parameter
-> documentation, and the implementation in kernel/trace/trace.c.
-> 
-> Signed-off-by: Stephen Kitt <steve@sk2.org>
+commit dd7de4c0023e7564cabe39d64b2822a522890792 upstream.
 
-This one could benefit from an ack from Steve (CC'd).  Also one other
-little nit below:
+The first received byte is the MSB, followed by the LSB so the value needs
+to be byte swapped.
 
->  Documentation/admin-guide/sysctl/kernel.rst | 50 +++++++++++++++++++++
->  1 file changed, 50 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-> index 82bfd5892663..d4bbdaf96ebc 100644
-> --- a/Documentation/admin-guide/sysctl/kernel.rst
-> +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> @@ -265,6 +265,27 @@ domain names are in general different. For a detailed discussion
->  see the ``hostname(1)`` man page.
->  
->  
-> +ftrace_dump_on_oops
-> +===================
-> +
-> +Determines whether ``ftrace_dump()`` should be called on an oops (or
-> +kernel panic). This will output the contents of the ftrace buffers to
-> +the console.  This is very useful for capturing traces that lead to
-> +crashes and outputing it to a serial console.
-> +
-> += ===================================================
-> +0 Disabled (default).
-> +1 Dump buffers of all CPUs.
-> +2 Dump the buffer of the CPU that triggered the oops.
-> += ===================================================
-> +
-> +
-> +ftrace_enabled, stack_tracer_enabled
-> +====================================
-> +
-> +See :doc:`/trace/ftrace`.
-> +
-> +
->  hardlockup_all_cpu_backtrace
->  ============================
->  
-> @@ -1191,6 +1212,35 @@ If a value outside of this range is written to ``threads-max`` an
->  ``EINVAL`` error occurs.
->  
->  
-> +traceoff_on_warning
-> +===================
-> +
-> +When set, disables tracing (see :doc:`/trace/ftrace`) when a
-> +``WARN()`` is hit.
-> +
-> +
-> +tracepoint_printk
-> +=================
-> +
-> +When tracepoints are sent to printk() (enabled by the ``tp_printk``
-> +boot parameter), this entry provides runtime control::
-> +
-> +    echo 0 > /proc/sys/kernel/tracepoint_printk
-> +
-> +will stop tracepoints from being sent to printk(), and
-> +
-> +::
+Also, the ADC actually has a delay of one clock on the SPI bus. Read three
+bytes to get the last bit.
 
-I would just make that ", and::" and avoid the separate line.
+Fixes: 8dd2d7c0fed7 ("iio: adc: Add driver for the TI ADS8344 A/DC chips")
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> +
-> +    echo 1 > /proc/sys/kernel/tracepoint_printk
-> +
-> +will send them to printk() again.
-> +
-> +This only works if the kernel was booted with ``tp_printk`` enabled.
-> +
-> +See :doc:`/admin-guide/kernel-parameters` and
-> +:doc:`/trace/boottime-trace`.
-> +
-> +
->  unknown_nmi_panic
->  =================
->  
+---
+ drivers/iio/adc/ti-ads8344.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Thanks,
+--- a/drivers/iio/adc/ti-ads8344.c
++++ b/drivers/iio/adc/ti-ads8344.c
+@@ -29,7 +29,7 @@ struct ads8344 {
+ 	struct mutex lock;
+ 
+ 	u8 tx_buf ____cacheline_aligned;
+-	u16 rx_buf;
++	u8 rx_buf[3];
+ };
+ 
+ #define ADS8344_VOLTAGE_CHANNEL(chan, si)				\
+@@ -89,11 +89,11 @@ static int ads8344_adc_conversion(struct
+ 
+ 	udelay(9);
+ 
+-	ret = spi_read(spi, &adc->rx_buf, 2);
++	ret = spi_read(spi, adc->rx_buf, sizeof(adc->rx_buf));
+ 	if (ret)
+ 		return ret;
+ 
+-	return adc->rx_buf;
++	return adc->rx_buf[0] << 9 | adc->rx_buf[1] << 1 | adc->rx_buf[2] >> 7;
+ }
+ 
+ static int ads8344_read_raw(struct iio_dev *iio,
 
-jon
+
