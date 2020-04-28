@@ -2,95 +2,209 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72322C83002
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DBBC83002
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40D52206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B013E206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:37:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbgD1Cfk (ORCPT
+        id S1726355AbgD1ChR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 22:35:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:44748 "EHLO foss.arm.com"
+        Mon, 27 Apr 2020 22:37:17 -0400
+Received: from mga06.intel.com ([134.134.136.31]:33262 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726263AbgD1Cfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 22:35:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4AF6C30E;
-        Mon, 27 Apr 2020 19:35:39 -0700 (PDT)
-Received: from [10.163.70.197] (unknown [10.163.70.197])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF0443F305;
-        Mon, 27 Apr 2020 19:35:30 -0700 (PDT)
-Subject: Re: [mm/debug] fa6726c1e7: kernel_BUG_at_include/linux/mm.h
-To:     Qian Cai <cai@lca.pw>
-Cc:     kernel test robot <lkp@intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-References: <51dcbcbf-6020-6672-05b0-5bb10c6292b5@arm.com>
- <31CD915D-2E14-4897-AF62-82B6C5FD567A@lca.pw>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <096a07fc-4525-feb6-5658-40bcffbd0a58@arm.com>
-Date:   Tue, 28 Apr 2020 08:05:02 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1726263AbgD1ChR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 22:37:17 -0400
+IronPort-SDR: tGAIC0enJoA0wxwuf4kui24US322IphnHaTeNbmpn+D4SwOZt4XDCNUsr6kmL3/6QPzuCF5qo/
+ WTg2MfzPTFOQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 19:37:16 -0700
+IronPort-SDR: MHLSgb9QfWHzePzjt1owK0AshxqFJh558djI8oFxWgEm2rDWlGg9X+DZsSzzQC0bKNUwjk1aNN
+ cssbVFYB644w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,326,1583222400"; 
+   d="scan'208";a="281991138"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by fmsmga004.fm.intel.com with ESMTP; 27 Apr 2020 19:37:15 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: x86/mmu: Add a helper to consolidate root sp allocation
+Date:   Mon, 27 Apr 2020 19:37:14 -0700
+Message-Id: <20200428023714.31923-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <31CD915D-2E14-4897-AF62-82B6C5FD567A@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add a helper, mmu_alloc_root(), to consolidate the allocation of a root
+shadow page, which has the same basic mechanics for all flavors of TDP
+and shadow paging.
 
+Note, __pa(sp->spt) doesn't need to be protected by mmu_lock, sp->spt
+points at a kernel page.
 
-On 04/28/2020 07:35 AM, Qian Cai wrote:
-> 
-> 
->> On Apr 27, 2020, at 9:49 PM, Anshuman Khandual <Anshuman.Khandual@arm.com> wrote:
->>
->> This is an unsupported (enabled via CONFIG_EXPERT) X86 platform (CONFIG_X86_PAE)
->> and is known to fail. The latest (V17) patch had moved the test invocation into
->> a late_initcall() per Linus thus pushing down any possible failures (like this)
->> after early boot. Please ignore this report.
->>
->> Apart from this X86_PAE based config, no other platform failures have reported
->> so far. Assuming that this test robot does have a good platform coverage, the
->> CONFIG_EXPERT method of enabling CONFIG_DEBUG_VM_PGTABLE should help in getting
->> more platform coverage for this test.
-> 
-> This sounds really sloppy. Why can’t we make it impossible to select this combination if nobody is willing to fix it?
+No functional change intended.
 
-Letting CONFIG_DEBUG_VM_PGTABLE enabled via CONFIG_EXPERT for unsupported
-platforms i.e without ARCH_HAS_DEBUG_VM_PGTABLE, was a conscious decision
-meant to expand it's adaptability and coverage without requiring any code
-(i.e Kconfig) change. The easier it is to enable the test on unsupported
-platforms right now, more folks are likely to try it out thus increasing
-it's probability to get fixed on those platforms. That is a valid enough
-reason to have CONFIG_EXPERT based enablement method, IMHO. Also even with
-CONFIG_EXPERT set, CONFIG_DEBUG_VM_PGTABLE does not get enabled by default
-automatically.
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/mmu/mmu.c | 88 +++++++++++++++++++-----------------------
+ 1 file changed, 39 insertions(+), 49 deletions(-)
+
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index e618472c572b..80205aea296e 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -3685,37 +3685,43 @@ static int mmu_check_root(struct kvm_vcpu *vcpu, gfn_t root_gfn)
+ 	return ret;
+ }
+ 
++static hpa_t mmu_alloc_root(struct kvm_vcpu *vcpu, gfn_t gfn, gva_t gva,
++			    u8 level, bool direct)
++{
++	struct kvm_mmu_page *sp;
++
++	spin_lock(&vcpu->kvm->mmu_lock);
++
++	if (make_mmu_pages_available(vcpu)) {
++		spin_unlock(&vcpu->kvm->mmu_lock);
++		return INVALID_PAGE;
++	}
++	sp = kvm_mmu_get_page(vcpu, gfn, gva, level, direct, ACC_ALL);
++	++sp->root_count;
++
++	spin_unlock(&vcpu->kvm->mmu_lock);
++	return __pa(sp->spt);
++}
++
+ static int mmu_alloc_direct_roots(struct kvm_vcpu *vcpu)
+ {
+-	struct kvm_mmu_page *sp;
++	u8 shadow_root_level = vcpu->arch.mmu->shadow_root_level;
++	hpa_t root;
+ 	unsigned i;
+ 
+-	if (vcpu->arch.mmu->shadow_root_level >= PT64_ROOT_4LEVEL) {
+-		spin_lock(&vcpu->kvm->mmu_lock);
+-		if(make_mmu_pages_available(vcpu) < 0) {
+-			spin_unlock(&vcpu->kvm->mmu_lock);
++	if (shadow_root_level >= PT64_ROOT_4LEVEL) {
++		root = mmu_alloc_root(vcpu, 0, 0, shadow_root_level, true);
++		if (!VALID_PAGE(root))
+ 			return -ENOSPC;
+-		}
+-		sp = kvm_mmu_get_page(vcpu, 0, 0,
+-				vcpu->arch.mmu->shadow_root_level, 1, ACC_ALL);
+-		++sp->root_count;
+-		spin_unlock(&vcpu->kvm->mmu_lock);
+-		vcpu->arch.mmu->root_hpa = __pa(sp->spt);
+-	} else if (vcpu->arch.mmu->shadow_root_level == PT32E_ROOT_LEVEL) {
++		vcpu->arch.mmu->root_hpa = root;
++	} else if (shadow_root_level == PT32E_ROOT_LEVEL) {
+ 		for (i = 0; i < 4; ++i) {
+-			hpa_t root = vcpu->arch.mmu->pae_root[i];
++			MMU_WARN_ON(VALID_PAGE(vcpu->arch.mmu->pae_root[i]));
+ 
+-			MMU_WARN_ON(VALID_PAGE(root));
+-			spin_lock(&vcpu->kvm->mmu_lock);
+-			if (make_mmu_pages_available(vcpu) < 0) {
+-				spin_unlock(&vcpu->kvm->mmu_lock);
++			root = mmu_alloc_root(vcpu, i << (30 - PAGE_SHIFT),
++					      i << 30, PT32_ROOT_LEVEL, true);
++			if (!VALID_PAGE(root))
+ 				return -ENOSPC;
+-			}
+-			sp = kvm_mmu_get_page(vcpu, i << (30 - PAGE_SHIFT),
+-					i << 30, PT32_ROOT_LEVEL, 1, ACC_ALL);
+-			root = __pa(sp->spt);
+-			++sp->root_count;
+-			spin_unlock(&vcpu->kvm->mmu_lock);
+ 			vcpu->arch.mmu->pae_root[i] = root | PT_PRESENT_MASK;
+ 		}
+ 		vcpu->arch.mmu->root_hpa = __pa(vcpu->arch.mmu->pae_root);
+@@ -3730,9 +3736,9 @@ static int mmu_alloc_direct_roots(struct kvm_vcpu *vcpu)
+ 
+ static int mmu_alloc_shadow_roots(struct kvm_vcpu *vcpu)
+ {
+-	struct kvm_mmu_page *sp;
+ 	u64 pdptr, pm_mask;
+ 	gfn_t root_gfn, root_pgd;
++	hpa_t root;
+ 	int i;
+ 
+ 	root_pgd = vcpu->arch.mmu->get_guest_pgd(vcpu);
+@@ -3746,20 +3752,12 @@ static int mmu_alloc_shadow_roots(struct kvm_vcpu *vcpu)
+ 	 * write-protect the guests page table root.
+ 	 */
+ 	if (vcpu->arch.mmu->root_level >= PT64_ROOT_4LEVEL) {
+-		hpa_t root = vcpu->arch.mmu->root_hpa;
++		MMU_WARN_ON(VALID_PAGE(vcpu->arch.mmu->root_hpa));
+ 
+-		MMU_WARN_ON(VALID_PAGE(root));
+-
+-		spin_lock(&vcpu->kvm->mmu_lock);
+-		if (make_mmu_pages_available(vcpu) < 0) {
+-			spin_unlock(&vcpu->kvm->mmu_lock);
++		root = mmu_alloc_root(vcpu, root_gfn, 0,
++				      vcpu->arch.mmu->shadow_root_level, false);
++		if (!VALID_PAGE(root))
+ 			return -ENOSPC;
+-		}
+-		sp = kvm_mmu_get_page(vcpu, root_gfn, 0,
+-				vcpu->arch.mmu->shadow_root_level, 0, ACC_ALL);
+-		root = __pa(sp->spt);
+-		++sp->root_count;
+-		spin_unlock(&vcpu->kvm->mmu_lock);
+ 		vcpu->arch.mmu->root_hpa = root;
+ 		goto set_root_pgd;
+ 	}
+@@ -3774,9 +3772,7 @@ static int mmu_alloc_shadow_roots(struct kvm_vcpu *vcpu)
+ 		pm_mask |= PT_ACCESSED_MASK | PT_WRITABLE_MASK | PT_USER_MASK;
+ 
+ 	for (i = 0; i < 4; ++i) {
+-		hpa_t root = vcpu->arch.mmu->pae_root[i];
+-
+-		MMU_WARN_ON(VALID_PAGE(root));
++		MMU_WARN_ON(VALID_PAGE(vcpu->arch.mmu->pae_root[i]));
+ 		if (vcpu->arch.mmu->root_level == PT32E_ROOT_LEVEL) {
+ 			pdptr = vcpu->arch.mmu->get_pdptr(vcpu, i);
+ 			if (!(pdptr & PT_PRESENT_MASK)) {
+@@ -3787,17 +3783,11 @@ static int mmu_alloc_shadow_roots(struct kvm_vcpu *vcpu)
+ 			if (mmu_check_root(vcpu, root_gfn))
+ 				return 1;
+ 		}
+-		spin_lock(&vcpu->kvm->mmu_lock);
+-		if (make_mmu_pages_available(vcpu) < 0) {
+-			spin_unlock(&vcpu->kvm->mmu_lock);
+-			return -ENOSPC;
+-		}
+-		sp = kvm_mmu_get_page(vcpu, root_gfn, i << 30, PT32_ROOT_LEVEL,
+-				      0, ACC_ALL);
+-		root = __pa(sp->spt);
+-		++sp->root_count;
+-		spin_unlock(&vcpu->kvm->mmu_lock);
+ 
++		root = mmu_alloc_root(vcpu, root_gfn, i << 30,
++				      PT32_ROOT_LEVEL, false);
++		if (!VALID_PAGE(root))
++			return -ENOSPC;
+ 		vcpu->arch.mmu->pae_root[i] = root | pm_mask;
+ 	}
+ 	vcpu->arch.mmu->root_hpa = __pa(vcpu->arch.mmu->pae_root);
+-- 
+2.26.0
+
