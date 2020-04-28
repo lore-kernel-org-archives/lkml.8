@@ -2,108 +2,71 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3EBC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D93C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60029206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:44:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099481;
-	bh=CTF34mYL5Zm2aCRc78RJkk59CgF4gPC5ZKAdh7FgILU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QAhQUP/tHaMVirj0xDQntuZ5WOAcn2qS22U65HWUo364ou2fjWH0N3d2GgwvJPICT
-	 k4w447hr/l3gLFACT8bmtJZE7yPy7XXXkO9CALve0FjIyQ8FoPJ2c4sviIubfAimpI
-	 G4kfI5/ogQjMdNpTjGS+8YGVkHZZp9IuKQ2DIAAE=
+	by mail.kernel.org (Postfix) with ESMTP id 3D4C7206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:44:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731528AbgD1Sok (ORCPT
+        id S1731473AbgD1Som (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:44:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37624 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731390AbgD1Soh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:44:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731383AbgD1Soh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Apr 2020 14:44:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF9B2C03C1AB;
+        Tue, 28 Apr 2020 11:44:37 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35C4B206D6;
-        Tue, 28 Apr 2020 18:44:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099476;
-        bh=CTF34mYL5Zm2aCRc78RJkk59CgF4gPC5ZKAdh7FgILU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YwqAKTUDJDqJ0XGdz4Aba7BdcmnLGFe9yvuvq13SyHFVffdsYQf/QgHbj1UgBsJZC
-         aCHiU8VriasxCDAzyuVjlqFHTqe3FiWoEQozz7doWZMBGTqCoXYHi4Ts3dXaTRDUcw
-         KR5ARf7nWv99qPKaQ5tK4UvkiGDu/Rd1BCC/BPQ8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 166/168] powerpc/mm: Fix CONFIG_PPC_KUAP_DEBUG on PPC32
-Date:   Tue, 28 Apr 2020 20:25:40 +0200
-Message-Id: <20200428182251.666828529@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by ms.lwn.net (Postfix) with ESMTPSA id 468FE44A;
+        Tue, 28 Apr 2020 18:44:37 +0000 (UTC)
+Date:   Tue, 28 Apr 2020 12:44:36 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Linux Security Summit Program Committee 
+        <lss-pc@lists.linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH] Documentation: LSM: Correct the basic LSM description
+Message-ID: <20200428124436.1c7463ee@lwn.net>
+In-Reply-To: <4c053d72-2d58-612f-6d6b-f04226d0181e@schaufler-ca.com>
+References: <4c053d72-2d58-612f-6d6b-f04226d0181e.ref@schaufler-ca.com>
+        <4c053d72-2d58-612f-6d6b-f04226d0181e@schaufler-ca.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+On Tue, 21 Apr 2020 14:48:34 -0700
+Casey Schaufler <casey@schaufler-ca.com> wrote:
 
-commit feb8e960d780e170e992a70491eec9dd68f4dbf2 upstream.
+> This is a first pass at updating the basic documentation on
+> Linux Security Modules (LSM), which is frighteningly out of date.
+> Remove untrue statements about the LSM framework. Replace them
+> with true statements where it is convenient to do so. This is
+> the beginnig of a larger effort to bring the LSM documentation
+> up to date.
+> 
+> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+> ---
+>  Documentation/security/lsm.rst | 202 ++++++++++++++---------------------------
+>  1 file changed, 66 insertions(+), 136 deletions(-)
 
-CONFIG_PPC_KUAP_DEBUG is not selectable because it depends on PPC_32
-which doesn't exists.
+James, are you planning to pick this up, or should I grab it?
 
-Fixing it leads to a deadlock due to a vital register getting
-clobbered in _switch().
+Thanks,
 
-Change dependency to PPC32 and use r0 instead of r4 in _switch()
-
-Fixes: e2fb9f544431 ("powerpc/32: Prepare for Kernel Userspace Access Protection")
-Cc: stable@vger.kernel.org # v5.2+
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/540242f7d4573f7cdf1b3bf46bb35f743b2cd68f.1587124651.git.christophe.leroy@c-s.fr
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/powerpc/kernel/entry_32.S         |    2 +-
- arch/powerpc/platforms/Kconfig.cputype |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
---- a/arch/powerpc/kernel/entry_32.S
-+++ b/arch/powerpc/kernel/entry_32.S
-@@ -705,7 +705,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_SPE)
- 	stw	r10,_CCR(r1)
- 	stw	r1,KSP(r3)	/* Set old stack pointer */
- 
--	kuap_check r2, r4
-+	kuap_check r2, r0
- #ifdef CONFIG_SMP
- 	/* We need a sync somewhere here to make sure that if the
- 	 * previous task gets rescheduled on another CPU, it sees all
---- a/arch/powerpc/platforms/Kconfig.cputype
-+++ b/arch/powerpc/platforms/Kconfig.cputype
-@@ -389,7 +389,7 @@ config PPC_KUAP
- 
- config PPC_KUAP_DEBUG
- 	bool "Extra debugging for Kernel Userspace Access Protection"
--	depends on PPC_KUAP && (PPC_RADIX_MMU || PPC_32)
-+	depends on PPC_KUAP && (PPC_RADIX_MMU || PPC32)
- 	help
- 	  Add extra debugging for Kernel Userspace Access Protection (KUAP)
- 	  If you're unsure, say N.
-
-
+jon
