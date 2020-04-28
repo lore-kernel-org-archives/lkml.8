@@ -7,411 +7,113 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1223FC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D759C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCFCD20730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DD7820730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:10:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YXfNT/To"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="o3xYz0v1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbgD1QKc (ORCPT
+        id S1728600AbgD1QKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:10:32 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:43756 "EHLO
+        Tue, 28 Apr 2020 12:10:34 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43848 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728483AbgD1QKP (ORCPT
+        with ESMTP id S1728561AbgD1QK3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:10:15 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03SG9wnT043166;
-        Tue, 28 Apr 2020 11:09:58 -0500
+        Tue, 28 Apr 2020 12:10:29 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03SGAQR1043315;
+        Tue, 28 Apr 2020 11:10:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588090198;
-        bh=1C9pZG/jB3VeIukaC/9Q0XgtdOXGCrHgKjLiFBYYRO0=;
+        s=ti-com-17Q1; t=1588090226;
+        bh=zPVchTChHdpxMYKPtl8CqXVH1QZqlgzEz+03WLIzBpo=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=YXfNT/ToleKiEUek8m/B01qHfN7Yni10Uf/lMlV+S0O7cy7m4xzmKBJNeS4S10xQG
-         zWmjgWOBUmd1UJH6V34Cf+Slig0wwS2JsAasyvNXM42DitbEZEDISAf24rXlF/k9cH
-         ub8fE8dWT6artacK6NOAg306J9PnC4hNBbmkvvR0=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03SG9wON000446
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 Apr 2020 11:09:58 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+        b=o3xYz0v1Tij8z5DjgG51ntjkjZyrcpz91VXUzcHP9K3aUBxsAsAYFPGvwrCHwNcEy
+         H/41cY/auMZyjtTIU8qkcrKnfMgHpGoiSlw85JJVkmxQ/N/B5hI0ScBLy9Bu/bRzxR
+         mnpzxyZQ9bBIhsDfHPV1MxxyffQL9ay7SG3Rs/Ws=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03SGAQbi038032;
+        Tue, 28 Apr 2020 11:10:26 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
- Apr 2020 11:09:58 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2020 11:10:26 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 28 Apr 2020 11:09:58 -0500
+ Frontend Transport; Tue, 28 Apr 2020 11:10:26 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03SG9vVm124282;
-        Tue, 28 Apr 2020 11:09:57 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03SGAPtb125792;
+        Tue, 28 Apr 2020 11:10:25 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: [PATCH v21 06/16] dt: bindings: lp55xx: Update binding for Multicolor Framework
-Date:   Tue, 28 Apr 2020 11:03:28 -0500
-Message-ID: <20200428160338.2793-7-dmurphy@ti.com>
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v21 12/16] leds: lp5523: Update the lp5523 code to add multicolor brightness function
+Date:   Tue, 28 Apr 2020 11:03:34 -0500
+Message-ID: <20200428160338.2793-13-dmurphy@ti.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200428160338.2793-1-dmurphy@ti.com>
 References: <20200428160338.2793-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the DT binding to include the properties to use the
-multicolor framework for the devices that use the LP55xx
-framework.
+Add the multicolor brightness call back to support the multicolor
+framework.  This call back allows setting  brightness on grouped channels
+in a single function.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
-CC: Tony Lindgren <tony@atomide.com>
-CC: "Benoît Cousson" <bcousson@baylibre.com>
-CC: Linus Walleij <linus.walleij@linaro.org>
-CC: Shawn Guo <shawnguo@kernel.org>
-CC: Sascha Hauer <s.hauer@pengutronix.de>
-CC: Pengutronix Kernel Team <kernel@pengutronix.de>
-CC: Fabio Estevam <festevam@gmail.com>
-CC: NXP Linux Team <linux-imx@nxp.com>
 ---
- .../devicetree/bindings/leds/leds-lp55xx.txt  | 149 +++++++++++++++---
- 1 file changed, 124 insertions(+), 25 deletions(-)
+ drivers/leds/leds-lp5523.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-index bfe2805c5534..0ccc1efc2499 100644
---- a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-@@ -1,6 +1,8 @@
- Binding for TI/National Semiconductor LP55xx LED Drivers
+diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
+index b076c16df9ab..9776dc72a764 100644
+--- a/drivers/leds/leds-lp5523.c
++++ b/drivers/leds/leds-lp5523.c
+@@ -791,6 +791,25 @@ static ssize_t store_master_fader_leds(struct device *dev,
+ 	return ret;
+ }
  
- Required properties:
-+- #address-cells: 1
-+- #size-cells: 0
- - compatible: one of
- 	national,lp5521
- 	national,lp5523
-@@ -14,6 +16,18 @@ Required properties:
- Each child has own specific current settings
- - led-cur: Current setting at each LED channel (mA x10, 0 if LED is not connected)
- - max-cur: Maximun current at each LED channel.
-+- reg: Output channel for the LED.  This is zero based channel identifier and
-+	the data sheet is a one based channel identifier.
-+	reg value to output to LED output number
-+	D1 = reg value is 0
-+	D2 = reg value is 1
-+	D3 = reg value is 2
-+	D4 = reg value is 3
-+	D5 = reg value is 4
-+	D6 = reg value is 5
-+	D7 = reg value is 6
-+	D8 = reg value is 7
-+	D9 = reg value is 8
- 
- Optional properties:
- - enable-gpio: GPIO attached to the chip's enable pin
-@@ -35,23 +49,28 @@ example 1) LP5521
- on channel 0.
- 
- lp5521@32 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "national,lp5521";
- 	reg = <0x32>;
- 	label = "lp5521_pri";
- 	clock-mode = /bits/ 8 <2>;
- 
--	chan0 {
-+	chan@0 {
-+		reg = <0>;
- 		led-cur = /bits/ 8 <0x2f>;
- 		max-cur = /bits/ 8 <0x5f>;
- 		linux,default-trigger = "heartbeat";
- 	};
- 
--	chan1 {
-+	chan@1 {
-+		reg = <1>;
- 		led-cur = /bits/ 8 <0x2f>;
- 		max-cur = /bits/ 8 <0x5f>;
- 	};
- 
--	chan2 {
-+	chan@2 {
-+		reg = <2>;
- 		led-cur = /bits/ 8 <0x2f>;
- 		max-cur = /bits/ 8 <0x5f>;
- 	};
-@@ -70,59 +89,70 @@ ASEL1    ASEL0    Address
-  VEN      VEN       35h
- 
- lp5523@32 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "national,lp5523";
- 	reg = <0x32>;
- 	clock-mode = /bits/ 8 <1>;
- 
--	chan0 {
-+	chan@0 {
-+		reg = <0>;
- 		chan-name = "d1";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan1 {
-+	chan@1 {
-+		reg = <1>;
- 		chan-name = "d2";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan2 {
-+	chan@2 {
-+		reg = <2>;
- 		chan-name = "d3";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan3 {
-+	chan@3 {
-+		reg = <3>;
- 		chan-name = "d4";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan4 {
-+	chan@4 {
-+		reg = <4>;
- 		chan-name = "d5";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan5 {
-+	chan@5 {
-+		reg = <5>;
- 		chan-name = "d6";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan6 {
-+	chan@6 {
-+		reg = <6>;
- 		chan-name = "d7";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan7 {
-+	chan@7 {
-+		reg = <7>;
- 		chan-name = "d8";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan8 {
-+	chan@8 {
-+		reg = <8>;
- 		chan-name = "d9";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
-@@ -133,29 +163,35 @@ example 3) LP5562
- 4 channels are defined.
- 
- lp5562@30 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "ti,lp5562";
- 	reg = <0x30>;
- 	clock-mode = /bits/8 <2>;
- 
--	chan0 {
-+	chan@0 {
-+		reg = <0>;
- 		chan-name = "R";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
- 	};
- 
--	chan1 {
-+	chan@1 {
-+		reg = <1>;
- 		chan-name = "G";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
- 	};
- 
--	chan2 {
-+	chan@2 {
-+		reg = <2>;
- 		chan-name = "B";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
- 	};
- 
--	chan3 {
-+	chan@3 {
-+		reg = <3>;
- 		chan-name = "W";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
-@@ -167,62 +203,125 @@ example 4) LP8501
- Others are same as LP5523.
- 
- lp8501@32 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "ti,lp8501";
- 	reg = <0x32>;
- 	clock-mode = /bits/ 8 <2>;
- 	pwr-sel = /bits/ 8 <3>;	/* D1~9 connected to VOUT */
- 
--	chan0 {
-+	chan@0 {
-+		reg = <0>;
- 		chan-name = "d1";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan1 {
-+	chan@1 {
-+		reg = <1>;
- 		chan-name = "d2";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan2 {
-+	chan@2 {
-+		reg = <2>;
- 		chan-name = "d3";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan3 {
-+	chan@3 {
-+		reg = <3>;
- 		chan-name = "d4";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan4 {
-+	chan@4 {
-+		reg = <4>;
- 		chan-name = "d5";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan5 {
-+	chan@5 {
-+		reg = <5>;
- 		chan-name = "d6";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan6 {
-+	chan@6 {
-+		reg = <6>;
- 		chan-name = "d7";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan7 {
-+	chan@7 {
-+		reg = <7>;
- 		chan-name = "d8";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan8 {
-+	chan@8 {
-+		reg = <8>;
- 		chan-name = "d9";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- };
++static int lp5523_multicolor_brightness(struct lp55xx_led *led)
++{
++	struct lp55xx_chip *chip = led->chip;
++	int ret;
++	int i;
 +
-+Multicolor Framework Support
-+In addition to the nodes and properties defined above for device support the
-+properties below are needed for multicolor framework support as defined in
-+Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
++	mutex_lock(&chip->lock);
++	for (i = 0; i < led->mc_cdev.num_colors; i++) {
++		ret = lp55xx_write(chip,
++				   LP5523_REG_LED_PWM_BASE +
++				   led->mc_cdev.subled_info[i].channel,
++				   led->mc_cdev.subled_info[i].brightness);
++		if (ret)
++			break;
++	}
++	mutex_unlock(&chip->lock);
++	return ret;
++}
 +
-+Required child properties for multicolor framework
-+	- color : Must be LED_COLOR_ID_MULTI
-+	- function : see Documentation/devicetree/bindings/leds/common.txt
-+
-+Required grandchildren properties
-+	- reg : This is the LED output of the device
-+	- color : see Documentation/devicetree/bindings/leds/common.txt
-+
-+Multicolor LED example:
-+led-controller@32 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	compatible = "national,lp5523";
-+	reg = <0x32>;
-+	clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
-+
-+	multi-led@2 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <2>;
-+		color = <LED_COLOR_ID_MULTI>;
-+		function = LED_FUNCTION_STANDBY;
-+		linux,default-trigger = "heartbeat";
-+
-+		led@0 {
-+			led-cur = /bits/ 8 <50>;
-+			max-cur = /bits/ 8 <100>;
-+			reg = <0x0>;
-+			color = <LED_COLOR_ID_GREEN>;
-+		};
-+
-+		led@1 {
-+			led-cur = /bits/ 8 <50>;
-+			max-cur = /bits/ 8 <100>;
-+			reg = <0x1>;
-+			color = <LED_COLOR_ID_BLUE>;
-+		};
-+
-+		led@6 {
-+			led-cur = /bits/ 8 <50>;
-+			max-cur = /bits/ 8 <100>;
-+			reg = <0x6>;
-+			color = <LED_COLOR_ID_RED>;
-+		};
-+	};
-+};
+ static int lp5523_led_brightness(struct lp55xx_led *led)
+ {
+ 	struct lp55xx_chip *chip = led->chip;
+@@ -857,6 +876,7 @@ static struct lp55xx_device_config lp5523_cfg = {
+ 	.max_channel  = LP5523_MAX_LEDS,
+ 	.post_init_device   = lp5523_post_init_device,
+ 	.brightness_fn      = lp5523_led_brightness,
++	.multicolor_brightness_fn = lp5523_multicolor_brightness,
+ 	.set_led_current    = lp5523_set_led_current,
+ 	.firmware_cb        = lp5523_firmware_loaded,
+ 	.run_engine         = lp5523_run_engine,
 -- 
 2.25.1
 
