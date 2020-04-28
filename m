@@ -2,52 +2,51 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC0AC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 645DFC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79294206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 447FE206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100332;
-	bh=SC/vqzeMx1k3k9AAbtjSE5BmU6VVJ9MANDBe3abuSXk=;
+	s=default; t=1588100336;
+	bh=XOTjo0i8DbOr9GRbY+k+F3BY0aAQvmrwYJwPgt2C8sc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FTtsHUDCmQVRHzDDJR3QqebEm43x6q9kdVpsxWeNmF2NeBJgHYPRqq/D6UVHGsQ46
-	 N4C1aWxn736rLRTUWBtvF2LQZmWip7V2BwfplZrjrSRXB7Ipd5kXwH4aEaQteWn5j8
-	 vi2BzBX4R/DsSXwuuvogNi+RSHQnKj2vYd+ax1tc=
+	b=eU8ucncLf9iP9BLNBAcd2wa3OmFhL8/teK1FGyZdtvP2uRcabWtS50p+uKCaFRQRX
+	 kNhAAYXG5EyU/C9HBU+EsK5aco/H0pBgO+vJpPFnnMdC0Ga9Ay3KDY3+WUwlXeocxC
+	 vJ7c6huqXZedl1/k72w1pBdEGLT3VmsP34ljzpTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbgD1S3A (ORCPT
+        id S1729784AbgD1S6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:29:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42070 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:58:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729248AbgD1S2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:28:49 -0400
+        id S1729271AbgD1S24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:28:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84DD620B1F;
-        Tue, 28 Apr 2020 18:28:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D122A208E0;
+        Tue, 28 Apr 2020 18:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098529;
-        bh=SC/vqzeMx1k3k9AAbtjSE5BmU6VVJ9MANDBe3abuSXk=;
+        s=default; t=1588098536;
+        bh=XOTjo0i8DbOr9GRbY+k+F3BY0aAQvmrwYJwPgt2C8sc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aN14Gj3MkKC14wPT88tHgMz6pSIr0ifvgzJybFeC+W7ZUAq5bWeWkPjDMLVoFrVvR
-         0puqNHctpaU0BtVcA7EZMRYY11wZ3Z4DCKtplGUQBRWlcMpYy2nKZGlOkU/bkvRGPw
-         9ImGAB0jVt4WxzMe/wVLuDgWdiiA+mU7op//Q/2E=
+        b=jEqDqycZgQVaecB0aSovhlcVGmgvF63Y8Z/gi44vYd5VqRw6AOUmVKqr7UOVx5DeV
+         8WrunfsN0voXWsiCtGQyG2M5l3sUM0gbMTkVewv2NCTaXKYzUE2iiODvW13tUHUUEv
+         FQby30vaFEQyRDbHoK2QzQYVsAYmG4RX8LQGgzFY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Franti=C5=A1ek=20Ku=C4=8Dera?= <franta-linux@frantovo.cz>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 040/167] ALSA: usb-audio: Add Pioneer DJ DJM-250MK2 quirk
-Date:   Tue, 28 Apr 2020 20:23:36 +0200
-Message-Id: <20200428182230.168043946@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 068/167] net: dsa: b53: Rework ARL bin logic
+Date:   Tue, 28 Apr 2020 20:24:04 +0200
+Message-Id: <20200428182233.572934793@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
 References: <20200428182225.451225420@linuxfoundation.org>
@@ -60,77 +59,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: František Kučera <franta-linux@frantovo.cz>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 73d8c94084341e2895169a0462dbc18167f01683 ]
+[ Upstream commit 6344dbde6a27d10d16246d734b968f84887841e2 ]
 
-Pioneer DJ DJM-250MK2 is a mixer that acts like a USB sound card.
-The MIDI controller part is standard but the PCM part is "vendor specific".
-Output is enabled by this quirk: 8 channels, 48 000 Hz, S24_3LE.
-Input is not working.
+When asking the ARL to read a MAC address, we will get a number of bins
+returned in a single read. Out of those bins, there can essentially be 3
+states:
 
-Signed-off-by: František Kučera <franta-linux@frantovo.cz>
-Link: https://lore.kernel.org/r/20200401095907.3387-1-konference@frantovo.cz
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+- all bins are full, we have no space left, and we can either replace an
+  existing address or return that full condition
+
+- the MAC address was found, then we need to return its bin index and
+  modify that one, and only that one
+
+- the MAC address was not found and we have a least one bin free, we use
+  that bin index location then
+
+The code would unfortunately fail on all counts.
+
+Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/usb/quirks-table.h | 42 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ drivers/net/dsa/b53/b53_common.c |   30 ++++++++++++++++++++++++++----
+ drivers/net/dsa/b53/b53_regs.h   |    3 +++
+ 2 files changed, 29 insertions(+), 4 deletions(-)
 
-diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
-index d187aa6d50db0..dcaf9eed9a415 100644
---- a/sound/usb/quirks-table.h
-+++ b/sound/usb/quirks-table.h
-@@ -3592,5 +3592,47 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge", "HVR-950Q"),
- 		}
- 	}
- },
-+{
-+	/*
-+	 * Pioneer DJ DJM-250MK2
-+	 * PCM is 8 channels out @ 48 fixed (endpoints 0x01).
-+	 * The output from computer to the mixer is usable.
-+	 *
-+	 * The input (phono or line to computer) is not working.
-+	 * It should be at endpoint 0x82 and probably also 8 channels,
-+	 * but it seems that it works only with Pioneer proprietary software.
-+	 * Even on officially supported OS, the Audacity was unable to record
-+	 * and Mixxx to recognize the control vinyls.
-+	 */
-+	USB_DEVICE_VENDOR_SPEC(0x2b73, 0x0017),
-+	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
-+		.ifnum = QUIRK_ANY_INTERFACE,
-+		.type = QUIRK_COMPOSITE,
-+		.data = (const struct snd_usb_audio_quirk[]) {
-+			{
-+				.ifnum = 0,
-+				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
-+				.data = &(const struct audioformat) {
-+					.formats = SNDRV_PCM_FMTBIT_S24_3LE,
-+					.channels = 8, // outputs
-+					.iface = 0,
-+					.altsetting = 1,
-+					.altset_idx = 1,
-+					.endpoint = 0x01,
-+					.ep_attr = USB_ENDPOINT_XFER_ISOC|
-+						USB_ENDPOINT_SYNC_ASYNC,
-+					.rates = SNDRV_PCM_RATE_48000,
-+					.rate_min = 48000,
-+					.rate_max = 48000,
-+					.nr_rates = 1,
-+					.rate_table = (unsigned int[]) { 48000 }
-+				}
-+			},
-+			{
-+				.ifnum = -1
-+			}
-+		}
-+	}
-+},
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -1463,6 +1463,7 @@ static int b53_arl_read(struct b53_devic
+ 			u16 vid, struct b53_arl_entry *ent, u8 *idx,
+ 			bool is_valid)
+ {
++	DECLARE_BITMAP(free_bins, B53_ARLTBL_MAX_BIN_ENTRIES);
+ 	unsigned int i;
+ 	int ret;
  
- #undef USB_DEVICE_VENDOR_SPEC
--- 
-2.20.1
-
+@@ -1470,6 +1471,8 @@ static int b53_arl_read(struct b53_devic
+ 	if (ret)
+ 		return ret;
+ 
++	bitmap_zero(free_bins, dev->num_arl_entries);
++
+ 	/* Read the bins */
+ 	for (i = 0; i < dev->num_arl_entries; i++) {
+ 		u64 mac_vid;
+@@ -1481,16 +1484,24 @@ static int b53_arl_read(struct b53_devic
+ 			   B53_ARLTBL_DATA_ENTRY(i), &fwd_entry);
+ 		b53_arl_to_entry(ent, mac_vid, fwd_entry);
+ 
+-		if (!(fwd_entry & ARLTBL_VALID))
++		if (!(fwd_entry & ARLTBL_VALID)) {
++			set_bit(i, free_bins);
+ 			continue;
++		}
+ 		if ((mac_vid & ARLTBL_MAC_MASK) != mac)
+ 			continue;
+ 		if (dev->vlan_enabled &&
+ 		    ((mac_vid >> ARLTBL_VID_S) & ARLTBL_VID_MASK) != vid)
+ 			continue;
+ 		*idx = i;
++		return 0;
+ 	}
+ 
++	if (bitmap_weight(free_bins, dev->num_arl_entries) == 0)
++		return -ENOSPC;
++
++	*idx = find_first_bit(free_bins, dev->num_arl_entries);
++
+ 	return -ENOENT;
+ }
+ 
+@@ -1520,10 +1531,21 @@ static int b53_arl_op(struct b53_device
+ 	if (op)
+ 		return ret;
+ 
+-	/* We could not find a matching MAC, so reset to a new entry */
+-	if (ret) {
++	switch (ret) {
++	case -ENOSPC:
++		dev_dbg(dev->dev, "{%pM,%.4d} no space left in ARL\n",
++			addr, vid);
++		return is_valid ? ret : 0;
++	case -ENOENT:
++		/* We could not find a matching MAC, so reset to a new entry */
++		dev_dbg(dev->dev, "{%pM,%.4d} not found, using idx: %d\n",
++			addr, vid, idx);
+ 		fwd_entry = 0;
+-		idx = 1;
++		break;
++	default:
++		dev_dbg(dev->dev, "{%pM,%.4d} found, using idx: %d\n",
++			addr, vid, idx);
++		break;
+ 	}
+ 
+ 	/* For multicast address, the port is a bitmask and the validity
+--- a/drivers/net/dsa/b53/b53_regs.h
++++ b/drivers/net/dsa/b53/b53_regs.h
+@@ -323,6 +323,9 @@
+ #define   ARLTBL_STATIC			BIT(15)
+ #define   ARLTBL_VALID			BIT(16)
+ 
++/* Maximum number of bin entries in the ARL for all switches */
++#define B53_ARLTBL_MAX_BIN_ENTRIES	4
++
+ /* ARL Search Control Register (8 bit) */
+ #define B53_ARL_SRCH_CTL		0x50
+ #define B53_ARL_SRCH_CTL_25		0x20
 
 
