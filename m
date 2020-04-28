@@ -2,171 +2,500 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0536C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07C0C83009
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5F8F206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:26:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="OIGlmCk/";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="OIGlmCk/"
+	by mail.kernel.org (Postfix) with ESMTP id C8A01206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:27:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgD1M0v (ORCPT
+        id S1726819AbgD1M12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:26:51 -0400
-Received: from mail-eopbgr40055.outbound.protection.outlook.com ([40.107.4.55]:19982
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        Tue, 28 Apr 2020 08:27:28 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2121 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726361AbgD1M0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:26:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wxhR2gOD+0fMy60YrtKy1bzzx4wBCyrNW926XIc/zC4=;
- b=OIGlmCk/Gh9dJH2Y19BkNL0mWCByQ0v5h+s30yu4/QMRWz+Pk/gDcj5yC0CoVfhXBU7BOU9o1kPl/5ZYmBbWIyQAO+Jg/VNLL0vUT/h3ZRdqtJ7n8EF0i0qOQxyl1rG4t/6DGlxb8Q8df61E/NPzqVnPBsv7PVWCut+BhBJvXFA=
-Received: from DB6PR0601CA0029.eurprd06.prod.outlook.com (2603:10a6:4:17::15)
- by DBBPR08MB4444.eurprd08.prod.outlook.com (2603:10a6:10:c4::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Tue, 28 Apr
- 2020 12:26:41 +0000
-Received: from DB5EUR03FT056.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:4:17:cafe::a6) by DB6PR0601CA0029.outlook.office365.com
- (2603:10a6:4:17::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend
- Transport; Tue, 28 Apr 2020 12:26:41 +0000
-Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
- header.from=arm.com;
-Received-SPF: TempError (protection.outlook.com: error in processing during
- lookup of arm.com: DNS Timeout)
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT056.mail.protection.outlook.com (10.152.21.124) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.19 via Frontend Transport; Tue, 28 Apr 2020 12:26:39 +0000
-Received: ("Tessian outbound fb9de21a7e90:v54"); Tue, 28 Apr 2020 12:26:39 +0000
-X-CR-MTA-TID: 64aa7808
-Received: from f1150cc13839.2
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 435307EB-5FFE-4419-8BE2-B95A2541FEAE.1;
-        Tue, 28 Apr 2020 12:26:34 +0000
-Received: from EUR02-VE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id f1150cc13839.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Tue, 28 Apr 2020 12:26:34 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mAQGT3gvtqTQWd1EulYCThpfD8w3+QFidxS0tX1TAMGY8p/yM+BwSgFrRlcA1YgD+MZ0tsSkm+EhyIRxy23eJSbCSB7xMiVrBaYFg2xObUfIDzKaUSS0B8XqzLVDurvvGVCJwxWb4EiuEZj4qv7iAnET2VoR2leUdVM1a/46pbEAn4Fln0Qys0czBL5+QZQo08jvOBVAgrJooS+0Q1ddU8ZFchW4wuT/aKRPhuR6ovJdphWOofNlbMJ8DGrx79mOJLDm4/7+IvgxtwrCIy23WEYN9SAVrmXEipAAHAg+whvEOo1KxSGI20gAeN2BEB3ZXfAadxZLBlYMMrq8Qv8LDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wxhR2gOD+0fMy60YrtKy1bzzx4wBCyrNW926XIc/zC4=;
- b=mhy6XAxiw8pRUxJ3JmpTDR5XJtG1kZ+QBH8BdvdqnmT9PcLvVlMWgB9ApIzklPHjm8jcFof16uWE7lWGiFaLbHPJd96RBKe6HKjOnjlfMKke8xK44jGM9pm/UVZbC/UK3g49TptlKxhJIFKVjcxutCRxUt8DqxybVm61iO+5mWdfGqYeakn1sSkHmvygBgsLn+zkJaOyrtcdvQNaYPr9h5Ou+s0XqxcGxKAo23+DXbrCM7OA5+sQpbgopxBdOtpBnKk0omTT5YbVp8foOfRZqa7jaQizGFHersO2h2zcfB9b0gHvnO4Ccw4ZcFCUXVZABHhQCinQCzZOEZQ8NrxdSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wxhR2gOD+0fMy60YrtKy1bzzx4wBCyrNW926XIc/zC4=;
- b=OIGlmCk/Gh9dJH2Y19BkNL0mWCByQ0v5h+s30yu4/QMRWz+Pk/gDcj5yC0CoVfhXBU7BOU9o1kPl/5ZYmBbWIyQAO+Jg/VNLL0vUT/h3ZRdqtJ7n8EF0i0qOQxyl1rG4t/6DGlxb8Q8df61E/NPzqVnPBsv7PVWCut+BhBJvXFA=
-Received: from DB7PR08MB3003.eurprd08.prod.outlook.com (2603:10a6:5:1b::14) by
- DB7PR08MB3354.eurprd08.prod.outlook.com (2603:10a6:5:1d::31) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.13; Tue, 28 Apr 2020 12:26:32 +0000
-Received: from DB7PR08MB3003.eurprd08.prod.outlook.com
- ([fe80::2cdc:6170:b6f:5853]) by DB7PR08MB3003.eurprd08.prod.outlook.com
- ([fe80::2cdc:6170:b6f:5853%7]) with mapi id 15.20.2937.023; Tue, 28 Apr 2020
- 12:26:32 +0000
-From:   Hadar Gat <Hadar.Gat@arm.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-CC:     Matt Mackall <mpm@selenic.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
-Subject: RE: [PATCH v3 1/3] hwrng: cctrng - Add dependency on OF
-Thread-Topic: [PATCH v3 1/3] hwrng: cctrng - Add dependency on OF
-Thread-Index: AQHWHIgZN7YKol1Tq02g1xaDTWU+daiNEe0AgAFkcMA=
-Date:   Tue, 28 Apr 2020 12:26:31 +0000
-Message-ID: <DB7PR08MB3003E1459755B853B41490D6E9AC0@DB7PR08MB3003.eurprd08.prod.outlook.com>
-References: <1587987364-4566-1-git-send-email-hadar.gat@arm.com>
- <1587987364-4566-2-git-send-email-hadar.gat@arm.com>
- <20200427150658.GA26305@gondor.apana.org.au>
-In-Reply-To: <20200427150658.GA26305@gondor.apana.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ts-tracking-id: d0e5d884-e4b2-40eb-b1cd-05bc5d22c532.1
-x-checkrecipientchecked: true
-Authentication-Results-Original: gondor.apana.org.au; dkim=none (message not
- signed) header.d=none;gondor.apana.org.au; dmarc=none action=none
- header.from=arm.com;
-x-originating-ip: [84.109.179.203]
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 79f1ae50-f7e9-4360-342d-08d7eb6f66ee
-x-ms-traffictypediagnostic: DB7PR08MB3354:|DB7PR08MB3354:|DBBPR08MB4444:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <DBBPR08MB4444F013A45D02D1B2C86F02E9AC0@DBBPR08MB4444.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:2150;OLM:2150;
-x-forefront-prvs: 0387D64A71
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3003.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(396003)(346002)(376002)(366004)(478600001)(66556008)(64756008)(5660300002)(66446008)(7696005)(9686003)(7416002)(55016002)(66476007)(66946007)(54906003)(71200400001)(76116006)(8676002)(6916009)(8936002)(86362001)(316002)(6506007)(2906002)(33656002)(81156014)(4326008)(186003)(4744005)(83080400001)(26005)(966005)(52536014);DIR:OUT;SFP:1101;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: RSVca5Rxa88GaFi5QkLUvQIwWiARGbOs64YIpYdtWWzZMjlaQ9r+ZUgTTj+UrigGdWW+uAU6US9IUkB+WLbEJi6yaliYyFtqgJD2AudvXG2Z+0cZD8VMbUahAPDPcncto2ugLmQ6EE4487aOWNo78Pm4JHeqTG9E53Y1dVwwmSF8JFPiwB15WAvCC5BfSuMxlo4ld1hf8S+57iNeDUiKucyAXGJgOQCsjQ2o2PuKqvoxoBXgtB60ncEKhqcngMQmzuktNnA7NigWLSygpQ+nXgi28DVaznkn5kj8pws11hXKuUz+rP96sBrj0xmcZEipIYmiVD8wrQhoIZP1h8ezV6ny08aSNqd5icr+aE+0gTCtcykNHj4XUpNlUHT5nJT+V2oPVHD9Di3hIBS5veSDjOckaBj6kciO0WzCx0t6HvVPB28v2f7lduNHhkcR3v+Fg91O3JZObhVXcIQK48JVcIx134hZfIe/pE7PViRssX7Kp6PPzO5Q1a38m/LoocwAEtb0HJzwpoKFCQwVjvYWkw==
-x-ms-exchange-antispam-messagedata: NB7L9lVNPGfR7sjkz/YaPsO3bTChpa/qvATsxFIvQ6+fhM8gTOVT3jbyV/m+1UteJ6rYSNl5YayH/QEHeNiXNheHnnadkZVV3iew/LW2OgQOGok76jBQPKQ4GNRTqGQB6+YN2AqOFNNFSh03Gn91egOoAa9ufDBsi3SawdEILYk+FCKwQ6impZ8iOM5gnwx4+s5n4DbYFuqr+zWFIwSjVmry1bNBPhNjk2mUJLRrX7K5QFwHrsSH0a1aA3Y7M7htLNOH+Mr9wdKUvJfcaK+7zJFyV51CDG9ZrNQfpiI7LWAw7uHCkVKNdCnA1jogR69sz9KW9t1GiuR88tA07jY4gN+nyPO2wxOLJ9QtRT1Z2dbxwCZ8y274Sd9WhMK0CtggewwPVSFuaSFcZufA8NqePLxEifHpJXAi40aOPfdDsKivN0oPBWbxWizNWATnJ3nKjvpYF3tnrVY3SJLBHzUrPq/idQJ8sl5NWjf2rRpuUtydobpq6MdhbXKuYHeKEgoBzCXZjlczRGURZ5nwYfUiv5+8yWokChQc/EqP8pPP2zwWvfgMM0fGY7Imy3CD2IPn7eQj3IQm3h15+aIyosUslLWynyMduLIUrW8DzrHfYCNLqcOv6ONy7lX9kVe/RJbLT/RmLt98K25EhOvaL3RfA82z6Awo15xFjVhHjFZvtWweH9ukejOh3hWfKmI5R9kCnEoPvXo4CgDGT/B3ON5LrEYVjV2VO1CayY/D86clMPhvUAr1YjxPKNN7+vizh6v5R4sv5ETciybkwMRoRucBm6JsLZRbLyVakt4PlhC4R/8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726361AbgD1M10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 08:27:26 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 62CFED82C3633676EF21;
+        Tue, 28 Apr 2020 13:27:23 +0100 (IST)
+Received: from localhost (10.47.94.202) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 28 Apr
+ 2020 13:27:21 +0100
+Date:   Tue, 28 Apr 2020 13:27:04 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     SeongJae Park <sjpark@amazon.com>
+CC:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v9 00/15] Introduce Data Access MONitor (DAMON)
+Message-ID: <20200428132704.00003f79@Huawei.com>
+In-Reply-To: <20200427120442.24179-1-sjpark@amazon.com>
+References: <20200427120442.24179-1-sjpark@amazon.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3354
-Original-Authentication-Results: gondor.apana.org.au; dkim=none (message not signed)
- header.d=none;gondor.apana.org.au; dmarc=none action=none
- header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT056.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(376002)(346002)(39860400002)(46966005)(4744005)(5660300002)(6862004)(450100002)(55016002)(4326008)(478600001)(82740400003)(47076004)(9686003)(54906003)(2906002)(966005)(6506007)(316002)(81166007)(186003)(63350400001)(52536014)(81156014)(8676002)(86362001)(83080400001)(33656002)(26005)(70586007)(70206006)(82310400002)(336012)(8936002)(7696005)(356005);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 97d5b583-f555-48f3-04d1-08d7eb6f627e
-X-Forefront-PRVS: 0387D64A71
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: sjZMgLPunl8rlO8JMOKiyFwFg5KuOC05XhvZwGAcWLsOfV3vJoS7q3ewB7+SZcNjFQE0p9BZVwZcJQzraOP7WYACsd4vewQly90BD10pcJQoKzib+YN5MnVUTuAQhq2jEaLGWoLhAlOr338gfnXhE8rWFfBvivm03lY4Dlvf+IwRDfBy8MTvfcw4ZgHJ+0q9iZakKSlrQF3583g9+Lh2Smd6AWklaWkERhlUecTYAxJOmWkrjatUdhjSKLo/2xDk8nUSDfLvkrAb64ChVzj2MOOTsW/j6DG+7meL6HKkwB2XWbcTMP5avwtxZqlvbHCN+4Dl9Amm+9h4S7dm7jtdwqLi93/t0iE2/Nf4hfaF4XJQ+l3wN+RvBeqO7lDRMVJf48E5FKGf/Obcj03mjghnS/PUhECWDIG6VzSl2nc9D9tSQvxpYkXVTIen/X7w0YaM9URnppH8etjGiWbC7wRvHtI20Mvw9o2CZqerIkrVSTaraRn33GIINu2wAsQDaqog8D6eU3g+QkfOBpUbT7sT79bMMlXG8DXLsX7Bh0eYjku6vIsmDGgnn5wg+e9U15HiiQxp1fitblCESZ5Cwn1C/x9L07QFLSJqbzXjcQC/MZE=
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2020 12:26:39.6898
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79f1ae50-f7e9-4360-342d-08d7eb6f66ee
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4444
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.94.202]
+X-ClientProxiedBy: lhreml718-chm.china.huawei.com (10.201.108.69) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IEZyb206IGxpbnV4LWNyeXB0by1vd25lckB2Z2VyLmtlcm5lbC5vcmcgPGxpbnV4LWNyeXB0
-by0NCj4gb3duZXJAdmdlci5rZXJuZWwub3JnPiBPbiBCZWhhbGYgT2YgSGVyYmVydCBYdQ0KPiBT
-ZW50OiBNb25kYXksIDI3IEFwcmlsIDIwMjAgMTg6MDcNCj4gDQo+IE9uIE1vbiwgQXByIDI3LCAy
-MDIwIGF0IDAyOjM2OjAyUE0gKzAzMDAsIEhhZGFyIEdhdCB3cm90ZToNCj4gPiBUaGUgY2N0cm5n
-IGlzIHVudXNhYmxlIG9uIG5vbi1EVCBzeXN0ZW1zIHNvIHdlIHNob3VsZCBkZXBlbmQgb24gaXQu
-DQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBIYWRhciBHYXQgPGhhZGFyLmdhdEBhcm0uY29tPg0K
-PiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2NoYXIvaHdfcmFuZG9tL0tjb25maWcgfCAyICstDQo+ID4g
-IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gVGhp
-cyBzdGlsbCBkb2Vzbid0IHdvcmsgd2l0aCBDT01QSUxFX1RFU1QuDQoNCkhpIEhlcmJlcnQsDQpJ
-J3ZlIHNldCBDT01QSUxFX1RFU1QgYnV0IGNvdWxkbid0IHNlZSBhbnkgcHJvYmxlbS4NCldvdWxk
-IHlvdSBzaGFyZSB3aGF0IGRvZXNuJ3Qgd29yaz8NClRoYW5rcywNCkhhZGFyDQoNCj4gDQo+IENo
-ZWVycywNCj4gLS0NCj4gRW1haWw6IEhlcmJlcnQgWHUgPGhlcmJlcnRAZ29uZG9yLmFwYW5hLm9y
-Zy5hdT4gSG9tZSBQYWdlOg0KPiBodHRwOi8vZ29uZG9yLmFwYW5hLm9yZy5hdS9+aGVyYmVydC8N
-Cj4gUEdQIEtleTogaHR0cDovL2dvbmRvci5hcGFuYS5vcmcuYXUvfmhlcmJlcnQvcHVia2V5LnR4
-dA0K
+On Mon, 27 Apr 2020 14:04:27 +0200
+SeongJae Park <sjpark@amazon.com> wrote:
+
+> From: SeongJae Park <sjpark@amazon.de>
+> 
+> Introduction
+> ============
+> 
+> Memory management decisions can be improved if finer data access information is
+> available.  However, because such finer information usually comes with higher
+> overhead, most systems including Linux forgives the potential benefit and rely
+> on only coarse information or some light-weight heuristics.  The pseudo-LRU and
+> the aggressive THP promotions are such examples.
+> 
+> A number of data access pattern awared memory management optimizations (refer
+> to 'Appendix A' for more details) consistently say the potential benefit is not
+> small.  However, none of those has successfully merged to the mainline Linux
+> kernel mainly due to the absence of a scalable and efficient data access
+> monitoring mechanism.  Refer to 'Appendix B' to see the limitations of existing
+> memory monitoring mechanisms.
+> 
+> DAMON is a data access monitoring subsystem for the problem.  It is 1) accurate
+> enough to be used for the DRAM level memory management (a straightforward
+> DAMON-based optimization achieved up to 2.55x speedup), 2) light-weight enough
+> to be applied online (compared to a straightforward access monitoring scheme,
+> DAMON is up to 94,242.42x lighter) and 3) keeps predefined upper-bound overhead
+> regardless of the size of target workloads (thus scalable).  Refer to 'Appendix
+> C' if you interested in how it is possible, and 'Appendix F' to know how the
+> numbers collected.
+> 
+> DAMON has mainly designed for the kernel's memory management mechanisms.
+> However, because it is implemented as a standalone kernel module and provides
+> several interfaces, it can be used by a wide range of users including kernel
+> space programs, user space programs, programmers, and administrators.  DAMON
+> is now supporting the monitoring only, but it will also provide simple and
+> convenient data access pattern awared memory managements by itself.  Refer to
+> 'Appendix D' for more detailed expected usages of DAMON.
+> 
+> 
+> Boring? Here Are Something Colorful
+> ===================================
+> 
+> For intuitive understanding of DAMON, I made web pages[1-8] showing the
+> visualized dynamic data access pattern of various realistic workloads in
+> PARSEC3 and SPLASH-2X bechmark suites.  The figures are generated using the
+> user space tool in 10th patch of this patchset.
+> 
+> There are pages showing the heatmap format dynamic access pattern of each
+> workload for heap area[1], mmap()-ed area[2], and stack[3] area.  I splitted
+> the entire address space to the three area because there are huge unmapped
+> regions between the areas.
+> 
+> You can also show how the dynamic working set size of each workload is
+> distributed[4], and how it is chronologically changing[5].
+> 
+> The most important characteristic of DAMON is its promise of the upperbound of
+> the monitoring overhead.  To show whether DAMON keeps the promise well, I
+> visualized the number of monitoring operations required for each 5
+> milliseconds, which is configured to not exceed 1000.  You can show the
+> distribution of the numbers[6] and how it changes chronologically[7].
+> 
+> [1] https://damonitor.github.io/reports/latest/by_image/heatmap.0.png.html
+> [2] https://damonitor.github.io/reports/latest/by_image/heatmap.1.png.html
+> [3] https://damonitor.github.io/reports/latest/by_image/heatmap.2.png.html
+> [4] https://damonitor.github.io/reports/latest/by_image/wss_sz.png.html
+> [5] https://damonitor.github.io/reports/latest/by_image/wss_time.png.html
+> [6] https://damonitor.github.io/reports/latest/by_image/nr_regions_sz.png.html
+> [7] https://damonitor.github.io/reports/latest/by_image/nr_regions_time.png.html
+> 
+> 
+> Future Plans
+> ============
+> 
+> This patchset is only for the first stage of DAMON.  As soon as this patchset
+> is merged, official patchsets for below future plans will be posted.
+> 
+> 
+> Automate Data Access Pattern-aware Memory Management
+> ----------------------------------------------------
+> 
+> Though DAMON provides the monitoring feature, implementing data access pattern
+> aware memory management schemes could be difficult to beginners.  DAMON will be
+> able to do most of the work by itself in near future.  Users will be required
+> to only describe what kind of data access monitoring-based operation schemes
+> they want.
+> 
+> By applying a very simple scheme for THP promotion/demotion with a latest
+> version of the patchset (not posted yet), DAMON achieved 18x lower memory space
+> overhead compared to THP while preserving about 50% of the THP performance
+> benefit with SPLASH-2X benchmark suite.
+> 
+> An RFC patchset for this plan is already available
+> (https://lore.kernel.org/linux-mm/20200407100007.3894-1-sjpark@amazon.com/).
+> 
+> 
+> Support Various Address Spaces
+> ------------------------------
+> 
+> Currently, DAMON supports virtual memory address spaces using PTE Accessed bits
+> as its access checking primitive.  However, the core design of DAMON is not
+> dependent to such implementation details.  In a future, DAMON will decouple
+> those and support various address spaces including physical memory.  It will
+> further allow users to configure and even implement the primitives by
+> themselves for their special usecase.  Monitoring of page cache, NUMA nodes,
+> specific files, or block devices would be examples of such usecases.
+> 
+> An RFC patchset for this plan is already available
+> (https://lore.kernel.org/linux-mm/20200409094232.29680-1-sjpark@amazon.com/).
+> 
+> 
+> Frequently Asked Questions
+> ==========================
+> 
+> Q: Why a new module, instead of extending perf or other tools?
+> A: First, DAMON aims to be used by other programs including the kernel.
+> Therefore, having dependency to specific tools like perf is not desirable.
+> Second, because it need to be lightweight as much as possible so that it can be
+> used online, any unnecessary overhead such as kernel - user space context
+> switching cost should be avoided.  These are the two most biggest reasons why
+> DAMON is implemented in the kernel space.  The idle page tracking subsystem
+> would be the kernel module that most seems similar to DAMON.  However, its own
+> interface is not compatible with DAMON.  Also, the internal implementation of
+> it has no common part to be reused by DAMON.
+> 
+> Q: Can 'perf mem' or PMUs used instead of DAMON?
+> A: No.  Roughly speaking, DAMON has two seperate layers.  The low layer is
+> access check of pages, and the higher layer is its core mechanisms for overhead
+> controlling.  For the low layer, DAMON is now using the PTE Accessed bits.
+> Other H/W or S/W features that can be used for the access check of pages, such
+> as 'perf mem', PMU, or even page idle, could be used instead in the layer.
+> However, those could not alternate the high layer of DAMON.
+> 
+> 
+> Evaluations
+> ===========
+> 
+> We evaluated DAMON's overhead, monitoring quality and usefulness using 25
+> realistic workloads on my QEMU/KVM based virtual machine.
+> 
+> DAMON is lightweight.  It consumes only -0.18% more system memory and up to 1%
+> CPU time.  It makes target worloads only 0.55% slower.
+> 
+> DAMON is accurate and useful for memory management optimizations.  An
+> experimental DAMON-based operation scheme for THP removes 66.2% of THP memory
+> overheads while preserving 54.78% of THP speedup.  Another experimental
+> DAMON-based 'proactive reclamation' implementation reduced 88.15% of
+> residentail sets and 22.30% of system memory footprint while incurring only
+> 2.91% runtime overhead in best case (parsec3/freqmine).
+> 
+> NOTE that the experimentail THP optimization and proactive reclamation are not
+> for production, just only for proof of concepts.
+> 
+> Please refer to 'Appendix E' for detailed evaluation setup and results.
+> 
+> 
+> References
+> ==========
+> 
+> Prototypes of DAMON have introduced by an LPC kernel summit track talk[1] and
+> two academic papers[2,3].  Please refer to those for more detailed information,
+> especially the evaluations.  The latest version of the patchsets has also
+> introduced by an LWN artice[4].
+> 
+> [1] SeongJae Park, Tracing Data Access Pattern with Bounded Overhead and
+>     Best-effort Accuracy. In The Linux Kernel Summit, September 2019.
+>     https://linuxplumbersconf.org/event/4/contributions/548/
+> [2] SeongJae Park, Yunjae Lee, Heon Y. Yeom, Profiling Dynamic Data Access
+>     Patterns with Controlled Overhead and Quality. In 20th ACM/IFIP
+>     International Middleware Conference Industry, December 2019.
+>     https://dl.acm.org/doi/10.1145/3366626.3368125
+> [3] SeongJae Park, Yunjae Lee, Yunhee Kim, Heon Y. Yeom, Profiling Dynamic Data
+>     Access Patterns with Bounded Overhead and Accuracy. In IEEE International
+>     Workshop on Foundations and Applications of Self- Systems (FAS 2019), June
+>     2019.
+> [4] Jonathan Corbet, Memory-management optimization with DAMON. In Linux Weekly
+>     News (LWN), Feb 2020. https://lwn.net/Articles/812707/
+> 
+> 
+> Baseline and Complete Git Trees
+> ===============================
+> 
+> The patches are based on the v5.6.  You can also clone the complete git
+> tree:
+> 
+>     $ git clone git://github.com/sjp38/linux -b damon/patches/v9
+> 
+> The web is also available:
+> https://github.com/sjp38/linux/releases/tag/damon/patches/v9
+> 
+> This patchset contains patches for the stabled main logic of DAMON only.  The
+> latest DAMON development tree is also available at:
+> https://github.com/sjp38/linux/tree/damon/master
+> 
+> 
+> Sequence Of Patches
+> ===================
+> 
+> The patches are organized in the following sequence.  The first two patches are
+> preparation of DAMON patchset.  The 1st patch adds typos found in previous
+> versions of DAMON patchset to 'scripts/spelling.txt' so that the typos can be
+> caught by 'checkpatch.pl'.  The 2nd patch exports 'lookup_page_ext()' to GPL
+> modules so that it can be used by DAMON even though it is built as a loadable
+> module.
+> 
+> Next four patches implement the core of DAMON and it's programming interface.
+> The 3rd patch introduces DAMON module, it's data structures, and data structure
+> related common functions.  Each of following three patches (4nd to 6th)
+> implements the core mechanisms of DAMON, namely regions based sampling,
+> adaptive regions adjustment, and dynamic memory mapping chage adoption,
+> respectively, with programming interface supports of those.
+> 
+> Following four patches are for low level users of DAMON.  The 7th patch
+> implements callbacks for each of monitoring steps so that users can do whatever
+> they want with the access patterns.  The 8th one implements recording of access
+> patterns in DAMON for better convenience and efficiency.  Each of next two
+> patches (9th and 10th) respectively adds a debugfs interface for privileged
+> people and/or programs in user space, and a tracepoint for other tracepoints
+> supporting tracers such as perf.
+> 
+> Two patches for high level users of DAMON follows.  To provide a minimal
+> reference to the debugfs interface and for high level use/tests of the DAMON,
+> the next patch (11th) implements an user space tool.  The 12th patch adds a
+> document for administrators of DAMON.
+> 
+> Next two patches are for tests.  The 13th and 14th patches provide unit tests
+> (based on kunit) and user space tests (based on kselftest), respectively.
+> 
+> Finally, the last patch (15th) updates the MAINTAINERS file.
+> 
+> 
+> Patch History
+> =============
+> 
+> The most biggest change in this version is support of minimal region size,
+> which defaults to 'PAGE_SIZE'.  This change will reduce unnecessary region
+> splits and thus improve the quality of the output.  In a future, we will be
+> able to make this configurable for support of various access check primitives
+> such as PMUs.
+
+That is a good improvement.  Might be interesting to consider taking
+hugepages into account as well.
+
+One issue I've noted is that we have a degeneracy problem with the current
+region merging and splitting that perhaps could do with a small tweak.
+
+Currently we can end with a very small number of regions because there
+is no limit on how many regions can be merged in a give pass for merging.
+However, splitting only doubles the number of regions.
+
+I've been experimenting with a few loops of the splitting algorithm to ensure
+we don't end up stuck with limited regions.  I think the problem we are working
+around can be roughly described as:
+
+1) Program allocates a lot of memory - not really touching much of it.
+2) Damon fuses the large memory allocations in to one region because the
+   access counts are always near 0. 
+3) Program finishes setup.
+4) Program accesses a few pages in the huge reason a lot, but not that much
+   for most of the rest.  Taking an extreme option, the page in the middle
+   gets all the accesses and the other 1G on either side gets none.
+5) As a split always breaks the page in two, the chances of significantly
+   different values for the two resulting regions is low (as we only sample
+   the hot page occasionally).
+
+If we just run the splits twice if the number of regions < max regions / 4
+then over time we should eventually get a region with the single hot page in it.
+We will get there faster if we split more (keeping below max regions).
+
+As we always remain below max regions, we are still obeying the fixed
+maximum overhead and actually monitoring at closer to the desired granularity.
+
+Jonathan
+
+> 
+> Changes from v8
+> (https://lore.kernel.org/linux-mm/20200406130938.14066-1-sjpark@amazon.com/)
+>  - Make regions always aligned by minimal region size that can be changed
+>    (Stefan Nuernberger)
+>  - Store binary format version in the recording file (Stefan Nuernberger)
+>  - Use 'int' for pid instead of 'unsigned long' (Stefan Nuernberger)
+>  - Fix a race condition in damon thread termination (Stefan Nuernberger)
+>  - Optimize random value generation and recording (Stefan Nuernberger)
+>  - Clean up commit messages and comments (Stefan Nuernberger)
+>  - Clean up code (Stefan Nuernberger)
+>  - Use explicit signalling and 'do_exit()' for damon thread termination 
+>  - Add more typos to spelling.txt
+>  - Update the performance evaluation results
+>  - Describe future plans in the cover letter
+> 
+> Changes from v7
+> (https://lore.kernel.org/linux-mm/20200318112722.30143-1-sjpark@amazon.com/)
+>  - Cleanup variable names (Jonathan Cameron)
+>  - Split sampling address setup from access_check() (Jonathan Cameron)
+>  - Make sampling address to always locate in the region (Jonathan Cameron)
+>  - Make initial region's sampling addr to be old (Jonathan Cameron)
+>  - Split kdamond on/off function to seperate functions (Jonathan Cameron)
+>  - Fix wrong kernel doc comments (Jonathan Cameron)
+>  - Reset 'last_accessed' to false in kdamond_check_access() if necessary
+>  - Rebase on v5.6
+> 
+> Changes from v6
+> (https://lore.kernel.org/linux-mm/20200224123047.32506-1-sjpark@amazon.com/)
+>  - Wordsmith cover letter (Shakeel Butt)
+>  - Cleanup code and commit messages (Jonathan Cameron)
+>  - Avoid kthread_run() under spinlock critical section (Jonathan Cameron)
+>  - Use kthread_stop() (Jonathan Cameron)
+>  - Change tracepoint to trace regions (Jonathan Cameron)
+>  - Implement API from the beginning (Jonathan Cameron)
+>  - Fix typos (Jonathan Cameron)
+>  - Fix access checking to properly handle regions smaller than single page
+>    (Jonathan Cameron)
+>  - Add found typos to 'scripts/spelling.txt'
+>  - Add recent evaluation results including DAMON-based Operation Schemes
+> 
+> Changes from v5
+> (https://lore.kernel.org/linux-mm/20200217103110.30817-1-sjpark@amazon.com/)
+>  - Fix minor bugs (sampling, record attributes, debugfs and user space tool)
+>  - selftests: Add debugfs interface tests for the bugs
+>  - Modify the user space tool to use its self default values for parameters
+>  - Fix pmg huge page access check
+> 
+> Changes from v4
+> (https://lore.kernel.org/linux-mm/20200210144812.26845-1-sjpark@amazon.com/)
+>  - Add 'Reviewed-by' for the kunit tests patch (Brendan Higgins)
+>  - Make the unit test to depedns on 'DAMON=y' (Randy Dunlap and kbuild bot)
+>    Reported-by: kbuild test robot <lkp@intel.com>
+>  - Fix m68k module build issue
+>    Reported-by: kbuild test robot <lkp@intel.com>
+>  - Add selftests
+>  - Seperate patches for low level users from core logics for better reading
+>  - Clean up debugfs interface
+>  - Trivial nitpicks
+> 
+> Changes from v3
+> (https://lore.kernel.org/linux-mm/20200204062312.19913-1-sj38.park@gmail.com/)
+>  - Fix i386 build issue
+>    Reported-by: kbuild test robot <lkp@intel.com>
+>  - Increase the default size of the monitoring result buffer to 1 MiB
+>  - Fix misc bugs in debugfs interface
+> 
+> Changes from v2
+> (https://lore.kernel.org/linux-mm/20200128085742.14566-1-sjpark@amazon.com/)
+>  - Move MAINTAINERS changes to last commit (Brendan Higgins)
+>  - Add descriptions for kunittest: why not only entire mappings and what the 4
+>    input sets are trying to test (Brendan Higgins)
+>  - Remove 'kdamond_need_stop()' test (Brendan Higgins)
+>  - Discuss about the 'perf mem' and DAMON (Peter Zijlstra)
+>  - Make CV clearly say what it actually does (Peter Zijlstra)
+>  - Answer why new module (Qian Cai)
+>  - Diable DAMON by default (Randy Dunlap)
+>  - Change the interface: Seperate recording attributes
+>    (attrs, record, rules) and allow multiple kdamond instances
+>  - Implement kernel API interface
+> 
+> Changes from v1
+> (https://lore.kernel.org/linux-mm/20200120162757.32375-1-sjpark@amazon.com/)
+>  - Rebase on v5.5
+>  - Add a tracepoint for integration with other tracers (Kirill A. Shutemov)
+>  - document: Add more description for the user space tool (Brendan Higgins)
+>  - unittest: Improve readability (Brendan Higgins)
+>  - unittest: Use consistent name and helpers function (Brendan Higgins)
+>  - Update PG_Young to avoid reclaim logic interference (Yunjae Lee)
+> 
+> Changes from RFC
+> (https://lore.kernel.org/linux-mm/20200110131522.29964-1-sjpark@amazon.com/)
+>  - Specify an ambiguous plan of access pattern based mm optimizations
+>  - Support loadable module build
+>  - Cleanup code
+> 
+> SeongJae Park (15):
+>   scripts/spelling: Add a few more typos
+>   mm/page_ext: Export lookup_page_ext() to GPL modules
+>   mm: Introduce Data Access MONitor (DAMON)
+>   mm/damon: Implement region based sampling
+>   mm/damon: Adaptively adjust regions
+>   mm/damon: Apply dynamic memory mapping changes
+>   mm/damon: Implement callbacks
+>   mm/damon: Implement access pattern recording
+>   mm/damon: Add debugfs interface
+>   mm/damon: Add tracepoints
+>   tools: Add a minimal user-space tool for DAMON
+>   Documentation/admin-guide/mm: Add a document for DAMON
+>   mm/damon: Add kunit tests
+>   mm/damon: Add user space selftests
+>   MAINTAINERS: Update for DAMON
+> 
+>  .../admin-guide/mm/data_access_monitor.rst    |  428 +++++
+>  Documentation/admin-guide/mm/index.rst        |    1 +
+>  MAINTAINERS                                   |   12 +
+>  include/linux/damon.h                         |   78 +
+>  include/trace/events/damon.h                  |   43 +
+>  mm/Kconfig                                    |   23 +
+>  mm/Makefile                                   |    1 +
+>  mm/damon-test.h                               |  615 +++++++
+>  mm/damon.c                                    | 1494 +++++++++++++++++
+>  mm/page_ext.c                                 |    1 +
+>  scripts/spelling.txt                          |    8 +
+>  tools/damon/.gitignore                        |    1 +
+>  tools/damon/_dist.py                          |   36 +
+>  tools/damon/_recfile.py                       |   23 +
+>  tools/damon/bin2txt.py                        |   67 +
+>  tools/damon/damo                              |   37 +
+>  tools/damon/heats.py                          |  362 ++++
+>  tools/damon/nr_regions.py                     |   91 +
+>  tools/damon/record.py                         |  212 +++
+>  tools/damon/report.py                         |   45 +
+>  tools/damon/wss.py                            |   97 ++
+>  tools/testing/selftests/damon/Makefile        |    7 +
+>  .../selftests/damon/_chk_dependency.sh        |   28 +
+>  tools/testing/selftests/damon/_chk_record.py  |  108 ++
+>  .../testing/selftests/damon/debugfs_attrs.sh  |  139 ++
+>  .../testing/selftests/damon/debugfs_record.sh |   50 +
+>  26 files changed, 4007 insertions(+)
+>  create mode 100644 Documentation/admin-guide/mm/data_access_monitor.rst
+>  create mode 100644 include/linux/damon.h
+>  create mode 100644 include/trace/events/damon.h
+>  create mode 100644 mm/damon-test.h
+>  create mode 100644 mm/damon.c
+>  create mode 100644 tools/damon/.gitignore
+>  create mode 100644 tools/damon/_dist.py
+>  create mode 100644 tools/damon/_recfile.py
+>  create mode 100644 tools/damon/bin2txt.py
+>  create mode 100755 tools/damon/damo
+>  create mode 100644 tools/damon/heats.py
+>  create mode 100644 tools/damon/nr_regions.py
+>  create mode 100644 tools/damon/record.py
+>  create mode 100644 tools/damon/report.py
+>  create mode 100644 tools/damon/wss.py
+>  create mode 100644 tools/testing/selftests/damon/Makefile
+>  create mode 100644 tools/testing/selftests/damon/_chk_dependency.sh
+>  create mode 100644 tools/testing/selftests/damon/_chk_record.py
+>  create mode 100755 tools/testing/selftests/damon/debugfs_attrs.sh
+>  create mode 100755 tools/testing/selftests/damon/debugfs_record.sh
+> 
+
+
