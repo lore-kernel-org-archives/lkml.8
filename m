@@ -2,58 +2,57 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C494C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A33F7C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C01720575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F2EE20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100096;
-	bh=s48c0xA9AWOzYkT8z8qRtALlO98KGhNl0F4y/Xz6oqw=;
+	s=default; t=1588100100;
+	bh=8UiJs6jIRBpkRDsW57Nggg4rK9GDparxqDJXa96dMbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r9+BCVbzyJguwPBnRCS1fmhRJafRgZzHruiwcYO3ulXTZ/lrgp1kqYM/X2+cVTTIB
-	 7tYF/yndQ1brpBK6XWlls4YsfSSQqSFLPyGSlJFZVAGFs1bCOvMWSWfrCTnXf64jRm
-	 55eUMXoD5W/LT0lxq0k9ys9GZpsVDnAQL7VqMRXk=
+	b=e0ukq9m4YATp3OhcsmxASB0aojCSnmuLXIbVywicG+S25jULUhgCajvj7xmonEUy5
+	 AZ/74RjlLLQmXvf+o21VCRJPffgleL9rWqYSKZxwsG5YMJBtHDFPAV1SB+UDovFzi3
+	 JfqI6LW6bi+uWPtul79yLyWpE3pcPN8pjDvNc0N4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbgD1SdT (ORCPT
+        id S1729817AbgD1Sy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:33:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49572 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:54:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729907AbgD1SdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:33:13 -0400
+        id S1729923AbgD1SdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:33:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FD1221835;
-        Tue, 28 Apr 2020 18:33:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5340C21744;
+        Tue, 28 Apr 2020 18:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098792;
-        bh=s48c0xA9AWOzYkT8z8qRtALlO98KGhNl0F4y/Xz6oqw=;
+        s=default; t=1588098797;
+        bh=8UiJs6jIRBpkRDsW57Nggg4rK9GDparxqDJXa96dMbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HocLgYQS5bGdUopXnrmfiNZ0Ab8qIgET6or/iuVp34VoyBzxoLdhi39E3n2gf6Z6L
-         k/OkaDplaLIEWh6pOH5dF9qagCQIOVjxmaxyn/x1M8/RHvTnQzRVYsBjJEEG7AI+nt
-         BvwicFOD+p+w3TUa3OZCsGHlphR6lWoVF2/0ZO30=
+        b=ul/ffulQrLKv+B+7xq0m16QLxN7WXa0hl1gJqYsDhQoNC2abkWjd6+qTmP65p83Hd
+         spdlzVTD1oBkVCWpGseMczvEmmsO5d5+sqeVKgQKsbPGKUY05GcdVA2zQHAS/C2Fhm
+         uBbIyW+F44TI65ADLzN3aioEiojIEbsZ5aFNM4OU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 051/131] x86/KVM: Make sure KVM_VCPU_FLUSH_TLB flag is not missed
-Date:   Tue, 28 Apr 2020 20:24:23 +0200
-Message-Id: <20200428182231.389944621@linuxfoundation.org>
+        syzbot+d889b59b2bb87d4047a2@syzkaller.appspotmail.com,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.6 113/167] KVM: Check validity of resolved slot when searching memslots
+Date:   Tue, 28 Apr 2020 20:24:49 +0200
+Message-Id: <20200428182239.467833354@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,131 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit b043138246a41064527cf019a3d51d9f015e9796 upstream.
+commit b6467ab142b708dd076f6186ca274f14af379c72 upstream.
 
-There is a potential race in record_steal_time() between setting
-host-local vcpu->arch.st.steal.preempted to zero (i.e. clearing
-KVM_VCPU_PREEMPTED) and propagating this value to the guest with
-kvm_write_guest_cached(). Between those two events the guest may
-still see KVM_VCPU_PREEMPTED in its copy of kvm_steal_time, set
-KVM_VCPU_FLUSH_TLB and assume that hypervisor will do the right
-thing. Which it won't.
+Check that the resolved slot (somewhat confusingly named 'start') is a
+valid/allocated slot before doing the final comparison to see if the
+specified gfn resides in the associated slot.  The resolved slot can be
+invalid if the binary search loop terminated because the search index
+was incremented beyond the number of used slots.
 
-Instad of copying, we should map kvm_steal_time and that will
-guarantee atomicity of accesses to @preempted.
+This bug has existed since the binary search algorithm was introduced,
+but went unnoticed because KVM statically allocated memory for the max
+number of slots, i.e. the access would only be truly out-of-bounds if
+all possible slots were allocated and the specified gfn was less than
+the base of the lowest memslot.  Commit 36947254e5f98 ("KVM: Dynamically
+size memslot array based on number of used slots") eliminated the "all
+possible slots allocated" condition and made the bug embarrasingly easy
+to hit.
 
-This is part of CVE-2019-3016.
-
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Reviewed-by: Joao Martins <joao.m.martins@oracle.com>
+Fixes: 9c1a5d38780e6 ("kvm: optimize GFN to memslot lookup with large slots amount")
+Reported-by: syzbot+d889b59b2bb87d4047a2@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Message-Id: <20200408064059.8957-2-sean.j.christopherson@intel.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[bwh: Backported to 4.19: No tracepoint in record_steal_time().]
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kvm/x86.c | 49 +++++++++++++++++++++++++++-------------------
- 1 file changed, 29 insertions(+), 20 deletions(-)
+ include/linux/kvm_host.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 6916f46909ab0..d77822e03ff6b 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2397,43 +2397,45 @@ static void kvm_vcpu_flush_tlb(struct kvm_vcpu *vcpu, bool invalidate_gpa)
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1039,7 +1039,7 @@ search_memslots(struct kvm_memslots *slo
+ 			start = slot + 1;
+ 	}
  
- static void record_steal_time(struct kvm_vcpu *vcpu)
- {
-+	struct kvm_host_map map;
-+	struct kvm_steal_time *st;
-+
- 	if (!(vcpu->arch.st.msr_val & KVM_MSR_ENABLED))
- 		return;
- 
--	if (unlikely(kvm_read_guest_cached(vcpu->kvm, &vcpu->arch.st.stime,
--		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time))))
-+	/* -EAGAIN is returned in atomic context so we can just return. */
-+	if (kvm_map_gfn(vcpu, vcpu->arch.st.msr_val >> PAGE_SHIFT,
-+			&map, &vcpu->arch.st.cache, false))
- 		return;
- 
-+	st = map.hva +
-+		offset_in_page(vcpu->arch.st.msr_val & KVM_STEAL_VALID_BITS);
-+
- 	/*
- 	 * Doing a TLB flush here, on the guest's behalf, can avoid
- 	 * expensive IPIs.
- 	 */
--	if (xchg(&vcpu->arch.st.steal.preempted, 0) & KVM_VCPU_FLUSH_TLB)
-+	if (xchg(&st->preempted, 0) & KVM_VCPU_FLUSH_TLB)
- 		kvm_vcpu_flush_tlb(vcpu, false);
- 
--	if (vcpu->arch.st.steal.version & 1)
--		vcpu->arch.st.steal.version += 1;  /* first time write, random junk */
-+	vcpu->arch.st.steal.preempted = 0;
- 
--	vcpu->arch.st.steal.version += 1;
-+	if (st->version & 1)
-+		st->version += 1;  /* first time write, random junk */
- 
--	kvm_write_guest_cached(vcpu->kvm, &vcpu->arch.st.stime,
--		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time));
-+	st->version += 1;
- 
- 	smp_wmb();
- 
--	vcpu->arch.st.steal.steal += current->sched_info.run_delay -
-+	st->steal += current->sched_info.run_delay -
- 		vcpu->arch.st.last_steal;
- 	vcpu->arch.st.last_steal = current->sched_info.run_delay;
- 
--	kvm_write_guest_cached(vcpu->kvm, &vcpu->arch.st.stime,
--		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time));
--
- 	smp_wmb();
- 
--	vcpu->arch.st.steal.version += 1;
-+	st->version += 1;
- 
--	kvm_write_guest_cached(vcpu->kvm, &vcpu->arch.st.stime,
--		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time));
-+	kvm_unmap_gfn(vcpu, &map, &vcpu->arch.st.cache, true, false);
- }
- 
- int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
-@@ -3272,18 +3274,25 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- 
- static void kvm_steal_time_set_preempted(struct kvm_vcpu *vcpu)
- {
-+	struct kvm_host_map map;
-+	struct kvm_steal_time *st;
-+
- 	if (!(vcpu->arch.st.msr_val & KVM_MSR_ENABLED))
- 		return;
- 
- 	if (vcpu->arch.st.steal.preempted)
- 		return;
- 
--	vcpu->arch.st.steal.preempted = KVM_VCPU_PREEMPTED;
-+	if (kvm_map_gfn(vcpu, vcpu->arch.st.msr_val >> PAGE_SHIFT, &map,
-+			&vcpu->arch.st.cache, true))
-+		return;
-+
-+	st = map.hva +
-+		offset_in_page(vcpu->arch.st.msr_val & KVM_STEAL_VALID_BITS);
-+
-+	st->preempted = vcpu->arch.st.steal.preempted = KVM_VCPU_PREEMPTED;
- 
--	kvm_write_guest_offset_cached(vcpu->kvm, &vcpu->arch.st.stime,
--			&vcpu->arch.st.steal.preempted,
--			offsetof(struct kvm_steal_time, preempted),
--			sizeof(vcpu->arch.st.steal.preempted));
-+	kvm_unmap_gfn(vcpu, &map, &vcpu->arch.st.cache, true, true);
- }
- 
- void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
--- 
-2.20.1
-
+-	if (gfn >= memslots[start].base_gfn &&
++	if (start < slots->used_slots && gfn >= memslots[start].base_gfn &&
+ 	    gfn < memslots[start].base_gfn + memslots[start].npages) {
+ 		atomic_set(&slots->lru_slot, start);
+ 		return &memslots[start];
 
 
