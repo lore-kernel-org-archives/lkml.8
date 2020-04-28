@@ -2,182 +2,140 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 303CBC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BB5C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CAE1208FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:19:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588094372;
-	bh=hh6nXBiocZ2GmSoC/HUt/H1ViNWeuSi+aGw8ni8/Vvw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=cizLYmVSmbwkrCjbszfuX+luTJG2JMs9DJExFi8hNOkDPbob182zNFAKxD2m86Ql4
-	 Vq/b6/Y41XyavtioZpRRgdkCYpUZdzsJioGrlUjS6P/lLBkscCxck9Q2PkIci4kbt+
-	 cMjeRJrFslakEFqDP4yzgExep9SFJWnBIbPwrfbs=
+	by mail.kernel.org (Postfix) with ESMTP id EF9D82082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:21:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u+pPcSsk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgD1RTb (ORCPT
+        id S1728392AbgD1RVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 13:19:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39084 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726406AbgD1RTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 13:19:30 -0400
-Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F8732082E;
-        Tue, 28 Apr 2020 17:19:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588094370;
-        bh=hh6nXBiocZ2GmSoC/HUt/H1ViNWeuSi+aGw8ni8/Vvw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=17nyOSUWlUVh2D5YBLMoRXzFRf9mzTyTROtZ8B5ZHjNJxg+5j7ESUyJgPbQq5TroI
-         LLXY0smLQRaOIuamjjyPUqXEVCT55Slkrvn6qQIXc4+57aDc9pYekU/1KybBw1/rYQ
-         x3rlcb6g5qdNQB0ExSFcfFOBt6FSELMWYXWXTvWA=
-Date:   Tue, 28 Apr 2020 12:19:28 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Cc:     Shannon Nelson <snelson@pensando.io>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Martin Habets <mhabets@solarflare.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        netdev@vger.kernel.org, bjorn@helgaas.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, rjw@rjwysocki.net,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, skhan@linuxfoundation.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v2 1/2] realtek/8139too: Remove
- Legacy Power Management
-Message-ID: <20200428171928.GA170516@google.com>
+        Tue, 28 Apr 2020 13:21:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgD1RVj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 13:21:39 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 563A0C03C1AB;
+        Tue, 28 Apr 2020 10:21:39 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id h26so17640368qtu.8;
+        Tue, 28 Apr 2020 10:21:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OOISRMzVXkBTccG3AWhDfap2jg6mzOAD3VNHaaEgJEo=;
+        b=u+pPcSskukoOuKKCbnzmTz9EuIPlGnB73UzTxPfs3FfPgVXou2gE+IQiOra+1za6KD
+         RgZOJu7mQvpMGbdLvCadq0GpHkTOBCAHwiikhoM6Clxgri78ydhtfVEMxnk57T/OtKhI
+         3phKYWQU0D8EJ8QQCpeln1Pn7eJCoCbzfPzSqQU22I0CTgGVv8d1q5+8zrpKfkiCC75v
+         gmo4C7PfDj/o7+bgYWFC6Yilz3zBhcdKWPeVG+vYNdmUg3YmiObUMkdUjqiWN7twxesw
+         sFde9R+uuuVh3VxN7MEiZeyrGxxaCU3E2NtTdATev2JS+gdKK6amm9Nfms45TTlYEBqs
+         sQAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OOISRMzVXkBTccG3AWhDfap2jg6mzOAD3VNHaaEgJEo=;
+        b=hltWxjQxjw0MrdZcvuY8PrHTrWbm+6ulbbFhjX50vrqoMcH2NIUav8XWMd+I2HaFTg
+         RuYM6zQ93CJqyYd81bkyFRBqWVSTDtJds3JoGc2WQpGpy4/bIhe9WIz6UzzqBCgwACrP
+         +nYS2lsDNtMVwZcCPtgi1ZOUovSJbVsRBlRHLcTnu5rJ85flI2lmb8cFiEk8SE84Ghlj
+         kZBbNYMDAz5kIc8KGW6yC9vhVhKeSSYw7NvKufxFG9OBk72Tboa03BVyj4b0v6rUNR4v
+         Qk1/P1WypcIqpEmM284GOX04si1ULuR0tOu3GWrRA5TOVWRNL1O2P8qWqDT4lUr6Tblt
+         lmZA==
+X-Gm-Message-State: AGi0PubAsehpgDvzHgb6DIuBnWwpBCufKcgR6AaTGOnN+o7Fy1cOEcgR
+        VodXWkZDIf+zeOWg5MLevoE=
+X-Google-Smtp-Source: APiQypK1m8CAEfNPkais9yyOVgVTjwbfJvLb4WZwkgnksdwQSNPSyOAYgisA64wud24uy9rsiGNFEQ==
+X-Received: by 2002:ac8:4e81:: with SMTP id 1mr29138170qtp.58.1588094498367;
+        Tue, 28 Apr 2020 10:21:38 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id c68sm13562254qke.121.2020.04.28.10.21.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 10:21:37 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id E8151409A3; Tue, 28 Apr 2020 14:21:34 -0300 (-03)
+Date:   Tue, 28 Apr 2020 14:21:34 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: Re: [PATCH 4/7] perf bpf: Decouple creating the evlist from adding
+ the SB event
+Message-ID: <20200428172134.GA5460@kernel.org>
+References: <20200427211935.25789-1-acme@kernel.org>
+ <20200427211935.25789-5-acme@kernel.org>
+ <20200428094851.GE1476763@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200428144314.24533-2-vaibhavgupta40@gmail.com>
+In-Reply-To: <20200428094851.GE1476763@krava>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Uncapitalize "legacy power management" in subject.  I'd say "convert",
-not "remove", to make it clear that the driver will still do power
-management afterwards.
-
-I think your to: and cc: list came from the get_maintainer.pl script,
-but you can trim it a bit by omitting people who have just made
-occasional random fixups.  These drivers are really unmaintained, so
-Dave M, netdev, Rafael, linux-pm, linux-pci, and maybe LKML are
-probably enough.
-
-On Tue, Apr 28, 2020 at 08:13:13PM +0530, Vaibhav Gupta wrote:
-> Upgrade power management from legacy to generic using dev_pm_ops.
-
-Instead of the paragraphs below, which cover the stuff that's fairly
-obvious, I think it would be more useful to include hints about where
-the things you removed will be done now.  That helps reviewers verify
-that this doesn't break anything.  E.g.,
-
-  In the legacy PM model, drivers save and restore PCI state and set
-  the device power state directly.  In the generic model, this is all
-  done by the PCI core in .suspend_noirq() (pci_pm_suspend_noirq())
-  and .resume_noirq() (pci_pm_resume_noirq()).
-
-This sort of thing could go in each commit log.  The cover letter
-doesn't normally go in the commit log, so you have to assume it will
-be lost.
-
-> Remove "struct pci_driver.suspend" and "struct pci_driver.resume"
-> bindings, and add "struct pci_driver.driver.pm" .
+Em Tue, Apr 28, 2020 at 11:48:51AM +0200, Jiri Olsa escreveu:
+> On Mon, Apr 27, 2020 at 06:19:32PM -0300, Arnaldo Carvalho de Melo wrote:
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > 
+> > Renaming bpf_event__add_sb_event() to evlist__add_sb_event() and
+> > requiring that the evlist be allocated beforehand.
 > 
-> Add "__maybe_unused" attribute to resume() and susend() callbacks
-> definition to suppress compiler warnings.
->
-> Generic callback requires an argument of type "struct device*". Hence,
-> convert it to "struct net_device*" using "dev_get_drvdata()" to use
-> it in the callback.
->
-> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+> hum, this seems to be done in previous patch, maybe you
+> need to squash this with the previous one?
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Thanks a lot for doing this!
-
-> ---
->  drivers/net/ethernet/realtek/8139too.c | 26 +++++++-------------------
->  1 file changed, 7 insertions(+), 19 deletions(-)
+Right, doing it now.
+ 
+> jirka
 > 
-> diff --git a/drivers/net/ethernet/realtek/8139too.c b/drivers/net/ethernet/realtek/8139too.c
-> index 5caeb8368eab..227139d42227 100644
-> --- a/drivers/net/ethernet/realtek/8139too.c
-> +++ b/drivers/net/ethernet/realtek/8139too.c
-> @@ -2603,17 +2603,13 @@ static void rtl8139_set_rx_mode (struct net_device *dev)
->  	spin_unlock_irqrestore (&tp->lock, flags);
->  }
->  
-> -#ifdef CONFIG_PM
-> -
-> -static int rtl8139_suspend (struct pci_dev *pdev, pm_message_t state)
-> +static int __maybe_unused rtl8139_suspend(struct device *device)
->  {
-> -	struct net_device *dev = pci_get_drvdata (pdev);
-> +	struct net_device *dev = dev_get_drvdata(device);
->  	struct rtl8139_private *tp = netdev_priv(dev);
->  	void __iomem *ioaddr = tp->mmio_addr;
->  	unsigned long flags;
->  
-> -	pci_save_state (pdev);
-> -
->  	if (!netif_running (dev))
->  		return 0;
->  
-> @@ -2631,38 +2627,30 @@ static int rtl8139_suspend (struct pci_dev *pdev, pm_message_t state)
->  
->  	spin_unlock_irqrestore (&tp->lock, flags);
->  
-> -	pci_set_power_state (pdev, PCI_D3hot);
-> -
->  	return 0;
->  }
->  
-> -
-> -static int rtl8139_resume (struct pci_dev *pdev)
-> +static int __maybe_unused rtl8139_resume(struct device *device)
->  {
-> -	struct net_device *dev = pci_get_drvdata (pdev);
-> +	struct net_device *dev = dev_get_drvdata(device);
->  
-> -	pci_restore_state (pdev);
->  	if (!netif_running (dev))
->  		return 0;
-> -	pci_set_power_state (pdev, PCI_D0);
-> +
->  	rtl8139_init_ring (dev);
->  	rtl8139_hw_start (dev);
->  	netif_device_attach (dev);
->  	return 0;
->  }
->  
-> -#endif /* CONFIG_PM */
-> -
-> +static SIMPLE_DEV_PM_OPS(rtl8139_pm_ops, rtl8139_suspend, rtl8139_resume);
->  
->  static struct pci_driver rtl8139_pci_driver = {
->  	.name		= DRV_NAME,
->  	.id_table	= rtl8139_pci_tbl,
->  	.probe		= rtl8139_init_one,
->  	.remove		= rtl8139_remove_one,
-> -#ifdef CONFIG_PM
-> -	.suspend	= rtl8139_suspend,
-> -	.resume		= rtl8139_resume,
-> -#endif /* CONFIG_PM */
-> +	.driver.pm	= &rtl8139_pm_ops,
->  };
->  
->  
-> -- 
-> 2.26.2
+> > 
+> > This will allow using the same side band thread and evlist to be used
+> > for multiple purposes in addition to react to PERF_RECORD_BPF_EVENT soon
+> > after they are generated.
+> > 
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Song Liu <songliubraving@fb.com>
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/perf/util/bpf-event.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
+> > index 2c7a50509659..68f315c3df5b 100644
+> > --- a/tools/perf/util/bpf-event.h
+> > +++ b/tools/perf/util/bpf-event.h
+> > @@ -45,7 +45,7 @@ static inline int machine__process_bpf(struct machine *machine __maybe_unused,
+> >  	return 0;
+> >  }
+> >  
+> > -static inline int evlist__add_bpf_sb_event(struct evlist **evlist __maybe_unused,
+> > +static inline int evlist__add_bpf_sb_event(struct evlist *evlist __maybe_unused,
+> >  					   struct perf_env *env __maybe_unused)
+> >  {
+> >  	return 0;
+> > -- 
+> > 2.21.1
+> > 
 > 
+
+-- 
+
+- Arnaldo
