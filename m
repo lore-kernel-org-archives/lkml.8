@@ -2,53 +2,56 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD8C8C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63850C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EAFB20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4026620575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099899;
-	bh=aA6z5Im+fckIqDKy07hv31qtqVKsbkx6P9lhSktTShc=;
+	s=default; t=1588099908;
+	bh=vfAHXFAy/Y/q0wkxF7wa7tNLX+mcFSUdnGqu55sY0aU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Aox/RssiyBvVLqPjsX/jh9eZAZT+WWAWNjdf9+3dfqX5Ms90SVvYX8f8KsgxS7ceR
-	 Uj2WCjIw81Nxer/ee0BogBQo6JbUw49Bs85yM8+STVpt+P6ReDg2ndgXIQ5DgMTJRR
-	 0CkRcoancuE78INXKzbGfYftlVyvDsjUBFJRG0ck=
+	b=pPQkkq9kpdoH2EYiJipZy1gSA0eZveHMqWZVGgMiDmes7RC+2I+ImjGCBg5cWeWYU
+	 AFtoHZHrtsG0McPz3UtZCkWmnp2YMHD4k1zQGT/fl4Xf+fNjc7cVrz/uDbQ9Zm/XFM
+	 xHWcsMe/Uh9NJ8ybgIokx69khh9Fd6jaDBu99PYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730774AbgD1Svi (ORCPT
+        id S1730762AbgD1Svr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:51:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55112 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:51:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729218AbgD1ShL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:37:11 -0400
+        id S1729392AbgD1Sg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:36:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85BCD20B80;
-        Tue, 28 Apr 2020 18:37:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59E2920575;
+        Tue, 28 Apr 2020 18:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099031;
-        bh=aA6z5Im+fckIqDKy07hv31qtqVKsbkx6P9lhSktTShc=;
+        s=default; t=1588099018;
+        bh=vfAHXFAy/Y/q0wkxF7wa7tNLX+mcFSUdnGqu55sY0aU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fY/tYTIGwKMRVKzVKsa6tAVFwToeUFGVci7Hl+HVDZl8xgT+1OS6GMpoJPmFWkCTR
-         4dAdCB/tI4T9Aq+c/O5UxcF+u2euua4uTAib4ANOKE5CnehsR++5Fs24nzHP91PYkn
-         0Z3rgixrh5PyRnNOfyJyyIFr3wVuhyOB0xmU4kz8=
+        b=khMehWWQElCGPo2Wrc38H4uNj2uB6P7VjgnK9LNa5vCjVZ+bJ2yU2H44JQao0H3t0
+         VYj6yRC8fnNyt3nWZNE9kMmLaIMCodVW1Esyp7eB58vocSI9Xj9/vooWUnjkqwt5YT
+         ISeeOpEB9R3uwwQuZ/zcArpbNtCzw3Wqp2pBCj1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 5.6 146/167] UAS: no use logging any details in case of ENODEV
-Date:   Tue, 28 Apr 2020 20:25:22 +0200
-Message-Id: <20200428182244.058058234@linuxfoundation.org>
+        stable@vger.kernel.org, Aurelien Jarno <aurelien@aurel32.net>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 046/168] libbpf: Fix readelf output parsing on powerpc with recent binutils
+Date:   Tue, 28 Apr 2020 20:23:40 +0200
+Message-Id: <20200428182237.685189790@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,33 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Aurelien Jarno <aurelien@aurel32.net>
 
-commit 5963dec98dc52d52476390485f07a29c30c6a582 upstream.
+[ Upstream commit 3464afdf11f9a1e031e7858a05351ceca1792fea ]
 
-Once a device is gone, the internal state does not matter anymore.
-There is no need to spam the logs.
+On powerpc with recent versions of binutils, readelf outputs an extra
+field when dumping the symbols of an object file. For example:
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Cc: stable <stable@vger.kernel.org>
-Fixes: 326349f824619 ("uas: add dead request list")
-Link: https://lore.kernel.org/r/20200415141750.811-1-oneukum@suse.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    35: 0000000000000838    96 FUNC    LOCAL  DEFAULT [<localentry>: 8]     1 btf_is_struct
+
+The extra "[<localentry>: 8]" prevents the GLOBAL_SYM_COUNT variable to
+be computed correctly and causes the check_abi target to fail.
+
+Fix that by looking for the symbol name in the last field instead of the
+8th one. This way it should also cope with future extra fields.
+
+Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Tested-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/bpf/20191201195728.4161537-1-aurelien@aurel32.net
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/storage/uas.c |    3 +++
- 1 file changed, 3 insertions(+)
+ tools/lib/bpf/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/storage/uas.c
-+++ b/drivers/usb/storage/uas.c
-@@ -190,6 +190,9 @@ static void uas_log_cmd_state(struct scs
- 	struct uas_cmd_info *ci = (void *)&cmnd->SCp;
- 	struct uas_cmd_info *cmdinfo = (void *)&cmnd->SCp;
+diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+index 33e2638ef7f0d..122321d549227 100644
+--- a/tools/lib/bpf/Makefile
++++ b/tools/lib/bpf/Makefile
+@@ -145,7 +145,7 @@ PC_FILE		:= $(addprefix $(OUTPUT),$(PC_FILE))
  
-+	if (status == -ENODEV) /* too late */
-+		return;
-+
- 	scmd_printk(KERN_INFO, cmnd,
- 		    "%s %d uas-tag %d inflight:%s%s%s%s%s%s%s%s%s%s%s%s ",
- 		    prefix, status, cmdinfo->uas_tag,
+ GLOBAL_SYM_COUNT = $(shell readelf -s --wide $(BPF_IN_SHARED) | \
+ 			   cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | \
+-			   awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}' | \
++			   awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}' | \
+ 			   sort -u | wc -l)
+ VERSIONED_SYM_COUNT = $(shell readelf -s --wide $(OUTPUT)libbpf.so | \
+ 			      grep -Eo '[^ ]+@LIBBPF_' | cut -d@ -f1 | sort -u | wc -l)
+@@ -217,7 +217,7 @@ check_abi: $(OUTPUT)libbpf.so
+ 		     "versioned in $(VERSION_SCRIPT)." >&2;		 \
+ 		readelf -s --wide $(BPF_IN_SHARED) |			 \
+ 		    cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' |	 \
+-		    awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}'|   \
++		    awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}'|  \
+ 		    sort -u > $(OUTPUT)libbpf_global_syms.tmp;		 \
+ 		readelf -s --wide $(OUTPUT)libbpf.so |			 \
+ 		    grep -Eo '[^ ]+@LIBBPF_' | cut -d@ -f1 |		 \
+-- 
+2.20.1
+
 
 
