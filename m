@@ -6,125 +6,122 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B29C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6024AC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77F9E205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48962206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbgD1GlG (ORCPT
+        id S1726355AbgD1Gn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 02:41:06 -0400
-Received: from mga07.intel.com ([134.134.136.100]:32587 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725917AbgD1GlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 02:41:06 -0400
-IronPort-SDR: UxNeR0PHSlme5T8SXuKZmkK97RSUpoi4Xx87n9g6wXDsGR9hy3BQocu5SZpA/wyE4UUG0pOULc
- oO4tFJaIpkwA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 23:41:05 -0700
-IronPort-SDR: wMRNgtHejWu0dVLeBGehFcIgugGTqKfEXBtRJqjkh5bZwf8DaRvztJQcam/FWcmiz8CE/28E6E
- yUywd5ewAT7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,327,1583222400"; 
-   d="scan'208";a="459132646"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 27 Apr 2020 23:41:04 -0700
-Received: from [10.214.149.60] (vramuthx-mobl1.gar.corp.intel.com [10.214.149.60])
-        by linux.intel.com (Postfix) with ESMTP id 1E6C9580BC5;
-        Mon, 27 Apr 2020 23:40:59 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v3 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        hauke.mehrtens@intel.com, qi-ming.wu@intel.com,
-        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
-        richard@nod.at, brendanhiggins@google.com,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-References: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200423162113.38055-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200424183612.4cfdbb6a@collabora.com> <20200427175127.0518c193@xps13>
- <cba30ccb-c190-d4d6-eab9-6083bd5d2aad@linux.intel.com>
- <20200428082759.25065146@collabora.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <38334812-21b9-5b2c-db84-01c9eacc84d0@linux.intel.com>
-Date:   Tue, 28 Apr 2020 14:40:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 28 Apr 2020 02:43:28 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:46019 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725917AbgD1Gn2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 02:43:28 -0400
+Received: from dread.disaster.area (pa49-195-157-175.pa.nsw.optusnet.com.au [49.195.157.175])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id DD45E82080A;
+        Tue, 28 Apr 2020 16:43:19 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jTJxe-0002vq-9O; Tue, 28 Apr 2020 16:43:18 +1000
+Date:   Tue, 28 Apr 2020 16:43:18 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Ruan, Shiyang" <ruansy.fnst@cn.fujitsu.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "darrick.wong@oracle.com" <darrick.wong@oracle.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "hch@lst.de" <hch@lst.de>, "rgoldwyn@suse.de" <rgoldwyn@suse.de>,
+        "Qi, Fuli" <qi.fuli@fujitsu.com>,
+        "Gotou, Yasunori" <y-goto@fujitsu.com>
+Subject: Re: =?utf-8?B?5Zue5aSNOiBSZQ==?= =?utf-8?Q?=3A?= [RFC PATCH 0/8]
+ dax: Add a dax-rmap tree to support reflink
+Message-ID: <20200428064318.GG2040@dread.disaster.area>
+References: <20200427084750.136031-1-ruansy.fnst@cn.fujitsu.com>
+ <20200427122836.GD29705@bombadil.infradead.org>
+ <em33c55fa5-15ca-4c46-8c27-6b0300fa4e51@g08fnstd180058>
 MIME-Version: 1.0
-In-Reply-To: <20200428082759.25065146@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <em33c55fa5-15ca-4c46-8c27-6b0300fa4e51@g08fnstd180058>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=ONQRW0k9raierNYdzxQi9Q==:117 a=ONQRW0k9raierNYdzxQi9Q==:17
+        a=IkcTkHD0fZMA:10 a=cl8xLZFz6L8A:10 a=5KLPUuaC_9wA:10 a=JfrnYn6hAAAA:8
+        a=7-415B0cAAAA:8 a=Kw4piam9Eq2nsQd2tG8A:9 a=93mTbiTF0b_u7Sz-:21
+        a=KFoNIqDtwUuuseL_:21 a=QEXdDO2ut3YA:10 a=1CNFftbPRP8L7MoqJWF3:22
+        a=biEYGPWJfzWAr4FL6Ov7:22 a=pHzHmUro8NiASowvMSCR:22
+        a=n87TN5wuljxrRezIQYnT:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
-
-On 28/4/2020 2:27 pm, Boris Brezillon wrote:
-> On Tue, 28 Apr 2020 14:17:30 +0800
-> "Ramuthevar, Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+On Tue, Apr 28, 2020 at 06:09:47AM +0000, Ruan, Shiyang wrote:
 > 
->> Hi Miquel,
->>
->>      Thank you very much for the review comments and your time...
->>
->> On 27/4/2020 11:51 pm, Miquel Raynal wrote:
->>> Hi Ramuthevar,
->>>    
->>>>> +static int ebu_nand_probe(struct platform_device *pdev)
->>>>> +{
->>>>> +	struct device *dev = &pdev->dev;
->>>>> +	struct ebu_nand_controller *ebu_host;
->>>>> +	struct nand_chip *nand;
->>>>> +	phys_addr_t nandaddr_pa;
->>>>> +	struct mtd_info *mtd;
->>>>> +	struct resource *res;
->>>>> +	int ret;
->>>>> +	u32 cs;
->>>>> +
->>>>> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
->>>>> +	if (!ebu_host)
->>>>> +		return -ENOMEM;
->>>>> +
->>>>> +	ebu_host->dev = dev;
->>>>> +	nand_controller_init(&ebu_host->controller);
->>>>> +
->>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
->>>>> +	ebu_host->ebu_addr = devm_ioremap_resource(&pdev->dev, res);
->>>>> +	if (IS_ERR(ebu_host->ebu_addr))
->>>>> +		return PTR_ERR(ebu_host->ebu_addr);
->>>>> +
->>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
->>>>> +	ebu_host->nand_addr = devm_ioremap_resource(&pdev->dev, res);
->>>>> +	if (IS_ERR(ebu_host->nand_addr))
->>>>> +		return PTR_ERR(ebu_host->nand_addr);
->>>>> +
->>>>> +	ret = device_property_read_u32(dev, "nand,cs", &cs);
->>>>
->>>> CS ids should be encoded in the reg property (see [1]).
->>>
->>> Is it your choice to only support a single CS or is it actually a
->>> controller limitation?
->>
->> Yes , its controller limitation to support only one CS
+> 在 2020/4/27 20:28:36, "Matthew Wilcox" <willy@infradead.org> 写道:
 > 
-> I'm pretty sure that's not true, otherwise you wouldn't have to select
-> the CS you want to use :P.
-
-At a time it supports only one chip select.
-Thanks!
-
-Regards
-Vadivel
+> >On Mon, Apr 27, 2020 at 04:47:42PM +0800, Shiyang Ruan wrote:
+> >>  This patchset is a try to resolve the shared 'page cache' problem for
+> >>  fsdax.
+> >>
+> >>  In order to track multiple mappings and indexes on one page, I
+> >>  introduced a dax-rmap rb-tree to manage the relationship.  A dax entry
+> >>  will be associated more than once if is shared.  At the second time we
+> >>  associate this entry, we create this rb-tree and store its root in
+> >>  page->private(not used in fsdax).  Insert (->mapping, ->index) when
+> >>  dax_associate_entry() and delete it when dax_disassociate_entry().
+> >
+> >Do we really want to track all of this on a per-page basis?  I would
+> >have thought a per-extent basis was more useful.  Essentially, create
+> >a new address_space for each shared extent.  Per page just seems like
+> >a huge overhead.
+> >
+> Per-extent tracking is a nice idea for me.  I haven't thought of it 
+> yet...
 > 
+> But the extent info is maintained by filesystem.  I think we need a way 
+> to obtain this info from FS when associating a page.  May be a bit 
+> complicated.  Let me think about it...
+
+That's why I want the -user of this association- to do a filesystem
+callout instead of keeping it's own naive tracking infrastructure.
+The filesystem can do an efficient, on-demand reverse mapping lookup
+from it's own extent tracking infrastructure, and there's zero
+runtime overhead when there are no errors present.
+
+At the moment, this "dax association" is used to "report" a storage
+media error directly to userspace. I say "report" because what it
+does is kill userspace processes dead. The storage media error
+actually needs to be reported to the owner of the storage media,
+which in the case of FS-DAX is the filesytem.
+
+That way the filesystem can then look up all the owners of that bad
+media range (i.e. the filesystem block it corresponds to) and take
+appropriate action. e.g.
+
+- if it falls in filesytem metadata, shutdown the filesystem
+- if it falls in user data, call the "kill userspace dead" routines
+  for each mapping/index tuple the filesystem finds for the given
+  LBA address that the media error occurred.
+
+Right now if the media error is in filesystem metadata, the
+filesystem isn't even told about it. The filesystem can't even shut
+down - the error is just dropped on the floor and it won't be until
+the filesystem next tries to reference that metadata that we notice
+there is an issue.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
