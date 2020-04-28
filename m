@@ -2,57 +2,62 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB63C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3127C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B295B2076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882BF20B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098676;
-	bh=sDy84/9S0SVR+cStma7Q8DyMDzSJwxBQfsiDI1sTIro=;
+	s=default; t=1588098681;
+	bh=Hk13QinprYZgIRF1dgkDe9eApvGfNPRK3fwtpheysR4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DMbZjI/3Cwkfi3lipfs4sdDcQbTBTxDgOiCB08zEMhyl4/ct0JJs/SttgKAUIPFch
-	 FLppiolcj7jcx1crJqDvugBleqK+NEc1G273tKR3ogcPKV9HDaU7XTyXSqMoUHhfhu
-	 DiGWSHYUlHEJ0In8Fj9oaZSWhJTOSgTQU2wzHrWE=
+	b=CGkSa53BjK7YUb0HIh5/8U+iGJ8VrX3gYi0EO9yPuPy9swz5TSRAJvNFKYqEd3XMg
+	 B2hp53kRlapClPBUEoBdpaoS0eNbpwbWDkWIsjYswOqRvdEtB2OUMG1cCg/HV8p0iK
+	 lHqI0M5nEwl1TMzE7OHx5ZLch67/RnevP1uQyP4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729644AbgD1SbP (ORCPT
+        id S1729662AbgD1SbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:31:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46436 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:31:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729615AbgD1SbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:31:09 -0400
+        id S1729646AbgD1SbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:31:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAF6321707;
-        Tue, 28 Apr 2020 18:31:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 610A02076A;
+        Tue, 28 Apr 2020 18:31:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098668;
-        bh=sDy84/9S0SVR+cStma7Q8DyMDzSJwxBQfsiDI1sTIro=;
+        s=default; t=1588098678;
+        bh=Hk13QinprYZgIRF1dgkDe9eApvGfNPRK3fwtpheysR4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NhKLHwCucXQ2DXE9wk+iRq+lnobFgnjyjxZoumljb2xKRhZy+cz0P9BdqowQlL06p
-         JZd6xAwlOZtqYziRSNLUbDP6kt+pRSQMz5jmbUM/nLuA10OJqJLoDKfHWXVRnLnngV
-         HKTcKy3kpU0XHAUNBbYFgo1W50H24csHIWH0MOtQ=
+        b=u2EUKn+VomXgMUugW9EevGGkRilep+w+aHSb7Uh4Uo8anToX7F7X9LE/nNJr8KMAn
+         oJHASAt65Bc661QBBWP0VvV191cQCazw9GxrgyC8cm082AM7VBT2RFBc2QLsnKYcAV
+         SxH5+KoHiX47pLImO1xtvR9sYw4LYOOZkhPTi4TY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 038/131] net: ipv6_stub: use ip6_dst_lookup_flow instead of ip6_dst_lookup
-Date:   Tue, 28 Apr 2020 20:24:10 +0200
-Message-Id: <20200428182229.867724410@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.6 097/167] vmalloc: fix remap_vmalloc_range() bounds checks
+Date:   Tue, 28 Apr 2020 20:24:33 +0200
+Message-Id: <20200428182237.414442594@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,270 +67,165 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sabrina Dubroca <sd@queasysnail.net>
+From: Jann Horn <jannh@google.com>
 
-commit 6c8991f41546c3c472503dff1ea9daaddf9331c2 upstream.
+commit bdebd6a2831b6fab69eb85cee74a8ba77f1a1cc2 upstream.
 
-ipv6_stub uses the ip6_dst_lookup function to allow other modules to
-perform IPv6 lookups. However, this function skips the XFRM layer
-entirely.
+remap_vmalloc_range() has had various issues with the bounds checks it
+promises to perform ("This function checks that addr is a valid
+vmalloc'ed area, and that it is big enough to cover the vma") over time,
+e.g.:
 
-All users of ipv6_stub->ip6_dst_lookup use ip_route_output_flow (via the
-ip_route_output_key and ip_route_output helpers) for their IPv4 lookups,
-which calls xfrm_lookup_route(). This patch fixes this inconsistent
-behavior by switching the stub to ip6_dst_lookup_flow, which also calls
-xfrm_lookup_route().
+ - not detecting pgoff<<PAGE_SHIFT overflow
 
-This requires some changes in all the callers, as these two functions
-take different arguments and have different return types.
+ - not detecting (pgoff<<PAGE_SHIFT)+usize overflow
 
-Fixes: 5f81bd2e5d80 ("ipv6: export a stub for IPv6 symbols used by vxlan")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 4.19:
- - Drop change in lwt_bpf.c
- - Delete now-unused "ret" in mlx5e_route_lookup_ipv6()
- - Initialise "out_dev" in mlx5e_create_encap_header_ipv6() to avoid
-   introducing a spurious "may be used uninitialised" warning
- - Adjust filenames, context, indentation]
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+ - not checking whether addr and addr+(pgoff<<PAGE_SHIFT) are the same
+   vmalloc allocation
+
+ - comparing a potentially wildly out-of-bounds pointer with the end of
+   the vmalloc region
+
+In particular, since commit fc9702273e2e ("bpf: Add mmap() support for
+BPF_MAP_TYPE_ARRAY"), unprivileged users can cause kernel null pointer
+dereferences by calling mmap() on a BPF map with a size that is bigger
+than the distance from the start of the BPF map to the end of the
+address space.
+
+This could theoretically be used as a kernel ASLR bypass, by using
+whether mmap() with a given offset oopses or returns an error code to
+perform a binary search over the possible address range.
+
+To allow remap_vmalloc_range_partial() to verify that addr and
+addr+(pgoff<<PAGE_SHIFT) are in the same vmalloc region, pass the offset
+to remap_vmalloc_range_partial() instead of adding it to the pointer in
+remap_vmalloc_range().
+
+In remap_vmalloc_range_partial(), fix the check against
+get_vm_area_size() by using size comparisons instead of pointer
+comparisons, and add checks for pgoff.
+
+Fixes: 833423143c3a ("[PATCH] mm: introduce remap_vmalloc_range()")
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: Andrii Nakryiko <andriin@fb.com>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: KP Singh <kpsingh@chromium.org>
+Link: http://lkml.kernel.org/r/20200415222312.236431-1-jannh@google.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/infiniband/core/addr.c                  |  7 +++----
- drivers/infiniband/sw/rxe/rxe_net.c             |  8 +++++---
- drivers/net/ethernet/mellanox/mlx5/core/en_tc.c | 11 +++++------
- drivers/net/geneve.c                            |  4 +++-
- drivers/net/vxlan.c                             |  8 +++-----
- include/net/addrconf.h                          |  6 ++++--
- net/ipv6/addrconf_core.c                        | 11 ++++++-----
- net/ipv6/af_inet6.c                             |  2 +-
- net/mpls/af_mpls.c                              |  7 +++----
- net/tipc/udp_media.c                            |  9 ++++++---
- 10 files changed, 39 insertions(+), 34 deletions(-)
+ fs/proc/vmcore.c         |    5 +++--
+ include/linux/vmalloc.h  |    2 +-
+ mm/vmalloc.c             |   16 +++++++++++++---
+ samples/vfio-mdev/mdpy.c |    2 +-
+ 4 files changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/addr.c
-index 6e96a2fb97dc4..df8f5ceea2dd4 100644
---- a/drivers/infiniband/core/addr.c
-+++ b/drivers/infiniband/core/addr.c
-@@ -408,16 +408,15 @@ static int addr6_resolve(struct sockaddr_in6 *src_in,
- 	struct flowi6 fl6;
- 	struct dst_entry *dst;
- 	struct rt6_info *rt;
--	int ret;
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -266,7 +266,8 @@ static int vmcoredd_mmap_dumps(struct vm
+ 		if (start < offset + dump->size) {
+ 			tsz = min(offset + (u64)dump->size - start, (u64)size);
+ 			buf = dump->buf + start - offset;
+-			if (remap_vmalloc_range_partial(vma, dst, buf, tsz)) {
++			if (remap_vmalloc_range_partial(vma, dst, buf, 0,
++							tsz)) {
+ 				ret = -EFAULT;
+ 				goto out_unlock;
+ 			}
+@@ -624,7 +625,7 @@ static int mmap_vmcore(struct file *file
+ 		tsz = min(elfcorebuf_sz + elfnotes_sz - (size_t)start, size);
+ 		kaddr = elfnotes_buf + start - elfcorebuf_sz - vmcoredd_orig_sz;
+ 		if (remap_vmalloc_range_partial(vma, vma->vm_start + len,
+-						kaddr, tsz))
++						kaddr, 0, tsz))
+ 			goto fail;
  
- 	memset(&fl6, 0, sizeof fl6);
- 	fl6.daddr = dst_in->sin6_addr;
- 	fl6.saddr = src_in->sin6_addr;
- 	fl6.flowi6_oif = addr->bound_dev_if;
+ 		size -= tsz;
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -137,7 +137,7 @@ extern void vunmap(const void *addr);
  
--	ret = ipv6_stub->ipv6_dst_lookup(addr->net, NULL, &dst, &fl6);
--	if (ret < 0)
--		return ret;
-+	dst = ipv6_stub->ipv6_dst_lookup_flow(addr->net, NULL, &fl6, NULL);
-+	if (IS_ERR(dst))
-+		return PTR_ERR(dst);
+ extern int remap_vmalloc_range_partial(struct vm_area_struct *vma,
+ 				       unsigned long uaddr, void *kaddr,
+-				       unsigned long size);
++				       unsigned long pgoff, unsigned long size);
  
- 	rt = (struct rt6_info *)dst;
- 	if (ipv6_addr_any(&src_in->sin6_addr)) {
-diff --git a/drivers/infiniband/sw/rxe/rxe_net.c b/drivers/infiniband/sw/rxe/rxe_net.c
-index 54add70c22b5c..7903bd5c639ea 100644
---- a/drivers/infiniband/sw/rxe/rxe_net.c
-+++ b/drivers/infiniband/sw/rxe/rxe_net.c
-@@ -154,10 +154,12 @@ static struct dst_entry *rxe_find_route6(struct net_device *ndev,
- 	memcpy(&fl6.daddr, daddr, sizeof(*daddr));
- 	fl6.flowi6_proto = IPPROTO_UDP;
+ extern int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
+ 							unsigned long pgoff);
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -34,6 +34,7 @@
+ #include <linux/llist.h>
+ #include <linux/bitops.h>
+ #include <linux/rbtree_augmented.h>
++#include <linux/overflow.h>
  
--	if (unlikely(ipv6_stub->ipv6_dst_lookup(sock_net(recv_sockets.sk6->sk),
--						recv_sockets.sk6->sk, &ndst, &fl6))) {
-+	ndst = ipv6_stub->ipv6_dst_lookup_flow(sock_net(recv_sockets.sk6->sk),
-+					       recv_sockets.sk6->sk, &fl6,
-+					       NULL);
-+	if (unlikely(IS_ERR(ndst))) {
- 		pr_err_ratelimited("no route to %pI6\n", daddr);
--		goto put;
-+		return NULL;
- 	}
- 
- 	if (unlikely(ndst->error)) {
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-index c8928ce69185f..3050853774ee0 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-@@ -2217,12 +2217,11 @@ static int mlx5e_route_lookup_ipv6(struct mlx5e_priv *priv,
- #if IS_ENABLED(CONFIG_INET) && IS_ENABLED(CONFIG_IPV6)
- 	struct mlx5e_rep_priv *uplink_rpriv;
- 	struct mlx5_eswitch *esw = priv->mdev->priv.eswitch;
--	int ret;
- 
--	ret = ipv6_stub->ipv6_dst_lookup(dev_net(mirred_dev), NULL, &dst,
--					 fl6);
--	if (ret < 0)
--		return ret;
-+	dst = ipv6_stub->ipv6_dst_lookup_flow(dev_net(mirred_dev), NULL, fl6,
-+					      NULL);
-+	if (IS_ERR(dst))
-+		return PTR_ERR(dst);
- 
- 	if (!(*out_ttl))
- 		*out_ttl = ip6_dst_hoplimit(dst);
-@@ -2428,7 +2427,7 @@ static int mlx5e_create_encap_header_ipv6(struct mlx5e_priv *priv,
- 	int max_encap_size = MLX5_CAP_ESW(priv->mdev, max_encap_header_size);
- 	int ipv6_encap_size = ETH_HLEN + sizeof(struct ipv6hdr) + VXLAN_HLEN;
- 	struct ip_tunnel_key *tun_key = &e->tun_info.key;
--	struct net_device *out_dev;
-+	struct net_device *out_dev = NULL;
- 	struct neighbour *n = NULL;
- 	struct flowi6 fl6 = {};
- 	u8 nud_state, tos, ttl;
-diff --git a/drivers/net/geneve.c b/drivers/net/geneve.c
-index ff83408733d45..36444de701cd9 100644
---- a/drivers/net/geneve.c
-+++ b/drivers/net/geneve.c
-@@ -801,7 +801,9 @@ static struct dst_entry *geneve_get_v6_dst(struct sk_buff *skb,
- 		if (dst)
- 			return dst;
- 	}
--	if (ipv6_stub->ipv6_dst_lookup(geneve->net, gs6->sock->sk, &dst, fl6)) {
-+	dst = ipv6_stub->ipv6_dst_lookup_flow(geneve->net, gs6->sock->sk, fl6,
-+					      NULL);
-+	if (IS_ERR(dst)) {
- 		netdev_dbg(dev, "no route to %pI6\n", &fl6->daddr);
- 		return ERR_PTR(-ENETUNREACH);
- 	}
-diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-index 64751b089482b..7ee0bad184662 100644
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -1963,7 +1963,6 @@ static struct dst_entry *vxlan6_get_route(struct vxlan_dev *vxlan,
- 	bool use_cache = ip_tunnel_dst_cache_usable(skb, info);
- 	struct dst_entry *ndst;
- 	struct flowi6 fl6;
--	int err;
- 
- 	if (!sock6)
- 		return ERR_PTR(-EIO);
-@@ -1986,10 +1985,9 @@ static struct dst_entry *vxlan6_get_route(struct vxlan_dev *vxlan,
- 	fl6.fl6_dport = dport;
- 	fl6.fl6_sport = sport;
- 
--	err = ipv6_stub->ipv6_dst_lookup(vxlan->net,
--					 sock6->sock->sk,
--					 &ndst, &fl6);
--	if (unlikely(err < 0)) {
-+	ndst = ipv6_stub->ipv6_dst_lookup_flow(vxlan->net, sock6->sock->sk,
-+					       &fl6, NULL);
-+	if (unlikely(IS_ERR(ndst))) {
- 		netdev_dbg(dev, "no route to %pI6\n", daddr);
- 		return ERR_PTR(-ENETUNREACH);
- 	}
-diff --git a/include/net/addrconf.h b/include/net/addrconf.h
-index 6def0351bcc33..c8d5bb8b36169 100644
---- a/include/net/addrconf.h
-+++ b/include/net/addrconf.h
-@@ -235,8 +235,10 @@ struct ipv6_stub {
- 				 const struct in6_addr *addr);
- 	int (*ipv6_sock_mc_drop)(struct sock *sk, int ifindex,
- 				 const struct in6_addr *addr);
--	int (*ipv6_dst_lookup)(struct net *net, struct sock *sk,
--			       struct dst_entry **dst, struct flowi6 *fl6);
-+	struct dst_entry *(*ipv6_dst_lookup_flow)(struct net *net,
-+						  const struct sock *sk,
-+						  struct flowi6 *fl6,
-+						  const struct in6_addr *final_dst);
- 
- 	struct fib6_table *(*fib6_get_table)(struct net *net, u32 id);
- 	struct fib6_info *(*fib6_lookup)(struct net *net, int oif,
-diff --git a/net/ipv6/addrconf_core.c b/net/ipv6/addrconf_core.c
-index 5cd0029d930e2..66a1a0eb2ed05 100644
---- a/net/ipv6/addrconf_core.c
-+++ b/net/ipv6/addrconf_core.c
-@@ -127,11 +127,12 @@ int inet6addr_validator_notifier_call_chain(unsigned long val, void *v)
- }
- EXPORT_SYMBOL(inet6addr_validator_notifier_call_chain);
- 
--static int eafnosupport_ipv6_dst_lookup(struct net *net, struct sock *u1,
--					struct dst_entry **u2,
--					struct flowi6 *u3)
-+static struct dst_entry *eafnosupport_ipv6_dst_lookup_flow(struct net *net,
-+							   const struct sock *sk,
-+							   struct flowi6 *fl6,
-+							   const struct in6_addr *final_dst)
+ #include <linux/uaccess.h>
+ #include <asm/tlbflush.h>
+@@ -3054,6 +3055,7 @@ finished:
+  * @vma:		vma to cover
+  * @uaddr:		target user address to start at
+  * @kaddr:		virtual address of vmalloc kernel memory
++ * @pgoff:		offset from @kaddr to start at
+  * @size:		size of map area
+  *
+  * Returns:	0 for success, -Exxx on failure
+@@ -3066,9 +3068,15 @@ finished:
+  * Similar to remap_pfn_range() (see mm/memory.c)
+  */
+ int remap_vmalloc_range_partial(struct vm_area_struct *vma, unsigned long uaddr,
+-				void *kaddr, unsigned long size)
++				void *kaddr, unsigned long pgoff,
++				unsigned long size)
  {
--	return -EAFNOSUPPORT;
-+	return ERR_PTR(-EAFNOSUPPORT);
+ 	struct vm_struct *area;
++	unsigned long off;
++	unsigned long end_index;
++
++	if (check_shl_overflow(pgoff, PAGE_SHIFT, &off))
++		return -EINVAL;
+ 
+ 	size = PAGE_ALIGN(size);
+ 
+@@ -3082,8 +3090,10 @@ int remap_vmalloc_range_partial(struct v
+ 	if (!(area->flags & (VM_USERMAP | VM_DMA_COHERENT)))
+ 		return -EINVAL;
+ 
+-	if (kaddr + size > area->addr + get_vm_area_size(area))
++	if (check_add_overflow(size, off, &end_index) ||
++	    end_index > get_vm_area_size(area))
+ 		return -EINVAL;
++	kaddr += off;
+ 
+ 	do {
+ 		struct page *page = vmalloc_to_page(kaddr);
+@@ -3122,7 +3132,7 @@ int remap_vmalloc_range(struct vm_area_s
+ 						unsigned long pgoff)
+ {
+ 	return remap_vmalloc_range_partial(vma, vma->vm_start,
+-					   addr + (pgoff << PAGE_SHIFT),
++					   addr, pgoff,
+ 					   vma->vm_end - vma->vm_start);
+ }
+ EXPORT_SYMBOL(remap_vmalloc_range);
+--- a/samples/vfio-mdev/mdpy.c
++++ b/samples/vfio-mdev/mdpy.c
+@@ -418,7 +418,7 @@ static int mdpy_mmap(struct mdev_device
+ 		return -EINVAL;
+ 
+ 	return remap_vmalloc_range_partial(vma, vma->vm_start,
+-					   mdev_state->memblk,
++					   mdev_state->memblk, 0,
+ 					   vma->vm_end - vma->vm_start);
  }
  
- static struct fib6_table *eafnosupport_fib6_get_table(struct net *net, u32 id)
-@@ -169,7 +170,7 @@ eafnosupport_ip6_mtu_from_fib6(struct fib6_info *f6i, struct in6_addr *daddr,
- }
- 
- const struct ipv6_stub *ipv6_stub __read_mostly = &(struct ipv6_stub) {
--	.ipv6_dst_lookup   = eafnosupport_ipv6_dst_lookup,
-+	.ipv6_dst_lookup_flow = eafnosupport_ipv6_dst_lookup_flow,
- 	.fib6_get_table    = eafnosupport_fib6_get_table,
- 	.fib6_table_lookup = eafnosupport_fib6_table_lookup,
- 	.fib6_lookup       = eafnosupport_fib6_lookup,
-diff --git a/net/ipv6/af_inet6.c b/net/ipv6/af_inet6.c
-index 5db88be8b6ecb..5c2351deedc8f 100644
---- a/net/ipv6/af_inet6.c
-+++ b/net/ipv6/af_inet6.c
-@@ -904,7 +904,7 @@ static struct pernet_operations inet6_net_ops = {
- static const struct ipv6_stub ipv6_stub_impl = {
- 	.ipv6_sock_mc_join = ipv6_sock_mc_join,
- 	.ipv6_sock_mc_drop = ipv6_sock_mc_drop,
--	.ipv6_dst_lookup   = ip6_dst_lookup,
-+	.ipv6_dst_lookup_flow = ip6_dst_lookup_flow,
- 	.fib6_get_table	   = fib6_get_table,
- 	.fib6_table_lookup = fib6_table_lookup,
- 	.fib6_lookup       = fib6_lookup,
-diff --git a/net/mpls/af_mpls.c b/net/mpls/af_mpls.c
-index d5a4db5b3fe7b..7623d9aec6364 100644
---- a/net/mpls/af_mpls.c
-+++ b/net/mpls/af_mpls.c
-@@ -618,16 +618,15 @@ static struct net_device *inet6_fib_lookup_dev(struct net *net,
- 	struct net_device *dev;
- 	struct dst_entry *dst;
- 	struct flowi6 fl6;
--	int err;
- 
- 	if (!ipv6_stub)
- 		return ERR_PTR(-EAFNOSUPPORT);
- 
- 	memset(&fl6, 0, sizeof(fl6));
- 	memcpy(&fl6.daddr, addr, sizeof(struct in6_addr));
--	err = ipv6_stub->ipv6_dst_lookup(net, NULL, &dst, &fl6);
--	if (err)
--		return ERR_PTR(err);
-+	dst = ipv6_stub->ipv6_dst_lookup_flow(net, NULL, &fl6, NULL);
-+	if (IS_ERR(dst))
-+		return ERR_CAST(dst);
- 
- 	dev = dst->dev;
- 	dev_hold(dev);
-diff --git a/net/tipc/udp_media.c b/net/tipc/udp_media.c
-index 382c84d9339d6..1d62354797061 100644
---- a/net/tipc/udp_media.c
-+++ b/net/tipc/udp_media.c
-@@ -189,10 +189,13 @@ static int tipc_udp_xmit(struct net *net, struct sk_buff *skb,
- 			.saddr = src->ipv6,
- 			.flowi6_proto = IPPROTO_UDP
- 		};
--		err = ipv6_stub->ipv6_dst_lookup(net, ub->ubsock->sk, &ndst,
--						 &fl6);
--		if (err)
-+		ndst = ipv6_stub->ipv6_dst_lookup_flow(net,
-+						       ub->ubsock->sk,
-+						       &fl6, NULL);
-+		if (IS_ERR(ndst)) {
-+			err = PTR_ERR(ndst);
- 			goto tx_error;
-+		}
- 		ttl = ip6_dst_hoplimit(ndst);
- 		err = udp_tunnel6_xmit_skb(ndst, ub->ubsock->sk, skb, NULL,
- 					   &src->ipv6, &dst->ipv6, 0, ttl, 0,
--- 
-2.20.1
-
 
 
