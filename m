@@ -2,130 +2,109 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 065F6C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED86AC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7E10206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54EC206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:36:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FkJkBtD/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f6wfaq6d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbgD1KfT (ORCPT
+        id S1726419AbgD1Kgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 06:35:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53724 "EHLO
+        Tue, 28 Apr 2020 06:36:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726345AbgD1KfS (ORCPT
+        by vger.kernel.org with ESMTP id S1726328AbgD1Kgm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 06:35:18 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 939ECC03C1AB
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 03:35:18 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id r17so16449522lff.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 03:35:18 -0700 (PDT)
+        Tue, 28 Apr 2020 06:36:42 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0A83C03C1A9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 03:36:41 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k1so24068120wrx.4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 03:36:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BJeRnwA9amHTr9HBEW7mHHem3+zV44srWi4Z/fPkb/4=;
-        b=FkJkBtD/KENicQYgV8/9KEdp8orrQgIFyT8zmHnW3Mmp+OnH1EUrSPkgFaAg7rlchX
-         +x9wIx2GcWtef8yKRxW2LS2+lJhQzg4O7CvPlq35R9E/b77f5c3yVqjodC6AWLuIrjpC
-         ZZ3Yv2dbBK4OV+W6SO3oy7dR13A6BBHvJAr094oN+JHE0yFTpbEG11D1hiAVxQDVmsG3
-         u2rsoy++wB9s/xSFhf11yHvF6EgyXav/TWlMOgfJTVtgZYELJRT0juiYqxxpzQoGLnxE
-         PlDm2IZvcXvllzW7RQ/ZPx6HDNBLisPgsdamz+sZ0J+VdUf8wgDn+ytmTx70QEXxeFPy
-         l5Xg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=BHqjt1t2DhfWJ1/1kKGvSeNrwY7VYPAdj03G60NkxGk=;
+        b=f6wfaq6dWOosZttEbWFUigERrQKtyelJdzMu3KaOhe+0LwI9pFLOjTiSMzZuuUnqdQ
+         x3MOI9EKRfhZWLSjWNdNwE1uXVk1ZZOXgpeWYol8IAO6IhLCK3cmADCySsZO1Vx3EQPu
+         W5xirJ5ip6/i/LLqEBJiLl9A5owHAGqXmdPPP83hbkWagVeIrFkoh2FYhvpx70/X3+nT
+         gIF4PEdmE3qZgUwSJ0WUjx7xXVvQPrmPzTcJq8qMhFtq7ku4PvdhRLC03ZZjpH5rRdyw
+         WXRdo3u5N1qgX3HeyBU/AN+B0CoMFe6YLszKgHajxzLP+PYti+wzgzks93/Vv0W+GgzR
+         dnUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BJeRnwA9amHTr9HBEW7mHHem3+zV44srWi4Z/fPkb/4=;
-        b=A3mAdC3Fpz1tMwx+opo30/bAEOSCvu2omNAi5Efqz3Wz5OcmrHVeYnmT+btJMl3gay
-         zdAXJETKdlTIicEVzup178r0Ii3Z50snZEl8c3pS6o2DnRIHdRiPYO/PEZ2TDDuZ+ZiM
-         754p/SX0gW9Et0nQUQ5aHgLLomrCLmJeIB/3EUhXukxAzzM2CS9lNujq1bdboppmMuyq
-         CPHoLheBoWGN5doncvDYlxLrcRj8bUTmgr8EOtHLWcc2XvkObyYc32eE87uoKihY8kVX
-         huTa1Dak5DE/Ey0MSoKywt+d0fXhyiNesqyR8m7/eu6W7f80XOq4UjQJlFYQfkOZlIVF
-         Wo+g==
-X-Gm-Message-State: AGi0PuYklmo4xL4rESEw3ofKdzyzAoWQg46XaOpv2lb9e/ikdYrYRhGT
-        r+/PJHnTWzl142o6EPdK3/lPAHf1xeD+S+VaJdJtwA==
-X-Google-Smtp-Source: APiQypJQohGEauHOPeCAfh6CAKNLQi3MDZVRWRvhKmCXA8vccTfOzGPM5rSuUJLaL3HrFixXMly5E2pXIjeahpVHKf8=
-X-Received: by 2002:a19:42c3:: with SMTP id p186mr548845lfa.194.1588070116907;
- Tue, 28 Apr 2020 03:35:16 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=BHqjt1t2DhfWJ1/1kKGvSeNrwY7VYPAdj03G60NkxGk=;
+        b=cjbuZyM7TNXM4v3wmbI0pHGkKooWGqzsAUorPEgrbSGhz4B/Nx20vE9whUn1hgsA95
+         NAj0Ay3cYNOINj19W4HMArXZdP/LmgpwWciaYGlTKXanSOCfVRMRd8d/M+rWItXRlXva
+         yyp47jItt3xUzSZWl08ajdgoxjybeO8iY5UvU5KTbLhD18XzkG4o1yMpzTP1yaLc0tcY
+         UR0ZY+7HkoSDH33ODCyxjyQC1XdAiYpyB6PzNUd6l0t3afr57Zl9upXykxGx5G1HPeQs
+         vmeHv1RLIxJMRK+ssUYnW57aX5T3UxaTh+cndpY2NkfqVXQAdafzVcIEMzIuDraXDMv9
+         LjBA==
+X-Gm-Message-State: AGi0PuYRWE8Kh/on+JI7M7O6suQgyOtwC73FGHGRnbf21iyK2GQ4rS8f
+        829Ui6kdHdQjpYlm1Doftij/Xu+BG1U=
+X-Google-Smtp-Source: APiQypIhwr4oWY9O/EQP4CeY2gIrC2pk0Lyc62kILtt31clrfdbBJtYE6pA/gmyXol5Tg21gBih4OA==
+X-Received: by 2002:adf:ce0a:: with SMTP id p10mr31423829wrn.89.1588070200647;
+        Tue, 28 Apr 2020 03:36:40 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id q17sm2632337wmj.45.2020.04.28.03.36.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 03:36:39 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 11:36:38 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH 4/4] ASoC: wm8994: Silence warnings during deferred probe
+Message-ID: <20200428103638.GP3559@dell>
+References: <20200427074832.22134-1-m.szyprowski@samsung.com>
+ <CGME20200427074843eucas1p1a3a265df0c7f14b0aaec25eb65daf606@eucas1p1.samsung.com>
+ <20200427074832.22134-5-m.szyprowski@samsung.com>
+ <20200427112202.GB4272@sirena.org.uk>
 MIME-Version: 1.0
-References: <20200419002220.105338-1-hector.bujanda@digi.com>
-In-Reply-To: <20200419002220.105338-1-hector.bujanda@digi.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Apr 2020 12:35:05 +0200
-Message-ID: <CACRpkdZgkKG04=MmRLjepYY+trGY3fQCx49iFk9aTC4axfaMyw@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
-To:     Hector Bujanda <hector.bujanda@digi.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Drew Fustini <drew@pdp7.com>,
-        Kent Gibson <warthog618@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200427112202.GB4272@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hector,
+On Mon, 27 Apr 2020, Mark Brown wrote:
 
-thanks for your patch!
+> On Mon, Apr 27, 2020 at 09:48:32AM +0200, Marek Szyprowski wrote:
+> > Don't confuse user with meaningless warning about the failure in getting
+> > clocks in case of deferred probe.
+> 
+> >  	if (ret < 0) {
+> > -		dev_err(&pdev->dev, "Failed to get clocks: %d\n", ret);
+> > +		if (ret != -EPROBE_DEFER)
+> > +			dev_err(&pdev->dev, "Failed to get clocks: %d\n", ret);
+> 
+> This completely eliminates the diagnostics which means that if the clock
+> isn't there the user is a bit stuck trying to work out what's missing.
+> There should still be a diagnostic.
 
-On Sun, Apr 19, 2020 at 2:22 AM Hector Bujanda <hector.bujanda@digi.com> wrote:
+The driver won't defer forever though.  The final pass should fail
+with a different error.  At which point the error will be released to
+the system log, no?
 
-> This allows calling gpiod_set_debounce function through char device ioctl.
->
-> Signed-off-by: Hector Bujanda <hector.bujanda@digi.com>
-
-(...)
-> +/**
-> + * struct gpioline_debounce - GPIO line debounce
-> + * @line_offset: the local offset on this GPIO device, fill this in when
-> + * requesting the line information from the kernel
-> + * @debounce_usec: debounce in uSeconds to set for this line
-> + */
-> +struct gpioline_debounce {
-> +       __u32 line_offset;
-> +       __u32 debounce_usec;
-> +};
-(...)
-> @@ -154,5 +165,6 @@ struct gpioevent_data {
->  #define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info)
->  #define GPIO_GET_LINEHANDLE_IOCTL _IOWR(0xB4, 0x03, struct gpiohandle_request)
->  #define GPIO_GET_LINEEVENT_IOCTL _IOWR(0xB4, 0x04, struct gpioevent_request)
-> +#define GPIO_SET_DEBOUNCE_IOCTL _IOW(0xB4, 0x05, struct gpioline_debounce)
-
-Please do not define a new ioctl for this: since of commit
-e588bb1eae31be73fbec2b731be986a7c09635a4
-"gpio: add new SET_CONFIG ioctl() to gpio chardev"
-by Kent Gibson we have this:
-
-/**
- * struct gpiohandle_config - Configuration for a GPIO handle request
- * @flags: updated flags for the requested GPIO lines, such as
- * GPIOHANDLE_REQUEST_OUTPUT, GPIOHANDLE_REQUEST_ACTIVE_LOW etc, OR:ed
- * together
- * @default_values: if the GPIOHANDLE_REQUEST_OUTPUT is set in flags,
- * this specifies the default output value, should be 0 (low) or
- * 1 (high), anything else than 0 or 1 will be interpreted as 1 (high)
- * @padding: reserved for future use and should be zero filled
- */
-struct gpiohandle_config {
-        __u32 flags;
-        __u8 default_values[GPIOHANDLES_MAX];
-        __u32 padding[4]; /* padding for future use */
-};
-
-#define GPIOHANDLE_SET_CONFIG_IOCTL _IOWR(0xB4, 0x0a, struct gpiohandle_config)
-
-Setting debounce is just another type of config, so please use Kent's
-work as a base for this.
-
-Yours,
-Linus Walleij
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
