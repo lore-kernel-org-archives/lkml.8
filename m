@@ -2,87 +2,142 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70B4C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3AE0C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAED7206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:42:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588070530;
-	bh=CvEzbuCfH4+7PgmhF93OcCUlpgwCqTZYnfybiXHV8/I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kzp6EXkvAx6puPdvKmSlitq1RWbYwl2vCd/7T8TqmG92g1MSVN8PVPlUvqCVxwrzz
-	 HCSTN1ynxidqE05iNiENtHpyPdzvPcSSIk8wrl0gM2JI49L666fqrLlZ9qwBQu/Wsl
-	 P5dIhwhfI8ZJ38jkbX/KYc+tDJj0woRMeFXGT+7A=
+	by mail.kernel.org (Postfix) with ESMTP id C75E4206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:46:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbgD1KmJ (ORCPT
+        id S1726536AbgD1Kq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 06:42:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726335AbgD1KmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 06:42:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7D36206D9;
-        Tue, 28 Apr 2020 10:42:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588070529;
-        bh=CvEzbuCfH4+7PgmhF93OcCUlpgwCqTZYnfybiXHV8/I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O8saSke60GAMFfflqYFA1fvYiKEOXGCYpCXzaZ88cMJDx2OMK6q2ZgUl0aCzEbRQ1
-         jrkgdfDk7TiAkNgrBjRO1Yxki5drTIwAQQOkOlF7iiCwEpWgttzO9NUvzU+m0DYyW9
-         CoPKdTLtFrM+EXN6YP6eYb/XyjyVltLcmp4Dwr9g=
-Date:   Tue, 28 Apr 2020 12:42:06 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     John Oldman <john.oldman@polehill.co.uk>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH-3] staging: rts5208: rtsx: Use balanced braces for
- if/else if blocks
-Message-ID: <20200428104206.GA1131692@kroah.com>
-References: <20200428102804.28795-1-john.oldman@polehill.co.uk>
+        Tue, 28 Apr 2020 06:46:58 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61940 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726360AbgD1Kq5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 06:46:57 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03SAWfWP030704;
+        Tue, 28 Apr 2020 06:46:54 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh9nf7nr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 06:46:54 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03SAeVhT069021;
+        Tue, 28 Apr 2020 06:46:53 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh9nf7m5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 06:46:53 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03SAkVhX002074;
+        Tue, 28 Apr 2020 10:46:51 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 30mcu6wy2r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 10:46:51 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03SAkmHn17105076
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 10:46:48 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 409A342042;
+        Tue, 28 Apr 2020 10:46:48 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 861924203F;
+        Tue, 28 Apr 2020 10:46:47 +0000 (GMT)
+Received: from funtu.home (unknown [9.171.3.163])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 28 Apr 2020 10:46:47 +0000 (GMT)
+Subject: Re: [PATCH v7 01/15] s390/vfio-ap: store queue struct in hash table
+ for quick access
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        borntraeger@de.ibm.com, cohuck@redhat.com, mjrosato@linux.ibm.com,
+        pmorel@linux.ibm.com, alex.williamson@redhat.com,
+        kwankhede@nvidia.com, jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+ <20200407192015.19887-2-akrowiak@linux.ibm.com>
+ <20200424055732.7663896d.pasic@linux.ibm.com>
+ <d15b4a8e-66eb-e4ce-c8ac-6885519940aa@linux.ibm.com>
+ <20200427171739.76291a74.pasic@linux.ibm.com>
+From:   Harald Freudenberger <freude@linux.ibm.com>
+Message-ID: <30c824a4-2b3c-984d-406e-1791f7725914@linux.ibm.com>
+Date:   Tue, 28 Apr 2020 12:46:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428102804.28795-1-john.oldman@polehill.co.uk>
+In-Reply-To: <20200427171739.76291a74.pasic@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-28_06:2020-04-27,2020-04-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
+ spamscore=0 malwarescore=0 adultscore=0 suspectscore=0 mlxlogscore=999
+ impostorscore=0 lowpriorityscore=0 mlxscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 11:28:04AM +0100, John Oldman wrote:
-> Coding style issues
+On 27.04.20 17:17, Halil Pasic wrote:
+> On Mon, 27 Apr 2020 15:05:23 +0200
+> Harald Freudenberger <freude@linux.ibm.com> wrote:
+>
+>> On 24.04.20 05:57, Halil Pasic wrote:
+>>> On Tue,  7 Apr 2020 15:20:01 -0400
+>>> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>>>  
+>>>> Rather than looping over potentially 65535 objects, let's store the
+>>>> structures for caching information about queue devices bound to the
+>>>> vfio_ap device driver in a hash table keyed by APQN.  
+>>> @Harald:
+>>> Would it make sense to make the efficient lookup of an apqueue base
+>>> on its APQN core AP functionality instead of each driver figuring it out
+>>> on it's own?
+>>>
+>>> If I'm not wrong the zcrypt device/driver(s) must the problem of
+>>> looking up a queue based on its APQN as well.
+>>>
+>>> For instance struct ep11_cprb has a target_id filed
+>>> (arch/s390/include/uapi/asm/zcrypt.h).
+>>>
+>>> Regards,
+>>> Halil  
+>> Hi Halil
+>>
+>> no, the zcrypt drivers don't have this problem. They build up their own device object which
+>> includes a pointer to the base ap device.
+> I'm a bit confused. Doesn't your code loop first trough the ap_card
+> objects to find the APID portion of the APQN, and then loop the queue
+> list of the matching card to find the right ap_queue object? Or did I
+> miss something? Isn't that what _zcrypt_send_ep11_cprb() does? Can you
+> point me to the code that avoids the lookup (by apqn) for zcrypt?
+No. The code is looping through zcrypt_card and zcrypt_queue objects which
+are build up and held by the zcrypt api and the zcrypt driver(s).
+It does not deal with ap_card and ap_queue devices.
 
-
-Hi,
-
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- You did not specify a description of why the patch is needed, or
-  possibly, any description at all, in the email body.  Please read the
-  section entitled "The canonical patch format" in the kernel file,
-  Documentation/SubmittingPatches for what is needed in order to
-  properly describe the change.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+>
+>
+> If you look at the new function of vfio_ap_get_queue(unsigned long apqn)
+> it basically about finding the queue based on the apqn, with the
+> difference that it is vfio specific.
+>
+> Regards,
+> Halil
+>
+>> However, this is not a big issue, as the ap_bus holds a list of ap_card objects and within each
+>> ap_card object there exists a list of ap_queues.
+>
+>
+>
