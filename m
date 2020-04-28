@@ -2,179 +2,136 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58266C8300A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6024AC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3034E205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:07:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38EC5205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:09:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="CTuRapyD"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RbvTzwiu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbgD1PHs (ORCPT
+        id S1727983AbgD1PJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:07:48 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:3910 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727865AbgD1PHr (ORCPT
+        Tue, 28 Apr 2020 11:09:27 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18234 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727803AbgD1PJ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:07:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588086467; x=1619622467;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=te8o9Lj1+ijfjNPgqMBT7qXZPWfUQ2zkU3aGea8cF2U=;
-  b=CTuRapyDOZpMoYSJYG0RgwHQAtlFCH8IU9eeteQzGu9ra5zlxQ22uwoS
-   A4/c0onLUyu0yNJW2fGnypDas+0SsjNlbkT6PhRw6Us9rGVsT99BQcJMh
-   BT5snRXa8RYhYIMI2BEsJz8t4SnNl/XceuLcPCqZIJCAR/zwJfXpJWyV2
-   0=;
-IronPort-SDR: sTMdFzGT/Qju37TJKZt0gijyvJi9c4GvdgYHIGdSCUHqYMzTUZ+BaFoNhXw06JvL9TUW7M2Y8d
- Ifdgr1OoJaYQ==
-X-IronPort-AV: E=Sophos;i="5.73,328,1583193600"; 
-   d="scan'208";a="41395309"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 28 Apr 2020 15:07:45 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (Postfix) with ESMTPS id C3B9AA219C;
-        Tue, 28 Apr 2020 15:07:42 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 28 Apr 2020 15:07:40 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.162.200) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 28 Apr 2020 15:07:36 +0000
-Subject: Re: [PATCH v1 00/15] Add support for Nitro Enclaves
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        "Paraschiv, Andra-Irina" <andraprs@amazon.com>,
+        Tue, 28 Apr 2020 11:09:27 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea846e50000>; Tue, 28 Apr 2020 08:08:21 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 28 Apr 2020 08:09:27 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 28 Apr 2020 08:09:27 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Apr
+ 2020 15:09:27 +0000
+Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Apr
+ 2020 15:09:25 +0000
+Subject: Re: [RFC PATCH v1 3/5] media: tegra-video: Move PM runtime handle to
+ streaming
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>
+CC:     <linux-media@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@amazon.com>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>, Balbir Singh <sblbir@amazon.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200421184150.68011-1-andraprs@amazon.com>
- <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
- <ff65b1ed-a980-9ddc-ebae-996869e87308@amazon.com>
- <2a4a15c5-7adb-c574-d558-7540b95e2139@redhat.com>
- <1ee5958d-e13e-5175-faf7-a1074bd9846d@amazon.com>
- <f560aed3-a241-acbd-6d3b-d0c831234235@redhat.com>
- <80489572-72a1-dbe7-5306-60799711dae0@amazon.com>
- <0467ce02-92f3-8456-2727-c4905c98c307@redhat.com>
- <5f8de7da-9d5c-0115-04b5-9f08be0b34b0@amazon.com>
- <095e3e9d-c9e5-61d0-cdfc-2bb099f02932@redhat.com>
- <602565db-d9a6-149a-0e1a-fe9c14a90ce7@amazon.com>
- <fb0bfd95-4732-f3c6-4a59-7227cf50356c@redhat.com>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <0a4c7a95-af86-270f-6770-0a283cec30df@amazon.com>
-Date:   Tue, 28 Apr 2020 17:07:34 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+References: <1588047650-29402-1-git-send-email-skomatineni@nvidia.com>
+ <1588047650-29402-4-git-send-email-skomatineni@nvidia.com>
+ <631390cb-9aff-0e3f-6c39-81d6c565987e@gmail.com>
+ <3ef69413-a606-b475-f530-d5534760b73b@nvidia.com>
+ <2b334095-fadb-bf0a-f7a8-62fc798c2bd2@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <18a7b095-7f0f-7819-c786-7e011cfd14ed@nvidia.com>
+Date:   Tue, 28 Apr 2020 08:08:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <fb0bfd95-4732-f3c6-4a59-7227cf50356c@redhat.com>
+In-Reply-To: <2b334095-fadb-bf0a-f7a8-62fc798c2bd2@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-X-Originating-IP: [10.43.162.200]
-X-ClientProxiedBy: EX13D30UWC002.ant.amazon.com (10.43.162.235) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588086501; bh=yPelmU7DB8+fLNxRRGCPfIBoQB8O7B3JhNwnbdtOjKg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=RbvTzwiuY0umeVgUGr/Wi+LD23sWdimM9M9VUKzmAoVLAVZySdN12cl3mPrLzbIRG
+         RMryuo+oIdDxIqViRGi2y+B+1b4T6Sq4sMM52YAkQpycCcwWV0rK9s64egVquzu1+x
+         NUn1+PplGCFywYrAjzxlAF5repovI4LTCEGk9gTrgu8QqeznVtSZSSdXmf09LgoDn+
+         QpvAuNH5UTBORDP0v+cVa6iRKEJT3hsZhgW+hVfKuWmT06Uha26Vt2EV+fLB/M3f06
+         YCA1660TfKm2YndUp+DZTPCiRJR57//bXJSoK5lfzoAHtBzFbRCUqj5Kbex6S2DlUV
+         pYnb0u+e1i1Iw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAyNS4wNC4yMCAxODowNSwgUGFvbG8gQm9uemluaSB3cm90ZToKPiBDQVVUSU9OOiBUaGlz
-IGVtYWlsIG9yaWdpbmF0ZWQgZnJvbSBvdXRzaWRlIG9mIHRoZSBvcmdhbml6YXRpb24uIERvIG5v
-dCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVzcyB5b3UgY2FuIGNvbmZpcm0g
-dGhlIHNlbmRlciBhbmQga25vdyB0aGUgY29udGVudCBpcyBzYWZlLgo+IAo+IAo+IAo+IE9uIDI0
-LzA0LzIwIDIxOjExLCBBbGV4YW5kZXIgR3JhZiB3cm90ZToKPj4gV2hhdCBJIHdhcyBzYXlpbmcg
-YWJvdmUgaXMgdGhhdCBtYXliZSBjb2RlIGlzIGVhc2llciB0byB0cmFuc2ZlciB0aGF0Cj4+IHRo
-YW4gYSAudHh0IGZpbGUgdGhhdCBnZXRzIGxvc3Qgc29tZXdoZXJlIGluIHRoZSBEb2N1bWVudGF0
-aW9uIGRpcmVjdG9yeQo+PiA6KS4KPiAKPiB3aHlub3Rib3RoLmpwZyA6RAoKVWgsIHN1cmU/IDop
-CgpMZXQncyBmaXJzdCBoYW1tZXIgb3V0IHdoYXQgd2UgcmVhbGx5IHdhbnQgZm9yIHRoZSBVQUJJ
-IHRob3VnaC4gVGhlbiB3ZSAKY2FuIGRvY3VtZW50IGl0LgoKPj4+PiBUbyBhbnN3ZXIgdGhlIHF1
-ZXN0aW9uIHRob3VnaCwgdGhlIHRhcmdldCBmaWxlIGlzIGluIGEgbmV3bHkgaW52ZW50ZWQKPj4+
-PiBmaWxlIGZvcm1hdCBjYWxsZWQgIkVJRiIgYW5kIGl0IG5lZWRzIHRvIGJlIGxvYWRlZCBhdCBv
-ZmZzZXQgMHg4MDAwMDAgb2YKPj4+PiB0aGUgYWRkcmVzcyBzcGFjZSBkb25hdGVkIHRvIHRoZSBl
-bmNsYXZlLgo+Pj4KPj4+IFdoYXQgaXMgdGhpcyBFSUY/Cj4+Cj4+IEl0J3MganVzdCBhIHZlcnkg
-ZHVtYiBjb250YWluZXIgZm9ybWF0IHRoYXQgaGFzIGEgdHJpdmlhbCBoZWFkZXIsIGEKPj4gc2Vj
-dGlvbiB3aXRoIHRoZSBiekltYWdlIGFuZCBvbmUgdG8gbWFueSBzZWN0aW9ucyBvZiBpbml0cmFt
-ZnMuCj4+Cj4+IEFzIG1lbnRpb25lZCBlYXJsaWVyIGluIHRoaXMgdGhyZWFkLCBpdCByZWFsbHkg
-aXMganVzdCAiLWtlcm5lbCIgYW5kCj4+ICItaW5pdHJkIiwgcGFja2VkIGludG8gYSBzaW5nbGUg
-YmluYXJ5IGZvciB0cmFuc21pc3Npb24gdG8gdGhlIGhvc3QuCj4gCj4gT2theSwgZ290IGl0LiAg
-U28sIGNvcnJlY3QgbWUgaWYgdGhpcyBpcyB3cm9uZywgdGhlIGluZm9ybWF0aW9uIHRoYXQgaXMK
-PiBuZWVkZWQgdG8gYm9vdCB0aGUgZW5jbGF2ZSBpczoKPiAKPiAqIHRoZSBrZXJuZWwsIGluIGJ6
-SW1hZ2UgZm9ybWF0Cj4gCj4gKiB0aGUgaW5pdHJkCgpJdCdzIGEgc2luZ2xlIEVJRiBmaWxlIGZv
-ciBhIGdvb2QgcmVhc29uLiBUaGVyZSBhcmUgY2hlY2tzdW1zIGluIHRoZXJlIAphbmQgcG90ZW50
-aWFsbHkgc2lnbmF0dXJlcyB0b28sIHNvIHRoYXQgeW91IGNhbiB0aGUgZW5jbGF2ZSBjYW4gYXR0
-ZXN0IAppdHNlbGYuIEZvciB0aGUgc2FrZSBvZiB0aGUgdXNlciBzcGFjZSBBUEksIHRoZSBlbmNs
-YXZlIGltYWdlIHJlYWxseSAKc2hvdWxkIGp1c3QgYmUgY29uc2lkZXJlZCBhIGJsb2IuCgo+IAo+
-ICogYSBjb25zZWN1dGl2ZSBhbW91bnQgb2YgbWVtb3J5LCB0byBiZSBtYXBwZWQgd2l0aAo+IEtW
-TV9TRVRfVVNFUl9NRU1PUllfUkVHSU9OCj4gCj4gT2ZmIGxpc3QsIEFsZXggYW5kIEkgZGlzY3Vz
-c2VkIGhhdmluZyBhIHN0cnVjdCB0aGF0IHBvaW50cyB0byBrZXJuZWwgYW5kCj4gaW5pdHJkIG9m
-ZiBlbmNsYXZlIG1lbW9yeSwgYW5kIGhhdmUgdGhlIGRyaXZlciBidWlsZCBFSUYgYXQgdGhlCj4g
-YXBwcm9wcmlhdGUgcG9pbnQgaW4gZW5jbGF2ZSBtZW1vcnkgKHRoZSA4IE1pQiBvZnNldCB0aGF0
-IHlvdSBtZW50aW9uZWQpLgo+IAo+IFRoaXMgaG93ZXZlciBoYXMgdHdvIGRpc2FkdmFudGFnZXM6
-Cj4gCj4gMSkgaGF2aW5nIHRoZSBrZXJuZWwgYW5kIGluaXRyZCBsb2FkZWQgYnkgdGhlIHBhcmVu
-dCBWTSBpbiBlbmNsYXZlCj4gbWVtb3J5IGhhcyB0aGUgYWR2YW50YWdlIHRoYXQgeW91IHNhdmUg
-bWVtb3J5IG91dHNpZGUgdGhlIGVuY2xhdmUgbWVtb3J5Cj4gZm9yIHNvbWV0aGluZyB0aGF0IGlz
-IG9ubHkgbmVlZGVkIGluc2lkZSB0aGUgZW5jbGF2ZQo+IAo+IDIpIGl0IGlzIGxlc3MgZXh0ZW5z
-aWJsZSAod2hhdCBpZiB5b3Ugd2FudCB0byB1c2UgUFZIIGluIHRoZSBmdXR1cmUgZm9yCj4gZXhh
-bXBsZSkgYW5kIHB1dHMgaW4gdGhlIGRyaXZlciBwb2xpY3kgdGhhdCBzaG91bGQgYmUgaW4gdXNl
-cnNwYWNlLgo+IAo+IAo+IFNvIHdoeSBub3QganVzdCBzdGFydCBydW5uaW5nIHRoZSBlbmNsYXZl
-IGF0IDB4ZmZmZmZmZjAgaW4gcmVhbCBtb2RlPwo+IFllcyBldmVyeWJvZHkgaGF0ZXMgaXQsIGJ1
-dCB0aGF0J3Mgd2hhdCBPU2VzIGFyZSB3cml0dGVuIGFnYWluc3QuICBJbgo+IHRoZSBzaW1wbGVz
-dCBleGFtcGxlLCB0aGUgcGFyZW50IGVuY2xhdmUgY2FuIGxvYWQgYnpJbWFnZSBhbmQgaW5pdHJk
-IGF0Cj4gMHgxMDAwMCBhbmQgcGxhY2UgZmlybXdhcmUgdGFibGVzIChNUFRhYmxlIGFuZCBETUkp
-IHNvbWV3aGVyZSBhdAo+IDB4ZjAwMDA7IHRoZSBmaXJtd2FyZSB3b3VsZCBqdXN0IGJlIGEgZmV3
-IG1vdnMgdG8gc2VnbWVudCByZWdpc3RlcnMKPiBmb2xsb3dlZCBieSBhIGxvbmcgam1wLgoKVGhl
-cmUgaXMgYSBiaXQgb2YgaW5pdGlhbCBhdHRlc3RhdGlvbiBmbG93IGluIHRoZSBlbmNsYXZlLCBz
-byB0aGF0IHlvdSAKY2FuIGJlIHN1cmUgdGhhdCB0aGUgY29kZSB0aGF0IGlzIHJ1bm5pbmcgaXMg
-YWN0dWFsbHkgd2hhdCB5b3Ugd2FudGVkIHRvIApydW4uCgpJIHdvdWxkIGFsc28gaW4gZ2VuZXJh
-bCBwcmVmZXIgdG8gZGlzY29ubmVjdCB0aGUgbm90aW9uIG9mICJlbmNsYXZlIAptZW1vcnkiIGFz
-IG11Y2ggYXMgcG9zc2libGUgZnJvbSBhIG1lbW9yeSBsb2NhdGlvbiB2aWV3LiBVc2VyIHNwYWNl
-IApzaG91bGRuJ3QgYmUgaW4gdGhlIGJ1c2luZXNzIG9mIGtub3dpbmcgbG9jYXRpb24gb2YgaXRz
-IGRvbmF0ZWQgbWVtb3J5IAplbmRlZCB1cCBhdCB3aGljaCBlbmNsYXZlIG1lbW9yeSBwb3NpdGlv
-bi4gQnkgZGlzY29ubmVjdGluZyB0aGUgdmlldyBvZiAKdGhlIG1lbW9yeSB3b3JsZCwgd2UgY2Fu
-IGRvIHNvbWUgbW9yZSBvcHRpbWl6YXRpb25zLCBzdWNoIGFzIGNvbXBhY3QgCm1lbW9yeSByYW5n
-ZXMgbW9yZSBlZmZpY2llbnRseSBpbiBrZXJuZWwgc3BhY2UuCgo+IElmIHlvdSB3YW50IHRvIGtl
-ZXAgRUlGLCB3ZSBtZWFzdXJlZCBpbiBRRU1VIHRoYXQgdGhlcmUgaXMgbm8gbWVhc3VyYWJsZQo+
-IGRpZmZlcmVuY2UgYmV0d2VlbiBsb2FkaW5nIHRoZSBrZXJuZWwgaW4gdGhlIGhvc3QgYW5kIGRv
-aW5nIGl0IGluIHRoZQo+IGd1ZXN0LCBzbyBBbWF6b24gY291bGQgcHJvdmlkZSBhbiBFSUYgbG9h
-ZGVyIHN0dWIgYXQgMHhmZmZmZmZmMCBmb3IKPiBiYWNrd2FyZHMgY29tcGF0aWJpbGl0eS4KCkl0
-J3Mgbm90IGFib3V0IHBlcmZvcm1hbmNlIDopLgoKU28gdGhlIG90aGVyIHRoaW5nIHdlIGRpc2N1
-c3NlZCB3YXMgd2hldGhlciB0aGUgS1ZNIEFQSSByZWFsbHkgdHVybmVkIApvdXQgdG8gYmUgYSBn
-b29kIGZpdCBoZXJlLiBBZnRlciBhbGwsIHRvZGF5IHdlIG1lcmVseSBjYWxsOgoKICAgKiBDUkVB
-VEVfVk0KICAgKiBTRVRfTUVNT1JZX1JBTkdFCiAgICogQ1JFQVRFX1ZDUFUKICAgKiBTVEFSVF9F
-TkNMQVZFCgp3aGVyZSB3ZSBldmVuIGJ1dGNoZXIgdXAgQ1JFQVRFX1ZDUFUgaW50byBhIG1lYW5p
-bmdsZXNzIGJsb2Igb2Ygb3ZlcmhlYWQgCmZvciBubyBnb29kIHJlYXNvbi4KCldoeSBkb24ndCB3
-ZSBidWlsZCBzb21ldGhpbmcgbGlrZSB0aGUgZm9sbG93aW5nIGluc3RlYWQ/CgogICB2bSA9IG5l
-X2NyZWF0ZSh2Y3B1cyA9IDQpCiAgIG5lX3NldF9tZW1vcnkodm0sIGh2YSwgbGVuKQogICBuZV9s
-b2FkX2ltYWdlKHZtLCBhZGRyLCBsZW4pCiAgIG5lX3N0YXJ0KHZtKQoKVGhhdCB3YXkgd2Ugd291
-bGQgZ2V0IHRoZSBFSUYgbG9hZGluZyBpbnRvIGtlcm5lbCBzcGFjZS4gIkxPQURfSU1BR0UiIAp3
-b3VsZCBvbmx5IGJlIGF2YWlsYWJsZSBpbiB0aGUgdGltZSB3aW5kb3cgYmV0d2VlbiBzZXRfbWVt
-b3J5IGFuZCBzdGFydC4gCkl0IGJhc2ljYWxseSBpbXBsZW1lbnRzIGEgbWVtY3B5KCksIGJ1dCBp
-dCB3b3VsZCBjb21wbGV0ZWx5IGhpZGUgdGhlIApoaWRkZW4gc2VtYW50aWNzIG9mIHdoZXJlIGFu
-IEVJRiBoYXMgdG8gZ28sIHNvIGZ1dHVyZSBkZXZpY2UgdmVyc2lvbnMgCihvciBldmVuIG90aGVy
-IGVuY2xhdmUgaW1wbGVtZW50ZXJzKSBjb3VsZCBjaGFuZ2UgdGhlIGxvZ2ljLgoKSSB0aGluayBp
-dCBhbHNvIG1ha2VzIHNlbnNlIHRvIGp1c3QgYWxsb2NhdGUgdGhvc2UgNCBpb2N0bHMgZnJvbSAK
-c2NyYXRjaC4gUGFvbG8sIHdvdWxkIHlvdSBzdGlsbCB3YW50IHRvICJkb25hdGUiIEtWTSBpb2N0
-bCBzcGFjZSBpbiB0aGF0IApjYXNlPwoKT3ZlcmFsbCwgdGhlIGFib3ZlIHNob3VsZCBhZGRyZXNz
-IG1vc3Qgb2YgdGhlIGNvbmNlcm5zIHlvdSByYWlzZWQgaW4gCnRoaXMgbWFpbCwgcmlnaHQ/IEl0
-IHN0aWxsIHJlcXVpcmVzIGNvcHlpbmcsIGJ1dCBhdCBsZWFzdCB3ZSBkb24ndCBoYXZlIAp0byBr
-ZWVwIHRoZSBjb3B5IGluIGtlcm5lbCBzcGFjZS4KCgpBbGV4CgoKCkFtYXpvbiBEZXZlbG9wbWVu
-dCBDZW50ZXIgR2VybWFueSBHbWJICktyYXVzZW5zdHIuIDM4CjEwMTE3IEJlcmxpbgpHZXNjaGFl
-ZnRzZnVlaHJ1bmc6IENocmlzdGlhbiBTY2hsYWVnZXIsIEpvbmF0aGFuIFdlaXNzCkVpbmdldHJh
-Z2VuIGFtIEFtdHNnZXJpY2h0IENoYXJsb3R0ZW5idXJnIHVudGVyIEhSQiAxNDkxNzMgQgpTaXR6
-OiBCZXJsaW4KVXN0LUlEOiBERSAyODkgMjM3IDg3OQoKCg==
+
+On 4/28/20 7:59 AM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 28.04.2020 17:51, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 4/28/20 6:59 AM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> 28.04.2020 07:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> diff --git a/drivers/staging/media/tegra-video/csi.c
+>>>> b/drivers/staging/media/tegra-video/csi.c
+>>>> index b3dd0c3..29ccdae 100644
+>>>> --- a/drivers/staging/media/tegra-video/csi.c
+>>>> +++ b/drivers/staging/media/tegra-video/csi.c
+>>>> @@ -272,8 +272,25 @@ static int tegra_csi_s_stream(struct v4l2_subdev
+>>>> *subdev, int enable)
+>>>>         struct tegra_vi_channel *chan =3D v4l2_get_subdev_hostdata(sub=
+dev);
+>>>>         struct tegra_csi_channel *csi_chan =3D to_csi_chan(subdev);
+>>>>         struct tegra_csi *csi =3D csi_chan->csi;
+>>>> +     int ret;
+>>>> +
+>>>> +     if (enable && atomic_add_return(1, &csi->clk_refcnt) =3D=3D 1) {
+>>>> +             ret =3D pm_runtime_get_sync(csi->dev);
+>>>> +             if (ret < 0) {
+>>>> +                     dev_err(csi->dev,
+>>>> +                             "failed to get runtime PM: %d\n", ret);
+>>>> +                     pm_runtime_put_noidle(csi->dev);
+>>>> +                     atomic_dec(&csi->clk_refcnt);
+>>>> +                     return ret;
+>>>> +             }
+>>>> +     }
+>>>> +
+>>>> +     ret =3D csi->ops->csi_streaming(csi_chan, chan->pg_mode, enable)=
+;
+>>>>
+>>>> -     return csi->ops->csi_streaming(csi_chan, chan->pg_mode, enable);
+>>>> +     if ((ret < 0 || !enable) && atomic_dec_and_test(&csi->clk_refcnt=
+))
+>>>> +             pm_runtime_put_sync(csi->dev);
+>>> Runtime PM maintains its own refcount, why these
+>>> clk_refcnt/power_on_refcnt are needed?
+>> Streaming is per channel and we can't turn power/clocks off while other
+>> channels may still be running.
+>>
+> All channels use the same CSI device. You should remove the custom
+> refcounting.
+>
+> BTW, next time you'll really need to do refcounting, use the generic kref=
+.
+
+Before channel stream we enable power/clocks and after streaming we stop.
+
+So without refcount, on stream stop of any of the channel RPM put turns=20
+power/clock but other channels will still be streaming.
 
