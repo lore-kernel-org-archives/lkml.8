@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 616BCC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8515C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36F57206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8C3B2085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099452;
-	bh=TeaS1cHqlCEkbfMEujQm1NjPPa5FBQpNl0nQJJvqyCU=;
+	s=default; t=1588099455;
+	bh=0sOTq4s30ooeuz5sbfz4jOZfhxiqi4UmbeG8VQrVoww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xpKwoDKAHi4a12BS/NKZZYlqWQ5e7wD/5XM0FffTylSkU2GIkI22XTrCf7vxjfcEh
-	 iixzt9GhBDy130EtxmveDcpdXCrt25yM0pcHY3V0GBWUdaaiPh0dRMmCTV93qsvAIx
-	 uAKMuzpmmme862jx8lblQzwYYgxFiwXTAL7DqmVs=
+	b=GTMAlhnVitwj7GdOJ6t4KUDV9KwC8U3dOHXrcv4KZ3iH7H8YadFSbNGaNRti7qqOZ
+	 HkBd8jrd5WMM+tLzeaLF7yIgMu3YbD2z5ng/CDXn3twdgVOrw4i66CO6KYEmI363fx
+	 DX7JsOabaO2uEg1jGfaVGVg0X+/px5vbodIgUSOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730184AbgD1SoL (ORCPT
+        id S1731359AbgD1SoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:44:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37020 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:44:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731344AbgD1SoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:44:07 -0400
+        id S1730893AbgD1SoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:44:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD346206D6;
-        Tue, 28 Apr 2020 18:44:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6276206A1;
+        Tue, 28 Apr 2020 18:44:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099447;
-        bh=TeaS1cHqlCEkbfMEujQm1NjPPa5FBQpNl0nQJJvqyCU=;
+        s=default; t=1588099452;
+        bh=0sOTq4s30ooeuz5sbfz4jOZfhxiqi4UmbeG8VQrVoww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=msKxMmzP+M4NLKYpLIZYmeXsNB1KrrFQLxXh21VBbs+H91FkaZSGN/U00R9o1YhrQ
-         CMs800kmOSW1ftNpWUsrNwE/r9PsH9HpXl6BLRVHDlCKdlAI8Zpv8YZES7It3ZZQKd
-         Uy+i1fdwVcn0VUxa+Dslft+TWml22U7dOFS7Ejk4=
+        b=xLnXpAlWM9u5hJDryipAltZMvujqMnP9M9wHU9TZVQhWBkI6Q4WML8ufntiC+BhP0
+         mL8ZOuVNRJVkeEqi74xQSIZC4nwE000aDTACqHrTue/T4NgJoTUuxHV82MrgdCgfdu
+         HHPWfouODG5kgYabZlnppzdUhETDiBLnyQmPENi4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 5.4 155/168] xhci: prevent bus suspend if a roothub port detected a over-current condition
-Date:   Tue, 28 Apr 2020 20:25:29 +0200
-Message-Id: <20200428182250.867738114@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH 5.4 139/168] vt: dont use kmalloc() for the unicode screen buffer
+Date:   Tue, 28 Apr 2020 20:25:13 +0200
+Message-Id: <20200428182249.373313755@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -59,47 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Nicolas Pitre <nico@fluxnic.net>
 
-commit e9fb08d617bfae5471d902112667d0eeb9dee3c4 upstream.
+commit 9a98e7a80f95378c9ee0c644705e3b5aa54745f1 upstream.
 
-Suspending the bus and host controller while a port is in a over-current
-condition may halt the host.
-Also keep the roothub running if over-current is active.
+Even if the actual screen size is bounded in vc_do_resize(), the unicode
+buffer is still a little more than twice the size of the glyph buffer
+and may exceed MAX_ORDER down the kmalloc() path. This can be triggered
+from user space.
 
+Since there is no point having a physically contiguous buffer here,
+let's avoid the above issue as well as reducing pressure on high order
+allocations by using vmalloc() instead.
+
+Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200421140822.28233-3-mathias.nyman@linux.intel.com
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.2003282214210.2671@knanqh.ubzr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-hub.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/tty/vt/vt.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -1569,6 +1569,8 @@ int xhci_hub_status_data(struct usb_hcd
- 		}
- 		if ((temp & PORT_RC))
- 			reset_change = true;
-+		if (temp & PORT_OC)
-+			status = 1;
- 	}
- 	if (!status && !reset_change) {
- 		xhci_dbg(xhci, "%s: stopping port polling.\n", __func__);
-@@ -1634,6 +1636,13 @@ retry:
- 				 port_index);
- 			goto retry;
- 		}
-+		/* bail out if port detected a over-current condition */
-+		if (t1 & PORT_OC) {
-+			bus_state->bus_suspended = 0;
-+			spin_unlock_irqrestore(&xhci->lock, flags);
-+			xhci_dbg(xhci, "Bus suspend bailout, port over-current detected\n");
-+			return -EBUSY;
-+		}
- 		/* suspend ports in U0, or bail out for new connect changes */
- 		if ((t1 & PORT_PE) && (t1 & PORT_PLS_MASK) == XDEV_U0) {
- 			if ((t1 & PORT_CSC) && wake_enabled) {
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -81,6 +81,7 @@
+ #include <linux/errno.h>
+ #include <linux/kd.h>
+ #include <linux/slab.h>
++#include <linux/vmalloc.h>
+ #include <linux/major.h>
+ #include <linux/mm.h>
+ #include <linux/console.h>
+@@ -350,7 +351,7 @@ static struct uni_screen *vc_uniscr_allo
+ 	/* allocate everything in one go */
+ 	memsize = cols * rows * sizeof(char32_t);
+ 	memsize += rows * sizeof(char32_t *);
+-	p = kmalloc(memsize, GFP_KERNEL);
++	p = vmalloc(memsize);
+ 	if (!p)
+ 		return NULL;
+ 
+@@ -366,7 +367,7 @@ static struct uni_screen *vc_uniscr_allo
+ 
+ static void vc_uniscr_set(struct vc_data *vc, struct uni_screen *new_uniscr)
+ {
+-	kfree(vc->vc_uni_screen);
++	vfree(vc->vc_uni_screen);
+ 	vc->vc_uni_screen = new_uniscr;
+ }
+ 
 
 
