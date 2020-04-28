@@ -2,99 +2,107 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDC6C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9A8C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97C8B206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2812B206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:45:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgD1How (ORCPT
+        id S1726573AbgD1HpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:44:52 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38805 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbgD1How (ORCPT
+        Tue, 28 Apr 2020 03:45:19 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:33576 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726256AbgD1HpT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 03:44:52 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g19so31023236otk.5;
-        Tue, 28 Apr 2020 00:44:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cXl7lKArunQG+/kNdzxWXFuMByrBcBqaAzCKT8iRNHY=;
-        b=KJFYa/goYd448GE7CYQOqvTTONqICFVSw9i1bzEup0l1fx2XKNysmPlwCF2CIZm9+x
-         /W7IS1vyYTtSYSR50Q8cvMB1PzsiA8lw3hs+fz4+2xstnpYBAqX5Ctim4gYFMLK9MMoh
-         IbHMG5GjqbQu5QzcLFXWBqP+/1K5RzejbL+LNEAciEXsRrQyY2OwybNBo08s7ufAYCub
-         ql5J4ZKbfJQyVMBIjewGqY09GrecCNa7gw0xAlL/c80AWtlPE9KAAClUOzjhpb0wux0I
-         EUN73DMT6muuu5BqzPZ+6gjFYAIiUvSSD9iBvEtXN8sKJLi83YZ8/iGMp+5uWMXoUFZ4
-         QAPw==
-X-Gm-Message-State: AGi0PuZWNmhj02Bneay3w4q5oz4YtT67OY8J1qUQ4KCD69N+tg4vagKN
-        bDZm0yjvaxTnLf9h4YWZ45OW0ODEdpyAMVS3u+s=
-X-Google-Smtp-Source: APiQypKhptPShSJB7NSsDnhvt8r6BIMcWUz++M7lNbqsO+HW2HU8+SrM8htxROBTxsP2p13a5k9/0HekF6DYp6mYfJk=
-X-Received: by 2002:aca:f541:: with SMTP id t62mr1978445oih.148.1588059891287;
- Tue, 28 Apr 2020 00:44:51 -0700 (PDT)
+        Tue, 28 Apr 2020 03:45:19 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jTKvQ-00077O-8t; Tue, 28 Apr 2020 07:45:04 +0000
+Date:   Tue, 28 Apr 2020 09:45:02 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Hagen Paul Pfeifer <hagen@jauu.net>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Jann Horn <jannh@google.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Brian Gerst <brgerst@gmail.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC v2] ptrace, pidfd: add pidfd_ptrace syscall
+Message-ID: <20200428074502.ruqlxqqgnoyqvhwv@wittgenstein>
+References: <CAHk-=wga3O=BoKZXR27-CDnAFareWcMxXhpWerwtCffdaH6_ow@mail.gmail.com>
+ <B7A115CB-0C8C-4719-B97B-74D94231CD1E@amacapital.net>
+ <CAHk-=whQzOsh9O2uhUO2VETD+hrzjKMpEJpzoUby5QHMcvgPKg@mail.gmail.com>
+ <20200428063935.GA5660@laniakea>
 MIME-Version: 1.0
-References: <1587998460-7804-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1587998460-7804-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 28 Apr 2020 09:44:40 +0200
-Message-ID: <CAMuHMdV_RwosqTfEa9m=euOGnCb-y8d0a5fFjnF-2udrurBxUw@mail.gmail.com>
-Subject: Re: [PATCH v2] clk: renesas: cpg-mssr: Add R8A7742 support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200428063935.GA5660@laniakea>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+On Tue, Apr 28, 2020 at 08:39:35AM +0200, Hagen Paul Pfeifer wrote:
+> * Linus Torvalds | 2020-04-27 21:28:14 [-0700]:
+> 
+> >> I hate to say this, but I’m not convinced that asking the gdb folks is
+> >> the right approach. GDB has an ancient architecture and is
+> >> *incredibly* buggy. I’m sure ptrace is somewhere on the pain point
+> >> list, but I suspect it’s utterly dwarfed by everything else.
+> >
+> >You may be right. However, if gdbn isn't going to use it, then I
+> >seriously don't think it's worth changing much.
+> >
+> >It might be worth looking at people who don't use ptrace() for
+> >debugging, but for "incidental" reasons. IOW sandboxing, tracing,
+> >things like that.
+> >
+> >Maybe those people want things that are simpler and don't actually
+> >need the kinds of hard serialization that ptrace() wants.
+> >
+> >I'd rather add a few really simple things that might not be a full
+> >complement of operations for a debugger, but exactly because they
+> >aren't a full debugger, maybe they are things that we can tell are
+> >obviously secure and simple?
+> 
+> Okay, to sum up the the whole discussion: we go forward with Jann's proposal
+> by simple adding PTRACE_ATTACH_PIDFD and friends. This is the minimal invasive
+> solution and the risk of an potenial security problem is almost not present[TM].
+> 
+> Changing the whole ptrace API is a different beast. I rather believe that I
+> see Linus Linux successor rather than a ptrace successor.
+> 
+> I am fine with PTRACE_ATTACH_PIDFD!
 
-On Mon, Apr 27, 2020 at 4:41 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add RZ/G1H (R8A7742) Clock Pulse Generator / Module Standby and Software
-> Reset support, using the CPG/MSSR driver core and the common R-Car Gen2
-> (and RZ/G) code.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> ---
-> Changes for v2:
-> * Dropped zt* clocks
-> * lb clock is now a base clock
-> * Fixed clock-sources for scif2/sdhi1/iic2
-> * Dropped setting div to 3 for zg clock
+If this is enough for you use-case then we should make due with my
+initial suggestion, yes. I'd be fine with adding this variant.
 
-Thanks for the update
+I initially thought that we'd likely would need to support a few more
+but I don't think we want to actually; there's a bunch of crazy stuff in
+there.
 
-> --- /dev/null
-> +++ b/drivers/clk/renesas/r8a7742-cpg-mssr.c
-
-> +static struct cpg_core_clk r8a7742_core_clks[] __initdata = {
-
-Missing "const".
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in clk-renesas-for-v5.8, with the above fixed (i.e. no need to
-resend).
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Christian
