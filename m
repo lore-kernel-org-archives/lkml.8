@@ -2,140 +2,110 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9F0C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FC8C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 486422072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:23:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QKBLrqvd"
+	by mail.kernel.org (Postfix) with ESMTP id A8F032072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:24:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588076688;
+	bh=v3DgtmSId2rTIqTuXLUCM4ll+1xF/+qucisJtHmJLms=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LjnEI1CwUPaHeGCOmlHUjkbvYH3alg1eTEVxF8AvkT7be3xMTkQomRBim+4Zicios
+	 OFckFnKUIw+Gz/gqGuI8qWGgnamTvkxJq31EOgiOdsrRNdidhuQbA6E2/Pf7t6fdWy
+	 cmV6pJUe35At225YZ9yPLWx8CQJTBJsJgRcCBqeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgD1MX1 (ORCPT
+        id S1726810AbgD1MYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:23:27 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:43304 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726645AbgD1MX1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:23:27 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588076606; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=ur5ZOryjha/YHWLiOVj8eFSzWKndQ45R+vkiliUrPiY=;
- b=QKBLrqvdpQzQ2tvfB2BQzPaImoq3zc+nAT2eLEP1iqA/Y8TU4Uy8/oMtkv5mfHZ5vnouiW0q
- Vq3zdQ/JvjLuWpA80g2fkGg13ApLT0swLOj93wSIncmeEcQANm8sY/8RiJ4cLab+dInzWxvR
- sVWa/54u8wIpN8kaicFvkWaeMr4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea82035.7feb23e3bed8-smtp-out-n02;
- Tue, 28 Apr 2020 12:23:17 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A4BC4C433BA; Tue, 28 Apr 2020 12:23:17 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Tue, 28 Apr 2020 08:24:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58324 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726361AbgD1MYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 08:24:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1F6D1C433D2;
-        Tue, 28 Apr 2020 12:23:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FEE2206A1;
+        Tue, 28 Apr 2020 12:24:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588076687;
+        bh=v3DgtmSId2rTIqTuXLUCM4ll+1xF/+qucisJtHmJLms=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gjRjCj3EJ+e4zbnwYzOHx2FWHVrfmyqtxQjIAUTjAWlE3B80++82vUEyFofkur8+5
+         r1LJp2BO3Os377GlnhwKOzatZoHHhLEe9guFj+TTmTbbbSA5EBDm7fPo+7IUrKbYA6
+         mQyZWunYErUrZzvOzBeVSLavPU/OULpsNbkjuwAM=
+Date:   Tue, 28 Apr 2020 14:24:44 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sidong Yang <realwakka@gmail.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: qlge: change prefix to qlge_*
+Message-ID: <20200428122444.GA1244536@kroah.com>
+References: <20200426084120.28295-1-realwakka@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 28 Apr 2020 17:53:17 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>, mike.leach@linaro.org
-Cc:     mathieu.poirier@linaro.org, swboyd@chromium.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple
- connections
-In-Reply-To: <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com>
-References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
- <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com>
- <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
- <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com>
-Message-ID: <668ea1283a6dd6b34e701972f6f71034@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200426084120.28295-1-realwakka@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-27 19:23, Suzuki K Poulose wrote:
-> On 04/27/2020 10:45 AM, Mike Leach wrote:
-[...]
->>> 
->>> This is not sufficient. You must prevent another session trying to
->>> enable the other port of the replicator as this could silently fail
->>> the "on-going" session. Not ideal. Fail the attempt to enable a port
->>> if the other port is active. You could track this in software and
->>> fail early.
->>> 
->>> Suzuki
->> 
->> While I have no issue in principle with not enabling a path to a sink
->> that is not in use - indeed in some cases attaching to unused sinks
->> can cause back-pressure that slows throughput (cf TPIU) - I am
->> concerned that this modification is masking an underlying issue with
->> the platform in question.
->> 
->> Should we decide to enable the diversion of different IDs to different
->> sinks or allow different sessions go to different sinks, then this has
->> potential to fail on the SC7180 SoC - and it will be difficult in
->> future to associate a problem with this discussion.
+On Sun, Apr 26, 2020 at 05:41:20PM +0900, Sidong Yang wrote:
+> In terms of namespace, The driver uses either qlge_, ql_ or nothing.
+> also there is macro using QL_. This can make crash with other qlogic
+> drivers. Rename everything to use the qlge_ or QLGE_ prefix.
+
+How can it crash anything?
+
+I can see changing global functions to a common namespace like this, but
+you are changing a _lot_ of things here:
+
+> ---
+>  drivers/staging/qlge/qlge.h         |  488 +++++------
+>  drivers/staging/qlge/qlge_dbg.c     |  638 +++++++-------
+>  drivers/staging/qlge/qlge_ethtool.c |  484 +++++------
+>  drivers/staging/qlge/qlge_main.c    | 1200 +++++++++++++--------------
+>  drivers/staging/qlge/qlge_mpi.c     |  386 ++++-----
+>  5 files changed, 1598 insertions(+), 1598 deletions(-)
 > 
-> Mike,
-> 
-> I think thats a good point.
-> Sai, please could we narrow down this to the real problem and may be
-> work around it for the "device" ? Do we know which sink is causing the
-> back pressure ? We could then push the "work around" to the replicator
-> it is connected to.
-> 
-> Suzuki
+> diff --git a/drivers/staging/qlge/qlge.h b/drivers/staging/qlge/qlge.h
+> index fc8c5ca8935d..a8da06c978ff 100644
+> --- a/drivers/staging/qlge/qlge.h
+> +++ b/drivers/staging/qlge/qlge.h
+> @@ -955,7 +955,7 @@ enum {
+>  	MB_CMD_GET_PORT_CFG = 0x00000123,
+>  	MB_CMD_GET_LINK_STS = 0x00000124,
+>  	MB_CMD_SET_LED_CFG = 0x00000125, /* Set LED Configuration Register */
+> -		QL_LED_BLINK = 0x03e803e8,
+> +		QLGE_LED_BLINK = 0x03e803e8,
+>  	MB_CMD_GET_LED_CFG = 0x00000126, /* Get LED Configuration Register */
+>  	MB_CMD_SET_MGMNT_TFK_CTL = 0x00000160, /* Set Mgmnt Traffic Control */
+>  	MB_SET_MPI_TFK_STOP = (1 << 0),
+> @@ -986,14 +986,14 @@ enum {
+>  	MB_CMD_STS_PARAM_ERR = 0x00004006,	/* Parameter Error. */
+>  };
+>  
+> -struct mbox_params {
+> +struct qlge_mbox_params {
+>  	u32 mbox_in[MAILBOX_COUNT];
+>  	u32 mbox_out[MAILBOX_COUNT];
+>  	int in_count;
+>  	int out_count;
+>  };
 
-Hi Suzuki, Mike,
+Why change local structure names that are local to the specific driver?
+That "namespace" can not escape out of the driver, so lots of these
+changes are unneeded.
 
-To add some more to the information provided earlier, 
-swao_replicator(6b06000) and etf are
-in AOSS (Always-On-SubSystem) group. Also TPIU(connected to 
-qdss_replicator) and EUD(connected
-to swao_replicator) sinks are unused.
+I will gladly take a patch that fixes up the global symbols, but that's
+all that needs to be done here, right?
 
-Please ignore the id filter values provided earlier.
-Here are ID filter values after boot and before enabling replicator. As 
-per
-these idfilter values, we should not try to enable replicator if its 
-already
-enabled (in this case for swao_replicator) right?
+thanks,
 
-localhost ~ # cat 
-/sys/bus/amba/devices/6b06000.replicator/replicator1/mgmt/idfilter0
-0x0
-localhost ~ # cat 
-/sys/bus/amba/devices/6b06000.replicator/replicator1/mgmt/idfilter1
-0x0
-
-localhost ~ # cat 
-/sys/bus/amba/devices/6046000.replicator/replicator0/mgmt/idfilter0
-0xff
-localhost ~ # cat 
-/sys/bus/amba/devices/6046000.replicator/replicator0/mgmt/idfilter1
-0xff
-
-I think the unused sink EUD(also in AOSS group) probably is causing the 
-backpressure here.
-
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+greg k-h
