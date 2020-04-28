@@ -2,111 +2,182 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79046C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B76A5C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D363206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:03:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F7F920656
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:03:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f9a8PxIR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/0NG8Pw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgD1XC7 (ORCPT
+        id S1726684AbgD1XDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 19:02:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58188 "EHLO
+        Tue, 28 Apr 2020 19:03:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725934AbgD1XC6 (ORCPT
+        by vger.kernel.org with ESMTP id S1725934AbgD1XDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 19:02:58 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C83DDC03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 16:02:58 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id m9so184601uaq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 16:02:58 -0700 (PDT)
+        Tue, 28 Apr 2020 19:03:32 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 404C4C03C1AC;
+        Tue, 28 Apr 2020 16:03:31 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id z1so125996pfn.3;
+        Tue, 28 Apr 2020 16:03:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rseuUntF/+U+N/+xHdLPAE++j42wC+S3/o0SkJMlafY=;
-        b=f9a8PxIRI/5QonHE5BNzluyGyxbL7GXfP1yD7pTQwJDNRp7HjPkfUBD3Jyi9l/Wq3B
-         CSLnYWWi66zCaieBmpWF+SFpnyOzX0CJlEtRsYy189kqLTOAlDS3+1YQ2DmlPwm9EQDI
-         KgxfkjBQd8EyKUkvzdjU7V+hZD0SkOdVYfV50=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=+eb5YBzAF98WZOyXU0W5JrcpxvfZ8QdL+rCMUNBogBs=;
+        b=O/0NG8PwX3dqCAE7rfx8O3nSMOjMBNp9iVLdYyb89n+JKhHj4S3b6rT1SFs6VUg8TO
+         4SCiIYfSZ1XxRzLFCdve1O7apjpLhRFTzRGSoQiEyox4wQ2taYf6FgD5ZP9Aulmwmpw8
+         H3LCU/JfOKq5DOLTVpAGUwJFhmhCY+7433CAtbSBOgwP19+kmfD1LAfaID8A0zQQzVXL
+         u9jslrVS/aDUNtDHHS8GyoP5fsrgudZdaV/qh91IB5uJDTiLfeWg4z4VM0hB+HUFAPbK
+         F5xLvRL/ratvulf6NIij4g1JX4B3DykyWtItpjgce/1QmNaSXEfGSG1SjKPAUruI0inN
+         9BiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rseuUntF/+U+N/+xHdLPAE++j42wC+S3/o0SkJMlafY=;
-        b=ntpW2Pliq/aqXo+ypS0Zd5WGrPL4CgJECzHIjJi3wKPGgoJZrjRrEz3dpMkAwpJoBs
-         0EZoNdzgLC0NpqHuIRxRvbU2ncQJTTdEbrGTihlUtwgr/5P3yOYY104bOSp8f4+YIu2k
-         cmOHWXqBzUE4DsZ6TXYVTee2qT9Lms2l7mc5Di1jh6LF7DZK3ThlttHleL/DQk6POHxJ
-         FHQQIEQrbkjBgk/4xvzbv+cfl4yr4Q6txcdf6WF1VftmNbenffn4TYFPCWkFUNUK6Y6i
-         Vz2lmbUOGzLQtGOJkftTLQvfrsrpRtm+BYuFibk9D/Aatvw1cdy2rgsrFz8HStyx6jiW
-         R9ow==
-X-Gm-Message-State: AGi0Pua2mOzT3geqUonggk8Mmq+0EUo4pLf3goyLIbmtIPyR7voSrQXC
-        iD9OP5PhPT/6RP8Y8mZs5maAAIFrGYs=
-X-Google-Smtp-Source: APiQypKXQFJv/WQOMECs45BLfB0DmDaET/Tyuji6JJN0Wg5byGLpXw/f3TMmQfW6XJ7B0jP2XX+hoQ==
-X-Received: by 2002:ab0:408a:: with SMTP id i10mr10055784uad.80.1588114977280;
-        Tue, 28 Apr 2020 16:02:57 -0700 (PDT)
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
-        by smtp.gmail.com with ESMTPSA id d184sm4932669vkf.37.2020.04.28.16.02.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 16:02:56 -0700 (PDT)
-Received: by mail-vs1-f54.google.com with SMTP id e22so92455vsa.12
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 16:02:56 -0700 (PDT)
-X-Received: by 2002:a67:c40c:: with SMTP id c12mr23547785vsk.106.1588114975891;
- Tue, 28 Apr 2020 16:02:55 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=+eb5YBzAF98WZOyXU0W5JrcpxvfZ8QdL+rCMUNBogBs=;
+        b=FAfMjvzQ5rE22TliDdfA0WbWxA8fPLJ2ORdxVccdim/XkNpVuU+COq8W87Cm5Vauhi
+         UpKcFHXkKA95hnkf27fwDAlsM7fWY30RI6Ry6RdWotv+BFusnO5ew1cdFphht6/4D52w
+         Y92htOBLakWHQkxw88gvcyfCWFKw6vJNyZWfwq53yjjYNnfs3y/ke1b+QvcS5EFBzjMK
+         BtoRtBM0DI0Vg+mpAx1pHf9PI/CNkeTwks1hpvFNLKKk2pp7AZcPc6kuua1i1e1Q8ugd
+         M8WitFjQr4HHPEd7Nriuhin1XgqMrl4cNoDuGaGlkFUh8sSO8SJ1cow207DnonhmdNdg
+         zERg==
+X-Gm-Message-State: AGi0PuZcnWKaXF8oIAuzFiWOpPhESqvDp8K355G3XmRu3Ch5KjHpru4l
+        Ub1CnHpT6rWlNkI6s5TcOAA=
+X-Google-Smtp-Source: APiQypJPE+cc4RU52SwdvwJv6fLg/VZd1xU0gwwQyijEzCMwU4XUhna9Mxms6HnaLfQFvRuDeLePLQ==
+X-Received: by 2002:a63:f30a:: with SMTP id l10mr30917710pgh.372.1588115010795;
+        Tue, 28 Apr 2020 16:03:30 -0700 (PDT)
+Received: from syed ([106.202.21.137])
+        by smtp.gmail.com with ESMTPSA id kb10sm3100232pjb.6.2020.04.28.16.03.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 Apr 2020 16:03:30 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 04:33:11 +0530
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     andriy.shevchenko@linux.intel.com, vilhelm.gray@gmail.com,
+        michal.simek@xilinx.com, arnd@arndb.de, rrichter@marvell.com,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        yamada.masahiro@socionext.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        linux-arch@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH v3 0/4] Introduce the for_each_set_clump macro
+Message-ID: <cover.1588112714.git.syednwaris@gmail.com>
 MIME-Version: 1.0
-References: <20200427225902.30404-1-gwendal@chromium.org>
-In-Reply-To: <20200427225902.30404-1-gwendal@chromium.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 28 Apr 2020 16:02:43 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XE5US4B3VE1OuF+bHTJc8QGG-c3PgQvT9KmPa-Hucoqw@mail.gmail.com>
-Message-ID: <CAD=FV=XE5US4B3VE1OuF+bHTJc8QGG-c3PgQvT9KmPa-Hucoqw@mail.gmail.com>
-Subject: Re: [PATCH] platform: chrome: Allocate sensorhub resource before
- claiming sensors
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This patchset introduces a new generic version of for_each_set_clump. 
+The previous version of for_each_set_clump8 used a fixed size 8-bit
+clump, but the new generic version can work with clump of any size but
+less than or equal to BITS_PER_LONG. The patchset utilizes the new macro 
+in several GPIO drivers.
 
-On Mon, Apr 27, 2020 at 3:59 PM Gwendal Grignou <gwendal@chromium.org> wrote:
->
-> Allocate callbacks array before enumerating the sensors:
-> The probe routine for these sensors (for instance cros_ec_sensors_probe)
-> can be called within the sensorhub probe routine
-> (cros_ec_sensors_probe())
->
-> Fixes: 145d59baff594 ("platform/chrome: cros_ec_sensorhub: Add FIFO support")
->
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> ---
->  drivers/platform/chrome/cros_ec_sensorhub.c   | 80 +++++++++++--------
->  .../platform/chrome/cros_ec_sensorhub_ring.c  | 73 ++++++++++-------
->  .../linux/platform_data/cros_ec_sensorhub.h   |  1 +
->  3 files changed, 93 insertions(+), 61 deletions(-)
+The earlier 8-bit for_each_set_clump8 facilitated a
+for-loop syntax that iterates over a memory region entire groups of set
+bits at a time.
 
-I haven't done any review of this patch, but before this patch on my
-hardware enabling 'CONFIG_IIO_CROS_EC_SENSORS_CORE=y' would cause a
-NULL pointer dereference at boot.  After picking this patch the NULL
-pointer dereference is gone.  The details were in
-<https://crbug.com/1074471>.  I haven't done any other testing than
-that, though.  ;-)  If it's useful:
+For example, suppose you would like to iterate over a 32-bit integer 8
+bits at a time, skipping over 8-bit groups with no set bit, where
+XXXXXXXX represents the current 8-bit group:
 
-Reported-by: Douglas Anderson <dianders@chromium.org>
-Tested-by: Douglas Anderson <dianders@chromium.org>
+    Example:        10111110 00000000 11111111 00110011
+    First loop:     10111110 00000000 11111111 XXXXXXXX
+    Second loop:    10111110 00000000 XXXXXXXX 00110011
+    Third loop:     XXXXXXXX 00000000 11111111 00110011
 
--Doug
+Each iteration of the loop returns the next 8-bit group that has at
+least one set bit.
+
+But with the new for_each_set_clump the clump size can be different from 8 bits.
+Moreover, the clump can be split at word boundary in situations where word 
+size is not multiple of clump size. Following are examples showing the working 
+of new macro for clump sizes of 24 bits and 6 bits.
+
+Example 1:
+clump size: 24 bits, Number of clumps (or ports): 10
+bitmap stores the bit information from where successive clumps are retrieved.
+
+     /* bitmap memory region */
+        0x00aa0000ff000000;  /* Most significant bits */
+        0xaaaaaa0000ff0000;
+        0x000000aa000000aa;
+        0xbbbbabcdeffedcba;  /* Least significant bits */
+
+Different iterations of for_each_set_clump:-
+'offset' is the bit position and 'clump' is the 24 bit clump from the
+above bitmap.
+Iteration first:        offset: 0 clump: 0xfedcba
+Iteration second:       offset: 24 clump: 0xabcdef
+Iteration third:        offset: 48 clump: 0xaabbbb
+Iteration fourth:       offset: 96 clump: 0xaa
+Iteration fifth:        offset: 144 clump: 0xff
+Iteration sixth:        offset: 168 clump: 0xaaaaaa
+Iteration seventh:      offset: 216 clump: 0xff
+Loop breaks because in the end the remaining bits (0x00aa) size was less
+than clump size of 24 bits.
+
+In above example it can be seen that in iteration third, the 24 bit clump
+that was retrieved was split between bitmap[0] and bitmap[1]. This example 
+also shows that 24 bit zeroes if present in between, were skipped (preserving
+the previous for_each_set_macro8 behaviour). 
+
+Example 2:
+clump size = 6 bits, Number of clumps (or ports) = 3.
+
+     /* bitmap memory region */
+        0x00aa0000ff000000;  /* Most significant bits */
+        0xaaaaaa0000ff0000;
+        0x0f00000000000000;
+        0x0000000000000ac0;  /* Least significant bits */
+
+Different iterations of for_each_set_clump:
+'offset' is the bit position and 'clump' is the 6 bit clump from the
+above bitmap.
+Iteration first:        offset: 6 clump: 0x2b
+Loop breaks because 6 * 3 = 18 bits traversed in bitmap.
+Here 6 * 3 is clump size * no. of clumps.
+
+Changes in v3:
+ - Patch 3: Change datatype of some variables from u64 to unsigned long
+   in function thunderx_gpio_set_multiple.
+
+CHanges in v2:
+ - Patch 2: Unify different tests for 'for_each_set_clump'. Pass test data as
+   function parameters.
+ - Patch 2: Remove unnecessary bitmap_zero calls.
+
+Syed Nayyar Waris (4):
+  bitops: Introduce the the for_each_set_clump macro
+  lib/test_bitmap.c: Add for_each_set_clump test cases
+  gpio: thunderx: Utilize for_each_set_clump macro
+  gpio: xilinx: Utilize for_each_set_clump macro
+
+ drivers/gpio/gpio-thunderx.c      |  12 ++-
+ drivers/gpio/gpio-xilinx.c        |  64 ++++++++--------
+ include/asm-generic/bitops/find.h |  19 +++++
+ include/linux/bitmap.h            |  61 +++++++++++++++
+ include/linux/bitops.h            |  13 ++++
+ lib/find_bit.c                    |  14 ++++
+ lib/test_bitmap.c                 | 121 ++++++++++++++++++++++++++++++
+ 7 files changed, 270 insertions(+), 34 deletions(-)
+
+
+base-commit: a9509b8ee069a06cd14334edca904bd0607622ca
+-- 
+2.26.2
+
