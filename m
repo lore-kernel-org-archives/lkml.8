@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8515C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F03C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8C3B2085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E59E206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:44:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099455;
-	bh=0sOTq4s30ooeuz5sbfz4jOZfhxiqi4UmbeG8VQrVoww=;
+	s=default; t=1588099458;
+	bh=PvhzddcV4LfMVCiDpVZEFtGJ0jU8K4eM4uyLQeZ+RjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GTMAlhnVitwj7GdOJ6t4KUDV9KwC8U3dOHXrcv4KZ3iH7H8YadFSbNGaNRti7qqOZ
-	 HkBd8jrd5WMM+tLzeaLF7yIgMu3YbD2z5ng/CDXn3twdgVOrw4i66CO6KYEmI363fx
-	 DX7JsOabaO2uEg1jGfaVGVg0X+/px5vbodIgUSOU=
+	b=LQfqOUWNzVExJ8ZlA8EntC1eAGzP/01N3w+iOZa9QooQflrodAAcD/EhNpTKA+slP
+	 972OWE8MJ969LWCVlGlom5ZDji7MzJDSMmHyO8I/VgZQAb9Hu+v3X2/6p1TzNLkjVs
+	 6o5MThMYoOyFBJGv2QYB1faRJcHrvUtoLbj1DJ94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731359AbgD1SoP (ORCPT
+        id S1731366AbgD1SoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:44:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37114 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:44:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730893AbgD1SoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:44:12 -0400
+        id S1731347AbgD1SoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:44:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6276206A1;
-        Tue, 28 Apr 2020 18:44:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B9A6206D6;
+        Tue, 28 Apr 2020 18:44:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099452;
-        bh=0sOTq4s30ooeuz5sbfz4jOZfhxiqi4UmbeG8VQrVoww=;
+        s=default; t=1588099449;
+        bh=PvhzddcV4LfMVCiDpVZEFtGJ0jU8K4eM4uyLQeZ+RjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xLnXpAlWM9u5hJDryipAltZMvujqMnP9M9wHU9TZVQhWBkI6Q4WML8ufntiC+BhP0
-         mL8ZOuVNRJVkeEqi74xQSIZC4nwE000aDTACqHrTue/T4NgJoTUuxHV82MrgdCgfdu
-         HHPWfouODG5kgYabZlnppzdUhETDiBLnyQmPENi4=
+        b=OD/v0S0cc1nf82iA/MCR3zpy4D+uqQUmI7n5HN7WVjHxuFBYFgo4o+3B1787zipe0
+         j9zni1y0bx0REpX/eVOddzsHh1aZY0nRG+Z9wjLYgUNeji0fOFhlMU1s4JDUmpya6W
+         kjLsgUoqC9nYBtMzZXrzEVEGD21izKCUS15l15Yo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH 5.4 139/168] vt: dont use kmalloc() for the unicode screen buffer
-Date:   Tue, 28 Apr 2020 20:25:13 +0200
-Message-Id: <20200428182249.373313755@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 5.4 156/168] xhci: Dont clear hub TT buffer on ep0 protocol stall
+Date:   Tue, 28 Apr 2020 20:25:30 +0200
+Message-Id: <20200428182250.939365900@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -59,56 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Pitre <nico@fluxnic.net>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit 9a98e7a80f95378c9ee0c644705e3b5aa54745f1 upstream.
+commit 8f97250c21f0cf36434bf5b7ddf4377406534cd1 upstream.
 
-Even if the actual screen size is bounded in vc_do_resize(), the unicode
-buffer is still a little more than twice the size of the glyph buffer
-and may exceed MAX_ORDER down the kmalloc() path. This can be triggered
-from user space.
+The default control endpoint ep0 can return a STALL indicating the
+device does not support the control transfer requests. This is called
+a protocol stall and does not halt the endpoint.
 
-Since there is no point having a physically contiguous buffer here,
-let's avoid the above issue as well as reducing pressure on high order
-allocations by using vmalloc() instead.
+xHC behaves a bit different. Its internal endpoint state will always
+be halted on any stall, even if the device side of the endpiont is not
+halted. So we do need to issue the reset endpoint command to clear the
+xHC host intenal endpoint halt state, but should not request the HS hub
+to clear the TT buffer unless device side of endpoint is halted.
 
-Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
-Cc: <stable@vger.kernel.org>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.2003282214210.2671@knanqh.ubzr
+Clearing the hub TT buffer at protocol stall caused ep0 to become
+unresponsive for some FS/LS devices behind HS hubs, and class drivers
+failed to set the interface due to timeout:
+
+usb 1-2.1: 1:1: usb_set_interface failed (-110)
+
+Fixes: ef513be0a905 ("usb: xhci: Add Clear_TT_Buffer")
+Cc: <stable@vger.kernel.org> # v5.3
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200421140822.28233-4-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/vt.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/usb/host/xhci-ring.c |   16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -81,6 +81,7 @@
- #include <linux/errno.h>
- #include <linux/kd.h>
- #include <linux/slab.h>
-+#include <linux/vmalloc.h>
- #include <linux/major.h>
- #include <linux/mm.h>
- #include <linux/console.h>
-@@ -350,7 +351,7 @@ static struct uni_screen *vc_uniscr_allo
- 	/* allocate everything in one go */
- 	memsize = cols * rows * sizeof(char32_t);
- 	memsize += rows * sizeof(char32_t *);
--	p = kmalloc(memsize, GFP_KERNEL);
-+	p = vmalloc(memsize);
- 	if (!p)
- 		return NULL;
- 
-@@ -366,7 +367,7 @@ static struct uni_screen *vc_uniscr_allo
- 
- static void vc_uniscr_set(struct vc_data *vc, struct uni_screen *new_uniscr)
- {
--	kfree(vc->vc_uni_screen);
-+	vfree(vc->vc_uni_screen);
- 	vc->vc_uni_screen = new_uniscr;
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -1868,7 +1868,6 @@ static void xhci_cleanup_halted_endpoint
+ 		ep->ep_state |= EP_HARD_CLEAR_TOGGLE;
+ 		xhci_cleanup_stalled_ring(xhci, slot_id, ep_index, stream_id,
+ 					  td);
+-		xhci_clear_hub_tt_buffer(xhci, td, ep);
+ 	}
+ 	xhci_ring_cmd_db(xhci);
  }
- 
+@@ -1989,11 +1988,18 @@ static int finish_td(struct xhci_hcd *xh
+ 	if (trb_comp_code == COMP_STALL_ERROR ||
+ 		xhci_requires_manual_halt_cleanup(xhci, ep_ctx,
+ 						trb_comp_code)) {
+-		/* Issue a reset endpoint command to clear the host side
+-		 * halt, followed by a set dequeue command to move the
+-		 * dequeue pointer past the TD.
+-		 * The class driver clears the device side halt later.
++		/*
++		 * xhci internal endpoint state will go to a "halt" state for
++		 * any stall, including default control pipe protocol stall.
++		 * To clear the host side halt we need to issue a reset endpoint
++		 * command, followed by a set dequeue command to move past the
++		 * TD.
++		 * Class drivers clear the device side halt from a functional
++		 * stall later. Hub TT buffer should only be cleared for FS/LS
++		 * devices behind HS hubs for functional stalls.
+ 		 */
++		if ((ep_index != 0) || (trb_comp_code != COMP_STALL_ERROR))
++			xhci_clear_hub_tt_buffer(xhci, td, ep);
+ 		xhci_cleanup_halted_endpoint(xhci, slot_id, ep_index,
+ 					ep_ring->stream_id, td, EP_HARD_RESET);
+ 	} else {
 
 
