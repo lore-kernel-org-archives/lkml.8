@@ -2,124 +2,171 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1F9C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 772B8C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7601120737
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:37:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588109826;
-	bh=sgoAjx/rxH+09D6zfwRTyHoQLg8b1bAYPPMkwTsPWK4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=S9BgNDCiBLCNfn4W5pbDkAelEfw7HY8Sl3390wGx+GQN9YMcP/7ywxPhpSROhR60a
-	 YO/oaWfF0pCPPVfKoaVPm54IpTktwXh6WBtNc93u++6LMjES6Chg1X3jg8SoOS9a3X
-	 vhYupkpG9beYh22i5SZpJRolvB001Kf0Xv/LQXFg=
+	by mail.kernel.org (Postfix) with ESMTP id 58D5B20730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:37:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbgD1VhF (ORCPT
+        id S1726625AbgD1VhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:37:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726282AbgD1VhF (ORCPT
+        Tue, 28 Apr 2020 17:37:11 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:37929 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbgD1VhJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:37:05 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A292C03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 14:37:04 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id e25so411294ljg.5
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 14:37:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=byKFbf6/4dlMbIbNFz7mzcw9H9m+Hnm7ILov1GMUf20=;
-        b=c5V540DX5qA6TExpwN82zDgCG62wkqprBQKUL+iKPh4WlRl/iYQMUxVRhV6k+zsiT3
-         LdHMx69qD/cpw5w0oGC5Q0372ifsczILIVK5UMTuNG1Z2+H4Chzy4fZoyZE2yARv/Qes
-         lhUI/+ul3xggWnP/fqFH3tT8S0RA9vGMxghbU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=byKFbf6/4dlMbIbNFz7mzcw9H9m+Hnm7ILov1GMUf20=;
-        b=h7VcGVp6sMHBovZThSDYbD/cxpPD4W3kWYc0thFf5ItVJmdepTS2r7TOMxj5HYCoRq
-         llsrMsELzLvMLICt7NMsVQtdtsSsAHxPs4Dyv9bwXLNYn6JIslA2bAYx38jB4rhKd0Td
-         c7wRm8iHcV9PbL8pFUVbj/UiAs4/eD3OBXMT67dI9yKeJpxZHJp5jNYgweHT6ysbqKKz
-         s9EKEANH4m7JfEMgsGGXFuV9WaiWzylQ2YgphTbZtYbaByRXCdQh/VMTy9tmMQ1a1ij4
-         aidA+RJBHJTuxg7Nbww9a9CAVgR12GDUGHYK+OB/Jiq1CiQrwWjhXU/v7w6wX8YZH1s1
-         mG1w==
-X-Gm-Message-State: AGi0PuYPRG4p2fLSjNEUEmMvm2x1HVpjd0Wjd626IIxIPVTU5B1G9RlN
-        unSVH8iOMIFYCIQny3mtEMg0gQp1pKQ=
-X-Google-Smtp-Source: APiQypKpfFeMG1F24osbGOCCoXeB2xPLxsvcKTjjLs6TvN/HdQKYhi7fJWiOFWZtbr0F75eX9YHFrw==
-X-Received: by 2002:a05:651c:c8:: with SMTP id 8mr17858806ljr.182.1588109822370;
-        Tue, 28 Apr 2020 14:37:02 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id k18sm516708lfg.81.2020.04.28.14.37.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 14:37:00 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id u15so423050ljd.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 14:37:00 -0700 (PDT)
-X-Received: by 2002:a2e:9a54:: with SMTP id k20mr17622095ljj.265.1588109820160;
- Tue, 28 Apr 2020 14:37:00 -0700 (PDT)
+        Tue, 28 Apr 2020 17:37:09 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1Mo7if-1ioQaP0hbP-00phAH; Tue, 28 Apr 2020 23:36:50 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
+        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Gayatri Kammela <gayatri.kammela@intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Chen Zhou <chenzhou10@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "David E. Box" <david.e.box@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Rajat Jain <rajatja@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nishad Kamdar <nishadkamdar@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: intel_pmc_core: avoid unused-function warnings
+Date:   Tue, 28 Apr 2020 23:36:38 +0200
+Message-Id: <20200428213648.3629501-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-References: <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com>
- <87imi8nzlw.fsf@x220.int.ebiederm.org> <CAHk-=wgh4zts+3hdkGzHLJ6pBGumcJ=23gRbMfubDrLstis2Bg@mail.gmail.com>
- <CAHk-=whKHpERyVv2-C+kxq9KV_mJPW3hkGDpn6f4yOvs+au8SA@mail.gmail.com>
- <20200411182043.GA3136@redhat.com> <CAHk-=wgwXpKepChGi4ZhQVxZxD0ic8s2CDXvUmqBTMaKGz-fjg@mail.gmail.com>
- <20200412195049.GA23824@redhat.com> <CAHk-=wiDwR+6ugYaKEGHfYteLF+NH5xu=T7uuUTkK9y-hr6zow@mail.gmail.com>
- <AM6PR03MB51708CF53D8A02086427DAC2E4AC0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wi_zr9dwX3UBYvgkmm6eVQfRP50orryJ6ZVAxuFqdSG5A@mail.gmail.com>
- <20200428190836.GC29960@redhat.com> <CAHk-=wi03QRcUR1DfbEr+Pw-DAMENzY-FuRcGawtj9p597=p2w@mail.gmail.com>
- <CAG48ez03ABTa-KbCtFHqB1hOT7dgAM96c3kiw-e80B+utSEwYw@mail.gmail.com>
-In-Reply-To: <CAG48ez03ABTa-KbCtFHqB1hOT7dgAM96c3kiw-e80B+utSEwYw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 28 Apr 2020 14:36:43 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjTLnMuZmBO2foeHhsLAoUTpUi7oBVJ67F4XKB+tdEDbQ@mail.gmail.com>
-Message-ID: <CAHk-=wjTLnMuZmBO2foeHhsLAoUTpUi7oBVJ67F4XKB+tdEDbQ@mail.gmail.com>
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-To:     Jann Horn <jannh@google.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Waiman Long <longman@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:nvNU/HDnyd33t01OiWL2I6dmE6u7w9oJnm8AAqtxowJeqKhvQqw
+ haXaJX3ywsdYR3AiMt+DPphtMU8g2kfqr6aHeEMyOQZZGE5dPzUqOu2osXRe0uLC3C0VOMz
+ HzWqotj1SsW3Y/AvXF/P95eaHSZICk/8ENTuDVyEeSjfaf7YOqvLqao5ml281iy5MyH+Ksq
+ BcbAGEs2BAPst60ge+MUg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3jBJdqlr6ro=:83ZkR/dO+GI/5JLxYRofra
+ PMNHMSM1p4DgHgv6TawQA7/2OIZLJ83xhjBifRvVkYFDYDfOIlwP3V8WQULv8spF7VFEX1YcC
+ SQ7hOvblO4759ek641nhlE8yuhyDClhcAsH8Qqys53wd1rOTEAd5XoLn7SBt492N7vgNx9oxR
+ gu1mdiYKgviFj9sLkGf+2q1nW3wLTaVOO8z6BFgwS+zIabtvMlDwyk6ReB0GhqiqDO/Uys3EE
+ ATNsBLWpPTPcmo1IEWN0gx/lWFJ22WtCWEbn+2oN7VQy4l19rAp9nDdjn8lTcHR30nFKPCPs0
+ NyRafXoBqS3FyWYolEC8zDfrusNEbJopW6G+2Xqou2Ja3HF97jaPEULV1IQBtkP8H+OTa8wl7
+ h95hNSOy3K8B5YOLPvd3RbP9KU0exb+rMEIDvjycxLQOlnl6JTYo1PLIS6qtqh6Ghn+JQckfB
+ btsS6GtDim+atapsQuVLcUVYJMtYz0OKSDpmDkrY4ISYK9Oc6TSbi1yDWAZB1f0FnXcuecZoo
+ kxdHtKo1CNWaHTrQKkc0/8axUjW6j5Pgj5C5bqrTzqZDX/xhOd1CEVlZxpFtfPOX/5nUtnRT8
+ S4fXSiQHIqYF3QrZ5TiuGxLfK6OEx9LnTWpbW8ulN3zBYxeone9N6hLt20y0py6JeQYHBfLD1
+ jS2Z5LbPr/urw7cskvGVDq1wFZ+Kx/HQeD6pg5zof0X4eNgNaXzVKlvltmnhbVAUSkc+Y5OuR
+ /jHphW1EPpLm5gw723MqJSMPYtXN7/QHU2zLp5jG/awnoiJJ/6IYTiZJhZqfXjrJtwogCoXRP
+ 7q90t4JZky2DWlWef3ZSymSG6x4TPKJEL5x81YV6UXtoWEczBE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 2:06 PM Jann Horn <jannh@google.com> wrote:
->
-> In execve:
->
->  - After the point of no return, but before we start waiting for the
->    other threads to go away, finish calculating our post-execve creds
->    and stash them somewhere in the task_struct or so.
->  - Drop the cred_guard_mutex.
->  - Wait for the other threads to die.
->  - Take the cred_guard_mutex again.
->  - Clear out the pointer in the task_struct.
->  - Finish execve and install the new creds.
->  - Drop the cred_guard_mutex again.
->
-> Then in ptrace_may_access, after taking the cred_guard_mutex, we'd
-> know that the target task is either outside execve or in the middle of
-> execve, with old and new credentials known; and then we could say "you
-> only get to access that task if you're capable relative to *both* its
-> old and new credentials, since the task currently has both state from
-> the old executable and from the new one".
+When both CONFIG_DEBUG_FS and CONFIG_PM_SLEEP are disabled, the
+functions that got moved out of the #ifdef section now cause
+a warning:
 
-That doesn't solve the problem with "check_unsafe_exec()" - you might
-miss setting LSM_UNSAFE_PTRACE.
+drivers/platform/x86/intel_pmc_core.c:654:13: error: 'pmc_core_lpm_display' defined but not used [-Werror=unused-function]
+  654 | static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
+      |             ^~~~~~~~~~~~~~~~~~~~
+drivers/platform/x86/intel_pmc_core.c:617:13: error: 'pmc_core_slps0_display' defined but not used [-Werror=unused-function]
+  617 | static void pmc_core_slps0_display(struct pmc_dev *pmcdev, struct device *dev,
+      |             ^~~~~~~~~~~~~~~~~~~~~~
 
-Although maybe that whole function could be moved down (to after you
-get the cred_guard_mutex the second time).
+Rather than add even more #ifdefs here, remove them entirely and
+let the compiler work it out, it can actually get rid of all the
+debugfs calls without problems as long as the struct member is
+there.
 
-               Linus
+The two PM functions just need a __maybe_unused annotations to avoid
+another warning instead of the #ifdef.
+
+Fixes: aae43c2bcdc1 ("platform/x86: intel_pmc_core: Relocate pmc_core_*_display() to outside of CONFIG_DEBUG_FS")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/platform/x86/intel_pmc_core.c | 18 ++----------------
+ drivers/platform/x86/intel_pmc_core.h |  2 --
+ 2 files changed, 2 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index a130859ec49e..7c8bdab078cf 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -692,7 +692,6 @@ static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
+ 	kfree(lpm_regs);
+ }
+ 
+-#if IS_ENABLED(CONFIG_DEBUG_FS)
+ static bool slps0_dbg_latch;
+ 
+ static inline u8 pmc_core_reg_read_byte(struct pmc_dev *pmcdev, int offset)
+@@ -1133,15 +1132,6 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+ 				    &pmc_core_substate_l_sts_regs_fops);
+ 	}
+ }
+-#else
+-static inline void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+-{
+-}
+-
+-static inline void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+-{
+-}
+-#endif /* CONFIG_DEBUG_FS */
+ 
+ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+ 	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_L,		&spt_reg_map),
+@@ -1260,13 +1250,11 @@ static int pmc_core_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_PM_SLEEP
+-
+ static bool warn_on_s0ix_failures;
+ module_param(warn_on_s0ix_failures, bool, 0644);
+ MODULE_PARM_DESC(warn_on_s0ix_failures, "Check and warn for S0ix failures");
+ 
+-static int pmc_core_suspend(struct device *dev)
++static __maybe_unused int pmc_core_suspend(struct device *dev)
+ {
+ 	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
+ 
+@@ -1318,7 +1306,7 @@ static inline bool pmc_core_is_s0ix_failed(struct pmc_dev *pmcdev)
+ 	return false;
+ }
+ 
+-static int pmc_core_resume(struct device *dev)
++static __maybe_unused int pmc_core_resume(struct device *dev)
+ {
+ 	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
+ 	const struct pmc_bit_map **maps = pmcdev->map->lpm_sts;
+@@ -1348,8 +1336,6 @@ static int pmc_core_resume(struct device *dev)
+ 	return 0;
+ }
+ 
+-#endif
+-
+ static const struct dev_pm_ops pmc_core_pm_ops = {
+ 	SET_LATE_SYSTEM_SLEEP_PM_OPS(pmc_core_suspend, pmc_core_resume)
+ };
+diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+index 0d50b2402abe..5eae55d80226 100644
+--- a/drivers/platform/x86/intel_pmc_core.h
++++ b/drivers/platform/x86/intel_pmc_core.h
+@@ -282,9 +282,7 @@ struct pmc_dev {
+ 	u32 base_addr;
+ 	void __iomem *regbase;
+ 	const struct pmc_reg_map *map;
+-#if IS_ENABLED(CONFIG_DEBUG_FS)
+ 	struct dentry *dbgfs_dir;
+-#endif /* CONFIG_DEBUG_FS */
+ 	int pmc_xram_read_bit;
+ 	struct mutex lock; /* generic mutex lock for PMC Core */
+ 
+-- 
+2.26.0
+
