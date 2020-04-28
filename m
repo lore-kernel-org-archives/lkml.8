@@ -2,164 +2,89 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9345EC83009
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 011EDC83006
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69007206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:48:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="dUDumjdT"
+	by mail.kernel.org (Postfix) with ESMTP id D0AE7206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:48:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgD1MsL (ORCPT
+        id S1726911AbgD1Msa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:48:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46488 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726620AbgD1MsL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:48:11 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F14AFC03C1AB
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 05:48:09 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id m18so32273753otq.9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 05:48:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gIMUGicgwmIFtnYG9N3fQPjEXkbOpiDE/URudlFOW5s=;
-        b=dUDumjdTIlGGpNmZYXHngArdwQWCCtin2qUEkmCJQtwAgVH3K5XgViZI81wZ44IjG7
-         Zq9hacLuuX3LoskBpPXvwEKqsb+nyh8KlA22O07jpgEn9K3uC6ACaKAN8PKic/lPqIH3
-         aGuwroFwfXlxdyxjbX0M5ZO8aNaVayipg4ovDBY1QrVdSeb7pZN8F9XkXds1YomIXvTY
-         YmfpZJC7mu05HAL4WFjKaNy2UHPs3FQx9op/si0XAJd964b+EV57407V2UZmA/ay/P77
-         xLf+QNzD7vJnw4QY7Rt6Ymk3pNiAJ9KUWkKYygNBJf6EbhdoOzp+JfBNNHOfuB1A5awb
-         aYQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gIMUGicgwmIFtnYG9N3fQPjEXkbOpiDE/URudlFOW5s=;
-        b=ckjUlGWAhFQaOy8GZ481QZzjrXlRu7TKHkSeR1v0rFVHCw9rhqQPyUK5XKN+9Ekrm9
-         E5eyMBh1yZubMp+cRfP0+jC1o2vqyKRs4N8dg6ZbZtcuFW2xK3xMVLccOzO9T2siwGQt
-         xs/87A/qU31zBvjYxojacEtmfIX08yGDWgainSAnWRJzyXRMCrzeO9q5+TwkL5CMO4U3
-         078RgponVEU5i0GDLIndGmREvsl+CDQLPL0i/RkNm+QWkze0XSTTOCQcw1GbkIY8nRW8
-         z11Id5DV86WL9f7swBFErG9MDAv4zeVmKNx0nrkshlOmIi9XSHtOJICRqukXqMB4a1TQ
-         x5GQ==
-X-Gm-Message-State: AGi0PuYONcLClZpUZzgi+gvcTxRtaahxrVrOQ6Mey20/EPkZwrOXs10H
-        UHpIspYFL0jSP7oL/dwVDJhbfh7lYUBR1Q0T+o3vyw==
-X-Google-Smtp-Source: APiQypJfEP180kCuws7+abjZcT8dPX9zxxKNlOozz0+TthkUItgt4+ccPZriFdCypuPgxcXtg9LpjV+6NqVW8gqrIFU=
-X-Received: by 2002:a05:6830:13d4:: with SMTP id e20mr22370151otq.66.1588078089294;
- Tue, 28 Apr 2020 05:48:09 -0700 (PDT)
+        Tue, 28 Apr 2020 08:48:30 -0400
+Received: from mga05.intel.com ([192.55.52.43]:16155 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726620AbgD1Ms3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 08:48:29 -0400
+IronPort-SDR: frzY7PeL0lwc/Fy6ueZHWuZK4gGyeLdw6ZU51oVaOISklbKlQBRvo7YlnouO9HlM5lPPZgjOQp
+ 7T46iRqOpiqg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 05:48:28 -0700
+IronPort-SDR: Z6HWDOLjjHowLabIxkbwfY0Q9JgW7Nm7J2HaRF6lvI3Cx2TF1ufN6CXUvV7fWs7gyUl5moZXMA
+ 76qS05kQmiAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,327,1583222400"; 
+   d="scan'208";a="257603079"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 28 Apr 2020 05:48:23 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jTPez-003YmH-Dr; Tue, 28 Apr 2020 15:48:25 +0300
+Date:   Tue, 28 Apr 2020 15:48:25 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 04/16] dt-bindings: mfd: Add bindings for sl28cpld
+Message-ID: <20200428124825.GT185537@smile.fi.intel.com>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-5-michael@walle.cc>
 MIME-Version: 1.0
-References: <20200401163542.83278-1-robert.marko@sartura.hr> <20200427164514.GQ56386@vkoul-mobl.Dlink>
-In-Reply-To: <20200427164514.GQ56386@vkoul-mobl.Dlink>
-From:   Robert Marko <robert.marko@sartura.hr>
-Date:   Tue, 28 Apr 2020 14:47:58 +0200
-Message-ID: <CA+HBbNHT7bOM68zBGAHO0Pi9WrBc244Qewwe5JV7fNhNUGPZ4Q@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] phy: add driver for Qualcomm IPQ40xx USB PHY
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-kernel@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, John Crispin <john@phrozen.org>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423174543.17161-5-michael@walle.cc>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 6:45 PM Vinod Koul <vkoul@kernel.org> wrote:
->
-> Hello Robert,
->
-> On 01-04-20, 18:35, Robert Marko wrote:
->
-> > +static int ipq4019_ss_phy_power_on(struct phy *_phy)
-> > +{
-> > +     struct ipq4019_usb_phy *phy = phy_get_drvdata(_phy);
-> > +
-> > +     ipq4019_ss_phy_power_off(_phy);
-> > +
-> > +     reset_control_deassert(phy->por_rst);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static struct phy_ops ipq4019_usb_ss_phy_ops = {
-> > +     .power_on       = ipq4019_ss_phy_power_on,
-> > +     .power_off      = ipq4019_ss_phy_power_off,
-> > +};
-> > +
-> > +static int ipq4019_hs_phy_power_off(struct phy *_phy)
-> > +{
-> > +     struct ipq4019_usb_phy *phy = phy_get_drvdata(_phy);
-> > +
-> > +     reset_control_assert(phy->por_rst);
-> > +     msleep(10);
->
-> why not call ipq4019_ss_phy_power_off() here as well?
-Its not necessary, SS and HS PHY-s are separated but share
-the same register space.
-So when HS PHY is controlled, SS PHY can remain working.
->
-> > +
-> > +     reset_control_assert(phy->srif_rst);
-> > +     msleep(10);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int ipq4019_hs_phy_power_on(struct phy *_phy)
-> > +{
-> > +     struct ipq4019_usb_phy *phy = phy_get_drvdata(_phy);
-> > +
-> > +     ipq4019_hs_phy_power_off(_phy);
-> > +
-> > +     reset_control_deassert(phy->srif_rst);
-> > +     msleep(10);
-> > +
-> > +     reset_control_deassert(phy->por_rst);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static struct phy_ops ipq4019_usb_hs_phy_ops = {
-> > +     .power_on       = ipq4019_hs_phy_power_on,
-> > +     .power_off      = ipq4019_hs_phy_power_off,
-> > +};
->
-> So this is fiddling with resets, what about phy configuration and
-> calibration, who take care of that?
-As as I understand, since I don't have documentation access is that no
-calibration and configuration except to properly reset them are needed.
-Development hardware required some magic register values to be
-written but in the previous revisions of this driver it was
-discovered that they were leftovers from the development HW.
->
-> > +static int ipq4019_usb_phy_probe(struct platform_device *pdev)
-> > +{
-> > +     struct device *dev = &pdev->dev;
-> > +     struct resource *res;
-> > +     struct phy_provider *phy_provider;
-> > +     struct ipq4019_usb_phy *phy;
-> > +     const struct of_device_id *match;
-> > +
-> > +     match = of_match_device(ipq4019_usb_phy_of_match, &pdev->dev);
-> > +     if (!match)
-> > +             return -ENODEV;
->
-> you are using this to get match-data few lines below, why not use
-> of_device_get_match_data() and get the match->data which you are
-> interested in?
-Thanks, I will look into it.
->
-> --
-> ~Vinod
+On Thu, Apr 23, 2020 at 07:45:31PM +0200, Michael Walle wrote:
+> This adds device tree bindings for the board management controller found
+> on the Kontron SMARC-sAL28 board.
+
+I think it should be independent patches (same way as you do for drivers).
+
+>  .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  51 ++++++
+>  .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 +++
+>  .../bindings/mfd/kontron,sl28cpld.yaml        | 162 ++++++++++++++++++
+>  .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++++
+>  .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++++
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
