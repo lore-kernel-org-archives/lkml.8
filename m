@@ -2,195 +2,115 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B55D5C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B782C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E90C20757
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:55:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NcxHbMn9"
+	by mail.kernel.org (Postfix) with ESMTP id 3B03E20757
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbgD1Rz6 (ORCPT
+        id S1728575AbgD1R6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 13:55:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728023AbgD1Rz5 (ORCPT
+        Tue, 28 Apr 2020 13:58:24 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:51462 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727827AbgD1R6X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 13:55:57 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49FF0C03C1AB;
-        Tue, 28 Apr 2020 10:55:57 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id g19so34163566otk.5;
-        Tue, 28 Apr 2020 10:55:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WPNSEszGsKvWwr5mWrgU0hiRBGrCOhQfvvHO8mYiip0=;
-        b=NcxHbMn968e3SArAbgtFRgFPL/7mSv37DM6oLID+iG8epieq6FKHU0WOLraK04kbZ2
-         h/HD75QC4hkpLYcbdrC3iudhC43FDT4oYSz+SRLL/s3B86MEWqUNXXNuhYZTkJxnZnDt
-         +5iYECCkN0GH6NE8pdfMPgncaXEdPD6DYevJcraxu0GEah8Vci11j5MTWMv5f2NEwHbr
-         aNA7T91VyiYzzcC8WiU8vw9GaJUWdAY76OPr5B+z8Y4mY4gyYbbJgvgyVagOFQ4F3jhj
-         YuGs0PUQgakmA+zwHRxOiSbRSEFsDT4zPmEqjHcF7TsKE2XwwU5F7o6XTETR/l31u9fB
-         2Vrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WPNSEszGsKvWwr5mWrgU0hiRBGrCOhQfvvHO8mYiip0=;
-        b=svynhwZ9fv9GuYvGOBtLvFaWKNhyQubZzLGMTkEj0H6yRad1745x9lRUr44hg/GOMg
-         NwkQGE3FJsYIlDPXopvZfnqhIyFKtaMUV4tYSpn2SHeiCOditaXCFoVympPzew4FzVJC
-         m2ymTAweiwonLFfH89mAo2x3o9mEKAgdNLtU+O8YLtOusKhMaefUfSbkVz4js1fMWSbw
-         LnwRhDFvHRXtgqOA1yF7qs8Kvvonh+x8YTNEIvNsPC/GFPGOsQQCYWqVXFSHvXWCl6Ym
-         Z/voO4iHzhQEg2Eogk8QdwvyF7YM1Ek3UVnKODiGylNXmc4C8lIA9z15Rk5nyVw/Jb+S
-         UkWg==
-X-Gm-Message-State: AGi0PuZmhVTF+ok9UVXc3/YDFyoUC5taba843famjMx5RYQrDmWTGeQw
-        eCgb4RTa9ogR6GCSGseP8lA=
-X-Google-Smtp-Source: APiQypIbp0GiAGwfiaFKNuw/Omid8A5x5maeShrzS4a9PPE02r0BseiG3bEp8QpYMByPXyBDhJ50OQ==
-X-Received: by 2002:aca:eb95:: with SMTP id j143mr3883044oih.159.1588096556631;
-        Tue, 28 Apr 2020 10:55:56 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id b6sm5007825otq.18.2020.04.28.10.55.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 10:55:55 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH v2] hv_netvsc: Fix netvsc_start_xmit's return type
-Date:   Tue, 28 Apr 2020 10:54:56 -0700
-Message-Id: <20200428175455.2109973-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428100828.aslw3pn5nhwtlsnt@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
-References: <20200428100828.aslw3pn5nhwtlsnt@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
+        Tue, 28 Apr 2020 13:58:23 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jTUUw-0008S4-H8; Tue, 28 Apr 2020 11:58:22 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jTUUv-00068u-LG; Tue, 28 Apr 2020 11:58:22 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
+        <87ftcv1nqe.fsf@x220.int.ebiederm.org>
+        <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
+        <20200424173927.GB26802@redhat.com>
+        <87mu6ymkea.fsf_-_@x220.int.ebiederm.org>
+        <875zdmmj4y.fsf_-_@x220.int.ebiederm.org>
+        <CAHk-=whvktUC9VbzWLDw71BHbV4ofkkuAYsrB5Rmxnhc-=kSeQ@mail.gmail.com>
+        <878sihgfzh.fsf@x220.int.ebiederm.org>
+        <CAHk-=wjSM9mgsDuX=ZTy2L+S7wGrxZMcBn054As_Jyv8FQvcvQ@mail.gmail.com>
+        <87sggnajpv.fsf_-_@x220.int.ebiederm.org>
+        <CAHk-=wiBYMoimvtc_DrwKN5EaQ98AmPryqYX6a-UE_VGP6LMrw@mail.gmail.com>
+Date:   Tue, 28 Apr 2020 12:55:07 -0500
+In-Reply-To: <CAHk-=wiBYMoimvtc_DrwKN5EaQ98AmPryqYX6a-UE_VGP6LMrw@mail.gmail.com>
+        (Linus Torvalds's message of "Tue, 28 Apr 2020 09:53:22 -0700")
+Message-ID: <87pnbr8phg.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jTUUv-00068u-LG;;;mid=<87pnbr8phg.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19/UlenhLPHsqhEZAfwxw9ynR2w+0kVTag=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v4 0/2] proc: Ensure we see the exit of each process tid exactly
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-netvsc_start_xmit is used as a callback function for the ndo_start_xmit
-function pointer. ndo_start_xmit's return type is netdev_tx_t but
-netvsc_start_xmit's return type is int.
+Linus Torvalds <torvalds@linux-foundation.org> writes:
 
-This causes a failure with Control Flow Integrity (CFI), which requires
-function pointer prototypes and callback function definitions to match
-exactly. When CFI is in enforcing, the kernel panics. When booting a
-CFI kernel with WSL 2, the VM is immediately terminated because of this.
+> On Tue, Apr 28, 2020 at 5:20 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>>
+>> In short I don't think this change will introduce any regressions.
+>
+> I think the series looks fine, but I also think the long explanation
+> (that I snipped in this reply) in the cover letter should be there in
+> the kernel tree.
 
-The splat when CONFIG_CFI_PERMISSIVE is used:
+When I have been adding patchsets like this to my tree I have been doing
+merge --no-ff so I can create a place for explanations like this, and I
+will do the same with this.
 
-[    5.916765] CFI failure (target: netvsc_start_xmit+0x0/0x10):
-[    5.916771] WARNING: CPU: 8 PID: 0 at kernel/cfi.c:29 __cfi_check_fail+0x2e/0x40
-[    5.916772] Modules linked in:
-[    5.916774] CPU: 8 PID: 0 Comm: swapper/8 Not tainted 5.7.0-rc3-next-20200424-microsoft-cbl-00001-ged4eb37d2c69-dirty #1
-[    5.916776] RIP: 0010:__cfi_check_fail+0x2e/0x40
-[    5.916777] Code: 48 c7 c7 70 98 63 a9 48 c7 c6 11 db 47 a9 e8 69 55 59 00 85 c0 75 02 5b c3 48 c7 c7 73 c6 43 a9 48 89 de 31 c0 e8 12 2d f0 ff <0f> 0b 5b c3 00 00 cc cc 00 00 cc cc 00 00 cc cc 00 00 85 f6 74 25
-[    5.916778] RSP: 0018:ffffa803c0260b78 EFLAGS: 00010246
-[    5.916779] RAX: 712a1af25779e900 RBX: ffffffffa8cf7950 RCX: ffffffffa962cf08
-[    5.916779] RDX: ffffffffa9c36b60 RSI: 0000000000000082 RDI: ffffffffa9c36b5c
-[    5.916780] RBP: ffff8ffc4779c2c0 R08: 0000000000000001 R09: ffffffffa9c3c300
-[    5.916781] R10: 0000000000000151 R11: ffffffffa9c36b60 R12: ffff8ffe39084000
-[    5.916782] R13: ffffffffa8cf7950 R14: ffffffffa8d12cb0 R15: ffff8ffe39320140
-[    5.916784] FS:  0000000000000000(0000) GS:ffff8ffe3bc00000(0000) knlGS:0000000000000000
-[    5.916785] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    5.916786] CR2: 00007ffef5749408 CR3: 00000002f4f5e000 CR4: 0000000000340ea0
-[    5.916787] Call Trace:
-[    5.916788]  <IRQ>
-[    5.916790]  __cfi_check+0x3ab58/0x450e0
-[    5.916793]  ? dev_hard_start_xmit+0x11f/0x160
-[    5.916795]  ? sch_direct_xmit+0xf2/0x230
-[    5.916796]  ? __dev_queue_xmit.llvm.11471227737707190958+0x69d/0x8e0
-[    5.916797]  ? neigh_resolve_output+0xdf/0x220
-[    5.916799]  ? neigh_connected_output.cfi_jt+0x8/0x8
-[    5.916801]  ? ip6_finish_output2+0x398/0x4c0
-[    5.916803]  ? nf_nat_ipv6_out+0x10/0xa0
-[    5.916804]  ? nf_hook_slow+0x84/0x100
-[    5.916807]  ? ip6_input_finish+0x8/0x8
-[    5.916807]  ? ip6_output+0x6f/0x110
-[    5.916808]  ? __ip6_local_out.cfi_jt+0x8/0x8
-[    5.916810]  ? mld_sendpack+0x28e/0x330
-[    5.916811]  ? ip_rt_bug+0x8/0x8
-[    5.916813]  ? mld_ifc_timer_expire+0x2db/0x400
-[    5.916814]  ? neigh_proxy_process+0x8/0x8
-[    5.916816]  ? call_timer_fn+0x3d/0xd0
-[    5.916817]  ? __run_timers+0x2a9/0x300
-[    5.916819]  ? rcu_core_si+0x8/0x8
-[    5.916820]  ? run_timer_softirq+0x14/0x30
-[    5.916821]  ? __do_softirq+0x154/0x262
-[    5.916822]  ? native_x2apic_icr_write+0x8/0x8
-[    5.916824]  ? irq_exit+0xba/0xc0
-[    5.916825]  ? hv_stimer0_vector_handler+0x99/0xe0
-[    5.916826]  ? hv_stimer0_callback_vector+0xf/0x20
-[    5.916826]  </IRQ>
-[    5.916828]  ? hv_stimer_global_cleanup.cfi_jt+0x8/0x8
-[    5.916829]  ? raw_setsockopt+0x8/0x8
-[    5.916830]  ? default_idle+0xe/0x10
-[    5.916832]  ? do_idle.llvm.10446269078108580492+0xb7/0x130
-[    5.916833]  ? raw_setsockopt+0x8/0x8
-[    5.916833]  ? cpu_startup_entry+0x15/0x20
-[    5.916835]  ? cpu_hotplug_enable.cfi_jt+0x8/0x8
-[    5.916836]  ? start_secondary+0x188/0x190
-[    5.916837]  ? secondary_startup_64+0xa5/0xb0
-[    5.916838] ---[ end trace f2683fa869597ba5 ]---
+I already have Alexey Gladkov's proc changes, and my next_tgid cleanup
+on a branch of proc changes in my tree already.
 
-Avoid this by using the right return type for netvsc_start_xmit.
+> So if you send me this as a single pull request, with that explanation
+> (either in the email or in the signed tag - although you don't seem to
+> use tags normally - so that we have that extra commentary for
+> posterity, that sounds good.
 
-Fixes: fceaf24a943d8 ("Staging: hv: add the Hyper-V virtual network driver")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1009
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
+I hope you don't mind if I combind this with some other proc changes.
+If you do mind I will put this on a separate topic branch.
 
-v1 -> v2:
+Right now it just seems easier for me to keep track of if I keep my
+number of topics limited.
 
-* Move splat into commit message rather than issue.
+> That said, this fix seems to not matter for normal operation, so
+> unless it's holding up something important, maybe it's 5.8 material?
 
-Comment from previous version:
+Yes, this is 5.8 material.
 
-Do note that netvsc_xmit still returns int because netvsc_xmit has a
-potential return from netvsc_vf_xmit, which does not return netdev_tx_t
-because of the call to dev_queue_xmit.
+I am just aiming to get review before I put in linux-next, and later
+send it to your for merging.  I should have mentioned that in the cover
+letter.
 
-I am not sure if that is an oversight that was introduced by
-commit 0c195567a8f6e ("netvsc: transparent VF management") or if
-everything works properly as it is now.
+I am noticing that removing technical debt without adding more technical
+debt is quite a challenge.
 
-My patch is purely concerned with making the definition match the
-prototype so it should be NFC aside from avoiding the CFI panic.
+Eric
 
- drivers/net/hyperv/netvsc_drv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index d8e86bdbfba1e..ebcfbae056900 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -707,7 +707,8 @@ static int netvsc_xmit(struct sk_buff *skb, struct net_device *net, bool xdp_tx)
- 	goto drop;
- }
- 
--static int netvsc_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-+static netdev_tx_t netvsc_start_xmit(struct sk_buff *skb,
-+				     struct net_device *ndev)
- {
- 	return netvsc_xmit(skb, ndev, false);
- }
-
-base-commit: 51184ae37e0518fd90cb437a2fbc953ae558cd0d
--- 
-2.26.2
 
