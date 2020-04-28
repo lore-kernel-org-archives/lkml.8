@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EA4C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83331C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E43F920730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ABED2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:20:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iGk7+i0i"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e0NKFa83"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbgD1TTy (ORCPT
+        id S1729105AbgD1TUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 15:19:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51402 "EHLO
+        Tue, 28 Apr 2020 15:20:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728956AbgD1TTu (ORCPT
+        by vger.kernel.org with ESMTP id S1729019AbgD1TTx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 15:19:50 -0400
+        Tue, 28 Apr 2020 15:19:53 -0400
 Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 413B9C03C1AD
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 12:19:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4973DC03C1AD
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 12:19:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=5ZRP2prB3+4lkffpS1QqktaqknTbNafSKFsaH4UcQQ4=; b=iGk7+i0iQoW+1UqJb2JYN+zafy
-        sXngHyPQav1rnMjZYqSILWwNrLpui4uiMGt/UMsix3WlIR1jB4uQZAHrXdpHJ36sUoxZaDQvFXfbQ
-        TTga4nPbELLWe0YmxYLZrN49abCFFyvYul7qi+lCSDFKdgKBGqNZwafs14Vhs7j/CIxD4DKB+Vc1R
-        J7Z2b5qxHB56COcy/547/Pi/QhJbS9ZHPmcMbW4GmlAAXIvsQ4mp4cVwWMtQL9Wd0aD2e8KLan1L8
-        AiFetYahkb2ytkbypdwJ+Lj39NMM7sthZt9rCGPO/Lo7cI1xLd9PdH/HiorbycRGf7T/62kToz3yq
-        DOueq7bg==;
+        bh=5YgQtQCUtVGS9kzMe6SLPbJYLmwHlRLif9PX8QeAZ8E=; b=e0NKFa83sllsU/D7m3gvoZkVWy
+        iXZwRKz8WoSxJYaEn3g4g8DHVZOZ+3+WLSav+Ak8o2zsP3AZfeZD41nC/kS2lnYCFoDFi+pejUnLk
+        xt9RJCHjPoFUzCHIZkNhgzkFBVvHHnonOSFfJhqpd2KNXOGL1du0bex8L8ct6Yu0NOn6MDRpxsRJH
+        x8yR7aTvtPMrzHNVeNC9PCa8655Yn6tKOkl9GhENNs8EqQtKxxNkjI7oCWAFoMeS4M+LP5+ZWqetw
+        00559xhAFWCPDiq0jP05NRoVmI/TvUfCdI1XpyYFdUIPfdDVQl74QWezxw1XQaW6IKh+vL4JiWnvx
+        KeEN5khQ==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTVlR-0007l0-M6; Tue, 28 Apr 2020 19:19:30 +0000
+        id 1jTVlR-0007l1-MR; Tue, 28 Apr 2020 19:19:30 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BDB9330793E;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BF8EF30794F;
         Tue, 28 Apr 2020 21:19:26 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 9A55E25D01319; Tue, 28 Apr 2020 21:19:26 +0200 (CEST)
-Message-Id: <20200428191659.972514813@infradead.org>
+        id A8B2523CFDE43; Tue, 28 Apr 2020 21:19:26 +0200 (CEST)
+Message-Id: <20200428191700.151623523@infradead.org>
 User-Agent: quilt/0.65
-Date:   Tue, 28 Apr 2020 21:11:11 +0200
+Date:   Tue, 28 Apr 2020 21:11:14 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     jpoimboe@redhat.com, alexandre.chartre@oracle.com
 Cc:     linux-kernel@vger.kernel.org, jthierry@redhat.com,
         tglx@linutronix.de, x86@kernel.org, mbenes@suse.cz,
         peterz@infradead.org
-Subject: [PATCH v2 10/14] objtool: Add support for intra-function calls
+Subject: [PATCH v2 13/14] x86: Change {JMP,CALL}_NOSPEC argument
 References: <20200428191101.886208539@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,195 +62,266 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Chartre <alexandre.chartre@oracle.com>
+In order to change the {JMP,CALL}_NOSPEC macros to call out-of-line
+versions of the retpoline magic, we need to remove the '%' from the
+argument, such that we can paste it onto symbol names.
 
-Change objtool to support intra-function calls. On x86, an intra-function
-call is represented in objtool as a push onto the stack (of the return
-address), and a jump to the destination address. That way the stack
-information is correctly updated and the call flow is still accurate.
-
-Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200414103618.12657-4-alexandre.chartre@oracle.com
 ---
- include/linux/frame.h                            |   11 +++
- tools/objtool/Documentation/stack-validation.txt |    8 ++
- tools/objtool/arch/x86/decode.c                  |    8 ++
- tools/objtool/check.c                            |   79 +++++++++++++++++++++--
- 4 files changed, 102 insertions(+), 4 deletions(-)
+ arch/x86/crypto/aesni-intel_asm.S            |    4 ++--
+ arch/x86/crypto/camellia-aesni-avx-asm_64.S  |    2 +-
+ arch/x86/crypto/camellia-aesni-avx2-asm_64.S |    2 +-
+ arch/x86/crypto/crc32c-pcl-intel-asm_64.S    |   26 +++++++++++++-------------
+ arch/x86/entry/entry_32.S                    |    6 +++---
+ arch/x86/entry/entry_64.S                    |    2 +-
+ arch/x86/include/asm/nospec-branch.h         |   16 ++++++++--------
+ arch/x86/kernel/ftrace_32.S                  |    2 +-
+ arch/x86/kernel/ftrace_64.S                  |    4 ++--
+ arch/x86/lib/checksum_32.S                   |    4 ++--
+ arch/x86/platform/efi/efi_stub_64.S          |    2 +-
+ 11 files changed, 35 insertions(+), 35 deletions(-)
 
---- a/include/linux/frame.h
-+++ b/include/linux/frame.h
-@@ -15,9 +15,20 @@
- 	static void __used __section(.discard.func_stack_frame_non_standard) \
- 		*__func_stack_frame_non_standard_##func = func
+--- a/arch/x86/crypto/aesni-intel_asm.S
++++ b/arch/x86/crypto/aesni-intel_asm.S
+@@ -2758,7 +2758,7 @@ SYM_FUNC_START(aesni_xts_crypt8)
+ 	pxor INC, STATE4
+ 	movdqu IV, 0x30(OUTP)
  
-+/*
-+ * This macro indicates that the following intra-function call is valid.
-+ * Any non-annotated intra-function call will cause objtool to issue a warning.
-+ */
-+#define ANNOTATE_INTRA_FUNCTION_CALL				\
-+	999:							\
-+	.pushsection .discard.intra_function_calls;		\
-+	.long 999b;						\
-+	.popsection;
-+
- #else /* !CONFIG_STACK_VALIDATION */
+-	CALL_NOSPEC %r11
++	CALL_NOSPEC r11
  
- #define STACK_FRAME_NON_STANDARD(func)
-+#define ANNOTATE_INTRA_FUNCTION_CALL
+ 	movdqu 0x00(OUTP), INC
+ 	pxor INC, STATE1
+@@ -2803,7 +2803,7 @@ SYM_FUNC_START(aesni_xts_crypt8)
+ 	_aesni_gf128mul_x_ble()
+ 	movups IV, (IVP)
  
- #endif /* CONFIG_STACK_VALIDATION */
+-	CALL_NOSPEC %r11
++	CALL_NOSPEC r11
  
---- a/tools/objtool/Documentation/stack-validation.txt
-+++ b/tools/objtool/Documentation/stack-validation.txt
-@@ -323,6 +323,14 @@ they mean, and suggestions for how to fi
-     The easiest way to enforce this is to ensure alternative do not contain
-     any ORC entries, which in turn implies the above constraint.
+ 	movdqu 0x40(OUTP), INC
+ 	pxor INC, STATE1
+--- a/arch/x86/crypto/camellia-aesni-avx-asm_64.S
++++ b/arch/x86/crypto/camellia-aesni-avx-asm_64.S
+@@ -1228,7 +1228,7 @@ SYM_FUNC_START_LOCAL(camellia_xts_crypt_
+ 	vpxor 14 * 16(%rax), %xmm15, %xmm14;
+ 	vpxor 15 * 16(%rax), %xmm15, %xmm15;
  
-+11. file.o: warning: unannotated intra-function call
-+
-+   This warning means that a direct call is done to a destination which
-+   is not at the beginning of a function. If this is a legit call, you
-+   can remove this warning by putting the ANNOTATE_INTRA_FUNCTION_CALL
-+   directive right before the call.
-+
-+
- If the error doesn't seem to make sense, it could be a bug in objtool.
- Feel free to ask the objtool maintainer for help.
+-	CALL_NOSPEC %r9;
++	CALL_NOSPEC r9;
  
---- a/tools/objtool/arch/x86/decode.c
-+++ b/tools/objtool/arch/x86/decode.c
-@@ -496,6 +496,14 @@ int arch_decode_instruction(const struct
+ 	addq $(16 * 16), %rsp;
  
- 	case 0xe8:
- 		*type = INSN_CALL;
-+		/*
-+		 * For the impact on the stack, a CALL behaves like
-+		 * a PUSH of an immediate value (the return address).
-+		 */
-+		ADD_OP(op) {
-+			op->src.type = OP_SRC_CONST;
-+			op->dest.type = OP_DEST_PUSH;
-+		}
- 		break;
+--- a/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
++++ b/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
+@@ -1339,7 +1339,7 @@ SYM_FUNC_START_LOCAL(camellia_xts_crypt_
+ 	vpxor 14 * 32(%rax), %ymm15, %ymm14;
+ 	vpxor 15 * 32(%rax), %ymm15, %ymm15;
  
- 	case 0xfc:
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -692,6 +692,16 @@ static int add_jump_destinations(struct
- 	return 0;
- }
+-	CALL_NOSPEC %r9;
++	CALL_NOSPEC r9;
  
-+static void remove_insn_ops(struct instruction *insn)
-+{
-+	struct stack_op *op, *tmp;
-+
-+	list_for_each_entry_safe(op, tmp, &insn->stack_ops, list) {
-+		list_del(&op->list);
-+		free(op);
-+	}
-+}
-+
- /*
-  * Find the destination instructions for all calls.
-  */
-@@ -717,10 +727,7 @@ static int add_call_destinations(struct
- 				continue;
+ 	addq $(16 * 32), %rsp;
  
- 			if (!insn->call_dest) {
--				WARN_FUNC("unsupported intra-function call",
--					  insn->sec, insn->offset);
--				if (retpoline)
--					WARN("If this is a retpoline, please patch it in with alternatives and annotate it with ANNOTATE_NOSPEC_ALTERNATIVE.");
-+				WARN_FUNC("unannotated intra-function call", insn->sec, insn->offset);
- 				return -1;
- 			}
+--- a/arch/x86/crypto/crc32c-pcl-intel-asm_64.S
++++ b/arch/x86/crypto/crc32c-pcl-intel-asm_64.S
+@@ -75,7 +75,7 @@
  
-@@ -743,6 +750,15 @@ static int add_call_destinations(struct
- 			}
- 		} else
- 			insn->call_dest = rela->sym;
-+
-+		/*
-+		 * Whatever stack impact regular CALLs have, should be undone
-+		 * by the RETURN of the called function.
-+		 *
-+		 * Annotated intra-function calls retain the stack_ops but
-+		 * are converted to JUMP, see read_intra_function_calls().
-+		 */
-+		remove_insn_ops(insn);
- 	}
+ .text
+ SYM_FUNC_START(crc_pcl)
+-#define    bufp		%rdi
++#define    bufp		rdi
+ #define    bufp_dw	%edi
+ #define    bufp_w	%di
+ #define    bufp_b	%dil
+@@ -105,9 +105,9 @@ SYM_FUNC_START(crc_pcl)
+ 	## 1) ALIGN:
+ 	################################################################
  
- 	return 0;
-@@ -1422,6 +1438,57 @@ static int read_instr_hints(struct objto
- 	return 0;
- }
+-	mov     bufp, bufptmp		# rdi = *buf
+-	neg     bufp
+-	and     $7, bufp		# calculate the unalignment amount of
++	mov     %bufp, bufptmp		# rdi = *buf
++	neg     %bufp
++	and     $7, %bufp		# calculate the unalignment amount of
+ 					# the address
+ 	je      proc_block		# Skip if aligned
  
-+static int read_intra_function_calls(struct objtool_file *file)
-+{
-+	struct instruction *insn;
-+	struct section *sec;
-+	struct rela *rela;
-+
-+	sec = find_section_by_name(file->elf, ".rela.discard.intra_function_calls");
-+	if (!sec)
-+		return 0;
-+
-+	list_for_each_entry(rela, &sec->rela_list, list) {
-+		unsigned long dest_off;
-+
-+		if (rela->sym->type != STT_SECTION) {
-+			WARN("unexpected relocation symbol type in %s",
-+			     sec->name);
-+			return -1;
-+		}
-+
-+		insn = find_insn(file, rela->sym->sec, rela->addend);
-+		if (!insn) {
-+			WARN("bad .discard.intra_function_call entry");
-+			return -1;
-+		}
-+
-+		if (insn->type != INSN_CALL) {
-+			WARN_FUNC("intra_function_call not a direct call",
-+				  insn->sec, insn->offset);
-+			return -1;
-+		}
-+
-+		/*
-+		 * Treat intra-function CALLs as JMPs, but with a stack_op.
-+		 * See add_call_destinations(), which strips stack_ops from
-+		 * normal CALLs.
-+		 */
-+		insn->type = INSN_JUMP_UNCONDITIONAL;
-+
-+		dest_off = insn->offset + insn->len + insn->immediate;
-+		insn->jump_dest = find_insn(file, insn->sec, dest_off);
-+		if (!insn->jump_dest) {
-+			WARN_FUNC("can't find call dest at %s+0x%lx",
-+				  insn->sec, insn->offset,
-+				  insn->sec->name, dest_off);
-+			return -1;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static void mark_rodata(struct objtool_file *file)
- {
- 	struct section *sec;
-@@ -1477,6 +1544,10 @@ static int decode_sections(struct objtoo
- 	if (ret)
- 		return ret;
+@@ -123,13 +123,13 @@ SYM_FUNC_START(crc_pcl)
+ do_align:
+ 	#### Calculate CRC of unaligned bytes of the buffer (if any)
+ 	movq    (bufptmp), tmp		# load a quadward from the buffer
+-	add     bufp, bufptmp		# align buffer pointer for quadword
++	add     %bufp, bufptmp		# align buffer pointer for quadword
+ 					# processing
+-	sub     bufp, len		# update buffer length
++	sub     %bufp, len		# update buffer length
+ align_loop:
+ 	crc32b  %bl, crc_init_dw 	# compute crc32 of 1-byte
+ 	shr     $8, tmp			# get next byte
+-	dec     bufp
++	dec     %bufp
+ 	jne     align_loop
  
-+	ret = read_intra_function_calls(file);
-+	if (ret)
-+		return ret;
-+
- 	ret = add_call_destinations(file);
- 	if (ret)
- 		return ret;
+ proc_block:
+@@ -169,10 +169,10 @@ SYM_FUNC_START(crc_pcl)
+ 	xor     crc2, crc2
+ 
+ 	## branch into array
+-	lea	jump_table(%rip), bufp
+-	movzxw  (bufp, %rax, 2), len
+-	lea	crc_array(%rip), bufp
+-	lea     (bufp, len, 1), bufp
++	lea	jump_table(%rip), %bufp
++	movzxw  (%bufp, %rax, 2), len
++	lea	crc_array(%rip), %bufp
++	lea     (%bufp, len, 1), %bufp
+ 	JMP_NOSPEC bufp
+ 
+ 	################################################################
+@@ -218,9 +218,9 @@ LABEL crc_ %i
+ 	## 4) Combine three results:
+ 	################################################################
+ 
+-	lea	(K_table-8)(%rip), bufp		# first entry is for idx 1
++	lea	(K_table-8)(%rip), %bufp		# first entry is for idx 1
+ 	shlq    $3, %rax			# rax *= 8
+-	pmovzxdq (bufp,%rax), %xmm0		# 2 consts: K1:K2
++	pmovzxdq (%bufp,%rax), %xmm0		# 2 consts: K1:K2
+ 	leal	(%eax,%eax,2), %eax		# rax *= 3 (total *24)
+ 	subq    %rax, tmp			# tmp -= rax*24
+ 
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -816,7 +816,7 @@ SYM_CODE_START(ret_from_fork)
+ 
+ 	/* kernel thread */
+ 1:	movl	%edi, %eax
+-	CALL_NOSPEC %ebx
++	CALL_NOSPEC ebx
+ 	/*
+ 	 * A kernel thread is allowed to return here after successfully
+ 	 * calling do_execve().  Exit to userspace to complete the execve()
+@@ -1501,7 +1501,7 @@ SYM_CODE_START_LOCAL_NOALIGN(common_exce
+ 
+ 	TRACE_IRQS_OFF
+ 	movl	%esp, %eax			# pt_regs pointer
+-	CALL_NOSPEC %edi
++	CALL_NOSPEC edi
+ 	jmp	ret_from_exception
+ SYM_CODE_END(common_exception_read_cr2)
+ 
+@@ -1522,7 +1522,7 @@ SYM_CODE_START_LOCAL_NOALIGN(common_exce
+ 
+ 	TRACE_IRQS_OFF
+ 	movl	%esp, %eax			# pt_regs pointer
+-	CALL_NOSPEC %edi
++	CALL_NOSPEC edi
+ 	jmp	ret_from_exception
+ SYM_CODE_END(common_exception)
+ 
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -349,7 +349,7 @@ SYM_CODE_START(ret_from_fork)
+ 	/* kernel thread */
+ 	UNWIND_HINT_EMPTY
+ 	movq	%r12, %rdi
+-	CALL_NOSPEC %rbx
++	CALL_NOSPEC rbx
+ 	/*
+ 	 * A kernel thread is allowed to return here after successfully
+ 	 * calling do_execve().  Exit to userspace to complete the execve()
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -118,22 +118,22 @@
+ .macro JMP_NOSPEC reg:req
+ #ifdef CONFIG_RETPOLINE
+ 	ANNOTATE_NOSPEC_ALTERNATIVE
+-	ALTERNATIVE_2 __stringify(ANNOTATE_RETPOLINE_SAFE; jmp *\reg),	\
+-		__stringify(RETPOLINE_JMP \reg), X86_FEATURE_RETPOLINE,	\
+-		__stringify(lfence; ANNOTATE_RETPOLINE_SAFE; jmp *\reg), X86_FEATURE_RETPOLINE_AMD
++	ALTERNATIVE_2 __stringify(ANNOTATE_RETPOLINE_SAFE; jmp *%\reg),	\
++		__stringify(RETPOLINE_JMP %\reg), X86_FEATURE_RETPOLINE,\
++		__stringify(lfence; ANNOTATE_RETPOLINE_SAFE; jmp *%\reg), X86_FEATURE_RETPOLINE_AMD
+ #else
+-	jmp	*\reg
++	jmp	*%\reg
+ #endif
+ .endm
+ 
+ .macro CALL_NOSPEC reg:req
+ #ifdef CONFIG_RETPOLINE
+ 	ANNOTATE_NOSPEC_ALTERNATIVE
+-	ALTERNATIVE_2 __stringify(ANNOTATE_RETPOLINE_SAFE; call *\reg),	\
+-		__stringify(RETPOLINE_CALL \reg), X86_FEATURE_RETPOLINE,\
+-		__stringify(lfence; ANNOTATE_RETPOLINE_SAFE; call *\reg), X86_FEATURE_RETPOLINE_AMD
++	ALTERNATIVE_2 __stringify(ANNOTATE_RETPOLINE_SAFE; call *%\reg),\
++		__stringify(RETPOLINE_CALL %\reg), X86_FEATURE_RETPOLINE,\
++		__stringify(lfence; ANNOTATE_RETPOLINE_SAFE; call *%\reg), X86_FEATURE_RETPOLINE_AMD
+ #else
+-	call	*\reg
++	call	*%\reg
+ #endif
+ .endm
+ 
+--- a/arch/x86/kernel/ftrace_32.S
++++ b/arch/x86/kernel/ftrace_32.S
+@@ -189,5 +189,5 @@ SYM_CODE_END(ftrace_graph_caller)
+ 	movl	%eax, %ecx
+ 	popl	%edx
+ 	popl	%eax
+-	JMP_NOSPEC %ecx
++	JMP_NOSPEC ecx
+ #endif
+--- a/arch/x86/kernel/ftrace_64.S
++++ b/arch/x86/kernel/ftrace_64.S
+@@ -301,7 +301,7 @@ SYM_INNER_LABEL(ftrace_stub, SYM_L_GLOBA
+ 	 * function tracing is enabled.
+ 	 */
+ 	movq ftrace_trace_function, %r8
+-	CALL_NOSPEC %r8
++	CALL_NOSPEC r8
+ 	restore_mcount_regs
+ 
+ 	jmp fgraph_trace
+@@ -338,6 +338,6 @@ SYM_CODE_START(return_to_handler)
+ 	movq 8(%rsp), %rdx
+ 	movq (%rsp), %rax
+ 	addq $24, %rsp
+-	JMP_NOSPEC %rdi
++	JMP_NOSPEC rdi
+ SYM_CODE_END(return_to_handler)
+ #endif
+--- a/arch/x86/lib/checksum_32.S
++++ b/arch/x86/lib/checksum_32.S
+@@ -153,7 +153,7 @@ SYM_FUNC_START(csum_partial)
+ 	negl %ebx
+ 	lea 45f(%ebx,%ebx,2), %ebx
+ 	testl %esi, %esi
+-	JMP_NOSPEC %ebx
++	JMP_NOSPEC ebx
+ 
+ 	# Handle 2-byte-aligned regions
+ 20:	addw (%esi), %ax
+@@ -436,7 +436,7 @@ SYM_FUNC_START(csum_partial_copy_generic
+ 	andl $-32,%edx
+ 	lea 3f(%ebx,%ebx), %ebx
+ 	testl %esi, %esi 
+-	JMP_NOSPEC %ebx
++	JMP_NOSPEC ebx
+ 1:	addl $64,%esi
+ 	addl $64,%edi 
+ 	SRC(movb -32(%edx),%bl)	; SRC(movb (%edx),%bl)
+--- a/arch/x86/platform/efi/efi_stub_64.S
++++ b/arch/x86/platform/efi/efi_stub_64.S
+@@ -21,7 +21,7 @@ SYM_FUNC_START(__efi_call)
+ 	mov %r8, %r9
+ 	mov %rcx, %r8
+ 	mov %rsi, %rcx
+-	CALL_NOSPEC %rdi
++	CALL_NOSPEC rdi
+ 	leave
+ 	ret
+ SYM_FUNC_END(__efi_call)
 
 
