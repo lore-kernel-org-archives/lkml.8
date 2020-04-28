@@ -2,341 +2,177 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD929C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8B7C83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A916206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB71120730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:04:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HSYs+E+r"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ekHX1BRP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gXKvxnxN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728389AbgD1QDX (ORCPT
+        id S1728443AbgD1QEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:03:23 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35392 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727920AbgD1QDX (ORCPT
+        Tue, 28 Apr 2020 12:04:23 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:52795 "EHLO
+        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728037AbgD1QEW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:03:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588089800;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hBJi8zIGk8WOyhlWyio6gaGrcbzBQ/4UwNnQCnZWksU=;
-        b=HSYs+E+rfXXOR+drQaCHDo96y6Z7wi3ie7UGSGNw0Jn8ivuNrTQe+LLkiEo4ncnSdmYLkU
-        TB90T11XN2Sm8bmJoTS8wJAzcLlEth87Gb4O33ZL6JQa6hgD7uvpDcp1FYLuszMatbBltM
-        5BX6B9wETEDcgafjFkgcEO1UHwPpzWQ=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-401-m8ASkOkaNzicvIsr_e4t1g-1; Tue, 28 Apr 2020 12:03:18 -0400
-X-MC-Unique: m8ASkOkaNzicvIsr_e4t1g-1
-Received: by mail-wr1-f70.google.com with SMTP id f4so11114182wrp.14
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 09:03:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hBJi8zIGk8WOyhlWyio6gaGrcbzBQ/4UwNnQCnZWksU=;
-        b=fhGb0OATBCX5qkwYANexODA3nQDuCYD64EDzrGMVxCGQzrHrj/i7T4c+0wSEHdIBll
-         3CQo37Ii0cBifq3O6+09JgDOhQWKkJPPGFpIArVbb9mTaRMGANYoR+NsAonQg6x2uogY
-         pMAmmDCwcXI5ANM5B4flvM/vEt8b7PcWpI8Ocho9e/0ZUP7/Fg3gtEPwFhOVrwMF2nnK
-         fgZF2CwXXO+lWV1xLy4rqzE1mED3/I+OHAiY+gbQSZXFk2vxTGzPqhp9y5mlOhAuneGS
-         D7jSFDhPjrf5DFuo0Rh99WPlWEaI4cq06q00ez/ZuBpLJbzqhAAFbMyzbbfnpHmS/xSA
-         ozrA==
-X-Gm-Message-State: AGi0Pua8IW13wap/3NrNrF1JNay8kSssK5IezMfcseDbNrRIQsR/dvCt
-        VapRznV/FHDRgPuhhaTC6LhYWmdtg/DKllVCoC0YYMtmfnSf0Ov5purKd4ToWoGv1GYLwjf/t64
-        Id3PUD0dH3iDcw/OqrLtTahfa
-X-Received: by 2002:adf:9441:: with SMTP id 59mr33346459wrq.211.1588089796859;
-        Tue, 28 Apr 2020 09:03:16 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJNhjJambiiyG5T3FZZ1d5lIJD6EM5AUWopnTqnTUlnP3xrL7KImVBSqMiGIyDR01pmOUe3Cw==
-X-Received: by 2002:adf:9441:: with SMTP id 59mr33346389wrq.211.1588089796232;
-        Tue, 28 Apr 2020 09:03:16 -0700 (PDT)
-Received: from redhat.com (bzq-109-66-7-121.red.bezeqint.net. [109.66.7.121])
-        by smtp.gmail.com with ESMTPSA id l4sm26559989wrv.60.2020.04.28.09.03.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 09:03:15 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 12:03:13 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Stefan Hajnoczi <stefanha@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, linux-block@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, Stefano Garzarella <sgarzare@redhat.com>,
-        Lance Digby <ldigby@redhat.com>
-Subject: Re: [PATCH v2] virtio-blk: handle block_device_operations callbacks
- after hot unplug
-Message-ID: <20200428120244-mutt-send-email-mst@kernel.org>
-References: <20200428143009.107645-1-stefanha@redhat.com>
- <20200428110515-mutt-send-email-mst@kernel.org>
- <20200428155715.GA109767@stefanha-x1.localdomain>
+        Tue, 28 Apr 2020 12:04:22 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 2FE3D5FA;
+        Tue, 28 Apr 2020 12:04:21 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 28 Apr 2020 12:04:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=sOFZ1jPclsSm3u+h/VuhDsJZx7b
+        YOtqGCr5nWlpsVh8=; b=ekHX1BRP+1TfVz1t22l+bCdNvO/JzeQA6e1nC954d4t
+        rugCIEuZ2M2dWlEhMvSRZ4oA5UJN/TFTwHhTkMpX1eHjW/IJqhA24mA1ZLW6ADi2
+        ds41Pi/0PKU7IBUJztJ2fMbH24oDPRpcSKr6TSlUTNwnoEfEms/G9QS+fKVl2iKT
+        g17IGuNcD1m7j2dzaLwyBq/6ZKpJhDjPiYaWNu/1F6BavVzE/KrjFM7DsilU6TLr
+        0lHD+FzZygGLcEevSvRb7A7f4NwRtsm2kphDtYfD1ry+lzvYJvHRigGWVNR+z6+T
+        69c0QuwMZlF4ksNiGEovncrc1hbLSbJT8v1snxvA1Wg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=sOFZ1j
+        PclsSm3u+h/VuhDsJZx7bYOtqGCr5nWlpsVh8=; b=gXKvxnxNmCf3WzsWvfJxkq
+        RNCq20RIfaux0rfvjpbZCbZgyGFomX2PW8pAhVUDi0QyecEHnbpX6L5R7JlQ1EpD
+        aWZSxc8TjVtV/jCZlbvZ6UFzl+c0Z6sIfRUmbtnKfgnKE8XRtgjUEh6tk/dEy/bH
+        NrGFoDPbAk6vIDYzpPMPbJh7RqPmEXKOp6tnBRLNah4Wuoj9k73C/VlBfQV+H4SC
+        1kdf8Ieh8ZjyLvNXatnoL4SRDZBt2lidxPam/d8XFQMLbSvKCXDpHvYkMHgyb6Nr
+        mj2OTA1MuhWAd3DkcEOFCMtT7c3E5O7D9A15hCLzhdqhDMajahNsznB2+jBc1Iew
+        ==
+X-ME-Sender: <xms:A1SoXgPyPISErhLyus-Su-GMKMbZFWO0F3E6774q64G3isa-TqfrWw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedugdelhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:A1SoXgqgsqFCW-8s3uz2IiEo8frR3GgpaC4i3pHB53t_H9S02lhFcw>
+    <xmx:A1SoXmlhcIkmeYJJhvXDDXSA7D1pqfRXHo3SIVaJiuGm_E6fEuZRag>
+    <xmx:A1SoXgzuKmdtl820vHTZvitDHafGzX5L1UfDZrxYMyTmPJNgbsVMng>
+    <xmx:BFSoXu5UwG_QI_x28zWwyD59bvLsERgxEGoqiXQ7gqsokpHr_cgGY4ZNc2I>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0FF803280059;
+        Tue, 28 Apr 2020 12:04:18 -0400 (EDT)
+Date:   Tue, 28 Apr 2020 18:04:17 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Marcus Cooper <codekipper@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: [PATCH 4/7] arm64: dts: allwinner: a64: Add HDMI audio
+Message-ID: <20200428160417.6q5oab2guaumhhwi@gilmour.lan>
+References: <20200426120442.11560-1-peron.clem@gmail.com>
+ <20200426120442.11560-5-peron.clem@gmail.com>
+ <20200428080020.35qcuylwq2ylmubu@gilmour.lan>
+ <CAJiuCcc2LQ4L36KSfO8iLVFBUO6k+zsZFX+_Ovm_10PoWO4AsA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rbultuas4kxpkny5"
 Content-Disposition: inline
-In-Reply-To: <20200428155715.GA109767@stefanha-x1.localdomain>
+In-Reply-To: <CAJiuCcc2LQ4L36KSfO8iLVFBUO6k+zsZFX+_Ovm_10PoWO4AsA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 04:57:15PM +0100, Stefan Hajnoczi wrote:
-> On Tue, Apr 28, 2020 at 11:25:07AM -0400, Michael S. Tsirkin wrote:
-> > On Tue, Apr 28, 2020 at 03:30:09PM +0100, Stefan Hajnoczi wrote:
-> > > A userspace process holding a file descriptor to a virtio_blk device can
-> > > still invoke block_device_operations after hot unplug.  For example, a
-> > > program that has /dev/vdb open can call ioctl(HDIO_GETGEO) after hot
-> > > unplug to invoke virtblk_getgeo().
-> > 
-> > 
-> > which causes what? a use after free?
-> 
-> Yes, use after free.  I will include the kernel panic in the next
-> revision.
-> 
-> virtio_check_driver_offered_feature() accesses vdev->dev.driver, which
-> doesn't work after virtblk_remove() has freed vdev :).
-> 
-> > > 
-> > > Introduce a reference count in struct virtio_blk so that its lifetime
-> > > covers both virtio_driver probe/remove and block_device_operations
-> > > open/release users.  This ensures that block_device_operations functions
-> > > like virtblk_getgeo() can safely access struct virtio_blk.
-> > > 
-> > > Add remove_mutex to prevent block_device_operations functions from
-> > > accessing vblk->vdev during virtblk_remove() and let the safely check
-> > 
-> > let the -> let them?
-> 
-> Thanks, will fix.
-> 
-> > 
-> > > for !vblk->vdev after virtblk_remove() returns.
-> > > 
-> > > Switching to a reference count also solves the vd_index_ida leak where
-> > > vda, vdb, vdc, etc indices were lost when the device was hot unplugged
-> > > while the block device was still open.
-> > 
-> > Can you move this statement up so we list both issues (use after free
-> > and leak) upfront, then discuss the fix?
-> 
-> Thanks, will fix.
 
-Maybe add Fixes: if there's a specific commit that added geo support.
+--rbultuas4kxpkny5
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > 
-> > > 
-> > > Reported-by: Lance Digby <ldigby@redhat.com>
-> > > Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+On Tue, Apr 28, 2020 at 10:54:00AM +0200, Cl=E9ment P=E9ron wrote:
+> Hi Maxime,
+>=20
+> On Tue, 28 Apr 2020 at 10:00, Maxime Ripard <maxime@cerno.tech> wrote:
+> >
+> > On Sun, Apr 26, 2020 at 02:04:39PM +0200, Cl=E9ment P=E9ron wrote:
+> > > From: Marcus Cooper <codekipper@gmail.com>
+> > >
+> > > Add a simple-soundcard to link audio between HDMI and I2S.
+> > >
+> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
 > > > ---
-> > > If someone has a simpler solution please let me know.  I looked at
-> > > various approaches including reusing device_lock(&vblk->vdev.dev) but
-> > > they were more complex and extending the lifetime of virtio_device after
-> > > remove() has been called seems questionable.
-> > > ---
-> > >  drivers/block/virtio_blk.c | 85 ++++++++++++++++++++++++++++++++++----
-> > >  1 file changed, 77 insertions(+), 8 deletions(-)
-> > > 
-> > > diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-> > > index 93468b7c6701..3dd53b445cc1 100644
-> > > --- a/drivers/block/virtio_blk.c
-> > > +++ b/drivers/block/virtio_blk.c
-> > > @@ -44,6 +44,13 @@ struct virtio_blk {
-> > >  	/* Process context for config space updates */
-> > >  	struct work_struct config_work;
-> > >  
-> > > +	/*
-> > > +	 * Tracks references from block_device_operations open/release and
-> > > +	 * virtio_driver probe/remove so this object can be freed once no
-> > > +	 * longer in use.
-> > > +	 */
-> > > +	refcount_t refs;
-> > > +
-> > >  	/* What host tells us, plus 2 for header & tailer. */
-> > >  	unsigned int sg_elems;
-> > >  
-> > > @@ -53,6 +60,9 @@ struct virtio_blk {
-> > >  	/* num of vqs */
-> > >  	int num_vqs;
-> > >  	struct virtio_blk_vq *vqs;
-> > > +
-> > > +	/* Provides mutual exclusion with virtblk_remove(). */
-> > 
-> > This is not the best way to document access rules.
-> > Which fields does this protect, exactly?
-> > I think it's just vdev. Right?
-> > Pls add to the comment.
-> 
-> Yes, vblk->vdev cannot be dereferenced after virtblk_remove() is
-> entered.
-> 
-> I'll document this mutex as protecting vdev.
-> 
-> > 
-> > > +	struct mutex remove_mutex;
-> > >  };
-> > >  
-> > >  struct virtblk_req {
-> > > @@ -295,10 +305,54 @@ static int virtblk_get_id(struct gendisk *disk, char *id_str)
-> > >  	return err;
-> > >  }
-> > >  
-> > > +static void virtblk_get(struct virtio_blk *vblk)
-> > > +{
-> > > +	refcount_inc(&vblk->refs);
-> > > +}
-> > > +
-> > > +static void virtblk_put(struct virtio_blk *vblk)
-> > > +{
-> > > +	if (refcount_dec_and_test(&vblk->refs)) {
-> > > +		ida_simple_remove(&vd_index_ida, vblk->index);
-> > > +		mutex_destroy(&vblk->remove_mutex);
-> > > +		kfree(vblk);
-> > > +	}
-> > > +}
-> > > +
-> > > +static int virtblk_open(struct block_device *bd, fmode_t mode)
-> > > +{
-> > > +	struct virtio_blk *vblk = bd->bd_disk->private_data;
-> > > +	int ret = -ENXIO;
-> > 
-> > 
-> > It's more common to do
-> > 
-> > 	int ret = 0;
-> > 
-> > and on error:
-> > 	ret = -ENXIO;
-> > 
-> > 
-> > let's do this.
-> 
-> Will fix.
-> 
-> > > +
-> > > +	mutex_lock(&vblk->remove_mutex);
-> > > +
-> > > +	if (vblk->vdev) {
-> > > +		virtblk_get(vblk);
-> > > +		ret = 0;
-> > > +	}
-> > 
-> > I prefer
-> > 	else
-> > 		ret = -ENXIO
-> > 
-> > here.
-> 
-> Got it.
-> 
-> > > +
-> > > +	mutex_unlock(&vblk->remove_mutex);
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +static void virtblk_release(struct gendisk *disk, fmode_t mode)
-> > > +{
-> > > +	struct virtio_blk *vblk = disk->private_data;
-> > > +
-> > > +	virtblk_put(vblk);
-> > > +}
-> > > +
-> > >  /* We provide getgeo only to please some old bootloader/partitioning tools */
-> > >  static int virtblk_getgeo(struct block_device *bd, struct hd_geometry *geo)
-> > >  {
-> > >  	struct virtio_blk *vblk = bd->bd_disk->private_data;
-> > > +	int ret = -ENXIO;
-> > 
-> > It's more common to do
-> > 
-> > 	int ret = 0;
-> > 
-> > and on error:
-> > 	ret = -ENXIO;
-> > 
-> > 
-> > let's do this.
-> 
-> Will fix.
-> 
-> > 
-> > > +
-> > > +	mutex_lock(&vblk->remove_mutex);
-> > > +
-> > > +	if (!vblk->vdev) {
-> > > +		goto out;
-> > > +	}
-> > 
-> > 
-> > single lines are not supposed to use {}.
-> > if you add ret = -ENXIO here then it won't be a single line anymore
-> > though.
-> 
-> Oops, a QEMU coding style habit :).
-> 
-> > >  
-> > >  	/* see if the host passed in geometry config */
-> > >  	if (virtio_has_feature(vblk->vdev, VIRTIO_BLK_F_GEOMETRY)) {
-> > > @@ -314,11 +368,17 @@ static int virtblk_getgeo(struct block_device *bd, struct hd_geometry *geo)
-> > >  		geo->sectors = 1 << 5;
-> > >  		geo->cylinders = get_capacity(bd->bd_disk) >> 11;
-> > >  	}
-> > > -	return 0;
-> > > +
-> > > +	ret = 0;
-> > > +out:
-> > > +	mutex_unlock(&vblk->remove_mutex);
-> > > +	return ret;
-> > >  }
-> > >  
-> > >  static const struct block_device_operations virtblk_fops = {
-> > >  	.owner  = THIS_MODULE,
-> > > +	.open = virtblk_open,
-> > > +	.release = virtblk_release,
-> > >  	.getgeo = virtblk_getgeo,
-> > >  };
-> > >  
-> > > @@ -655,6 +715,10 @@ static int virtblk_probe(struct virtio_device *vdev)
-> > >  		goto out_free_index;
-> > >  	}
-> > >  
-> > > +	/* This reference is dropped in virtblk_remove(). */
-> > > +	refcount_set(&vblk->refs, 1);
-> > > +	mutex_init(&vblk->remove_mutex);
-> > > +
-> > >  	vblk->vdev = vdev;
-> > >  	vblk->sg_elems = sg_elems;
-> > >  
-> > > @@ -820,8 +884,12 @@ static int virtblk_probe(struct virtio_device *vdev)
-> > >  static void virtblk_remove(struct virtio_device *vdev)
-> > >  {
-> > >  	struct virtio_blk *vblk = vdev->priv;
-> > > -	int index = vblk->index;
-> > > -	int refc;
-> > > +
-> > > +	/*
-> > > +	 * Virtqueue processing is stopped safely here but mutual exclusion is
-> > > +	 * needed for block_device_operations.
-> > > +	 */
-> > > +	mutex_lock(&vblk->remove_mutex);
-> > >  
-> > >  	/* Make sure no work handler is accessing the device. */
-> > >  	flush_work(&vblk->config_work);
-> > > @@ -834,15 +902,16 @@ static void virtblk_remove(struct virtio_device *vdev)
-> > >  	/* Stop all the virtqueues. */
-> > >  	vdev->config->reset(vdev);
-> > >  
-> > > -	refc = kref_read(&disk_to_dev(vblk->disk)->kobj.kref);
-> > > +	/* Virtqueue are stopped, nothing can use vblk->vdev anymore. */
-> > 
-> > Virtqueues?
-> 
-> Thanks, will fix.
+> > >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 21 +++++++++++++++++=
+++
+> > >  1 file changed, 21 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm=
+64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > index e56e1e3d4b73..08ab6b5e72a5 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > @@ -102,6 +102,25 @@
+> > >               status =3D "disabled";
+> > >       };
+> > >
+> > > +     hdmi_sound: hdmi-sound {
+> > > +             compatible =3D "simple-audio-card";
+> > > +             simple-audio-card,format =3D "i2s";
+> > > +             simple-audio-card,name =3D "allwinner,hdmi";
+> >
+> > I'm not sure what the usual card name should be like though. I would as=
+sume that
+> > this should be something specific enough so that you're able to differe=
+ntiate
+> > between boards / SoC so that the userspace can choose a different confi=
+guration
+> > based on it?
+>=20
+> I really don't know what we should use here,
+> I just have a look at other SoC:
+> rk3328: "HDMI"
+> rk3399: "hdmi-sound"
+> r8a774c0-cat874: "CAT874 HDMI sound"
+>=20
+> But maybe it's time to introduce proper name:
+> What about :
+> sun50i-a64-hdmi
+> sun50i-h6-hdmi
 
+It's pretty much what we've been using for the other sound cards we have, s=
+o it
+makes sense to me.
 
+> How should we handle this with h3 / h5 ?
+> settings the simple-audio-card,name in each SoC dts?
+> Or using sun50i-h3-hdmi as they are both identical?
+
+Yeah, we can do the latter
+
+Maxime
+
+--rbultuas4kxpkny5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqhUAQAKCRDj7w1vZxhR
+xThzAQCdfGqGBenInfXFcERmsGo6KmDYj/IpfZqqLJhS7hMAmAEAu4oEes/hmj4+
+lop9h0Zfn5J8S9rkeex26DXrp2LOsQY=
+=x+kX
+-----END PGP SIGNATURE-----
+
+--rbultuas4kxpkny5--
