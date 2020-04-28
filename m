@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DF4C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B998C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0402085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00EC520575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099355;
-	bh=jMJhh2+wu78WkYWNTpnb7aQZRNPelMQ0y1U1sNDZL70=;
+	s=default; t=1588099360;
+	bh=ghupO339lD3K+xHxFoqtrtWMaXlH4At1OwY6QqOhB0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FV1UyD1JS/Qeu85ksltJDIGsGrWlQxngUdJN8xxBpOiHWXhWTksMZrFRUzg8/z69l
-	 TZwIt7T8X0D/U+fRDtXnUtOV0ka1WQ7Y2WB6hVl26JIp5zrxj1l1/tb30JKBI8dN2R
-	 76Nj0bICeVXfbm4763oQOUf+e2QuFx8VRBrP20q0=
+	b=suhbMmshIMAi9BIkCbyMS3v2w/gqqocpRkabvhjy/kNyKt5F/wT5X4sHHTEaGg+yD
+	 GItzkiDCVSXOZjsV6POGrrFCyI5nZyZWsX7JNd+RUoXxCRvHqLwjXhI7btUZbr//3P
+	 I5WRh05EcCkNi/ZUiCNjLFG9UtpfsmpvkxX3nhgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730566AbgD1Sme (ORCPT
+        id S1731137AbgD1Smj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:42:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34414 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:42:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731098AbgD1Sm1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:42:27 -0400
+        id S1731126AbgD1Smh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:42:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CB342085B;
-        Tue, 28 Apr 2020 18:42:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4608F20575;
+        Tue, 28 Apr 2020 18:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099346;
-        bh=jMJhh2+wu78WkYWNTpnb7aQZRNPelMQ0y1U1sNDZL70=;
+        s=default; t=1588099356;
+        bh=ghupO339lD3K+xHxFoqtrtWMaXlH4At1OwY6QqOhB0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uhooyz4smj3cgq0zO+XMtWwul9SJoFLpMUSB3IKPa+W8ANy8HDbv4oS0wCbCcOL8H
-         hApmwgcEZIFaQfFKyflTPhemI0R5XtnmwsWZUrbLAMH99rlkeGsIccAtLbV0dlOahM
-         5JzXOEgLdZEFQ8vYhUbGNnDX9BTWpLKW3dVoFJQc=
+        b=JDLJCdGupxP3gRCNOSgZikjHfcMXj6NBAukmJMvOJsVnC/N/ibu0/EZ4kJlwVIaxB
+         68WFZ02e+eYJ22gXOPcW6uvhOT1Av3tYpJ0ZNmjCwj2fe5nfTyDrhcq93aV/8ol8vz
+         t+1Wk2Ke0k6BT5J09eAFwEKgTGhmKxjT6PRyZmZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Skobkin <skobkin-ru@ya.ru>,
-        Alexander Tsoy <alexander@tsoy.me>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 113/168] ALSA: usb-audio: Filter out unsupported sample rates on Focusrite devices
-Date:   Tue, 28 Apr 2020 20:24:47 +0200
-Message-Id: <20200428182246.817724364@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 117/168] KVM: s390: Return last valid slot if approx index is out-of-bounds
+Date:   Tue, 28 Apr 2020 20:24:51 +0200
+Message-Id: <20200428182247.288255691@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -60,105 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Tsoy <alexander@tsoy.me>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 1c826792586f526a5a5cd21d55aad388f5bb0b23 upstream.
+commit 97daa028f3f621adff2c4f7b15fe0874e5b5bd6c upstream.
 
-Many Focusrite devices supports a limited set of sample rates per
-altsetting. These includes audio interfaces with ADAT ports:
- - Scarlett 18i6, 18i8 1st gen, 18i20 1st gen;
- - Scarlett 18i8 2nd gen, 18i20 2nd gen;
- - Scarlett 18i8 3rd gen, 18i20 3rd gen;
- - Clarett 2Pre USB, 4Pre USB, 8Pre USB.
+Return the index of the last valid slot from gfn_to_memslot_approx() if
+its binary search loop yielded an out-of-bounds index.  The index can
+be out-of-bounds if the specified gfn is less than the base of the
+lowest memslot (which is also the last valid memslot).
 
-Maximum rate is exposed in the last 4 bytes of Format Type descriptor
-which has a non-standard bLength = 10.
+Note, the sole caller, kvm_s390_get_cmma(), ensures used_slots is
+non-zero.
 
-Tested-by: Alexey Skobkin <skobkin-ru@ya.ru>
-Signed-off-by: Alexander Tsoy <alexander@tsoy.me>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200418175815.12211-1-alexander@tsoy.me
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: afdad61615cc3 ("KVM: s390: Fix storage attributes migration with memory slots")
+Cc: stable@vger.kernel.org # 4.19.x: 0774a964ef56: KVM: Fix out of range accesses to memslots
+Cc: stable@vger.kernel.org # 4.19.x
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Message-Id: <20200408064059.8957-3-sean.j.christopherson@intel.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/format.c |   52 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+ arch/s390/kvm/kvm-s390.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/sound/usb/format.c
-+++ b/sound/usb/format.c
-@@ -227,6 +227,52 @@ static int parse_audio_format_rates_v1(s
- }
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -1932,6 +1932,9 @@ static int gfn_to_memslot_approx(struct
+ 			start = slot + 1;
+ 	}
  
- /*
-+ * Many Focusrite devices supports a limited set of sampling rates per
-+ * altsetting. Maximum rate is exposed in the last 4 bytes of Format Type
-+ * descriptor which has a non-standard bLength = 10.
-+ */
-+static bool focusrite_valid_sample_rate(struct snd_usb_audio *chip,
-+					struct audioformat *fp,
-+					unsigned int rate)
-+{
-+	struct usb_interface *iface;
-+	struct usb_host_interface *alts;
-+	unsigned char *fmt;
-+	unsigned int max_rate;
++	if (start >= slots->used_slots)
++		return slots->used_slots - 1;
 +
-+	iface = usb_ifnum_to_if(chip->dev, fp->iface);
-+	if (!iface)
-+		return true;
-+
-+	alts = &iface->altsetting[fp->altset_idx];
-+	fmt = snd_usb_find_csint_desc(alts->extra, alts->extralen,
-+				      NULL, UAC_FORMAT_TYPE);
-+	if (!fmt)
-+		return true;
-+
-+	if (fmt[0] == 10) { /* bLength */
-+		max_rate = combine_quad(&fmt[6]);
-+
-+		/* Validate max rate */
-+		if (max_rate != 48000 &&
-+		    max_rate != 96000 &&
-+		    max_rate != 192000 &&
-+		    max_rate != 384000) {
-+
-+			usb_audio_info(chip,
-+				"%u:%d : unexpected max rate: %u\n",
-+				fp->iface, fp->altsetting, max_rate);
-+
-+			return true;
-+		}
-+
-+		return rate <= max_rate;
-+	}
-+
-+	return true;
-+}
-+
-+/*
-  * Helper function to walk the array of sample rate triplets reported by
-  * the device. The problem is that we need to parse whole array first to
-  * get to know how many sample rates we have to expect.
-@@ -262,6 +308,11 @@ static int parse_uac2_sample_rate_range(
- 		}
- 
- 		for (rate = min; rate <= max; rate += res) {
-+			/* Filter out invalid rates on Focusrite devices */
-+			if (USB_ID_VENDOR(chip->usb_id) == 0x1235 &&
-+			    !focusrite_valid_sample_rate(chip, fp, rate))
-+				goto skip_rate;
-+
- 			if (fp->rate_table)
- 				fp->rate_table[nr_rates] = rate;
- 			if (!fp->rate_min || rate < fp->rate_min)
-@@ -276,6 +327,7 @@ static int parse_uac2_sample_rate_range(
- 				break;
- 			}
- 
-+skip_rate:
- 			/* avoid endless loop */
- 			if (res == 0)
- 				break;
+ 	if (gfn >= memslots[start].base_gfn &&
+ 	    gfn < memslots[start].base_gfn + memslots[start].npages) {
+ 		atomic_set(&slots->lru_slot, start);
 
 
