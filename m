@@ -2,110 +2,113 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56276C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBC5C83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33C87206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC6F21775
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:03:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588035839;
+	bh=MGJvylZiGkTZwwzCHb5ZFTaQJFtBOk//T/dAGP9LFuk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=kV6zDJENTzxGEzNZ2CDWaoVilnnWA2E7MEesubNSUs8n3tA2qq9jX8YcH8F1hmsvB
+	 ZT330jvV+ZyjpYItvXnPAckv69HiGDHR6HzwqlWbTcoo9Fgq6eBpJMIyI5WhVrQ2cc
+	 JPw1PbpUhufNITdWU9GOpOB4y6eSZNXyo8QGPrZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbgD1BDQ (ORCPT
+        id S1726418AbgD1BD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 21:03:16 -0400
-Received: from mga12.intel.com ([192.55.52.136]:48366 "EHLO mga12.intel.com"
+        Mon, 27 Apr 2020 21:03:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726263AbgD1BDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 21:03:15 -0400
-IronPort-SDR: ss8XX41GWzOej3rlMf/TJQEHlOqx1fUlKpXqhyP2Z7biAbjH3h7ougJkNoDAYyLBRaxW5TLuK1
- HtfgTELe/fWA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 18:03:15 -0700
-IronPort-SDR: g76t0Djx48ZE6PbBVETOmC4oPnCumQAPrxsqLiw1myb2aC7mQFYgl0A0AL5/YzOBoC42ZrrF0e
- /16sF2dl88NQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
-   d="scan'208";a="260923278"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga006.jf.intel.com with ESMTP; 27 Apr 2020 18:03:15 -0700
-Date:   Mon, 27 Apr 2020 18:03:15 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Haiwei Li <lihaiwei@tencent.com>
-Subject: Re: [PATCH v3 2/5] KVM: X86: Introduce need_cancel_enter_guest helper
-Message-ID: <20200428010315.GE14870@linux.intel.com>
-References: <1587709364-19090-1-git-send-email-wanpengli@tencent.com>
- <1587709364-19090-3-git-send-email-wanpengli@tencent.com>
- <CANRm+CwvTrwmJnFWR8UgEkqyE_fyoc6KmrNuHQj=DuJDkR-UGA@mail.gmail.com>
- <20200427183656.GO14870@linux.intel.com>
- <CANRm+CzdCcz4Vyw-6D5xTc+VmRTr6=O0U=7vfdNLF=LjW5HOEg@mail.gmail.com>
+        id S1726379AbgD1BD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 21:03:58 -0400
+Received: from kicinski-fedora-PC1C0HJN.thefacebook.com (unknown [163.114.132.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35E50206D6;
+        Tue, 28 Apr 2020 01:03:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588035837;
+        bh=MGJvylZiGkTZwwzCHb5ZFTaQJFtBOk//T/dAGP9LFuk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=B4HM7VVc2Ui10qnNjm+8cBH8Ycc+25mPPyK4A0JOCN9vXVxeH/2yQO8iuSHHKxu7a
+         K10b9rA/jDKae6xISuL+IN5+3tNKNWuy8l5GgTm/TArZxHNm4ZPNoMqtSggtZPCYuj
+         LmfEvfSWVH+qp6jnrPyIfwxvMubg+ngkjP751/BI=
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     davem@davemloft.net
+Cc:     keescook@chromium.org, shuah@kernel.org, netdev@vger.kernel.org,
+        luto@amacapital.net, wad@chromium.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, Tim.Bird@sony.com,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH net-next v6 0/5] kselftest: add fixture parameters
+Date:   Mon, 27 Apr 2020 18:03:46 -0700
+Message-Id: <20200428010351.331260-1-kuba@kernel.org>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANRm+CzdCcz4Vyw-6D5xTc+VmRTr6=O0U=7vfdNLF=LjW5HOEg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 08:44:13AM +0800, Wanpeng Li wrote:
-> On Tue, 28 Apr 2020 at 02:36, Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > > @@ -6771,12 +6774,10 @@ static enum exit_fastpath_completion
-> > > vmx_vcpu_run(struct kvm_vcpu *vcpu)
-> > >      vmx_recover_nmi_blocking(vmx);
-> > >      vmx_complete_interrupts(vmx);
-> > >
-> > > -    if (!(kvm_need_cancel_enter_guest(vcpu))) {
-> > > -        exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
-> > > -        if (exit_fastpath == EXIT_FASTPATH_CONT_RUN) {
-> > > -            vmx_sync_pir_to_irr(vcpu);
-> > > -            goto cont_run;
-> > > -        }
-> > > +    exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
-> > > +    if (exit_fastpath == EXIT_FASTPATH_CONT_RUN) {
-> >
-> > Relying on the handlers to check kvm_need_cancel_enter_guest() will be
-> > error prone and costly to maintain.  I also don't like that it buries the
-> > logic.
-> >
-> > What about adding another flavor, e.g.:
-> >
-> >         exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
-> >         if (exit_fastpath == EXIT_FASTPATH_CONT_RUN &&
-> >             kvm_need_cancel_enter_guest(vcpu))
-> >                 exit_fastpath = EXIT_FASTPATH_NOP;
-> >
-> > That would also allow you to enable preemption timer without first having
-> > to add CONT_RUN, which would be a very good thing for bisection.
-> 
-> I miss understand the second part, do you mean don't need to add
-> CONT_RUN in patch 1/5?
+Hi!
 
-Yes, with the disclaimer that I haven't worked through all the flows to
-ensure it's actually doable and/or a good idea. 
+This set is an attempt to make running tests for different
+sets of data easier. The direct motivation is the tls
+test which we'd like to run for TLS 1.2 and TLS 1.3,
+but currently there is no easy way to invoke the same
+tests with different parameters.
 
-The idea is to add EXIT_FASTPATH_NOP and use that for the preemption timer
-fastpath.  KVM would still go through it's full run loop, but it would skip
-invoking the exit handler.  In theory that would disassociate fast handling
-of the preemption timer from resuming the guest without going back to the
-run loop, i.e. provide a separate bisection point for enabling CONT_RUN.
+Tested all users of kselftest_harness.h.
 
-Like I said, might not be a good idea, e.g. if preemption timer ends up
-being the only user of EXIT_FASTPATH_CONT_RUN then EXIT_FASTPATH_NOP is a
-waste of space.
+Dave, would it be possible to take these via net-next?
+It seems we're failing to get Shuah's attention.
 
-Side topic, what about EXIT_FASTPATH_RESUME instead of CONT_RUN?  Or maybe
-REENTER_GUEST?  Something that start with RE :-)
+v2:
+ - don't run tests by fixture
+ - don't pass params as an explicit argument
+
+v3:
+ - go back to the orginal implementation with an extra
+   parameter, and running by fixture (Kees);
+ - add LIST_APPEND helper (Kees);
+ - add a dot between fixture and param name (Kees);
+ - rename the params to variants (Tim);
+
+v4:
+ - whitespace fixes.
+
+v5 (Kees):
+ - move a comment;
+ - remove a temporary variable;
+ - reword the commit message on patch 4.
+
+v6:
+ - resend for net-next.
+
+v1: https://lore.kernel.org/netdev/20200313031752.2332565-1-kuba@kernel.org/
+v2: https://lore.kernel.org/netdev/20200314005501.2446494-1-kuba@kernel.org/
+v3: https://lore.kernel.org/netdev/20200316225647.3129354-1-kuba@kernel.org/
+v4: https://lore.kernel.org/netdev/20200317010419.3268916-1-kuba@kernel.org/
+v5: https://lore.kernel.org/netdev/20200318010153.40797-1-kuba@kernel.org/
+
+Jakub Kicinski (5):
+  kselftest: factor out list manipulation to a helper
+  kselftest: create fixture objects
+  kselftest: run tests by fixture
+  kselftest: add fixture variants
+  selftests: tls: run all tests for TLS 1.2 and TLS 1.3
+
+ Documentation/dev-tools/kselftest.rst       |   3 +-
+ tools/testing/selftests/kselftest_harness.h | 234 +++++++++++++++-----
+ tools/testing/selftests/net/tls.c           |  93 ++------
+ 3 files changed, 202 insertions(+), 128 deletions(-)
+
+-- 
+2.25.4
+
