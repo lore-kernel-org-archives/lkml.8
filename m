@@ -2,131 +2,158 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6DEC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D5DC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B64E62085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:39:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZxryyFHs"
+	by mail.kernel.org (Postfix) with ESMTP id AFCCE208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:40:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgD1UjD (ORCPT
+        id S1726526AbgD1UkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:39:03 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:47464 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726291AbgD1UjC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:39:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588106341;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=AbPHY1AYpcEsQGK31HfahH54k0ELDBfLbhr3/3je0ok=;
-        b=ZxryyFHsKgeAGkiGQVVB1cZ2ANsrVC4B5MiEIsFtcUpFfOFUMm8+DqVbvAJ5F4KwI7oLLR
-        F3C3hE87mJQeRMJAu/g8c+5vKc44seRxAHOgwtPrT+vuNZXir1DKuPBVN6MpAc/N4cBac+
-        fEVstAvU1v1fyzVtzkZoBfilFQ/4dzg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-420-fWpzP96SOdKWRtcRNLDKPw-1; Tue, 28 Apr 2020 16:38:59 -0400
-X-MC-Unique: fWpzP96SOdKWRtcRNLDKPw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E6E47800685;
-        Tue, 28 Apr 2020 20:38:57 +0000 (UTC)
-Received: from treble (ovpn-112-209.rdu2.redhat.com [10.10.112.209])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 358365D710;
-        Tue, 28 Apr 2020 20:38:57 +0000 (UTC)
-Date:   Tue, 28 Apr 2020 15:38:55 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: Remaining randconfig objtool warnings, linux-next-20200428
-Message-ID: <20200428203855.zapf6jhcp6mbft7i@treble>
-References: <CAK8P3a2qLJkokMGt48JRky=WUeAbJRuNmoD1oqfWdrGSC6y1LA@mail.gmail.com>
- <20200428161044.caamvx67t2z4t6vd@treble>
- <CAK8P3a0X4kMW1BQU6x9A2oo6i3-CMxi1h=0PhQgEbBtYWbJa9A@mail.gmail.com>
+        Tue, 28 Apr 2020 16:40:12 -0400
+Received: from mga07.intel.com ([134.134.136.100]:11887 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726180AbgD1UkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 16:40:11 -0400
+IronPort-SDR: cuYURl/TkHWPWgl6E4blwG/3hYJAzBPAd1xdCaI3Vy/drJlXO5WN9gypfDKhjN1O4c/y8U9Bj9
+ jkcYLyVsFvHQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 13:40:11 -0700
+IronPort-SDR: v6udWB+U4wE/22S2l8Wz/OFuo988K6Pf+8JjY9MBQ2pKbKK8v+meEgtG9vZQqIntj8Th5MCUzK
+ uvqiQkGvxSpQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
+   d="scan'208";a="246624870"
+Received: from jpan9-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.240.17])
+  by orsmga007.jf.intel.com with SMTP; 28 Apr 2020 13:40:10 -0700
+Date:   Tue, 28 Apr 2020 13:40:09 -0700
+From:   "Jacob Pan (Jun)" <jacob.jun.pan@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Fenghua Yu <fenghua.yu@intel.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "Dave Hansen" <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, <iommu@lists.linux-foundation.org>,
+        jacob.jun.pan@intel.com, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 5/7] x86/mmu: Allocate/free PASID
+Message-ID: <20200428134009.00002f0d@intel.com>
+In-Reply-To: <87tv13o306.fsf@nanos.tec.linutronix.de>
+References: <1585596788-193989-1-git-send-email-fenghua.yu@intel.com>
+        <1585596788-193989-6-git-send-email-fenghua.yu@intel.com>
+        <87pnbus3du.fsf@nanos.tec.linutronix.de>
+        <20200428112113.000033bd@intel.com>
+        <87tv13o306.fsf@nanos.tec.linutronix.de>
+Organization: intel
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a0X4kMW1BQU6x9A2oo6i3-CMxi1h=0PhQgEbBtYWbJa9A@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 10:19:46PM +0200, Arnd Bergmann wrote:
-> On Tue, Apr 28, 2020 at 6:10 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > On Tue, Apr 28, 2020 at 04:49:15PM +0200, Arnd Bergmann wrote:
-> > > ==> build/x86/0xFD7B7323_defconfig/log <==
-> > > arch/x86/entry/entry_64.o: warning: objtool: .entry.text+0x991: unreachable instruction
+On Tue, 28 Apr 2020 20:54:01 +0200
+Thomas Gleixner <tglx@linutronix.de> wrote:
+
+> "Jacob Pan (Jun)" <jacob.jun.pan@intel.com> writes:
+> > On Sun, 26 Apr 2020 16:55:25 +0200
+> > Thomas Gleixner <tglx@linutronix.de> wrote:  
+> >> Fenghua Yu <fenghua.yu@intel.com> writes:  
+> >> > The PASID is freed when the process exits (so no need to keep
+> >> > reference counts on how many SVM devices are sharing the
+> >> > PASID).    
+> >> 
+> >> I'm not buying that. If there is an outstanding request with the
+> >> PASID of a process then tearing down the process address space and
+> >> freeing the PASID (which might be reused) is fundamentally broken.
+> >>   
+> > Device driver unbind PASID is tied to FD release. So when a process
+> > exits, FD close causes driver to do the following:
 > >
-> > This warning looks correct, did you make a change to entry_64.S?
+> > 1. stops DMA
+> > 2. unbind PASID (clears the PASID entry in IOMMU, flush all TLBs,
+> > drain in flight page requests)  
 > 
-> I bisected my local patches and found that I had a local hack that turned
-> off CONFIG_RETPOLINE for testing something unrelated. I can reproduce
-> it on linux-next with this patch:
+> Fair enough. Explaining that somewhere might be helpful.
 > 
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -447,8 +447,7 @@ config GOLDFISH
->         depends on X86_GOLDFISH
+Will do. I plan to document this in a kernel doc for IOASID/PASID
+lifecycle management.
+
+> > For bare metal SVM, if the last mmdrop always happens after FD
+> > release, we can ensure no outstanding requests at the point of
+> > ioasid_free(). Perhaps this is a wrong assumption?  
 > 
->  config RETPOLINE
-> -       bool "Avoid speculative indirect branches in kernel"
-> -       default y
-> +       def_bool n
->         select STACK_VALIDATION if HAVE_STACK_VALIDATION
->         help
->           Compile kernel with the retpoline compiler options to guard against
+> If fd release cleans up then how should there be something in flight
+> at the final mmdrop?
+> 
+> > For guest SVM, there will be more users of a PASID. I am also
+> > working on adding refcounting to ioasid. ioasid_free() will not
+> > release the PASID back to the pool until all references are
+> > dropped.  
+> 
+> What does more users mean?
+For VT-d, a PASID can be used by VFIO, IOMMU driver, KVM, and Virtual
+Device Composition Module (VDCM*) at the same time.
 
-Thanks, that worked.
+*https://software.intel.com/en-us/download/intel-data-streaming-accelerator-preliminary-architecture-specification
 
-This one makes no sense to me.  It looks like the assembler is inserting
-a jump as part of the alignment padding???  WTH.
+There are HW context associated with the PASID in IOMMU, KVM, and VDCM.
+So before the lifetime of the PASID is over, clean up must be done in
+all of the above. PASID cannot be reclaimed until the last user drops
+its reference. Our plan is to do notification and refcouting.
 
-0000000000000980 <common_spurious>:
-     980:	48 83 04 24 80       	addq   $0xffffffffffffff80,(%rsp)
-     985:	e8 00 00 00 00       	callq  98a <common_spurious+0xa>
-			986: R_X86_64_PLT32	interrupt_entry-0x4
-     98a:	e8 00 00 00 00       	callq  98f <common_spurious+0xf>
-			98b: R_X86_64_PLT32	smp_spurious_interrupt-0x4
-     98f:	eb 7e                	jmp    a0f <ret_from_intr>
-     991:	eb 6d                	jmp    a00 <common_interrupt>
-     993:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
-     99a:	00 00 00 00 
-     99e:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
-     9a5:	00 00 00 00 
-     9a9:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
-     9b0:	00 00 00 00 
-     9b4:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
-     9bb:	00 00 00 00 
-     9bf:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
-     9c6:	00 00 00 00 
-     9ca:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
-     9d1:	00 00 00 00 
-     9d5:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
-     9dc:	00 00 00 00 
-     9e0:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
-     9e7:	00 00 00 00 
-     9eb:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
-     9f2:	00 00 00 00 
-     9f6:	66 2e 0f 1f 84 00 00 	nopw   %cs:0x0(%rax,%rax,1)
-     9fd:	00 00 00 
 
-0000000000000a00 <common_interrupt>:
-     a00:	48 83 04 24 80       	addq   $0xffffffffffffff80,(%rsp)
+> 
+> >> > +	if (mm && mm->context.pasid && !(flags &
+> >> > SVM_FLAG_PRIVATE_PASID)) {
+> >> > +		/*
+> >> > +		 * Once a PASID is allocated for this mm, the
+> >> > PASID
+> >> > +		 * stays with the mm until the mm is dropped.
+> >> > Reuse
+> >> > +		 * the PASID which has been already allocated
+> >> > for the
+> >> > +		 * mm instead of allocating a new one.
+> >> > +		 */
+> >> > +		ioasid_set_data(mm->context.pasid, svm);    
+> >> 
+> >> So if the PASID is reused several times for different SVMs then
+> >> every time ioasid_data->private is set to a different SVM. How is
+> >> that supposed to work?
+> >>   
+> > For the lifetime of the mm, there is only one PASID.
+> > svm_bind/unbind_mm could happen many times with different private
+> > data: intel_svm. Multiple devices can bind to the same PASID as
+> > well. But private data don't change within the first bind and last
+> > unbind.  
+> 
+> Ok. I read through that spaghetti of intel_svm_bind_mm() again and
+> now I start to get an idea how that is supposed to work. What a mess.
+> 
+> That function really wants to be restructured in a way so it is
+> understandable to mere mortals. 
+> 
 
--- 
-Josh
+Agreed. We are adding many new features and converging with generic
+sva_bind_device. Things will get more clear after we have fewer moving
+pieces.
+
+
+> Thanks,
+> 
+>         tglx
 
