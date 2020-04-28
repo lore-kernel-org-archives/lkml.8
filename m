@@ -2,205 +2,83 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8CB1C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6F9C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C11A6206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:12:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TyNk0pic"
+	by mail.kernel.org (Postfix) with ESMTP id 32E20206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:12:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbgD1OMG (ORCPT
+        id S1728090AbgD1OML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:12:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726949AbgD1OMF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:12:05 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11053C03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 07:12:05 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id f18so21627547lja.13
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 07:12:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9t0tu6yYKzN35uBYTbFFPc0dS5Ew+chbn+hE8zcVYWQ=;
-        b=TyNk0pickYyy84k5NMTmvZ7WzQe7BnjIVvEcEofdf2pnFIF3UDagf9JUJ7ut92Rts+
-         nXjwA9FP0UEvwZWuaI149nPEKt2yL8xUPonbQ9mtHTJjvMD/Ne/JMiOEcPscYQxC3BVd
-         abFsVjRNuG1rglN1RNryTYcYXYInUM8AtHmY6EsqusqThuai3b1BiDUeb8DBaR3Mr8kf
-         D9CZS48ljYs/GL52sBAI0g72KUUbAxeFaqGK+hw9/sGTqDJmNdX0D+nQKFKNj+3ua56o
-         3qSpsNHTdHoduEWEIm2bb+bl32dw2mvf8MjPPX++HTjz3y89q2OJqYHsBwaDuCVI+U1T
-         9/Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9t0tu6yYKzN35uBYTbFFPc0dS5Ew+chbn+hE8zcVYWQ=;
-        b=ZezoUP7ul6sQhrNsNJQO63Pjhrvl/Aim2jv1wmJWxjE2WbIwiGMGUQiub2NZOG+f+V
-         cxZ7q5y9TEbqCAQ8nFtbKY0myvY2Zpb2CSARvrjQnyR44M5avvhYpf63VCbW/3o/+jOy
-         GZTeD2Amp5o9UMdj5u5tUfaasa+uwV8rd6kcXb4UbHoEkfCE7GDd/9o9uA5wA5/SjtVW
-         8GLrqqjKvnvIDynLaQ2nKoLf0EY0Ws+0J8n9c0WortVhnYZHSgu/nBmimrvPjOZJbsoh
-         IPe+NxTz600f45tqXna++XDYfGg9qBv0ZxqG0gPYOA94GGaJSVV0ZjDraQMTL65dlXgU
-         ivlA==
-X-Gm-Message-State: AGi0PuY5esoHICZ2swFGiL6oCp1ZHkqU1ONJd4zxItHRNTdsEBkodn8J
-        JFjXMJcAurdJKr35Ebi7Ik17T7g5LgKMtdfwXDUC1g==
-X-Google-Smtp-Source: APiQypLKjTvcl707sIjTA8Gi7R58xVWA0sIpl7IXDlKPS6s5Rejq4xHZpXS8mo+iRC6XTT0VWMqVNlDJbIp6fcMI3sI=
-X-Received: by 2002:a2e:3809:: with SMTP id f9mr17881928lja.281.1588083123472;
- Tue, 28 Apr 2020 07:12:03 -0700 (PDT)
+        Tue, 28 Apr 2020 10:12:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:52556 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726949AbgD1OMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 10:12:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 70BA131B;
+        Tue, 28 Apr 2020 07:12:10 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.53])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 667233F68F;
+        Tue, 28 Apr 2020 07:12:09 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 15:11:58 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Richard Gong <richard.gong@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] firmware: stratix10-svc: Drop unnecessary checking for
+ and populating /firmware/ node
+Message-ID: <20200428141148.GA11737@bogus>
+References: <20200421173256.34897-1-sudeep.holla@arm.com>
+ <8ca3666f-8ff1-3c3c-d40b-81c024b37bdd@linux.intel.com>
+ <20200423081149.GB18538@bogus>
+ <2b2e29ec-ebbf-3ee6-acc9-3722a2fabbfb@linux.intel.com>
+ <20200428083238.GA21288@bogus>
+ <a583b842-585d-888e-49e5-32a16dfab8a6@linux.intel.com>
 MIME-Version: 1.0
-References: <1587726554-32018-1-git-send-email-sumit.garg@linaro.org>
- <1587726554-32018-3-git-send-email-sumit.garg@linaro.org> <20200425112950.3a4815b6@why>
- <6fd3d96181ec53f735ef1b6a79d28da1@kernel.org>
-In-Reply-To: <6fd3d96181ec53f735ef1b6a79d28da1@kernel.org>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Tue, 28 Apr 2020 19:41:50 +0530
-Message-ID: <CAFA6WYPNNNZeX5zpadayfiZ7P_mHmiREpUd5LZ3Jp+TjGVqoEw@mail.gmail.com>
-Subject: Re: [RFC Patch v1 2/4] irqchip/gic-v3: Add support to handle SGI as
- pseudo NMI
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, julien.thierry.kdev@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a583b842-585d-888e-49e5-32a16dfab8a6@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-Thanks for your comments and apologies for my delayed response as I
-was exploring ideas that you have shared.
-
-On Sat, 25 Apr 2020 at 20:02, Marc Zyngier <maz@kernel.org> wrote:
+On Tue, Apr 28, 2020 at 09:14:25AM -0500, Richard Gong wrote:
+> Hi,
+> 
+> On 4/28/20 3:32 AM, Sudeep Holla wrote:
+> > On Mon, Apr 27, 2020 at 02:12:56PM -0500, Richard Gong wrote:
+> > > Hi Sudeep,
+> > > 
+> > > In our dts, firmware is not under root node. You can refer to
+> > > arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi for details.
+> > > 
+> > > This is why we need check and populate firmware node.
+> > > 
+> > 
+> > Ah that's bad. One of very few DTS I see firmware node not in the
+> > root.
 >
-> On 2020-04-25 11:29, Marc Zyngier wrote:
-> > On Fri, 24 Apr 2020 16:39:12 +0530
-> > Sumit Garg <sumit.garg@linaro.org> wrote:
-> >
-> > Hi Sumit,
-> >
-> >> With pseudo NMIs enabled, interrupt controller can be configured to
-> >> deliver SGI as a pseudo NMI. So add corresponding handling for SGIs.
-> >>
-> >> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> >> ---
-> >>  drivers/irqchip/irq-gic-v3.c | 22 +++++++++++++++++-----
-> >>  1 file changed, 17 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/drivers/irqchip/irq-gic-v3.c
-> >> b/drivers/irqchip/irq-gic-v3.c
-> >> index d7006ef..be361bf 100644
-> >> --- a/drivers/irqchip/irq-gic-v3.c
-> >> +++ b/drivers/irqchip/irq-gic-v3.c
-> >> @@ -609,17 +609,29 @@ static inline void gic_handle_nmi(u32 irqnr,
-> >> struct pt_regs *regs)
-> >>      if (irqs_enabled)
-> >>              nmi_enter();
-> >>
-> >> -    if (static_branch_likely(&supports_deactivate_key))
-> >> -            gic_write_eoir(irqnr);
-> >>      /*
-> >>       * Leave the PSR.I bit set to prevent other NMIs to be
-> >>       * received while handling this one.
-> >>       * PSR.I will be restored when we ERET to the
-> >>       * interrupted context.
-> >>       */
-> >> -    err = handle_domain_nmi(gic_data.domain, irqnr, regs);
-> >> -    if (err)
-> >> -            gic_deactivate_unhandled(irqnr);
-> >> +    if (likely(irqnr > 15)) {
-> >> +            if (static_branch_likely(&supports_deactivate_key))
-> >> +                    gic_write_eoir(irqnr);
-> >> +
-> >> +            err = handle_domain_nmi(gic_data.domain, irqnr, regs);
-> >> +            if (err)
-> >> +                    gic_deactivate_unhandled(irqnr);
-> >> +    } else {
-> >> +            gic_write_eoir(irqnr);
-> >> +            if (static_branch_likely(&supports_deactivate_key))
-> >> +                    gic_write_dir(irqnr);
-> >> +#ifdef CONFIG_SMP
-> >> +            handle_IPI(irqnr, regs);
-> >> +#else
-> >> +            WARN_ONCE(true, "Unexpected SGI received!\n");
-> >> +#endif
-> >> +    }
-> >>
-> >>      if (irqs_enabled)
-> >>              nmi_exit();
-> >
-> > If there is one thing I would like to avoid, it is to add more ugly
-> > hacks to the way we handle SGIs. There is very little reason why SGIs
-> > should be handled differently from all other interrupts. They have the
-> > same properties, and it is only because of the 32bit legacy that we
-> > deal
-> > with them in such a cumbersome way. Nothing that we cannot fix though.
-> >
-> > What I would really like to see is first a conversion of the SGIs to
-> > normal, full fat interrupts. These interrupts can then be configured as
-> > NMI using the normal API.
-> >
-> > I think Julien had something along these lines (or was that limited to
-> > the PMU?). Otherwise, I'll happily help you with that.
+> Per the Devicetree Specification, there is no need to define firmware
+> under the root node. Some examples are fsl-ls1012a.dtsi and
+> hi6220-hikey.dts.
 >
-> OK, to give you an idea of what I am after, here's a small series[1]
-> that
-> can be used as a base (it has been booted exactly *once* on a model, and
-> is thus absolutely perfect ;-).
 
-Thanks for this series. I have re-based my patch-set on top of this
-series [1] and just dropped this patch #2. It works fine for me.
+Yes I checked that before I replied, otherwise I would have asked to change
+😉 
 
->
-> There is still a bit of work to be able to actually request a SGI (they
-> are hard-wired as chained interrupts so far, as this otherwise changes
-> the output of /proc/interrupts, among other things), but you will
-> hopefully see what I'm aiming for.
+> > But this driver is the only one duplicating the code
+> then Commit 3aa0582fdb82 should be extended to handle firmware which is
+> not defined under the root node. I am not sure if it is doable.
 
-I was exploring this idea: "request a SGI". I guess here you meant to
-request a new SGI as a normal NMI/IRQ via common APIs such as
-request_percpu_nmi() or request_percpu_irq() rather than statically
-adding a new IPI as per this patch [2], correct? If yes, then I have
-following follow up queries:
+I agree, I need to take a look at it again.
 
-1. Do you envision any drivers to use SGIs in a similar manner as they
-use SPIs or PPIs?
-2. How do you envision allocation of SGIs as currently they are
-hardcoded in an arch specific file (like arch/arm64/kernel/smp.c
-+794)?
-3. AFAIK, the major difference among SGIs and SPIs or PPIs is the
-trigger method where SGIs are software triggered and SPIs or PPIs are
-hardware triggered. And I couldn't find a generalized method across
-architectures to invoke SGIs. So how do you envision drivers to invoke
-SGIs in an architecture agnostic manner?
-
-[1] https://git.linaro.org/people/sumit.garg/linux.git/?h=kgdb-nmi
-[2] https://git.linaro.org/people/sumit.garg/linux.git/commit/?h=kgdb-nmi&id=fc89e5f395f89966110554a15ab0fa0f0d471132
-
--Sumit
-
->
-> Thanks,
->
->          M.
->
-> [1]
-> https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=irq/gic-sgi
-> --
-> Jazz is not dead. It just smells funny...
+-- 
+Regards,
+Sudeep
