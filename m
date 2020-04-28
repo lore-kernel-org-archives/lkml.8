@@ -2,183 +2,89 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 079AAC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73644C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA48820656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:04:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jKDnZ33H"
+	by mail.kernel.org (Postfix) with ESMTP id 421CC206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:04:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588115077;
+	bh=bo21LaVDiN3p5qRExTfq+J7LOaI4TxtlxHpokeU5a/o=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=bHvhcRJUq+hqCnptl11doCD1Pbgnqy1ZPbG0Qn9EwE66M8hE8a+h5mQOKF9kEWinX
+	 3dODhs7IE9cYhBfEoYkILzOZo1ibSox90ZGONojwgZm8YvJxKYjmu5hrIW5SLq90m9
+	 hx0ECD/gba8NOQJG9s7XJ/9hPNk+CQhgfMnyyhnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgD1XEX (ORCPT
+        id S1726739AbgD1XEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 19:04:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58412 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726431AbgD1XEX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 19:04:23 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02DC7C035493
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 16:04:23 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id u22so70451plq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 16:04:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bSsy1ygM1BDs51F1GbcG8UXkEqb70z5oMMLFkPxYsgA=;
-        b=jKDnZ33HB7ZcGRyKUq6bAEk49pA5hrq+M98P3hotNW/sjDg3UVzFz2zZipYauwUi3t
-         h0GTAYzesuGLBbDhYaZxl1d5rsSYyvKnL1btTfXYa8SHa9OGIhs2B9MqQF/U+0xMDKAA
-         depD2eW08eF/lKwYQCdorJgAq97Aag4bpIVAw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bSsy1ygM1BDs51F1GbcG8UXkEqb70z5oMMLFkPxYsgA=;
-        b=trtS7BOIGHCKNwoM/R/tKuUSNqjzluaH0bqdJMha/kemlbsqASqKN9jBtzwoUfOTs1
-         OSsW9YUZ9YplMiO3in4uh0Vjc+ml+mucwsFlEcacVYXfci6JQm55TKZWo8uOGbuDfHkU
-         56xpRnAr9SZ8VSSgtaFWhd3ykHtebZ92OFxotVxjzbBi3ApR8UkNiSN1dinprlxcd/fS
-         Z0iIr1lvxborTqm9KAI61O3eKHXHTvGmiXNqkL8ppIra2Ds6ljjaA1b6lhG3R9gEV10p
-         TYN3RCrfV2lBZVkSGefughfDMrrHIXPmtPniLNokvEjjHaqMy9vPVc8FwD5TREAF4+DC
-         z8dg==
-X-Gm-Message-State: AGi0Pub+LiCDOKU+KAjMYhUqTWeSd9irkGdVrkzYS4cBmsZqAmKNEXfx
-        USVyRuhyy7uGh5TujMkGAlbhgQ==
-X-Google-Smtp-Source: APiQypJEdKFVlT1c+cl9kFH+eXgc50EVz7/lIRVgEziupIY9ZLK2G+50Qx9FWS7gk15l1MqknfnB4g==
-X-Received: by 2002:a17:902:dc83:: with SMTP id n3mr30555779pld.133.1588115062459;
-        Tue, 28 Apr 2020 16:04:22 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id w125sm14224097pgw.22.2020.04.28.16.04.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 16:04:21 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 16:04:20 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Alok Chauhan <alokc@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH v3 02/17] spi: spi-geni-qcom: Use OPP API to set clk/perf
- state
-Message-ID: <20200428230420.GJ4525@google.com>
-References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
- <1588080785-6812-3-git-send-email-rnayak@codeaurora.org>
+        Tue, 28 Apr 2020 19:04:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726181AbgD1XEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 19:04:36 -0400
+Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E881120656;
+        Tue, 28 Apr 2020 23:04:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588115075;
+        bh=bo21LaVDiN3p5qRExTfq+J7LOaI4TxtlxHpokeU5a/o=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=yFtq8fVR/VOkhVWVlZwlZokdulMlFu18XJsQJY7pDxJcDZzrCvZYs0XLTYNZmxQFB
+         TBC5AJbU1fcRxpBlV7gSsUZbbrInB3b/KP1iNNFQvhDadkU4ftnPdNkgd7QRwiGDNB
+         fSoqdmY8NaFIDGsoCMkQHQ8Ab/XP58R2TcfoPOUo=
+Date:   Tue, 28 Apr 2020 16:04:34 -0700 (PDT)
+From:   Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+cc:     Srivatsa Vaddagiri <vatsa@codeaurora.org>, konrad.wilk@oracle.com,
+        jasowang@redhat.com, jan.kiszka@siemens.com, will@kernel.org,
+        stefano.stabellini@xilinx.com, iommu@lists.linux-foundation.org,
+        virtualization@lists.linux-foundation.org,
+        virtio-dev@lists.oasis-open.org, tsoni@codeaurora.org,
+        pratikp@codeaurora.org, christoffer.dall@arm.com,
+        alex.bennee@linaro.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] virtio: Add bounce DMA ops
+In-Reply-To: <20200428163448-mutt-send-email-mst@kernel.org>
+Message-ID: <alpine.DEB.2.21.2004281556180.29217@sstabellini-ThinkPad-T480s>
+References: <1588073958-1793-1-git-send-email-vatsa@codeaurora.org> <1588073958-1793-6-git-send-email-vatsa@codeaurora.org> <20200428121232-mutt-send-email-mst@kernel.org> <20200428174952.GA5097@quicinc.com> <20200428163448-mutt-send-email-mst@kernel.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1588080785-6812-3-git-send-email-rnayak@codeaurora.org>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 07:02:50PM +0530, Rajendra Nayak wrote:
-> geni spi needs to express a perforamnce state requirement on CX
-> depending on the frequency of the clock rates. Use OPP table from
-> DT to register with OPP framework and use dev_pm_opp_set_rate() to
-> set the clk/perf state.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Alok Chauhan <alokc@codeaurora.org>
-> Cc: Akash Asthana <akashast@codeaurora.org>
-> Cc: linux-spi@vger.kernel.org
-> ---
-> This patch has a dependency on the 'PATCH 01/17' in this series,
-> due to the changes in include/linux/qcom-geni-se.h
-> Its ideal if this and the previous patch gets merged via the
-> msm tree (once reviewed and ack'ed)
-> Greg has already responded he is fine with it for serial.
-> 
->  drivers/spi/spi-geni-qcom.c | 26 +++++++++++++++++++++++---
->  1 file changed, 23 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
-> index c397242..51186c3 100644
-> --- a/drivers/spi/spi-geni-qcom.c
-> +++ b/drivers/spi/spi-geni-qcom.c
-> @@ -7,6 +7,7 @@
->  #include <linux/log2.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> +#include <linux/pm_opp.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/qcom-geni-se.h>
->  #include <linux/spi/spi.h>
-> @@ -95,7 +96,6 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
->  {
->  	unsigned long sclk_freq;
->  	unsigned int actual_hz;
-> -	struct geni_se *se = &mas->se;
->  	int ret;
->  
->  	ret = geni_se_clk_freq_match(&mas->se,
-> @@ -112,9 +112,9 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
->  
->  	dev_dbg(mas->dev, "req %u=>%u sclk %lu, idx %d, div %d\n", speed_hz,
->  				actual_hz, sclk_freq, *clk_idx, *clk_div);
-> -	ret = clk_set_rate(se->clk, sclk_freq);
-> +	ret = dev_pm_opp_set_rate(mas->dev, sclk_freq);
->  	if (ret)
-> -		dev_err(mas->dev, "clk_set_rate failed %d\n", ret);
-> +		dev_err(mas->dev, "dev_pm_opp_set_rate failed %d\n", ret);
->  	return ret;
->  }
->  
-> @@ -561,6 +561,17 @@ static int spi_geni_probe(struct platform_device *pdev)
->  	mas->se.wrapper = dev_get_drvdata(dev->parent);
->  	mas->se.base = base;
->  	mas->se.clk = clk;
-> +	mas->se.opp_table = dev_pm_opp_set_clkname(&pdev->dev, "se");
-> +	if (IS_ERR(mas->se.opp_table))
-> +		return PTR_ERR(mas->se.opp_table);
-> +	/* OPP table is optional */
-> +	ret = dev_pm_opp_of_add_table(&pdev->dev);
-> +	if (!ret) {
-> +		mas->se.has_opp_table = true;
-> +	} else if (ret != -ENODEV) {
-> +		dev_err(&pdev->dev, "Invalid OPP table in Device tree\n");
-> +		return ret;
-> +	}
->  
->  	spi->bus_num = -1;
->  	spi->dev.of_node = dev->of_node;
-> @@ -596,6 +607,9 @@ static int spi_geni_probe(struct platform_device *pdev)
->  spi_geni_probe_runtime_disable:
->  	pm_runtime_disable(dev);
->  	spi_master_put(spi);
-> +	if (mas->se.has_opp_table)
-> +		dev_pm_opp_of_remove_table(&pdev->dev);
-> +	dev_pm_opp_put_clkname(mas->se.opp_table);
->  	return ret;
->  }
->  
-> @@ -604,6 +618,9 @@ static int spi_geni_remove(struct platform_device *pdev)
->  	struct spi_master *spi = platform_get_drvdata(pdev);
->  	struct spi_geni_master *mas = spi_master_get_devdata(spi);
->  
-> +	if (mas->se.has_opp_table)
-> +		dev_pm_opp_of_remove_table(&pdev->dev);
-> +	dev_pm_opp_put_clkname(mas->se.opp_table);
->  	/* Unregister _before_ disabling pm_runtime() so we stop transfers */
->  	spi_unregister_master(spi);
->  
-> @@ -617,6 +634,9 @@ static int __maybe_unused spi_geni_runtime_suspend(struct device *dev)
->  	struct spi_master *spi = dev_get_drvdata(dev);
->  	struct spi_geni_master *mas = spi_master_get_devdata(spi);
->  
-> +	/* Drop the performance state vote */
-> +	dev_pm_opp_set_rate(dev, 0);
-> +
->  	return geni_se_resources_off(&mas->se);
->  }
+On Tue, 28 Apr 2020, Michael S. Tsirkin wrote:
+> On Tue, Apr 28, 2020 at 11:19:52PM +0530, Srivatsa Vaddagiri wrote:
+> > * Michael S. Tsirkin <mst@redhat.com> [2020-04-28 12:17:57]:
+> > 
+> > > Okay, but how is all this virtio specific?  For example, why not allow
+> > > separate swiotlbs for any type of device?
+> > > For example, this might make sense if a given device is from a
+> > > different, less trusted vendor.
+> > 
+> > Is swiotlb commonly used for multiple devices that may be on different trust
+> > boundaries (and not behind a hardware iommu)?
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+The trust boundary is not a good way of describing the scenario and I
+think it leads to miscommunication.
+
+A better way to describe the scenario would be that the device can only
+DMA to/from a small reserved-memory region advertised on device tree.
+
+Do we have other instances of devices that can only DMA to/from very
+specific and non-configurable address ranges? If so, this series could
+follow their example.
+
+
+> Even a hardware iommu does not imply a 100% security from malicious
+> hardware. First lots of people use iommu=pt for performance reasons.
+> Second even without pt, unmaps are often batched, and sub-page buffers
+> might be used for DMA, so we are not 100% protected at all times.
