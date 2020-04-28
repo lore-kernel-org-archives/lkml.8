@@ -2,111 +2,121 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8123EC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29694C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FDCE206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:47:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD94206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:48:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="E0S6TZ7f"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="A3Z9s3IC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgD1Lr2 (ORCPT
+        id S1726699AbgD1Lsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:47:28 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17785 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726285AbgD1Lr2 (ORCPT
+        Tue, 28 Apr 2020 07:48:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37094 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726285AbgD1Lsh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:47:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1588074324; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=Xy05zNdC3MFMTfkdoaLrwqTqpQBIgwI9ImssanrOfNLkxVEA/nmxFSnj7yLyy1tfzqCH43Y34FyEYic4RcNV+KaWwtTe/eY0MceyqguhCK1j8fmnsvOTE42FqjRBA7C5909DnqrcXNoy9D8UumGB8HP+qTM4FsBhIay6fwndL/s=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1588074324; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
-        bh=oG6pqFzQBk7AZlpEQUBQ9MQBZPeiSbtQQkXAin2JXtI=; 
-        b=hl6tWzB3WZ1FBp0Yp5tYffyBvUD0Te0mEkJ2JeP3TroEjCEWGBQqaUfY5o/jSi4vtmbOq+rxypyZFjNdXmrokDdBVTShxMuDPcA/AHWU/Asi7ZxuoRhsp1YkO30Pzimx6uYSGCcVfXLO1k9A/40VlFJpYiWPsTAc8I7e6/pj1D0=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=flygoat.com;
-        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
-        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1588074324;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=oG6pqFzQBk7AZlpEQUBQ9MQBZPeiSbtQQkXAin2JXtI=;
-        b=E0S6TZ7fSBmVIEvUgzmNXSi4iqSvKuoSBxTbI7vwK6nMIo6qKX8y88upSlFj9mLy
-        ltaqKpD3dN3mIZi29QlAvWGbkC44/Yq8KFsd8I/hG620lgzo0jglDx3bis50JbW6N1/
-        qzUbOBFK85aiFj5AYjup0zNjJug0s0K5+9A9unzY=
-Received: from [127.0.0.1] (122.235.213.3 [122.235.213.3]) by mx.zoho.com.cn
-        with SMTPS id 1588074322203701.7412192540986; Tue, 28 Apr 2020 19:45:22 +0800 (CST)
-Date:   Tue, 28 Apr 2020 19:45:19 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     linux-mips@vger.kernel.org, john.garry@huawei.com,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Stephen Kitt <steve@sk2.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        =?ISO-8859-1?Q?Philippe_Mathieu-Daud=E9?= <f4bug@amsat.org>,
-        Daniel Silsby <dansilsby@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Tue, 28 Apr 2020 07:48:37 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B83BC03C1A9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 04:48:37 -0700 (PDT)
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 49BKfV3T5mz9sSX; Tue, 28 Apr 2020 21:48:34 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1588074514;
+        bh=2Xt4drwzFdVoeLpaSdh55/L13zgR9vEVW6/4XuF+vMI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=A3Z9s3IC6Mm4hUr+WF1T2mo5kr9Rc6qWQqzMOfky6XVKvjc5n+VicZ0JE6amXUqhj
+         GtfIhPLiu/Hf4wFewBbZ/GxKapOdK0EuRm1dpPlQh2byI3Nb1HqcLfS7DViDpm2+mr
+         GvrwGa9FgcGYZqCvT98hg/fTClJvzu7gZzoDd7wOdDZBhsPpysyIU0slQ+QyALRcla
+         lwkU+EgZw80sDHQDrVMe2ZiuFKH+2HKMAdBMYRgFxCbYTHUY8GHBSjQl7QS+Q74g9s
+         rDw/nDY/vvDgZrT+mEzVvKAOuWknPcf1Qgt4rC/x0W1Y1RegZ0kTGoabxveskhlIyU
+         1mE+X93WnZZbg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     linuxppc-dev@ozlabs.org
+Cc:     hch@lst.de, jk@ozlabs.org, viro@zeniv.linux.org.uk,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] MIPS: Massage address spaces headers
-User-Agent: K-9 Mail for Android
-Reply-to: jiaxun.yang@flygoat.com
-In-Reply-To: <20200428113326.GD11443@alpha.franken.de>
-References: <20200428021437.2000066-1-jiaxun.yang@flygoat.com> <20200428021437.2000066-2-jiaxun.yang@flygoat.com> <20200428113326.GD11443@alpha.franken.de>
-Message-ID: <7613695F-5A83-4B57-A2E6-0EE27DCF397F@flygoat.com>
+Subject: [PATCH] powerpc/spufs: Add rcu_read_lock() around fcheck()
+Date:   Tue, 28 Apr 2020 21:48:11 +1000
+Message-Id: <20200428114811.68436-1-mpe@ellerman.id.au>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently the spu coredump code triggers an RCU warning:
 
+  =============================
+  WARNING: suspicious RCU usage
+  5.7.0-rc3-01755-g7cd49f0b7ec7 #1 Not tainted
+  -----------------------------
+  include/linux/fdtable.h:95 suspicious rcu_dereference_check() usage!
 
-=E4=BA=8E 2020=E5=B9=B44=E6=9C=8828=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=887=
-:33:26, Thomas Bogendoerfer <tsbogend@alpha=2Efranken=2Ede> =E5=86=99=E5=88=
-=B0:
->On Tue, Apr 28, 2020 at 10:14:12AM +0800, Jiaxun Yang wrote:
->> That would allow us modify kernel vm address spaces without
->> step into the hell of includes=2E
->>=20
->> Also use some marcos for address spaces to make spaces=2Eh more
->> clear=2E
->>=20
->> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
->
->I don't like this patch as I can't see a good reason for shuffling
->stuff arround=2E Can you drop this from this series ?
+  other info that might help us debug this:
 
-The problem is without this patch we'll have to include pgtable-32=2Eh and
-pgtable-64=2Eh into asm/io=2Eh, and that will become totally hell=2E
+  rcu_scheduler_active = 2, debug_locks = 1
+  1 lock held by spu-coredump/1343:
+   #0: c0000007fa22f430 (sb_writers#2){.+.+}-{0:0}, at: .do_coredump+0x1010/0x13c8
 
-Thanks=2E
+  stack backtrace:
+  CPU: 0 PID: 1343 Comm: spu-coredump Not tainted 5.7.0-rc3-01755-g7cd49f0b7ec7 #1
+  Call Trace:
+    .dump_stack+0xec/0x15c (unreliable)
+    .lockdep_rcu_suspicious+0x120/0x144
+    .coredump_next_context+0x148/0x158
+    .spufs_coredump_extra_notes_size+0x54/0x190
+    .elf_coredump_extra_notes_size+0x34/0x50
+    .elf_core_dump+0xe48/0x19d0
+    .do_coredump+0xe50/0x13c8
+    .get_signal+0x864/0xd88
+    .do_notify_resume+0x158/0x3c8
+    .interrupt_exit_user_prepare+0x19c/0x208
+    interrupt_return+0x14/0x1c0
 
->
->Thomas=2E
->
+This comes from fcheck_files() via fcheck().
 
---=20
-Jiaxun Yang
+It's pretty clearly documented that fcheck() must be wrapped with
+rcu_read_lock(), so fix it.
+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+---
+ arch/powerpc/platforms/cell/spufs/coredump.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/platforms/cell/spufs/coredump.c b/arch/powerpc/platforms/cell/spufs/coredump.c
+index 8b3296b62f65..0fc52cbaa552 100644
+--- a/arch/powerpc/platforms/cell/spufs/coredump.c
++++ b/arch/powerpc/platforms/cell/spufs/coredump.c
+@@ -82,13 +82,19 @@ static int match_context(const void *v, struct file *file, unsigned fd)
+  */
+ static struct spu_context *coredump_next_context(int *fd)
+ {
++	struct spu_context *ctx;
+ 	struct file *file;
+ 	int n = iterate_fd(current->files, *fd, match_context, NULL);
+ 	if (!n)
+ 		return NULL;
+ 	*fd = n - 1;
++
++	rcu_read_lock();
+ 	file = fcheck(*fd);
+-	return SPUFS_I(file_inode(file))->i_ctx;
++	ctx = SPUFS_I(file_inode(file))->i_ctx;
++	rcu_read_unlock();
++
++	return ctx;
+ }
+ 
+ int spufs_coredump_extra_notes_size(void)
+-- 
+2.25.1
+
