@@ -2,101 +2,86 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EB5C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED12AC83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81E8B20746
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:30:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKLcbFM/"
+	by mail.kernel.org (Postfix) with ESMTP id CC7A520746
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728518AbgD1Pab (ORCPT
+        id S1728314AbgD1Pbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:30:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727981AbgD1Pab (ORCPT
+        Tue, 28 Apr 2020 11:31:40 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45675 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727917AbgD1Pbj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:30:31 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B7C2C03C1AB;
-        Tue, 28 Apr 2020 08:30:31 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id r4so10475280pgg.4;
-        Tue, 28 Apr 2020 08:30:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6PjGg3UbaqxfVPgULOkWJWIszbc0cWBSzi6BaU2Kh6M=;
-        b=nKLcbFM/dz/5pfMj+s2SkAwYS78K/cZLtnkGzt3F3FB7NdZn4FsWdVpI/wJR5FOYTO
-         qaT9nTWlFDPzgnRLR+yQj+YzKCkFC2ba7BlyQERQW3n/b6aN24Ug9FpE9gG2r2s/yqnQ
-         0P3rg8CPNj+xmrRXySCCGFOCyO+093tkJ+/cXnyNkKDHVhkil6CMJar9Wn8Wua2kxi/P
-         4sz8AD1U536RvHmXqTZe8/Aj+aYv45i7mZ2eVOOtOKP8nBJ6LhIkG4hQ8PGNWi+LE1z8
-         QNbM+3JRNXMja3UADJpgAuU37MITMO1FYpVsxqIg0osNd6ZDZhi6RzJlnHUPOqBshVQm
-         yjzg==
+        Tue, 28 Apr 2020 11:31:39 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e20so33291189otk.12;
+        Tue, 28 Apr 2020 08:31:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6PjGg3UbaqxfVPgULOkWJWIszbc0cWBSzi6BaU2Kh6M=;
-        b=d3Lnsp/mePUBfUjc5z8px4DDeiqMaSGqMXKb0JHBkdQRzJaX5639/G4MwRzUVFla5a
-         F7Nfv9QqxrC+U53+6D/DfyfZderBD4rivREPUdqV9E1D4CT1TsJTo0tHHz05MPlldLHU
-         q4QHU8xi4tuKqP7IhvvlEAiO0y4uQZSj7Kw6IwW+2bY2atVLmNAskwLnAn2Zc1vy1eIL
-         yRdKSmVyMG/fFGPo0CkWbpmyty5ioihWd94kFj/5misYlbLiDSRkseVDKoPBhJV+LEw7
-         a+BTV5jSZOH1ou3Y/92Bib2JgNcvXQTNiLsf0PpF6TNqSAtT+6/41VKZy+JgOv9umaLE
-         cRPA==
-X-Gm-Message-State: AGi0PuYbXERnEortaCB8j7WQxMW+hYRvgXxfWwgvr44KvkrJVhiULs+I
-        mkvLyHD0KlsoY3xRW6WapKakku+irWnf422wNfg=
-X-Google-Smtp-Source: APiQypJtNDV9iExHzJU8YiVUP9l/NCa9z28YI5f6UtRB/lVB0A6v8hOtpV8C7MQ3/486tioY+E+OOeJN5JSFKz5HI4Y=
-X-Received: by 2002:a63:1c1:: with SMTP id 184mr29960076pgb.203.1588087830620;
- Tue, 28 Apr 2020 08:30:30 -0700 (PDT)
+        bh=H0LOD7XbNY8f26IcdF+mTtRkvNc/cLKM59So7aS3RUw=;
+        b=Kh4h/h4ROTQqDh64ylfpPGzS3za/yVYdFZeoCZxjL3yGkQXvlwvtNpURUK1+ORePif
+         FkgMwjMxG5nmKPLcAjbrGMOrbSCUKJvztugDgxSCw95QFpzH+Nprzjt9iU+pG1w6Rqm1
+         g0ROcLt4kN7c923mEgQKQY7VV+H1Fxrm6L0UF4ym/y4+8HQQrydr51L3xUqGda2C/O4F
+         E/bAqqPWO/K49lG7sxmsHoOB9+ZzP0D2iy5oh154/50qzbGpf5FMCSbOSV1vVLOXrPFb
+         TO5oJSMciPYaXxzyfXWBWK0bRul4ZkeSCrzQtgsKclWFXk7cFl3OIm9qFGQPrXPsWGOc
+         pmAg==
+X-Gm-Message-State: AGi0PuZv1ZHZAXM48nUJoXo3HXMFm0JbV745xWMHdMjoQb/5vvE904/5
+        wRVBhgt/GvnKjuRuqnE0C6ZSQabUn7V6MT42UbI=
+X-Google-Smtp-Source: APiQypKmPPMRmFDEpK+pbxelea00daQWJAo2cqKdKqvVtb9z1shjQduzXoV/x4KObl7etnUGy2BDWPAjQyNgmtVAs6E=
+X-Received: by 2002:a9d:7d85:: with SMTP id j5mr21717225otn.107.1588087898648;
+ Tue, 28 Apr 2020 08:31:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200424154103.10311-1-zhengdejin5@gmail.com> <20200424154103.10311-3-zhengdejin5@gmail.com>
- <CACRpkdY5_+_n8qfUxAGtG16QW_VoVcpSFZuoBR8A6iuCbmsrFw@mail.gmail.com>
-In-Reply-To: <CACRpkdY5_+_n8qfUxAGtG16QW_VoVcpSFZuoBR8A6iuCbmsrFw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 28 Apr 2020 18:30:24 +0300
-Message-ID: <CAHp75VfmMJEFo8gcoESg9Zh6dBuzn7tB8iquaNBVU_nyTx-LMQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: mm-lantiq: Fix small typo
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Dejin Zheng <zhengdejin5@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1587987364-4566-1-git-send-email-hadar.gat@arm.com> <1587987364-4566-3-git-send-email-hadar.gat@arm.com>
+In-Reply-To: <1587987364-4566-3-git-send-email-hadar.gat@arm.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 28 Apr 2020 17:31:25 +0200
+Message-ID: <CAMuHMdWdgnqAp8rHyMj9gCXD2WBweeB6g38OV6S2MJ5KFLyvcw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] hwrng: cctrng - change default to n
+To:     Hadar Gat <hadar.gat@arm.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <ofir.drang@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 4:53 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Mon, Apr 27, 2020 at 1:39 PM Hadar Gat <hadar.gat@arm.com> wrote:
+> For many users, the Arm CryptoCell HW is not available, so the default for
+> HW_RANDOM_CCTRNG should to n.
+> Remove the line to follow the convention - 'n' is the default anyway so no
+> need to state it explicitly.
 >
-> On Fri, Apr 24, 2020 at 5:41 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
->
-> > Fix a spelling typo in gpio-mm-lantiq.c by codespell
-> > s/dont/don't/
-> >
-> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> > ---
-> > v1 -> v2:
-> >         - split patch v1 (only one patch) into patches for each driver
-> >           by Bartosz's suggestion. thanks Bartosz.
->
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Andy: since this is an Intel product are you picking it up?
-> I think this Intel-MIPS platform is a bit of a special case so
-> I can also handle it if you prefer.
+> Signed-off-by: Hadar Gat <hadar.gat@arm.com>
 
-I only collecting stuff for x86 base Intel, this one is MIPS, so,
-please take it directly if you are okay with it.
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
