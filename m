@@ -2,174 +2,239 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EF6C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C65C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F756206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE0C320730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:46:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099608;
-	bh=dhUsOr1v2mBAanhqQ0gOmvuHvZAHd5hliZZQ3LNcyPk=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=T1zoohNQpQnh4cDXS4LSe5YQX8nuzn9Kg53hIhpy782BPFZd19OLtCpQvXVqJmTBs
-	 EYs7lCRtUP7SUr3kBEhz+6eATRXz3k9yMjVpkbDbi0swsrFpdt4Zi+VsCt2gIfJWDq
-	 9Daduz3j03XjM5DTY/9g1BTqSRmtAvZww6j1kIaE=
+	s=default; t=1588099610;
+	bh=EGlY97GK0ijcW+1LMPkvF75GLNdBEqnwBDP+xSKZCk8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Q8JVzQg9QYea+Thoo5EUv8symE8Hgd5rfwpwsj4J6Lr5luJ1SydYLTnQK7TlQz3W2
+	 Pr0qK29FYXuz6kFZRlELhCx9OVXahVySFud8YIMZXjuojDNrzucBlzU25AtPyCiVN1
+	 Wi1aHflb1SnQWL2kWqpWRBmnaAGCivajUp5wRfyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731322AbgD1Sqq (ORCPT
+        id S1731172AbgD1Sm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:46:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39696 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:42:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731174AbgD1Sqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:46:43 -0400
-Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
+        id S1730809AbgD1Smy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:42:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36DFA206A1;
-        Tue, 28 Apr 2020 18:46:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D37720575;
+        Tue, 28 Apr 2020 18:42:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099602;
-        bh=dhUsOr1v2mBAanhqQ0gOmvuHvZAHd5hliZZQ3LNcyPk=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=rpFe5bw3nYfTZI/Fw4t782dUbbzbY/e1wgEYuElBHaqtvWX/hfJsEsGLS2XuWDjW+
-         bIa1bjuq3y0DPZGSRea+vJdpT7vRGCrl1tbdpGUSeE9+xCmrQUgbqzVktKSAA0Vkgk
-         G9OeZjGFgkrrokBQpvUJ6AmBsdTd+Dw9M6vbLLqs=
-Date:   Tue, 28 Apr 2020 11:46:41 -0700 (PDT)
-From:   Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
-To:     =?UTF-8?Q?J=C3=BCrgen_Gro=C3=9F?= <jgross@suse.com>
-cc:     peng.fan@nxp.com, konrad.wilk@oracle.com,
-        boris.ostrovsky@oracle.com, sstabellini@kernel.org,
-        xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com, hch@infradead.org
-Subject: Re: [PATCH] xen/swiotlb: correct the check for
- xen_destroy_contiguous_region
-In-Reply-To: <1c01e97a-adcd-a703-55b5-8975b4ce4d2c@suse.com>
-Message-ID: <alpine.DEB.2.21.2004281118130.29217@sstabellini-ThinkPad-T480s>
-References: <1588059225-11245-1-git-send-email-peng.fan@nxp.com> <1c01e97a-adcd-a703-55b5-8975b4ce4d2c@suse.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        s=default; t=1588099373;
+        bh=EGlY97GK0ijcW+1LMPkvF75GLNdBEqnwBDP+xSKZCk8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=v4Y/7dQsKFJMpTv8jY3kcabBe5w8vXvwdGlduA81dq9jrHa2W8RgWrRKwXHX2iT/u
+         FALPP+BhWVc6+yQLo7q/A9G927/V68918dv6tgtcdWaehRs8N3d62+BinV7/1lGull
+         /4ff4WJD6VgaYtqZVrTVahyY7959IWJIbpnJs6HQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Christof Meerwald <cmeerw@cmeerw.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Subject: [PATCH 5.4 123/168] signal: Avoid corrupting si_pid and si_uid in do_notify_parent
+Date:   Tue, 28 Apr 2020 20:24:57 +0200
+Message-Id: <20200428182247.930375583@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-325783116-1588098351=:29217"
-Content-ID: <alpine.DEB.2.21.2004281125590.29217@sstabellini-ThinkPad-T480s>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: Eric W. Biederman <ebiederm@xmission.com>
 
---8323329-325783116-1588098351=:29217
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: 8BIT
-Content-ID: <alpine.DEB.2.21.2004281125591.29217@sstabellini-ThinkPad-T480s>
+commit 61e713bdca3678e84815f2427f7a063fc353a1fc upstream.
 
-On Tue, 28 Apr 2020, Jürgen Groß wrote:
-> On 28.04.20 09:33, peng.fan@nxp.com wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> > 
-> > When booting xen on i.MX8QM, met:
-> > "
-> > [    3.602128] Unable to handle kernel paging request at virtual address
-> > 0000000000272d40
-> > [    3.610804] Mem abort info:
-> > [    3.613905]   ESR = 0x96000004
-> > [    3.617332]   EC = 0x25: DABT (current EL), IL = 32 bits
-> > [    3.623211]   SET = 0, FnV = 0
-> > [    3.626628]   EA = 0, S1PTW = 0
-> > [    3.630128] Data abort info:
-> > [    3.633362]   ISV = 0, ISS = 0x00000004
-> > [    3.637630]   CM = 0, WnR = 0
-> > [    3.640955] [0000000000272d40] user address but active_mm is swapper
-> > [    3.647983] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-> > [    3.654137] Modules linked in:
-> > [    3.677285] Hardware name: Freescale i.MX8QM MEK (DT)
-> > [    3.677302] Workqueue: events deferred_probe_work_func
-> > [    3.684253] imx6q-pcie 5f000000.pcie: PCI host bridge to bus 0000:00
-> > [    3.688297] pstate: 60000005 (nZCv daif -PAN -UAO)
-> > [    3.688310] pc : xen_swiotlb_free_coherent+0x180/0x1c0
-> > [    3.693993] pci_bus 0000:00: root bus resource [bus 00-ff]
-> > [    3.701002] lr : xen_swiotlb_free_coherent+0x44/0x1c0
-> > "
-> > 
-> > In xen_swiotlb_alloc_coherent, if !(dev_addr + size - 1 <= dma_mask) or
-> > range_straddles_page_boundary(phys, size) are true, it will
-> > create contiguous region. So when free, we need to free contiguous
-> > region use upper check condition.
-> 
-> No, this will break PV guests on x86.
-> 
-> I think there is something wrong with your setup in combination with
-> the ARM xen_create_contiguous_region() implementation.
-> 
-> Stefano?
+Christof Meerwald <cmeerw@cmeerw.org> writes:
+> Hi,
+>
+> this is probably related to commit
+> 7a0cf094944e2540758b7f957eb6846d5126f535 (signal: Correct namespace
+> fixups of si_pid and si_uid).
+>
+> With a 5.6.5 kernel I am seeing SIGCHLD signals that don't include a
+> properly set si_pid field - this seems to happen for multi-threaded
+> child processes.
+>
+> A simple test program (based on the sample from the signalfd man page):
+>
+> #include <sys/signalfd.h>
+> #include <signal.h>
+> #include <unistd.h>
+> #include <spawn.h>
+> #include <stdlib.h>
+> #include <stdio.h>
+>
+> #define handle_error(msg) \
+>     do { perror(msg); exit(EXIT_FAILURE); } while (0)
+>
+> int main(int argc, char *argv[])
+> {
+>   sigset_t mask;
+>   int sfd;
+>   struct signalfd_siginfo fdsi;
+>   ssize_t s;
+>
+>   sigemptyset(&mask);
+>   sigaddset(&mask, SIGCHLD);
+>
+>   if (sigprocmask(SIG_BLOCK, &mask, NULL) == -1)
+>     handle_error("sigprocmask");
+>
+>   pid_t chldpid;
+>   char *chldargv[] = { "./sfdclient", NULL };
+>   posix_spawn(&chldpid, "./sfdclient", NULL, NULL, chldargv, NULL);
+>
+>   sfd = signalfd(-1, &mask, 0);
+>   if (sfd == -1)
+>     handle_error("signalfd");
+>
+>   for (;;) {
+>     s = read(sfd, &fdsi, sizeof(struct signalfd_siginfo));
+>     if (s != sizeof(struct signalfd_siginfo))
+>       handle_error("read");
+>
+>     if (fdsi.ssi_signo == SIGCHLD) {
+>       printf("Got SIGCHLD %d %d %d %d\n",
+>           fdsi.ssi_status, fdsi.ssi_code,
+>           fdsi.ssi_uid, fdsi.ssi_pid);
+>       return 0;
+>     } else {
+>       printf("Read unexpected signal\n");
+>     }
+>   }
+> }
+>
+>
+> and a multi-threaded client to test with:
+>
+> #include <unistd.h>
+> #include <pthread.h>
+>
+> void *f(void *arg)
+> {
+>   sleep(100);
+> }
+>
+> int main()
+> {
+>   pthread_t t[8];
+>
+>   for (int i = 0; i != 8; ++i)
+>   {
+>     pthread_create(&t[i], NULL, f, NULL);
+>   }
+> }
+>
+> I tried to do a bit of debugging and what seems to be happening is
+> that
+>
+>   /* From an ancestor pid namespace? */
+>   if (!task_pid_nr_ns(current, task_active_pid_ns(t))) {
+>
+> fails inside task_pid_nr_ns because the check for "pid_alive" fails.
+>
+> This code seems to be called from do_notify_parent and there we
+> actually have "tsk != current" (I am assuming both are threads of the
+> current process?)
 
-Let me start by asking Peng a couple of questions:
+I instrumented the code with a warning and received the following backtrace:
+> WARNING: CPU: 0 PID: 777 at kernel/pid.c:501 __task_pid_nr_ns.cold.6+0xc/0x15
+> Modules linked in:
+> CPU: 0 PID: 777 Comm: sfdclient Not tainted 5.7.0-rc1userns+ #2924
+> Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
+> RIP: 0010:__task_pid_nr_ns.cold.6+0xc/0x15
+> Code: ff 66 90 48 83 ec 08 89 7c 24 04 48 8d 7e 08 48 8d 74 24 04 e8 9a b6 44 00 48 83 c4 08 c3 48 c7 c7 59 9f ac 82 e8 c2 c4 04 00 <0f> 0b e9 3fd
+> RSP: 0018:ffffc9000042fbf8 EFLAGS: 00010046
+> RAX: 000000000000000c RBX: 0000000000000000 RCX: ffffc9000042faf4
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff81193d29
+> RBP: ffffc9000042fc18 R08: 0000000000000000 R09: 0000000000000001
+> R10: 000000100f938416 R11: 0000000000000309 R12: ffff8880b941c140
+> R13: 0000000000000000 R14: 0000000000000000 R15: ffff8880b941c140
+> FS:  0000000000000000(0000) GS:ffff8880bca00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f2e8c0a32e0 CR3: 0000000002e10000 CR4: 00000000000006f0
+> Call Trace:
+>  send_signal+0x1c8/0x310
+>  do_notify_parent+0x50f/0x550
+>  release_task.part.21+0x4fd/0x620
+>  do_exit+0x6f6/0xaf0
+>  do_group_exit+0x42/0xb0
+>  get_signal+0x13b/0xbb0
+>  do_signal+0x2b/0x670
+>  ? __audit_syscall_exit+0x24d/0x2b0
+>  ? rcu_read_lock_sched_held+0x4d/0x60
+>  ? kfree+0x24c/0x2b0
+>  do_syscall_64+0x176/0x640
+>  ? trace_hardirqs_off_thunk+0x1a/0x1c
+>  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+The immediate problem is as Christof noticed that "pid_alive(current) == false".
+This happens because do_notify_parent is called from the last thread to exit
+in a process after that thread has been reaped.
+
+The bigger issue is that do_notify_parent can be called from any
+process that manages to wait on a thread of a multi-threaded process
+from wait_task_zombie.  So any logic based upon current for
+do_notify_parent is just nonsense, as current can be pretty much
+anything.
+
+So change do_notify_parent to call __send_signal directly.
+
+Inspecting the code it appears this problem has existed since the pid
+namespace support started handling this case in 2.6.30.  This fix only
+backports to 7a0cf094944e ("signal: Correct namespace fixups of si_pid and si_uid")
+where the problem logic was moved out of __send_signal and into send_signal.
+
+Cc: stable@vger.kernel.org
+Fixes: 6588c1e3ff01 ("signals: SI_USER: Masquerade si_pid when crossing pid ns boundary")
+Ref: 921cf9f63089 ("signals: protect cinit from unblocked SIG_DFL signals")
+Link: https://lore.kernel.org/lkml/20200419201336.GI22017@edge.cmeerw.net/
+Reported-by: Christof Meerwald <cmeerw@cmeerw.org>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ kernel/signal.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -1993,8 +1993,12 @@ bool do_notify_parent(struct task_struct
+ 		if (psig->action[SIGCHLD-1].sa.sa_handler == SIG_IGN)
+ 			sig = 0;
+ 	}
++	/*
++	 * Send with __send_signal as si_pid and si_uid are in the
++	 * parent's namespaces.
++	 */
+ 	if (valid_signal(sig) && sig)
+-		__group_send_sig_info(sig, &info, tsk->parent);
++		__send_signal(sig, &info, tsk->parent, PIDTYPE_TGID, false);
+ 	__wake_up_parent(tsk, tsk->parent);
+ 	spin_unlock_irqrestore(&psig->siglock, flags);
+ 
 
 
-Peng, could you please add a printk to check which one of the two
-conditions is True for you?  Is it (dev_addr + size - 1 > dma_mask) or
-range_straddles_page_boundary(phys, size)?
-
-Is hwdev->coherent_dma_mask set for your DMA capable device?
-
-Finally, is this patch supposed to fix the crash you are seeing? If not,
-can you tell where is the crash exactly?
-
-
-
-Juergen, keep in mind that xen_create_contiguous_region does nothing on
-ARM because in dom0 guest_phys == phys. xen_create_contiguous_region
-simply sets dma_handle to phys. Whatever condition caused the code to
-take the xen_create_contiguous_region branch in
-xen_swiotlb_alloc_coherent, it will also cause it to WARN in
-xen_swiotlb_free_coherent.
-
-
-range_straddles_page_boundary should never return True because
-guest_phys == phys. That leaves us with the dma_mask check:
-
-  dev_addr + size - 1 <= dma_mask
-
-dev_addr is the dma_handle allocated by xen_alloc_coherent_pages.
-dma_mask is either DMA_BIT_MASK(32) or hwdev->coherent_dma_mask.
-
-The implementation of xen_alloc_coherent_pages has been recently changed
-to use dma_direct_alloc.
-
-
-Christoff, does dma_direct_alloc respect hwdev->coherent_dma_mask if
-present? Also, can it return highmem pages?
-
-
-
-> Juergen
-> 
-> > 
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >   drivers/xen/swiotlb-xen.c | 4 ++--
-> >   1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-> > index b6d27762c6f8..ab96e468584f 100644
-> > --- a/drivers/xen/swiotlb-xen.c
-> > +++ b/drivers/xen/swiotlb-xen.c
-> > @@ -346,8 +346,8 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t
-> > size, void *vaddr,
-> >   	/* Convert the size to actually allocated. */
-> >   	size = 1UL << (order + XEN_PAGE_SHIFT);
-> >   -	if (!WARN_ON((dev_addr + size - 1 > dma_mask) ||
-> > -		     range_straddles_page_boundary(phys, size)) &&
-> > +	if (((dev_addr + size - 1 > dma_mask) ||
-> > +	    range_straddles_page_boundary(phys, size)) &&
-> >   	    TestClearPageXenRemapped(virt_to_page(vaddr)))
-> >   		xen_destroy_contiguous_region(phys, order);
-> >   
-> 
---8323329-325783116-1588098351=:29217--
