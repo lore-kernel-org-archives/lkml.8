@@ -6,21 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E733EC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10738C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF9D52186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC6F02186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:22:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbgD1PWv (ORCPT
+        id S1728827AbgD1PWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:22:51 -0400
-Received: from 8bytes.org ([81.169.241.247]:37386 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728263AbgD1PSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:22:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728262AbgD1PSD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Apr 2020 11:18:03 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97391C03C1AB;
+        Tue, 28 Apr 2020 08:18:02 -0700 (PDT)
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id E526AF0E; Tue, 28 Apr 2020 17:17:47 +0200 (CEST)
+        id 7C59DF09; Tue, 28 Apr 2020 17:17:47 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -40,9 +44,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 31/75] x86/head/64: Install boot GDT
-Date:   Tue, 28 Apr 2020 17:16:41 +0200
-Message-Id: <20200428151725.31091-32-joro@8bytes.org>
+Subject: [PATCH v3 28/75] x86/idt: Move IDT to data segment
+Date:   Tue, 28 Apr 2020 17:16:38 +0200
+Message-Id: <20200428151725.31091-29-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200428151725.31091-1-joro@8bytes.org>
 References: <20200428151725.31091-1-joro@8bytes.org>
@@ -53,68 +57,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Handling exceptions during boot requires a working GDT. The kernel GDT
-is not yet ready for use, so install a temporary boot GDT.
+With SEV-ES, exception handling is needed very early, even before the
+kernel has cleared the bss segment. In order to prevent clearing the
+currently used IDT, move the IDT to the data segment.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/head_64.S | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ arch/x86/kernel/idt.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 4bbc770af632..11a28c1fb51f 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -72,6 +72,26 @@ SYM_CODE_START_NOALIGN(startup_64)
- 	/* Set up the stack for verify_cpu(), similar to initial_stack below */
- 	leaq	(__end_init_task - SIZEOF_PTREGS)(%rip), %rsp
+diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+index 87ef69a72c52..a8fc01ea602a 100644
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -165,8 +165,12 @@ static const __initconst struct idt_data dbg_idts[] = {
+ };
+ #endif
  
-+	/* Setup boot GDT descriptor and load boot GDT */
-+	leaq	boot_gdt(%rip), %rax
-+	movq	%rax, boot_gdt_base(%rip)
-+	lgdt	boot_gdt_descr(%rip)
-+
-+	/* New GDT is live - reload data segment registers */
-+	movl	$__KERNEL_DS, %eax
-+	movl	%eax, %ds
-+	movl	%eax, %ss
-+	movl	%eax, %es
-+
-+	/* Now switch to __KERNEL_CS so IRET works reliably */
-+	pushq	$__KERNEL_CS
-+	leaq	.Lon_kernel_cs(%rip), %rax
-+	pushq	%rax
-+	lretq
-+
-+.Lon_kernel_cs:
-+	UNWIND_HINT_EMPTY
-+
- 	/* Sanitize CPU configuration */
- 	call verify_cpu
+-/* Must be page-aligned because the real IDT is used in a fixmap. */
+-gate_desc idt_table[IDT_ENTRIES] __page_aligned_bss;
++/*
++ * Must be page-aligned because the real IDT is used in a fixmap.
++ * Also needs to be in the .data segment, because the idt_table is
++ * needed before the kernel clears the .bss segment.
++ */
++gate_desc idt_table[IDT_ENTRIES] __page_aligned_data;
  
-@@ -480,6 +500,22 @@ SYM_DATA_LOCAL(early_gdt_descr_base,	.quad INIT_PER_CPU_VAR(gdt_page))
- SYM_DATA(phys_base, .quad 0x0)
- EXPORT_SYMBOL(phys_base)
- 
-+/* Boot GDT used when kernel addresses are not mapped yet */
-+SYM_DATA_LOCAL(boot_gdt_descr,		.word boot_gdt_end - boot_gdt)
-+SYM_DATA_LOCAL(boot_gdt_base,		.quad 0)
-+SYM_DATA_START(boot_gdt)
-+	.quad	0
-+	.quad   0x00cf9a000000ffff	/* __KERNEL32_CS */
-+	.quad   0x00af9a000000ffff	/* __KERNEL_CS */
-+	.quad   0x00cf92000000ffff	/* __KERNEL_DS */
-+	.quad	0			/* __USER32_CS - unused */
-+	.quad	0			/* __USER_DS   - unused */
-+	.quad	0			/* __USER_CS   - unused */
-+	.quad	0			/* unused */
-+	.quad   0x0080890000000000	/* TSS descriptor */
-+	.quad   0x0000000000000000	/* TSS continued */
-+SYM_DATA_END_LABEL(boot_gdt, SYM_L_LOCAL, boot_gdt_end)
-+
- #include "../../x86/xen/xen-head.S"
- 
- 	__PAGE_ALIGNED_BSS
+ struct desc_ptr idt_descr __ro_after_init = {
+ 	.size		= (IDT_ENTRIES * 2 * sizeof(unsigned long)) - 1,
 -- 
 2.17.1
 
