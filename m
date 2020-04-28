@@ -2,122 +2,96 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED86DC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D89C83009
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D446D206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40989206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:55:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pM7rz3M7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgD1MyX (ORCPT
+        id S1726871AbgD1Mzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:54:23 -0400
-Received: from albireo.enyo.de ([37.24.231.21]:48706 "EHLO albireo.enyo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726759AbgD1MyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:54:22 -0400
-Received: from [172.17.203.2] (helo=deneb.enyo.de)
-        by albireo.enyo.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1jTPka-0002WQ-A9; Tue, 28 Apr 2020 12:54:12 +0000
-Received: from fw by deneb.enyo.de with local (Exim 4.92)
-        (envelope-from <fw@deneb.enyo.de>)
-        id 1jTPkT-00031t-02; Tue, 28 Apr 2020 14:54:05 +0200
-From:   Florian Weimer <fw@deneb.enyo.de>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Michael Kerrisk <mtk.manpages@gmail.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        carlos <carlos@redhat.com>, Rich Felker <dalias@libc.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>
-Subject: Re: [PATCH glibc 5/9] glibc: Perform rseq(2) registration at C startup and thread creation (v17)
-References: <20200326155633.18236-1-mathieu.desnoyers@efficios.com>
-        <87ees9z417.fsf@mid.deneb.enyo.de>
-        <284293396.70630.1588005648556.JavaMail.zimbra@efficios.com>
-        <87zhawvphv.fsf@mid.deneb.enyo.de>
-        <2102127737.70791.1588008377292.JavaMail.zimbra@efficios.com>
-        <87ftcnrf7d.fsf@mid.deneb.enyo.de>
-        <1080028389.72414.1588077193438.JavaMail.zimbra@efficios.com>
-        <878sifrdo0.fsf@mid.deneb.enyo.de>
-        <190402462.72430.1588077816717.JavaMail.zimbra@efficios.com>
-Date:   Tue, 28 Apr 2020 14:54:04 +0200
-In-Reply-To: <190402462.72430.1588077816717.JavaMail.zimbra@efficios.com>
-        (Mathieu Desnoyers's message of "Tue, 28 Apr 2020 08:43:36 -0400
-        (EDT)")
-Message-ID: <87tv13py8j.fsf@mid.deneb.enyo.de>
+        Tue, 28 Apr 2020 08:55:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726827AbgD1Mzb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 08:55:31 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 845BDC03C1A9;
+        Tue, 28 Apr 2020 05:55:31 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49BM7g0ggCz9sP7;
+        Tue, 28 Apr 2020 22:55:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588078527;
+        bh=Y47UAgUAwN2altZxsVR5r8sQ2CymmGxOKr3zUKWNfCs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pM7rz3M75dursj3FH7FuoCZxCoThX5DOFVapWQlX70HObHiZjpIoLtK4QSyWlDRr2
+         90RWNMbArJWXCYbrFyj539JZRUi4uiqFOuFnjH3Ii4plLWwf094SSy8Ya/24w+Gs+X
+         WixajLCBFtb6y1qN3ybk9K93FuYOMqv3kd+keptlaowLNDIssrt0bM4QcIzsrgA2kO
+         1Lxc76220fHALnEO2HJIws620fuu6GjvDyQ+vQp3a7ryVq0cU61cVXHtnwhQnW8CvK
+         usOImGfniilwRPklwvI+OulpGxPQaHGzjtAg7VGBWMQGmoccyl6fHGjsIbD7cCXYpi
+         IxkF3cDIIaelg==
+Date:   Tue, 28 Apr 2020 22:55:16 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Malcolm Priestley <tvboxspy@gmail.com>
+Subject: Re: linux-next: manual merge of the staging tree with the
+ staging.current tree
+Message-ID: <20200428225516.59ad9812@canb.auug.org.au>
+In-Reply-To: <20200428121545.GA1234722@kroah.com>
+References: <20200424151546.4dea83cb@canb.auug.org.au>
+        <20200424064555.GA143960@kroah.com>
+        <20200428121545.GA1234722@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; boundary="Sig_/c3I6eY74TZKPZPf/lkB_W+z";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
+--Sig_/c3I6eY74TZKPZPf/lkB_W+z
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> ----- On Apr 28, 2020, at 8:35 AM, Florian Weimer fw@deneb.enyo.de wrote:
+Hi Greg,
+
+On Tue, 28 Apr 2020 14:15:45 +0200 Greg KH <greg@kroah.com> wrote:
 >
->> * Mathieu Desnoyers:
->> 
->>> One issue I'm currently facing when running "make check": because
->>> nptl/tst-rseq-nptl.c uses pthread_cancel(), I run into an Abort
->>> with:
->>>
->>> libgcc_s.so.1 must be installed for pthread_cancel to work
->>> Didn't expect signal from child: got `Aborted'
->> 
->> This is really unusual.  Is the affected test statically linked?
->
-> I built glibc without specifying anything particular, and ran
-> "make check". It indeed seems to be dynamically linked to libc:
->
-> ldd tst-rseq-nptl
-> ./tst-rseq-nptl: /lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.32' not found (required by ./tst-rseq-nptl)
-> linux-vdso.so.1 (0x00007ffd3a2f3000)
-> libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007f0527560000)
-> libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f052716f000)
-> /home/efficios/glibc-test5/lib/ld-linux-x86-64.so.2 => /lib64/ld-linux-x86-64.so.2 (0x00007f0527986000)
+> This should now all be resolved in my staging.next branch.
 
-That's expected if the installed glibc is older than the built glibc.
+Yep, thanks.
 
-> After make check I have:
->
-> cat tst-rseq-nptl.test-result 
-> FAIL: nptl/tst-rseq-nptl
-> original exit status 134
+--=20
+Cheers,
+Stephen Rothwell
 
-What's in the tst-rseq-nptl.out file?
+--Sig_/c3I6eY74TZKPZPf/lkB_W+z
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-> And if I run
->
-> ./tst-rseq-nptl
->
-> Then I get
->
-> libgcc_s.so.1 must be installed for pthread_cancel to work
-> Didn't expect signal from child: got `Aborted'
-> libgcc_s.so.1 must be installed for pthread_cancel to work
-> Aborted (core dumped)
+-----BEGIN PGP SIGNATURE-----
 
-I'm puzzled why you don't get a GLIBC_2.32 version error in this case.
-Do you build with --enable-hardcoded-path-in-tests?
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6oJ7UACgkQAVBC80lX
+0Gwh/ggAnC9mj602XOfR51MrtWaeI6Ip4h0HXHl30uqP+S5avDzQquZz6nPQyxFj
+Sqm+DUAWGYteq5pXIbTbB8BIVn7t3RqSLV4QswkJAZ8gTet/Er3fjJwBMhnFds//
+eCDGlEeWgqrWpbvIhL8P9p+57O96ZtSgZGiKuTLzZQn8kavB7lj3Kq03mK8cIH96
+w0aGkFaw3WqRukOrBtCeW3kQ91xPHsouXwyZF/a2km0pKEFfa7SJKHhPndK81Tl7
+7Zrq6VNqLt8otmhNaokvTVrFMr8r4rn9e6eqJgMsfgJSn0rAD6L0bANYVwyHjjJI
+mDkzBXEzCHQydPcG0T26jRnyv0dobw==
+=DDYk
+-----END PGP SIGNATURE-----
 
-> Same result if I do ./testrun.sh nptl/tst-rseq-nptl
-
-That one definitely should work.
-
-I expect you might see this if libgcc_s.so.1 is installed into a
-multiarch subdirectory that upstream glibc does not search.  (The
-Debian patches are unfortunately not upstream.)
-
-I think on my system, the built glibc can find the system libgcc_s via
-/etc/ld.so.cache, so I haven't seen this issue yet.
+--Sig_/c3I6eY74TZKPZPf/lkB_W+z--
