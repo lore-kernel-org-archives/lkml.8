@@ -2,117 +2,128 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBD0C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9B1C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DDFB206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88CFB2078C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:57:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O6oemS2L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PuLQaKEK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgD1J4j (ORCPT
+        id S1727782AbgD1J5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 05:56:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47710 "EHLO
+        Tue, 28 Apr 2020 05:57:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726971AbgD1J4i (ORCPT
+        by vger.kernel.org with ESMTP id S1726971AbgD1J5P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 05:56:38 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69CCCC03C1AB
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 02:56:38 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id f18so20785112lja.13
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 02:56:38 -0700 (PDT)
+        Tue, 28 Apr 2020 05:57:15 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02C3BC03C1A9;
+        Tue, 28 Apr 2020 02:57:14 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id r26so2168022wmh.0;
+        Tue, 28 Apr 2020 02:57:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dUYMvHNm1S+cpRAgh6CuSzaN8QMyIl6tpzVnoQoDNsE=;
-        b=O6oemS2LnyyWHZ8OwOVA5KOWkg8pK08yWXcrww9azpSPIXoqcyZUqaeM+3xVi2ke0u
-         +N6PeCK3fdOn6+nxTApK1Ve3c6+2SjX3uanr9QyJK0/7sHiR7ZSG3zOTztgcd/ym8fXa
-         o1c6DSg/BSnqC0YDotD1dhY/RN0m/4GXyeUDpgX2b8XUHT9ZLKC5d0wy37aIV2JR2ANF
-         edfFxnlJhe5pdtlMc2ZMCQZL0m2MykJTd5yLS1+DHzNuoUFcICYI/41mUidjkTSbpuoD
-         9jH0Q7n7ugThfQG3sHPJfC7kpdAmjVEmtmUnEtLuu3ViKE03MeHAGm3FuPRkK6ZQeNTn
-         QPQA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nTaGG7SSX6CF4kBBBpm5NDyrd8GCvd35Jt/ARBQ8h40=;
+        b=PuLQaKEKCgOwpZrcw4/CMp5zUgGzGWeTnjk02IUua6RxWhxxSmd2DaDZ7XNVzz622f
+         cuZs6EcC194lMtkZL0obRUG7xfsMO86WNtxZ9Y+EuwPb7qu32hl9o5UnsmyvbN3BvWmW
+         x33GX43YwsBR/8wnPe9CtMGjs/01pQofEJKrbhlS9PDywrw6hVFJYdTpnXiuNaqGcs58
+         gDEHbpuG+WMQdhvTL9YvLljs/TMOL0nzE+ZGkLZi6cf3XS0hdnKXY/Z7l9NwzflApDvr
+         FgHrdTrcBcvEWKottFQpar35rs2G3kowCyVIjKMlJF6WFz6TyTKOES2fdc8w+YgPaxCU
+         vUxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dUYMvHNm1S+cpRAgh6CuSzaN8QMyIl6tpzVnoQoDNsE=;
-        b=AobdaS4K5Qj3KSYPG9PAKYs6SZHc0nip78sFFg2Z3z6lyL//QR8zaWBOJ8MH9954qA
-         RatlHz7TFu0S02PDHogr4lVE7V8rNdzluC7vTZrVVCE+8OPWFKHId3u026LkIBLh8kXo
-         Btwz0RjiT2LN+WUzi494XW7UApvKWMgUacqVlqe/X5gOMWND+sEJaFbTaQs3hH753/q0
-         Fl4wtjnE3PCRy+Fucqq6bv+zCHddCDPQWxpPN+m/SoMLIG4GJ4CciRJtxuOcWi8WPmDL
-         gc8C/7draFmdGljO/wOIeZtq1426G9xmZEwfkXvB2SHNavhO6KBrYEmwuntec5iQUQHf
-         qDCQ==
-X-Gm-Message-State: AGi0Pua1RhMBTWaj3QHFkwSyiabUGBAJ2Fa2o/Enmn6+7sXXZX5DommI
-        SRZQIj8PUExtCC+P70xkk5ECi3UQnIjEeUxUSSel6Q==
-X-Google-Smtp-Source: APiQypJlwiuxB4ab5wQqVxYuJTJqT6PIowMT3AHLQ+WNf0e2mYCYXwqrwm6FFZORaGA6n3AkLGy307SzZEMgXnQ6Ro8=
-X-Received: by 2002:a2e:b6cf:: with SMTP id m15mr16549672ljo.168.1588067796808;
- Tue, 28 Apr 2020 02:56:36 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nTaGG7SSX6CF4kBBBpm5NDyrd8GCvd35Jt/ARBQ8h40=;
+        b=QnOxqCFP8Ax0vs79J84ADozRBqFLortlShz2psP/TI862+2fX6vpkf5X3slWGn4wY2
+         ZO4xLBmwNT/lSoLWgMAyVsejigam2uyaO7Rw8FryOwGFH6ZfrrMjD7QCxfms7B4lWHNN
+         AYmCwfR9U3BtfhOpDVXPXNJSqf50EOuIEqYlZ4U0BG5RQef/eYdHr9TSYUD1vk0xKogR
+         mLLX0ONlXo2DAn3HYzGLiaBIbm5VZ8BPOSdsb/8hk9v9AB6RqVb66K5y2nbdFf1ZVYu0
+         nNBFArQ9Tr7xuhWy46fzg1dEJN/4ZDEXlPrfruFhf/gBIPWfjjNnxk3VN/sMU0b2bS4y
+         y0dA==
+X-Gm-Message-State: AGi0PuYFab1RQiC1ZNoqqFREPbo/C1UzpET46kBSZQkhK9zLm2RMAw4U
+        UmERxn/VQifBWQKjDnFfPOQ=
+X-Google-Smtp-Source: APiQypKTnDihml0NWOVYIyeYpsaqg7Q/GMXXpVyxLjtKDVnzj6ea1nW8O4HHQSe0xjZUn6L3nk/bwg==
+X-Received: by 2002:a1c:9a16:: with SMTP id c22mr3553349wme.38.1588067832658;
+        Tue, 28 Apr 2020 02:57:12 -0700 (PDT)
+Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
+        by smtp.gmail.com with ESMTPSA id o7sm2511404wmh.46.2020.04.28.02.57.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 02:57:11 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 11:57:10 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
+        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 1/8] dt-bindings: phy: tegra-xusb: Add charger-detect
+ property
+Message-ID: <20200428095710.GA3592148@ulmo>
+References: <1586939108-10075-1-git-send-email-nkristam@nvidia.com>
+ <1586939108-10075-2-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-References: <20200417073512.42350-1-yanaijie@huawei.com>
-In-Reply-To: <20200417073512.42350-1-yanaijie@huawei.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Apr 2020 11:56:25 +0200
-Message-ID: <CACRpkdaH1bet-iBxB7pM9-_swpXkuUiMeg6jwTyx2j8WiB2G_g@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: nomadik: db8500: remove some unused symbols
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hulk Robot <hulkci@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
+Content-Disposition: inline
+In-Reply-To: <1586939108-10075-2-git-send-email-nkristam@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 9:08 AM Jason Yan <yanaijie@huawei.com> wrote:
 
-> Fix the following gcc warning:
->
-> drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c:899:20: warning:
-> =E2=80=98sbag_groups=E2=80=99 defined but not used [-Wunused-const-variab=
-le=3D]
->  DB8500_FUNC_GROUPS(sbag, "sbag_oc2_1", "sbag_oc4_1");
->                     ^
-> drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c:570:23: warning:
-> =E2=80=98ipgpio6_c_2_pins=E2=80=99 defined but not used [-Wunused-const-v=
-ariable=3D]
->  static const unsigned ipgpio6_c_2_pins[] =3D { DB8500_PIN_G3 };
->                        ^~~~~~~~~~~~~~~~
-> drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c:472:23: warning:
-> =E2=80=98mc1dir_a_1_pins=E2=80=99 defined but not used [-Wunused-const-va=
-riable=3D]
->  static const unsigned mc1dir_a_1_pins[] =3D { DB8500_PIN_AH13,
-> DB8500_PIN_AG12,
->                        ^~~~~~~~~~~~~~~
-> drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c:453:23: warning:
-> =E2=80=98modem_a_1_pins=E2=80=99 defined but not used [-Wunused-const-var=
-iable=3D]
->  static const unsigned modem_a_1_pins[] =3D { DB8500_PIN_D22,
-> DB8500_PIN_C23,
->                        ^~~~~~~~~~~~~~
-> drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c:430:23: warning:
-> =E2=80=98kpskaskb_a_1_pins=E2=80=99 defined but not used [-Wunused-const-=
-variable=3D]
->  static const unsigned kpskaskb_a_1_pins[] =3D { DB8500_PIN_D17,
-> DB8500_PIN_D16 };
->                        ^~~~~~~~~~~~~~~~~
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+--jI8keyz6grp/JLjh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-These should not be deleted but used properly. I've sent another
-patch fixing the problem and adding you as Reported-by.
+On Wed, Apr 15, 2020 at 01:55:01PM +0530, Nagarjuna Kristam wrote:
+> Add nvidia,charger-detect boolean property for Tegra210 and Tegra186
+> platforms. This property is used to inform driver to perform charger
+> detection on corresponding USB 2 port.
+>=20
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+> V2:
+>  - Added Acked-by updates to commit message.
+> ---
+>  Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt | =
+4 ++++
+>  1 file changed, 4 insertions(+)
 
-Yours,
-Linus Walleij
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--jI8keyz6grp/JLjh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6n/fQACgkQ3SOs138+
+s6Ey8A//Q4uTEuupOy7QQCFXs3b3I4r6jVXyp7QjRGgXc7yHsnbR90IS0fm3eHsx
+6sHKZXqZAyGiL31/zqCktQfQZW9pwwizNKwikn0ly6pmr77zDf9zrbL4YyY90Twb
+ZNI1kpx88LcjO8rwhS/PAZF7CNzrzMx3uLabAf2oT+d95Lz1OLO+afwd82VTA23t
+QDIzlQNFB3UO3yLQbQ+1WIkFsWXEqXgWiHb8F07r1vnI/FqOKhc92dEMskfVxMCH
++pHYOHxF9zqwK1zQcP9BaPtuCDP1jN63ys+xEz7KgpivxK2/Vgsv3Iak7ZdLn3Qd
+myldUUl500MjfanZYuIWi0g9QFk0RLuwLuQbak/SiUW53Yh1si5YQixsIk9foiq7
+kpW2HVme+iTC7zTYVppxS2sEpKVbFMKZl1eCfTF4nJvQ+nKqVEgh/7xROyN2U5TB
+H8eygj9x9sc5/I1Y9GNFF+JSiLsNr/A+IAYnIO/ZRDesMo3QivT8hZLZOfMPx8et
+Pkwnf5oWpUvM0X5w71jtc02jewYF4fk4tukanyQR/vdOBZU/XdUqsM+QEjEbN+s6
+esBuOAIE5vntKRHJznGOX4eb4nAAI57q1HLg9WQWZssCkPxZKdLrcBePAgFvLmmj
+9Rko7SMP3B5YV9s3dW1j9iQUhKzclnr/ceL+3A8Dm9KzinJ11A8=
+=n51I
+-----END PGP SIGNATURE-----
+
+--jI8keyz6grp/JLjh--
