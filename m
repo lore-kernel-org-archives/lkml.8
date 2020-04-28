@@ -2,121 +2,93 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29694C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 827D9C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAD94206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:48:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="A3Z9s3IC"
+	by mail.kernel.org (Postfix) with ESMTP id 63B7F206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:49:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbgD1Lsi (ORCPT
+        id S1726752AbgD1Ltf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:48:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37094 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726285AbgD1Lsh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:48:37 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B83BC03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 04:48:37 -0700 (PDT)
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 49BKfV3T5mz9sSX; Tue, 28 Apr 2020 21:48:34 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1588074514;
-        bh=2Xt4drwzFdVoeLpaSdh55/L13zgR9vEVW6/4XuF+vMI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=A3Z9s3IC6Mm4hUr+WF1T2mo5kr9Rc6qWQqzMOfky6XVKvjc5n+VicZ0JE6amXUqhj
-         GtfIhPLiu/Hf4wFewBbZ/GxKapOdK0EuRm1dpPlQh2byI3Nb1HqcLfS7DViDpm2+mr
-         GvrwGa9FgcGYZqCvT98hg/fTClJvzu7gZzoDd7wOdDZBhsPpysyIU0slQ+QyALRcla
-         lwkU+EgZw80sDHQDrVMe2ZiuFKH+2HKMAdBMYRgFxCbYTHUY8GHBSjQl7QS+Q74g9s
-         rDw/nDY/vvDgZrT+mEzVvKAOuWknPcf1Qgt4rC/x0W1Y1RegZ0kTGoabxveskhlIyU
-         1mE+X93WnZZbg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     linuxppc-dev@ozlabs.org
-Cc:     hch@lst.de, jk@ozlabs.org, viro@zeniv.linux.org.uk,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] powerpc/spufs: Add rcu_read_lock() around fcheck()
-Date:   Tue, 28 Apr 2020 21:48:11 +1000
-Message-Id: <20200428114811.68436-1-mpe@ellerman.id.au>
-X-Mailer: git-send-email 2.25.1
+        Tue, 28 Apr 2020 07:49:35 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2065 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726285AbgD1Ltf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 07:49:35 -0400
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 2CE5A9A64A1CC1F80253;
+        Tue, 28 Apr 2020 19:49:33 +0800 (CST)
+Received: from dggeme705-chm.china.huawei.com (10.1.199.101) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Tue, 28 Apr 2020 19:49:32 +0800
+Received: from dggeme756-chm.china.huawei.com (10.3.19.102) by
+ dggeme705-chm.china.huawei.com (10.1.199.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Tue, 28 Apr 2020 19:49:32 +0800
+Received: from dggeme756-chm.china.huawei.com ([10.6.80.68]) by
+ dggeme756-chm.china.huawei.com ([10.6.80.68]) with mapi id 15.01.1913.007;
+ Tue, 28 Apr 2020 19:49:32 +0800
+From:   Hushijie <hushijie3@huawei.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Nixiaoming <nixiaoming@huawei.com>,
+        "wangxu (AE)" <wangxu72@huawei.com>,
+        "Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
+        yangerkun <yangerkun@huawei.com>,
+        "Wangle (RTOS FAE)" <wangle6@huawei.com>,
+        "Chengang (L)" <cg.chen@huawei.com>
+Subject: Re [PATCH] [RFC]hugetlbfs: Get unmapped area below TASK_UNMAPPED_BASE
+ for hugetlbfs
+Thread-Topic: Re [PATCH] [RFC]hugetlbfs: Get unmapped area below
+ TASK_UNMAPPED_BASE for hugetlbfs
+Thread-Index: AdYdUmUl7otGISMhRXK04Qrl9WrqxA==
+Date:   Tue, 28 Apr 2020 11:49:32 +0000
+Message-ID: <2f7fcfd8d66d4df7ac0c972fd9c3abc1@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.67.103.250]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the spu coredump code triggers an RCU warning:
-
-  =============================
-  WARNING: suspicious RCU usage
-  5.7.0-rc3-01755-g7cd49f0b7ec7 #1 Not tainted
-  -----------------------------
-  include/linux/fdtable.h:95 suspicious rcu_dereference_check() usage!
-
-  other info that might help us debug this:
-
-  rcu_scheduler_active = 2, debug_locks = 1
-  1 lock held by spu-coredump/1343:
-   #0: c0000007fa22f430 (sb_writers#2){.+.+}-{0:0}, at: .do_coredump+0x1010/0x13c8
-
-  stack backtrace:
-  CPU: 0 PID: 1343 Comm: spu-coredump Not tainted 5.7.0-rc3-01755-g7cd49f0b7ec7 #1
-  Call Trace:
-    .dump_stack+0xec/0x15c (unreliable)
-    .lockdep_rcu_suspicious+0x120/0x144
-    .coredump_next_context+0x148/0x158
-    .spufs_coredump_extra_notes_size+0x54/0x190
-    .elf_coredump_extra_notes_size+0x34/0x50
-    .elf_core_dump+0xe48/0x19d0
-    .do_coredump+0xe50/0x13c8
-    .get_signal+0x864/0xd88
-    .do_notify_resume+0x158/0x3c8
-    .interrupt_exit_user_prepare+0x19c/0x208
-    interrupt_return+0x14/0x1c0
-
-This comes from fcheck_files() via fcheck().
-
-It's pretty clearly documented that fcheck() must be wrapped with
-rcu_read_lock(), so fix it.
-
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
----
- arch/powerpc/platforms/cell/spufs/coredump.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/platforms/cell/spufs/coredump.c b/arch/powerpc/platforms/cell/spufs/coredump.c
-index 8b3296b62f65..0fc52cbaa552 100644
---- a/arch/powerpc/platforms/cell/spufs/coredump.c
-+++ b/arch/powerpc/platforms/cell/spufs/coredump.c
-@@ -82,13 +82,19 @@ static int match_context(const void *v, struct file *file, unsigned fd)
-  */
- static struct spu_context *coredump_next_context(int *fd)
- {
-+	struct spu_context *ctx;
- 	struct file *file;
- 	int n = iterate_fd(current->files, *fd, match_context, NULL);
- 	if (!n)
- 		return NULL;
- 	*fd = n - 1;
-+
-+	rcu_read_lock();
- 	file = fcheck(*fd);
--	return SPUFS_I(file_inode(file))->i_ctx;
-+	ctx = SPUFS_I(file_inode(file))->i_ctx;
-+	rcu_read_unlock();
-+
-+	return ctx;
- }
- 
- int spufs_coredump_extra_notes_size(void)
--- 
-2.25.1
-
+IE9uIDQvMjgvMjAgNjo0NiBBTSwgTWlrZSBLcmF2ZXR6IHdyb3RlOg0KPkp1c3QgY3VyaW91cy4g
+IEhhdmUgeW91IGFjdHVhbGx5IHNlZWluZyBhIHByb2JsZW0gd2l0aCB0aGlzIGNvZGUsIG9yIGlz
+DQo+dGhlIHJlYXNvbiBmb3IgdGhlIHByb3Bvc2VkIGNoYW5nZSBqdXN0IHRoZSByZXN1bHQgb2Yg
+Y29kZSBpbnNwZWN0aW9uPyAgSSBhc2sNCj5iZWNhdXNlIG1hbnkgYXJjaGl0ZWN0dXJlcyBoYXZl
+IHRoZWlyIG93biB2ZXJzaW9uIG9mIGh1Z2V0bGJfZ2V0X3VubWFwcGVkX2FyZWEuDQo+U28sIGlm
+IHlvdSBhcmUgc2VlaW5nIHRoaXMgaXNzdWUgaXQgd291bGQgYmUgaW50ZXJlc3RpbmcgdG8ga25v
+dyB3aGF0DQo+YXJjaGl0ZWN0dXJlIHlvdSBhcmUgcnVubmluZy4NCg0KVGhhbmtzIGZvciB5b3Vy
+IHJlcGx5Lg0KDQpXZSBhY3R1YWxseSBmb3VuZCB0aGlzIHByb2JsZW0gb24gYXJtNjQgYXJjaGl0
+ZWN0dXJlLCBydW5uaW5nIGEgMzItYml0IA0KcHJvZ3JhbS4gV2hlbiB0aGUgYWRkcmVzcyBzcGFj
+ZSBiZWxvdyBUQVNLX1VOTUFQUEVEX0JBU0UgaXMgY29tcGxldGVseSANCmV4aGF1c3RlZCwgc2ht
+YXQoKSBmb3IgaHVnZSBwYWdlcyB3aWxsIHJldHVybiBFTk9NRU0sIGJ1dCBzaG1hdCgpIGZvciAN
+Cm5vcm1hbCBwYWdlcyBjYW4gc3RpbGwgc3VjY2Vzcy4NCg0KPlRoZSByb3V0aW5lIGh1Z2V0bGJf
+Z2V0X3VubWFwcGVkX2FyZWEgaGFzIG5vdCBjaGFuZ2VkIG11Y2ggc2luY2UgdGhpcyBmaXJzdA0K
+PmdpdCB2ZXJzaW9uLiAgSSBzdXNwZWN0IHRoaXMgaXMgYmVjYXVzZSBpdCBpcyBtb3N0bHkgdW51
+c2VkLg0KPg0KPkkgbm90aWNlZCB0aGF0IGh1Z2V0bGJfZ2V0X3VubWFwcGVkX2FyZWEgaXMgb25l
+IG9mIG9ubHkgYSBmZXcgcGxhY2VzIGluIGFyY2gNCj5pbmRlcGVuZGVudCBjb2RlIGNhbGxpbmcg
+dm1fdW5tYXBwZWRfYXJlYSgpLiAgVGhlIG90aGVyIGNhbGxlcnMgYXJlIGFyY2gNCj5pbmRlcGVu
+ZGVudCBmYWxsIGJhY2sgcm91dGluZXMgZm9yIGFyY2hfZ2V0X3VubWFwcGVkX2FyZWEqIHJvdXRp
+bmVzLiAgSWYgd2UNCj5tb3ZlIGZvcndhcmQgd2l0aCBjaGFuZ2VzIHRvIHRoaXMgcm91dGluZSwg
+d291bGQgaXQgbWFrZSBtb3JlIHNlbnNlIHRvIHVzZQ0KPnRoZSBhcmNoX2dldF91bm1hcHBlZF9h
+cmVhKiByb3V0aW5lcyBpbnN0ZWFkIG9mIGNhbGxpbmcgdm1fdW5tYXBwZWRfYXJlYQ0KPmRpcmVj
+dGx5PyAgVGhpcyB3b3VsZCB0YWtlIGFkdmFudGFnZSBvZiBhbnkgYXJjaCBzcGVjaWZpYyBpZiBp
+dCBleGlzdHMuDQoNCkkgdG90YWxseSBhZ3JlZSB3aXRoIHlvdS4NCiANCkl0IGlzIG1vcmUgYXBw
+cm9wcmlhdGUgdG8gaW1wbGVtZW50aW5nIGh1Z2V0bGJfZ2V0X3VubWFwcGVkX2FyZWEoKSBmb3Ig
+YSANCnNwZWNpZmljIGFyY2hpdGVjdHVyZSwgaW5zdGVhZCBvZiBjaGFnaW5nIGNvbW1vbiBodWdl
+dGxiX2dldF91bm1hcHBlZF9hcmVhKCkgDQppbnRlcmZhY2UgYXQgImZzL2h1Z2V0bGJmcy9pbm9k
+ZS5jIi4NCg0KSSB3aWxsIHN1Ym1pdCBhbm90aGVyIHBhdGNoIGp1c3QgZm9yIHNwZWNpZmljIGFy
+Y2hpdGVjdHVyZXMgKGFybTY0KSBsYXRlci4gDQpUaGFua3MgZm9yIHlvdXIgcmVwbHkgYW5kIGFk
+dmlzZS4NCg==
