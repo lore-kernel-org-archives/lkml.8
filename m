@@ -2,96 +2,104 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E127EC83003
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7220C83003
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFC4220728
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93BD6206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:15:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ZRkzebef"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="OIVpEj1h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbgD1CLQ (ORCPT
+        id S1726375AbgD1CPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 22:11:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726233AbgD1CLP (ORCPT
+        Mon, 27 Apr 2020 22:15:12 -0400
+Received: from vultr.net.flygoat.com ([149.28.68.211]:60356 "EHLO
+        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726262AbgD1CPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 22:11:15 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B66F5C03C1A9
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 19:11:15 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id s63so20348520qke.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 19:11:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=7634cSYNnkEeZLF9qaQ+2AgpibDUSOrBUl4aX1MYmtc=;
-        b=ZRkzebefYI8C8YM+yiMqJuIxbcoHVPnVIoxvoL8/hgvaR74uXvHOvFl4346qeUIuUr
-         7GZbXnz+22W3LePUoSJ2gWqSXyMqfX1aUWsfxdOmpYbgkh8OzGZ3kG4YzmdclLPek/RO
-         oVJAxqoWqeclY26sXJcQs4W2JfjNzlx4Ey0FoMnFAYL9UxTnrZyoZzIjUm4gp+ozkZZB
-         vFMTJiTsxGPCrFmtoqo4y0cxos0KVXLX5nMiiWNh/Qy+CCpNKygxhfkIy3hgeOu7PyAq
-         oi2Y0OKlopHWpUuBSkiL0Ed0d0RcX12M4Hl2WS0lsStn0GM0VeqsPhoQqU3g67mlydnw
-         wclw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=7634cSYNnkEeZLF9qaQ+2AgpibDUSOrBUl4aX1MYmtc=;
-        b=KLKKX5JwpjsnreWvLhq+O7RwARIenpnvT9V9+KaPGmgbU6kQaL0Y3Y14AU/R4MS2Rg
-         8azu9M+QHr+lWd4lxR8mvBiazKaBUCTbUVwuYlnxHRSUFbHcWgNhQPDArgG72LAlbHvy
-         eak5Ofxgx6hv7Il1NbNZ7GzwGq9l2tDHZUvjfSu1la2H6/lSN9SF8jd+KQsSk/g56K9i
-         f2dqMkUwQ+pYgjvv7LVQQBnN/PagxGjtigKAPD7bl5IrHc6hpgIpLN7T879rSC01P6UY
-         J4MF6gl/mhNjFxfh/LW4DbIp5qYxUpkidZdHR97ggoSEc94/YHQpf97+20NAFAkzaDLw
-         q+ow==
-X-Gm-Message-State: AGi0PuYmGblgik3PaT9eDDP+xiwq5Zn9GDlNkdXgMwuu5dsR0GXNrr4+
-        Yo+Ym7+XTA9stg6QXxv6YD9zLA==
-X-Google-Smtp-Source: APiQypLaVm9c2SWLzE0Ol8tWHv9xAxVvSk0tUEaXh6snUiBA0tr0lAOAwF/hn7HoXTPC1RAWydrxSw==
-X-Received: by 2002:a05:620a:13eb:: with SMTP id h11mr23839919qkl.404.1588039874792;
-        Mon, 27 Apr 2020 19:11:14 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id p2sm12282513qkm.65.2020.04.27.19.11.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 19:11:14 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2 4/4] mm/slub: Fix sysfs shrink circular locking dependency
-Date:   Mon, 27 Apr 2020 22:11:13 -0400
-Message-Id: <28BB8A1C-CFDF-4F5A-8686-537C3CE04818@lca.pw>
-References: <dbbfe685-7374-9a96-b7c2-684142746e30@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        Juri Lelli <juri.lelli@redhat.com>
-In-Reply-To: <dbbfe685-7374-9a96-b7c2-684142746e30@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-X-Mailer: iPhone Mail (17D50)
+        Mon, 27 Apr 2020 22:15:12 -0400
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id AEAE82049B;
+        Tue, 28 Apr 2020 02:15:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1588040111; bh=GkNn6QDS6+1D5/N1KKM+IIJftlwxUET+1TaEhVK7DDc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OIVpEj1hTI1EHHTITeN/a1gvWSbzafVeYpfsmb75lfz6g/nL2w4GrzGORSelO7hbD
+         oRp2k5LOGOVeNTCWmHN2LxvYXwnyHVqcKZHLJLZNmPqDLdnqijvUoh7CyRyAy4CfQl
+         nh/n3L237Z0j/6rduYk5N531su177IfvlZRmXKr3ceUwiVKBX59u5KFtfpaYd4fUOr
+         AFVnLc9v9KYtYclP0X7fi1vrbCtIKdcA/yy1VcPoOANm+EZqz4hCs0G+HQcE/kGp0F
+         cpagZKT3yYTU3C+1bzZQQm33JkQphVpVTTrAyPPU3W02nyyclYzqiB3bWv5h0z0nni
+         GvTV/1vNZ4L5Q==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     john.garry@huawei.com, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Stephen Kitt <steve@sk2.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Daniel Silsby <dansilsby@gmail.com>,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] MIPS: Loongson64: Use logic_pio v2
+Date:   Tue, 28 Apr 2020 10:14:11 +0800
+Message-Id: <20200428021437.2000066-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: 20200426114806.1176629-1-jiaxun.yang@flygoat.com
+References: 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+To add I/O ports for PCI host bridge via devicetree, we have to use
+logic_pio mechanism.
+That would require convert I/O ports into virt memory map.
 
+v2: Register a logic_pio range instead of reserve in logic_pio system.
 
-> On Apr 27, 2020, at 9:39 PM, Waiman Long <longman@redhat.com> wrote:
->=20
-> The sequence that was prevented by this patch is "kn->count --> mem_hotplu=
-g_lock.rwsem". This sequence isn't directly in the splat. Once this link is b=
-roken, the 3-lock circular loop cannot be formed. Maybe I should modify the c=
-ommit log to make this point more clear.
+Jiaxun Yang (3):
+  MIPS: Massage address spaces headers
+  MIPS: Introduce PCI_IO_VMMAP
+  MIPS: Loongson64: Enable PCI_IO_VMMAP
 
-I don=E2=80=99t know what you are talking about. Once trylock succeed once, y=
-ou will have kn->count =E2=80=94> cpu/memory_hotplug_lock.=
+ arch/mips/Kconfig                             |  4 ++
+ arch/mips/include/asm/addrspace.h             |  4 +-
+ arch/mips/include/asm/io.h                    | 36 ++++++++++++----
+ arch/mips/include/asm/mach-generic/spaces.h   | 42 ++++++++++++++-----
+ .../include/asm/mach-loongson64/loongson.h    |  2 +
+ arch/mips/include/asm/page-def.h              | 29 +++++++++++++
+ arch/mips/include/asm/page.h                  | 21 ----------
+ arch/mips/include/asm/pgtable-32.h            |  2 -
+ arch/mips/include/asm/pgtable-64.h            | 10 +----
+ arch/mips/include/asm/sync.h                  |  2 +
+ arch/mips/kernel/cps-vec.S                    |  3 +-
+ arch/mips/kernel/setup.c                      |  2 +
+ arch/mips/lib/iomap-pci.c                     |  2 +-
+ arch/mips/lib/uncached.c                      |  6 +--
+ arch/mips/loongson64/init.c                   | 34 +++++++++++++--
+ arch/mips/loongson64/pci.c                    |  2 +-
+ 16 files changed, 138 insertions(+), 63 deletions(-)
+ create mode 100644 arch/mips/include/asm/page-def.h
+
+-- 
+2.26.0.rc2
+
