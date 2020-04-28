@@ -2,157 +2,134 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A46C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BD6C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B9D2206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:53:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="RgHbtbSs"
+	by mail.kernel.org (Postfix) with ESMTP id 1012B206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:54:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588071299;
+	bh=is2aPWQw6pJAxql+DF3OYqVrRF2wZHFAWoUJR8QM8+c=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=GsP/QtfSxJ2+5luDPzOfYXXK/uBxLNrjLGYWPPOuOWGZwLHGOusP5uwxYTmS4kS0t
+	 YMP/eoFA4mju0qnGGRJw8jXrpQ7lUKPc3GP7rbR8snxYNt7GAFvuqDh7MNjeF2gseE
+	 KIoOVcNGgUhofBl3QBm0/0UBCj9Pl0DM5RD5pHd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgD1KxR (ORCPT
+        id S1726512AbgD1Ky6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 06:53:17 -0400
-Received: from mout.web.de ([212.227.15.3]:42609 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgD1KxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 06:53:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1588071188;
-        bh=MuVgc++mK1LoWNYOk+q2KcESKGNFPp/aLL8KlvUH+Gs=;
-        h=X-UI-Sender-Class:Subject:To:References:From:Cc:Date:In-Reply-To;
-        b=RgHbtbSsazkbszQhoU375M3MGYNDvQLKmMHoYFKItv3VmMrnfc4DeGEXpFfKNsk4/
-         PYsQn7j9Sw3ZPnkDrvQtEMUXA0EOA46pkSFt3tcTQ1SX4aWW8Jd7aKtePyyIVHrn4N
-         g7bleMpGVjttU8dBxvkHjC8luWeYr77dowMS5k9I=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.179.255]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MRzYo-1jacsz3aCA-00TDQr; Tue, 28
- Apr 2020 12:53:08 +0200
-Subject: Re: [PATCH v3] checkpatch: add dedicated checker for 'Fixes:' tag
-To:     Wang YanQing <udknight@gmail.com>, Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        kernel-janitors@vger.kernel.org
-References: <20200428020223.GA28074@udknight>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Matteo Croce <mcroce@redhat.com>
-Message-ID: <38e1a926-53a6-bda6-cb07-2614f4c682ba@web.de>
-Date:   Tue, 28 Apr 2020 12:52:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 28 Apr 2020 06:54:58 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:58652 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbgD1Ky5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 06:54:57 -0400
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 03SAsVHb003792;
+        Tue, 28 Apr 2020 19:54:32 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 03SAsVHb003792
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1588071272;
+        bh=DvrztLqXLwkbKNNvyyk2abuZyw9KD3WysD/ymL0dSlo=;
+        h=From:Date:Subject:To:Cc:From;
+        b=0+eg9Pz4cSPuuuYL5OaMKEHPLF3ndT585dZIguWqvUVUgg0s8Y08uKoc1hdoxLiQt
+         xnDnQg4V4pJ1HY8c5NcAANuGYNFIzYoxa9otb+ya3VIoK6SkJJkXKb4/UiAlDtibJT
+         b4V4VoQzvJ3A/kDfGf28XS/+ci8c6M98KS4IZQ1R3yrRXeNLjF3MHT2nwE9NIocn+H
+         7dTo1ai5S4lQ1vpeg8HrugJ9kNo3nx/IPbtkDQYzCobX+QmmtsYg+9FqUqJmoYl1E4
+         e6XdOxt6LAAVHG65EaTdIWYpWTcqqw6azujYzp5R/Dc4fWV3Q8EOqz4JS5W+/tzErs
+         wpWVD2WyGSDAg==
+X-Nifty-SrcIP: [209.85.222.47]
+Received: by mail-ua1-f47.google.com with SMTP id y10so20859322uao.8;
+        Tue, 28 Apr 2020 03:54:32 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaZdmCJ/f56iHEqFOee4eQf28ta8iNhuTbzq+mIEE9ztCJIK+YP
+        OKs/TkAK6GJ531ZEjCwoGVv3YDL7TMkX7wAT8JI=
+X-Google-Smtp-Source: APiQypJxccn14dWrLYyUjBNE7+Sl1to9kyCFhKc2cnk+3tpYrY7twjdkGUBmpY5DTHLfyUqOVbeB4mLIwmxvUKTv2hI=
+X-Received: by 2002:a05:6102:240f:: with SMTP id j15mr21176730vsi.155.1588071270835;
+ Tue, 28 Apr 2020 03:54:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200428020223.GA28074@udknight>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:YKYuo3VtcPy/WpQxFfAYFZ+4mmQ7Yk4hS39wdYgPgrW+R29Y4Iy
- K+yaGL8E7gOgSXLpIIEUIBm31JqdoQWr2CawQjohzk3DFkYeGVCdt+wWKZVwfo5kC4aCTQu
- 2J6NV0QK88qEnsZGFifnMCptx22GC1POT4wIMQfFa4Sl2ELWfNOWGPIBxXD4saySsQ74IGA
- bRKyjK0GUt/spzB8DZuBQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SKe5jNOUlDI=:nacpSeCOguexjVHhQWvj5w
- nvIlpcInm1WOZOtm0oyxJ5ujgwhqjo86w9iOoO7PkAEqNkuqOi6k+RxmHiM0TZYOCNpzs8mp6
- NBdkMhXxRRTYLzZJO2EQuS2PQVuv7dnJdHpyVy37WPTLMTA3YeRsKunlQqmookoExWUHshYX2
- j3W4fnAh9S3Cwn11Lr4kPmGjDjK0i0EErgxr+T8Rdh6VaufppS2rqX89Vwn1ftrL58mj3F2Ah
- naidg2warb+82F6f5gLA4Pnss1nRzaWLLXnHwrCs6xuL6Dv6GVFUNmIS9JIb76MHOccKhG1+m
- kzImckkIOeu98lzQ78Cz9H1fR4sUY8pudwWMUKlUdHkbDtv8kRgDQ7LR7HsI5FXTb2rjinDld
- Jr2NE5HwGXOU4Rbej54cRsaDAmpFGjLmbGop1R8EUe2tlpsSHz///XhWUMz+jRif2MZlcgQKO
- o6MaMcztXsH865cJC3JiAu9ygYgWO/YpmEZmOjmfeXTcS6ELUG3ND0TX7gdKdmriwHrrcB7VV
- eGsZL2CtdbCaDzyPfJNwPT/4LntDL6f2DZSv7ZRbjyog6oI2bBNlZk1H0qzVVLLKKfUzaEO1Y
- Jw9cxeC+1JqAW+wREQ4RoN9S/PbA9ao9v55PCFkVkg8AJUfXb/kHTJUaq0C+odbcGGn2u6z4V
- +CzikrJveJpkSDF3hModLIn1fqBAi71w35V6684cbSb3GIsL4Vwe51/grL0/Ym/3+Cp6xHgeY
- YuI1grLWmHvS6IgMh3uEojDNJfUjNw/XgZhCQPmqVK2Yj4xL/sOx2bPAMBmKp5d/F7LSjR7ox
- nHmXc/mFZbB1nuZU7WSwWx4NjE/3GUWYIxG9SGp5U+b9QwgdEZU1nhh4Q3R9iAJ3QA0wyMpmw
- TYPWk54sr0O8bqL6ucHi71phHOmG2m4EWiLETbTotO0lqP235ZuoeMgvYjN3nhRAx2fIf17Bq
- jQHG9Dki+KJI3ikhedzuFBIRN9PI3jYmiK4opwU3fqI8AhCva/ov/mfepNeJcvOWXRMCpmRdX
- eqSwMbFFlXJOrdApPBE/JtQZPDhxzpfOPBMlDgX880WkaQ+YNnwHpDh5DPD8hz0TA/5GUX2eP
- FAm4WXOwaGdols5U3cOcgJM+TUmJvWCMBVLkrnud+I40XSP2S5qoE5jJeGEoE7xP/twwHY6DE
- wWLXtc8WHiJqjsx47hzU5Dn+pTCiDwvVBZusqYpdehClByth555ZsqDmL5KjfJWUQ2eSArPLV
- Z/xTYwQ2csk9lkL5b
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 28 Apr 2020 19:53:55 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARHd0DXRLONf6vH_ghsYZjzoduzkixqNDpVqqPx0yHbHg@mail.gmail.com>
+Message-ID: <CAK7LNARHd0DXRLONf6vH_ghsYZjzoduzkixqNDpVqqPx0yHbHg@mail.gmail.com>
+Subject: BPFilter: bit size mismatch between bpfiter_umh and vmliux
+To:     Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>
+Cc:     Networking <netdev@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> And there is no 'Fixes:' tag format checker in checkpatch
+Hi.
 
-I have taken another look at corresponding implementation details.
-Will programming challenges get any more attention?
-
-
-> to check the commit id length too,
-
-The mentioned script contains the following information.
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/s=
-cripts/checkpatch.pl?id=3Db240f960afb900e59112ebcfa5a759bb0a85a14e#n2818
-
-# Check for git id commit length and improperly formed commit descriptions
+I have a question about potential bit size
+mismatch between vmlinux and bpfilter_umh.
 
 
-> so let's add dedicated checker to check these conditions for 'Fixes:' ta=
-g.
-
-How do you think about to reconsider the usage of the word =E2=80=9Cchecke=
-r=E2=80=9D
-at specific places?
+net/bpfilter/bpfilter_umh is compiled for the
+default machine bit of the compiler.
+This may not match to the kernel bit size.
 
 
-> +		    my $id =3D '0123456789ab';
-> +		    my $orig_desc =3D "commit description";
+This happens in the following scenario.
 
-* Do you try to extend the existing software analysis approach =E2=80=9CGI=
-T_COMMIT_ID=E2=80=9D?
+GCC can be compiled as bi-arch.
+If you use GCC that defaults to 64-bit,
+you can give -m32 flag to produce the 32 bit code.
 
-* Would you like to avoid the development of duplicate Perl code?
+When you build the kernel for 32-bit, -m32 is
+properly passed for building the kernel space objects.
+However, it is missing while building the userspace
+objects for bpfilter_umh.
 
-Regards,
-Markus
+
+For example, my build host is x86_64 Ubuntu.
+
+If I build the kernel for i386
+with CONFIG_BPFILTER_UMH=y,
+the embedded bpfilter_umh is 64bit ELF.
+
+You can reproduce it by the following command on the
+mainline kernel.
+
+masahiro@oscar:~/ref/linux$ make ARCH=i386 defconfig
+masahiro@oscar:~/ref/linux$ scripts/config -e BPFILTER
+masahiro@oscar:~/ref/linux$ scripts/config -e BPFILTER_UMH
+masahiro@oscar:~/ref/linux$ make $(nproc) ARCH=i386
+   ...
+masahiro@oscar:~/ref/linux$ file vmlinux
+vmlinux: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV),
+statically linked,
+BuildID[sha1]=7ac691c67b4fe9b0cd46b45a2dc2d728d7d87686, not stripped
+masahiro@oscar:~/ref/linux$ file net/bpfilter/bpfilter_umh
+net/bpfilter/bpfilter_umh: ELF 64-bit LSB executable, x86-64, version
+1 (GNU/Linux), statically linked,
+BuildID[sha1]=baf1ffe26f4c030a99a945fc22924c8c559e60ac, for GNU/Linux
+3.2.0, not stripped
+
+
+
+
+At least, the build was successful,
+but does this work at runtime?
+
+If this is a bug, I can fix it cleanly.
+
+I think the bit size of the user mode helper
+should match to the kernel bit size. Is this correct?
+
+
+I noticed this while I was working on userspace
+build cleanups.
+https://patchwork.kernel.org/patch/11505207/
+
+
+-- 
+Best Regards
+Masahiro Yamada
