@@ -2,142 +2,97 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CDBC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAE8C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0A520730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:04:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJpp4Gbs"
+	by mail.kernel.org (Postfix) with ESMTP id 9BF0B21835
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbgD1QEs (ORCPT
+        id S1728341AbgD1QFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:04:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727985AbgD1QEr (ORCPT
+        Tue, 28 Apr 2020 12:05:23 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:44447 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727917AbgD1QFW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:04:47 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E003FC03C1AB;
-        Tue, 28 Apr 2020 09:04:45 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id w20so22095925ljj.0;
-        Tue, 28 Apr 2020 09:04:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7mUYj4GA/1dIgbyNxbqxWEcPwwbVckITyPakRYctQPs=;
-        b=aJpp4Gbsa77D3CwVDtT/kYQST/DBrxv9rK0Cmb3AfK9jOlmBirwL/8H9udjnDy1uwC
-         OvVx+TPsWhWHJfN1JckNgwNrss927ul1AFg3fExe2Fy4TdkANKvM796IN2LlBBrIHp8x
-         5iLj7jc1kXxAzB5NhwGaq+g+dM/Z7WM6D+dzg7VedmfRtYkQqc9Pv9ynCj43PsNocGzo
-         25FPXPl6+tmpmPnBu0HmtVmrHtuyRJ8LY7pGFF56q3jtZgBgSX9+oFtOIhDi1Inc4+Zu
-         6rhSvD5jHBNcfYsEOOCYr5kQxYQ3YwkhzbXHZnj6ZvK5R6UGkMNrY5K3oxymw4rV66nN
-         GoHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7mUYj4GA/1dIgbyNxbqxWEcPwwbVckITyPakRYctQPs=;
-        b=iErlHJzu5kTsLBEOmKHPwZEEYO5a9Z6WPFOQwZUTszcgHflHUdE+GdSHhprUhqcqRz
-         PzSXLjtXIUFjfyyvWUmjr413W3BPt7VQxymMbq59qRwpSl0yCZxPlA7eKmbQi3poiwSK
-         U1w039t/IeK0zNJDWMh7DZ5ucRzwwzsHofLJDuAviM0HUDCdKG3igo93xh794Gk6tGj4
-         mms4oTLgXSTMEue2QFOg8zsXB+C+BlA7po/O/hofWUq76kWxhJAP17dy/7ii9kl6pqcA
-         fmHQJNaQcXNMFM4FlEz6m1uylV3UcHyYN/aUSVT3jYSi4B/mAkx8mZPK/kEN2mUaczBw
-         uxMw==
-X-Gm-Message-State: AGi0PuZbw4WerVq3ne2ZxrMjQucN9SFBRMDdSBdyjy7tCmJxmN47HMOq
-        RqKept0oqtPjcq0Tr3o5bdjmuvlY
-X-Google-Smtp-Source: APiQypIXNtHvVX8LwOfgEDM/DfnbP2+tEIeXxPj7WLF58KTKZ9BuBggQ1ApM3WiwWyk/G+ctJakpBg==
-X-Received: by 2002:a05:651c:1131:: with SMTP id e17mr19194200ljo.79.1588089883949;
-        Tue, 28 Apr 2020 09:04:43 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id c19sm11233645lfj.18.2020.04.28.09.04.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 09:04:43 -0700 (PDT)
-Subject: Re: [RFC PATCH v1 3/5] media: tegra-video: Move PM runtime handle to
- streaming
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl
-Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1588047650-29402-1-git-send-email-skomatineni@nvidia.com>
- <1588047650-29402-4-git-send-email-skomatineni@nvidia.com>
- <631390cb-9aff-0e3f-6c39-81d6c565987e@gmail.com>
- <3ef69413-a606-b475-f530-d5534760b73b@nvidia.com>
- <2b334095-fadb-bf0a-f7a8-62fc798c2bd2@gmail.com>
- <18a7b095-7f0f-7819-c786-7e011cfd14ed@nvidia.com>
- <ce31e273-f424-f13e-5cd6-0db2589a2a10@gmail.com>
- <5741d5d3-e474-e23c-4841-809df5760067@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f6e34203-3e4b-b804-30a5-bf78445ab366@gmail.com>
-Date:   Tue, 28 Apr 2020 19:04:41 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 28 Apr 2020 12:05:22 -0400
+Received: from mail-lf1-f41.google.com ([209.85.167.41]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1Mqal4-1iq1KL0via-00mXI4; Tue, 28 Apr 2020 18:05:21 +0200
+Received: by mail-lf1-f41.google.com with SMTP id y3so1734911lfy.1;
+        Tue, 28 Apr 2020 09:05:21 -0700 (PDT)
+X-Gm-Message-State: AGi0Pua4VbAhm36z1vDTJi/ZBPM9rfrNid34H3ekg8u3XA6iyzBCvNdw
+        5ByqYXHWxNKgrVC2R+34zFEmysEZw7raUklJEwQ=
+X-Google-Smtp-Source: APiQypLrh7goUYFCcrHRyRyMKDsyAveCKs6dCpTFYxufTmhSFxrioTA6Q8bARt9FHX/ytYSEYl2HA7MOF3TO7A8k8/I=
+X-Received: by 2002:a19:40d0:: with SMTP id n199mr19399076lfa.161.1588089920707;
+ Tue, 28 Apr 2020 09:05:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5741d5d3-e474-e23c-4841-809df5760067@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <cover.1588079622.git.christophe.leroy@c-s.fr> <e78344d3fcc1d33bfb1782e430b7f0529f6c612f.1588079622.git.christophe.leroy@c-s.fr>
+In-Reply-To: <e78344d3fcc1d33bfb1782e430b7f0529f6c612f.1588079622.git.christophe.leroy@c-s.fr>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 28 Apr 2020 18:05:03 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2aXJRWjxWO8oMRX2AJkfeVeeoYbOPbpd9-UTgjqM4B7g@mail.gmail.com>
+Message-ID: <CAK8P3a2aXJRWjxWO8oMRX2AJkfeVeeoYbOPbpd9-UTgjqM4B7g@mail.gmail.com>
+Subject: Re: [PATCH v8 8/8] powerpc/vdso: Provide __kernel_clock_gettime64()
+ on vdso32
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:KXW1vp4IRKpuGN24fAWiEMrLgVx6g1nnuyzT/+lteK2DmgDCz5A
+ H3dK4oQYzrosbDrxY9whDSudBmPFIA251jhXDxPUv7a1c+zTZ4FSO9ENoBuX09O/pTvnXHk
+ GUYmNivqqhhvDiemzYqK5YYB4ZWi5QPVS+qnD2tFYXZfNrW2442Tr0prPeYFD5TLMYToAcs
+ JAFw70fU8A5C26OTpdYNw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:J3v//L4+2dE=:XtMZ0duPJdOdCkk+fjNIUH
+ BoLHWrHDymzaPvMYmasOMjLO4zdgnqGlPf8kyhhNb8Lwb0sHffLdExpbBp3ww6JXul8Ir3Bw6
+ dNe7rmzQsKOcZGTAR46eacLlafFCivO8b/xJGKiCboc5MqmTsneYsz6ZznH0V41DAEzo9Shb2
+ R9mENcYu2nsGIPGmURP9tPMryWZQvTXnmUfftZ14C7bvIt8WXO4JWbLjHWvGv61srTDICdPS+
+ Yjy/KLqELBu/VBRMVbcpvlyO/ljBSbfkvesJG3gyBLVRQCqaGdp1SFWTlRQfVZg4aUdzTxd2Y
+ HWP89XUcXkRgpQpvZmBd+9fPBQvd3CtqG6YopSq0QFBNLPYos/9HYXD0AhHkTRBRgXnQ23lVo
+ P5Z3RVg6Os5rVWkzlJPzEvZqgAwOyG0OCGfDL1AgoCmZkNsu9scDgls6EOZes+23454CYiFFF
+ zgSXdKXd5SK7hy406i/ghO9mFc/cHH+zEYgblFIJmSEnAGjFODkB157tF0rkRcLTvBiTr5fBf
+ uOA1oJP3JCue09DEpEMGvCnMWzp205gg3FqcYN7cVxNoQTfEwRZ1cn+ksmC4lj9XqkRA6n1tG
+ kriwSzq4G+FQISxdwCE0xdA9MaH7Cz6vMqN+MWE5pC2RZ3C/x/qq5RASZrzZPSbbvUYRxAh0t
+ qJBhrQOFov78VutJAU3f0tF6lQSgZnHKgQioQ4RQ8/oL3LGGMOW3XwyleRTAiBK7Oxe/Z3Iqj
+ ehygLE6MqnkkHpRA6b1VleGT2GTimiWr/TYDAXG5lHDrRqOPjbUyI/HnrchfWDl9IjN5KVSW3
+ Q++gBNh+yi9oXIben5eq1Haf+AD4vd/8tZlUJTqbWKQV/Z6Wk4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-28.04.2020 18:22, Sowjanya Komatineni пишет:
-> 
-> On 4/28/20 8:15 AM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 28.04.2020 18:08, Sowjanya Komatineni пишет:
->>> On 4/28/20 7:59 AM, Dmitry Osipenko wrote:
->>>> External email: Use caution opening links or attachments
->>>>
->>>>
->>>> 28.04.2020 17:51, Sowjanya Komatineni пишет:
->>>>> On 4/28/20 6:59 AM, Dmitry Osipenko wrote:
->>>>>> External email: Use caution opening links or attachments
+On Tue, Apr 28, 2020 at 3:16 PM Christophe Leroy
+<christophe.leroy@c-s.fr> wrote:
+>
+> Provides __kernel_clock_gettime64() on vdso32. This is the
+> 64 bits version of __kernel_clock_gettime() which is
+> y2038 compliant.
+>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-Is it possible to disable this corporate-email message?
+Looks good to me
 
->>>>>>
->>>>>>
->>>>>> 28.04.2020 07:20, Sowjanya Komatineni пишет:
->>>>>>> diff --git a/drivers/staging/media/tegra-video/csi.c
->>>>>>> b/drivers/staging/media/tegra-video/csi.c
->>>>>>> index b3dd0c3..29ccdae 100644
->>>>>>> --- a/drivers/staging/media/tegra-video/csi.c
->>>>>>> +++ b/drivers/staging/media/tegra-video/csi.c
->>>>>>> @@ -272,8 +272,25 @@ static int tegra_csi_s_stream(struct
->>>>>>> v4l2_subdev
->>>>>>> *subdev, int enable)
->>>>>>>          struct tegra_vi_channel *chan =
->>>>>>> v4l2_get_subdev_hostdata(subdev);
->>>>>>>          struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
->>>>>>>          struct tegra_csi *csi = csi_chan->csi;
->>>>>>> +     int ret;
->>>>>>> +
->>>>>>> +     if (enable && atomic_add_return(1, &csi->clk_refcnt) == 1) {
->>>>>>> +             ret = pm_runtime_get_sync(csi->dev);
->>>>>>> +             if (ret < 0) {
->>>>>>> +                     dev_err(csi->dev,
->>>>>>> +                             "failed to get runtime PM: %d\n",
->>>>>>> ret);
->>>>>>> +                     pm_runtime_put_noidle(csi->dev);
->> Why this pm_runtime_put_noidle() is needed? This should be wrong, please
->> remove it.
-> 
-> pm_runtime_get_sync() increments power.usage_count prior to rpm_resume
-> 
-> if rpm_resume fails it does not decrement usage_count.
-> 
-> So to balance count on failure, calling pm_runtime_put_noidle()
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
-Hmm.. maybe you're right. I'll need to take a more detailed look.
+There was a bug on ARM for the corresponding function, so far it is unclear
+if this was a problem related to particular hardware, the 32-bit kernel code,
+or the common implementation of clock_gettime64 in the vdso library,
+see https://github.com/richfelker/musl-cross-make/issues/96
+
+Just to be sure that powerpc is not affected by the same issue, can you
+confirm that repeatedly calling clock_gettime64 on powerpc32, alternating
+between vdso and syscall, results in monotically increasing times?
+
+       Arnd
