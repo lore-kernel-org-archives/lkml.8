@@ -2,108 +2,201 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BC9C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08170C83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F02F3208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5D70208FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588093070;
-	bh=QaFdvwQtNCzuxJiiAPZ3ZOFvDXcpwjoLKDRZlvc+JTU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qVT79AZAkSIyavrKY4F+MPABhc5r5ddfLaMqOEPHhUtUX/DBE4ysLerwoCzpxRvaJ
-	 IC1NqLfRC3G2zWBL+3WAmKRSYjwoheYSKFjftqYmQWGtnRhe8H3vAlP6rw4UPU3plR
-	 uO3u7mSpH2X161ciIYeNDrBpw2p+/6wwL29pVTao=
+	s=default; t=1588093198;
+	bh=DDISJ5ho6h27V70q1LkBq6lxmMmBnWXMjbaptVzgKG8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=mLpLBkjX76fx22N5ixc2iFWD/4ayrcw1n2J7OFdQmYW4XDIC8bVCPxe1S2FBXGTrI
+	 aL2OV29r0tLgGYzqdrmUxyloE+0fqVQveYtuNmch2BhJu/BmDAERgldofcyFWr5oVd
+	 u8IaXClowlwqCq725IZj8v+jALtFyw4ygh+NX5qo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgD1Q5t (ORCPT
+        id S1728334AbgD1Q76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:57:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59142 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 12:59:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728022AbgD1Q5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:57:49 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1727957AbgD1Q76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 12:59:58 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE42320757;
-        Tue, 28 Apr 2020 16:57:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CA6420730;
+        Tue, 28 Apr 2020 16:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588093068;
-        bh=QaFdvwQtNCzuxJiiAPZ3ZOFvDXcpwjoLKDRZlvc+JTU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vraqZ0wEcRphTU3lPtLyXChwnLcRHayEWGgLHdrwesblGo/42zUJF4jLqaKz47xEb
-         ORmefUppK8xFN675aFR0gcO4VVqr2YyuuyxKCpPYfzSeapY4vntKXugE6AbXyEFfgo
-         yJ+sGuNxbqA2Hi26mqqt5ODXt97n7b9DRXqC2cRI=
-Date:   Tue, 28 Apr 2020 17:57:45 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Marcus Cooper <codekipper@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: Re: Audio sound card name [was [PATCH 4/7] arm64: dts: allwinner:
- a64: Add HDMI audio]
-Message-ID: <20200428165745.GM5677@sirena.org.uk>
-References: <20200426120442.11560-1-peron.clem@gmail.com>
- <20200426120442.11560-5-peron.clem@gmail.com>
- <20200428080020.35qcuylwq2ylmubu@gilmour.lan>
- <CAJiuCcc2LQ4L36KSfO8iLVFBUO6k+zsZFX+_Ovm_10PoWO4AsA@mail.gmail.com>
- <20200428160417.6q5oab2guaumhhwi@gilmour.lan>
- <CAJiuCccFFUJJzXwygLQbDK4fGJ61p72Hv7vj3WVP-=z=J1Yj0Q@mail.gmail.com>
+        s=default; t=1588093197;
+        bh=DDISJ5ho6h27V70q1LkBq6lxmMmBnWXMjbaptVzgKG8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=1o/irJWRdeuyfBO6VnyQX2K/e2SJPF7eXPQsrP+NcBRJCYKBdTYO77ETS7Ker7qVe
+         tUNKDZSBi2Z+fT6MEsQKvwGiSUlZkwhIyhw8fEMA/2Tq3Ke9gMBNK2TwEFwV1wkxV+
+         6/ybAJi94dxBL/JFT1HAhJiLFHET2PfNbhZRekh4=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jTTaN-007RBo-7a; Tue, 28 Apr 2020 17:59:55 +0100
+Date:   Tue, 28 Apr 2020 17:59:53 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH v2 1/6] irqchip: Add Loongson HyperTransport Vector
+ support
+Message-ID: <20200428175953.487d23c8@why>
+In-Reply-To: <20200428063247.2223499-1-jiaxun.yang@flygoat.com>
+References: <20200422142428.1249684-1-jiaxun.yang@flygoat.com>
+        <20200428063247.2223499-1-jiaxun.yang@flygoat.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="x38akuY2VS0PywU3"
-Content-Disposition: inline
-In-Reply-To: <CAJiuCccFFUJJzXwygLQbDK4fGJ61p72Hv7vj3WVP-=z=J1Yj0Q@mail.gmail.com>
-X-Cookie: Eschew obfuscation.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, chenhc@lemote.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 28 Apr 2020 14:32:40 +0800
+Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
 
---x38akuY2VS0PywU3
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> This controller appears on Loongson-3 chips for receiving interrupt
+> vectors from PCH's PIC and PCH's PCIe MSI interrupts.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+> v2:
+> 	- Style cleanup
+> 	- Set ack callback and set correct edge_irq handler
+> ---
+>  drivers/irqchip/Kconfig              |   8 +
+>  drivers/irqchip/Makefile             |   1 +
+>  drivers/irqchip/irq-loongson-htvec.c | 214 +++++++++++++++++++++++++++
+>  3 files changed, 223 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-loongson-htvec.c
+> 
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index a85aada04a64..de4564e2ea88 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -532,4 +532,12 @@ config LOONGSON_HTPIC
+>  	help
+>  	  Support for the Loongson-3 HyperTransport PIC Controller.
+>  
+> +config LOONGSON_HTVEC
+> +	bool "Loongson3 HyperTransport Interrupt Vector Controller"
+> +	depends on MACH_LOONGSON64 || COMPILE_TEST
+> +	default MACH_LOONGSON64
+> +	select IRQ_DOMAIN_HIERARCHY
+> +	help
+> +	  Support for the Loongson3 HyperTransport Interrupt Vector Controller.
+> +
+>  endmenu
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index 37bbe39bf909..74561879f5a7 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -107,3 +107,4 @@ obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
+>  obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
+>  obj-$(CONFIG_LOONGSON_LIOINTC)		+= irq-loongson-liointc.o
+>  obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
+> +obj-$(CONFIG_LOONGSON_HTVEC)		+= irq-loongson-htvec.o
+> diff --git a/drivers/irqchip/irq-loongson-htvec.c b/drivers/irqchip/irq-loongson-htvec.c
+> new file mode 100644
+> index 000000000000..3b6032e3bb13
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-loongson-htvec.c
+> @@ -0,0 +1,214 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + *  Copyright (C) 2020, Jiaxun Yang <jiaxun.yang@flygoat.com>
+> + *  Loongson HyperTransport Interrupt Vector support
+> + */
+> +
+> +#define pr_fmt(fmt) "htvec: " fmt
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/kernel.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_platform.h>
+> +
+> +/* Registers */
+> +#define HTVEC_EN_OFF		0x20
+> +#define HTVEC_MAX_PARENT_IRQ	4
+> +
+> +#define VEC_COUNT_PER_REG	32
+> +#define VEC_REG_COUNT		4
+> +#define VEC_COUNT		(VEC_COUNT_PER_REG * VEC_REG_COUNT)
+> +#define VEC_REG_IDX(irq_id)	((irq_id) / VEC_COUNT_PER_REG)
+> +#define VEC_REG_BIT(irq_id)	((irq_id) % VEC_COUNT_PER_REG)
+> +
+> +struct htvec {
+> +	void __iomem		*base;
+> +	struct irq_domain	*htvec_domain;
+> +	raw_spinlock_t		htvec_lock;
+> +};
+> +
+> +static void htvec_irq_dispatch(struct irq_desc *desc)
+> +{
+> +	struct htvec *priv = irq_desc_get_handler_data(desc);
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	u32 pending;
+> +	bool handled = false;
+> +	int i;
+> +
+> +	chained_irq_enter(chip, desc);
+> +
+> +	for (i = 0; i < VEC_REG_COUNT; i++) {
+> +		pending = readl(priv->base + 4 * i);
+> +		writel(pending, priv->base + 4 * i);
+> +		while (pending) {
+> +			int bit = __ffs(pending);
+> +
+> +			generic_handle_irq(irq_linear_revmap(priv->htvec_domain,
+> +						bit + VEC_COUNT_PER_REG * i));
+> +			pending &= ~BIT(bit);
+> +			handled = true;
+> +		}
+> +	}
+> +
+> +	if (!handled)
+> +		spurious_interrupt();
+> +
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static void htvec_ack_irq(struct irq_data *d)
+> +{
+> +	struct htvec *priv = irq_data_get_irq_chip_data(d);
+> +	void __iomem *addr = priv->base;
+> +
+> +	writel(VEC_REG_BIT(d->hwirq), priv->base + VEC_REG_IDX(d->hwirq) * 4);
 
-On Tue, Apr 28, 2020 at 06:49:10PM +0200, Cl=E9ment P=E9ron wrote:
+Are you really sure about this? All the other operations seems to be
+based on a hot-bit pattern, while these particular registers seems to
+be taking hwirq mod 32. I'm willing to bet this is wrong.
 
-> I have a question regarding the simple-audio-card,name.
-> In this patch, I would like to introduce a simple-audio-card for the
-> Allwinner A64 HDMI.
-
-> What should be the preferred name for this sound card?
-> "sun50i-a64-hdmi" ? "allwinner, sun50i-a64-hdmi" ?
-
-The former is more idiomatic for ALSA.
-
---x38akuY2VS0PywU3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6oYIkACgkQJNaLcl1U
-h9CxAgf7BWIci8LznrR1sMDBntaJK2/0G/U8xmAKYRllkCNU+ygWiMh4kJP0s8Xt
-kwdFyZZIgLgcsjFiKBtUmSOtJtQklUyVMyYfN4Fuxspk0tuoZ55f7XfLkZelcMin
-pDhjmgvcSRMfLrcLovinmN0tAR6rWlNzUbDEs2J1bkxyoBsp1+9JbIadgU0+HVwC
-7/EYkpQG5niUXnDqe5puy9aeR9ml20pg8+DYnjTjgTUqGQTBbvdrd9PIwjsh7R0t
-RK9k8vuWd94brTyA0W4z8PbDHCIVpz/noDHFOBeUUjR2tP0sPAfYZkh5TlpDM/pG
-9CbD0IlbKTXi0BXgBg1H8zN+XLKCyA==
-=5lUy
------END PGP SIGNATURE-----
-
---x38akuY2VS0PywU3--
+	M.
+-- 
+Jazz is not dead. It just smells funny...
