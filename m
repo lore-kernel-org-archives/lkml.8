@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6437C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD72FC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A26A620575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0F2D206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099790;
-	bh=p1mEFL7GZrCu3Wlff4cQ8A8VxqTd/adu9gpNmAseRug=;
+	s=default; t=1588099797;
+	bh=KG1cImSwXekqFidNv5mdI71r3HLK0YV8Gz0vgep1UU0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=17YZadm69WJrghNvn+Ce0O5FE6A0/5GVJ03nCGobP0OWt7Ad3N32h/2gCBYurYavD
-	 avNnCVTOFSKRVXAa/CPjjK5rI9dT/DRtpbmk/A1dKoSHlB+V3wCHIeb5pHfrvuFBZs
-	 8cJDADiPbVoYWPjf3M4/yHg9DDQwbplgO3urvDtM=
+	b=pOGFsvgDbt9Jr2X0VSV8S+ediEK3WXk+6rs4oljigI4THiOWcSEgvo4fQOPrcskOC
+	 gfbHuizPh8EfB745YYo/73sjsMFNgqNUXa14WLy4BumqMDCu2OAe9MYzBJ7mCdAx97
+	 BcyZ9DquCSOjGSwMr0PkbYipltbtjs+6hHWedbQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731188AbgD1Stt (ORCPT
+        id S1731395AbgD1St4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:49:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58712 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:49:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730862AbgD1Sjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:39:48 -0400
+        id S1730114AbgD1Sjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:39:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B8AF20730;
-        Tue, 28 Apr 2020 18:39:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B407F20575;
+        Tue, 28 Apr 2020 18:39:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099187;
-        bh=p1mEFL7GZrCu3Wlff4cQ8A8VxqTd/adu9gpNmAseRug=;
+        s=default; t=1588099175;
+        bh=KG1cImSwXekqFidNv5mdI71r3HLK0YV8Gz0vgep1UU0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VPOtuzL8w2VafAu7VR9JcFYjKChQuTizUFUD6O0u7SiEMi/Tjv2VPk+Cik9EjWX68
-         3/V2Sc86CVqQlaXVHLVHRB9QBILHy1b/DADhASz4Ye0wZ4oZVKAfUY95/ov8AiDVdr
-         /AjqReed7M9RkDAq7CXHDrrNKWYLyPZAACqqcgFM=
+        b=Uw2xZR3XL/5yj0gv9dHbxzZchIEmWVZJ8v3gLp1hdWoMaxmzXWu3pDVNxDlUlc4Nr
+         HWcPva3gVlNv0TApuDLJ9kfdAScQsA+HBF31Yx9AXXaqzc6CwddEHCeNG0QGg/GI4V
+         wQsDta49FVmRsmUkKMKeAh6B20nJIfVitIH54w84=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 5.6 167/167] s390/mm: fix page table upgrade vs 2ndary address mode accesses
-Date:   Tue, 28 Apr 2020 20:25:43 +0200
-Message-Id: <20200428182246.762029529@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.19 109/131] iwlwifi: pcie: actually release queue memory in TVQM
+Date:   Tue, 28 Apr 2020 20:25:21 +0200
+Message-Id: <20200428182238.887373109@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,127 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit 316ec154810960052d4586b634156c54d0778f74 upstream.
+commit b98b33d5560a2d940f3b80f6768a6177bf3dfbc0 upstream.
 
-A page table upgrade in a kernel section that uses secondary address
-mode will mess up the kernel instructions as follows:
+The iwl_trans_pcie_dyn_txq_free() function only releases the frames
+that may be left on the queue by calling iwl_pcie_gen2_txq_unmap(),
+but doesn't actually free the DMA ring or byte-count tables for the
+queue. This leads to pretty large memory leaks (at least before my
+queue size improvements), in particular in monitor/sniffer mode on
+channel hopping since this happens on every channel change.
 
-Consider the following scenario: two threads are sharing memory.
-On CPU1 thread 1 does e.g. strnlen_user().  That gets to
-        old_fs = enable_sacf_uaccess();
-        len = strnlen_user_srst(src, size);
-and
-                "   la    %2,0(%1)\n"
-                "   la    %3,0(%0,%1)\n"
-                "   slgr  %0,%0\n"
-                "   sacf  256\n"
-                "0: srst  %3,%2\n"
-in strnlen_user_srst().  At that point we are in secondary space mode,
-control register 1 points to kernel page table and instruction fetching
-happens via c1, rather than usual c13.  Interrupts are not disabled, for
-obvious reasons.
+This was also now more evident after the move to a DMA pool for the
+byte count tables, showing messages such as
 
-On CPU2 thread 2 does MAP_FIXED mmap(), forcing the upgrade of page table
-from 3-level to e.g. 4-level one.  We'd allocated new top-level table,
-set it up and now we hit this:
-                notify = 1;
-                spin_unlock_bh(&mm->page_table_lock);
-        }
-        if (notify)
-                on_each_cpu(__crst_table_upgrade, mm, 0);
-OK, we need to actually change over to use of new page table and we
-need that to happen in all threads that are currently running.  Which
-happens to include the thread 1.  IPI is delivered and we have
-static void __crst_table_upgrade(void *arg)
-{
-        struct mm_struct *mm = arg;
+  BUG iwlwifi:bc (...): Objects remaining in iwlwifi:bc on __kmem_cache_shutdown()
 
-        if (current->active_mm == mm)
-                set_user_asce(mm);
-        __tlb_flush_local();
-}
-run on CPU1.  That does
-static inline void set_user_asce(struct mm_struct *mm)
-{
-        S390_lowcore.user_asce = mm->context.asce;
-OK, user page table address updated...
-        __ctl_load(S390_lowcore.user_asce, 1, 1);
-... and control register 1 set to it.
-        clear_cpu_flag(CIF_ASCE_PRIMARY);
-}
+This fixes https://bugzilla.kernel.org/show_bug.cgi?id=206811.
 
-IPI is run in home space mode, so it's fine - insns are fetched
-using c13, which always points to kernel page table.  But as soon
-as we return from the interrupt, previous PSW is restored, putting
-CPU1 back into secondary space mode, at which point we no longer
-get the kernel instructions from the kernel mapping.
-
-The fix is to only fixup the control registers that are currently in use
-for user processes during the page table update.  We must also disable
-interrupts in enable_sacf_uaccess to synchronize the cr and
-thread.mm_segment updates against the on_each-cpu.
-
-Fixes: 0aaba41b58bc ("s390: remove all code using the access register mode")
-Cc: stable@vger.kernel.org # 4.15+
-Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-Reviewed-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 6b35ff91572f ("iwlwifi: pcie: introduce a000 TX queues management")
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/iwlwifi.20200417100405.f5f4c4193ec1.Id5feebc9b4318041913a9c89fc1378bb5454292c@changeid
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/lib/uaccess.c |    4 ++++
- arch/s390/mm/pgalloc.c  |   16 ++++++++++++++--
- 2 files changed, 18 insertions(+), 2 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/s390/lib/uaccess.c
-+++ b/arch/s390/lib/uaccess.c
-@@ -64,10 +64,13 @@ mm_segment_t enable_sacf_uaccess(void)
- {
- 	mm_segment_t old_fs;
- 	unsigned long asce, cr;
-+	unsigned long flags;
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
+@@ -1231,6 +1231,9 @@ void iwl_trans_pcie_dyn_txq_free(struct
  
- 	old_fs = current->thread.mm_segment;
- 	if (old_fs & 1)
- 		return old_fs;
-+	/* protect against a concurrent page table upgrade */
-+	local_irq_save(flags);
- 	current->thread.mm_segment |= 1;
- 	asce = S390_lowcore.kernel_asce;
- 	if (likely(old_fs == USER_DS)) {
-@@ -83,6 +86,7 @@ mm_segment_t enable_sacf_uaccess(void)
- 		__ctl_load(asce, 7, 7);
- 		set_cpu_flag(CIF_ASCE_SECONDARY);
- 	}
-+	local_irq_restore(flags);
- 	return old_fs;
- }
- EXPORT_SYMBOL(enable_sacf_uaccess);
---- a/arch/s390/mm/pgalloc.c
-+++ b/arch/s390/mm/pgalloc.c
-@@ -70,8 +70,20 @@ static void __crst_table_upgrade(void *a
- {
- 	struct mm_struct *mm = arg;
+ 	iwl_pcie_gen2_txq_unmap(trans, queue);
  
--	if (current->active_mm == mm)
--		set_user_asce(mm);
-+	/* we must change all active ASCEs to avoid the creation of new TLBs */
-+	if (current->active_mm == mm) {
-+		S390_lowcore.user_asce = mm->context.asce;
-+		if (current->thread.mm_segment == USER_DS) {
-+			__ctl_load(S390_lowcore.user_asce, 1, 1);
-+			/* Mark user-ASCE present in CR1 */
-+			clear_cpu_flag(CIF_ASCE_PRIMARY);
-+		}
-+		if (current->thread.mm_segment == USER_DS_SACF) {
-+			__ctl_load(S390_lowcore.user_asce, 7, 7);
-+			/* enable_sacf_uaccess does all or nothing */
-+			WARN_ON(!test_cpu_flag(CIF_ASCE_SECONDARY));
-+		}
-+	}
- 	__tlb_flush_local();
++	iwl_pcie_gen2_txq_free_memory(trans, trans_pcie->txq[queue]);
++	trans_pcie->txq[queue] = NULL;
++
+ 	IWL_DEBUG_TX_QUEUES(trans, "Deactivate queue %d\n", queue);
  }
  
 
