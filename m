@@ -2,111 +2,118 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A1EC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC059C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3B5206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AC57206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:05:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9XEUY6b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726854AbgD1WEh (ORCPT
+        id S1726753AbgD1WFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:04:37 -0400
-Received: from mga02.intel.com ([134.134.136.20]:13558 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725934AbgD1WEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:04:36 -0400
-IronPort-SDR: 7A9YF1c+TMb08MV2ZPgmy8qz+pw8Qq+9b0zRE8tOS/xdX++yaj8t+GwIeHvTtgEk64eeinNX8p
- LawRfEUrDuoQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 15:04:36 -0700
-IronPort-SDR: l7M6V/bjnoYBNCtL9HPR7FeFyttpjX6WR+y0CL4huH55MgwCiaTD7IbXtPAVPJfcbTZ2xSJSQ3
- cTZUntqq7+Wg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
-   d="scan'208";a="282292044"
-Received: from psera2-dell24.ra.intel.com ([10.54.154.157])
-  by fmsmga004.fm.intel.com with ESMTP; 28 Apr 2020 15:04:36 -0700
-Date:   Tue, 28 Apr 2020 15:06:07 -0700 (PDT)
-From:   matthew.gerlach@linux.intel.com
-X-X-Sender: lab@psera2-dell24.ra.intel.com
-To:     Xu Yilun <yilun.xu@intel.com>
-cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mdf@kernel.org
-Subject: Re: How to update a piece of flash for FPGA firmware?
-In-Reply-To: <20200428050135.GA27416@yilunxu-OptiPlex-7050>
-Message-ID: <alpine.LFD.2.21.2004281434001.59524@psera2-dell24.ra.intel.com>
-References: <20200428050135.GA27416@yilunxu-OptiPlex-7050>
+        Tue, 28 Apr 2020 18:05:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49212 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725934AbgD1WFU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 18:05:20 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51D71C03C1AC;
+        Tue, 28 Apr 2020 15:05:20 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id a32so100817pje.5;
+        Tue, 28 Apr 2020 15:05:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z4c4XHLNxK71Q6+EZ8KzDjbiwbFtdyK+ghGeLHVUgoE=;
+        b=A9XEUY6bgDwfKo+231A6FmRC4co4JYjiJEwmSpt4sgQx9V09GC6WVqziQ1Bcsa7cfj
+         bcyk226E/jwzyL43CCwTJups8gLE6bEicN2wdvEHiSjmeQujudpEpPFZYYXvw8YLR/ly
+         I5VqJPrKfdyf3so2yoaKLKzt+cJ1ELi60KaI+numwdQS1A7FUXcmw7/QhEjm9RxMyuoe
+         FW7Ddl9iyIafCgRXKBD5H53Xtzsu2koQdkQvCoMPecMKecr2Bcz0YfSNThWofqSwpe6T
+         P56xgbqLK3APGG5mTTF8jhGNEkrlgBhMgk6/7VupJSXRDg+Li1S1q0ZmGcCHg7lquD7c
+         53oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z4c4XHLNxK71Q6+EZ8KzDjbiwbFtdyK+ghGeLHVUgoE=;
+        b=j10t/L2BRwlkA/45EnHuLvlC0Tz/mYKYngNL9nXDqBE3BhPzSE9VaRiu37hBoQIAWl
+         L3jThdkRxF4jvzWlbRwgm9lj4SeLMkbYdvlE/DoSczHrOJ8yWrTLUiXK6AvL8jOWPJW9
+         OYb1dBAee40p+uxpkaP/iRJsGHdhhQkQiSDD5X+FL9u6WshsLadyUFT+y0AtMW67dwxp
+         Wanb2JBsAdR8P727lNSPsMJp4ojE7gvIu6BfBLtekRuel8yEsxzGKvJuKJm0qvDvss6l
+         e09uUULYzpWVJixEJolvk5Pp+dJBFCMi/Qr+6uncmKHXy0t+RCucLtzvSSS1Cdr8yGEI
+         uDGA==
+X-Gm-Message-State: AGi0PuauOEoRKleb7aNuuHSdz8NuzpIysTEjF3Xvj7Aw90LrEbbFtnFI
+        gwnZ1rYBC6BXqLoQNu+t5/JUSYm8YibTFj3ouNM=
+X-Google-Smtp-Source: APiQypKlEARfbXLp1HXPh5c1a/44apf7u3aabai4GVf4uhBsovU6BaUwf4OGJCS0ALrzwkHlGJj5x9WRDzDfd7E9IF8=
+X-Received: by 2002:a17:902:d697:: with SMTP id v23mr28755150ply.262.1588111519805;
+ Tue, 28 Apr 2020 15:05:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+References: <20200428212959.2993304-1-arnd@arndb.de>
+In-Reply-To: <20200428212959.2993304-1-arnd@arndb.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 29 Apr 2020 01:05:08 +0300
+Message-ID: <CAHp75Vd0shZi3JA0cK9wVfRm1vZuKye_-eAhXYf-dYqA5QwK2g@mail.gmail.com>
+Subject: Re: [PATCH] watchdog: iTCO: fix link error
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yilun,
-
-You raise some very interesting questions. Please see
-my comments below.
-
-Matthew
-
-On Tue, 28 Apr 2020, Xu Yilun wrote:
-
-> Hi,
+On Wed, Apr 29, 2020 at 12:33 AM Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> I wonder if an updating of FPGA Flash (but cannot reload) could be
-> implemented as fpga-mgr?
+> When the MFD driver is a loadable module, the watchdog driver fails
+> to get linked into the kernel:
 >
-> I have the pcie based FPGA card. The bitstream for FPGA static region is
-> stored on flash chip. Board will load the bitstream to FPGA on system
-> power cycle. The flash chip could be accessed through "PCIE -> ... ->
-> Flash update engine -> Flash". So the update of the FPGA static region is
-> basicly updating the flash chip through PCIE and rebooting system.
-
-I think you mean power cycle when you say "rebooting system" above, but
-your point is worth highlighting.  During this flash update the
-FPGA is actually fully configured and running its application.  Typically,
-during a fpga-mgr update of the static region or partial reconfiguration
-region, the actual contents of the fpga region is "changing" during the 
-update.
-
+> drivers/watchdog/iTCO_wdt.o: In function `update_no_reboot_bit_pmc':
+> iTCO_wdt.c:(.text+0x54f): undefined reference to `intel_pmc_gcr_update'
 >
-> Should I implement the flash update engine as a fpga-mgr device? On one
-> hand it is just a flash write, FPGA functionality is actually not
-> changed before reboot. Does fpga-mgr requires bitstream takes function
-> immediately after write_complete()? On the other hand, the flash write
-> do affects FPGA static region on next boot. Operating on the
-> corresponding fpga region makes kernel fully aware of what is being
-> done.
-
-When an fpga-mgr is used in a device tree overlay flow, one gains
-the benefit the enumeration of the nodes in the overlay after the
-update has completed.
-
+> The code is written to support operation without the MFD driver, so
+> add a Kconfig dependency that allows this, while disallowing the watchdog
+> to be built-in when the MFD driver is a module.
 >
-> Actually the FPGA card do has the capability to reload bitstream at
-> runtime. But it will cause the whole PCIE device lost, static region is
-> also destroyed. We need to rescan PCI to get it back. So I think
-> basically this is the same case as system reboot from FPGA's
-> perspective.
-
-Yes, on those cards that have the ability to power cycle themselves (i.e. 
-fully reconfigure the FPGA from flash), the PCIe connection to the card
-is broken because of a surprise link down PCIe error.  As you say a PCI 
-rescan (i.e. re-enumeration of the entire card) is required.  Since
-the card has to be re-scanned at the PCI level anyway, there may not be 
-much benefit to using the fpga-mgr in this flow.
-
-I wonder if these kinds of more disruptive updates are better suited to 
-something firmware updates rather than fpga updates?
-
+> Fixes: 25f1ca31e230 ("platform/x86: intel_pmc_ipc: Convert to MFD")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/watchdog/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> Thanks
-> Yilun
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 66ca69f30f01..67a83578810e 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -1217,6 +1217,7 @@ config ITCO_WDT
+>         depends on (X86 || IA64) && PCI
+>         select WATCHDOG_CORE
+>         depends on I2C || I2C=n
+> +       depends on MFD_INTEL_PMC_BXT || !MFD_INTEL_PMC_BXT
+
+Can we use same format as for I2C?
+
+>         select LPC_ICH if !EXPERT
+>         select I2C_I801 if !EXPERT && I2C
+>         ---help---
+> --
+> 2.26.0
 >
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
