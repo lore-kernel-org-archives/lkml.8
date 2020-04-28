@@ -2,54 +2,56 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 953BAC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 421FDC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CB3A208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20566208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098987;
-	bh=VtS+X6WEymlTP8Z6qFuMXCpIcfSJoMeZrYnzp/pdOZ0=;
+	s=default; t=1588098993;
+	bh=sFS1aTN77s462QSqkmbpOiTld0tKgWA3KLsgWWCSkBY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LbSRKDpwQXkhTp46cqPSmnFRGPgIPCu3nFalQdk4g6jHPfTKwkETb+nLITBRaXZfW
-	 D7VVFrBbkYijFHeOuJVr+anoY6nG4JFtiQVV//4AI0xRNkMF5ErqnP3JvQhhDvHdGA
-	 RuHc3rB7UaOjlbdAFCzaIQhPxdqApwbiczmIK1Ho=
+	b=o0xyd7qPd/alRkxS0BCMirRqvO3rf8Ht5ARyDS+uJRLgqCJmCJfsf0eCqoQ+xJ1uY
+	 h1XZGNywXKH3gYNBsHR7tc1sMtXhzBtarCiY0Zvih/MhsoBVxWdo7dTPSetcc0yWkT
+	 92k15NfohNmtfp82nwMIaZtFrv/hl1ZSRyDLbWvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730108AbgD1Sg0 (ORCPT
+        id S1729888AbgD1Sgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:36:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51032 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:36:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730088AbgD1SeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:34:20 -0400
+        id S1730377AbgD1SgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:36:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE92B20575;
-        Tue, 28 Apr 2020 18:34:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D5F12085B;
+        Tue, 28 Apr 2020 18:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098859;
-        bh=VtS+X6WEymlTP8Z6qFuMXCpIcfSJoMeZrYnzp/pdOZ0=;
+        s=default; t=1588098983;
+        bh=sFS1aTN77s462QSqkmbpOiTld0tKgWA3KLsgWWCSkBY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZpnzQmriH4dyBDt0RN5kH/8cv6/B83fME+YGhMI9xdkXBRii4Zol3GqVfT17ULp29
-         nBUArX08iKS+MlinbkBij5+WmtdrxWM5gWVmg3+CuPwIBMSNKvdGyTAsWLRtxEWyz7
-         uMTBmTOJ+cV1RkGx1jZ39FY+AQ8bsvfNY6MroDEQ=
+        b=goo0923KluE4U1mpVbaxaIpGlQeaGf+xGaQR9aKcBVinCw558NFGwp+/7SzV1DPuL
+         GSLocM1S2764vsLhgZCgFHLb3N4yTNvBySbnOP7+7x2iB87kBrgLN9DW8nsQHqDfAH
+         paCoBz44Cp8luIQHOpNNM/jwKYsiIbIZb/6WgO5g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gyeongtaek Lee <gt82.lee@samsung.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.6 121/167] ASoC: dapm: fixup dapm kcontrol widget
-Date:   Tue, 28 Apr 2020 20:24:57 +0200
-Message-Id: <20200428182240.540076010@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 042/168] xhci: Wait until link state trainsits to U0 after setting USB_SS_PORT_LS_U0
+Date:   Tue, 28 Apr 2020 20:23:36 +0200
+Message-Id: <20200428182237.158648468@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,71 +61,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gyeongtaek Lee <gt82.lee@samsung.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit ebf1474745b4373fdde0fcf32d9d1f369b50b212 upstream.
+[ Upstream commit 0200b9f790b0fc9e9a42f685f5ad54b23fe959f4 ]
 
-snd_soc_dapm_kcontrol widget which is created by autodisable control
-should contain correct on_val, mask and shift because it is set when the
-widget is powered and changed value is applied on registers by following
-code in dapm_seq_run_coalesced().
+Like U3 case, xHCI spec doesn't specify the upper bound of U0 transition
+time. The 20ms is not enough for some devices.
 
-		mask |= w->mask << w->shift;
-		if (w->power)
-			value |= w->on_val << w->shift;
-		else
-			value |= w->off_val << w->shift;
+Intead of polling PLS or PLC, we can facilitate the port change event to
+know that the link transits to U0 is completed.
 
-Shift on the mask in dapm_kcontrol_data_alloc() is removed to prevent
-double shift.
-And, on_val in dapm_kcontrol_set_value() is modified to get correct
-value in the dapm_seq_run_coalesced().
+While at it, also separate U0 and U3 case to make the code cleaner.
 
-Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/000001d61537$b212f620$1638e260$@samsung.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+[variable rename to u3exit, and skip completion for usb2 ports -Mathias ]
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200312144517.1593-8-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-dapm.c |   20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ drivers/usb/host/xhci-hub.c  | 44 +++++++++++++++++++++++++-----------
+ drivers/usb/host/xhci-mem.c  |  1 +
+ drivers/usb/host/xhci-ring.c |  1 +
+ drivers/usb/host/xhci.h      |  1 +
+ 4 files changed, 34 insertions(+), 13 deletions(-)
 
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -423,7 +423,7 @@ static int dapm_kcontrol_data_alloc(stru
+diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+index 712cd44f05ace..02f52d4f74df8 100644
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -1306,7 +1306,33 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 					 wIndex, link_state);
+ 				goto error;
+ 			}
++
++			if (link_state == USB_SS_PORT_LS_U0) {
++				if ((temp & PORT_PLS_MASK) == XDEV_U0)
++					break;
++
++				if (!((temp & PORT_PLS_MASK) == XDEV_U1 ||
++				    (temp & PORT_PLS_MASK) == XDEV_U2 ||
++				    (temp & PORT_PLS_MASK) == XDEV_U3)) {
++					xhci_warn(xhci, "Can only set port %d to U0 from U state\n",
++							wIndex);
++					goto error;
++				}
++				reinit_completion(&bus_state->u3exit_done[wIndex]);
++				xhci_set_link_state(xhci, ports[wIndex],
++						    USB_SS_PORT_LS_U0);
++				spin_unlock_irqrestore(&xhci->lock, flags);
++				if (!wait_for_completion_timeout(&bus_state->u3exit_done[wIndex],
++								 msecs_to_jiffies(100)))
++					xhci_dbg(xhci, "missing U0 port change event for port %d\n",
++						 wIndex);
++				spin_lock_irqsave(&xhci->lock, flags);
++				temp = readl(ports[wIndex]->addr);
++				break;
++			}
++
+ 			if (link_state == USB_SS_PORT_LS_U3) {
++				int retries = 16;
+ 				slot_id = xhci_find_slot_id_by_port(hcd, xhci,
+ 						wIndex + 1);
+ 				if (slot_id) {
+@@ -1317,26 +1343,18 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 					xhci_stop_device(xhci, slot_id, 1);
+ 					spin_lock_irqsave(&xhci->lock, flags);
+ 				}
+-			}
+-
+-			xhci_set_link_state(xhci, ports[wIndex], link_state);
+-
+-			spin_unlock_irqrestore(&xhci->lock, flags);
+-			if (link_state == USB_SS_PORT_LS_U3) {
+-				int retries = 16;
+-
++				xhci_set_link_state(xhci, ports[wIndex], USB_SS_PORT_LS_U3);
++				spin_unlock_irqrestore(&xhci->lock, flags);
+ 				while (retries--) {
+ 					usleep_range(4000, 8000);
+ 					temp = readl(ports[wIndex]->addr);
+ 					if ((temp & PORT_PLS_MASK) == XDEV_U3)
+ 						break;
+ 				}
+-			}
+-			spin_lock_irqsave(&xhci->lock, flags);
+-
+-			temp = readl(ports[wIndex]->addr);
+-			if (link_state == USB_SS_PORT_LS_U3)
++				spin_lock_irqsave(&xhci->lock, flags);
++				temp = readl(ports[wIndex]->addr);
+ 				bus_state->suspended_ports |= 1 << wIndex;
++			}
+ 			break;
+ 		case USB_PORT_FEAT_POWER:
+ 			/*
+diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
+index 884c601bfa15f..9764122c9cdf2 100644
+--- a/drivers/usb/host/xhci-mem.c
++++ b/drivers/usb/host/xhci-mem.c
+@@ -2552,6 +2552,7 @@ int xhci_mem_init(struct xhci_hcd *xhci, gfp_t flags)
+ 		xhci->usb3_rhub.bus_state.resume_done[i] = 0;
+ 		/* Only the USB 2.0 completions will ever be used. */
+ 		init_completion(&xhci->usb2_rhub.bus_state.rexit_done[i]);
++		init_completion(&xhci->usb3_rhub.bus_state.u3exit_done[i]);
+ 	}
  
- 			memset(&template, 0, sizeof(template));
- 			template.reg = e->reg;
--			template.mask = e->mask << e->shift_l;
-+			template.mask = e->mask;
- 			template.shift = e->shift_l;
- 			template.off_val = snd_soc_enum_item_to_val(e, 0);
- 			template.on_val = template.off_val;
-@@ -546,8 +546,22 @@ static bool dapm_kcontrol_set_value(cons
- 	if (data->value == value)
- 		return false;
+ 	if (scratchpad_alloc(xhci, flags))
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index f7a190fb2353d..a952d99f0456b 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -1673,6 +1673,7 @@ static void handle_port_status(struct xhci_hcd *xhci,
+ 	     (portsc & PORT_PLS_MASK) == XDEV_U1 ||
+ 	     (portsc & PORT_PLS_MASK) == XDEV_U2)) {
+ 		xhci_dbg(xhci, "resume SS port %d finished\n", port_id);
++		complete(&bus_state->u3exit_done[hcd_portnum]);
+ 		/* We've just brought the device into U0/1/2 through either the
+ 		 * Resume state after a device remote wakeup, or through the
+ 		 * U3Exit state after a host-initiated resume.  If it's a device
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index 98b98a0cd2a8b..3ad4f80960d08 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -1694,6 +1694,7 @@ struct xhci_bus_state {
+ 	/* Which ports are waiting on RExit to U0 transition. */
+ 	unsigned long		rexit_ports;
+ 	struct completion	rexit_done[USB_MAXCHILDREN];
++	struct completion	u3exit_done[USB_MAXCHILDREN];
+ };
  
--	if (data->widget)
--		data->widget->on_val = value;
-+	if (data->widget) {
-+		switch (dapm_kcontrol_get_wlist(kcontrol)->widgets[0]->id) {
-+		case snd_soc_dapm_switch:
-+		case snd_soc_dapm_mixer:
-+		case snd_soc_dapm_mixer_named_ctl:
-+			data->widget->on_val = value & data->widget->mask;
-+			break;
-+		case snd_soc_dapm_demux:
-+		case snd_soc_dapm_mux:
-+			data->widget->on_val = value >> data->widget->shift;
-+			break;
-+		default:
-+			data->widget->on_val = value;
-+			break;
-+		}
-+	}
  
- 	data->value = value;
- 
+-- 
+2.20.1
+
 
 
