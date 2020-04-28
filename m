@@ -2,167 +2,181 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3618DC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9227BC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 106E5206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:12:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WgEGuEKV"
+	by mail.kernel.org (Postfix) with ESMTP id 753F2206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:13:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgD1UMj (ORCPT
+        id S1726562AbgD1UNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:12:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43069 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726377AbgD1UMi (ORCPT
+        Tue, 28 Apr 2020 16:13:00 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:46617 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbgD1UNA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:12:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588104756;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2OKswG1ruzns5I21UqjqGNJ9iohxx9gNx+0J1CK9CTA=;
-        b=WgEGuEKVS4fUG4sg4ICaCchkpY5wCkZ/+eSp17CEc1eS2TbdzUR0XAf69qXRKPKzLR114r
-        hMMfcKsCWKDblMMhHbhqbiAs4abHP4nvjT4ImF2cXYqou++xgAgyYwdPhiQcw9jyYIEDgp
-        2GuSk9xgWNY4ofC75UR/5Ej0k3tQbBE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-493-z8QR-YRYPemkXjd5Mb2htQ-1; Tue, 28 Apr 2020 16:12:28 -0400
-X-MC-Unique: z8QR-YRYPemkXjd5Mb2htQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF0171895A28;
-        Tue, 28 Apr 2020 20:12:25 +0000 (UTC)
-Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 037E9648D6;
-        Tue, 28 Apr 2020 20:12:23 +0000 (UTC)
-Date:   Tue, 28 Apr 2020 14:12:23 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>, linux-doc@vger.kernel.org
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Tue, 28 Apr 2020 16:13:00 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MDPqi-1jMP2o3Hzq-00ATWb; Tue, 28 Apr 2020 22:12:36 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-mm@kvack.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [regression?] Re: [PATCH v6 06/12] mm/gup: track FOLL_PIN pages
-Message-ID: <20200428141223.5b1653db@w520.home>
-In-Reply-To: <20200428192251.GW26002@ziepe.ca>
-References: <20200211001536.1027652-1-jhubbard@nvidia.com>
-        <20200211001536.1027652-7-jhubbard@nvidia.com>
-        <20200424121846.5ee2685f@w520.home>
-        <5b901542-d949-8d7e-89c7-f8d5ee20f6e9@nvidia.com>
-        <20200424141548.5afdd2bb@w520.home>
-        <665ffb48-d498-90f4-f945-997a922fc370@nvidia.com>
-        <20200428105455.30343fb4@w520.home>
-        <20200428174957.GV26002@ziepe.ca>
-        <20200428130752.75c153bd@w520.home>
-        <20200428192251.GW26002@ziepe.ca>
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] fixup! signal: factor copy_siginfo_to_external32 from copy_siginfo_to_user32
+Date:   Tue, 28 Apr 2020 21:56:26 +0200
+Message-Id: <20200428195645.1365019-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200428074827.GA19846@lst.de>
+References: <20200428074827.GA19846@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:BfAvDKI9SSwe2+766/MLLDP63p+G4VcCD7Yw0qKaGd8OUqaUT93
+ dwH8xVn4vZsTRFeogGQBryDkMAtZhL/IwptYefT+c2aXPjcEz5uTnU2EG4jQFqC7tXJu6aI
+ zCBIqYyBnd7fw9eQBUeGBrjuXIv5c7SEEMf1FJ2sh6kYQdnfTdA0fGrL+AZjCrwKtkdpY6R
+ 90AVtj8sxaI5oar4YkYug==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1tDfrCfOWcg=:ovEhwjJ6ujR0mMOB5D8EOH
+ B5zD5kobkoVigp1N2g4eMDKMxOSadhJbGhdEw0CQVDJ1vkyvIv6W+pSeWcNE66pBl4VBGQ/c/
+ bS74pjPam9DQBuT9Y5m2o7J92y8bl98lMWvWSG3m6vh3sE0G5BsPXMP4yPxDL8Qsgxfn2FZQX
+ 6VZORuKsnB4wTAt5gaJTP7b0LoUuz4jt+GQhpbRiSyMqyxCPVtstT8DZ1oL8leQ6gzgO3hHli
+ 2WNSw3PeHQT2e8gQamUauF1zfzvEq1ofp4di5MHNGvDGdQJWJJHk4XR+5JYvcI6N70d2HFt2/
+ 8bgn3YwxpkfetX3aJdVazMk9L6u4q+QbyEW2c27f9EFLLduOeAsAB7aikO//xxpt+7AUAPZhc
+ sDjYu7kiv6OtK006xBC3w3qdcyoYJVCvI2Ce3FscGMbXbs/JKKeZU7iRGvpcNZe/+EuDcz77n
+ /FAI6PG5Bhosqa1rIuEvqljEvQSxMU13CxliZJjllvYWIyaSmUMyfksAxzmxkqaFCmxWA6TuU
+ PKZ4dgBLueswpTEfvx61h9RbqlJgedfW9UQkUrKzDSy5b5V5D0f3FYeE9LaRJ1miBotCfHkys
+ /krTikRNKotidsbOYcjjwzxVclZZaY1h0Ji+ypppPVvqHaxqOwXKQo1r1Nr3EIbr4iOuQgr/W
+ HYpHhTAHcVkyfQ6e2CSlaLXFjSuNiaPcDSd/RV1Wc2yFXrLdoIvFk2SXacgY3mr6Iu4mB4Glt
+ tdEgJv/7xdpAsIUqVwsx42CGS71Mr5aVOmQsOuBw1/BDPITZyd2WFgQNVJsIOHtZ82TlWg2SG
+ ec3W+ApX2f478booY6auUhabsLFhMrGLs2P0XdFUENiaJqXPTk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 16:22:51 -0300
-Jason Gunthorpe <jgg@ziepe.ca> wrote:
+I think I found a way to improve the x32 handling:
 
-> On Tue, Apr 28, 2020 at 01:07:52PM -0600, Alex Williamson wrote:
-> > On Tue, 28 Apr 2020 14:49:57 -0300
-> > Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> >   
-> > > On Tue, Apr 28, 2020 at 10:54:55AM -0600, Alex Williamson wrote:  
-> > > >  static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
-> > > >  {
-> > > >  	struct vfio_pci_device *vdev = device_data;
-> > > > @@ -1253,8 +1323,14 @@ static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
-> > > >  	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
-> > > >  	vma->vm_pgoff = (pci_resource_start(pdev, index) >> PAGE_SHIFT) + pgoff;
-> > > >  
-> > > > +	vma->vm_ops = &vfio_pci_mmap_ops;
-> > > > +
-> > > > +#if 1
-> > > > +	return 0;
-> > > > +#else
-> > > >  	return remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
-> > > > -			       req_len, vma->vm_page_prot);
-> > > > +			       vma->vm_end - vma->vm_start, vma->vm_page_prot);    
-> > > 
-> > > The remap_pfn_range here is what tells get_user_pages this is a
-> > > non-struct page mapping:
-> > > 
-> > > 	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
-> > > 
-> > > Which has to be set when the VMA is created, they shouldn't be
-> > > modified during fault.  
-> > 
-> > Aha, thanks Jason!  So fundamentally, pin_user_pages_remote() should
-> > never have been faulting in this vma since the pages are non-struct
-> > page backed.   
-> 
-> gup should not try to pin them.. I think the VM will still call fault
-> though, not sure from memory?
+This is a simplification over Christoph's "[PATCH 2/7] signal: factor
+copy_siginfo_to_external32 from copy_siginfo_to_user32", reducing the
+x32 specifics in the common code to a single #ifdef/#endif check, in
+order to keep it more readable for everyone else.
 
-Hmm, at commit 3faa52c03f44 the behavior is that I don't see a fault on
-pin, maybe that's a bug.  But trying to rebase to current top of tree,
-now my DMA mapping gets an -EFAULT, so something is still funky :-\
+Christoph, if you like it, please fold into your patch.
 
-> > Maybe I was just getting lucky before this commit.  For a
-> > VM_PFNMAP, vaddr_get_pfn() only needs pin_user_pages_remote() to return
-> > error and the vma information that we setup in vfio_pci_mmap().  
-> 
-> I've written on this before, vfio should not be passing pages to the
-> iommu that it cannot pin eg it should not touch VM_PFNMAP vma's in the
-> first place.
-> 
-> It is a use-after-free security issue the way it is..
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Jeremy Kerr <jk@ozlabs.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: "Eric W . Biederman" <ebiederm@xmission.com>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-fsdevel@vger.kernel.org
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/x86/include/asm/compat.h | 10 ++++++++++
+ arch/x86/kernel/signal.c      | 23 +++++++++++++++++++++++
+ kernel/signal.c               | 15 ++-------------
+ 3 files changed, 35 insertions(+), 13 deletions(-)
 
-Where is the user after free?  Here I'm trying to map device mmio space
-through the iommu, which we need to enable p2p when the user owns
-multiple devices.  The device is owned by the user, bound to vfio-pci,
-and can't be unbound while the user has it open.  The iommu mappings
-are torn down on release.  I guess I don't understand the problem.
-
-> > only need the fault handler to trigger for user access, which is what I
-> > see with this change.  That should work for me.
-> >   
-> > > Also the vma code above looked a little strange to me, if you do send
-> > > something like this cc me and I can look at it. I did some work like
-> > > this for rdma a while ago..  
-> > 
-> > Cool, I'll do that.  I'd like to be able to zap the vmas from user
-> > access at a later point and I have doubts that I'm holding the
-> > refs/locks that I need to for that.  Thanks,  
-> 
-> Check rdma_umap_ops, it does what you described (actually it replaces
-> them with 0 page, but along the way it zaps too).
-
-Ok, thanks,
-
-Alex
+diff --git a/arch/x86/include/asm/compat.h b/arch/x86/include/asm/compat.h
+index 52e9f3480f69..9341ea3da757 100644
+--- a/arch/x86/include/asm/compat.h
++++ b/arch/x86/include/asm/compat.h
+@@ -214,7 +214,17 @@ static inline bool in_compat_syscall(void)
+ #endif
+ 
+ struct compat_siginfo;
++#ifdef CONFIG_X86_X32_ABI
+ int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
+ 		const kernel_siginfo_t *from, bool x32_ABI);
++#else
++int copy_siginfo_to_user32(struct compat_siginfo __user *to,
++		const kernel_siginfo_t *from);
++static inline int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
++		const kernel_siginfo_t *from, bool x32_ABI)
++{
++	return copy_siginfo_to_user32(to, from);
++}
++#endif
+ 
+ #endif /* _ASM_X86_COMPAT_H */
+diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
+index 83b74fb38c8f..0e166571d28b 100644
+--- a/arch/x86/kernel/signal.c
++++ b/arch/x86/kernel/signal.c
+@@ -511,6 +511,29 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
+ }
+ #endif /* CONFIG_X86_32 */
+ 
++#ifdef CONFIG_X86_X32_ABI
++int copy_siginfo_to_user32(struct compat_siginfo __user *to,
++			   const struct kernel_siginfo *from)
++{
++	return __copy_siginfo_to_user32(to, from, in_x32_syscall());
++}
++
++int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
++			     const struct kernel_siginfo *from, bool x32_ABI)
++{
++	struct compat_siginfo new;
++
++	copy_siginfo_to_external32(&new, from);
++	if (x32_ABI && from->si_signo == SIGCHLD) {
++		new._sifields._sigchld_x32._utime = from->si_utime;
++		new._sifields._sigchld_x32._stime = from->si_stime;
++	}
++	if (copy_to_user(to, &new, sizeof(struct compat_siginfo)))
++		return -EFAULT;
++	return 0;
++}
++#endif
++
+ static int x32_setup_rt_frame(struct ksignal *ksig,
+ 			      compat_sigset_t *set,
+ 			      struct pt_regs *regs)
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 1a81602050b4..935facca4860 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -3318,29 +3318,18 @@ void copy_siginfo_to_external32(struct compat_siginfo *to,
+ 	}
+ }
+ 
++#ifndef CONFIG_X86_X32_ABI
+ int copy_siginfo_to_user32(struct compat_siginfo __user *to,
+ 			   const struct kernel_siginfo *from)
+-#if defined(CONFIG_X86_X32_ABI) || defined(CONFIG_IA32_EMULATION)
+-{
+-	return __copy_siginfo_to_user32(to, from, in_x32_syscall());
+-}
+-int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
+-			     const struct kernel_siginfo *from, bool x32_ABI)
+-#endif
+ {
+ 	struct compat_siginfo new;
+ 
+ 	copy_siginfo_to_external32(&new, from);
+-#ifdef CONFIG_X86_X32_ABI
+-	if (x32_ABI && from->si_signo == SIGCHLD) {
+-		new._sifields._sigchld_x32._utime = from->si_utime;
+-		new._sifields._sigchld_x32._stime = from->si_stime;
+-	}
+-#endif
+ 	if (copy_to_user(to, &new, sizeof(struct compat_siginfo)))
+ 		return -EFAULT;
+ 	return 0;
+ }
++#endif
+ 
+ static int post_copy_siginfo_from_user32(kernel_siginfo_t *to,
+ 					 const struct compat_siginfo *from)
+-- 
+2.26.0
 
