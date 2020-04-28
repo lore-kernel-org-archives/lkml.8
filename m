@@ -2,104 +2,101 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE5AC83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71596C83003
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B16E7205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:47:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BHJTeAgx"
+	by mail.kernel.org (Postfix) with ESMTP id 499C7206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:51:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbgD1ArQ (ORCPT
+        id S1726355AbgD1Avp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 20:47:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46382 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726263AbgD1ArQ (ORCPT
+        Mon, 27 Apr 2020 20:51:45 -0400
+Received: from mout-p-103.mailbox.org ([80.241.56.161]:41566 "EHLO
+        mout-p-103.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726264AbgD1Avp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 20:47:16 -0400
-Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37DA7C03C1A8;
-        Mon, 27 Apr 2020 17:47:16 -0700 (PDT)
-Received: by mail-oo1-xc43.google.com with SMTP id 190so4297016ooa.12;
-        Mon, 27 Apr 2020 17:47:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Mg3ylSUl5nTSYGxTWgCy2J6jsay82JWyxDHWJ67sXd0=;
-        b=BHJTeAgxrQcdxgbSnbBQ2r3yUouEpq5tFpfBfLiRMbGMAbOJzp1gwLavi3skk3+Xtb
-         dxrmQdkZHP8gf7Ytiwcy3oNE9Wlg0kzA/CWUZbxRKKcZP+DREC6/sPGzsZvXAmoWKkk7
-         w0CowYAgQeloZl2ELKOxGPjT+xqSZmtw2c8nPDlZ6b72NmCBuV7ouIbpo2uojIEqk2iU
-         9EL5QuLqh5SfOT/24fsJ6IQaq9RSGRBuCwHUQDTdwgd1p/8MopMrdg9ZH6VMQvO29oop
-         sP6JpPREldsbh6DWITEbl5XIwHqlxvCMwqIqf+h8gDUDuaOy1gqv5XgEbZ9e/77o7Kk/
-         2dbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Mg3ylSUl5nTSYGxTWgCy2J6jsay82JWyxDHWJ67sXd0=;
-        b=mnJlIOOzlZHyVLMSL1Gx0EYalIQka+d6OJBNks/7vuM3+JmerntnwTZHdcwGdkpQsA
-         JMWBwSJxqKRjaPBuzI45C8DhvR+d5qf5qYHgHOT+vmXwmg8sZICff/ReG1SQm90Spz+H
-         M8OTz6nFRo9I0E1Gq8Qq7iOvOTo2vegXNrd8R6vyCFO7+oXN+FkUwiLCtzmDWE+qTy80
-         GuaHnN1en+vzj7yVUaIFb2oMtUc8CkjCOq61U25t2bL+RWDW8irwgRyFlQ5xIryRFJlJ
-         Y+NK/D5ZdmeT7HntA6AR4dd9bLpu25OdUllSAFsLFdLPDekseCGgvdVdznMFglPetcCE
-         gQsw==
-X-Gm-Message-State: AGi0PuZDp0+kmw3xjvZ8/WTgrASJrjWSrayZk9vF40rqFg6WPOYM//D4
-        mtZk8vQvFVkHjjv26ZI3miBK3iFyp3CCMs1tkbk=
-X-Google-Smtp-Source: APiQypIfTPGQQQfOB5A+EopR4kh38+zyXjtO9KEGC+3ldyqv7OPbmaTqNkuTiK37dBY9a1ss/9o7LJcM3QQ8lLvQ4hU=
-X-Received: by 2002:a4a:d355:: with SMTP id d21mr9857599oos.66.1588034835594;
- Mon, 27 Apr 2020 17:47:15 -0700 (PDT)
+        Mon, 27 Apr 2020 20:51:45 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-103.mailbox.org (Postfix) with ESMTPS id 49B34Z34sLzKmZM;
+        Tue, 28 Apr 2020 02:51:42 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
+        with ESMTP id r3EXWYFXzHLQ; Tue, 28 Apr 2020 02:51:38 +0200 (CEST)
+Date:   Tue, 28 Apr 2020 10:51:26 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Cyril Hrubis <chrubis@suse.cz>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        linux-arch@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        lkp@lists.01.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
+        ltp@lists.linux.it
+Subject: Re: [LTP] [fs] ce436509a8: ltp.openat203.fail
+Message-ID: <20200428005126.6wncibudt6ohghvc@yavin.dot.cyphar.com>
+References: <f969e7d45a8e83efc1ca13d675efd8775f13f376.1586830316.git.josh@joshtriplett.org>
+ <20200427135210.GB5770@shao2-debian>
+ <20200427142733.GD7661@rei>
 MIME-Version: 1.0
-References: <1587709364-19090-1-git-send-email-wanpengli@tencent.com>
- <1587709364-19090-2-git-send-email-wanpengli@tencent.com> <20200427182631.GM14870@linux.intel.com>
-In-Reply-To: <20200427182631.GM14870@linux.intel.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 28 Apr 2020 08:47:05 +0800
-Message-ID: <CANRm+CyNOnCDEwAK04Yr_Yom3ebfKH61_3-fXaCs-LbcTiEd7w@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] KVM: VMX: Introduce generic fastpath handler
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Haiwei Li <lihaiwei@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tk4luxag2mt2b3sb"
+Content-Disposition: inline
+In-Reply-To: <20200427142733.GD7661@rei>
+X-Rspamd-Queue-Id: 0E0701771
+X-Rspamd-Score: -9.44 / 15.00 / 15.00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 at 02:26, Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Fri, Apr 24, 2020 at 02:22:40PM +0800, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > Introduce generic fastpath handler to handle MSR fastpath, VMX-preemption
-> > timer fastpath etc. In addition, we can't observe benefit from single
-> > target IPI fastpath when APICv is disabled, let's just enable IPI and
-> > Timer fastpath when APICv is enabled for now.
->
-> There are three different changes being squished into a single patch:
->
->   - Refactor code to add helper
->   - Change !APICv behavior for WRMSR fastpath
->   - Introduce EXIT_FASTPATH_CONT_RUN
->
-> I don't think you necessarily need to break this into three separate
-> patches, but's the !APICv change needs to be a standalone patch, especially
-> given the shortlog.  E.g. the refactoring could be introduced along with
-> the second fastpath case, and CONT_RUN could be introduced with its first
-> usage.
 
-Agreed, will split to two separate patches.
+--tk4luxag2mt2b3sb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-    Wanpeng
+On 2020-04-27, Cyril Hrubis <chrubis@suse.cz> wrote:
+> Hi!
+> > commit: ce436509a8e109330c56bb4d8ec87d258788f5f4 ("[PATCH v4 2/3] fs: o=
+penat2: Extend open_how to allow userspace-selected fds")
+> > url: https://github.com/0day-ci/linux/commits/Josh-Triplett/Support-use=
+rspace-selected-fds/20200414-102939
+> > base: https://git.kernel.org/cgit/linux/kernel/git/shuah/linux-kselftes=
+t.git next
+>=20
+> This commit adds fd parameter to the how structure where LTP test was
+> previously passing garbage, which obviously causes the difference in
+> errno.
+>=20
+> This could be safely ignored for now, if the patch gets merged the test
+> needs to be updated.
+
+It wouldn't be a bad idea to switch the test to figure out the ksize of
+the struct, so that you only add bad padding after that. But then again,
+this would be a bit ugly -- having CHECK_FIELDS would make this simpler.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--tk4luxag2mt2b3sb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXqd+CwAKCRCdlLljIbnQ
+EgeUAP9m6EkEl0AGN+/eOT+i/EalQ0VpBQZ8UYtvJP5HbYDC8gEA3HtLFj8eHbce
+Y9pj4AZCRJVLhR1qVwrou+X6rZVJ0Ao=
+=p2HM
+-----END PGP SIGNATURE-----
+
+--tk4luxag2mt2b3sb--
