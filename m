@@ -2,113 +2,98 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AAFC83006
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF3AC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41A19206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E5B206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:53:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iPpk6l/j"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aCpdTrXL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbgD1Fwu (ORCPT
+        id S1726432AbgD1FxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 01:52:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37834 "EHLO
+        Tue, 28 Apr 2020 01:53:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726258AbgD1Fwu (ORCPT
+        by vger.kernel.org with ESMTP id S1726258AbgD1FxB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 01:52:50 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9463BC03C1AC
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 22:52:49 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id f8so15858486lfe.12
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 22:52:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3FFyhFGwSR5hCCAOzKWLB8ijhIIWqMIumwJnODZevkI=;
-        b=iPpk6l/jcA1BeDumj4n6myfu973lYILM4XQEUj2U9UO9NMB5cveMhC0qpE7+ppX0Bl
-         NwwXr3ZGwsusuav6BpzkvqFgO+dDUQglvmVXTDQ34IUs8a2xp5D4asH6xNcUEEJimtrk
-         4mtm5HgQpZnnJB3kKT+YlVYWlQz4UCEN0OFbe/rh+0C7PyKRYbDsrVajTzK6hSclaXf9
-         o1Q7WzNZJ0dH3MybAy06ZSF5gjc5YwjwPRYVGKunKe3DPdG91fHg0qpIwDWdOtTqhqnc
-         iqMeT2xCdTZTQFZQroCmrRgQNoR1D0MlyHpyegg+Vs7bRSY3iiysohCImS46eC/xpdrW
-         JKcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3FFyhFGwSR5hCCAOzKWLB8ijhIIWqMIumwJnODZevkI=;
-        b=ATVIBRRH47dgCEJPpiv4M8InxG+J6U87HjAo8bHl1A8IYA4y38uofMLlUHpwS6k5Xl
-         JDbI/PQ3ANqaNmvB9UiwSBO0qqPAZXM0hnTwMJxwrWD+DFLoT3yuDQ8ujWf3n4GtS9rA
-         b7D3AwNk6vFSeyZmC+1XczXzOc+LiQM/PoyQ4r+8Qyl9AJ2DddTjeDj6iLsomiSfM8T9
-         hzjcjPl+7BMUPvlWlI6SJ3oLn3vmd4HpvFrkzV8Lc5LmFm1MGZ86y/kPlvUSmQjvQ1jN
-         IabFWbCPqYvsmVy5lzUbNSPbKmGeWQrMU/Kt3Nnxsp/K8Ow6QQqg+WF06BcnvHXB1S2F
-         E6mg==
-X-Gm-Message-State: AGi0PubRPG6PkaNurbi0WtBztXuAdbK5Vmrbpjl9E5lSekEaUv31aj7d
-        +coqBAMGD6cfxLeb/gAckbGZ2Cj9au7jDWdMCZB68g==
-X-Google-Smtp-Source: APiQypLsGvxVV4G5Cnrl0vPMdgLPCcQHgc3r4oAY763aqzMS5nENJMiQ8OSQP6fW4gw42184cs8u8oZQg2fi/pBykaA=
-X-Received: by 2002:ac2:5dc6:: with SMTP id x6mr17919772lfq.108.1588053167164;
- Mon, 27 Apr 2020 22:52:47 -0700 (PDT)
+        Tue, 28 Apr 2020 01:53:01 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95F1EC03C1A9;
+        Mon, 27 Apr 2020 22:53:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=9XovULq8rJCuWXmFB4aDWCVuT48qS2yZ0ltStjBj4hM=; b=aCpdTrXL5xBMuDBIgagmp2g9ZQ
+        9aord42KwraiUSaEVoMLiPpaH6zjsWyRuEDa2eNLtNNtFecX9lc9xnoKg/elNnxSmtyjht7evkfqp
+        5jhC9NxXS4u/e94nSa87KnXf7J/TlD6xFel1PGwXXqepI6XDXwQ5dNJrsJhMVSdMD7JyV1x5La7P3
+        fv6FJMXX2dWE/kk3Zs1Intp9acSgOVu4GpSw+HZcRpNqs1DFT+3WF0Oh9KPJYcFjkFmPdt2b/XkGf
+        NaRhjRbDUCsfOfLmFkrgUapwKQvl12tG7ca329qjaeptall/qjs0VlzIFEOiI2c8bJLII0FEIUuZ0
+        f9FJAP/g==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTJAw-0001r9-SN; Tue, 28 Apr 2020 05:52:58 +0000
+Subject: Re: [PATCH v2] module: Allow to disable modsign in kernel cmdline
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>, jeyu@kernel.org,
+        corbet@lwn.net, mchehab+samsung@kernel.org, tglx@linutronix.de,
+        akpm@linux-foundation.org, gregkh@linuxfoundation.org,
+        pawan.kumar.gupta@linux.intel.com, jgross@suse.com
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20200428050523.47253-1-tianjia.zhang@linux.alibaba.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <aff03dbb-a1a3-c95e-1c24-60279b14970a@infradead.org>
+Date:   Mon, 27 Apr 2020 22:52:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200428032745.133556-1-jannh@google.com> <20200428032745.133556-3-jannh@google.com>
- <CAHk-=wjSYTpTH0X8EcGGJD84tsJS62BN3tC6NfzmjvXdSkFVxg@mail.gmail.com>
-In-Reply-To: <CAHk-=wjSYTpTH0X8EcGGJD84tsJS62BN3tC6NfzmjvXdSkFVxg@mail.gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 28 Apr 2020 07:52:20 +0200
-Message-ID: <CAG48ez0Nz8Bnty2aKdsUeMoXkjc_Bcxr+EcStZ7LBTOgRt1mrQ@mail.gmail.com>
-Subject: Re: [PATCH 2/5] coredump: Fix handling of partial writes in dump_emit()
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200428050523.47253-1-tianjia.zhang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 5:36 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> On Mon, Apr 27, 2020 at 8:28 PM Jann Horn <jannh@google.com> wrote:
-> >
-> > After a partial write, we have to update the input buffer pointer.
->
-> Interesting. It seems this partial write case never triggers (except
-> for actually killing the core-dump).
->
-> Or did you find a case where it actually matters?
->
-> Your fix is obviously correct, but it also makes me go "that function
-> clearly never actually worked for partial writes, maybe we shouldn't
-> even bother?"
+Hi,
 
-Hmm, yeah... I can't really think of cases where write handlers can
-spuriously return early without having a pending signal, and a second
-write is likely to succeed... I just know that there are some things
-that are notorious for returning short *reads* (e.g. pipes, sockets,
-/proc/$pid/maps).
+On 4/27/20 10:05 PM, Tianjia Zhang wrote:
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 7bc83f3d9bdf..00ed7566959f 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -3190,6 +3190,12 @@
+>  	noirqdebug	[X86-32] Disables the code which attempts to detect and
+>  			disable unhandled interrupt sources.
+>  
+> +	no_modsig_enforce
+> +			[KNL] When CONFIG_MODULE_SIG_FORCE is set, this option
+> +			allows to disable modsign completely at the beginning.
+> +			This means that modules without (valid) signatures will
+> +			success to load.
 
-Al's commit message refers to pipes specifically; but even at commit
-2507a4fbd48a, I don't actually see where pipe_write() could return a
-short write without a page allocation failure or something like that.
+			succeed to load.
 
-So maybe you're right and we should just get rid of it...
+			succeed in loading.
+
+			load successfully.
+I prefer this one.....  ^^^^^^^^^^^^^^^^^^^^^
+
+			be loaded successfully.
+
+
+> +
+>  	no_timer_check	[X86,APIC] Disables the code which tests for
+>  			broken timer IRQ sources.
+>  
+
+thanks.
+-- 
+~Randy
+
