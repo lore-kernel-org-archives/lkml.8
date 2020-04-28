@@ -2,75 +2,135 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E1CC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0313BC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0C97206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D25C5206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:45:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="hOUykm/7"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="UBR5gAQ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgD1Hpj (ORCPT
+        id S1726618AbgD1Hp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:45:39 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:57568 "EHLO mail.skyhub.de"
+        Tue, 28 Apr 2020 03:45:56 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:50279 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726253AbgD1Hpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 03:45:39 -0400
-Received: from zn.tnic (p200300EC2F0EA50071685FEE5673AD7B.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:a500:7168:5fee:5673:ad7b])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2CC3C1EC0CE6;
-        Tue, 28 Apr 2020 09:45:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1588059938;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=cjj5Q4NWvyvHXwbuKwDJQoSET/uG75lyUxQf/sqpNns=;
-        b=hOUykm/79/t/J1CUkNPEmbNhcVnT3ebkgx1RW7esSjsEc/zmB1uaNvzZ+14yJSGTOLK/fP
-        Pp6rV8v2PKfa4hb3r4Fb7IicbfgbiEa3wEqVDla6UpTrd3YhzjAdrEI0AdC3VoMqg8JP7I
-        Exe6Yx9kYYO0blMSez3sOX2dcTSARTk=
-Date:   Tue, 28 Apr 2020 09:45:27 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Adam Borowski <kilobyte@angband.pl>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: boot failure: stack-protector: Kernel stack is corrupted in:
- start_secondary
-Message-ID: <20200428074527.GA12579@zn.tnic>
-References: <20200421013234.GA5393@angband.pl>
+        id S1726253AbgD1Hp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 03:45:56 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49BDGT61qhz9v0Yh;
+        Tue, 28 Apr 2020 09:45:53 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=UBR5gAQ5; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id Jm5mmlEvRnDf; Tue, 28 Apr 2020 09:45:53 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49BDGT4QTyz9v0Yg;
+        Tue, 28 Apr 2020 09:45:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1588059953; bh=/2fZZkU1LY2pi9G08Gg14D8HOq4abGxDwLX+kqPlt1o=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=UBR5gAQ53YJN7ELul96h9s1XA1XXA+4fvsvJ+j3pt0+0nKvRCMh3AZyL/IBPKVzuA
+         j3Gc+fUrI76w6umT2wOmN3GTPm/U0ZjnNCv4YC/kSlVhGQRyeNlBqhuRQjCUJuX8ff
+         HU7o4PADGi6vHlzTQ7FuNK5gQHJ7lzZ6KlCoAPp8=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9CC8B8B7EF;
+        Tue, 28 Apr 2020 09:45:54 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id rlSWOtbbJT9w; Tue, 28 Apr 2020 09:45:54 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DE3628B7ED;
+        Tue, 28 Apr 2020 09:45:53 +0200 (CEST)
+Subject: Re: [PATCH 2/7] signal: factor copy_siginfo_to_external32 from
+ copy_siginfo_to_user32
+To:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeremy Kerr <jk@ozlabs.org>, linux-fsdevel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        "Eric W . Biederman" <ebiederm@xmission.com>
+References: <20200421154204.252921-1-hch@lst.de>
+ <20200421154204.252921-3-hch@lst.de>
+ <20200425214724.a9a00c76edceff7296df7874@linux-foundation.org>
+ <20200426074039.GA31501@lst.de>
+ <20200427154050.e431ad7fb228610cc6b95973@linux-foundation.org>
+ <20200428070935.GE18754@lst.de>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <ddbaba35-9cc5-dfb9-3cae-51b026de5b65@c-s.fr>
+Date:   Tue, 28 Apr 2020 09:45:46 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200421013234.GA5393@angband.pl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200428070935.GE18754@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 03:32:34AM +0200, Adam Borowski wrote:
-> Hi!
-> With kernels compiled with gcc-10, on two different machines (AMD Phenom2,
-> AMD 2990WX) I get the following panic during boot:
 
-Welcome to the party:
 
-https://git.kernel.org/tip/f670269a42bfdd2c83a1118cc3d1b475547eac22
+Le 28/04/2020 à 09:09, Christoph Hellwig a écrit :
+> On Mon, Apr 27, 2020 at 03:40:50PM -0700, Andrew Morton wrote:
+>>> https://www.spinics.net/lists/kernel/msg3473847.html
+>>> https://www.spinics.net/lists/kernel/msg3473840.html
+>>> https://www.spinics.net/lists/kernel/msg3473843.html
+>>
+>> OK, but that doesn't necessitate the above monstrosity?  How about
+>>
+>> static int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
+>> 			     const struct kernel_siginfo *from, bool x32_ABI)
+>> {
+>> 	struct compat_siginfo new;
+>> 	copy_siginfo_to_external32(&new, from);
+>> 	...
+>> }
+>>
+>> int copy_siginfo_to_user32(struct compat_siginfo __user *to,
+>> 			   const struct kernel_siginfo *from)
+>> {
+>> #if defined(CONFIG_X86_X32_ABI) || defined(CONFIG_IA32_EMULATION)
+>> 	return __copy_siginfo_to_user32(to, from, in_x32_syscall());
+>> #else
+>> 	return __copy_siginfo_to_user32(to, from, 0);
+>> #endif
+>> }
+>>
+>> Or something like that - I didn't try very hard.  We know how to do
+>> this stuff, and surely this thing isn't how!
+> 
+> I guess that might be a worthwhile middle ground.  Still not a fan of
+> all these ifdefs..
+> 
 
-Try this branch to check whether it works for ya:
+Can't we move the small X32 specific part out of 
+__copy_siginfo_to_user32(), in an arch specific helper that voids for 
+other architectures ?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=x86/build
+Something like:
 
-Thx.
+		if (!arch_special_something(&new, from)) {
+			new.si_utime = from->si_utime;
+			new.si_stime = from->si_stime;
+		}
 
--- 
-Regards/Gruss,
-    Boris.
+Then the arch_special_something() does what it wants in x86 and returns 
+1, and for architectures not implementating it, a generic version return 
+0 all the time.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Christophe
