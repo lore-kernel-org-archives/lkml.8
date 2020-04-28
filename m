@@ -2,113 +2,84 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 394FFC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B2EC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1174B21927
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B5C206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099750;
-	bh=0sOTq4s30ooeuz5sbfz4jOZfhxiqi4UmbeG8VQrVoww=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OxCLvY1SdHZFsgVpC5mdZCyCnEnD7Zw2m2QWBWolmWGNquw5bXpWu2h0/P26a25Uf
-	 1PdTpfToLtb50a6l9BsxpZSSpEZJb+opJ1WstT80LVYx9Ig9yb6Yjz/DudWIM8FqyH
-	 QoDuKCzYz6Pdh8L7aS09rk+uI7oH+OjzY/SQSxT4=
+	s=default; t=1588099755;
+	bh=7JNHiBIIBF6nBVtNd2tj4B4ihq3wa/COFTfVnM8d+bI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JZKh25YCENp/V49fofqV7wX3WqwSXH7hQde5XSq74kiAgwwnHXndv2GN9RjXgLC8i
+	 jNEL90hCZ8/OAdGQST+Z160+RqJ9IxLwmPURCjJX/F3kl6LDMx7FtUo5JLwJCsK84q
+	 NCz3+gzBQwP+LLHjWLRv5015J8LtQogpcecshcSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731180AbgD1StJ (ORCPT
+        id S1730907AbgD1StO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:49:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59408 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:49:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730911AbgD1SkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:40:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1730911AbgD1StM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:49:12 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 173482076A;
-        Tue, 28 Apr 2020 18:40:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A80BA206A1;
+        Tue, 28 Apr 2020 18:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099219;
-        bh=0sOTq4s30ooeuz5sbfz4jOZfhxiqi4UmbeG8VQrVoww=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WT1iPFX+mjgqv8Elp3qaDdgSuJzeaqekiamvVVegIh+i1k7rCRC8vaHY/snEp/Gpe
-         v0nxggMBOEPTD7pCptoKbLHsds29Nn6CbnUapzF8epg4aTbOUIeWyR8KExiwWKP9o3
-         ZciZkyaCn5IR/1A16UltmuVjOdVoumNehrnzjzxs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH 4.19 116/131] vt: dont use kmalloc() for the unicode screen buffer
-Date:   Tue, 28 Apr 2020 20:25:28 +0200
-Message-Id: <20200428182239.834497789@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1588099752;
+        bh=7JNHiBIIBF6nBVtNd2tj4B4ihq3wa/COFTfVnM8d+bI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=X/Cbla9bkQeX3pAWWk2Bj/CFct7MIUbQJeJJPqwzVKzUyG2pSSDjjEwpX23QTlJ4w
+         Wy14pBDSCpFw8puGMPF+pXn2LF/7q8lUxFWlueBnuMq3MiwcwfowT1igM8CyvsGcX/
+         VKnU3ThtVRL2Nj5Owzdg6FCz39YUaDTD57wLcCJE=
+Date:   Tue, 28 Apr 2020 11:49:10 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Huazhong Tan <tanhuazhong@huawei.com>
+Cc:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <salil.mehta@huawei.com>,
+        <yisen.zhuang@huawei.com>, <linuxarm@huawei.com>,
+        Yonglong Liu <liuyonglong@huawei.com>
+Subject: Re: [PATCH net-next] net: hns3: adds support for reading module
+ eeprom info
+Message-ID: <20200428114910.7cc5182e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <1588075105-52158-1-git-send-email-tanhuazhong@huawei.com>
+References: <1588075105-52158-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Pitre <nico@fluxnic.net>
+On Tue, 28 Apr 2020 19:58:25 +0800 Huazhong Tan wrote:
+> From: Yonglong Liu <liuyonglong@huawei.com>
+> 
+> This patch adds support for reading the optical module eeprom
+> info via "ethtool -m".
+> 
+> Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 
-commit 9a98e7a80f95378c9ee0c644705e3b5aa54745f1 upstream.
+> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+> index 4d9c85f..8364e1b 100644
+> --- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+> @@ -12,6 +12,16 @@ struct hns3_stats {
+>  	int stats_offset;
+>  };
+>  
+> +#define HNS3_MODULE_TYPE_QSFP		0x0C
+> +#define HNS3_MODULE_TYPE_QSFP_P		0x0D
+> +#define HNS3_MODULE_TYPE_QSFP_28	0x11
+> +#define HNS3_MODULE_TYPE_SFP		0x03
 
-Even if the actual screen size is bounded in vc_do_resize(), the unicode
-buffer is still a little more than twice the size of the glyph buffer
-and may exceed MAX_ORDER down the kmalloc() path. This can be triggered
-from user space.
+Could you use the SFF8024_ID_* defines from sfp.h here as well?
 
-Since there is no point having a physically contiguous buffer here,
-let's avoid the above issue as well as reducing pressure on high order
-allocations by using vmalloc() instead.
-
-Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
-Cc: <stable@vger.kernel.org>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.2003282214210.2671@knanqh.ubzr
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/tty/vt/vt.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -81,6 +81,7 @@
- #include <linux/errno.h>
- #include <linux/kd.h>
- #include <linux/slab.h>
-+#include <linux/vmalloc.h>
- #include <linux/major.h>
- #include <linux/mm.h>
- #include <linux/console.h>
-@@ -350,7 +351,7 @@ static struct uni_screen *vc_uniscr_allo
- 	/* allocate everything in one go */
- 	memsize = cols * rows * sizeof(char32_t);
- 	memsize += rows * sizeof(char32_t *);
--	p = kmalloc(memsize, GFP_KERNEL);
-+	p = vmalloc(memsize);
- 	if (!p)
- 		return NULL;
- 
-@@ -366,7 +367,7 @@ static struct uni_screen *vc_uniscr_allo
- 
- static void vc_uniscr_set(struct vc_data *vc, struct uni_screen *new_uniscr)
- {
--	kfree(vc->vc_uni_screen);
-+	vfree(vc->vc_uni_screen);
- 	vc->vc_uni_screen = new_uniscr;
- }
- 
-
-
+Otherwise looks good to me!
