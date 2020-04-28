@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DE2C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C2DC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 390EC206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59DD6206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099802;
-	bh=//zB9eqmKRDD9KoFjetW5pHJ9mI7Z88mNkGSqKAfTK0=;
+	s=default; t=1588099815;
+	bh=qb+tFqZAtb67ysg/oJZrMRY528CyQDiR23V3cBnmGUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0cQZYbNXA50oB5RhGCtZYeJ7LJfWRGRTtCjU9Sk5uL479eBOZY/ZTExqD8MzVmypG
-	 gu2woRMkUOu/Ct7dbvN+Rh2RMA0LT1b6uYuDTGt2RzrhCN2GNh98AVmPU007Np9lws
-	 1Ffzsu9DFn8HilmH8B2Hm9VygFAnia1WxRYkUaAw=
+	b=mSzAbpb+CAjSbgoHeWR9AJ1Zuoe+X6gmJnkntUgBhpf3Ks4s9rWdvQV6pqJKxmapC
+	 HmXFAheJucrcaJTQ8ZT4K66qy9FDWGyL7+wL3FD0m1LikAkAYIqLtNDXSS4OLF3vEj
+	 6AWZ0cxqj9uNz4/RsQy/ky2XiGbJx+oju0xzMh68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731348AbgD1SuB (ORCPT
+        id S1730844AbgD1SuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:50:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58280 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:50:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729425AbgD1Sj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:39:28 -0400
+        id S1730648AbgD1Sih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:38:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B57220730;
-        Tue, 28 Apr 2020 18:39:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A5B820575;
+        Tue, 28 Apr 2020 18:38:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099167;
-        bh=//zB9eqmKRDD9KoFjetW5pHJ9mI7Z88mNkGSqKAfTK0=;
+        s=default; t=1588099116;
+        bh=qb+tFqZAtb67ysg/oJZrMRY528CyQDiR23V3cBnmGUY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jeaBgQ5BMHsT0j0dIG112Pk5wmU+ZhY0uDcmLwDYQPS3gH82HBGYow5jr1qR4AGHm
-         PTZx9Q56zxTQKpwe39ViI5c+02eYTCUSOMHbW8n0RG9Mzlef1SC+uFvBFLxxV6wXKK
-         IGNhVRmNZ8A0vAelzLn5Zb20AH54dRPgi5GhqVH8=
+        b=n71KqZDHR5u5fTUscyznokA/loYctbbiSzvGUw0BD27hVWeUULDGT4cf/BYOx+z75
+         O6Ib7/6acrUBG+NuZeuMzOHCJx6EapeTxKDzgvQLlIGEJewHlvlBt3/Ptu3ADNPW1+
+         jfk3RqCxjyQv1IhcO2fjPGsusBinJ3A2xESdE24E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gyeongtaek Lee <gt82.lee@samsung.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 108/131] ASoC: dapm: fixup dapm kcontrol widget
-Date:   Tue, 28 Apr 2020 20:25:20 +0200
-Message-Id: <20200428182238.752484549@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH 5.6 157/167] Revert "serial: uartps: Fix uartps_major handling"
+Date:   Tue, 28 Apr 2020 20:25:33 +0200
+Message-Id: <20200428182245.440171669@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,71 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gyeongtaek Lee <gt82.lee@samsung.com>
+From: Michal Simek <michal.simek@xilinx.com>
 
-commit ebf1474745b4373fdde0fcf32d9d1f369b50b212 upstream.
+commit 2e01911b7cf7aa07a304a809eca1b11a4bd35859 upstream.
 
-snd_soc_dapm_kcontrol widget which is created by autodisable control
-should contain correct on_val, mask and shift because it is set when the
-widget is powered and changed value is applied on registers by following
-code in dapm_seq_run_coalesced().
+This reverts commit 5e9bd2d70ae7c00a95a22994abf1eef728649e64.
 
-		mask |= w->mask << w->shift;
-		if (w->power)
-			value |= w->on_val << w->shift;
-		else
-			value |= w->off_val << w->shift;
+As Johan says, this driver needs a lot more work and these changes are
+only going in the wrong direction:
+    https://lkml.kernel.org/r/20190523091839.GC568@localhost
 
-Shift on the mask in dapm_kcontrol_data_alloc() is removed to prevent
-double shift.
-And, on_val in dapm_kcontrol_set_value() is modified to get correct
-value in the dapm_seq_run_coalesced().
-
-Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/000001d61537$b212f620$1638e260$@samsung.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/310999ab5342f788a7bc1b0e68294d4f052cad07.1585905873.git.michal.simek@xilinx.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-dapm.c |   20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ drivers/tty/serial/xilinx_uartps.c |    8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -410,7 +410,7 @@ static int dapm_kcontrol_data_alloc(stru
+--- a/drivers/tty/serial/xilinx_uartps.c
++++ b/drivers/tty/serial/xilinx_uartps.c
+@@ -1576,6 +1576,7 @@ static int cdns_uart_probe(struct platfo
+ 		goto err_out_id;
+ 	}
  
- 			memset(&template, 0, sizeof(template));
- 			template.reg = e->reg;
--			template.mask = e->mask << e->shift_l;
-+			template.mask = e->mask;
- 			template.shift = e->shift_l;
- 			template.off_val = snd_soc_enum_item_to_val(e, 0);
- 			template.on_val = template.off_val;
-@@ -536,8 +536,22 @@ static bool dapm_kcontrol_set_value(cons
- 	if (data->value == value)
- 		return false;
++	uartps_major = cdns_uart_uart_driver->tty_driver->major;
+ 	cdns_uart_data->cdns_uart_driver = cdns_uart_uart_driver;
  
--	if (data->widget)
--		data->widget->on_val = value;
-+	if (data->widget) {
-+		switch (dapm_kcontrol_get_wlist(kcontrol)->widgets[0]->id) {
-+		case snd_soc_dapm_switch:
-+		case snd_soc_dapm_mixer:
-+		case snd_soc_dapm_mixer_named_ctl:
-+			data->widget->on_val = value & data->widget->mask;
-+			break;
-+		case snd_soc_dapm_demux:
-+		case snd_soc_dapm_mux:
-+			data->widget->on_val = value >> data->widget->shift;
-+			break;
-+		default:
-+			data->widget->on_val = value;
-+			break;
-+		}
-+	}
+ 	/*
+@@ -1706,7 +1707,6 @@ static int cdns_uart_probe(struct platfo
+ 		console_port = NULL;
+ #endif
  
- 	data->value = value;
+-	uartps_major = cdns_uart_uart_driver->tty_driver->major;
+ 	cdns_uart_data->cts_override = of_property_read_bool(pdev->dev.of_node,
+ 							     "cts-override");
+ 	return 0;
+@@ -1768,12 +1768,6 @@ static int cdns_uart_remove(struct platf
+ 		console_port = NULL;
+ #endif
  
+-	/* If this is last instance major number should be initialized */
+-	mutex_lock(&bitmap_lock);
+-	if (bitmap_empty(bitmap, MAX_UART_INSTANCES))
+-		uartps_major = 0;
+-	mutex_unlock(&bitmap_lock);
+-
+ 	uart_unregister_driver(cdns_uart_data->cdns_uart_driver);
+ 	return rc;
+ }
 
 
