@@ -2,86 +2,121 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAB8C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5664C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9B8E206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:13:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pnjpc69a"
+	by mail.kernel.org (Postfix) with ESMTP id A81172072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgD1WNu (ORCPT
+        id S1726808AbgD1WOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:13:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726256AbgD1WNt (ORCPT
+        Tue, 28 Apr 2020 18:14:25 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:60412 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726571AbgD1WOY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:13:49 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11C29C03C1AD
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:13:49 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id k23so61084ios.5
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:13:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nt1cm16K5Y36Xh/ags5IlFDGPPNWI9tqZabQEk0lerk=;
-        b=Pnjpc69a03aDBq/qhh2OAOK7R1vgOqgfEJpswJa4LrY0v9Mh4scs+TIZeMJ0a6XMen
-         LhdW4Q9sQnXEozRdiuE07iBai0lTC9DGkjZ/rl5ODoasbAjHr7+Fo18rj5zn7s+40gNz
-         iAvuQe2iImsfmV+sc1Ksjpa0s9JUBBMGSVGq0564FHWLONLCkA+bl7Hjy0c89Dvw9pSY
-         LVU2xYmjBErDnRx3hFdMNDEX1aSi7sffi2hbUCTOAHzDMdm1pKnLo86JPq3gPdZfZAqY
-         CP7PHW4+A/cda9B40s2k9nWBNneJLIKMn+i7aY7Q4zJGS8399VEZVJjtKcNxd9cc6MX1
-         kzqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nt1cm16K5Y36Xh/ags5IlFDGPPNWI9tqZabQEk0lerk=;
-        b=ogW++vleImXORWkZn+ULthxMqLC4Dab+jdDrx6MAmIRZBw3jloca0Rt0AKuX0Zrq2H
-         7kT8cGCmmxTUvwCVDio6VQ//kWaXmUYXIFnoxKTiIQpTdadxCUUjVgO9K8q4J9qqqupZ
-         ou6IB0nw5dcLuQlF5tOr7QfThP3T0H4aNSwpm1UpkY0+aBot6cdQOBlQkDM+rOZQuOVn
-         MAQ49BQKyX4A8nYXSe0XJcQ1IV3bg0IBTUT+V0bH0wN1sHcWaphwC5Dyz1ax/BPnh2qc
-         hKQyc1TdNMZLVtfFGPfkvaQvPBKh5wSMwJZk6bT8+SehUXAjt3MCjFvLa5+hUW0dUOe8
-         c69g==
-X-Gm-Message-State: AGi0PuZxWDi1eXw00W2dpMRfNBRe44qZGlzyeWQs9EWbEmBR0S9duWNN
-        JL7Unaj9vF87UuV+UpOI08mGgt7l1KfrujJZ26zB+A==
-X-Google-Smtp-Source: APiQypKr1XjkmQooE/lzZ/u45HwY4nKIHKWQktaVIhq1vSY/3xMLN9btT4nz5s5h8EBpad7gV6FTGcaNJpohL6Cfzxg=
-X-Received: by 2002:a05:6638:bd0:: with SMTP id g16mr27868146jad.48.1588112028205;
- Tue, 28 Apr 2020 15:13:48 -0700 (PDT)
+        Tue, 28 Apr 2020 18:14:24 -0400
+Received: from dread.disaster.area (pa49-195-157-175.pa.nsw.optusnet.com.au [49.195.157.175])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 543753A44C1;
+        Wed, 29 Apr 2020 07:47:35 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jTY4k-0008LL-IM; Wed, 29 Apr 2020 07:47:34 +1000
+Date:   Wed, 29 Apr 2020 07:47:34 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Dan Schatzberg <schatzberg.dan@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:FILESYSTEMS (VFS and infrastructure)" 
+        <linux-fsdevel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
+Subject: Re: [PATCH v5 0/4] Charge loop device i/o to issuing cgroup
+Message-ID: <20200428214653.GD2005@dread.disaster.area>
+References: <20200428161355.6377-1-schatzberg.dan@gmail.com>
 MIME-Version: 1.0
-References: <20200423022550.15113-1-sean.j.christopherson@intel.com> <20200423022550.15113-14-sean.j.christopherson@intel.com>
-In-Reply-To: <20200423022550.15113-14-sean.j.christopherson@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 28 Apr 2020 15:13:37 -0700
-Message-ID: <CALMp9eQ0hpZ8MBmCCEXQHKFxyeFzRbJ3+OmaTe2cMwtkp2AKGA@mail.gmail.com>
-Subject: Re: [PATCH 13/13] KVM: VMX: Use vmx_get_rflags() to query RFLAGS in vmx_interrupt_blocked()
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Oliver Upton <oupton@google.com>,
-        Peter Shier <pshier@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428161355.6377-1-schatzberg.dan@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=ONQRW0k9raierNYdzxQi9Q==:117 a=ONQRW0k9raierNYdzxQi9Q==:17
+        a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10 a=7-415B0cAAAA:8
+        a=1gqJplI6GZ5HzG39sUQA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 7:26 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Use vmx_get_rflags() instead of manually reading vmcs.GUEST_RFLAGS when
-> querying RFLAGS.IF so that multiple checks against interrupt blocking in
-> a single run loop only require a single VMREAD.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
+On Tue, Apr 28, 2020 at 12:13:46PM -0400, Dan Schatzberg wrote:
+> The loop device runs all i/o to the backing file on a separate kworker
+> thread which results in all i/o being charged to the root cgroup. This
+> allows a loop device to be used to trivially bypass resource limits
+> and other policy. This patch series fixes this gap in accounting.
+
+How is this specific to the loop device? Isn't every block device
+that offloads work to a kthread or single worker thread susceptible
+to the same "exploit"?
+
+Or is the problem simply that the loop worker thread is simply not
+taking the IO's associated cgroup and submitting the IO with that
+cgroup associated with it? That seems kinda simple to fix....
+
+> Naively charging cgroups could result in priority inversions through
+> the single kworker thread in the case where multiple cgroups are
+> reading/writing to the same loop device.
+
+And that's where all the complexity and serialisation comes from,
+right?
+
+So, again: how is this unique to the loop device? Other block
+devices also offload IO to kthreads to do blocking work and IO
+submission to lower layers. Hence this seems to me like a generic
+"block device does IO submission from different task" issue that
+should be handled by generic infrastructure and not need to be
+reimplemented multiple times in every block device driver that
+offloads work to other threads...
+
+> This patch series does some
+> minor modification to the loop driver so that each cgroup can make
+> forward progress independently to avoid this inversion.
+> 
+> With this patch series applied, the above script triggers OOM kills
+> when writing through the loop device as expected.
+
+NACK!
+
+The IO that is disallowed should fail with ENOMEM or some similar
+error, not trigger an OOM kill that shoots some innocent bystander
+in the head. That's worse than using BUG() to report errors...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
