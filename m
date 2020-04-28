@@ -2,187 +2,225 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65762C83003
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4185C83003
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33C4C2078C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:01:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XNvI8bae"
+	by mail.kernel.org (Postfix) with ESMTP id B899F2078C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:02:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588032137;
+	bh=3H0OviquW4GQzxAjPMvMp3gxIMeyYsjLwtRWBBjV6ag=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=QQaql0QG9TONHbji1aPMceVFlDtw4fGwlvW2DAVfo7tR9Oh7y3AafwXDzYJ5UQ0Yp
+	 SCYHudMquoojjcih9gg8fuFAHj2ZpxlWQSf0FXv3Xtsv5s//O8YPvqc2qAGmBBou7T
+	 hDN4HbLCNHHaOxTlViY/yGMycG/OoNbSw+NO67sw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgD1ABu (ORCPT
+        id S1726406AbgD1ACR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 20:01:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726359AbgD1ABs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 20:01:48 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB19BC09B050
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 17:01:46 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id 7so428087pjo.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 17:01:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1s/dsw3iQ5+KLo+HnIszPH3KY3xtYoHt7IVuj3QhLHU=;
-        b=XNvI8baeWbFOlqlhE8xT1QWuu1S8IwUV53ybwKKHilfeMad9u86/Uf3LdqVk3ZOryZ
-         c6KHmlE+ZFcis9At+kwW5gX7bge93AvjplIQf7HxNFsh9x4qPnGPTl50398M9joshJ+P
-         mOYz9wHPLNh3cQzkWnvbtFhAqhD5327iTLGlPglQg9kcRzscpFewWWLCTGeo/Jp5h/O2
-         IhCzlCJeyPWcD3ovB/UldAl7i5yDmzvjSAPwmwCQT+lY2iExK1IFlCk1ZEJY0GOtXO+I
-         mIOShl7d4YKDbHlxR/3xnnr93oOcQlxIghqMJoTqohMQDdA80dCEOuzqTEhlfLhhTv5e
-         WEPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1s/dsw3iQ5+KLo+HnIszPH3KY3xtYoHt7IVuj3QhLHU=;
-        b=pX3k5bzWqEW/uk+OcqlpV7q/wcog3LCnLa+hBcaBO1zpwv+a2HZulziWmwPzCsxssq
-         z8nSCARpywjUS5JWXYwOWTL793+f/53xE1xSxrYFJrqRp3UaCxDjNyCIay105Fgk4reo
-         Q1MEvMdpycv320ONd6c4SMv6dV7pFidpoFp8f72XGpXLltuU20Bw30bSHKn/AsRug3o9
-         duTPf5nQ0XGtjiYboBLjPzaZQjhdt7CDM39QWCULPsNS/EpwiLugJ4VOYa37N4xhlhDQ
-         EjCCzNRUyKbZy1zdBRcDmmD2eEK30hPwwqIaUbdTXY/PjnpmmIKO3b4a2IwUwwYMO8J/
-         R0uA==
-X-Gm-Message-State: AGi0PubQHK/BMBOaiKnpFOo2486HECUxu4uKkq0UUprLdl73Q1oZeCqc
-        qjJSCHP7KW4Ofx6dU3Z3oAChXw==
-X-Google-Smtp-Source: APiQypLTLSeLx4582wk1BaOWz0qb2oLn0Mzn+JdglqHV4PiHoKagI4kSJkJbxuaIo/LC7hsyhR/UJg==
-X-Received: by 2002:a17:902:8608:: with SMTP id f8mr25757854plo.110.1588032106375;
-        Mon, 27 Apr 2020 17:01:46 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id cp22sm363850pjb.28.2020.04.27.17.01.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 17:01:45 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 2/2] remoteproc: qcom: pas: Add SM8250 PAS remoteprocs
-Date:   Mon, 27 Apr 2020 17:01:10 -0700
-Message-Id: <20200428000110.2958704-2-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200428000110.2958704-1-bjorn.andersson@linaro.org>
-References: <20200428000110.2958704-1-bjorn.andersson@linaro.org>
+        Mon, 27 Apr 2020 20:02:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51696 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726381AbgD1ACQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 20:02:16 -0400
+Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7435F2078C;
+        Tue, 28 Apr 2020 00:02:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588032135;
+        bh=3H0OviquW4GQzxAjPMvMp3gxIMeyYsjLwtRWBBjV6ag=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=gs86Jngqxtq5khk4f0zk7SrMeD9ZD4cIcUQwOe9CsvmoZdf57rkkoSBcaZ1u1YSUR
+         fkeOqmfyTggZWAqxStkGTHPRetMN9FI399gw9iuI6VvWTAXlc42ChOXBc2yjiHBw9e
+         B5haNSPFo6mj5R8J3aqCJUWRv/K2zl3QcEq2yQVw=
+Date:   Mon, 27 Apr 2020 19:02:13 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, Jon Derrick <jonathan.derrick@intel.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>
+Subject: Re: [PATCH v1 1/1] PCI/AER: Use _OSC negotiation to determine AER
+ ownership
+Message-ID: <20200428000213.GA29631@google.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <67af2931705bed9a588b5a39d369cb70b9942190.1587925636.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add audio, compute and sensor DSP compatibles to the Qualcomm PAS
-binding and driver.
+[+cc Jon, Alexandru]
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/remoteproc/qcom_q6v5_pas.c | 62 ++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+On Sun, Apr 26, 2020 at 11:30:06AM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> Currently PCIe AER driver uses HEST FIRMWARE_FIRST bit to
+> determine the PCIe AER Capability ownership between OS and
+> firmware. This support is added based on following spec
+> reference.
+> 
+> Per ACPI spec r6.3, table 18-387, 18-388, 18-389, HEST table
+> flags field BIT-0 and BIT-1 can be used to expose the
+> ownership of error source between firmware and OSPM.
+> 
+> Bit [0] - FIRMWARE_FIRST: If set, indicates that system
+>           firmware will handle errors from this source
+>           first.
+> Bit [1] – GLOBAL: If set, indicates that the settings
+>           contained in this structure apply globally to all
+>           PCI Express Bridges.
+> 
+> Although above spec reference states that setting
+> FIRMWARE_FIRST bit means firmware will handle the error source
+> first, it does not explicitly state anything about AER
+> ownership. So using HEST to determine AER ownership is
+> incorrect.
+> 
+> Also, as per following specification references, _OSC can be
+> used to negotiate the AER ownership between firmware and OS.
+> Details are,
+> 
+> Per ACPI spec r6.3, sec 6.2.11.3, table titled “Interpretation
+> of _OSC Control Field” and as per PCI firmware specification r3.2,
+> sec 4.5.1, table 4-5, OS can set bit 3 of _OSC control field
+> to request control over PCI Express AER. If the OS successfully
+> receives control of this feature, it must handle error reporting
+> through the AER Capability as described in the PCI Express Base
+> Specification.
+> 
+> Since above spec references clearly states _OSC can be used to
+> determine AER ownership, don't depend on HEST FIRMWARE_FIRST bit.
 
-diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-index 8ecc157f1ed1..5f2266c74448 100644
---- a/drivers/remoteproc/qcom_q6v5_pas.c
-+++ b/drivers/remoteproc/qcom_q6v5_pas.c
-@@ -508,6 +508,26 @@ static const struct adsp_data sm8150_adsp_resource = {
- 		.ssctl_id = 0x14,
- };
- 
-+static const struct adsp_data sm8250_adsp_resource = {
-+	.crash_reason_smem = 423,
-+	.firmware_name = "adsp.mdt",
-+	.pas_id = 1,
-+	.has_aggre2_clk = false,
-+	.auto_boot = true,
-+	.active_pd_names = (char*[]){
-+		"load_state",
-+		NULL
-+	},
-+	.proxy_pd_names = (char*[]){
-+		"cx",
-+		"mx",
-+		NULL
-+	},
-+	.ssr_name = "lpass",
-+	.sysmon_name = "adsp",
-+	.ssctl_id = 0x14,
-+};
-+
- static const struct adsp_data msm8998_adsp_resource = {
- 		.crash_reason_smem = 423,
- 		.firmware_name = "adsp.mdt",
-@@ -553,6 +573,25 @@ static const struct adsp_data sm8150_cdsp_resource = {
- 	.ssctl_id = 0x17,
- };
- 
-+static const struct adsp_data sm8250_cdsp_resource = {
-+	.crash_reason_smem = 601,
-+	.firmware_name = "cdsp.mdt",
-+	.pas_id = 18,
-+	.has_aggre2_clk = false,
-+	.auto_boot = true,
-+	.active_pd_names = (char*[]){
-+		"load_state",
-+		NULL
-+	},
-+	.proxy_pd_names = (char*[]){
-+		"cx",
-+		NULL
-+	},
-+	.ssr_name = "cdsp",
-+	.sysmon_name = "cdsp",
-+	.ssctl_id = 0x17,
-+};
-+
- static const struct adsp_data mpss_resource_init = {
- 	.crash_reason_smem = 421,
- 	.firmware_name = "modem.mdt",
-@@ -604,6 +643,26 @@ static const struct adsp_data sm8150_slpi_resource = {
- 		.ssctl_id = 0x16,
- };
- 
-+static const struct adsp_data sm8250_slpi_resource = {
-+	.crash_reason_smem = 424,
-+	.firmware_name = "slpi.mdt",
-+	.pas_id = 12,
-+	.has_aggre2_clk = false,
-+	.auto_boot = true,
-+	.active_pd_names = (char*[]){
-+		"load_state",
-+		NULL
-+	},
-+	.proxy_pd_names = (char*[]){
-+		"lcx",
-+		"lmx",
-+		NULL
-+	},
-+	.ssr_name = "dsps",
-+	.sysmon_name = "slpi",
-+	.ssctl_id = 0x16,
-+};
-+
- static const struct adsp_data msm8998_slpi_resource = {
- 		.crash_reason_smem = 424,
- 		.firmware_name = "slpi.mdt",
-@@ -644,6 +703,9 @@ static const struct of_device_id adsp_of_match[] = {
- 	{ .compatible = "qcom,sm8150-cdsp-pas", .data = &sm8150_cdsp_resource},
- 	{ .compatible = "qcom,sm8150-mpss-pas", .data = &mpss_resource_init},
- 	{ .compatible = "qcom,sm8150-slpi-pas", .data = &sm8150_slpi_resource},
-+	{ .compatible = "qcom,sm8250-adsp-pas", .data = &sm8250_adsp_resource},
-+	{ .compatible = "qcom,sm8250-cdsp-pas", .data = &sm8250_cdsp_resource},
-+	{ .compatible = "qcom,sm8250-slpi-pas", .data = &sm8250_slpi_resource},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, adsp_of_match);
--- 
-2.24.0
+I split this up a bit and applied the first part to pci/error to get
+it into -next so we can start seeing what breaks.  I won't be too
+surprised if we trip over something.
 
+Here's the first part (entire original patch is at
+https://lore.kernel.org/r/67af2931705bed9a588b5a39d369cb70b9942190.1587925636.git.sathyanarayanan.kuppuswamy@linux.intel.com).
+
+commit 8f8e42e7c2dd ("PCI/AER: Use only _OSC to determine AER ownership")
+Author: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Date:   Mon Apr 27 18:25:13 2020 -0500
+
+    PCI/AER: Use only _OSC to determine AER ownership
+    
+    Per the PCI Firmware spec, r3.2, sec 4.5.1, the OS can request control of
+    AER via bit 3 of the _OSC Control Field.  In the returned value of the
+    Control Field:
+    
+      The firmware sets [bit 3] to 1 to grant control over PCI Express Advanced
+      Error Reporting.  ...  after control is transferred to the operating
+      system, firmware must not modify the Advanced Error Reporting Capability.
+      If control of this feature was requested and denied or was not requested,
+      firmware returns this bit set to 0.
+    
+    Previously the pci_root driver looked at the HEST FIRMWARE_FIRST bit to
+    determine whether to request ownership of the AER Capability.  This was
+    based on ACPI spec v6.3, sec 18.3.2.4, and similar sections, which say
+    things like:
+    
+      Bit [0] - FIRMWARE_FIRST: If set, indicates that system firmware will
+                handle errors from this source first.
+    
+      Bit [1] - GLOBAL: If set, indicates that the settings contained in this
+                structure apply globally to all PCI Express Devices.
+    
+    These ACPI references don't say anything about ownership of the AER
+    Capability.
+    
+    Remove use of the FIRMWARE_FIRST bit and rely only on the _OSC bit to
+    determine whether we have control of the AER Capability.
+    
+    Link: https://lore.kernel.org/r/67af2931705bed9a588b5a39d369cb70b9942190.1587925636.git.sathyanarayanan.kuppuswamy@linux.intel.com
+    [bhelgaas: commit log, split patches]
+    Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index ac8ad6cb82aa..9e235c1a75ff 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -483,13 +483,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+ 	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_SHPC))
+ 		control |= OSC_PCI_SHPC_NATIVE_HP_CONTROL;
+ 
+-	if (pci_aer_available()) {
+-		if (aer_acpi_firmware_first())
+-			dev_info(&device->dev,
+-				 "PCIe AER handled by firmware\n");
+-		else
+-			control |= OSC_PCI_EXPRESS_AER_CONTROL;
+-	}
++	if (pci_aer_available())
++		control |= OSC_PCI_EXPRESS_AER_CONTROL;
+ 
+ 	/*
+ 	 * Per the Downstream Port Containment Related Enhancements ECN to
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index f4274d301235..efc26773cc6d 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -318,30 +318,6 @@ int pcie_aer_get_firmware_first(struct pci_dev *dev)
+ 		aer_set_firmware_first(dev);
+ 	return dev->__aer_firmware_first;
+ }
+-
+-static bool aer_firmware_first;
+-
+-/**
+- * aer_acpi_firmware_first - Check if APEI should control AER.
+- */
+-bool aer_acpi_firmware_first(void)
+-{
+-	static bool parsed = false;
+-	struct aer_hest_parse_info info = {
+-		.pci_dev	= NULL,	/* Check all PCIe devices */
+-		.firmware_first	= 0,
+-	};
+-
+-	if (pcie_ports_native)
+-		return false;
+-
+-	if (!parsed) {
+-		apei_hest_parse(aer_hest_parse, &info);
+-		aer_firmware_first = info.firmware_first;
+-		parsed = true;
+-	}
+-	return aer_firmware_first;
+-}
+ #endif
+ 
+ #define	PCI_EXP_AER_FLAGS	(PCI_EXP_DEVCTL_CERE | PCI_EXP_DEVCTL_NFERE | \
+@@ -1523,7 +1499,7 @@ static struct pcie_port_service_driver aerdriver = {
+  */
+ int __init pcie_aer_init(void)
+ {
+-	if (!pci_aer_available() || aer_acpi_firmware_first())
++	if (!pci_aer_available())
+ 		return -ENXIO;
+ 	return pcie_port_service_register(&aerdriver);
+ }
+diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
+index 2d155bfb8fbf..11c98875538a 100644
+--- a/include/linux/pci-acpi.h
++++ b/include/linux/pci-acpi.h
+@@ -125,10 +125,4 @@ static inline void acpi_pci_add_bus(struct pci_bus *bus) { }
+ static inline void acpi_pci_remove_bus(struct pci_bus *bus) { }
+ #endif	/* CONFIG_ACPI */
+ 
+-#ifdef CONFIG_ACPI_APEI
+-extern bool aer_acpi_firmware_first(void);
+-#else
+-static inline bool aer_acpi_firmware_first(void) { return false; }
+-#endif
+-
+ #endif	/* _PCI_ACPI_H_ */
