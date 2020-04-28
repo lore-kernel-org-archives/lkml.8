@@ -2,153 +2,131 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B29C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F0BC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A47C20730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 686CB20731
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:36:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgD1Vey (ORCPT
+        id S1726773AbgD1VgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:34:54 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:49085 "EHLO
+        Tue, 28 Apr 2020 17:36:09 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:60941 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgD1Vey (ORCPT
+        with ESMTP id S1726456AbgD1VgJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:34:54 -0400
+        Tue, 28 Apr 2020 17:36:09 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MORVA-1jp5vy03UE-00Py7I; Tue, 28 Apr 2020 23:34:32 +0200
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1N0FE1-1jIE0M3Npv-00xHPb; Tue, 28 Apr 2020 23:35:53 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Benoit Parrot <bparrot@ti.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab@osg.samsung.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: ti-vpe: avoid gcc-9 warning
-Date:   Tue, 28 Apr 2020 23:34:19 +0200
-Message-Id: <20200428213430.3419189-1-arnd@arndb.de>
+Subject: [PATCH] media: add missing v4l2 dependencies
+Date:   Tue, 28 Apr 2020 23:35:37 +0200
+Message-Id: <20200428213552.3538767-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:laZaSS69dZZdVv23QiUyMzGBmD8IJlkLbL88EVgS9i+1BLw8fCj
- +1blN9GbEgLlOyTP3xWSc6gXyHPrPHoVs9wOra691yM+8m56CMng9nyLWqcl/DrhTf3YWpH
- piug/Cb6yUL5YLQ6qbBMmIHbMFpxK8M0tHYSUkAtSTUBMIZFtkc+qIfW8fmhfhgo9XwWsMw
- sXlEEkM5CwzFIgDpb4zjQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:J8mzMUcgKM4=:Rq019EP3rAGH2vQcoy1QrG
- 6MW9Rc6VNJe4yAjrV4ffUYj4MYHwB3gQF354n87+Z86Hk9jZPcGlrAGKK8eBcmpz7NeaaN//S
- fN+m/firO37USpjEyIA2hnljveMFfYzxICbSUiwxjckp5zEG+i/Xewd/5nZ8Q+z6fS8PONYzz
- i5IgNzg/B9s1PH3N4wQ9JnpKhHEcOSkRHgfPYykcvKOs+44mzYvQaEaLcEFqdLoQJs0gBOr6R
- NYkGrmC99t73dy72Tq5am/YxhsH8oGJYQkcby2q7Szx1HWcQD62tEm3SD3jPXAjv2UCaYrUcW
- cYDmieOuXjdFP/u7yTayljjG20q2Pav1mduZhzeIHuIzF1y7jR8ACry60mer+2K059ArxWRgn
- /804vLTP0BB2kdkrXuN3p+JpsjC8zx7vAd3VNuG4xpn87+ewrYsRfG1wCfgDB5RkgB2eLGcsW
- uxV4QY0v469n5OtYMDwT8l5LZ7EOJfJuXD7pV8OKmNKs5VA2Jt8G0jWjIca4N5AZ6bpu2Ipae
- 1Q7Z5Z0byV4rHOFaTVIaVCC/sQoDNeiri3bJifoA3MpfO7+UsOOYIGrGWlrsI8uQPMtRr7ymO
- TiamRvmQrcgkhYOmuHASIMvOcgheSg78fbi8NCshrVcJTXfQQPY4kH/3jAZJHLdGzpH2p4eAY
- Efny7fLPFsIhtk1wXHAsrbBXZRRJoqRAs/0E2TcIS/nvHniB1XFzUFcEh18wEOhVDlbVB2vI/
- /kmeNDvggAadpCkGacqFvrktAC6ioQDXkx8iaCoSnHUVwxGWxWg6gSilaKLHGGQCD0a0ZVwIk
- el7cGq7SL0gzSgk2hN60VnHPyfMajbK6krHUDOdYHHJUXpW55I=
+X-Provags-ID: V03:K1:iocJEcgLvReQSOfV5oCNDw3ndfKYeCb9qcL1xqElP+KWoh87nHl
+ TRguru1TSsOAPOLE2gJItg5HqVXfWdB34vz+QYeE/AquNBsdLBvqDhTM4tR1HwJ6Ya5dmSQ
+ W5EZP5EZteLSemlbW3BOQ1GD9fcg2vkZ69ExSMwMyk97/IX36Iu+TPzodMXjIRNsBqrc6oj
+ RBqkDjWqusHIabZrbb5jg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bEiWZKhOr88=:zHmMbDt3VJvx7hVB6ZJSDI
+ 9EcqcsjKsfFNOQAXOy2LXH/l+NzQZlpnB5Uw/FNoD4jwe/7a6Y3FCsPuYYs7fLPwdo03R/bWF
+ 7+uZ8lMhPxwpsTlYjGN0/mLBqRwimm8lwWq7LIMPVuRp1LoYuouy/O8zx8TxW4/Sb3eQ4EmSO
+ gH1TjlV/fE/7wkCuTk0BkEYy/+iCwikpwbpLM0eyy7LCaPFq2Ay+3KJkxsZttkYXLZkCJpbGT
+ Xe/1tcg02MwkVwl2YYUNAdWTjnPLtrgSidYU2xXi9240EuUQ8oReL3sMsskmjzioE3kBZFUL+
+ k6VlbuI2bbBl4hi/zrC7DSpHO6WVbSaFNP0CZgxRvOk8mV7GYOl6q+HY1argLsbWbZcMpH1ri
+ bhg87YBia4GK3pw4YZaufw/IP4oXNTc5xQwZ+sw/8g9t/D5TZb/jtca7+tR4hNlEPzpvGwmhA
+ 93nPPQcPimThaiSbt5CgR5ku0r1jS4Yz9jTXLBwflGgRsoL6YydoV8NFIFVK3eoksxBq0A4Ak
+ 7k6rvkwWZb7AtC2soP5BR4PNdHbXgbAifF0/dS8JPnJkNLq/Ga4q9tZvzxDgO2e7e3ViVcNZm
+ cC/UjzoemHepc95bMf3UC+CALsgVUQdzAi+6tDawg4baP1Ru2G8Tr0fp7aoD0Q1VifwGtOXPf
+ YK1lNJju8kiQVZBh0ahRM/GnV8Q89/I/hVxbtKInzHg5o4xbzI6GLfXI3uOPMTky+7u5v6mrp
+ 1hf2yY1KofC9gsIhw6Yzsv1shMF4Vppts/g33JWpuPyCwtW+jA/XvXn974O/jn6lowglxQCXS
+ 3xc5q+IhS4kvx3Xtftbs0dxev53/h6YrGWehJs/U2kk/7MTlrI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gcc warns about empty array declarations, which we get in this driver
-when compile-testing without CONFIG_OF:
+A few Kconfig warnings showed up recently, pointing to missing
+CONFIG_VIDEO_V4L2 dependencies, e.g.:
 
-drivers/media/platform/ti-vpe/cal.c:2194:34: warning: array 'cal_of_match' assumed to have one element
- 2194 | static const struct of_device_id cal_of_match[];
+WARNING: unmet direct dependencies detected for DVB_RTL2832_SDR
+  Depends on [n]: MEDIA_SUPPORT [=y] && MEDIA_DIGITAL_TV_SUPPORT [=y] && DVB_CORE [=y] && I2C [=y] && I2C_MUX [=y] && VIDEO_V4L2 [=n] && MEDIA_SDR_SUPPORT [=y] && USB [=y]
+  Selected by [y]:
+  - DVB_USB_RTL28XXU [=y] && USB [=y] && MEDIA_SUPPORT [=y] && MEDIA_USB_SUPPORT [=y] && I2C [=y] && MEDIA_DIGITAL_TV_SUPPORT [=y] && DVB_USB_V2 [=y] && I2C_MUX [=y] && MEDIA_SUBDRV_AUTOSELECT [=y] && MEDIA_SDR_SUPPORT [=y]
 
-Since all users of this driver do need CONFIG_OF anyway, there is no
-point in making the array definition conditional to save space, so
-just remove the #ifdef and move the array up a little.
+WARNING: unmet direct dependencies detected for MEDIA_TUNER_FC2580
+  Depends on [n]: (MEDIA_ANALOG_TV_SUPPORT [=y] || MEDIA_DIGITAL_TV_SUPPORT [=y] || MEDIA_RADIO_SUPPORT [=y] || MEDIA_SDR_SUPPORT [=y]) && MEDIA_SUPPORT [=y] && I2C [=y] && VIDEO_V4L2 [=n]
+  Selected by [y]:
+  - DVB_USB_AF9035 [=y] && USB [=y] && MEDIA_SUPPORT [=y] && MEDIA_USB_SUPPORT [=y] && I2C [=y] && MEDIA_DIGITAL_TV_SUPPORT [=y] && DVB_USB_V2 [=y] && MEDIA_SUBDRV_AUTOSELECT [=y]
 
-Fixes: 343e89a792a5 ("[media] media: ti-vpe: Add CAL v4l2 camera capture driver")
+WARNING: unmet direct dependencies detected for VIDEO_OV7670
+  Depends on [n]: MEDIA_SUPPORT [=y] && I2C [=y] && VIDEO_V4L2 [=n]
+  Selected by [y]:
+  - VIDEO_VIA_CAMERA [=y] && MEDIA_SUPPORT [=y] && MEDIA_PLATFORM_SUPPORT [=y] && V4L_PLATFORM_DRIVERS [=y] && FB_VIA [=y]
+
+Some of these apparently stem from a recently added dependency
+in the tuner drivers, but I don't know where the VIDEO_VIA_CAMERA
+warning got added.
+
+Fixes: 4bdbff4da405 ("media: tuners: Kconfig: add some missing VIDEO_V4L2 dependencies")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/media/platform/ti-vpe/cal.c | 46 +++++++++++++----------------
- 1 file changed, 21 insertions(+), 25 deletions(-)
+I'm not completely convinced the previous patch (4bdbff4da405) was
+going in the right direction, it's possible that we should instead
+revert that and fix the other problem in a different way.
+---
+ drivers/media/platform/Kconfig       | 1 +
+ drivers/media/usb/dvb-usb-v2/Kconfig | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-index 49204872e711..9b18db7af6c3 100644
---- a/drivers/media/platform/ti-vpe/cal.c
-+++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -2237,7 +2237,26 @@ static struct cal_ctx *cal_create_instance(struct cal_dev *dev, int inst)
- 	return NULL;
- }
- 
--static const struct of_device_id cal_of_match[];
-+static const struct of_device_id cal_of_match[] = {
-+	{
-+		.compatible = "ti,dra72-cal",
-+		.data = (void *)&dra72x_cal_data,
-+	},
-+	{
-+		.compatible = "ti,dra72-pre-es2-cal",
-+		.data = (void *)&dra72x_es1_cal_data,
-+	},
-+	{
-+		.compatible = "ti,dra76-cal",
-+		.data = (void *)&dra76x_cal_data,
-+	},
-+	{
-+		.compatible = "ti,am654-cal",
-+		.data = (void *)&am654_cal_data,
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, cal_of_match);
- 
- static int cal_probe(struct platform_device *pdev)
- {
-@@ -2413,29 +2432,6 @@ static int cal_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--#if defined(CONFIG_OF)
--static const struct of_device_id cal_of_match[] = {
--	{
--		.compatible = "ti,dra72-cal",
--		.data = (void *)&dra72x_cal_data,
--	},
--	{
--		.compatible = "ti,dra72-pre-es2-cal",
--		.data = (void *)&dra72x_es1_cal_data,
--	},
--	{
--		.compatible = "ti,dra76-cal",
--		.data = (void *)&dra76x_cal_data,
--	},
--	{
--		.compatible = "ti,am654-cal",
--		.data = (void *)&am654_cal_data,
--	},
--	{},
--};
--MODULE_DEVICE_TABLE(of, cal_of_match);
--#endif
--
- static int cal_runtime_resume(struct device *dev)
- {
- 	struct cal_dev *caldev = dev_get_drvdata(dev);
-@@ -2462,7 +2458,7 @@ static struct platform_driver cal_pdrv = {
- 	.driver		= {
- 		.name	= CAL_MODULE_NAME,
- 		.pm	= &cal_pm_ops,
--		.of_match_table = of_match_ptr(cal_of_match),
-+		.of_match_table = cal_of_match,
- 	},
- };
- 
+diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+index b1ac9c6c9cdb..994ecd71da8a 100644
+--- a/drivers/media/platform/Kconfig
++++ b/drivers/media/platform/Kconfig
+@@ -15,6 +15,7 @@ source "drivers/media/platform/marvell-ccic/Kconfig"
+ config VIDEO_VIA_CAMERA
+ 	tristate "VIAFB camera controller support"
+ 	depends on FB_VIA
++	depends on VIDEO_V4L2 # for VIDEO_OV7670
+ 	select VIDEOBUF2_DMA_SG
+ 	select VIDEO_OV7670
+ 	help
+diff --git a/drivers/media/usb/dvb-usb-v2/Kconfig b/drivers/media/usb/dvb-usb-v2/Kconfig
+index ff0ae64424c4..0b48b4af38ba 100644
+--- a/drivers/media/usb/dvb-usb-v2/Kconfig
++++ b/drivers/media/usb/dvb-usb-v2/Kconfig
+@@ -33,6 +33,7 @@ config DVB_USB_AF9015
+ config DVB_USB_AF9035
+ 	tristate "Afatech AF9035 DVB-T USB2.0 support"
+ 	depends on DVB_USB_V2
++	depends on VIDEO_V4L2 # for MEDIA_TUNER_*
+ 	select DVB_AF9033
+ 	select MEDIA_TUNER_TUA9001 if MEDIA_SUBDRV_AUTOSELECT
+ 	select MEDIA_TUNER_FC0011 if MEDIA_SUBDRV_AUTOSELECT
+@@ -132,6 +133,7 @@ config DVB_USB_MXL111SF
+ config DVB_USB_RTL28XXU
+ 	tristate "Realtek RTL28xxU DVB USB support"
+ 	depends on DVB_USB_V2 && I2C_MUX
++	depends on VIDEO_V4L2 # for MEDIA_TUNER_*
+ 	select DVB_MN88472 if MEDIA_SUBDRV_AUTOSELECT
+ 	select DVB_MN88473 if MEDIA_SUBDRV_AUTOSELECT
+ 	select DVB_CXD2841ER if MEDIA_SUBDRV_AUTOSELECT
 -- 
 2.26.0
 
