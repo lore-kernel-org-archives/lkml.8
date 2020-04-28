@@ -2,70 +2,216 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF87FC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD5CC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0554206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AE8A206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:33:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgD1GdT (ORCPT
+        id S1726549AbgD1GdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 28 Apr 2020 02:33:21 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:5820 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726256AbgD1GdT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Apr 2020 02:33:19 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42820 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726515AbgD1GdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 02:33:17 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D650823780E96D7D22AB;
-        Tue, 28 Apr 2020 14:33:15 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Tue, 28 Apr 2020
- 14:33:09 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <arnd@arndb.de>,
-        <linux-alpha@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH] alpha: remove unneeded semicolon in osf_sys.c
-Date:   Tue, 28 Apr 2020 14:32:35 +0800
-Message-ID: <20200428063235.31061-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.21.1
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03S61ctt084369;
+        Tue, 28 Apr 2020 02:32:54 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh330rns-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 02:32:54 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03S62l5f088216;
+        Tue, 28 Apr 2020 02:32:54 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh330rnc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 02:32:53 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03S6VpCv002840;
+        Tue, 28 Apr 2020 06:32:53 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma05wdc.us.ibm.com with ESMTP id 30mcu69jxg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 06:32:52 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03S6Wq5K15991286
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 06:32:52 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6372FAE05C;
+        Tue, 28 Apr 2020 06:32:52 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 347E7AE060;
+        Tue, 28 Apr 2020 06:32:44 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.55.78])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 28 Apr 2020 06:32:43 +0000 (GMT)
+Subject: Re: [PATCH v8 0/7] powerpc/perf: Add json file metric support for the
+ hv_24x7 socket/chip level events
+To:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        sukadev@linux.vnet.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com,
+        ravi.bangoria@linux.ibm.com, peterz@infradead.org,
+        yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org,
+        kan.liang@linux.intel.com, jmario@redhat.com,
+        alexander.shishkin@linux.intel.com, mingo@kernel.org,
+        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
+        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
+        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
+        tglx@linutronix.de
+References: <20200401203340.31402-1-kjain@linux.ibm.com>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <fa31bc42-d34c-c788-0109-350d769b51ce@linux.ibm.com>
+Date:   Tue, 28 Apr 2020 12:02:42 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200401203340.31402-1-kjain@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-28_02:2020-04-27,2020-04-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 malwarescore=0 mlxlogscore=999 priorityscore=1501
+ phishscore=0 suspectscore=0 clxscore=1015 impostorscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280046
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following coccicheck warning:
+Hi Arnaldo,
+	Please let me know if there any changes required in this patchset,
+as some of its patches are still not part of your perf/core tree.
 
-arch/alpha/kernel/osf_sys.c:680:2-3: Unneeded semicolon
+Thanks,
+Kajol Jain
 
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
----
- arch/alpha/kernel/osf_sys.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/alpha/kernel/osf_sys.c b/arch/alpha/kernel/osf_sys.c
-index 94e4cde8071a..d5367a1c6300 100644
---- a/arch/alpha/kernel/osf_sys.c
-+++ b/arch/alpha/kernel/osf_sys.c
-@@ -677,7 +677,7 @@ SYSCALL_DEFINE2(osf_proplist_syscall, enum pl_code, code,
- 	default:
- 		error = -EOPNOTSUPP;
- 		break;
--	};
-+	}
- 	return error;
- }
- 
--- 
-2.21.1
-
+On 4/2/20 2:03 AM, Kajol Jain wrote:
+> Patchset adds json file metric support for the hv_24x7 socket/chip level
+> events. "hv_24x7" pmu interface events needs system dependent parameter
+> like socket/chip/core. For example, hv_24x7 chip level events needs
+> specific chip-id to which the data is requested should be added as part
+> of pmu events.
+> 
+> So to enable JSON file support to "hv_24x7" interface, patchset reads
+> total number of sockets details in sysfs under 
+> "/sys/devices/hv_24x7/interface/".
+> 
+> Second patch of the patchset adds expr_scanner_ctx object to hold user
+> data for the expr scanner, which can be used to hold runtime parameter.
+> 
+> Patch 4 & 6 of the patchset handles perf tool plumbing needed to replace
+> the "?" character in the metric expression to proper value and hv_24x7
+> json metric file for different Socket/chip resources.
+> 
+> Patch set also enable Hz/hz prinitg for --metric-only option to print
+> metric data for bus frequency.
+> 
+> Applied and tested all these patches cleanly on top of jiri's flex changes
+> with the changes done by Kan Liang for "Support metric group constraint"
+> patchset and made required changes.
+> 
+> Also apply this patch on top of the fix patch send earlier
+> for printing metric name incase overlapping events.
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=perf/core&id=37cd7f65bf71a48f25eeb6d9be5dacb20d008ea6
+> 
+> Changelog:
+> v7 -> v8
+> - Add test case for testing parsing of "?" in metric expression
+> - Reaname variables name to runtime
+> 
+> v6 -> v7
+> - Spit patchset into two patch series one for kernel changes and other
+>   for tool side changes.
+> - Made changes Suggested by Jiri, including rather then reading runtime
+>   parameter from metric name, actually add it in structure egroup and
+>   metric_expr.
+> - As we don't need to read runtime parameter from metric name,
+>   now I am not appending it and rather just printing it in
+>   generic_metric function.
+> 
+> Kernel Side changes patch series: https://lkml.org/lkml/2020/3/27/58
+> 
+> v5 -> v6
+> - resolve compilation issue due to rearranging patch series.
+> - Rather then adding new function to take careof case for runtime param
+>   in metricgroup__add_metric, using metricgroup__add_metric_param itself
+>   for that work.
+> - Address some optimization suggested like using directly file path
+>   rather then adding new macro in header.c
+> - Change commit message on patch where we are adding "?" support
+>   by adding simple example.
+> 
+> v4 -> v5
+> - Using sysfs__read_int instead of sysfs__read_ull while reading
+>   parameter value in powerpc/util/header.c file.
+> 
+> - Using asprintf rather then malloc and sprintf 
+>   Suggested by Arnaldo Carvalho de Melo
+> 
+> - Break patch 6 from previous version to two patch,
+>   - One to add refactor current "metricgroup__add_metric" function
+>     and another where actually "?" handling infra added.
+> 
+> - Add expr__runtimeparam as part of 'expr_scanner_ctx' struct
+>   rather then making it global variable. Thanks Jiri for
+>   adding this structure to hold user data for the expr scanner.
+> 
+> - Add runtime param as agrugement to function 'expr__find_other'
+>   and 'expr__parse' and made changes on references accordingly.
+> 
+> v3 -> v4
+> - Apply these patch on top of Kan liang changes.
+>   As suggested by Jiri.
+> 
+> v2 -> v3
+> - Remove setting  event_count to 0 part in function 'h_24x7_event_read'
+>   with comment rather then adding 0 to event_count value.
+>   Suggested by: Sukadev Bhattiprolu
+> 
+> - Apply tool side changes require to replace "?" on Jiri's flex patch
+>   series and made all require changes to make it compatible with added
+>   flex change.
+> 
+> v1 -> v2
+> - Rename hv-24x7 metric json file as nest_metrics.json
+> 
+> Jiri Olsa (2):
+>   perf expr: Add expr_ prefix for parse_ctx and parse_id
+>   perf expr: Add expr_scanner_ctx object
+> 
+> Kajol Jain (5):
+>   perf/tools: Refactoring metricgroup__add_metric function
+>   perf/tools: Enhance JSON/metric infrastructure to handle "?"
+>   perf/tests/expr: Added test for runtime param in metric expression
+>   tools/perf: Enable Hz/hz prinitg for --metric-only option
+>   perf/tools/pmu-events/powerpc: Add hv_24x7 socket/chip level metric
+>     events
+> 
+>  tools/perf/arch/powerpc/util/header.c         |  8 ++
+>  .../arch/powerpc/power9/nest_metrics.json     | 19 +++++
+>  tools/perf/tests/expr.c                       | 20 +++--
+>  tools/perf/util/expr.c                        | 25 +++---
+>  tools/perf/util/expr.h                        | 19 +++--
+>  tools/perf/util/expr.l                        | 37 ++++++---
+>  tools/perf/util/expr.y                        |  6 +-
+>  tools/perf/util/metricgroup.c                 | 78 +++++++++++++------
+>  tools/perf/util/metricgroup.h                 |  2 +
+>  tools/perf/util/stat-display.c                |  2 -
+>  tools/perf/util/stat-shadow.c                 | 19 +++--
+>  11 files changed, 164 insertions(+), 71 deletions(-)
+>  create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+> 
