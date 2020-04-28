@@ -2,98 +2,135 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF3AC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E9CC83006
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6E5B206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284542073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:54:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aCpdTrXL"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="aJxb6w7/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbgD1FxC (ORCPT
+        id S1726411AbgD1FyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 01:53:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726258AbgD1FxB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 01:53:01 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95F1EC03C1A9;
-        Mon, 27 Apr 2020 22:53:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=9XovULq8rJCuWXmFB4aDWCVuT48qS2yZ0ltStjBj4hM=; b=aCpdTrXL5xBMuDBIgagmp2g9ZQ
-        9aord42KwraiUSaEVoMLiPpaH6zjsWyRuEDa2eNLtNNtFecX9lc9xnoKg/elNnxSmtyjht7evkfqp
-        5jhC9NxXS4u/e94nSa87KnXf7J/TlD6xFel1PGwXXqepI6XDXwQ5dNJrsJhMVSdMD7JyV1x5La7P3
-        fv6FJMXX2dWE/kk3Zs1Intp9acSgOVu4GpSw+HZcRpNqs1DFT+3WF0Oh9KPJYcFjkFmPdt2b/XkGf
-        NaRhjRbDUCsfOfLmFkrgUapwKQvl12tG7ca329qjaeptall/qjs0VlzIFEOiI2c8bJLII0FEIUuZ0
-        f9FJAP/g==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTJAw-0001r9-SN; Tue, 28 Apr 2020 05:52:58 +0000
-Subject: Re: [PATCH v2] module: Allow to disable modsign in kernel cmdline
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>, jeyu@kernel.org,
-        corbet@lwn.net, mchehab+samsung@kernel.org, tglx@linutronix.de,
-        akpm@linux-foundation.org, gregkh@linuxfoundation.org,
-        pawan.kumar.gupta@linux.intel.com, jgross@suse.com
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20200428050523.47253-1-tianjia.zhang@linux.alibaba.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <aff03dbb-a1a3-c95e-1c24-60279b14970a@infradead.org>
-Date:   Mon, 27 Apr 2020 22:52:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200428050523.47253-1-tianjia.zhang@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
+        Tue, 28 Apr 2020 01:54:23 -0400
+Received: from mail-eopbgr50040.outbound.protection.outlook.com ([40.107.5.40]:33422
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726210AbgD1FyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 01:54:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MI12FJVqDhZJXPPRZaOgaLoXXFJdXdFkPVV19SAfNKJLtpca1DscV3u/h3SKxlDjYtzZ0d7WyQDolfjptUGLfbZrFu/rseWUZI9HMeRETcbsoFK1QVFQmEWwqKWLVH4u8nsYQ2Q3+xmMmIogs0yjbzBTK+ukmdT24YtnOHqn6+MG/QB2VQnsyj5uVGs7YcJEalnep7Rbz0jqUXsZx9h71c6ub6gXUbQ9KXNuHHjbS4Rn52ZLCRdqN+pTsquetbWvG7r3GtcDJ0USdfnk/+vEiJjq6a7eD8PkvKYTAu9gp3HVyoauZY5QITsFn792GKDQzcnKasJKG7RvnMRcEnoI0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z32vYN+owoDtFdjOdNiHaBPJjDqwGCd45Rj0sTcxk9E=;
+ b=WzOU5aRf3i2rFfjCw4c5MRK4NYyg+56S7Wj/JIvdFYsMlW0ui/A9PdvEsUrbJtzKcLCYBBBuZc7xFXsLdt6Oj2mkPLBumUWLTGk1u1SozilfH90uZFqBEV4iPY66yTCl7K0NEocGB074ZS6dPBO/s4m4LFc6cY1OOmz1HVaSkKywym6VPK6Z+UIqsf7BSgt+EE8tQnWnow3l5Iu8x5bJr21a2rlyUbZkGUa+fRtDIc/IIrlOSVbT5pQwo2BGsBmCwR9cTRi34v1KrxiVJP4Phg+zowK3woSgbJO36PdJZ0G0lj8yhQTqoUuyrAUD9AsA2ycp86TVWwl0c1ny3MHWiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z32vYN+owoDtFdjOdNiHaBPJjDqwGCd45Rj0sTcxk9E=;
+ b=aJxb6w7/FoaND7qFNZywwyPjmK7dwiKaVMDP3RqZLoNvhQ3D7hob9B+Tsc+nIOkQXrAbZE6nhYOyQUWQ+6OMs2l3/T5WIqRbk3KJrZ9ZenahdO6jzOg8/NZHYKnX0NWyZqHFbOuZmzU4q1hYLQj1smU4XOJngu4pm9fRWKLHZj0=
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (10.172.251.142) by
+ DB6PR0402MB2888.eurprd04.prod.outlook.com (10.172.248.135) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2937.13; Tue, 28 Apr 2020 05:54:18 +0000
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.2937.023; Tue, 28 Apr 2020
+ 05:54:18 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Guillaume Tucker <guillaume.tucker@collabora.com>
+CC:     "kernelci@groups.io" <kernelci@groups.io>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: next/master bisection: baseline.dmesg.alert on imx8mn-ddr4-evk
+Thread-Topic: next/master bisection: baseline.dmesg.alert on imx8mn-ddr4-evk
+Thread-Index: AQHWHJPdlwmAOV9oG0GHu+aEMLQ08KiN7nUAgAAa7YA=
+Date:   Tue, 28 Apr 2020 05:54:18 +0000
+Message-ID: <DB6PR0402MB2760E36D267024A3C028630788AC0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+References: <5ea44ff8.1c69fb81.f246c.d02d@mx.google.com>
+ <8af4842d-d576-fd6f-ac6b-2ef3482742b7@collabora.com>
+ <20200428041636.loakok7yfqg3hcsl@vireshk-i7>
+In-Reply-To: <20200428041636.loakok7yfqg3hcsl@vireshk-i7>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6f0d6c01-a711-4b58-e1da-08d7eb389737
+x-ms-traffictypediagnostic: DB6PR0402MB2888:|DB6PR0402MB2888:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR0402MB288864B0CBFBDF0FE9709AA888AC0@DB6PR0402MB2888.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0387D64A71
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(366004)(136003)(376002)(39860400002)(396003)(316002)(15650500001)(54906003)(26005)(2906002)(71200400001)(44832011)(4744005)(86362001)(110136005)(186003)(5660300002)(64756008)(66946007)(76116006)(66476007)(66556008)(66446008)(4326008)(52536014)(81156014)(8936002)(33656002)(8676002)(6506007)(53546011)(478600001)(7696005)(55016002)(7416002)(9686003)(45673001)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: mqIl+8L5UipkY3rkBvGuWCphLLBXpenYzK4vXjqErhMyqLQskDAwoVGeTqeMQk8s7JOeB0JKIy2oNoaYwnzCra0jMOVc9AGkC7UFnZve0cqBmbyVe6LoS61uttq39qKtpS4LzhPRFrYFk/x454gtKXzg6axq2/tASWCJrW+ZX3UTpGBpk1QfZV6ntX49lLqfT4lBsxISDSTevyDt8nPGwNLZR8lPmsJ3a2vVP+arcivUmCOvLRXS7ffJltUxhFF5jH4WzzJfC3eMYX40/a1LWYJZLATdKhTJqaaBXwJtyR8k+ymu2L+99wKo3sTRKz8H91DhIVMcxytlE7amOGsV1k1oG3ezwfDPRf30C6KWJ9m/u65V7diNZ5OdgthiSohLF00uXW6I4cC6AebJ+BkREZsG3y+M0axFs2TkFIixwWuzYskV17iX6rT7pWTUKAWyzQ+E3agZjII1SOaOHroGCyLylJoPRQ8a7wkoRq1Djzx4bpfFGu46LWNH6xoFkiuD8x4XyZt9FSeN5RRKYjELYw==
+x-ms-exchange-antispam-messagedata: yGmexrFmAjdIZsQzFc4aMR5P8be5QoPxsD7ZnCCgYAVJXJPVUCHBf03YTt8QxXJsUCOFPnR5X8WC/XW0rkMlGaIIshQQM10a/4NRpn74Ol3fL7qsc1PKNADvqfcswyzoDOYCVe/blWFzSuFXqeX1PWXQRwD7sT3w1pJlXAPbQ0V9fnXeR/XCz8mfwuFSjh3b11rgQTH8ch72YBoYQz93w6QxDa1EPlyPbOB4ekI7NNf9FQhlGUYBwqMCkR+b4lYSJqTyLT1M8YItIHC4k2Fjf7/ICmaLKTMLiPv475nPym+r6Z+cwlZKhL9+BZgmjfp83i6QJNiWZapKqGLEo4THOBlGGC0HFrtnPW5Wm1Ltq63wtCLm8k+I9O2ahPhI9KJFxQHQPTMNBQhOx+NsTC9jc/hm5ol24DeZZLiXrF2Ajfs7/lCpIeMo2NClcHFhjb88h2fJiyo8jEDzJ8/KQWpYsbO9+36aT2juwnu3yaMSHrB0pcjWe4uHtignDC0fWReTrksrHuSc32BxzXd6ZQHmAuS5UjKXihNV/JbFpBSVsNG2NJV+ZMXfcal0IlyrEZB0ZHJZ0wVByXO2oINz5+xp2S4kv+zTyTQkX5N/5IIBAmploHN7FaBrMKQ1yI0OH12dpWRjLTv9R4aEoXv5GYRgqocmm8L10EcwtIxDvCglwW2T/Pkar1HmYY5KZR/csBQ0k5mI0OqXYlrD99F9PTAZV1+yHAOzMRlyg97FYHBaWa6dJFfQFPQoFgGDAXlCOJxqqEGaAUqHIF1IxZreWfVRAxBGqwrzi5qORuI5vzlSoDA=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f0d6c01-a711-4b58-e1da-08d7eb389737
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2020 05:54:18.2692
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BkD3vhYZTTpPgCN8Jts6nzq/EXL/MXN9cNcWA9l/nBMBevxousboUiy2B7Ys+5vvldWFpNUfkuRoV8eb2NxyyA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2888
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+> Subject: Re: next/master bisection: baseline.dmesg.alert on
+> imx8mn-ddr4-evk
+>=20
+> On 27-04-20, 14:00, Guillaume Tucker wrote:
+> > Please see the bisection report below about a boot failure.
+> >
+> > Reports aren't automatically sent to the public while we're trialing
+> > new bisection features on kernelci.org but this one looks valid.
+>=20
+> @Peng: I have dropped your patch now, please resend it once you have fixe=
+d
+> the issue.
 
-On 4/27/20 10:05 PM, Tianjia Zhang wrote:
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 7bc83f3d9bdf..00ed7566959f 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -3190,6 +3190,12 @@
->  	noirqdebug	[X86-32] Disables the code which attempts to detect and
->  			disable unhandled interrupt sources.
->  
-> +	no_modsig_enforce
-> +			[KNL] When CONFIG_MODULE_SIG_FORCE is set, this option
-> +			allows to disable modsign completely at the beginning.
-> +			This means that modules without (valid) signatures will
-> +			success to load.
+Sorry, I used an old base for the patch, the cpu_dev should be applied befo=
+re
+check cpu-supply property.
 
-			succeed to load.
+        if (!of_find_property(cpu_dev->of_node, "cpu-supply", NULL))
+                return -ENODEV;
 
-			succeed in loading.
+        cpu_dev =3D get_cpu_device(0);  --> put before the upper code.
 
-			load successfully.
-I prefer this one.....  ^^^^^^^^^^^^^^^^^^^^^
+I'll post new version.
 
-			be loaded successfully.
+Thanks,
+Peng.
 
-
-> +
->  	no_timer_check	[X86,APIC] Disables the code which tests for
->  			broken timer IRQ sources.
->  
-
-thanks.
--- 
-~Randy
-
+>=20
+> --
+> viresh
