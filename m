@@ -2,194 +2,103 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B609C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 231A5C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4544A206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA6CC206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:14:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588072470;
+	bh=6DTJndgItc1WFWhpZyZ1xM0bC2J9mb3KRo6Obnb4WmI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R5wQQZ2nY1ReRrKjE4y7qRuybyhfQ4E0TtstZ0m6CzmoHYI7KiWvAKOozgRHq4Szo
+	 RAAMIGXzOgUC5z/JlNydWN8Q7c5isRQaeN1PGXAAckJ2YJaeOza1zcHxiPyiMJahuT
+	 0poeOVGFcqpeUBMxTftWZjYYnccENZZIurweEYWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbgD1LOZ (ORCPT
+        id S1726766AbgD1LOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:14:25 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:17486 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726762AbgD1LOV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Apr 2020 07:14:21 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03SBBMGJ020165;
-        Tue, 28 Apr 2020 07:14:18 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30mj45baah-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 07:14:18 -0400
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 03SBEHDx017060
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 28 Apr 2020 07:14:17 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 28 Apr
- 2020 07:14:16 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 28 Apr 2020 07:14:16 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03SBEAgv032471;
-        Tue, 28 Apr 2020 07:14:14 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, <rachna@ti.com>, <mugunthanvnm@ti.com>,
-        <vigneshr@ti.com>, <afd@ti.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 3/3] iio: adc: ti_am335x_adc: convert rest of probe to devm_ functions
-Date:   Tue, 28 Apr 2020 14:14:30 +0300
-Message-ID: <20200428111430.71723-3-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200428111430.71723-1-alexandru.ardelean@analog.com>
-References: <20200428111430.71723-1-alexandru.ardelean@analog.com>
+Received: from mail.kernel.org ([198.145.29.99]:34932 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726590AbgD1LOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 07:14:16 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BC04206F0;
+        Tue, 28 Apr 2020 11:14:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588072455;
+        bh=6DTJndgItc1WFWhpZyZ1xM0bC2J9mb3KRo6Obnb4WmI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Q3qb34E4bp44JWa6pDDT90Gk7LeUH02t8lh2VwWR1c9Oaw66ERl/dzd5ezZl4DCtW
+         iQ7bTY9xXuwovratP2T6vv33tNHxFYnVfCJtej/koTp/bP7CscKrtfOXwKt0MfSfKv
+         P6BAeAhkD7oshYsng08lhA2nUgKNAdqTdFkr9aZs=
+Date:   Tue, 28 Apr 2020 12:14:13 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH 4/4] ASoC: wm8994: Silence warnings during deferred probe
+Message-ID: <20200428111413.GD5677@sirena.org.uk>
+References: <20200427074832.22134-1-m.szyprowski@samsung.com>
+ <CGME20200427074843eucas1p1a3a265df0c7f14b0aaec25eb65daf606@eucas1p1.samsung.com>
+ <20200427074832.22134-5-m.szyprowski@samsung.com>
+ <20200427112202.GB4272@sirena.org.uk>
+ <20200428103638.GP3559@dell>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-28_07:2020-04-28,2020-04-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- suspectscore=2 malwarescore=0 spamscore=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 mlxlogscore=999 clxscore=1015
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004280091
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="M38YqGLZlgb6RLPS"
+Content-Disposition: inline
+In-Reply-To: <20200428103638.GP3559@dell>
+X-Cookie: Eschew obfuscation.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change converts the rest of the probe to use devm_ functions.
-Consequently this allows us to remove the remove hook.
 
-It tries to preserve the initial order or probe & remove.
-The devm_add_action() call hooks the cleanup routine (what's needed still
-for the remove part).
-If that doesn't work the DMA channel is cleaned up manually inside the
-probe hook. This done (like this) because the remove hook has a peculiar
-cleanup that tries to restore a step-mask, and that only seems to happen on
-the remove hook, and not in any probe error-cleanup paths.
+--M38YqGLZlgb6RLPS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/adc/ti_am335x_adc.c | 63 +++++++++++++++++----------------
- 1 file changed, 32 insertions(+), 31 deletions(-)
+On Tue, Apr 28, 2020 at 11:36:38AM +0100, Lee Jones wrote:
+> On Mon, 27 Apr 2020, Mark Brown wrote:
 
-diff --git a/drivers/iio/adc/ti_am335x_adc.c b/drivers/iio/adc/ti_am335x_adc.c
-index 03b2ab649cc3..9fac83e036c1 100644
---- a/drivers/iio/adc/ti_am335x_adc.c
-+++ b/drivers/iio/adc/ti_am335x_adc.c
-@@ -562,6 +562,18 @@ static int tiadc_request_dma(struct platform_device *pdev,
- 	return -ENOMEM;
- }
- 
-+static void tiadc_cleanup_dma(struct tiadc_device *adc_dev)
-+{
-+	struct tiadc_dma *dma = &adc_dev->dma;
-+
-+	if (!dma->chan)
-+		return;
-+
-+	dma_free_coherent(dma->chan->device->dev, DMA_BUFFER_SIZE,
-+			  dma->buf, dma->addr);
-+	dma_release_channel(dma->chan);
-+}
-+
- static int tiadc_parse_dt(struct platform_device *pdev,
- 			  struct tiadc_device *adc_dev)
- {
-@@ -593,6 +605,17 @@ static int tiadc_parse_dt(struct platform_device *pdev,
- 	return 0;
- }
- 
-+static void tiadc_cleanup(void *data)
-+{
-+	struct tiadc_device *adc_dev = data;
-+	u32 step_en;
-+
-+	tiadc_cleanup_dma(adc_dev);
-+
-+	step_en = get_adc_step_mask(adc_dev);
-+	am335x_tsc_se_clr(adc_dev->mfd_tscadc, step_en);
-+}
-+
- static int tiadc_probe(struct platform_device *pdev)
- {
- 	struct iio_dev		*indio_dev;
-@@ -635,48 +658,27 @@ static int tiadc_probe(struct platform_device *pdev)
- 		IRQF_SHARED,
- 		&tiadc_buffer_setup_ops);
- 
-+	err = devm_iio_device_register(&pdev->dev, indio_dev);
- 	if (err)
--		goto err_free_channels;
--
--	err = iio_device_register(indio_dev);
--	if (err)
--		goto err_buffer_unregister;
-+		return err;
- 
- 	platform_set_drvdata(pdev, indio_dev);
- 
- 	err = tiadc_request_dma(pdev, adc_dev);
- 	if (err && err == -EPROBE_DEFER)
--		goto err_dma;
-+		return err;
-+
-+	err = devm_add_action(&pdev->dev, tiadc_cleanup, adc_dev);
-+	if (err)
-+		goto err_free_dma;
- 
- 	return 0;
- 
--err_dma:
--	iio_device_unregister(indio_dev);
--err_buffer_unregister:
--err_free_channels:
-+err_free_dma:
-+	tiadc_cleanup_dma(adc_dev);
- 	return err;
- }
- 
--static int tiadc_remove(struct platform_device *pdev)
--{
--	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
--	struct tiadc_device *adc_dev = iio_priv(indio_dev);
--	struct tiadc_dma *dma = &adc_dev->dma;
--	u32 step_en;
--
--	if (dma->chan) {
--		dma_free_coherent(dma->chan->device->dev, DMA_BUFFER_SIZE,
--				  dma->buf, dma->addr);
--		dma_release_channel(dma->chan);
--	}
--	iio_device_unregister(indio_dev);
--
--	step_en = get_adc_step_mask(adc_dev);
--	am335x_tsc_se_clr(adc_dev->mfd_tscadc, step_en);
--
--	return 0;
--}
--
- static int __maybe_unused tiadc_suspend(struct device *dev)
- {
- 	struct iio_dev *indio_dev = dev_get_drvdata(dev);
-@@ -723,7 +725,6 @@ static struct platform_driver tiadc_driver = {
- 		.of_match_table = ti_adc_dt_ids,
- 	},
- 	.probe	= tiadc_probe,
--	.remove	= tiadc_remove,
- };
- module_platform_driver(tiadc_driver);
- 
--- 
-2.17.1
+> > This completely eliminates the diagnostics which means that if the clock
+> > isn't there the user is a bit stuck trying to work out what's missing.
+> > There should still be a diagnostic.
 
+> The driver won't defer forever though.  The final pass should fail
+> with a different error.  At which point the error will be released to
+> the system log, no?
+
+One of the really common cases is that someone forgot to build the
+driver for the dependency so it'll just defer forever waiting for
+something that never loads.
+
+--M38YqGLZlgb6RLPS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6oEAQACgkQJNaLcl1U
+h9BdrQf+NCklPpWwravEIRIAH1rwyigfjx2trNsyl7yEA2AwXk8z7UPMlVo/5tAx
+U6MrMNyYDvWsAgZVED3Xd20d7R/7M9+E7vg/73nnG4GIsQSbx1CGxfkaovbmWGWl
+jGsqydTS7K3eMMSq2WiwiwfJW6qtX2ah3KWNM/hOkxzzxfkYoBY4whG+0AMJzwzZ
+X+ciwLknAY2GiigH3viTy0t9vrAJZq8JpsbLrxzlh55YYPmM9sCfwN9Vi5bCfuet
+pbGBfCGj4puRpt9bXB0fcO9q34kGsmGVG0cz/BcNc/hGM4y5xSYbGGeBTAPB0Qg0
+3VfbJLNHhewSONj2A74OCuxVJqG47A==
+=4bNe
+-----END PGP SIGNATURE-----
+
+--M38YqGLZlgb6RLPS--
