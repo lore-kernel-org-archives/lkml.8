@@ -2,98 +2,138 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCCAC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3241C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80458206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1C65206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:08:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UOp9nl7/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u8UHPtK1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgD1WId (ORCPT
+        id S1726745AbgD1WIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:08:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49714 "EHLO
+        Tue, 28 Apr 2020 18:08:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726343AbgD1WIc (ORCPT
+        by vger.kernel.org with ESMTP id S1726343AbgD1WIm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:08:32 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CC00C03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:08:32 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id c140so158769qkg.23
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:08:32 -0700 (PDT)
+        Tue, 28 Apr 2020 18:08:42 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A34C8C03C1AC;
+        Tue, 28 Apr 2020 15:08:42 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id n16so2869pgb.7;
+        Tue, 28 Apr 2020 15:08:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=hlzgtua4FT07Iktkw8wO18i+dcUI37C1JOVLxE2W49E=;
-        b=UOp9nl7/O1pI2hxJvYsrlzNgllpaws4gm0GsfrWDKc118citm945gekme8wLEqUnBk
-         ghSuezea6nD3T42PS7kaRNMxfGLH8yHaE6b1gkNbL4CR+MUIIDV7KrZshPP7piKVq8y/
-         4Nt+Qfwb0ydufNCstPtzwPdqp/GDj05QX4jXg24cpJQvjglhnh4udMgD5BKrRg0zpDxD
-         mnXES+l31yGCVVg1JXmHwiam6WxJMCce8el89GqTrpyxnM5U9UWKjuahE95jkii8Ke05
-         uSY14aeChjx+CosW6NbTAynh9EO7qpd7wPEok6DkOfxMnXD1jo4D6lYCBrCyi+KiMskI
-         ySMQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CucLDCAtx0OGxZhd7U3+pHytapXL85CWzXGFNadaJVE=;
+        b=u8UHPtK1e2CkwXwCIbugkPBrGfbll+2jZRPd5hxNVAPnRdPNIiaxQLWp0qctJuW3hZ
+         TQFg2KWVdic6sCbm+fpRzywFvfjmaUkbLEEn5PbkAlomVTmvOWXUD5FSP1Zu/yCMXkXK
+         7ul0qqpWHaXihJh4pYp4s3vBZuwjBPTll67qRISvg2JYnb2NK3vh7k6/fNBoWBC6IZAp
+         /cWNk3N9t21YNqm50XA+Khtsc+vJCGhaNxST1UR/2EmPAPdKNdxutjKcyn5drifpKyK9
+         pbpYNYt29TzmKJ0HSGrWGLy08Jdw006OMQr022lPvHNYIZyKTyUZQOmmzZPG7TdAa3Uw
+         /ewA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=hlzgtua4FT07Iktkw8wO18i+dcUI37C1JOVLxE2W49E=;
-        b=AIsx2ZHjO4KJB4jT31oJCuoSsfwtRBLxtuXT5PoyMD8NOChIaQtauLijk1ER54+vTx
-         XVXKnsXwUSObj+LyjtekyfGUg9dy5Mq3mgCeGGWC8Lhx8viM9aAsDb/GFQmnWxgwA1K5
-         xiCZMYaSzpEem/xlzdoZ7dIyxtyCOnPm6+39mRyJi9g33F5VXpdsuu9PpMeKyUF5lhzB
-         +nFir4b96YrgP6MJKSI0g94qw9n8QIFz1TQmWmkQBQGkpVXR+FPp1WoV6Ud5WKgGlcLf
-         XI7QmkgLhldkuojNrzLAnRIsxzsmwJcaZVgMezSG0esj9AiPNB5jR+s3lqdSx8tnZ/rD
-         kELg==
-X-Gm-Message-State: AGi0PubEehKJJQUg/3DvOKq9SfEcMkzNBsed6yT8XJDZcxuuGhJy53Gj
-        YZ65hKaxf8u2Y4hUtNeNkQDnaGaP3tY=
-X-Google-Smtp-Source: APiQypLAaGzhfm+BuScTw/mOhTDXDhIQF44+NVjFS5CcBrcmTSJLPmiSmhxBAPqe+kDzWXUhHpZmjX/NWpAD
-X-Received: by 2002:a05:6214:3e2:: with SMTP id cf2mr28521504qvb.193.1588111711076;
- Tue, 28 Apr 2020 15:08:31 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 15:08:25 -0700
-Message-Id: <20200428220825.169606-1-zzyiwei@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-Subject: [PATCH] gpu/trace: minor comment updates for gpu_mem_total tracepoint
-From:   zzyiwei@google.com
-To:     rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     prahladk@google.com, lpy@google.com, android-kernel@google.com,
-        Yiwei Zhang <zzyiwei@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CucLDCAtx0OGxZhd7U3+pHytapXL85CWzXGFNadaJVE=;
+        b=dNf/0FjqaZR0ZfxqTbBoCQN0k7b/KhUH6Mju/lLK/bjiDUq199yYDX6DvUcwUzrV/D
+         djzcqxPNjYbQth0jzxLMY0e0HRazylwbS6CV74wP5QC0qFGvIrnB9c3693ToOrIE5tlx
+         9LqhuKsBCFJDeDjMb6YmodzssS7gGSwi8956K6bCkm3yANZaa0xzEmTCQ1oIM+BvBvBu
+         1W0ex5glu6pJPncJWnMhzLFY9iDHphYjTRiOf+sJjSkuh4+mlztmu3MiSriDKNyup4It
+         oPC97QnlehvYA8TIRitYBMmIEACX01GoCxrGHeYdZBnMlDVL/UK8cACb4rKFCJth+7Lq
+         WIww==
+X-Gm-Message-State: AGi0PuafWH6U3glVNvKjAlWqintt+ZSLFJqHfeI/abJQUFR270+uQ5YZ
+        uklF3dlX7UuaFLZEP12Nw2fIvVpxLEthPE7y1Ro=
+X-Google-Smtp-Source: APiQypII6SQ5Okuw51pNlgbiYJwS78/56MsUavstfIBtJG+uEuAH2KEa+LkeL7KGv5KMNZ+oiRyok8ChtOfvf7/z2/E=
+X-Received: by 2002:a62:f908:: with SMTP id o8mr1552806pfh.170.1588111722155;
+ Tue, 28 Apr 2020 15:08:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200428215804.48481-1-arnd@arndb.de>
+In-Reply-To: <20200428215804.48481-1-arnd@arndb.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 29 Apr 2020 01:08:30 +0300
+Message-ID: <CAHp75VfSny=nSeiCnjE8MwL=hLT92G--9qy6=_0mittzuPxc-A@mail.gmail.com>
+Subject: Re: [PATCH] acpi: avoid uninialized-variable warning
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yiwei Zhang <zzyiwei@google.com>
+On Wed, Apr 29, 2020 at 1:03 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> Older compilers like gcc-4.8 produce a bogus warning here
+>
+> In file included from include/linux/compiler_types.h:68:0,
+>                  from <command-line>:0:
+> drivers/acpi/property.c: In function 'acpi_data_prop_read':
+> include/linux/compiler-gcc.h:75:45: error: 'obj' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+>  #define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __COUNTER__)
+>                                              ^
+> drivers/acpi/property.c:934:27: note: 'obj' was declared here
+>   const union acpi_object *obj;
+>                            ^
+>
+> Ensure the output is always initialized even when returning an error
+> to avoid the warning.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/acpi/property.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+> index e601c4511a8b..3aa71daeb0b4 100644
+> --- a/drivers/acpi/property.c
+> +++ b/drivers/acpi/property.c
+> @@ -587,8 +587,10 @@ static int acpi_data_get_property_array(const struct acpi_device_data *data,
+>         int ret, i;
+>
+>         ret = acpi_data_get_property(data, name, ACPI_TYPE_PACKAGE, &prop);
+> -       if (ret)
+> +       if (ret && obj) {
 
-This change updates the improper comment for the 'size' attribute in the
-tracepoint definition. Most gfx drivers pre-fault in physical pages
-instead of making virtual allocations. So we drop the 'Virtual' keyword
-here and leave this to the implementations.
+It changes semantics and requires obj to be non-NULL.
 
-Signed-off-by: Yiwei Zhang <zzyiwei@google.com>
----
- include/trace/events/gpu_mem.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Should be
+if (ret) {
+  if (obj)
+    *obj = NULL;
+  return ret;
+}
 
-diff --git a/include/trace/events/gpu_mem.h b/include/trace/events/gpu_mem.h
-index 1897822a9150..26d871f96e94 100644
---- a/include/trace/events/gpu_mem.h
-+++ b/include/trace/events/gpu_mem.h
-@@ -24,7 +24,7 @@
-  *
-  * @pid: Put 0 for global total, while positive pid for process total.
-  *
-- * @size: Virtual size of the allocation in bytes.
-+ * @size: Size of the allocation in bytes.
-  *
-  */
- TRACE_EVENT(gpu_mem_total,
+> +               *obj = NULL;
+>                 return ret;
+> +       }
+>
+>         if (type != ACPI_TYPE_ANY) {
+>                 /* Check that all elements are of correct type. */
+> --
+> 2.26.0
+>
+
+
 -- 
-2.26.2.526.g744177e7f7-goog
-
+With Best Regards,
+Andy Shevchenko
