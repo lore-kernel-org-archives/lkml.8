@@ -2,148 +2,576 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A40C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8714C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C269121835
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D2521973
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:46:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="VSYG47P3";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="khOaihOp"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v0ZEJ6Wp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729264AbgD1TqF (ORCPT
+        id S1729291AbgD1TqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 15:46:05 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:39482 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728620AbgD1TqE (ORCPT
+        Tue, 28 Apr 2020 15:46:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728620AbgD1TqU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 15:46:04 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id EEA504017D;
-        Tue, 28 Apr 2020 19:46:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1588103164; bh=lty+6iUJ6jk3PWGcbv8AlVkjx5NoUFHko6LkB3O5adM=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=VSYG47P3RP8yReynDm29kA/+oBTH0+FBHQpBIjl3pOy1cxnkk2PGbm+6LdeWZqHnq
-         nuvm540ZDxbDJ2LzGW/7OAmShIIEcQ2kmgO1wpJhAS7Y4Ql2v5BFpH1QgA1GcRvbaM
-         kDM95ue2blqUL9w3CNVPa45uUetJnB0eOafQHAGvfgnjCI9C7pRhAEE5EEcoNQ3JR7
-         Y1XmtXQnkewfC5VBZ0sWxQlh8uX0IAtpE3sN97UGV5TpPZdy33gqdxCgNhhJ62EAYw
-         ZyT82BAuLd4tYXuOVbenOxwCt8CEpxe4FIiyOc7ODOwyVTMJzSudBZLyJdOQwJKRl4
-         htSKNx2JywZ0Q==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id A9480A0069;
-        Tue, 28 Apr 2020 19:46:03 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 28 Apr 2020 12:46:03 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.487.0; Tue, 28 Apr 2020 12:46:03 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=deHM20ep3iUtVKk0nnrDOP5XCiub4HklFY14+SyVFZ0aWj9HmzeRZcNOmIrKDCcmB6HmlY8mq6AuRmrTkTKpPDStMYLnMex+qkA1xtvyuO2eJAGZkXSU/lzsuQ/iKHJe8DQYCxzZlSx3rEmJkR//qtNKB9fNaInsh2hTi94qPXEpkRTF9OqQCUorE93SR9dM9pR1h7NcWGweiIjduVnyeOFg+bYycsliA0WdEARxY1qHPb4jfnEoJSXrGFNzIV+GHo0dXfuFnbSOQ5Z78LEu6TFkmsoA4YSsl28TRFZHJgl1ND6VRsvEoMbqYJWZvZxt83YdMQYrYfjlTfCyjvC4MA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lty+6iUJ6jk3PWGcbv8AlVkjx5NoUFHko6LkB3O5adM=;
- b=i0F1RA6Vioq844FU7oKR7xGFty+h0fdHGuMDam53Xve8H/+VQAi4vpLSmrb43CrUkR4RHgsRfVPyb3ZSsAjOsfgMY3axHe4rPLlfAOnZ8kSSR863ZrMEubj/uAw5i1/SIOprQIKCSe6ZGGrkRGiT9L0vTFLNYHXefGB8NERVV2+XODfdCIb1beCfmNn9mFfQU+J4kQomdoKQHstDJkUPPe5B+sNufrmhTIAw8TxupeTk6JDcW6Lnv+pyWrNj99AGJzpIVSl1yLEoEj+Hcf/hsK9F3t1yzbB/xgSy3hLK6UwgeSKHNXVcPf6v/oWS+gI+raAx7yZBoYsB8nk4wQjA7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lty+6iUJ6jk3PWGcbv8AlVkjx5NoUFHko6LkB3O5adM=;
- b=khOaihOp9WWA/5RM5TKEpGIrDF0cjKKfd0KCW5af3jLwO9EykLdr7RsG2234DQr+YCAgVxfWmy1fsobh+bez4cmG7EhGwtW9TXLf7mqrsMCFu6Fc3G2za02ciO2VMFlf6bGwLcYPWggAdLNLQJ4MZ50xd/SAjavNeRzDzBdbzDc=
-Received: from BYAPR12MB3592.namprd12.prod.outlook.com (2603:10b6:a03:db::25)
- by BYAPR12MB3591.namprd12.prod.outlook.com (2603:10b6:a03:dd::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Tue, 28 Apr
- 2020 19:46:01 +0000
-Received: from BYAPR12MB3592.namprd12.prod.outlook.com
- ([fe80::a45a:6a41:3fe5:2eb7]) by BYAPR12MB3592.namprd12.prod.outlook.com
- ([fe80::a45a:6a41:3fe5:2eb7%7]) with mapi id 15.20.2937.023; Tue, 28 Apr 2020
- 19:46:01 +0000
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>
-CC:     Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARC: guard dsp early init against non ARCv2
-Thread-Topic: [PATCH] ARC: guard dsp early init against non ARCv2
-Thread-Index: AQHWHY4Y/rFoWc1Ys0qE7xdv+GRYS6iO8C2A
-Date:   Tue, 28 Apr 2020 19:46:01 +0000
-Message-ID: <08a295ba-e6f0-65d2-cb64-3ea463797f6d@synopsys.com>
-References: <20200428185024.5168-1-Eugeniy.Paltsev@synopsys.com>
-In-Reply-To: <20200428185024.5168-1-Eugeniy.Paltsev@synopsys.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-authentication-results: synopsys.com; dkim=none (message not signed)
- header.d=none;synopsys.com; dmarc=none action=none header.from=synopsys.com;
-x-originating-ip: [2601:641:c100:83a0:8d37:2a26:865c:124e]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8f714437-1ed1-466c-0935-08d7ebacc801
-x-ms-traffictypediagnostic: BYAPR12MB3591:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR12MB35916A2287AC1DD4D2A4D955B6AC0@BYAPR12MB3591.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 0387D64A71
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3592.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(346002)(366004)(136003)(396003)(376002)(31696002)(5660300002)(31686004)(2906002)(54906003)(36756003)(110136005)(316002)(86362001)(66446008)(2616005)(6486002)(8936002)(64756008)(53546011)(66556008)(66476007)(76116006)(6512007)(186003)(4326008)(478600001)(8676002)(71200400001)(66946007)(6506007);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HTxgXCZAmHnTVLC8UFmeVbG83NC7Li8x5Gm9dCnVLauqcWuWsJRNtZ8Sp+dX4IvYzr5skikUwTAjR0vcHhiE+DflFMQnoEFOGEjd9W/pe596pY1Z9+rtuPm19kuPdTfKathkBnuAHNDBtWluRBRRORfe2+Hv7erYzKPLP5gr+vj15BMHXd8qiU6DwO1si9as8pUvMqCYDLxy1cg3cnT/wSEluEX8UrL/424RpImrE36y7/rew0X19Q4hZWWax9ddy9x+hOkr6TjXvrzUQ9Jm1sFEs8bmWNgmEZ0MQwNx9+QtyKxhobFjiRl9KxIBKH7rCXGeH7d+/hoFfBuQxvQl7def3euOtBC6sLihxOsaZdEpcqy5PXeSKp1SYNnxg3IDcNoOYDjUimIgREFqHE8i1ndcCbvpWJAFVXbreGjbYpegw9baD23W0EG41RXKp8bR
-x-ms-exchange-antispam-messagedata: so+jWBZsDVJX/S7yz9qeDGsyZeiXmrK54U8t1clumPTeeinDovWSnKYPMWWTONaP2sG9K9dES1fpeuI+zpsYl2atjq4dZkBTm3BeE133A2zssmsJTySV5SzBgLrn93Ccvi1OwHOQ0YBRsT35xYjN5LVrlpAEL4sgHJwqcdHOdFkwSCrkRsP6odAM7zT04dbYAUK3xujH7t87ePON/pde4EZSw31J8An+b0guVyFCo5bhHxHcON81RI76xO37YPp8XoZ+/oj2QkKrDx85LnofYcbCnHRyB7gHM1UXk9oU7bPl7PrOAMiIy2z3X9N2HwJfKhS2LWsF1YLuKNAYhKiGjTwyxe8X0va7eTPZWT/SqBBKitoyv9D2xnPoW/zQvG80RA7RShScwiOUR5B4TXfrdNIrwHEDI0AjPqcXOlGpLP+MT3Jf9gV5lxkTP2b3pkUEEZ9+wHzgvRGJpCDvbYzw3P/Cs5Ji5mnTzTKwbF8aO9FQ0732yzKiTKS56NFlTo4MqoFL5KD2AKpHTZ7pWQTLJUwT66wwpB+bOL/pNPGgmLaXUnCd8oKEd6R/Jmprarmc7MwDsLmc0UwTLg5ywI8TQVq1GthZdTTbRU/cmc/r9Wc8YMnidFigsX4ZiLfNT0jdPSrb5635YFrS72QyBGxtfO6mYHwucQfKv3qWuFJyvo0O6hMG3FQ8XzB7x0OBgYD0e+siUAH5bZXiEeVR42SWIMyas5x8Hcdj+cy3Ly9XW+oxIxTcjuk6dxCOgn67MPewe9frcUybndxzK24AAh/uSfko0qjSAX0doQWrvXvpSpwnOSj47jXptnCaMTXxIIShcuHsCkbJmQ68iWZvBRp+YW3U3IXn9RnhKKmKzPf2Fmc=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <ABE2FEB008F13B429933BF4A2C21986A@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f714437-1ed1-466c-0935-08d7ebacc801
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2020 19:46:01.7208
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NWSl0449Qe8yXShSVqJwsqyLtrTLXXrIT3Frqr7+aenp3hQqv1Dpz9OeBfEmqO1DB1IS4ShUEgRDnPx9CdU9mA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3591
-X-OriginatorOrg: synopsys.com
+        Tue, 28 Apr 2020 15:46:20 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D51D5C03C1AB
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 12:46:18 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id s62so26327869ybs.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 12:46:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=REUornMUNNo44MwpyGzMlWX0UTRetBsRbPQ6PscTidg=;
+        b=v0ZEJ6WpU2lwn0yng76HoZOyWH4qMdeJjg9Q2duj57sPlkS5OGvpcV0LHbv2uvTNKj
+         YRmv33fARFIEIiOm2n/5yY+2DZ2Leih/Bd5dEPhjcUkV1rte2DmwzjPIRY31WAB3/AaY
+         v9x7owkzKdAu9b0XYle2+fBshR6vpVFRhQkJwem2XTPdldWb8Y3a1PD0JvWkkbtVweah
+         TeOtQAMyv5WH35Vzi2fhLcRV1MUK69yBrSqMh4yalU8iU8Pc0T+ZO9tXa4eB/MzpW0A+
+         zpHZ5tO/vhmFQofKKA1zpYDmPa6jso7uKHtIVXfqvr+IGhKPI1X9Kug0NGVAOnMfM4Ah
+         WxVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=REUornMUNNo44MwpyGzMlWX0UTRetBsRbPQ6PscTidg=;
+        b=oh9enIV+Fa2BCYt4wt8kYdKkmjSTZIZeucEPmUvInuVF3J/UNDNtMNPQjY5vkOwtgF
+         rN3+h/zVHHMk2UEnO5trwEvqXnNBk9nQQr2foK0dSFdsIHtI2pu/3y5NSa/sqCOHckyV
+         rlR4DrZkLlE7ICOCI/sKrQIEH6zfJQU0s4Yl/Xhl5Amjz4ZWg0UUtdNiNrSGFPJSJND9
+         +1GcDOiSGrmOA2ahD9JlNHNzknSzXpinh0qaAQL1M72ZsXG+vBIiyMJxpSwVzURAbA8U
+         X50l/9JtCSiZ1wjtuwWxTxQzIWrSq4+JbvsJNQoX4REXtsSNuZ6ChXPrL3TJYd4gI7pg
+         TuTQ==
+X-Gm-Message-State: AGi0PuYO7sXAf0zxHC4eB8kzsd8tj6eZ/RTxOifoGsJ2PVfDdKYfeJ3N
+        sWnliGDnezLoV0T9G5Lqd8AGth16wC+XUPU4
+X-Google-Smtp-Source: APiQypKrz5L8kViR/3X2cUgIijxd1haxS+KTbC2gK8Nj0h98lMt6GuUxdhlNhV2qRIkU6MeypCdVGVU+Gkz0IrI+
+X-Received: by 2002:a25:80c3:: with SMTP id c3mr51962845ybm.33.1588103178028;
+ Tue, 28 Apr 2020 12:46:18 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 21:46:12 +0200
+Message-Id: <e7920e1960ed65410f00c3400bdeccb27553c736.1588103144.git.andreyknvl@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
+Subject: [PATCH] usb: raw-gadget: fix gadget endpoint selection
+From:   Andrey Konovalov <andreyknvl@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNC8yOC8yMCAxMTo1MCBBTSwgRXVnZW5peSBQYWx0c2V2IHdyb3RlOg0KPiBBcyBvZiB0b2Rh
-eSB3ZSBndWFyZCBlYXJseSBEU1AgaW5pdCBjb2RlIHdpdGgNCj4gQVJDX0FVWF9EU1BfQlVJTEQg
-KDB4N0EpIEJDUiBjaGVjayB0byB2ZXJpZnkgdGhhdCB3ZSBoYXZlDQo+IENQVSB3aXRoIERTUCBj
-b25maWd1cmVkLiBIb3dldmVyIHRoYXQncyBub3QgZW5vdWdoIGFzIGluDQo+IEFSQ3YxIENQVSB0
-aGUgc2FtZSBCQ1IgKDB4N0EpIGlzIHVzZWQgZm9yIGNoZWNraW5nIE1VTC9NQUMNCj4gaW5zdHJ1
-Y3Rpb25zIHByZXNlbmNlLg0KPg0KPiBTbywgbGV0J3MgZ3VhcmQgRFNQIGVhcmx5IGluaXQgYWdh
-aW5zdCBub24gQVJDdjIuDQo+DQo+IFNpZ25lZC1vZmYtYnk6IEV1Z2VuaXkgUGFsdHNldiA8RXVn
-ZW5peS5QYWx0c2V2QHN5bm9wc3lzLmNvbT4NCj4gLS0tDQo+ICBhcmNoL2FyYy9pbmNsdWRlL2Fz
-bS9kc3AtaW1wbC5oIHwgMiArKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQ0K
-Pg0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcmMvaW5jbHVkZS9hc20vZHNwLWltcGwuaCBiL2FyY2gv
-YXJjL2luY2x1ZGUvYXNtL2RzcC1pbXBsLmgNCj4gaW5kZXggZTFhYTIxMmNhNmViLi5lNjRkOTQ1
-YWU3ZGYgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJjL2luY2x1ZGUvYXNtL2RzcC1pbXBsLmgNCj4g
-KysrIGIvYXJjaC9hcmMvaW5jbHVkZS9hc20vZHNwLWltcGwuaA0KPiBAQCAtMTUsMTIgKzE1LDE0
-IEBADQo+ICANCj4gIC8qIGNsb2JiZXJzIHI1IHJlZ2lzdGVyICovDQo+ICAubWFjcm8gRFNQX0VB
-UkxZX0lOSVQNCj4gKyNpZiBkZWZpbmVkKENPTkZJR19JU0FfQVJDVjIpDQoNCmlmZGVmIGlzIHRo
-ZSBjYW5vbmljYWwgd2F5IGZvciBhIHNpbmdsZSBtYWNybyB0byBjaGVjay4NCg0KQWxzbywgdGhp
-cyBuZWVkcyB0byBiZSBmaW5lciBncmFpbmVkLCBpLmUuIENPTkZJR19BUkNfRFNQX0tFUk5FTCB3
-aGljaCBpcyBhbHJlYWR5DQp0aWVkIHRvIEFSQ1YyIG9ubHkgY29uZmlncy4NCg0KPiAgCWxyCXI1
-LCBbQVJDX0FVWF9EU1BfQlVJTERdDQo+ICAJYm1zawlyNSwgcjUsIDcNCj4gIAlicmVxICAgIHI1
-LCAwLCAxZg0KPiAgCW1vdglyNSwgRFNQX0NUUkxfRElTQUJMRURfQUxMDQo+ICAJc3IJcjUsIFtB
-UkNfQVVYX0RTUF9DVFJMXQ0KPiAgMToNCj4gKyNlbmRpZg0KPiAgLmVuZG0NCj4gIA0KPiAgLyog
-Y2xvYmJlcnMgcjEwLCByMTEgcmVnaXN0ZXJzIHBhaXIgKi8NCg0K
+Currently automatic gadget endpoint selection based on required features
+doesn't work. Raw Gadget tries iterating over the list of available
+endpoints and finding one that has the right direction and transfer type.
+Unfortunately selecting arbitrary gadget endpoints (even if they satisfy
+feature requirements) doesn't work, as (depending on the UDC driver) they
+might have fixed addresses, and one also needs to provide matching
+endpoint addresses in the descriptors sent to the host.
+
+The composite framework deals with this by assigning endpoint addresses
+in usb_ep_autoconfig() before enumeration starts. This approach won't work
+with Raw Gadget as the endpoints are supposed to be enabled after a
+set_configuration/set_interface request from the host, so it's too late to
+patch the endpoint descriptors that had already been sent to the host.
+
+For Raw Gadget we take the another approach. Similarly to GadgetFS, we
+allow the user to make the decision as to which gadget endpoints to use.
+
+This patch adds another Raw Gadget ioctl USB_RAW_IOCTL_EPS_INFO that
+exposes information about all non-control endpoints that a currently
+connected UDC has. This information includes endpoints addresses, as well
+as their capabilities and limits to allow the user to chose the most
+fitting gadget endpoint.
+
+The USB_RAW_IOCTL_EP_ENABLE ioctl is updated to use the proper endpoint
+validation routine usb_gadget_ep_match_desc() and also now accepts an
+optional usb_ss_ep_comp_descriptor argument.
+
+These changes affect the portability of the gadgets that use Raw Gadget
+when running on different UDCs. Nevertheless, as long as the user relies
+on the information provided by USB_RAW_IOCTL_EPS_INFO to dynamically
+choose endpoint addresses, UDC-agnostic gadgets can still be written with
+Raw Gadget.
+
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+---
+ Documentation/usb/raw-gadget.rst       |   6 +-
+ drivers/usb/gadget/legacy/raw_gadget.c | 194 ++++++++++++++++---------
+ include/uapi/linux/usb/raw_gadget.h    |  84 ++++++++++-
+ 3 files changed, 207 insertions(+), 77 deletions(-)
+
+diff --git a/Documentation/usb/raw-gadget.rst b/Documentation/usb/raw-gadget.rst
+index 9e78cb858f86..42bd446d72b2 100644
+--- a/Documentation/usb/raw-gadget.rst
++++ b/Documentation/usb/raw-gadget.rst
+@@ -27,11 +27,7 @@ differences are:
+ 3. Raw Gadget provides a way to select a UDC device/driver to bind to,
+    while GadgetFS currently binds to the first available UDC.
+ 
+-4. Raw Gadget uses predictable endpoint names (handles) across different
+-   UDCs (as long as UDCs have enough endpoints of each required transfer
+-   type).
+-
+-5. Raw Gadget has ioctl-based interface instead of a filesystem-based one.
++4. Raw Gadget has ioctl-based interface instead of a filesystem-based one.
+ 
+ Userspace interface
+ ~~~~~~~~~~~~~~~~~~~
+diff --git a/drivers/usb/gadget/legacy/raw_gadget.c b/drivers/usb/gadget/legacy/raw_gadget.c
+index 7b241992ad5a..cbf4b0572188 100644
+--- a/drivers/usb/gadget/legacy/raw_gadget.c
++++ b/drivers/usb/gadget/legacy/raw_gadget.c
+@@ -7,6 +7,7 @@
+  */
+ 
+ #include <linux/compiler.h>
++#include <linux/ctype.h>
+ #include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/kref.h>
+@@ -123,8 +124,6 @@ static void raw_event_queue_destroy(struct raw_event_queue *queue)
+ 
+ struct raw_dev;
+ 
+-#define USB_RAW_MAX_ENDPOINTS 32
+-
+ enum ep_state {
+ 	STATE_EP_DISABLED,
+ 	STATE_EP_ENABLED,
+@@ -134,6 +133,7 @@ struct raw_ep {
+ 	struct raw_dev		*dev;
+ 	enum ep_state		state;
+ 	struct usb_ep		*ep;
++	u8			addr;
+ 	struct usb_request	*req;
+ 	bool			urb_queued;
+ 	bool			disabling;
+@@ -168,7 +168,8 @@ struct raw_dev {
+ 	bool				ep0_out_pending;
+ 	bool				ep0_urb_queued;
+ 	ssize_t				ep0_status;
+-	struct raw_ep			eps[USB_RAW_MAX_ENDPOINTS];
++	struct raw_ep			eps[USB_RAW_EPS_NUM_MAX];
++	int				eps_num;
+ 
+ 	struct completion		ep0_done;
+ 	struct raw_event_queue		queue;
+@@ -202,7 +203,7 @@ static void dev_free(struct kref *kref)
+ 		usb_ep_free_request(dev->gadget->ep0, dev->req);
+ 	}
+ 	raw_event_queue_destroy(&dev->queue);
+-	for (i = 0; i < USB_RAW_MAX_ENDPOINTS; i++) {
++	for (i = 0; i < USB_RAW_EPS_NUM_MAX; i++) {
+ 		if (dev->eps[i].state != STATE_EP_ENABLED)
+ 			continue;
+ 		usb_ep_disable(dev->eps[i].ep);
+@@ -249,12 +250,26 @@ static void gadget_ep0_complete(struct usb_ep *ep, struct usb_request *req)
+ 	complete(&dev->ep0_done);
+ }
+ 
++static u8 get_ep_addr(const char *name)
++{
++	/* If the endpoint has fixed function (named as e.g. "ep12out-bulk"),
++	 * parse the endpoint address from its name. We deliberately use
++	 * deprecated simple_strtoul() function here, as the number isn't
++	 * followed by '\0' nor '\n'.
++	 */
++	if (isdigit(name[2]))
++		return simple_strtoul(&name[2], NULL, 10);
++	/* Otherwise the endpoint is configurable (named as e.g. "ep-a"). */
++	return USB_RAW_EP_ADDR_ANY;
++}
++
+ static int gadget_bind(struct usb_gadget *gadget,
+ 			struct usb_gadget_driver *driver)
+ {
+-	int ret = 0;
++	int ret = 0, i = 0;
+ 	struct raw_dev *dev = container_of(driver, struct raw_dev, driver);
+ 	struct usb_request *req;
++	struct usb_ep *ep;
+ 	unsigned long flags;
+ 
+ 	if (strcmp(gadget->name, dev->udc_name) != 0)
+@@ -273,6 +288,13 @@ static int gadget_bind(struct usb_gadget *gadget,
+ 	dev->req->context = dev;
+ 	dev->req->complete = gadget_ep0_complete;
+ 	dev->gadget = gadget;
++	gadget_for_each_ep(ep, dev->gadget) {
++		dev->eps[i].ep = ep;
++		dev->eps[i].addr = get_ep_addr(ep->name);
++		dev->eps[i].state = STATE_EP_DISABLED;
++		i++;
++	}
++	dev->eps_num = i;
+ 	spin_unlock_irqrestore(&dev->lock, flags);
+ 
+ 	/* Matches kref_put() in gadget_unbind(). */
+@@ -555,7 +577,7 @@ static void *raw_alloc_io_data(struct usb_raw_ep_io *io, void __user *ptr,
+ 
+ 	if (copy_from_user(io, ptr, sizeof(*io)))
+ 		return ERR_PTR(-EFAULT);
+-	if (io->ep >= USB_RAW_MAX_ENDPOINTS)
++	if (io->ep >= USB_RAW_EPS_NUM_MAX)
+ 		return ERR_PTR(-EINVAL);
+ 	if (!usb_raw_io_flags_valid(io->flags))
+ 		return ERR_PTR(-EINVAL);
+@@ -682,52 +704,30 @@ static int raw_ioctl_ep0_read(struct raw_dev *dev, unsigned long value)
+ 	return ret;
+ }
+ 
+-static bool check_ep_caps(struct usb_ep *ep,
+-				struct usb_endpoint_descriptor *desc)
+-{
+-	switch (usb_endpoint_type(desc)) {
+-	case USB_ENDPOINT_XFER_ISOC:
+-		if (!ep->caps.type_iso)
+-			return false;
+-		break;
+-	case USB_ENDPOINT_XFER_BULK:
+-		if (!ep->caps.type_bulk)
+-			return false;
+-		break;
+-	case USB_ENDPOINT_XFER_INT:
+-		if (!ep->caps.type_int)
+-			return false;
+-		break;
+-	default:
+-		return false;
+-	}
+-
+-	if (usb_endpoint_dir_in(desc) && !ep->caps.dir_in)
+-		return false;
+-	if (usb_endpoint_dir_out(desc) && !ep->caps.dir_out)
+-		return false;
+-
+-	return true;
+-}
+-
+ static int raw_ioctl_ep_enable(struct raw_dev *dev, unsigned long value)
+ {
+ 	int ret = 0, i;
+ 	unsigned long flags;
+-	struct usb_endpoint_descriptor *desc;
+-	struct usb_ep *ep = NULL;
++	struct usb_raw_ep_descs *descs;
++	struct usb_endpoint_descriptor *ep_desc;
++	struct usb_ss_ep_comp_descriptor *comp_desc = NULL;
++	struct raw_ep *ep;
+ 
+-	desc = memdup_user((void __user *)value, sizeof(*desc));
+-	if (IS_ERR(desc))
+-		return PTR_ERR(desc);
++	descs = memdup_user((void __user *)value, sizeof(*descs));
++	if (IS_ERR(descs))
++		return PTR_ERR(descs);
++
++	ep_desc = &descs->ep;
++	if (descs->comp.bLength != 0)
++		comp_desc = &descs->comp;
+ 
+ 	/*
+ 	 * Endpoints with a maxpacket length of 0 can cause crashes in UDC
+ 	 * drivers.
+ 	 */
+-	if (usb_endpoint_maxp(desc) == 0) {
++	if (usb_endpoint_maxp(ep_desc) == 0) {
+ 		dev_dbg(dev->dev, "fail, bad endpoint maxpacket\n");
+-		kfree(desc);
++		kfree(descs);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -743,41 +743,38 @@ static int raw_ioctl_ep_enable(struct raw_dev *dev, unsigned long value)
+ 		goto out_free;
+ 	}
+ 
+-	for (i = 0; i < USB_RAW_MAX_ENDPOINTS; i++) {
+-		if (dev->eps[i].state == STATE_EP_ENABLED)
++	for (i = 0; i < dev->eps_num; i++) {
++		ep = &dev->eps[i];
++		if (ep->state != STATE_EP_DISABLED)
+ 			continue;
+-		break;
+-	}
+-	if (i == USB_RAW_MAX_ENDPOINTS) {
+-		dev_dbg(&dev->gadget->dev,
+-				"fail, no device endpoints available\n");
+-		ret = -EBUSY;
+-		goto out_free;
+-	}
+-
+-	gadget_for_each_ep(ep, dev->gadget) {
+-		if (ep->enabled)
++		if (ep->addr != usb_endpoint_num(ep_desc) &&
++				ep->addr != USB_RAW_EP_ADDR_ANY)
+ 			continue;
+-		if (!check_ep_caps(ep, desc))
++		if (!usb_gadget_ep_match_desc(dev->gadget, ep->ep,
++							ep_desc, comp_desc))
+ 			continue;
+-		ep->desc = desc;
+-		ret = usb_ep_enable(ep);
++		/* Gadget subsystem requires us to assign only a pointer to the
++		 * endpoint descriptor here, but technically we store pointer
++		 * to a usb_raw_ep_descs struct with both ep and comp
++		 * descriptors to be later freed by raw_ioctl_ep_disable().
++		 */
++		ep->ep->desc = ep_desc;
++		ret = usb_ep_enable(ep->ep);
+ 		if (ret < 0) {
+ 			dev_err(&dev->gadget->dev,
+ 				"fail, usb_ep_enable returned %d\n", ret);
+ 			goto out_free;
+ 		}
+-		dev->eps[i].req = usb_ep_alloc_request(ep, GFP_ATOMIC);
+-		if (!dev->eps[i].req) {
++		ep->req = usb_ep_alloc_request(ep->ep, GFP_ATOMIC);
++		if (!ep->req) {
+ 			dev_err(&dev->gadget->dev,
+ 				"fail, usb_ep_alloc_request failed\n");
+-			usb_ep_disable(ep);
++			usb_ep_disable(ep->ep);
+ 			ret = -ENOMEM;
+ 			goto out_free;
+ 		}
+-		dev->eps[i].ep = ep;
+-		dev->eps[i].state = STATE_EP_ENABLED;
+-		ep->driver_data = &dev->eps[i];
++		ep->state = STATE_EP_ENABLED;
++		ep->ep->driver_data = ep;
+ 		ret = i;
+ 		goto out_unlock;
+ 	}
+@@ -786,7 +783,7 @@ static int raw_ioctl_ep_enable(struct raw_dev *dev, unsigned long value)
+ 	ret = -EBUSY;
+ 
+ out_free:
+-	kfree(desc);
++	kfree(descs);
+ out_unlock:
+ 	spin_unlock_irqrestore(&dev->lock, flags);
+ 	return ret;
+@@ -796,9 +793,9 @@ static int raw_ioctl_ep_disable(struct raw_dev *dev, unsigned long value)
+ {
+ 	int ret = 0, i = value;
+ 	unsigned long flags;
+-	const void *desc;
++	const void *descs;
+ 
+-	if (i < 0 || i >= USB_RAW_MAX_ENDPOINTS)
++	if (i < 0 || i >= USB_RAW_EPS_NUM_MAX)
+ 		return -EINVAL;
+ 
+ 	spin_lock_irqsave(&dev->lock, flags);
+@@ -836,10 +833,10 @@ static int raw_ioctl_ep_disable(struct raw_dev *dev, unsigned long value)
+ 
+ 	spin_lock_irqsave(&dev->lock, flags);
+ 	usb_ep_free_request(dev->eps[i].ep, dev->eps[i].req);
+-	desc = dev->eps[i].ep->desc;
++	descs = dev->eps[i].ep->desc;
+ 	dev->eps[i].ep = NULL;
+ 	dev->eps[i].state = STATE_EP_DISABLED;
+-	kfree(desc);
++	kfree(descs);
+ 	dev->eps[i].disabling = false;
+ 
+ out_unlock:
+@@ -1027,6 +1024,64 @@ static int raw_ioctl_vbus_draw(struct raw_dev *dev, unsigned long value)
+ 	return ret;
+ }
+ 
++static void fill_ep_caps(struct usb_ep_caps *caps,
++				struct usb_raw_ep_caps *raw_caps)
++{
++	raw_caps->type_control = caps->type_control;
++	raw_caps->type_iso = caps->type_iso;
++	raw_caps->type_bulk = caps->type_bulk;
++	raw_caps->type_int = caps->type_int;
++	raw_caps->dir_in = caps->dir_in;
++	raw_caps->dir_out = caps->dir_out;
++}
++
++static void fill_ep_limits(struct usb_ep *ep, struct usb_raw_ep_limits *limits)
++{
++	limits->maxpacket_limit = ep->maxpacket_limit;
++	limits->max_streams = ep->max_streams;
++	limits->maxburst = ep->maxburst;
++}
++
++static int raw_ioctl_eps_info(struct raw_dev *dev, unsigned long value)
++{
++	int ret = 0, i;
++	unsigned long flags;
++	struct usb_raw_eps_info info;
++	struct raw_ep *ep;
++
++	spin_lock_irqsave(&dev->lock, flags);
++	if (dev->state != STATE_DEV_RUNNING) {
++		dev_dbg(dev->dev, "fail, device is not running\n");
++		ret = -EINVAL;
++		spin_unlock_irqrestore(&dev->lock, flags);
++		goto out;
++	}
++	if (!dev->gadget) {
++		dev_dbg(dev->dev, "fail, gadget is not bound\n");
++		ret = -EBUSY;
++		spin_unlock_irqrestore(&dev->lock, flags);
++		goto out;
++	}
++
++	memset(&info, 0, sizeof(info));
++	for (i = 0; i < dev->eps_num; i++) {
++		ep = &dev->eps[i];
++		strscpy(&info.eps[i].name[0], ep->ep->name,
++				USB_RAW_EP_NAME_MAX);
++		info.eps[i].addr = ep->addr;
++		fill_ep_caps(&ep->ep->caps, &info.eps[i].caps);
++		fill_ep_limits(ep->ep, &info.eps[i].limits);
++	}
++	ret = dev->eps_num;
++	spin_unlock_irqrestore(&dev->lock, flags);
++
++	if (copy_to_user((void __user *)value, &info, sizeof(info)))
++		ret = -EFAULT;
++
++out:
++	return ret;
++}
++
+ static long raw_ioctl(struct file *fd, unsigned int cmd, unsigned long value)
+ {
+ 	struct raw_dev *dev = fd->private_data;
+@@ -1069,6 +1124,9 @@ static long raw_ioctl(struct file *fd, unsigned int cmd, unsigned long value)
+ 	case USB_RAW_IOCTL_VBUS_DRAW:
+ 		ret = raw_ioctl_vbus_draw(dev, value);
+ 		break;
++	case USB_RAW_IOCTL_EPS_INFO:
++		ret = raw_ioctl_eps_info(dev, value);
++		break;
+ 	default:
+ 		ret = -EINVAL;
+ 	}
+diff --git a/include/uapi/linux/usb/raw_gadget.h b/include/uapi/linux/usb/raw_gadget.h
+index 8544802b25bd..6ae626d17f0c 100644
+--- a/include/uapi/linux/usb/raw_gadget.h
++++ b/include/uapi/linux/usb/raw_gadget.h
+@@ -93,6 +93,75 @@ struct usb_raw_ep_io {
+ 	__u8		data[0];
+ };
+ 
++/*
++ * struct usb_raw_ep_descs - argument for USB_RAW_IOCTL_EP_ENABLE ioctl.
++ * @ep: Endpoint descriptor.
++ * @comp: SuperSpeed Endpoint Companion descriptor.
++ *
++ * Both of these descriptors are only used by the gadget subsystem including
++ * the UDC driver and don't affect the descriptors that are sent to the host.
++ * However, the user must make sure that the host and the gadget sides agree
++ * on the used endpoint parameters (such as e.g. endpoint addresses).
++ */
++struct usb_raw_ep_descs {
++	struct usb_endpoint_descriptor		ep;
++	struct usb_ss_ep_comp_descriptor	comp;
++};
++
++/* Maximum number of non-control endpoints in struct usb_raw_eps_info. */
++#define USB_RAW_EPS_NUM_MAX	30
++
++/* Maximum length of UDC endpoint name in struct usb_raw_ep_info. */
++#define USB_RAW_EP_NAME_MAX	16
++
++/* Used as addr in struct usb_raw_ep_info if endpoint accepts any address. */
++#define USB_RAW_EP_ADDR_ANY	0xff
++
++/*
++ * struct usb_raw_ep_caps - exposes endpoint capabilities from
++ *     struct usb_ep_caps.
++ */
++struct usb_raw_ep_caps {
++	__u32	type_control:1;
++	__u32	type_iso:1;
++	__u32	type_bulk:1;
++	__u32	type_int:1;
++	__u32	dir_in:1;
++	__u32	dir_out:1;
++};
++
++/*
++ * struct usb_raw_ep_limits - exposes endpoint limits from struct usb_ep.
++ */
++struct usb_raw_ep_limits {
++	__u32	maxpacket_limit;
++	__u32	max_streams;
++	__u32	maxburst;
++};
++
++/*
++ * struct usb_raw_ep_info - stores information about a gadget endpoint.
++ * @name: Name of the endpoint as it is defined in the UDC driver.
++ * @addr: Address of the endpoint that must be specified in the endpoint
++ *     descriptor passed to USB_RAW_IOCTL_EP_ENABLE ioctl.
++ * @caps: Endpoint capabilities.
++ * @limits: Endpoint limits.
++ */
++struct usb_raw_ep_info {
++	__u8				name[USB_RAW_EP_NAME_MAX];
++	__u32				addr;
++	struct usb_raw_ep_caps		caps;
++	struct usb_raw_ep_limits	limits;
++};
++
++/*
++ * struct usb_raw_eps_info - argument for USB_RAW_IOCTL_EPS_INFO ioctl.
++ * eps: Structures that store information about non-control endpoints.
++ */
++struct usb_raw_eps_info {
++	struct usb_raw_ep_info	eps[USB_RAW_EPS_NUM_MAX];
++};
++
+ /*
+  * Initializes a Raw Gadget instance.
+  * Accepts a pointer to the usb_raw_init struct as an argument.
+@@ -126,12 +195,12 @@ struct usb_raw_ep_io {
+ #define USB_RAW_IOCTL_EP0_READ		_IOWR('U', 4, struct usb_raw_ep_io)
+ 
+ /*
+- * Finds an endpoint that supports the transfer type specified in the
+- * descriptor and enables it.
+- * Accepts a pointer to the usb_endpoint_descriptor struct as an argument.
++ * Finds an endpoint that satisfies the parameters specified in the provided
++ * descriptors (address, transfer type, etc.) and enables it.
++ * Accepts a pointer to the usb_raw_ep_descs struct as an argument.
+  * Returns enabled endpoint handle on success or negative error code on failure.
+  */
+-#define USB_RAW_IOCTL_EP_ENABLE		_IOW('U', 5, struct usb_endpoint_descriptor)
++#define USB_RAW_IOCTL_EP_ENABLE		_IOW('U', 5, struct usb_raw_ep_descs)
+ 
+ /* Disables specified endpoint.
+  * Accepts endpoint handle as an argument.
+@@ -164,4 +233,11 @@ struct usb_raw_ep_io {
+  */
+ #define USB_RAW_IOCTL_VBUS_DRAW		_IOW('U', 10, __u32)
+ 
++/* Fills in the usb_raw_eps_info structure with information about non-control
++ * endpoints available for the currently connected UDC.
++ * Returns the number of available endpoints on success or negative error code
++ * on failure.
++ */
++#define USB_RAW_IOCTL_EPS_INFO		_IOR('U', 11, struct usb_raw_eps_info)
++
+ #endif /* _UAPI__LINUX_USB_RAW_GADGET_H */
+-- 
+2.26.2.303.gf8c07b1a785-goog
+
