@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71ECDC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EFEC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46D9520730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D4922085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:52:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099938;
-	bh=Z+aGTiu/MMYd7+T5Sgdgb3SXYjm2IMEzxJTGQBgbQDg=;
+	s=default; t=1588099943;
+	bh=44T7SWIY83Obrz2DWLQSdXGRagyEww4zB2z4m9v9SEk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mZc8V0WHTMfLgbDv7qqjbk859+jvSR5CG2whTDkVSX541oc2gGJw3YDY/BBtS6XcR
-	 5LQzhhZbz9R+dSpbKZNVsyhXC7kFnyQPQTe7bxqjEtHWiQD8IwSTbL5nQ+vXdFQWbQ
-	 uVk/pQw1TmkFDLCFcYRnbYvOzz761pzrtKxNRu98=
+	b=abmS2DcQ6oTnS3g8s79Do/x66sUk1N5Y7HyUPg/GbaBuSnYYNxlo3tI4aBz44CnQc
+	 1d/6hM6MxJzV45CQKO9uyYzbLLwo+RjVfgOXzMHTVnivBpOHXyTRpUg8jKUSjVBcYP
+	 YlH1ZhxdzGkwYTNCkN/2Mmfq/YtE0oTEnrR57pBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730649AbgD1SwQ (ORCPT
+        id S1730906AbgD1SwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:52:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53792 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:52:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729579AbgD1SgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:36:22 -0400
+        id S1730364AbgD1SgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:36:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBD24214D8;
-        Tue, 28 Apr 2020 18:36:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7EB020575;
+        Tue, 28 Apr 2020 18:36:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098981;
-        bh=Z+aGTiu/MMYd7+T5Sgdgb3SXYjm2IMEzxJTGQBgbQDg=;
+        s=default; t=1588098976;
+        bh=44T7SWIY83Obrz2DWLQSdXGRagyEww4zB2z4m9v9SEk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F0kGEeltTUeSdPR7ICYJHogwZG8FBe38jlUM+iet3qfqgOQ2CK5DAmlbKGep6rCAw
-         1DNWm8cVlPHJTdd5rpzE58ZnZxKLQSyynaqCltEE5Znk3cdJS6jr+EHQYjntsEXNfq
-         CGeyAfWRMUngc6RfFkXywj8D3FY+cBLzClOyBzkY=
+        b=VX3B2fC4PBnGPwgzUnUBYc4Vsoor1+mtqGUOP4ism2iCeq7YrKpyO8FTJFmxgCKcP
+         4eAbMXRAtVpqPwyFxoXzp0k9KSA+6WQavK35rMzAqjcxEjOW/1NbErrEvEa/B720dH
+         407cY9nqq6UAzC5XIArDDrZlzaOhx7B4U41kwJn0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 5.6 140/167] staging: vt6656: Fix drivers TBTT timing counter.
-Date:   Tue, 28 Apr 2020 20:25:16 +0200
-Message-Id: <20200428182243.325768141@linuxfoundation.org>
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.19 081/131] iio: xilinx-xadc: Fix clearing interrupt when enabling trigger
+Date:   Tue, 28 Apr 2020 20:24:53 +0200
+Message-Id: <20200428182235.120764718@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,45 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-commit 09057742af98a39ebffa27fac4f889dc873132de upstream.
+commit f954b098fbac4d183219ce5b42d76d6df2aed50a upstream.
 
-The drivers TBTT counter is not synchronized with mac80211 timestamp.
+When enabling the trigger and unmasking the end-of-sequence (EOS) interrupt
+the EOS interrupt should be cleared from the status register. Otherwise it
+is possible that it was still set from a previous capture. If that is the
+case the interrupt would fire immediately even though no conversion has
+been done yet and stale data is being read from the device.
 
-Reorder the functions and use vnt_update_next_tbtt to do the final
-synchronize.
+The old code only clears the interrupt if the interrupt was previously
+unmasked. Which does not make much sense since the interrupt is always
+masked at this point and in addition masking the interrupt does not clear
+the interrupt from the status register. So the clearing needs to be done
+unconditionally.
 
-Fixes: c15158797df6 ("staging: vt6656: implement TSF counter")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/375d0b25-e8bc-c8f7-9b10-6cc705d486ee@gmail.com
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Fixes: bdc8cda1d010 ("iio:adc: Add Xilinx XADC driver")
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6656/main_usb.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/iio/adc/xilinx-xadc-core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/vt6656/main_usb.c
-+++ b/drivers/staging/vt6656/main_usb.c
-@@ -777,12 +777,15 @@ static void vnt_bss_info_changed(struct
- 			vnt_mac_reg_bits_on(priv, MAC_REG_TFTCTL,
- 					    TFTCTL_TSFCNTREN);
+--- a/drivers/iio/adc/xilinx-xadc-core.c
++++ b/drivers/iio/adc/xilinx-xadc-core.c
+@@ -675,7 +675,7 @@ static int xadc_trigger_set_state(struct
  
--			vnt_adjust_tsf(priv, conf->beacon_rate->hw_value,
--				       conf->sync_tsf, priv->current_tsf);
--
- 			vnt_mac_set_beacon_interval(priv, conf->beacon_int);
- 
- 			vnt_reset_next_tbtt(priv, conf->beacon_int);
-+
-+			vnt_adjust_tsf(priv, conf->beacon_rate->hw_value,
-+				       conf->sync_tsf, priv->current_tsf);
-+
-+			vnt_update_next_tbtt(priv,
-+					     conf->sync_tsf, conf->beacon_int);
- 		} else {
- 			vnt_clear_current_tsf(priv);
- 
+ 	spin_lock_irqsave(&xadc->lock, flags);
+ 	xadc_read_reg(xadc, XADC_AXI_REG_IPIER, &val);
+-	xadc_write_reg(xadc, XADC_AXI_REG_IPISR, val & XADC_AXI_INT_EOS);
++	xadc_write_reg(xadc, XADC_AXI_REG_IPISR, XADC_AXI_INT_EOS);
+ 	if (state)
+ 		val |= XADC_AXI_INT_EOS;
+ 	else
 
 
