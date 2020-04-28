@@ -2,52 +2,51 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B2AC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07D9C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C788E208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA4A9208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099005;
-	bh=FK7eUuzCW4GPx08jc70s2BZ2va0uZtioF7V7N9/9Ugk=;
+	s=default; t=1588099009;
+	bh=V/z9nYtkNN3czXQhqwf7MYTQj/NZF5QlMLIlsp40KV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1f6ooEPrJLn5s1MCb4OowNDY0EVQFT6aQBy/fqfHfZtzuXRDOWOKzip+GFaspGXFc
-	 Jzf9vjhTPzyKudpm1Aegnmcqqt/LW0M/ELiCuAXp55rMwpLeljNns+KjX/jv9+90h2
-	 oBExDmOZadMXyNT/8oxV/16rV1N1zonGPH2CqX08=
+	b=TiBN6yXJx2rxzVCqJsT7QbGAOJNzLO3RpntTxIE/WWQZn05kkSdhuLcK+Xxn51+wd
+	 OFhg/JnvJLyCha4igD73f4d1ZXMr+IOzuVkhD4DDC+qIgb9Emi7HFUdALGZCLLm7Tz
+	 7yH+mPFhmgLbrNuOGQ12fun/4taOH85uZFpML+s8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730396AbgD1Sgo (ORCPT
+        id S1729951AbgD1Sgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:36:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54098 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:36:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729857AbgD1Sgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:36:36 -0400
+        id S1730394AbgD1Sgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:36:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68A4D20575;
-        Tue, 28 Apr 2020 18:36:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF8032085B;
+        Tue, 28 Apr 2020 18:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098995;
-        bh=FK7eUuzCW4GPx08jc70s2BZ2va0uZtioF7V7N9/9Ugk=;
+        s=default; t=1588099003;
+        bh=V/z9nYtkNN3czXQhqwf7MYTQj/NZF5QlMLIlsp40KV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YNYwmCNCzmXpssW7WwFV+0xxjxUrd42EZhzDJsk7mL+O7xgthHe5HUZzXrIhXBFKM
-         Ag7cbVuMdu7+VC3P6jqh9RYVoK+tUHvkBeehboM2UtS8ZQ9JIpH2qOowazHzfrOzUP
-         WdQ5tHu6PeAuoLz6zLFkxYGManQ2/G8QjwJ7Gnuk=
+        b=nMqxtI7q6laBNLkdNCjv9uDfBT/hb6lEfXdTGrpwOTCSZGBluNe7OvEI6dhuJNZky
+         P8/tNw9J8fE6LlHWThxemnKRv+9PSLBcQpv3cxuc5BwSvT126hlGcUBFb89VHssSBy
+         dgobOFHUB25gzIjqoUIzO9y9UnDjLVY1GXBxxdM4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, greg@kroah.com
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 083/131] iio: xilinx-xadc: Make sure not exceed maximum samplerate
-Date:   Tue, 28 Apr 2020 20:24:55 +0200
-Message-Id: <20200428182235.352564767@linuxfoundation.org>
+        stable@vger.kernel.org, Piotr Krysiuk <piotras@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 4.19 084/131] fs/namespace.c: fix mountpoint reference counter race
+Date:   Tue, 28 Apr 2020 20:24:56 +0200
+Message-Id: <20200428182235.475417804@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
 References: <20200428182224.822179290@linuxfoundation.org>
@@ -60,180 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
 
-commit 3b7f9dbb827ce8680b98490215e698b6079a9ec5 upstream.
+From: Piotr Krysiuk <piotras@gmail.com>
 
-The XADC supports a samplerate of up to 1MSPS. Unfortunately the hardware
-does not have a FIFO, which means it generates an interrupt for each
-conversion sequence. At one 1MSPS this creates an interrupt storm that
-causes the system to soft-lock.
+A race condition between threads updating mountpoint reference counter
+affects longterm releases 4.4.220, 4.9.220, 4.14.177 and 4.19.118.
 
-For this reason the driver limits the maximum samplerate to 150kSPS.
-Currently this check is only done when setting a new samplerate. But it is
-also possible that the initial samplerate configured in the FPGA bitstream
-exceeds the limit.
+The mountpoint reference counter corruption may occur when:
+* one thread increments m_count member of struct mountpoint
+  [under namespace_sem, but not holding mount_lock]
+    pivot_root()
+* another thread simultaneously decrements the same m_count
+  [under mount_lock, but not holding namespace_sem]
+    put_mountpoint()
+      unhash_mnt()
+        umount_mnt()
+          mntput_no_expire()
 
-In this case when starting to capture data without first changing the
-samplerate the system can overload.
+To fix this race condition, grab mount_lock before updating m_count in
+pivot_root().
 
-To prevent this check the currently configured samplerate in the probe
-function and reduce it to the maximum if necessary.
-
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Fixes: bdc8cda1d010 ("iio:adc: Add Xilinx XADC driver")
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reference: CVE-2020-12114
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Piotr Krysiuk <piotras@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/xilinx-xadc-core.c |   78 ++++++++++++++++++++++++++++---------
- 1 file changed, 60 insertions(+), 18 deletions(-)
+ fs/namespace.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/iio/adc/xilinx-xadc-core.c
-+++ b/drivers/iio/adc/xilinx-xadc-core.c
-@@ -103,6 +103,16 @@ static const unsigned int XADC_ZYNQ_UNMA
- 
- #define XADC_FLAGS_BUFFERED BIT(0)
- 
-+/*
-+ * The XADC hardware supports a samplerate of up to 1MSPS. Unfortunately it does
-+ * not have a hardware FIFO. Which means an interrupt is generated for each
-+ * conversion sequence. At 1MSPS sample rate the CPU in ZYNQ7000 is completely
-+ * overloaded by the interrupts that it soft-lockups. For this reason the driver
-+ * limits the maximum samplerate 150kSPS. At this rate the CPU is fairly busy,
-+ * but still responsive.
-+ */
-+#define XADC_MAX_SAMPLERATE 150000
-+
- static void xadc_write_reg(struct xadc *xadc, unsigned int reg,
- 	uint32_t val)
- {
-@@ -835,11 +845,27 @@ static const struct iio_buffer_setup_ops
- 	.postdisable = &xadc_postdisable,
- };
- 
-+static int xadc_read_samplerate(struct xadc *xadc)
-+{
-+	unsigned int div;
-+	uint16_t val16;
-+	int ret;
-+
-+	ret = xadc_read_adc_reg(xadc, XADC_REG_CONF2, &val16);
-+	if (ret)
-+		return ret;
-+
-+	div = (val16 & XADC_CONF2_DIV_MASK) >> XADC_CONF2_DIV_OFFSET;
-+	if (div < 2)
-+		div = 2;
-+
-+	return xadc_get_dclk_rate(xadc) / div / 26;
-+}
-+
- static int xadc_read_raw(struct iio_dev *indio_dev,
- 	struct iio_chan_spec const *chan, int *val, int *val2, long info)
- {
- 	struct xadc *xadc = iio_priv(indio_dev);
--	unsigned int div;
- 	uint16_t val16;
- 	int ret;
- 
-@@ -892,41 +918,31 @@ static int xadc_read_raw(struct iio_dev
- 		*val = -((273150 << 12) / 503975);
- 		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_SAMP_FREQ:
--		ret = xadc_read_adc_reg(xadc, XADC_REG_CONF2, &val16);
--		if (ret)
-+		ret = xadc_read_samplerate(xadc);
-+		if (ret < 0)
- 			return ret;
- 
--		div = (val16 & XADC_CONF2_DIV_MASK) >> XADC_CONF2_DIV_OFFSET;
--		if (div < 2)
--			div = 2;
--
--		*val = xadc_get_dclk_rate(xadc) / div / 26;
--
-+		*val = ret;
- 		return IIO_VAL_INT;
- 	default:
- 		return -EINVAL;
- 	}
- }
- 
--static int xadc_write_raw(struct iio_dev *indio_dev,
--	struct iio_chan_spec const *chan, int val, int val2, long info)
-+static int xadc_write_samplerate(struct xadc *xadc, int val)
- {
--	struct xadc *xadc = iio_priv(indio_dev);
- 	unsigned long clk_rate = xadc_get_dclk_rate(xadc);
- 	unsigned int div;
- 
- 	if (!clk_rate)
- 		return -EINVAL;
- 
--	if (info != IIO_CHAN_INFO_SAMP_FREQ)
--		return -EINVAL;
--
- 	if (val <= 0)
- 		return -EINVAL;
- 
- 	/* Max. 150 kSPS */
--	if (val > 150000)
--		val = 150000;
-+	if (val > XADC_MAX_SAMPLERATE)
-+		val = XADC_MAX_SAMPLERATE;
- 
- 	val *= 26;
- 
-@@ -939,7 +955,7 @@ static int xadc_write_raw(struct iio_dev
- 	 * limit.
- 	 */
- 	div = clk_rate / val;
--	if (clk_rate / div / 26 > 150000)
-+	if (clk_rate / div / 26 > XADC_MAX_SAMPLERATE)
- 		div++;
- 	if (div < 2)
- 		div = 2;
-@@ -950,6 +966,17 @@ static int xadc_write_raw(struct iio_dev
- 		div << XADC_CONF2_DIV_OFFSET);
- }
- 
-+static int xadc_write_raw(struct iio_dev *indio_dev,
-+	struct iio_chan_spec const *chan, int val, int val2, long info)
-+{
-+	struct xadc *xadc = iio_priv(indio_dev);
-+
-+	if (info != IIO_CHAN_INFO_SAMP_FREQ)
-+		return -EINVAL;
-+
-+	return xadc_write_samplerate(xadc, val);
-+}
-+
- static const struct iio_event_spec xadc_temp_events[] = {
- 	{
- 		.type = IIO_EV_TYPE_THRESH,
-@@ -1237,6 +1264,21 @@ static int xadc_probe(struct platform_de
- 	if (ret)
- 		goto err_free_samplerate_trigger;
- 
-+	/*
-+	 * Make sure not to exceed the maximum samplerate since otherwise the
-+	 * resulting interrupt storm will soft-lock the system.
-+	 */
-+	if (xadc->ops->flags & XADC_FLAGS_BUFFERED) {
-+		ret = xadc_read_samplerate(xadc);
-+		if (ret < 0)
-+			goto err_free_samplerate_trigger;
-+		if (ret > XADC_MAX_SAMPLERATE) {
-+			ret = xadc_write_samplerate(xadc, XADC_MAX_SAMPLERATE);
-+			if (ret < 0)
-+				goto err_free_samplerate_trigger;
-+		}
-+	}
-+
- 	ret = request_irq(xadc->irq, xadc->ops->interrupt_handler, 0,
- 			dev_name(&pdev->dev), indio_dev);
- 	if (ret)
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -3142,8 +3142,8 @@ SYSCALL_DEFINE2(pivot_root, const char _
+ 	/* make certain new is below the root */
+ 	if (!is_path_reachable(new_mnt, new.dentry, &root))
+ 		goto out4;
+-	root_mp->m_count++; /* pin it so it won't go away */
+ 	lock_mount_hash();
++	root_mp->m_count++; /* pin it so it won't go away */
+ 	detach_mnt(new_mnt, &parent_path);
+ 	detach_mnt(root_mnt, &root_parent);
+ 	if (root_mnt->mnt.mnt_flags & MNT_LOCKED) {
 
 
