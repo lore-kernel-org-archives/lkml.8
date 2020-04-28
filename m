@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED45C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAADC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2BE3206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47BF220575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:52:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099952;
-	bh=Jq+43dOowewCe+eyDo+Q0xe3EHHPuoR53eIrtwTUFs8=;
+	s=default; t=1588099959;
+	bh=D7yI5jf0N7AIEwKlsJJUMm+DUQddQ9Hx2yGufvoqEMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gleTr760eWVmAZ54pqrXGkRGy7ydAvAdol4b6ctpDV8Ze8TVpJOPewtP/bnnrb4KA
-	 UpPTuzfnPH5c7vylKkXFW53vy5fYqvBAGLxYOA7IXRggTcs5eN9u4Wx1B5B7ioIRY1
-	 611WgFYY45WQ2nj9G16tiZu7JV+ph3vhGDxaWX24=
+	b=v3JzRrPs0NJ4Dy1/cyKOXOhvomeWMnzFsFz0rfVoeJMMIBoo02BG3TcWlLndZSMyY
+	 earN+BsvyWFvUPa7kd+F34pWhXcgnOIalC0BWBrPTVKPPL7RLdTQCJ/pvhSHFIvDSi
+	 o/DRpHeW7sbeYGzGacjUYrNvlnQD4BMpcnK1ZV4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730349AbgD1SgJ (ORCPT
+        id S1730624AbgD1Swi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:36:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53420 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:52:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730331AbgD1SgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:36:02 -0400
+        id S1729261AbgD1SgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:36:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 583082085B;
-        Tue, 28 Apr 2020 18:36:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C12FB2085B;
+        Tue, 28 Apr 2020 18:36:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098961;
-        bh=Jq+43dOowewCe+eyDo+Q0xe3EHHPuoR53eIrtwTUFs8=;
+        s=default; t=1588098964;
+        bh=D7yI5jf0N7AIEwKlsJJUMm+DUQddQ9Hx2yGufvoqEMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uhs+QBSLD2nooDmG1uwf+U8t5hMsUmr0B+jy1ExHzdeRX+StRXz+bvDbWrRWwCGWc
-         2DwudwEdL1Mgh6cmI293H8IOPZqCiQyOzPmq2bzX3gSu9EaPE8R2vS9LDNuN2VtQk9
-         4c2QoE0vT/xfPXBCW63dQGV/712shKdFxgNFKrao=
+        b=lOFAFWhAmoKshksV8porf9TP8szp3KoSTVDPKtFEsumh1OG2/hd3d6mWT2HC0B5h8
+         YeAaxInjgaehGgAl13XS/oDGGuBBglOFYpZT7sTqbKvK5ed66yud8zzsQRskfvCOmZ
+         RbJLe5K39d6iQIZOaolvHXhBKOTyveVzerRphEVY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 5.6 134/167] staging: comedi: dt2815: fix writing hi byte of analog output
-Date:   Tue, 28 Apr 2020 20:25:10 +0200
-Message-Id: <20200428182242.389089986@linuxfoundation.org>
+        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.19 079/131] iio: adc: stm32-adc: fix sleep in atomic context
+Date:   Tue, 28 Apr 2020 20:24:51 +0200
+Message-Id: <20200428182234.861197663@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,62 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Olivier Moysan <olivier.moysan@st.com>
 
-commit ed87d33ddbcd9a1c3b5ae87995da34e6f51a862c upstream.
+commit e2042d2936dfc84e9c600fe9b9d0039ca0e54b7d upstream.
 
-The DT2815 analog output command is 16 bits wide, consisting of the
-12-bit sample value in bits 15 to 4, the channel number in bits 3 to 1,
-and a voltage or current selector in bit 0.  Both bytes of the 16-bit
-command need to be written in turn to a single 8-bit data register.
-However, the driver currently only writes the low 8-bits.  It is broken
-and appears to have always been broken.
+This commit fixes the following error:
+"BUG: sleeping function called from invalid context at kernel/irq/chip.c"
 
-Electronic copies of the DT2815 User's Manual seem impossible to find
-online, but looking at the source code, a best guess for the sequence
-the driver intended to use to write the analog output command is as
-follows:
+In DMA mode suppress the trigger irq handler, and make the buffer
+transfers directly in DMA callback, instead.
 
-1. Wait for the status register to read 0x00.
-2. Write the low byte of the command to the data register.
-3. Wait for the status register to read 0x80.
-4. Write the high byte of the command to the data register.
-
-Step 4 is missing from the driver.  Add step 4 to (hopefully) fix the
-driver.
-
-Also add a "FIXME" comment about setting bit 0 of the low byte of the
-command.  Supposedly, it is used to choose between voltage output and
-current output, but the current driver always sets it to 1.
-
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200406142015.126982-1-abbotti@mev.co.uk
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 2763ea0585c9 ("iio: adc: stm32: add optional dma support")
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/dt2815.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/iio/adc/stm32-adc.c |   31 ++++++++++++++++++++++++++++---
+ 1 file changed, 28 insertions(+), 3 deletions(-)
 
---- a/drivers/staging/comedi/drivers/dt2815.c
-+++ b/drivers/staging/comedi/drivers/dt2815.c
-@@ -92,6 +92,7 @@ static int dt2815_ao_insn(struct comedi_
+--- a/drivers/iio/adc/stm32-adc.c
++++ b/drivers/iio/adc/stm32-adc.c
+@@ -1308,8 +1308,30 @@ static unsigned int stm32_adc_dma_residu
+ static void stm32_adc_dma_buffer_done(void *data)
+ {
+ 	struct iio_dev *indio_dev = data;
++	struct stm32_adc *adc = iio_priv(indio_dev);
++	int residue = stm32_adc_dma_residue(adc);
++
++	/*
++	 * In DMA mode the trigger services of IIO are not used
++	 * (e.g. no call to iio_trigger_poll).
++	 * Calling irq handler associated to the hardware trigger is not
++	 * relevant as the conversions have already been done. Data
++	 * transfers are performed directly in DMA callback instead.
++	 * This implementation avoids to call trigger irq handler that
++	 * may sleep, in an atomic context (DMA irq handler context).
++	 */
++	dev_dbg(&indio_dev->dev, "%s bufi=%d\n", __func__, adc->bufi);
++
++	while (residue >= indio_dev->scan_bytes) {
++		u16 *buffer = (u16 *)&adc->rx_buf[adc->bufi];
+ 
+-	iio_trigger_poll_chained(indio_dev->trig);
++		iio_push_to_buffers(indio_dev, buffer);
++
++		residue -= indio_dev->scan_bytes;
++		adc->bufi += indio_dev->scan_bytes;
++		if (adc->bufi >= adc->rx_buf_sz)
++			adc->bufi = 0;
++	}
+ }
+ 
+ static int stm32_adc_dma_start(struct iio_dev *indio_dev)
+@@ -1703,6 +1725,7 @@ static int stm32_adc_probe(struct platfo
+ {
+ 	struct iio_dev *indio_dev;
+ 	struct device *dev = &pdev->dev;
++	irqreturn_t (*handler)(int irq, void *p) = NULL;
+ 	struct stm32_adc *adc;
  	int ret;
  
- 	for (i = 0; i < insn->n; i++) {
-+		/* FIXME: lo bit 0 chooses voltage output or current output */
- 		lo = ((data[i] & 0x0f) << 4) | (chan << 1) | 0x01;
- 		hi = (data[i] & 0xff0) >> 4;
+@@ -1785,9 +1808,11 @@ static int stm32_adc_probe(struct platfo
+ 	if (ret < 0)
+ 		goto err_clk_disable;
  
-@@ -105,6 +106,8 @@ static int dt2815_ao_insn(struct comedi_
- 		if (ret)
- 			return ret;
- 
-+		outb(hi, dev->iobase + DT2815_DATA);
++	if (!adc->dma_chan)
++		handler = &stm32_adc_trigger_handler;
 +
- 		devpriv->ao_readback[chan] = data[i];
- 	}
- 	return i;
+ 	ret = iio_triggered_buffer_setup(indio_dev,
+-					 &iio_pollfunc_store_time,
+-					 &stm32_adc_trigger_handler,
++					 &iio_pollfunc_store_time, handler,
+ 					 &stm32_adc_buffer_setup_ops);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "buffer setup failed\n");
 
 
