@@ -2,132 +2,130 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E059C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86343C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C475206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 625C5206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:02:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nb6/Li2p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbgD1WB6 (ORCPT
+        id S1726661AbgD1WCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:01:58 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:60511 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgD1WB6 (ORCPT
+        Tue, 28 Apr 2020 18:02:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726381AbgD1WCG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:01:58 -0400
-Received: from mail-lf1-f53.google.com ([209.85.167.53]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MkYsS-1ikppa38uM-00m166 for <linux-kernel@vger.kernel.org>; Wed, 29 Apr
- 2020 00:01:56 +0200
-Received: by mail-lf1-f53.google.com with SMTP id t11so18065555lfe.4
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:01:56 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ0Ks2qBXKHmVtnYrBKsSv5H8uHhTx0gONPcaiSYuRRobzjZqOq
-        bgFYylM86dv0KRCk0nokTek3t9qnAAyZ2lEla/k=
-X-Google-Smtp-Source: APiQypKRCC3KPD04zAsw5+cxuEvdnddfpLWkPhoC2m7sjHNQVxlSGSJA7IqZ0gPza4uX18XwephNlgb4sPXRsKwTwuc=
-X-Received: by 2002:a05:6512:10cd:: with SMTP id k13mr20513654lfg.173.1588111316217;
- Tue, 28 Apr 2020 15:01:56 -0700 (PDT)
+        Tue, 28 Apr 2020 18:02:06 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DC1FC03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:02:06 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id a21so461089ljb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:02:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qgsuGKbVjYSeRuT0TDuIXexAYzlpaF3ybirX/bZdq/M=;
+        b=Nb6/Li2pKgIuauzZc2N7D4986KwsAReiq+tNfzAVNQVdh/FoY66ln1u7c/OYs5nAIQ
+         5UN/eOvHcUkIcP4q9blPXT94fH+WWdxswwCB5DKULdEHPi1YqR1dvk2z6PvlWWeAQAcm
+         wQwwSDA8HHbq+YgMhNTWRBM/CImHC0LY9UotCwM0UgXh0tABr3MbTh+50pfQ0KbVJKi8
+         cg4w5xhIpzuG6Bd892VjlS1HnODoa4vjODLOrKsg/dV5ZzXRX6o13x78TwXT7LaG0BJE
+         xgEIremOXnl4KN3PAUhl/lbPEuA27Zm/tMJk1F0bDyX0J3fzcmWjvKcuxbldGRhUrvwA
+         AVzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qgsuGKbVjYSeRuT0TDuIXexAYzlpaF3ybirX/bZdq/M=;
+        b=GCBQcBFVJcMfnWDjctmUa7ZMStNut6uGsFe52ukzAZCC3J2aQpKH/eHsrvIk32zSYR
+         BKpL8xk0CQTtrP+4uGVAUxX63+qeh4ZylUqb7mU59Oo9NULBJKRusxizCSGZPakb5tq/
+         ZRtxYxfI0bCVFpT+Z+zpMjef3nJl4CInVr4eBHTbjWx7ZgGgw/sX7mJZamIH2fBtT0R8
+         9fKAbRGrbakKhr6NOsThbh6MZJmHdSz82j+IKvsSRIQNbxTo+7JXw9cTAEfE61idww8L
+         1Y3gxZyI1F4sGI3ZTe9nLPVhHxVk+g6IQ3UGof02jRXDXTIM1x32dJM+KK33P5aZx3Bv
+         GrzA==
+X-Gm-Message-State: AGi0PuYQ2m6sewsGf7o1ygq+OpNW37ltBbWnCHU1owuAV4hfL4vj7UjS
+        y4E0CM3xbXVAKw20LQ5w4k8unbjgY9yG9M4zKbQydAkjxzHe5A==
+X-Google-Smtp-Source: APiQypK6ydV759YI7StmjgOVJfSU2MfnmxevWP+lyXRgv9iMHdwfQp34+B8t21gh6ZdagByaUv/XhQqYXuOXjfVzfUY=
+X-Received: by 2002:a2e:b249:: with SMTP id n9mr18998872ljm.221.1588111324730;
+ Tue, 28 Apr 2020 15:02:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200428212752.2901778-1-arnd@arndb.de> <6b39fbba-c65d-2c02-14bf-11c2d00547af@linux.intel.com>
-In-Reply-To: <6b39fbba-c65d-2c02-14bf-11c2d00547af@linux.intel.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 29 Apr 2020 00:01:39 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a24whg2RhJE3Vf5u3EWy+wvFqhXdp7EQZuQx0shPsMARw@mail.gmail.com>
-Message-ID: <CAK8P3a24whg2RhJE3Vf5u3EWy+wvFqhXdp7EQZuQx0shPsMARw@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: SOF: sort out Kconfig, again
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        sound-open-firmware@alsa-project.org,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200428175129.634352-1-mic@digikod.net> <CAG48ez1bKzh1YvbD_Lcg0AbMCH_cdZmrRRumU7UCJL=qPwNFpQ@mail.gmail.com>
+ <87blnb48a3.fsf@mid.deneb.enyo.de>
+In-Reply-To: <87blnb48a3.fsf@mid.deneb.enyo.de>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 29 Apr 2020 00:01:38 +0200
+Message-ID: <CAG48ez2TphTj-VdDaSjvnr0Q8BhNmT3n86xYz4bF3wRJmAMsMw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/5] Add support for RESOLVE_MAYEXEC
+To:     Florian Weimer <fw@deneb.enyo.de>
+Cc:     =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:BuX9Dak/99iKtVorhI5pIQrR/G5WeKHpo8sqZxqcDq27jW9wC+c
- 5yj99ZyaqEkdQqFg/T6WdO7q48IUCp+AGoUxLQf6RFMCA9h13zoO34mNXeSfBX7R9lwHJUb
- uYS8PHfYdNvGvVGZKuEFR7wAORhaTF47EZlv+SbMGKYSz+fqZdVQqFu7XGH+LzN/I0BGKaz
- scj1GnEBv4zkKWvgglFeA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zZn11hZBU0o=:tzLBf539tsDGuKSM6X3RpA
- n/syzXeZ4FFMMz36g6DOCM+4kGFxOBBUu5kKGB1Cp5GW1NNkQAj/4weWH9v2UnrqncHU9Mqax
- fyyazErfhjsC+Hd9bzFtml/vd+fYHoG7XyxLBv3hiaCFVGg+1+an5qkpIoG85KpnuU0pYKeyo
- WjuHEqIfo+UY2DWiCGvUShvgKAcNk7d8CF8I2+vieEGkxzzdlJvBHei7PZy1w4UBTAm46Cj97
- 45XWVDr9lRkbM6G+LeFMsX/eVIbLjQNJHrlXz7ERsuTo5iphY5CsE63q1owxl9EdhRmuD1yTH
- V9ZSt47OJ3RovzMXN7fJMI7mqOtaR7+cRAl1r3VBN1YsXYnxcpWIVFu3nf5idM8qKk8uEJADs
- hhX0QroEszan7Qz8EKzguTlKe8SiV5ceAItkWNk6CRTLFBSEReDjRutidd/u19WNp3foz8b1N
- LPR97UpU35qfBjixCnPQwCCk+WwaSeZzJi+oeL01f5e88eijN2yeS3XxWYSHW20J7ybhkXK3c
- wW3YCDOXuUfRdUM9N4tRiEv2WiCYJv0EY1yiOHF6uytZd7Rn0F4aVTmsDRaHTdrKtKZFcTNUs
- itndCqzuOKuO80P57gUZH//hmNIzBDpaXWs6gTRVa58YEzMdmw0C377qG4gYq61Q1al+uH/RG
- zy8Ta93ndddSZcicawVxXk9O4BWbQ0iCS/ch0B1mFtuw94pScLsmkQbI0t19w847MlKFlfjpM
- n1jCywQCVTSZgKcIlRq94ALXWV3KGnYP0AyMU4fH8ER9QPCPgTaFoqxPjBGuEkeZ1dVUl1MHB
- kbA39/Uq+agfLate3ZdVn0AC2es+ODwCK63SyBggGofOKKzQXI=
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 11:43 PM Pierre-Louis Bossart
-<pierre-louis.bossart@linux.intel.com> wrote:
-> On 4/28/20 4:27 PM, Arnd Bergmann wrote:
-> > The imx8 config keeps causing issues:
-> >
-> > WARNING: unmet direct dependencies detected for SND_SOC_SOF_IMX8M
-> >    Depends on [n]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=m] && SND_SOC_SOF_TOPLEVEL [=y] && SND_SOC_SOF_IMX_TOPLEVEL [=y] && IMX_DSP [=n]
-> >    Selected by [m]:
-> >    - SND_SOC_SOF_IMX_OF [=m] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=m] && SND_SOC_SOF_TOPLEVEL [=y] && SND_SOC_SOF_IMX_TOPLEVEL [=y] && SND_SOC_SOF_IMX8M_SUPPORT [=y]
-> >
-> > This is complicated by two drivers having dependencies on both
-> > platform specific drivers and the SND_SOC_SOF_OF framework code,
-> > and using an somewhat obscure method to build them the same way
-> > as the SOC_SOF_OF symbol (built-in or modular).
-> >
-> > My solution now ensures that the two drivers can only be enabled
-> > when the dependencies are met:
-> >
-> > - When the platform specific drivers are built-in, everything is
-> >    fine, as SOC_SOF_OF is either =y or =m
-> >
-> > - When both are loadable modules, it also works, both for Kconfig
-> >    and at runtime
-> >
-> > - When the hardware drivers are loadable modules or disabled, and
-> >    SOC_SOF_OF=y, prevent the IMX_SOF_OF drivers from being turned on,
-> >    as this would be broken.
-> >
-> > It seems that this is just an elaborate way to describe two tristate
-> > symbols that have straight dependencies, but maybe I'm missing some
-> > subtle point. It seems to always build for me now.
+On Tue, Apr 28, 2020 at 11:21 PM Florian Weimer <fw@deneb.enyo.de> wrote:
+> * Jann Horn:
 >
-> Thanks Arnd, do you mind sharing your config?
-
-https://pastebin.com/HRX5xi3R
-
-> We noticed last week that
-> there's a depend/select confusion might be simpler to fix, see
-> https://github.com/thesofproject/linux/pull/2047/commits
+> > Just as a comment: You'd probably also have to use RESOLVE_MAYEXEC in
+> > the dynamic linker.
 >
-> If I look at the first line I see a IMX_DSP=n which looks exactly like
-> what we wanted to fix.
+> Absolutely.  In typical configurations, the kernel does not enforce
+> that executable mappings must be backed by files which are executable.
+> It's most obvious with using an explicit loader invocation to run
+> executables on noexec mounts.  RESOLVE_MAYEXEC is much more useful
+> than trying to reimplement the kernel permission checks (or what some
+> believe they should be) in userspace.
 
-Yes, I think that fix addresses the build warning as well, but looking
-more closely I don't think it's what you want: If you do this on
-a config that has the IMX_DSP disabled, it would appear to the
-user that you have enabled the drivers, but the actual code is still
-disabled.
+Oh, good point.
 
-      Arnd
+That actually seems like something Micka=C3=ABl could add to his series? If
+someone turns on that knob for "When an interpreter wants to execute
+something, enforce that we have execute access to it", they probably
+also don't want it to be possible to just map files as executable? So
+perhaps when that flag is on, the kernel should either refuse to map
+anything as executable if it wasn't opened with RESOLVE_MAYEXEC or
+(less strict) if RESOLVE_MAYEXEC wasn't used, print a warning, then
+check whether the file is executable and bail out if not?
+
+A configuration where interpreters verify that scripts are executable,
+but other things can just mmap executable pages, seems kinda
+inconsistent...
