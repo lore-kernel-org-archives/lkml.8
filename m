@@ -2,52 +2,50 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E13ADC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D209C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0FDB20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D1982076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099372;
-	bh=pMrxVaaiiCU86Lgsmkafmskcx5LjP5eRt86sY/KyaF8=;
+	s=default; t=1588099375;
+	bh=gYpCN2E60RoWYWQQNwY8vf9911kUG5TcfdItDCLSNYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k19zG9YORere2Qa9oXZzPBNYYFAeyEgVRFV8MhNoD1ptUNXKKXsxfPnb+86FFzO5n
-	 6ZZnYA9wVjtdarAufoom4ClcsQnmqBCrRcqL9eRTEJZlc6neLycb6C/8I4Noc8mG/o
-	 /I7ZwBv6l/4XKu5D3eS95Wht/DggDPjD2/FjRCc8=
+	b=2l4C+rC+abNChG6cbgq3jsA9s/oTVa3eGzzDsNMOxgbBsM1TTHpb2zNfHU3DVka8T
+	 2TyXLKneKVd9YFj92NSPnXjAchOSiU39iVOUaSF+/skfqOi5ag8SgQNQFJBT27Jydx
+	 qfEkOomhHFbBMjLZ1waynTotmqUaX6tYOiTPL/ig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730956AbgD1Sms (ORCPT
+        id S1731161AbgD1Smy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:42:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34832 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:42:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731139AbgD1Sml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:42:41 -0400
+        id S1731152AbgD1Smt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:42:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 280DC20575;
-        Tue, 28 Apr 2020 18:42:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8379420575;
+        Tue, 28 Apr 2020 18:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099361;
-        bh=pMrxVaaiiCU86Lgsmkafmskcx5LjP5eRt86sY/KyaF8=;
+        s=default; t=1588099369;
+        bh=gYpCN2E60RoWYWQQNwY8vf9911kUG5TcfdItDCLSNYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tJWdUjYcapw60T3rF/8cLceHYtHxeq2okLb6Kd+RRymzHIVSMIVg2ofy0UbCmsYqc
-         kB7Htku5F3wmrBfTOsVpMK4HeGZDXe13sZ8uT+dxeTHiuWghLuVxvboayuD4/IR7Qi
-         Z0IOYe+/YdARKrqNMoD4Q5uCcW41TGxAREWb6wiY=
+        b=pjtsHJUfyKuGN+4Og5OFwWSv3OwaaBbQoGUxcsOE3YKaqEPGVS9l07FGC/VssvwII
+         hQbiHlkavvYPjOlcArU6xCh4Wt/sEzCctYo9ysTtxWU6sEFCA8OhHY/yfMdZjBjz+w
+         KlG0ej4loy4UnDWbkKjxnUnrrwgm63xDQTkcfuIk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Uros Bizjak <ubizjak@gmail.com>
-Subject: [PATCH 5.4 119/168] KVM: VMX: Enable machine check support for 32bit targets
-Date:   Tue, 28 Apr 2020 20:24:53 +0200
-Message-Id: <20200428182247.535009424@linuxfoundation.org>
+        stable@vger.kernel.org, Changming Liu <liu.changm@northeastern.edu>
+Subject: [PATCH 5.4 095/168] USB: sisusbvga: Change port variable from signed to unsigned
+Date:   Tue, 28 Apr 2020 20:24:29 +0200
+Message-Id: <20200428182244.335896795@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -60,36 +58,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uros Bizjak <ubizjak@gmail.com>
+From: Changming Liu <liu.changm@northeastern.edu>
 
-commit fb56baae5ea509e63c2a068d66a4d8ea91969fca upstream.
+commit 2df7405f79ce1674d73c2786fe1a8727c905d65b upstream.
 
-There is no reason to limit the use of do_machine_check
-to 64bit targets. MCE handling works for both target familes.
+Change a bunch of arguments of wrapper functions which pass signed
+integer to an unsigned integer which might cause undefined behaviors
+when sign integer overflow.
 
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: stable@vger.kernel.org
-Fixes: a0861c02a981 ("KVM: Add VT-x machine check support")
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Message-Id: <20200414071414.45636-1-ubizjak@gmail.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Changming Liu <liu.changm@northeastern.edu>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/BL0PR06MB45482D71EA822D75A0E60A2EE5D50@BL0PR06MB4548.namprd06.prod.outlook.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/vmx.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/misc/sisusbvga/sisusb.c      |   20 ++++++++++----------
+ drivers/usb/misc/sisusbvga/sisusb_init.h |   14 +++++++-------
+ 2 files changed, 17 insertions(+), 17 deletions(-)
 
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4566,7 +4566,7 @@ static int handle_rmode_exception(struct
-  */
- static void kvm_machine_check(void)
+--- a/drivers/usb/misc/sisusbvga/sisusb.c
++++ b/drivers/usb/misc/sisusbvga/sisusb.c
+@@ -1199,18 +1199,18 @@ static int sisusb_read_mem_bulk(struct s
+ /* High level: Gfx (indexed) register access */
+ 
+ #ifdef CONFIG_USB_SISUSBVGA_CON
+-int sisusb_setreg(struct sisusb_usb_data *sisusb, int port, u8 data)
++int sisusb_setreg(struct sisusb_usb_data *sisusb, u32 port, u8 data)
  {
--#if defined(CONFIG_X86_MCE) && defined(CONFIG_X86_64)
-+#if defined(CONFIG_X86_MCE)
- 	struct pt_regs regs = {
- 		.cs = 3, /* Fake ring 3 no matter what the guest ran on */
- 		.flags = X86_EFLAGS_IF,
+ 	return sisusb_write_memio_byte(sisusb, SISUSB_TYPE_IO, port, data);
+ }
+ 
+-int sisusb_getreg(struct sisusb_usb_data *sisusb, int port, u8 *data)
++int sisusb_getreg(struct sisusb_usb_data *sisusb, u32 port, u8 *data)
+ {
+ 	return sisusb_read_memio_byte(sisusb, SISUSB_TYPE_IO, port, data);
+ }
+ #endif
+ 
+-int sisusb_setidxreg(struct sisusb_usb_data *sisusb, int port,
++int sisusb_setidxreg(struct sisusb_usb_data *sisusb, u32 port,
+ 		u8 index, u8 data)
+ {
+ 	int ret;
+@@ -1220,7 +1220,7 @@ int sisusb_setidxreg(struct sisusb_usb_d
+ 	return ret;
+ }
+ 
+-int sisusb_getidxreg(struct sisusb_usb_data *sisusb, int port,
++int sisusb_getidxreg(struct sisusb_usb_data *sisusb, u32 port,
+ 		u8 index, u8 *data)
+ {
+ 	int ret;
+@@ -1230,7 +1230,7 @@ int sisusb_getidxreg(struct sisusb_usb_d
+ 	return ret;
+ }
+ 
+-int sisusb_setidxregandor(struct sisusb_usb_data *sisusb, int port, u8 idx,
++int sisusb_setidxregandor(struct sisusb_usb_data *sisusb, u32 port, u8 idx,
+ 		u8 myand, u8 myor)
+ {
+ 	int ret;
+@@ -1245,7 +1245,7 @@ int sisusb_setidxregandor(struct sisusb_
+ }
+ 
+ static int sisusb_setidxregmask(struct sisusb_usb_data *sisusb,
+-		int port, u8 idx, u8 data, u8 mask)
++		u32 port, u8 idx, u8 data, u8 mask)
+ {
+ 	int ret;
+ 	u8 tmp;
+@@ -1258,13 +1258,13 @@ static int sisusb_setidxregmask(struct s
+ 	return ret;
+ }
+ 
+-int sisusb_setidxregor(struct sisusb_usb_data *sisusb, int port,
++int sisusb_setidxregor(struct sisusb_usb_data *sisusb, u32 port,
+ 		u8 index, u8 myor)
+ {
+ 	return sisusb_setidxregandor(sisusb, port, index, 0xff, myor);
+ }
+ 
+-int sisusb_setidxregand(struct sisusb_usb_data *sisusb, int port,
++int sisusb_setidxregand(struct sisusb_usb_data *sisusb, u32 port,
+ 		u8 idx, u8 myand)
+ {
+ 	return sisusb_setidxregandor(sisusb, port, idx, myand, 0x00);
+@@ -2785,8 +2785,8 @@ static loff_t sisusb_lseek(struct file *
+ static int sisusb_handle_command(struct sisusb_usb_data *sisusb,
+ 		struct sisusb_command *y, unsigned long arg)
+ {
+-	int	retval, port, length;
+-	u32	address;
++	int	retval, length;
++	u32	port, address;
+ 
+ 	/* All our commands require the device
+ 	 * to be initialized.
+--- a/drivers/usb/misc/sisusbvga/sisusb_init.h
++++ b/drivers/usb/misc/sisusbvga/sisusb_init.h
+@@ -812,17 +812,17 @@ static const struct SiS_VCLKData SiSUSB_
+ int SiSUSBSetMode(struct SiS_Private *SiS_Pr, unsigned short ModeNo);
+ int SiSUSBSetVESAMode(struct SiS_Private *SiS_Pr, unsigned short VModeNo);
+ 
+-extern int sisusb_setreg(struct sisusb_usb_data *sisusb, int port, u8 data);
+-extern int sisusb_getreg(struct sisusb_usb_data *sisusb, int port, u8 * data);
+-extern int sisusb_setidxreg(struct sisusb_usb_data *sisusb, int port,
++extern int sisusb_setreg(struct sisusb_usb_data *sisusb, u32 port, u8 data);
++extern int sisusb_getreg(struct sisusb_usb_data *sisusb, u32 port, u8 * data);
++extern int sisusb_setidxreg(struct sisusb_usb_data *sisusb, u32 port,
+ 			    u8 index, u8 data);
+-extern int sisusb_getidxreg(struct sisusb_usb_data *sisusb, int port,
++extern int sisusb_getidxreg(struct sisusb_usb_data *sisusb, u32 port,
+ 			    u8 index, u8 * data);
+-extern int sisusb_setidxregandor(struct sisusb_usb_data *sisusb, int port,
++extern int sisusb_setidxregandor(struct sisusb_usb_data *sisusb, u32 port,
+ 				 u8 idx, u8 myand, u8 myor);
+-extern int sisusb_setidxregor(struct sisusb_usb_data *sisusb, int port,
++extern int sisusb_setidxregor(struct sisusb_usb_data *sisusb, u32 port,
+ 			      u8 index, u8 myor);
+-extern int sisusb_setidxregand(struct sisusb_usb_data *sisusb, int port,
++extern int sisusb_setidxregand(struct sisusb_usb_data *sisusb, u32 port,
+ 			       u8 idx, u8 myand);
+ 
+ void sisusb_delete(struct kref *kref);
 
 
