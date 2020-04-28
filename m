@@ -2,54 +2,55 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD4CC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1D6C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C095206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C034206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099847;
-	bh=XxISZYI385Ve0ULnt0OBLJbYSHNcZOEQ8W2uuaUP7S0=;
+	s=default; t=1588099851;
+	bh=oTAIAjyk+RanQ8x47eQMRi2YenORNeIepWTAu6pzS3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OtFaY/9JV16v+TSR0fRgyGFXQOxJC41pVn1cnH6D6r0/gUkbnxJrVcRxegKF+cPH3
-	 YFdyvOnr7qQuVI2U+rNkObmZ01JxNO6Lhe0Eap73mb2FvvpPp8G1k/KniqiZ+zbEYX
-	 aCXTFwk7ZOUQp+GqknRXy39ZrHKorZaRo8NwAfZs=
+	b=Ma9NvaXOh8+4mWdpufIloNUbodNcwlT9itIgdnvVZoWzfgp3KqZLixC70gqLtLoXq
+	 2iqtkpJq4Tu1OhkeU+8eQSS55XDOWpyI5FZzDCNGvVhBYHrJ4j2+CRiptNKQhBqZq7
+	 Sv9GmJxyPUg31YrQjDddIlEXVspEFruRZbZVDB+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730582AbgD1SiE (ORCPT
+        id S1731292AbgD1Suu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:38:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56288 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:50:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730573AbgD1SiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:38:00 -0400
+        id S1729061AbgD1SiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:38:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 702A32076A;
-        Tue, 28 Apr 2020 18:37:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E99E62076A;
+        Tue, 28 Apr 2020 18:38:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099079;
-        bh=XxISZYI385Ve0ULnt0OBLJbYSHNcZOEQ8W2uuaUP7S0=;
+        s=default; t=1588099082;
+        bh=oTAIAjyk+RanQ8x47eQMRi2YenORNeIepWTAu6pzS3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=llBBRC/wmc1ELBEthPgNnDM3Ev8rPnvebh57nO2ObLs0Ln0FLWmDxeRRNfL5LTHUv
-         ZHDPLa8P1iV6qSr8W71g8HvDRNxGK9vkJcrxpjLep6DetCX8MqEGGW2j5VPEZyTp2e
-         XRfY2Z34ykilqOp/+kkrQR37cRVwo8kSGEkqeCxA=
+        b=XwUd6h9KmUf8MfYRVSSWghD1vn5roXGUdPZfBclJn0UULoz+ofYFFKBVc9IKjRp/S
+         Y+b8WN3QWH6fCc9fZv39CcTjQlXKmDjmD8olDmRiwwIXDmGJMpT9WVzBroVyP/NLyI
+         oXa24yCSE6h7MbJNSEjklP62Rh0HQ0tHhZJCIQ8o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lin Yi <teroincn@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 094/131] ALSA: usx2y: Fix potential NULL dereference
-Date:   Tue, 28 Apr 2020 20:25:06 +0200
-Message-Id: <20200428182236.795276533@linuxfoundation.org>
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 054/168] PCI/ASPM: Allow re-enabling Clock PM
+Date:   Tue, 28 Apr 2020 20:23:48 +0200
+Message-Id: <20200428182238.747987829@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,34 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-commit 7686e3485253635c529cdd5f416fc640abaf076f upstream.
+[ Upstream commit 35efea32b26f9aacc99bf07e0d2cdfba2028b099 ]
 
-The error handling code in usX2Y_rate_set() may hit a potential NULL
-dereference when an error occurs before allocating all us->urb[].
-Add a proper NULL check for fixing the corner case.
+Previously Clock PM could not be re-enabled after being disabled by
+pci_disable_link_state() because clkpm_capable was reset.  Change this by
+adding a clkpm_disable field similar to aspm_disable.
 
-Reported-by: Lin Yi <teroincn@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200420075529.27203-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/4e8a66db-7d53-4a66-c26c-f0037ffaa705@gmail.com
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/usx2y/usbusx2yaudio.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/pcie/aspm.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
---- a/sound/usb/usx2y/usbusx2yaudio.c
-+++ b/sound/usb/usx2y/usbusx2yaudio.c
-@@ -695,6 +695,8 @@ static int usX2Y_rate_set(struct usX2Yde
- 			us->submitted =	2*NOOF_SETRATE_URBS;
- 			for (i = 0; i < NOOF_SETRATE_URBS; ++i) {
- 				struct urb *urb = us->urb[i];
-+				if (!urb)
-+					continue;
- 				if (urb->status) {
- 					if (!err)
- 						err = -ENODEV;
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 32c34330e5a67..5a1bbf2cb7e98 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -64,6 +64,7 @@ struct pcie_link_state {
+ 	u32 clkpm_capable:1;		/* Clock PM capable? */
+ 	u32 clkpm_enabled:1;		/* Current Clock PM state */
+ 	u32 clkpm_default:1;		/* Default Clock PM state by BIOS */
++	u32 clkpm_disable:1;		/* Clock PM disabled */
+ 
+ 	/* Exit latencies */
+ 	struct aspm_latency latency_up;	/* Upstream direction exit latency */
+@@ -161,8 +162,11 @@ static void pcie_set_clkpm_nocheck(struct pcie_link_state *link, int enable)
+ 
+ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
+ {
+-	/* Don't enable Clock PM if the link is not Clock PM capable */
+-	if (!link->clkpm_capable)
++	/*
++	 * Don't enable Clock PM if the link is not Clock PM capable
++	 * or Clock PM is disabled
++	 */
++	if (!link->clkpm_capable || link->clkpm_disable)
+ 		enable = 0;
+ 	/* Need nothing if the specified equals to current state */
+ 	if (link->clkpm_enabled == enable)
+@@ -192,7 +196,8 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+ 	}
+ 	link->clkpm_enabled = enabled;
+ 	link->clkpm_default = enabled;
+-	link->clkpm_capable = (blacklist) ? 0 : capable;
++	link->clkpm_capable = capable;
++	link->clkpm_disable = blacklist ? 1 : 0;
+ }
+ 
+ static bool pcie_retrain_link(struct pcie_link_state *link)
+@@ -1097,10 +1102,9 @@ static int __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
+ 		link->aspm_disable |= ASPM_STATE_L1;
+ 	pcie_config_aspm_link(link, policy_to_aspm_state(link));
+ 
+-	if (state & PCIE_LINK_STATE_CLKPM) {
+-		link->clkpm_capable = 0;
+-		pcie_set_clkpm(link, 0);
+-	}
++	if (state & PCIE_LINK_STATE_CLKPM)
++		link->clkpm_disable = 1;
++	pcie_set_clkpm(link, policy_to_clkpm_state(link));
+ 	mutex_unlock(&aspm_lock);
+ 	if (sem)
+ 		up_read(&pci_bus_sem);
+-- 
+2.20.1
+
 
 
