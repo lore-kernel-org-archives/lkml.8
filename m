@@ -2,104 +2,129 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B47C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C037AC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BF9A206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CFE8206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:17:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XW1GVGsX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R8P0NejM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgD1KRi (ORCPT
+        id S1727931AbgD1KRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 06:17:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50998 "EHLO
+        Tue, 28 Apr 2020 06:17:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726932AbgD1KRh (ORCPT
+        by vger.kernel.org with ESMTP id S1727857AbgD1KRn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 06:17:37 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0194FC03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 03:17:37 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id e26so2089748wmk.5
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 03:17:36 -0700 (PDT)
+        Tue, 28 Apr 2020 06:17:43 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD365C03C1A9;
+        Tue, 28 Apr 2020 03:17:43 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id d15so22347872wrx.3;
+        Tue, 28 Apr 2020 03:17:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=eV+Th5BniRPcPDXkhwyuSN3cWP7lFrktIHIPo7qrlrI=;
-        b=XW1GVGsXY80vV9DGRufEmge0H/eu4FI2dVz4xVST2VJPpwHCI+o+ddaLSy2ba5Hdkb
-         iuzJp9SdjDDShZQbQuoBoLj0oJsrsqCBxY6Muw7u+ucBbcK5xBtYMI8M8Ai1CZNYSaOk
-         C+bOa6xklbijjdm1mTD/XE2UyPcEXhuKTmAzFTr6zFYpo3ApuM5+g/dZB7qhS8P2gQiw
-         2o//7/l9Vl8nr2/BQyOW4z0QDI6NIx6F1w1MiLc1Xg3zkl++9G1nezfF6luc8TSi9mXu
-         BJLFzjvv4Y+rer9w6mmFQ+0vrLQxmpNOBepAvsq1Rsip66ShlAcn6dURnGimeTrE9yS8
-         hljg==
+         :content-disposition:in-reply-to:user-agent;
+        bh=PaOE7EKh8O20/7Yms9xkw0YwXarsNSTkVwVY/irSTwI=;
+        b=R8P0NejMyV1PDqJHKa2KbMse3xkmH8lrC5aVCpQIQfbYimB6ByrYkdvxXRPTIF1hhf
+         3UWs96bgNm4OJwe1RQIRSSkCRvzUJ8GQfJ2CwFrMcDkUHqJBmOm438on6tQv9Wl1KT4d
+         21niGjPBlWfcXdcJuvCcTMhypz4LjeUMEh6f14IxZvgLBvX53lAOqQ5RJDV5ywmsTrme
+         fqxe+B6MCXAz4QUXEsT/u7ontkqWn/rBV5jQOmoxDjeLv0Sh9YiqdxCm36XEUxwhPJzd
+         zHIUONuOD7Xh4DuF49pJHmaUnohR0PSFwVHqq5pfBL3aJ+bg5unzDI8vkb9S63KN6QZk
+         gDVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=eV+Th5BniRPcPDXkhwyuSN3cWP7lFrktIHIPo7qrlrI=;
-        b=oudJoPQyg60AnsDV27gitehlF+ADb54G12hmXMZI7UcRLQ5GmOABxoQy/oRCB2oDnf
-         8MVDGzyaLO92h26PhFTV8b/YqLFnOINzldeRqfkH4fVbjc0KAEvsuQ+a0hsZ1cI72vgh
-         7kQ9Nhj8Xj/vxJZFZn6sGvXvC3XvWqp8+4j2lVw45S9ffJ02H8Jtav8HgpOtyrMtnKhh
-         YY0u1LsAoY5m4HjNmo/ojay7LY1IA1not3DdIO4tgxO2OMvYBFpvnLCTm4zlnkkaKxzj
-         CcNNCkWVz+2bthzZU6ugts1FdUlPmhjuVxFARpo85oW8Pnho4dwPAYkYq79oJ4V3BnKF
-         f6tQ==
-X-Gm-Message-State: AGi0PuaPX3RyvknBLuwi5XP5jkxo/orFvj7v7jzUug2SnR7EJNboo+nF
-        AGrtMXeN9JmTzdPWk32UzYj4CA==
-X-Google-Smtp-Source: APiQypIhzI9nKz44SYFmbAjDlx51uIBdA+B/YRligLSbLzuaLGU6jAYkbx4GpfVkznPLFTaFXUJ2kA==
-X-Received: by 2002:a05:600c:220c:: with SMTP id z12mr3706794wml.84.1588069055751;
-        Tue, 28 Apr 2020 03:17:35 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id 185sm3055694wmc.32.2020.04.28.03.17.34
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PaOE7EKh8O20/7Yms9xkw0YwXarsNSTkVwVY/irSTwI=;
+        b=MMw3022hnZjwJShO0KvGBEU35cEMjowze+7bexzv9li5v3fxNTjZHwXPYcy1QJWcZi
+         l9CLamrYcSeiQf24VSzxSPeeqKyzt/hym5k0TBWAJ7JRnlm1HBmckkea7ljBV2yADTJS
+         LhAs2jH4WZgop0rWSMoHj3hxoww6wmGVzqNpyxpcKdc5cUcUm8+JPd0RjzdAnrsBjSS6
+         m8NJjZmHwlqfwftx9TroBi+0YTFJR+0Rq86dpe3oGKKle36pMqbZXD+oobu9J6GYO5LV
+         dTV6glElMoTa/AeiRoMPEA2w5iZwqlG3r2slurT825dM4OD1aocrk7ig4VMnr3ERIxTA
+         PfKA==
+X-Gm-Message-State: AGi0PuZeLCbfn0GywMn9FD7rZEnDImcXnzr3RlIGeh9pMBfRuY44UHtg
+        K7Auirg6wQi0sfw8DkAXeagXZmj/
+X-Google-Smtp-Source: APiQypLxLZtVaWlIaYwOkXS3QvuWCKzZ7uVHba7bLh7gUGi0QAF6deX5ljtvnpRZxHDbTtXx/9wAQg==
+X-Received: by 2002:adf:fe51:: with SMTP id m17mr32016729wrs.414.1588069062479;
+        Tue, 28 Apr 2020 03:17:42 -0700 (PDT)
+Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
+        by smtp.gmail.com with ESMTPSA id m15sm2626066wmc.35.2020.04.28.03.17.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 03:17:35 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 11:17:33 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Kiran Gunda <kgunda@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        daniel.thompson@linaro.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
-        robh@kernel.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dan Murphy <dmurphy@ti.com>, linux-arm-msm@vger.kernel.org,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-Subject: Re: [PATCH V6 3/4] backlight: qcom-wled: Add WLED5 bindings
-Message-ID: <20200428101733.GO3559@dell>
-References: <1587656017-27911-1-git-send-email-kgunda@codeaurora.org>
- <1587656017-27911-4-git-send-email-kgunda@codeaurora.org>
+        Tue, 28 Apr 2020 03:17:41 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 12:17:40 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
+        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 4/8] phy: tegra: xusb: Add USB2 pad power control
+ support for Tegra210
+Message-ID: <20200428101740.GG3592148@ulmo>
+References: <1586939108-10075-1-git-send-email-nkristam@nvidia.com>
+ <1586939108-10075-5-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="DWg365Y4B18r8evw"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1587656017-27911-4-git-send-email-kgunda@codeaurora.org>
+In-Reply-To: <1586939108-10075-5-git-send-email-nkristam@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Apr 2020, Kiran Gunda wrote:
 
-> Add WLED5 specific bindings.
-> 
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+--DWg365Y4B18r8evw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Apr 15, 2020 at 01:55:04PM +0530, Nagarjuna Kristam wrote:
+> Add USB2 pad power on and off API's for TEgra210 and provide its control
+> via soc ops. It can be used by operations like charger detect to power on
+> and off USB2 pad if needed.
+>=20
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
 > ---
->  .../bindings/leds/backlight/qcom-wled.yaml         | 59 ++++++++++++++++++++--
->  1 file changed, 56 insertions(+), 3 deletions(-)
+> V2:
+>  - Patch re-based.
+> ---
+>  drivers/phy/tegra/xusb-tegra210.c | 190 ++++++++++++++++++++++++++------=
+------
+>  1 file changed, 133 insertions(+), 57 deletions(-)
 
-Needs a DT Ack.
+Ignore that previous comment, I was making wrong assumptions:
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--DWg365Y4B18r8evw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6oAsQACgkQ3SOs138+
+s6HgRRAAkKBpdIifr13ah+O4pd7JwhNKw9JYwDfzVCGukWCrfD8Y/gZovptA53ww
+MtcogouhBKZgyH9D0qRFPhDJGOBSgSn+MwQRfIXzsYVXrllvCACvhD7iFs1ACJ+L
+wFGllBYVRByCUnXrGB6fZAe2my9D2+gzOtDjDjC7fZZE20jYewyVwG1TL3F1fMCd
+arkdvSki+qOmwEgjaYfOypgZmj9Lgn0ty9q/XCYg48oStgFOutFDEL/au6ncBfv6
+L+/bOwwJ63o+Fa6P8p70Sx+dPjjWkHAgqrD09BAHCG9Xi9qosL/T7XHTw8odQoPA
+FRFnHnh/TEexCInco3nBGE77opKnsl/Jrdnd7YgK2F+O31vcrQ4LKYPefTKwR7se
+oxvHjodo6PIS2hKzn4pKqUX7D6KGVZXwXEGipvdWRTZcx7zewOMmcUF6dPbMuzvk
+6J/YRh2zcbidu/FmExilZK7RSehzORSSTcvvlRHN4aoH07tWCMzFOYBCmbwDjEYj
+syMOBDw83hPdwbYHAQae1sKiKGciRQmHyORwjwT2RR6fNq0Zr3ssq+q6ZVZybjGT
+Bu+O/i670oGR9Nn7OKi/LKM+v4dJS17KrJNn66j/mqVTgRGO5blIFySlSqYPNN5t
+hkA8fz67jresVycjbbWe0qUHiYp7N9hn4eEntxMih7YgSf1gvtI=
+=76s1
+-----END PGP SIGNATURE-----
+
+--DWg365Y4B18r8evw--
