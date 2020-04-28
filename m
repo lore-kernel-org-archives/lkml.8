@@ -4,258 +4,188 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B7E6C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5996C83006
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F036D2064C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 954DD2064C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:22:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YWKoqEGh"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="EuhXQ4M7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgD1EVy (ORCPT
+        id S1726466AbgD1EV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 28 Apr 2020 00:21:58 -0400
+Received: from mail-dm6nam12on2134.outbound.protection.outlook.com ([40.107.243.134]:46657
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726413AbgD1EVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Apr 2020 00:21:54 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9760 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbgD1EVt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 00:21:49 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea7af500001>; Mon, 27 Apr 2020 21:21:36 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 27 Apr 2020 21:21:49 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 27 Apr 2020 21:21:49 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Apr
- 2020 04:21:48 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 28 Apr 2020 04:21:48 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.165.152]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ea7af5c0000>; Mon, 27 Apr 2020 21:21:48 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>
-CC:     <digetx@gmail.com>, <linux-media@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH v1 3/5] media: tegra-video: Move PM runtime handle to streaming
-Date:   Mon, 27 Apr 2020 21:20:48 -0700
-Message-ID: <1588047650-29402-4-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588047650-29402-1-git-send-email-skomatineni@nvidia.com>
-References: <1588047650-29402-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
-MIME-Version: 1.0
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aOvYcPspbFntjk5lWA7bTuBNLj2NYYsL1wwaz6dA4IgeQchN8uYMfI/FryWYBG0dhvo/y6bMWOcBKFdqENXjzygTHRyKN0PiCrVK803+mm3wNso9nRc+VTYZKqkAoZl7E2C3hazwLt3a+AMBIq4SEWkr+mcNBpMdhkSAKiXUVgr1skJiMSggp7qUhl3BazfCx/DwBjwLkSQGlGqmT505MAKfXx8vwlfBLhnpAkdaBUylxYGNwq3r3VXCkwEIUnjkuZCf/YROA0qONOHSTtGyGA2g8WxxDU23FVXWrDITNJvg7QBht7vEbx1115Xoyh3KulnD4z9hjXjMIgc4lAnfMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+OAz9ywgePeSeHnPMmOG6iunEWu0dI2obD8p8sqxqY8=;
+ b=nWNNEMoBUYok+pM+7ErsA4PUpVoM9ssVbijAUqsEUj1hh6QmaF95PUl+HFEIKxZ9Mip/AwcDKzKFO0zlFTzzfBWua+6IYCBgXvqmvArDGn2y7GGSlRgc/67ViFnzrbMCKBMiExE4Ea+mIi2bjVZ9bEtlWw/RFpD49LHcHn22Kd1Tar7grE3KRAWBdTBtZyQb6isU4P5IgNlAaV6Pb6jTQw48xKDwQE4hbYRp2BsAQCioPlC/k7t6LO2sygd30n9vCHp3mYZeWcX+yc7v79Xw+5GM+sUNJ4K+Wz7xaLZTpi3r9YgjTcu+WPdGhWzweMMeVjQSDFx/MeOvHlp/U9Rs2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+OAz9ywgePeSeHnPMmOG6iunEWu0dI2obD8p8sqxqY8=;
+ b=EuhXQ4M71aqjzMXsPAiG56tpbloRpMl065lIxvwru6Rut4h1dWuc9YDhjNhyaqDFp9Vq3QYp1rgKvCD2K3zWNbgaDwWJolMDbM6fNsN4eDqQ7dfusjyhJzAhw9itJKr08itmbe3AlRWStmDL4Wo5GBiuCm4fM74qxmn4SwEtCHU=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=weh@microsoft.com; 
+Received: from SN6PR2101MB1021.namprd21.prod.outlook.com (2603:10b6:805:8::12)
+ by SN6PR2101MB1088.namprd21.prod.outlook.com (2603:10b6:805:6::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.3; Tue, 28 Apr
+ 2020 04:21:45 +0000
+Received: from SN6PR2101MB1021.namprd21.prod.outlook.com
+ ([fe80::a9e6:4244:f67e:c55]) by SN6PR2101MB1021.namprd21.prod.outlook.com
+ ([fe80::a9e6:4244:f67e:c55%5]) with mapi id 15.20.2958.014; Tue, 28 Apr 2020
+ 04:21:41 +0000
+From:   Wei Hu <weh@microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        bhelgaas@google.com, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        decui@microsoft.com, mikelley@microsoft.com
+Cc:     Wei Hu <weh@microsoft.com>
+Subject: [PATCH v2] PCI: hv: Retry PCI bus D0 entry when the first attempt failed with invalid device state
+Date:   Tue, 28 Apr 2020 12:21:12 +0800
+Message-Id: <20200428042112.1479-1-weh@microsoft.com>
+X-Mailer: git-send-email 2.20.1
+Reply-To: weh@microsoft.com
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588047696; bh=Bk0IVV1VuhDOXgh7mRL9yuSSU0OFWYsRAC5v+Bfzhlk=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=YWKoqEGhdvRgHjFv28BMQ/FYbFolrxqv7yogM2CBSzL2a9EwZQHbsBT4WpLFUId0g
-         dpZ5NlazMu62n6VSmv+o8hAWK432L2Ln2uh6X2pZxS77ZogQylEohqLEeEd7CkZ5fj
-         kjRv7iOkCYT5YDEI1Z3CtxcbGXIrOUNjQiRpML0iqTYAbf+cUsoK1vZcpfGdMQn6PO
-         ck2KdpUBEBsXmyNzJIgjrV0JkcD5SudtdiN1aNf9dfHdFPn0TRdgi90oTIcFDFLJZe
-         wjdw38md1K+WVhzIZ173Anhp2ypyTObpIAzPQOtpuN5q6Wrs5c+2SMT2qsY57WHL2e
-         822MkrMp4GMMw==
+X-ClientProxiedBy: SG2PR01CA0115.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:40::19) To SN6PR2101MB1021.namprd21.prod.outlook.com
+ (2603:10b6:805:8::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from weh-g1-u1904d-testwin10.corp.microsoft.com (167.220.255.49) by SG2PR01CA0115.apcprd01.prod.exchangelabs.com (2603:1096:4:40::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Tue, 28 Apr 2020 04:21:37 +0000
+X-Mailer: git-send-email 2.20.1
+X-Originating-IP: [167.220.255.49]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 07ef6588-9888-4a3d-0b00-08d7eb2ba6a7
+X-MS-TrafficTypeDiagnostic: SN6PR2101MB1088:|SN6PR2101MB1088:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR2101MB1088C24C7CC0D4CD49C98859BBAC0@SN6PR2101MB1088.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 0387D64A71
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: BuC5Yk+34PUswC9GOLUSSBuyLk32elI9RU2ZmMnsFy7+A5N4CKU8DrZGSZA6uDZo9F4Jq30b/7vxZOflW5QpAeuObDVyLPQnvYYr+jzgM8BE7DHs/zRPnjWWVWd7Wd0kA9+ZQt7sZg1dXOcb/YS+bY6uubkh9keQTi0pX7DIKrbNQcpiMFk4Ymqnx1mWZHxb1aGvURHg0eIB7Ux5pzquyX6tkqcRd57FgZwjsdfEz4b8YZtQogLCMozBwpXV2eBwJmQEzwhjVu7scHNjIibpRcWZRfB4hee9J0Nawat6a2MAVxAxj19ZLqlsBc7xlisONs6OaD7ZeYuXoHaVhYRX9bRNKZrfhA/j7v+1yguqr7OIlaTqDwjzkbCTugHaeWaa2gerv82KFmiHlIh+YQQxMddLI1VYeDRyeqoTywY1D50scV1vqih/gCENgJkJjYpi/3oR2fgzjc+cvL50PP4zCanHn3Ns26GFVByn/sry9cA=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR2101MB1021.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(376002)(346002)(39860400002)(366004)(186003)(66476007)(66556008)(3450700001)(82960400001)(82950400001)(478600001)(316002)(6486002)(8676002)(86362001)(66946007)(2906002)(36756003)(7696005)(52116002)(26005)(8936002)(6666004)(5660300002)(6636002)(10290500003)(2616005)(1076003)(107886003)(4326008)(956004)(16526019)(921003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: ue+e2QvAcTEtm6DUFBoBtUwo0DAlILeQ+ub3ebSDUvo1ABgkCqrl3IgjndEm5k/xQ98K5Az8yG8mBYK35ZlZWL6X1kbq47f4Mu1JtopPB03ussqiXb8CBW8t3tVUF8qheg+hgODG62J4UWEBjlAaacZejbFlhQ9onxy/ZOXD30Bf0Kyc9OSbp8wKHV4D81JD1+PA8wVrPFXVHqiJxCclKYDsyQE6jma5JxP1l2xLmz4I99RVFfyBjSETuGeZbi1Q+p4QUQNXHmCB6Wwlq9L3hSgJFEhFMuBhZ/FfYoYbIeDf76gYKgQOftB5L47q+H7lpMWJWJfIXkCiseRxhLXmjoW5XC8CzyUsUiRn0yuhEr/PgIlUQM01s3nBklUNXgs1gWrMeKEAAWOa/K1P7Y2YTYNPJQ+LsE3C2tWPpuq05olUiXAqwUzyv7U06qkMft/OIk3kWBkx32rax2yiRu9nshu7nxn8MeMb1W+EEchpg5Rm5skmhHCgridDhOMNJ3qEStrts9ZiY4G7RqF5FVy43hJcw8bppS4TEWzIlYMkljf0swyjGULpSJnVDmslD5kDl43HgeyEY+66Lwv6lVAF1lRthBTv8s+OktBOlmRfDt9UeECmlT67g/BQRtaURdjNOLljUxafH5c7fx/+EfUvsQPJkt0flbyhfBWorP5n8Va9sy8raMKbmESUky17Mdp7noaByF8O9xWW3fYGIkdx1LVz0qOw4vfGwj5Af5PUCadBDDTQYLT2xbQqjzM8bUATnVf+pYwZmzpJPPfSi2B/yljfyKA2cEcWC9AYEyx3bPU=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07ef6588-9888-4a3d-0b00-08d7eb2ba6a7
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2020 04:21:41.5786
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0m6y1QiSj6NvrdTykSjeJIltfzv7g1L8aLyOVntvQEcekBTnV2A7a21jF5/WGnFabgWQ4Gr91LDcaime6ilPdw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1088
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PM runtime resume and suspend should happen during streaming start
-and stop so only when there is any active streaming from any of the
-video devices, power and clocks gets enabled otherwise they will be
-disabled.
+In the case of kdump, the PCI device was not cleanly shut down
+before the kdump kernel starts. This causes the initial
+attempt of entering D0 state in the kdump kernel to fail with
+invalid device state returned from Hyper-V host.
+When this happens, explicitly call PCI bus exit and retry to
+enter the D0 state.
 
-This patch moves pm_runtime_get_sync and pm_runtime_put_sync to
-streaming start and stop for both Tegra VI and CSI.
-
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Wei Hu <weh@microsoft.com>
 ---
- drivers/staging/media/tegra-video/csi.c | 27 +++++++++++++++++---------
- drivers/staging/media/tegra-video/csi.h |  2 ++
- drivers/staging/media/tegra-video/vi.c  | 34 ++++++++++++++++++++-------------
- drivers/staging/media/tegra-video/vi.h  |  2 ++
- 4 files changed, 43 insertions(+), 22 deletions(-)
+    v2: Incorporate review comments from Michael Kelley, Dexuan Cui and
+    Bjorn Helgaas
 
-diff --git a/drivers/staging/media/tegra-video/csi.c b/drivers/staging/media/tegra-video/csi.c
-index b3dd0c3..29ccdae 100644
---- a/drivers/staging/media/tegra-video/csi.c
-+++ b/drivers/staging/media/tegra-video/csi.c
-@@ -272,8 +272,25 @@ static int tegra_csi_s_stream(struct v4l2_subdev *subdev, int enable)
- 	struct tegra_vi_channel *chan = v4l2_get_subdev_hostdata(subdev);
- 	struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
- 	struct tegra_csi *csi = csi_chan->csi;
-+	int ret;
+ drivers/pci/controller/pci-hyperv.c | 30 +++++++++++++++++++++++++++--
+ 1 file changed, 28 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index e15022ff63e3..0a42c228b231 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -2736,6 +2736,8 @@ static void hv_free_config_window(struct hv_pcibus_device *hbus)
+ 	vmbus_free_mmio(hbus->mem_config->start, PCI_CONFIG_MMIO_LENGTH);
+ }
+ 
++static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs);
 +
-+	if (enable && atomic_add_return(1, &csi->clk_refcnt) == 1) {
-+		ret = pm_runtime_get_sync(csi->dev);
-+		if (ret < 0) {
-+			dev_err(csi->dev,
-+				"failed to get runtime PM: %d\n", ret);
-+			pm_runtime_put_noidle(csi->dev);
-+			atomic_dec(&csi->clk_refcnt);
-+			return ret;
+ /**
+  * hv_pci_enter_d0() - Bring the "bus" into the D0 power state
+  * @hdev:	VMBus's tracking struct for this root PCI bus
+@@ -2748,8 +2750,10 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+ 	struct pci_bus_d0_entry *d0_entry;
+ 	struct hv_pci_compl comp_pkt;
+ 	struct pci_packet *pkt;
++	bool retry = true;
+ 	int ret;
+ 
++enter_d0_retry:
+ 	/*
+ 	 * Tell the host that the bus is ready to use, and moved into the
+ 	 * powered-on state.  This includes telling the host which region
+@@ -2776,6 +2780,28 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+ 	if (ret)
+ 		goto exit;
+ 
++	/*
++	 * In certain case (Kdump) the pci device of interest was
++	 * not cleanly shut down and resource is still held on host
++	 * side, the host could return invalid device status.
++	 * We need to explicitly request host to release the resource
++	 * and try to enter D0 again.
++	 */
++	if (comp_pkt.completion_status < 0 && retry) {
++		retry = false;
++
++		dev_err(&hdev->device, "Retrying D0 Entry\n");
++
++		ret = hv_pci_bus_exit(hdev, true);
++
++		if (ret == 0) {
++			kfree(pkt);
++			goto enter_d0_retry;
 +		}
++		dev_err(&hdev->device,
++			"Retrying D0 failed with ret %d\n", ret);
 +	}
 +
-+	ret = csi->ops->csi_streaming(csi_chan, chan->pg_mode, enable);
- 
--	return csi->ops->csi_streaming(csi_chan, chan->pg_mode, enable);
-+	if ((ret < 0 || !enable) && atomic_dec_and_test(&csi->clk_refcnt))
-+		pm_runtime_put_sync(csi->dev);
-+
-+	return ret;
- }
- 
- /*
-@@ -437,13 +454,6 @@ static int tegra_csi_init(struct host1x_client *client)
- 
- 	INIT_LIST_HEAD(&csi->csi_chans);
- 
--	ret = pm_runtime_get_sync(csi->dev);
--	if (ret < 0) {
--		dev_err(csi->dev, "failed to get runtime PM: %d\n", ret);
--		pm_runtime_put_noidle(csi->dev);
--		return ret;
--	}
--
- 	ret = tegra_csi_tpg_channels_alloc(csi);
- 	if (ret < 0) {
- 		dev_err(csi->dev,
-@@ -470,7 +480,6 @@ static int tegra_csi_exit(struct host1x_client *client)
- 	struct tegra_csi *csi = host1x_client_to_csi(client);
- 
- 	tegra_csi_channels_cleanup(csi);
--	pm_runtime_put_sync(csi->dev);
- 
- 	return 0;
- }
-diff --git a/drivers/staging/media/tegra-video/csi.h b/drivers/staging/media/tegra-video/csi.h
-index 217d5d3..4781b83 100644
---- a/drivers/staging/media/tegra-video/csi.h
-+++ b/drivers/staging/media/tegra-video/csi.h
-@@ -125,6 +125,7 @@ struct tegra_csi_soc {
-  * @soc: pointer to SoC data structure
-  * @ops: csi operations
-  * @channels: list head for CSI channels
-+ * @clk_refcnt: reference counter for clock enable/disable
-  */
- struct tegra_csi {
- 	struct device *dev;
-@@ -134,6 +135,7 @@ struct tegra_csi {
- 	const struct tegra_csi_soc *soc;
- 	const struct tegra_csi_ops *ops;
- 	struct list_head csi_chans;
-+	atomic_t clk_refcnt;
- };
- 
- void tegra_csi_error_recover(struct v4l2_subdev *subdev);
-diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
-index 61ecc2b..cd4c08d 100644
---- a/drivers/staging/media/tegra-video/vi.c
-+++ b/drivers/staging/media/tegra-video/vi.c
-@@ -200,8 +200,25 @@ void tegra_channel_release_buffers(struct tegra_vi_channel *chan,
- static int tegra_channel_start_streaming(struct vb2_queue *vq, u32 count)
- {
- 	struct tegra_vi_channel *chan = vb2_get_drv_priv(vq);
-+	int ret;
- 
--	return chan->vi->ops->vi_start_streaming(vq, count);
-+	if (atomic_add_return(1, &chan->vi->power_on_refcnt) == 1) {
-+		ret = pm_runtime_get_sync(chan->vi->dev);
-+		if (ret < 0) {
-+			dev_err(chan->vi->dev,
-+				"failed to get runtime PM: %d\n", ret);
-+			pm_runtime_put_noidle(chan->vi->dev);
-+			atomic_dec(&chan->vi->power_on_refcnt);
-+			return ret;
-+		}
-+	}
-+
-+	ret = chan->vi->ops->vi_start_streaming(vq, count);
-+
-+	if (ret < 0 && atomic_dec_and_test(&chan->vi->power_on_refcnt))
-+		pm_runtime_put_sync(chan->vi->dev);
-+
-+	return ret;
- }
- 
- static void tegra_channel_stop_streaming(struct vb2_queue *vq)
-@@ -209,6 +226,9 @@ static void tegra_channel_stop_streaming(struct vb2_queue *vq)
- 	struct tegra_vi_channel *chan = vb2_get_drv_priv(vq);
- 
- 	chan->vi->ops->vi_stop_streaming(vq);
-+
-+	if (atomic_dec_and_test(&chan->vi->power_on_refcnt))
-+		pm_runtime_put_sync(chan->vi->dev);
- }
- 
- static const struct vb2_ops tegra_channel_queue_qops = {
-@@ -920,13 +940,6 @@ static int tegra_vi_init(struct host1x_client *client)
- 
- 	INIT_LIST_HEAD(&vi->vi_chans);
- 
--	ret = pm_runtime_get_sync(vi->dev);
--	if (ret < 0) {
--		dev_err(vi->dev, "failed to get runtime PM: %d\n", ret);
--		pm_runtime_put_noidle(vi->dev);
--		return ret;
--	}
--
- 	ret = tegra_vi_tpg_channels_alloc(vi);
- 	if (ret < 0) {
- 		dev_err(vi->dev, "failed to allocate tpg channels: %d\n", ret);
-@@ -947,14 +960,11 @@ static int tegra_vi_init(struct host1x_client *client)
- 		kfree(chan);
- 	}
- 
--	pm_runtime_put_sync(vi->dev);
+ 	if (comp_pkt.completion_status < 0) {
+ 		dev_err(&hdev->device,
+ 			"PCI Pass-through VSP failed D0 Entry with status %x\n",
+@@ -3173,7 +3199,7 @@ static int hv_pci_probe(struct hv_device *hdev,
  	return ret;
  }
  
- static int tegra_vi_exit(struct host1x_client *client)
+-static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating)
++static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
  {
--	struct tegra_vi *vi = host1x_client_to_vi(client);
--
- 	/*
- 	 * Do not cleanup the channels here as application might still be
- 	 * holding video device nodes. Channels cleanup will happen during
-@@ -962,8 +972,6 @@ static int tegra_vi_exit(struct host1x_client *client)
- 	 * device nodes are released.
- 	 */
+ 	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
+ 	struct {
+@@ -3191,7 +3217,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating)
+ 	if (hdev->channel->rescind)
+ 		return 0;
  
--	pm_runtime_put_sync(vi->dev);
--
- 	return 0;
- }
- 
-diff --git a/drivers/staging/media/tegra-video/vi.h b/drivers/staging/media/tegra-video/vi.h
-index bf0ed1a..b7a5439 100644
---- a/drivers/staging/media/tegra-video/vi.h
-+++ b/drivers/staging/media/tegra-video/vi.h
-@@ -54,6 +54,7 @@ struct tegra_vi_soc {
-  * @soc: pointer to SoC data structure
-  * @ops: vi operations
-  * @vi_chans: list head for VI channels
-+ * @power_on_refcnt: reference counter for power and clocks on/off
-  */
- struct tegra_vi {
- 	struct device *dev;
-@@ -64,6 +65,7 @@ struct tegra_vi {
- 	const struct tegra_vi_soc *soc;
- 	const struct tegra_vi_ops *ops;
- 	struct list_head vi_chans;
-+	atomic_t power_on_refcnt;
- };
- 
- void tegra_channels_cleanup(struct tegra_vi *vi);
+-	if (!hibernating) {
++	if (!keep_devs) {
+ 		/* Delete any children which might still exist. */
+ 		dr = kzalloc(sizeof(*dr), GFP_KERNEL);
+ 		if (dr && hv_pci_start_relations_work(hbus, dr))
 -- 
-2.7.4
+2.20.1
 
