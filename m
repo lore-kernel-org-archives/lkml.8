@@ -2,94 +2,120 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CD4C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 377D5C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF3E206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:18:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588076314;
-	bh=cqHjxWIJFaTWsEU5MiLL9cIs2YJlUyPIj3BshwlJDXk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=quhOiE1PYHLI9a69/biQj5KjPTq1+oU5IKm6XzSHxtJtNulX2jn6+iweZn41O5b5J
-	 kLYTrq06TKYMuCikCoQ6GYL4PnHS2EFYYCd7sLYc7lCnEC7q2YuTA7+jgNg0J6IKF1
-	 wnQrw+hlrEkVOyAoVSgdj/qexe3Yq+YnzHHiq33U=
+	by mail.kernel.org (Postfix) with ESMTP id 1A4D52072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:20:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgD1MSd (ORCPT
+        id S1726832AbgD1MUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:18:33 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36639 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbgD1MSd (ORCPT
+        Tue, 28 Apr 2020 08:20:09 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:52580 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbgD1MUJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:18:33 -0400
-Received: by mail-wr1-f68.google.com with SMTP id d15so22764075wrx.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 05:18:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zTlw31zRjoLT85wRz+voXIuSEjbFXJwzYKMzq0JdG5o=;
-        b=m5jPGIeVeSIDzv42thpWDx4IAMg4J8qwgZB6+/ia0/T/7lJgmftQFjRWvr44gg+wPV
-         kZSXpnVznul9rMAnmV7q/+dBQd3t/DYIl6E1V1zXj2KDpPggONjB2/FUrTAWDPKta3Vi
-         31OLDOkdZQEHBxWM7hfwaFEqKE6YOkSWA1yumKxELneaaupCK+VkkB9vbhLJ/9flnat7
-         mNfKNiq3mpp+o8wdL5U+Jmu2aSLSdy5r/ziqGzoRuVBBLcHX0iqQ9o3iiIbBbblviJTE
-         bJAJYGnonGs5RPU4NrSitVVTdTmOLEE7/X8cri3IxJlRA2+hLtzDwvNpxOvrhxZDBQVn
-         4ogA==
-X-Gm-Message-State: AGi0Pub+MRTTCghKZR4KLMTqogdxyxCM/2rCGvk8BYYM11m85Yffk7po
-        KoZkiIwUjwPWdYDdYnyS2Zs=
-X-Google-Smtp-Source: APiQypKN/xIOpwoxNBlnVyTPp2GIfbIVgJeU2bVIhWDH1sdrfxJyjBWSixoYUzkp9/7OhRSNUS5DLw==
-X-Received: by 2002:adf:9d8b:: with SMTP id p11mr32589178wre.322.1588076311193;
-        Tue, 28 Apr 2020 05:18:31 -0700 (PDT)
-Received: from localhost (ip-37-188-130-62.eurotel.cz. [37.188.130.62])
-        by smtp.gmail.com with ESMTPSA id a205sm3325989wmh.29.2020.04.28.05.18.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 05:18:30 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 14:18:28 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
-Message-ID: <20200428121828.GP28637@dhcp22.suse.cz>
-References: <20200424024239.63607-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200425004609.GE8982@jagdpanzerIV.localdomain>
- <842ff40b-a232-6098-4333-996a3033b30a@i-love.sakura.ne.jp>
- <20200427062117.GC486@jagdpanzerIV.localdomain>
- <4dae86af-1d9a-f5a8-cff6-aa91ec038a79@i-love.sakura.ne.jp>
+        Tue, 28 Apr 2020 08:20:09 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jTPDT-0006cz-Aw; Tue, 28 Apr 2020 06:19:59 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jTPDS-00016K-Gn; Tue, 28 Apr 2020 06:19:59 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
+        <87ftcv1nqe.fsf@x220.int.ebiederm.org>
+        <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
+        <20200424173927.GB26802@redhat.com>
+        <87mu6ymkea.fsf_-_@x220.int.ebiederm.org>
+        <875zdmmj4y.fsf_-_@x220.int.ebiederm.org>
+        <CAHk-=whvktUC9VbzWLDw71BHbV4ofkkuAYsrB5Rmxnhc-=kSeQ@mail.gmail.com>
+        <878sihgfzh.fsf@x220.int.ebiederm.org>
+        <CAHk-=wjSM9mgsDuX=ZTy2L+S7wGrxZMcBn054As_Jyv8FQvcvQ@mail.gmail.com>
+Date:   Tue, 28 Apr 2020 07:16:44 -0500
+In-Reply-To: <CAHk-=wjSM9mgsDuX=ZTy2L+S7wGrxZMcBn054As_Jyv8FQvcvQ@mail.gmail.com>
+        (Linus Torvalds's message of "Mon, 27 Apr 2020 13:27:40 -0700")
+Message-ID: <87sggnajpv.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4dae86af-1d9a-f5a8-cff6-aa91ec038a79@i-love.sakura.ne.jp>
+Content-Type: text/plain
+X-XM-SPF: eid=1jTPDS-00016K-Gn;;;mid=<87sggnajpv.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+Ca6+ElOCctvOcWA7bIRbvwRUv+5ClZTc=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH v4 0/2] proc: Ensure we see the exit of each process tid exactly
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 28-04-20 20:33:21, Tetsuo Handa wrote:
-> On 2020/04/27 15:21, Sergey Senozhatsky wrote:
-> >> KERN_NO_CONSOLES is for type of messages where "saved for later analysis" is
-> >> important but "printed for immediate notification" is not important.
-> >> In other words, KERN_NO_CONSOLES is NOT for dying messages where "printed for
-> >> immediate notification" is important.
-> > 
-> > per-console loglevel is a user configurable parameter.
-> > KERN_NO_CONSOLES is a hard-coded policy.
-> 
-> But given that whether to use KERN_NO_CONSOLES is configurable via e.g. sysctl,
-> KERN_NO_CONSOLES will become a user configurable parameter. What's still wrong?
 
-How do I as a kernel developer know that KERN_NO_CONSOLES should be
-used? In other words, how can I assume what a user will consider
-important on the console?
+In the work to remove proc_mnt I noticed that we were calling
+proc_flush_task now proc_flush_pid possibly multiple times for the same
+pid because of how de_thread works.
 
--- 
-Michal Hocko
-SUSE Labs
+This is a bare minimal patchset to sort out de_thread, by introducing
+exchange_tids and the helper of exchange_tids hlists_swap_heads_rcu.
+
+The actual call of exchange_tids should be slowpath so I have
+prioritized readability over getting every last drop of performance.
+
+I have also read through a bunch of the code to see if I could find
+anything that would be affected by this change.  Users of
+has_group_leader_pid were a good canidates.  But I also looked at other
+cases that might have a pid->task->pid transition.  I ignored other
+sources of races with de_thread and exec as those are preexisting.
+
+I found a close call with send_signals user of task_active_pid_ns, but
+all pids of a thread group are guaranteeds to be in the same pid
+namespace so there is not a problem.
+
+I found a few pieces of debugging code that do:
+
+	task = pid_task(pid, PIDTYPE_PID);
+        if (task) {
+        	printk("%u\n", task->pid);
+        }
+
+But I can't see how we care if it happens at the wrong moment that
+task->pid might not match pid_nr(pid);
+
+Similarly because the code in posix-cpu-timers goes pid->task->pid it
+feels like there should be a problem.  But as the code that works with
+PIDTYPE_PID is only available within the thread group, and as de_thread
+kills all of the other threads before it makes any changes of this
+kind the race can not happen.
+
+In short I don't think this change will introduce any regressions.
+
+Eric W. Biederman (2):
+      rculist: Add hlists_swap_heads_rcu
+      proc: Ensure we see the exit of each process tid exactly once
+
+ fs/exec.c               |  5 +----
+ include/linux/pid.h     |  1 +
+ include/linux/rculist.h | 21 +++++++++++++++++++++
+ kernel/pid.c            | 19 +++++++++++++++++++
+ 4 files changed, 42 insertions(+), 4 deletions(-)
+
+Eric
