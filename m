@@ -2,308 +2,130 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988B0C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4783C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E4382176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:57:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588103832;
-	bh=H3AromAI/bQt3gTc63FAWPy8ELDG96hA1qpnAEphN1c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VF/ojU8UHvseMLsB9JnW8t5p3W17zXuhqACfrZuwsv8AkPoqnzWt4HWLq45UW+T54
-	 PUv1SiE50UNTZAJnL7KUzYGY888yOCELBrdCICMFBU8Sy73Lse7EgbYxshp/vh81/8
-	 YBAE4W1gBAqwW+QwCVCJgafqKBAcbhVDECFJzucU=
+	by mail.kernel.org (Postfix) with ESMTP id 8245A2137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:58:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kxvn03Qc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbgD1T5L (ORCPT
+        id S1729300AbgD1T6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 15:57:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52472 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729191AbgD1T5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 15:57:11 -0400
-Received: from localhost.localdomain (unknown [157.51.86.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 017DE2176D;
-        Tue, 28 Apr 2020 19:57:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588103830;
-        bh=H3AromAI/bQt3gTc63FAWPy8ELDG96hA1qpnAEphN1c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YUNKhggf9k8N5dx75bDkryc5gmgxNBrgFHMcd+o/7pD1sPpTv0RBID6UHXJoY+xB+
-         sQMYFCzsLZk3bM57SUFMMBJLBa2+TRTJmkrdqvgPYRcLxH5sFt9UD3pi5WiCYYLsBF
-         kwDKmOAcbpMrjiOILvQ0FWvFLFtMfr0TOZRx3AYs=
-From:   mani@kernel.org
-To:     johan@kernel.org, gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patong.mxl@gmail.com, Manivannan Sadhasivam <mani@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH 2/2] usb: serial: xr_serial: Add gpiochip support
-Date:   Wed, 29 Apr 2020 01:26:51 +0530
-Message-Id: <20200428195651.6793-3-mani@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200428195651.6793-1-mani@kernel.org>
-References: <20200428195651.6793-1-mani@kernel.org>
+        Tue, 28 Apr 2020 15:58:14 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:42674 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728559AbgD1T6O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 15:58:14 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SJrp4B001622;
+        Tue, 28 Apr 2020 19:58:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=fgVW8SHlL4lo+HxxlLz7Gr/ftUNHzPDePQJYvyyrBI4=;
+ b=kxvn03Qcj77WKcY+oCnkzbE133TkmTB5xUfqKzOiKDKPtM8JYr5FTFTykSLs80QP5loP
+ i4ZDn+GZWw09SkJOERPGEniHA0LmQTZREao0ypUmcLamJUgU8kApDaoJl2CSRqzL/0EJ
+ pCgCJo8SMDgqn0z2i413gk7zMFA82a6opg1BJYb1rL25ShA/Z4M1+H4iED7ubC5z2qKU
+ 6fcp/x5CL3bxl0wlh9kLOy6eOWdfJfok6rpGsPA6aFNhF+JmoVW79vL5GnchWKvv9718
+ IllIoBefAQcgtXrFa3g7Gn9GFjTxO0U3Sspnx9A9pej0RdJzotn65MH13yRTz6UokuvX qQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 30p2p07gbe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 19:58:08 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SJqfKu164941;
+        Tue, 28 Apr 2020 19:56:08 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 30mxpgv1yb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 19:56:08 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03SJu6sf008267;
+        Tue, 28 Apr 2020 19:56:06 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Apr 2020 12:56:06 -0700
+Date:   Tue, 28 Apr 2020 22:56:00 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Suraj Upadhyay <usuraj35@gmail.com>
+Cc:     Jerome Pouiller <Jerome.Pouiller@silabs.com>,
+        devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] staging: wfx: cleanup long lines in data_tx.c
+Message-ID: <20200428195600.GN2014@kadam>
+References: <20200425113234.GA14492@blackclown>
+ <8518467.FNpd3NTrYF@pc-42>
+ <20200427115827.GA3214@blackclown>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427115827.GA3214@blackclown>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 bulkscore=0 adultscore=0 phishscore=0 suspectscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280156
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1015
+ bulkscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
+ mlxscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004280156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manivannan Sadhasivam <mani@kernel.org>
+On Mon, Apr 27, 2020 at 05:28:27PM +0530, Suraj Upadhyay wrote:
+> On Mon, Apr 27, 2020 at 11:50:23AM +0000, Jerome Pouiller wrote:
+> > On Saturday 25 April 2020 13:32:34 CEST Suraj Upadhyay wrote:
+> > > Break lines with length over 80 characters to
+> > > conform to the linux coding style and refactor
+> > > wherever necessary.
+> > > 
+> > > Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
+> > > ---
+> > > 
+> > > Changes in v4:
+> > > 	- Added a space after declaration in wfx_get_hw_rate().
+> > > 	- A checkpatch warning for this commit is retained at line 75,
+> > > 	  to maintain uniformity in function declarations. (Reviewer
+> > > 	  jerome suggested).
+> > > 
+> > > Changes in v3:
+> > >         - Changed the temporary variable name for the memzcmp statement
+> > >           to is_used. (as suggested).
+> > >         - Added a temporary ieee80211_supported_band variable to address
+> > >           the problem in wfx_get_hw_rate() more efficiently. (not
+> > >           suggested, but still).
+> > > 
+> > > Changes in v2:
+> > >         - Introduced a temporary variable for the memzcmp statement.
+> > >         - Addressed the checkpatch problem with wfx_get_hw_rate().
+> > >         - Restored the function definition of wfx_tx_get_tx_parms
+> > >           as suggested by the reviewer.
+> > >         - Added suggested changes for req->packet_id statement.
+> > > 
+> > >  drivers/staging/wfx/data_tx.c | 40 +++++++++++++++++++++++------------
+> > >  1 file changed, 26 insertions(+), 14 deletions(-)
+> > 
+> > This patch does not contain the suggestions from Dan. However, it is
+> > sufficient from my personal point of view.
+> 
+> Yes, I considered them but thought it would be bad to introduce a new
+> variable at every iteration of the for-loop.
+> 
 
-Add gpiochip support for Maxlinear/Exar USB to serial converter
-for controlling the available gpios.
+It's not bad at all.  I don't know why someone would think that.
 
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
----
- drivers/usb/serial/xr_serial.c | 186 ++++++++++++++++++++++++++++++++-
- drivers/usb/serial/xr_serial.h |   7 ++
- 2 files changed, 192 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/serial/xr_serial.c b/drivers/usb/serial/xr_serial.c
-index ea4a0b167d3f..d86fd40839f8 100644
---- a/drivers/usb/serial/xr_serial.c
-+++ b/drivers/usb/serial/xr_serial.c
-@@ -476,6 +476,189 @@ static void xr_break_ctl(struct tty_struct *tty, int break_state)
- 		   state);
- }
- 
-+#ifdef CONFIG_GPIOLIB
-+
-+static int xr_gpio_request(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct usb_serial_port *port = gpiochip_get_data(gc);
-+	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-+
-+	/* Check if the requested GPIO is occupied */
-+	if (port_priv->gpio_altfunc & BIT(offset))
-+		return -ENODEV;
-+
-+	return 0;
-+}
-+
-+static int xr_gpio_get(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	struct usb_serial_port *port = gpiochip_get_data(gc);
-+	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-+	int ret;
-+	u16 gpio_status;
-+
-+	ret = xr_get_reg(port, XR21V141X_UART_REG_BLOCK,
-+			 port_priv->regs->gpio_status, &gpio_status);
-+	if (ret)
-+		return ret;
-+
-+	return !!(gpio_status & BIT(gpio));
-+}
-+
-+static void xr_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
-+{
-+	struct usb_serial_port *port = gpiochip_get_data(gc);
-+	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-+
-+	if (val)
-+		xr_set_reg(port, XR21V141X_UART_REG_BLOCK,
-+			   port_priv->regs->gpio_set, BIT(gpio));
-+	else
-+		xr_set_reg(port, XR21V141X_UART_REG_BLOCK,
-+			   port_priv->regs->gpio_clr, BIT(gpio));
-+}
-+
-+static int xr_gpio_direction_get(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	struct usb_serial_port *port = gpiochip_get_data(gc);
-+	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-+	int ret;
-+	u16 gpio_dir;
-+
-+	ret = xr_get_reg(port, XR21V141X_UART_REG_BLOCK,
-+			 port_priv->regs->gpio_dir, &gpio_dir);
-+	if (ret)
-+		return ret;
-+
-+	/* Logic 0 = input and Logic 1 = output */
-+	return !(gpio_dir & BIT(gpio));
-+}
-+
-+static int xr_gpio_direction_input(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	struct usb_serial_port *port = gpiochip_get_data(gc);
-+	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-+	int ret;
-+	u16 gpio_dir;
-+
-+	ret = xr_get_reg(port, XR21V141X_UART_REG_BLOCK,
-+			 port_priv->regs->gpio_dir, &gpio_dir);
-+	if (ret)
-+		return ret;
-+
-+	gpio_dir &= ~BIT(gpio);
-+
-+	return xr_set_reg(port, XR21V141X_UART_REG_BLOCK,
-+			  port_priv->regs->gpio_dir, gpio_dir);
-+}
-+
-+static int xr_gpio_direction_output(struct gpio_chip *gc, unsigned int gpio,
-+				    int val)
-+{
-+	struct usb_serial_port *port = gpiochip_get_data(gc);
-+	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-+	int ret;
-+	u16 gpio_dir;
-+
-+	ret = xr_get_reg(port, XR21V141X_UART_REG_BLOCK,
-+			 port_priv->regs->gpio_dir, &gpio_dir);
-+	if (ret)
-+		return ret;
-+
-+	gpio_dir |= BIT(gpio);
-+
-+	ret = xr_set_reg(port, XR21V141X_UART_REG_BLOCK,
-+			 port_priv->regs->gpio_dir, gpio_dir);
-+	if (ret)
-+		return ret;
-+
-+	xr_gpio_set(gc, gpio, val);
-+
-+	return 0;
-+}
-+
-+static int xr21v141x_gpio_init(struct usb_serial_port *port)
-+{
-+	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-+	int ret;
-+	u16 gpio_mode;
-+
-+	port_priv->gc.ngpio = 6;
-+
-+	ret = xr_get_reg(port, XR21V141X_UART_REG_BLOCK,
-+			 port_priv->regs->gpio_mode, &gpio_mode);
-+	if (ret)
-+		return ret;
-+
-+	/* Mark all pins which are not in GPIO mode */
-+	if (gpio_mode & UART_MODE_RTS_CTS)
-+		port_priv->gpio_altfunc |= (BIT(4) | BIT(5));
-+	else if (gpio_mode & UART_MODE_DTR_DSR)
-+		port_priv->gpio_altfunc |= (BIT(2) | BIT(3));
-+	else if (gpio_mode & UART_MODE_RS485)
-+		port_priv->gpio_altfunc |= BIT(5);
-+	else if (gpio_mode & UART_MODE_RS485_ADDR)
-+		port_priv->gpio_altfunc |= BIT(5);
-+	else
-+		port_priv->gpio_altfunc = 0; /* All GPIOs are available */
-+
-+	return ret;
-+}
-+
-+static int xr_gpio_init(struct usb_serial_port *port)
-+{
-+	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-+	int ret = 0;
-+
-+	if (port_priv->idProduct == XR21V141X_ID)
-+		ret = xr21v141x_gpio_init(port);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	port_priv->gc.label = "xr_gpios";
-+	port_priv->gc.request = xr_gpio_request;
-+	port_priv->gc.get_direction = xr_gpio_direction_get;
-+	port_priv->gc.direction_input = xr_gpio_direction_input;
-+	port_priv->gc.direction_output = xr_gpio_direction_output;
-+	port_priv->gc.get = xr_gpio_get;
-+	port_priv->gc.set = xr_gpio_set;
-+	port_priv->gc.owner = THIS_MODULE;
-+	port_priv->gc.parent = &port->dev;
-+	port_priv->gc.base = -1;
-+	port_priv->gc.can_sleep = true;
-+
-+	ret = gpiochip_add_data(&port_priv->gc, port);
-+	if (!ret)
-+		port_priv->gpio_registered = true;
-+
-+	return ret;
-+}
-+
-+static void xr_gpio_remove(struct usb_serial_port *port)
-+{
-+	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-+
-+	if (port_priv->gpio_registered) {
-+		gpiochip_remove(&port_priv->gc);
-+		port_priv->gpio_registered = false;
-+	}
-+}
-+
-+#else
-+
-+static int xr_gpio_init(struct usb_serial_port *port)
-+{
-+	return 0;
-+}
-+
-+static void xr_gpio_remove(struct usb_serial_port *port)
-+{
-+	/* Nothing to do */
-+}
-+
-+#endif
-+
- static int xr_port_probe(struct usb_serial_port *port)
- {
- 	struct usb_serial *serial = port->serial;
-@@ -495,13 +678,14 @@ static int xr_port_probe(struct usb_serial_port *port)
- 
- 	usb_set_serial_port_data(port, port_priv);
- 
--	return 0;
-+	return xr_gpio_init(port);
- }
- 
- static int xr_port_remove(struct usb_serial_port *port)
- {
- 	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
- 
-+	xr_gpio_remove(port);
- 	kfree(port_priv);
- 
- 	return 0;
-diff --git a/drivers/usb/serial/xr_serial.h b/drivers/usb/serial/xr_serial.h
-index d2977ef847a0..079098cf553a 100644
---- a/drivers/usb/serial/xr_serial.h
-+++ b/drivers/usb/serial/xr_serial.h
-@@ -3,6 +3,8 @@
- #ifndef __LINUX_USB_SERIAL_XR_SERIAL_H
- #define __LINUX_USB_SERIAL_XR_SERIAL_H
- 
-+#include <linux/gpio/driver.h>
-+
- struct xr_uart_regs {
- 	u8 enable;
- 	u8 format;
-@@ -21,6 +23,11 @@ struct xr_uart_regs {
- };
- 
- struct xr_port_private {
-+#ifdef CONFIG_GPIOLIB
-+	struct gpio_chip gc;
-+	bool gpio_registered;
-+	u8 gpio_altfunc;
-+#endif
- 	const struct xr_uart_regs *regs;
- 	u16 idProduct;
- 	u8 reg_width;
--- 
-2.17.1
+regards,
+dan carpenter
 
