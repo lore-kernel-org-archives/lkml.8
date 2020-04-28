@@ -2,96 +2,95 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D149DC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF14C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEDFF206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:38:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588066699;
-	bh=Twljy6kTtrMgFpCh7Qv6jtXx2wKv16hS05/wrUPUnGY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YQ08sH4YINlAnWWLmdNmFHD7T2O5RpZ4zR8HHJvwRmhfET5mQQ2m8d3QtPlgJscyr
-	 PUIOkJ3jEM6SePadiSuXeMVXo13ezp7pIZnlL2Ehzs9FXsC/YW7z0lc84XnlHDI8cI
-	 LJr+CYm7Utjm29YzkFfgZphzC4TF8DGdgJ2LF/Rs=
+	by mail.kernel.org (Postfix) with ESMTP id 51D62206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:38:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgD1JiS (ORCPT
+        id S1727125AbgD1JiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 05:38:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51738 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 05:38:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41084 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727052AbgD1JiO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 05:38:14 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD400206C0;
-        Tue, 28 Apr 2020 09:38:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588066694;
-        bh=Twljy6kTtrMgFpCh7Qv6jtXx2wKv16hS05/wrUPUnGY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P7F9NnzFI4hDD5ttYp3IkD0Whph4DYR0Xh0GC+isX8gDGS6aLP0+r9CU9Rtc/KSs7
-         ZwbPke9I+V8bmLmxWnUoP+S9o3t3M05/w5FFQCgv/M5Ubx9P6X6X/r6AARSe49xkiN
-         HkO996lBToKh0cLpsoLODaVKswRBRuymcnUlrm6E=
-Date:   Tue, 28 Apr 2020 10:38:11 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sanjay R Mehta <sanmehta@amd.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sanjay R Mehta <sanju.mehta@amd.com>
-Subject: Re: linux-next: build warning after merge of the spi tree
-Message-ID: <20200428093811.GA5677@sirena.org.uk>
-References: <20200428141611.0ed0969a@canb.auug.org.au>
- <2b6a132c-8659-d2ed-917e-09aef47aeac3@amd.com>
+        id S1727042AbgD1JiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 05:38:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D6BF0AD92;
+        Tue, 28 Apr 2020 09:38:19 +0000 (UTC)
+Subject: Re: [patch] mm, oom: stop reclaiming if GFP_ATOMIC will start failing
+ soon
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>
+References: <alpine.DEB.2.22.394.2004241347310.70176@chino.kir.corp.google.com>
+ <20200425172706.26b5011293e8dc77b1dccaf3@linux-foundation.org>
+ <alpine.DEB.2.22.394.2004261959310.80211@chino.kir.corp.google.com>
+ <20200427133051.b71f961c1bc53a8e72c4f003@linux-foundation.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <28e35a8b-400e-9320-5a97-accfccf4b9a8@suse.cz>
+Date:   Tue, 28 Apr 2020 11:38:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="/04w6evG8XlLl3ft"
-Content-Disposition: inline
-In-Reply-To: <2b6a132c-8659-d2ed-917e-09aef47aeac3@amd.com>
-X-Cookie: Eschew obfuscation.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200427133051.b71f961c1bc53a8e72c4f003@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 4/27/20 10:30 PM, Andrew Morton wrote:
+> On Sun, 26 Apr 2020 20:12:58 -0700 (PDT) David Rientjes <rientjes@google.com> wrote:
+> 
+>> 
+>> GFP_ATOMIC allocators can access below these per-zone watermarks.  So the 
+>> issue is that per-zone free pages stays between ALLOC_HIGH watermarks 
+>> (the watermark that GFP_ATOMIC allocators can allocate to) and min 
+>> watermarks.  We never reclaim enough memory to get back to min watermarks 
+>> because reclaim cannot keep up with the amount of GFP_ATOMIC allocations.
+> 
+> But there should be an upper bound upon the total amount of in-flight
+> GFP_ATOMIC memory at any point in time?  These aren't like pagecache
 
---/04w6evG8XlLl3ft
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If it's a network receive path, then this is effectively bounded by link speed 
+vs ability to deal with the packets quickly and free the buffers. And the bursts 
+of incoming packets might be out of control of the admin. With my "enterprise 
+kernel support" hat on, it's it's annoying enough to explain GFP_ATOMIC failures 
+(usually high-order) in dmesg every once in a while (the usual suggestion is to 
+bump min_free_kbytes and stress that unless they are frequent, there's no actual 
+harm as networking can defer the allocation to non-atomic context). If there was 
+an OOM kill as a result, that could not be disabled, I can well imagine we would 
+have to revert such patch in our kernel as a result due to the DOS (intentional 
+or not) potential.
 
-On Tue, Apr 28, 2020 at 10:31:56AM +0530, Sanjay R Mehta wrote:
-> Hi Stephen,
->=20
-> I have just sent a fixup patch for this. Could it still reach 5.8?
+> which will take more if we give it more.  Setting the various
+> thresholds appropriately should ensure that blockable allocations don't
+> get their memory stolen by GPP_ATOMIC allocations?
 
-Yes, it'll be fine - thanks for sending the fix.
+I agree with the view that GFP_ATOMIC is only a (perhaps more visible) part of 
+the problem that there's no fairness guarantee in reclaim, and allocators can 
+steal from each other. GFP_ATOMIC allocations just have it easier thanks to 
+lower thresholds.
 
-Please don't top post, reply in line with needed context.  This allows
-readers to readily follow the flow of conversation and understand what
-you are talking about and also helps ensure that everything in the
-discussion is being addressed.
+> I took a look at doing a quick-fix for the
+> direct-reclaimers-get-their-stuff-stolen issue about a million years
+> ago.  I don't recall where it ended up.  It's pretty trivial for the
+> direct reclaimer to free pages into current->reclaimed_pages and to
+> take a look in there on the allocation path, etc.  But it's only
+> practical for order-0 pages.
 
---/04w6evG8XlLl3ft
-Content-Type: application/pgp-signature; name="signature.asc"
+FWIW there's already such approach added to compaction by Mel some time ago, so 
+order>0 allocations are covered to some extent. But in this case I imagine that 
+compaction won't even start because order-0 watermarks are too low.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6n+X8ACgkQJNaLcl1U
-h9CPVwf/akusipJdGODVVZUKosXnjJDGuM9skyUXNpaVoDcTgEtA4UlThjSV9JeD
-Br74NFKS8CbvzRhT2M6lDJpya+LVLEnxOsBq3Mgvkh0u914lAZu8jFFTFsx3X4dq
-Mv0h5JW/mJ3yeh9/MvwEyPsgkT7naPLtNUSuzUTMEG9Pg4ZnEHa9nDdaZdCZHQg6
-aD8VUNnN+e3Lp4s6LRy/+8Npwdq5JOy2rcJNHXQyRhMoAtdrgO66ZppDYxTZBtgk
-VO5cPPWRItpx0j86fTtr47bQAMZbdAHF6s+85715rtbgtxgDlgvs9kuj3+NdCuzo
-zcnhjiWhQ+R92O4dtjF3gJpDhuhMpw==
-=G1j5
------END PGP SIGNATURE-----
-
---/04w6evG8XlLl3ft--
+The order-0 reclaim capture might work though - as a result the GFP_ATOMIC 
+allocations would more likely fail and defer to their fallback context.
