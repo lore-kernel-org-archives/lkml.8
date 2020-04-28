@@ -2,116 +2,111 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BC8C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A1EC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF35B206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:04:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EYfcSwBK"
+	by mail.kernel.org (Postfix) with ESMTP id 0D3B5206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:04:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgD1WEO (ORCPT
+        id S1726854AbgD1WEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:04:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49034 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725934AbgD1WEO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:04:14 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31075C03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:04:14 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id i19so25078857ioh.12
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:04:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hdye9Y+HN3Ay3k4lAQbTQjGJKjGjfhnRJ5ClLYqLI5Q=;
-        b=EYfcSwBKoyf1yvsIqjslcUpr811ti1beomA8wAYjwTPxou14WZi54Y1DRkaCZUFbzS
-         fod/drVFx08FoL743YYDcZt006b5fMlrKOhEBMc4mWuSCmaYYwZkmU3OnVT2w56YAGPt
-         dwetTgWPn05l/H7Uw5Q2HAA94rrAsF8o3ibPAdUZJPCtvTuONOnkW2Iou8UMTPASDrh4
-         VWBxlx9oC3tOZvW+Q7G3fRsF3AmnRSLqL0QMA0x+k9MI6P1D4E51Gs5ZhZqI+EKccIrZ
-         0JtZZdKuZU3XbuJSvldJMMICbIXaSn86M3joweoUyWG+rjeODIhzGiQL4bfNphcwoJs2
-         X47w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hdye9Y+HN3Ay3k4lAQbTQjGJKjGjfhnRJ5ClLYqLI5Q=;
-        b=f2F3EZiuPqjISy12iILQhnzxMD93fVZAYE65ZOd4fvZm5OgPhwSWsr0WOYOAeDpHD+
-         HAS16vpgHes3sD+uo+dZ4L4xjb6IqwiMjFIvHu0KB0DuhZ+u/awsLSvZgV5i5yy+BY3/
-         KjZ2AqlWPyBu1WdjjINkNUW0+xu4tOaY5L2qZLQ03LY/Ir95AwnKp6RencC0ejawUNOS
-         WiUY1NLOwOIHrO30vWUMh5lmCKrb0nCxnJwkv3xVmni2So7abY/xbJ874n9Hia3X0h56
-         9kZjYFumSqPy18AD/an1/ZRrH1aO8n63IUu4f6g+jPIl2JV4X2IN9f50D8hJr3RteeCC
-         i80A==
-X-Gm-Message-State: AGi0PuYizf+TRJLG+OKtTuJaLbCPbUqiY4sIjo4ovd/s58bWsV4tD0Qk
-        Zn4JnKPNPeTN8rtn82UzzSaWEhX1BtU0Qfb1oYLUaA==
-X-Google-Smtp-Source: APiQypI9Nf6EOOBA5QVkfYCA6/jwvMsAYAzR0B14+Ay30XrCyHLqc0Nyb66cxDFd7jShKchKfrhAeQtEqRe90mQA/zU=
-X-Received: by 2002:a6b:6318:: with SMTP id p24mr4129450iog.12.1588111453327;
- Tue, 28 Apr 2020 15:04:13 -0700 (PDT)
+        Tue, 28 Apr 2020 18:04:37 -0400
+Received: from mga02.intel.com ([134.134.136.20]:13558 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725934AbgD1WEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 18:04:36 -0400
+IronPort-SDR: 7A9YF1c+TMb08MV2ZPgmy8qz+pw8Qq+9b0zRE8tOS/xdX++yaj8t+GwIeHvTtgEk64eeinNX8p
+ LawRfEUrDuoQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 15:04:36 -0700
+IronPort-SDR: l7M6V/bjnoYBNCtL9HPR7FeFyttpjX6WR+y0CL4huH55MgwCiaTD7IbXtPAVPJfcbTZ2xSJSQ3
+ cTZUntqq7+Wg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
+   d="scan'208";a="282292044"
+Received: from psera2-dell24.ra.intel.com ([10.54.154.157])
+  by fmsmga004.fm.intel.com with ESMTP; 28 Apr 2020 15:04:36 -0700
+Date:   Tue, 28 Apr 2020 15:06:07 -0700 (PDT)
+From:   matthew.gerlach@linux.intel.com
+X-X-Sender: lab@psera2-dell24.ra.intel.com
+To:     Xu Yilun <yilun.xu@intel.com>
+cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mdf@kernel.org
+Subject: Re: How to update a piece of flash for FPGA firmware?
+In-Reply-To: <20200428050135.GA27416@yilunxu-OptiPlex-7050>
+Message-ID: <alpine.LFD.2.21.2004281434001.59524@psera2-dell24.ra.intel.com>
+References: <20200428050135.GA27416@yilunxu-OptiPlex-7050>
 MIME-Version: 1.0
-References: <20200423022550.15113-1-sean.j.christopherson@intel.com> <20200423022550.15113-10-sean.j.christopherson@intel.com>
-In-Reply-To: <20200423022550.15113-10-sean.j.christopherson@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 28 Apr 2020 15:04:02 -0700
-Message-ID: <CALMp9eSuYqeVmWhb6q7T5DAW_Npbuin_N1+sbWjvcu0zTqiwsQ@mail.gmail.com>
-Subject: Re: [PATCH 09/13] KVM: nVMX: Prioritize SMI over nested IRQ/NMI
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Oliver Upton <oupton@google.com>,
-        Peter Shier <pshier@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 7:26 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Check for an unblocked SMI in vmx_check_nested_events() so that pending
-> SMIs are correctly prioritized over IRQs and NMIs when the latter events
-> will trigger VM-Exit.  This also fixes an issue where an SMI that was
-> marked pending while processing a nested VM-Enter wouldn't trigger an
-> immediate exit, i.e. would be incorrectly delayed until L2 happened to
-> take a VM-Exit.
->
-> Fixes: 64d6067057d96 ("KVM: x86: stubs for SMM support")
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/vmx/nested.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index 1fdaca5fd93d..8c16b190816b 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -3750,6 +3750,12 @@ static int vmx_check_nested_events(struct kvm_vcpu=
- *vcpu)
->                 return 0;
->         }
->
-> +       if (vcpu->arch.smi_pending && !is_smm(vcpu)) {
-> +               if (block_nested_events)
-> +                       return -EBUSY;
-> +               goto no_vmexit;
-> +       }
-> +
+Hi Yilun,
 
-From the SDM, volume 3:
+You raise some very interesting questions. Please see
+my comments below.
 
-=E2=80=A2 System-management interrupts (SMIs), INIT signals, and higher
-priority events take priority over MTF VM exits.
+Matthew
 
-I think this block needs to be moved up.
+On Tue, 28 Apr 2020, Xu Yilun wrote:
+
+> Hi,
+>
+> I wonder if an updating of FPGA Flash (but cannot reload) could be
+> implemented as fpga-mgr?
+>
+> I have the pcie based FPGA card. The bitstream for FPGA static region is
+> stored on flash chip. Board will load the bitstream to FPGA on system
+> power cycle. The flash chip could be accessed through "PCIE -> ... ->
+> Flash update engine -> Flash". So the update of the FPGA static region is
+> basicly updating the flash chip through PCIE and rebooting system.
+
+I think you mean power cycle when you say "rebooting system" above, but
+your point is worth highlighting.  During this flash update the
+FPGA is actually fully configured and running its application.  Typically,
+during a fpga-mgr update of the static region or partial reconfiguration
+region, the actual contents of the fpga region is "changing" during the 
+update.
+
+>
+> Should I implement the flash update engine as a fpga-mgr device? On one
+> hand it is just a flash write, FPGA functionality is actually not
+> changed before reboot. Does fpga-mgr requires bitstream takes function
+> immediately after write_complete()? On the other hand, the flash write
+> do affects FPGA static region on next boot. Operating on the
+> corresponding fpga region makes kernel fully aware of what is being
+> done.
+
+When an fpga-mgr is used in a device tree overlay flow, one gains
+the benefit the enumeration of the nodes in the overlay after the
+update has completed.
+
+>
+> Actually the FPGA card do has the capability to reload bitstream at
+> runtime. But it will cause the whole PCIE device lost, static region is
+> also destroyed. We need to rescan PCI to get it back. So I think
+> basically this is the same case as system reboot from FPGA's
+> perspective.
+
+Yes, on those cards that have the ability to power cycle themselves (i.e. 
+fully reconfigure the FPGA from flash), the PCIe connection to the card
+is broken because of a surprise link down PCIe error.  As you say a PCI 
+rescan (i.e. re-enumeration of the entire card) is required.  Since
+the card has to be re-scanned at the PCI level anyway, there may not be 
+much benefit to using the fpga-mgr in this flow.
+
+I wonder if these kinds of more disruptive updates are better suited to 
+something firmware updates rather than fpga updates?
+
+>
+> Thanks
+> Yilun
+>
