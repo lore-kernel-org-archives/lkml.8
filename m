@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B15CEC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8C4C8300A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6BC206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 218ED20B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099768;
-	bh=OB5cdMgX0DfmvgcahTQN1oU2ujswn+ZP+iedL5rqzVg=;
+	s=default; t=1588099769;
+	bh=Jq+43dOowewCe+eyDo+Q0xe3EHHPuoR53eIrtwTUFs8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sTXYF150n4XqfnVHJviJkc7+XuykflsIEQmOjpAhhB7VJ9vF/DaTd6y3Pnujni7R1
-	 Xj/0TmHsz/U7VZd62Bbk/hHSkmocTKyn0YNk6DBL7Wisb93plS49BE3/3KBFU0IyyE
-	 Re+hFCxoEOaZKpV31LkJySz1jI0BUsDm6amjHPeU=
+	b=aC+0Rg0igdcEEFMZLKpDEQiuGnbGEuWwltl+zQ5eaptg5f4iC5f8IHowRiTt/9PSB
+	 Z33mqlwmKhjijtUSAvwnfYhatDG+5bi6oxaDAd4D9zgRAVfoCaBW+3NLlJYDliFv1b
+	 PePWrQWclfYmqbldbsP4f9EsrUphg8xmBBFxFWg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730894AbgD1StW (ORCPT
+        id S1730886AbgD1SkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:49:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59338 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:40:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730905AbgD1SkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:40:17 -0400
+        id S1730177AbgD1SkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:40:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2FEF20575;
-        Tue, 28 Apr 2020 18:40:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08F9320575;
+        Tue, 28 Apr 2020 18:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099217;
-        bh=OB5cdMgX0DfmvgcahTQN1oU2ujswn+ZP+iedL5rqzVg=;
+        s=default; t=1588099202;
+        bh=Jq+43dOowewCe+eyDo+Q0xe3EHHPuoR53eIrtwTUFs8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qcMbnfAhjUHMoxUqfE9OwGk5WqMH+Z147wwYazEVNmYOjJBDumSAQ07mq3GoXOMoa
-         zIePQoPByM6aGKCCMVQrLYLemso9l3uH9PKQnEwiIWOlgWHDkDkjBW//hT8t/Fpz9K
-         csBASrKNZqHZ1msI5M492R/SE2QZHzg7X33dDxeg=
+        b=EOzD4KZnvhqqGUMtmbSgjLk87TwZjfcVHhPxrHZupzlQmo5IFX/SiQkQupUjp1wF6
+         U0+FMD3o65ON8DmP/Bpw7+GWH47DlNj7nhCT2WOAbxaMteful9EBbusanijhM4y1T+
+         pWMhTalp7bK7nQZZ9ZXV7ErGw4jU8tWmfEHFbjso=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 075/168] net: dsa: b53: Fix valid setting for MDB entries
-Date:   Tue, 28 Apr 2020 20:24:09 +0200
-Message-Id: <20200428182241.590684350@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.19 113/131] staging: comedi: dt2815: fix writing hi byte of analog output
+Date:   Tue, 28 Apr 2020 20:25:25 +0200
+Message-Id: <20200428182239.408300451@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,35 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-[ Upstream commit eab167f4851a19c514469dfa81147f77e17b5b20 ]
+commit ed87d33ddbcd9a1c3b5ae87995da34e6f51a862c upstream.
 
-When support for the MDB entries was added, the valid bit was correctly
-changed to be assigned depending on the remaining port bitmask, that is,
-if there were no more ports added to the entry's port bitmask, the entry
-now becomes invalid. There was another assignment a few lines below that
-would override this which would invalidate entries even when there were
-still multiple ports left in the MDB entry.
+The DT2815 analog output command is 16 bits wide, consisting of the
+12-bit sample value in bits 15 to 4, the channel number in bits 3 to 1,
+and a voltage or current selector in bit 0.  Both bytes of the 16-bit
+command need to be written in turn to a single 8-bit data register.
+However, the driver currently only writes the low 8-bits.  It is broken
+and appears to have always been broken.
 
-Fixes: 5d65b64a3d97 ("net: dsa: b53: Add support for MDB")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Electronic copies of the DT2815 User's Manual seem impossible to find
+online, but looking at the source code, a best guess for the sequence
+the driver intended to use to write the analog output command is as
+follows:
+
+1. Wait for the status register to read 0x00.
+2. Write the low byte of the command to the data register.
+3. Wait for the status register to read 0x80.
+4. Write the high byte of the command to the data register.
+
+Step 4 is missing from the driver.  Add step 4 to (hopefully) fix the
+driver.
+
+Also add a "FIXME" comment about setting bit 0 of the low byte of the
+command.  Supposedly, it is used to choose between voltage output and
+current output, but the current driver always sets it to 1.
+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200406142015.126982-1-abbotti@mev.co.uk
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/dsa/b53/b53_common.c |    1 -
- 1 file changed, 1 deletion(-)
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -1515,7 +1515,6 @@ static int b53_arl_op(struct b53_device
+---
+ drivers/staging/comedi/drivers/dt2815.c |    3 +++
+ 1 file changed, 3 insertions(+)
+
+--- a/drivers/staging/comedi/drivers/dt2815.c
++++ b/drivers/staging/comedi/drivers/dt2815.c
+@@ -92,6 +92,7 @@ static int dt2815_ao_insn(struct comedi_
+ 	int ret;
  
- 	memset(&ent, 0, sizeof(ent));
- 	ent.port = port;
--	ent.is_valid = is_valid;
- 	ent.vid = vid;
- 	ent.is_static = true;
- 	memcpy(ent.mac, addr, ETH_ALEN);
+ 	for (i = 0; i < insn->n; i++) {
++		/* FIXME: lo bit 0 chooses voltage output or current output */
+ 		lo = ((data[i] & 0x0f) << 4) | (chan << 1) | 0x01;
+ 		hi = (data[i] & 0xff0) >> 4;
+ 
+@@ -105,6 +106,8 @@ static int dt2815_ao_insn(struct comedi_
+ 		if (ret)
+ 			return ret;
+ 
++		outb(hi, dev->iobase + DT2815_DATA);
++
+ 		devpriv->ao_readback[chan] = data[i];
+ 	}
+ 	return i;
 
 
