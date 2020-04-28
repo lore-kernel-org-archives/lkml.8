@@ -2,52 +2,53 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72334C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1E7C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F85420BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C00C20BED
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:28:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098513;
-	bh=stN9rP4HgKIFrPN1xz/O73Hsp6NVHW7nqXAQ5WzJH24=;
+	s=default; t=1588098515;
+	bh=HDRVvxIprPJMsOxeeV4IKZ2/E6oVS200w4vIvpWIuqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xczomIXL6m9qTRs36RyUckXQV+RmK0DsPyERUCSbeE72yyM2en+BsFU1hVAaD/e1g
-	 kIrZV7LTD2hr2r8IxmrKVXL3sYYUjQU2IE6dfY6XLB1enX/KDoxpQ+TxlRyL/AEqka
-	 WxBZCR04cIfoPhUdf8Gi6UYNHwh/YM2NfhttSkMs=
+	b=NIlJGBr+mW+dzfRwAt/2NVLGIHNxWKU6fOyQ5eUuYjRf59YAelnzcE/8a4CNKsN1C
+	 WUICYBOkGG0107EhYJNYBN0XdNCjHKrvhITZidWy9VWYf/qBJ1zyU7mELJ++U2uJzQ
+	 U58vZ76h9OVIqssdYFDH+swuuq+evUT9c/Eb0LD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbgD1S2c (ORCPT
+        id S1728593AbgD1S2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:28:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41050 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:28:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729168AbgD1S2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:28:18 -0400
+        id S1729180AbgD1S2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:28:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B333208E0;
-        Tue, 28 Apr 2020 18:28:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB645208E0;
+        Tue, 28 Apr 2020 18:28:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098497;
-        bh=stN9rP4HgKIFrPN1xz/O73Hsp6NVHW7nqXAQ5WzJH24=;
+        s=default; t=1588098502;
+        bh=HDRVvxIprPJMsOxeeV4IKZ2/E6oVS200w4vIvpWIuqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IffqjOixVhoQUTgh+xIRJ7gqe+wmv0QDeR9hMHH0n//R8ut2tao8vo0FdkgL8VqfA
-         mMOql52R5/1BCbtQLkXN1KHIMVrk045eBqoTUKRzMooG0ImlUobdfdObVGyjH1bVN1
-         z0GochMtu/uU+j9TS78ndMlgvOVK1Pu4kemOsZ7s=
+        b=qr4mlk4hlhocIlm3sFNgTzX/u+VWt8W5h4NzNW52+upQdMykWFmYZmGl1BSutx972
+         s2liOkWJZICkyItZ9q4XcaSNXzjehSvyMZgnht5kAwGp7w13V0BtLOlelqYaW7lUJu
+         PDvxw1BvCQ40d9CrpUTOx9MB/J03cJ8ehS3y0QXM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 061/167] team: fix hang in team_mode_get()
-Date:   Tue, 28 Apr 2020 20:23:57 +0200
-Message-Id: <20200428182232.675467511@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 039/167] ASoC: Intel: bytcr_rt5640: Add quirk for MPMAN MPWIN895CL tablet
+Date:   Tue, 28 Apr 2020 20:23:35 +0200
+Message-Id: <20200428182230.059324414@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
 References: <20200428182225.451225420@linuxfoundation.org>
@@ -60,90 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 1c30fbc76b8f0c07c92a8ca4cd7c456612e17eb5 ]
+[ Upstream commit c8b78f24c1247b7bd0882885c672d9dec5800bc6 ]
 
-When team mode is changed or set, the team_mode_get() is called to check
-whether the mode module is inserted or not. If the mode module is not
-inserted, it calls the request_module().
-In the request_module(), it creates a child process, which is
-the "modprobe" process and waits for the done of the child process.
-At this point, the following locks were used.
-down_read(&cb_lock()); by genl_rcv()
-    genl_lock(); by genl_rcv_msc()
-        rtnl_lock(); by team_nl_cmd_options_set()
-            mutex_lock(&team->lock); by team_nl_team_get()
+The MPMAN MPWIN895CL tablet almost fully works with out default settings.
+The only problem is that it has only 1 speaker so any sounds only playing
+on the right channel get lost.
 
-Concurrently, the team module could be removed by rmmod or "modprobe -r"
-The __exit function of team module is team_module_exit(), which calls
-team_nl_fini() and it tries to acquire following locks.
-down_write(&cb_lock);
-    genl_lock();
-Because of the genl_lock() and cb_lock, this process can't be finished
-earlier than request_module() routine.
+Add a quirk for this model using the default settings + MONO_SPEAKER.
 
-The problem secenario.
-CPU0                                     CPU1
-team_mode_get
-    request_module()
-                                         modprobe -r team_mode_roundrobin
-                                                     team <--(B)
-        modprobe team <--(A)
-            team_mode_roundrobin
-
-By request_module(), the "modprobe team_mode_roundrobin" command
-will be executed. At this point, the modprobe process will decide
-that the team module should be inserted before team_mode_roundrobin.
-Because the team module is being removed.
-
-By the module infrastructure, the same module insert/remove operations
-can't be executed concurrently.
-So, (A) waits for (B) but (B) also waits for (A) because of locks.
-So that the hang occurs at this point.
-
-Test commands:
-    while :
-    do
-        teamd -d &
-	killall teamd &
-	modprobe -rv team_mode_roundrobin &
-    done
-
-The approach of this patch is to hold the reference count of the team
-module if the team module is compiled as a module. If the reference count
-of the team module is not zero while request_module() is being called,
-the team module will not be removed at that moment.
-So that the above scenario could not occur.
-
-Fixes: 3d249d4ca7d0 ("net: introduce ethernet teaming device")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200405133726.24154-1-hdegoede@redhat.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/team/team.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ sound/soc/intel/boards/bytcr_rt5640.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/drivers/net/team/team.c
-+++ b/drivers/net/team/team.c
-@@ -468,6 +468,9 @@ static const struct team_mode *team_mode
- 	struct team_mode_item *mitem;
- 	const struct team_mode *mode = NULL;
- 
-+	if (!try_module_get(THIS_MODULE))
-+		return NULL;
-+
- 	spin_lock(&mode_list_lock);
- 	mitem = __find_mode(kind);
- 	if (!mitem) {
-@@ -483,6 +486,7 @@ static const struct team_mode *team_mode
- 	}
- 
- 	spin_unlock(&mode_list_lock);
-+	module_put(THIS_MODULE);
- 	return mode;
- }
- 
+diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
+index 6bd9ae813be28..d14d5f7db1689 100644
+--- a/sound/soc/intel/boards/bytcr_rt5640.c
++++ b/sound/soc/intel/boards/bytcr_rt5640.c
+@@ -591,6 +591,17 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
+ 					BYT_RT5640_SSP0_AIF1 |
+ 					BYT_RT5640_MCLK_EN),
+ 	},
++	{
++		/* MPMAN MPWIN895CL */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "MPMAN"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MPWIN8900CL"),
++		},
++		.driver_data = (void *)(BYTCR_INPUT_DEFAULTS |
++					BYT_RT5640_MONO_SPEAKER |
++					BYT_RT5640_SSP0_AIF1 |
++					BYT_RT5640_MCLK_EN),
++	},
+ 	{	/* MSI S100 tablet */
+ 		.matches = {
+ 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
+-- 
+2.20.1
+
 
 
