@@ -7,86 +7,119 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F424C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E910EC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFD120730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D272E20730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:31:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgD1Vap (ORCPT
+        id S1726798AbgD1VbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:30:45 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:38239 "EHLO
+        Tue, 28 Apr 2020 17:31:25 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:47835 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgD1Vap (ORCPT
+        with ESMTP id S1725934AbgD1VbZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:30:45 -0400
+        Tue, 28 Apr 2020 17:31:25 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1McHM2-1it7ey3lam-00ciSB; Tue, 28 Apr 2020 23:30:37 +0200
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1M9WmQ-1jZ47l0nHo-005W2P; Tue, 28 Apr 2020 23:31:09 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Rishi Gupta <gupt21@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jiri Kosina <jkosina@suse.cz>,
-        Bastien Nocera <bnocera@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-input@vger.kernel.org,
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jani Nikula <jani.nikula@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Manasi Navare <manasi.d.navare@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] HID: mcp2221: add gpiolib dependency
-Date:   Tue, 28 Apr 2020 23:30:17 +0200
-Message-Id: <20200428213035.3108649-1-arnd@arndb.de>
+Subject: [PATCH] drm/i915: avoid unused scale_user_to_hw() warning
+Date:   Tue, 28 Apr 2020 23:30:50 +0200
+Message-Id: <20200428213106.3139170-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:7r62qOoVCPk7gtPEoS7ZCMnWkY3NDUcoFia+LnBLDsJhyS0znYT
- 8l0MoyYXUWSQ1KXGyDmM+4QXQ2jKT9uDUl4JyDjT1lUR5yWRobTJ30NqcPt8rrtM5Getybt
- c/gYzc7hs54mFqvfbvGu2tjOMKuQS4EisdokSjBu1B8GGk9zuO7tDOpyXQAgQK1ht/9gybx
- KwAA2oetBf7QpSDnxHGvQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ZuNYRQiWMEE=:mhP4d/Qfn7PrwxWDgFNNAz
- aupxDknp6gt1/Ru2AyMiOnsN11+IMPN5JUz0sE5uDFuc0T7P2MgW+eaRjaUuEukRoni9WcvFz
- IS6a6CBMZ+FPIxClGfY5linu4XdOwhkg4DRV4mf66gX2fDOCDlPXQsxq+/aSH2uWei1TtDpre
- NgwOCUtN7qL0nAafixszMd/UnJo+v3vL+FwpoiM13ZvGqkuRdC0UgALgip7Kwz3A+crFwXWQy
- P/cEkHwD0y3/Bu20rala7TfH3o5anT8HYWv60pP5B+nzapyRfCjNpgPJr0lVWWOyNsoDJssm2
- 7eP2clJDq1FG8RbvYZlrep9zBZrWG+EQmnt2JZALtFPc04GBHhY6dCnK7yBHSYAUWh1NN3Hex
- jBVyLeBOMa4SAl/ALuhSrXDRxcDc9EOOxmQlk2r9zNoOVTlEWDlGoW6397U9qkNYNGh4TYOqj
- wheDojTdiWNZxRhxh3An+a+3Kf0za5hAYIbxdSLnpdHqxzM+Bkk8T0R4Q6bl1deMlb/VGSzM3
- rwGR2VfHaOxd3GJEkKiOXpBQvv3+lLuCIA3y4Nc5KlDp9XkiGwZdjGZ7dScA/7FwmiS1ajnSY
- /MLWXsxC013uM0T87xvxV/gW7ToDIvwapRnpebPyYvdVopqhoDp7RJpH9+s5O7SEDXO57Y/Ht
- jJ6LsED0LT9ijiHXQa5wOOkcXENsxnkc37i2wlpQdDS7rbl6jkPN4IgKp4X22+Le+k38yxcny
- 0j0+Bn+ZSud5bMbzaLy+Bb8y3YVqFrj60ogGG5jOXJhCLIZnQJjcZWgpD9RFA5xRM2GyKd5rf
- lf17fCNghFntPypm++wYaW1bkrt0YgiIp8xcDvj1eSy6gDJ7wo=
+X-Provags-ID: V03:K1:rYIYDMxCYWRB2eFt+r4bXR0ojs6VRf8cssYFP45eloPQBq3kk1D
+ 38AbGpfXilhQ2jU3p6Hjd0QcD2HvV3U+BhpEpeAKZtbVB3ZQ/FfFecRn74a+7glEdjBtxhN
+ mCtjym4QUZYwirc3/24PVfET6sA4U1JkY6ymVG2ainX3OdXVUT7FrO8C3wZUz7tT3mANQiP
+ 1CtPuSaxk0HHZM5ZPj5zQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:DmNhM1LrliY=:AH8nBz5qg7//jHMk3FuG07
+ G0DALaFRg/496pj0R3g9B8yEMsUsm1tdew0yojIFSWwldeLPjnIe2HxZQpbKnCZOoOx9ZHuzP
+ VyIxzhMRF4falqztsfZMGV2K2nwiwdKpNqgAb89X3dBU8BTm2rAzVSchElOWeGYtRNzFRYe6a
+ E+xBgEmfmuVo0QRBbaqnPz/mx23ORxpfd7Sd2OBQkI4vCbK4Ro7vfe9fwf4R58epq22aDkehB
+ RGZ9W2KHhN+K6H7dkDw1tkcemaqMsca0bLEKk+Ub7kdOMW6lyvSXH3Oe5aCJ4Defd05xZvXZ/
+ 4HpPa02O3JOQ/D8CfiXMPD+I4Qf9UZseb5GhKxsn6JXwkzJk97xC6vG6fFYL2mTM27BFGyv+R
+ sfsA7RAmpWxQnhLbXXlVD1EfhNx3xNHdcB8wOR86EjTbHht3RSyDf6eIw16ni7s3SAtH7wQ8v
+ DuUKrhJ7JhRQ4vCj1+ST6H6SzxhGWOoFviaQxWJcQrjGf2tUj+wGYXtBP6IDzpYFha8ccwcKs
+ jLKSSqD7PiYYb9exeWgp+JTrQG6A5cRq7N30YoYRSYm+vmiR3UFlrDpSLNEoJh5ys3/hXDhh7
+ kb6N3jfYbxHKMq7TnEzc7n2Vja9dUpwFmTura/Qnq0cD3H06zTjCso1oDBOCa+Hn+qaqC9MUC
+ OVPnc5G59IGUtsyj92V7FgODe+McbW+Wzs0Gtq6kNoJ4RDRfFQDAlW9b1xKjaEpqMuj6vxY4C
+ fUhC3SJkzNA5JkCcsLeA2iHZfzp0JegX/dwe3DL3qz4oTTcqTvvBO8/awKE9ZVeB1aJGx7Tc5
+ F6TnuV/kM5UlOls0MI5A8To+exth+rpDd1PSg+Y9CcbNTAoUSE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without gpiolib, this driver fails to link:
+After the function is no longer marked 'inline', there
+is now a new warning pointing out that the only caller
+is inside of an #ifdef:
 
-arm-linux-gnueabi-ld: drivers/hid/hid-mcp2221.o: in function `mcp2221_probe':
-hid-mcp2221.c:(.text+0x1b0): undefined reference to `devm_gpiochip_add_data'
-arm-linux-gnueabi-ld: drivers/hid/hid-mcp2221.o: in function `mcp_gpio_get':
-hid-mcp2221.c:(.text+0x30c): undefined reference to `gpiochip_get_data'
+drivers/gpu/drm/i915/display/intel_panel.c:493:12: warning: 'scale_user_to_hw' defined but not used [-Wunused-function]
+  493 | static u32 scale_user_to_hw(struct intel_connector *connector,
+      |            ^~~~~~~~~~~~~~~~
 
-Fixes: 328de1c519c5 ("HID: mcp2221: add GPIO functionality support")
+Move the function itself into that #ifdef as well.
+
+Fixes: 81b55ef1f47b ("drm/i915: drop a bunch of superfluous inlines")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/hid/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/i915/display/intel_panel.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
-index 008bf44bc2c3..d54e7ae80de5 100644
---- a/drivers/hid/Kconfig
-+++ b/drivers/hid/Kconfig
-@@ -1155,6 +1155,7 @@ config HID_ALPS
- config HID_MCP2221
- 	tristate "Microchip MCP2221 HID USB-to-I2C/SMbus host support"
- 	depends on USB_HID && I2C
-+	depends on GPIOLIB
- 	---help---
- 	Provides I2C and SMBUS host adapter functionality over USB-HID
- 	through MCP2221 device.
+diff --git a/drivers/gpu/drm/i915/display/intel_panel.c b/drivers/gpu/drm/i915/display/intel_panel.c
+index 4279d2bf884a..92ed67e21c60 100644
+--- a/drivers/gpu/drm/i915/display/intel_panel.c
++++ b/drivers/gpu/drm/i915/display/intel_panel.c
+@@ -489,16 +489,6 @@ static u32 scale(u32 source_val,
+ 	return target_val;
+ }
+ 
+-/* Scale user_level in range [0..user_max] to [hw_min..hw_max]. */
+-static u32 scale_user_to_hw(struct intel_connector *connector,
+-			    u32 user_level, u32 user_max)
+-{
+-	struct intel_panel *panel = &connector->panel;
+-
+-	return scale(user_level, 0, user_max,
+-		     panel->backlight.min, panel->backlight.max);
+-}
+-
+ /* Scale user_level in range [0..user_max] to [0..hw_max], clamping the result
+  * to [hw_min..hw_max]. */
+ static u32 clamp_user_to_hw(struct intel_connector *connector,
+@@ -1255,6 +1245,16 @@ static u32 intel_panel_get_backlight(struct intel_connector *connector)
+ 	return val;
+ }
+ 
++/* Scale user_level in range [0..user_max] to [hw_min..hw_max]. */
++static u32 scale_user_to_hw(struct intel_connector *connector,
++			    u32 user_level, u32 user_max)
++{
++	struct intel_panel *panel = &connector->panel;
++
++	return scale(user_level, 0, user_max,
++		     panel->backlight.min, panel->backlight.max);
++}
++
+ /* set backlight brightness to level in range [0..max], scaling wrt hw min */
+ static void intel_panel_set_backlight(const struct drm_connector_state *conn_state,
+ 				      u32 user_level, u32 user_max)
 -- 
 2.26.0
 
