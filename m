@@ -2,157 +2,220 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15940C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8EFCC83003
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8E632075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:29:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ORd7/HnR"
+	by mail.kernel.org (Postfix) with ESMTP id BD4A82076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgD1A3H (ORCPT
+        id S1726366AbgD1Acv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 20:29:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726016AbgD1A3G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 20:29:06 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90918C0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 17:29:06 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id i16so18600959ils.12
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 17:29:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8Z3XKyHxAG7IUAvzD9JfBuXDfdRYbv9qqPO6eeYSrFk=;
-        b=ORd7/HnRA28Oya0GJjq9fEZBcHElM84CebAGT4i17uPekgJx2dJnHcDe0AwBvb+NwJ
-         BvxTMdG5eJHN2Arut0iXak3+TVVQqJZNkMADD5eTou0O/biFl0+XHSQu6YchIsvOdfPQ
-         Qa6vAx0Zx4tx9ZNlgdiSSCrcDooIBRmJTN/4T7cwnMmBIT6c5uzfXDjkwAu3GXtFrFXc
-         7/121vdRAmQ/izha0afgQbXyNncGbFsL79Zvd6Ncxp7hzKli0XC3Vv5abDouCS49QWDy
-         tBwlGrb3lEgcEy4V8pJ9Q8s8kw1ox5zPvbzuTaA3xItOcGLUu42+DqABWJNOboJG3iNH
-         glVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8Z3XKyHxAG7IUAvzD9JfBuXDfdRYbv9qqPO6eeYSrFk=;
-        b=CEz99Cc0FJQ1r3Ej7WguxL2qvnBUv1jbcFOaERqp3W7OjGTsalz0GmwULnCbxv+Q2r
-         V2xl1qvOdoOfo9S/FevH+nMRpCYrwmzXXxbMJpUJviqfDomC+uCcldpm4R0Gjfl/CL5+
-         YAGLIMHo4+K/6LT5f+3YF+Su4N7roCgFEr/8COlJ12DzNBlEvHTF2IWRwXOkSBcRPQUH
-         ez+V610EG2Lyk1MHvx2FqwQnMjQ1ZIQfef5ls1NV6hhT6ckDbo8L2D0rOnomAO3t9hK9
-         2HpgoZ5eMQh//tsh534mPFyfEGre3WYEXmHgXVyUgR6ZXKynjXMl5yQYpndXNnEEorEk
-         5bfw==
-X-Gm-Message-State: AGi0PuYf+YTT73nOKCJaqojxTZOyDgaL0KfVc/m+KTwiDt/yWahLxBrb
-        6brx+NYJSaDHF0oXZH/+vmAXPF9OJsvagGY+JPBKeQ==
-X-Google-Smtp-Source: APiQypKNcYUgCo9BYCsRgOoS0qjiW7kuAUtuQNqf8nOHc8HFG6NxKxozTIoOpNtW1E0Z1daC2YmA8D+pFaUvVC9fUa0=
-X-Received: by 2002:a92:d8ca:: with SMTP id l10mr23867156ilo.118.1588033745597;
- Mon, 27 Apr 2020 17:29:05 -0700 (PDT)
+        Mon, 27 Apr 2020 20:32:51 -0400
+Received: from mga14.intel.com ([192.55.52.115]:59646 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726257AbgD1Acu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 20:32:50 -0400
+IronPort-SDR: t5lbXe2wPNkEx/Ok4eLR5uJKOXDOi19SLvfuei1shi8b2Hs3jKID2tCTpGauAALjvQ2hj1nLGH
+ zt02tQMj0LwA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 17:32:50 -0700
+IronPort-SDR: 34+iHEPkybRq6Oeh47PcPNcKJ8fWXXno08aPz344bOPHq5SVrhIh3DMLCn6PJmSUzsfjGxRxp6
+ 5ZUEZjy9VZXA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
+   d="scan'208";a="336470353"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 27 Apr 2020 17:32:49 -0700
+Received: from debox1-hc.jf.intel.com (debox1-hc.jf.intel.com [10.54.75.159])
+        by linux.intel.com (Postfix) with ESMTP id C1097580820;
+        Mon, 27 Apr 2020 17:32:49 -0700 (PDT)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     rjw@rjwysocki.net, lenb@kernel.org, bhelgaas@google.com,
+        kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH 1/2] pci: Add ACPI StorageD3Enable _DSD support
+Date:   Mon, 27 Apr 2020 17:32:13 -0700
+Message-Id: <20200428003214.3764-2-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200428003214.3764-1-david.e.box@linux.intel.com>
+References: <20200428003214.3764-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
-References: <20200427165917.31799-1-pbonzini@redhat.com>
-In-Reply-To: <20200427165917.31799-1-pbonzini@redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Mon, 27 Apr 2020 17:28:54 -0700
-Message-ID: <CALMp9eTBs=deSYu1=CMLwZcO8HTpGM2JsgDxvFR1Y220tdUQ3w@mail.gmail.com>
-Subject: Re: [PATCH] KVM: x86: handle wrap around 32-bit address space
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Joerg Roedel <joro@8bytes.org>, everdox@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 9:59 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> KVM is not handling the case where EIP wraps around the 32-bit address
-> space (that is, outside long mode).  This is needed both in vmx.c
-> and in emulate.c.  SVM with NRIPS is okay, but it can still print
-> an error to dmesg due to integer overflow.
->
-> Reported-by: Nick Peterson <everdox@gmail.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/x86/kvm/emulate.c |  2 ++
->  arch/x86/kvm/svm/svm.c |  3 ---
->  arch/x86/kvm/vmx/vmx.c | 15 ++++++++++++---
->  3 files changed, 14 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
-> index bddaba9c68dd..de5476f8683e 100644
-> --- a/arch/x86/kvm/emulate.c
-> +++ b/arch/x86/kvm/emulate.c
-> @@ -5798,6 +5798,8 @@ int x86_emulate_insn(struct x86_emulate_ctxt *ctxt)
->         }
->
->         ctxt->eip = ctxt->_eip;
-> +       if (ctxt->mode != X86EMUL_MODE_PROT64)
-> +               ctxt->eip = (u32)ctxt->_eip;
->
->  done:
->         if (rc == X86EMUL_PROPAGATE_FAULT) {
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 8f8fc65bfa3e..d5e72b22bc87 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -319,9 +319,6 @@ static int skip_emulated_instruction(struct kvm_vcpu *vcpu)
->                 if (!kvm_emulate_instruction(vcpu, EMULTYPE_SKIP))
->                         return 0;
->         } else {
-> -               if (svm->next_rip - kvm_rip_read(vcpu) > MAX_INST_SIZE)
-> -                       pr_err("%s: ip 0x%lx next 0x%llx\n",
-> -                              __func__, kvm_rip_read(vcpu), svm->next_rip);
->                 kvm_rip_write(vcpu, svm->next_rip);
->         }
->         svm_set_interrupt_shadow(vcpu, 0);
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 3ab6ca6062ce..ed1ffc8a727b 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1556,7 +1556,7 @@ static int vmx_rtit_ctl_check(struct kvm_vcpu *vcpu, u64 data)
->
->  static int skip_emulated_instruction(struct kvm_vcpu *vcpu)
->  {
-> -       unsigned long rip;
-> +       unsigned long rip, orig_rip;
->
->         /*
->          * Using VMCS.VM_EXIT_INSTRUCTION_LEN on EPT misconfig depends on
-> @@ -1568,8 +1568,17 @@ static int skip_emulated_instruction(struct kvm_vcpu *vcpu)
->          */
->         if (!static_cpu_has(X86_FEATURE_HYPERVISOR) ||
->             to_vmx(vcpu)->exit_reason != EXIT_REASON_EPT_MISCONFIG) {
-> -               rip = kvm_rip_read(vcpu);
-> -               rip += vmcs_read32(VM_EXIT_INSTRUCTION_LEN);
-> +               orig_rip = kvm_rip_read(vcpu);
-> +               rip = orig_rip + vmcs_read32(VM_EXIT_INSTRUCTION_LEN);
-> +#ifdef CONFIG_X86_64
-> +               /*
-> +                * We need to mask out the high 32 bits of RIP if not in 64-bit
-> +                * mode, but just finding out that we are in 64-bit mode is
-> +                * quite expensive.  Only do it if there was a carry.
-> +                */
-> +               if (unlikely(((rip ^ orig_rip) >> 31) == 3) && !is_64_bit_mode(vcpu))
+NVMe storage power management during suspend-to-idle, particularly on
+laptops, has been inconsistent with some devices working with D3 while
+others must rely on NVMe APST in order for power savings to be realized.
+Currently the default is to use APST unless quirked to do otherwise.
+However newer platforms, like Intel Comet Lake systems, may require NVMe
+drives to use D3 in order for the PCIe ports to be properly power managed.
+To make it easier for drivers to choose, these platforms may supply a
+special "StorageD3Enable" _DSD property under the root port that the device
+is attached to. If supplied, the driver must use D3 in order for the
+platform to realize the deepest power savings in suspend-to-idle.
 
-Is it actually possible to wrap around 0 without getting a segment
-limit violation, or is it only possible to wrap *to* 0 (i.e. rip==1ull
-<< 32)?
+Adds support for the _DSD to the pci/acpi layer.
 
-> +                       rip = (u32)rip;
-> +#endif
->                 kvm_rip_write(vcpu, rip);
->         } else {
->                 if (!kvm_emulate_instruction(vcpu, EMULTYPE_SKIP))
-> --
-> 2.18.2
->
+Acked-by: Dan Williams <dan.j.williams@intel.com>
+Link: https://docs.microsoft.com/en-us/windows-hardware/design/component-guidelines/power-management-for-storage-hardware-devices-intro
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+---
+ drivers/acpi/property.c |  3 +++
+ drivers/pci/pci-acpi.c  | 47 +++++++++++++++++++++++++++++++++++++++++
+ drivers/pci/pci.c       |  6 ++++++
+ drivers/pci/pci.h       |  4 ++++
+ include/linux/pci.h     |  1 +
+ 5 files changed, 61 insertions(+)
+
+diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+index e601c4511a8b..f09375ab40e4 100644
+--- a/drivers/acpi/property.c
++++ b/drivers/acpi/property.c
+@@ -45,6 +45,9 @@ static const guid_t prp_guids[] = {
+ 	/* Thunderbolt GUID for WAKE_SUPPORTED: 6c501103-c189-4296-ba72-9bf5a26ebe5d */
+ 	GUID_INIT(0x6c501103, 0xc189, 0x4296,
+ 		  0xba, 0x72, 0x9b, 0xf5, 0xa2, 0x6e, 0xbe, 0x5d),
++	/* D3 Support for storage devivce: 5025030f-842f-4ab4-a561-99a5189762d0 */
++	GUID_INIT(0x5025030f, 0x842f, 0x4ab4,
++		  0xa5, 0x61, 0x99, 0xa5, 0x18, 0x97, 0x62, 0xd0),
+ };
+ 
+ /* ACPI _DSD data subnodes GUID: dbb8e3e6-5886-4ba6-8795-1319f52a966b */
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index d21969fba6ab..5df249ebf022 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -972,6 +972,52 @@ static bool acpi_pci_bridge_d3(struct pci_dev *dev)
+ 	return val == 1;
+ }
+ 
++static bool acpi_pci_storage_d3(struct pci_dev *dev)
++{
++	const struct fwnode_handle *fwnode;
++	struct acpi_device *adev;
++	struct pci_dev *root;
++	acpi_handle handle;
++	acpi_status status;
++	u8 val;
++
++	/*
++	 * Look for _DSD property specifying that the storage device on
++	 * the port must use D3 to support deep platform power savings during
++	 * suspend-to-idle
++	 */
++	root = pci_find_pcie_root_port(dev);
++	if (!root)
++		return false;
++
++	adev = ACPI_COMPANION(&root->dev);
++	if (root == dev) {
++		/*
++		 * It is possible that the ACPI companion is not yet bound
++		 * for the root port so look it up manually here.
++		 */
++		if (!adev && !pci_dev_is_added(root))
++			adev = acpi_pci_find_companion(&root->dev);
++	}
++
++	if (!adev)
++		return false;
++
++	status = acpi_get_handle(adev->handle, "PXSX", &handle);
++	if (ACPI_FAILURE(status))
++		return false;
++
++	adev = acpi_bus_get_acpi_device(handle);
++	if (!adev)
++		return false;
++
++	fwnode = acpi_fwnode_handle(adev);
++	if (!fwnode_property_read_u8(fwnode, "StorageD3Enable", &val))
++		return val == 1;
++
++	return false;
++}
++
+ static bool acpi_pci_power_manageable(struct pci_dev *dev)
+ {
+ 	struct acpi_device *adev = ACPI_COMPANION(&dev->dev);
+@@ -1100,6 +1146,7 @@ static bool acpi_pci_need_resume(struct pci_dev *dev)
+ 
+ static const struct pci_platform_pm_ops acpi_pci_platform_pm = {
+ 	.bridge_d3 = acpi_pci_bridge_d3,
++	.storage_d3 = acpi_pci_storage_d3,
+ 	.is_manageable = acpi_pci_power_manageable,
+ 	.set_state = acpi_pci_set_power_state,
+ 	.get_state = acpi_pci_get_power_state,
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 595fcf59843f..217d89f31e8b 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -871,6 +871,11 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
+ 	return pci_platform_pm ? pci_platform_pm->bridge_d3(dev) : false;
+ }
+ 
++static inline bool platform_pci_storage_d3(struct pci_dev *dev)
++{
++	return pci_platform_pm->storage_d3(dev);
++}
++
+ /**
+  * pci_raw_set_power_state - Use PCI PM registers to set the power state of
+  *			     given PCI device
+@@ -2903,6 +2908,7 @@ void pci_pm_init(struct pci_dev *dev)
+ 	dev->d3_delay = PCI_PM_D3_WAIT;
+ 	dev->d3cold_delay = PCI_PM_D3COLD_WAIT;
+ 	dev->bridge_d3 = pci_bridge_d3_possible(dev);
++	dev->storage_d3 = platform_pci_storage_d3(dev);
+ 	dev->d3cold_allowed = true;
+ 
+ 	dev->d1_support = false;
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 6d3f75867106..4dc4d05da810 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -53,6 +53,9 @@ int pci_bus_error_reset(struct pci_dev *dev);
+  *
+  * @bridge_d3: Does the bridge allow entering into D3
+  *
++ * @storage_d3: 'true' if the bridge contains a storage device that must use D3
++ *		to support platform s2idle
++ *
+  * @is_manageable: returns 'true' if given device is power manageable by the
+  *		   platform firmware
+  *
+@@ -77,6 +80,7 @@ int pci_bus_error_reset(struct pci_dev *dev);
+  */
+ struct pci_platform_pm_ops {
+ 	bool (*bridge_d3)(struct pci_dev *dev);
++	bool (*storage_d3)(struct pci_dev *dev);
+ 	bool (*is_manageable)(struct pci_dev *dev);
+ 	int (*set_state)(struct pci_dev *dev, pci_power_t state);
+ 	pci_power_t (*get_state)(struct pci_dev *dev);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 83ce1cdf5676..cbba1555020b 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -346,6 +346,7 @@ struct pci_dev {
+ 	unsigned int	no_d1d2:1;	/* D1 and D2 are forbidden */
+ 	unsigned int	no_d3cold:1;	/* D3cold is forbidden */
+ 	unsigned int	bridge_d3:1;	/* Allow D3 for bridge */
++	unsigned int	storage_d3:1;	/* Storage dev must use D3 for s2idle */
+ 	unsigned int	d3cold_allowed:1;	/* D3cold is allowed by user */
+ 	unsigned int	mmio_always_on:1;	/* Disallow turning off io/mem
+ 						   decoding during BAR sizing */
+-- 
+2.20.1
+
