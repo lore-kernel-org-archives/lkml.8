@@ -2,135 +2,106 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE14C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C52C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D10DE20737
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6222072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:56:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gSBx0TPl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgD1V4S (ORCPT
+        id S1726844AbgD1V4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:56:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:59696 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726363AbgD1V4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:56:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 687ED31B;
-        Tue, 28 Apr 2020 14:56:17 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17FF33F305;
-        Tue, 28 Apr 2020 14:56:15 -0700 (PDT)
-References: <20200428050242.17717-1-swood@redhat.com> <20200428050242.17717-4-swood@redhat.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Scott Wood <swood@redhat.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Rik van Riel <riel@surriel.com>,
-        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Subject: Re: [RFC PATCH 3/3] sched,rt: break out of load balancing if an RT task appears
-In-reply-to: <20200428050242.17717-4-swood@redhat.com>
-Date:   Tue, 28 Apr 2020 22:56:13 +0100
-Message-ID: <jhjees7s29u.mognet@arm.com>
+        Tue, 28 Apr 2020 17:56:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47736 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726793AbgD1V4T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 17:56:19 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D998C03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 14:56:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=YTDcY2zuu3Qu48Kjzg7QUwQDDLkrS24FinA0K9b7j+8=; b=gSBx0TPlCqRAhL8G/xtPMTOVmy
+        AObYUkcVspwEi6TPO6vzhDhMM3ds7fBlIFLYvEhl8DQv5Xek9hPJhO5MGE+6aamjxRrvH/3w3jsg0
+        G/21ZUXyacp6pItmsE6qighxVO6an4NzQ5s2tohOLk9L2GOyXuWN9LHNpcAA3Nvu8QLL8pOk5cjen
+        Y6BwQoKuwNZWPBEiwWjsJ/gi8qvquu+oGQfU3ptb9W0LvahPzI8hBEYcp21bRcKCeWOKWzmcZklys
+        PPEXwCtmcxlFoqwgsjJa+Ed/s7K0mPS+zctrtSxTghr8KKVo8HZkzZL4bCu+rQOCvPViL2h5PQC6k
+        +fxjwsLw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTYCr-0003Cv-8n; Tue, 28 Apr 2020 21:55:57 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 82F0A304C22;
+        Tue, 28 Apr 2020 23:55:54 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7323028569EF3; Tue, 28 Apr 2020 23:55:54 +0200 (CEST)
+Date:   Tue, 28 Apr 2020 23:55:54 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: Remaining randconfig objtool warnings, linux-next-20200428
+Message-ID: <20200428215554.GA16027@hirez.programming.kicks-ass.net>
+References: <CAK8P3a2qLJkokMGt48JRky=WUeAbJRuNmoD1oqfWdrGSC6y1LA@mail.gmail.com>
+ <20200428161044.caamvx67t2z4t6vd@treble>
+ <CAK8P3a0X4kMW1BQU6x9A2oo6i3-CMxi1h=0PhQgEbBtYWbJa9A@mail.gmail.com>
+ <20200428203855.zapf6jhcp6mbft7i@treble>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428203855.zapf6jhcp6mbft7i@treble>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 28, 2020 at 03:38:55PM -0500, Josh Poimboeuf wrote:
+> This one makes no sense to me.  It looks like the assembler is inserting
+> a jump as part of the alignment padding???  WTH.
+> 
+> 0000000000000980 <common_spurious>:
+>      980:	48 83 04 24 80       	addq   $0xffffffffffffff80,(%rsp)
+>      985:	e8 00 00 00 00       	callq  98a <common_spurious+0xa>
+> 			986: R_X86_64_PLT32	interrupt_entry-0x4
+>      98a:	e8 00 00 00 00       	callq  98f <common_spurious+0xf>
+> 			98b: R_X86_64_PLT32	smp_spurious_interrupt-0x4
+>      98f:	eb 7e                	jmp    a0f <ret_from_intr>
+>      991:	eb 6d                	jmp    a00 <common_interrupt>
+>      993:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+>      99a:	00 00 00 00 
+>      99e:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+>      9a5:	00 00 00 00 
+>      9a9:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+>      9b0:	00 00 00 00 
+>      9b4:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+>      9bb:	00 00 00 00 
+>      9bf:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+>      9c6:	00 00 00 00 
+>      9ca:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+>      9d1:	00 00 00 00 
+>      9d5:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+>      9dc:	00 00 00 00 
+>      9e0:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+>      9e7:	00 00 00 00 
+>      9eb:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+>      9f2:	00 00 00 00 
+>      9f6:	66 2e 0f 1f 84 00 00 	nopw   %cs:0x0(%rax,%rax,1)
+>      9fd:	00 00 00 
 
-On 28/04/20 06:02, Scott Wood wrote:
-> From: Rik van Riel <riel@redhat.com>
->
-> Bugzilla: 1331562
->
-> The CFS load balancer can take a little while, to the point of
-> it having a special LBF_NEED_BREAK flag, when the task moving
-> code takes a breather.
->
-> However, at that point it will jump right back in to load balancing,
-> without checking whether the CPU has gained any runnable real time
-> (or deadline) tasks.
->
-> Only idle_balance used to check for runnable real time tasks on a
-> CPU. This patch moves that check into a separate inline function,
-> and calls that function in load_balance, at approximately the same
-> granularity that LBF_NEED_BREAK happens.
->
-> Besides breaking out of load_balance, this patch also clears
-> continue_balancing, in order for rebalance_domains to break out
-> of its loop when a realtime task becomes runnable.
->
-> Signed-off-by: Rik van Riel <riel@redhat.com>
-> Reported-by: Clark Williams <williams@redhat.com>
-> Signed-off-by: Clark Williams <williams@redhat.com>
-> ---
->  kernel/sched/fair.c  | 19 +++++++++++++++++--
->  kernel/sched/sched.h |  6 ++++++
->  2 files changed, 23 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index dfde7f0ce3db..e7437e4e40b4 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -9394,6 +9400,10 @@ static int should_we_balance(struct lb_env *env)
->       struct sched_group *sg = env->sd->groups;
->       int cpu, balance_cpu = -1;
->
-> +	/* Run the realtime task now; load balance later. */
-> +	if (rq_has_runnable_rt_task(env->dst_rq))
-> +		return 0;
-> +
+binutils.git/gas/configure/tc-i386.c:i386_generate_nops
 
-I have a feeling this isn't very nice to CFS tasks, since we would now
-"waste" load-balance attempts if they happen to coincide with an RT task
-being runnable.
-
-On your 72 CPUs machine, the system-wide balance happens (at best) every
-72ms if you have idle time, every ~2300ms otherwise (every balance
-CPU gets to try to balance however, so it's not as horrible as I'm making
-it sound). This is totally worst-case scenario territory, and you'd hope
-newidle_balance() could help here and there (as it isn't gated by any
-balance interval).
-
-Still, even for a single rq, postponing a system-wide balance for a
-full balance interval (i.e. ~2 secs worst case here) just because we had a
-single RT task running when we tried to balance seems a bit much.
-
-It may be possible to hack something to detect those cases and reset the
-interval to "now" when e.g. dequeuing the last RT task (& after having
-previously aborted a load-balance due to RT/DL/foobar).
-
->       /*
->        * Ensure the balancing environment is consistent; can happen
->        * when the softirq triggers 'during' hotplug.
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 3d97c51544d7..a2a01dfd2bea 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -1878,6 +1878,12 @@ static inline struct cpuidle_state *idle_get_state(struct rq *rq)
->
->       return rq->idle_state;
->  }
-> +
-> +/* Is there a task of a high priority class? */
-> +static inline bool rq_has_runnable_rt_task(struct rq *rq)
-> +{
-> +	return unlikely(rq->nr_running != rq->cfs.h_nr_running);
-
-Seeing as that can be RT, DL or stopper, that name is somewhat misleading.
-
-> +}
->  #else
->  static inline void idle_set_state(struct rq *rq,
->                                 struct cpuidle_state *idle_state)
+When there's too many NOPs (as here) it generates a JMP across the NOPS.
+It makes some sort of sense, at some point executing NOPs is going to be
+more expensive than a branch.. But shees..
