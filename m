@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3C2C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7218EC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B05702085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A403208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099343;
-	bh=55mYeuL65ps/03lsNcaO7IyFEfSSoYetTTKsWBdFxtY=;
+	s=default; t=1588099347;
+	bh=yy+L2TaQ1fzV8FxZkoyYt4yIaFb/9edhiehY4/YtF6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UUiV/2ovnzE0CFy4nqGjPw5RXirnMhC+sjt6Y3aQTat3T0EshYvXlkO1Iqyum9jLu
-	 X1194Dp9RjTDRcELJgLmYy+3g6spbGKMaOEMiEloai0CvYFP4DKsLBZTT5tnJLWGVV
-	 glteENuGd5Fb0IXg9aUblBZd3/hMt3q1CuquGQYU=
+	b=eJ5qWSXxPv398i3ImslbxqHGZX6KS5Ew4Dx8zc+OEWG2lpaEYMPS82VmSvcQjyFrX
+	 qdjwi0CH7MUzSNIkD/Y8p37EtGqE2K2Sdp25aECCs8xvkpbkGEU4lAvZt48UbZrUa1
+	 zHc1KLvf4TYG2FBqdWiMbPByMLcmbwEGC3pklP4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730512AbgD1SmX (ORCPT
+        id S1731107AbgD1Sm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:42:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34240 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:42:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731094AbgD1SmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:42:20 -0400
+        id S1731098AbgD1SmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:42:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E691520575;
-        Tue, 28 Apr 2020 18:42:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EC7420575;
+        Tue, 28 Apr 2020 18:42:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099339;
-        bh=55mYeuL65ps/03lsNcaO7IyFEfSSoYetTTKsWBdFxtY=;
+        s=default; t=1588099341;
+        bh=yy+L2TaQ1fzV8FxZkoyYt4yIaFb/9edhiehY4/YtF6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1xjM92VD3RQyTx+mJVgcYArpTVgeh6p+J/vd8qINkPcF0zOQ7N05HCtaV+cVK+TLN
-         ZAPdvqXeuuBHbw3ROEx3oXWZ5Ib2V1DxwsA4V2CS06U9hzTIzdFHlQY7LlDhESx+48
-         Zfp82+Z5jLRCYR2mkuq9ZPAcVGwpX5+QrWIMvt1g=
+        b=Cgs2CCRW8gxaK0bA00xxIWGho7YdzpWvakiBhDqaOrplbHcZUGL7N026b0RRfyOx2
+         aaa5HvrJAltTyVPqSXhMoRDDZaqLxCGgd0lvYXk6GYYC6XnKPmF/qowSInZ6Bg/gwP
+         jBtGEgpYP7xiBHJhufRqKtECsSkP4u4njqQgo2HA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 111/168] ALSA: hda/hdmi: Add module option to disable audio component binding
-Date:   Tue, 28 Apr 2020 20:24:45 +0200
-Message-Id: <20200428182246.581944342@linuxfoundation.org>
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.4 094/168] iio: xilinx-xadc: Make sure not exceed maximum samplerate
+Date:   Tue, 28 Apr 2020 20:24:28 +0200
+Message-Id: <20200428182244.202435826@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -58,49 +60,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-commit b392350ec3f229ad9603d3816f753479e441d99a upstream.
+commit 3b7f9dbb827ce8680b98490215e698b6079a9ec5 upstream.
 
-As the recent regression showed, we want sometimes to turn off the
-audio component binding just for debugging.  This patch adds the
-module option to control it easily without compilation.
+The XADC supports a samplerate of up to 1MSPS. Unfortunately the hardware
+does not have a FIFO, which means it generates an interrupt for each
+conversion sequence. At one 1MSPS this creates an interrupt storm that
+causes the system to soft-lock.
 
-Fixes: ade49db337a9 ("ALSA: hda/hdmi - Allow audio component for AMD/ATI and Nvidia HDMI")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207223
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200415162523.27499-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+For this reason the driver limits the maximum samplerate to 150kSPS.
+Currently this check is only done when setting a new samplerate. But it is
+also possible that the initial samplerate configured in the FPGA bitstream
+exceeds the limit.
+
+In this case when starting to capture data without first changing the
+samplerate the system can overload.
+
+To prevent this check the currently configured samplerate in the probe
+function and reduce it to the maximum if necessary.
+
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Fixes: bdc8cda1d010 ("iio:adc: Add Xilinx XADC driver")
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_hdmi.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/iio/adc/xilinx-xadc-core.c |   78 ++++++++++++++++++++++++++++---------
+ 1 file changed, 60 insertions(+), 18 deletions(-)
 
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -57,6 +57,10 @@ MODULE_PARM_DESC(static_hdmi_pcm, "Don't
- #define is_cherryview(codec) ((codec)->core.vendor_id == 0x80862883)
- #define is_valleyview_plus(codec) (is_valleyview(codec) || is_cherryview(codec))
+--- a/drivers/iio/adc/xilinx-xadc-core.c
++++ b/drivers/iio/adc/xilinx-xadc-core.c
+@@ -102,6 +102,16 @@ static const unsigned int XADC_ZYNQ_UNMA
  
-+static bool enable_acomp = true;
-+module_param(enable_acomp, bool, 0444);
-+MODULE_PARM_DESC(enable_acomp, "Enable audio component binding (default=yes)");
+ #define XADC_FLAGS_BUFFERED BIT(0)
+ 
++/*
++ * The XADC hardware supports a samplerate of up to 1MSPS. Unfortunately it does
++ * not have a hardware FIFO. Which means an interrupt is generated for each
++ * conversion sequence. At 1MSPS sample rate the CPU in ZYNQ7000 is completely
++ * overloaded by the interrupts that it soft-lockups. For this reason the driver
++ * limits the maximum samplerate 150kSPS. At this rate the CPU is fairly busy,
++ * but still responsive.
++ */
++#define XADC_MAX_SAMPLERATE 150000
 +
- struct hdmi_spec_per_cvt {
- 	hda_nid_t cvt_nid;
- 	int assigned;
-@@ -2550,6 +2554,11 @@ static void generic_acomp_init(struct hd
+ static void xadc_write_reg(struct xadc *xadc, unsigned int reg,
+ 	uint32_t val)
  {
- 	struct hdmi_spec *spec = codec->spec;
+@@ -834,11 +844,27 @@ static const struct iio_buffer_setup_ops
+ 	.postdisable = &xadc_postdisable,
+ };
  
-+	if (!enable_acomp) {
-+		codec_info(codec, "audio component disabled by module option\n");
-+		return;
++static int xadc_read_samplerate(struct xadc *xadc)
++{
++	unsigned int div;
++	uint16_t val16;
++	int ret;
++
++	ret = xadc_read_adc_reg(xadc, XADC_REG_CONF2, &val16);
++	if (ret)
++		return ret;
++
++	div = (val16 & XADC_CONF2_DIV_MASK) >> XADC_CONF2_DIV_OFFSET;
++	if (div < 2)
++		div = 2;
++
++	return xadc_get_dclk_rate(xadc) / div / 26;
++}
++
+ static int xadc_read_raw(struct iio_dev *indio_dev,
+ 	struct iio_chan_spec const *chan, int *val, int *val2, long info)
+ {
+ 	struct xadc *xadc = iio_priv(indio_dev);
+-	unsigned int div;
+ 	uint16_t val16;
+ 	int ret;
+ 
+@@ -891,41 +917,31 @@ static int xadc_read_raw(struct iio_dev
+ 		*val = -((273150 << 12) / 503975);
+ 		return IIO_VAL_INT;
+ 	case IIO_CHAN_INFO_SAMP_FREQ:
+-		ret = xadc_read_adc_reg(xadc, XADC_REG_CONF2, &val16);
+-		if (ret)
++		ret = xadc_read_samplerate(xadc);
++		if (ret < 0)
+ 			return ret;
+ 
+-		div = (val16 & XADC_CONF2_DIV_MASK) >> XADC_CONF2_DIV_OFFSET;
+-		if (div < 2)
+-			div = 2;
+-
+-		*val = xadc_get_dclk_rate(xadc) / div / 26;
+-
++		*val = ret;
+ 		return IIO_VAL_INT;
+ 	default:
+ 		return -EINVAL;
+ 	}
+ }
+ 
+-static int xadc_write_raw(struct iio_dev *indio_dev,
+-	struct iio_chan_spec const *chan, int val, int val2, long info)
++static int xadc_write_samplerate(struct xadc *xadc, int val)
+ {
+-	struct xadc *xadc = iio_priv(indio_dev);
+ 	unsigned long clk_rate = xadc_get_dclk_rate(xadc);
+ 	unsigned int div;
+ 
+ 	if (!clk_rate)
+ 		return -EINVAL;
+ 
+-	if (info != IIO_CHAN_INFO_SAMP_FREQ)
+-		return -EINVAL;
+-
+ 	if (val <= 0)
+ 		return -EINVAL;
+ 
+ 	/* Max. 150 kSPS */
+-	if (val > 150000)
+-		val = 150000;
++	if (val > XADC_MAX_SAMPLERATE)
++		val = XADC_MAX_SAMPLERATE;
+ 
+ 	val *= 26;
+ 
+@@ -938,7 +954,7 @@ static int xadc_write_raw(struct iio_dev
+ 	 * limit.
+ 	 */
+ 	div = clk_rate / val;
+-	if (clk_rate / div / 26 > 150000)
++	if (clk_rate / div / 26 > XADC_MAX_SAMPLERATE)
+ 		div++;
+ 	if (div < 2)
+ 		div = 2;
+@@ -949,6 +965,17 @@ static int xadc_write_raw(struct iio_dev
+ 		div << XADC_CONF2_DIV_OFFSET);
+ }
+ 
++static int xadc_write_raw(struct iio_dev *indio_dev,
++	struct iio_chan_spec const *chan, int val, int val2, long info)
++{
++	struct xadc *xadc = iio_priv(indio_dev);
++
++	if (info != IIO_CHAN_INFO_SAMP_FREQ)
++		return -EINVAL;
++
++	return xadc_write_samplerate(xadc, val);
++}
++
+ static const struct iio_event_spec xadc_temp_events[] = {
+ 	{
+ 		.type = IIO_EV_TYPE_THRESH,
+@@ -1236,6 +1263,21 @@ static int xadc_probe(struct platform_de
+ 	if (ret)
+ 		goto err_free_samplerate_trigger;
+ 
++	/*
++	 * Make sure not to exceed the maximum samplerate since otherwise the
++	 * resulting interrupt storm will soft-lock the system.
++	 */
++	if (xadc->ops->flags & XADC_FLAGS_BUFFERED) {
++		ret = xadc_read_samplerate(xadc);
++		if (ret < 0)
++			goto err_free_samplerate_trigger;
++		if (ret > XADC_MAX_SAMPLERATE) {
++			ret = xadc_write_samplerate(xadc, XADC_MAX_SAMPLERATE);
++			if (ret < 0)
++				goto err_free_samplerate_trigger;
++		}
 +	}
 +
- 	spec->port2pin = port2pin;
- 	setup_drm_audio_ops(codec, ops);
- 	if (!snd_hdac_acomp_init(&codec->bus->core, &spec->drm_audio_ops,
+ 	ret = request_irq(xadc->irq, xadc->ops->interrupt_handler, 0,
+ 			dev_name(&pdev->dev), indio_dev);
+ 	if (ret)
 
 
