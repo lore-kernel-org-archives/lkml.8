@@ -2,80 +2,75 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8EFC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3923BC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36D75206F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10074206F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:02:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jp/cGmJk"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="QDH3NZ0F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbgD1VAq (ORCPT
+        id S1726676AbgD1VCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:00:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38732 "EHLO
+        Tue, 28 Apr 2020 17:02:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726543AbgD1U7k (ORCPT
+        by vger.kernel.org with ESMTP id S1726355AbgD1VCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:59:40 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 166F8C03C1AD;
-        Tue, 28 Apr 2020 13:59:40 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id w20so268365ljj.0;
-        Tue, 28 Apr 2020 13:59:40 -0700 (PDT)
+        Tue, 28 Apr 2020 17:02:42 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AE82C03C1AC;
+        Tue, 28 Apr 2020 14:02:42 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id v4so3295036wme.1;
+        Tue, 28 Apr 2020 14:02:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KpPRWZDvG8CgK8dZKCEsG9Emj5dGIpU0eqSTK3oTu4U=;
-        b=Jp/cGmJks3FbPmO6cnSdkivz7OJHf87NIdc550TYVUo5oyct/fknb8SeQgG/Wa6AvT
-         j1s4N78U0TRqqfWCoy4Cnwkj6gYaJjhBPoPA4SDXFmJLkSgX/GEs/heihzFRtuULBLuR
-         ydXaywn1Lar7YFPryFl7cTeTeik4WiCd59r+Y9nk9wFiAtp1oezC4vFzgKC81AgGdBDL
-         STIicmNXYpDyWAknzGXu+U4RdBzyt0gcZaLuVfHNt3i11xsecqtZeCVI8ivDe15kcRl0
-         qrTiYkXv2wP3a7zEMIu2PMB0JHWoYrUnSoEO4DbpVVTeg46tQ5FPN0LKzJqMmpMJ/Mzu
-         a/yQ==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yw7EK7N4yEtnhbsKdiWnKZJJkNUJXPPLmqusKcDlWn4=;
+        b=QDH3NZ0F1YoTWBY73XIwUv7DlugjsyVaIs90L9yRNBD6az0cxNSSg46PWsxfVAlK3c
+         wx60nQOKxuG792Dg6HygS/qzgQa2DYC5fzq9qmx7P83nRozHSg+AYT8Q8yyAQIU4Qr+p
+         kq5vjJVEs81+0jOqmNnaLSw0kuUvKwcHXg42HqGxfwPMzt+FA6bUzpENA54jJzJV4zOB
+         LJDPUvqaHOArrRO/pltmFSzMLYIPpVlnrVHu1XAvl8LGTJ3lj0h2i+ic1+g9KgQT+FVD
+         fsdGLLmjv+Uf4e1/h7N1hLj7P2iMniQTr26TSQ/pllrHgfBzU0gs87KAy6P0/97N/Oig
+         p7EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KpPRWZDvG8CgK8dZKCEsG9Emj5dGIpU0eqSTK3oTu4U=;
-        b=ei8ubK1yia5i+lRLBR53cn6PrcLlmuMi5shZMPPvSvzqonWXfoPYVd/eNftHICYMnV
-         cvtDR9QdCc4+6UqTBjxHPK63uCCJOGpgEWpmdwJ82YomA96OmHNOJ5edKi1gwzNfwOwe
-         dVlDexfV+hMWBRbtIGG0ORGZcmES6pHN1ewT4Fq9w5Fpu8+ViJSZHhNX6SLn7+/oi4XP
-         srs3a+o8BP2qMosjR49FrDEaQA0ObsRh2/bWbwdV5oce+2LHR6PQzyEJsvRkjM2urCv2
-         ycyHEfAaS1jkx68di7IwNJ0KLB/3jW/gBK7XvCd/VtnuF/9RsBut2qz2mPtE8QbXLMK1
-         twTg==
-X-Gm-Message-State: AGi0PuaYgnRDIYArX45ev/T86GhsTKjFp8sCLq140dfbn5gYXa9MQDl0
-        jwQXV0mvbqUneLPl27wIpcbXd9cPjSee1A==
-X-Google-Smtp-Source: APiQypIK0yNKxQMrJ+FmeTtM1yEhM2Bk+cTVBWd0YgRswTk8U0gkkBZkwM/NPoG1ukrhwMQjsmSyPQ==
-X-Received: by 2002:a2e:9713:: with SMTP id r19mr19379545lji.89.1588107578198;
-        Tue, 28 Apr 2020 13:59:38 -0700 (PDT)
-Received: from pc638.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id z21sm295483ljh.42.2020.04.28.13.59.37
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yw7EK7N4yEtnhbsKdiWnKZJJkNUJXPPLmqusKcDlWn4=;
+        b=UM0NHSNp3/ZMYc0kqhcEapvD8lnVyBDsRxZcNkcjzZ7+Cn9UQ1dXNQYjBvuGb2awHW
+         4YTlOaNdNHC0jI4rVgUuWzagCAfxIvXWD1xXDYqO8HAqQTc3LJDOk/eIH/+znFnIxjoV
+         lR4DD0ONd2vbCt+QnsjEHoQ4go9b7zqSK6BrppTBkbWMWJ6mlYNj3FAO0CsLmLZnjqu3
+         fc0c+KXcQV5c1/jX+u6eK3+BXngcjcLML2CRcdvjwaOKaDiwrEle9/3ow/mlu8mCZHsI
+         CpGw8jmBOY63AD0zsOAPpvmK/T3+9803r7jF5Bj0LMqelweExC/xDcsUJUehTQr0iGnp
+         Y7og==
+X-Gm-Message-State: AGi0PuYQuga6B+5RQ5VZ8vVMOl2MO2LRKurLwuFUsoQGGgxZ7ZoXziNx
+        n8D9RuooMPg38FkrFs23RRc=
+X-Google-Smtp-Source: APiQypID52osTOt/r+5vVSxSLHFg+GwS+r2Wh1XUO8jXqCNggdq8a97jXinVpVhbbc40v9q2qn+z4w==
+X-Received: by 2002:a1c:dfc2:: with SMTP id w185mr6329402wmg.1.1588107760863;
+        Tue, 28 Apr 2020 14:02:40 -0700 (PDT)
+Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id x18sm4709243wmi.29.2020.04.28.14.02.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 13:59:37 -0700 (PDT)
-From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        RCU <rcu@vger.kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 08/24] rcu/tree: Use static initializer for krc.lock
-Date:   Tue, 28 Apr 2020 22:58:47 +0200
-Message-Id: <20200428205903.61704-9-urezki@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200428205903.61704-1-urezki@gmail.com>
-References: <20200428205903.61704-1-urezki@gmail.com>
+        Tue, 28 Apr 2020 14:02:40 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, linux-mmc@vger.kernel.org,
+        ulf.hansson@linaro.org
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
+        jianxin.pan@amlogic.com, linux-kernel@vger.kernel.org,
+        yinxin_1989@aliyun.com, linux-arm-kernel@lists.infradead.org,
+        lnykww@gmail.com, linux.amoon@gmail.com, jbrunet@baylibre.com,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v6 0/2] Amlogic 32-bit Meson SoC SDHC MMC controller driver
+Date:   Tue, 28 Apr 2020 23:02:27 +0200
+Message-Id: <20200428210229.703309-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,82 +78,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Hello,
 
-The per-CPU variable is initialized at runtime in
-kfree_rcu_batch_init(). This function is invoked before
-'rcu_scheduler_active' is set to 'RCU_SCHEDULER_RUNNING'.
-After the initialisation, '->initialized' is to true.
+this is the patchset for a driver for the Amlogic "SDHC" MMC controller
+found on Meson6, Meson8, Meson8b and Meson8m2 SoCs.
 
-The raw_spin_lock is only acquired if '->initialized' is
-set to true. The worqueue item is only used if 'rcu_scheduler_active'
-set to RCU_SCHEDULER_RUNNING which happens after initialisation.
+The public S805 (Meson8b) datasheet has some documentation starting on
+page 74: [0]
 
-Use a static initializer for krc.lock and remove the runtime
-initialisation of the lock. Since the lock can now be always
-acquired, remove the '->initialized' check.
+It's performance is still not as good as the driver from Amlogic's 3.10
+kernel, but it does not corrupt data anymore (as RFC v1 did).
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
----
- kernel/rcu/tree.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+Special thanks to the people who supported me off-list - you are
+amazing and deserve to be mentioned here:
+- Xin Yin who helped me fix two more write corruption problems. I am
+  hoping that he will reply with Reviewed-by, Tested-by and Bug-fixed-by
+- Jianxin Pan for sharing some of the internal workings of this MMC
+  controller with me
+- Wei Wang for spotting the initial write corruption problem and helping
+  test this driver on his board. I have his permission to add his
+  Tested-by (off-list, he's Cc'ed so if there's any problem he can speak
+  up)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index bc6c2bc8fa32..89e9ca3f4e3e 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -2892,7 +2892,7 @@ struct kfree_rcu_cpu_work {
-  * @lock: Synchronize access to this structure
-  * @monitor_work: Promote @head to @head_free after KFREE_DRAIN_JIFFIES
-  * @monitor_todo: Tracks whether a @monitor_work delayed work is pending
-- * @initialized: The @lock and @rcu_work fields have been initialized
-+ * @initialized: The @rcu_work fields have been initialized
-  *
-  * This is a per-CPU structure.  The reason that it is not included in
-  * the rcu_data structure is to permit this code to be extracted from
-@@ -2912,7 +2912,9 @@ struct kfree_rcu_cpu {
- 	int count;
- };
- 
--static DEFINE_PER_CPU(struct kfree_rcu_cpu, krc);
-+static DEFINE_PER_CPU(struct kfree_rcu_cpu, krc) = {
-+	.lock = __RAW_SPIN_LOCK_UNLOCKED(krc.lock),
-+};
- 
- static __always_inline void
- debug_rcu_bhead_unqueue(struct kfree_rcu_bulk_data *bhead)
-@@ -2930,10 +2932,9 @@ krc_this_cpu_lock(unsigned long *flags)
- {
- 	struct kfree_rcu_cpu *krcp;
- 
--	local_irq_save(*flags);	// For safely calling this_cpu_ptr().
-+	local_irq_save(*flags);	/* For safely calling this_cpu_ptr(). */
- 	krcp = this_cpu_ptr(&krc);
--	if (likely(krcp->initialized))
--		raw_spin_lock(&krcp->lock);
-+	raw_spin_lock(&krcp->lock);
- 
- 	return krcp;
- }
-@@ -2941,8 +2942,7 @@ krc_this_cpu_lock(unsigned long *flags)
- static inline void
- krc_this_cpu_unlock(struct kfree_rcu_cpu *krcp, unsigned long flags)
- {
--	if (likely(krcp->initialized))
--		raw_spin_unlock(&krcp->lock);
-+	raw_spin_unlock(&krcp->lock);
- 	local_irq_restore(flags);
- }
- 
-@@ -4168,7 +4168,6 @@ static void __init kfree_rcu_batch_init(void)
- 	for_each_possible_cpu(cpu) {
- 		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
- 
--		raw_spin_lock_init(&krcp->lock);
- 		for (i = 0; i < KFREE_N_BATCHES; i++) {
- 			INIT_RCU_WORK(&krcp->krw_arr[i].rcu_work, kfree_rcu_work);
- 			krcp->krw_arr[i].krcp = krcp;
+
+Changes since v5 at [5] (thanks to Ulf and Jerome for the feedback):
+- changed copyright year to 2020
+- move register #defines to a separate header file
+- drop unused include linux/clk-provider.h from meson-mx-sdhc.c
+- used #defines for regmap_read_poll_timeout timeout/sleep values
+- set MMC_CAP_WAIT_WHILE_BUSY
+- move the clock controller code to mmc/host/meson-mx-sdhc-clkc.c and
+  don't register a separate platform_device for it. This also means
+  that the driver switched from clk_regmap to the standard
+  clk_{divider,gate,mux}_ops
+- dropped ".index = -1" for clk_parent_data with .fw_name
+- use CLK_SET_RATE_PARENT on all leaf clocks and drop
+  CLK_SET_RATE_GATE
+- switch from parent_data.name to parent_hws
+- use fallthrough; instead of fallthrough comment
+- added Anand's Tested-by - thank you!
+- I decided to keep all Tested-by and Reviewed-by because they were
+  only for the MMC controller part and I have barely touched that with
+  this update.
+- Ulf asked if the timeout can be shortened. I believe it can but I
+  have no documentation for it. Thus I need a test-case to see if my
+  assumptions are correct - thus I have not addressed this in v6 yet
+
+Changes since v4 at [4]:
+- move the four clkin clock inputs to the start of the clock-names list
+  as suggested by Rob, affects patch #1
+- fixed #include statement in dt-bindings example in patch #1
+
+Changes since v3 at [3]:
+- split the clock bits into a separate clock controller driver because
+  of two reasons: 1) it keeps the MMC controller driver mostly clean of
+  the clock bits 2) the pure clock controller can use
+  devm_clk_hw_register() (instead of devm_clk_register(), which is
+  deprecated) and the MMC controller can act as a pure clock consumer.
+  This also affects the dt-bindings which is why I dropped Rob's
+  Reviewed-by. Thanks to Ulf for the suggestions
+
+Changes since v2 at [2]:
+- rebased on top of v5.5-rc1
+- added Rob's and Xin Yin's Reviewed-by and Tested-by (thank you!)
+- (note: Kevin had v2 of this series in -next for a few days so the
+   build test robots could play with it. I haven't received any negative
+   feedback in that time)
+
+Changes since RFC v1 at [1]:
+- don't set MESON_SDHC_MISC_MANUAL_STOP to fix one of three write
+  corruption problems. the out-of-tree 3.10 "reference" driver doesn't
+  set it either
+- check against data->flags instead of cmd->flags when testing for
+  MMC_DATA_WRITE as spotted by Xin Yin (many thanks!). This fixes
+  another write corruption problem
+- clear the FIFOs after successfully transferring data as suggested by
+  Xin Yin (many thanks!). This is what the 3.10 driver did and fixes yet
+  another write corruption problem
+- integrate the clock suggestions from Jianxin Pan so the driver is now
+  able to set up the clocks correctly for all known cases. documentation
+  is also added to the patch description. Thank you Jianxin for the
+  help!
+- set the correct max_busy_timeout as suggested by Jianxin Pan (thanks!)
+- convert the dt-bindings to .yaml (which is why I didn't add Rob's
+  Reviewed-by)
+- switch to struct clk_parent_data as part of newer common clock
+  framework APIs to simplify the clock setup
+- dropped CMD23 support because it seems to hurt read and write
+  performance by 10-20% in my tests. it's not clear why, but for now we
+  can live without this.
+- use devm_platform_ioremap_resource instead of open-coding it
+
+
+[0] https://dn.odroid.com/S805/Datasheet/S805_Datasheet%20V0.8%2020150126.pdf
+[1] https://patchwork.kernel.org/cover/11035505/
+[2] http://lists.infradead.org/pipermail/linux-amlogic/2019-November/014576.html
+[3] https://patchwork.kernel.org/cover/11283179/
+[4] https://patchwork.kernel.org/cover/11329017/
+[5] https://patchwork.kernel.org/cover/11463341/
+
+
+Martin Blumenstingl (2):
+  dt-bindings: mmc: Document the Amlogic Meson SDHC MMC host controller
+  mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson SDHC host
+
+ .../bindings/mmc/amlogic,meson-mx-sdhc.yaml   |  83 ++
+ drivers/mmc/host/Kconfig                      |  14 +
+ drivers/mmc/host/Makefile                     |   1 +
+ drivers/mmc/host/meson-mx-sdhc-clkc.c         | 188 ++++
+ drivers/mmc/host/meson-mx-sdhc.c              | 916 ++++++++++++++++++
+ drivers/mmc/host/meson-mx-sdhc.h              | 138 +++
+ .../dt-bindings/clock/meson-mx-sdhc-clkc.h    |   8 +
+ 7 files changed, 1348 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
+ create mode 100644 drivers/mmc/host/meson-mx-sdhc-clkc.c
+ create mode 100644 drivers/mmc/host/meson-mx-sdhc.c
+ create mode 100644 drivers/mmc/host/meson-mx-sdhc.h
+ create mode 100644 include/dt-bindings/clock/meson-mx-sdhc-clkc.h
+
 -- 
-2.20.1
+2.26.2
 
