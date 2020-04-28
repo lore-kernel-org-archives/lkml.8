@@ -2,204 +2,176 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DE6C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DFCC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B972B20730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:57:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100260;
-	bh=qEjxKOBFnf4u0leOG6IvyiKBbBguatnRg9OSjBm9Lxc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rtgv5GufwPMA2dL+W0taaa7EcXHlrfhFJJ+902exJOil7uFkf6d3LTaf+k18yjXnW
-	 Tsw3jYlHftE0fmTOztoE3OxgraqneAjyfVwTYJxpyLft64jarNhO2PZknM8ZH+nOnR
-	 BMZOGbkEleIy2fdv1C+ssvhamYCTKWPJ1HPPHOZg=
+	by mail.kernel.org (Postfix) with ESMTP id 3A277206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:57:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BMOR3eMS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729648AbgD1S5j (ORCPT
+        id S1729776AbgD1S5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:57:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728961AbgD1SaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:30:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F01A620B80;
-        Tue, 28 Apr 2020 18:30:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098619;
-        bh=qEjxKOBFnf4u0leOG6IvyiKBbBguatnRg9OSjBm9Lxc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gpZ8jO2zf46Y/nsHove99kQ5XmM4OAYaow18qbPBs9P7oSzYHJ9pR1JsazAADeMnr
-         6l99/O9FFMF2S7G+JUeK64svan/4YNqdCZjD+Fo/x7lw0oyZ88vVGMp+ZK29ZOe/HQ
-         i6uYQIylQ842RpyM4BdS0+rY9IppFz29sa8ljmGo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        NeilBrown <neilb@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
-        Waiman Long <longman@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 020/131] kernel/gcov/fs.c: gcov_seq_next() should increase position index
-Date:   Tue, 28 Apr 2020 20:23:52 +0200
-Message-Id: <20200428182227.651335936@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 28 Apr 2020 14:57:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43648 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729469AbgD1SaP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:30:15 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FA71C03C1AB
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:30:15 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id z16so22455319uae.11
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:30:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pXMg95AozC5ju4vKrdTrkYzrsPUBTLw6GqQWj9wwSg8=;
+        b=BMOR3eMSjaDO+gIF05mqIQqam13R+jGBmNymq3jZoK2dxuYu0k0lfMbTri71OPUeg+
+         nOm7JCs5UGgb8RbAbZVh57RtL73K6pOtg4bfa6abk1zifMglkXSY4sHFy8Nj5nfsL3Ad
+         dq4ixCiwxQPtrHIlKhKxJv/yYOmOLo+/3SvhMtbny8ghN3Yuz+VIlDubVGUfLXzRSnkm
+         4f8qdAol1fBSCGJCWs0SrvVkjELl0tFaqPgwtaB6KB0y4p4G4e0dnfHEFfAGKDVQusYv
+         z1y6QRs6X0ce0WGJHccaWZVslvJG1pAy/ou+ybIzy1ImNfYw7qsdTrmvqtgfLJTfPwEo
+         srfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pXMg95AozC5ju4vKrdTrkYzrsPUBTLw6GqQWj9wwSg8=;
+        b=Tw3ZeiZmWS2O2qj0xGxaCiuBEkvY4wgdpaWeNRzXBFtOuZuVxSmmftmdGIEC1okHYS
+         oaLssPJPUJTUqVBRCDbidDWnimCFYFnOC3ny3mKbOL/IHGoxDFl8paks/eLmbCtSI0nr
+         FyE2Gd6vL2V4vN2n1Rn7uhwgNo7M0JYTy24Fsfe/qxIujWfCvk70+nCtxv90OKC5hBMX
+         aIIjb+692Wxi6k5NFsSLn18FEz14hIU25HU/P14w7XZwulvuU2yvqqa4Oe0NUyZWL0tz
+         r8QTslCFP2WyJl3DVKUTCfzDlZfnZZS8lDmKbIlpOgOcQFiqX0UQirtfoGLJISAYxzWT
+         28ew==
+X-Gm-Message-State: AGi0PuYzPE9nBR9n14e0HP+OXNrVcvWLiIEn72NrKg4VA+mp2C06xwij
+        XuBi63Shcra7N+bb1ytTZmvP8oWXlDdJpT3uuDjteA==
+X-Google-Smtp-Source: APiQypLsMma60/04KmAJl8+He2niHeX0v3cUqZD1z9G1U33bvEUR66gRv6EtELS7Q+EmnzF1YJxBkDklwYv88PqRhtM=
+X-Received: by 2002:ab0:6588:: with SMTP id v8mr23216205uam.100.1588098614071;
+ Tue, 28 Apr 2020 11:30:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org> <1588080785-6812-10-git-send-email-rnayak@codeaurora.org>
+In-Reply-To: <1588080785-6812-10-git-send-email-rnayak@codeaurora.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 28 Apr 2020 20:29:38 +0200
+Message-ID: <CAPDyKFrGQvcCB1wfv=iqk66uja3faMRF1gGMSE2VhB8gJcO=sg@mail.gmail.com>
+Subject: Re: [PATCH v3 09/17] mmc: sdhci-msm: Fix error handling for dev_pm_opp_of_add_table()
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Pradeep P V K <ppvk@codeaurora.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+On Tue, 28 Apr 2020 at 15:39, Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>
+> Even though specifying OPP's in device tree is optional, ignoring all errors
+> reported by dev_pm_opp_of_add_table() means we can't distinguish between a
+> missing OPP table and a wrong/buggy OPP table. While missing OPP table
+> (dev_pm_opp_of_add_table() returns a -ENODEV in such case) can be ignored,
+> a wrong/buggy OPP table in device tree should make the driver error out.
+>
+> while we fix that, lets also fix the variable names for opp/opp_table to
+> avoid confusion and name them opp_table/has_opp_table instead.
+>
+> Suggested-by: Matthias Kaehlcke <matthias@chromium.org>
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Pradeep P V K <ppvk@codeaurora.org>
+> Cc: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> Cc: linux-mmc@vger.kernel.org
 
-[ Upstream commit f4d74ef6220c1eda0875da30457bef5c7111ab06 ]
+Is this a standalone patch that I queue up via my mmc tree?
 
-If seq_file .next function does not change position index, read after
-some lseek can generate unexpected output.
+Kind regards
+Uffe
 
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Manfred Spraul <manfred@colorfullife.com>
-Cc: NeilBrown <neilb@suse.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Waiman Long <longman@redhat.com>
-Link: http://lkml.kernel.org/r/f65c6ee7-bd00-f910-2f8a-37cc67e4ff88@virtuozzo.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/gcov/fs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/gcov/fs.c b/kernel/gcov/fs.c
-index 6e40ff6be083d..291e0797125b6 100644
---- a/kernel/gcov/fs.c
-+++ b/kernel/gcov/fs.c
-@@ -109,9 +109,9 @@ static void *gcov_seq_next(struct seq_file *seq, void *data, loff_t *pos)
- {
- 	struct gcov_iterator *iter = data;
- 
-+	(*pos)++;
- 	if (gcov_iter_next(iter))
- 		return NULL;
--	(*pos)++;
- 
- 	return iter;
- }
--- 
-2.20.1
-
-
-
- sizeof(kctl->id.name));
-+
-+	if (check_mapped_name(map, kctl->id.name, sizeof(kctl->id.name)))
-+		strlcat(kctl->id.name, " Jack", sizeof(kctl->id.name));
-+	else
-+		get_connector_control_name(mixer, term, is_input, kctl->id.name,
-+					   sizeof(kctl->id.name));
- 	kctl->private_free = snd_usb_mixer_elem_free;
- 	snd_usb_mixer_add_control(&cval->head, kctl);
- }
-diff --git a/sound/usb/mixer_maps.c b/sound/usb/mixer_maps.c
-index b4e77000f441e..fb2c4a992951b 100644
---- a/sound/usb/mixer_maps.c
-+++ b/sound/usb/mixer_maps.c
-@@ -369,6 +369,24 @@ static const struct usbmix_name_map asus_rog_map[] = {
- 	{}
- };
- 
-+/* TRX40 mobos with Realtek ALC1220-VB */
-+static const struct usbmix_name_map trx40_mobo_map[] = {
-+	{ 18, NULL }, /* OT, IEC958 - broken response, disabled */
-+	{ 19, NULL, 12 }, /* FU, Input Gain Pad - broken response, disabled */
-+	{ 16, "Speaker" },		/* OT */
-+	{ 22, "Speaker Playback" },	/* FU */
-+	{ 7, "Line" },			/* IT */
-+	{ 19, "Line Capture" },		/* FU */
-+	{ 17, "Front Headphone" },	/* OT */
-+	{ 23, "Front Headphone Playback" },	/* FU */
-+	{ 8, "Mic" },			/* IT */
-+	{ 20, "Mic Capture" },		/* FU */
-+	{ 9, "Front Mic" },		/* IT */
-+	{ 21, "Front Mic Capture" },	/* FU */
-+	{ 24, "IEC958 Playback" },	/* FU */
-+	{}
-+};
-+
- /*
-  * Control map entries
-  */
-@@ -500,7 +518,7 @@ static const struct usbmix_ctl_map usbmix_ctl_maps[] = {
- 	},
- 	{	/* Gigabyte TRX40 Aorus Pro WiFi */
- 		.id = USB_ID(0x0414, 0xa002),
--		.map = asus_rog_map,
-+		.map = trx40_mobo_map,
- 	},
- 	{	/* ASUS ROG Zenith II */
- 		.id = USB_ID(0x0b05, 0x1916),
-@@ -512,11 +530,11 @@ static const struct usbmix_ctl_map usbmix_ctl_maps[] = {
- 	},
- 	{	/* MSI TRX40 Creator */
- 		.id = USB_ID(0x0db0, 0x0d64),
--		.map = asus_rog_map,
-+		.map = trx40_mobo_map,
- 	},
- 	{	/* MSI TRX40 */
- 		.id = USB_ID(0x0db0, 0x543d),
--		.map = asus_rog_map,
-+		.map = trx40_mobo_map,
- 	},
- 	{ 0 } /* terminator */
- };
-diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
-index dcaf9eed9a415..8c2f5c23e1b43 100644
---- a/sound/usb/quirks-table.h
-+++ b/sound/usb/quirks-table.h
-@@ -3635,4 +3635,18 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge", "HVR-950Q"),
- 	}
- },
- 
-+#define ALC1220_VB_DESKTOP(vend, prod) { \
-+	USB_DEVICE(vend, prod),	\
-+	.driver_info = (unsigned long) & (const struct snd_usb_audio_quirk) { \
-+		.vendor_name = "Realtek", \
-+		.product_name = "ALC1220-VB-DT", \
-+		.profile_name = "Realtek-ALC1220-VB-Desktop", \
-+		.ifnum = QUIRK_NO_INTERFACE \
-+	} \
-+}
-+ALC1220_VB_DESKTOP(0x0414, 0xa002), /* Gigabyte TRX40 Aorus Pro WiFi */
-+ALC1220_VB_DESKTOP(0x0db0, 0x0d64), /* MSI TRX40 Creator */
-+ALC1220_VB_DESKTOP(0x0db0, 0x543d), /* MSI TRX40 */
-+#undef ALC1220_VB_DESKTOP
-+
- #undef USB_DEVICE_VENDOR_SPEC
--- 
-2.20.1
-
-
-
+> ---
+>  drivers/mmc/host/sdhci-msm.c | 27 ++++++++++++++++-----------
+>  1 file changed, 16 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index 8a055dd..97758fa 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -244,8 +244,8 @@ struct sdhci_msm_host {
+>         struct clk_bulk_data bulk_clks[4]; /* core, iface, cal, sleep clocks */
+>         unsigned long clk_rate;
+>         struct mmc_host *mmc;
+> -       struct opp_table *opp;
+> -       bool opp_table;
+> +       struct opp_table *opp_table;
+> +       bool has_opp_table;
+>         bool use_14lpp_dll_reset;
+>         bool tuning_done;
+>         bool calibration_done;
+> @@ -1967,15 +1967,20 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>         }
+>         msm_host->bulk_clks[0].clk = clk;
+>
+> -       msm_host->opp = dev_pm_opp_set_clkname(&pdev->dev, "core");
+> -       if (IS_ERR(msm_host->opp)) {
+> -               ret = PTR_ERR(msm_host->opp);
+> +       msm_host->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "core");
+> +       if (IS_ERR(msm_host->opp_table)) {
+> +               ret = PTR_ERR(msm_host->opp_table);
+>                 goto bus_clk_disable;
+>         }
+>
+>         /* OPP table is optional */
+> -       if (!dev_pm_opp_of_add_table(&pdev->dev))
+> -               msm_host->opp_table = true;
+> +       ret = dev_pm_opp_of_add_table(&pdev->dev);
+> +       if (!ret) {
+> +               msm_host->has_opp_table = true;
+> +       } else if (ret != -ENODEV) {
+> +               dev_err(&pdev->dev, "Invalid OPP table in Device tree\n");
+> +               goto opp_cleanup;
+> +       }
+>
+>         /* Vote for maximum clock rate for maximum performance */
+>         ret = dev_pm_opp_set_rate(&pdev->dev, INT_MAX);
+> @@ -2133,9 +2138,9 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>         clk_bulk_disable_unprepare(ARRAY_SIZE(msm_host->bulk_clks),
+>                                    msm_host->bulk_clks);
+>  opp_cleanup:
+> -       if (msm_host->opp_table)
+> +       if (msm_host->has_opp_table)
+>                 dev_pm_opp_of_remove_table(&pdev->dev);
+> -       dev_pm_opp_put_clkname(msm_host->opp);
+> +       dev_pm_opp_put_clkname(msm_host->opp_table);
+>  bus_clk_disable:
+>         if (!IS_ERR(msm_host->bus_clk))
+>                 clk_disable_unprepare(msm_host->bus_clk);
+> @@ -2154,9 +2159,9 @@ static int sdhci_msm_remove(struct platform_device *pdev)
+>
+>         sdhci_remove_host(host, dead);
+>
+> -       if (msm_host->opp_table)
+> +       if (msm_host->has_opp_table)
+>                 dev_pm_opp_of_remove_table(&pdev->dev);
+> -       dev_pm_opp_put_clkname(msm_host->opp);
+> +       dev_pm_opp_put_clkname(msm_host->opp_table);
+>         pm_runtime_get_sync(&pdev->dev);
+>         pm_runtime_disable(&pdev->dev);
+>         pm_runtime_put_noidle(&pdev->dev);
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
