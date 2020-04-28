@@ -2,144 +2,91 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6DBC83002
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63546C83002
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21C7C206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:44:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588038273;
-	bh=Lkl6K/3AX+U13aetHC0TrO4ikRJFL3MaON0p7QUiEWQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=B/8VFqdS3Hiv0VAc9xiWYi3GfX+RQibPjCP3XCJUN1s6lsaa3V8lnqVxG7FZEYG5j
-	 OgmWMcilEB9jC/UBKtyiZUK+b4TcIAdcK44oDcdaiLxVuSfsByosl6c6iX5daUI9k8
-	 QzW2ILGtbYW3qrIjS2dgSk+Y8SeB5chEDC7jTIeo=
+	by mail.kernel.org (Postfix) with ESMTP id 35FED2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:47:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbgD1Boc (ORCPT
+        id S1726348AbgD1BrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 21:44:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726264AbgD1Bob (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 21:44:31 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91C5FC03C1A8
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 18:44:31 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id r7so15193385edo.11
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 18:44:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6dLKuml1l37VsUNUL7W3+8Plw3oZZU13zk85vygbzVU=;
-        b=Bd+HoaOQxYuuh8Zf1OdODQuVSh84RUl4JQmlzGerUyQmf8yQo21wChRkbSt91VRbi7
-         rW7nVLys2SsQX2Zyf0eFgqihojc0YmFDp8m/iu9CZyEhvrn1ELZTebPjm+Ei/dLS9xRA
-         fQg/tEt3Rd0+Q259PEVjDGKRpewOS/+lcY8FU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6dLKuml1l37VsUNUL7W3+8Plw3oZZU13zk85vygbzVU=;
-        b=OFEa9D0TR44hd2nxsFuPrP2BC6pvFEAzJMitRQ68VEpT8VU0yoNxRtmdn4ZGfHgK1U
-         y3ymkmp9qclKpeIcfBKAxhLgyqKyqd5ntl5GIyi7RAb1xZE7Ym6zSmmbxGQW8fQ2sI37
-         d96oNJ/FQ5Io69470SvCHxgclsbXp9h6eNRYaeaqbKKQ2IKq2cp9PB7i4PD2LyEYuPkZ
-         FxkRvZ54pRvvUYUtmPn/wO0EDWa3DumRBHibQ/N1/UxVYsmzWkgwpHUK1o2N+f83AC+C
-         g1jVRuzgDPUr5I484Sv3n77RGc7Z0WBhYY11OrIp6LSV7vs6hrzHwJBsK8//eCHAjKRs
-         76SA==
-X-Gm-Message-State: AGi0PuZ0vhGhhjQ+0BD7teCE/r9JdIWHJSQEqKeNw2LVml4vMv2adkWe
-        gjvi0DP/9zYzaqw0STHkGd2U9HTCkJk=
-X-Google-Smtp-Source: APiQypImgvMU7CXHZH0GN68HjQ+4686vzh9ZabejfYlMM6csZNqh+vZZAj/tT/cDTcbDNiNEEu8xqA==
-X-Received: by 2002:a50:9b53:: with SMTP id a19mr21482394edj.104.1588038269964;
-        Mon, 27 Apr 2020 18:44:29 -0700 (PDT)
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
-        by smtp.gmail.com with ESMTPSA id a15sm134933eds.50.2020.04.27.18.44.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 18:44:29 -0700 (PDT)
-Received: by mail-ed1-f42.google.com with SMTP id a8so15219881edv.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 18:44:29 -0700 (PDT)
-X-Received: by 2002:a05:6512:14a:: with SMTP id m10mr17156490lfo.152.1588037812064;
- Mon, 27 Apr 2020 18:36:52 -0700 (PDT)
+        Mon, 27 Apr 2020 21:47:12 -0400
+Received: from mga06.intel.com ([134.134.136.31]:30711 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726264AbgD1BrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 21:47:12 -0400
+IronPort-SDR: 3k1w4RYi2o+1b8HmbTiH1yXkJvKfpKCGr7Fxwl8qR+kejPu/MDbxkhWs5enP7qr58Y8U5x4f6n
+ QM1+0AWaijig==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 18:47:11 -0700
+IronPort-SDR: HHrSf2zNwP3Z3RdFg6IPqorcVVnRcv8CQUZlxIpElwsFxEhIW4hgKIVeSHPlUpIKgKgfaU1bzD
+ H6EaVfMXZcxA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
+   d="scan'208";a="367345195"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.212.128]) ([10.254.212.128])
+  by fmsmga001.fm.intel.com with ESMTP; 27 Apr 2020 18:47:09 -0700
+Cc:     Joerg Roedel <joro@8bytes.org>, baolu.lu@linux.intel.com,
+        ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
+        Liu Yi L <yi.l.liu@intel.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] iommu/vt-d: Add page request draining support
+To:     kevin.tian@intel.com
+References: <20200422080611.15689-1-baolu.lu@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <714e0552-ae31-fa4a-76fe-d3c38e064e0a@linux.intel.com>
+Date:   Tue, 28 Apr 2020 09:47:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200426130100.306246-1-hagen@jauu.net> <20200426163430.22743-1-hagen@jauu.net>
- <20200427170826.mdklazcrn4xaeafm@wittgenstein> <CAG48ez0hskhN7OkxwHX-Bo5HGboJaVEk8udFukkTgiC=43ixcw@mail.gmail.com>
- <87zhawdc6w.fsf@x220.int.ebiederm.org> <20200427185929.GA1768@laniakea>
- <CAK8P3a2Ux1pDZEBjgRSPMJXvwUAvbPastX2ynVVC2iPTTDK_ow@mail.gmail.com>
- <20200427201303.tbiipopeapxofn6h@wittgenstein> <20200428004546.mlpwixgms2ekpfdm@yavin.dot.cyphar.com>
-In-Reply-To: <20200428004546.mlpwixgms2ekpfdm@yavin.dot.cyphar.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 27 Apr 2020 18:36:36 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wga3O=BoKZXR27-CDnAFareWcMxXhpWerwtCffdaH6_ow@mail.gmail.com>
-Message-ID: <CAHk-=wga3O=BoKZXR27-CDnAFareWcMxXhpWerwtCffdaH6_ow@mail.gmail.com>
-Subject: Re: [RFC v2] ptrace, pidfd: add pidfd_ptrace syscall
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Hagen Paul Pfeifer <hagen@jauu.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Jann Horn <jannh@google.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Brian Gerst <brgerst@gmail.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200422080611.15689-1-baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 5:46 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
->
-> I agree. It would be a shame to add a new ptrace syscall and not take
-> the opportunity to fix the multitude of problems with the existing API.
-> But that's a Pandora's box which we shouldn't open unless we want to
-> wait a long time to get an API everyone is okay with -- a pretty high
-> price to just get pidfds support in ptrace.
+Hi Kevin,
 
-We should really be very very careful with some "smarter ptrace".
-We've had _so_ many security issues with ptrace that it's not even
-funny.
+On 2020/4/22 16:06, Lu Baolu wrote:
+> When a PASID is stopped or terminated, there can be pending PRQs
+> (requests that haven't received responses) in the software and
+> remapping hardware. The pending page requests must be drained
+> so that the pasid could be reused. The chapter 7.10 in the VT-d
+> specification specifies the software steps to drain pending page
+> requests and responses.
+> 
+> This includes two parts:
+>   - PATCH 1/4 ~ 2/4: refactor the qi_submit_sync() to support multiple
+>     descriptors per submission which will be used in the following
+>     patch.
+>   - PATCH 3/4 ~ 4/4: add page request drain support after a pasid entry
+>     is torn down.
+> 
+> Please help to review.
+> 
+> Best regards,
+> baolu
+> 
+> Change log:
+>   v2->v3:
+>    - Address Kevin's review comments
+>      - Squash the first 2 patches together;
+>      - The prq thread is serialized, no need to consider reentrance;
+>      - Ensure no new-coming prq before drain prq in queue;
+>      - Handle page request overflow case.
 
-And that's ignoring all the practical issues we've had.
+Very appreciated for your review comments.
 
-I would definitely not want to have anything that looks like ptrace AT
-ALL using pidfd. If we have a file descriptor to specify the target
-process, then we should probably take advantage of that file
-descriptor to actually make it more of a asynchronous interface that
-doesn't cause the kinds of deadlocks that we've had with ptrace.
+How about these changes? Any comments?
 
-The synchronous nature of ptrace() means that not only do we have
-those nasty deadlocks, it's also very very expensive to use. It also
-has some other fundamental problems, like the whole "take over parent"
-and the SIGCHLD behavior.
-
-It also is hard to ptrace a ptracer. Which is annoying when you're
-debugging gdb or strace or whatever.
-
-So I think the thing to do is ask the gdb (and strace) people if they
-have any _very_ particular painpoints that we could perhaps help with.
-
-And then very carefully think things through and not repeat all the
-mistakes ptrace did.
-
-I'm not very optimistic.
-
-              Linus
+Best regards,
+baolu
