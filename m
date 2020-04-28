@@ -2,103 +2,108 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF49C83002
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E3BC83003
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A80E3206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF00206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:16:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vB6BBBag"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="KpvpSpyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgD1BN1 (ORCPT
+        id S1726380AbgD1BQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 21:13:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726233AbgD1BN1 (ORCPT
+        Mon, 27 Apr 2020 21:16:28 -0400
+Received: from vultr.net.flygoat.com ([149.28.68.211]:60258 "EHLO
+        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbgD1BQ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 21:13:27 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00D5EC03C1A8
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 18:13:25 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id n11so1402956pgl.9
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 18:13:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=Y3GGZmbxLoB4/ky/zvuMJizsm3y5Ahq0Z93yi1/mNik=;
-        b=vB6BBBagJDNdjOQ1Uf4d1ItZKf/yfYwHY/Lx4bBn5067k07IaWYcjHV2b/uF0pmXv7
-         oV6/eTOs1N6BYi+vy36uPtzNUOYAIsVpvjBX5lfLogz6JAzOwld2SA7HRWLoIJQCXRfL
-         M2l11WtPwurHVLAY4oqywzmCJT1J4QaTfvxkdcLOQyz15hSid6YKP4TySrKfNf0gLM50
-         blcQZ6QdcdSQzaKD4M/5tUqELAcaDSlv9hG3ah24B2+36Lv92gBNIX5UiDapmcJkWMsT
-         naqt0aA/gek21E+dEEs7O5xEsCDGHxyXb8vgk07kBSJzBXSUqMPEisZfVZsiS+wjnx4t
-         d10Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=Y3GGZmbxLoB4/ky/zvuMJizsm3y5Ahq0Z93yi1/mNik=;
-        b=QCgoHxmEZc4T4MbS24Fh1NhYg7EW5MLmK70HLxwYPiNKg/4oDNpDt4cAMWlLaYD4hD
-         8otYD5zuHKU0qcAR+6BrLUl6DCEeJ6PPlozguQvjTeuWnE0XlfFqqfvZMUHIwKAnOCJu
-         910U3nriOIm9o1bjHbuBlScMj9shmd6T/3SH0HcrSC+31SjVVGPLL52Mv4Pi/D+yYdOl
-         Z9hIbGJXrnTUB7PTIY48DhcHHmOHGrTrfaASy+HJ5cLBmplStmE0IVNDr/5zJ+mMXiLr
-         vz1sheqiYWMXgr9br5Ppmc1BRgP0Hyzp4BJxkZ3H+UHmB/DXmzT64htPsCsj7xrE3LXh
-         JvyA==
-X-Gm-Message-State: AGi0PuaTmSecQgLwofomt2npGjDbPNSEy8lZTeczieJuegiEqgNXvQA6
-        +Dxl/1fWDmwKjYbL7JVRxw8=
-X-Google-Smtp-Source: APiQypJKpTSK6oyBac2PxQyt9jZI95zOC2NCXv9W9sAxO7BuYSp54SwYztJQt2SAqQcjCBedqNTXIg==
-X-Received: by 2002:a63:d601:: with SMTP id q1mr2176948pgg.452.1588036405434;
-        Mon, 27 Apr 2020 18:13:25 -0700 (PDT)
-Received: from localhost ([203.220.177.17])
-        by smtp.gmail.com with ESMTPSA id q201sm13892911pfq.40.2020.04.27.18.13.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 18:13:24 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 11:08:54 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [RFC 1/3] powernv/cpuidle : Support for pre-entry and post exit
- of stop state in firmware
-To:     Abhishek Goel <huntbag@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org
-Cc:     ego@linux.vnet.ibm.com, mikey@neuling.org, mpe@ellerman.id.au,
-        oohall@gmail.com, psampat@linux.ibm.com, svaidy@linux.ibm.com,
-        skiboot@lists.ozlabs.org
-References: <20200427021027.114582-1-huntbag@linux.vnet.ibm.com>
-In-Reply-To: <20200427021027.114582-1-huntbag@linux.vnet.ibm.com>
+        Mon, 27 Apr 2020 21:16:27 -0400
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id D7F792049E;
+        Tue, 28 Apr 2020 01:16:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1588036582; bh=YpbKFu2GtHuJRM3elJ1UDPWZ42z5iYMpD3wZVprdR/8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KpvpSpyyHeInj2hqGchbkiq09c63G1ENf9haGk7dFZPGammg8EawvRr/YwVlxJooX
+         kxJlHf0Y9TGG5/uFX8jLJU1WPUgMA7/Fdfiysfm54tYp0n737kCdNQ+cVlewm+RDLo
+         /bmg6AcNc4aNmPuvfyPhxBE7ppHaiZsPgYb3o/GWd57D07ndZ/IX0MBMekLGjnJdkB
+         PpM1TQmjDeUQj/ECZAjncTEvhB9NyobtCgmrIvCiEvWlYX2H8wkz4PzQr2jhEiaw26
+         Ej+bD6lnA6cHQTeF91p+x/9LE15Xd8+YrQ7lX54Axpmd7x0hB8L0prOpVwbCCp8fDg
+         xZ+shF5SWa8mg==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v7 0/5] Loongson PCI Generic Driver 
+Date:   Tue, 28 Apr 2020 09:14:15 +0800
+Message-Id: <20200428011429.1852081-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
+References: 
 MIME-Version: 1.0
-Message-Id: <1588035100.usm3gb816q.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for picking this up and pushing it along. I do plan to come back=20
-and take another look at it all, but what we do need to do first is get=20
-a coherent approach to this proposed new calling convention and OS ops.
+Hi,
 
-It's fine to work on this in the meantime, but to start merging things
-my idea is:
+This series converts Loongson PCI into a generic PCI controller
+driver and adds support for LS2K SoC and LS7A PCH's PCI support.
 
-- OPAL must leave r13-r15 untouched for the OS.
-- OS ops are made available only for a "v4" OS that uses the new
-  calling convention, including kernel stack.
-- OS ops baseline (all OSes must provide) will be console / printk=20
-  facility, trap handling and crash/symbol decoding on behalf of OPAL,
-  and runtime virtual memory.
+Is it possible to let patch 1~3 go through PCI tree and patch
+4~5 go through MIPS tree?
 
-Other OS ops features can be added in the versioned structure, including=20
-this.
+Thanks.
 
-I'm trying to get back to cleaning these things up and start getting=20
-them merged now. Any comments or review on those would be helpful.
+v6: Drop first the patch of previous versions. Driver code clean-ups
+according to rob's suggestion.
 
-Thanks,
-Nick
+It looks like I had a wrong impression on generic IO port handeling
+and now the issue has been fixed, I implemented PCI_IOBASE for MIPS[1].
+Now the address is uniform here.
+
+[1]: https://patchwork.kernel.org/cover/11510499/
+
+v7: Fix some minor issues.
+
+Jiaxun Yang (5):
+  PCI: Don't disable decoding when mmio_always_on is set
+  PCI: Add Loongson PCI Controller support
+  dt-bindings: Document Loongson PCI Host Controller
+  MIPS: DTS: Loongson64: Add PCI Controller Node
+  MIPS: Loongson64: Switch to generic PCI driver
+
+ .../devicetree/bindings/pci/loongson.yaml     |  62 +++++
+ arch/mips/Kconfig                             |   1 +
+ arch/mips/boot/dts/loongson/rs780e-pch.dtsi   |  12 +
+ arch/mips/loongson64/Makefile                 |   2 +-
+ arch/mips/loongson64/vbios_quirk.c            |  29 ++
+ arch/mips/pci/Makefile                        |   1 -
+ arch/mips/pci/fixup-loongson3.c               |  71 -----
+ arch/mips/pci/ops-loongson3.c                 | 116 --------
+ drivers/pci/controller/Kconfig                |  10 +
+ drivers/pci/controller/Makefile               |   1 +
+ drivers/pci/controller/pci-loongson.c         | 251 ++++++++++++++++++
+ drivers/pci/probe.c                           |   2 +-
+ 12 files changed, 368 insertions(+), 190 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/loongson.yaml
+ create mode 100644 arch/mips/loongson64/vbios_quirk.c
+ delete mode 100644 arch/mips/pci/fixup-loongson3.c
+ delete mode 100644 arch/mips/pci/ops-loongson3.c
+ create mode 100644 drivers/pci/controller/pci-loongson.c
+
+-- 
+2.26.0.rc2
 
