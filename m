@@ -2,132 +2,124 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961E6C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9EBC83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71A43206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:01:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CWInyEc9"
+	by mail.kernel.org (Postfix) with ESMTP id 39DDC206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:01:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588089679;
+	bh=SWWuqtYeFWZ3I38DWk43ah6fy3VoLbdmJTw+uLQwDoI=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=pptyssQw+6GGooW8bqJr9y6axrh4ItYLi84mejhXhXMMXrs4A++70agrEV7hPXvkR
+	 8vZN2C4wSPT51mkeHIN3LuajceGl4ugOFZvPaJbS9Fw4esl41Xi3zpkVUFZkCf8LC3
+	 2kriCT44lMhoLaMi20OKqSdlJDbnuykGo6OjivNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgD1QBD (ORCPT
+        id S1728314AbgD1QBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:01:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46088 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728080AbgD1QBB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:01:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588089660;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=V/nHrnAWjFYDEx+ooars7FfriVR6n5mahvVNAOlPkCA=;
-        b=CWInyEc9RhBkQetkohvGIXbkg3GphnrOZ6NsM0dp1q0WQPBbomrjasUEDYbDMQTRb8hMzK
-        pA/9zfxPfOoxh/dinN2Cv778s1D6zaZE1sP+6qpi2XeXAi/pYWaNivBwCsqFAxWA1ygtVc
-        OYbNyocD7uMCQyAxjlYnmPwRP/ah6wE=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-215-lTf2py4WP0q7Rf-TCfi6KQ-1; Tue, 28 Apr 2020 12:00:58 -0400
-X-MC-Unique: lTf2py4WP0q7Rf-TCfi6KQ-1
-Received: by mail-wm1-f71.google.com with SMTP id n127so1054001wme.4
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 09:00:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=V/nHrnAWjFYDEx+ooars7FfriVR6n5mahvVNAOlPkCA=;
-        b=F9ILT1HuO/moKr4Z84QJ3pjPoDpMgBGAZa0zBLX6EsQ5wJADHWv9s8FUz/viFEzdEe
-         q6xQ89+rFFsY8NlmDZN4AyV7Ai5fUFH46UFbDsi6vmXi2h+p9rpQKoKG99NOlEfzNKXT
-         4kaxOx+MmzDa32iFgXDZRn/Hy3KA/dLm7OJqIooKpLo8chOZygEXD6Lh21atf0YRVGZw
-         4MWLliKKSTUSUWoNwYGHJdoC6miPs2wAKiJWZQC0X/kJ8GssSPjF0jXSVrZHJiG0bZy2
-         ovWTbI8mK9gQ27Ce0EqGzJbRBaeh4j0jfMLEPjyNf3oN0TjlpLsbFn+pwOiAK1DfStBH
-         ykxA==
-X-Gm-Message-State: AGi0PuZ6yTdsCZRY3HxL8VApOcIn7QvdPokaPOUn7eGMaoH97+TYMP0B
-        Mtp5Wu23b4ZHXdRIGiCmdRc64TdAymhN4toSMvRGeBZWzjhb5TrCgSgLqo+j855Y1qbsckhp6n+
-        aUMXLKnIhvc8905LO2qqB3AMF
-X-Received: by 2002:adf:bb94:: with SMTP id q20mr36673127wrg.105.1588089656820;
-        Tue, 28 Apr 2020 09:00:56 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKIbCy5WLfJsOD2H4tVuk3XU3G9si8HV/hIhC9ID521e8b71TD3eq8vjhdxcrAKzwjnXgEZ/g==
-X-Received: by 2002:adf:bb94:: with SMTP id q20mr36673001wrg.105.1588089655649;
-        Tue, 28 Apr 2020 09:00:55 -0700 (PDT)
-Received: from steredhat (host108-207-dynamic.49-79-r.retail.telecomitalia.it. [79.49.207.108])
-        by smtp.gmail.com with ESMTPSA id i129sm4064632wmi.20.2020.04.28.09.00.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 09:00:54 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 18:00:52 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     davem@davemloft.net, Stefan Hajnoczi <stefanha@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        linux-kernel@vger.kernel.org, Jorgen Hansen <jhansen@vmware.com>,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        linux-hyperv@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH net-next 0/3] vsock: support network namespace
-Message-ID: <20200428160052.o3ihui4262xogyg4@steredhat>
-References: <20200116172428.311437-1-sgarzare@redhat.com>
- <20200427142518.uwssa6dtasrp3bfc@steredhat>
- <224cdc10-1532-7ddc-f113-676d43d8f322@redhat.com>
+        Tue, 28 Apr 2020 12:01:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728151AbgD1QBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 12:01:18 -0400
+Received: from [192.168.1.74] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5594320575;
+        Tue, 28 Apr 2020 16:01:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588089677;
+        bh=SWWuqtYeFWZ3I38DWk43ah6fy3VoLbdmJTw+uLQwDoI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=yaI41Jkq+YEXEWlPtQ1lcY8i1uGO7n5apErXelEicg+EfkI5N+z8am7E0XXlGBHEH
+         xmABJW4riW9ZKJDwCUQ9qLJMMxh8iveS+Auh3Zc6HraVQHnjVolcQ4myd4WFi9mrM2
+         4izd940/7PNWJkzUZAjQWqS4zhNX3uvG3/trrxKs=
+Subject: Re: [PATCH] dmaengine: qcom_hidma: Simplify error handling path in
+ hidma_probe
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, vkoul@kernel.org,
+        dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20200427111043.70218-1-christophe.jaillet@wanadoo.fr>
+ <20200428125426.GE2014@kadam>
+From:   Sinan Kaya <okaya@kernel.org>
+Autocrypt: addr=okaya@kernel.org; keydata=
+ mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
+ uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
+ 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
+ 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
+ V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
+ AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
+ ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
+ AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
+ 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
+ Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
+ ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
+ qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
+ AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
+ eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
+ 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
+ 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
+ gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
+ CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
+ gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
+ e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
+ 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
+ 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
+ L+s0nPaNMKwv/Xhhm6Y=
+Message-ID: <1efa0186-7fbe-9cb5-2719-2d7192f99e27@kernel.org>
+Date:   Tue, 28 Apr 2020 12:01:15 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200428125426.GE2014@kadam>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <224cdc10-1532-7ddc-f113-676d43d8f322@redhat.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 04:13:22PM +0800, Jason Wang wrote:
+On 4/28/2020 8:54 AM, Dan Carpenter wrote:
+>> @@ -897,7 +897,6 @@ static int hidma_probe(struct platform_device *pdev)
+>>  	if (msi)
+>             ^^^
+> This test doesn't work.  It will call free hidma_free_msis() if the
+> hidma_request_msi() call fails.  We should do:
 > 
-> On 2020/4/27 下午10:25, Stefano Garzarella wrote:
-> > Hi David, Michael, Stefan,
-> > I'm restarting to work on this topic since Kata guys are interested to
-> > have that, especially on the guest side.
-> > 
-> > While working on the v2 I had few doubts, and I'd like to have your
-> > suggestions:
-> > 
-> >   1. netns assigned to the device inside the guest
-> > 
-> >     Currently I assigned this device to 'init_net'. Maybe it is better
-> >     if we allow the user to decide which netns assign to the device
-> >     or to disable this new feature to have the same behavior as before
-> >     (host reachable from any netns).
-> >     I think we can handle this in the vsock core and not in the single
-> >     transports.
-> > 
-> >     The simplest way that I found, is to add a new
-> >     IOCTL_VM_SOCKETS_ASSIGN_G2H_NETNS to /dev/vsock to enable the feature
-> >     and assign the device to the same netns of the process that do the
-> >     ioctl(), but I'm not sure it is clean enough.
-> > 
-> >     Maybe it is better to add new rtnetlink messages, but I'm not sure if
-> >     it is feasible since we don't have a netdev device.
-> > 
-> >     What do you suggest?
+> 	if (msi) {
+> 		rc = hidma_request_msi(dmadev, pdev);
+> 		msi = false;
+> 	}
+> 
+> 	if (!msi) {
+> 		hidma_ll_setup_irq(dmadev->lldev, false);
+> 		rc = devm_request_irq(&pdev->dev, chirq, hidma_chirq_handler,
+> 				      0, "qcom-hidma", dmadev->lldev);
+> 		if (rc)
+> 			goto uninit;
+> 	}
 > 
 > 
-> As we've discussed, it should be a netdev probably in either guest or host
-> side. And it would be much simpler if we want do implement namespace then.
-> No new API is needed.
-> 
 
-Thanks Jason!
+Let me clarify how this works. MSI capability is not present on all
+platforms. Therefore, this is detected by an ACPI/DTS parameter called
+HIDMA_MSI_CAP.
 
-It would be cool, but I don't have much experience on netdev.
-Do you see any particular obstacles?
+msi = hidma_test_capability(&pdev->dev, HIDMA_MSI_CAP);
 
-I'll take a look to understand how to do it, surely in the guest would
-be very useful to have the vsock device as a netdev and maybe also in the host.
+Therefore,
 
-Stefano
+1. Code will request MSI capability if it is present.
+2. Code will fallback to plain IRQ, if MSI allocation also fails.
 
+I hope this helps.
+
+We need both #1 and #2 to be supported.
