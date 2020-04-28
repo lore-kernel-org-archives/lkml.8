@@ -2,368 +2,108 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B862C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BC9C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05B4E20757
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:55:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QoSRAvZN"
+	by mail.kernel.org (Postfix) with ESMTP id F02F3208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:57:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588093070;
+	bh=QaFdvwQtNCzuxJiiAPZ3ZOFvDXcpwjoLKDRZlvc+JTU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qVT79AZAkSIyavrKY4F+MPABhc5r5ddfLaMqOEPHhUtUX/DBE4ysLerwoCzpxRvaJ
+	 IC1NqLfRC3G2zWBL+3WAmKRSYjwoheYSKFjftqYmQWGtnRhe8H3vAlP6rw4UPU3plR
+	 uO3u7mSpH2X161ciIYeNDrBpw2p+/6wwL29pVTao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgD1QzJ (ORCPT
+        id S1728291AbgD1Q5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:55:09 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:51475 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727957AbgD1QzI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:55:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588092906;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ebXyDv/i8jtA4VSfqIkOWbEh11RYKbfmfy2Rk5FO8Vk=;
-        b=QoSRAvZNs0bSvGnUPSdCl8Uo3pXQuQK7UWX+GdQuNwaEqY9qHPBadiLG9TRJIMWxt2DodB
-        IURd7pnEzqk66QGNsKN8lKE/lBF75DCACKTwr07zUIlQKKAZeKchZ2TV2G7mcIiA+6Oq8m
-        sOL4taqai2i0NgrvvFjdkWmWc+xXjlY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-472-1w1_27iUPpKirbacfPJCIQ-1; Tue, 28 Apr 2020 12:55:01 -0400
-X-MC-Unique: 1w1_27iUPpKirbacfPJCIQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 28 Apr 2020 12:57:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728022AbgD1Q5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 12:57:49 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DDFED1005510;
-        Tue, 28 Apr 2020 16:54:57 +0000 (UTC)
-Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 009E510013BD;
-        Tue, 28 Apr 2020 16:54:55 +0000 (UTC)
-Date:   Tue, 28 Apr 2020 10:54:55 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Dave Chinner" <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [regression?] Re: [PATCH v6 06/12] mm/gup: track FOLL_PIN pages
-Message-ID: <20200428105455.30343fb4@w520.home>
-In-Reply-To: <665ffb48-d498-90f4-f945-997a922fc370@nvidia.com>
-References: <20200211001536.1027652-1-jhubbard@nvidia.com>
-        <20200211001536.1027652-7-jhubbard@nvidia.com>
-        <20200424121846.5ee2685f@w520.home>
-        <5b901542-d949-8d7e-89c7-f8d5ee20f6e9@nvidia.com>
-        <20200424141548.5afdd2bb@w520.home>
-        <665ffb48-d498-90f4-f945-997a922fc370@nvidia.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id DE42320757;
+        Tue, 28 Apr 2020 16:57:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588093068;
+        bh=QaFdvwQtNCzuxJiiAPZ3ZOFvDXcpwjoLKDRZlvc+JTU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vraqZ0wEcRphTU3lPtLyXChwnLcRHayEWGgLHdrwesblGo/42zUJF4jLqaKz47xEb
+         ORmefUppK8xFN675aFR0gcO4VVqr2YyuuyxKCpPYfzSeapY4vntKXugE6AbXyEFfgo
+         yJ+sGuNxbqA2Hi26mqqt5ODXt97n7b9DRXqC2cRI=
+Date:   Tue, 28 Apr 2020 17:57:45 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Marcus Cooper <codekipper@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: Audio sound card name [was [PATCH 4/7] arm64: dts: allwinner:
+ a64: Add HDMI audio]
+Message-ID: <20200428165745.GM5677@sirena.org.uk>
+References: <20200426120442.11560-1-peron.clem@gmail.com>
+ <20200426120442.11560-5-peron.clem@gmail.com>
+ <20200428080020.35qcuylwq2ylmubu@gilmour.lan>
+ <CAJiuCcc2LQ4L36KSfO8iLVFBUO6k+zsZFX+_Ovm_10PoWO4AsA@mail.gmail.com>
+ <20200428160417.6q5oab2guaumhhwi@gilmour.lan>
+ <CAJiuCccFFUJJzXwygLQbDK4fGJ61p72Hv7vj3WVP-=z=J1Yj0Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="MP_/BQ=NWFsJNN2mugeC9JYOndi"
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="x38akuY2VS0PywU3"
+Content-Disposition: inline
+In-Reply-To: <CAJiuCccFFUJJzXwygLQbDK4fGJ61p72Hv7vj3WVP-=z=J1Yj0Q@mail.gmail.com>
+X-Cookie: Eschew obfuscation.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---MP_/BQ=NWFsJNN2mugeC9JYOndi
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+
+--x38akuY2VS0PywU3
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 24 Apr 2020 15:58:29 -0700
-John Hubbard <jhubbard@nvidia.com> wrote:
+On Tue, Apr 28, 2020 at 06:49:10PM +0200, Cl=E9ment P=E9ron wrote:
 
-> On 2020-04-24 13:15, Alex Williamson wrote:
-> > On Fri, 24 Apr 2020 12:20:03 -0700
-> > John Hubbard <jhubbard@nvidia.com> wrote:
-> >   
-> >> On 2020-04-24 11:18, Alex Williamson wrote:
-> >> ...  
-> >>> Hi John,
-> >>>
-> >>> I'm seeing a regression bisected back to this commit (3faa52c03f44
-> >>> mm/gup: track FOLL_PIN pages).  I've attached some vfio-pci test code
-> >>> that reproduces this by mmap'ing a page of MMIO space of a device and
-> >>> then tries to map that through the IOMMU, so this should be attempting
-> >>> a gup/pin of a PFNMAP page.  Previously this failed gracefully (-EFAULT),
-> >>> but now results in:  
-> >>
-> >>
-> >> Hi Alex,
-> >>
-> >> Thanks for this report, and especially for source code to test it,
-> >> seeing as how I can't immediately spot the problem just from the crash
-> >> data so far.  I'll get set up and attempt a repro.
-> >>
-> >> Actually this looks like it should be relatively easier than the usual
-> >> sort of "oops, we leaked a pin_user_pages() or unpin_user_pages() call,
-> >> good luck finding which one" report that I fear the most. :) This one
-> >> looks more like a crash that happens directly, when calling into the
-> >> pin_user_pages_remote() code. Which should be a lot easier to solve...
-> >>
-> >> btw, if you are set up for it, it would be nice to know what source file
-> >> and line number corresponds to the RIP (get_pfnblock_flags_mask+0x22)
-> >> below. But if not, no problem, because I've likely got to do the repro
-> >> in any case.  
-> > 
-> > Hey John,
-> > 
-> > TBH I'm feeling a lot less confident about this bisect.  This was
-> > readily reproducible to me on a clean tree a bit ago, but now it
-> > eludes me.  Let me go back and figure out what's going on before you
-> > spend any more time on it.  Thanks,
-> >   
-> 
-> OK. But I'm keeping the repro program! :)  It made it quick and easy to
-> set up a vfio test, so it was worth doing in any case.
+> I have a question regarding the simple-audio-card,name.
+> In this patch, I would like to introduce a simple-audio-card for the
+> Allwinner A64 HDMI.
 
-Great, because I've traced my steps, re-bisected and came back to the
-same upstream commit with the same test program.  The major difference
-is that I thought I was seeing this on pure upstream, but some vfio
-code that I'm trying to prepare for upstream snuck in, so this isn't a
-pure upstream regression, but the changes I was making worked on v5.6
-and does not work with this commit.  Maybe still a latent regression,
-maybe a bug in my changes.
+> What should be the preferred name for this sound card?
+> "sun50i-a64-hdmi" ? "allwinner, sun50i-a64-hdmi" ?
 
-> Anyway, I wanted to double check this just out of paranoia, and so
-> now I have a data point for you: your test program runs and passes for
-> me using today's linux.git kernel, with an NVIDIA GPU as the vfio
-> device, and the kernel log is clean. No hint of any problems.
+The former is more idiomatic for ALSA.
 
-Yep, I agree.  The vfio change I'm experimenting with is to move the
-remap_pfn_range() from vfio_pci_mmap() to a vm_ops.fault handler.  This
-is why I have the test program creating an mmap of the device mmio
-space and then immediately mapping it through the iommu without
-touching it.  If the vma gets faulted in the dma mapping path via
-pin_user_pages_remote(), I see the crash I reported initially.  If the
-test program is modified to access the mmap before doing the dma
-mapping, everything works normally.  In either case, the fault handler
-is called and satisfies the fault with remap_pfn_range() and returns
-VM_FAULT_NOPAGE (vfio patch attached).
+--x38akuY2VS0PywU3
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Here's the crash I'm seeing with some further debugging:
+-----BEGIN PGP SIGNATURE-----
 
-BUG: unable to handle page fault for address: ffffa5b8bfe14f38
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 0 P4D 0 
-Oops: 0000 [#1] SMP NOPTI
-CPU: 70 PID: 3343 Comm: vfio-pci-dma-ma Not tainted 5.6.0-3faa52c03f44+ #20
-Hardware name: AMD Corporation Diesel/Diesel, BIOS TDL100CB 03/17/2020
-RIP: 0010:get_pfnblock_flags_mask+0x22/0x70
-Code: c3 0f 1f 80 00 00 00 00 0f 1f 44 00 00 48 8b 05 bc e1 d9 01 48 89 f7 49 89 c8 48 c1 ef 0f 48 85 c0 74 48 48 89 f1 48 c1 e9 17 <48> 8b 04 c8 48 85 c0 74 0b 40 0f b6 ff 48 c1 e7 04 48 01 f8 48 c1
-RSP: 0018:ffffb2e3c910fcc8 EFLAGS: 00010216
-RAX: ffff95b8bff50000 RBX: 0000000000000001 RCX: 000001fffffd89e7
-RDX: 0000000000000002 RSI: fffffec4f3a899ba RDI: 0001fffffd89e751
-RBP: ffffb2e3c910fd88 R08: 0000000000000007 R09: ffff95a4aa79fce8
-R10: 0000000000000000 R11: ffffb2e3c910f840 R12: 0000000100000000
-R13: 0000000000000000 R14: 0000000000000001 R15: ffff959caa266e80
-FS:  00007f1a95023740(0000) GS:ffff959caf180000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffa5b8bfe14f38 CR3: 0000000462a1e000 CR4: 00000000003406e0
-Call Trace:
- __gup_longterm_locked+0x274/0x620
- vaddr_get_pfn+0x74/0x110 [vfio_iommu_type1]
- vfio_pin_pages_remote+0x6e/0x370 [vfio_iommu_type1]
- vfio_iommu_type1_ioctl+0x8e5/0xaac [vfio_iommu_type1]
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6oYIkACgkQJNaLcl1U
+h9CxAgf7BWIci8LznrR1sMDBntaJK2/0G/U8xmAKYRllkCNU+ygWiMh4kJP0s8Xt
+kwdFyZZIgLgcsjFiKBtUmSOtJtQklUyVMyYfN4Fuxspk0tuoZ55f7XfLkZelcMin
+pDhjmgvcSRMfLrcLovinmN0tAR6rWlNzUbDEs2J1bkxyoBsp1+9JbIadgU0+HVwC
+7/EYkpQG5niUXnDqe5puy9aeR9ml20pg8+DYnjTjgTUqGQTBbvdrd9PIwjsh7R0t
+RK9k8vuWd94brTyA0W4z8PbDHCIVpz/noDHFOBeUUjR2tP0sPAfYZkh5TlpDM/pG
+9CbD0IlbKTXi0BXgBg1H8zN+XLKCyA==
+=5lUy
+-----END PGP SIGNATURE-----
 
-get_pfnblock_flags_mask+0x22/0x70 is here:
-
-include/linux/mmzone.h:1254
-static inline struct mem_section *__nr_to_section(unsigned long nr)
-{
-#ifdef CONFIG_SPARSEMEM_EXTREME
-        if (!mem_section)
-                return NULL;
-#endif
-====>   if (!mem_section[SECTION_NR_TO_ROOT(nr)])
-                return NULL;
-        return &mem_section[SECTION_NR_TO_ROOT(nr)][nr & SECTION_ROOT_MASK];
-}
-
-The call trace is:
-
-__gup_longterm_locked
-  check_and_migrate_cma_pages
-    is_migrate_cma_page
-      get_pageblock_migratetype
-        get_pfnblock_flags_mask
-          __get_pfnblock_flags_mask
-            get_pageblock_bitmap
-              __pfn_to_section
-                __nr_to_section
-
-Any ideas why we see this difference between the vma being faulted in
-outside of the page pinning path versus faulted by it?
-
-FWIW, here's the stack dump for getting to the fault handler in the
-latter case:
-
- vfio_pci_mmap_fault+0x22/0x130 [vfio_pci]
- __do_fault+0x38/0xd0
- __handle_mm_fault+0xd4b/0x1380
- handle_mm_fault+0xe2/0x1f0
- __get_user_pages+0x188/0x820
- __gup_longterm_locked+0xc8/0x620
-
-Thanks!
-Alex
-
---MP_/BQ=NWFsJNN2mugeC9JYOndi
-Content-Type: text/x-patch
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment; filename=vfio-fault.diff
-
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 379a02c36e37..3b8db2ef6247 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -1195,6 +1195,76 @@ static ssize_t vfio_pci_write(void *device_data, const char __user *buf,
- 	return vfio_pci_rw(device_data, (char __user *)buf, count, ppos, true);
- }
- 
-+static int vfio_pci_add_vma(struct vfio_pci_device *vdev,
-+			    struct vm_area_struct *vma)
-+{
-+	struct vfio_pci_mmap_vma *mmap_vma;
-+
-+	mmap_vma = kzalloc(sizeof(*mmap_vma), GFP_KERNEL);
-+	if (!mmap_vma)
-+		return -ENOMEM;
-+
-+	mmap_vma->vma = vma;
-+
-+	mutex_lock(&vdev->vma_lock);
-+	list_add(&mmap_vma->vma_next, &vdev->vma_list);
-+	mutex_unlock(&vdev->vma_lock);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Zap mmaps on open so that we can fault them in on access and therefore
-+ * our vma_list only tracks mappings accessed since last zap.
-+ */
-+static void vfio_pci_mmap_open(struct vm_area_struct *vma)
-+{
-+	zap_vma_ptes(vma, vma->vm_start, vma->vm_end - vma->vm_start);
-+}
-+
-+static void vfio_pci_mmap_close(struct vm_area_struct *vma)
-+{
-+	struct vfio_pci_device *vdev = vma->vm_private_data;
-+	struct vfio_pci_mmap_vma *mmap_vma;
-+
-+	mutex_lock(&vdev->vma_lock);
-+	list_for_each_entry(mmap_vma, &vdev->vma_list, vma_next) {
-+		if (mmap_vma->vma == vma) {
-+			list_del(&mmap_vma->vma_next);
-+			kfree(mmap_vma);
-+			break;
-+		}
-+	}
-+	mutex_unlock(&vdev->vma_lock);
-+}
-+
-+static vm_fault_t vfio_pci_mmap_fault(struct vm_fault *vmf)
-+{
-+	struct vm_area_struct *vma = vmf->vma;
-+	struct vfio_pci_device *vdev = vma->vm_private_data;
-+
-+	printk("Fault: %p\n", vma);
-+	if (vfio_pci_add_vma(vdev, vma)) {
-+		printk("SIGOOM\n");
-+		return VM_FAULT_OOM;
-+	}
-+
-+	if (remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
-+			    vma->vm_end - vma->vm_start, vma->vm_page_prot)) {
-+		printk("SIGBUS\n");
-+		return VM_FAULT_SIGBUS;
-+	}
-+
-+	printk("OK\n");
-+	return VM_FAULT_NOPAGE;
-+}
-+
-+static const struct vm_operations_struct vfio_pci_mmap_ops = {
-+	.open = vfio_pci_mmap_open,
-+	.close = vfio_pci_mmap_close,
-+	.fault = vfio_pci_mmap_fault,
-+};
-+
- static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
- {
- 	struct vfio_pci_device *vdev = device_data;
-@@ -1253,8 +1323,14 @@ static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
- 	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
- 	vma->vm_pgoff = (pci_resource_start(pdev, index) >> PAGE_SHIFT) + pgoff;
- 
-+	vma->vm_ops = &vfio_pci_mmap_ops;
-+
-+#if 1
-+	return 0;
-+#else
- 	return remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
--			       req_len, vma->vm_page_prot);
-+			       vma->vm_end - vma->vm_start, vma->vm_page_prot);
-+#endif
- }
- 
- static void vfio_pci_request(void *device_data, unsigned int count)
-@@ -1330,6 +1406,8 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	spin_lock_init(&vdev->irqlock);
- 	mutex_init(&vdev->ioeventfds_lock);
- 	INIT_LIST_HEAD(&vdev->ioeventfds_list);
-+	mutex_init(&vdev->vma_lock);
-+	INIT_LIST_HEAD(&vdev->vma_list);
- 
- 	ret = vfio_add_group_dev(&pdev->dev, &vfio_pci_ops, vdev);
- 	if (ret) {
-diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
-index 8a2c7607d513..7faed79fe033 100644
---- a/drivers/vfio/pci/vfio_pci_private.h
-+++ b/drivers/vfio/pci/vfio_pci_private.h
-@@ -84,6 +84,11 @@ struct vfio_pci_reflck {
- 	struct mutex		lock;
- };
- 
-+struct vfio_pci_mmap_vma {
-+	struct vm_area_struct	*vma;
-+	struct list_head	vma_next;
-+};
-+
- struct vfio_pci_device {
- 	struct pci_dev		*pdev;
- 	void __iomem		*barmap[PCI_STD_NUM_BARS];
-@@ -122,6 +127,8 @@ struct vfio_pci_device {
- 	struct list_head	dummy_resources_list;
- 	struct mutex		ioeventfds_lock;
- 	struct list_head	ioeventfds_list;
-+	struct mutex		vma_lock;
-+	struct list_head	vma_list;
- };
- 
- #define is_intx(vdev) (vdev->irq_type == VFIO_PCI_INTX_IRQ_INDEX)
-
---MP_/BQ=NWFsJNN2mugeC9JYOndi--
-
+--x38akuY2VS0PywU3--
