@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CE9C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CA4C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFDBF20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26B3620575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099725;
-	bh=b7xoRuxmnBYbOV63CMPj6fTSw2HyOLsSsZO2WNLHGqY=;
+	s=default; t=1588099729;
+	bh=Qyc+upMyRK5hOlTaziOgUPCg9cJpCHKiPXD7yWXZ/XM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rStqiKm+BnF8pKzeqcChbTq7GmJgO9cYoBNemEt8mx+FzK8Goob355MMBoQ0AzgMe
-	 /5uRUh9DKeFTi8iXw4j6Ak0lJ0uvklNv3ABDSJwEUdnG+oaXvOO6WDeyDjUWakcBIO
-	 httmyn9QJ3Q2lv9EgKTJN+wy9C+AFitYpxkvHr8k=
+	b=CJyZ0nmYwLavFexPaOaESfxyAmH7tSe49RcoTQHt711Gwk8UXJNuwV3s3UgwsqD+f
+	 zIXX+BHE4B9U8wX0+/h7z/L/NKGDUyFIJBiAPcPnDbFcgcNxdgL/Ow7uKEpGgvow3+
+	 WzDp4k2vAhhtPUzfkM0IH0CC2hgWWuxyR3VeU53M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730281AbgD1Ski (ORCPT
+        id S1731087AbgD1Ssr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:40:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59604 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:48:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730927AbgD1Sk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:40:28 -0400
+        id S1730749AbgD1Skh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:40:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71A8E20575;
-        Tue, 28 Apr 2020 18:40:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87BDF20575;
+        Tue, 28 Apr 2020 18:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099226;
-        bh=b7xoRuxmnBYbOV63CMPj6fTSw2HyOLsSsZO2WNLHGqY=;
+        s=default; t=1588099237;
+        bh=Qyc+upMyRK5hOlTaziOgUPCg9cJpCHKiPXD7yWXZ/XM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pa3tijgGu3wdRWZ6UlbsM0ChLzherog9/S9kEjyt3KX8XTSD8L4EIQ+GBowwzZYA6
-         5WbBv7Pwg3PoOXtnfe559w6FPzDXHSxTXSbiBx6hMpa9iB7gFA8hBGmlJV2GSTOgwc
-         IkzGiuKb2rv59EzPh/hWc7IEMo0IB++qzM65RhFA=
+        b=DaypICs7jIkT+JJc67Ct1srmClvyyZA3P+sbPQ2OSz/3XjodRXseRkrMgHkvtd2Zf
+         b0lQE/GqOy9rmSzQ+wGMRp7VOHM0T/8rOGa5NdBWWSDCMaBtKpdRR4BswaEpav5gQm
+         d6VBkzqDA1JwK/kmNFr8uFgA00cDqn3qppWCUpRc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 077/168] net: dsa: b53: Rework ARL bin logic
-Date:   Tue, 28 Apr 2020 20:24:11 +0200
-Message-Id: <20200428182241.875461551@linuxfoundation.org>
+        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
+Subject: [PATCH 4.19 119/131] staging: vt6656: Fix drivers TBTT timing counter.
+Date:   Tue, 28 Apr 2020 20:25:31 +0200
+Message-Id: <20200428182240.182426008@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,115 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Malcolm Priestley <tvboxspy@gmail.com>
 
-[ Upstream commit 6344dbde6a27d10d16246d734b968f84887841e2 ]
+commit 09057742af98a39ebffa27fac4f889dc873132de upstream.
 
-When asking the ARL to read a MAC address, we will get a number of bins
-returned in a single read. Out of those bins, there can essentially be 3
-states:
+The drivers TBTT counter is not synchronized with mac80211 timestamp.
 
-- all bins are full, we have no space left, and we can either replace an
-  existing address or return that full condition
+Reorder the functions and use vnt_update_next_tbtt to do the final
+synchronize.
 
-- the MAC address was found, then we need to return its bin index and
-  modify that one, and only that one
-
-- the MAC address was not found and we have a least one bin free, we use
-  that bin index location then
-
-The code would unfortunately fail on all counts.
-
-Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: c15158797df6 ("staging: vt6656: implement TSF counter")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
+Link: https://lore.kernel.org/r/375d0b25-e8bc-c8f7-9b10-6cc705d486ee@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/dsa/b53/b53_common.c |   30 ++++++++++++++++++++++++++----
- drivers/net/dsa/b53/b53_regs.h   |    3 +++
- 2 files changed, 29 insertions(+), 4 deletions(-)
 
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -1450,6 +1450,7 @@ static int b53_arl_read(struct b53_devic
- 			u16 vid, struct b53_arl_entry *ent, u8 *idx,
- 			bool is_valid)
- {
-+	DECLARE_BITMAP(free_bins, B53_ARLTBL_MAX_BIN_ENTRIES);
- 	unsigned int i;
- 	int ret;
+---
+ drivers/staging/vt6656/main_usb.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+--- a/drivers/staging/vt6656/main_usb.c
++++ b/drivers/staging/vt6656/main_usb.c
+@@ -740,12 +740,15 @@ static void vnt_bss_info_changed(struct
+ 			vnt_mac_reg_bits_on(priv, MAC_REG_TFTCTL,
+ 					    TFTCTL_TSFCNTREN);
  
-@@ -1457,6 +1458,8 @@ static int b53_arl_read(struct b53_devic
- 	if (ret)
- 		return ret;
+-			vnt_adjust_tsf(priv, conf->beacon_rate->hw_value,
+-				       conf->sync_tsf, priv->current_tsf);
+-
+ 			vnt_mac_set_beacon_interval(priv, conf->beacon_int);
  
-+	bitmap_zero(free_bins, dev->num_arl_entries);
+ 			vnt_reset_next_tbtt(priv, conf->beacon_int);
 +
- 	/* Read the bins */
- 	for (i = 0; i < dev->num_arl_entries; i++) {
- 		u64 mac_vid;
-@@ -1468,16 +1471,24 @@ static int b53_arl_read(struct b53_devic
- 			   B53_ARLTBL_DATA_ENTRY(i), &fwd_entry);
- 		b53_arl_to_entry(ent, mac_vid, fwd_entry);
- 
--		if (!(fwd_entry & ARLTBL_VALID))
-+		if (!(fwd_entry & ARLTBL_VALID)) {
-+			set_bit(i, free_bins);
- 			continue;
-+		}
- 		if ((mac_vid & ARLTBL_MAC_MASK) != mac)
- 			continue;
- 		if (dev->vlan_enabled &&
- 		    ((mac_vid >> ARLTBL_VID_S) & ARLTBL_VID_MASK) != vid)
- 			continue;
- 		*idx = i;
-+		return 0;
- 	}
- 
-+	if (bitmap_weight(free_bins, dev->num_arl_entries) == 0)
-+		return -ENOSPC;
++			vnt_adjust_tsf(priv, conf->beacon_rate->hw_value,
++				       conf->sync_tsf, priv->current_tsf);
 +
-+	*idx = find_first_bit(free_bins, dev->num_arl_entries);
-+
- 	return -ENOENT;
- }
++			vnt_update_next_tbtt(priv,
++					     conf->sync_tsf, conf->beacon_int);
+ 		} else {
+ 			vnt_clear_current_tsf(priv);
  
-@@ -1507,10 +1518,21 @@ static int b53_arl_op(struct b53_device
- 	if (op)
- 		return ret;
- 
--	/* We could not find a matching MAC, so reset to a new entry */
--	if (ret) {
-+	switch (ret) {
-+	case -ENOSPC:
-+		dev_dbg(dev->dev, "{%pM,%.4d} no space left in ARL\n",
-+			addr, vid);
-+		return is_valid ? ret : 0;
-+	case -ENOENT:
-+		/* We could not find a matching MAC, so reset to a new entry */
-+		dev_dbg(dev->dev, "{%pM,%.4d} not found, using idx: %d\n",
-+			addr, vid, idx);
- 		fwd_entry = 0;
--		idx = 1;
-+		break;
-+	default:
-+		dev_dbg(dev->dev, "{%pM,%.4d} found, using idx: %d\n",
-+			addr, vid, idx);
-+		break;
- 	}
- 
- 	memset(&ent, 0, sizeof(ent));
---- a/drivers/net/dsa/b53/b53_regs.h
-+++ b/drivers/net/dsa/b53/b53_regs.h
-@@ -323,6 +323,9 @@
- #define   ARLTBL_STATIC			BIT(15)
- #define   ARLTBL_VALID			BIT(16)
- 
-+/* Maximum number of bin entries in the ARL for all switches */
-+#define B53_ARLTBL_MAX_BIN_ENTRIES	4
-+
- /* ARL Search Control Register (8 bit) */
- #define B53_ARL_SRCH_CTL		0x50
- #define B53_ARL_SRCH_CTL_25		0x20
 
 
