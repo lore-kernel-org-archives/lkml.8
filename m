@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5482EC83009
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B49DC83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 314B62085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C85820B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:29:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XI/5dnY1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SkXZ/OPn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728547AbgD1R3q (ORCPT
+        id S1728584AbgD1R3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 13:29:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46186 "EHLO
+        Tue, 28 Apr 2020 13:29:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39471 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728519AbgD1R3o (ORCPT
+        with ESMTP id S1728549AbgD1R3r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 13:29:44 -0400
+        Tue, 28 Apr 2020 13:29:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588094982;
+        s=mimecast20190719; t=1588094985;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=302JfAKXdeKAFP9le9Cjh8LmYPnDyvK9wzRhL+36K80=;
-        b=XI/5dnY13D4mxmog/WZEi7IG8HEIgtEvjoanFj9d+19AJgMSBzZxp3IMPyEoCqGBgAwHi4
-        9qCTCjVJMT8Y7LQWWN7NHEQgSZCKpMLuJ+CusoPAUP4pTrYpbUSnwv8EERLbO3tpPySVtp
-        bcLK4z9Jf5JCyfTB6Ym7BOBtSxRKB84=
+        bh=6ccMItdhwvpodcMZBPPRhaKCXgBbP3FMX3RumfGVPIw=;
+        b=SkXZ/OPnxc/voQ2FXhKiJnF+2V5IjONBiNXyn1XkeNPlXuNJnyZfyCV/z6Bg5mBRvWsURq
+        GihR66g20ubQn9NktMrjqfLdGZmfrhBvgIMC87PQOJ7n2XKfJRkYrcieAp8cVL8Pi3O68z
+        dT4WwoDLLAMbrDKKBfy96NN1amMEsBo=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-323-3bqQkQLhOoGCWHtZ7pgt1A-1; Tue, 28 Apr 2020 13:29:39 -0400
-X-MC-Unique: 3bqQkQLhOoGCWHtZ7pgt1A-1
+ us-mta-42-ivygr76OMHiz6tvf_Rtt-Q-1; Tue, 28 Apr 2020 13:29:44 -0400
+X-MC-Unique: ivygr76OMHiz6tvf_Rtt-Q-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 08BE91054F93;
-        Tue, 28 Apr 2020 17:29:37 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 87F7F800C78;
+        Tue, 28 Apr 2020 17:29:42 +0000 (UTC)
 Received: from x1.localdomain.com (ovpn-114-62.ams2.redhat.com [10.36.114.62])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 71BB25C1D4;
-        Tue, 28 Apr 2020 17:29:34 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1DFF95C1D4;
+        Tue, 28 Apr 2020 17:29:39 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>,
@@ -56,11 +56,10 @@ Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v3 03/11] iio: light: cm32181: Add some extra register defines
-Date:   Tue, 28 Apr 2020 19:29:15 +0200
-Message-Id: <20200428172923.567806-3-hdegoede@redhat.com>
+        linux-iio@vger.kernel.org
+Subject: [PATCH v3 05/11] iio: light: cm32181: Clean up the probe function a bit
+Date:   Tue, 28 Apr 2020 19:29:17 +0200
+Message-Id: <20200428172923.567806-5-hdegoede@redhat.com>
 In-Reply-To: <20200428172923.567806-1-hdegoede@redhat.com>
 References: <20200428172923.567806-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -71,72 +70,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These come from a newer version of cm32181.c, which is floating around
-the net, with a copyright of:
+3 small cleanups to cm32181_probe():
 
- * Copyright (C) 2014 Capella Microsystems Inc.
- * Author: Kevin Tsai <ktsai@capellamicro.com>
- *
- * This program is free software; you can redistribute it and/or modify i=
-t
- * under the terms of the GNU General Public License version 2, as publis=
-hed
- * by the Free Software Foundation.
+1. Do not log an error when we fail to allocate memory (as a general
+rule drivers do not log errors for this as the kernel will already
+have complained loudly that it could not alloc the mem).
 
-Note that this removes the bogus CM32181_CMD_ALS_ENABLE define, there
-is no enable bit, only a disable bit and enabled is the absence of
-being disabled.
+2. Remove the i2c_set_clientdata() call, we never use i2c_get_clientdata(=
+)
+or dev_get_drvdata() anywhere.
 
-This is a preparation patch for adding support for the older
-CM3218 model of the light sensor.
+3. Add a dev helper variable and use it in various places instead of
+&client->dev.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/iio/light/cm32181.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+Changes in v3:
+- This is a new patch in v3 of this patch-set
+---
+ drivers/iio/light/cm32181.c | 22 ++++++++--------------
+ 1 file changed, 8 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
-index 5ca8bbf6667c..6fc0a753c499 100644
+index 065bc7a11f84..8fe49610fc26 100644
 --- a/drivers/iio/light/cm32181.c
 +++ b/drivers/iio/light/cm32181.c
-@@ -18,6 +18,9 @@
+@@ -326,41 +326,35 @@ static const struct iio_info cm32181_info =3D {
 =20
- /* Registers Address */
- #define CM32181_REG_ADDR_CMD		0x00
-+#define CM32181_REG_ADDR_WH		0x01
-+#define CM32181_REG_ADDR_WL		0x02
-+#define CM32181_REG_ADDR_TEST		0x03
- #define CM32181_REG_ADDR_ALS		0x04
- #define CM32181_REG_ADDR_STATUS		0x06
- #define CM32181_REG_ADDR_ID		0x07
-@@ -26,9 +29,13 @@
- #define CM32181_CONF_REG_NUM		0x01
+ static int cm32181_probe(struct i2c_client *client)
+ {
++	struct device *dev =3D &client->dev;
+ 	struct cm32181_chip *cm32181;
+ 	struct iio_dev *indio_dev;
+ 	int ret;
 =20
- /* CMD register */
--#define CM32181_CMD_ALS_ENABLE		0x00
--#define CM32181_CMD_ALS_DISABLE		0x01
--#define CM32181_CMD_ALS_INT_EN		0x02
-+#define CM32181_CMD_ALS_DISABLE		BIT(0)
-+#define CM32181_CMD_ALS_INT_EN		BIT(1)
-+#define CM32181_CMD_ALS_THRES_WINDOW	BIT(2)
-+
-+#define CM32181_CMD_ALS_PERS_SHIFT	4
-+#define CM32181_CMD_ALS_PERS_MASK	(0x03 << CM32181_CMD_ALS_PERS_SHIFT)
-+#define CM32181_CMD_ALS_PERS_DEFAULT	(0x01 << CM32181_CMD_ALS_PERS_SHIFT=
-)
+-	indio_dev =3D devm_iio_device_alloc(&client->dev, sizeof(*cm32181));
+-	if (!indio_dev) {
+-		dev_err(&client->dev, "devm_iio_device_alloc failed\n");
++	indio_dev =3D devm_iio_device_alloc(dev, sizeof(*cm32181));
++	if (!indio_dev)
+ 		return -ENOMEM;
+-	}
 =20
- #define CM32181_CMD_ALS_IT_SHIFT	6
- #define CM32181_CMD_ALS_IT_MASK		(0x0F << CM32181_CMD_ALS_IT_SHIFT)
-@@ -82,7 +89,7 @@ static int cm32181_reg_init(struct cm32181_chip *cm3218=
-1)
- 		return -ENODEV;
+ 	cm32181 =3D iio_priv(indio_dev);
+-	i2c_set_clientdata(client, indio_dev);
+ 	cm32181->client =3D client;
 =20
- 	/* Default Values */
--	cm32181->conf_regs[CM32181_REG_ADDR_CMD] =3D CM32181_CMD_ALS_ENABLE |
-+	cm32181->conf_regs[CM32181_REG_ADDR_CMD] =3D
- 			CM32181_CMD_ALS_IT_DEFAULT | CM32181_CMD_ALS_SM_DEFAULT;
- 	cm32181->calibscale =3D CM32181_CALIBSCALE_DEFAULT;
+ 	mutex_init(&cm32181->lock);
+-	indio_dev->dev.parent =3D &client->dev;
++	indio_dev->dev.parent =3D dev;
+ 	indio_dev->channels =3D cm32181_channels;
+ 	indio_dev->num_channels =3D ARRAY_SIZE(cm32181_channels);
+ 	indio_dev->info =3D &cm32181_info;
+-	indio_dev->name =3D dev_name(&client->dev);
++	indio_dev->name =3D dev_name(dev);
+ 	indio_dev->modes =3D INDIO_DIRECT_MODE;
+=20
+ 	ret =3D cm32181_reg_init(cm32181);
+ 	if (ret) {
+-		dev_err(&client->dev,
+-			"%s: register init failed\n",
+-			__func__);
++		dev_err(dev, "%s: register init failed\n", __func__);
+ 		return ret;
+ 	}
+=20
+-	ret =3D devm_iio_device_register(&client->dev, indio_dev);
++	ret =3D devm_iio_device_register(dev, indio_dev);
+ 	if (ret) {
+-		dev_err(&client->dev,
+-			"%s: regist device failed\n",
+-			__func__);
++		dev_err(dev, "%s: regist device failed\n", __func__);
+ 		return ret;
+ 	}
 =20
 --=20
 2.26.0
