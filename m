@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17016C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA85AC83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB7EE206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4EAF206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100058;
-	bh=noDKrL1XZ7S66q2XxiX3wRm8Ysr3RMy4fpVkvvvA9UE=;
+	s=default; t=1588100062;
+	bh=T0bqKDiD0pEiEkKfmreEht0rqWSSsLOrK+hh34wIOiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iytk1gOx20ItvwMour9rxc9KTBIQn0AxL00ZOhuqvwk4lYU/SSbla4r6eNrDDkKcJ
-	 gDcix1kQoV0UxvmgFgnCjVXrH/0+J322djbywAM5uPbKDqhihLT7grYG5p5zRJ26Iy
-	 MgmT16QrRTo5S6bvP+ZsxGfCJkXf4oJDqpHwm1XE=
+	b=2AoEddUQWVybzzqTiRgoxvsHrMSSSKP28lcPvB8jlsx9iLrztAVv1dOmXTSWV9VEc
+	 IZkt5bSB49nBWEgVNS0Xo2yD7TJrWSEbpXCT4cr1L4J5LyKk0ayT37VlYIxRCbX6tg
+	 BAeQdgLs/lHcuQTjesNH+L7rHtjILaC0jrZtGqdc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730757AbgD1SyS (ORCPT
+        id S1730002AbgD1Sdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:54:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50640 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:33:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729263AbgD1Sd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:33:59 -0400
+        id S1729991AbgD1Sdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:33:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFA5020B80;
-        Tue, 28 Apr 2020 18:33:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27F112085B;
+        Tue, 28 Apr 2020 18:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098839;
-        bh=noDKrL1XZ7S66q2XxiX3wRm8Ysr3RMy4fpVkvvvA9UE=;
+        s=default; t=1588098829;
+        bh=T0bqKDiD0pEiEkKfmreEht0rqWSSsLOrK+hh34wIOiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oyo8WMYKvNqilE2qNhfsDe6xJLgIqlLnR15TV2HlG2AIuDixQyVBXdlc1sZPxz85z
-         TSdXv5n6mt2SoZ0OMqFgxs47PgZpex3QSAjYdpC7ttSY6r0teG8KA6vtOmrHRr5dC9
-         sdpoFO1uFZ3zfSRI89MiMLXybiW/HPzl4GDIw90I=
+        b=rExksM+EemtyZ3o9ed1mouvzCla+RKu/6Dox/v9SPM7RgIAX5EOiauLMA4ZGtHdJa
+         wIBweI1cPTvKiVAJaJe7/EhZq2t9A65Fdh9D8iIGxRUT6YYhtqdA2U0q6+FQ05VBYe
+         juc49j3900mKecXn796yU3wgFVQGP4Q+FDlbhYog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 063/131] tcp: cache line align MAX_TCP_HEADER
-Date:   Tue, 28 Apr 2020 20:24:35 +0200
-Message-Id: <20200428182232.875882123@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Cyril Roelandt <tipecaml@gmail.com>
+Subject: [PATCH 5.6 117/167] usb-storage: Add unusual_devs entry for JMicron JMS566
+Date:   Tue, 28 Apr 2020 20:24:53 +0200
+Message-Id: <20200428182240.026643076@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,38 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-[ Upstream commit 9bacd256f1354883d3c1402655153367982bba49 ]
+commit 94f9c8c3c404ee1f7aaff81ad4f24aec4e34a78b upstream.
 
-TCP stack is dumb in how it cooks its output packets.
+Cyril Roelandt reports that his JMicron JMS566 USB-SATA bridge fails
+to handle WRITE commands with the FUA bit set, even though it claims
+to support FUA.  (Oddly enough, a later version of the same bridge,
+version 2.03 as opposed to 1.14, doesn't claim to support FUA.  Also
+oddly, the bridge _does_ support FUA when using the UAS transport
+instead of the Bulk-Only transport -- but this device was blacklisted
+for uas in commit bc3bdb12bbb3 ("usb-storage: Disable UAS on JMicron
+SATA enclosure") for apparently unrelated reasons.)
 
-Depending on MAX_HEADER value, we might chose a bad ending point
-for the headers.
+This patch adds a usb-storage unusual_devs entry with the BROKEN_FUA
+flag.  This allows the bridge to work properly with usb-storage.
 
-If we align the end of TCP headers to cache line boundary, we
-make sure to always use the smallest number of cache lines,
-which always help.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Soheil Hassas Yeganeh <soheil@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-and-tested-by: Cyril Roelandt <tipecaml@gmail.com>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2004221613110.11262-100000@iolanthe.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/tcp.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -53,7 +53,7 @@ extern struct inet_hashinfo tcp_hashinfo
- extern struct percpu_counter tcp_orphan_count;
- void tcp_time_wait(struct sock *sk, int state, int timeo);
+---
+ drivers/usb/storage/unusual_devs.h |    7 +++++++
+ 1 file changed, 7 insertions(+)
+
+--- a/drivers/usb/storage/unusual_devs.h
++++ b/drivers/usb/storage/unusual_devs.h
+@@ -2323,6 +2323,13 @@ UNUSUAL_DEV(  0x3340, 0xffff, 0x0000, 0x
+ 		USB_SC_DEVICE,USB_PR_DEVICE,NULL,
+ 		US_FL_MAX_SECTORS_64 ),
  
--#define MAX_TCP_HEADER	(128 + MAX_HEADER)
-+#define MAX_TCP_HEADER	L1_CACHE_ALIGN(128 + MAX_HEADER)
- #define MAX_TCP_OPTION_SPACE 40
- #define TCP_MIN_SND_MSS		48
- #define TCP_MIN_GSO_SIZE	(TCP_MIN_SND_MSS - MAX_TCP_OPTION_SPACE)
++/* Reported by Cyril Roelandt <tipecaml@gmail.com> */
++UNUSUAL_DEV(  0x357d, 0x7788, 0x0114, 0x0114,
++		"JMicron",
++		"USB to ATA/ATAPI Bridge",
++		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
++		US_FL_BROKEN_FUA ),
++
+ /* Reported by Andrey Rahmatullin <wrar@altlinux.org> */
+ UNUSUAL_DEV(  0x4102, 0x1020, 0x0100,  0x0100,
+ 		"iRiver",
 
 
