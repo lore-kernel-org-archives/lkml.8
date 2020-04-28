@@ -2,152 +2,122 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA367C83009
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1454C83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C82CA206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:55:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JJM3sOrR"
+	by mail.kernel.org (Postfix) with ESMTP id 8534B206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgD1NzB (ORCPT
+        id S1727983AbgD1NzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:55:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727921AbgD1Ny7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:54:59 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98898C03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 06:54:59 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id t14so24726537wrw.12
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 06:54:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=y4R3VnlEi2z5e9sIaP90X1Xt8ogqQzWAFd5IDdJculE=;
-        b=JJM3sOrRHFZiVfnWGdSakzblHcv7JX3BvvX2/h97d8aeprfJN//zyI26TJIp+jtPY/
-         4HrFhR9QrEYH/p29K7RIUSoJD1T2OjM2lOFlOMnu//pAHmVUeH7A2eAAsKNYpO9ueAs2
-         4fPfQ8vAiUAjgVg/2Jmw82zkQUuPHpMlOUmxJV1bH+cU4i399cjjXdoFdq3pFPmYUx1T
-         vT7vGj3l1YiC3xMJUfq9baoMdoKeUm4a421T8WL45h90URhKfiBrzFOZmSodBEo3ITRd
-         TvHpZAOX9Bj7TlhU21ea3qZG4n6hRRWDiHFWfDAier17llPtDdbRVBJmUbFwPStooCFh
-         /dZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=y4R3VnlEi2z5e9sIaP90X1Xt8ogqQzWAFd5IDdJculE=;
-        b=q8Jj3TXS7TCeFCp0+wy4pzACfzdtzY2BWCzonRmKqpQZ+HlRo6nZtTSk3CHFF74cUe
-         E74ihAxaSmdQmtfBdcQ/1MGy8ppe3rH0Bd0Rpzvngeanm62HU56IJzS4wPYREUy3FQJA
-         DKNMd1KisJ0C9R98zktFlTJCZ42da87FQpaASs4oYi/LdNlEpmHaj2IO83h8J5WL3Q5Z
-         72UDLTus/TRUPNJYZrkU8bmvTOXBYIpzzHzOYG87JZhPAC98vTycF5DoMQvBN0IiTJ4G
-         JxPEyShkZcDbnqGo2azg4NFE8cYRBcWe2DuOYt3pnvmppLYr57T64A57z3GyceyxofcE
-         j4RA==
-X-Gm-Message-State: AGi0PuaqTeTol1iC2qbiP4VuEDGRjEoa5UduZbQJ/E41YsXsY54IRPqh
-        XNOttggHi0duh7QnWwDjUeOy9Q==
-X-Google-Smtp-Source: APiQypIgyNgC6uyVKLvHFUkGnGak2AElpTZPwJhrf3lsXoErO6m8fGbfE7BWOG5yBnFfbrAITeMsxQ==
-X-Received: by 2002:adf:e586:: with SMTP id l6mr32840757wrm.184.1588082098287;
-        Tue, 28 Apr 2020 06:54:58 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id d143sm3330771wmd.16.2020.04.28.06.54.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 06:54:57 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 14:54:56 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     dianders@chromium.org, linux-serial@vger.kernel.org,
-        linux@armlinux.org.uk, gregkh@linuxfoundation.org, jslaby@suse.com,
-        jason.wessel@windriver.com, kgdb-bugreport@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] serial: amba-pl011: Support earlycon_kgdboc
-Message-ID: <20200428135456.2d7zxz2mdte5kclk@holly.lan>
-References: <1587716031-28199-1-git-send-email-sumit.garg@linaro.org>
+        Tue, 28 Apr 2020 09:55:05 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59976 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726868AbgD1NzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 09:55:05 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id D7F1FFE6ACFFF91720DA;
+        Tue, 28 Apr 2020 21:54:47 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.100) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Tue, 28 Apr 2020
+ 21:54:39 +0800
+Subject: Re: [PATCH] fs/ceph:fix double unlock in handle_cap_export()
+To:     "Yan, Zheng" <ukernel@gmail.com>
+CC:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        "Ilya Dryomov" <idryomov@gmail.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        <liuzhiqiang26@huawei.com>, <linfeilong@huawei.com>
+References: <1588077962-353994-1-git-send-email-wubo40@huawei.com>
+ <CAAM7YAnWM4oHgwBNXQWY5BOMDmZ9Pbqdd7N0DDedTO6HxQQeqg@mail.gmail.com>
+From:   Wu Bo <wubo40@huawei.com>
+Message-ID: <f40f07f4-27b8-5308-80f6-9d2904c8dd52@huawei.com>
+Date:   Tue, 28 Apr 2020 21:54:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587716031-28199-1-git-send-email-sumit.garg@linaro.org>
+In-Reply-To: <CAAM7YAnWM4oHgwBNXQWY5BOMDmZ9Pbqdd7N0DDedTO6HxQQeqg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.100]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 01:43:51PM +0530, Sumit Garg wrote:
-> Implement the read() function in the early console driver. With
-> recently added earlycon_kgdboc feature, this allows you to use kgdb
-> to debug fairly early into the system boot.
+On 2020/4/28 21:41, Yan, Zheng wrote:
+> On Tue, Apr 28, 2020 at 8:50 PM Wu Bo <wubo40@huawei.com> wrote:
+>>
+>> If the ceph_mdsc_open_export_target_session() return fails,
+>> should add a lock to avoid twice unlocking.
+>> Because the lock will be released at the retry or out_unlock tag.
+>>
 > 
-> We only bother implementing this if polling is enabled since kgdb can't
-> be enabled without that.
-> 
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> at retry label, i_ceph_lock get locked. I don't see how i_ceph_lock
+> can get double unlock
+>sorry, maybe I didn't describe it clearly enough, not i_ceph_lock, but 
+session->s_mutex.
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Thanks.
+
+Wu Bo
+>> Signed-off-by: Wu Bo <wubo40@huawei.com>
+>> ---
+>>   fs/ceph/caps.c | 26 ++++++++++++++------------
+>>   1 file changed, 14 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+>> index 185db76..b5a62a8 100644
+>> --- a/fs/ceph/caps.c
+>> +++ b/fs/ceph/caps.c
+>> @@ -3731,22 +3731,24 @@ static void handle_cap_export(struct inode *inode, struct ceph_mds_caps *ex,
+>>
+>>          /* open target session */
+>>          tsession = ceph_mdsc_open_export_target_session(mdsc, target);
+>> -       if (!IS_ERR(tsession)) {
+>> -               if (mds > target) {
+>> -                       mutex_lock(&session->s_mutex);
+>> -                       mutex_lock_nested(&tsession->s_mutex,
+>> -                                         SINGLE_DEPTH_NESTING);
+>> -               } else {
+>> -                       mutex_lock(&tsession->s_mutex);
+>> -                       mutex_lock_nested(&session->s_mutex,
+>> -                                         SINGLE_DEPTH_NESTING);
+>> -               }
+>> -               new_cap = ceph_get_cap(mdsc, NULL);
+>> -       } else {
+>> +       if (IS_ERR(tsession)) {
+>>                  WARN_ON(1);
+>>                  tsession = NULL;
+>>                  target = -1;
+>> +               mutex_lock(&session->s_mutex);
+>> +               goto out_unlock;
+>> +       }
+>> +
+>> +       if (mds > target) {
+>> +               mutex_lock(&session->s_mutex);
+>> +               mutex_lock_nested(&tsession->s_mutex,
+>> +                                       SINGLE_DEPTH_NESTING);
+>> +       } else {
+>> +               mutex_lock(&tsession->s_mutex);
+>> +               mutex_lock_nested(&session->s_mutex,
+>> +                                       SINGLE_DEPTH_NESTING);
+>>          }
+>> +       new_cap = ceph_get_cap(mdsc, NULL);
+>>          goto retry;
+>>
+>>   out_unlock:
+>> --
+>> 1.8.3.1
+>>
+> 
+> .
+> 
 
 
-> ---
-> 
-> Depends on kgdb patch series: https://lkml.org/lkml/2020/4/21/1179
-> 
->  drivers/tty/serial/amba-pl011.c | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-> index 2296bb0..c010f63 100644
-> --- a/drivers/tty/serial/amba-pl011.c
-> +++ b/drivers/tty/serial/amba-pl011.c
-> @@ -2435,6 +2435,37 @@ static void pl011_early_write(struct console *con, const char *s, unsigned n)
->  	uart_console_write(&dev->port, s, n, pl011_putc);
->  }
->  
-> +#ifdef CONFIG_CONSOLE_POLL
-> +static int pl011_getc(struct uart_port *port)
-> +{
-> +	if (readl(port->membase + UART01x_FR) & UART01x_FR_RXFE)
-> +		return NO_POLL_CHAR;
-> +
-> +	if (port->iotype == UPIO_MEM32)
-> +		return readl(port->membase + UART01x_DR);
-> +	else
-> +		return readb(port->membase + UART01x_DR);
-> +}
-> +
-> +static int pl011_early_read(struct console *con, char *s, unsigned int n)
-> +{
-> +	struct earlycon_device *dev = con->data;
-> +	int ch, num_read = 0;
-> +
-> +	while (num_read < n) {
-> +		ch = pl011_getc(&dev->port);
-> +		if (ch == NO_POLL_CHAR)
-> +			break;
-> +
-> +		s[num_read++] = ch;
-> +	}
-> +
-> +	return num_read;
-> +}
-> +#else
-> +#define pl011_early_read NULL
-> +#endif
-> +
->  /*
->   * On non-ACPI systems, earlycon is enabled by specifying
->   * "earlycon=pl011,<address>" on the kernel command line.
-> @@ -2454,6 +2485,7 @@ static int __init pl011_early_console_setup(struct earlycon_device *device,
->  		return -ENODEV;
->  
->  	device->con->write = pl011_early_write;
-> +	device->con->read = pl011_early_read;
->  
->  	return 0;
->  }
-> -- 
-> 2.7.4
-> 
