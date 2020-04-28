@@ -2,348 +2,238 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A95DC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2396C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 320DA2076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB06E2083B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:15:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k+UJBrGV"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="uadpuLjb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgD1VPN (ORCPT
+        id S1727107AbgD1VPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:15:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41098 "EHLO
+        Tue, 28 Apr 2020 17:15:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726773AbgD1VOW (ORCPT
+        by vger.kernel.org with ESMTP id S1727089AbgD1VPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:14:22 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B802C03C1AD
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 14:14:22 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 18so10208057pfv.8
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 14:14:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qB+lqC2cvzJldiuAiejXSmyPHD6gcQO32mtwTJkQS1M=;
-        b=k+UJBrGVYqRkqcsb8U0EcI6eZRSwmbw3z3q3pjyZwBAoVCJU+nbu9OhwRJOzTEb+kT
-         7ln6dbUf54Zh53MI8jUe0D4kopUeS4ibKa2iALMcnLlRh6b5rIAFMwiSLEPuZZnE8toJ
-         XxDd0+hyVTSIMv0wYncrYzfjYvQunGJdzUh+8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qB+lqC2cvzJldiuAiejXSmyPHD6gcQO32mtwTJkQS1M=;
-        b=rm3PKl7H07YDslnWy2KgMwdiP9wbcO0NCnPIIjMI2J5bYuKOM6238qrcQUFn4NGgnY
-         o1DM6NdDGdf3HAw24/DuEsASLA8onoTZEcRIhJ5tKcppI4RRIL7ZD4lbfc5GKR4OJjUa
-         MuUKRYBV3qUxny7vu7b+FK0Y9z6HdqcffL4h7fHMUrA2dSSy2zgfZ6/ghI7+5tNK3G7z
-         fuW8X28JlWiAJSZoHAsxpkMn7X1WaZex/auWoiUbK9NHQp86K0Y9kv9LNEDllm9l4gpM
-         pzKIZAQLjiW1ZrtahBhsQBSReI67Lfg0/gonA8FmrXS3FMbeQ2hILjMrleP/MBLplOAa
-         cySw==
-X-Gm-Message-State: AGi0PuZXR77IW2uYq2LLXoZw5ABs3MVXoMVmlYbgo6vFbijb1wbRAfn4
-        zvk9ilFtlwJUodRU3vaE0w7ABw==
-X-Google-Smtp-Source: APiQypKUtAjxThDAF84FUuPXoEdshhIqtD9YaTVJ06yGp1xT/Yn88HgZIek/sFOA/ckN6ZdzhTB5Nw==
-X-Received: by 2002:a63:141:: with SMTP id 62mr16153505pgb.101.1588108462024;
-        Tue, 28 Apr 2020 14:14:22 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id 18sm2988202pjf.30.2020.04.28.14.14.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 14:14:21 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     jason.wessel@windriver.com, daniel.thompson@linaro.org,
-        gregkh@linuxfoundation.org
-Cc:     agross@kernel.org, kgdb-bugreport@lists.sourceforge.net,
-        catalin.marinas@arm.com, linux-serial@vger.kernel.org,
-        sumit.garg@linaro.org, corbet@lwn.net, mingo@redhat.com,
-        will@kernel.org, hpa@zytor.com, tglx@linutronix.de,
-        frowand.list@gmail.com, bp@alien8.de, bjorn.andersson@linaro.org,
-        jslaby@suse.com, Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 03/11] kgdboc: Use a platform device to handle tty drivers showing up late
-Date:   Tue, 28 Apr 2020 14:13:43 -0700
-Message-Id: <20200428141218.v3.3.I4a493cfb0f9f740ce8fd2ab58e62dc92d18fed30@changeid>
-X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-In-Reply-To: <20200428211351.85055-1-dianders@chromium.org>
-References: <20200428211351.85055-1-dianders@chromium.org>
+        Tue, 28 Apr 2020 17:15:12 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E79EC03C1AC;
+        Tue, 28 Apr 2020 14:15:12 -0700 (PDT)
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id EA7BD22723;
+        Tue, 28 Apr 2020 23:15:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1588108510;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=DM6n7RNsmhoSxxAKEVPc3W8HQFHK3ap5WeCMwOzIOHE=;
+        b=uadpuLjbZ9SEDmqwKOZR9UnzcOFbOKbYXqTGftF91Wi29dGETpN7qcV21N4AtkV8e7bH/n
+        GWSZhBk+7Jo6TAocbb62b9L8wRSLFkOeQTGLLIrfeFyAUks+i1S2iLaRTuhRQ5JAvXMBc+
+        8EhLbKFgjVf1fQLsja1uXXqHmmv6sNU=
+From:   Michael Walle <michael@walle.cc>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH net-next] net: phy: at803x: add downshift support
+Date:   Tue, 28 Apr 2020 23:15:02 +0200
+Message-Id: <20200428211502.1290-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: EA7BD22723
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[8];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
+         FREEMAIL_CC(0.00)[lunn.ch,gmail.com,armlinux.org.uk,davemloft.net,walle.cc];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If you build CONFIG_KGDB_SERIAL_CONSOLE into the kernel then you
-should be able to have KGDB init itself at bootup by specifying the
-"kgdboc=..." kernel command line parameter.  This has worked OK for me
-for many years, but on a new device I switched to it stopped working.
+The AR8031 and AR8035 support the link speed downshift. Add driver
+support for it. One peculiarity of these PHYs is that it needs a
+software reset after changing the setting, thus add the .soft_reset()
+op and do a phy_init_hw() if necessary.
 
-The problem is that on this new device the serial driver gets its
-probe deferred.  Now when kgdb initializes it can't find the tty
-driver and when it gives up it never tries again.
+This was tested on a custom board with the AR8031.
 
-We could try to find ways to move up the initialization of the serial
-driver and such a thing might be worthwhile, but it's nice to be
-robust against serial drivers that load late.  We could move kgdb to
-init itself later but that penalizes our ability to debug early boot
-code on systems where the driver inits early.  We could roll our own
-system of detecting when new tty drivers get loaded and then use that
-to figure out when kgdb can init, but that's ugly.
-
-Instead, let's jump on the -EPROBE_DEFER bandwagon.  We'll create a
-singleton instance of a "kgdboc" platform device.  If we can't find
-our tty device when the singleton "kgdboc" probes we'll return
--EPROBE_DEFER which means that the system will call us back later to
-try again when the tty device might be there.
-
-We won't fully transition all of the kgdboc to a platform device
-because early kgdb initialization (via the "ekgdboc" kernel command
-line parameter) still runs before the platform device has been
-created.  The kgdb platform device is merely used as a convenient way
-to hook into the system's normal probe deferral mechanisms.
-
-As part of this, we'll ever-so-slightly change how the "kgdboc=..."
-kernel command line parameter works.  Previously if you booted up and
-kgdb couldn't find the tty driver then later reading
-'/sys/module/kgdboc/parameters/kgdboc' would return a blank string.
-Now kgdb will keep track of the string that came as part of the
-command line and give it back to you.  It's expected that this should
-be an OK change.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Signed-off-by: Michael Walle <michael@walle.cc>
 ---
+ drivers/net/phy/at803x.c | 87 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
 
-Changes in v3: None
-Changes in v2: None
-
- drivers/tty/serial/kgdboc.c | 126 +++++++++++++++++++++++++++++-------
- 1 file changed, 101 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-index 8a1a4d1b6768..519d8cfbfbed 100644
---- a/drivers/tty/serial/kgdboc.c
-+++ b/drivers/tty/serial/kgdboc.c
-@@ -20,6 +20,7 @@
- #include <linux/vt_kern.h>
- #include <linux/input.h>
- #include <linux/module.h>
-+#include <linux/platform_device.h>
+diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+index 31b6edcc1fd1..f4fec5f644e9 100644
+--- a/drivers/net/phy/at803x.c
++++ b/drivers/net/phy/at803x.c
+@@ -43,6 +43,9 @@
+ #define AT803X_INTR_STATUS			0x13
  
- #define MAX_CONFIG_LEN		40
+ #define AT803X_SMART_SPEED			0x14
++#define AT803X_SMART_SPEED_ENABLE		BIT(5)
++#define AT803X_SMART_SPEED_RETRY_LIMIT_MASK	GENMASK(4, 2)
++#define AT803X_SMART_SPEED_BYPASS_TIMER		BIT(1)
+ #define AT803X_LED_CONTROL			0x18
  
-@@ -27,6 +28,7 @@ static struct kgdb_io		kgdboc_io_ops;
+ #define AT803X_DEVICE_ADDR			0x03
+@@ -103,6 +106,10 @@
+ #define AT803X_CLK_OUT_STRENGTH_HALF		1
+ #define AT803X_CLK_OUT_STRENGTH_QUARTER		2
  
- /* -1 = init not run yet, 0 = unconfigured, 1 = configured. */
- static int configured		= -1;
-+DEFINE_MUTEX(config_mutex);
- 
- static char config[MAX_CONFIG_LEN];
- static struct kparam_string kps = {
-@@ -38,6 +40,8 @@ static int kgdboc_use_kms;  /* 1 if we use kernel mode switching */
- static struct tty_driver	*kgdb_tty_driver;
- static int			kgdb_tty_line;
- 
-+static struct platform_device *kgdboc_pdev;
++#define AT803X_DEFAULT_DOWNSHIFT 5
++#define AT803X_MIN_DOWNSHIFT 2
++#define AT803X_MAX_DOWNSHIFT 9
 +
- #ifdef CONFIG_KDB_KEYBOARD
- static int kgdboc_reset_connect(struct input_handler *handler,
- 				struct input_dev *dev,
-@@ -133,11 +137,13 @@ static void kgdboc_unregister_kbd(void)
- 
- static void cleanup_kgdboc(void)
- {
-+	if (configured != 1)
-+		return;
-+
- 	if (kgdb_unregister_nmi_console())
- 		return;
- 	kgdboc_unregister_kbd();
--	if (configured == 1)
--		kgdb_unregister_io_module(&kgdboc_io_ops);
-+	kgdb_unregister_io_module(&kgdboc_io_ops);
- }
- 
- static int configure_kgdboc(void)
-@@ -198,20 +204,79 @@ static int configure_kgdboc(void)
- 	kgdb_unregister_io_module(&kgdboc_io_ops);
- noconfig:
- 	kgdboc_unregister_kbd();
--	config[0] = 0;
- 	configured = 0;
--	cleanup_kgdboc();
- 
- 	return err;
- }
- 
-+static int kgdboc_probe(struct platform_device *pdev)
-+{
-+	int ret = 0;
-+
-+	mutex_lock(&config_mutex);
-+	if (configured != 1) {
-+		ret = configure_kgdboc();
-+
-+		/* Convert "no device" to "defer" so we'll keep trying */
-+		if (ret == -ENODEV)
-+			ret = -EPROBE_DEFER;
-+	}
-+	mutex_unlock(&config_mutex);
-+
-+	return ret;
-+}
-+
-+static struct platform_driver kgdboc_platform_driver = {
-+	.probe = kgdboc_probe,
-+	.driver = {
-+		.name = "kgdboc",
-+		.suppress_bind_attrs = true,
-+	},
-+};
-+
- static int __init init_kgdboc(void)
- {
--	/* Already configured? */
--	if (configured == 1)
-+	int ret;
-+
-+	/*
-+	 * kgdboc is a little bit of an odd "platform_driver".  It can be
-+	 * up and running long before the platform_driver object is
-+	 * created and thus doesn't actually store anything in it.  There's
-+	 * only one instance of kgdb so anything is stored as global state.
-+	 * The platform_driver is only created so that we can leverage the
-+	 * kernel's mechanisms (like -EPROBE_DEFER) to call us when our
-+	 * underlying tty is ready.  Here we init our platform driver and
-+	 * then create the single kgdboc instance.
-+	 */
-+	ret = platform_driver_register(&kgdboc_platform_driver);
-+	if (ret)
-+		return ret;
-+
-+	kgdboc_pdev = platform_device_alloc("kgdboc", PLATFORM_DEVID_NONE);
-+	if (!kgdboc_pdev) {
-+		ret = -ENOMEM;
-+		goto err_did_register;
-+	}
-+
-+	ret = platform_device_add(kgdboc_pdev);
-+	if (!ret)
- 		return 0;
- 
--	return configure_kgdboc();
-+	platform_device_put(kgdboc_pdev);
-+
-+err_did_register:
-+	platform_driver_unregister(&kgdboc_platform_driver);
-+	return ret;
-+}
-+
-+static void exit_kgdboc(void)
-+{
-+	mutex_lock(&config_mutex);
-+	cleanup_kgdboc();
-+	mutex_unlock(&config_mutex);
-+
-+	platform_device_unregister(kgdboc_pdev);
-+	platform_driver_unregister(&kgdboc_platform_driver);
- }
- 
- static int kgdboc_get_char(void)
-@@ -234,24 +299,20 @@ static int param_set_kgdboc_var(const char *kmessage,
- 				const struct kernel_param *kp)
- {
- 	size_t len = strlen(kmessage);
-+	int ret = 0;
- 
- 	if (len >= MAX_CONFIG_LEN) {
- 		pr_err("config string too long\n");
- 		return -ENOSPC;
- 	}
- 
--	/* Only copy in the string if the init function has not run yet */
--	if (configured < 0) {
--		strcpy(config, kmessage);
--		return 0;
--	}
--
- 	if (kgdb_connected) {
- 		pr_err("Cannot reconfigure while KGDB is connected.\n");
--
- 		return -EBUSY;
- 	}
- 
-+	mutex_lock(&config_mutex);
-+
- 	strcpy(config, kmessage);
- 	/* Chop out \n char as a result of echo */
- 	if (len && config[len - 1] == '\n')
-@@ -260,8 +321,30 @@ static int param_set_kgdboc_var(const char *kmessage,
- 	if (configured == 1)
- 		cleanup_kgdboc();
- 
--	/* Go and configure with the new params. */
--	return configure_kgdboc();
-+	/*
-+	 * Configure with the new params as long as init already ran.
-+	 * Note that we can get called before init if someone loads us
-+	 * with "modprobe kgdboc kgdboc=..." or if they happen to use the
-+	 * the odd syntax of "kgdboc.kgdboc=..." on the kernel command.
-+	 */
-+	if (configured >= 0)
-+		ret = configure_kgdboc();
-+
-+	/*
-+	 * If we couldn't configure then clear out the config.  Note that
-+	 * specifying an invalid config on the kernel command line vs.
-+	 * through sysfs have slightly different behaviors.  If we fail
-+	 * to configure what was specified on the kernel command line
-+	 * we'll leave it in the 'config' and return -EPROBE_DEFER from
-+	 * our probe.  When specified through sysfs userspace is
-+	 * responsible for loading the tty driver before setting up.
-+	 */
-+	if (ret)
-+		config[0] = '\0';
-+
-+	mutex_unlock(&config_mutex);
-+
-+	return ret;
- }
- 
- static int dbg_restore_graphics;
-@@ -320,15 +403,8 @@ __setup("kgdboc=", kgdboc_option_setup);
- /* This is only available if kgdboc is a built in for early debugging */
- static int __init kgdboc_early_init(char *opt)
- {
--	/* save the first character of the config string because the
--	 * init routine can destroy it.
--	 */
--	char save_ch;
--
- 	kgdboc_option_setup(opt);
--	save_ch = config[0];
--	init_kgdboc();
--	config[0] = save_ch;
-+	configure_kgdboc();
+ #define ATH9331_PHY_ID 0x004dd041
+ #define ATH8030_PHY_ID 0x004dd076
+ #define ATH8031_PHY_ID 0x004dd074
+@@ -713,6 +720,80 @@ static int at803x_read_status(struct phy_device *phydev)
  	return 0;
  }
  
-@@ -336,7 +412,7 @@ early_param("ekgdboc", kgdboc_early_init);
- #endif /* CONFIG_KGDB_SERIAL_CONSOLE */
- 
- module_init(init_kgdboc);
--module_exit(cleanup_kgdboc);
-+module_exit(exit_kgdboc);
- module_param_call(kgdboc, param_set_kgdboc_var, param_get_string, &kps, 0644);
- MODULE_PARM_DESC(kgdboc, "<serial_device>[,baud]");
- MODULE_DESCRIPTION("KGDB Console TTY Driver");
++static int at803x_get_downshift(struct phy_device *phydev, u8 *d)
++{
++	int val;
++
++	val = phy_read(phydev, AT803X_SMART_SPEED);
++	if (val < 0)
++		return val;
++
++	if (val & AT803X_SMART_SPEED_ENABLE)
++		*d = FIELD_GET(AT803X_SMART_SPEED_RETRY_LIMIT_MASK, val) + 2;
++	else
++		*d = DOWNSHIFT_DEV_DISABLE;
++
++	return 0;
++}
++
++static int at803x_set_downshift(struct phy_device *phydev, u8 cnt)
++{
++	u16 mask, set;
++	int ret;
++
++	switch (cnt) {
++	case DOWNSHIFT_DEV_DEFAULT_COUNT:
++		cnt = AT803X_DEFAULT_DOWNSHIFT;
++		fallthrough;
++	case AT803X_MIN_DOWNSHIFT ... AT803X_MAX_DOWNSHIFT:
++		set = AT803X_SMART_SPEED_ENABLE |
++		      AT803X_SMART_SPEED_BYPASS_TIMER |
++		      FIELD_PREP(AT803X_SMART_SPEED_RETRY_LIMIT_MASK, cnt - 2);
++		mask = AT803X_SMART_SPEED_RETRY_LIMIT_MASK;
++		break;
++	case DOWNSHIFT_DEV_DISABLE:
++		set = 0;
++		mask = AT803X_SMART_SPEED_ENABLE |
++		       AT803X_SMART_SPEED_BYPASS_TIMER;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	ret = phy_modify_changed(phydev, AT803X_SMART_SPEED, mask, set);
++
++	/* After changing the smart speed settings, we need to perform a
++	 * software reset, use phy_init_hw() to make sure we set the
++	 * reapply any values which might got lost during software reset.
++	 */
++	if (ret == 1)
++		ret = phy_init_hw(phydev);
++
++	return ret;
++}
++
++static int at803x_get_tunable(struct phy_device *phydev,
++			      struct ethtool_tunable *tuna, void *data)
++{
++	switch (tuna->id) {
++	case ETHTOOL_PHY_DOWNSHIFT:
++		return at803x_get_downshift(phydev, data);
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static int at803x_set_tunable(struct phy_device *phydev,
++			      struct ethtool_tunable *tuna, const void *data)
++{
++	switch (tuna->id) {
++	case ETHTOOL_PHY_DOWNSHIFT:
++		return at803x_set_downshift(phydev, *(const u8 *)data);
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
+ static struct phy_driver at803x_driver[] = {
+ {
+ 	/* Qualcomm Atheros AR8035 */
+@@ -722,6 +803,7 @@ static struct phy_driver at803x_driver[] = {
+ 	.probe			= at803x_probe,
+ 	.remove			= at803x_remove,
+ 	.config_init		= at803x_config_init,
++	.soft_reset		= genphy_soft_reset,
+ 	.set_wol		= at803x_set_wol,
+ 	.get_wol		= at803x_get_wol,
+ 	.suspend		= at803x_suspend,
+@@ -730,6 +812,8 @@ static struct phy_driver at803x_driver[] = {
+ 	.read_status		= at803x_read_status,
+ 	.ack_interrupt		= at803x_ack_interrupt,
+ 	.config_intr		= at803x_config_intr,
++	.get_tunable		= at803x_get_tunable,
++	.set_tunable		= at803x_set_tunable,
+ }, {
+ 	/* Qualcomm Atheros AR8030 */
+ 	.phy_id			= ATH8030_PHY_ID,
+@@ -754,6 +838,7 @@ static struct phy_driver at803x_driver[] = {
+ 	.probe			= at803x_probe,
+ 	.remove			= at803x_remove,
+ 	.config_init		= at803x_config_init,
++	.soft_reset		= genphy_soft_reset,
+ 	.set_wol		= at803x_set_wol,
+ 	.get_wol		= at803x_get_wol,
+ 	.suspend		= at803x_suspend,
+@@ -763,6 +848,8 @@ static struct phy_driver at803x_driver[] = {
+ 	.aneg_done		= at803x_aneg_done,
+ 	.ack_interrupt		= &at803x_ack_interrupt,
+ 	.config_intr		= &at803x_config_intr,
++	.get_tunable		= at803x_get_tunable,
++	.set_tunable		= at803x_set_tunable,
+ }, {
+ 	/* Qualcomm Atheros AR8032 */
+ 	PHY_ID_MATCH_EXACT(ATH8032_PHY_ID),
 -- 
-2.26.2.303.gf8c07b1a785-goog
+2.20.1
 
