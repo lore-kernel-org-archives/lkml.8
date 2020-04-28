@@ -2,111 +2,126 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A38A0C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3A5C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FAC9206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:50:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C5F206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:50:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="R291xHrz"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jCW3hAgZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgD1Ou0 (ORCPT
+        id S1728215AbgD1Ou6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:50:26 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:19212 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727888AbgD1OuX (ORCPT
+        Tue, 28 Apr 2020 10:50:58 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:45370 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727878AbgD1Ou6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:50:23 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588085423; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=840my3Iu6yk+BC/Y1oTomASSkMJd5a+KJg6tqb2LL6I=; b=R291xHrzNWgk48QpPdUgknUupLvopI8GdtrGbl7tjZpqHT47Fu+fGIHwQwmyzb+XUNUAoy7K
- tdxR2HNcQfolLjWRSA2wN0jiAAgOWGJGVmVhi3w25uqIbFCn2qkvxoS/X6OmXpkxN/vAD7UV
- q7OfTFXUAQfVok5yVl5J6qGSLo4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea8429f.7f95c61e3148-smtp-out-n02;
- Tue, 28 Apr 2020 14:50:07 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C0BD0C4478C; Tue, 28 Apr 2020 14:50:06 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AF802C43637;
-        Tue, 28 Apr 2020 14:50:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AF802C43637
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v2 3/8] bus: mhi: core: Read transfer length from an event
- properly
-To:     Bhaumik Bhatt <bbhatt@codeaurora.org>, mani@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hemantk@codeaurora.org
-References: <1588042766-17496-1-git-send-email-bbhatt@codeaurora.org>
- <1588042766-17496-4-git-send-email-bbhatt@codeaurora.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <cbd0698d-52ca-fad6-a658-e6e0009bde66@codeaurora.org>
-Date:   Tue, 28 Apr 2020 08:50:04 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 28 Apr 2020 10:50:58 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SEmpuT116964;
+        Tue, 28 Apr 2020 14:50:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=21bkKoVEDcFItNpAZkSZgketfx0K3t7FQdrYOmCXnPU=;
+ b=jCW3hAgZbJUKMmmZkFPGdiEJOqCIc+5ynLGimPU6zQvVRnxd2ilU5Ou/968dVRCGba6o
+ cHgh1Q0qisyk8aTXXR58Sc1GYi7ZdJ7pSzRf9n7tbLbB8GrTE/VlNlhJbtspwK/Gb5dY
+ T1grJgeG8dc7YXiYrqVU03qn1N+yrMUas3BOW5RbqH8GyqFvM+/TMUcGxwamFc4b4d0z
+ qMe4l8ksN2nKs1wzcRozVgVGNQywFmnKs5pZf4rz3T+GmbkIaULeEGTD7FmgDnnM3qga
+ tjWoIJ+7vxBcUmHsXlBVWdiDadW+7LzML2J+BhIpnkDtAppxfqVZabenkxcVTpn1NDc6 Qw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 30nucg0egh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 14:50:52 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SEb5vD179570;
+        Tue, 28 Apr 2020 14:50:51 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 30my0dbqwf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 14:50:51 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03SEomVU022423;
+        Tue, 28 Apr 2020 14:50:49 GMT
+Received: from [192.168.1.24] (/70.114.128.235)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Apr 2020 07:50:48 -0700
+Subject: Re: [PATCH][next] scsi: qla2xxx: make 1 bit bit-fields unsigned int
+To:     Colin King <colin.king@canonical.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        GR-QLogic-Storage-Upstream@marvell.com,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Arun Easi <aeasi@marvell.com>, linux-scsi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200428102013.1040598-1-colin.king@canonical.com>
+From:   himanshu.madhani@oracle.com
+Organization: Oracle Corporation
+Message-ID: <ba9f540a-f46a-9380-e097-20d02abed2e1@oracle.com>
+Date:   Tue, 28 Apr 2020 09:50:47 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <1588042766-17496-4-git-send-email-bbhatt@codeaurora.org>
+In-Reply-To: <20200428102013.1040598-1-colin.king@canonical.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
+ suspectscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280116
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 priorityscore=1501
+ mlxlogscore=999 impostorscore=0 suspectscore=0 malwarescore=0
+ lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/27/2020 8:59 PM, Bhaumik Bhatt wrote:
-> From: Hemant Kumar <hemantk@codeaurora.org>
-> 
-> When MHI Driver receives an EOT event, it reads xfer_len from the
-> event in the last TRE. The value is under control of the MHI device
-> and never validated by Host MHI driver. The value should never be
-> larger than the real size of the buffer but a malicious device can
-> set the value 0xFFFF as maximum. This causes device to memory
 
-The device will overflow, or the driver?
 
-> overflow (both read or write). Fix this issue by reading minimum of
-> transfer length from event and the buffer length provided.
+On 4/28/20 5:20 AM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
-> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+> The bitfields mpi_fw_dump_reading and mpi_fw_dumped are currently signed
+> which is not recommended as the representation is an implementation defined
+> behaviour.  Fix this by making the bit-fields unsigned ints.
+> 
+> Fixes: cbb01c2f2f63 ("scsi: qla2xxx: Fix MPI failure AEN (8200) handling")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 > ---
->   drivers/bus/mhi/core/main.c | 5 ++++-
->   1 file changed, 4 insertions(+), 1 deletion(-)
+>   drivers/scsi/qla2xxx/qla_def.h | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-> index 1ccd4cc..3d468d9 100644
-> --- a/drivers/bus/mhi/core/main.c
-> +++ b/drivers/bus/mhi/core/main.c
-> @@ -521,7 +521,10 @@ static int parse_xfer_event(struct mhi_controller *mhi_cntrl,
->   				mhi_cntrl->unmap_single(mhi_cntrl, buf_info);
->   
->   			result.buf_addr = buf_info->cb_buf;
-> -			result.bytes_xferd = xfer_len;
-> +
-> +			/* truncate to buf len if xfer_len is larger */
-> +			result.bytes_xferd =
-> +				min_t(u16, xfer_len, buf_info->len);
->   			mhi_del_ring_element(mhi_cntrl, buf_ring);
->   			mhi_del_ring_element(mhi_cntrl, tre_ring);
->   			local_rp = tre_ring->rp;
+> diff --git a/drivers/scsi/qla2xxx/qla_def.h b/drivers/scsi/qla2xxx/qla_def.h
+> index daa9e936887b..172ea4e5887d 100644
+> --- a/drivers/scsi/qla2xxx/qla_def.h
+> +++ b/drivers/scsi/qla2xxx/qla_def.h
+> @@ -4248,8 +4248,8 @@ struct qla_hw_data {
+>   	int		fw_dump_reading;
+>   	void		*mpi_fw_dump;
+>   	u32		mpi_fw_dump_len;
+> -	int		mpi_fw_dump_reading:1;
+> -	int		mpi_fw_dumped:1;
+> +	unsigned int	mpi_fw_dump_reading:1;
+> +	unsigned int	mpi_fw_dumped:1;
+>   	int		prev_minidump_failed;
+>   	dma_addr_t	eft_dma;
+>   	void		*eft;
 > 
 
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
 
 -- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Himanshu Madhani
+Oracle Linux Engineering
