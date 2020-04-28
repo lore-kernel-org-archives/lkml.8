@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C25C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF7FC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B72CB20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9545E21707
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:27:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098420;
-	bh=ddR3lY7X7Py94OEnLYZZsrm3gr2MaNXEqKJZwflfaEg=;
+	s=default; t=1588098423;
+	bh=iljF7Edtms053YjF9mQtzQ/ve2E9hUgK2Tcg3enhmPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y3tgQGoSA+m4FJUzgBmviGAmJLhvlvboJhKDG59C00S6aRFSPFzD52GIC3sY6MpBv
-	 Dk6kvA7v4SWyGyVEjTnugb4YLevS/V4T+g7w777a/yDUvtDB5My78RqZUtWewNnCO3
-	 IVVNqPQws7BDOqFtwlu+og14yhyrJ23DQBVdS23I=
+	b=umceLce9CD4R4a7k/gZTu3FxViEsLRvVPmJfeax9ucDBfPrAeoKFHGhT8EhATqqQS
+	 lduEpxP3jgzK5cN0d7afHuqxv22YJfeuHAsSW1wEPQMM6KIEh0XSBClmERL6a1stFj
+	 T2EKdNxAwx09MFBGD6HZKd+Yy2NioebHJDF9+ATI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbgD1S07 (ORCPT
+        id S1728883AbgD1S1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:26:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38736 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:27:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728850AbgD1S0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:26:54 -0400
+        id S1728834AbgD1S05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:26:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08D8E20B80;
-        Tue, 28 Apr 2020 18:26:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 828242085B;
+        Tue, 28 Apr 2020 18:26:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098414;
-        bh=ddR3lY7X7Py94OEnLYZZsrm3gr2MaNXEqKJZwflfaEg=;
+        s=default; t=1588098417;
+        bh=iljF7Edtms053YjF9mQtzQ/ve2E9hUgK2Tcg3enhmPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R/9nDNxl+7Xf+hTDEFDkqiOcWFxa78+xeAFy6MpQRg5pkEgYi43PbfYsPvlSBqLjm
-         pr4SofjIAaEgqQQ7/SmWkyViukFgvXmScgSU3NCAJmmL+zBQO279u9ZpW/RhcjxU9k
-         V4OeonkK357Px+jWflWjFLgqfMBqPrbG2zO8n98I=
+        b=SbHOCthtYec55yaqO1TRF7IUwiyB9Rpwr9DV6NR9JEvYFPxaFOnYpHwG274tGpll/
+         XytiwpqfaJ/eJE4bGrZ81C5Hiu+8nVXZsd27qRkkHbMWrstKysAQb2R5Iq0icG7+8s
+         vZn1GxcG0JHatFOBsvBvMHYGcctVYtJRvXrfejbY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 003/167] watchdog: reset last_hw_keepalive time at start
-Date:   Tue, 28 Apr 2020 20:22:59 +0200
-Message-Id: <20200428182225.838482997@linuxfoundation.org>
+Subject: [PATCH 5.6 030/167] Revert "powerpc/64: irq_work avoid interrupt when called with hardware irqs enabled"
+Date:   Tue, 28 Apr 2020 20:23:26 +0200
+Message-Id: <20200428182229.030563101@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
 References: <20200428182225.451225420@linuxfoundation.org>
@@ -61,40 +60,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit 982bb70517aef2225bad1d802887b733db492cc0 ]
+[ Upstream commit abc3fce76adbdfa8f87272c784b388cd20b46049 ]
 
-Currently the watchdog core does not initialize the last_hw_keepalive
-time during watchdog startup. This will cause the watchdog to be pinged
-immediately if enough time has passed from the system boot-up time, and
-some types of watchdogs like K3 RTI does not like this.
+This reverts commit ebb37cf3ffd39fdb6ec5b07111f8bb2f11d92c5f.
 
-To avoid the issue, setup the last_hw_keepalive time during watchdog
-startup.
+That commit does not play well with soft-masked irq state
+manipulations in idle, interrupt replay, and possibly others due to
+tracing code sometimes using irq_work_queue (e.g., in
+trace_hardirqs_on()). That can cause PACA_IRQ_DEC to become set when
+it is not expected, and be ignored or cleared or cause warnings.
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20200302200426.6492-3-t-kristo@ti.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+The net result seems to be missing an irq_work until the next timer
+interrupt in the worst case which is usually not going to be noticed,
+however it could be a long time if the tick is disabled, which is
+against the spirit of irq_work and might cause real problems.
+
+The idea is still solid, but it would need more work. It's not really
+clear if it would be worth added complexity, so revert this for
+now (not a straight revert, but replace with a comment explaining why
+we might see interrupts happening, and gives git blame something to
+find).
+
+Fixes: ebb37cf3ffd3 ("powerpc/64: irq_work avoid interrupt when called with hardware irqs enabled")
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200402120401.1115883-1-npiggin@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/watchdog_dev.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/kernel/time.c | 44 +++++++++++---------------------------
+ 1 file changed, 13 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-index 8b5c742f24e81..7e4cd34a8c20e 100644
---- a/drivers/watchdog/watchdog_dev.c
-+++ b/drivers/watchdog/watchdog_dev.c
-@@ -282,6 +282,7 @@ static int watchdog_start(struct watchdog_device *wdd)
- 	if (err == 0) {
- 		set_bit(WDOG_ACTIVE, &wdd->status);
- 		wd_data->last_keepalive = started_at;
-+		wd_data->last_hw_keepalive = started_at;
- 		watchdog_update_worker(wdd);
- 	}
+diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
+index 1168e8b37e306..716f8d0960a7b 100644
+--- a/arch/powerpc/kernel/time.c
++++ b/arch/powerpc/kernel/time.c
+@@ -522,35 +522,6 @@ static inline void clear_irq_work_pending(void)
+ 		"i" (offsetof(struct paca_struct, irq_work_pending)));
+ }
  
+-void arch_irq_work_raise(void)
+-{
+-	preempt_disable();
+-	set_irq_work_pending_flag();
+-	/*
+-	 * Non-nmi code running with interrupts disabled will replay
+-	 * irq_happened before it re-enables interrupts, so setthe
+-	 * decrementer there instead of causing a hardware exception
+-	 * which would immediately hit the masked interrupt handler
+-	 * and have the net effect of setting the decrementer in
+-	 * irq_happened.
+-	 *
+-	 * NMI interrupts can not check this when they return, so the
+-	 * decrementer hardware exception is raised, which will fire
+-	 * when interrupts are next enabled.
+-	 *
+-	 * BookE does not support this yet, it must audit all NMI
+-	 * interrupt handlers to ensure they call nmi_enter() so this
+-	 * check would be correct.
+-	 */
+-	if (IS_ENABLED(CONFIG_BOOKE) || !irqs_disabled() || in_nmi()) {
+-		set_dec(1);
+-	} else {
+-		hard_irq_disable();
+-		local_paca->irq_happened |= PACA_IRQ_DEC;
+-	}
+-	preempt_enable();
+-}
+-
+ #else /* 32-bit */
+ 
+ DEFINE_PER_CPU(u8, irq_work_pending);
+@@ -559,16 +530,27 @@ DEFINE_PER_CPU(u8, irq_work_pending);
+ #define test_irq_work_pending()		__this_cpu_read(irq_work_pending)
+ #define clear_irq_work_pending()	__this_cpu_write(irq_work_pending, 0)
+ 
++#endif /* 32 vs 64 bit */
++
+ void arch_irq_work_raise(void)
+ {
++	/*
++	 * 64-bit code that uses irq soft-mask can just cause an immediate
++	 * interrupt here that gets soft masked, if this is called under
++	 * local_irq_disable(). It might be possible to prevent that happening
++	 * by noticing interrupts are disabled and setting decrementer pending
++	 * to be replayed when irqs are enabled. The problem there is that
++	 * tracing can call irq_work_raise, including in code that does low
++	 * level manipulations of irq soft-mask state (e.g., trace_hardirqs_on)
++	 * which could get tangled up if we're messing with the same state
++	 * here.
++	 */
+ 	preempt_disable();
+ 	set_irq_work_pending_flag();
+ 	set_dec(1);
+ 	preempt_enable();
+ }
+ 
+-#endif /* 32 vs 64 bit */
+-
+ #else  /* CONFIG_IRQ_WORK */
+ 
+ #define test_irq_work_pending()	0
 -- 
 2.20.1
 
