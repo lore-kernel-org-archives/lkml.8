@@ -2,167 +2,283 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B2FC83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D63C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C15FD208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:38:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Y4JojaNB"
+	by mail.kernel.org (Postfix) with ESMTP id 3778F208FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:39:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbgD1Qiy (ORCPT
+        id S1728313AbgD1QjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:38:54 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:47834 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728037AbgD1Qix (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:38:53 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03SGcWQr007658;
-        Tue, 28 Apr 2020 18:38:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=ho062TRS0YdQ6wUnxTpdhRHNh/WM5Lgej+B4b4n+1WU=;
- b=Y4JojaNBtGP9CoyX+sKdfiEZeYVNiE9SsaFXBE4sApdQ179oDInnlsJfgIXrRuYmOkuq
- PpLyX1racB7DlJrMZ55V4evElOtb9DjKjwj99Jed3EPuNJWxWiHxZbAJ7GTfqWSfkuGX
- sAYKpOfqtCJxYrSz91Oj+jGyv9o7sy5UgYrIzibaiKunR9TMB4tm+n7IRTya7TEs0l4f
- TX6ZD9mrw+Pb2l7/zuoM/NhG9PJkf6yobA7mUMfoq2vA5KBItp+OZibVbQv/WZw9GfSA
- bG9+FPzeHXZNj/6XWPERS5fqs4VuRFeHQ1QQ5T7ZwRODPgJDfME3ZMF+X/fcPjAFYSTQ LQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30mhjws5jb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 18:38:44 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A9B9310002A;
-        Tue, 28 Apr 2020 18:38:43 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 95B912B5F4B;
-        Tue, 28 Apr 2020 18:38:43 +0200 (CEST)
-Received: from lmecxl0889.tpe.st.com (10.75.127.44) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Apr
- 2020 18:38:42 +0200
-Subject: Re: [PATCH v3 03/14] remoteproc: Add new operation and flags for
- synchronistation
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        <bjorn.andersson@linaro.org>, <ohad@wizery.com>
-CC:     <loic.pallardy@st.com>, <s-anna@ti.com>,
-        <linux-remoteproc@vger.kernel.org>, <corbet@lwn.net>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200424200135.28825-1-mathieu.poirier@linaro.org>
- <20200424200135.28825-4-mathieu.poirier@linaro.org>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <7c5c8d5e-feb7-74ad-a2eb-1ccb8192b0ae@st.com>
-Date:   Tue, 28 Apr 2020 18:38:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 28 Apr 2020 12:39:07 -0400
+Received: from mga09.intel.com ([134.134.136.24]:26668 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728037AbgD1QjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 12:39:06 -0400
+IronPort-SDR: GtQ7MvAs0/Dz7+2v5awuHQE9QIM9NKHSWwWNHPXHlks9yAxE0mPfAu2bEejblURAnRVB8oX/P8
+ GLJogT62nqTg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 09:39:06 -0700
+IronPort-SDR: zRmXs1JCpo9jEGh6IpsS0SdDaQzGUKNssQ9lPejopuzAWUo2mdPfJ5qFqgs0lUFIXG6JU4ct2f
+ jDPag9a557Zw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
+   d="scan'208";a="275894898"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 28 Apr 2020 09:39:04 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jTTGC-000ICW-7f; Wed, 29 Apr 2020 00:39:04 +0800
+Date:   Wed, 29 Apr 2020 00:38:09 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:dev.2020.04.27a] BUILD SUCCESS
+ 57e72e53ca32c848c780be651122976394030b37
+Message-ID: <5ea85bf1.scoP+TBc9gobdYB+%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20200424200135.28825-4-mathieu.poirier@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-28_11:2020-04-28,2020-04-28 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.04.27a
+branch HEAD: 57e72e53ca32c848c780be651122976394030b37  kcsan: Add test suite
 
+elapsed time: 1132m
 
-On 4/24/20 10:01 PM, Mathieu Poirier wrote:
-> Add a new sync_ops to support use cases where the remoteproc
-> core is synchronising with the remote processor.  Exactly when to use
-> the synchronisation operations is directed by the flags in structure
-> rproc_sync_flags.
-> 
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> ---
->  include/linux/remoteproc.h | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index ac4082f12e8b..ceb3b2bba824 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -353,6 +353,23 @@ enum rsc_handling_status {
->  	RSC_IGNORED	= 1,
->  };
->  
-> +/**
-> + * struct rproc_sync_flags - platform specific flags indicating which
-> + *			      rproc_ops to use at specific times during
-> + *			      the rproc lifecycle.
-> + * @on_init: true if synchronising with the remote processor at
-> + *	     initialisation time
-> + * @after_stop: true if synchronising with the remote processor after it was
-> + *		stopped from the cmmand line
-typo command
-> + * @after_crash: true if synchronising with the remote processor after
-> + *		 it has crashed
-> + */
-> +struct rproc_sync_flags {
-> +	bool on_init;
-> +	bool after_stop;
-> +	bool after_crash;
-> +};
-> +
-how about a bit field instead (just a proposition)?
-Platform driver would set the sync flag and rproc_set_sync_flag could be a 
-simple mask instead of a switch case.
+configs tested: 216
+configs skipped: 0
 
-Is it possible to split this patch in a different ways because difficult to understand as
-rproc_sync_flags seems not used before 
-[PATCH v3 09/14] remoteproc: Deal with synchronisation when crashing
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Thanks
-Arnaud  
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+csky                                defconfig
+sparc64                          allyesconfig
+powerpc                             defconfig
+ia64                                defconfig
+h8300                       h8s-sim_defconfig
+mips                         tb0287_defconfig
+m68k                             allmodconfig
+mips                              allnoconfig
+arc                                 defconfig
+mips                       capcella_defconfig
+sparc64                             defconfig
+mips                  decstation_64_defconfig
+openrisc                    or1ksim_defconfig
+microblaze                      mmu_defconfig
+ia64                              allnoconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                        generic_defconfig
+ia64                          tiger_defconfig
+ia64                         bigsur_defconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+alpha                               defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+arc                              allyesconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                            ar7_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+mips                malta_kvm_guest_defconfig
+mips                           ip32_defconfig
+mips                      loongson3_defconfig
+mips                          ath79_defconfig
+mips                        bcm63xx_defconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+parisc               randconfig-a001-20200428
+m68k                 randconfig-a001-20200428
+alpha                randconfig-a001-20200428
+nds32                randconfig-a001-20200428
+riscv                randconfig-a001-20200428
+parisc               randconfig-a001-20200427
+alpha                randconfig-a001-20200427
+mips                 randconfig-a001-20200427
+m68k                 randconfig-a001-20200427
+riscv                randconfig-a001-20200427
+nds32                randconfig-a001-20200427
+nios2                randconfig-a001-20200427
+c6x                  randconfig-a001-20200427
+h8300                randconfig-a001-20200427
+sparc64              randconfig-a001-20200427
+microblaze           randconfig-a001-20200427
+nios2                randconfig-a001-20200428
+h8300                randconfig-a001-20200428
+c6x                  randconfig-a001-20200428
+sparc64              randconfig-a001-20200428
+microblaze           randconfig-a001-20200428
+sh                   randconfig-a001-20200428
+csky                 randconfig-a001-20200428
+s390                 randconfig-a001-20200428
+xtensa               randconfig-a001-20200428
+openrisc             randconfig-a001-20200428
+sh                   randconfig-a001-20200427
+csky                 randconfig-a001-20200427
+xtensa               randconfig-a001-20200427
+openrisc             randconfig-a001-20200427
+i386                 randconfig-b002-20200427
+x86_64               randconfig-b001-20200427
+i386                 randconfig-b001-20200427
+i386                 randconfig-b003-20200427
+x86_64               randconfig-b002-20200427
+x86_64               randconfig-b003-20200427
+i386                 randconfig-c002-20200428
+i386                 randconfig-c001-20200428
+x86_64               randconfig-c001-20200428
+i386                 randconfig-c003-20200428
+x86_64               randconfig-c003-20200428
+i386                 randconfig-c002-20200427
+i386                 randconfig-c001-20200427
+x86_64               randconfig-c002-20200427
+x86_64               randconfig-c001-20200427
+i386                 randconfig-c003-20200427
+x86_64               randconfig-c003-20200427
+i386                 randconfig-a003-20200427
+i386                 randconfig-a001-20200427
+i386                 randconfig-a002-20200427
+x86_64               randconfig-a002-20200427
+x86_64               randconfig-d001-20200428
+i386                 randconfig-d002-20200428
+i386                 randconfig-d001-20200428
+x86_64               randconfig-d003-20200428
+i386                 randconfig-d003-20200428
+x86_64               randconfig-d001-20200427
+x86_64               randconfig-d002-20200427
+i386                 randconfig-d002-20200427
+i386                 randconfig-d001-20200427
+x86_64               randconfig-d003-20200427
+i386                 randconfig-d003-20200427
+x86_64               randconfig-a001-20200428
+x86_64               randconfig-a002-20200428
+i386                 randconfig-e003-20200427
+x86_64               randconfig-e002-20200427
+x86_64               randconfig-e003-20200427
+i386                 randconfig-e002-20200427
+i386                 randconfig-e001-20200427
+x86_64               randconfig-e001-20200427
+x86_64               randconfig-f002-20200428
+i386                 randconfig-f002-20200428
+i386                 randconfig-f003-20200428
+x86_64               randconfig-f003-20200428
+i386                 randconfig-f001-20200428
+x86_64               randconfig-f001-20200428
+i386                 randconfig-g003-20200428
+x86_64               randconfig-g001-20200428
+i386                 randconfig-g001-20200428
+x86_64               randconfig-g002-20200428
+i386                 randconfig-g002-20200428
+x86_64               randconfig-g003-20200428
+i386                 randconfig-g003-20200427
+i386                 randconfig-g001-20200427
+x86_64               randconfig-g001-20200427
+i386                 randconfig-g002-20200427
+x86_64               randconfig-g003-20200427
+i386                 randconfig-h003-20200427
+x86_64               randconfig-h002-20200427
+i386                 randconfig-h002-20200427
+i386                 randconfig-h001-20200427
+x86_64               randconfig-h001-20200428
+i386                 randconfig-h003-20200428
+x86_64               randconfig-h003-20200428
+x86_64               randconfig-h002-20200428
+i386                 randconfig-h001-20200428
+i386                 randconfig-h002-20200428
+sparc                randconfig-a001-20200428
+ia64                 randconfig-a001-20200428
+powerpc              randconfig-a001-20200428
+arm64                randconfig-a001-20200428
+arc                  randconfig-a001-20200428
+sparc                randconfig-a001-20200427
+ia64                 randconfig-a001-20200427
+arm                  randconfig-a001-20200427
+arm64                randconfig-a001-20200427
+arc                  randconfig-a001-20200427
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                          debug_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                           allnoconfig
+sparc64                          allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
->  /**
->   * struct rproc_ops - platform-specific device handlers
->   * @start:	power on the device and boot it
-> @@ -459,6 +476,9 @@ struct rproc_dump_segment {
->   * @firmware: name of firmware file to be loaded
->   * @priv: private data which belongs to the platform-specific rproc module
->   * @ops: platform-specific start/stop rproc handlers
-> + * @sync_ops: platform-specific start/stop rproc handlers when
-> + *	      synchronising with a remote processor.
-> + * @sync_flags: Determine the rproc_ops to choose in specific states.
->   * @dev: virtual device for refcounting and common remoteproc behavior
->   * @power: refcount of users who need this rproc powered up
->   * @state: state of the device
-> @@ -482,6 +502,7 @@ struct rproc_dump_segment {
->   * @table_sz: size of @cached_table
->   * @has_iommu: flag to indicate if remote processor is behind an MMU
->   * @auto_boot: flag to indicate if remote processor should be auto-started
-> + * @sync_with_rproc: true if currently synchronising with the rproc
->   * @dump_segments: list of segments in the firmware
->   * @nb_vdev: number of vdev currently handled by rproc
->   */
-> @@ -492,6 +513,8 @@ struct rproc {
->  	const char *firmware;
->  	void *priv;
->  	struct rproc_ops *ops;
-> +	struct rproc_ops *sync_ops;
-> +	struct rproc_sync_flags sync_flags;
->  	struct device dev;
->  	atomic_t power;
->  	unsigned int state;
-> @@ -515,6 +538,7 @@ struct rproc {
->  	size_t table_sz;
->  	bool has_iommu;
->  	bool auto_boot;
-> +	bool sync_with_rproc;
->  	struct list_head dump_segments;
->  	int nb_vdev;
->  	u8 elf_class;
-> 
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
