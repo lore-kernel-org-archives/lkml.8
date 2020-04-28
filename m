@@ -6,21 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 244A0C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E945C83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B3E32186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECACA21841
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:22:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbgD1PWY (ORCPT
+        id S1728816AbgD1PW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:22:24 -0400
-Received: from 8bytes.org ([81.169.241.247]:37630 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728299AbgD1PSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:18:07 -0400
+        Tue, 28 Apr 2020 11:22:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728291AbgD1PSG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:18:06 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E47C03C1AC;
+        Tue, 28 Apr 2020 08:18:05 -0700 (PDT)
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 86CCFF1D; Tue, 28 Apr 2020 17:17:49 +0200 (CEST)
+        id B2847F15; Tue, 28 Apr 2020 17:17:48 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -40,9 +44,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 39/75] x86/sev-es: Print SEV-ES info into kernel log
-Date:   Tue, 28 Apr 2020 17:16:49 +0200
-Message-Id: <20200428151725.31091-40-joro@8bytes.org>
+Subject: [PATCH v3 35/75] x86/head/64: Build k/head64.c with -fno-stack-protector
+Date:   Tue, 28 Apr 2020 17:16:45 +0200
+Message-Id: <20200428151725.31091-36-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200428151725.31091-1-joro@8bytes.org>
 References: <20200428151725.31091-1-joro@8bytes.org>
@@ -53,62 +57,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Refactor the message printed to the kernel log which indicates whether
-SEV or SME is active to print a list of enabled encryption features.
-This will scale better in the future when more memory encryption
-features might be added. Also add SEV-ES to the list of features.
+The code inserted by the stack protector does not work in the early
+boot environment because it uses the GS segment, at least with memory
+encryption enabled. Make sure the early code is compiled without this
+feature enabled.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/mm/mem_encrypt.c | 29 ++++++++++++++++++++++++++---
- 1 file changed, 26 insertions(+), 3 deletions(-)
+ arch/x86/kernel/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index 3e59fcd7f9ac..c8d8eabfa1bc 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -409,6 +409,31 @@ void __init mem_encrypt_free_decrypted_mem(void)
- 	free_init_pages("unused decrypted", vaddr, vaddr_end);
- }
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index ba89cabe5fcf..1192de38fa56 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -35,6 +35,10 @@ ifdef CONFIG_FRAME_POINTER
+ OBJECT_FILES_NON_STANDARD_ftrace_$(BITS).o		:= y
+ endif
  
-+static void print_mem_encrypt_feature_info(void)
-+{
-+	pr_info("AMD Memory Encryption Features active:");
++# make sure head64.c is built without stack protector
++nostackp := $(call cc-option, -fno-stack-protector)
++CFLAGS_head64.o		:= $(nostackp)
 +
-+	/* Secure Memory Encryption */
-+	if (sme_active()) {
-+		/*
-+		 * SME is mutually exclusive with any of the SEV
-+		 * features below.
-+		 */
-+		pr_cont(" SME\n");
-+		return;
-+	}
-+
-+	/* Secure Encrypted Virtualization */
-+	if (sev_active())
-+		pr_cont(" SEV");
-+
-+	/* Encrypted Register State */
-+	if (sev_es_active())
-+		pr_cont(" SEV-ES");
-+
-+	pr_cont("\n");
-+}
-+
- void __init mem_encrypt_init(void)
- {
- 	if (!sme_me_mask)
-@@ -423,8 +448,6 @@ void __init mem_encrypt_init(void)
- 	if (sev_active())
- 		static_branch_enable(&sev_enable_key);
- 
--	pr_info("AMD %s active\n",
--		sev_active() ? "Secure Encrypted Virtualization (SEV)"
--			     : "Secure Memory Encryption (SME)");
-+	print_mem_encrypt_feature_info();
- }
- 
+ # If instrumentation of this dir is enabled, boot hangs during first second.
+ # Probably could be more selective here, but note that files related to irqs,
+ # boot, dumpstack/stacktrace, etc are either non-interesting or can lead to
 -- 
 2.17.1
 
