@@ -2,87 +2,87 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D688EC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 836B7C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E04720730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:42:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jzYQ2rTc"
+	by mail.kernel.org (Postfix) with ESMTP id 67B1A20730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:43:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbgD1Vmp (ORCPT
+        id S1726690AbgD1VnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:42:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726272AbgD1Vmo (ORCPT
+        Tue, 28 Apr 2020 17:43:02 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:44202 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbgD1VnB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:42:44 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4425CC03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 14:42:44 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id z2so24982701iol.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 14:42:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rfmlo41ts2i7Zcv0kqVybUxAnbR3sTlhoiDkLxdhqcM=;
-        b=jzYQ2rTc5iGSeW867YpgJb0e0aw2v+lG7u1PpshHvK+b6XV/dUh6YTFnf/tFVjoHSL
-         BU4n4+hcpwwPAURGSbzgxuxkjBKwGmDDH8fhJ6Noim6yF2Ko55IlWL3GaMHWQIEE85z8
-         stYWqfldjztBG7VdjBUxgxmYYt7ch8ZcywOPIpqIy8JW+yYySgvhJYT/a2dBQLTPNYo6
-         TtGt6ctYXhojzWnBpNIFQzBu/3qfIkUvqHKv/BAXbgbmwYbakHDJ4C2IA1PvjgV2JQK5
-         3zqvrwVubOUgBRTJ59l1iaxH/JjFjMKorIeIuTq3Oo0trW8vjEUnPKDt2enyUWMjCT9R
-         lGRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rfmlo41ts2i7Zcv0kqVybUxAnbR3sTlhoiDkLxdhqcM=;
-        b=qz/a30Zz4+wQyNrHDB/vJs86KPWdNEruvXdyhAduM5XuyAG8a4IX3nxXouV4AtYxij
-         nzGBdu7yikWIILKzC9adUBbQBPbgf8xehs2+1B46x7Vi21r0kq7Oqg00vR3RPdqo0SU7
-         poiUCobRj1iXa2FkywisXnsDNpogDW6vpynF3Iik3MIWlKaC/cDE9wIpl1mNl+s/74RD
-         wfnVt0otNOwjNg8EH4HHXVtHKKaFV0PL9NWVhjGYXOfhcgkginCVCk9jqkB5SjWFfiWt
-         fHyhEnkP9bml2ZfbEtqE9QHkmPE5H0VVb8U2TCMNNzfUQtk+9UqkYJMGPvDAisptHa3M
-         mZ+Q==
-X-Gm-Message-State: AGi0PuYDTLBCtSIRZa92PX2oMPD7v9fZvAo3QJPJuN4LfM+0VExboapD
-        6RamjK3q/OHZMI3DmqiNEVNOBGHDxgCaC4iYV+XBtw==
-X-Google-Smtp-Source: APiQypK7/mohAHqrxGWpCG7N79ayXvDCuEmqwdOh2T1wVp1srOrMpFaJDheHtIywUbwKQ4GJrCnqek9FIrXvz7vYYDc=
-X-Received: by 2002:a05:6638:bd0:: with SMTP id g16mr27759289jad.48.1588110163502;
- Tue, 28 Apr 2020 14:42:43 -0700 (PDT)
+        Tue, 28 Apr 2020 17:43:01 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jTY0K-0004u4-GB; Tue, 28 Apr 2020 15:43:00 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jTY0J-00015a-OA; Tue, 28 Apr 2020 15:43:00 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
+        <87ftcv1nqe.fsf@x220.int.ebiederm.org>
+        <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
+        <20200424173927.GB26802@redhat.com>
+        <87mu6ymkea.fsf_-_@x220.int.ebiederm.org>
+        <875zdmmj4y.fsf_-_@x220.int.ebiederm.org>
+        <CAHk-=whvktUC9VbzWLDw71BHbV4ofkkuAYsrB5Rmxnhc-=kSeQ@mail.gmail.com>
+        <878sihgfzh.fsf@x220.int.ebiederm.org>
+        <CAHk-=wjSM9mgsDuX=ZTy2L+S7wGrxZMcBn054As_Jyv8FQvcvQ@mail.gmail.com>
+        <87sggnajpv.fsf_-_@x220.int.ebiederm.org>
+        <20200428180540.GB29960@redhat.com>
+Date:   Tue, 28 Apr 2020 16:39:44 -0500
+In-Reply-To: <20200428180540.GB29960@redhat.com> (Oleg Nesterov's message of
+        "Tue, 28 Apr 2020 20:05:41 +0200")
+Message-ID: <87mu6v70in.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20200423022550.15113-1-sean.j.christopherson@intel.com> <20200423022550.15113-5-sean.j.christopherson@intel.com>
-In-Reply-To: <20200423022550.15113-5-sean.j.christopherson@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 28 Apr 2020 14:42:32 -0700
-Message-ID: <CALMp9eRPfvsx+uu4RFbDiLrL4pY9_NiZkivWqUi8gUSAMHv-ZA@mail.gmail.com>
-Subject: Re: [PATCH 04/13] KVM: x86: Make return for {interrupt_nmi}_allowed()
- a bool instead of int
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Oliver Upton <oupton@google.com>,
-        Peter Shier <pshier@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-XM-SPF: eid=1jTY0J-00015a-OA;;;mid=<87mu6v70in.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+UtBNkHu4rLIVo9CsZRAkkaksr2Rapk5s=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH v1 0/4] signal: Removing has_group_leader_pid
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 7:26 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Return an actual bool for kvm_x86_ops' {interrupt_nmi}_allowed() hook to
-> better reflect the return semantics, and to avoid creating an even
-> bigger mess when the related VMX code is refactored in upcoming patches.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
+
+With de_thread now calling exchange_tids has_group_leader_pid no longer
+makes any sense and is equivalent to calling thread_group_leader.
+
+As there are only 2 remaining users of has_group_leader_pid let's
+update the code and get rid of has_group_leader_pid.
+
+There is one extra patch to lookup_task that performs that unifies
+to code paths that become identical when has_group_leader_pid went
+away.
+
+Eric W. Biederman (4):
+      posix-cpu-timer: Tidy up group_leader logic in lookup_task
+      posix-cpu-timer:  Unify the now redundant code in lookup_task
+      exec: Remove BUG_ON(has_group_leader_pid)
+      signal: Remove has_group_leader_pid
+
+ fs/exec.c                      |  1 -
+ include/linux/sched/signal.h   | 11 -----------
+ kernel/time/posix-cpu-timers.c | 21 ++++++++-------------
+ 3 files changed, 8 insertions(+), 25 deletions(-)
