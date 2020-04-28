@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87886C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AAFC8300C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5736F2072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E898020731
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:00:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o5++9uYp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nMGZ+fe6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgD1U76 (ORCPT
+        id S1727103AbgD1VAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:59:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38782 "EHLO
+        Tue, 28 Apr 2020 17:00:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726921AbgD1U7w (ORCPT
+        by vger.kernel.org with ESMTP id S1727088AbgD1VAD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:59:52 -0400
+        Tue, 28 Apr 2020 17:00:03 -0400
 Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA3F0C03C1AC;
-        Tue, 28 Apr 2020 13:59:51 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id l19so198809lje.10;
-        Tue, 28 Apr 2020 13:59:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43357C03C1AC;
+        Tue, 28 Apr 2020 14:00:03 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id w20so270398ljj.0;
+        Tue, 28 Apr 2020 14:00:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bWLqr2jPDyEQcY7iSPb5llcri1orQdd6DnkilIcs6pQ=;
-        b=o5++9uYpB0tejuE6SOx2AEJ39EGXaxcQzOa6BiVWFjcS7yoTvXbje74KUsJfyuRkbg
-         fwJPdrquJbOLHCaxqz9Mwtl6FuSvM+KsXMnliBkFsADyVua+6KDH1fCS59qjPVtxRK0n
-         dbipm1fl+eKq8q9CYpoaWufW0aRmtdGBT3+unSG/3WWIawdf3TxALo47FGzyiW/IPdJm
-         nKA0oWU8najSTRkjsVD0TmMdzC33ujQapFp5uE/fLh1YLZ0yXHG+58rzxSzfgTt4eNSp
-         7A45DvCSkx6V0saTuCCdtrbmkF8QTbYJ3Hrf+TmzTvnWaNoe/+pbLk046gt2RE4nFrvf
-         CVtQ==
+        bh=pFz29Ncgyaz8z/1Qp2+b1WJTbiL+UppT5lx2exYc8qs=;
+        b=nMGZ+fe6xiYOw++aC//Z8OF1EzE9mTIAXdtY2wYZBb4quZdq+MAuktQTFSZimsBMfv
+         yr21ycB+3x8EE/b74Vi1nlowx9liJrqN0hO2NzaxZ09mbYg4k5xi/sFv5/E/hf/J9SV/
+         e68LuotEDHAqBbYzGSwp7SvvkcwdYmbSeLMoXn5Qq0UJyehqB8pu8BGqUIsvl4CBGCPP
+         usSTKwwlhyWEonVJtNoaJp5318qEf+frWelZvLRGS7Lrr9DEw+4lr1MSFUEtPNnVYlp2
+         ZiNz53ok5DGi27Ny8bImfXSRM6zS9vQSS6Ac2KO1RkonVz58KfwAw+Yk1vsf5eAAN/0f
+         KU+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bWLqr2jPDyEQcY7iSPb5llcri1orQdd6DnkilIcs6pQ=;
-        b=pXTmDSGLFrOhDorqdJ5GLJwP48tfsjwfGONtN7fw6YyhYlg/3F0csn705NQAW337Vv
-         wvXOZPYEeKfMc+XVkfax2P4/HsUafH9Dade0VpH1jbkwkVSr8FBT1x2ZtkLBgk/TBv7T
-         Y+gcMg839LBVq/+GgdYw5iVLXjAVpQ0xg6Zh+3FpnjzP65iZJ2/PMyfeJi7o3IWXYB2J
-         iTg4eRfZ0/xJU3Bxf+0HmbBoMm4axnnEuhmlo/Bm0k76DNt3LovKzc9jWn76nC7DimgO
-         px4NUONGX1vh4HI/49fCuiODLoAH2zbIAfbAmUhMizaJNqT9vXsfslpf6ab1dJ1MYocP
-         yR/g==
-X-Gm-Message-State: AGi0PuY65ggVhg8ADYyBW5Wpy0PbRI2KRvHaWq0tMqgbmFu510jSegS4
-        o5K9NvdcYRZch5h9sFfWGfJhHWhC9VgAlQ==
-X-Google-Smtp-Source: APiQypK9EZpQhwaV5M+lBBDIJenVe52+/F2F7dseEsf9lWqnTDKV8zoEcohaXMvNV1qR0laI6NaBXg==
-X-Received: by 2002:a2e:9018:: with SMTP id h24mr18683499ljg.217.1588107589805;
-        Tue, 28 Apr 2020 13:59:49 -0700 (PDT)
+        bh=pFz29Ncgyaz8z/1Qp2+b1WJTbiL+UppT5lx2exYc8qs=;
+        b=I4/F6eKkrFXf7TEt/Lk+PNqJRzoauriEDszQ5f2UPrQvlv2nufWco5VIznNtfUsF33
+         LGq4Wv2WxrsqcLJtteU1+aG2rIOa9w8AQ5oANCxlMFKExpAARoIINIQXfLzIZcH3+WQ/
+         ifyGm2sN+GdAUQ5h6J2GEtj9qOXBo75cqoGPkN66UDVP+UR0ExQA2b3m4NCH8fd/skjF
+         R5eMt9bKF82lprKe2bF4ovrji5soSHYuJ91L2DARtCfzLzQwWbamI9kgkf+w93fvWhXa
+         tkfvX3nZiHaozU3vcDLxp2JpZezrrkD5ZsCiQqHbMOs3bIsAD/eWOQUKPVYa7xdO8Quh
+         ZhVQ==
+X-Gm-Message-State: AGi0PubpnYUwmqTo7SnWOSgoA7lAzNd6vscM7AWzGAxrF/7Lv5YkJiRz
+        +Ilr9HvakrUlKbScBc6dVqZwPIM0f8iGkA==
+X-Google-Smtp-Source: APiQypLE5mxTFoU3KAMfpCj2cbiae08hkJfL0cpRwE+8diBE7xGLdv5s1UOvFjgkkhBVYoqWhWEgHQ==
+X-Received: by 2002:a2e:8083:: with SMTP id i3mr18677202ljg.175.1588107601389;
+        Tue, 28 Apr 2020 14:00:01 -0700 (PDT)
 Received: from pc638.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id z21sm295483ljh.42.2020.04.28.13.59.48
+        by smtp.gmail.com with ESMTPSA id z21sm295483ljh.42.2020.04.28.14.00.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 13:59:49 -0700 (PDT)
+        Tue, 28 Apr 2020 14:00:00 -0700 (PDT)
 From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 To:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
@@ -69,9 +69,9 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Joel Fernandes <joel@joelfernandes.org>,
         RCU <rcu@vger.kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
         Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: [PATCH 17/24] rcu: Introduce 2 arg kvfree_rcu() interface
-Date:   Tue, 28 Apr 2020 22:58:56 +0200
-Message-Id: <20200428205903.61704-18-urezki@gmail.com>
+Subject: [PATCH 24/24] lib/test_vmalloc.c: Add test cases for kvfree_rcu()
+Date:   Tue, 28 Apr 2020 22:59:03 +0200
+Message-Id: <20200428205903.61704-25-urezki@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200428205903.61704-1-urezki@gmail.com>
 References: <20200428205903.61704-1-urezki@gmail.com>
@@ -82,52 +82,155 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kvfree_rcu() can deal with an allocated memory that is obtained
-via kvmalloc(). It can return two types of allocated memory or
-"pointers", one can belong to regular SLAB allocator and another
-one can be vmalloc one. It depends on requested size and memory
-pressure.
+Introduce four new test cases. They are considered to
+cover and testing of kvfree_rcu() interface. Two of
+them belong to 1 argument functionality and another
+two for 2 arguments functionality.
 
-<snip>
-    struct test_kvfree_rcu {
-        struct rcu_head rcu;
-        unsigned char array[100];
-    };
-
-    struct test_kvfree_rcu *p;
-
-    p = kvmalloc(10 * PAGE_SIZE);
-    if (p)
-        kvfree_rcu(p, rcu);
-<snip>
+The aim is to stress it, to check how it behaves under
+different load and memory conditions, analysis of the
+performance throughput and its impact.
 
 Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- include/linux/rcupdate.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ lib/test_vmalloc.c | 103 +++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 95 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index b344fc800a9b..51b26ab02878 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -875,6 +875,15 @@ do {									\
- 		__kvfree_rcu(&((___p)->rhf), offsetof(typeof(*(ptr)), rhf)); \
- } while (0)
+diff --git a/lib/test_vmalloc.c b/lib/test_vmalloc.c
+index 8bbefcaddfe8..ec73561cda2e 100644
+--- a/lib/test_vmalloc.c
++++ b/lib/test_vmalloc.c
+@@ -15,6 +15,8 @@
+ #include <linux/delay.h>
+ #include <linux/rwsem.h>
+ #include <linux/mm.h>
++#include <linux/rcupdate.h>
++#include <linux/slab.h>
  
-+/**
-+ * kvfree_rcu() - kvfree an object after a grace period.
-+ * @ptr:	pointer to kvfree
-+ * @rhf:	the name of the struct rcu_head within the type of @ptr.
-+ *
-+ * Same as kfree_rcu(), just simple alias.
-+ */
-+#define kvfree_rcu(ptr, rhf) kfree_rcu(ptr, rhf)
+ #define __param(type, name, init, msg)		\
+ 	static type name = init;				\
+@@ -35,14 +37,18 @@ __param(int, test_loop_count, 1000000,
+ 
+ __param(int, run_test_mask, INT_MAX,
+ 	"Set tests specified in the mask.\n\n"
+-		"\t\tid: 1,   name: fix_size_alloc_test\n"
+-		"\t\tid: 2,   name: full_fit_alloc_test\n"
+-		"\t\tid: 4,   name: long_busy_list_alloc_test\n"
+-		"\t\tid: 8,   name: random_size_alloc_test\n"
+-		"\t\tid: 16,  name: fix_align_alloc_test\n"
+-		"\t\tid: 32,  name: random_size_align_alloc_test\n"
+-		"\t\tid: 64,  name: align_shift_alloc_test\n"
+-		"\t\tid: 128, name: pcpu_alloc_test\n"
++		"\t\tid: 1,    name: fix_size_alloc_test\n"
++		"\t\tid: 2,    name: full_fit_alloc_test\n"
++		"\t\tid: 4,    name: long_busy_list_alloc_test\n"
++		"\t\tid: 8,    name: random_size_alloc_test\n"
++		"\t\tid: 16,   name: fix_align_alloc_test\n"
++		"\t\tid: 32,   name: random_size_align_alloc_test\n"
++		"\t\tid: 64,   name: align_shift_alloc_test\n"
++		"\t\tid: 128,  name: pcpu_alloc_test\n"
++		"\t\tid: 256,  name: kvfree_rcu_1_arg_vmalloc_test\n"
++		"\t\tid: 512,  name: kvfree_rcu_2_arg_vmalloc_test\n"
++		"\t\tid: 1024, name: kvfree_rcu_1_arg_slab_test\n"
++		"\t\tid: 2048, name: kvfree_rcu_2_arg_slab_test\n"
+ 		/* Add a new test case description here. */
+ );
+ 
+@@ -328,6 +334,83 @@ pcpu_alloc_test(void)
+ 	return rv;
+ }
+ 
++struct test_kvfree_rcu {
++	struct rcu_head rcu;
++	unsigned char array[20];
++};
 +
- /*
-  * Place this after a lock-acquisition primitive to guarantee that
-  * an UNLOCK+LOCK pair acts as a full barrier.  This guarantee applies
++static int
++kvfree_rcu_1_arg_vmalloc_test(void)
++{
++	struct test_kvfree_rcu *p;
++	int i;
++
++	for (i = 0; i < test_loop_count; i++) {
++		p = vmalloc(1 * PAGE_SIZE);
++		if (!p)
++			return -1;
++
++		p->array[0] = 'a';
++		kvfree_rcu(p);
++	}
++
++	return 0;
++}
++
++static int
++kvfree_rcu_2_arg_vmalloc_test(void)
++{
++	struct test_kvfree_rcu *p;
++	int i;
++
++	for (i = 0; i < test_loop_count; i++) {
++		p = vmalloc(1 * PAGE_SIZE);
++		if (!p)
++			return -1;
++
++		p->array[0] = 'a';
++		kvfree_rcu(p, rcu);
++	}
++
++	return 0;
++}
++
++static int
++kvfree_rcu_1_arg_slab_test(void)
++{
++	struct test_kvfree_rcu *p;
++	int i;
++
++	for (i = 0; i < test_loop_count; i++) {
++		p = kmalloc(sizeof(*p), GFP_KERNEL);
++		if (!p)
++			return -1;
++
++		p->array[0] = 'a';
++		kvfree_rcu(p);
++	}
++
++	return 0;
++}
++
++static int
++kvfree_rcu_2_arg_slab_test(void)
++{
++	struct test_kvfree_rcu *p;
++	int i;
++
++	for (i = 0; i < test_loop_count; i++) {
++		p = kmalloc(sizeof(*p), GFP_KERNEL);
++		if (!p)
++			return -1;
++
++		p->array[0] = 'a';
++		kvfree_rcu(p, rcu);
++	}
++
++	return 0;
++}
++
+ struct test_case_desc {
+ 	const char *test_name;
+ 	int (*test_func)(void);
+@@ -342,6 +425,10 @@ static struct test_case_desc test_case_array[] = {
+ 	{ "random_size_align_alloc_test", random_size_align_alloc_test },
+ 	{ "align_shift_alloc_test", align_shift_alloc_test },
+ 	{ "pcpu_alloc_test", pcpu_alloc_test },
++	{ "kvfree_rcu_1_arg_vmalloc_test", kvfree_rcu_1_arg_vmalloc_test },
++	{ "kvfree_rcu_2_arg_vmalloc_test", kvfree_rcu_2_arg_vmalloc_test },
++	{ "kvfree_rcu_1_arg_slab_test", kvfree_rcu_1_arg_slab_test },
++	{ "kvfree_rcu_2_arg_slab_test", kvfree_rcu_2_arg_slab_test },
+ 	/* Add a new test case here. */
+ };
+ 
 -- 
 2.20.1
 
