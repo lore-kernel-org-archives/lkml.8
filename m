@@ -2,131 +2,108 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A346C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F58C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E17B206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBAAD206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:55:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qY200Gdh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yqPfDDwK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgD1Lv1 (ORCPT
+        id S1726620AbgD1LzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:51:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37536 "EHLO
+        Tue, 28 Apr 2020 07:55:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbgD1Lv1 (ORCPT
+        with ESMTP id S1726505AbgD1LzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:51:27 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01F02C03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 04:51:27 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id m18so32007989otq.9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 04:51:26 -0700 (PDT)
+        Tue, 28 Apr 2020 07:55:09 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71060C03C1A9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 04:55:09 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f13so24249141wrm.13
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 04:55:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YV5X7b0RVx9UtJZqWhbhycNNkPCol2NhsoVPXumvChw=;
-        b=qY200Gdh14KWjuFl7nMHJc5Y6JPsMnKXb+yEm+ncWoJ2UZOZXise3+Js8HeoWMi7cc
-         IgwtEqKjPLAGBnHEg5HKFHjRoxSnELVv8kn45MyI9kIFqYgVS6zPiJ2M85fAOg22GyyE
-         819bOa4POc+oTD+ZXBHOQGapNKnxVaE7fpJUkb9oIedVVdxYBRu0336uweqMWwyfBhRd
-         cg4cmOHFVMgLu/3Xr/MNVw4TRUgxCW2aFT9eVid1r0DJvVrHL5ecakv39CU7qdZADE2/
-         mV9188VWARK8Oe7oA39H1FZ1UhXWmfyCwoT9EmxMJFgimfGqXL9yyKrEStKAlQkAgLsZ
-         rJAw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ARhS0rwZ8Alb5Jm0pWQp/cHnoFN2jrQ1u7lV5uPkaIQ=;
+        b=yqPfDDwKZw7djhVzl5OuNoaqC8fFv5dibuLQEe4/NGADPAlpc7ia3b3xNCHs277nOD
+         wobBmC1791F6rWiuwhRrV7BlcpsOZmcc0G0/Ghtu/3/pHzPjOyjq1H7u6J/lXXj6OFle
+         v3jZNOLjPoTZfcyPMGwk0cOi0XLAIE5RWhhAyJ3mmMvFXr+lnUjTDaIK508DjlYcZrqU
+         xhMFB1SFDD1sXHMgx2smoIRPKC00GOPr+XD2nD5FtI8p0M1eUq1Qswzttk87OJ7/aE3x
+         RMU6ytLyZs3AMfJ/nP0lKwosL0Lnsy2a3A7C6RD8BQ+DDqvtGR7diSF28B6etB0H1pXZ
+         i5Jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YV5X7b0RVx9UtJZqWhbhycNNkPCol2NhsoVPXumvChw=;
-        b=AVpINAXYlx1W7aC+kqTj00uDXPqhXVFUXBvvElK4xmR1bakYJFWrDSOGOC3ebD7WcD
-         9KviRY3ISopNygaq3DKKaV8NY+BaWiS3ksHpwb30crONZnh7to0Dq1uzwt7ykZvpJFbE
-         VpRvj7NNhJ+PCf2L57QsfkTRd6GHJhGuLsYzlH5FMtmdRVQHwupgXd1RbHhwXcmu6Vl2
-         DsqXh+5JfB7iMvdINr/e/tPQ69HfSetFv0X0fAgmgnyVOK/dUgE5w1DLVev3dLjorJ0G
-         i03LoJJiAnZnvUoy6XuPCY8IXaIDtBHEb4aLZNvgISsXkrWggvB6VDjNfdIi9/NCFLjI
-         xaew==
-X-Gm-Message-State: AGi0PubwPRPZjGi5c5s0PTiz9lgJKGFkjLPeWT/7OBM7pvSBL42OAWpp
-        VnQH/VTT43EGxuWc+itiSx++YmIWq2KvSJYdSc0Vbw==
-X-Google-Smtp-Source: APiQypIGTUh/5sCvlDOhvI/LG4JE8NTFr9y4EW8BlYgrxb5QHasXcsr59vMAsl3o74ezgCVEiF3BiSVV/FTK4Mkh01Y=
-X-Received: by 2002:a05:6830:1e4e:: with SMTP id e14mr21811872otj.91.1588074686391;
- Tue, 28 Apr 2020 04:51:26 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ARhS0rwZ8Alb5Jm0pWQp/cHnoFN2jrQ1u7lV5uPkaIQ=;
+        b=LLAl0FAcX4pUc8Wo1sYIEwspgKNtFQKR6AsOmwr2ta1D+Fy4M7Sn7Dg0dmYJbAdijq
+         utBjq0UGgx4HnEOtRLZARe0TPIG68i/grWpYWLCX+SuCuG2CB2ggZvLcwRAQhWU1jk5C
+         uE7EmE+RLE6cx3OB8s3dzqvv7SJ4pcQtIotFBZid80COS5kLMVumdNStcChewZ2vh8I1
+         C8qWqaKj1fwaBUgR9349mp77mxIlTuQWdmM+7otvJFm4iV0gka0EIIWKekY5d47IvpoY
+         77UsgY/NQxNon/zUiIy46FmlHQKU2T8YSWAPWmL8154w6PKPab1n5WNv7CEfQLzKUnJN
+         n6iw==
+X-Gm-Message-State: AGi0Pubd/yVZdgCPZTy6af05decwxJqc1V0z4OTkuqgj6HQhJqlBeZVY
+        vI8hJBb5NRQAD/Wwx9kqnMheenwcSpU=
+X-Google-Smtp-Source: APiQypLd2NSu0mYIXkv6YI6YC6iYQ4qBfQuvzN3jUInvrcXe/1U8kye3GPBhq/k3JVYMUwXYHLtPPQ==
+X-Received: by 2002:a5d:544f:: with SMTP id w15mr35097664wrv.77.1588074907763;
+        Tue, 28 Apr 2020 04:55:07 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id r2sm3091066wmg.2.2020.04.28.04.55.06
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 Apr 2020 04:55:07 -0700 (PDT)
+Subject: Re: [PATCH] nvmem: ensure sysfs writes handle write-protect pin
+To:     Michael Auchter <michael.auchter@ni.com>
+Cc:     Khouloud Touil <ktouil@baylibre.com>, linux-kernel@vger.kernel.org
+References: <20200427183914.333587-1-michael.auchter@ni.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <4fa69067-8993-1819-abb5-3ce718e17d36@linaro.org>
+Date:   Tue, 28 Apr 2020 12:55:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20200408110816.2712841-1-robert.foss@linaro.org>
- <20200408110816.2712841-2-robert.foss@linaro.org> <20200415160729.GA4438@bogus>
- <20200415162110.bmorj4u4hkqohqjx@pengutronix.de> <CAG3jFysg34=HJ7xefuAKw4Uq6W0POm5TsJmzQku6WwkhH_j=-w@mail.gmail.com>
- <20200428075504.ovzugt2mbgan7z3k@gilmour.lan> <20200428082505.GA22489@pengutronix.de>
-In-Reply-To: <20200428082505.GA22489@pengutronix.de>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Tue, 28 Apr 2020 13:51:15 +0200
-Message-ID: <CAG3jFysKKfu564y4jnfh3unT-6xPLSeBPjfGX5KRY5s=avp1mg@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] media: dt-bindings: ov8856: Document YAML bindings
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Maxime Ripard <maxime@cerno.tech>, Rob Herring <robh@kernel.org>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200427183914.333587-1-michael.auchter@ni.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ah, sorry. I was thinking of the 'port' property and replying to that.
 
-assigned clocks are definitely being removed.
 
-On Tue, 28 Apr 2020 at 10:25, Marco Felsch <m.felsch@pengutronix.de> wrote:
->
-> On 20-04-28 09:55, Maxime Ripard wrote:
-> > On Mon, Apr 27, 2020 at 05:13:42PM +0200, Robert Foss wrote:
-> > > On Wed, 15 Apr 2020 at 18:21, Marco Felsch <m.felsch@pengutronix.de> wrote:
-> > > >
-> > > > On 20-04-15 11:07, Rob Herring wrote:
-> > > > > On Wed, Apr 08, 2020 at 01:08:14PM +0200, Robert Foss wrote:
-> > > > > > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
->
-> ...
->
-> > > > > > +  clock-names:
-> > > > > > +    description:
-> > > > > > +      Input clock for the sensor.
-> > > > > > +    items:
-> > > > > > +      - const: xvclk
-> > > > > > +
-> > > > > > +  assigned-clocks:
-> > > > > > +    description:
-> > > > > > +      Input clock for the sensor.
-> > > > > > +
-> > > > > > +  assigned-clock-rates:
-> > > > > > +    description:
-> > > > > > +      Frequency of the xvclk clock in Hertz.
-> > > > >
-> > > > > These 2 should have a 'maxItems: 1'
-> > > >
-> > > > Don't know why those properties are needed here.. IMHO this shouldn't be
-> > > > part of the binding or at least it should be optional and not required.
-> > > > All we need is the clocks and the clock-names property.
-> > >
-> > > Thanks Marco, I'll make it optional for the next revision.
-> >
-> > Well, the whole discussion we had was about removing them entirely?
->
-> +1 from my side. It is part of the system integration and not part of
-> this device.
->
-> Regards,
->   Marco
->
-> > Maxime
+On 27/04/2020 19:39, Michael Auchter wrote:
+> Commit 2a127da461a9d8d97782d6e82b227041393eb4d2 added support for
+> handling write-protect pins to the nvmem core, and commit
+> 1c89074bf85068d1b86f2e0f0c2110fdd9b83c9f retrofitted the at24 driver to
+> use this support.
+> 
+> These changes broke write() on the nvmem sysfs attribute for eeproms
+> which utilize a write-protect pin, as the write callback invokes the
+> nvmem device's reg_write callback directly which no longer handles
+> changing the state of the write-protect pin.
+> 
+> Change the read and write callbacks for the sysfs attribute to invoke
+> nvmme_reg_read/nvmem_reg_write helpers which handle this, rather than
+> calling reg_read/reg_write directly.
+> 
+> Signed-off-by: Michael Auchter <michael.auchter@ni.com>
+> ---
+>   drivers/nvmem/core.c | 52 ++++++++++++++++++++++----------------------
+>   1 file changed, 26 insertions(+), 26 deletions(-)
+> 
+
+Applied fixes tag:
+  Fixes: 2a127da461a9 ("nvmem: add support for the write-protect pin")
+
+
+--srini
