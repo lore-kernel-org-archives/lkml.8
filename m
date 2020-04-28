@@ -2,108 +2,105 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F11C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5E1C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80439206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79CA4206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:29:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SQwyib3K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgD1G2G (ORCPT
+        id S1726345AbgD1G3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 02:28:06 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45482 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbgD1G2F (ORCPT
+        Tue, 28 Apr 2020 02:29:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725917AbgD1G3S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 02:28:05 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 28 Apr 2020 02:29:18 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BDC2C03C1A9;
+        Mon, 27 Apr 2020 23:29:18 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 35D7B2A122C;
-        Tue, 28 Apr 2020 07:28:03 +0100 (BST)
-Date:   Tue, 28 Apr 2020 08:27:59 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        hauke.mehrtens@intel.com, qi-ming.wu@intel.com,
-        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
-        richard@nod.at, brendanhiggins@google.com,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-Subject: Re: [PATCH v3 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200428082759.25065146@collabora.com>
-In-Reply-To: <cba30ccb-c190-d4d6-eab9-6083bd5d2aad@linux.intel.com>
-References: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200423162113.38055-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200424183612.4cfdbb6a@collabora.com>
-        <20200427175127.0518c193@xps13>
-        <cba30ccb-c190-d4d6-eab9-6083bd5d2aad@linux.intel.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49BBZ06QC1z9sRY;
+        Tue, 28 Apr 2020 16:29:12 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588055354;
+        bh=GnxcI0kkLzQz19bJb2kB7GvBixqRVImJBSF2kt9g9tk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=SQwyib3KHot5j38pdCwwNfttpWYV9gx+jbRIrpYQCURiZ+iNde27t4Zru33nz/Yid
+         GvtZ431uyw+CXFogxZiUYsAkyo3wtbnPG9/MjJ153ikeezXdneMnvP03uJOT+Sg9Bg
+         YCx4KpK/8oZtt0mGEbfK+aUs6m87h8vJMGhkVLLN6MmFtouLyzutfYwVeNqDMprm54
+         MGmNdTysamxHafxdeYZ4TazY44VTTkbhOW2EMIBWcIkJClzFD2k3JHFuy0y1p3mafF
+         mX6EeDUfDUyuMYTuM2aF7X4ejJCTDvz4plnEdzO6WSBSXkNY9vOk+v0f7+rafRNjev
+         132ZGFZtAnLmQ==
+Date:   Tue, 28 Apr 2020 16:29:10 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: linux-next: build warning after merge of the tip tree
+Message-ID: <20200428162910.0dee6f52@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/HHh.isL9q9ZPyWaPWYipMyu";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 14:17:30 +0800
-"Ramuthevar, Vadivel MuruganX"
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+--Sig_/HHh.isL9q9ZPyWaPWYipMyu
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> Hi Miquel,
-> 
->     Thank you very much for the review comments and your time...
-> 
-> On 27/4/2020 11:51 pm, Miquel Raynal wrote:
-> > Hi Ramuthevar,
-> >   
-> >>> +static int ebu_nand_probe(struct platform_device *pdev)
-> >>> +{
-> >>> +	struct device *dev = &pdev->dev;
-> >>> +	struct ebu_nand_controller *ebu_host;
-> >>> +	struct nand_chip *nand;
-> >>> +	phys_addr_t nandaddr_pa;
-> >>> +	struct mtd_info *mtd;
-> >>> +	struct resource *res;
-> >>> +	int ret;
-> >>> +	u32 cs;
-> >>> +
-> >>> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
-> >>> +	if (!ebu_host)
-> >>> +		return -ENOMEM;
-> >>> +
-> >>> +	ebu_host->dev = dev;
-> >>> +	nand_controller_init(&ebu_host->controller);
-> >>> +
-> >>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
-> >>> +	ebu_host->ebu_addr = devm_ioremap_resource(&pdev->dev, res);
-> >>> +	if (IS_ERR(ebu_host->ebu_addr))
-> >>> +		return PTR_ERR(ebu_host->ebu_addr);
-> >>> +
-> >>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
-> >>> +	ebu_host->nand_addr = devm_ioremap_resource(&pdev->dev, res);
-> >>> +	if (IS_ERR(ebu_host->nand_addr))
-> >>> +		return PTR_ERR(ebu_host->nand_addr);
-> >>> +
-> >>> +	ret = device_property_read_u32(dev, "nand,cs", &cs);  
-> >>
-> >> CS ids should be encoded in the reg property (see [1]).  
-> > 
-> > Is it your choice to only support a single CS or is it actually a
-> > controller limitation?  
-> 
-> Yes , its controller limitation to support only one CS
+Hi all,
 
-I'm pretty sure that's not true, otherwise you wouldn't have to select
-the CS you want to use :P.
+After merging the tip tree, today's linux-next build (x86_64 allnoconfig)
+produced this warning:
+
+arch/x86/kernel/unwind_orc.c:29:26: warning: 'cur_orc_table' defined but no=
+t used [-Wunused-variable]
+   29 | static struct orc_entry *cur_orc_table =3D __start_orc_unwind;
+      |                          ^~~~~~~~~~~~~
+arch/x86/kernel/unwind_orc.c:28:13: warning: 'cur_orc_ip_table' defined but=
+ not used [-Wunused-variable]
+   28 | static int *cur_orc_ip_table =3D __start_orc_unwind_ip;
+      |             ^~~~~~~~~~~~~~~~
+
+Exposed by commit
+
+  153eb2223c79 ("x86/unwind/orc: Convert global variables to static")
+
+This build has CONFIG_MODULE not set.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/HHh.isL9q9ZPyWaPWYipMyu
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6nzTYACgkQAVBC80lX
+0Gxr2Af8DtURpiQP8RSDSzqWrGJVXcZcmVG3bzN3fY+x6rt2qxz2KvWszV5uSvNN
+ZrS0anFoWP/GCqD5OQtVQZy2EXrVwHT9z/7zKCnU3R8ckpbilmvRRNkAKHx4+PLX
+wslr2WkgHg5DWgSqUoR2bGlOXMPwbn3wn/NVV+cHslAOJpDl+fFSfF30p01Hiccz
+dYtucOHViDLqLxvZG7be8Hmw7mreaJqIbesFAuwFYf3a2zqFhc/qQIZMRmNFEcly
+YUateOoP5TFsH2BCH1w9KPx3tk29I0mXDe3Szb3XGeOrLqa7yDGzHAgvBu6O76dx
+b/rOzW6wSsGD62FfCWzoLyM3G3IPqw==
+=bs8r
+-----END PGP SIGNATURE-----
+
+--Sig_/HHh.isL9q9ZPyWaPWYipMyu--
