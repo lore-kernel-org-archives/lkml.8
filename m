@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1E7C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC28C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 647172072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA5832072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:00:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CQtUZub7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p9Fr9GlC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgD1VAY (ORCPT
+        id S1726889AbgD1U7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:00:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38788 "EHLO
+        Tue, 28 Apr 2020 16:59:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726941AbgD1U7x (ORCPT
+        by vger.kernel.org with ESMTP id S1726842AbgD1U7n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:59:53 -0400
+        Tue, 28 Apr 2020 16:59:43 -0400
 Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 289FFC03C1AC;
-        Tue, 28 Apr 2020 13:59:53 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id j3so211368ljg.8;
-        Tue, 28 Apr 2020 13:59:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA40DC03C1AC;
+        Tue, 28 Apr 2020 13:59:42 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id g4so257333ljl.2;
+        Tue, 28 Apr 2020 13:59:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5ldgJ4636CVVH5K09ieY2CjYskH7FkK4YIkv15ewvcg=;
-        b=CQtUZub7pmYCoM9rgBDRF8mOSsdyPuWwmd58ngg3Hlx0WWJBUPyU6nMUtnNSnjSvFi
-         9PcXKfbggKYCYRv4M2BI1ivQVzjcHHOwxvfjfZv1cqmGM5J25fNWUENTN5J+ek9erpbJ
-         SvkSqmrZut59DzXc+ag223V9aWC3r1f9IWUbXfRi3ACwJp5mu9xU0KxkgDSNH83xyk8x
-         QLhcYVe1OvpcztTL865V1jatwBmH3vn/pkqoIJ7Jxj4NSloLaTRUzsuxaBjRsh1xXLeN
-         hQVUWmQlPqcZEL4nguD8c7Vlkry1FfBNwpumcnUWV6vISLulSNYtcvhuKkiQPO6HLKG6
-         S9FA==
+        bh=WD1ujdDPaZr2tel/SdXaMCcHYNwfEhTtkcv7u+ya4TM=;
+        b=p9Fr9GlCZWdBfVeNmGFGRectLCP0tawZJ6HOk4/26gkt2xbuGisjL5HWK8oxenMLc3
+         WK7CFb3ruKHCtZ7DW6Lp8Fpzt4GHk+CGxiYQtgWPSlUcZZhyrkXg+x7Q/f57QULeG4g7
+         KBX/5c90KxyqqsIIlo8SJO7E7uG+2zSYj8AOCV2Ylk8oubDLEsK3ADImk2flhGOFkXI+
+         87KwKJ/zH2FkeTIOkSsL2VQzig4qfyW01BDbny+JHyYdb8TNIJn+W5fs5fV4eB76ibiO
+         CcBQtvZ48ahRBPCdPeE5xo7HRSuwQn5iX+QgHsxVfkr1T4EZH49PkqEz1HmXrNUWClic
+         bbZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5ldgJ4636CVVH5K09ieY2CjYskH7FkK4YIkv15ewvcg=;
-        b=HAHeWZmHB0yvkOOhZK8ncaJl9FfVinbkkPdFWGf00qj48MZCNCSsZW4D8Jf4tq5Npw
-         6JwXOz6dXKHwLkWZ0irhCRVfP/pBFU1I8C5mMKHvCRazLN0L0pom1JnG0SZbVZhAgBe7
-         Gju7T56VuDV9czYzu/5dFbY+9GKoKdGElaUDMidJGPtskLY0bIJ/wqsQAwcTmrprThoF
-         tVxmDnvpP803h1neM0DJyDNomPRK/fJ/8LCOLmvcCm22P3G4RIGmk0wEFd7z1qcv44iM
-         5cWvfdBTSnDOTVRfvDOHSZXTiOjRZ5JrQBY6krTLTOirv0tY3nkApD1DPHmdUkKXVboG
-         yGzQ==
-X-Gm-Message-State: AGi0PuYunQHJ7vE6Ohd379UEJl7ZaHOZkbJRtTjCTca5ChuJxlyxXh/Y
-        nR2ezDvIPZ25W7v4DKU7YVxm+vLEowjY8A==
-X-Google-Smtp-Source: APiQypI7Q10ox7ABU0RMMw3dY9sgNyJEZcaL1fC+sRAcqhh5hwFSEZtLMIISQ2ZVDZMjGMbpQT614Q==
-X-Received: by 2002:a05:651c:545:: with SMTP id q5mr14996061ljp.57.1588107591349;
-        Tue, 28 Apr 2020 13:59:51 -0700 (PDT)
+        bh=WD1ujdDPaZr2tel/SdXaMCcHYNwfEhTtkcv7u+ya4TM=;
+        b=U0YdinzbDKzElZ38VcoPbNb194Duh3Cm1Xr5sfDhfl5xbJPmkiZg7FfrN41vJbHW4c
+         Cd2WPK08+yWfn2QLerMhMuqLMPI9ZRqa1WWRUqyLIR3bFZTOeCaxpdSg0j7+q6mEG7+W
+         Ni+u8xCCRMA18etwUGfipGzRXzYgk6795SSLJkEbITwx2UCaBR+bFRpY5KM+2Cz2PaWf
+         pqieh4Wolbmg7WIY1rEoWCbmnOIBe11wMaWLnipUrc+AIkqEpv31qIPFoFPtBTTDume0
+         eAB0o9aiRMd5UCLpxQ4MSUY6eAffmKMrGB1JBbSm+Z08/ijmAjGZQkS6SihkiR/LaJ8c
+         Oglg==
+X-Gm-Message-State: AGi0PuazzyZyUG1xh5UUAS7P3xLdAUmmnsVTOUwChm7/GADJ0sALJUgQ
+        nJg/eLx4g1p3+12Oi4/utN3/B1DpMPejgw==
+X-Google-Smtp-Source: APiQypJNL/we3uS/PpZeWdXqJOcuZv4g219qgtqBw9a68MWbrzBMMmSnncu/axBnMngVJ8BcXOksZA==
+X-Received: by 2002:a2e:b057:: with SMTP id d23mr19244054ljl.157.1588107580807;
+        Tue, 28 Apr 2020 13:59:40 -0700 (PDT)
 Received: from pc638.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id z21sm295483ljh.42.2020.04.28.13.59.49
+        by smtp.gmail.com with ESMTPSA id z21sm295483ljh.42.2020.04.28.13.59.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 13:59:50 -0700 (PDT)
+        Tue, 28 Apr 2020 13:59:40 -0700 (PDT)
 From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 To:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
@@ -69,9 +69,9 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Joel Fernandes <joel@joelfernandes.org>,
         RCU <rcu@vger.kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
         Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: [PATCH 18/24] mm/list_lru.c: Remove kvfree_rcu_local() function
-Date:   Tue, 28 Apr 2020 22:58:57 +0200
-Message-Id: <20200428205903.61704-19-urezki@gmail.com>
+Subject: [PATCH 10/24] rcu/tree: add rcutree.rcu_min_cached_objs description
+Date:   Tue, 28 Apr 2020 22:58:49 +0200
+Message-Id: <20200428205903.61704-11-urezki@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200428205903.61704-1-urezki@gmail.com>
 References: <20200428205903.61704-1-urezki@gmail.com>
@@ -82,66 +82,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since there is newly introduced kvfree_rcu() API, there is no need in
-queuing and using call_rcu() to kvfree() an object after the GP.
+Document the rcutree.rcu_min_cached_objs sysfs kernel parameter.
 
-Remove kvfree_rcu_local() function and replace call_rcu() by new
-kvfree_rcu() API that does the same but in more efficient way.
-
-Cc: linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: rcu@vger.kernel.org
 Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- mm/list_lru.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/mm/list_lru.c b/mm/list_lru.c
-index 42c95bcb53ca..a0b08b27a9b9 100644
---- a/mm/list_lru.c
-+++ b/mm/list_lru.c
-@@ -12,6 +12,7 @@
- #include <linux/slab.h>
- #include <linux/mutex.h>
- #include <linux/memcontrol.h>
-+#include <linux/rcupdate.h>
- #include "slab.h"
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 828ff975fbc6..b2b7022374af 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3977,6 +3977,14 @@
+ 			latencies, which will choose a value aligned
+ 			with the appropriate hardware boundaries.
  
- #ifdef CONFIG_MEMCG_KMEM
-@@ -373,21 +374,13 @@ static void memcg_destroy_list_lru_node(struct list_lru_node *nlru)
- 	struct list_lru_memcg *memcg_lrus;
- 	/*
- 	 * This is called when shrinker has already been unregistered,
--	 * and nobody can use it. So, there is no need to use kvfree_rcu_local().
-+	 * and nobody can use it. So, there is no need to use kvfree_rcu().
- 	 */
- 	memcg_lrus = rcu_dereference_protected(nlru->memcg_lrus, true);
- 	__memcg_destroy_list_lru_node(memcg_lrus, 0, memcg_nr_cache_ids);
- 	kvfree(memcg_lrus);
- }
- 
--static void kvfree_rcu_local(struct rcu_head *head)
--{
--	struct list_lru_memcg *mlru;
--
--	mlru = container_of(head, struct list_lru_memcg, rcu);
--	kvfree(mlru);
--}
--
- static int memcg_update_list_lru_node(struct list_lru_node *nlru,
- 				      int old_size, int new_size)
- {
-@@ -419,7 +412,7 @@ static int memcg_update_list_lru_node(struct list_lru_node *nlru,
- 	rcu_assign_pointer(nlru->memcg_lrus, new);
- 	spin_unlock_irq(&nlru->lock);
- 
--	call_rcu(&old->rcu, kvfree_rcu_local);
-+	kvfree_rcu(old, rcu);
- 	return 0;
- }
- 
++	rcutree.rcu_min_cached_objs= [KNL]
++			Minimum number of objects which are cached and
++			maintained per one CPU. Object size is equal
++			to PAGE_SIZE. The cache allows to reduce the
++			pressure to page allocator, also it makes the
++			whole algorithm to behave better in low memory
++			condition.
++
+ 	rcutree.jiffies_till_first_fqs= [KNL]
+ 			Set delay from grace-period initialization to
+ 			first attempt to force quiescent states.
 -- 
 2.20.1
 
