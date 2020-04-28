@@ -2,133 +2,136 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F26C8C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 250F4C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2E512073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1A022073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:53:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="MOaili/s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aOYnwekw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgD2Ow2 (ORCPT
+        id S1726864AbgD2Ox2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:52:28 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:42728 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726775AbgD2Ow1 (ORCPT
+        Wed, 29 Apr 2020 10:53:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726484AbgD2Ox1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:52:27 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03TEqKrF025571;
-        Wed, 29 Apr 2020 16:52:20 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=k4HHTwS+8Ljbwqtos9h637MEEsprgCn+OA+4OMP7vFM=;
- b=MOaili/s/VJ0fiUvGwJyitOHHjHTrw54nh0Chwl9+QzytQIlBGkcQzCavUDbaLCgtUqn
- 552MnWhqHPq9pZdFCBdi3KR5en+UQi8FaFqHh+q6f3mVuK/jhfHMhyg+wncyvR4XIZmd
- UlLJBdrW11H0bRqWyoLj9xUBGtPNeB0B69AgpyI/4VF6Ku9YfLIClRwpQsQdXttjtPDO
- di18l2lPdHUe+Qaq83dAJjNIOyAsYDp9keWtKqVXPf9k5TnsOhXRjX0Y87kUHsGle7lt
- LecV34D//WmmYfrJ+9FEdKajqgQlxd+oe/Oef6+XDTllvg2LzkOXWjxKewKfHzBGFiwZ Dg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30n4j6352n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 16:52:20 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6CAE710002A;
-        Wed, 29 Apr 2020 16:52:19 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5AA232AAF70;
-        Wed, 29 Apr 2020 16:52:19 +0200 (CEST)
-Received: from lmecxl0889.tpe.st.com (10.75.127.47) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Apr
- 2020 16:52:18 +0200
-Subject: Re: [PATCH v2 09/12] remoteproc: stm32: Update M4 state in
- stm32_rproc_stop()
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
-CC:     <loic.pallardy@st.com>, <linux-remoteproc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200424202505.29562-1-mathieu.poirier@linaro.org>
- <20200424202505.29562-10-mathieu.poirier@linaro.org>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <f4394e9d-2915-2e15-38e4-80b23baf678e@st.com>
-Date:   Wed, 29 Apr 2020 16:52:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 10:53:27 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3D05C03C1AD;
+        Wed, 29 Apr 2020 07:53:27 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 145so1162776pfw.13;
+        Wed, 29 Apr 2020 07:53:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=0ZRCFqU303/twN8hVJ5hqfcmrbnv34m+1dUf1S5stNk=;
+        b=aOYnwekw+Ep61qJAMEnkw1HpeaNpSpUiVZAODecFZzn3FmNASj/FNznKgfNWegoS60
+         Yx5v1NGzv3S/cPXEc3ALlBzUihHvwDLvBYDf17ffCaRVDrXS7RuTipnW8sDa30ggxmse
+         RxoTryFRRFriEs7NCReUY3zAzzqEf45PXnZxoAn9U33LHz7Y/EXsLGugPMvi1SoSxEqq
+         WjhhGe5oRPVT2bScL/FE/cnQ1Q3Ib8s4lq/Dm0vMqw9KXRs1rHPyQ7f9yl8eiLOl1YIb
+         k+wLFh11qK0RwlCEPBLxcBsPeEylR5cfU3rJWCmg4L/vfq9U6d9G6fHsv3rHNlf8jPL7
+         ofNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=0ZRCFqU303/twN8hVJ5hqfcmrbnv34m+1dUf1S5stNk=;
+        b=a0i++ZttpGzhTov6BWEBpoZ8GNv933+x4sUKPNbacyDy/S2AEN4BksqR0xDkYtu8WV
+         Dn9wyIZUBTtvQkfOe+qdsdrNmPBYnJ0QJo0hCgPLofepm/CeLIxoyff47JxqZlfDBjGP
+         2Lf51Q0Cra81G9TaC2nSxax/aW+Q2TvRYAkSgHjmaZIJy7xNAT4uiImkPrD6aJ/7jrlT
+         Otc9BTZxB8Dd6DEHzYrfFY8VZWtZoLdxFsyBYNjqkONfPsOJA8+nfQ593hIYMQ87uRVM
+         jPFLvCnpxCOKFGNve47vMMtP5jDdlagDiqgLuPzgNhPIb3N2xLuktonwYvkAnApyGGgF
+         Lvew==
+X-Gm-Message-State: AGi0PuYLitqG4rOy0CCuuNRbkOFogbIeq1xKaicigL7EOlkBusQaw1mN
+        2FvpMyE4yagGPhCnOeYTU0Y=
+X-Google-Smtp-Source: APiQypII7p7aNkIJuh7yMUE3jid684h7H+f5nYDkdRXBk7Yp8huPtWwgw135zQbdhJ8i10Nsn1nMGA==
+X-Received: by 2002:aa7:951b:: with SMTP id b27mr35415299pfp.2.1588172007216;
+        Wed, 29 Apr 2020 07:53:27 -0700 (PDT)
+Received: from udknight.localhost ([59.57.158.27])
+        by smtp.gmail.com with ESMTPSA id y24sm1243603pfn.211.2020.04.29.07.53.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 Apr 2020 07:53:26 -0700 (PDT)
+Received: from udknight.localhost (localhost [127.0.0.1])
+        by udknight.localhost (8.14.9/8.14.4) with ESMTP id 03SGIdPj000709;
+        Wed, 29 Apr 2020 00:18:39 +0800
+Received: (from root@localhost)
+        by udknight.localhost (8.14.9/8.14.9/Submit) id 03SGIVsG000694;
+        Wed, 29 Apr 2020 00:18:31 +0800
+Date:   Wed, 29 Apr 2020 00:18:31 +0800
+From:   Wang YanQing <udknight@gmail.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Joe Perches <joe@perches.com>, Andy Whitcroft <apw@canonical.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Matteo Croce <mcroce@redhat.com>
+Subject: Re: [PATCH v3] checkpatch: add dedicated checker for 'Fixes:' tag
+Message-ID: <20200428161831.GB30042@udknight>
+Mail-Followup-To: Wang YanQing <udknight@gmail.com>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Joe Perches <joe@perches.com>, Andy Whitcroft <apw@canonical.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Matteo Croce <mcroce@redhat.com>
+References: <20200428020223.GA28074@udknight>
+ <38e1a926-53a6-bda6-cb07-2614f4c682ba@web.de>
 MIME-Version: 1.0
-In-Reply-To: <20200424202505.29562-10-mathieu.poirier@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-29_07:2020-04-29,2020-04-29 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <38e1a926-53a6-bda6-cb07-2614f4c682ba@web.de>
+User-Agent: Mutt/1.7.1 (2016-10-04)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/24/20 10:25 PM, Mathieu Poirier wrote:
-> Update the M4 co-processor state in function stm32_rproc_stop() so
-> that it can be used in synchronisation scenarios.
+On Tue, Apr 28, 2020 at 12:52:59PM +0200, Markus Elfring wrote:
+> > And there is no 'Fixes:' tag format checker in checkpatch
 > 
-> Mainly based on the work published by Arnaud Pouliquen [1].
+> I have taken another look at corresponding implementation details.
+> Will programming challenges get any more attention?
 > 
-> [1]. https://patchwork.kernel.org/project/linux-remoteproc/list/?series=239877
 > 
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > to check the commit id length too,
+> 
+> The mentioned script contains the following information.
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/scripts/checkpatch.pl?id=b240f960afb900e59112ebcfa5a759bb0a85a14e#n2818
+> 
+> # Check for git id commit length and improperly formed commit descriptions
+> 
+> 
+> > so let's add dedicated checker to check these conditions for 'Fixes:' tag.
+> 
+> How do you think about to reconsider the usage of the word “checker”
+> at specific places?
 
-Reviewed-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Yes, I will use the word "check" only in later version.
 
-Thanks,
-Arnaud
+> 
+> 
+> > +		    my $id = '0123456789ab';
+> > +		    my $orig_desc = "commit description";
+> 
+> * Do you try to extend the existing software analysis approach “GIT_COMMIT_ID”?
+> 
+> * Would you like to avoid the development of duplicate Perl code?
 
-> ---
->  drivers/remoteproc/stm32_rproc.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+Fixes: lines don't need to have a "commit" prefix before the commit id, the description
+in normal commit id could across multiple lines, and we don't need to consider the
+$commit_log_possible_stack_dump for 'Fixes:' tag line. I mean it will make the GIT_COMMIT_ID
+code become harder to read and maintain.
+
 > 
-> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-> index 404f17a97095..86d23c35d805 100644
-> --- a/drivers/remoteproc/stm32_rproc.c
-> +++ b/drivers/remoteproc/stm32_rproc.c
-> @@ -493,6 +493,18 @@ static int stm32_rproc_stop(struct rproc *rproc)
->  		}
->  	}
->  
-> +	/* update coprocessor state to OFF if available */
-> +	if (ddata->m4_state.map) {
-> +		err = regmap_update_bits(ddata->m4_state.map,
-> +					 ddata->m4_state.reg,
-> +					 ddata->m4_state.mask,
-> +					 M4_STATE_OFF);
-> +		if (err) {
-> +			dev_err(&rproc->dev, "failed to set copro state\n");
-> +			return err;
-> +		}
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -531,6 +543,7 @@ static struct rproc_ops st_rproc_ops = {
->  
->  static __maybe_unused struct rproc_ops st_rproc_sync_ops = {
->  	.start		= stm32_rproc_sync_start,
-> +	.stop		= stm32_rproc_stop,
->  };
->  
->  static const struct of_device_id stm32_rproc_match[] = {
-> 
+> Regards,
+> Markus
