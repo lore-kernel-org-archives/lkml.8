@@ -4,27 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2606C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8185C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAD1921D92
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF74221D7B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:17:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgD1PRs (ORCPT
+        id S1728187AbgD1PRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:17:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728028AbgD1PRq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:17:46 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C031C03C1AB;
-        Tue, 28 Apr 2020 08:17:46 -0700 (PDT)
+        Tue, 28 Apr 2020 11:17:54 -0400
+Received: from 8bytes.org ([81.169.241.247]:37428 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728028AbgD1PRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:17:50 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 756F16BB; Tue, 28 Apr 2020 17:17:42 +0200 (CEST)
+        id 6D3CD947; Tue, 28 Apr 2020 17:17:43 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -44,9 +41,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 01/75] KVM: SVM: Add GHCB definitions
-Date:   Tue, 28 Apr 2020 17:16:11 +0200
-Message-Id: <20200428151725.31091-2-joro@8bytes.org>
+Subject: [PATCH v3 07/75] x86/umip: Factor out instruction fetch
+Date:   Tue, 28 Apr 2020 17:16:17 +0200
+Message-Id: <20200428151725.31091-8-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200428151725.31091-1-joro@8bytes.org>
 References: <20200428151725.31091-1-joro@8bytes.org>
@@ -55,70 +52,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-Extend the vmcb_safe_area with SEV-ES fields and add a new
-'struct ghcb' which will be used for guest-hypervisor communication.
+Factor out the code to fetch the instruction from user-space to a helper
+function.
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+No functional changes.
+
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/svm.h | 42 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ arch/x86/include/asm/insn-eval.h |  2 ++
+ arch/x86/kernel/umip.c           | 26 +++++-----------------
+ arch/x86/lib/insn-eval.c         | 38 ++++++++++++++++++++++++++++++++
+ 3 files changed, 46 insertions(+), 20 deletions(-)
 
-diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-index 6ece8561ba66..f36288c659b5 100644
---- a/arch/x86/include/asm/svm.h
-+++ b/arch/x86/include/asm/svm.h
-@@ -201,6 +201,48 @@ struct __attribute__ ((__packed__)) vmcb_save_area {
- 	u64 br_to;
- 	u64 last_excp_from;
- 	u64 last_excp_to;
+diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
+index 2b6ccf2c49f1..b8b9ef1bbd06 100644
+--- a/arch/x86/include/asm/insn-eval.h
++++ b/arch/x86/include/asm/insn-eval.h
+@@ -19,5 +19,7 @@ void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs);
+ int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs);
+ unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx);
+ int insn_get_code_seg_params(struct pt_regs *regs);
++int insn_fetch_from_user(struct pt_regs *regs,
++			 unsigned char buf[MAX_INSN_SIZE]);
+ 
+ #endif /* _ASM_X86_INSN_EVAL_H */
+diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
+index 8d5cbe1bbb3b..c9e5345da793 100644
+--- a/arch/x86/kernel/umip.c
++++ b/arch/x86/kernel/umip.c
+@@ -317,11 +317,11 @@ static void force_sig_info_umip_fault(void __user *addr, struct pt_regs *regs)
+  */
+ bool fixup_umip_exception(struct pt_regs *regs)
+ {
+-	int not_copied, nr_copied, reg_offset, dummy_data_size, umip_inst;
+-	unsigned long seg_base = 0, *reg_addr;
++	int nr_copied, reg_offset, dummy_data_size, umip_inst;
+ 	/* 10 bytes is the maximum size of the result of UMIP instructions */
+ 	unsigned char dummy_data[10] = { 0 };
+ 	unsigned char buf[MAX_INSN_SIZE];
++	unsigned long *reg_addr;
+ 	void __user *uaddr;
+ 	struct insn insn;
+ 	int seg_defs;
+@@ -329,26 +329,12 @@ bool fixup_umip_exception(struct pt_regs *regs)
+ 	if (!regs)
+ 		return false;
+ 
+-	/*
+-	 * If not in user-space long mode, a custom code segment could be in
+-	 * use. This is true in protected mode (if the process defined a local
+-	 * descriptor table), or virtual-8086 mode. In most of the cases
+-	 * seg_base will be zero as in USER_CS.
+-	 */
+-	if (!user_64bit_mode(regs))
+-		seg_base = insn_get_seg_base(regs, INAT_SEG_REG_CS);
+-
+-	if (seg_base == -1L)
+-		return false;
+-
+-	not_copied = copy_from_user(buf, (void __user *)(seg_base + regs->ip),
+-				    sizeof(buf));
+-	nr_copied = sizeof(buf) - not_copied;
++	nr_copied = insn_fetch_from_user(regs, buf);
+ 
+ 	/*
+-	 * The copy_from_user above could have failed if user code is protected
+-	 * by a memory protection key. Give up on emulation in such a case.
+-	 * Should we issue a page fault?
++	 * The insn_fetch_from_user above could have failed if user code
++	 * is protected by a memory protection key. Give up on emulation
++	 * in such a case.  Should we issue a page fault?
+ 	 */
+ 	if (!nr_copied)
+ 		return false;
+diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
+index 31600d851fd8..0c4f7ebc261b 100644
+--- a/arch/x86/lib/insn-eval.c
++++ b/arch/x86/lib/insn-eval.c
+@@ -1369,3 +1369,41 @@ void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs)
+ 		return (void __user *)-1L;
+ 	}
+ }
++
++/**
++ * insn_fetch_from_user() - Copy instruction bytes from user-space memory
++ * @regs:	Structure with register values as seen when entering kernel mode
++ * @buf:	Array to store the fetched instruction
++ *
++ * Gets the linear address of the instruction and copies the instruction bytes
++ * to the buf.
++ *
++ * Returns:
++ *
++ * Number of instruction bytes copied.
++ *
++ * 0 if nothing was copied.
++ */
++int insn_fetch_from_user(struct pt_regs *regs, unsigned char buf[MAX_INSN_SIZE])
++{
++	unsigned long seg_base = 0;
++	int not_copied;
 +
 +	/*
-+	 * The following part of the save area is valid only for
-+	 * SEV-ES guests when referenced through the GHCB.
++	 * If not in user-space long mode, a custom code segment could be in
++	 * use. This is true in protected mode (if the process defined a local
++	 * descriptor table), or virtual-8086 mode. In most of the cases
++	 * seg_base will be zero as in USER_CS.
 +	 */
-+	u8 reserved_7[104];
-+	u64 reserved_8;		/* rax already available at 0x01f8 */
-+	u64 rcx;
-+	u64 rdx;
-+	u64 rbx;
-+	u64 reserved_9;		/* rsp already available at 0x01d8 */
-+	u64 rbp;
-+	u64 rsi;
-+	u64 rdi;
-+	u64 r8;
-+	u64 r9;
-+	u64 r10;
-+	u64 r11;
-+	u64 r12;
-+	u64 r13;
-+	u64 r14;
-+	u64 r15;
-+	u8 reserved_10[16];
-+	u64 sw_exit_code;
-+	u64 sw_exit_info_1;
-+	u64 sw_exit_info_2;
-+	u64 sw_scratch;
-+	u8 reserved_11[56];
-+	u64 xcr0;
-+	u8 valid_bitmap[16];
-+	u64 x87_state_gpa;
-+	u8 reserved_12[1016];
-+};
++	if (!user_64bit_mode(regs)) {
++		seg_base = insn_get_seg_base(regs, INAT_SEG_REG_CS);
++		if (seg_base == -1L)
++			return 0;
++	}
 +
-+struct __attribute__ ((__packed__)) ghcb {
-+	struct vmcb_save_area save;
 +
-+	u8 shared_buffer[2032];
++	not_copied = copy_from_user(buf, (void __user *)(seg_base + regs->ip),
++				    MAX_INSN_SIZE);
 +
-+	u8 reserved_1[10];
-+	u16 protocol_version;	/* negotiated SEV-ES/GHCB protocol version */
-+	u32 ghcb_usage;
- };
- 
- struct __attribute__ ((__packed__)) vmcb {
++	return MAX_INSN_SIZE - not_copied;
++}
 -- 
 2.17.1
 
