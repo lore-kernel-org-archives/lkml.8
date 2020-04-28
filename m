@@ -2,196 +2,84 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 452F7C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B085DC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21A9820575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099980;
-	bh=wQT0NZEs+27u1LF8elCTQvvAaHB5bW7Z7i0FVy5aQ4Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W37sLWb1eFk94G3W5gWiWrn4TkyiWSuede2NpE5Usvmct9ejT+DZtnHiLgwkRBbak
-	 qRMw2Wa5PcYM7kl9OXDeEGvse1gTkIoxA/wRGYlZ1lPFJPishiN4q8wTLNqUe27216
-	 uMq2XqKBJQTQHeK3G5dJOPIS2havJb5ZZYlH2/K4=
+	by mail.kernel.org (Postfix) with ESMTP id 8601220575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="a71ArMo0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730964AbgD1Sw7 (ORCPT
+        id S1731057AbgD1SxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:52:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52860 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729767AbgD1Sfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:35:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 28 Apr 2020 14:53:05 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:11416 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730821AbgD1SxC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:53:02 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588099981; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=FsLzJHNr0VXH8rbASHfDq+8KzuyxXUdIT4i76FNX04c=; b=a71ArMo06QJdB9V+/nO5fIcm2lrL56Bd3tPgFg2e5GDrB1X1Se7Xt13LFW2xD2a6hyPr2Mqj
+ vzx2xZXGd8TXiBP2keNmaOyQYR4eEh3GY9KvDyRFuZbAyU9FHAYZMpOMfP9JyLQXYXOs07Ph
+ KzT2azdD6jn0AfjONuA/0HcSS64=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea87b75.7f167c8cb148-smtp-out-n02;
+ Tue, 28 Apr 2020 18:52:37 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id ABADCC44791; Tue, 28 Apr 2020 18:52:36 +0000 (UTC)
+Received: from [10.46.162.249] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0AE021707;
-        Tue, 28 Apr 2020 18:35:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098937;
-        bh=wQT0NZEs+27u1LF8elCTQvvAaHB5bW7Z7i0FVy5aQ4Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ikrQaYeUB1begBEy8N/euMSsP8KQaJlQuOcy3A3GZNWpAn1f98sx5Xi6hT3oHO9If
-         5cCZoVIEbRQwNoRCJEH6o7yl0Z+62urtc5v9XfCaHwLjY2WZ0CYlGcokbK1V883MAm
-         7d3DF2TQrZivgy7mH+aNTPbMf+tiNQTHzvoY3BTY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 075/131] ALSA: usb-audio: Add static mapping table for ALC1220-VB-based mobos
-Date:   Tue, 28 Apr 2020 20:24:47 +0200
-Message-Id: <20200428182234.365733149@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Authenticated sender: hemantk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 47788C44791;
+        Tue, 28 Apr 2020 18:52:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 47788C44791
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
+Subject: Re: [PATCH v3 1/6] bus: mhi: core: Make sure to powerdown if
+ mhi_sync_power_up fails
+To:     Jeffrey Hugo <jhugo@codeaurora.org>,
+        manivannan.sadhasivam@linaro.org
+Cc:     bbhatt@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1588003153-13139-1-git-send-email-jhugo@codeaurora.org>
+ <1588003153-13139-2-git-send-email-jhugo@codeaurora.org>
+From:   Hemant Kumar <hemantk@codeaurora.org>
+Message-ID: <330fe8ab-5ae3-12f1-0298-0c18bfc7ace9@codeaurora.org>
+Date:   Tue, 28 Apr 2020 11:52:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1588003153-13139-2-git-send-email-jhugo@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit a43c1c41bc5145971d06edc42a6b1e8faa0e2bc3 ]
 
-TRX40 mobos from MSI and others with ALC1220-VB USB-audio device need
-yet more quirks for the proper control names.
+On 4/27/20 8:59 AM, Jeffrey Hugo wrote:
+> Powerdown is necessary if mhi_sync_power_up fails due to a timeout, to
+> clean up the resources.  Otherwise a BUG could be triggered when
+> attempting to clean up MSIs because the IRQ is still active from a
+> request_irq().
+> 
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> ---
+Reviewed-by: Hemant Kumar <hemantk@codeaurora.org>
 
-This patch provides the mapping table for those boards, correcting the
-FU names for volume and mute controls as well as the terminal names
-for jack controls.  It also improves build_connector_control() not to
-add the directional suffix blindly if the string is given from the
-mapping table.
 
-With this patch applied, the new UCM profiles will be effective.
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206873
-Link: https://lore.kernel.org/r/20200420062036.28567-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/usb/mixer.c        | 12 +++++++++---
- sound/usb/mixer_maps.c   | 24 +++++++++++++++++++++---
- sound/usb/quirks-table.h | 14 ++++++++++++++
- 3 files changed, 44 insertions(+), 6 deletions(-)
-
-diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
-index 257da95a4ea6a..2638bd2e41f31 100644
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -1770,8 +1770,10 @@ static void build_connector_control(struct usb_mixer_interface *mixer,
- {
- 	struct snd_kcontrol *kctl;
- 	struct usb_mixer_elem_info *cval;
-+	const struct usbmix_name_map *map;
- 
--	if (check_ignored_ctl(find_map(imap, term->id, 0)))
-+	map = find_map(imap, term->id, 0);
-+	if (check_ignored_ctl(map))
- 		return;
- 
- 	cval = kzalloc(sizeof(*cval), GFP_KERNEL);
-@@ -1803,8 +1805,12 @@ static void build_connector_control(struct usb_mixer_interface *mixer,
- 		usb_mixer_elem_info_free(cval);
- 		return;
- 	}
--	get_connector_control_name(mixer, term, is_input, kctl->id.name,
--				   sizeof(kctl->id.name));
-+
-+	if (check_mapped_name(map, kctl->id.name, sizeof(kctl->id.name)))
-+		strlcat(kctl->id.name, " Jack", sizeof(kctl->id.name));
-+	else
-+		get_connector_control_name(mixer, term, is_input, kctl->id.name,
-+					   sizeof(kctl->id.name));
- 	kctl->private_free = snd_usb_mixer_elem_free;
- 	snd_usb_mixer_add_control(&cval->head, kctl);
- }
-diff --git a/sound/usb/mixer_maps.c b/sound/usb/mixer_maps.c
-index bf000e54461b1..3c14ef8fd5a2b 100644
---- a/sound/usb/mixer_maps.c
-+++ b/sound/usb/mixer_maps.c
-@@ -373,6 +373,24 @@ static const struct usbmix_name_map asus_rog_map[] = {
- 	{}
- };
- 
-+/* TRX40 mobos with Realtek ALC1220-VB */
-+static const struct usbmix_name_map trx40_mobo_map[] = {
-+	{ 18, NULL }, /* OT, IEC958 - broken response, disabled */
-+	{ 19, NULL, 12 }, /* FU, Input Gain Pad - broken response, disabled */
-+	{ 16, "Speaker" },		/* OT */
-+	{ 22, "Speaker Playback" },	/* FU */
-+	{ 7, "Line" },			/* IT */
-+	{ 19, "Line Capture" },		/* FU */
-+	{ 17, "Front Headphone" },	/* OT */
-+	{ 23, "Front Headphone Playback" },	/* FU */
-+	{ 8, "Mic" },			/* IT */
-+	{ 20, "Mic Capture" },		/* FU */
-+	{ 9, "Front Mic" },		/* IT */
-+	{ 21, "Front Mic Capture" },	/* FU */
-+	{ 24, "IEC958 Playback" },	/* FU */
-+	{}
-+};
-+
- /*
-  * Control map entries
-  */
-@@ -494,7 +512,7 @@ static struct usbmix_ctl_map usbmix_ctl_maps[] = {
- 	},
- 	{	/* Gigabyte TRX40 Aorus Pro WiFi */
- 		.id = USB_ID(0x0414, 0xa002),
--		.map = asus_rog_map,
-+		.map = trx40_mobo_map,
- 	},
- 	{	/* ASUS ROG Zenith II */
- 		.id = USB_ID(0x0b05, 0x1916),
-@@ -506,11 +524,11 @@ static struct usbmix_ctl_map usbmix_ctl_maps[] = {
- 	},
- 	{	/* MSI TRX40 Creator */
- 		.id = USB_ID(0x0db0, 0x0d64),
--		.map = asus_rog_map,
-+		.map = trx40_mobo_map,
- 	},
- 	{	/* MSI TRX40 */
- 		.id = USB_ID(0x0db0, 0x543d),
--		.map = asus_rog_map,
-+		.map = trx40_mobo_map,
- 	},
- 	{ 0 } /* terminator */
- };
-diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
-index 90d4f61cc2308..774aeedde0717 100644
---- a/sound/usb/quirks-table.h
-+++ b/sound/usb/quirks-table.h
-@@ -3400,4 +3400,18 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge", "HVR-950Q"),
- 	}
- },
- 
-+#define ALC1220_VB_DESKTOP(vend, prod) { \
-+	USB_DEVICE(vend, prod),	\
-+	.driver_info = (unsigned long) & (const struct snd_usb_audio_quirk) { \
-+		.vendor_name = "Realtek", \
-+		.product_name = "ALC1220-VB-DT", \
-+		.profile_name = "Realtek-ALC1220-VB-Desktop", \
-+		.ifnum = QUIRK_NO_INTERFACE \
-+	} \
-+}
-+ALC1220_VB_DESKTOP(0x0414, 0xa002), /* Gigabyte TRX40 Aorus Pro WiFi */
-+ALC1220_VB_DESKTOP(0x0db0, 0x0d64), /* MSI TRX40 Creator */
-+ALC1220_VB_DESKTOP(0x0db0, 0x543d), /* MSI TRX40 */
-+#undef ALC1220_VB_DESKTOP
-+
- #undef USB_DEVICE_VENDOR_SPEC
 -- 
-2.20.1
-
-
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
