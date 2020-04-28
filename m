@@ -2,117 +2,69 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A20AC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5093DC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4937A206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:56:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ql4jS1g+"
+	by mail.kernel.org (Postfix) with ESMTP id 31D64206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:56:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728120AbgD1Oz7 (ORCPT
+        id S1728081AbgD1O4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:55:59 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:58836 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727775AbgD1Oz6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:55:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588085757; x=1619621757;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=3MZHNktipicg4cEO4n/1/kC9uDxKkqzTZ+Cu+s8r1wc=;
-  b=ql4jS1g+WucsYlhNDnE3cVYKN5CgMcIlV61FKkME9zO1tuRq2Iy9Medw
-   Htsay9IixfahArcvwgJQGMbsHXmn7NhLgTiEVpUvAGtxRG6PDEpiD6X9j
-   X4bK6I83FVme222kiUszYwIofrfd99oBHm+bqaQ8qlPEv5ZPcV1Q3gMds
-   I=;
-IronPort-SDR: LtBqlManQCsvUv43fuj2bj3eOiHr7DJQKk7vzdvSfqUyRaVQDSiM4d7qOF231/mk08ZZzXWy+o
- ret79dK04ojw==
-X-IronPort-AV: E=Sophos;i="5.73,328,1583193600"; 
-   d="scan'208";a="29085930"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 28 Apr 2020 14:55:42 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id C9A00A1D11;
-        Tue, 28 Apr 2020 14:55:41 +0000 (UTC)
-Received: from EX13D06EUC004.ant.amazon.com (10.43.164.101) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 28 Apr 2020 14:55:41 +0000
-Received: from EX13D28EUC001.ant.amazon.com (10.43.164.4) by
- EX13D06EUC004.ant.amazon.com (10.43.164.101) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 28 Apr 2020 14:55:40 +0000
-Received: from EX13D28EUC001.ant.amazon.com ([10.43.164.4]) by
- EX13D28EUC001.ant.amazon.com ([10.43.164.4]) with mapi id 15.00.1497.006;
- Tue, 28 Apr 2020 14:55:40 +0000
-From:   "Agroskin, Shay" <shayagr@amazon.com>
-To:     Gavin Shan <gshan@redhat.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Belgazal, Netanel" <netanel@amazon.com>,
-        "Kiyanovski, Arthur" <akiyano@amazon.com>,
-        "Tzalik, Guy" <gtzalik@amazon.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "shan.gavin@gmail.com" <shan.gavin@gmail.com>,
-        "agrosshay@gmail.com" <agrosshay@gmail.com>
-Subject: Re: [PATCH v2] net/ena: Fix build warning in ena_xdp_set()
-Thread-Topic: [PATCH v2] net/ena: Fix build warning in ena_xdp_set()
-Thread-Index: AQHWHW0VNHFzEvmdV0OlJCS/s0Kxaw==
-Date:   Tue, 28 Apr 2020 14:55:40 +0000
-Message-ID: <87r1w7fymt.fsf@amazon.com>
-References: <20200428044945.123511-1-gshan@redhat.com>
-In-Reply-To: <20200428044945.123511-1-gshan@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.160.65]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <43391DA55B808C4FBD13B1ED09C84B85@amazon.com>
-Content-Transfer-Encoding: base64
+        Tue, 28 Apr 2020 10:56:52 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43662 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727108AbgD1O4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 10:56:51 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 00C6994C8C1753763870;
+        Tue, 28 Apr 2020 22:56:46 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 28 Apr 2020 22:56:36 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Santosh Shilimkar <ssantosh@kernel.org>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] soc: ti: knav_qmss_queue: fix error return code in knav_queue_probe()
+Date:   Tue, 28 Apr 2020 14:57:51 +0000
+Message-ID: <20200428145751.97287-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpHYXZpbiBTaGFuIDxnc2hhbkByZWRoYXQuY29tPiB3cml0ZXM6DQoNCj4gVGhpcyBmaXhlcyB0
-aGUgZm9sbG93aW5nIGJ1aWxkIHdhcm5pbmcgaW4gZW5hX3hkcF9zZXQoKSwgd2hpY2ggaXMNCj4g
-b2JzZXJ2ZWQgb24gYWFyY2g2NCB3aXRoIDY0S0IgcGFnZSBzaXplLg0KPg0KPiAgICBJbiBmaWxl
-IGluY2x1ZGVkIGZyb20gLi9pbmNsdWRlL25ldC9pbmV0X3NvY2suaDoxOSwNCj4gICAgICAgZnJv
-bSAuL2luY2x1ZGUvbmV0L2lwLmg6MjcsDQo+ICAgICAgIGZyb20gZHJpdmVycy9uZXQvZXRoZXJu
-ZXQvYW1hem9uL2VuYS9lbmFfbmV0ZGV2LmM6NDY6DQo+ICAgIGRyaXZlcnMvbmV0L2V0aGVybmV0
-L2FtYXpvbi9lbmEvZW5hX25ldGRldi5jOiBJbiBmdW5jdGlvbiAgICAgICAgIFwNCj4gICAg4oCY
-ZW5hX3hkcF9zZXTigJk6ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIFwNCj4gICAgZHJpdmVycy9uZXQvZXRoZXJuZXQvYW1hem9uL2VuYS9lbmFfbmV0
-ZGV2LmM6NTU3OjY6IHdhcm5pbmc6ICAgICAgXA0KPiAgICBmb3JtYXQg4oCYJWx14oCZICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXA0KPiAgICBl
-eHBlY3RzIGFyZ3VtZW50IG9mIHR5cGUg4oCYbG9uZyB1bnNpZ25lZCBpbnTigJksIGJ1dCBhcmd1
-bWVudCA0ICAgICAgXA0KPiAgICBoYXMgdHlwZSDigJhpbnTigJkgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXA0KPiAgICBbLVdmb3JtYXQ9XSAiRmFp
-bGVkIHRvIHNldCB4ZHAgcHJvZ3JhbSwgdGhlIGN1cnJlbnQgTVRVICglZCkgaXMgICBcDQo+ICAg
-IGxhcmdlciB0aGFuIHRoZSBtYXhpbXVtIGFsbG93ZWQgTVRVICglbHUpIHdoaWxlIHhkcCBpcyBv
-biIsDQo+DQo+IFNpZ25lZC1vZmYtYnk6IEdhdmluIFNoYW4gPGdzaGFuQHJlZGhhdC5jb20+DQo+
-IC0tLQ0KPiB2MjogTWFrZSBFTkFfUEFHRV9TSVpFIHRvIGJlICJ1bnNpZ25lZCBsb25nIiBhbmQg
-dmVyaWZ5IG9uIGFhcmNoNjQNCj4gICAgIHdpdGggNEtCIG9yIDY0S0IgcGFnZSBzaXplIGNvbmZp
-Z3VyYXRpb24NCj4gLS0tDQo+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9hbWF6b24vZW5hL2VuYV9u
-ZXRkZXYuaCB8IDIgKy0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxl
-dGlvbigtKQ0KPg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvYW1hem9uL2Vu
-YS9lbmFfbmV0ZGV2LmggYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9hbWF6b24vZW5hL2VuYV9uZXRk
-ZXYuaA0KPiBpbmRleCA5N2RmZDBjNjdlODQuLjllMTg2MGQ4MTkwOCAxMDA2NDQNCj4gLS0tIGEv
-ZHJpdmVycy9uZXQvZXRoZXJuZXQvYW1hem9uL2VuYS9lbmFfbmV0ZGV2LmgNCj4gKysrIGIvZHJp
-dmVycy9uZXQvZXRoZXJuZXQvYW1hem9uL2VuYS9lbmFfbmV0ZGV2LmgNCj4gQEAgLTY5LDcgKzY5
-LDcgQEANCj4gICAqIDE2a0IuDQo+ICAgKi8NCj4gICNpZiBQQUdFX1NJWkUgPiBTWl8xNksNCj4g
-LSNkZWZpbmUgRU5BX1BBR0VfU0laRSBTWl8xNksNCj4gKyNkZWZpbmUgRU5BX1BBR0VfU0laRSAo
-X0FDKFNaXzE2SywgVUwpKQ0KPiAgI2Vsc2UNCj4gICNkZWZpbmUgRU5BX1BBR0VfU0laRSBQQUdF
-X1NJWkUNCj4gICNlbmRpZg0KDQp0aGFua3MgZm9yIHRoaXMgZml4DQoNCkFja2VkLWJ5OiBTaGF5
-IEFncm9za2luIDxzaGF5YWdyQGFtYXpvbi5jb20+
+Fix to return negative error code -ENODEV from the error handling
+case instead of 0, as done elsewhere in this function.
+
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+---
+ drivers/soc/ti/knav_qmss_queue.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/soc/ti/knav_qmss_queue.c b/drivers/soc/ti/knav_qmss_queue.c
+index 37f3db6c041c..64339c9bb08e 100644
+--- a/drivers/soc/ti/knav_qmss_queue.c
++++ b/drivers/soc/ti/knav_qmss_queue.c
+@@ -1864,6 +1864,7 @@ static int knav_queue_probe(struct platform_device *pdev)
+ 	regions =  of_get_child_by_name(node, "descriptor-regions");
+ 	if (!regions) {
+ 		dev_err(dev, "descriptor-regions not specified\n");
++		ret = -ENODEV;
+ 		goto err;
+ 	}
+ 	ret = knav_queue_setup_regions(kdev, regions);
+
+
+
