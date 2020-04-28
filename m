@@ -2,142 +2,128 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDFCC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63001C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE3B420730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 402C0206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:09:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RKMz4XyV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbgD1QIF (ORCPT
+        id S1728232AbgD1QJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:08:05 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:33041 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727884AbgD1QIE (ORCPT
+        Tue, 28 Apr 2020 12:09:42 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43654 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728028AbgD1QJm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:08:04 -0400
-Received: from mail-lj1-f175.google.com ([209.85.208.175]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M5jA2-1jWCs42Tuc-007Cf0; Tue, 28 Apr 2020 18:08:02 +0200
-Received: by mail-lj1-f175.google.com with SMTP id a21so19183214ljj.11;
-        Tue, 28 Apr 2020 09:08:02 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYUOq8MazV62YikamNGZturQV6nlt5i3hO8MfsD2yuKeVw4ewn3
-        NGxFx/7XQFE6fJ8ZJfRXL1ovW8jFIIjnTshtb3w=
-X-Google-Smtp-Source: APiQypLjCfbDbry068u6vxlKzJcflxkRwat6fVOMH+US4GAHbh3y8PTlg2fnsUbpMYOK7K8IFz3FdB+JzQ7CtznK4ww=
-X-Received: by 2002:a2e:9842:: with SMTP id e2mr18192759ljj.273.1588090082023;
- Tue, 28 Apr 2020 09:08:02 -0700 (PDT)
+        Tue, 28 Apr 2020 12:09:42 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03SG9bv3042986;
+        Tue, 28 Apr 2020 11:09:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588090177;
+        bh=OQqzFbuvkzc375gGmqwBOZYGZM679V95R0vHQaPHA3Y=;
+        h=From:To:CC:Subject:Date;
+        b=RKMz4XyVp+4fwmCfJjuBrh2HVUM1wBAa63BJdKqnScwB8Mk4Nek8DIKqLSN8Npzof
+         Xfg93PNtzHt0osFoCB0ytaQsQjztPaTCsOj7sw4tFOQHMWu8FDPCdAdmcuIFETHhgG
+         +ErhmtF0sIEMHeZTOV7wD9SC2cz9ALCaTRX+0W3o=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03SG9bwc068061
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Apr 2020 11:09:37 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
+ Apr 2020 11:09:36 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 28 Apr 2020 11:09:36 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03SG9a1g077640;
+        Tue, 28 Apr 2020 11:09:36 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v21 00/16] Multicolor Framework
+Date:   Tue, 28 Apr 2020 11:03:22 -0500
+Message-ID: <20200428160338.2793-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200428090749.31983-1-clay@daemons.net> <CAMuHMdXhVcp3j4Sq_4fsqavw1eH_DksN-yjajqC_8pRKnjM0zA@mail.gmail.com>
-In-Reply-To: <CAMuHMdXhVcp3j4Sq_4fsqavw1eH_DksN-yjajqC_8pRKnjM0zA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 28 Apr 2020 18:07:45 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2rG-A6_qhU9vrcadZqq2r1FdCDFMVPhSzPEAO83WrA9A@mail.gmail.com>
-Message-ID: <CAK8P3a2rG-A6_qhU9vrcadZqq2r1FdCDFMVPhSzPEAO83WrA9A@mail.gmail.com>
-Subject: Re: [PATCH] net: Select PTP_1588_CLOCK in PTP-specific drivers
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Clay McClure <clay@daemons.net>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Nicolas Pitre <nicolas.pitre@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Mao Wenan <maowenan@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Edward Cree <ecree@solarflare.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:0+QGPAJgYT3AuDOXDuVZJl/GVgCZgUasWRfsVnr299ZBPU/ljYb
- D+6RnzTUco8WKSxZrl8LG/I6sxC6tymAcmrsXDiRAbXBSshjWnBi6aE1rgS43X//maObXf+
- tGeoWKE4AFzuWLJilDDjTtgv1E0wWK+xRFcObkL99zh96Lg0gMQLFHQFxUSUsZR98rI4eth
- KWGdOBCZ3js9P2oUJFDhQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9tMlXwbHIIM=:f4pYF/VEBIk2lgG50JAJBL
- JDgJdURDuCSysbBHbL6Nb51b9W8tKMI9QwL0iInii9UjPSz6jxR6l3AGQ6VB7G/ua8plt6LHm
- yItS9u3LeIVBGEXjGca4eOts4KC3GFPORTJ4fM7er8K9OlsGl6b9UP1572d7hfWJajq2Tln+w
- ULzQghg55dOQ/OezWrNcw7J3ourdvXvbenoT1bceeXwKvgEW0/qPoqU3yehv+g3oiA4CBCKLD
- VbL8+RohFue2XbVf4b6nG9MlAxVStmh0jSHdwFBR+4V2UAwKglYSOFXFZjLiAAFFAOzqylzHF
- HKeTSwIRXmzXN2YkOFMGn+DVr78pTCS+ZdiwJtJLy7tv+M9+xNDbUr1PrGjzneXDhFfdaWJv2
- irvgBwn2Y1frZet7EMqC7iCiG0Ju2lUg8g8gnumdQeW2T+EmxEMePg3PRBGQAQMNvxz2TWXy6
- 32px6aMvC29SwWFg7SB5hPCm+YeFGVO7AT3B2mWuv2sdxDLD3Zdusv3sxZbyazP7CWCItcQLE
- rf4v4FscJeY3gT7QgDp0trYTHArsrZB38qHs0CLYxoj8Z1XB6BP62v4hK6pb7xSQedOEFAMRh
- 5cRGpWf5Ye1YeC691YG/SU5a3P9PZyGhGhVEJkctIb0nP3AFiqSZjfiRhDnvPbwTOr2+MuNda
- 7IRj+hg8MnND0aA2hLg7Im/7xSrLLxD+5Xvnh91wPSs6njH/30dQ/y5Jc8WlIuWIn2u+PdQxb
- 4Do+WHN/+Whs2HjZzDj/aPyPX9MdmA+fP2F9JVet729tbFqvv9x2Tvk7hLHZRgdq4Z0tNEPSL
- q4X7tDeQtBt0Spvkl0+xFT7EnVt92FhlPWd9MMgPQbUCMQbfNY=
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 11:21 AM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> On Tue, Apr 28, 2020 at 11:14 AM Clay McClure <clay@daemons.net> wrote:
-> > Commit d1cbfd771ce8 ("ptp_clock: Allow for it to be optional") changed
-> > all PTP-capable Ethernet drivers from `select PTP_1588_CLOCK` to `imply
-> > PTP_1588_CLOCK`, "in order to break the hard dependency between the PTP
-> > clock subsystem and ethernet drivers capable of being clock providers."
-> > As a result it is possible to build PTP-capable Ethernet drivers without
-> > the PTP subsystem by deselecting PTP_1588_CLOCK. Drivers are required to
-> > handle the missing dependency gracefully.
-> >
-> > Some PTP-capable Ethernet drivers (e.g., TI_CPSW) factor their PTP code
-> > out into separate drivers (e.g., TI_CPTS_MOD). The above commit also
-> > changed these PTP-specific drivers to `imply PTP_1588_CLOCK`, making it
-> > possible to build them without the PTP subsystem. But as Grygorii
-> > Strashko noted in [1]:
-> >
-> > On Wed, Apr 22, 2020 at 02:16:11PM +0300, Grygorii Strashko wrote:
-> >
-> > > Another question is that CPTS completely nonfunctional in this case and
-> > > it was never expected that somebody will even try to use/run such
-> > > configuration (except for random build purposes).
-> >
-> > In my view, enabling a PTP-specific driver without the PTP subsystem is
-> > a configuration error made possible by the above commit. Kconfig should
-> > not allow users to create a configuration with missing dependencies that
-> > results in "completely nonfunctional" drivers.
-> >
-> > I audited all network drivers that call ptp_clock_register() and found
-> > six that look like PTP-specific drivers that are likely nonfunctional
-> > without PTP_1588_CLOCK:
-> >
-> >     NET_DSA_MV88E6XXX_PTP
-> >     NET_DSA_SJA1105_PTP
-> >     MACB_USE_HWSTAMP
-> >     CAVIUM_PTP
-> >     TI_CPTS_MOD
-> >     PTP_1588_CLOCK_IXP46X
-> >
-> > Note how they all reference PTP or timestamping in their name; this is a
-> > clue that they depend on PTP_1588_CLOCK.
-> >
-> > Change these drivers back [2] to `select PTP_1588_CLOCK`. Note that this
-> > requires also selecting POSIX_TIMERS, a transitive dependency of
-> > PTP_1588_CLOCK.
->
-> If these drivers have a hard dependency on PTP_1588_CLOCK, IMHO they
-> should depend on PTP_1588_CLOCK, not select PTP_1588_CLOCK.
+This is the multi color LED framework.   This framework presents clustered
+colored LEDs into an array and allows the user space to adjust the brightness
+of the cluster using a single file write.  The individual colored LEDs
+intensities are controlled via a single file that is an array of LEDs
 
-Agreed. Note that for drivers that only optionally use the PTP_1588_CLOCK
-support, we probably want 'depends on PTP_1588_CLOCK ||
-!PTP_1588_CLOCK' (or the syntax replacing it eventually), to avoid the
-case where a built-in driver fails to use a modular ptp implementation.
+Dan
 
-     Arnd
+Dan Murphy (16):
+  dt: bindings: Add multicolor class dt bindings documention
+  leds: multicolor: Introduce a multicolor class definition
+  dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+  leds: lp50xx: Add the LP50XX family of the RGB LED driver
+  dt: bindings: lp55xx: Be consistent in the document with LED acronym
+  dt: bindings: lp55xx: Update binding for Multicolor Framework
+  ARM: dts: n900: Add reg property to the LP5523 channel node
+  ARM: dts: imx6dl-yapp4: Add reg property to the lp5562 channel node
+  ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
+  leds: lp55xx: Convert LED class registration to devm_*
+  leds: lp55xx: Add multicolor framework support to lp55xx
+  leds: lp5523: Update the lp5523 code to add multicolor brightness
+    function
+  leds: lp5521: Add multicolor framework multicolor brightness support
+  leds: lp55xx: Fix checkpatch file permissions issues
+  leds: lp5523: Fix checkpatch issues in the code
+  dt: bindings: Update lp55xx binding to recommended LED naming
+
+ .../ABI/testing/sysfs-class-led-multicolor    |  34 +
+ .../bindings/leds/leds-class-multicolor.txt   |  98 +++
+ .../devicetree/bindings/leds/leds-lp50xx.yaml | 117 +++
+ .../devicetree/bindings/leds/leds-lp55xx.txt  | 163 +++-
+ Documentation/leds/index.rst                  |   1 +
+ Documentation/leds/leds-class-multicolor.rst  |  88 ++
+ MAINTAINERS                                   |   8 +
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi    |  14 +-
+ arch/arm/boot/dts/omap3-n900.dts              |  29 +-
+ arch/arm/boot/dts/ste-href.dtsi               |  22 +-
+ drivers/leds/Kconfig                          |  22 +
+ drivers/leds/Makefile                         |   2 +
+ drivers/leds/led-class-multicolor.c           | 210 +++++
+ drivers/leds/led-core.c                       |   1 +
+ drivers/leds/leds-lp50xx.c                    | 778 ++++++++++++++++++
+ drivers/leds/leds-lp5521.c                    |  43 +-
+ drivers/leds/leds-lp5523.c                    |  62 +-
+ drivers/leds/leds-lp5562.c                    |  22 +-
+ drivers/leds/leds-lp55xx-common.c             | 213 +++--
+ drivers/leds/leds-lp55xx-common.h             |  16 +-
+ drivers/leds/leds-lp8501.c                    |  23 +-
+ include/dt-bindings/leds/common.h             |   3 +-
+ include/linux/led-class-multicolor.h          | 121 +++
+ include/linux/platform_data/leds-lp55xx.h     |   8 +
+ 24 files changed, 1939 insertions(+), 159 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+ create mode 100644 Documentation/leds/leds-class-multicolor.rst
+ create mode 100644 drivers/leds/led-class-multicolor.c
+ create mode 100644 drivers/leds/leds-lp50xx.c
+ create mode 100644 include/linux/led-class-multicolor.h
+
+-- 
+2.25.1
+
