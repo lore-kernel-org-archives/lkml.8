@@ -2,54 +2,54 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D2BC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CB0C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2477E206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8699F20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099686;
-	bh=lXv8GvFJ5TXg/OJvEjNdWkFA+38PmRAfdEtTJ/mfdWQ=;
+	s=default; t=1588099691;
+	bh=CvpKfVNoNGZuvjB+NGSjHIPsc6WNenusENripEY++zs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KkCMTXAEslw9rDuKY9msORIPkYKaTbkccmbiylPAS9Lgrm2kSV0aV9TiOT/Qxlqc8
-	 c/449xZ36o0FFlDm3s5yIN1pT/poCl9IqAQSiZG2CyP7p2IADM/O3lThUEeKfLVI1s
-	 pcBYE4k+MLD3lK6VXKAb1alXGj3poA9FiT1GBSSo=
+	b=ln8XAHSrRAUuq4kBh1suCF+RtWAu5i2BaD85VEbqDNhriM8fsmiWIQh1XKdHeYjth
+	 52bO6TIOMYgst0c6E0/AEdQ0IxzYddeypiBO0zHYiZiXqAVxC2FBeymbuh5c6pHsjW
+	 wW8tGdYylk8fPHNkfUj6ocN4jTIrc4Arn/m5Yeaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730599AbgD1SsF (ORCPT
+        id S1731060AbgD1SsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:48:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32854 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:48:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729842AbgD1SlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:41:23 -0400
+        id S1730975AbgD1SlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:41:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A11F2076A;
-        Tue, 28 Apr 2020 18:41:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAB0A2076A;
+        Tue, 28 Apr 2020 18:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099283;
-        bh=lXv8GvFJ5TXg/OJvEjNdWkFA+38PmRAfdEtTJ/mfdWQ=;
+        s=default; t=1588099276;
+        bh=CvpKfVNoNGZuvjB+NGSjHIPsc6WNenusENripEY++zs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HkgTLuEHDXG/R8Y/VOWv1bXuVmswpSOhkfCZqhAnMOAFPzvxx5B6IFMZCmHU3hzuJ
-         TR+qyVBP9lsGt18S7vMevRxDLUn6vthsa7xsFezJgplTZu1NJgKMZ7QJVJhVleMwW3
-         ZwmXnKK8H/cYDM/hjKbhEv6Rk8aOgfcrPpycAFHA=
+        b=kcv9FKt4R5dID8kmXZgo9u8NqOtkld4HLFx1kCgscNR/3P2wtJ/pKQjNNaGaEvvdj
+         4GbliLg/6k+48VzA+Bc8hHII2W3yc0/Tqgbi/IuiT2M9vw0/WaEDqwoFUnR9aWKGv4
+         aFkyt0bm9RzNAvUpX/zU+Y9W0UKcoG53qblPdVik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.19 128/131] xhci: prevent bus suspend if a roothub port detected a over-current condition
-Date:   Tue, 28 Apr 2020 20:25:40 +0200
-Message-Id: <20200428182241.423544899@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 086/168] ALSA: usb-audio: Add connector notifier delegation
+Date:   Tue, 28 Apr 2020 20:24:20 +0200
+Message-Id: <20200428182243.154415320@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,47 +59,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit e9fb08d617bfae5471d902112667d0eeb9dee3c4 upstream.
+[ Upstream commit fef66ae73a611e84c8b4b74ff6f805ec5f113477 ]
 
-Suspending the bus and host controller while a port is in a over-current
-condition may halt the host.
-Also keep the roothub running if over-current is active.
+It turned out that ALC1220-VB USB-audio device gives the interrupt
+event to some PCM terminals while those don't allow the connector
+state request but only the actual I/O terminals return the request.
+The recent commit 7dc3c5a0172e ("ALSA: usb-audio: Don't create jack
+controls for PCM terminals") excluded those phantom terminals, so
+those events are ignored, too.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200421140822.28233-3-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+My first thought was that this could be easily deduced from the
+associated terminals, but some of them have even no associate terminal
+ID, hence it's not too trivial to figure out.
 
+Since the number of such terminals are small and limited, this patch
+implements another quirk table for the simple mapping of the
+connectors.  It's not really scalable, but let's hope that there will
+be not many such funky devices in future.
+
+Fixes: 7dc3c5a0172e ("ALSA: usb-audio: Don't create jack controls for PCM terminals")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206873
+Link: https://lore.kernel.org/r/20200422113320.26664-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-hub.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ sound/usb/mixer.c      | 25 +++++++++++++++++++++++++
+ sound/usb/mixer.h      | 10 ++++++++++
+ sound/usb/mixer_maps.c | 13 +++++++++++++
+ 3 files changed, 48 insertions(+)
 
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -1481,6 +1481,8 @@ int xhci_hub_status_data(struct usb_hcd
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index f9586a6ea05b6..583edacc9fe8e 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -3096,6 +3096,7 @@ static int snd_usb_mixer_controls(struct usb_mixer_interface *mixer)
+ 		if (map->id == state.chip->usb_id) {
+ 			state.map = map->map;
+ 			state.selector_map = map->selector_map;
++			mixer->connector_map = map->connector_map;
+ 			mixer->ignore_ctl_error |= map->ignore_ctl_error;
+ 			break;
  		}
- 		if ((temp & PORT_RC))
- 			reset_change = true;
-+		if (temp & PORT_OC)
-+			status = 1;
- 	}
- 	if (!status && !reset_change) {
- 		xhci_dbg(xhci, "%s: stopping port polling.\n", __func__);
-@@ -1546,6 +1548,13 @@ retry:
- 				 port_index);
- 			goto retry;
- 		}
-+		/* bail out if port detected a over-current condition */
-+		if (t1 & PORT_OC) {
-+			bus_state->bus_suspended = 0;
-+			spin_unlock_irqrestore(&xhci->lock, flags);
-+			xhci_dbg(xhci, "Bus suspend bailout, port over-current detected\n");
-+			return -EBUSY;
+@@ -3177,10 +3178,32 @@ static int snd_usb_mixer_controls(struct usb_mixer_interface *mixer)
+ 	return 0;
+ }
+ 
++static int delegate_notify(struct usb_mixer_interface *mixer, int unitid,
++			   u8 *control, u8 *channel)
++{
++	const struct usbmix_connector_map *map = mixer->connector_map;
++
++	if (!map)
++		return unitid;
++
++	for (; map->id; map++) {
++		if (map->id == unitid) {
++			if (control && map->control)
++				*control = map->control;
++			if (channel && map->channel)
++				*channel = map->channel;
++			return map->delegated_id;
 +		}
- 		/* suspend ports in U0, or bail out for new connect changes */
- 		if ((t1 & PORT_PE) && (t1 & PORT_PLS_MASK) == XDEV_U0) {
- 			if ((t1 & PORT_CSC) && wake_enabled) {
++	}
++	return unitid;
++}
++
+ void snd_usb_mixer_notify_id(struct usb_mixer_interface *mixer, int unitid)
+ {
+ 	struct usb_mixer_elem_list *list;
+ 
++	unitid = delegate_notify(mixer, unitid, NULL, NULL);
++
+ 	for_each_mixer_elem(list, mixer, unitid) {
+ 		struct usb_mixer_elem_info *info =
+ 			mixer_elem_list_to_info(list);
+@@ -3250,6 +3273,8 @@ static void snd_usb_mixer_interrupt_v2(struct usb_mixer_interface *mixer,
+ 		return;
+ 	}
+ 
++	unitid = delegate_notify(mixer, unitid, &control, &channel);
++
+ 	for_each_mixer_elem(list, mixer, unitid)
+ 		count++;
+ 
+diff --git a/sound/usb/mixer.h b/sound/usb/mixer.h
+index 37e1b234c802f..8e0fb7fdf1a00 100644
+--- a/sound/usb/mixer.h
++++ b/sound/usb/mixer.h
+@@ -6,6 +6,13 @@
+ 
+ struct media_mixer_ctl;
+ 
++struct usbmix_connector_map {
++	u8 id;
++	u8 delegated_id;
++	u8 control;
++	u8 channel;
++};
++
+ struct usb_mixer_interface {
+ 	struct snd_usb_audio *chip;
+ 	struct usb_host_interface *hostif;
+@@ -18,6 +25,9 @@ struct usb_mixer_interface {
+ 	/* the usb audio specification version this interface complies to */
+ 	int protocol;
+ 
++	/* optional connector delegation map */
++	const struct usbmix_connector_map *connector_map;
++
+ 	/* Sound Blaster remote control stuff */
+ 	const struct rc_config *rc_cfg;
+ 	u32 rc_code;
+diff --git a/sound/usb/mixer_maps.c b/sound/usb/mixer_maps.c
+index 28eec0e0aa5e4..39d6c6fa5e337 100644
+--- a/sound/usb/mixer_maps.c
++++ b/sound/usb/mixer_maps.c
+@@ -27,6 +27,7 @@ struct usbmix_ctl_map {
+ 	u32 id;
+ 	const struct usbmix_name_map *map;
+ 	const struct usbmix_selector_map *selector_map;
++	const struct usbmix_connector_map *connector_map;
+ 	int ignore_ctl_error;
+ };
+ 
+@@ -377,6 +378,15 @@ static const struct usbmix_name_map trx40_mobo_map[] = {
+ 	{}
+ };
+ 
++static const struct usbmix_connector_map trx40_mobo_connector_map[] = {
++	{ 10, 16 },	/* (Back) Speaker */
++	{ 11, 17 },	/* Front Headphone */
++	{ 13, 7 },	/* Line */
++	{ 14, 8 },	/* Mic */
++	{ 15, 9 },	/* Front Mic */
++	{}
++};
++
+ /*
+  * Control map entries
+  */
+@@ -499,6 +509,7 @@ static struct usbmix_ctl_map usbmix_ctl_maps[] = {
+ 	{	/* Gigabyte TRX40 Aorus Pro WiFi */
+ 		.id = USB_ID(0x0414, 0xa002),
+ 		.map = trx40_mobo_map,
++		.connector_map = trx40_mobo_connector_map,
+ 	},
+ 	{	/* ASUS ROG Zenith II */
+ 		.id = USB_ID(0x0b05, 0x1916),
+@@ -511,10 +522,12 @@ static struct usbmix_ctl_map usbmix_ctl_maps[] = {
+ 	{	/* MSI TRX40 Creator */
+ 		.id = USB_ID(0x0db0, 0x0d64),
+ 		.map = trx40_mobo_map,
++		.connector_map = trx40_mobo_connector_map,
+ 	},
+ 	{	/* MSI TRX40 */
+ 		.id = USB_ID(0x0db0, 0x543d),
+ 		.map = trx40_mobo_map,
++		.connector_map = trx40_mobo_connector_map,
+ 	},
+ 	{ 0 } /* terminator */
+ };
+-- 
+2.20.1
+
 
 
