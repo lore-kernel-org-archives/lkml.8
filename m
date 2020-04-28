@@ -2,125 +2,135 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60530C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECEDC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3516C206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:01:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100502;
-	bh=xb3clEcraXNK9Wyslkxot44BRE3EY7gzX0hft+tPgbM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sq4ih4P5hjsLqJ2pQjC+ZM4s4U7eJIXN8dQEj0AgmnP18FGrhqTpFKdaZoQ4BrWKu
-	 Y2DmaZXd0nFd/5GVcJJ3FCITsulwaReEyNc/bomfg/Jwnt+a5sKq3g4YTspntbOnJ5
-	 TpFUfTzKMy8hoPDFBxOJqUpQIbUl0yMH7GmlzVEo=
+	by mail.kernel.org (Postfix) with ESMTP id 1D5EA206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:02:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="umkbl7Gv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729454AbgD1TBl (ORCPT
+        id S1728984AbgD1TCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 15:01:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728652AbgD1S0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:26:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 221352085B;
-        Tue, 28 Apr 2020 18:26:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098368;
-        bh=xb3clEcraXNK9Wyslkxot44BRE3EY7gzX0hft+tPgbM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2RFJ/TSjVYAMRD/GwYDvuayw2V3dUBKualubBgBE6G+dw1q6rl71WCEzcgg2+04oT
-         FeiZ2V013c9vm78IR8k8y3x1IDIRWvMYbAZFg953pIQ9EuuJAESs2Rc9FArp9p2QZ1
-         VTg8uOspFLq0iFzfCp/5NlblYFq5vrGHqlV7FiVw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 012/167] pwm: rcar: Fix late Runtime PM enablement
-Date:   Tue, 28 Apr 2020 20:23:08 +0200
-Message-Id: <20200428182226.762089564@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 28 Apr 2020 15:02:16 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:47738 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728558AbgD1TCP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 15:02:15 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SIxHSA091425;
+        Tue, 28 Apr 2020 19:02:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=+5iXYoqsuyxXZ24Vp+LdjRiIUsJCP86KqCL8PYesp/w=;
+ b=umkbl7GvWWTOdwT/RqYhC/dBjta460HKqs/eqkjEg2nXysNvtKNYE6xA4VVhcOLvf7Mk
+ hO0Du1BmMf+KBFoLJQS0fz/7Tgpbc07hqJ4n4DjerHGWrUyiUKzpxZDv+11y2i9J8k4u
+ qSgnEEFUBrB9iiHtwfk+ylq++IHECXmP0jhY0BsJmI780PPmZqc0nv8kRGghsc6slK0y
+ chRsuUoJYrMEgPSec7WsIwXhKzrIVgjKaGMKNUYI6dkjLpN0E8ceOVU5XR47iJ1Hyhkw
+ d1JQn7FpZdX4NzACpSIlZvrTSf9rbpaKw2pR23ibHQWO4JdOVqSLLiE8XSEpmnqBL4Wq XQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 30p2p0780j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 19:02:08 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SIufcA157860;
+        Tue, 28 Apr 2020 19:00:07 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 30mxpgqsff-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 19:00:07 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03SJ05pw019518;
+        Tue, 28 Apr 2020 19:00:05 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Apr 2020 12:00:04 -0700
+Date:   Tue, 28 Apr 2020 21:59:57 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Oliver Graute <oliver.graute@gmail.com>
+Cc:     devel@driverdev.osuosl.org, linux-fbdev@vger.kernel.org,
+        gregkh@linuxfoundation.org,
+        Oliver Graute <oliver.graute@kococonnector.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v1] staging: fbtft: fb_st7789v: Initialize the Display
+Message-ID: <20200428185957.GL2014@kadam>
+References: <1586424337-26602-1-git-send-email-oliver.graute@gmail.com>
+ <20200409102013.GP2001@kadam>
+ <20200427083642.GD18436@portage>
+ <20200427093306.GU2682@kadam>
+ <20200427123625.GE18436@portage>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427123625.GE18436@portage>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 bulkscore=0 adultscore=0 phishscore=0 suspectscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280150
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1015
+ bulkscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
+ mlxscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004280150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+On Mon, Apr 27, 2020 at 02:36:25PM +0200, Oliver Graute wrote:
+> On 27/04/20, Dan Carpenter wrote:
+> > On Mon, Apr 27, 2020 at 10:36:42AM +0200, Oliver Graute wrote:
+> > > On 09/04/20, Dan Carpenter wrote:
+> > > > On Thu, Apr 09, 2020 at 11:25:32AM +0200, Oliver Graute wrote:
+> > > > > From: Oliver Graute <oliver.graute@kococonnector.com>
+> > > > > 
+> > > > > Set Gamma Values and Register Values for the HSD20_IPS
+> > > > > 
+> > > > > Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
+> > > > > ---
+> > > > >  drivers/staging/fbtft/fb_st7789v.c | 12 ++++++------
+> > > > >  1 file changed, 6 insertions(+), 6 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/staging/fbtft/fb_st7789v.c b/drivers/staging/fbtft/fb_st7789v.c
+> > > > > index 84c5af2dc9a0..b0aa96b703a8 100644
+> > > > > --- a/drivers/staging/fbtft/fb_st7789v.c
+> > > > > +++ b/drivers/staging/fbtft/fb_st7789v.c
+> > > > > @@ -17,8 +17,8 @@
+> > > > >  #define DRVNAME "fb_st7789v"
+> > > > >  
+> > > > >  #define DEFAULT_GAMMA \
+> > > > > -	"70 2C 2E 15 10 09 48 33 53 0B 19 18 20 25\n" \
+> > > > > -	"70 2C 2E 15 10 09 48 33 53 0B 19 18 20 25"
+> > > > > +	"D0 05 0A 09 08 05 2E 44 45 0F 17 16 2B 33\n" \
+> > > > > +	"D0 05 0A 09 08 05 2E 43 45 0F 16 16 2B 33"
+> > > > 
+> > > > How do you know this won't break someone else's setup?
+> > > 
+> > > Should I declare an extra define for my values?
+> > > 
+> > > +#define HSD20_IPS_GAMMA \
+> > > +	"D0 05 0A 09 08 05 2E 44 45 0F 17 16 2B 33\n" \
+> > > +	"D0 05 0A 09 08 05 2E 43 45 0F 16 16 2B 33"
+> > > 
+> > 
+> > That's fine, but it can't be a compile time thing.  Both types of
+> > hardware have to be working/available at run time.
+> 
+> ok, what is the proper way to handover the gamma values during run time?
 
-[ Upstream commit 1451a3eed24b5fd6a604683f0b6995e0e7e16c79 ]
+Can you detect which are appropriate and set that in the probe()
+function?
 
-Runtime PM should be enabled before calling pwmchip_add(), as PWM users
-can appear immediately after the PWM chip has been added.
-Likewise, Runtime PM should be disabled after the removal of the PWM
-chip.
-
-Fixes: ed6c1476bf7f16d5 ("pwm: Add support for R-Car PWM Timer")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pwm/pwm-rcar.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
-index 2685577b6dd45..7ab9eb6616d95 100644
---- a/drivers/pwm/pwm-rcar.c
-+++ b/drivers/pwm/pwm-rcar.c
-@@ -229,24 +229,28 @@ static int rcar_pwm_probe(struct platform_device *pdev)
- 	rcar_pwm->chip.base = -1;
- 	rcar_pwm->chip.npwm = 1;
- 
-+	pm_runtime_enable(&pdev->dev);
-+
- 	ret = pwmchip_add(&rcar_pwm->chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to register PWM chip: %d\n", ret);
-+		pm_runtime_disable(&pdev->dev);
- 		return ret;
- 	}
- 
--	pm_runtime_enable(&pdev->dev);
--
- 	return 0;
- }
- 
- static int rcar_pwm_remove(struct platform_device *pdev)
- {
- 	struct rcar_pwm_chip *rcar_pwm = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&rcar_pwm->chip);
- 
- 	pm_runtime_disable(&pdev->dev);
- 
--	return pwmchip_remove(&rcar_pwm->chip);
-+	return ret;
- }
- 
- static const struct of_device_id rcar_pwm_of_table[] = {
--- 
-2.20.1
-
-
+regards,
+dan carpenter
 
