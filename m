@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B031C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64085C8300A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CBE120730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 420DF217D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099218;
-	bh=/n+aw/AIgsVNLvpZZefwZf1O71uQadggFN+UnXZb02c=;
+	s=default; t=1588099221;
+	bh=+ih6MphER0J1zqqkZ6A8BsDxyML4CcO5wlpDOSwsHwk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YVjF59UIR+jbqz9hEtdFYIT+KUAS2PTo2jlTSfmjCn+r5sTq9RL29ww/TljCDwiHR
-	 e9VzwQnQsEzLCZvlnMoICxS98+gOBe+EUO42TnV2FYmRK9cKoGno0hpc1jRhTPZpc3
-	 T1lnAcBsJYQEhU5YE7QDLgi8rdxrnRB0ATW6TUzE=
+	b=Mjvc8fLWNZ2xxs2kaQD/r8xiYza8dhpKBX6At1+PG+1PcCPrxf/mbTLbKZOgzGaqT
+	 qOX6YudE0xt7stQNuyS7Gb7x62QMJVRDeDxEWsUGdO2Sssf1zPlLVTo3l+bdKPoX5N
+	 SlXWI47MiJwoPbMcZfYwFwd8B+yhnRx272bt237Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730737AbgD1SjT (ORCPT
+        id S1729727AbgD1SkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:39:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57970 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:40:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730717AbgD1SjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:39:11 -0400
+        id S1730899AbgD1SkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:40:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C6D020575;
-        Tue, 28 Apr 2020 18:39:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D48C120575;
+        Tue, 28 Apr 2020 18:40:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099150;
-        bh=/n+aw/AIgsVNLvpZZefwZf1O71uQadggFN+UnXZb02c=;
+        s=default; t=1588099212;
+        bh=+ih6MphER0J1zqqkZ6A8BsDxyML4CcO5wlpDOSwsHwk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cqcFlhogccwOq3ax0kRWF6FB05j+a9fnRjKptn4hn/Ya6+zi14IvPe+UkjkkzwEWi
-         BD6YWlm3uKkjHrX7lmT9g83Wu0QfpbuIXQryABe1UJNUbaiVH7yaHgraql9v1mJWY8
-         obhp5+D7nJJg1Muk67ZOAgEPu3iMKw7+EEX9Q/OI=
+        b=gt3v5TcnorVpsGtM342W1kKnSGm63dIBYGcmXnVLSc5pzcQwenW/RzZNWChvOWtkj
+         u2rlb3agpX2tpQcPSB3A4xTHkjCkledkbjjk5uYudgUR19kRAOCe7G2iGWRwloBQdr
+         JppixJCHjp9dxFy2kWRO2omwjsLHQr2Q/PMU4Uco=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Ido Schimmel <idosch@mellanox.com>,
+        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 062/168] mlxsw: Fix some IS_ERR() vs NULL bugs
-Date:   Tue, 28 Apr 2020 20:23:56 +0200
-Message-Id: <20200428182239.779341135@linuxfoundation.org>
+Subject: [PATCH 5.4 074/168] net: dsa: b53: Lookup VID in ARL searches when VLAN is enabled
+Date:   Tue, 28 Apr 2020 20:24:08 +0200
+Message-Id: <20200428182241.449034633@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -60,87 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit c391eb8366ae052d571bb2841f1ccb4d39f3ceb8 ]
+[ Upstream commit 2e97b0cd1651a270f3a3fcf42115c51f3284c049 ]
 
-The mlxsw_sp_acl_rulei_create() function is supposed to return an error
-pointer from mlxsw_afa_block_create().  The problem is that these
-functions both return NULL instead of error pointers.  Half the callers
-expect NULL and half expect error pointers so it could lead to a NULL
-dereference on failure.
+When VLAN is enabled, and an ARL search is issued, we also need to
+compare the full {MAC,VID} tuple before returning a successful search
+result.
 
-This patch changes both of them to return error pointers and changes all
-the callers which checked for NULL to check for IS_ERR() instead.
-
-Fixes: 4cda7d8d7098 ("mlxsw: core: Introduce flexible actions support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Ido Schimmel <idosch@mellanox.com>
+Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_actions.c |    4 ++--
- drivers/net/ethernet/mellanox/mlxsw/spectrum2_acl_tcam.c    |    4 ++--
- drivers/net/ethernet/mellanox/mlxsw/spectrum_acl.c          |    2 +-
- drivers/net/ethernet/mellanox/mlxsw/spectrum_mr_tcam.c      |    4 ++--
- 4 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/net/dsa/b53/b53_common.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_actions.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_actions.c
-@@ -316,7 +316,7 @@ struct mlxsw_afa_block *mlxsw_afa_block_
- 
- 	block = kzalloc(sizeof(*block), GFP_KERNEL);
- 	if (!block)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 	INIT_LIST_HEAD(&block->resource_list);
- 	block->afa = mlxsw_afa;
- 
-@@ -344,7 +344,7 @@ err_second_set_create:
- 	mlxsw_afa_set_destroy(block->first_set);
- err_first_set_create:
- 	kfree(block);
--	return NULL;
-+	return ERR_PTR(-ENOMEM);
- }
- EXPORT_SYMBOL(mlxsw_afa_block_create);
- 
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum2_acl_tcam.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum2_acl_tcam.c
-@@ -88,8 +88,8 @@ static int mlxsw_sp2_acl_tcam_init(struc
- 	 * to be written using PEFA register to all indexes for all regions.
- 	 */
- 	afa_block = mlxsw_afa_block_create(mlxsw_sp->afa);
--	if (!afa_block) {
--		err = -ENOMEM;
-+	if (IS_ERR(afa_block)) {
-+		err = PTR_ERR(afa_block);
- 		goto err_afa_block;
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -1472,6 +1472,9 @@ static int b53_arl_read(struct b53_devic
+ 			continue;
+ 		if ((mac_vid & ARLTBL_MAC_MASK) != mac)
+ 			continue;
++		if (dev->vlan_enabled &&
++		    ((mac_vid >> ARLTBL_VID_S) & ARLTBL_VID_MASK) != vid)
++			continue;
+ 		*idx = i;
  	}
- 	err = mlxsw_afa_block_continue(afa_block);
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl.c
-@@ -444,7 +444,7 @@ mlxsw_sp_acl_rulei_create(struct mlxsw_s
  
- 	rulei = kzalloc(sizeof(*rulei), GFP_KERNEL);
- 	if (!rulei)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 
- 	if (afa_block) {
- 		rulei->act_block = afa_block;
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_mr_tcam.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_mr_tcam.c
-@@ -199,8 +199,8 @@ mlxsw_sp_mr_tcam_afa_block_create(struct
- 	int err;
- 
- 	afa_block = mlxsw_afa_block_create(mlxsw_sp->afa);
--	if (!afa_block)
--		return ERR_PTR(-ENOMEM);
-+	if (IS_ERR(afa_block))
-+		return afa_block;
- 
- 	err = mlxsw_afa_block_append_allocated_counter(afa_block,
- 						       counter_index);
 
 
