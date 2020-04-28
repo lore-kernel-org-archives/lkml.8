@@ -2,118 +2,130 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63904C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FD3C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5DD206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:44:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WD0Vdo9P"
+	by mail.kernel.org (Postfix) with ESMTP id DCC5F206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:45:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgD1EnV (ORCPT
+        id S1726338AbgD1Eou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 00:43:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55346 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbgD1EnV (ORCPT
+        Tue, 28 Apr 2020 00:44:50 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:55723 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbgD1Eot (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 00:43:21 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE1B6C03C1A9
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 21:43:19 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id u12so19959035uau.10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 21:43:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6MzIVWZpSVCHDb5pf6WQNcJ/ckZ7Y5e/ESVb+fFzIZA=;
-        b=WD0Vdo9P4/N4GSEpKAhopNTQVyTrPiPKK3hWvrtsiHMzebOMrruO2aJX9wZe95BGHj
-         XGk8c62wFBqDPwNbo61yYZGaWDExozBcGqaTvzvhgue/6PH25ZdF3jIcE9D0iv7XULGu
-         hc0qeug7S/R/21XHC27bLSFzxUVEnjHArDV38=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6MzIVWZpSVCHDb5pf6WQNcJ/ckZ7Y5e/ESVb+fFzIZA=;
-        b=BJ+4AK8bzJVfq86tKxgF5smXrAjTVHcY0286ZuiuofkyVbB1H5nWM5E3UVi0Ob0a9l
-         e8otCV+NVhbFzgj0EDH4RwFL67jlqeXIl+k0j5ypCpBQuQU11rPvgITRxH/AlFt9qUG/
-         90lNg+5tU2qjqh9q64+FkSnw3fSiyCrkus1tG0NY8QtEXZxjKxKGprUsFeV053WggutC
-         C6vQIlkCXWgHcdVfcBbJSmG+HXV0EX199bY4KWbpfGoz3QIK6iNnSZvdkhdjwgo/4dNv
-         iLq5gz0wH3GHiCH3gNPUeP2tJMqECSqdcB9NPRDfhe7NphPaWnFdHjh9Wyfuazk/yh2I
-         XnTQ==
-X-Gm-Message-State: AGi0PuYwSZVZoNFcR/z6xxb1nqRSuQYiy05+DFNHgoLnWxrP9SAsWmIJ
-        mDCugfJeJD2AbRXnVVjzXCHo+QH65z8=
-X-Google-Smtp-Source: APiQypLVOF3S7GFVwHfOFJIYQDTxC07WZfVHzHXEHlftUcrNw+TpOo0oVQjbncwfK1QDWnlnX8MKNw==
-X-Received: by 2002:a67:79cb:: with SMTP id u194mr19823639vsc.233.1588048998893;
-        Mon, 27 Apr 2020 21:43:18 -0700 (PDT)
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
-        by smtp.gmail.com with ESMTPSA id o9sm2652251vko.18.2020.04.27.21.43.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 21:43:17 -0700 (PDT)
-Received: by mail-ua1-f50.google.com with SMTP id m9so6360559uaq.12
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 21:43:17 -0700 (PDT)
-X-Received: by 2002:a67:f9d0:: with SMTP id c16mr19912596vsq.53.1588048997072;
- Mon, 27 Apr 2020 21:43:17 -0700 (PDT)
+        Tue, 28 Apr 2020 00:44:49 -0400
+Received: from methusalix.internal.home.lespocky.de ([109.250.101.169]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1MfYDO-1j0XvY2as4-00fwEP; Tue, 28 Apr 2020 06:44:44 +0200
+Received: from falbala.internal.home.lespocky.de ([192.168.243.94])
+        by methusalix.internal.home.lespocky.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <post@lespocky.de>)
+        id 1jTI6r-000482-VZ; Tue, 28 Apr 2020 06:44:43 +0200
+Date:   Tue, 28 Apr 2020 06:44:40 +0200
+From:   Alexander Dahl <post@lespocky.de>
+To:     webmaster@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: New Wiki URLs?
+Message-ID: <20200428044440.kd2rf3cxa5rffewm@falbala.internal.home.lespocky.de>
+Mail-Followup-To: webmaster@kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
 MIME-Version: 1.0
-References: <20200423044036.234578-1-evanbenn@chromium.org>
- <20200423143945.v5.2.Ia92bb4d4ce84bcefeba1d00aaa1c1e919b6164ef@changeid> <CAODwPW9-c8EcZh_zB6SwohzvHtCQasaNLQM0fj2bj5O5KuVPfg@mail.gmail.com>
-In-Reply-To: <CAODwPW9-c8EcZh_zB6SwohzvHtCQasaNLQM0fj2bj5O5KuVPfg@mail.gmail.com>
-From:   Evan Benn <evanbenn@chromium.org>
-Date:   Tue, 28 Apr 2020 14:42:50 +1000
-X-Gmail-Original-Message-ID: <CAKz_xw0nQL2t1a-ofosLVb72JwSAGXCea5wOuddstOMrULNygg@mail.gmail.com>
-Message-ID: <CAKz_xw0nQL2t1a-ofosLVb72JwSAGXCea5wOuddstOMrULNygg@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] watchdog: Add new arm_smc_wdt watchdog driver
-To:     Julius Werner <jwerner@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Olof Johansson <olof@lixom.net>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6rmhozldre3ci2et"
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Scan-Signature: 43227bb1a0d9095ae2bb1ca1fd71373a
+X-Provags-ID: V03:K1:zZsd+o4iLKjEyP5P+XBhwrWENVcApqAdfolg81YTjc/dzkddyIH
+ Mfd/MDEOxT3XgiKLP8hUnx5xQr9nL40UcJE9HF1ccN6kkahv07stAfJ0Ssyj1o6wwxtCH5i
+ caKKjRzdHyf64/yLlTq/sIAvxu70JHWlqz0vNLttoZrzfEQan2hgIJ8l8iWtsaCjnzOklAK
+ uC79reoTriX+4tTyDGV2g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7UorH9nhJFM=:0Tj2F8RM368aOSQNNuX8Rg
+ WRZFE8yXcxIj1q94UxiQvxcCMQ3iiQNpqm4VXnfw0PPJGmXnlpz8yUw/+K9zSO0uQ/c03Ll3d
+ /y80alGFtnQEra6vTAY8Pkc6jQll7shOAtOmSUK+a3DiYVpOxaiJgijOOkczJh0+6ZAL0nWrX
+ 83eb3D8qI6d+tCiMeOTd6DGxxZuk4KRK6ATeaWK6woG8krsa4vCJzXcQqzw7mFMyScAarYWzb
+ bWOitRi4tGFV7ve+bLWTtkQyHVxK0Aiqh4S1BPbaIaKSJAEAJIzlMCyGHcwtyMmF6drWy6hbs
+ vA6rvvdmgH/U+VvhjRKYad4kmhEN/OZ9mkRLqLhxaasWkAh2ebXxsIFcBUomSHdRIG23nUirV
+ c2M3IhFFafx4JmqfuFbwqqSTxIZF7dnWixRw+zzx5rTXp/KPz7UfxSVjbwOGqxE5fEROvsX4L
+ M1uTdppEgCvIYKAcfst4BsKRxyrBxXz4XYEtj269WfGYaT2k6pNTqOXqz5i+0vLRu6T/M/vdh
+ FsvJyhdNxKf1oilagmUADdhx9/SkCoIUnYXB0IKVLF8r2MYmAqmhv+1ZdvnKVbvPfRZ5DBzYF
+ pnfuylhWE3DDDuBvw3hx9O+hraj+nlnw1fVIHdT2ZkILiZ22qMumRX6TH7vZPKx6EbhzKx3SN
+ 39P8g4+REgzbqJgDxho+BbTS3ALNuSwHi29AtyE9XoMXoVPUHftt65IR28jUqVCj8A5sKptGf
+ SYORdw61qCg3IkB9eFOZYxhirG0d/3Kaszzj1XH1i7cxuFCxhOCfGXgNM7lyVOfyveffTEh7Y
+ S/1eL6+phwQHmt2/3rnmUNAXHw/9yvbNWsw/kv8Mnw9HGnK6V78XTbxXPwwT5y7K/jdm+Ci
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 8:17 AM Julius Werner <jwerner@chromium.org> wrote:
->
-> > +       err = of_property_read_u32(pdev->dev.of_node, "arm,smc-id",
-> > +                                  &smc_func_id);
-> > +       if (err < 0)
-> > +               return err;
-> > +       watchdog_set_drvdata(wdd, (void *)(uintptr_t)smc_func_id);
->
-> Your device tree binding says there's a default and this is optional.
-> I think you need to change the code so that that's actually true.
 
-I think I have misunderstood the device tree json-schema spec.
-My intention was for the device tree to fill in a default value in the dtb for
-arm,smc-id if it was omitted in the dts. But now I see that does not seem to
-happen, I cannot really find any documentation of `default`, so I will just put
-a documentation string in instead and force the default in the driver.
+--6rmhozldre3ci2et
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello,
+
+I noticed the kernel wiki URLs might have changed. The URLs now are
+like this:
+
+https://wireless.wiki.kernel.org/en/users/drivers/b43
+
+However in the kernel source code and in the kernel log output you
+find something like this:
+
+    b43-phy1 ERROR: You must go to http://wireless.kernel.org/en/users/Driv=
+ers/b43#devicefirmware and do
+    wnload the correct firmware for this driver version. Please carefully r=
+ead all instructions on this=20
+    website.
+
+(Notice the additional subdomain and the case change in the resource
+path.)
+
+Some websites seem to link on those old URLs, see
+https://packages.debian.org/source/buster/b43-fwcutter for example.
+
+Could the webmasters of kernel.org please configure some kind of
+redirects so people don't get 404 errors when looking for docs?
+
+Bonus question: would it make sense to change all those URLs in the
+source (as in: send patches for that)? Then what URLs are supposed to
+be the right ones now?
+
+Kind regards
+Alex
+
+--=20
+/"\ ASCII RIBBON | =BBWith the first link, the chain is forged. The first
+\ / CAMPAIGN     | speech censured, the first thought forbidden, the
+ X  AGAINST      | first freedom denied, chains us all irrevocably.=AB
+/ \ HTML MAIL    | (Jean-Luc Picard, quoting Judge Aaron Satie)
+
+--6rmhozldre3ci2et
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEwo7muQJjlc+Prwj6NK3NAHIhXMYFAl6ntLQACgkQNK3NAHIh
+XMbeAhAAyRPtVq5b/B1fRdh/FkSS2r/auAWSB+DoukfvUZADasr5JWDaEDISPJb3
+vWnVFt493cuGo05LV569Qj37aNKu6g9EUguFmWMShunSU6Vguojlag6J7+rinOMR
+8feiEnec4bQWAmSONzxyXxwC66vsKMTD+smOPhS8MEIAX+iHKxYLFLVBPqIcAEzr
+AqVHNWOaOODk7IOsCo7wKr8exjRXrWQe4erzZNWb+/4feHsygBuzfVgvEiDKQDVq
+pDQDgOodqCWsOZC0y2mWrUamry97g3vGNM1nKZPSkMe1wi5tNKe5aFJgeABf8FY6
+sqnFrw1kEL0fOuht0Bsx4ry9XLnt3rXRMw7ArY2Epgyjj7yb8pWo+4oe7Gx+PXUY
+PBUMU1016XOLOeoxkwFQtLGJ1a0iRnfkcEJznx8zQ2gA9ebZ1LfTzaQ4Xhr1qtQC
+QDTINb6ToeMozwYTZrPqc5g8HJwKRGrAGZlBRRRTzK03trBQ/aydpTKqJltQQBgv
+1GNUFQfauysdDaL/n/mIg1d4bjHSNs/ETi6AovgCAmTTrnueKtGTdhXUS4BezjlE
+Z8eA7UUuktkuzX7th8T71u+RVptjnFGZeQ7T1nQIDvrNH3ii30qqqzqq+nGC7EW9
+l40I+hK8dg61biL2dRnLd3upz81IuelnqQXIwoFCAVVWkV6ECP0=
+=+NxB
+-----END PGP SIGNATURE-----
+
+--6rmhozldre3ci2et--
