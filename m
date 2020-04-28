@@ -2,55 +2,57 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B805C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E66C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3557321835
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3130D20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098820;
-	bh=SdYPtGsz1ShTARY+qX9ivV1aApM0u9ClSZT3PcCCiK8=;
+	s=default; t=1588098824;
+	bh=SgIOKnFekVTZdbg62jtE6S/vCStCN4oFmWjvD0J3m0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HX+0ipMeEsDpqYrUQ9FAPoNxtbmbA19+vKbU4ZhuTNlrh9uVujMuK6Q722bGwuFAW
-	 nrWqaW8StVxrCwlj63WRsnlcQStylFiPOpjtKhXIjzsf+nmTqkJkgKlgPkSa+s6uGO
-	 gKh/f/2UxY2H2w8wmeWvFDPO4TVnh092TjQmyBzg=
+	b=W1iKIlHlUlamD5XtiRYyLt9Zv3asnDloIg3+DecTumG07xmdiCGUP5deuB5dA9O2c
+	 BLmMlngn5R7gF/lQ2mOTfVF9SYXnseP0XcNdFM+dkHTA/ZzoS3qS1SaBOKgZ0SxXzI
+	 0Ix3jS1mEw+Pqu2waSuVUszuxLZGYuzqrWLiL/88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729970AbgD1Sdj (ORCPT
+        id S1729504AbgD1Sdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:33:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50072 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:33:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729191AbgD1Sdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:33:35 -0400
+        id S1729965AbgD1Sdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:33:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE0EC21841;
-        Tue, 28 Apr 2020 18:33:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24A9920575;
+        Tue, 28 Apr 2020 18:33:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098815;
-        bh=SdYPtGsz1ShTARY+qX9ivV1aApM0u9ClSZT3PcCCiK8=;
+        s=default; t=1588098817;
+        bh=SgIOKnFekVTZdbg62jtE6S/vCStCN4oFmWjvD0J3m0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Dv+KZ/J3IzntPYNPhH+PNme+TI5HCWCJlZ0RKL7rogbgJ8+L6LDSj1/lUE9YTDre
-         vyB5sDmKmvJYb+YS1Icp2M9x4WM5/hWzFxxjfbdZAwLj582oFgzCuHUPNtek5/kkR/
-         0FRV9ZyUJEXJBcaVT2v29nu5+8M4YCTdQuH9WMc4=
+        b=TPnSjBZI3EguP1QbqGM2S2u0YcAmlXXJW2r+1N6FLD5MX8hhXLfvOSDz+h4Yq6wMn
+         c9DpUJ2MsQ4TvF+l5VRqOvBaLaRUOCcTWJKnqEr+Nvs0/iDkrhqg6Z8g334wCk2HFp
+         UDy7WtJu4jH3X+bdplqu0lwIE1B94Gn23gly0kOc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 060/131] net: stmmac: dwmac-meson8b: Add missing boundary to RGMII TX clock array
-Date:   Tue, 28 Apr 2020 20:24:32 +0200
-Message-Id: <20200428182232.520434532@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Santosh Sivaraj <santosh@fossix.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 019/168] tools/test/nvdimm: Fix out of tree build
+Date:   Tue, 28 Apr 2020 20:23:13 +0200
+Message-Id: <20200428182234.119453496@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,98 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Santosh Sivaraj <santosh@fossix.org>
 
-[ Upstream commit f0212a5ebfa6cd789ab47666b9cc169e6e688732 ]
+[ Upstream commit 1f776799628139d0da47e710ad86eb58d987ff66 ]
 
-Running with KASAN on a VIM3L systems leads to the following splat
-when probing the Ethernet device:
+Out of tree build using
 
-==================================================================
-BUG: KASAN: global-out-of-bounds in _get_maxdiv+0x74/0xd8
-Read of size 4 at addr ffffa000090615f4 by task systemd-udevd/139
-CPU: 1 PID: 139 Comm: systemd-udevd Tainted: G            E     5.7.0-rc1-00101-g8624b7577b9c #781
-Hardware name: amlogic w400/w400, BIOS 2020.01-rc5 03/12/2020
-Call trace:
- dump_backtrace+0x0/0x2a0
- show_stack+0x20/0x30
- dump_stack+0xec/0x148
- print_address_description.isra.12+0x70/0x35c
- __kasan_report+0xfc/0x1d4
- kasan_report+0x4c/0x68
- __asan_load4+0x9c/0xd8
- _get_maxdiv+0x74/0xd8
- clk_divider_bestdiv+0x74/0x5e0
- clk_divider_round_rate+0x80/0x1a8
- clk_core_determine_round_nolock.part.9+0x9c/0xd0
- clk_core_round_rate_nolock+0xf0/0x108
- clk_hw_round_rate+0xac/0xf0
- clk_factor_round_rate+0xb8/0xd0
- clk_core_determine_round_nolock.part.9+0x9c/0xd0
- clk_core_round_rate_nolock+0xf0/0x108
- clk_core_round_rate_nolock+0xbc/0x108
- clk_core_set_rate_nolock+0xc4/0x2e8
- clk_set_rate+0x58/0xe0
- meson8b_dwmac_probe+0x588/0x72c [dwmac_meson8b]
- platform_drv_probe+0x78/0xd8
- really_probe+0x158/0x610
- driver_probe_device+0x140/0x1b0
- device_driver_attach+0xa4/0xb0
- __driver_attach+0xcc/0x1c8
- bus_for_each_dev+0xf4/0x168
- driver_attach+0x3c/0x50
- bus_add_driver+0x238/0x2e8
- driver_register+0xc8/0x1e8
- __platform_driver_register+0x88/0x98
- meson8b_dwmac_driver_init+0x28/0x1000 [dwmac_meson8b]
- do_one_initcall+0xa8/0x328
- do_init_module+0xe8/0x368
- load_module+0x3300/0x36b0
- __do_sys_finit_module+0x120/0x1a8
- __arm64_sys_finit_module+0x4c/0x60
- el0_svc_common.constprop.2+0xe4/0x268
- do_el0_svc+0x98/0xa8
- el0_svc+0x24/0x68
- el0_sync_handler+0x12c/0x318
- el0_sync+0x158/0x180
+   make M=tools/test/nvdimm O=/tmp/build -C /tmp/build
 
-The buggy address belongs to the variable:
- div_table.63646+0x34/0xfffffffffffffa40 [dwmac_meson8b]
+fails with the following error
 
-Memory state around the buggy address:
- ffffa00009061480: fa fa fa fa 00 00 00 01 fa fa fa fa 00 00 00 00
- ffffa00009061500: 05 fa fa fa fa fa fa fa 00 04 fa fa fa fa fa fa
->ffffa00009061580: 00 03 fa fa fa fa fa fa 00 00 00 00 00 00 fa fa
-                                                             ^
- ffffa00009061600: fa fa fa fa 00 01 fa fa fa fa fa fa 01 fa fa fa
- ffffa00009061680: fa fa fa fa 00 01 fa fa fa fa fa fa 04 fa fa fa
-==================================================================
+make: Entering directory '/tmp/build'
+  CC [M]  tools/testing/nvdimm/test/nfit.o
+linux/tools/testing/nvdimm/test/nfit.c:19:10: fatal error: nd-core.h: No such file or directory
+   19 | #include <nd-core.h>
+      |          ^~~~~~~~~~~
+compilation terminated.
 
-Digging into this indeed shows that the clock divider array is
-lacking a final fence, and that the clock subsystems goes in the
-weeds. Oh well.
+That is because the kbuild file uses $(src) which points to
+tools/testing/nvdimm, $(srctree) correctly points to root of the linux
+source tree.
 
-Let's add the empty structure that indicates the end of the array.
-
-Fixes: bd6f48546b9c ("net: stmmac: dwmac-meson8b: Fix the RGMII TX delay on Meson8b/8m2 SoCs")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
+Link: https://lore.kernel.org/r/20200114054051.4115790-1-santosh@fossix.org
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c |    1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/nvdimm/Kbuild      | 4 ++--
+ tools/testing/nvdimm/test/Kbuild | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-@@ -125,6 +125,7 @@ static int meson8b_init_rgmii_tx_clk(str
- 		{ .div = 5, .val = 5, },
- 		{ .div = 6, .val = 6, },
- 		{ .div = 7, .val = 7, },
-+		{ /* end of array */ }
- 	};
+diff --git a/tools/testing/nvdimm/Kbuild b/tools/testing/nvdimm/Kbuild
+index c4a9196d794c9..cb80d3b811792 100644
+--- a/tools/testing/nvdimm/Kbuild
++++ b/tools/testing/nvdimm/Kbuild
+@@ -21,8 +21,8 @@ DRIVERS := ../../../drivers
+ NVDIMM_SRC := $(DRIVERS)/nvdimm
+ ACPI_SRC := $(DRIVERS)/acpi/nfit
+ DAX_SRC := $(DRIVERS)/dax
+-ccflags-y := -I$(src)/$(NVDIMM_SRC)/
+-ccflags-y += -I$(src)/$(ACPI_SRC)/
++ccflags-y := -I$(srctree)/drivers/nvdimm/
++ccflags-y += -I$(srctree)/drivers/acpi/nfit/
  
- 	clk_configs = devm_kzalloc(dev, sizeof(*clk_configs), GFP_KERNEL);
+ obj-$(CONFIG_LIBNVDIMM) += libnvdimm.o
+ obj-$(CONFIG_BLK_DEV_PMEM) += nd_pmem.o
+diff --git a/tools/testing/nvdimm/test/Kbuild b/tools/testing/nvdimm/test/Kbuild
+index fb3c3d7cdb9bd..75baebf8f4ba1 100644
+--- a/tools/testing/nvdimm/test/Kbuild
++++ b/tools/testing/nvdimm/test/Kbuild
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+-ccflags-y := -I$(src)/../../../../drivers/nvdimm/
+-ccflags-y += -I$(src)/../../../../drivers/acpi/nfit/
++ccflags-y := -I$(srctree)/drivers/nvdimm/
++ccflags-y += -I$(srctree)/drivers/acpi/nfit/
+ 
+ obj-m += nfit_test.o
+ obj-m += nfit_test_iomap.o
+-- 
+2.20.1
+
 
 
