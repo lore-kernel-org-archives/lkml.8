@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A0DC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3794BC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC330206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 086BA20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099625;
-	bh=p6/qDMrnVbxyIlgKCC8TT69irLDYwq8f/fnI7ON44PI=;
+	s=default; t=1588099631;
+	bh=ntRI2d4t5d8LgNQWaIoeisCkG2w01XL6Yg21Sgy5huY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AhdBZl0FgtOOopqNXPGl+nrTL6lseCOjIGYsTmJbqeNsyHD4hMhXirSzzNCL3asAa
-	 qa/wKEfoECB4t96PJW2+Tt/ZWIMiTC5ZRiKATOTd/HxlD6B1xP4RA+SN9iOR6Khafm
-	 wgWgNNTPR12l5yL3Z+BoscWLi+clj1HZRQQ+0Q0I=
+	b=KS6HW9MIHdTYHghNOBTxsiK0KsNurmhFsB0Yp/2hKWM6aB4h2FenJa7lhVYnS0eQa
+	 He1hHIF3jgvWXYMXFMt+gnvSKK24pyGfo6XTeoEjpShDw6Bdz4UI1xjAw1fSxxUl5O
+	 AFaSh9DezwIIeJVTlGqdV5cCNTNgGDUa8V2UZilc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730775AbgD1SrE (ORCPT
+        id S1731085AbgD1SmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:47:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34558 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:42:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730926AbgD1Smc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:42:32 -0400
+        id S1730502AbgD1SmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:42:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4922F2085B;
-        Tue, 28 Apr 2020 18:42:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08AA72076A;
+        Tue, 28 Apr 2020 18:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099351;
-        bh=p6/qDMrnVbxyIlgKCC8TT69irLDYwq8f/fnI7ON44PI=;
+        s=default; t=1588099334;
+        bh=ntRI2d4t5d8LgNQWaIoeisCkG2w01XL6Yg21Sgy5huY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=at9Gzsj7D1/opniPFHKuXkHhynFv2DmKLH1MSiExQ5S/mpuheYWJd+PCupAVPN6N+
-         DhRkzuUMEAdHg6bNH0cbu0S70kVXTKyliHhTFnWeDYFKLCBQmTDxpc2LRZ/AlyGp29
-         BYg16mcZH8766+dDaHX6AerLMZSBbwJWq2BePxSA=
+        b=scOHvS1wyV6cwvj7+6LiiOzqVm9pOj0B3+REZWSlIg+eattStCmMo3Wk9CSlDs5x8
+         a0wEkJWu5zE9PupwwV1xIElz3sjHsvx3/2anITVJiVZ8sp/VK6H6b9gMeTBcao1uAp
+         +8YMRSxJwcXRL9mO2QM8p1OKoWK4jB6rjGzvyHfo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 5.4 115/168] tpm: fix wrong return value in tpm_pcr_extend
-Date:   Tue, 28 Apr 2020 20:24:49 +0200
-Message-Id: <20200428182247.059042367@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 109/168] ALSA: hda/realtek - Fix unexpected init_amp override
+Date:   Tue, 28 Apr 2020 20:24:43 +0200
+Message-Id: <20200428182246.288982582@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -62,37 +58,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 29cb79795e324a8b65e7891d76f8f6ca911ba440 upstream.
+commit 67791202c5e069cf2ba51db0718d56c634709e78 upstream.
 
-For the algorithm that does not match the bank, a positive
-value EINVAL is returned here. I think this is a typo error.
-It is necessary to return an error value.
+The commit 1c76aa5fb48d ("ALSA: hda/realtek - Allow skipping
+spec->init_amp detection") changed the way to assign spec->init_amp
+field that specifies the way to initialize the amp.  Along with the
+change, the commit also replaced a few fixups that set spec->init_amp
+in HDA_FIXUP_ACT_PROBE with HDA_FIXUP_ACT_PRE_PROBE.  This was rather
+aligning to the other fixups, and not supposed to change the actual
+behavior.
 
-Cc: stable@vger.kernel.org # 5.4.x
-Fixes: 9f75c8224631 ("KEYS: trusted: correctly initialize digests and fix locking issue")
-Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Reviewed-by: Roberto Sassu <roberto.sassu@huawei.com>
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+However, this change turned out to cause a regression on FSC S7020,
+which hit exactly the above.  The reason was that there is still one
+place that overrides spec->init_amp after HDA_FIXUP_ACT_PRE_PROBE
+call, namely in alc_ssid_check().
+
+This patch fixes the regression by adding the proper spec->init_amp
+override check, i.e. verifying whether it's still ALC_INIT_UNDEFINED.
+
+Fixes: 1c76aa5fb48d ("ALSA: hda/realtek - Allow skipping spec->init_amp detection")
+Cc: <stable@vger.kernel.org>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207329
+Link: https://lore.kernel.org/r/20200418190639.10082-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/tpm/tpm-interface.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/drivers/char/tpm/tpm-interface.c
-+++ b/drivers/char/tpm/tpm-interface.c
-@@ -322,7 +322,7 @@ int tpm_pcr_extend(struct tpm_chip *chip
- 
- 	for (i = 0; i < chip->nr_allocated_banks; i++) {
- 		if (digests[i].alg_id != chip->allocated_banks[i].alg_id) {
--			rc = EINVAL;
-+			rc = -EINVAL;
- 			goto out;
- 		}
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -789,9 +789,11 @@ static void alc_ssid_check(struct hda_co
+ {
+ 	if (!alc_subsystem_id(codec, ports)) {
+ 		struct alc_spec *spec = codec->spec;
+-		codec_dbg(codec,
+-			  "realtek: Enable default setup for auto mode as fallback\n");
+-		spec->init_amp = ALC_INIT_DEFAULT;
++		if (spec->init_amp == ALC_INIT_UNDEFINED) {
++			codec_dbg(codec,
++				  "realtek: Enable default setup for auto mode as fallback\n");
++			spec->init_amp = ALC_INIT_DEFAULT;
++		}
  	}
+ }
+ 
 
 
