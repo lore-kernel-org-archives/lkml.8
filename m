@@ -2,55 +2,58 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E5CC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC2FC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00D302184D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC5A5217D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:35:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098899;
-	bh=+Kqz7iBDUfUsOPk7sYgADoGCWo1JAntG1JwD5JFUJFM=;
+	s=default; t=1588098901;
+	bh=hKu1vyMhVps1OAxX7R7Qf9/Zz7vCtRx4wUv23ATE3PU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=17NfpMS8YBQ/WEhLPWG8/lpYKS4T2WAjr4or9NdBt9QbmHnsQ3wYc3x9wPUTIogkl
-	 0tn/8KKbSotn0Q5S5Pt/0zevgGTTyir8FHYSXZ39Ss5ohr+uM4Z7XMlepnNKVByY3A
-	 399gybW/NuaM8ghcEBgo5z0v8eKMtXiQppkgAxNI=
+	b=dMckrfo3ZT1GiE+J/gb07TcdHKX1NtD4trqFgE/mvA+kyQ7WsCP2Ko7UFP/+nwWZT
+	 3Uk3FnOn/YfiUDg2+4J5c0BNiACTUkH3s/Xg4AmLUwnMvBv5fydtgrbYhUnjhYwBd+
+	 RR7XqR5HAkxKGbMr0M7ZJTWAA3Pdb8mdGaWq9eNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729209AbgD1Se6 (ORCPT
+        id S1730188AbgD1SfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:34:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51754 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:35:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729675AbgD1Sev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:34:51 -0400
+        id S1729395AbgD1Sey (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:34:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8075520B80;
-        Tue, 28 Apr 2020 18:34:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAB4A2186A;
+        Tue, 28 Apr 2020 18:34:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098891;
-        bh=+Kqz7iBDUfUsOPk7sYgADoGCWo1JAntG1JwD5JFUJFM=;
+        s=default; t=1588098893;
+        bh=hKu1vyMhVps1OAxX7R7Qf9/Zz7vCtRx4wUv23ATE3PU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=usLUCMZoQIve7Eh8E8bvbe1IP/FGQ2ic0z9ZUXtVBWGi/hUF1EHDrQVuqhDuN/YpD
-         hYkj4nfQwv+J0hua7yLgi0cbz9fmnbkmbPXSixMfNQ+8kB7J7wPkYnBBqWuLNNOQXA
-         nOf+fI/TF+vSX+FFl/oabrsd1/Txk9txnsaQIeTA=
+        b=gVQ0mK5tn8o+4jhSglE4rkjkWeycZPSE59ymF3X7J3QgYEP0ogFD0zH0ZeFnVKPvk
+         00LZ9oXYIzHvKzPSjpaDWfYI2hG8+atFbcAPIbJ0AoDeQ0YRh6QQKyg+0jVAhCH9Uc
+         +r/R26sCZrPnCXSalFEru0MrswJ5FWpMteP6TLzg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.6 125/167] iwlwifi: pcie: indicate correct RB size to device
-Date:   Tue, 28 Apr 2020 20:25:01 +0200
-Message-Id: <20200428182241.117194663@linuxfoundation.org>
+        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+        "H. Peter Anvin (Intel)" <hpa@zytor.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 028/168] lib/raid6/test: fix build on distros whose /bin/sh is not bash
+Date:   Tue, 28 Apr 2020 20:23:22 +0200
+Message-Id: <20200428182235.284683055@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,69 +63,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-commit d8d663970234fe885f29edf4f06394d0928c89f4 upstream.
+[ Upstream commit 06bd48b6cd97ef3889b68c8e09014d81dbc463f1 ]
 
-In the context info, we need to indicate the correct RB size
-to the device so that it will not think we have 4k when we
-only use 2k. This seems to not have caused any issues right
-now, likely because the hardware no longer supports putting
-multiple entries into a single RB, and practically all of
-the entries should be smaller than 2k.
+You can build a user-space test program for the raid6 library code,
+like this:
 
-Nevertheless, it's a bug, and we must advertise the right
-size to the device.
+  $ cd lib/raid6/test
+  $ make
 
-Note that right now we can only tell it 2k vs. 4k, so for
-the cases where we have more, still use 4k. This needs to
-be fixed by the firmware first.
+The command in $(shell ...) function is evaluated by /bin/sh by default.
+(or, you can specify the shell by passing SHELL=<shell> from command line)
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Fixes: cfdc20efebdc ("iwlwifi: pcie: use partial pages if applicable")
-Cc: stable@vger.kernel.org # v5.6
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/iwlwifi.20200417100405.ae6cd345764f.I0985c55223decf70182b9ef1d8edf4179f537853@changeid
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Currently '>&/dev/null' is used to sink both stdout and stderr. Because
+this code is bash-ism, it only works when /bin/sh is a symbolic link to
+bash (this is the case on RHEL etc.)
 
+This does not work on Ubuntu where /bin/sh is a symbolic link to dash.
+
+I see lots of
+
+  /bin/sh: 1: Syntax error: Bad fd number
+
+and
+
+  warning "your version of binutils lacks ... support"
+
+Replace it with portable '>/dev/null 2>&1'.
+
+Fixes: 4f8c55c5ad49 ("lib/raid6: build proper files on corresponding arch")
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Acked-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+Reviewed-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Acked-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c |   18 +++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ lib/raid6/test/Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c
-@@ -129,6 +129,18 @@ int iwl_pcie_ctxt_info_gen3_init(struct
- 	int cmdq_size = max_t(u32, IWL_CMD_QUEUE_SIZE,
- 			      trans->cfg->min_txq_size);
- 
-+	switch (trans_pcie->rx_buf_size) {
-+	case IWL_AMSDU_DEF:
-+		return -EINVAL;
-+	case IWL_AMSDU_2K:
-+		break;
-+	case IWL_AMSDU_4K:
-+	case IWL_AMSDU_8K:
-+	case IWL_AMSDU_12K:
-+		control_flags |= IWL_PRPH_SCRATCH_RB_SIZE_4K;
-+		break;
-+	}
-+
- 	/* Allocate prph scratch */
- 	prph_scratch = dma_alloc_coherent(trans->dev, sizeof(*prph_scratch),
- 					  &trans_pcie->prph_scratch_dma_addr,
-@@ -143,10 +155,8 @@ int iwl_pcie_ctxt_info_gen3_init(struct
- 		cpu_to_le16((u16)iwl_read32(trans, CSR_HW_REV));
- 	prph_sc_ctrl->version.size = cpu_to_le16(sizeof(*prph_scratch) / 4);
- 
--	control_flags = IWL_PRPH_SCRATCH_RB_SIZE_4K |
--			IWL_PRPH_SCRATCH_MTR_MODE |
--			(IWL_PRPH_MTR_FORMAT_256B &
--			 IWL_PRPH_SCRATCH_MTR_FORMAT);
-+	control_flags |= IWL_PRPH_SCRATCH_MTR_MODE;
-+	control_flags |= IWL_PRPH_MTR_FORMAT_256B & IWL_PRPH_SCRATCH_MTR_FORMAT;
- 
- 	/* initialize RX default queue */
- 	prph_sc_ctrl->rbd_cfg.free_rbd_addr =
+diff --git a/lib/raid6/test/Makefile b/lib/raid6/test/Makefile
+index 3ab8720aa2f84..b9e6c3648be1a 100644
+--- a/lib/raid6/test/Makefile
++++ b/lib/raid6/test/Makefile
+@@ -35,13 +35,13 @@ endif
+ ifeq ($(IS_X86),yes)
+         OBJS   += mmx.o sse1.o sse2.o avx2.o recov_ssse3.o recov_avx2.o avx512.o recov_avx512.o
+         CFLAGS += $(shell echo "pshufb %xmm0, %xmm0" |		\
+-                    gcc -c -x assembler - >&/dev/null &&	\
++                    gcc -c -x assembler - >/dev/null 2>&1 &&	\
+                     rm ./-.o && echo -DCONFIG_AS_SSSE3=1)
+         CFLAGS += $(shell echo "vpbroadcastb %xmm0, %ymm1" |	\
+-                    gcc -c -x assembler - >&/dev/null &&	\
++                    gcc -c -x assembler - >/dev/null 2>&1 &&	\
+                     rm ./-.o && echo -DCONFIG_AS_AVX2=1)
+ 	CFLAGS += $(shell echo "vpmovm2b %k1, %zmm5" |          \
+-		    gcc -c -x assembler - >&/dev/null &&        \
++		    gcc -c -x assembler - >/dev/null 2>&1 &&	\
+ 		    rm ./-.o && echo -DCONFIG_AS_AVX512=1)
+ else ifeq ($(HAS_NEON),yes)
+         OBJS   += neon.o neon1.o neon2.o neon4.o neon8.o recov_neon.o recov_neon_inner.o
+-- 
+2.20.1
+
 
 
