@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2C3C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6826FC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10BDC2085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C2CD2137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098377;
-	bh=bBZ0/WEzQteMoUn5HISEL67Z74iHviswZYjpHt3GYhw=;
+	s=default; t=1588098382;
+	bh=4r6aacRDYq6Hlwz2V30XSValEQ2V7Q+sqM4zheLkdQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nHkHSqiealFcI9isg8F3RfFhdwooC7vWmoxhrlCaNlPZoWAq0A50r9WLO/Kt5SXmk
-	 UnTu+BuRydo0QKx3DrYxLs9foIv9hcmGERXcZXYtGJYO1SGPOXl56Fz1gmwznpk5h5
-	 dS6P8S/IBSInBlEcBG82w9zmt5r+uu3WM/UpcljY=
+	b=N8psl/PY2i3eZXejx5r62xSnhlMFOeHf0Dv6e+9HWkjWM42q7bZBrncqljXh1kOMt
+	 8u46b991K0lhjHMflY3ja8FQsK9CZbuUKV3lwc4iWgOsYrMYTHHJHwnet5/esEQZR3
+	 neJiHQ2V2hS18H83Rb60Ahcy0uxD23eJO1yMh7BM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728692AbgD1S0Q (ORCPT
+        id S1728708AbgD1S0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:26:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37600 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:26:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728673AbgD1S0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:26:14 -0400
+        id S1728673AbgD1S0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:26:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 005052085B;
-        Tue, 28 Apr 2020 18:26:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A468208E0;
+        Tue, 28 Apr 2020 18:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098373;
-        bh=bBZ0/WEzQteMoUn5HISEL67Z74iHviswZYjpHt3GYhw=;
+        s=default; t=1588098375;
+        bh=4r6aacRDYq6Hlwz2V30XSValEQ2V7Q+sqM4zheLkdQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qZ1M0e78wL9xGYV6RGgQw27Lgb4FEZ44jpnITjxW21yNlfFJQMfhkM6bgNc/pxmOm
-         NoBDE9fwQZjxI4IwUxk17JY0kA5ImQK+fF18utbCgIkYc1ddLdUeLdfsV1urlOEcTA
-         5zl2svMEFZO/Gnb66dnb1A0nm/YkhwGIqTWUa+4I=
+        b=gHsx6PxKzE95n8/9jNVeilSrVbRPQcQYJhrkA4xycq2mkIA5ixIaddQQVNbB83Mqc
+         aocyK798ylsITZoy0wjooNn7vsr8lVmET3cXUBqtHSyDhj5AOAOZ8C/92SNJxy/zkJ
+         YYH9JArVUh82csewlL1jhBHKnUxvjZxz9zcNBBKA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Lee Duncan <lduncan@suse.com>,
+        Wu Bo <wubo40@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 014/167] ASoC: qcom: q6asm-dai: Add SNDRV_PCM_INFO_BATCH flag
-Date:   Tue, 28 Apr 2020 20:23:10 +0200
-Message-Id: <20200428182227.021520048@linuxfoundation.org>
+Subject: [PATCH 5.6 015/167] scsi: iscsi: Report unbind session event when the target has been removed
+Date:   Tue, 28 Apr 2020 20:23:11 +0200
+Message-Id: <20200428182227.152115606@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
 References: <20200428182225.451225420@linuxfoundation.org>
@@ -61,67 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Wu Bo <wubo40@huawei.com>
 
-[ Upstream commit 7f2430cda819a9ecb1df5a0f3ef4f1c20db3f811 ]
+[ Upstream commit 13e60d3ba287d96eeaf1deaadba51f71578119a3 ]
 
-At the moment, playing audio with PulseAudio with the qdsp6 driver
-results in distorted sound. It seems like its timer-based scheduling
-does not work properly with qdsp6 since setting tsched=0 in
-the PulseAudio configuration avoids the issue.
+If the daemon is restarted or crashes while logging out of a session, the
+unbind session event sent by the kernel is not processed and is lost.  When
+the daemon starts again, the session can't be unbound because the daemon is
+waiting for the event message. However, the kernel has already logged out
+and the event will not be resent.
 
-Apparently this happens when the pointer() callback is not accurate
-enough. There is a SNDRV_PCM_INFO_BATCH flag that can be used to stop
-PulseAudio from using timer-based scheduling by default.
+When iscsid restart is complete, logout session reports error:
 
-According to https://www.alsa-project.org/pipermail/alsa-devel/2014-March/073816.html:
+Logging out of session [sid: 6, target: iqn.xxxxx, portal: xx.xx.xx.xx,3260]
+iscsiadm: Could not logout of [sid: 6, target: iscsiadm -m node iqn.xxxxx, portal: xx.xx.xx.xx,3260].
+iscsiadm: initiator reported error (9 - internal error)
+iscsiadm: Could not logout of all requested sessions
 
-    The flag is being used in the sense explained in the previous audio
-    meeting -- the data transfer granularity isn't fine enough but aligned
-    to the period size (or less).
+Make sure the unbind event is emitted.
 
-q6asm-dai reports the position as multiple of
+[mkp: commit desc and applied by hand since patch was mangled]
 
-    prtd->pcm_count = snd_pcm_lib_period_bytes(substream)
-
-so it indeed just a multiple of the period size.
-
-Therefore adding the flag here seems appropriate and makes audio
-work out of the box.
-
-Fixes: 2a9e92d371db ("ASoC: qdsp6: q6asm: Add q6asm dai driver")
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20200330175210.47518-1-stephan@gerhold.net
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/r/4eab1771-2cb3-8e79-b31c-923652340e99@huawei.com
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Wu Bo <wubo40@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/qcom/qdsp6/q6asm-dai.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/scsi_transport_iscsi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
-index c0d422d0ab94f..d7dc80ede8927 100644
---- a/sound/soc/qcom/qdsp6/q6asm-dai.c
-+++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
-@@ -73,7 +73,7 @@ struct q6asm_dai_data {
- };
+diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
+index dfc726fa34e34..443ace019852f 100644
+--- a/drivers/scsi/scsi_transport_iscsi.c
++++ b/drivers/scsi/scsi_transport_iscsi.c
+@@ -2012,7 +2012,7 @@ static void __iscsi_unbind_session(struct work_struct *work)
+ 	if (session->target_id == ISCSI_MAX_TARGET) {
+ 		spin_unlock_irqrestore(&session->lock, flags);
+ 		mutex_unlock(&ihost->mutex);
+-		return;
++		goto unbind_session_exit;
+ 	}
  
- static const struct snd_pcm_hardware q6asm_dai_hardware_capture = {
--	.info =                 (SNDRV_PCM_INFO_MMAP |
-+	.info =                 (SNDRV_PCM_INFO_MMAP | SNDRV_PCM_INFO_BATCH |
- 				SNDRV_PCM_INFO_BLOCK_TRANSFER |
- 				SNDRV_PCM_INFO_MMAP_VALID |
- 				SNDRV_PCM_INFO_INTERLEAVED |
-@@ -95,7 +95,7 @@ static const struct snd_pcm_hardware q6asm_dai_hardware_capture = {
- };
+ 	target_id = session->target_id;
+@@ -2024,6 +2024,8 @@ static void __iscsi_unbind_session(struct work_struct *work)
+ 		ida_simple_remove(&iscsi_sess_ida, target_id);
  
- static struct snd_pcm_hardware q6asm_dai_hardware_playback = {
--	.info =                 (SNDRV_PCM_INFO_MMAP |
-+	.info =                 (SNDRV_PCM_INFO_MMAP | SNDRV_PCM_INFO_BATCH |
- 				SNDRV_PCM_INFO_BLOCK_TRANSFER |
- 				SNDRV_PCM_INFO_MMAP_VALID |
- 				SNDRV_PCM_INFO_INTERLEAVED |
+ 	scsi_remove_target(&session->dev);
++
++unbind_session_exit:
+ 	iscsi_session_event(session, ISCSI_KEVENT_UNBIND_SESSION);
+ 	ISCSI_DBG_TRANS_SESSION(session, "Completed target removal\n");
+ }
 -- 
 2.20.1
 
