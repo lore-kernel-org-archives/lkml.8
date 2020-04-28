@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4914C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F06C4C8300A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE45208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C455A2085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098362;
-	bh=Fbzklwso61IMLOubYjfCEIBGHAuX+p6DKbIr5DOMRtA=;
+	s=default; t=1588098365;
+	bh=Qx2tEubZRAhNZD5v2RNXGOpZeZLoeJABDxlfGSHEieQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oCSK3ekIp7uKGFf/VWvWQOpDSWXuAgJAHcjqY815PdaJpVtq2nnE7UnXLSq65gfoh
-	 rcZWypF9CGjTdrEClmywN8ynBzi0VYJsxZw7bTyKetCZV9enNgFAEnDLKO8lh2ROJe
-	 aK+cfvbQ0RveXewqcgtRHvbPonSGobPmNAtmfWlY=
+	b=jKH1I4UWkz73fSRPKJ8FFeRDbrRZqr54iDnt8X2G+qU7tpw6ysRLpz9dqfaO4nT5y
+	 Meyz/4z2Odw1HR6Tm7estWZdSrR7z4Je5F0oulIfk0kxDqhPUNCo7Nva/1EUcrkBSU
+	 jGoulkYDD+SfF0yjcKu9my8lN4TXGff3HOnKzxZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgD1S0C (ORCPT
+        id S1728647AbgD1S0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:26:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37236 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:26:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727827AbgD1S0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:26:01 -0400
+        id S1727827AbgD1S0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:26:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C631620730;
-        Tue, 28 Apr 2020 18:26:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B223208E0;
+        Tue, 28 Apr 2020 18:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098361;
-        bh=Fbzklwso61IMLOubYjfCEIBGHAuX+p6DKbIr5DOMRtA=;
+        s=default; t=1588098363;
+        bh=Qx2tEubZRAhNZD5v2RNXGOpZeZLoeJABDxlfGSHEieQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2ihNLzPULseabd9+RtGvpec0vwhk0S2WW5iQXod52pIxgc6h6l714lXQiGHQIGpRX
-         gdkt94BX9iPQMIyi/Gr8je7lsB1a61GNRpnj3tAXHaJFjb8PfYcgL0YB8GRArkf7qE
-         hxa1CnRclEcrzcBVOMDKgUKYbmZ17AMNFZadHMzM=
+        b=gXv5nt8/IQ28JbwSX89e+Wzjj4UJUOwjunsu8mxjeRm/aEB6O+CQ+fKRGyeeXPKi5
+         4/gOhl9vHin0RYH3vPbctivw4ZtTxTTBAyJMqVotDiEt+hE45r5KCB8EnrP4WltONC
+         9NN/fU9hO6N9e3H0CgKctHHSam1Dja2nLC4+/Ppo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, Jann Horn <jannh@google.com>
-Subject: [PATCH 5.6 001/167] mm: check that mm is still valid in madvise()
-Date:   Tue, 28 Apr 2020 20:22:57 +0200
-Message-Id: <20200428182225.685927310@linuxfoundation.org>
+        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 010/167] ceph: dont skip updating wanted caps when cap is stale
+Date:   Tue, 28 Apr 2020 20:23:06 +0200
+Message-Id: <20200428182226.535176245@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
 References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,75 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Yan, Zheng <zyan@redhat.com>
 
-[ Upstream commit bc0c4d1e176eeb614dc8734fc3ace34292771f11 ]
+[ Upstream commit 0aa971b6fd3f92afef6afe24ef78d9bb14471519 ]
 
-IORING_OP_MADVISE can end up basically doing mprotect() on the VM of
-another process, which means that it can race with our crazy core dump
-handling which accesses the VM state without holding the mmap_sem
-(because it incorrectly thinks that it is the final user).
+1. try_get_cap_refs() fails to get caps and finds that mds_wanted
+   does not include what it wants. It returns -ESTALE.
+2. ceph_get_caps() calls ceph_renew_caps(). ceph_renew_caps() finds
+   that inode has cap, so it calls ceph_check_caps().
+3. ceph_check_caps() finds that issued caps (without checking if it's
+   stale) already includes caps wanted by open file, so it skips
+   updating wanted caps.
 
-This is clearly a core dumping problem, but we've never fixed it the
-right way, and instead have the notion of "check that the mm is still
-ok" using mmget_still_valid() after getting the mmap_sem for writing in
-any situation where we're not the original VM thread.
+Above events can cause an infinite loop inside ceph_get_caps().
 
-See commit 04f5866e41fb ("coredump: fix race condition between
-mmget_not_zero()/get_task_mm() and core dumping") for more background on
-this whole mmget_still_valid() thing.  You might want to have a barf bag
-handy when you do.
-
-We're discussing just fixing this properly in the only remaining core
-dumping routines.  But even if we do that, let's make do_madvise() do
-the right thing, and then when we fix core dumping, we can remove all
-these mmget_still_valid() checks.
-
-Reported-and-tested-by: Jann Horn <jannh@google.com>
-Fixes: c1ca757bd6f4 ("io_uring: add IORING_OP_MADVISE")
-Acked-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/madvise.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ fs/ceph/caps.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 4bb30ed6c8d21..8cbd8c1bfe159 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -27,6 +27,7 @@
- #include <linux/swapops.h>
- #include <linux/shmem_fs.h>
- #include <linux/mmu_notifier.h>
-+#include <linux/sched/mm.h>
+diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+index 28ae0c1347004..d050acc1fd5d9 100644
+--- a/fs/ceph/caps.c
++++ b/fs/ceph/caps.c
+@@ -1973,8 +1973,12 @@ retry_locked:
+ 		}
  
- #include <asm/tlb.h>
- 
-@@ -1090,6 +1091,23 @@ int do_madvise(unsigned long start, size_t len_in, int behavior)
- 	if (write) {
- 		if (down_write_killable(&current->mm->mmap_sem))
- 			return -EINTR;
-+
-+		/*
-+		 * We may have stolen the mm from another process
-+		 * that is undergoing core dumping.
-+		 *
-+		 * Right now that's io_ring, in the future it may
-+		 * be remote process management and not "current"
-+		 * at all.
-+		 *
-+		 * We need to fix core dumping to not do this,
-+		 * but for now we have the mmget_still_valid()
-+		 * model.
-+		 */
-+		if (!mmget_still_valid(current->mm)) {
-+			up_write(&current->mm->mmap_sem);
-+			return -EINTR;
+ 		/* want more caps from mds? */
+-		if (want & ~(cap->mds_wanted | cap->issued))
+-			goto ack;
++		if (want & ~cap->mds_wanted) {
++			if (want & ~(cap->mds_wanted | cap->issued))
++				goto ack;
++			if (!__cap_is_valid(cap))
++				goto ack;
 +		}
- 	} else {
- 		down_read(&current->mm->mmap_sem);
- 	}
+ 
+ 		/* things we might delay */
+ 		if ((cap->issued & ~retain) == 0)
 -- 
 2.20.1
 
