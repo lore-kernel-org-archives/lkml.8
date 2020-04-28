@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ADDEC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8648BC83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAE4E206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C192206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:23:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbgD1PXr (ORCPT
+        id S1728702AbgD1PXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:23:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41640 "EHLO
+        Tue, 28 Apr 2020 11:23:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728240AbgD1PSB (ORCPT
+        by vger.kernel.org with ESMTP id S1728230AbgD1PR7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:18:01 -0400
+        Tue, 28 Apr 2020 11:17:59 -0400
 Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EA40C03C1AB;
-        Tue, 28 Apr 2020 08:18:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7597C03C1AB;
+        Tue, 28 Apr 2020 08:17:59 -0700 (PDT)
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 0EB34ED8; Tue, 28 Apr 2020 17:17:45 +0200 (CEST)
+        id 7E89EECD; Tue, 28 Apr 2020 17:17:45 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -44,9 +44,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 21/75] x86/boot/compressed/64: Check return value of kernel_ident_mapping_init()
-Date:   Tue, 28 Apr 2020 17:16:31 +0200
-Message-Id: <20200428151725.31091-22-joro@8bytes.org>
+Subject: [PATCH v3 18/75] x86/boot/compressed/64: Change add_identity_map() to take start and end
+Date:   Tue, 28 Apr 2020 17:16:28 +0200
+Message-Id: <20200428151725.31091-19-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200428151725.31091-1-joro@8bytes.org>
 References: <20200428151725.31091-1-joro@8bytes.org>
@@ -57,39 +57,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-The function can fail to create an identity mapping, check for that
-and bail out if it happens.
+Changing the function to take start and end as parameters instead of
+start and size simplifies the callers, which don't need to calculate
+the size if they already have start and end.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/compressed/ident_map_64.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/x86/boot/compressed/ident_map_64.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
 diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index 6ee089fdc65a..5d8b0bffe421 100644
+index 9f6606184797..83385a551f01 100644
 --- a/arch/x86/boot/compressed/ident_map_64.c
 +++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -93,6 +93,8 @@ static struct x86_mapping_info mapping_info;
+@@ -91,10 +91,8 @@ static struct x86_mapping_info mapping_info;
+ /*
+  * Adds the specified range to the identity mappings.
   */
- static void add_identity_map(unsigned long start, unsigned long end)
+-static void add_identity_map(unsigned long start, unsigned long size)
++static void add_identity_map(unsigned long start, unsigned long end)
  {
-+	int ret;
-+
+-	unsigned long end = start + size;
+-
  	/* Align boundary to 2M. */
  	start = round_down(start, PMD_SIZE);
  	end = round_up(end, PMD_SIZE);
-@@ -100,8 +102,9 @@ static void add_identity_map(unsigned long start, unsigned long end)
- 		return;
+@@ -109,8 +107,6 @@ static void add_identity_map(unsigned long start, unsigned long size)
+ /* Locates and clears a region for a new top level page table. */
+ void initialize_identity_maps(void)
+ {
+-	unsigned long start, size;
+-
+ 	/* If running as an SEV guest, the encryption mask is required. */
+ 	set_sev_encryption_mask();
  
- 	/* Build the mapping. */
--	kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt,
--				  start, end);
-+	ret = kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt, start, end);
-+	if (ret)
-+		error("Error: kernel_ident_mapping_init() failed\n");
+@@ -157,15 +153,14 @@ void initialize_identity_maps(void)
+ 	 * New page-table is set up - map the kernel image and load it
+ 	 * into cr3.
+ 	 */
+-	start = (unsigned long)_head;
+-	size  = _end - _head;
+-	add_identity_map(start, size);
++	add_identity_map((unsigned long)_head, (unsigned long)_end);
+ 	write_cr3(top_level_pgt);
  }
  
- /* Locates and clears a region for a new top level page table. */
+ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
+ {
+-	unsigned long address = native_read_cr2();
++	unsigned long address = native_read_cr2() & PMD_MASK;
++	unsigned long end = address + PMD_SIZE;
+ 
+ 	/*
+ 	 * Check for unexpected error codes. Unexpected are:
+@@ -191,5 +186,5 @@ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
+ 	 * Error code is sane - now identity map the 2M region around
+ 	 * the faulting address.
+ 	 */
+-	add_identity_map(address & PMD_MASK, PMD_SIZE);
++	add_identity_map(address, end);
+ }
 -- 
 2.17.1
 
