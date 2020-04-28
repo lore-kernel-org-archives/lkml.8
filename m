@@ -2,109 +2,119 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E93AC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319CFC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6807C206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F62A206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:17:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HitueB7/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RncoTczb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgD1KQv (ORCPT
+        id S1727892AbgD1KQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 06:16:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50868 "EHLO
+        Tue, 28 Apr 2020 06:16:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726932AbgD1KQt (ORCPT
+        by vger.kernel.org with ESMTP id S1726932AbgD1KQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 06:16:49 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B319CC03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 03:16:49 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id d17so23979672wrg.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 03:16:49 -0700 (PDT)
+        Tue, 28 Apr 2020 06:16:59 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0958C03C1A9;
+        Tue, 28 Apr 2020 03:16:58 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id s18so7425190pgl.12;
+        Tue, 28 Apr 2020 03:16:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Abo6l5Xyc1oYnHFvRioVLnD13zq9Rgb+0iUvfQi/YYI=;
-        b=HitueB7/d1ualBTxbqUTESD3Pre5U2RmejIrTJWs1PwFw2iixni5EB1XiGxTaVKzLW
-         pzKcn3Xj1PpcWFfa69UUG20I2QY9Hjx4EEOen2McVt74aVnKRV6y2A0PJtcfThHgcPw5
-         oK6Al4D10wsEfr0T359Dyrbk2al7twmFMRjrMNXMJcGQvJbLjAnMv6uHJz+BmYR6Pd6Z
-         cw5FibGDqmisikZM7Sa0cp3m2ug0YbjwqI5aKgxne7aMs3sRr2uS32gXNW8CShZwtewk
-         ywABwowwP1RHJG7qay7Ymbnpc366x/+6HlMNcSPoqhESq0Z9ZEshf2vZWRjIeho4tRRk
-         mThg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PMjnBAmGgu6XoLQhl6ptyrFCAoyMr8FVl1mKQC6PPaE=;
+        b=RncoTczbOdcqMr1ZHkJfFjjB0TySFxQ4a/8qT19W8hFxRJqFCwcm9AzyxUbwKDoXT7
+         xYWMguhbPD77QZQ312Y126fgdFaMoOQEYDBcdZPBuzN1mwNHgSWij6w5ig1H8QZKiqKu
+         EzQVPOJn2px/+ozTqudMXpPUnJeZQDVPcSdDOsP1KclaC5P7lKI2/HgeiF5zkm/ibKl6
+         DpilYpsf4DH9GgRl7Boq1vyTOz/EAgrOXhsGHXy1ztGWKjfggVEHNTipZuoE2xwESXjq
+         1706dZ9KMUtqdzKy0UnnO3IGZtmrYRigiXwqV8HNsO0XLnB89VoN1X3TrJqhS+Zy+PYj
+         dL5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Abo6l5Xyc1oYnHFvRioVLnD13zq9Rgb+0iUvfQi/YYI=;
-        b=gxKTlHdHkr899A0A6psWDFT82BPyhnCRb3JvIsY/7CxSNnTI2rNOO0y1SOh+x6Iuy+
-         8nqgOmAnfOVV3yczcLGH/SfeY25KswioLkGEVik41yAGZK9A1r+WXXsYDV35374YIByc
-         OKLIeUl6GkPgSMXSwmbDyXkmncGVWnFJV4g8OIA9Pgy4hDrSOwmYKxc2+vCf9lAHJ0ba
-         xk5Cn9aMiGGka1vLzZqW7hbU1ftM1LbJJ1LEQzqXFKdkoahrSqOnxCqCVobEMD6ggZzs
-         lhiBCLofBITtODRimd6itv+sItcV+mHm6ojXGU7X4fvbM/SdHsEzUFZ3WRpmr4nrrZ6g
-         VRWw==
-X-Gm-Message-State: AGi0PubYzN0u8oeHBXUfSDQ5And+t4GkWqlHHkcslWaJvCfcl1G3qjGs
-        Ia/NoF7NsJGFdynatThS4TNt7A==
-X-Google-Smtp-Source: APiQypLQ81+f0z7kO0fvBLeVPbuFSG2xYOUnKUA0JEXxXIUa3nlA/ckSrylVIOYt6X2eEAcUV7sWRw==
-X-Received: by 2002:adf:f9c6:: with SMTP id w6mr32720438wrr.341.1588069008454;
-        Tue, 28 Apr 2020 03:16:48 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id f23sm2638156wml.4.2020.04.28.03.16.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 03:16:47 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 11:16:46 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Kiran Gunda <kgunda@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        daniel.thompson@linaro.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
-        robh@kernel.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dan Murphy <dmurphy@ti.com>, linux-arm-msm@vger.kernel.org,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-Subject: Re: [PATCH V6 1/4] backlight: qcom-wled: convert the wled bindings
- to .yaml format
-Message-ID: <20200428101646.GN3559@dell>
-References: <1587656017-27911-1-git-send-email-kgunda@codeaurora.org>
- <1587656017-27911-2-git-send-email-kgunda@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PMjnBAmGgu6XoLQhl6ptyrFCAoyMr8FVl1mKQC6PPaE=;
+        b=e0qFp2/aT3QfnGBJPjYr3KdPjkc5yNXCvX4naCiJVBSL0xfn9UfI2GvT9SQPEqZKHL
+         a4rqvaWgMAkxDTw1kYOmuIKqUxBf4JAyR9TFdwQbwd+NHq6oCvW9lazFugCJ1SYodlqX
+         7tx4Ax4KKBZytbzxKjuGyrMyzRqpG/yacV2v6lTmAl0OBbhLw1qc7RJo5yiwSJ3PMMBL
+         I/oqDw5aprHZzrwBU9stAT85peUcw1qxjHjlS7rR5Fj61Bq8cwwne4Kyqgp5RKzJf7W7
+         MoJq65qleP/q8bho0YHl7KDYqLk5sm5mlQW5n2gCcLgKqKgTI5mBrlW/o7PNKOCv31Dj
+         buYQ==
+X-Gm-Message-State: AGi0PuYsZfCh8CRGIGLU5FH6H60tgba+6kpE34vxpAN0MyT7LS9B0TU/
+        88HEepFzlzR4ZR2iJTiXZlN5+HoL4ySSBU80aBs=
+X-Google-Smtp-Source: APiQypLjwqT3Evw7cs2eSptlYQM/hGNM8/iUGajRjMjhIp6HGHqaheczoeJmTSjtV9L+Y2DRDj5i3DuQvRUZCDBD4wU=
+X-Received: by 2002:a62:f908:: with SMTP id o8mr28487450pfh.170.1588069018490;
+ Tue, 28 Apr 2020 03:16:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1587656017-27911-2-git-send-email-kgunda@codeaurora.org>
+References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
+ <20200422141135.86419-2-tomasz.duszynski@octakon.com> <CAHp75VcbaGYj76qkDJnTnuG5SM215qVmFo7FLR6YzHA37PgF_g@mail.gmail.com>
+ <20200424190413.GA2731@arch> <CAHp75Vdajf7Ci3ytxP7Qs9=fFaxvVBQoL5uh+HUDwxHS5r9MUg@mail.gmail.com>
+ <20200425184130.GA37271@arch> <CAHp75Vez8wSaYHbXmvfXUS5N+vScQqHGg055DNKrEnCunP7awA@mail.gmail.com>
+ <20200428075606.GB6908@arch>
+In-Reply-To: <20200428075606.GB6908@arch>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 28 Apr 2020 13:16:47 +0300
+Message-ID: <CAHp75VdKqVvJg7T=42w1SzKSDbfWjYKMomgQBshiMAW=_e0y_w@mail.gmail.com>
+Subject: Re: [PATCH 1/6] iio: chemical: scd30: add core driver
+To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Apr 2020, Kiran Gunda wrote:
+On Tue, Apr 28, 2020 at 10:57 AM Tomasz Duszynski
+<tomasz.duszynski@octakon.com> wrote:
+>
+> On Sat, Apr 25, 2020 at 09:52:25PM +0300, Andy Shevchenko wrote:
+> > On Sat, Apr 25, 2020 at 9:42 PM Tomasz Duszynski
+> > <tomasz.duszynski@octakon.com> wrote:
+> > > On Sat, Apr 25, 2020 at 02:43:35PM +0300, Andy Shevchenko wrote:
+> > > > On Fri, Apr 24, 2020 at 10:05 PM Tomasz Duszynski
+> > > > <tomasz.duszynski@octakon.com> wrote:
+> > > > > On Wed, Apr 22, 2020 at 10:49:44PM +0300, Andy Shevchenko wrote:
+> > > > > > On Wed, Apr 22, 2020 at 5:22 PM Tomasz Duszynski
+> > > > > > <tomasz.duszynski@octakon.com> wrote:
+> >
+> > ...
+> >
+> > > > > As for ABI that's in
+> > > > > a separate patch.
+> > > >
+> > > > It's not good from bisectability point of view. If by some reason this
+> > > > patch or documentation patch gets reverted, the other one will be
+> > > > dangling.
+> > > > Please, unify them.
+> > > >
+> > >
+> > > Huh? Reverting core and leaving leftovers would be wrong and pointless.
+> >
+> > Exactly my point why it should be one patch. To secure impossibility
+> > to do pointless reverts.
+> >
+>
+> But the same applies to other driver parts like i2c or serial
+> interfaces. I don't buy it.
 
-> Convert the qcom-wled bindings from .txt to .yaml format.
-> Also replace PM8941 to WLED3 and PMI8998 to WLED4.
-> 
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-> ---
->  .../bindings/leds/backlight/qcom-wled.txt          | 154 ---------------
->  .../bindings/leds/backlight/qcom-wled.yaml         | 208 +++++++++++++++++++++
->  2 files changed, 208 insertions(+), 154 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
->  create mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+They won't compile without core driver, right? Absence of the
+documentation OTOH doesn't prevent build.
 
-Needs a DT Ack.
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+With Best Regards,
+Andy Shevchenko
