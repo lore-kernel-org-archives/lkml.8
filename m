@@ -2,253 +2,131 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C15C8C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6DEC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A168220B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:37:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588106221;
-	bh=ZC1B/1lsLTFKwVHrZgzidXDaYBKHkIEQkEmc6ya6Sc0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Y4BZ8tmfXL/myvGt0KulUhYXdsOjdqMVZHtrNYqJw44RLnuCZ01Iax89wG+tRnvc6
-	 5bqBEO7E9VZ5bpo9xIu9+vQFmv4uUIrfovpfLoC3XViislLc5PsKeskec3BcvfPVRy
-	 Mdm6FU4hOabPyS2og/d6xJANcYQNSxAHPM03qobE=
+	by mail.kernel.org (Postfix) with ESMTP id B64E62085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:39:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZxryyFHs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgD1UhB (ORCPT
+        id S1726511AbgD1UjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:37:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43200 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726286AbgD1UhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:37:00 -0400
-Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 28 Apr 2020 16:39:03 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:47464 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726291AbgD1UjC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 16:39:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588106341;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=AbPHY1AYpcEsQGK31HfahH54k0ELDBfLbhr3/3je0ok=;
+        b=ZxryyFHsKgeAGkiGQVVB1cZ2ANsrVC4B5MiEIsFtcUpFfOFUMm8+DqVbvAJ5F4KwI7oLLR
+        F3C3hE87mJQeRMJAu/g8c+5vKc44seRxAHOgwtPrT+vuNZXir1DKuPBVN6MpAc/N4cBac+
+        fEVstAvU1v1fyzVtzkZoBfilFQ/4dzg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-420-fWpzP96SOdKWRtcRNLDKPw-1; Tue, 28 Apr 2020 16:38:59 -0400
+X-MC-Unique: fWpzP96SOdKWRtcRNLDKPw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02EA72085B;
-        Tue, 28 Apr 2020 20:36:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588106219;
-        bh=ZC1B/1lsLTFKwVHrZgzidXDaYBKHkIEQkEmc6ya6Sc0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=FsbtQh6tVpH9m8pqT634qyofIFDXaQYPzNVMuRCRqp20/T92h5BhZzLA928Sj8r6l
-         ATih5OZ1MlwcdFDr+NMfRHznrORSvKK83EalASN+n9Bxvjg5BzPweWa+sUaN/wuSQK
-         9GGjpETTkvMV/lUEEsVSO/qKA+ANno9ZGPKHENvY=
-Date:   Tue, 28 Apr 2020 15:36:57 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Austin Bolen <Austin.Bolen@dell.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, Jon Derrick <jonathan.derrick@intel.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v1 1/1] PCI/AER: Use _OSC negotiation to determine AER
- ownership
-Message-ID: <20200428203657.GA206580@google.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E6E47800685;
+        Tue, 28 Apr 2020 20:38:57 +0000 (UTC)
+Received: from treble (ovpn-112-209.rdu2.redhat.com [10.10.112.209])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 358365D710;
+        Tue, 28 Apr 2020 20:38:57 +0000 (UTC)
+Date:   Tue, 28 Apr 2020 15:38:55 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: Remaining randconfig objtool warnings, linux-next-20200428
+Message-ID: <20200428203855.zapf6jhcp6mbft7i@treble>
+References: <CAK8P3a2qLJkokMGt48JRky=WUeAbJRuNmoD1oqfWdrGSC6y1LA@mail.gmail.com>
+ <20200428161044.caamvx67t2z4t6vd@treble>
+ <CAK8P3a0X4kMW1BQU6x9A2oo6i3-CMxi1h=0PhQgEbBtYWbJa9A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200428000213.GA29631@google.com>
+In-Reply-To: <CAK8P3a0X4kMW1BQU6x9A2oo6i3-CMxi1h=0PhQgEbBtYWbJa9A@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+to Mario, Austin, Rafael; Dell folks, I suspect this commit will
-break Dell servers but I'd like your opinion]
-
-On Mon, Apr 27, 2020 at 07:02:13PM -0500, Bjorn Helgaas wrote:
-> On Sun, Apr 26, 2020 at 11:30:06AM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > 
-> > Currently PCIe AER driver uses HEST FIRMWARE_FIRST bit to
-> > determine the PCIe AER Capability ownership between OS and
-> > firmware. This support is added based on following spec
-> > reference.
-> > 
-> > Per ACPI spec r6.3, table 18-387, 18-388, 18-389, HEST table
-> > flags field BIT-0 and BIT-1 can be used to expose the
-> > ownership of error source between firmware and OSPM.
-> > 
-> > Bit [0] - FIRMWARE_FIRST: If set, indicates that system
-> >           firmware will handle errors from this source
-> >           first.
-> > Bit [1] – GLOBAL: If set, indicates that the settings
-> >           contained in this structure apply globally to all
-> >           PCI Express Bridges.
-> > 
-> > Although above spec reference states that setting
-> > FIRMWARE_FIRST bit means firmware will handle the error source
-> > first, it does not explicitly state anything about AER
-> > ownership. So using HEST to determine AER ownership is
-> > incorrect.
-> > 
-> > Also, as per following specification references, _OSC can be
-> > used to negotiate the AER ownership between firmware and OS.
-> > Details are,
-> > 
-> > Per ACPI spec r6.3, sec 6.2.11.3, table titled “Interpretation
-> > of _OSC Control Field” and as per PCI firmware specification r3.2,
-> > sec 4.5.1, table 4-5, OS can set bit 3 of _OSC control field
-> > to request control over PCI Express AER. If the OS successfully
-> > receives control of this feature, it must handle error reporting
-> > through the AER Capability as described in the PCI Express Base
-> > Specification.
-> > 
-> > Since above spec references clearly states _OSC can be used to
-> > determine AER ownership, don't depend on HEST FIRMWARE_FIRST bit.
+On Tue, Apr 28, 2020 at 10:19:46PM +0200, Arnd Bergmann wrote:
+> On Tue, Apr 28, 2020 at 6:10 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > On Tue, Apr 28, 2020 at 04:49:15PM +0200, Arnd Bergmann wrote:
+> > > ==> build/x86/0xFD7B7323_defconfig/log <==
+> > > arch/x86/entry/entry_64.o: warning: objtool: .entry.text+0x991: unreachable instruction
+> >
+> > This warning looks correct, did you make a change to entry_64.S?
 > 
-> I split this up a bit and applied the first part to pci/error to get
-> it into -next so we can start seeing what breaks.  I won't be too
-> surprised if we trip over something.
+> I bisected my local patches and found that I had a local hack that turned
+> off CONFIG_RETPOLINE for testing something unrelated. I can reproduce
+> it on linux-next with this patch:
 > 
-> Here's the first part (entire original patch is at
-> https://lore.kernel.org/r/67af2931705bed9a588b5a39d369cb70b9942190.1587925636.git.sathyanarayanan.kuppuswamy@linux.intel.com).
-
-I *really* want the patch because the current mix of using both _OSC
-and FIRMWARE_FIRST to determine AER capability ownership is a mess and
-getting worse, but I'm more and more doubtful.
-
-My contention is that if firmware doesn't want the OS to use the AER
-capability it should simply decline to grant control via _OSC.
-
-But things like 0584396157ad ("PCI: PCIe AER: honor ACPI HEST FIRMWARE
-FIRST mode") [1] suggest that some machines grant AER control to the
-OS via _OSC, but still expect the OS to leave AER alone for certain
-devices.
-
-I think the FIRMWARE_FIRST language in the ACPI spec is really too
-vague to tell the OS not to use the AER Capability, but it seems like
-that's what commits like [1] rely on.
-
-The current _OSC definition (PCI Firmware r3.2) applies only to
-PNP0A03/PNP0A08 devices, but it's conceivable that it could be
-extended to other devices if we need per-device AER Capability
-ownership.
-
-[1] https://git.kernel.org/linus/0584396157ad
-
-> commit 8f8e42e7c2dd ("PCI/AER: Use only _OSC to determine AER ownership")
-> Author: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Date:   Mon Apr 27 18:25:13 2020 -0500
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -447,8 +447,7 @@ config GOLDFISH
+>         depends on X86_GOLDFISH
 > 
->     PCI/AER: Use only _OSC to determine AER ownership
->     
->     Per the PCI Firmware spec, r3.2, sec 4.5.1, the OS can request control of
->     AER via bit 3 of the _OSC Control Field.  In the returned value of the
->     Control Field:
->     
->       The firmware sets [bit 3] to 1 to grant control over PCI Express Advanced
->       Error Reporting.  ...  after control is transferred to the operating
->       system, firmware must not modify the Advanced Error Reporting Capability.
->       If control of this feature was requested and denied or was not requested,
->       firmware returns this bit set to 0.
->     
->     Previously the pci_root driver looked at the HEST FIRMWARE_FIRST bit to
->     determine whether to request ownership of the AER Capability.  This was
->     based on ACPI spec v6.3, sec 18.3.2.4, and similar sections, which say
->     things like:
->     
->       Bit [0] - FIRMWARE_FIRST: If set, indicates that system firmware will
->                 handle errors from this source first.
->     
->       Bit [1] - GLOBAL: If set, indicates that the settings contained in this
->                 structure apply globally to all PCI Express Devices.
->     
->     These ACPI references don't say anything about ownership of the AER
->     Capability.
->     
->     Remove use of the FIRMWARE_FIRST bit and rely only on the _OSC bit to
->     determine whether we have control of the AER Capability.
->     
->     Link: https://lore.kernel.org/r/67af2931705bed9a588b5a39d369cb70b9942190.1587925636.git.sathyanarayanan.kuppuswamy@linux.intel.com
->     [bhelgaas: commit log, split patches]
->     Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index ac8ad6cb82aa..9e235c1a75ff 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -483,13 +483,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
->  	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_SHPC))
->  		control |= OSC_PCI_SHPC_NATIVE_HP_CONTROL;
->  
-> -	if (pci_aer_available()) {
-> -		if (aer_acpi_firmware_first())
-> -			dev_info(&device->dev,
-> -				 "PCIe AER handled by firmware\n");
-> -		else
-> -			control |= OSC_PCI_EXPRESS_AER_CONTROL;
-> -	}
-> +	if (pci_aer_available())
-> +		control |= OSC_PCI_EXPRESS_AER_CONTROL;
->  
->  	/*
->  	 * Per the Downstream Port Containment Related Enhancements ECN to
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index f4274d301235..efc26773cc6d 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -318,30 +318,6 @@ int pcie_aer_get_firmware_first(struct pci_dev *dev)
->  		aer_set_firmware_first(dev);
->  	return dev->__aer_firmware_first;
->  }
-> -
-> -static bool aer_firmware_first;
-> -
-> -/**
-> - * aer_acpi_firmware_first - Check if APEI should control AER.
-> - */
-> -bool aer_acpi_firmware_first(void)
-> -{
-> -	static bool parsed = false;
-> -	struct aer_hest_parse_info info = {
-> -		.pci_dev	= NULL,	/* Check all PCIe devices */
-> -		.firmware_first	= 0,
-> -	};
-> -
-> -	if (pcie_ports_native)
-> -		return false;
-> -
-> -	if (!parsed) {
-> -		apei_hest_parse(aer_hest_parse, &info);
-> -		aer_firmware_first = info.firmware_first;
-> -		parsed = true;
-> -	}
-> -	return aer_firmware_first;
-> -}
->  #endif
->  
->  #define	PCI_EXP_AER_FLAGS	(PCI_EXP_DEVCTL_CERE | PCI_EXP_DEVCTL_NFERE | \
-> @@ -1523,7 +1499,7 @@ static struct pcie_port_service_driver aerdriver = {
->   */
->  int __init pcie_aer_init(void)
->  {
-> -	if (!pci_aer_available() || aer_acpi_firmware_first())
-> +	if (!pci_aer_available())
->  		return -ENXIO;
->  	return pcie_port_service_register(&aerdriver);
->  }
-> diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
-> index 2d155bfb8fbf..11c98875538a 100644
-> --- a/include/linux/pci-acpi.h
-> +++ b/include/linux/pci-acpi.h
-> @@ -125,10 +125,4 @@ static inline void acpi_pci_add_bus(struct pci_bus *bus) { }
->  static inline void acpi_pci_remove_bus(struct pci_bus *bus) { }
->  #endif	/* CONFIG_ACPI */
->  
-> -#ifdef CONFIG_ACPI_APEI
-> -extern bool aer_acpi_firmware_first(void);
-> -#else
-> -static inline bool aer_acpi_firmware_first(void) { return false; }
-> -#endif
-> -
->  #endif	/* _PCI_ACPI_H_ */
+>  config RETPOLINE
+> -       bool "Avoid speculative indirect branches in kernel"
+> -       default y
+> +       def_bool n
+>         select STACK_VALIDATION if HAVE_STACK_VALIDATION
+>         help
+>           Compile kernel with the retpoline compiler options to guard against
+
+Thanks, that worked.
+
+This one makes no sense to me.  It looks like the assembler is inserting
+a jump as part of the alignment padding???  WTH.
+
+0000000000000980 <common_spurious>:
+     980:	48 83 04 24 80       	addq   $0xffffffffffffff80,(%rsp)
+     985:	e8 00 00 00 00       	callq  98a <common_spurious+0xa>
+			986: R_X86_64_PLT32	interrupt_entry-0x4
+     98a:	e8 00 00 00 00       	callq  98f <common_spurious+0xf>
+			98b: R_X86_64_PLT32	smp_spurious_interrupt-0x4
+     98f:	eb 7e                	jmp    a0f <ret_from_intr>
+     991:	eb 6d                	jmp    a00 <common_interrupt>
+     993:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+     99a:	00 00 00 00 
+     99e:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+     9a5:	00 00 00 00 
+     9a9:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+     9b0:	00 00 00 00 
+     9b4:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+     9bb:	00 00 00 00 
+     9bf:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+     9c6:	00 00 00 00 
+     9ca:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+     9d1:	00 00 00 00 
+     9d5:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+     9dc:	00 00 00 00 
+     9e0:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+     9e7:	00 00 00 00 
+     9eb:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+     9f2:	00 00 00 00 
+     9f6:	66 2e 0f 1f 84 00 00 	nopw   %cs:0x0(%rax,%rax,1)
+     9fd:	00 00 00 
+
+0000000000000a00 <common_interrupt>:
+     a00:	48 83 04 24 80       	addq   $0xffffffffffffff80,(%rsp)
+
+-- 
+Josh
+
