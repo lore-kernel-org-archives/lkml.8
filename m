@@ -2,181 +2,114 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9227BC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABB6C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 753F2206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E406B20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:13:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbgD1UNA (ORCPT
+        id S1726515AbgD1UNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:13:00 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:46617 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbgD1UNA (ORCPT
+        Tue, 28 Apr 2020 16:13:34 -0400
+Received: from smtp12.smtpout.orange.fr ([80.12.242.134]:37938 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbgD1UNd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:13:00 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MDPqi-1jMP2o3Hzq-00ATWb; Tue, 28 Apr 2020 22:12:36 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] fixup! signal: factor copy_siginfo_to_external32 from copy_siginfo_to_user32
-Date:   Tue, 28 Apr 2020 21:56:26 +0200
-Message-Id: <20200428195645.1365019-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200428074827.GA19846@lst.de>
-References: <20200428074827.GA19846@lst.de>
+        Tue, 28 Apr 2020 16:13:33 -0400
+Received: from [192.168.1.41] ([92.148.159.11])
+        by mwinf5d23 with ME
+        id YLDV220080F2omL03LDVBg; Tue, 28 Apr 2020 22:13:31 +0200
+X-ME-Helo: [192.168.1.41]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Tue, 28 Apr 2020 22:13:31 +0200
+X-ME-IP: 92.148.159.11
+Subject: Re: [PATCH] firmware: stratix10-svc: Fix some error handling paths in
+ 'stratix10_svc_drv_probe()'
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     richard.gong@linux.intel.com, gregkh@linuxfoundation.org,
+        atull@kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20200426190307.40840-1-christophe.jaillet@wanadoo.fr>
+ <20200428115510.GA2014@kadam>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <f812994a-3de7-00d7-5f06-2e819d8be3f3@wanadoo.fr>
+Date:   Tue, 28 Apr 2020 22:13:28 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200428115510.GA2014@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:BfAvDKI9SSwe2+766/MLLDP63p+G4VcCD7Yw0qKaGd8OUqaUT93
- dwH8xVn4vZsTRFeogGQBryDkMAtZhL/IwptYefT+c2aXPjcEz5uTnU2EG4jQFqC7tXJu6aI
- zCBIqYyBnd7fw9eQBUeGBrjuXIv5c7SEEMf1FJ2sh6kYQdnfTdA0fGrL+AZjCrwKtkdpY6R
- 90AVtj8sxaI5oar4YkYug==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1tDfrCfOWcg=:ovEhwjJ6ujR0mMOB5D8EOH
- B5zD5kobkoVigp1N2g4eMDKMxOSadhJbGhdEw0CQVDJ1vkyvIv6W+pSeWcNE66pBl4VBGQ/c/
- bS74pjPam9DQBuT9Y5m2o7J92y8bl98lMWvWSG3m6vh3sE0G5BsPXMP4yPxDL8Qsgxfn2FZQX
- 6VZORuKsnB4wTAt5gaJTP7b0LoUuz4jt+GQhpbRiSyMqyxCPVtstT8DZ1oL8leQ6gzgO3hHli
- 2WNSw3PeHQT2e8gQamUauF1zfzvEq1ofp4di5MHNGvDGdQJWJJHk4XR+5JYvcI6N70d2HFt2/
- 8bgn3YwxpkfetX3aJdVazMk9L6u4q+QbyEW2c27f9EFLLduOeAsAB7aikO//xxpt+7AUAPZhc
- sDjYu7kiv6OtK006xBC3w3qdcyoYJVCvI2Ce3FscGMbXbs/JKKeZU7iRGvpcNZe/+EuDcz77n
- /FAI6PG5Bhosqa1rIuEvqljEvQSxMU13CxliZJjllvYWIyaSmUMyfksAxzmxkqaFCmxWA6TuU
- PKZ4dgBLueswpTEfvx61h9RbqlJgedfW9UQkUrKzDSy5b5V5D0f3FYeE9LaRJ1miBotCfHkys
- /krTikRNKotidsbOYcjjwzxVclZZaY1h0Ji+ypppPVvqHaxqOwXKQo1r1Nr3EIbr4iOuQgr/W
- HYpHhTAHcVkyfQ6e2CSlaLXFjSuNiaPcDSd/RV1Wc2yFXrLdoIvFk2SXacgY3mr6Iu4mB4Glt
- tdEgJv/7xdpAsIUqVwsx42CGS71Mr5aVOmQsOuBw1/BDPITZyd2WFgQNVJsIOHtZ82TlWg2SG
- ec3W+ApX2f478booY6auUhabsLFhMrGLs2P0XdFUENiaJqXPTk=
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I think I found a way to improve the x32 handling:
+Le 28/04/2020 à 13:55, Dan Carpenter a écrit :
+> On Sun, Apr 26, 2020 at 09:03:07PM +0200, Christophe JAILLET wrote:
+>> If an error occurs after calling 'kfifo_alloc()', the allocated memory
+>> should be freed with 'kfifo_free()', as already done in the remove
+>> function.
+>>
+>> Fixes: b5dc75c915cd ("firmware: stratix10-svc: extend svc to support new RSU features")
+>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>> ---
+>>   drivers/firmware/stratix10-svc.c | 15 +++++++++++----
+>>   1 file changed, 11 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
+>> index d5f0769f3761..cc9df9589195 100644
+>> --- a/drivers/firmware/stratix10-svc.c
+>> +++ b/drivers/firmware/stratix10-svc.c
+>> @@ -1043,24 +1043,31 @@ static int stratix10_svc_drv_probe(struct platform_device *pdev)
+>>   
+>>   	/* add svc client device(s) */
+>>   	svc = devm_kzalloc(dev, sizeof(*svc), GFP_KERNEL);
+>> -	if (!svc)
+>> -		return -ENOMEM;
+>> +	if (!svc) {
+>> +		ret = -ENOMEM;
+>> +		goto err_free_kfifo;
+>> +	}
+>>   
+>>   	svc->stratix10_svc_rsu = platform_device_alloc(STRATIX10_RSU, 0);
+>>   	if (!svc->stratix10_svc_rsu) {
+>>   		dev_err(dev, "failed to allocate %s device\n", STRATIX10_RSU);
+>> -		return -ENOMEM;
+>> +		ret = -ENOMEM;
+>> +		goto err_free_kfifo;
+>>   	}
+>>   
+>>   	ret = platform_device_add(svc->stratix10_svc_rsu);
+>>   	if (ret) {
+>>   		platform_device_put(svc->stratix10_svc_rsu);
+> Why not move this to the unwind code as well and do "goto put_platform;"?
 
-This is a simplification over Christoph's "[PATCH 2/7] signal: factor
-copy_siginfo_to_external32 from copy_siginfo_to_user32", reducing the
-x32 specifics in the common code to a single #ifdef/#endif check, in
-order to keep it more readable for everyone else.
+Sure, I'll send a V2.
 
-Christoph, if you like it, please fold into your patch.
+CJ
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Jeremy Kerr <jk@ozlabs.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: "Eric W . Biederman" <ebiederm@xmission.com>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-fsdevel@vger.kernel.org
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/x86/include/asm/compat.h | 10 ++++++++++
- arch/x86/kernel/signal.c      | 23 +++++++++++++++++++++++
- kernel/signal.c               | 15 ++-------------
- 3 files changed, 35 insertions(+), 13 deletions(-)
 
-diff --git a/arch/x86/include/asm/compat.h b/arch/x86/include/asm/compat.h
-index 52e9f3480f69..9341ea3da757 100644
---- a/arch/x86/include/asm/compat.h
-+++ b/arch/x86/include/asm/compat.h
-@@ -214,7 +214,17 @@ static inline bool in_compat_syscall(void)
- #endif
- 
- struct compat_siginfo;
-+#ifdef CONFIG_X86_X32_ABI
- int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
- 		const kernel_siginfo_t *from, bool x32_ABI);
-+#else
-+int copy_siginfo_to_user32(struct compat_siginfo __user *to,
-+		const kernel_siginfo_t *from);
-+static inline int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
-+		const kernel_siginfo_t *from, bool x32_ABI)
-+{
-+	return copy_siginfo_to_user32(to, from);
-+}
-+#endif
- 
- #endif /* _ASM_X86_COMPAT_H */
-diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
-index 83b74fb38c8f..0e166571d28b 100644
---- a/arch/x86/kernel/signal.c
-+++ b/arch/x86/kernel/signal.c
-@@ -511,6 +511,29 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
- }
- #endif /* CONFIG_X86_32 */
- 
-+#ifdef CONFIG_X86_X32_ABI
-+int copy_siginfo_to_user32(struct compat_siginfo __user *to,
-+			   const struct kernel_siginfo *from)
-+{
-+	return __copy_siginfo_to_user32(to, from, in_x32_syscall());
-+}
-+
-+int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
-+			     const struct kernel_siginfo *from, bool x32_ABI)
-+{
-+	struct compat_siginfo new;
-+
-+	copy_siginfo_to_external32(&new, from);
-+	if (x32_ABI && from->si_signo == SIGCHLD) {
-+		new._sifields._sigchld_x32._utime = from->si_utime;
-+		new._sifields._sigchld_x32._stime = from->si_stime;
-+	}
-+	if (copy_to_user(to, &new, sizeof(struct compat_siginfo)))
-+		return -EFAULT;
-+	return 0;
-+}
-+#endif
-+
- static int x32_setup_rt_frame(struct ksignal *ksig,
- 			      compat_sigset_t *set,
- 			      struct pt_regs *regs)
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 1a81602050b4..935facca4860 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -3318,29 +3318,18 @@ void copy_siginfo_to_external32(struct compat_siginfo *to,
- 	}
- }
- 
-+#ifndef CONFIG_X86_X32_ABI
- int copy_siginfo_to_user32(struct compat_siginfo __user *to,
- 			   const struct kernel_siginfo *from)
--#if defined(CONFIG_X86_X32_ABI) || defined(CONFIG_IA32_EMULATION)
--{
--	return __copy_siginfo_to_user32(to, from, in_x32_syscall());
--}
--int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
--			     const struct kernel_siginfo *from, bool x32_ABI)
--#endif
- {
- 	struct compat_siginfo new;
- 
- 	copy_siginfo_to_external32(&new, from);
--#ifdef CONFIG_X86_X32_ABI
--	if (x32_ABI && from->si_signo == SIGCHLD) {
--		new._sifields._sigchld_x32._utime = from->si_utime;
--		new._sifields._sigchld_x32._stime = from->si_stime;
--	}
--#endif
- 	if (copy_to_user(to, &new, sizeof(struct compat_siginfo)))
- 		return -EFAULT;
- 	return 0;
- }
-+#endif
- 
- static int post_copy_siginfo_from_user32(kernel_siginfo_t *to,
- 					 const struct compat_siginfo *from)
--- 
-2.26.0
+> regards,
+> dan carpenter
+>
+>> -		return ret;
+>> +		goto err_free_kfifo;
+>>   	}
+>>   	dev_set_drvdata(dev, svc);
+>>   
+>>   	pr_info("Intel Service Layer Driver Initialized\n");
+>>   
+>> +	return 0;
+>> +
+>> +err_free_kfifo:
+>> +	kfifo_free(&controller->svc_fifo);
+>>   	return ret;
+>>   }
+>
 
