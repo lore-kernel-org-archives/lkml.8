@@ -2,157 +2,145 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FF0C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B777C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0F1C2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F26B20730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:19:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="o5xNUOnn"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="PryLDU8f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbgD1QTO (ORCPT
+        id S1728401AbgD1QT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:19:14 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:19090 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728035AbgD1QTN (ORCPT
+        Tue, 28 Apr 2020 12:19:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727884AbgD1QTz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:19:13 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03SGITG3027589;
-        Tue, 28 Apr 2020 18:19:03 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=bTVST/vGOCmW9bqsQcFABvpaPEN0vNzqWpWCEdlwQXI=;
- b=o5xNUOnnP+HFLIMHhJf+r0D+yWKLgEeTptyByrWCw8QKDKw598JlqNeLWDC2Lm+aaUha
- XXMOO3HsED0yZyDyRNjzkqTywML48r/AjC3fEtZPIposCqm5gn2lYY59JHirmiq0OSU/
- g+iGDZAV4cjw2k1QbacNG8M6OGj1nQfTbVFODeFVlLtoufNujKGhFxE4mp9s/d6EIMoh
- v3aEbGkRniNXFC1xzAj7SbQRWRu34cdjXScHKJPl2bJqroG1kmUEUfmLUFXKkdWnveTt
- 9mFuJaXJltxdNfj8ol8vMFxrNSLkKPvMjiBJV3wpx7TnHFRHN8fbRNz4D8cguBfn/Dc1 rw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30n4j5w465-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 18:19:03 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 27FE510002A;
-        Tue, 28 Apr 2020 18:19:02 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 102C02BF9CE;
-        Tue, 28 Apr 2020 18:19:02 +0200 (CEST)
-Received: from lmecxl0889.tpe.st.com (10.75.127.47) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Apr
- 2020 18:19:00 +0200
-Subject: Re: [PATCH v3 01/14] remoteproc: Make core operations optional
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        <bjorn.andersson@linaro.org>, <ohad@wizery.com>
-CC:     <loic.pallardy@st.com>, <s-anna@ti.com>,
-        <linux-remoteproc@vger.kernel.org>, <corbet@lwn.net>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200424200135.28825-1-mathieu.poirier@linaro.org>
- <20200424200135.28825-2-mathieu.poirier@linaro.org>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <ff9254d9-6a17-cae5-9f41-2c60303a38ec@st.com>
-Date:   Tue, 28 Apr 2020 18:18:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 28 Apr 2020 12:19:55 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81F79C03C1AB
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 09:19:55 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id k12so3465868wmj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 09:19:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NopApeXh01c7L2Io03QMx8cqkS9YkQo3viws4wlNnSg=;
+        b=PryLDU8fNN6N3kbaEKSnFW3ZljxLU0aEKb/QT9PXimf+nSVuMU7ucP99uGmeVTuXFL
+         0p/ee18S1smX9x1e3ceylcDz2SWJwa72ZTbsMwetmBYWEVX4cF27O41AGTzVcwrn8u5g
+         PbIsYOtqM23NIaTvc9y3sESXaAwIbJCxITZ2P2HQx3/XwghUA3gnM5d5HELhhFuWkpcF
+         jsrnu3vL/GB66Xo166FKKryG/ir7ksho4hffwu3LLfhCcE98upCyoVzWUi8wsLFGyxd+
+         bjwNjleFhAVyz2XyiubXZlKf1ikUnHD9bAdfHhukEalyqgFJiEGxZrgQIzqPY+WYytnp
+         esGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NopApeXh01c7L2Io03QMx8cqkS9YkQo3viws4wlNnSg=;
+        b=D9rVm+2CI4J4fpL63PcrIJLUBIWqSUJesRelBQ9EcdVlGSu28WzENlCvy5whQP35o9
+         YA09/V375mWaXY6YwPxa12wAQPgNC/2C8UG7JCJPNFW0B/1DT/ZZtjpVB/XeJhKUfbG2
+         18fN+gtiFrTknm/8zTeWV3KKxcK+g94YAqqgmdiBPXZl2G7/78Z11y14aJGfaYV7c2L9
+         +ekk6q5ODNdJD70f/NwmEn2UUx6/YpjsHRwgerYm+FYmCv0rZyeZz5sDRfh4+70gQ49y
+         oYyEK/FvnqPlHppE3qtO1AjZIktY/KoX4CzTJFnHLcXOIOOGlzmIGFEzkW5qiHtIFu7e
+         VcIw==
+X-Gm-Message-State: AGi0PuZ1V5hyORvv5g/GSfJvitz3f3tcKfb2IoRxdy8TeATU4LE8CopA
+        Pc5ywW+QU+b77TtciNzRUnWPHIGb2Iyzr/MDtuii6w==
+X-Google-Smtp-Source: APiQypL3EsQ0jh1kA70/8Mgecdub3pq/2jqTXvhu/nseZ/tzt8oMEkOy7SFss8lrIFNxrKhvMfuy0TfvWG9Tvdn0UgM=
+X-Received: by 2002:a1c:2457:: with SMTP id k84mr5090599wmk.96.1588090793272;
+ Tue, 28 Apr 2020 09:19:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200424200135.28825-2-mathieu.poirier@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-28_11:2020-04-28,2020-04-28 signatures=0
+References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+ <4cd617827cc28875ef36f3632122a83cff2ea4a7.1587742492.git-series.maxime@cerno.tech>
+ <63f9e71a-1beb-7a67-ea48-dbc579fa3161@i2se.com> <20200428155711.efpq6vbqcq52gjk5@gilmour.lan>
+In-Reply-To: <20200428155711.efpq6vbqcq52gjk5@gilmour.lan>
+From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date:   Tue, 28 Apr 2020 17:19:38 +0100
+Message-ID: <CAPY8ntBkKebzCM8uG0=YN_XngWS=Kgmgs_LBXmJb1nY3uPEWUw@mail.gmail.com>
+Subject: Re: [PATCH v2 79/91] drm/vc4: hdmi: Deal with multiple debugfs files
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Stefan Wahren <stefan.wahren@i2se.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Phil Elwell <phil@raspberrypi.com>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
+Hi Stefan and Maxime
 
-On 4/24/20 10:01 PM, Mathieu Poirier wrote:
-> When synchronizing with a remote processor, it is entirely possible that
-> the remoteproc core is not the life cycle manager.  In such a case core
-> operations don't exist and should not be called.
+On Tue, 28 Apr 2020 at 16:57, Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> Hi Stefan,
+>
+> On Sat, Apr 25, 2020 at 11:26:31PM +0200, Stefan Wahren wrote:
+> > Am 24.04.20 um 17:35 schrieb Maxime Ripard:
+> > > The HDMI driver was registering a single debugfs file so far with the name
+> > > hdmi_regs.
+> > >
+> > > Obviously, this is not going to work anymore when will have multiple HDMI
+> > > controllers since we will end up trying to register two files with the same
+> > > name.
+> > >
+> > > Let's use the ID to avoid that name conflict.
+> >
+> > even with this patch there is a name conflict in debugfs using Linux
+> > 5.7-rc1. Dave Stevenson addressed this by using different card names
+> > [1]. Since this patch won't apply anymore here is my suggestion:
+> >
+> > diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
+> > index 29287ab..7209397 100644
+> > --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
+> > +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+> > @@ -1181,9 +1181,14 @@ static int vc4_hdmi_audio_init(struct vc4_hdmi
+> > *vc4_hdmi)
+> >
+> >      card->dai_link = dai_link;
+> >      card->num_links = 1;
+> > -    card->name = "vc4-hdmi";
+> >      card->dev = dev;
+> >
+> > +    if (vc4_hdmi->variant->encoder_type == VC4_ENCODER_TYPE_HDMI1) {
+> > +        card->name = "vc4-hdmi1";
+> > +    } else {
+> > +        card->name = "vc4-hdmi";
+> > +    }
+> > +
+>
+> Thinking about this some more, we don't really need VC4_ENCODER_TYPE_HDMI0 and
+> HDMI1, and it can all work with the same encoder type for both, so I'll drop
+> them.
+>
+> To address this issue though, we can add a card name string to the variant, like
+> I did for debugfs. Is that alright for you?
 
-What about ops in remote_core.c?
-Applying the series, seems that at least rproc->ops->panic rproc->ops->da_to_va 
-can be called tested with undefined ops structure.
+My patch doesn't fix everything with the audio debugfs entries anyway.
+I'm working against 5.4 on our downstream tree, and even with my patch
+I get
+[    7.459508] debugfs: Directory 'fef00700.hdmi' with parent
+'vc4-hdmi' already present!
+[    7.511017] debugfs: Directory 'fef05700.hdmi' with parent
+'vc4-hdmi1' already present!
+I seem to recall I reduced the number of complaints over 'vc4-hdmi',
+but internal to sound/soc-core the node is still registered twice.
 
-Regards, 
+There was discussion about this a few months back.
+https://lore.kernel.org/lkml/1jblpvraho.fsf@starbuckisacylon.baylibre.com/
+seemed to conclude that it wasn't totally trivial to solve.
 
-Arnaud
-
-> 
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> ---
->  drivers/remoteproc/remoteproc_internal.h | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
-> index b389dc79da81..59fc871743c7 100644
-> --- a/drivers/remoteproc/remoteproc_internal.h
-> +++ b/drivers/remoteproc/remoteproc_internal.h
-> @@ -67,7 +67,7 @@ rproc_find_carveout_by_name(struct rproc *rproc, const char *name, ...);
->  static inline
->  int rproc_fw_sanity_check(struct rproc *rproc, const struct firmware *fw)
->  {
-> -	if (rproc->ops->sanity_check)
-> +	if (rproc->ops && rproc->ops->sanity_check)
->  		return rproc->ops->sanity_check(rproc, fw);
->  
->  	return 0;
-> @@ -76,7 +76,7 @@ int rproc_fw_sanity_check(struct rproc *rproc, const struct firmware *fw)
->  static inline
->  u64 rproc_get_boot_addr(struct rproc *rproc, const struct firmware *fw)
->  {
-> -	if (rproc->ops->get_boot_addr)
-> +	if (rproc->ops && rproc->ops->get_boot_addr)
->  		return rproc->ops->get_boot_addr(rproc, fw);
->  
->  	return 0;
-> @@ -85,7 +85,7 @@ u64 rproc_get_boot_addr(struct rproc *rproc, const struct firmware *fw)
->  static inline
->  int rproc_load_segments(struct rproc *rproc, const struct firmware *fw)
->  {
-> -	if (rproc->ops->load)
-> +	if (rproc->ops && rproc->ops->load)
->  		return rproc->ops->load(rproc, fw);
->  
->  	return -EINVAL;
-> @@ -93,7 +93,7 @@ int rproc_load_segments(struct rproc *rproc, const struct firmware *fw)
->  
->  static inline int rproc_parse_fw(struct rproc *rproc, const struct firmware *fw)
->  {
-> -	if (rproc->ops->parse_fw)
-> +	if (rproc->ops && rproc->ops->parse_fw)
->  		return rproc->ops->parse_fw(rproc, fw);
->  
->  	return 0;
-> @@ -103,7 +103,7 @@ static inline
->  int rproc_handle_rsc(struct rproc *rproc, u32 rsc_type, void *rsc, int offset,
->  		     int avail)
->  {
-> -	if (rproc->ops->handle_rsc)
-> +	if (rproc->ops && rproc->ops->handle_rsc)
->  		return rproc->ops->handle_rsc(rproc, rsc_type, rsc, offset,
->  					      avail);
->  
-> @@ -114,7 +114,7 @@ static inline
->  struct resource_table *rproc_find_loaded_rsc_table(struct rproc *rproc,
->  						   const struct firmware *fw)
->  {
-> -	if (rproc->ops->find_loaded_rsc_table)
-> +	if (rproc->ops && rproc->ops->find_loaded_rsc_table)
->  		return rproc->ops->find_loaded_rsc_table(rproc, fw);
->  
->  	return NULL;
-> 
+Regards,
+  Dave
