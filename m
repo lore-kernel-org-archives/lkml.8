@@ -2,95 +2,100 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6383CC83002
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A89F4C83003
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30AE22051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8657F206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:59:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fa6uqLYA"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EGwKJLhR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgD1C6w (ORCPT
+        id S1726398AbgD1C7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 22:58:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38692 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726047AbgD1C6w (ORCPT
+        Mon, 27 Apr 2020 22:59:43 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:11508 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726309AbgD1C7m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 22:58:52 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95F94C03C1A9;
-        Mon, 27 Apr 2020 19:58:50 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id n24so7755658plp.13;
-        Mon, 27 Apr 2020 19:58:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/byDlkt6s+cQBuQif6rcML0PxVzE1MoIoVjA0VLFhMA=;
-        b=Fa6uqLYAD7a6+7BnYHMVXak0/2gRK0gawoyDOvbRcNDGpYwwVc2/ZUEBfvLabZ/t/b
-         vT9mks4QIGJ9IzsJoDE1EiaZS6Ah4vZiBuhezaX+SW72zIOnX96f/p5LKgE6b3d5CRgJ
-         Ll067Ob3EN6STbQQzDzmEAb2+Y+MCfR8Vu1sDqXHfzaO54Xv7rWMaqOzB8VaZ8F3azLs
-         vO2zCf/1egB4yptnyhvjNd1jEW60yr22n4V4Uw9RlcPjso7k00W/HhAKjFymj+0h1syJ
-         pU+hfS51t0rEnvArouSp587+OoJ1PbsPU21YePxWBRr+13Gc2OVBbfCHDQt8c7Y/Ub8x
-         f/JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/byDlkt6s+cQBuQif6rcML0PxVzE1MoIoVjA0VLFhMA=;
-        b=S3d2awxjG7YNF3F1/wqJoY3P43RY/GIOLy4eaP2jK21dbQIqhFOS/gUz+jWcUS1ka1
-         Sffum93/c4lLOQoxhHaWD/stRcCtZ4cGX17blOkCNdEPnTFZkco8Jvo0oGGzBvrzkjsW
-         GoeFvLPye7qtrF8oCJTqd3mdyzJzVXhUdpW90wULmUTZMrytQi+b9wwy1c0sO01sZrc9
-         nvu9v/bisjgy9WNJpGZLdYcr56gPZGgSCXTtbk8ZysO2ISgxnGcFwIHEso7tqlvJjb65
-         LlHOeIao2qY61RfXiyneDSc2F5WK5y5gpWS2cGFFLsyHQTBNyQ2j4Tapk/W4ogw/7maG
-         7E6w==
-X-Gm-Message-State: AGi0PuYnO0bMS2ceALJJV9DMgDKhMYv97QiEKH2B6SsXkSjyQc7Zq3yl
-        sGCifAwyrYxUbRadWyp6P1iXvOiU
-X-Google-Smtp-Source: APiQypJSMABkEKdshyCULU8a9vVj94Mjqb0HBNI2eoxM2bEA72MsgymuG6edVsTQXxXkkYn7PGcvbA==
-X-Received: by 2002:a17:90a:fb4e:: with SMTP id iq14mr2281878pjb.146.1588042730010;
-        Mon, 27 Apr 2020 19:58:50 -0700 (PDT)
-Received: from localhost ([89.208.244.169])
-        by smtp.gmail.com with ESMTPSA id u3sm6702844pfb.105.2020.04.27.19.58.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 Apr 2020 19:58:49 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 10:58:44 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     tglx@linutronix.de, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v1] ethernet: ks8842: delete unnecessary goto
- label
-Message-ID: <20200428025844.GA31933@nuc8i5>
-References: <20200425115612.17171-1-zhengdejin5@gmail.com>
- <20200427.111547.346558310845161759.davem@davemloft.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427.111547.346558310845161759.davem@davemloft.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 27 Apr 2020 22:59:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588042782; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=ySd+FuIVvU4bcQfhvNhFivwlPP3WQSnKygNW+wxM+/8=; b=EGwKJLhRfyvTnVjfcy7T1eSe560X1ZE8C4tuSvP/V3k6OoxFu8Y+XBJHDrmSd0Xxhapz0D3G
+ csnGh/QI2PsEfvX8bNpZeewWr76HMK9LKoEGw7RNNO8QJTiuu5qbmdsQT7rsaBjZRIYX/tJN
+ meJENQu6n1dAtaZH4FFDYNPomvk=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea79c1d.7f9e8a2f0340-smtp-out-n04;
+ Tue, 28 Apr 2020 02:59:41 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B5641C4478C; Tue, 28 Apr 2020 02:59:40 +0000 (UTC)
+Received: from bbhatt-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbhatt)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 147A6C432C2;
+        Tue, 28 Apr 2020 02:59:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 147A6C432C2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
+From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
+To:     mani@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hemantk@codeaurora.org, Bhaumik Bhatt <bbhatt@codeaurora.org>
+Subject: [PATCH v2 2/8] bus: mhi: core: Add range check for channel id received in event ring
+Date:   Mon, 27 Apr 2020 19:59:20 -0700
+Message-Id: <1588042766-17496-3-git-send-email-bbhatt@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1588042766-17496-1-git-send-email-bbhatt@codeaurora.org>
+References: <1588042766-17496-1-git-send-email-bbhatt@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 11:15:47AM -0700, David Miller wrote:
-> From: Dejin Zheng <zhengdejin5@gmail.com>
-> Date: Sat, 25 Apr 2020 19:56:12 +0800
-> 
-> > the label of err_register is not necessary, so delete it to
-> > simplify code.
-> > 
-> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> 
-> It's not unnecessary, it's documenting the state of the probe.
+From: Hemant Kumar <hemantk@codeaurora.org>
 
-David, Thanks for your information, and abandon this commit.
+MHI data completion handler function reads channel id from event
+ring element. Value is under the control of MHI devices and can be
+any value between 0 and 255. In order to prevent out of bound access
+add a bound check against the max channel supported by controller
+and skip processing of that event ring element.
 
-BR,
-Dejin
+Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
+Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+---
+ drivers/bus/mhi/core/main.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+index 23154f1..1ccd4cc 100644
+--- a/drivers/bus/mhi/core/main.c
++++ b/drivers/bus/mhi/core/main.c
+@@ -827,6 +827,9 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
+ 		enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
+ 
+ 		chan = MHI_TRE_GET_EV_CHID(local_rp);
++		if (WARN_ON(chan >= mhi_cntrl->max_chan))
++			goto next_event;
++
+ 		mhi_chan = &mhi_cntrl->mhi_chan[chan];
+ 
+ 		if (likely(type == MHI_PKT_TYPE_TX_EVENT)) {
+@@ -837,6 +840,7 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
+ 			event_quota--;
+ 		}
+ 
++next_event:
+ 		mhi_recycle_ev_ring_element(mhi_cntrl, ev_ring);
+ 		local_rp = ev_ring->rp;
+ 		dev_rp = mhi_to_virtual(ev_ring, er_ctxt->rp);
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
