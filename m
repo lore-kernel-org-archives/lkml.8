@@ -2,144 +2,142 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98994C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDFCC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74E7E2184D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:05:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588089950;
-	bh=ha74p5osPq/Fc3CF17rmXyTy7T6X5ysJvW80Tys9jaY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=twnvcqUpFBIn4HQOfqpO2s1M5OJ7BUvmVEYF+a/ttT2FmcClfxOM0H5Zfz4Sa3hzM
-	 RSWuw7MfCSYsCbVTpqg7lFVTMcihpRYl4Ue0+haoOmxnfpdjWCCGpAnGxngUP23eXt
-	 b5A021TIUQEXdAr7PLPTu7/wJxywhYoJVznHGvWY=
+	by mail.kernel.org (Postfix) with ESMTP id CE3B420730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:08:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbgD1QFt (ORCPT
+        id S1728230AbgD1QIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:05:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59944 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728028AbgD1QFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:05:49 -0400
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F81D21D7D
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 16:05:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588089948;
-        bh=ha74p5osPq/Fc3CF17rmXyTy7T6X5ysJvW80Tys9jaY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0dbcMJdky6/KE5oqf7xFxKV0nvxCb348kb1V53yMGUJLFKWOd99FZ18n6s9Cczajr
-         wdThMp0nDIOERbNXcnSnT6pkavy7nlA3ZNrb6GMRPc/rjX+ChkfWr9ZpJG5/MkQA9t
-         W6nkvGowbT6pbDsVK2HQ+a48pjG1aiPKGAaH52XY=
-Received: by mail-ed1-f49.google.com with SMTP id t12so16842245edw.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 09:05:48 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYoEBKgeqUfmwSo5on2PX0tViB6N92ILYvH8hDmXynIdWqG4+GI
-        oCg88XliAlh3lmtgHBP9kwNA2OaFovXQ+rCICg==
-X-Google-Smtp-Source: APiQypKHSVjOdbrgmCD0Ai4eyQOpggee1czWxlBZjdwbOJTigW/nq8+SgqWYpQTsun99LAQNf5hO0fvn3WJwMJdxsNA=
-X-Received: by 2002:aa7:dd95:: with SMTP id g21mr22982067edv.148.1588089946412;
- Tue, 28 Apr 2020 09:05:46 -0700 (PDT)
+        Tue, 28 Apr 2020 12:08:05 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:33041 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727884AbgD1QIE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 12:08:04 -0400
+Received: from mail-lj1-f175.google.com ([209.85.208.175]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M5jA2-1jWCs42Tuc-007Cf0; Tue, 28 Apr 2020 18:08:02 +0200
+Received: by mail-lj1-f175.google.com with SMTP id a21so19183214ljj.11;
+        Tue, 28 Apr 2020 09:08:02 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYUOq8MazV62YikamNGZturQV6nlt5i3hO8MfsD2yuKeVw4ewn3
+        NGxFx/7XQFE6fJ8ZJfRXL1ovW8jFIIjnTshtb3w=
+X-Google-Smtp-Source: APiQypLjCfbDbry068u6vxlKzJcflxkRwat6fVOMH+US4GAHbh3y8PTlg2fnsUbpMYOK7K8IFz3FdB+JzQ7CtznK4ww=
+X-Received: by 2002:a2e:9842:: with SMTP id e2mr18192759ljj.273.1588090082023;
+ Tue, 28 Apr 2020 09:08:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200420135045.27984-1-yuehaibing@huawei.com> <CAAOTY__km=QZQACp8g-Qr+aWZ4r0Yp7O5j7u8ZTpDpTXXfUdNw@mail.gmail.com>
- <20200428145507.GQ3456981@phenom.ffwll.local>
-In-Reply-To: <20200428145507.GQ3456981@phenom.ffwll.local>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Wed, 29 Apr 2020 00:05:34 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_-tNGOaKT9tqT7YSf1hWjShCSMaDxmU2vAqNAGMqPTPBQ@mail.gmail.com>
-Message-ID: <CAAOTY_-tNGOaKT9tqT7YSf1hWjShCSMaDxmU2vAqNAGMqPTPBQ@mail.gmail.com>
-Subject: Re: [PATCH -next] drm/mediatek: Fix Kconfig warning
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>
+References: <20200428090749.31983-1-clay@daemons.net> <CAMuHMdXhVcp3j4Sq_4fsqavw1eH_DksN-yjajqC_8pRKnjM0zA@mail.gmail.com>
+In-Reply-To: <CAMuHMdXhVcp3j4Sq_4fsqavw1eH_DksN-yjajqC_8pRKnjM0zA@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 28 Apr 2020 18:07:45 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2rG-A6_qhU9vrcadZqq2r1FdCDFMVPhSzPEAO83WrA9A@mail.gmail.com>
+Message-ID: <CAK8P3a2rG-A6_qhU9vrcadZqq2r1FdCDFMVPhSzPEAO83WrA9A@mail.gmail.com>
+Subject: Re: [PATCH] net: Select PTP_1588_CLOCK in PTP-specific drivers
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Clay McClure <clay@daemons.net>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Nicolas Pitre <nicolas.pitre@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Mao Wenan <maowenan@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Edward Cree <ecree@solarflare.com>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:0+QGPAJgYT3AuDOXDuVZJl/GVgCZgUasWRfsVnr299ZBPU/ljYb
+ D+6RnzTUco8WKSxZrl8LG/I6sxC6tymAcmrsXDiRAbXBSshjWnBi6aE1rgS43X//maObXf+
+ tGeoWKE4AFzuWLJilDDjTtgv1E0wWK+xRFcObkL99zh96Lg0gMQLFHQFxUSUsZR98rI4eth
+ KWGdOBCZ3js9P2oUJFDhQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9tMlXwbHIIM=:f4pYF/VEBIk2lgG50JAJBL
+ JDgJdURDuCSysbBHbL6Nb51b9W8tKMI9QwL0iInii9UjPSz6jxR6l3AGQ6VB7G/ua8plt6LHm
+ yItS9u3LeIVBGEXjGca4eOts4KC3GFPORTJ4fM7er8K9OlsGl6b9UP1572d7hfWJajq2Tln+w
+ ULzQghg55dOQ/OezWrNcw7J3ourdvXvbenoT1bceeXwKvgEW0/qPoqU3yehv+g3oiA4CBCKLD
+ VbL8+RohFue2XbVf4b6nG9MlAxVStmh0jSHdwFBR+4V2UAwKglYSOFXFZjLiAAFFAOzqylzHF
+ HKeTSwIRXmzXN2YkOFMGn+DVr78pTCS+ZdiwJtJLy7tv+M9+xNDbUr1PrGjzneXDhFfdaWJv2
+ irvgBwn2Y1frZet7EMqC7iCiG0Ju2lUg8g8gnumdQeW2T+EmxEMePg3PRBGQAQMNvxz2TWXy6
+ 32px6aMvC29SwWFg7SB5hPCm+YeFGVO7AT3B2mWuv2sdxDLD3Zdusv3sxZbyazP7CWCItcQLE
+ rf4v4FscJeY3gT7QgDp0trYTHArsrZB38qHs0CLYxoj8Z1XB6BP62v4hK6pb7xSQedOEFAMRh
+ 5cRGpWf5Ye1YeC691YG/SU5a3P9PZyGhGhVEJkctIb0nP3AFiqSZjfiRhDnvPbwTOr2+MuNda
+ 7IRj+hg8MnND0aA2hLg7Im/7xSrLLxD+5Xvnh91wPSs6njH/30dQ/y5Jc8WlIuWIn2u+PdQxb
+ 4Do+WHN/+Whs2HjZzDj/aPyPX9MdmA+fP2F9JVet729tbFqvv9x2Tvk7hLHZRgdq4Z0tNEPSL
+ q4X7tDeQtBt0Spvkl0+xFT7EnVt92FhlPWd9MMgPQbUCMQbfNY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Daniel Vetter <daniel@ffwll.ch> =E6=96=BC 2020=E5=B9=B44=E6=9C=8828=E6=97=
-=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=8810:55=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Sun, Apr 26, 2020 at 04:20:39PM +0800, Chun-Kuang Hu wrote:
-> > Hi, YueHaibing:
+On Tue, Apr 28, 2020 at 11:21 AM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> On Tue, Apr 28, 2020 at 11:14 AM Clay McClure <clay@daemons.net> wrote:
+> > Commit d1cbfd771ce8 ("ptp_clock: Allow for it to be optional") changed
+> > all PTP-capable Ethernet drivers from `select PTP_1588_CLOCK` to `imply
+> > PTP_1588_CLOCK`, "in order to break the hard dependency between the PTP
+> > clock subsystem and ethernet drivers capable of being clock providers."
+> > As a result it is possible to build PTP-capable Ethernet drivers without
+> > the PTP subsystem by deselecting PTP_1588_CLOCK. Drivers are required to
+> > handle the missing dependency gracefully.
 > >
-> > YueHaibing <yuehaibing@huawei.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=8820=
-=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8810:04=E5=AF=AB=E9=81=93=EF=
-=BC=9A
-> > >
-> > > WARNING: unmet direct dependencies detected for MTK_MMSYS
-> > >   Depends on [n]: (ARCH_MEDIATEK [=3Dy] || COMPILE_TEST [=3Dn]) && CO=
-MMON_CLK_MT8173_MMSYS [=3Dn]
-> > >   Selected by [y]:
-> > >   - DRM_MEDIATEK [=3Dy] && HAS_IOMEM [=3Dy] && DRM [=3Dy] && (ARCH_ME=
-DIATEK [=3Dy] || ARM && COMPILE_TEST [=3Dn]) && COMMON_CLK [=3Dy] && HAVE_A=
-RM_SMCCC [=3Dy] && OF [=3Dy]
-> > >
-> > > Add missing dependcy COMMON_CLK_MT8173_MMSYS to fix this.
+> > Some PTP-capable Ethernet drivers (e.g., TI_CPSW) factor their PTP code
+> > out into separate drivers (e.g., TI_CPTS_MOD). The above commit also
+> > changed these PTP-specific drivers to `imply PTP_1588_CLOCK`, making it
+> > possible to build them without the PTP subsystem. But as Grygorii
+> > Strashko noted in [1]:
 > >
-> > From the code relationship, mediatek drm has relation with mediatek
-> > mmsys, and mediatek mmsys has relation with medaitek clock.
-> > So I think it's better that CONFIG_MTK_MMSYS select
-> > CONFIG_COMMON_CLK_MT8173_MMSYS.
+> > On Wed, Apr 22, 2020 at 02:16:11PM +0300, Grygorii Strashko wrote:
+> >
+> > > Another question is that CPTS completely nonfunctional in this case and
+> > > it was never expected that somebody will even try to use/run such
+> > > configuration (except for random build purposes).
+> >
+> > In my view, enabling a PTP-specific driver without the PTP subsystem is
+> > a configuration error made possible by the above commit. Kconfig should
+> > not allow users to create a configuration with missing dependencies that
+> > results in "completely nonfunctional" drivers.
+> >
+> > I audited all network drivers that call ptp_clock_register() and found
+> > six that look like PTP-specific drivers that are likely nonfunctional
+> > without PTP_1588_CLOCK:
+> >
+> >     NET_DSA_MV88E6XXX_PTP
+> >     NET_DSA_SJA1105_PTP
+> >     MACB_USE_HWSTAMP
+> >     CAVIUM_PTP
+> >     TI_CPTS_MOD
+> >     PTP_1588_CLOCK_IXP46X
+> >
+> > Note how they all reference PTP or timestamping in their name; this is a
+> > clue that they depend on PTP_1588_CLOCK.
+> >
+> > Change these drivers back [2] to `select PTP_1588_CLOCK`. Note that this
+> > requires also selecting POSIX_TIMERS, a transitive dependency of
+> > PTP_1588_CLOCK.
 >
-> select is very strongly discouraged and should only be used for Kconfig
-> symbols not visible to users.
+> If these drivers have a hard dependency on PTP_1588_CLOCK, IMHO they
+> should depend on PTP_1588_CLOCK, not select PTP_1588_CLOCK.
 
-Okay, maybe the better solution is that DRM_MEDIATEK depend on MTK_MMSYS.
+Agreed. Note that for drivers that only optionally use the PTP_1588_CLOCK
+support, we probably want 'depends on PTP_1588_CLOCK ||
+!PTP_1588_CLOCK' (or the syntax replacing it eventually), to avoid the
+case where a built-in driver fails to use a modular ptp implementation.
 
-Regards,
-Chun-Kuang.
-
-> -Daniel
->
-> >
-> > Regards,
-> > Chun-Kuang.
-> >
-> > >
-> > > Fixes: 2c758e301ed9 ("soc / drm: mediatek: Move routing control to mm=
-sys device")
-> > > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> > > ---
-> > >  drivers/gpu/drm/mediatek/Kconfig | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/media=
-tek/Kconfig
-> > > index c420f5a3d33b..4d9b5540de68 100644
-> > > --- a/drivers/gpu/drm/mediatek/Kconfig
-> > > +++ b/drivers/gpu/drm/mediatek/Kconfig
-> > > @@ -6,6 +6,7 @@ config DRM_MEDIATEK
-> > >         depends on COMMON_CLK
-> > >         depends on HAVE_ARM_SMCCC
-> > >         depends on OF
-> > > +       depends on COMMON_CLK_MT8173_MMSYS
-> > >         select DRM_GEM_CMA_HELPER
-> > >         select DRM_KMS_HELPER
-> > >         select DRM_MIPI_DSI
-> > > --
-> > > 2.17.1
-> > >
-> > >
->
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+     Arnd
