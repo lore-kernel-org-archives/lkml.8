@@ -2,110 +2,247 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FC8C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8336C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8F032072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:24:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588076688;
-	bh=v3DgtmSId2rTIqTuXLUCM4ll+1xF/+qucisJtHmJLms=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LjnEI1CwUPaHeGCOmlHUjkbvYH3alg1eTEVxF8AvkT7be3xMTkQomRBim+4Zicios
-	 OFckFnKUIw+Gz/gqGuI8qWGgnamTvkxJq31EOgiOdsrRNdidhuQbA6E2/Pf7t6fdWy
-	 cmV6pJUe35At225YZ9yPLWx8CQJTBJsJgRcCBqeY=
+	by mail.kernel.org (Postfix) with ESMTP id A5341206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:25:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgD1MYr (ORCPT
+        id S1726850AbgD1MZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:24:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726361AbgD1MYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:24:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FEE2206A1;
-        Tue, 28 Apr 2020 12:24:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588076687;
-        bh=v3DgtmSId2rTIqTuXLUCM4ll+1xF/+qucisJtHmJLms=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gjRjCj3EJ+e4zbnwYzOHx2FWHVrfmyqtxQjIAUTjAWlE3B80++82vUEyFofkur8+5
-         r1LJp2BO3Os377GlnhwKOzatZoHHhLEe9guFj+TTmTbbbSA5EBDm7fPo+7IUrKbYA6
-         mQyZWunYErUrZzvOzBeVSLavPU/OULpsNbkjuwAM=
-Date:   Tue, 28 Apr 2020 14:24:44 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sidong Yang <realwakka@gmail.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Manish Chopra <manishc@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: qlge: change prefix to qlge_*
-Message-ID: <20200428122444.GA1244536@kroah.com>
-References: <20200426084120.28295-1-realwakka@gmail.com>
+        Tue, 28 Apr 2020 08:25:34 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:38058 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbgD1MZd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 08:25:33 -0400
+Received: by mail-qt1-f193.google.com with SMTP id i68so17043950qtb.5;
+        Tue, 28 Apr 2020 05:25:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zeUXn8O3NhvQC+1Ea0EFYL4fqcL5svckmOzVYxv7r/c=;
+        b=O5+CL/+jg3Hyo5YZhUFPVoc8szQkbS5fOiU5CNxRxmQ4ZgUznW/tb6mUnmcEYU30qC
+         F+KIJaEr76WOJtoUP5erSHkQJ/yJ7r4g0AwRPzcMR5Q/n2U03oG5iZe5hPBO3xJiH+hX
+         d0KsybQ8XEn6m8ZORkOg6l4wEFU/+fEgUZvAxmLwa4LcKRn1UuAxh2MaeJrg+sc0Gga1
+         5GvdlhrxCmvVFRfd9+RKFjJ/fRCoiTZhkTECPCQOyDy/8di8FhSb4z6O2mWEmDbZxIB9
+         k2DggElO5U5fK9xWIFFmL54YikbJFlGjIyIpwLXAJ6fTF9dV+8hFBrb1mfaHbvPJXqhc
+         JvDQ==
+X-Gm-Message-State: AGi0PuZ6UmF1VeeDKzRn9HaIUcbK5S/NIq7784STA6XlE4XeoermoZe8
+        8Noo6Ge8uAL+SKKSjplVdvA=
+X-Google-Smtp-Source: APiQypInrWvY8tExKEie/oPSMJcFFaaLSgWigzq8NLmo4v0zRji9Fd7m63eDYg1QNOxutQGm+YRYQA==
+X-Received: by 2002:ac8:2d94:: with SMTP id p20mr27330087qta.121.1588076731545;
+        Tue, 28 Apr 2020 05:25:31 -0700 (PDT)
+Received: from ?IPv6:2804:431:e7cc:dff4:7411:8bdd:69e5:f5d8? ([2804:431:e7cc:dff4:7411:8bdd:69e5:f5d8])
+        by smtp.gmail.com with ESMTPSA id h13sm11727380qti.32.2020.04.28.05.25.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Apr 2020 05:25:30 -0700 (PDT)
+Subject: Re: [Lkcamp] [PATCH v3 3/3] media: vimc: deb: Add support for {RGB,
+ BGR, GBR}888 bus formats on source pad
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= 
+        <nfraprado@protonmail.com>, linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        Helen Koike <helen.koike@collabora.com>,
+        lkcamp@lists.libreplanetbr.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+References: <20200427230234.3114565-4-nfraprado@protonmail.com>
+ <1fcbe67e-db71-7841-6165-e62b74d82994@collabora.com>
+From:   Helen Koike <helen@koikeco.de>
+Message-ID: <cd585b72-067f-88d6-7ec6-30044101db38@koikeco.de>
+Date:   Tue, 28 Apr 2020 09:25:25 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200426084120.28295-1-realwakka@gmail.com>
+In-Reply-To: <1fcbe67e-db71-7841-6165-e62b74d82994@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 05:41:20PM +0900, Sidong Yang wrote:
-> In terms of namespace, The driver uses either qlge_, ql_ or nothing.
-> also there is macro using QL_. This can make crash with other qlogic
-> drivers. Rename everything to use the qlge_ or QLGE_ prefix.
+Hello,
 
-How can it crash anything?
-
-I can see changing global functions to a common namespace like this, but
-you are changing a _lot_ of things here:
-
-> ---
->  drivers/staging/qlge/qlge.h         |  488 +++++------
->  drivers/staging/qlge/qlge_dbg.c     |  638 +++++++-------
->  drivers/staging/qlge/qlge_ethtool.c |  484 +++++------
->  drivers/staging/qlge/qlge_main.c    | 1200 +++++++++++++--------------
->  drivers/staging/qlge/qlge_mpi.c     |  386 ++++-----
->  5 files changed, 1598 insertions(+), 1598 deletions(-)
+On 4/28/20 4:46 AM, Dafna Hirschfeld wrote:
+> hi,
+> Thanks for the patches!
 > 
-> diff --git a/drivers/staging/qlge/qlge.h b/drivers/staging/qlge/qlge.h
-> index fc8c5ca8935d..a8da06c978ff 100644
-> --- a/drivers/staging/qlge/qlge.h
-> +++ b/drivers/staging/qlge/qlge.h
-> @@ -955,7 +955,7 @@ enum {
->  	MB_CMD_GET_PORT_CFG = 0x00000123,
->  	MB_CMD_GET_LINK_STS = 0x00000124,
->  	MB_CMD_SET_LED_CFG = 0x00000125, /* Set LED Configuration Register */
-> -		QL_LED_BLINK = 0x03e803e8,
-> +		QLGE_LED_BLINK = 0x03e803e8,
->  	MB_CMD_GET_LED_CFG = 0x00000126, /* Get LED Configuration Register */
->  	MB_CMD_SET_MGMNT_TFK_CTL = 0x00000160, /* Set Mgmnt Traffic Control */
->  	MB_SET_MPI_TFK_STOP = (1 << 0),
-> @@ -986,14 +986,14 @@ enum {
->  	MB_CMD_STS_PARAM_ERR = 0x00004006,	/* Parameter Error. */
->  };
->  
-> -struct mbox_params {
-> +struct qlge_mbox_params {
->  	u32 mbox_in[MAILBOX_COUNT];
->  	u32 mbox_out[MAILBOX_COUNT];
->  	int in_count;
->  	int out_count;
->  };
+> On 28.04.20 01:03, Nícolas F. R. A. Prado wrote:
+>> Add support for RGB888_*, BGR888_* and GBR888_* media bus formats on
+>> the source pad of debayer subdevices.
+>>
+>> Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
+>> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+>> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@protonmail.com>
+>> ---
+>>
+>> Changes in v3:
+>> - Rename vimc_deb_is_src_code_invalid() to vimc_deb_src_code_is_valid()
+>> - Change vimc_deb_src_code_is_valid() to return bool
+>>
+>> Changes in v2:
+>> - Change commit message to reflect v2 changes
+>> - Rename variables
+>> - Fix array formatting
+>> - Add vimc_deb_is_src_code_valid function
+>> - Add other BGR888 and RGB888 formats to debayer source pad supported
+>>    formats
+>>
+>>   .../media/test-drivers/vimc/vimc-debayer.c    | 61 +++++++++++++++----
+>>   1 file changed, 49 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/media/test-drivers/vimc/vimc-debayer.c b/drivers/media/test-drivers/vimc/vimc-debayer.c
+>> index d10aee9f84c4..7e87706d417e 100644
+>> --- a/drivers/media/test-drivers/vimc/vimc-debayer.c
+>> +++ b/drivers/media/test-drivers/vimc/vimc-debayer.c
+>> @@ -51,6 +51,19 @@ static const struct v4l2_mbus_framefmt sink_fmt_default = {
+>>       .colorspace = V4L2_COLORSPACE_DEFAULT,
+>>   };
+>>   +static const u32 vimc_deb_src_mbus_codes[] = {
+>> +    MEDIA_BUS_FMT_GBR888_1X24,
+>> +    MEDIA_BUS_FMT_BGR888_1X24,
+>> +    MEDIA_BUS_FMT_BGR888_3X8,
+>> +    MEDIA_BUS_FMT_RGB888_1X24,
+>> +    MEDIA_BUS_FMT_RGB888_2X12_BE,
+>> +    MEDIA_BUS_FMT_RGB888_2X12_LE,
+>> +    MEDIA_BUS_FMT_RGB888_3X8,
+>> +    MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
+>> +    MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
+>> +    MEDIA_BUS_FMT_RGB888_1X32_PADHI,
+>> +};
+>> +
+>>   static const struct vimc_deb_pix_map vimc_deb_pix_map_list[] = {
+>>       {
+>>           .code = MEDIA_BUS_FMT_SBGGR8_1X8,
+>> @@ -125,6 +138,17 @@ static const struct vimc_deb_pix_map *vimc_deb_pix_map_by_code(u32 code)
+>>       return NULL;
+>>   }
+>>   +static bool vimc_deb_src_code_is_valid(u32 code)
+>> +{
+>> +    unsigned int i;
+>> +
+>> +    for (i = 0; i < ARRAY_SIZE(vimc_deb_src_mbus_codes); i++)
+>> +        if (vimc_deb_src_mbus_codes[i] == code)
+>> +            return true;
+>> +
+>> +    return false;
+>> +}
+>> +
+>>   static int vimc_deb_init_cfg(struct v4l2_subdev *sd,
+>>                    struct v4l2_subdev_pad_config *cfg)
+>>   {
+>> @@ -148,14 +172,11 @@ static int vimc_deb_enum_mbus_code(struct v4l2_subdev *sd,
+>>                      struct v4l2_subdev_pad_config *cfg,
+>>                      struct v4l2_subdev_mbus_code_enum *code)
+>>   {
+>> -    /* We only support one format for source pads */
+>>       if (VIMC_IS_SRC(code->pad)) {
+>> -        struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
+>> -
+>> -        if (code->index)
+>> +        if (code->index >= ARRAY_SIZE(vimc_deb_src_mbus_codes))
+>>               return -EINVAL;
+>>   -        code->code = vdeb->src_code;
+>> +        code->code = vimc_deb_src_mbus_codes[code->index];
+>>       } else {
+>>           if (code->index >= ARRAY_SIZE(vimc_deb_pix_map_list))
+>>               return -EINVAL;
+>> @@ -170,8 +191,6 @@ static int vimc_deb_enum_frame_size(struct v4l2_subdev *sd,
+>>                       struct v4l2_subdev_pad_config *cfg,
+>>                       struct v4l2_subdev_frame_size_enum *fse)
+>>   {
+>> -    struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
+>> -
+>>       if (fse->index)
+>>           return -EINVAL;
+>>   @@ -181,7 +200,7 @@ static int vimc_deb_enum_frame_size(struct v4l2_subdev *sd,
+>>             if (!vpix)
+>>               return -EINVAL;
+>> -    } else if (fse->code != vdeb->src_code) {
+>> +    } else if (!vimc_deb_src_code_is_valid(fse->code)) {
+>>           return -EINVAL;
+>>       }
+>>   @@ -237,6 +256,7 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
+>>   {
+>>       struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
+>>       struct v4l2_mbus_framefmt *sink_fmt;
+>> +    u32 *src_code;
+>>         if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
+>>           /* Do not change the format while stream is on */
+>> @@ -244,8 +264,10 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
+>>               return -EBUSY;
+>>             sink_fmt = &vdeb->sink_fmt;
+>> +        src_code = &vdeb->src_code;
+>>       } else {
+>>           sink_fmt = v4l2_subdev_get_try_format(sd, cfg, 0);
+>> +        src_code = &v4l2_subdev_get_try_format(sd, cfg, 1)->code;
+>>       }
+>>         /*
+>> @@ -253,9 +275,14 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
+>>        * it is propagated from the sink
+>>        */
+>>       if (VIMC_IS_SRC(fmt->pad)) {
+>> +        u32 code = fmt->format.code;
+>> +
+>>           fmt->format = *sink_fmt;
+>> -        /* TODO: Add support for other formats */
+>> -        fmt->format.code = vdeb->src_code;
+>> +
+>> +        if (vimc_deb_src_code_is_valid(code))
+>> +            *src_code = code;
+>> +
+>> +        fmt->format.code = *src_code;
+>>       } else {
+>>           /* Set the new format in the sink pad */
+>>           vimc_deb_adjust_sink_fmt(&fmt->format);
+>> @@ -291,11 +318,21 @@ static void vimc_deb_set_rgb_mbus_fmt_rgb888_1x24(struct vimc_deb_device *vdeb,
+> I guess the name of the function should now change to vimc_deb_set_rgb_mbus_fmt ?
+> Or better vimc_deb_process_rgb_frame.
+> Also, it seems that it is a assigned as a callback so that each src_fmt have a different callback
+> but you already did it with a switch case. So maybe you can add a patch to call it directly
 
-Why change local structure names that are local to the specific driver?
-That "namespace" can not escape out of the driver, so lots of these
-changes are unneeded.
+Agreed that it should be renamed. Removing the callback could be done later (up to you Nícolas).
 
-I will gladly take a patch that fixes up the global symbols, but that's
-all that needs to be done here, right?
+With the rename, and with or without the callback removal:
+Acked-by: Helen Koike <helen.koike@collabora.com>
 
-thanks,
-
-greg k-h
+> 
+> Thanks,
+> Dafna
+> 
+>>                             unsigned int col,
+>>                             unsigned int rgb[3])
+>>   {
+>> +    const struct vimc_pix_map *vpix;
+>>       unsigned int i, index;
+>>   +    vpix = vimc_pix_map_by_code(vdeb->src_code);
+>>       index = VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
+>> -    for (i = 0; i < 3; i++)
+>> -        vdeb->src_frame[index + i] = rgb[i];
+>> +    for (i = 0; i < 3; i++) {
+>> +        switch (vpix->pixelformat) {
+>> +        case V4L2_PIX_FMT_RGB24:
+>> +            vdeb->src_frame[index + i] = rgb[i];
+>> +            break;
+>> +        case V4L2_PIX_FMT_BGR24:
+>> +            vdeb->src_frame[index + i] = rgb[2-i];
+>> +            break;
+>> +        }
+>> +    }
+>>   }
+>>     static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
+>>
+> 
+> _______________________________________________
+> Lkcamp mailing list
+> Lkcamp@lists.libreplanetbr.org
+> https://lists.libreplanetbr.org/mailman/listinfo/lkcamp
