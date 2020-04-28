@@ -2,154 +2,159 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FCDC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A99DC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4160206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71268206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:30:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipeT6iMZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IYzh5KIY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgD1OaT (ORCPT
+        id S1728034AbgD1OaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:30:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727108AbgD1OaT (ORCPT
+        Tue, 28 Apr 2020 10:30:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44791 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727108AbgD1OaW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:30:19 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D70AC03C1AB;
-        Tue, 28 Apr 2020 07:30:19 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id r2so20462226ilo.6;
-        Tue, 28 Apr 2020 07:30:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=JpPVmG/ic6yi3Tk4GAQi6DB6GCxhlbKT5nO4XO5x++4=;
-        b=ipeT6iMZnvOHZp+nbd29xbN+3F4XtHwR0HnaFmlAEmd3xsb6RDgzYxpn8ZDFijCYEg
-         k5dE7yv8JOff1Dab/0/7fyVTh8hv9JYG0FS71e5AcxWqUdORGAbesb0dvPXwh1bd7SE3
-         2KXB1xW4WKiSNttBfEbuY0YajvNaFl3KBw9K/5UguM9ltO3Xh+cwo3UvTXFYIPSlQEVU
-         89Yv8GHfhnkWkqvurh/CSL5ZV7W4f4gxQVRs92epAMEt3+I020alJpPqA5Zrq6RFiq3k
-         SI/Zo/DpQTeQNAX792L6jXTTfLOIV8qrs5YTgzwEC+PTpLjlw7RAm1bM3s1bop8fdG2l
-         TZ8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JpPVmG/ic6yi3Tk4GAQi6DB6GCxhlbKT5nO4XO5x++4=;
-        b=DCxqbWr1MUBEPL1lDtfHFiXYCn+u4NLj+9gZfQ2cTyHotbZCr2AfhA90+ypuEbtWgw
-         xWQfKUugISAYpjkdpcV4McAz2DEp1cEWICZge54c2c5ODR05r9vj3tdoaU+Ry7wWw2QT
-         NvhoT/BADwZMI3XncxvgNW5jrx23wCc8qpiL3MQpqL00mOVbzZh0VFqvCnlN9U3ETbnk
-         WoX/TJwSocSLXlm+cRMm+Je0xj1UxlSI9w52ngMS5ijUlscXDKBWKXkUM+ruf/Xd/J45
-         KccqP20mj4HgiJm+ofsFrzcHx5X1tjc8EkxTQznoNZ1QGMe14PgkS3KtXlON65MvpIaG
-         zNjQ==
-X-Gm-Message-State: AGi0PuYPXh4SlAhmzEc2+oxbTCe+3C1x0gmKYln+GOLqa0XsuoB5se9P
-        xGN58nIgXz624Kly/uOY8Jjq3QooedEVZykcgdk=
-X-Google-Smtp-Source: APiQypJoCBUTROFxqXlwhz34VHgNyehOqvvky/DAp7KIJoHxTKkUUYKeoBF1v3WwiPOZFL3Hm+dNa1O7Cnx/FGJIbW0=
-X-Received: by 2002:a92:d151:: with SMTP id t17mr4772428ilg.35.1588084217885;
- Tue, 28 Apr 2020 07:30:17 -0700 (PDT)
+        Tue, 28 Apr 2020 10:30:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588084220;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=LJYJOxQhIE1fE/bXXB2iJgsNhh+MEvSLEyy2mGQqHm4=;
+        b=IYzh5KIYzjqKcO90s0hJ3ODb8ylnzYGiop+X6MqmuagioX/HB5myXRWMm4HgcG5G4dfEq+
+        74qexznDIZZCRLd8x3ABZp4FDy6+1ifAGO+PfwYWZDipiUJG/Nyyg7qfaRsPH9jNi9MGig
+        TzcKfdCmRk/Zw0rZYphUr3hyoW5chhA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-493-YWug8AwhN2qI8cWogNqfqg-1; Tue, 28 Apr 2020 10:30:17 -0400
+X-MC-Unique: YWug8AwhN2qI8cWogNqfqg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 277D81005510;
+        Tue, 28 Apr 2020 14:30:16 +0000 (UTC)
+Received: from localhost (ovpn-115-22.ams2.redhat.com [10.36.115.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 319AB60CD3;
+        Tue, 28 Apr 2020 14:30:09 +0000 (UTC)
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     virtualization@lists.linux-foundation.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, linux-block@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Lance Digby <ldigby@redhat.com>
+Subject: [PATCH v2] virtio-blk: handle block_device_operations callbacks after hot unplug
+Date:   Tue, 28 Apr 2020 15:30:09 +0100
+Message-Id: <20200428143009.107645-1-stefanha@redhat.com>
 MIME-Version: 1.0
-References: <20200428142629.8950-1-peron.clem@gmail.com>
-In-Reply-To: <20200428142629.8950-1-peron.clem@gmail.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Tue, 28 Apr 2020 16:30:06 +0200
-Message-ID: <CAJiuCcevho5fGxW+WLHtJAqfYw+desy5-PipBvtz_vbH6EXVPQ@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: allwinner: h6: Use dummy regulator for
- Tanix TX6
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Piotr Oniszczuk <warpme@o2.pl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime, Warpme,
+QSB1c2Vyc3BhY2UgcHJvY2VzcyBob2xkaW5nIGEgZmlsZSBkZXNjcmlwdG9yIHRvIGEgdmlydGlv
+X2JsayBkZXZpY2UgY2FuCnN0aWxsIGludm9rZSBibG9ja19kZXZpY2Vfb3BlcmF0aW9ucyBhZnRl
+ciBob3QgdW5wbHVnLiAgRm9yIGV4YW1wbGUsIGEKcHJvZ3JhbSB0aGF0IGhhcyAvZGV2L3ZkYiBv
+cGVuIGNhbiBjYWxsIGlvY3RsKEhESU9fR0VUR0VPKSBhZnRlciBob3QKdW5wbHVnIHRvIGludm9r
+ZSB2aXJ0YmxrX2dldGdlbygpLgoKSW50cm9kdWNlIGEgcmVmZXJlbmNlIGNvdW50IGluIHN0cnVj
+dCB2aXJ0aW9fYmxrIHNvIHRoYXQgaXRzIGxpZmV0aW1lCmNvdmVycyBib3RoIHZpcnRpb19kcml2
+ZXIgcHJvYmUvcmVtb3ZlIGFuZCBibG9ja19kZXZpY2Vfb3BlcmF0aW9ucwpvcGVuL3JlbGVhc2Ug
+dXNlcnMuICBUaGlzIGVuc3VyZXMgdGhhdCBibG9ja19kZXZpY2Vfb3BlcmF0aW9ucyBmdW5jdGlv
+bnMKbGlrZSB2aXJ0YmxrX2dldGdlbygpIGNhbiBzYWZlbHkgYWNjZXNzIHN0cnVjdCB2aXJ0aW9f
+YmxrLgoKQWRkIHJlbW92ZV9tdXRleCB0byBwcmV2ZW50IGJsb2NrX2RldmljZV9vcGVyYXRpb25z
+IGZ1bmN0aW9ucyBmcm9tCmFjY2Vzc2luZyB2YmxrLT52ZGV2IGR1cmluZyB2aXJ0YmxrX3JlbW92
+ZSgpIGFuZCBsZXQgdGhlIHNhZmVseSBjaGVjawpmb3IgIXZibGstPnZkZXYgYWZ0ZXIgdmlydGJs
+a19yZW1vdmUoKSByZXR1cm5zLgoKU3dpdGNoaW5nIHRvIGEgcmVmZXJlbmNlIGNvdW50IGFsc28g
+c29sdmVzIHRoZSB2ZF9pbmRleF9pZGEgbGVhayB3aGVyZQp2ZGEsIHZkYiwgdmRjLCBldGMgaW5k
+aWNlcyB3ZXJlIGxvc3Qgd2hlbiB0aGUgZGV2aWNlIHdhcyBob3QgdW5wbHVnZ2VkCndoaWxlIHRo
+ZSBibG9jayBkZXZpY2Ugd2FzIHN0aWxsIG9wZW4uCgpSZXBvcnRlZC1ieTogTGFuY2UgRGlnYnkg
+PGxkaWdieUByZWRoYXQuY29tPgpTaWduZWQtb2ZmLWJ5OiBTdGVmYW4gSGFqbm9jemkgPHN0ZWZh
+bmhhQHJlZGhhdC5jb20+Ci0tLQpJZiBzb21lb25lIGhhcyBhIHNpbXBsZXIgc29sdXRpb24gcGxl
+YXNlIGxldCBtZSBrbm93LiAgSSBsb29rZWQgYXQKdmFyaW91cyBhcHByb2FjaGVzIGluY2x1ZGlu
+ZyByZXVzaW5nIGRldmljZV9sb2NrKCZ2YmxrLT52ZGV2LmRldikgYnV0CnRoZXkgd2VyZSBtb3Jl
+IGNvbXBsZXggYW5kIGV4dGVuZGluZyB0aGUgbGlmZXRpbWUgb2YgdmlydGlvX2RldmljZSBhZnRl
+cgpyZW1vdmUoKSBoYXMgYmVlbiBjYWxsZWQgc2VlbXMgcXVlc3Rpb25hYmxlLgotLS0KIGRyaXZl
+cnMvYmxvY2svdmlydGlvX2Jsay5jIHwgODUgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKy0tLS0KIDEgZmlsZSBjaGFuZ2VkLCA3NyBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygt
+KQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvYmxvY2svdmlydGlvX2Jsay5jIGIvZHJpdmVycy9ibG9j
+ay92aXJ0aW9fYmxrLmMKaW5kZXggOTM0NjhiN2M2NzAxLi4zZGQ1M2I0NDVjYzEgMTAwNjQ0Ci0t
+LSBhL2RyaXZlcnMvYmxvY2svdmlydGlvX2Jsay5jCisrKyBiL2RyaXZlcnMvYmxvY2svdmlydGlv
+X2Jsay5jCkBAIC00NCw2ICs0NCwxMyBAQCBzdHJ1Y3QgdmlydGlvX2JsayB7CiAJLyogUHJvY2Vz
+cyBjb250ZXh0IGZvciBjb25maWcgc3BhY2UgdXBkYXRlcyAqLwogCXN0cnVjdCB3b3JrX3N0cnVj
+dCBjb25maWdfd29yazsKIAorCS8qCisJICogVHJhY2tzIHJlZmVyZW5jZXMgZnJvbSBibG9ja19k
+ZXZpY2Vfb3BlcmF0aW9ucyBvcGVuL3JlbGVhc2UgYW5kCisJICogdmlydGlvX2RyaXZlciBwcm9i
+ZS9yZW1vdmUgc28gdGhpcyBvYmplY3QgY2FuIGJlIGZyZWVkIG9uY2Ugbm8KKwkgKiBsb25nZXIg
+aW4gdXNlLgorCSAqLworCXJlZmNvdW50X3QgcmVmczsKKwogCS8qIFdoYXQgaG9zdCB0ZWxscyB1
+cywgcGx1cyAyIGZvciBoZWFkZXIgJiB0YWlsZXIuICovCiAJdW5zaWduZWQgaW50IHNnX2VsZW1z
+OwogCkBAIC01Myw2ICs2MCw5IEBAIHN0cnVjdCB2aXJ0aW9fYmxrIHsKIAkvKiBudW0gb2YgdnFz
+ICovCiAJaW50IG51bV92cXM7CiAJc3RydWN0IHZpcnRpb19ibGtfdnEgKnZxczsKKworCS8qIFBy
+b3ZpZGVzIG11dHVhbCBleGNsdXNpb24gd2l0aCB2aXJ0YmxrX3JlbW92ZSgpLiAqLworCXN0cnVj
+dCBtdXRleCByZW1vdmVfbXV0ZXg7CiB9OwogCiBzdHJ1Y3QgdmlydGJsa19yZXEgewpAQCAtMjk1
+LDEwICszMDUsNTQgQEAgc3RhdGljIGludCB2aXJ0YmxrX2dldF9pZChzdHJ1Y3QgZ2VuZGlzayAq
+ZGlzaywgY2hhciAqaWRfc3RyKQogCXJldHVybiBlcnI7CiB9CiAKK3N0YXRpYyB2b2lkIHZpcnRi
+bGtfZ2V0KHN0cnVjdCB2aXJ0aW9fYmxrICp2YmxrKQoreworCXJlZmNvdW50X2luYygmdmJsay0+
+cmVmcyk7Cit9CisKK3N0YXRpYyB2b2lkIHZpcnRibGtfcHV0KHN0cnVjdCB2aXJ0aW9fYmxrICp2
+YmxrKQoreworCWlmIChyZWZjb3VudF9kZWNfYW5kX3Rlc3QoJnZibGstPnJlZnMpKSB7CisJCWlk
+YV9zaW1wbGVfcmVtb3ZlKCZ2ZF9pbmRleF9pZGEsIHZibGstPmluZGV4KTsKKwkJbXV0ZXhfZGVz
+dHJveSgmdmJsay0+cmVtb3ZlX211dGV4KTsKKwkJa2ZyZWUodmJsayk7CisJfQorfQorCitzdGF0
+aWMgaW50IHZpcnRibGtfb3BlbihzdHJ1Y3QgYmxvY2tfZGV2aWNlICpiZCwgZm1vZGVfdCBtb2Rl
+KQoreworCXN0cnVjdCB2aXJ0aW9fYmxrICp2YmxrID0gYmQtPmJkX2Rpc2stPnByaXZhdGVfZGF0
+YTsKKwlpbnQgcmV0ID0gLUVOWElPOworCisJbXV0ZXhfbG9jaygmdmJsay0+cmVtb3ZlX211dGV4
+KTsKKworCWlmICh2YmxrLT52ZGV2KSB7CisJCXZpcnRibGtfZ2V0KHZibGspOworCQlyZXQgPSAw
+OworCX0KKworCW11dGV4X3VubG9jaygmdmJsay0+cmVtb3ZlX211dGV4KTsKKwlyZXR1cm4gcmV0
+OworfQorCitzdGF0aWMgdm9pZCB2aXJ0YmxrX3JlbGVhc2Uoc3RydWN0IGdlbmRpc2sgKmRpc2ss
+IGZtb2RlX3QgbW9kZSkKK3sKKwlzdHJ1Y3QgdmlydGlvX2JsayAqdmJsayA9IGRpc2stPnByaXZh
+dGVfZGF0YTsKKworCXZpcnRibGtfcHV0KHZibGspOworfQorCiAvKiBXZSBwcm92aWRlIGdldGdl
+byBvbmx5IHRvIHBsZWFzZSBzb21lIG9sZCBib290bG9hZGVyL3BhcnRpdGlvbmluZyB0b29scyAq
+Lwogc3RhdGljIGludCB2aXJ0YmxrX2dldGdlbyhzdHJ1Y3QgYmxvY2tfZGV2aWNlICpiZCwgc3Ry
+dWN0IGhkX2dlb21ldHJ5ICpnZW8pCiB7CiAJc3RydWN0IHZpcnRpb19ibGsgKnZibGsgPSBiZC0+
+YmRfZGlzay0+cHJpdmF0ZV9kYXRhOworCWludCByZXQgPSAtRU5YSU87CisKKwltdXRleF9sb2Nr
+KCZ2YmxrLT5yZW1vdmVfbXV0ZXgpOworCisJaWYgKCF2YmxrLT52ZGV2KSB7CisJCWdvdG8gb3V0
+OworCX0KIAogCS8qIHNlZSBpZiB0aGUgaG9zdCBwYXNzZWQgaW4gZ2VvbWV0cnkgY29uZmlnICov
+CiAJaWYgKHZpcnRpb19oYXNfZmVhdHVyZSh2YmxrLT52ZGV2LCBWSVJUSU9fQkxLX0ZfR0VPTUVU
+UlkpKSB7CkBAIC0zMTQsMTEgKzM2OCwxNyBAQCBzdGF0aWMgaW50IHZpcnRibGtfZ2V0Z2VvKHN0
+cnVjdCBibG9ja19kZXZpY2UgKmJkLCBzdHJ1Y3QgaGRfZ2VvbWV0cnkgKmdlbykKIAkJZ2VvLT5z
+ZWN0b3JzID0gMSA8PCA1OwogCQlnZW8tPmN5bGluZGVycyA9IGdldF9jYXBhY2l0eShiZC0+YmRf
+ZGlzaykgPj4gMTE7CiAJfQotCXJldHVybiAwOworCisJcmV0ID0gMDsKK291dDoKKwltdXRleF91
+bmxvY2soJnZibGstPnJlbW92ZV9tdXRleCk7CisJcmV0dXJuIHJldDsKIH0KIAogc3RhdGljIGNv
+bnN0IHN0cnVjdCBibG9ja19kZXZpY2Vfb3BlcmF0aW9ucyB2aXJ0YmxrX2ZvcHMgPSB7CiAJLm93
+bmVyICA9IFRISVNfTU9EVUxFLAorCS5vcGVuID0gdmlydGJsa19vcGVuLAorCS5yZWxlYXNlID0g
+dmlydGJsa19yZWxlYXNlLAogCS5nZXRnZW8gPSB2aXJ0YmxrX2dldGdlbywKIH07CiAKQEAgLTY1
+NSw2ICs3MTUsMTAgQEAgc3RhdGljIGludCB2aXJ0YmxrX3Byb2JlKHN0cnVjdCB2aXJ0aW9fZGV2
+aWNlICp2ZGV2KQogCQlnb3RvIG91dF9mcmVlX2luZGV4OwogCX0KIAorCS8qIFRoaXMgcmVmZXJl
+bmNlIGlzIGRyb3BwZWQgaW4gdmlydGJsa19yZW1vdmUoKS4gKi8KKwlyZWZjb3VudF9zZXQoJnZi
+bGstPnJlZnMsIDEpOworCW11dGV4X2luaXQoJnZibGstPnJlbW92ZV9tdXRleCk7CisKIAl2Ymxr
+LT52ZGV2ID0gdmRldjsKIAl2YmxrLT5zZ19lbGVtcyA9IHNnX2VsZW1zOwogCkBAIC04MjAsOCAr
+ODg0LDEyIEBAIHN0YXRpYyBpbnQgdmlydGJsa19wcm9iZShzdHJ1Y3QgdmlydGlvX2RldmljZSAq
+dmRldikKIHN0YXRpYyB2b2lkIHZpcnRibGtfcmVtb3ZlKHN0cnVjdCB2aXJ0aW9fZGV2aWNlICp2
+ZGV2KQogewogCXN0cnVjdCB2aXJ0aW9fYmxrICp2YmxrID0gdmRldi0+cHJpdjsKLQlpbnQgaW5k
+ZXggPSB2YmxrLT5pbmRleDsKLQlpbnQgcmVmYzsKKworCS8qCisJICogVmlydHF1ZXVlIHByb2Nl
+c3NpbmcgaXMgc3RvcHBlZCBzYWZlbHkgaGVyZSBidXQgbXV0dWFsIGV4Y2x1c2lvbiBpcworCSAq
+IG5lZWRlZCBmb3IgYmxvY2tfZGV2aWNlX29wZXJhdGlvbnMuCisJICovCisJbXV0ZXhfbG9jaygm
+dmJsay0+cmVtb3ZlX211dGV4KTsKIAogCS8qIE1ha2Ugc3VyZSBubyB3b3JrIGhhbmRsZXIgaXMg
+YWNjZXNzaW5nIHRoZSBkZXZpY2UuICovCiAJZmx1c2hfd29yaygmdmJsay0+Y29uZmlnX3dvcmsp
+OwpAQCAtODM0LDE1ICs5MDIsMTYgQEAgc3RhdGljIHZvaWQgdmlydGJsa19yZW1vdmUoc3RydWN0
+IHZpcnRpb19kZXZpY2UgKnZkZXYpCiAJLyogU3RvcCBhbGwgdGhlIHZpcnRxdWV1ZXMuICovCiAJ
+dmRldi0+Y29uZmlnLT5yZXNldCh2ZGV2KTsKIAotCXJlZmMgPSBrcmVmX3JlYWQoJmRpc2tfdG9f
+ZGV2KHZibGstPmRpc2spLT5rb2JqLmtyZWYpOworCS8qIFZpcnRxdWV1ZSBhcmUgc3RvcHBlZCwg
+bm90aGluZyBjYW4gdXNlIHZibGstPnZkZXYgYW55bW9yZS4gKi8KKwl2YmxrLT52ZGV2ID0gTlVM
+TDsKKwogCXB1dF9kaXNrKHZibGstPmRpc2spOwogCXZkZXYtPmNvbmZpZy0+ZGVsX3Zxcyh2ZGV2
+KTsKIAlrZnJlZSh2YmxrLT52cXMpOwotCWtmcmVlKHZibGspOwogCi0JLyogT25seSBmcmVlIGRl
+dmljZSBpZCBpZiB3ZSBkb24ndCBoYXZlIGFueSB1c2VycyAqLwotCWlmIChyZWZjID09IDEpCi0J
+CWlkYV9zaW1wbGVfcmVtb3ZlKCZ2ZF9pbmRleF9pZGEsIGluZGV4KTsKKwltdXRleF91bmxvY2so
+JnZibGstPnJlbW92ZV9tdXRleCk7CisKKwl2aXJ0YmxrX3B1dCh2YmxrKTsKIH0KIAogI2lmZGVm
+IENPTkZJR19QTV9TTEVFUAotLSAKMi4yNS4zCgo=
 
-On Tue, 28 Apr 2020 at 16:26, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
-> wrote:
->
-> Tanix TX6 has a fixed regulator. As DVFS is instructed to change
-> voltage to meet OPP table, the DVFS is not working as expected.
->
-> Avoid to introduce a new dedicated OPP Table where voltage are
-> equals to the fixed regulator as it will only duplicate all the OPPs.
-> Instead remove the fixed regulator so the DVFS framework will create
-> dummy regulator and will have the same behavior.
->
-> Add some comments to explain this in the device-tree.
-
-Changes since v1:
-I have change this patch to use dummy regulator and add comment about
-this choice.
-I think it's a bit better than just dropping the regulator.
-
-@Piotr Oniszczuk:
-Please add your tested-by tag, to be sure this is working as expected !
-
-Thanks & Regards
-Clement
-
->
-> Reported-by: Piotr Oniszczuk <warpme@o2.pl>
-> Fixes: add1e27fb703 ("arm64: dts: allwinner: h6: Enable CPU opp tables fo=
-r Tanix TX6")
-> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> ---
->  .../boot/dts/allwinner/sun50i-h6-tanix-tx6.dts | 18 ++++++++++++++++--
->  1 file changed, 16 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch=
-/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> index be81330db14f..3e96fcb317ea 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> @@ -48,7 +48,15 @@
->  };
->
->  &cpu0 {
-> -       cpu-supply =3D <&reg_vdd_cpu_gpu>;
-> +       /*
-> +        * Don't specify the CPU regulator, as it's a fixed
-> +        * regulator DVFS will not work as it is intructed
-> +        * to reach a voltage which can't be reached.
-> +        * Not specifying a regulator will create a dummy
-> +        * regulator allowing all OPPs.
-> +        *
-> +        * cpu-supply =3D <&reg_vdd_cpu_gpu>;
-> +        */
->  };
->
->  &de {
-> @@ -68,7 +76,13 @@
->  };
->
->  &gpu {
-> -       mali-supply =3D <&reg_vdd_cpu_gpu>;
-> +       /*
-> +        * Don't specify the GPU regulator, see comment
-> +        * above for the CPU supply.
-> +        *
-> +        * mali-supply =3D <&reg_vdd_cpu_gpu>;
-> +        */
-> +
->         status =3D "okay";
->  };
->
-> --
-> 2.20.1
->
