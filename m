@@ -2,126 +2,146 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0832FC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA96C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4C79206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C4C821D91
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:25:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f++UMzw5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fVgHTUMt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbgD1UWg (ORCPT
+        id S1726475AbgD1UZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:22:36 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54203 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726284AbgD1UWf (ORCPT
+        Tue, 28 Apr 2020 16:25:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33390 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726286AbgD1UZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:22:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588105354;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=voGLyeD1WxfVMgEf4Mai58JZB/u+WPmTGh+LxkJS5LU=;
-        b=f++UMzw5p5A+zZhSYzvxyBZbXs9d/reeXczk6fU8XZZ5pmlGBS27A7lhQi6wbHdteHc06F
-        Mwz/PD6qLvUWPv/FCN79A/qI+iWSNBvm7KXT8ALj5KHueXmNKIzQhwbOV8SweS33B8C3qF
-        ViegAgm+18AdIuhRVafkuiz5OLqjKOI=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-34-QsdrZyw3NquT1tLO2ARKcQ-1; Tue, 28 Apr 2020 16:22:32 -0400
-X-MC-Unique: QsdrZyw3NquT1tLO2ARKcQ-1
-Received: by mail-qt1-f200.google.com with SMTP id n22so25940215qtp.15
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:22:31 -0700 (PDT)
+        Tue, 28 Apr 2020 16:25:10 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9BB7C03C1AB;
+        Tue, 28 Apr 2020 13:25:09 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id b11so26229913wrs.6;
+        Tue, 28 Apr 2020 13:25:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tT5d0riiZZ18ek/9DKLrzDdyJ2JQ94/wqzkmlAGoP9k=;
+        b=fVgHTUMtLyN8PrFr/GKj+psd0vGnjoXWpD8FYvJOBmhHAICfHpyCj9oRNiW7tV5fYV
+         K6z/g3Q+6pa3/yIV4vcqzxWxrS9emyprXBxVSiOm5+fA12f2L7LGVym0zyQhM9rmrCn3
+         8OdzwV9PnClKvjLIR4PQ27nKPbbntvMha6ymcbJAFfvD+p8bijamk4EnuwJKLqspCLSm
+         f6MOHSYTQxie75jNZHC+DJ+v5wIUTV6GVSWVDHLMJsKPSSi8xHbpMXCwvfGqE9TEeqPJ
+         2LBKcMS14axkULNn1bGxdT5LYoYCjYbljrioKbPMg7IQN9qIVGjROEMGBfoMa6eq2C3D
+         Zi2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=voGLyeD1WxfVMgEf4Mai58JZB/u+WPmTGh+LxkJS5LU=;
-        b=FGrN74JigIcTPXTepd9OUEo7DfQNG2xVEZzmz0VzXm2Y57rYtjhJCp8CJL0JbuwY9p
-         YzsaQ29a1Fb/3fVwhIh+EwizDijHFdzPjyrpmVPKPY3NkS7+xvLyHWBfHZgMtsju+x7W
-         fMHwJP5rmXBJ0orNBtbp+1fX2gB5OgMM9c6rFgqvOlAWl+1cukVvBtN4UFbRyybzVP/E
-         4HfCqjHDRHfwuTTvsHZXRVjERmhcqMfPsyCB/BMcPWmApfAxNhGwa7J1T2gq4mu+yccO
-         rM2pBII3EBNE6THzqBg8r8AbnRRSvQgVhvqcKyM2APJ3XkO1t2F7iQzddnmhV3+ScVSp
-         nDOQ==
-X-Gm-Message-State: AGi0PubXiFxlgXJe8IhBsP0sNdYF+3nPGn3Dm18wZF0fCkfNIAp2vc6/
-        gNRaq7Qv7O/WDQrLXMpvnxJQEHa6/WBSBzNvPKtE4VkHYwKwt7VcqrPYDinbirZ5r3vIFW33gWw
-        f4cqn/QX/vM5F0492RZ81luqJ
-X-Received: by 2002:a37:66d8:: with SMTP id a207mr28461418qkc.127.1588105351220;
-        Tue, 28 Apr 2020 13:22:31 -0700 (PDT)
-X-Google-Smtp-Source: APiQypK+LsYsK4GPD3bREyTNhokuLO2gi/E05ejK2hXFbJea8Bo086oicUgNv17RFKAAPIkQ+byHkg==
-X-Received: by 2002:a37:66d8:: with SMTP id a207mr28461388qkc.127.1588105350974;
-        Tue, 28 Apr 2020 13:22:30 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id x24sm14925754qth.80.2020.04.28.13.22.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 13:22:30 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 16:22:28 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Kevin Tian <kevin.tian@intel.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v8 03/14] KVM: X86: Don't track dirty for
- KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
-Message-ID: <20200428202228.GB4280@xz-x1>
-References: <20200331190000.659614-1-peterx@redhat.com>
- <20200331190000.659614-4-peterx@redhat.com>
- <20200423203944.GS17824@linux.intel.com>
- <20200424152151.GB41816@xz-x1>
- <20200427181054.GL14870@linux.intel.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tT5d0riiZZ18ek/9DKLrzDdyJ2JQ94/wqzkmlAGoP9k=;
+        b=KCN96H+DzVKLlICMg5qmDYRrifFic0riBYcAjRuA/FLbvCFFhKp8Xwp8Ft/kcQUx/Q
+         tH4b/F7ZlixItaY6VE3jc9w3dNxkDips2IrKT2CKPwkY1f0GgfgKwXbtOvL9aX1SF5dA
+         nRX+n43sFIGiMKtLDGZes8bmP7yeSuB1ydO4q05K8w4W4ZkdMFyOk9A7GTsGcZSAa6oZ
+         iHwFv69n7xmlgjYwmip1GKp2QCBKilYeyZzVQ4o4/r7WWO4NmEaj/9WGvbfvxRfWcAjw
+         Dqc+kHozlFsmLhJEgvXHwJA/mi1zYJvbEPRk/UxcPrNGQmbFX0rRHIVxvo0/VmGxTOXE
+         Xifw==
+X-Gm-Message-State: AGi0PubFGuUdGIFFF+BjTkWZoPBVD4QKie8WPr6gGADJFgO3gML76Hye
+        1QzspOCYVLcEsSNgzLxjaeyfo5g7TVk=
+X-Google-Smtp-Source: APiQypKx04egV24/uBV75dgEWC3DPqEnSLJTGUt+k+CPuBQHWJLN7dDcxJN2g3h6Hu+b57AMRI7XTA==
+X-Received: by 2002:adf:ab1b:: with SMTP id q27mr37550151wrc.220.1588105507706;
+        Tue, 28 Apr 2020 13:25:07 -0700 (PDT)
+Received: from [192.168.1.23] (afcs235.neoplus.adsl.tpnet.pl. [95.49.70.235])
+        by smtp.gmail.com with ESMTPSA id l16sm26599482wrp.91.2020.04.28.13.25.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Apr 2020 13:25:07 -0700 (PDT)
+Subject: Re: [PATCH v21 04/16] leds: lp50xx: Add the LP50XX family of the RGB
+ LED driver
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200428160338.2793-1-dmurphy@ti.com>
+ <20200428160338.2793-5-dmurphy@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <d3020c80-90f7-e73a-5ff3-6c503b9fdea9@gmail.com>
+Date:   Tue, 28 Apr 2020 22:25:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200427181054.GL14870@linux.intel.com>
+In-Reply-To: <20200428160338.2793-5-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 11:10:54AM -0700, Sean Christopherson wrote:
+Hi Dan,
 
+Thanks for the update. There is one remnant from the
+previous stages that you already scheduled for removal AFAIR.
+
+On 4/28/20 6:03 PM, Dan Murphy wrote:
+> Introduce the LP5036/30/24/18/12/9 RGB LED driver.
+> The difference in these parts are the number of
+> LED outputs where the:
+> 
+> LP5036 can control 36 LEDs
+> LP5030 can control 30 LEDs
+> LP5024 can control 24 LEDs
+> LP5018 can control 18 LEDs
+> LP5012 can control 12 LEDs
+> LP5009 can control 9 LEDs
+> 
+> The device has the ability to group LED output into control banks
+> so that multiple LED banks can be controlled with the same mixing and
+> brightness.  Inversely the LEDs can also be controlled independently.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
 [...]
+> +
+> +		init_data.fwnode = child;
+> +		init_data.devicename = priv->client->name;
 
-> > It will "return (0xdeadull << 48)" as you proposed in abbed4fa94f6? :-)
-> > 
-> > Frankly speaking I always preferred zero but that's just not true any more
-> > after above change.  This also reminded me that maybe we should also return the
-> > same thing at [1] below.
-> 
-> Ah, I was looking at this code:
-> 
-> 	if (!slot || !slot->npages)
-> 		return 0;
-> 
-> That means deletion returns different success values for "deletion was a
-> nop" and "deletion was successful".  The nop path should probably return
-> (or fill in) "(unsigned long)(0xdeadull << 48)" as well.
+Namely this line. We don't need devicename for new drivers like this.
 
-Yep.  Since I touched the line here after all, I'll directly squash this small
-fix into this patch too when I repost.  Thanks,
-
-[...]
-
-> > > 
-> > > >  	} else {
-> > > >  		if (!slot || !slot->npages)
-> > > > -			return 0;
-> > > > +			return ERR_PTR_USR(0);
-> > 
-> > [1]
-
+> +		fwnode_property_read_string(child, "linux,default-trigger",
+> +				    &led->led_dev.default_trigger);
+> +		num_colors = 0;
+> +
+> +		/* There are only 3 LEDs per module otherwise they should be
+> +		   banked which also is presented as 3 LEDs*/
+> +		mc_led_info = devm_kcalloc(priv->dev, LP50XX_LEDS_PER_MODULE,
+> +					   sizeof(*mc_led_info), GFP_KERNEL);
+> +		if (!mc_led_info)
+> +			return -ENOMEM;
+> +
+> +		fwnode_for_each_child_node(child, led_node) {
+> +			ret = fwnode_property_read_u32(led_node, "color",
+> +						       &color_id);
+> +			if (ret)
+> +				dev_err(priv->dev, "Cannot read color\n");
+> +
+> +			mc_led_info[num_colors].color_index = color_id;
+> +			num_colors++;
+> +		}
+> +
+> +		led->priv = priv;
+> +		led->mc_cdev.num_colors = num_colors;
+> +		led->mc_cdev.subled_info = mc_led_info;
+> +		led_cdev = &led->mc_cdev.led_cdev;
+> +		led_cdev->brightness_set_blocking = lp50xx_brightness_set;
+> +		ret = devm_led_classdev_multicolor_register_ext(&priv->client->dev,
+> +						       &led->mc_cdev,
+> +						       &init_data);
+>[...]
 -- 
-Peter Xu
-
+Best regards,
+Jacek Anaszewski
