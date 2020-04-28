@@ -2,98 +2,78 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C32C83003
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7193FC83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B03D52070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AACC2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:33:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgD1Ac4 (ORCPT
+        id S1726478AbgD1AdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 20:32:56 -0400
-Received: from mga03.intel.com ([134.134.136.65]:53455 "EHLO mga03.intel.com"
+        Mon, 27 Apr 2020 20:33:18 -0400
+Received: from mga05.intel.com ([192.55.52.43]:41331 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726257AbgD1Acv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 20:32:51 -0400
-IronPort-SDR: WE4VW56HMcP6Yb/KYWFvfKAagHJCrtiVcgOdEoH0EBFFICUlttHJ4Vr0Z7lw0wVBIdoUa/Egw+
- vZTb4rC73Ajg==
+        id S1726257AbgD1AdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 20:33:18 -0400
+IronPort-SDR: bJPqrIgYsP/8gUvWXDNFgWasencwxvuOXDd/dXczGGfEe/70e140c0EKNoKbW7+vfTlkuWFYUn
+ X2LsuURMGjng==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 17:32:50 -0700
-IronPort-SDR: S6siCG9eoW2gDi2go+lBLTfZ0I6oOsSrhS7as1w04pGxOS2bxIxLT4+UTXar1EAtw952ZV1v7r
- GTUljKNc4dnA==
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 17:33:17 -0700
+IronPort-SDR: 9KpS+xelx3QsJwLoqXzGT5Rmn2Xu98is1rERQcf+WvISeXIKF/KRSRAqW3NMmMp3m8S0sWUpry
+ 4ZbvqplHqZhQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
-   d="scan'208";a="367331794"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 27 Apr 2020 17:32:49 -0700
-Received: from debox1-hc.jf.intel.com (debox1-hc.jf.intel.com [10.54.75.159])
-        by linux.intel.com (Postfix) with ESMTP id C52EB58081E;
-        Mon, 27 Apr 2020 17:32:49 -0700 (PDT)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     rjw@rjwysocki.net, lenb@kernel.org, bhelgaas@google.com,
-        kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me
-Cc:     "David E. Box" <david.e.box@linux.intel.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 2/2] drivers/nvme: Add support for ACPI StorageD3Enable property
-Date:   Mon, 27 Apr 2020 17:32:14 -0700
-Message-Id: <20200428003214.3764-3-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200428003214.3764-1-david.e.box@linux.intel.com>
-References: <20200428003214.3764-1-david.e.box@linux.intel.com>
+   d="scan'208";a="246333189"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga007.jf.intel.com with ESMTP; 27 Apr 2020 17:33:17 -0700
+Date:   Mon, 27 Apr 2020 17:33:17 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        everdox@gmail.com
+Subject: Re: [PATCH] KVM: x86: handle wrap around 32-bit address space
+Message-ID: <20200428003317.GC14870@linux.intel.com>
+References: <20200427165917.31799-1-pbonzini@redhat.com>
+ <CALMp9eTBs=deSYu1=CMLwZcO8HTpGM2JsgDxvFR1Y220tdUQ3w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALMp9eTBs=deSYu1=CMLwZcO8HTpGM2JsgDxvFR1Y220tdUQ3w@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NVMe storage power management during suspend-to-idle, particularly on
-laptops, has been inconsistent with some devices working with D3 while
-others must rely on NVMe APST in order for power savings to be realized.
-Currently the default is to use APST unless quirked to do otherwise.
-However newer platforms, like Intel Comet Lake systems, may require NVMe
-drives to use D3 in order for the PCIe ports to be properly power managed.
-To make it easier for drivers to choose, these platforms may supply a
-special "StorageD3Enable" _DSD property under the root port that the device
-is attached to. If supplied, the driver must use D3 in order for the
-platform to realize the deepest power savings in suspend-to-idle.
+On Mon, Apr 27, 2020 at 05:28:54PM -0700, Jim Mattson wrote:
+> On Mon, Apr 27, 2020 at 9:59 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+> > @@ -1568,8 +1568,17 @@ static int skip_emulated_instruction(struct kvm_vcpu *vcpu)
+> >          */
+> >         if (!static_cpu_has(X86_FEATURE_HYPERVISOR) ||
+> >             to_vmx(vcpu)->exit_reason != EXIT_REASON_EPT_MISCONFIG) {
+> > -               rip = kvm_rip_read(vcpu);
+> > -               rip += vmcs_read32(VM_EXIT_INSTRUCTION_LEN);
+> > +               orig_rip = kvm_rip_read(vcpu);
+> > +               rip = orig_rip + vmcs_read32(VM_EXIT_INSTRUCTION_LEN);
+> > +#ifdef CONFIG_X86_64
+> > +               /*
+> > +                * We need to mask out the high 32 bits of RIP if not in 64-bit
+> > +                * mode, but just finding out that we are in 64-bit mode is
+> > +                * quite expensive.  Only do it if there was a carry.
+> > +                */
+> > +               if (unlikely(((rip ^ orig_rip) >> 31) == 3) && !is_64_bit_mode(vcpu))
+> 
+> Is it actually possible to wrap around 0 without getting a segment
+> limit violation, or is it only possible to wrap *to* 0 (i.e. rip==1ull
+> << 32)?
 
-Add check of StorageD3Enable property during probe to use D3 as specified
-by platform firmware.
-
-Acked-by: Dan Williams <dan.j.williams@intel.com>
-Link: https://docs.microsoft.com/en-us/windows-hardware/design/component-guidelines/power-management-for-storage-hardware-devices-intro
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
- drivers/nvme/host/pci.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 4e79e412b276..4d67735975f6 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2777,6 +2777,13 @@ static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 
- 	quirks |= check_vendor_combination_bug(pdev);
- 
-+	/*
-+	 * Platform requires storage device to use D3 for kernel managed
-+	 * suspend.
-+	 */
-+	if (pdev->storage_d3)
-+		quirks |= NVME_QUIRK_SIMPLE_SUSPEND;
-+
- 	/*
- 	 * Double check that our mempool alloc size will cover the biggest
- 	 * command we support.
--- 
-2.20.1
-
+Arbitrary wrap is possible.  Limit checks are disabled for flat segs, it's
+a legacy bug^W feature.
