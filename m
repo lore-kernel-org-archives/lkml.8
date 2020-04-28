@@ -2,124 +2,297 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 610F6C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D54D1C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C244206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:48:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588085294;
-	bh=wwPgZNGUMJkBXCHDH1r/tigwDvRty2wH177V7+Ns0W4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=2rvb1E9MIRv3ai/O4JVPHOSgQDJakK7lxDy5ZLkltsY0MX5f+YHiBqS624saPYBp1
-	 oDFFVgghbVHeDujt2LTdHZxd4dLdkIpe+4BMq0HcjWNr94naZFIKBcIpoH9uai/jhe
-	 yseEVYttBvApkoDq3YV8JEMtPY9YH6UZ62H0j+D4=
+	by mail.kernel.org (Postfix) with ESMTP id B0E23206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:49:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbgD1OsN (ORCPT
+        id S1727969AbgD1OtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:48:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727079AbgD1OsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:48:12 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6680D206B9;
-        Tue, 28 Apr 2020 14:48:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588085292;
-        bh=wwPgZNGUMJkBXCHDH1r/tigwDvRty2wH177V7+Ns0W4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Dgod49VSlqxpGshicvovMDfREGpxLC1t6lGRgtZtVHNWglRXLB5qLra42dNrYfBEU
-         ebFx9zt28jyyst+DqdIBOZ1AhHY6tDsmF4h7qPSvJgFwLC3asQpUHq07vzjY4t0mDS
-         hhq+cfprMCwe7JSaj+rDTDVw0b/+B1bEwr3hFANs=
-Message-ID: <e89bd817c69422c85f1945041dd83fbe8d534805.camel@kernel.org>
-Subject: Re: [PATCH V2] fs/ceph:fix double unlock in handle_cap_export()
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Wu Bo <wubo40@huawei.com>, sage@redhat.com, idryomov@gmail.com
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        liuzhiqiang26@huawei.com, linfeilong@huawei.com
-Date:   Tue, 28 Apr 2020 10:48:10 -0400
-In-Reply-To: <1588079622-423774-1-git-send-email-wubo40@huawei.com>
-References: <1588079622-423774-1-git-send-email-wubo40@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
+        Tue, 28 Apr 2020 10:49:04 -0400
+Received: from mail-oln040092253033.outbound.protection.outlook.com ([40.92.253.33]:3040
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727079AbgD1OtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 10:49:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Fz6+cpVkuTFV1k2o6s8jaQFZMyToykktLrPdupbJQ2disbH8Q0ZAHDZo8zNADUptkQblyH9vNh/3bdutAof32HY1Bnt/a0JTSoE/s5RMeV248m8pInWdzhX0NfbDnxa3eXRnLwsnmCdK2R4vB56V2yv9MUA5MZj57zxlOYfkgbJC6oeokdAZzavKSXCICw3hhou3lBs2KMXzvl6+NrIqBcrz19nPuV05gZlA/D7aJ7dBs7rq9j71ZMQDwfbo23XAu34cSqwX5VRZiLd0ZhquYR2LwxmBQ0gwHfsVqFLblWAkclpSyIWE7bt5zeCzSA/XnWvF1MKk/3No/nbqWiJ9xQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YVqU5JkLLeC2WjHRol2wioZoDNGeMioAk7wAvRzT030=;
+ b=gP2KuT5liQWEo878IyPMIMNRyUENmI726zNASkLQu6Ha+BJkkA1nTWTViCqqa/YaKHz8ALqXkKdWeAsINrcpRHoVwZ/hu/uF8MvVoWzCurC4ylX3n9unZXQWDQjjsXC8PiRChGctChX6C1QYjJVqS8AojivMnvE6BHw+2XDR5pIEVbN9Cyue6KEt58gXThwrRwDzwWzcszTrBovsHVT/n6FOInVWtLFEspte/Iwz4klf6k4eh3iYuMxJ5s3LW7RUSSH91yJIFaHgqxuQaa+bJ/Im2XCqnCPmundOPIjPIiQeAKREqjjzxk4v3r7QQID+f2FFCBTp4nBfIyrdd3DXnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=outlook.com.au; dmarc=pass action=none
+ header.from=outlook.com.au; dkim=pass header.d=outlook.com.au; arc=none
+Received: from SG2APC01FT046.eop-APC01.prod.protection.outlook.com
+ (2a01:111:e400:7ebd::51) by
+ SG2APC01HT045.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebd::264)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.15; Tue, 28 Apr
+ 2020 14:48:55 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.53) by
+ SG2APC01FT046.mail.protection.outlook.com (10.152.251.145) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2937.15 via Frontend Transport; Tue, 28 Apr 2020 14:48:55 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:51EDA924EE5575836B2BE8E89D68A30908D9B850C57A44654175E43D00B0DCAA;UpperCasedChecksum:5800F732756826CCE29519EA3F0C8B1F67387221CD5E5A76FB26774C131BABEC;SizeAsReceived:8515;Count:48
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::21f1:20fb:d1f:8e25]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::21f1:20fb:d1f:8e25%7]) with mapi id 15.20.2958.019; Tue, 28 Apr 2020
+ 14:48:55 +0000
+Date:   Tue, 28 Apr 2020 22:48:45 +0800
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Alex Deucher <alexdeucher@gmail.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        Takashi Iwai <tiwai@suse.com>, Lukas Wunner <lukas@wunner.de>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Subject: Re: [PATCH 0/1] Fiji GPU audio register timeout when in BACO state
+Message-ID: <PSXP216MB043899DC52E6C6BF728D77CD80AC0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+References: <PSXP216MB0438D2AF96CE0D4F83F48C4D80AE0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <MN2PR12MB4488E4909C1488FB507E0BF5F7AF0@MN2PR12MB4488.namprd12.prod.outlook.com>
+ <s5ho8rdnems.wl-tiwai@suse.de>
+ <PSXP216MB04387BF6B5F8DA84749E5D6F80AF0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <CADnq5_M=QEqxuCKjb_qZvFSvwM5eLEFfsepxYYXoouFoe5bn7A@mail.gmail.com>
+ <s5h4kt4ojrf.wl-tiwai@suse.de>
+ <CADnq5_MMQ5_MjEg=bkJJGMJP53RjB3yxvOW0nUDeWxzg3Q0pVQ@mail.gmail.com>
+ <s5hv9lkm49n.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <s5hv9lkm49n.wl-tiwai@suse.de>
+X-ClientProxiedBy: MEXPR01CA0122.ausprd01.prod.outlook.com
+ (2603:10c6:200:2c::31) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+X-Microsoft-Original-Message-ID: <20200428144845.GA1547@nicholas-dell-linux>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from nicholas-dell-linux (2001:44b8:605f:11:45ec:d37e:a989:bf24) by MEXPR01CA0122.ausprd01.prod.outlook.com (2603:10c6:200:2c::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Tue, 28 Apr 2020 14:48:51 +0000
+X-Microsoft-Original-Message-ID: <20200428144845.GA1547@nicholas-dell-linux>
+X-TMN:  [IUGqIC7/Zv7twGS6RVxoYzVam1CA7NZrEjvBBgbRbB98FB2DWIA8dbv+bvNICPsO]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 48
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: 8e4b4306-4dba-4988-ebed-08d7eb8345db
+X-MS-TrafficTypeDiagnostic: SG2APC01HT045:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dCk4q+BikjfVpAHuBnEjPOxoOji2VyGkIKuZw2/4FJYAAUwW9kI2QkomRGL3hgcH5FSy1RXWLXDnTdpDgWa4HM9ilSB+gbTPxdCp+bsBQ0cPOY9OGEPtXrd8Po0kjYKzHvVkISz2IymFM0qIqfkU6Rc9NfIe+G1W8wcZbaU2NOAOy5WEez5Ci8ixHVFxW63jwyHy4uesfg1ubaShO5Y6yQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:PSXP216MB0438.KORP216.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: xcdHaXoakmq/JoXDcjPo742TnHoCTzPmZnYYGDCesfAVzWzUUAH4lceZ+WKDDBEy0q31E2ecfGAEM9CeHqH5/m6fLxXCdDalpm3mElZcC3LCzukmmxvB3CnRgPM7PM/xvcFyv5IiehgmeAfQB4k32CTf4QPVl0szzdu4c6AYEYTyy0hnCBLVF4RP1om/Fru13/rHzUbzny1+NtClaUYsUg==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e4b4306-4dba-4988-ebed-08d7eb8345db
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2020 14:48:54.9904
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT045
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-28 at 21:13 +0800, Wu Bo wrote:
-> if the ceph_mdsc_open_export_target_session() return fails,
-> should add a lock to avoid twice unlocking.
-> Because the lock will be released at the retry or out_unlock tag.
+On Tue, Apr 28, 2020 at 09:57:24AM +0200, Takashi Iwai wrote:
+> On Mon, 27 Apr 2020 20:43:54 +0200,
+> Alex Deucher wrote:
+> > 
+> > On Mon, Apr 27, 2020 at 2:39 PM Takashi Iwai <tiwai@suse.de> wrote:
+> > >
+> > > On Mon, 27 Apr 2020 20:28:12 +0200,
+> > > Alex Deucher wrote:
+> > > >
+> > > > On Mon, Apr 27, 2020 at 2:07 PM Nicholas Johnson
+> > > > <nicholas.johnson-opensource@outlook.com.au> wrote:
+> > > > >
+> > > > > On Mon, Apr 27, 2020 at 05:15:55PM +0200, Takashi Iwai wrote:
+> > > > > > On Mon, 27 Apr 2020 16:22:21 +0200,
+> > > > > > Deucher, Alexander wrote:
+> > > > > > >
+> > > > > > > [AMD Public Use]
+> > > > > > >
+> > > > > > > > -----Original Message-----
+> > > > > > > > From: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> > > > > > > > Sent: Sunday, April 26, 2020 12:02 PM
+> > > > > > > > To: linux-kernel@vger.kernel.org
+> > > > > > > > Cc: Deucher, Alexander <Alexander.Deucher@amd.com>; Koenig, Christian
+> > > > > > > > <Christian.Koenig@amd.com>; Zhou, David(ChunMing)
+> > > > > > > > <David1.Zhou@amd.com>; Nicholas Johnson <nicholas.johnson-
+> > > > > > > > opensource@outlook.com.au>
+> > > > > > > > Subject: [PATCH 0/1] Fiji GPU audio register timeout when in BACO state
+> > > > > > > >
+> > > > > > > > Hi all,
+> > > > > > > >
+> > > > > > > > Since Linux v5.7-rc1 / commit 4fdda2e66de0 ("drm/amdgpu/runpm: enable
+> > > > > > > > runpm on baco capable VI+ asics"), my AMD R9 Nano has been using runpm /
+> > > > > > > > BACO. You can tell visually when it sleeps, because the fan on the graphics
+> > > > > > > > card is switched off to save power. It did not spin down the fan in v5.6.x.
+> > > > > > > >
+> > > > > > > > This is great (I love it), except that when it is sleeping, the PCIe audio function
+> > > > > > > > of the GPU has issues if anything tries to access it. You get dmesg errors such
+> > > > > > > > as these:
+> > > > > > > >
+> > > > > > > > snd_hda_intel 0000:08:00.1: spurious response 0x0:0x0, last cmd=0x170500
+> > > > > > > > snd_hda_intel 0000:08:00.1: azx_get_response timeout, switching to polling
+> > > > > > > > mode: last cmd=0x001f0500 snd_hda_intel 0000:08:00.1: No response from
+> > > > > > > > codec, disabling MSI: last cmd=0x001f0500 snd_hda_intel 0000:08:00.1: No
+> > > > > > > > response from codec, resetting bus: last cmd=0x001f0500
+> > > > > > > > snd_hda_codec_hdmi hdaudioC1D0: Unable to sync register 0x2f0d00. -11
+> > > > > > > >
+> > > > > > > > The above is with the Fiji XT GPU at 0000:08:00.0 in a Thunderbolt enclosure
+> > > > > > > > (not that Thunderbolt should affect it, but I feel I should mention it just in
+> > > > > > > > case). I dropped a lot of duplicate dmesg lines, as some of them repeated a
+> > > > > > > > lot of times before the driver gave up.
+> > > > > > > >
+> > > > > > > > I offer this patch to disable runpm for Fiji while a fix is found, if you decide
+> > > > > > > > that is the best approach. Regardless, I will gladly test any patches you come
+> > > > > > > > up with instead and confirm that the above issue has been fixed.
+> > > > > > > >
+> > > > > > > > I cannot tell if any other GPUs are affected. The only other cards to which I
+> > > > > > > > have access are a couple of AMD R9 280X (Tahiti XT), which use radeon driver
+> > > > > > > > instead of amdgpu driver.
+> > > > > > >
+> > > > > > > Adding a few more people.  Do you know what is accessing the audio?  The audio should have a dependency on the GPU device.  The GPU won't enter runtime pm until the audio has entered runtime pm and vice versa on resume. Please attach a copy of your dmesg output and lspci output.
+> > > > >
+> > > > > pci 0000:08:00.1: D0 power state depends on 0000:08:00.0
+> > > > > The above must be the dependency of which you speak from dmesg.
+> > > > >
+> > > > > Accessing the audio? I did not have a single method for triggering it.
+> > > > > Sometimes it happened on shutdown. Sometimes when restarting gdm.
+> > > > > Sometimes when playing with audio settings in Cinnamon Desktop. But most
+> > > > > often when changing displays. It might have something to do with the
+> > > > > audio device associated with a monitor being created when the monitor is
+> > > > > found. If an audio device is created, then pulseaudio might touch it.
+> > > > > Sorry, this is a very verbose "not quite sure".
+> > > > >
+> > > > > To trigger the bug, this time I did the following:
+> > > > >
+> > > > > 1. Boot laptop without Fiji and log in
+> > > > >
+> > > > > 2. Attach Fiji via Thunderbolt (no displays attached to Fiji) and
+> > > > > approve Thunderbolt device
+> > > > >
+> > > > > 3. Log in again because the session gets killed when GPU is hot-added
+> > > > >
+> > > > > 4. Wait for Fiji to fall asleep (fan stops)
+> > > > >
+> > > > > 5. Open "dmesg -w" on laptop display
+> > > > >
+> > > > > 6. Attach display to DisplayPort on Fiji (it should still stay asleep)
+> > > > >
+> > > > > 7. Do WindowsKey+P to activate external display. The error appears in
+> > > > > dmesg window that instant.
+> > > > >
+> > > > > Could it be a race condition when waking the card up?
+> > > > >
+> > > > > I cannot get the graphics card fan to spin down if the Thunderbolt
+> > > > > enclosure is attached at boot time. It only does it if hot-added.
+> > > > >
+> > > > > If you think it will help, I can take out the Fiji and put it in a test
+> > > > > rig and try to replicate the issue without Thunderbolt, but it looks
+> > > > > like it will not spin the fan down if Fiji is attached at boot time.
+> > > > >
+> > > > > Question, why would the fan not spin down if Fiji is attached at boot
+> > > > > time, and how would one make the said fan turn off? Aside from being
+> > > > > useful for pinning down the audio register issue, I would like to make
+> > > > > sure the power savings are realised whenever the GPU is not being used.
+> > > >
+> > > > Presumably something is using the device.  Maybe a framebuffer console
+> > > > or X?  Or maybe the something like tlp has disabled runtime pm on your
+> > > > device?  You can see the current status by reading the files in
+> > > > /sys/class/drm/cardX/device/power/ .  Replace cardX with card0, card1,
+> > > > etc. depending on which device is the radeon card.
+I had card1 = Fiji stuck awake and card2 = Fiji asleep (both in separate 
+Thunderbolt enclosures).
+
+The sysfs values in /sys/class/drm/card{0,1}/device/power/ were the 
+same.
+
+The powertop utility did not help in "tunables" tab.
+
+I compiled kernel without fbcon and it still did it.
+
+But moving from Arch to Ubuntu changed the behaviour. I am still 
+investigating.
+
+> > > >
+> > > > FWIW, I have a fiji board in a desktop system and it worked fine when
+> > > > this code was enabled.
+> > >
+> > > Is the new DC code used for Fiji boards?  IIRC, the audio component
+> > > binding from amdgpu is enabled only for DC, and without the audio
+> > > component binding the runtime PM won't be linked up, hence you can't
+> > > power up GPU from the audio side access automatically.
+> > >
+> > 
+> > Yes, DC is enabled by default for all cards with runtime pm enabled.
 > 
-
-The problem looks real, but...
-
-> --
-> v1 -> v2:
-> add spin_lock(&ci->i_ceph_lock) before goto out_unlock tag. 
+> OK, thanks, I found that amdgpu got bound via component in the dmesg
+> output, too:
 > 
-> Signed-off-by: Wu Bo <wubo40@huawei.com>
-> ---
->  fs/ceph/caps.c | 27 +++++++++++++++------------
->  1 file changed, 15 insertions(+), 12 deletions(-)
+> [   21.294927] snd_hda_intel 0000:08:00.1: bound 0000:08:00.0 (ops amdgpu_dm_audio_component_bind_ops [amdgpu])
 > 
-> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-> index 185db76..414c0e2 100644
-> --- a/fs/ceph/caps.c
-> +++ b/fs/ceph/caps.c
-> @@ -3731,22 +3731,25 @@ static void handle_cap_export(struct inode *inode, struct ceph_mds_caps *ex,
->  
->  	/* open target session */
->  	tsession = ceph_mdsc_open_export_target_session(mdsc, target);
-> -	if (!IS_ERR(tsession)) {
-> -		if (mds > target) {
-> -			mutex_lock(&session->s_mutex);
-> -			mutex_lock_nested(&tsession->s_mutex,
-> -					  SINGLE_DEPTH_NESTING);
-> -		} else {
-> -			mutex_lock(&tsession->s_mutex);
-> -			mutex_lock_nested(&session->s_mutex,
-> -					  SINGLE_DEPTH_NESTING);
-> -		}
-> -		new_cap = ceph_get_cap(mdsc, NULL);
-> -	} else {
-> +	if (IS_ERR(tsession)) {
->  		WARN_ON(1);
->  		tsession = NULL;
->  		target = -1;
-> +		mutex_lock(&session->s_mutex);
-> +		spin_lock(&ci->i_ceph_lock);
-> +		goto out_unlock;
+> This is the place soon after amdgpu driver gets initialized.
+> Then we see later another initialization phase:
+> 
+> [   26.904127] rfkill: input handler enabled
+> [   37.264152] [drm] PCIE GART of 1024M enabled (table at 0x000000F400000000).
+> 
+> here shows 10 seconds between them.  Then, it complained something:
+> 
+> 
+> [   37.363287] [drm] UVD initialized successfully.
+> [   37.473340] [drm] VCE initialized successfully.
+> [   37.477942] amdgpu 0000:08:00.0: [drm] Cannot find any crtc or sizes
 
-Why did you make this case goto out_unlock instead of retrying as it did
-before?
+The above would be me hitting WindowsKey+P to change screens, but with 
+no DisplayPort attached to Fiji, hence it unable to find crtc.
 
-> +	}
-> +
-> +	if (mds > target) {
-> +		mutex_lock(&session->s_mutex);
-> +		mutex_lock_nested(&tsession->s_mutex,
-> +					SINGLE_DEPTH_NESTING);
-> +	} else {
-> +		mutex_lock(&tsession->s_mutex);
-> +		mutex_lock_nested(&session->s_mutex,
-> +					SINGLE_DEPTH_NESTING);
->  	}
-> +	new_cap = ceph_get_cap(mdsc, NULL);
->  	goto retry;
->  
->  out_unlock:
+> 
+> ... and go further, and hitting HD-audio error:
+> 
+That would be me having attached the DisplayPort and done WindowsKey+P 
+again.
 
--- 
-Jeff Layton <jlayton@kernel.org>
+> 
+> [   38.936624] [drm] fb mappable at 0x4B0696000
+> [   38.936626] [drm] vram apper at 0x4B0000000
+> [   38.936626] [drm] size 33177600
+> [   38.936627] [drm] fb depth is 24
+> [   38.936627] [drm]    pitch is 15360
+> [   38.936673] amdgpu 0000:08:00.0: fb1: amdgpudrmfb frame buffer device
+> [   40.092223] snd_hda_intel 0000:08:00.1: azx_get_response timeout, switching to polling mode: last cmd=0x00170500
+> 
+> After this point, HD-audio communication was screwed up.
+> 
+> This lastcmd in the above message is AC_SET_POWER_STATE verb for the
+> root node to D0, so the very first command to power up the codec. 
+> The rest commands are also about the power up of each node, so the
+> whole error indicate that the power up at runtime resume failed.
+> 
+> So, this looks to me as if the device gets runtime-resumed at the bad
+> moment?
+It does. However, this is not going to be easy to pin down.
 
+I moved from Arch to Ubuntu, and it behaves differently. I cannot 
+trigger the bug in Ubuntu. Plus, it puts the GPUs asleep, even if 
+attached at boot, unlike Arch. I will continue to try to trigger it. But 
+even if this is a problem with the Linux distribution, it should not be 
+able to trigger a kernel mode bug, so we should persist with finding it.
+
+Regards,
+Nicholas
+
+> 
+> 
+> thanks,
+> 
+> Takashi
