@@ -2,184 +2,90 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C533C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3484CC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC77320575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100176;
-	bh=GGIH9utR/c7jGepEXQ4usVKMVkBy7Zo0FTi6ghrRoz8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lBpvF4eMmed84FURNg0rnSFJGuNFlSWBds4GyBcFwKd9I18sI9KWGtaZNmxjQx6qb
-	 0EEsblWjx4At+fqiDpv0+6sIUYAf7kCZuIVDdp6a1a7Tgt2CZSjq4sPbA+9KS9q1FI
-	 71Gko88Ruvpvg9HbA319EkSmiVh4SVVK8nEwjngA=
+	by mail.kernel.org (Postfix) with ESMTP id EF17D20730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Dqd2nQnS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729958AbgD1S4P (ORCPT
+        id S1729221AbgD1S4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:56:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47262 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728829AbgD1Sbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:31:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 28 Apr 2020 14:56:19 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:53225 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729175AbgD1S4Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:56:16 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588100176; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=wBBFoP1nlQZwT1olHqun3h+s+Vta5d2qFcH5weMHSD0=; b=Dqd2nQnSbQSLC8OVmEiD2KU2nDD3ND/BzC0dHDf7jdRiOrW1r1MDqYmpjZA4emC274VwxiOM
+ x48YgW607YqjWzIyigUjeF1IoHrdhzZ4fh9ntvB7a7f876897aw9obslVm9j1M6s8wB1odWs
+ QsbFXyTUvStuAeInqJUpyeM1LM4=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea87c46.7f3530f41e30-smtp-out-n01;
+ Tue, 28 Apr 2020 18:56:06 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4DF57C433F2; Tue, 28 Apr 2020 18:56:05 +0000 (UTC)
+Received: from [10.46.162.249] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 283A620BED;
-        Tue, 28 Apr 2020 18:31:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098697;
-        bh=GGIH9utR/c7jGepEXQ4usVKMVkBy7Zo0FTi6ghrRoz8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0OId5Ha/I37Q2rfIIHJ6eBLQ0nYkXHaTa4j87rz3TPTrJgfGYDuz3DjI/Q52bvCV7
-         KO74J4am31dOcg8HVhG7/JeXm+I4vf55Kgo7rMB3fZF7590r7WyY05inStGP4ZpkJP
-         /Wb9vJyHqVhnyc6lUCCKW9OtcE0qF9aWKcnXlKuA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Longpeng <longpeng2@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 100/167] mm/hugetlb: fix a addressing exception caused by huge_pte_offset
-Date:   Tue, 28 Apr 2020 20:24:36 +0200
-Message-Id: <20200428182237.825415518@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Authenticated sender: hemantk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4D712C43637;
+        Tue, 28 Apr 2020 18:56:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4D712C43637
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
+Subject: Re: [PATCH v3 3/6] bus: mhi: core: Offload register accesses to the
+ controller
+To:     Jeffrey Hugo <jhugo@codeaurora.org>,
+        manivannan.sadhasivam@linaro.org
+Cc:     bbhatt@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1588003153-13139-1-git-send-email-jhugo@codeaurora.org>
+ <1588003153-13139-4-git-send-email-jhugo@codeaurora.org>
+From:   Hemant Kumar <hemantk@codeaurora.org>
+Message-ID: <ba5e3217-afa0-95ae-406a-034d88d979b0@codeaurora.org>
+Date:   Tue, 28 Apr 2020 11:56:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1588003153-13139-4-git-send-email-jhugo@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Longpeng <longpeng2@huawei.com>
-
-commit 3c1d7e6ccb644d517a12f73a7ff200870926f865 upstream.
-
-Our machine encountered a panic(addressing exception) after run for a
-long time and the calltrace is:
-
-    RIP: hugetlb_fault+0x307/0xbe0
-    RSP: 0018:ffff9567fc27f808  EFLAGS: 00010286
-    RAX: e800c03ff1258d48 RBX: ffffd3bb003b69c0 RCX: e800c03ff1258d48
-    RDX: 17ff3fc00eda72b7 RSI: 00003ffffffff000 RDI: e800c03ff1258d48
-    RBP: ffff9567fc27f8c8 R08: e800c03ff1258d48 R09: 0000000000000080
-    R10: ffffaba0704c22a8 R11: 0000000000000001 R12: ffff95c87b4b60d8
-    R13: 00005fff00000000 R14: 0000000000000000 R15: ffff9567face8074
-    FS:  00007fe2d9ffb700(0000) GS:ffff956900e40000(0000) knlGS:0000000000000000
-    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    CR2: ffffd3bb003b69c0 CR3: 000000be67374000 CR4: 00000000003627e0
-    DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-    DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-    Call Trace:
-      follow_hugetlb_page+0x175/0x540
-      __get_user_pages+0x2a0/0x7e0
-      __get_user_pages_unlocked+0x15d/0x210
-      __gfn_to_pfn_memslot+0x3c5/0x460 [kvm]
-      try_async_pf+0x6e/0x2a0 [kvm]
-      tdp_page_fault+0x151/0x2d0 [kvm]
-     ...
-      kvm_arch_vcpu_ioctl_run+0x330/0x490 [kvm]
-      kvm_vcpu_ioctl+0x309/0x6d0 [kvm]
-      do_vfs_ioctl+0x3f0/0x540
-      SyS_ioctl+0xa1/0xc0
-      system_call_fastpath+0x22/0x27
-
-For 1G hugepages, huge_pte_offset() wants to return NULL or pudp, but it
-may return a wrong 'pmdp' if there is a race.  Please look at the
-following code snippet:
-
-    ...
-    pud = pud_offset(p4d, addr);
-    if (sz != PUD_SIZE && pud_none(*pud))
-        return NULL;
-    /* hugepage or swap? */
-    if (pud_huge(*pud) || !pud_present(*pud))
-        return (pte_t *)pud;
-
-    pmd = pmd_offset(pud, addr);
-    if (sz != PMD_SIZE && pmd_none(*pmd))
-        return NULL;
-    /* hugepage or swap? */
-    if (pmd_huge(*pmd) || !pmd_present(*pmd))
-        return (pte_t *)pmd;
-    ...
-
-The following sequence would trigger this bug:
-
- - CPU0: sz = PUD_SIZE and *pud = 0 , continue
- - CPU0: "pud_huge(*pud)" is false
- - CPU1: calling hugetlb_no_page and set *pud to xxxx8e7(PRESENT)
- - CPU0: "!pud_present(*pud)" is false, continue
- - CPU0: pmd = pmd_offset(pud, addr) and maybe return a wrong pmdp
-
-However, we want CPU0 to return NULL or pudp in this case.
-
-We must make sure there is exactly one dereference of pud and pmd.
-
-Signed-off-by: Longpeng <longpeng2@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200413010342.771-1-longpeng2@huawei.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- mm/hugetlb.c |   14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
-
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -4910,8 +4910,8 @@ pte_t *huge_pte_offset(struct mm_struct
- {
- 	pgd_t *pgd;
- 	p4d_t *p4d;
--	pud_t *pud;
--	pmd_t *pmd;
-+	pud_t *pud, pud_entry;
-+	pmd_t *pmd, pmd_entry;
- 
- 	pgd = pgd_offset(mm, addr);
- 	if (!pgd_present(*pgd))
-@@ -4921,17 +4921,19 @@ pte_t *huge_pte_offset(struct mm_struct
- 		return NULL;
- 
- 	pud = pud_offset(p4d, addr);
--	if (sz != PUD_SIZE && pud_none(*pud))
-+	pud_entry = READ_ONCE(*pud);
-+	if (sz != PUD_SIZE && pud_none(pud_entry))
- 		return NULL;
- 	/* hugepage or swap? */
--	if (pud_huge(*pud) || !pud_present(*pud))
-+	if (pud_huge(pud_entry) || !pud_present(pud_entry))
- 		return (pte_t *)pud;
- 
- 	pmd = pmd_offset(pud, addr);
--	if (sz != PMD_SIZE && pmd_none(*pmd))
-+	pmd_entry = READ_ONCE(*pmd);
-+	if (sz != PMD_SIZE && pmd_none(pmd_entry))
- 		return NULL;
- 	/* hugepage or swap? */
--	if (pmd_huge(*pmd) || !pmd_present(*pmd))
-+	if (pmd_huge(pmd_entry) || !pmd_present(pmd_entry))
- 		return (pte_t *)pmd;
- 
- 	return NULL;
 
 
+On 4/27/20 8:59 AM, Jeffrey Hugo wrote:
+> When reading or writing MHI registers, the core assumes that the physical
+> link is a memory mapped PCI link.  This assumption may not hold for all
+> MHI devices.  The controller knows what is the physical link (ie PCI, I2C,
+> SPI, etc), and therefore knows the proper methods to access that link.
+> The controller can also handle link specific error scenarios, such as
+> reading -1 when the PCI link went down.
+> 
+> Therefore, it is appropriate that the MHI core requests the controller to
+> make register accesses on behalf of the core, which abstracts the core
+> from link specifics, and end up removing an unnecessary assumption.
+> 
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> ---
+Reviewed-by: Hemant Kumar <hemantk@codeaurora.org>
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
