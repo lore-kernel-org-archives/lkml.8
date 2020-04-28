@@ -2,227 +2,284 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45568C8300B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE718C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E14320B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 855B621707
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:59:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IiSiQD7I"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JgEAb8a1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgD1U73 (ORCPT
+        id S1726763AbgD1U7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:59:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726355AbgD1U72 (ORCPT
+        Tue, 28 Apr 2020 16:59:31 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:49238 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbgD1U7a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:59:28 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B1FEC03C1AC;
-        Tue, 28 Apr 2020 13:59:28 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id l19so196562lje.10;
-        Tue, 28 Apr 2020 13:59:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=20juLYXIkeuaSxH0ZOfDE2aYGH0+hGPgd5TgVWNgKV0=;
-        b=IiSiQD7Iu4uhe8rSKiFsy+4MM1PYZAifb/4X08Jtk+cZrudizBa+RKHTmspM1N+54J
-         zqJhTvKu/5RQ6kvBm1U2XnFtEFoT5WK+zwPhKmJkjxoJF7GUThJw2k4x9UKsHyN3uVGr
-         t1obO+H+JCn5et6c+tkfu4seuB0gVaBP66MA3RnOVoiWWR6yNpPVLWRXguro8HTAimgy
-         dWMKPS6AWlRiBSdUP8vLP6smxvt8NoPstE7Me+W9nAo+jVxPe1UXCLY3/kLTgCPzwEGN
-         UqOgOltC5P1qNzlwU+eozjY3EfiF2YNtHyaDio7PldqVoXdf4YBXbYJs+pJcbBW0vSZH
-         qZLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=20juLYXIkeuaSxH0ZOfDE2aYGH0+hGPgd5TgVWNgKV0=;
-        b=D5x6PWvjIvvDkOlzC8ZGQs1HuuFnrOMAAIYq+ZZHzMOMPBOus0fb77G2T+Xoa5Thyu
-         u+t26XNum7+iX54g2DUx8HqVkSpsOLhpxnfWOYze8SkK60JhOE7oeTgyGI4P9GwioFnk
-         adjPimzfU7Tt84YWSUNYPyFrmUgpVj0qlFu0LSWMSU8C8LUD3tppEiX+kQed90/dXG1V
-         8U+eFxUZfD2fuxvM2bYU2cXQaxJbd2iDsfCayVlVS6fQAtZHOkecmP+LixOttB5WJ2Z6
-         ry/OJL3WtEiu1U2GYtJoYBqU+rGU4IbsdHZ+y6XZhlwGZZ4fkgnNxLZub0RcoLiQ3uMi
-         1D8Q==
-X-Gm-Message-State: AGi0Pualo/iUg5MrGqFrJlcC5JRxqSz9iTaIoY4OZUedSDoK2Sn1wILt
-        b3X9NXAA9fIl/a6CSVsl0F60TabnnBY9tg==
-X-Google-Smtp-Source: APiQypIzU/HDHdtBEfR5w4aVQIlns0HcLgmvrgZUF/xNsiisHjiPOjyV2oZEMK3gwdyuCi4Uq6EsKQ==
-X-Received: by 2002:a19:7008:: with SMTP id h8mr20057304lfc.43.1588107566139;
-        Tue, 28 Apr 2020 13:59:26 -0700 (PDT)
-Received: from pc638.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id z21sm295483ljh.42.2020.04.28.13.59.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 13:59:23 -0700 (PDT)
-From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        RCU <rcu@vger.kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        bigeasy@linutronix.de
-Subject: [PATCH 01/24] rcu/tree: Keep kfree_rcu() awake during lock contention
-Date:   Tue, 28 Apr 2020 22:58:40 +0200
-Message-Id: <20200428205903.61704-2-urezki@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200428205903.61704-1-urezki@gmail.com>
-References: <20200428205903.61704-1-urezki@gmail.com>
+        Tue, 28 Apr 2020 16:59:30 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SKrEXY127565;
+        Tue, 28 Apr 2020 20:56:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=3akuBY5peJ32hdSL7z2JVTSyubH1r3MFILK0dNcY4uM=;
+ b=JgEAb8a1D3CblzJDsr6u8uxuSHmWUlG8jOSiPjtPGJhtajkS2gMeVm40YBUyfNqBk49P
+ enIfnkVJL1vk7wzZRMLUxnX+QxaCqBLRZWSmFuB9mxmWXq12hgMkxrDk4M11ra6/SZ+R
+ /m7hNnpSFimfkT/gTkJXoc2p5UXNf4zrCrYPzQJDnyPOeXY8KFuLGoTrUTaSviKpl2w9
+ NDupo9xOUMhIxp9pGq1JrQf6utTc0ivWUR/4G4/p1roJDr36toKPpJM+HnoYZrrqbAN9
+ RPm9UcT/MycBeZ+uz9VUMwFKdHC/n7MaTJ8f64WwFxkNdBHuwOu/ogVFvHU2+EexFTkK kg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 30p01nrvqu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 20:56:33 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SKqghN195568;
+        Tue, 28 Apr 2020 20:56:32 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 30mxpgypu1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 20:56:32 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03SKuTNH015099;
+        Tue, 28 Apr 2020 20:56:30 GMT
+Received: from monkey.oracle.com (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Apr 2020 13:56:29 -0700
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Longpeng <longpeng2@huawei.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Mina Almasry <almasrymina@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH v4 3/4] hugetlbfs: remove hugetlb_add_hstate() warning for existing hstate
+Date:   Tue, 28 Apr 2020 13:56:13 -0700
+Message-Id: <20200428205614.246260-4-mike.kravetz@oracle.com>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200428205614.246260-1-mike.kravetz@oracle.com>
+References: <20200428205614.246260-1-mike.kravetz@oracle.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 bulkscore=0 adultscore=0 phishscore=0 suspectscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280163
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 clxscore=1015
+ phishscore=0 mlxlogscore=999 adultscore=0 priorityscore=1501 mlxscore=0
+ suspectscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004280163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+The routine hugetlb_add_hstate prints a warning if the hstate already
+exists.  This was originally done as part of kernel command line
+parsing.  If 'hugepagesz=' was specified more than once, the warning
+	pr_warn("hugepagesz= specified twice, ignoring\n");
+would be printed.
 
-On PREEMPT_RT kernels, contending on the krcp spinlock can cause
-sleeping as on these kernels, the spinlock is converted to an rt-mutex.
-To prevent breakage of possible usage of kfree_rcu() now or in the
-future, make use of raw spinlocks which are not subject to such
-conversions.
+Some architectures want to enable all huge page sizes.  They would
+call hugetlb_add_hstate for all supported sizes.  However, this was
+done after command line processing and as a result hstates could have
+already been created for some sizes.  To make sure no warning were
+printed, there would often be code like:
+	if (!size_to_hstate(size)
+		hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT)
 
-Vetting all code paths, there is no reason to believe that the raw
-spinlock will be held for long time so PREEMPT_RT should not suffer from
-lengthy acquirals of the lock.
+The only time we want to print the warning is as the result of command
+line processing.  So, remove the warning from hugetlb_add_hstate and
+add it to the single arch independent routine processing "hugepagesz=".
+After this, calls to size_to_hstate() in arch specific code can be
+removed and hugetlb_add_hstate can be called without worrying about
+warning messages.
 
-Cc: bigeasy@linutronix.de
-Cc: Uladzislau Rezki <urezki@gmail.com>
-Reviewed-by: Uladzislau Rezki <urezki@gmail.com>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Acked-by: Mina Almasry <almasrymina@google.com>
+Acked-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>  [s390]
+Acked-by: Will Deacon <will@kernel.org>
+Tested-by: Anders Roxell <anders.roxell@linaro.org>
 ---
- kernel/rcu/tree.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ arch/arm64/mm/hugetlbpage.c   | 16 ++++------------
+ arch/powerpc/mm/hugetlbpage.c |  3 +--
+ arch/riscv/mm/hugetlbpage.c   |  2 +-
+ arch/sparc/mm/init_64.c       | 19 ++++---------------
+ arch/x86/mm/hugetlbpage.c     |  2 +-
+ mm/hugetlb.c                  |  9 ++++++---
+ 6 files changed, 17 insertions(+), 34 deletions(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index f288477ee1c2..cf68d3d9f5b8 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -2905,7 +2905,7 @@ struct kfree_rcu_cpu {
- 	struct kfree_rcu_bulk_data *bhead;
- 	struct kfree_rcu_bulk_data *bcached;
- 	struct kfree_rcu_cpu_work krw_arr[KFREE_N_BATCHES];
--	spinlock_t lock;
-+	raw_spinlock_t lock;
- 	struct delayed_work monitor_work;
- 	bool monitor_todo;
- 	bool initialized;
-@@ -2939,12 +2939,12 @@ static void kfree_rcu_work(struct work_struct *work)
- 	krwp = container_of(to_rcu_work(work),
- 			    struct kfree_rcu_cpu_work, rcu_work);
- 	krcp = krwp->krcp;
--	spin_lock_irqsave(&krcp->lock, flags);
-+	raw_spin_lock_irqsave(&krcp->lock, flags);
- 	head = krwp->head_free;
- 	krwp->head_free = NULL;
- 	bhead = krwp->bhead_free;
- 	krwp->bhead_free = NULL;
--	spin_unlock_irqrestore(&krcp->lock, flags);
-+	raw_spin_unlock_irqrestore(&krcp->lock, flags);
+diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+index f706b821aba6..14bed8f4674a 100644
+--- a/arch/arm64/mm/hugetlbpage.c
++++ b/arch/arm64/mm/hugetlbpage.c
+@@ -441,22 +441,14 @@ void huge_ptep_clear_flush(struct vm_area_struct *vma,
+ 	clear_flush(vma->vm_mm, addr, ptep, pgsize, ncontig);
+ }
  
- 	/* "bhead" is now private, so traverse locklessly. */
- 	for (; bhead; bhead = bnext) {
-@@ -3047,14 +3047,14 @@ static inline void kfree_rcu_drain_unlock(struct kfree_rcu_cpu *krcp,
- 	krcp->monitor_todo = false;
- 	if (queue_kfree_rcu_work(krcp)) {
- 		// Success! Our job is done here.
--		spin_unlock_irqrestore(&krcp->lock, flags);
-+		raw_spin_unlock_irqrestore(&krcp->lock, flags);
+-static void __init add_huge_page_size(unsigned long size)
+-{
+-	if (size_to_hstate(size))
+-		return;
+-
+-	hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
+-}
+-
+ static int __init hugetlbpage_init(void)
+ {
+ #ifdef CONFIG_ARM64_4K_PAGES
+-	add_huge_page_size(PUD_SIZE);
++	hugetlb_add_hstate(PUD_SHIFT - PAGE_SHIFT);
+ #endif
+-	add_huge_page_size(CONT_PMD_SIZE);
+-	add_huge_page_size(PMD_SIZE);
+-	add_huge_page_size(CONT_PTE_SIZE);
++	hugetlb_add_hstate((CONT_PMD_SHIFT + PMD_SHIFT) - PAGE_SHIFT);
++	hugetlb_add_hstate(PMD_SHIFT - PAGE_SHIFT);
++	hugetlb_add_hstate((CONT_PTE_SHIFT + PAGE_SHIFT) - PAGE_SHIFT);
+ 
+ 	return 0;
+ }
+diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
+index 2c3fa0a7787b..4d5ed1093615 100644
+--- a/arch/powerpc/mm/hugetlbpage.c
++++ b/arch/powerpc/mm/hugetlbpage.c
+@@ -584,8 +584,7 @@ static int __init add_huge_page_size(unsigned long long size)
+ 	if (!arch_hugetlb_valid_size((unsigned long)size))
+ 		return -EINVAL;
+ 
+-	if (!size_to_hstate(size))
+-		hugetlb_add_hstate(shift - PAGE_SHIFT);
++	hugetlb_add_hstate(shift - PAGE_SHIFT);
+ 	return 0;
+ }
+ 
+diff --git a/arch/riscv/mm/hugetlbpage.c b/arch/riscv/mm/hugetlbpage.c
+index 4e5d7e9f0eef..932dadfdca54 100644
+--- a/arch/riscv/mm/hugetlbpage.c
++++ b/arch/riscv/mm/hugetlbpage.c
+@@ -26,7 +26,7 @@ bool __init arch_hugetlb_valid_size(unsigned long size)
+ static __init int gigantic_pages_init(void)
+ {
+ 	/* With CONTIG_ALLOC, we can allocate gigantic pages at runtime */
+-	if (IS_ENABLED(CONFIG_64BIT) && !size_to_hstate(1UL << PUD_SHIFT))
++	if (IS_ENABLED(CONFIG_64BIT))
+ 		hugetlb_add_hstate(PUD_SHIFT - PAGE_SHIFT);
+ 	return 0;
+ }
+diff --git a/arch/sparc/mm/init_64.c b/arch/sparc/mm/init_64.c
+index 4618f96fd30f..ae819a16d07a 100644
+--- a/arch/sparc/mm/init_64.c
++++ b/arch/sparc/mm/init_64.c
+@@ -325,23 +325,12 @@ static void __update_mmu_tsb_insert(struct mm_struct *mm, unsigned long tsb_inde
+ }
+ 
+ #ifdef CONFIG_HUGETLB_PAGE
+-static void __init add_huge_page_size(unsigned long size)
+-{
+-	unsigned int order;
+-
+-	if (size_to_hstate(size))
+-		return;
+-
+-	order = ilog2(size) - PAGE_SHIFT;
+-	hugetlb_add_hstate(order);
+-}
+-
+ static int __init hugetlbpage_init(void)
+ {
+-	add_huge_page_size(1UL << HPAGE_64K_SHIFT);
+-	add_huge_page_size(1UL << HPAGE_SHIFT);
+-	add_huge_page_size(1UL << HPAGE_256MB_SHIFT);
+-	add_huge_page_size(1UL << HPAGE_2GB_SHIFT);
++	hugetlb_add_hstate(HPAGE_64K_SHIFT - PAGE_SHIFT);
++	hugetlb_add_hstate(HPAGE_SHIFT - PAGE_SHIFT);
++	hugetlb_add_hstate(HPAGE_256MB_SHIFT - PAGE_SHIFT);
++	hugetlb_add_hstate(HPAGE_2GB_SHIFT - PAGE_SHIFT);
+ 
+ 	return 0;
+ }
+diff --git a/arch/x86/mm/hugetlbpage.c b/arch/x86/mm/hugetlbpage.c
+index 937d640a89e3..cf5781142716 100644
+--- a/arch/x86/mm/hugetlbpage.c
++++ b/arch/x86/mm/hugetlbpage.c
+@@ -195,7 +195,7 @@ bool __init arch_hugetlb_valid_size(unsigned long size)
+ static __init int gigantic_pages_init(void)
+ {
+ 	/* With compaction or CMA we can allocate gigantic pages at runtime */
+-	if (boot_cpu_has(X86_FEATURE_GBPAGES) && !size_to_hstate(1UL << PUD_SHIFT))
++	if (boot_cpu_has(X86_FEATURE_GBPAGES))
+ 		hugetlb_add_hstate(PUD_SHIFT - PAGE_SHIFT);
+ 	return 0;
+ }
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 6a8454bc2917..2ae0e506cfc7 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3222,8 +3222,7 @@ static int __init hugetlb_init(void)
+ 		}
+ 
+ 		default_hstate_size = HPAGE_SIZE;
+-		if (!size_to_hstate(default_hstate_size))
+-			hugetlb_add_hstate(HUGETLB_PAGE_ORDER);
++		hugetlb_add_hstate(HUGETLB_PAGE_ORDER);
+ 	}
+ 	default_hstate_idx = hstate_index(size_to_hstate(default_hstate_size));
+ 	if (default_hstate_max_huge_pages) {
+@@ -3268,7 +3267,6 @@ void __init hugetlb_add_hstate(unsigned int order)
+ 	unsigned long i;
+ 
+ 	if (size_to_hstate(PAGE_SIZE << order)) {
+-		pr_warn("hugepagesz= specified twice, ignoring\n");
  		return;
  	}
- 
- 	// Previous RCU batch still in progress, try again later.
- 	krcp->monitor_todo = true;
- 	schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
--	spin_unlock_irqrestore(&krcp->lock, flags);
-+	raw_spin_unlock_irqrestore(&krcp->lock, flags);
- }
- 
- /*
-@@ -3067,11 +3067,11 @@ static void kfree_rcu_monitor(struct work_struct *work)
- 	struct kfree_rcu_cpu *krcp = container_of(work, struct kfree_rcu_cpu,
- 						 monitor_work.work);
- 
--	spin_lock_irqsave(&krcp->lock, flags);
-+	raw_spin_lock_irqsave(&krcp->lock, flags);
- 	if (krcp->monitor_todo)
- 		kfree_rcu_drain_unlock(krcp, flags);
- 	else
--		spin_unlock_irqrestore(&krcp->lock, flags);
-+		raw_spin_unlock_irqrestore(&krcp->lock, flags);
- }
- 
- static inline bool
-@@ -3142,7 +3142,7 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
- 	local_irq_save(flags);	// For safely calling this_cpu_ptr().
- 	krcp = this_cpu_ptr(&krc);
- 	if (krcp->initialized)
--		spin_lock(&krcp->lock);
-+		raw_spin_lock(&krcp->lock);
- 
- 	// Queue the object but don't yet schedule the batch.
- 	if (debug_rcu_head_queue(head)) {
-@@ -3173,7 +3173,7 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
- 
- unlock_return:
- 	if (krcp->initialized)
--		spin_unlock(&krcp->lock);
-+		raw_spin_unlock(&krcp->lock);
- 	local_irq_restore(flags);
- }
- EXPORT_SYMBOL_GPL(kfree_call_rcu);
-@@ -3205,11 +3205,11 @@ kfree_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
- 		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
- 
- 		count = krcp->count;
--		spin_lock_irqsave(&krcp->lock, flags);
-+		raw_spin_lock_irqsave(&krcp->lock, flags);
- 		if (krcp->monitor_todo)
- 			kfree_rcu_drain_unlock(krcp, flags);
- 		else
--			spin_unlock_irqrestore(&krcp->lock, flags);
-+			raw_spin_unlock_irqrestore(&krcp->lock, flags);
- 
- 		sc->nr_to_scan -= count;
- 		freed += count;
-@@ -3236,15 +3236,15 @@ void __init kfree_rcu_scheduler_running(void)
- 	for_each_online_cpu(cpu) {
- 		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
- 
--		spin_lock_irqsave(&krcp->lock, flags);
-+		raw_spin_lock_irqsave(&krcp->lock, flags);
- 		if (!krcp->head || krcp->monitor_todo) {
--			spin_unlock_irqrestore(&krcp->lock, flags);
-+			raw_spin_unlock_irqrestore(&krcp->lock, flags);
- 			continue;
- 		}
- 		krcp->monitor_todo = true;
- 		schedule_delayed_work_on(cpu, &krcp->monitor_work,
- 					 KFREE_DRAIN_JIFFIES);
--		spin_unlock_irqrestore(&krcp->lock, flags);
-+		raw_spin_unlock_irqrestore(&krcp->lock, flags);
+ 	BUG_ON(hugetlb_max_hstate >= HUGE_MAX_HSTATE);
+@@ -3343,6 +3341,11 @@ static int __init hugepagesz_setup(char *s)
+ 		return 0;
  	}
+ 
++	if (size_to_hstate(size)) {
++		pr_warn("HugeTLB: hugepagesz %s specified twice, ignoring\n", s);
++		return 0;
++	}
++
+ 	hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
+ 	return 1;
  }
- 
-@@ -4140,7 +4140,7 @@ static void __init kfree_rcu_batch_init(void)
- 	for_each_possible_cpu(cpu) {
- 		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
- 
--		spin_lock_init(&krcp->lock);
-+		raw_spin_lock_init(&krcp->lock);
- 		for (i = 0; i < KFREE_N_BATCHES; i++) {
- 			INIT_RCU_WORK(&krcp->krw_arr[i].rcu_work, kfree_rcu_work);
- 			krcp->krw_arr[i].krcp = krcp;
 -- 
-2.20.1
+2.25.4
 
