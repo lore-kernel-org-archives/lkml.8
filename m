@@ -2,176 +2,124 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB1CC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D4C8C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84251206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:54:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sp3Ct+QA"
+	by mail.kernel.org (Postfix) with ESMTP id 0245420661
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:55:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbgD1EyF (ORCPT
+        id S1726338AbgD1EzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 00:54:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57000 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbgD1EyF (ORCPT
+        Tue, 28 Apr 2020 00:55:19 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:49403 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbgD1EzS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 00:54:05 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8842C03C1A9
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 21:54:04 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id y4so20036668ljn.7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 21:54:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=JrjPs69r0pUjI4jiWO1HZG/wjkxDutGKz6XBMDQZWzU=;
-        b=Sp3Ct+QAOIYkMPPYb8+ZTX2eAupbevFH6R2qOF98spZhleatVY1QJ5fLuRlronmMwm
-         eJ5uID4NlgC2K5EJYj0qrbJxoTPTQKcdjYYvdjVM/y6H2WizHrMJe8S1E1MF8Y58vO3s
-         T1xbs9g1wJQzLFypE/CfhPnRqv/Pf0uOEy2+KHxGgbd39auv0h/4PNzRvdnufjCCbHiV
-         BeXfi54GotFuMkpPxVuR2OMEosQMNPsT7Dpc97ow21KbWQxB2FxXyP5fkZ+Tvuhi8iuJ
-         gLCExSq86j5Mt6FIzLYexOxgcZx7LJnWqRrJwgU9+I6UgTRT7ukVrTpeOv4N5XWSKsR9
-         Pjug==
+        Tue, 28 Apr 2020 00:55:18 -0400
+Received: by mail-il1-f200.google.com with SMTP id z18so21921976ilp.16
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 21:55:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JrjPs69r0pUjI4jiWO1HZG/wjkxDutGKz6XBMDQZWzU=;
-        b=s17u9h5QS3jI5w2EKj0fAgZenzwuR5E2B5zQcmt3hIKRtCkN1JObE+CUu2CM9YYGWq
-         XScKpEccLbevVVstyYq59X8m5XWjRgRXLUa0F4mQ6aVaiWz1hpX35sOadEFJYuVVAb8k
-         8/dpOE62RZjWjfsN/kqi3zOYuDCU7ML4Bq4tEINNf4SOU/t8fjaPC2ZwbA46T4zHYQan
-         GvNhdQ/hK5beoOBgT+eWpFdR311ksREu0W0don9x1Jy1elt+m8eiFES8IDygVJvMlJDd
-         Biz6HHDgd+EE6yvEdPYuJdqAJOjQhcdvtGpwI2wq1DbfACJxiUCDg96/g3oK1SOK+3/F
-         3+Dg==
-X-Gm-Message-State: AGi0PuaofsxiyO2fXviES7SkpGj6dWN8XDTtJOrO4sKdzLVdo/eMY4Ze
-        i5ljrg+OsyzdMaUFHhzpvXAj3smucWsy/5XLoJzSvA==
-X-Google-Smtp-Source: APiQypKvYNGeBVV5knWEjW/v/ZM4A/rHwo0I2l0Vy5+M44twiEUahUOzQVF90JHCIA+Oh4khJ4ck8NyNmGTdYOb0qgk=
-X-Received: by 2002:a2e:80da:: with SMTP id r26mr16218619ljg.38.1588049643021;
- Mon, 27 Apr 2020 21:54:03 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=9lT/0KhJbhdFCWET24hPlWEPdDkGKOlKMSulFeVo/pc=;
+        b=aE9DfucGVrn0lIxcSSw5/Jbjv0N59n6M3G/nQGLtMQMEppF92ea+5sFqp6BeOewIC+
+         kMDrVnInOIajtuhHtBxIxUdWWil6tjzED3scbUTwT24w9K+iZsaPVr+zIWwHlp7Slb9F
+         9J04Ear9OV1HOgJxu6u0+O8W4vwHznvLf/5w60zYcW0QXAP8RCTg7daunfEkb/NczlCg
+         PXo9eoUMUtbok5OAWC3S5Q8Uj76pxeF8TPQCUgOzUPGjjopm+PEKjEls3q0nbCt5UUEK
+         IiMtLlSwdC7HqUXiaQHxWzkxQvutwVFdMhUGMTjBzsNI6GDMRe4Yjs0PZfIg59p4MKlv
+         xJsA==
+X-Gm-Message-State: AGi0PuaO1ykA6qSjF/bjXgRpMhpxLgisU/zgCABQIXLnH7WwTuYomoh3
+        9tpzQ02EqUV1W4Xk7Y8ODgDQyhGOVoAdqw4jWRoakYL7zkQe
+X-Google-Smtp-Source: APiQypK/7QIDeHnrv4sVkoxXejYnJlgztxzRKQNReLR1VStIjXuplBygPaz6ebMuQqT8dGQGWUK3rjiXNGxFMlKN1r7JN44dZN84
 MIME-Version: 1.0
-References: <20200418144047.9013-1-sashal@kernel.org> <20200418144047.9013-38-sashal@kernel.org>
-In-Reply-To: <20200418144047.9013-38-sashal@kernel.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 28 Apr 2020 10:23:51 +0530
-Message-ID: <CA+G9fYtuzvLSyqSkG8kCPk7exz16P4f5tYf-DTqV2p+eucKOLA@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.4 38/78] nvme: fix compat address handling in
- several ioctls
-To:     Sasha Levin <sashal@kernel.org>, Nick Bowler <nbowler@draconx.ca>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        linux- stable <stable@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
-        lkft-triage@lists.linaro.org, Basil Eljuse <Basil.Eljuse@arm.com>
+X-Received: by 2002:a5d:9505:: with SMTP id d5mr24216054iom.185.1588049716016;
+ Mon, 27 Apr 2020 21:55:16 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 21:55:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000357a2005a452a302@google.com>
+Subject: stack segment fault in redraw_screen
+From:   syzbot <syzbot+a2ae636def3ebbeae7c1@syzkaller.appspotmail.com>
+To:     daniel.vetter@ffwll.ch, ebiggers@google.com,
+        gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-kernel@vger.kernel.org, sam@ravnborg.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Apr 2020 at 20:24, Sasha Levin <sashal@kernel.org> wrote:
->
-> From: Nick Bowler <nbowler@draconx.ca>
->
-> [ Upstream commit c95b708d5fa65b4e51f088ee077d127fd5a57b70 ]
->
-> On a 32-bit kernel, the upper bits of userspace addresses passed via
-> various ioctls are silently ignored by the nvme driver.
->
-> However on a 64-bit kernel running a compat task, these upper bits are
-> not ignored and are in fact required to be zero for the ioctls to work.
->
-> Unfortunately, this difference matters.  32-bit smartctl submits the
-> NVME_IOCTL_ADMIN_CMD ioctl with garbage in these upper bits because it
-> seems the pointer value it puts into the nvme_passthru_cmd structure is
-> sign extended.  This works fine on 32-bit kernels but fails on a 64-bit
-> one because (at least on my setup) the addresses smartctl uses are
-> consistently above 2G.  For example:
->
->   # smartctl -x /dev/nvme0n1
->   smartctl 7.1 2019-12-30 r5022 [x86_64-linux-5.5.11] (local build)
->   Copyright (C) 2002-19, Bruce Allen, Christian Franke, www.smartmontools=
-.org
->
->   Read NVMe Identify Controller failed: NVME_IOCTL_ADMIN_CMD: Bad address
->
-> Since changing 32-bit kernels to actually check all of the submitted
-> address bits now would break existing userspace, this patch fixes the
-> compat problem by explicitly zeroing the upper bits in the compat case.
-> This enables 32-bit smartctl to work on a 64-bit kernel.
->
-> Signed-off-by: Nick Bowler <nbowler@draconx.ca>
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/nvme/host/core.c | 27 ++++++++++++++++++++-------
->  1 file changed, 20 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-> index b8fe42f4b3c5b..f97c48fd3edae 100644
-> --- a/drivers/nvme/host/core.c
-> +++ b/drivers/nvme/host/core.c
-> @@ -6,6 +6,7 @@
->
->  #include <linux/blkdev.h>
->  #include <linux/blk-mq.h>
-> +#include <linux/compat.h>
->  #include <linux/delay.h>
->  #include <linux/errno.h>
->  #include <linux/hdreg.h>
-> @@ -1244,6 +1245,18 @@ static void nvme_enable_aen(struct nvme_ctrl *ctrl=
-)
->         queue_work(nvme_wq, &ctrl->async_event_work);
->  }
->
-> +/*
-> + * Convert integer values from ioctl structures to user pointers, silent=
-ly
-> + * ignoring the upper bits in the compat case to match behaviour of 32-b=
-it
-> + * kernels.
-> + */
-> +static void __user *nvme_to_user_ptr(uintptr_t ptrval)
-> +{
-> +       if (in_compat_syscall())
-> +               ptrval =3D (compat_uptr_t)ptrval;
+Hello,
 
-arm64 make modules failed while building with an extra kernel config.
+syzbot found the following crash on:
 
-CONFIG_ARM64_64K_PAGES=3Dy
+HEAD commit:    b2768df2 Merge branch 'for-linus' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17bb4fc8100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=78a7d8adda44b4b
+dashboard link: https://syzkaller.appspot.com/bug?extid=a2ae636def3ebbeae7c1
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a2ae636def3ebbeae7c1@syzkaller.appspotmail.com
+
+stack segment: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.7.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events console_callback
+RIP: 0010:add_softcursor drivers/tty/vt/vt.c:865 [inline]
+RIP: 0010:set_cursor drivers/tty/vt/vt.c:907 [inline]
+RIP: 0010:redraw_screen+0xe44/0x16f0 drivers/tty/vt/vt.c:1025
+Code: 00 48 89 d8 48 c1 e8 03 80 3c 28 00 74 08 48 89 df e8 e0 9c b6 fd 4c 8b 2b 4c 89 ed 48 c1 ed 03 48 bb 00 00 00 00 00 fc ff df <8a> 44 1d 00 84 c0 0f 85 90 07 00 00 45 0f b7 75 00 4c 89 64 24 18
+RSP: 0018:ffffc90000cbfbc0 EFLAGS: 00010206
+RAX: 1ffff1100860827e RBX: dffffc0000000000 RCX: ffff8880a99a4140
+RDX: 0000000000000000 RSI: 00000000000000c0 RDI: ffff888043041000
+RBP: 000000001fffffee R08: ffffffff83faa792 R09: ffffed10148b8a84
+R10: ffffed10148b8a84 R11: 0000000000000000 R12: ffff888043041000
+R13: 00000000ffffff70 R14: 1ffff1100860829a R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005633a6f64f08 CR3: 00000000a2ddc000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ complete_change_console+0xb1/0x720 drivers/tty/vt/vt_ioctl.c:1274
+ console_callback+0x106/0x330 drivers/tty/vt/vt.c:2844
+ process_one_work+0x76e/0xfd0 kernel/workqueue.c:2268
+ worker_thread+0xa7f/0x1450 kernel/workqueue.c:2414
+ kthread+0x353/0x380 kernel/kthread.c:268
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace 2eb94778444607de ]---
+RIP: 0010:add_softcursor drivers/tty/vt/vt.c:865 [inline]
+RIP: 0010:set_cursor drivers/tty/vt/vt.c:907 [inline]
+RIP: 0010:redraw_screen+0xe44/0x16f0 drivers/tty/vt/vt.c:1025
+Code: 00 48 89 d8 48 c1 e8 03 80 3c 28 00 74 08 48 89 df e8 e0 9c b6 fd 4c 8b 2b 4c 89 ed 48 c1 ed 03 48 bb 00 00 00 00 00 fc ff df <8a> 44 1d 00 84 c0 0f 85 90 07 00 00 45 0f b7 75 00 4c 89 64 24 18
+RSP: 0018:ffffc90000cbfbc0 EFLAGS: 00010206
+RAX: 1ffff1100860827e RBX: dffffc0000000000 RCX: ffff8880a99a4140
+RDX: 0000000000000000 RSI: 00000000000000c0 RDI: ffff888043041000
+RBP: 000000001fffffee R08: ffffffff83faa792 R09: ffffed10148b8a84
+R10: ffffed10148b8a84 R11: 0000000000000000 R12: ffff888043041000
+R13: 00000000ffffff70 R14: 1ffff1100860829a R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005633a6f64f08 CR3: 00000000a2ddc000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
- # make -sk KBUILD_BUILD_USER=3DTuxBuild -C/linux -j16 ARCH=3Darm64
-CROSS_COMPILE=3Daarch64-linux-gnu- HOSTCC=3Dgcc CC=3D"sccache
-aarch64-linux-gnu-gcc" O=3Dbuild modules
-70 #
-71 ../drivers/nvme/host/core.c: In function =E2=80=98nvme_to_user_ptr=E2=80=
-=99:
-72 ../drivers/nvme/host/core.c:1256:13: error: =E2=80=98compat_uptr_t=E2=80=
-=99
-undeclared (first use in this function); did you mean =E2=80=98compat_time_=
-t=E2=80=99?
-73  1256 | ptrval =3D (compat_uptr_t)ptrval;
-74  | ^~~~~~~~~~~~~
-75  | compat_time_t
-76 ../drivers/nvme/host/core.c:1256:13: note: each undeclared
-identifier is reported only once for each function it appears in
-77 ../drivers/nvme/host/core.c:1256:27: error: expected =E2=80=98;=E2=80=99=
- before =E2=80=98ptrval=E2=80=99
-78  1256 | ptrval =3D (compat_uptr_t)ptrval;
-79  | ^~~~~~
-80  | ;
-81 make[4]: *** [../scripts/Makefile.build:266:
-drivers/nvme/host/core.o] Error 1
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-full build log,
-https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/528723851
-
-Kernel config:
-https://builds.tuxbuild.com/DeL6EepmdRw6OaOGmg7F_g/kernel.config
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
