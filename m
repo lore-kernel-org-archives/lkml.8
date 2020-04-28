@@ -2,106 +2,115 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCF8C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1AEC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7605A206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76CB6206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:02:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="l2f2Pl9X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgD1MC3 convert rfc822-to-8bit (ORCPT
+        id S1726793AbgD1MCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:02:29 -0400
-Received: from albireo.enyo.de ([37.24.231.21]:47708 "EHLO albireo.enyo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726448AbgD1MC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:02:29 -0400
-Received: from [172.17.203.2] (helo=deneb.enyo.de)
-        by albireo.enyo.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1jTOwI-0000kx-RO; Tue, 28 Apr 2020 12:02:14 +0000
-Received: from fw by deneb.enyo.de with local (Exim 4.92)
-        (envelope-from <fw@deneb.enyo.de>)
-        id 1jTOwI-0003qD-Mx; Tue, 28 Apr 2020 14:02:14 +0200
-From:   Florian Weimer <fw@deneb.enyo.de>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Michael Kerrisk <mtk.manpages@gmail.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        carlos <carlos@redhat.com>, Rich Felker <dalias@libc.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>
-Subject: Re: [PATCH glibc 5/9] glibc: Perform rseq(2) registration at C startup and thread creation (v17)
-References: <20200326155633.18236-1-mathieu.desnoyers@efficios.com>
-        <20200326155633.18236-6-mathieu.desnoyers@efficios.com>
-        <87ees9z417.fsf@mid.deneb.enyo.de>
-        <284293396.70630.1588005648556.JavaMail.zimbra@efficios.com>
-        <87zhawvphv.fsf@mid.deneb.enyo.de>
-        <2102127737.70791.1588008377292.JavaMail.zimbra@efficios.com>
-Date:   Tue, 28 Apr 2020 14:02:14 +0200
-In-Reply-To: <2102127737.70791.1588008377292.JavaMail.zimbra@efficios.com>
-        (Mathieu Desnoyers's message of "Mon, 27 Apr 2020 13:26:17 -0400
-        (EDT)")
-Message-ID: <87ftcnrf7d.fsf@mid.deneb.enyo.de>
+        Tue, 28 Apr 2020 08:02:35 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:14877 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726505AbgD1MCf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 08:02:35 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588075354; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: References: In-Reply-To: Subject: Cc:
+ To: From: Sender; bh=YxH+2DR7vWFpUoIHziSKBV2f45z4/gOayRfRydsyFKo=; b=l2f2Pl9X/Qx100kbUFDwto9l2nFytVzKBimIfapweTvvfyxzOTMHK3oCeTLNStGiNq/YTPAu
+ jcY/Ft9k90PKd8c1N3TRGI+ET3GkyULJ2MNkEmcB4ti73UvdPRpCGj1d6rgcfzuM/yQRAJgi
+ F69ljJUnm8Ve+Dnh8MhBhAY3rzk=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea81b20.7f91eb17bbc8-smtp-out-n04;
+ Tue, 28 Apr 2020 12:01:36 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BC9DBC43637; Tue, 28 Apr 2020 12:01:34 +0000 (UTC)
+Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E244DC433D2;
+        Tue, 28 Apr 2020 12:01:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E244DC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Sven Eckelmann <sven@narfation.org>
+Cc:     ath10k@lists.infradead.org,
+        Linus =?utf-8?Q?L=C3=BCssing?= <linus.luessing@c0d3.blue>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ben Greear <greearb@candelatech.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linus =?utf-8?Q?L=C3=BCssing?= <ll@simonwunderlich.de>,
+        mail@adrianschmutzler.de
+Subject: Re: [PATCH] ath10k: increase rx buffer size to 2048
+In-Reply-To: <3097447.aZuNXRJysd@sven-edge> (Sven Eckelmann's message of "Sat,
+        25 Apr 2020 13:14:42 +0200")
+References: <20200205191043.21913-1-linus.luessing@c0d3.blue>
+        <3300912.TRQvxCK2vZ@bentobox> <3097447.aZuNXRJysd@sven-edge>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+Date:   Tue, 28 Apr 2020 15:01:28 +0300
+Message-ID: <87blnblsyv.fsf@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
+Sven Eckelmann <sven@narfation.org> writes:
 
->>>>> +/* struct rseq is aligned on 4 * 8 bytes to ensure it is always
->>>>> +   contained within a single cache-line.
->>>>> +
->>>>> +   A single struct rseq per thread is allowed.  */
->>>>> +struct rseq
->>>>> +  {
->>>>> +    /* Restartable sequences cpu_id_start field. Updated by the
->>>>> +       kernel. Read by user-space with single-copy atomicity
->>>>> +       semantics. This field should only be read by the thread which
->>>>> +       registered this data structure. Aligned on 32-bit. Always
->>>> 
->>>> What does “Aligned on 32-bit” mean in this context?  Do you mean to
->>>> reference 32-*byte* alignment here?
->>>
->>> No. I really mean 32-bit (4-byte). Being aligned on 32-byte guarantees that
->>> this field is aligned at least on 4-byte. This is required by single-copy
->>> atomicity semantics.
->>>
->>> Should I update this comment to state "Aligned on 4-byte" instead ?
->> 
->> I think this is implied by all Linux ABIs.  And the explicit alignment
->> specification for struct rseq makes the alignment 32 bytes.
+> On Wednesday, 1 April 2020 09:00:49 CEST Sven Eckelmann wrote:
+>> On Wednesday, 5 February 2020 20:10:43 CEST Linus L=C3=BCssing wrote:
+>> > From: Linus L=C3=BCssing <ll@simonwunderlich.de>
+>> >=20
+>> > Before, only frames with a maximum size of 1528 bytes could be
+>> > transmitted between two 802.11s nodes.
+>> >=20
+>> > For batman-adv for instance, which adds its own header to each frame,
+>> > we typically need an MTU of at least 1532 bytes to be able to transmit
+>> > without fragmentation.
+>> >=20
+>> > This patch now increases the maxmimum frame size from 1528 to 1656
+>> > bytes.
+>> [...]
+>>=20
+>> @Kalle, I saw that this patch was marked as deferred [1] but I couldn't =
+find=20
+>> any mail why it was done so. It seems like this currently creates real w=
+orld=20
+>> problems - so would be nice if you could explain shortly what is current=
+ly=20
+>> blocking its acceptance.
 >
-> Unless a structure ends up being packed, which is of course not the case
-> here.
->
-> I would prefer to keep the comment about 32-bit alignment requirement on
-> the specific fields, because the motivation for alignment requirement is
-> much more strict for fields (correctness) than the motivation for alignment
-> of the structure (performance).
+> Ping?
 
-But the correctness is already enforced by the compiler, so I fail to
-see point of mentioning this in the comment.
+Sorry for the delay, my plan was to first write some documentation about
+different hardware families but haven't managed to do that yet.
 
-Anyway, I don't want to make a big deal of it.  Please leave it in if
-you think it is ehlpful.
+My problem with this patch is that I don't know what hardware and
+firmware versions were tested, so it needs analysis before I feel safe
+to apply it. The ath10k hardware families are very different that even
+if a patch works perfectly on one ath10k hardware it could still break
+badly on another one.
 
-> x32 should not be an issue as explained above, so I'm very open to
-> add this "uptr" for user-space only.
+What makes me faster to apply ath10k patches is to have comprehensive
+analysis in the commit log. This shows me the patch author has
+considered about all hardware families, not just the one he is testing
+on, and that I don't need to do the analysis myself.
 
-Okay, then please use anonymous unions and structs as necessary, to
-ensure that the uptr field can be reached on all platforms in the same
-way.
+--=20
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
