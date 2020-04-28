@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E8FC8300A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2A6C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8380F206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92CD820663
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:17:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="gIOzlfEW"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="c9D/B0Jk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbgD1LRQ (ORCPT
+        id S1726781AbgD1LRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:17:16 -0400
-Received: from mail-eopbgr750058.outbound.protection.outlook.com ([40.107.75.58]:2736
+        Tue, 28 Apr 2020 07:17:07 -0400
+Received: from mail-eopbgr750075.outbound.protection.outlook.com ([40.107.75.75]:52878
         "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726345AbgD1LRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:17:13 -0400
+        id S1726587AbgD1LRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 07:17:05 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kMWWeQKFxFVUnZrPGzCXrvuqbWAWro6ljvim0vPSxKEIIn8pwZ8yuw/NosIJQA46384qNHYXchpjFvuuRUuWzh6G3ms9RFyvLnYmBDyc6rOj/AMTFPX2gIVIJs3Rc6HY8sRBKkT2EMaiNsc+ooHNmX6ooR9hTtfTKglpIURLAnQ3vqcpth0/eGyXJCFFOO29dirnox1GVMTkFwK6YJbVrAgSrqNY1dKoVShg2a2VYiQHZ1R3lciIo3fcfKibgGo25D0AYoZQSfcHV3KBNpLyi4Wfcn8DlJNKAxsWKAV618/IgXoue/FdkvGHmoh05rFrCaxAq08emvop1fMrgBbVcQ==
+ b=mXhg+F+mpTeJomIczh/pkP4EnUDLycN9QKQG2YsTgTs5JB6HnU0v36rysyfNYoBVk6aXY94RwaNi8GoPiwKK5JdKL7X/yBCF4dS48IVZ9WpYuaa+dtu787VLjsS0a68y1bPTRXAjD7gpKxSVy7iCGp8i98pgSoRktBUoxDnwkAarTryZlH3uSgTlydMonCr5tLHag3+xB030I3DATOIgd47SYBfqYXudNawmc7ekjbnYiCexnoQuISAgbygiXm5vVuFyO4K2UC4AAXJ9Nv7w4kdQY60t2Cp6F//Hh1m67woBt7r0EugCzULFyUox8EWGSYo0GBAyd9okdp5fSKeXyQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vlXsg5y99bP88jZsA05ekSXbyLV+K3+CRPQ04r0YxdA=;
- b=PKYZRgE6HrnSJztS7DF96ZBhU/KN2vwmQk1XChEE3ZQSuIflekrS9uTyqFmrFqwXUSUhIich8AQ7k63tv0IvagdVBCoe/GrRSAxUrWaCMe391sYdE0O+9/p+q9IAKrMMYpG0pNwcyx6JIjyGbuWYP6rs3ObEbQcXsKaoEzC3K8TSixRpMj11qX8qJIt7f7bxc79/sulMQCz4+t3So/ngCo9xYI59XMT9yfTy+5qPC+zNnjGNNjJxJsHML4/wX4oWzUV0ZErbvztWQB7gMW/3tqB8wzAGnTFyQcSuoUyJ/fY8QEdRo1Kthh/WaxzIgznJLhQ3z6Gn76jo4OMWUshUTA==
+ bh=auhdIpVykeScLQHtqjvP+FzHVlmWZFx4SFd13kL/vhY=;
+ b=bCQ/oO+R+GV+NTKXIYk4JgNXhNP+B9QAIRC2X4PZs5BAXhT+8KN0gKnQxw4p5P8nKwhGWrjq+rhiCDFfRu9RUQXCQDcEjI1kiivOnO+5W61WRfNPJZ9acBG7jlIP8xQLCxIywvh8AdWUxXBFc/CWesWYcjH08iK9bb6Gjp3xt9+uqkYLoiuBSkL9zUtfimX/f7hdwOJ2cWXKbktlupXGji5F9kxYen123DRvW78MbUFiRezPzYzZkp+wsmWZrcWJGQz6rQ7YMX8W7D8FcX/p5sRUg7s8+h3r2yI6U43zXEXp5LNyR0Sg6JT/BgENJzjuO0Iz3CQ9NEHaQPE9x9xWig==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
  dkim=pass header.d=sifive.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vlXsg5y99bP88jZsA05ekSXbyLV+K3+CRPQ04r0YxdA=;
- b=gIOzlfEW6ojnS0cZnn+NKM042GT/my6EDYQTdw503/nhF6NFrzp7GiLyhDwTJrrQi0FrGPKUuKpx4bKN78uyVP2xd88ELMHJufB32AjSOc/gDy2T4xgtR/3eHQGUlW5jYHViuSZLKLgZaPJXZ609E++nrREnwvC2lUwMcK58Bps=
+ bh=auhdIpVykeScLQHtqjvP+FzHVlmWZFx4SFd13kL/vhY=;
+ b=c9D/B0JkTpXD1hALdVyz8Iv7Mn+tlubBN8QSS+NvFQ4HOrCJhAiDzgIe6/gNncEepdzZODxxS3sL1i1Di3KtvfJbwXNSFjPihmeq9hxtnW95tSkoMNES1vqzBStvtxHpq0ZbZ87G/BDax6D72SWQl+fZJddg5hfHW+/992Ry/+w=
 Authentication-Results: vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=none action=none header.from=sifive.com;
 Received: from BN8PR13MB2611.namprd13.prod.outlook.com (2603:10b6:408:81::17)
  by BN8PR13MB2737.namprd13.prod.outlook.com (2603:10b6:408:88::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.12; Tue, 28 Apr
- 2020 11:17:10 +0000
+ 2020 11:17:02 +0000
 Received: from BN8PR13MB2611.namprd13.prod.outlook.com
  ([fe80::c129:8fca:5ed:8929]) by BN8PR13MB2611.namprd13.prod.outlook.com
  ([fe80::c129:8fca:5ed:8929%6]) with mapi id 15.20.2958.014; Tue, 28 Apr 2020
- 11:17:10 +0000
+ 11:17:02 +0000
 From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
 To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
         robh+dt@kernel.org
 Cc:     palmer@dabbelt.com, paul.walmsley@sifive.com, atish.patra@wdc.com,
         devicetree@vger.kernel.org,
         Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Subject: [RFC PATCH 4/4] dt-bindings: net: phy: extend dt binding for VSC8541 ethernet-phy
-Date:   Tue, 28 Apr 2020 04:16:48 -0700
-Message-Id: <1588072608-7747-5-git-send-email-sagar.kadam@sifive.com>
+Subject: [RFC PATCH 1/4] dts: phy: fix missing mdio device and probe failure of vsc8541-01 device
+Date:   Tue, 28 Apr 2020 04:16:45 -0700
+Message-Id: <1588072608-7747-2-git-send-email-sagar.kadam@sifive.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1588072608-7747-1-git-send-email-sagar.kadam@sifive.com>
 References: <1588072608-7747-1-git-send-email-sagar.kadam@sifive.com>
@@ -67,61 +67,74 @@ X-ClientProxiedBy: BY5PR13CA0032.namprd13.prod.outlook.com
  (2603:10b6:408:81::17)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from gamma07.internal.sifive.com (64.62.193.194) by BY5PR13CA0032.namprd13.prod.outlook.com (2603:10b6:a03:180::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2958.9 via Frontend Transport; Tue, 28 Apr 2020 11:17:09 +0000
+Received: from gamma07.internal.sifive.com (64.62.193.194) by BY5PR13CA0032.namprd13.prod.outlook.com (2603:10b6:a03:180::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2958.9 via Frontend Transport; Tue, 28 Apr 2020 11:17:01 +0000
 X-Mailer: git-send-email 2.7.4
 X-Originating-IP: [64.62.193.194]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 58b9bdea-920e-43c8-2df9-08d7eb65b1cc
+X-MS-Office365-Filtering-Correlation-Id: eb252641-fbbc-4fb9-6fe9-08d7eb65acfa
 X-MS-TrafficTypeDiagnostic: BN8PR13MB2737:
 X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN8PR13MB2737D3B982CF3CD16AB5302399AC0@BN8PR13MB2737.namprd13.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
+X-Microsoft-Antispam-PRVS: <BN8PR13MB2737048600F9D0C836C1956299AC0@BN8PR13MB2737.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
 X-Forefront-PRVS: 0387D64A71
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR13MB2611.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(396003)(376002)(39850400004)(366004)(136003)(186003)(2616005)(52116002)(16526019)(7696005)(2906002)(86362001)(36756003)(26005)(107886003)(4326008)(5660300002)(66946007)(81156014)(956004)(66476007)(6666004)(66556008)(478600001)(316002)(8676002)(6486002)(8936002);DIR:OUT;SFP:1101;
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR13MB2611.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(396003)(376002)(39850400004)(366004)(136003)(186003)(2616005)(52116002)(16526019)(7696005)(2906002)(86362001)(36756003)(26005)(107886003)(4326008)(5660300002)(66946007)(81156014)(956004)(66476007)(6666004)(66556008)(478600001)(966005)(316002)(8676002)(6486002)(8936002);DIR:OUT;SFP:1101;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6RceVEMrliac0AWB2yYqQN1yG/nWwA5qfKUhelUi6KnusEkH1d0UiL8RZND7nmAzivYa2Lt/H92HEbnvCye2WEa5WEJbg3Y1mq7+oJnb4bi0oXajpDq+SCUQNMf3p+PtWplrOG3D/iLoXnT+uYE6CRMqrkVjQOcO/BcFy1PY4LVuuM2qoG0HFPCDkn7ZTMViHaYOmnHKsDGktrmdfUICElOeKj6pl5ClBjzFX0qtRJsbslEsXvQeLlaqA/7eDjD8nYaPSEQo4X645nbb0EaOEy8I6wCJ7f5/OJuCX9VFxI/b8qzFRYCoKfziSyyGgaI68uxMUPo3G83acEa5yr2YUGQf55xzdIucrbAXSubTjJ1EJj1qhfjJDi3RIrsAalXTyLvxECDsGJOubFj4tt0ssb0zoflU9E/0ABZXKQ1Wm1Qlu/PKCRnwVOPFnXeJGh5t
-X-MS-Exchange-AntiSpam-MessageData: /H9eNdMF2t/7MeFPdAshoBxfvm0eXfGNoPgUz+som8nXvrkdqLlboJfjXFrY76Gb+nYb0fAcRAsUg94nU1zypSHk5/qwRT9HtIJKARnlX8zQgB/QXexmltATEhPWWChTD0QuUuLRtWUMYp2jL2S1huZMUjiAVjOhSoFdxpV5GOf6oGCcqbfIEzDLAylT7SQ9dzJ3SqJVkq1uvXcUA8ANuKmG3RbzYIDz2HN6AaYQd6exRED9CWb3XBFrryaqnkbhdQ0aHRIIhHxjuUkjIxpEkYac4dXizjY6BXL4L5AEmamTgVjMuNJmjMMeZDfpNJhF7oZ9KIdt2KVtb7kdYFv1gDaOso74WxTrUi1ew+aohBCgvh7GgCWqrTmKDT2wY5c44LyBtz3nvXJbGH72gpXqVGjL65zEbX/qK+dIuAw8YdqLTKmJHoa+sV/9PLIRqmtp2YZOazxd7q7TeGtyvrXiDFBeeKz5OGVHQd+vf9dra8a2/st44Rn5nUEXUOy0EIj6lMP0A2SEhWwT+Wn0WAN2GQG3OlfAVsJZfvs69nz1GhxOnuQfc0uFmb3LBekN8a2nfyFZM1BVipe1LNfN6nHsMGm/I6jPlk0Obg9EK3hovdVeBZHRbxHn3WWd3jBwDmWhdfR/lhtKCxz4TIW1+lTea13r/y6XdWIn0x7vz5He/ueFZCNZmqXdRaIFcwTTnykfr4qDruDDrxCygarT0gqjUOf7Ugd2Fk6RF7hopCDghvly1hi9KuAVMBA18cdV67eqHikrNGpU2RVYzXxwEvpbWHiAeFb6wI0lGKg5cTaWVkM=
+X-Microsoft-Antispam-Message-Info: //D/XayTLSDemUzBOJLxVPIWgoJ6BZ/Xyn+sGOHuyD9B/QMePm9S214HXy44RzSf0VvL4k1PNo6VKPm0hLnWHGaOKYDHn4zupXeQHqXSEaBb9jXAVYmDSSxyLXybH8jUM56hdGMPwp+rMcjDpa2eyhgBjq4VwY+KmgMNVRw5ERpwJIIC/JfDDUW2zsjNbgi9MdV79M0OmOmKklnADO/da84TbQjd9kELARqoEGA0PUw15BcYNBZvEjttP9s0PcKNPAvbIZ2AamcyrfN/FfvqycY/nV1S2ggZQOPnu47ThfH0xcwenWVVkoK0ir8PwSU0KSYzVBgYkAOD9RuUX0Pr2tfqjPjcmjhYSjY6dfl3iO0KTiMATrpxL6R07gb6xAldH+tV5kI66sR3HEq25FZBMWzOz/7rN+VMXQJ9XMo6mrp3Hixk1AdPJRCRcP1SCmw1f5y0ZtFRkg9N7Ij/uxd0b0/WgxeYVap7OvXgLVgNUOBLpUtRHdTM3vRZoI4h7pSrkGUqDDOjzm1Vgmc+InHRvA==
+X-MS-Exchange-AntiSpam-MessageData: FoqMXRzdDTPwVNUIdVG2sjEZH+uI1iTYPp8xSPzgfw6jnE0QCnKptDssXqRrrq7pcpTeWiC3/ffVLOBrp38whKd69rNDM/b+i34APuN49Jzo+4HEeji1a4ociF/WUKFoOOVWSAqvoXihlbQVshBocJ4i6vMGlLA+15yuvNzf6DXPQgsLcyvejJAv8hdj6YZPS1VYaKQVlkfvElO2zdlF0fGed/P4L7EPYlqWkeLSGodBfs0YBmxRYmNiiBNNA/unzmHQg6PRxhX1vfuu1olpVbKkjH5KJ0Omuq0445CG9Pl8LvdInYO4AFqM79Nb3Pa46LaDgFALl30KRyY3MAkuRGXFfGy9u7xOzkApqCTNEY4gm7pOeQHxr0XOu8ntAHGppF2WW3N23Ym7svVtvnWUH49BC2ZSyy+ZgKBSeCWvK3MoNHZngJ2L5ti1fevD1kE7z0X0jhtOCShxm1EAettz7lxD55NG3xyZF2ilhjy+cACp+jRyQHgg6aZRwV7IG3QqMOViR1e4o9GQyi/5h8X2/YKXaam/lKuQFk4aNUXG8eiNsSU/3RSKUWsOMxcEm+Rr1V1LHVvNrFKNqydX+CQjFVWdF2Qf2EAa/mDHbd+oHw9Kh82RHdb18aN4OACVueBq9AOqZeShTz3jsPGA/Tkb7Fc4RCjERmshcUshrjWqdqvO8pCFIVOgnmi5oJQjW8aiHj7ucomRqk/wiLIS0NNIvd1M5TqW+ZwN0sjteO9Z+6VPpKxemnnKmPmST+FxiNW16Gj7sGM+g3oHVqPr0DCmqNjgP1qQfh7r4JnfkK8e2dQ=
 X-OriginatorOrg: sifive.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 58b9bdea-920e-43c8-2df9-08d7eb65b1cc
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2020 11:17:10.5775
+X-MS-Exchange-CrossTenant-Network-Message-Id: eb252641-fbbc-4fb9-6fe9-08d7eb65acfa
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2020 11:17:02.4021
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: b6QHR7mJ2HvMJFs/EL9IacAXBBrSN5dbqmdMn3zK1gqpVDr02/mppclnSdCDD6DJ/9Vhh/VsNbCHJKvU+U6ZdQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0wZCANYvqIljp+uIDpCpvvUu0FTwOIw6CGRzFVcm5iYqY/+BNniMor03Bu71zPIMKD7hCvi5mf8b3OSht5YJpA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR13MB2737
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding a OUI (Organizationally Unique Identifier) for VSC8541-01
-device to dt node requires a corresponding dt-binding entry as well
-so that checkpatch doesn't complain with a warning:
+HiFive unleashed A00 board has VSC8541-01 ethernet phy, this device is
+identified as a Revision B device as described in device identification
+registers. In order to use this phy in the unmanaged mode, it requires
+a specific reset sequence of logical 0-1-0-1 transition on the NRESET pin
+as documented here [1].
 
-DT compatible string "ethernet-phy-id0007.0771" appears un-documented
+Currently, the bootloader (fsbl) takes care of the phy reset. If due to
+some reason the phy device hasn't received the reset by the prior stages
+before the linux macb driver comes into the picture, the MACB mii bus gets
+probed but the mdio scan fails and is not even able to read the phy ID
+registers. It gives an error message:
 
-Here extend the existing dt binding of VSC8531 device to include
-VSC8541 device example.
+"libphy: MACB_mii_bus: probed
+mdio_bus 10090000.ethernet-ffffffff: MDIO device at address 0 is missing."
+
+Thus adding the device OUI (Organizationally Unique Identifier) to the phy
+device node helps to probe the phy device.
+
+[1]: VSC8541-01 datasheet:
+https://www.mouser.com/ds/2/523/Microsemi_VSC8541-01_Datasheet_10496_V40-1148034.pdf
 
 Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
 ---
- Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-index 5ff37c6..774448a 100644
---- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-+++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-@@ -68,3 +68,6 @@ Example:
-                 vsc8531,led-0-mode	= <LINK_1000_ACTIVITY>;
-                 vsc8531,led-1-mode	= <LINK_100_ACTIVITY>;
-         };
-+        vsc8541_0: ethernet-phy@0 {
-+                compatible = "ethernet-phy-id0007.0771";
-+	};
+diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+index 4a2729f..60846e8 100644
+--- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
++++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+@@ -88,6 +88,7 @@
+ 	phy-mode = "gmii";
+ 	phy-handle = <&phy0>;
+ 	phy0: ethernet-phy@0 {
++		compatible = "ethernet-phy-id0007.0771";
+ 		reg = <0>;
+ 	};
+ };
 -- 
 2.7.4
 
