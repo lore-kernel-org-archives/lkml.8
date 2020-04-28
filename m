@@ -2,148 +2,109 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A804C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC82DC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 132542085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:18:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588105107;
-	bh=k3bnp2JrBwznUcVuhHk66Arlp2a+C2BbQvoBabGvyFY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cxegPMXJPKIRtUH4+PWPxyzcRpCul1HnixWndcGsjtuJusdmNAmQTeiwhGIlWHpPL
-	 gNufY/sCW8PEO1jFSgX46YQeNBYOluns9AxyDCRSvl9VwOQqCpqPpqrOTvxm4mSzUx
-	 Z22GN6xrH7XABpuwTvu7Zlg/9yc42Ovy6THS6Dkw=
+	by mail.kernel.org (Postfix) with ESMTP id C0185206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:20:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgD1USZ (ORCPT
+        id S1726477AbgD1UUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:18:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34780 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726284AbgD1USZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:18:25 -0400
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E449206D6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 20:18:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588105104;
-        bh=k3bnp2JrBwznUcVuhHk66Arlp2a+C2BbQvoBabGvyFY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=G2OG7F8m3cFnoZLp2hppCZsznH4vEyao4eA9afgJRIxkVozlBJuR4lYGhKchEo9QR
-         /tGiP1VXlOng04bdZlyYw/JUKPeDolxScTfCCWmlDUPdldRhi5oDdxCw4PF2ygvR49
-         teZM0c6IF1J3q2/MiNEFVI0oPjaLzn52gboRrRFM=
-Received: by mail-qt1-f174.google.com with SMTP id s30so18480438qth.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:18:24 -0700 (PDT)
-X-Gm-Message-State: AGi0Pua2VP5VLmlVAU9tB2dtO+pGSQX/xMLFlhyOQHZyYujy7txD1E/+
-        niRC8VRuaBamGWnSfkMAIHhfV64myUFpsIylRQ==
-X-Google-Smtp-Source: APiQypJpZYBertwu91oC2RsdbhG8knfP1M2ukw7TDQa6uJ+Zu1++Po7yYlxazeBSwzXG4N3dCbdOLZrpqLM7FZI1kMI=
-X-Received: by 2002:ac8:4cce:: with SMTP id l14mr30537890qtv.31.1588105103128;
- Tue, 28 Apr 2020 13:18:23 -0700 (PDT)
+        Tue, 28 Apr 2020 16:20:06 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:50309 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbgD1UUF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 16:20:05 -0400
+Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M9W78-1jZ2U33HnA-005amh for <linux-kernel@vger.kernel.org>; Tue, 28 Apr
+ 2020 22:20:03 +0200
+Received: by mail-qk1-f176.google.com with SMTP id o135so10774131qke.6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:20:03 -0700 (PDT)
+X-Gm-Message-State: AGi0PubKgcYCGZPTlcNXDC5FD3z7xFmdxIjENtynmQ8XSZuA7Y3XBobC
+        Waz3nFEU/sQzt6HwxZsk+b99L1HJ4K5Ucmw9JqY=
+X-Google-Smtp-Source: APiQypK7QLahmWkvMcrJNx933CG5RbP5aw9XWv8As8rK7Pv5GXGKoN3E2TLZueHbBgo06RXBr1L+3zcz7OOllKVEfZU=
+X-Received: by 2002:a37:851:: with SMTP id 78mr30349558qki.352.1588105202639;
+ Tue, 28 Apr 2020 13:20:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200427210806.37422-1-cristian.marussi@arm.com>
-In-Reply-To: <20200427210806.37422-1-cristian.marussi@arm.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 28 Apr 2020 15:18:02 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKV8j8Jm_7B7no6SsZ9AAv=WjqOx9EmCp3fomUXRO-FzQ@mail.gmail.com>
-Message-ID: <CAL_JsqKV8j8Jm_7B7no6SsZ9AAv=WjqOx9EmCp3fomUXRO-FzQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/3] SCMI System Power Support
-To:     Cristian Marussi <cristian.marussi@arm.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        james.quinlan@broadcom.com, Lukasz Luba <lukasz.luba@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
+References: <CAK8P3a2qLJkokMGt48JRky=WUeAbJRuNmoD1oqfWdrGSC6y1LA@mail.gmail.com>
+ <20200428161044.caamvx67t2z4t6vd@treble>
+In-Reply-To: <20200428161044.caamvx67t2z4t6vd@treble>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 28 Apr 2020 22:19:46 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0X4kMW1BQU6x9A2oo6i3-CMxi1h=0PhQgEbBtYWbJa9A@mail.gmail.com>
+Message-ID: <CAK8P3a0X4kMW1BQU6x9A2oo6i3-CMxi1h=0PhQgEbBtYWbJa9A@mail.gmail.com>
+Subject: Re: Remaining randconfig objtool warnings, linux-next-20200428
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:M9bglFZb+K6kjAzvIp0DTzz0ZI+jPfA3kZ/9EXjCk8gmUoZSO96
+ qym1S3NjYSTF4rnIF94t2VCf+pRiwx+gYxH2FKqC9pxALjfLSd971KPFF6EVtMKD88Xs7kL
+ brRpn1QwDslZuu9hJ6M1pogOEBVhR+DMIE47ybJxxIGKwJKX2q9zBlmyM6QyNfLREQLDFGj
+ gEp1+yyDbyiV6aZ9fpVtg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9p/VePi+Xg8=:f1lD2KPpHOPuf1+Yc523WU
+ /TZxdR/6KHad3WP8AWJo/34IQRT4ISPg+G3q42M/QarTBhXjaA+RG0/SOgKrK5rk21eXEzyTh
+ Lporl3AhUMxaEAnmkWf0RVYHRbs4rHRQmMUmr9+KcBTd58aL0I5dPLIPEQpgCZzfZni/EAS96
+ 6HXMH0thqZi5MRgC1fU9qgs2+4dLERtMxgacbr0GiUnZdxrSe+T+FIYUSeDXbO0pK7HkuE5DQ
+ C0EssWbq/O118u7Yzv5fz4iwukxF03iMmlGW7C7HgHilP/LKfoa8NyULCz9o70eIDkAqENEBJ
+ 13l7bSmrsAnLKWmCquX74ObqQuKy2MlzIRtZE4TcmQ3E3WyphgQPCCKYNZNRwgZVqkEJWY8KL
+ 83KVnbWpY+fvJ/4x+RDrRkZ8fhjcIW6nnFFSUgPS0tSLpDPh8xY+rkbHthjkvDCO6kqeHrd3C
+ dmVW3YwDQUaJ3T3UqdK7kyDSMfc6qhrV66mbGepuFn7xHgs2kvrFhI2aKZ+dSu/NfHrYznsfO
+ ahE0K7k3R129SIjXBMfG/28u2FSyUA7Acpyw2A721TUOqONSCUPNtWyJas1mMBenKb7H4VjSA
+ lIXj1GmOqzJ7RAksQAK/zz7sdGxFed59HPnMGjvA46pnyDeBZrKyGYlpYdQvJY4PSRgFPcsIh
+ PmLKLEschymgsH3Nto8mHZQCFe55veIolJonx7yYCGE/0jYjRzU6x2wynrGuTYc9Q+EfT5uNn
+ rM2uir2x57wbN4dEdcxCd6KzQV+RvWx2mMxPb2AaYz6D2e0QSpMcaXbpPIkcoy9Ny4dRwWPxS
+ NIfmUqSKMCyOZZnyhEnwvn233C8JKKLmZsMpCFG2vgx/QphLyE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 4:08 PM Cristian Marussi
-<cristian.marussi@arm.com> wrote:
+On Tue, Apr 28, 2020 at 6:10 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> On Tue, Apr 28, 2020 at 04:49:15PM +0200, Arnd Bergmann wrote:
+> > ==> build/x86/0xFD7B7323_defconfig/log <==
+> > arch/x86/entry/entry_64.o: warning: objtool: .entry.text+0x991: unreachable instruction
 >
-> Hi all,
->
-> this series wants to add the core SCMI System Power support and related
-> events' handling logic: the protocol support itself is trivial and boils
-> down to some bare initializations and supporting one SCMI System Power
-> notification event meant to carry platform-originated System transition
-> requests. This is patch [1/3].
->
-> On top of this a new SCMI driver has been developed which registers for
-> such System Power notification and acts accordingly to satisfy such
-> plaform system-state transition requests that can be of forceful or
-> graceful kind.
+> This warning looks correct, did you make a change to entry_64.S?
 
-I needed this 7 years ago. :) (hb_keys_notifier in
-arch/arm/mach-highbank/highbank.c)
+I bisected my local patches and found that I had a local hack that turned
+off CONFIG_RETPOLINE for testing something unrelated. I can reproduce
+it on linux-next with this patch:
 
-> In order to comply with such graceful requests, and co-operate with
-> userspace entities to drive a clean shutdown/reboot, the logic of the
-> driver relies on the same orderly_* API methods used by ACPI when handling
-> ACPI Shutdown bus events. This is patch [2/3].
->
-> Patch [3/3] is a mere JUNO example of the minimal DT bindings needed to
-> enable the protocol at the DT level and is NOT meant to be upstream as of
-> now.
->
-> A viable alternative method (not implemented here) for communicating
-> graceful requests to userspace could be to use instead signals to PID 1
-> init process (e.g. kill_cad_pid(SIGRTMIN + 4, 1)): this method is supported
-> out-of-the-box by SystemD and (to some extent) Android, and, maybe, could
-> be interesting as an optional alternative, since it avoids the dependency
-> on usermodehelpers introduced by the internals of the orderly_ API calls
-> above.
->
-> Such alternative, if deemed worth, should clearly be configurable via DT
-> (also in terms of which signals to use), BUT all of this work is not done
-> in this series: and that's the reason for the RFC tag: does it make sense
-> to add such a configurable additional option ?
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -447,8 +447,7 @@ config GOLDFISH
+        depends on X86_GOLDFISH
 
-Which process signal to use in DT? I don't think so.
+ config RETPOLINE
+-       bool "Avoid speculative indirect branches in kernel"
+-       default y
++       def_bool n
+        select STACK_VALIDATION if HAVE_STACK_VALIDATION
+        help
+          Compile kernel with the retpoline compiler options to guard against
 
-> The series is based on SCMI Notifications Core V7 (still not posted though)
-> which in turn is based on top of scmi-for-next-5.7 and it's available (with
-> some additional debug on top) at [1].
+> > ==> build/x86/0xE0F2ACFF_defconfig/log <==
+> > kernel/time/posix-stubs.o: warning: objtool: __x64_sys_timer_create()+0x23: sibling call from callable instruction with modified stack frame
+> >
+> > ==> build/x86/0x2EA4CE4F_defconfig/log <==
+> > kernel/kcov.o: warning: objtool: write_comp_data()+0x1b: call to check_kcov_mode() with UACCESS enabled
+> > kernel/kcov.o: warning: objtool: __sanitizer_cov_trace_pc()+0x15: call to check_kcov_mode() with UACCESS enabled
+> >
+> > ==> build/x86/0x500B1B82_defconfig/log <==
+> > kernel/bpf/core.o: warning: objtool: ___bpf_prog_run()+0x1269: call
+> > without frame pointer save/setup
 >
->
-> Thanks
->
-> Cristian
->
-> ----
->
-> [1] http://www.linux-arm.org/git?p=linux-cm.git;a=shortlog;h=refs/heads/scmi_system_power_V1
->
->
-> Cristian Marussi (3):
->   firmware: arm_scmi: Add System Power Protocol support
->   firmware: arm_scmi: Add SCMI System Power Control driver
->   arm64: dts: juno: add SCMI SystemPower Protocol support
->
->  arch/arm64/boot/dts/arm/juno-base.dtsi        |   4 +
->  drivers/firmware/Kconfig                      |  12 +
->  drivers/firmware/arm_scmi/Makefile            |   3 +-
->  drivers/firmware/arm_scmi/driver.c            |   1 +
->  .../firmware/arm_scmi/scmi_power_control.c    | 359 ++++++++++++++++++
->  drivers/firmware/arm_scmi/system.c            | 146 +++++++
->  include/linux/scmi_protocol.h                 |  17 +
->  7 files changed, 541 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/firmware/arm_scmi/scmi_power_control.c
->  create mode 100644 drivers/firmware/arm_scmi/system.c
->
-> --
-> 2.17.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> I'll look into these.
+
+Thanks!
+
+    Arnd
