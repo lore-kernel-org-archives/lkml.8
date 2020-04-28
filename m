@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A58C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CE4C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41A0820575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10F620575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100166;
-	bh=soMyHZTRdotEhdGqYAHn3eNEg3IDW8qhDnFBz1nc1Vc=;
+	s=default; t=1588100172;
+	bh=/X1Thn25F5eOx7AvzYW79Uz65g8fKtvmXvUVWcUGf44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GKvN6pjmkEPrB2trEklmRlxtC1GzhnpaOF6eCKbq3sEO3yERvkMgp+fGE5DMKnu2l
-	 pmtK7CJjIvIP7xaYPL3HWS6Bv0v/ox0rIF2WuEiyA35+E/Q20btS+k2r5iKpOUDVbO
-	 8O740vFrdk7IeevT+e5lGiXrdUwjqPgGWvH9HJ6w=
+	b=e2lB2asjqsB9cO2zM853enp8V+oO4zTaHrcXVlJlfvg4wsbX9MiSrm2zS3Tb1Svph
+	 HbzvUccQxixca572/g7UWqD9PpMnivMRCwqV7oJZGGjuCdJzaUEP8mYp75TT1Z1/Ud
+	 1gzlENRfaYpDxU+hPuuP9INpg39ZlrlwfDGo8V4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730288AbgD1Sz5 (ORCPT
+        id S1728827AbgD1Sbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:55:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47818 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:31:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729234AbgD1Sb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:31:57 -0400
+        id S1728658AbgD1Sbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:31:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C35420B80;
-        Tue, 28 Apr 2020 18:31:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 491BE20BED;
+        Tue, 28 Apr 2020 18:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098717;
-        bh=soMyHZTRdotEhdGqYAHn3eNEg3IDW8qhDnFBz1nc1Vc=;
+        s=default; t=1588098692;
+        bh=/X1Thn25F5eOx7AvzYW79Uz65g8fKtvmXvUVWcUGf44=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HEqk5rfvl4s63TcX2BULfHDR55dhntsj/FG29dbUjOWqSWKjan48SIe2FehPciL4w
-         jsNmx+FsGCZOhh8gL8PGHkYGkFft03NiaqantWNq5Vx0Huz/5jtLjN+qQt2G02+OcQ
-         e1tpd7La64QjTiu9N9JVK/nu7tYnTtsrHv7FD0aM=
+        b=LqY7+1QaIlvIBHREDfUrqA7vVqHGhqS3yt6o1HY3PhHr05nPkk1aqPMvnZROT36U4
+         FR5FbDSicGOtWQbRWxBLVH/EdFH0IxoN23QDRJ0mEtER3UYyb+SeScJ93JgG95UiP5
+         bBx8BHHNjiCldaiNTHZsuDTvJNNJlfUDWzBdWbrM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
+        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 045/131] kvm: fix compilation on aarch64
-Date:   Tue, 28 Apr 2020 20:24:17 +0200
-Message-Id: <20200428182230.701874652@linuxfoundation.org>
+Subject: [PATCH 4.19 042/131] KVM: VMX: Zero out *all* general purpose registers after VM-Exit
+Date:   Tue, 28 Apr 2020 20:24:14 +0200
+Message-Id: <20200428182230.356721332@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
 References: <20200428182224.822179290@linuxfoundation.org>
@@ -62,54 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit c011d23ba046826ccf8c4a4a6c1d01c9ccaa1403 upstream.
+commit 0e0ab73c9a0243736bcd779b30b717e23ba9a56d upstream.
 
-Commit e45adf665a53 ("KVM: Introduce a new guest mapping API", 2019-01-31)
-introduced a build failure on aarch64 defconfig:
+...except RSP, which is restored by hardware as part of VM-Exit.
 
-$ make -j$(nproc) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=out defconfig \
-                Image.gz
-...
-../arch/arm64/kvm/../../../virt/kvm/kvm_main.c:
-    In function '__kvm_map_gfn':
-../arch/arm64/kvm/../../../virt/kvm/kvm_main.c:1763:9: error:
-    implicit declaration of function 'memremap'; did you mean 'memset_p'?
-../arch/arm64/kvm/../../../virt/kvm/kvm_main.c:1763:46: error:
-    'MEMREMAP_WB' undeclared (first use in this function)
-../arch/arm64/kvm/../../../virt/kvm/kvm_main.c:
-    In function 'kvm_vcpu_unmap':
-../arch/arm64/kvm/../../../virt/kvm/kvm_main.c:1795:3: error:
-    implicit declaration of function 'memunmap'; did you mean 'vm_munmap'?
+Paolo theorized that restoring registers from the stack after a VM-Exit
+in lieu of zeroing them could lead to speculative execution with the
+guest's values, e.g. if the stack accesses miss the L1 cache[1].
+Zeroing XORs are dirt cheap, so just be ultra-paranoid.
 
-because these functions are declared in <linux/io.h> rather than <asm/io.h>,
-and the former was being pulled in already on x86 but not on aarch64.
+Note that the scratch register (currently RCX) used to save/restore the
+guest state is also zeroed as its host-defined value is loaded via the
+stack, just with a MOV instead of a POP.
 
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+[1] https://patchwork.kernel.org/patch/10771539/#22441255
+
+Fixes: 0cb5b30698fd ("kvm: vmx: Scrub hardware GPRs at VM-exit")
+Cc: Jim Mattson <jmattson@google.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[bwh: Backported to 4.19: adjust context]
+[bwh: Backported to 4.19: adjust filename, context]
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/kvm_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/vmx.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index ec1479abb29de..4a5ea263edf62 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -52,9 +52,9 @@
- #include <linux/sort.h>
- #include <linux/bsearch.h>
- #include <linux/kthread.h>
-+#include <linux/io.h>
+diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+index d37b48173e9cf..e4d0ad06790e1 100644
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -10841,6 +10841,15 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 		"mov %%r13, %c[r13](%0) \n\t"
+ 		"mov %%r14, %c[r14](%0) \n\t"
+ 		"mov %%r15, %c[r15](%0) \n\t"
++
++		/*
++		 * Clear all general purpose registers (except RSP, which is loaded by
++		 * the CPU during VM-Exit) to prevent speculative use of the guest's
++		 * values, even those that are saved/loaded via the stack.  In theory,
++		 * an L1 cache miss when restoring registers could lead to speculative
++		 * execution with the guest's values.  Zeroing XORs are dirt cheap,
++		 * i.e. the extra paranoia is essentially free.
++		 */
+ 		"xor %%r8d,  %%r8d \n\t"
+ 		"xor %%r9d,  %%r9d \n\t"
+ 		"xor %%r10d, %%r10d \n\t"
+@@ -10855,8 +10864,11 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
  
- #include <asm/processor.h>
--#include <asm/io.h>
- #include <asm/ioctl.h>
- #include <linux/uaccess.h>
- #include <asm/pgtable.h>
+ 		"xor %%eax, %%eax \n\t"
+ 		"xor %%ebx, %%ebx \n\t"
++		"xor %%ecx, %%ecx \n\t"
++		"xor %%edx, %%edx \n\t"
+ 		"xor %%esi, %%esi \n\t"
+ 		"xor %%edi, %%edi \n\t"
++		"xor %%ebp, %%ebp \n\t"
+ 		"pop  %%" _ASM_BP "; pop  %%" _ASM_DX " \n\t"
+ 		".pushsection .rodata \n\t"
+ 		".global vmx_return \n\t"
 -- 
 2.20.1
 
