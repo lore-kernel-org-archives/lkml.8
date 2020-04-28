@@ -2,57 +2,53 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A08C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE9BC83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA26A20730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE25020730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099013;
-	bh=4ZKCqnq3aMeP0p5bGe5j0lm2MElKEZ8zCA5qJu5O/l4=;
+	s=default; t=1588099017;
+	bh=tQJ5zjzcGa80LM9r8zdHEAap+qQuGWt9Ne4izrJ5qmQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KwRy3CUnsJxy1blm0APCs+V8QHEc8TdkIUX2uVyDe/SO1w6GCI93OF9aS6wZCj4ar
-	 uqqKc64/wG+AGrx2CnvNhOMvRR4mDebL/9Q8MpZdgyW+jvV/oNTe2BMVbZwV22SBVo
-	 kqhmSkNswvRs/xDIKfHhD06A3OcKbQts/PChlAv0=
+	b=X5licN/i33S9mGy40VE+c5fMJz/Viswtg/MBUrHWaQDG1nI7i0oDrLTA8wxws1d/n
+	 yxlhKOLCVFobSJyqj0nyl2yh3OJiU85L6WMvqi8ehrCufaQaifkBOTNY0j1kGBzJw5
+	 3EkDSSN9ONzNBxDaVu35qB1M4yPUP2LSkjiYWEc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730419AbgD1Sgw (ORCPT
+        id S1730411AbgD1Sg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:36:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54434 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:36:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730411AbgD1Sgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:36:49 -0400
+        id S1730413AbgD1Sgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:36:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91E8B20575;
-        Tue, 28 Apr 2020 18:36:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 106402085B;
+        Tue, 28 Apr 2020 18:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099009;
-        bh=4ZKCqnq3aMeP0p5bGe5j0lm2MElKEZ8zCA5qJu5O/l4=;
+        s=default; t=1588099011;
+        bh=tQJ5zjzcGa80LM9r8zdHEAap+qQuGWt9Ne4izrJ5qmQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wQzSsvxYPXe8p6ieKX7U8aHlJ3/aGT4z/dpTGCAEVOz0jYbp6HQEYrUoVfNf4lmKX
-         X/7AYWQ73LKCPd4XzMxf5jgZA+JVqM4/UUztCnHdflOTpoD1XX6R7IY8jVp6CRnMGV
-         PkeaAuyKXCNKdZqRYemMDPkWdtF7k6qHKWfaubpE=
+        b=DXmpFG29kG8BdYGZdl1ZP4H9ogtNYdxAVZVsicBGzoY58jlhd8Ea1jAQWPWu53USg
+         LFkHo2g8JJjDKP4d7yUxBZ4AOtYq2nmGQ4ut5v+uOnZNvikYyVxvAsua5Q/AuibGwA
+         /LC/msLtu+pT9WYEfhThoGEYaJ8c4H4UohvEuK0w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 045/168] PCI/PM: Add pcie_wait_for_link_delay()
-Date:   Tue, 28 Apr 2020 20:23:39 +0200
-Message-Id: <20200428182237.556526922@linuxfoundation.org>
+        stable@vger.kernel.org, Changming Liu <liu.changm@northeastern.edu>
+Subject: [PATCH 4.19 085/131] USB: sisusbvga: Change port variable from signed to unsigned
+Date:   Tue, 28 Apr 2020 20:24:57 +0200
+Message-Id: <20200428182235.615311648@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,75 +58,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Changming Liu <liu.changm@northeastern.edu>
 
-[ Upstream commit 4827d63891b6a839dac49c6ab62e61c4b011c4f2 ]
+commit 2df7405f79ce1674d73c2786fe1a8727c905d65b upstream.
 
-Add pcie_wait_for_link_delay().  Similar to pcie_wait_for_link() but allows
-passing custom activation delay in milliseconds.
+Change a bunch of arguments of wrapper functions which pass signed
+integer to an unsigned integer which might cause undefined behaviors
+when sign integer overflow.
 
-Link: https://lore.kernel.org/r/20191112091617.70282-2-mika.westerberg@linux.intel.com
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Changming Liu <liu.changm@northeastern.edu>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/BL0PR06MB45482D71EA822D75A0E60A2EE5D50@BL0PR06MB4548.namprd06.prod.outlook.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/pci/pci.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ drivers/usb/misc/sisusbvga/sisusb.c      |   20 ++++++++++----------
+ drivers/usb/misc/sisusbvga/sisusb_init.h |   14 +++++++-------
+ 2 files changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 981ae16f935bc..94d6e120b4734 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4605,14 +4605,17 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
+--- a/drivers/usb/misc/sisusbvga/sisusb.c
++++ b/drivers/usb/misc/sisusbvga/sisusb.c
+@@ -1199,18 +1199,18 @@ static int sisusb_read_mem_bulk(struct s
+ /* High level: Gfx (indexed) register access */
  
- 	return pci_dev_wait(dev, "PM D3->D0", PCIE_RESET_READY_POLL_MS);
- }
-+
- /**
-- * pcie_wait_for_link - Wait until link is active or inactive
-+ * pcie_wait_for_link_delay - Wait until link is active or inactive
-  * @pdev: Bridge device
-  * @active: waiting for active or inactive?
-+ * @delay: Delay to wait after link has become active (in ms)
-  *
-  * Use this to wait till link becomes active or inactive.
-  */
--bool pcie_wait_for_link(struct pci_dev *pdev, bool active)
-+static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
-+				     int delay)
+ #ifdef INCL_SISUSB_CON
+-int sisusb_setreg(struct sisusb_usb_data *sisusb, int port, u8 data)
++int sisusb_setreg(struct sisusb_usb_data *sisusb, u32 port, u8 data)
  {
- 	int timeout = 1000;
- 	bool ret;
-@@ -4649,13 +4652,25 @@ bool pcie_wait_for_link(struct pci_dev *pdev, bool active)
- 		timeout -= 10;
- 	}
- 	if (active && ret)
--		msleep(100);
-+		msleep(delay);
- 	else if (ret != active)
- 		pci_info(pdev, "Data Link Layer Link Active not %s in 1000 msec\n",
- 			active ? "set" : "cleared");
- 	return ret == active;
+ 	return sisusb_write_memio_byte(sisusb, SISUSB_TYPE_IO, port, data);
  }
  
-+/**
-+ * pcie_wait_for_link - Wait until link is active or inactive
-+ * @pdev: Bridge device
-+ * @active: waiting for active or inactive?
-+ *
-+ * Use this to wait till link becomes active or inactive.
-+ */
-+bool pcie_wait_for_link(struct pci_dev *pdev, bool active)
-+{
-+	return pcie_wait_for_link_delay(pdev, active, 100);
-+}
-+
- void pci_reset_secondary_bus(struct pci_dev *dev)
+-int sisusb_getreg(struct sisusb_usb_data *sisusb, int port, u8 *data)
++int sisusb_getreg(struct sisusb_usb_data *sisusb, u32 port, u8 *data)
  {
- 	u16 ctrl;
--- 
-2.20.1
-
+ 	return sisusb_read_memio_byte(sisusb, SISUSB_TYPE_IO, port, data);
+ }
+ #endif
+ 
+-int sisusb_setidxreg(struct sisusb_usb_data *sisusb, int port,
++int sisusb_setidxreg(struct sisusb_usb_data *sisusb, u32 port,
+ 		u8 index, u8 data)
+ {
+ 	int ret;
+@@ -1220,7 +1220,7 @@ int sisusb_setidxreg(struct sisusb_usb_d
+ 	return ret;
+ }
+ 
+-int sisusb_getidxreg(struct sisusb_usb_data *sisusb, int port,
++int sisusb_getidxreg(struct sisusb_usb_data *sisusb, u32 port,
+ 		u8 index, u8 *data)
+ {
+ 	int ret;
+@@ -1230,7 +1230,7 @@ int sisusb_getidxreg(struct sisusb_usb_d
+ 	return ret;
+ }
+ 
+-int sisusb_setidxregandor(struct sisusb_usb_data *sisusb, int port, u8 idx,
++int sisusb_setidxregandor(struct sisusb_usb_data *sisusb, u32 port, u8 idx,
+ 		u8 myand, u8 myor)
+ {
+ 	int ret;
+@@ -1245,7 +1245,7 @@ int sisusb_setidxregandor(struct sisusb_
+ }
+ 
+ static int sisusb_setidxregmask(struct sisusb_usb_data *sisusb,
+-		int port, u8 idx, u8 data, u8 mask)
++		u32 port, u8 idx, u8 data, u8 mask)
+ {
+ 	int ret;
+ 	u8 tmp;
+@@ -1258,13 +1258,13 @@ static int sisusb_setidxregmask(struct s
+ 	return ret;
+ }
+ 
+-int sisusb_setidxregor(struct sisusb_usb_data *sisusb, int port,
++int sisusb_setidxregor(struct sisusb_usb_data *sisusb, u32 port,
+ 		u8 index, u8 myor)
+ {
+ 	return sisusb_setidxregandor(sisusb, port, index, 0xff, myor);
+ }
+ 
+-int sisusb_setidxregand(struct sisusb_usb_data *sisusb, int port,
++int sisusb_setidxregand(struct sisusb_usb_data *sisusb, u32 port,
+ 		u8 idx, u8 myand)
+ {
+ 	return sisusb_setidxregandor(sisusb, port, idx, myand, 0x00);
+@@ -2787,8 +2787,8 @@ static loff_t sisusb_lseek(struct file *
+ static int sisusb_handle_command(struct sisusb_usb_data *sisusb,
+ 		struct sisusb_command *y, unsigned long arg)
+ {
+-	int	retval, port, length;
+-	u32	address;
++	int	retval, length;
++	u32	port, address;
+ 
+ 	/* All our commands require the device
+ 	 * to be initialized.
+--- a/drivers/usb/misc/sisusbvga/sisusb_init.h
++++ b/drivers/usb/misc/sisusbvga/sisusb_init.h
+@@ -812,17 +812,17 @@ static const struct SiS_VCLKData SiSUSB_
+ int SiSUSBSetMode(struct SiS_Private *SiS_Pr, unsigned short ModeNo);
+ int SiSUSBSetVESAMode(struct SiS_Private *SiS_Pr, unsigned short VModeNo);
+ 
+-extern int sisusb_setreg(struct sisusb_usb_data *sisusb, int port, u8 data);
+-extern int sisusb_getreg(struct sisusb_usb_data *sisusb, int port, u8 * data);
+-extern int sisusb_setidxreg(struct sisusb_usb_data *sisusb, int port,
++extern int sisusb_setreg(struct sisusb_usb_data *sisusb, u32 port, u8 data);
++extern int sisusb_getreg(struct sisusb_usb_data *sisusb, u32 port, u8 * data);
++extern int sisusb_setidxreg(struct sisusb_usb_data *sisusb, u32 port,
+ 			    u8 index, u8 data);
+-extern int sisusb_getidxreg(struct sisusb_usb_data *sisusb, int port,
++extern int sisusb_getidxreg(struct sisusb_usb_data *sisusb, u32 port,
+ 			    u8 index, u8 * data);
+-extern int sisusb_setidxregandor(struct sisusb_usb_data *sisusb, int port,
++extern int sisusb_setidxregandor(struct sisusb_usb_data *sisusb, u32 port,
+ 				 u8 idx, u8 myand, u8 myor);
+-extern int sisusb_setidxregor(struct sisusb_usb_data *sisusb, int port,
++extern int sisusb_setidxregor(struct sisusb_usb_data *sisusb, u32 port,
+ 			      u8 index, u8 myor);
+-extern int sisusb_setidxregand(struct sisusb_usb_data *sisusb, int port,
++extern int sisusb_setidxregand(struct sisusb_usb_data *sisusb, u32 port,
+ 			       u8 idx, u8 myand);
+ 
+ void sisusb_delete(struct kref *kref);
 
 
