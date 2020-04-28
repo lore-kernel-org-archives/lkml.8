@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD6BC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD7EC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77D9F21744
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDEF921707
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098752;
-	bh=M0xuTTD2h8wYlWdVpKOED62go8ts3J0hXhOYPDJmHsI=;
+	s=default; t=1588098757;
+	bh=WwMQnnlr9UFxuKnVYip2MbxhHSDl070mII4XwC96BvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ki7YIinS54xdkdKAzv1eiAt0Igg2awcfC/bAqVKU43rnvYkpne3qVCMMVTr55Z29d
-	 UzD9miR1swelwg31I5LqNKiZvtUzRmx82WbTc9cgtnUupikTS9XjquAagRdASdv5rw
-	 eAEVAIAxw+gmZZNK3UfXzqgj2/2WStH7A/9vRLx0=
+	b=ZpN39yCJBc5WUnb5Z7QaueR+A+UMytWg3J1TJcONjBjhZkjXxlqYJXD98wQdfJcXM
+	 C3UFF5zgDAIVCHqe2buWtWgRC1I7q6Bqir/beTC+6lR00fxGNQOHasn92fcmOOq5Hc
+	 pq8qmxCUnJXYPJyzebVWfNWCFJlmZJz9W15zxuro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729818AbgD1Sca (ORCPT
+        id S1729828AbgD1Scg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:32:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48562 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:32:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728972AbgD1ScY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:32:24 -0400
+        id S1728972AbgD1Scb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:32:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E91A20B80;
-        Tue, 28 Apr 2020 18:32:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E06221707;
+        Tue, 28 Apr 2020 18:32:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098743;
-        bh=M0xuTTD2h8wYlWdVpKOED62go8ts3J0hXhOYPDJmHsI=;
+        s=default; t=1588098751;
+        bh=WwMQnnlr9UFxuKnVYip2MbxhHSDl070mII4XwC96BvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ee+148I5OHR5NAgvi8hb4U2AGrLrOkMGYbfQU/JHYz0N/LZrg3zdaXQLaBsEVh4qk
-         uyFWRVxyG2d/abKY7mKFcikJTeZcHznvFfNVkIUmNPI5mxSpOviiYHzfZg4Tu+v8SA
-         zYqJsZmIQ+/3on2ni9gerrMJrl5fbymOQikYRVJM=
+        b=di1wBXqTLb3PGC539T/BAMR0PWOPAemLQYTyLMvtYx8lP4ImjMyTqMUOCpIxTMPEg
+         l2BKsJkq9KyO+1ZE8lOyrkehAriGuVRtEf0/C43G3YhtoTTIB7+jp+MAMD8FPMTcNY
+         8tUMQYUxMnl0TQxW0iHADd0gBesCFcQ/VXy2bSqM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        James Morse <james.morse@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 007/168] arm64: Silence clang warning on mismatched value/register sizes
-Date:   Tue, 28 Apr 2020 20:23:01 +0200
-Message-Id: <20200428182232.589612520@linuxfoundation.org>
+Subject: [PATCH 5.4 008/168] tools/testing/nvdimm: Fix compilation failure without CONFIG_DEV_DAX_PMEM_COMPAT
+Date:   Tue, 28 Apr 2020 20:23:02 +0200
+Message-Id: <20200428182232.721702949@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -62,36 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Catalin Marinas <catalin.marinas@arm.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit: 27a22fbdeedd6c5c451cf5f830d51782bf50c3a2 ]
+[ Upstream commit c0e71d602053e4e7637e4bc7d0bc9603ea77a33f ]
 
-Clang reports a warning on the __tlbi(aside1is, 0) macro expansion since
-the value size does not match the register size specified in the inline
-asm. Construct the ASID value using the __TLBI_VADDR() macro.
+When a kernel is configured without CONFIG_DEV_DAX_PMEM_COMPAT, the
+compilation of tools/testing/nvdimm fails with:
 
-Fixes: 222fc0c8503d ("arm64: compat: Workaround Neoverse-N1 #1542419 for compat user-space")
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Cc: James Morse <james.morse@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: James Morse <james.morse@arm.com>
+  Building modules, stage 2.
+  MODPOST 11 modules
+ERROR: "dax_pmem_compat_test" [tools/testing/nvdimm/test/nfit_test.ko] undefined!
+
+Fix the problem by calling dax_pmem_compat_test() only if the kernel has
+the required functionality.
+
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200123154720.12097-1-jack@suse.cz
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/sys_compat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/nvdimm/test/nfit.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/kernel/sys_compat.c b/arch/arm64/kernel/sys_compat.c
-index c9fb02927d3e5..3c18c2454089b 100644
---- a/arch/arm64/kernel/sys_compat.c
-+++ b/arch/arm64/kernel/sys_compat.c
-@@ -37,7 +37,7 @@ __do_compat_cache_op(unsigned long start, unsigned long end)
- 			 * The workaround requires an inner-shareable tlbi.
- 			 * We pick the reserved-ASID to minimise the impact.
- 			 */
--			__tlbi(aside1is, 0);
-+			__tlbi(aside1is, __TLBI_VADDR(0, 0));
- 			dsb(ish);
- 		}
+diff --git a/tools/testing/nvdimm/test/nfit.c b/tools/testing/nvdimm/test/nfit.c
+index bf6422a6af7ff..a8ee5c4d41ebb 100644
+--- a/tools/testing/nvdimm/test/nfit.c
++++ b/tools/testing/nvdimm/test/nfit.c
+@@ -3164,7 +3164,9 @@ static __init int nfit_test_init(void)
+ 	mcsafe_test();
+ 	dax_pmem_test();
+ 	dax_pmem_core_test();
++#ifdef CONFIG_DEV_DAX_PMEM_COMPAT
+ 	dax_pmem_compat_test();
++#endif
+ 
+ 	nfit_test_setup(nfit_test_lookup, nfit_test_evaluate_dsm);
  
 -- 
 2.20.1
