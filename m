@@ -2,105 +2,92 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA01C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E42C6C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 539CA206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:00:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588068059;
-	bh=TAYZrlBNourlI1Exy25uV6LmaGBIsfM/j37IDhRQBeQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lZZrV/4cAyUU7gcrrDacPO5E5wCyOGTD/L7QhKqnEXXuGLgYxTXSXQJPsP4wdSzvn
-	 k7Z90HBtrqgQgy2ENDnjZkbqUa/2TDchqFXI1BuTH/oeA5IXMAvlA7+S6aP+LF0FsU
-	 UrgJ7FPI3uIpQzVUuEGccItNnC7y0F2GSNak2zbM=
+	by mail.kernel.org (Postfix) with ESMTP id B88AB206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:01:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YuSW84MJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbgD1KA6 (ORCPT
+        id S1727803AbgD1KB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 06:00:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35530 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726932AbgD1KA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 06:00:58 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EB5220663;
-        Tue, 28 Apr 2020 10:00:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588068057;
-        bh=TAYZrlBNourlI1Exy25uV6LmaGBIsfM/j37IDhRQBeQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YP3gcmI+bToxhAjSyPBKppOBFsSNVTOnQ4aujEb/Jz8bi9Zhyue9jtvZVCasxvidc
-         bOAcar/jfuiUUTGcjCHxgN/CN6gTcY7DsgWGNdj8wdmS25xH/O7JwKNKBttGlyI/lc
-         tLkzNQxg1tO7mfII7r2Uj8h8XUMpaNLUOW2dzRgI=
-Date:   Tue, 28 Apr 2020 11:00:55 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     robh@kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        daniel.schwierzeck@gmail.com, hauke@hauke-m.de,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
- transfers
-Message-ID: <20200428100055.GB5677@sirena.org.uk>
-References: <cover.1587702428.git.eswara.kota@linux.intel.com>
- <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
- <20200424112505.GD5850@sirena.org.uk>
- <616a5419-add3-085e-32dc-c83d9d975725@linux.intel.com>
- <20200427134555.GC4383@sirena.org.uk>
- <43ecffb1-4786-c038-09bb-648657c0f5f3@linux.intel.com>
+        Tue, 28 Apr 2020 06:01:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48456 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726932AbgD1KBZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 06:01:25 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 465FBC03C1AB
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 03:01:25 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id l19so20801272lje.10
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 03:01:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vLmsZ8FzUvZ2qyUD84j1b22i18dHEE70Jtvscxhc09k=;
+        b=YuSW84MJxGm4qTrO7x6FDa0tNZ2DwTGnBZcdLuuUJwmIySl3NXFo5FIxgcdvSWhhHw
+         w8f3SVhylLAGIenBWpXFofh7SIqxoYqGlwz7LQm+YJ51a177fjUJO5Xr8wTKk7PLE9Ow
+         sq0njirZjcIVJgrpYtz0SI1Xkqde9Fx+gJzIVvtihqPzC8b+RubH3I+eAsZH3kyRJCaT
+         TGV1gQgqGK9ntlhlHxoERIFjvIwg0mp1TnG9kPacdcpTqghNObPflJ8OxLxmk7azsenJ
+         5pB5uU4FilL+JAVfPKMCSGlURLIKRawxY2bwR16A3geOEdTBD8NnehNPWlwNekdReDCw
+         g9WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vLmsZ8FzUvZ2qyUD84j1b22i18dHEE70Jtvscxhc09k=;
+        b=l4dx/nurzxu5O/JGK9OZHHoacla6iT4t2+Siz77aS9bgJ6/g+zeWUrQQOhnrRgdZGS
+         e3D9k1J0HCMlx+FTflQaHY0o3cAwf8S10FFPf/3/YDiL5I/KscOi9yjyVa8FVtILV2Mi
+         EtAsyVT3OVx28Sv0yFE72NqjcvRpQkIQsGO4MZovnb9XsPW40Rc5zhj8dEYpekEanymh
+         BcroOOh6t0c+1S6rtLpFfVxIwaM7YyCncsfFyZZkq74rviR/3tD8NEuWU3lIf7ZvhVot
+         4efqW6KTpumnS5t0X4CSxINjwiA4Mdg5oo0CfHs3wpQZ0MqI+huWcqjNoWXKwBsA1Nav
+         MnxQ==
+X-Gm-Message-State: AGi0Pua0ef3QIsdz+BgoVX75ZfiQFm6otJT8yp832XTeDxDBwns6l1qx
+        HQ3m9wGWQnYVqtO8hnuTKL8ylNsiJT/UREiWXTgbjw==
+X-Google-Smtp-Source: APiQypILX45Ac1tiqnMnI+HFKCHUmn1qsryssGy+UbF1Sz2zs9tEQxqIByqukAumdnDai62XdgrEeXgjb4HSD+iqAwQ=
+X-Received: by 2002:a2e:2ac2:: with SMTP id q185mr8308858ljq.125.1588068083674;
+ Tue, 28 Apr 2020 03:01:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="1UWUbFP1cBYEclgG"
-Content-Disposition: inline
-In-Reply-To: <43ecffb1-4786-c038-09bb-648657c0f5f3@linux.intel.com>
-X-Cookie: Eschew obfuscation.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200417183349.1283092-1-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20200417183349.1283092-1-martin.blumenstingl@googlemail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 28 Apr 2020 12:01:12 +0200
+Message-ID: <CACRpkdZ82tjcBc_kF29zUMiLLH==0zKbOd=fTRGq5-4FOiez5w@mail.gmail.com>
+Subject: Re: [PATCH RESEND v2 0/2] pinctrl-meson: two small improvements
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 17, 2020 at 8:34 PM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
 
---1UWUbFP1cBYEclgG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> While playing with audio output on Meson8b I found out that the
+> vendor kernel uses a custom version of the GPIO_PULL_UP flag. I
+> suspect that we will need this for audio support on Meson8b and/or
+> Meson8m2 but I don't see it hurt other platforms.
+>
+> Also while comparing the register bits with the GPIO direction (of
+> GPIOs exported to sysfs) I sometimes had a mismatch. This also wires
+> up gpio_chip.get_direction to have sysfs and the actual registers in
+> sync.
 
-On Tue, Apr 28, 2020 at 01:39:06PM +0800, Dilip Kota wrote:
+Patches applied.
 
-> Do you suggest to use different ISRs for multiple interrupt lines and single
-> ISR for single interrupt line? I see, this results in writing repetitive
-> code lines.
-
-It looks like the shared case is mainly a handler that calls the two
-other handlers?
-
-> Does single ISR looks erroneous! Please let me know.
-
-The change was not entirely clear, I was having trouble convincing
-myself that all the transformations were OK partly because I kept on
-finding little extra changes in there and partly because there were
-several things going on.  In theory it could work.
-
---1UWUbFP1cBYEclgG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6n/tYACgkQJNaLcl1U
-h9ChBQf+PGiMHXg9hs8O59dO1hggZfS7HcB5IPZdYhr6PQ5YTYvPR6Ay2ydDj7jY
-tiv4E3ovjS8V5PGZo6facwPnmMGE5koCu7kwI9ZzZ334qMBlFI/57RbS9ghNGrwc
-GUcfgt8W1YedLNaBmG11F1rLv4A7QpDfTIKONLdFbOArUY3Mxx2jX/AQUkDKV69y
-Rrvto8lLvpWAwrWBXptzx1SldSwpbqvc5JblvXzumbaJid9znHrn4uy38a9WUpeP
-kxOUdEW6bN94PHMH4ceLW3zXrPVJDSW1BeAkwFa8mQJcZTLQ8otwQgDcXV/WyG+h
-XeY5fDQmBrsIeRoWgYF8MdTDArWYhg==
-=sirA
------END PGP SIGNATURE-----
-
---1UWUbFP1cBYEclgG--
+Yours,
+Linus Walleij
