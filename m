@@ -2,126 +2,107 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FAA8C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D795C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B42820731
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B1F7206F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:33:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TuyorktZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Nv8yf/Sk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbgD1Wdq (ORCPT
+        id S1726960AbgD1Wdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:33:46 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60780 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726515AbgD1Wdp (ORCPT
+        Tue, 28 Apr 2020 18:33:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53698 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725934AbgD1Wdu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:33:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588113224;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cfynA1GS9zoR/R+KpFpTNVmup6mUfUXSRebr4yyqKDI=;
-        b=TuyorktZyDcRWUXloJrwe0Tfg64aII8VJRRHGeZ7Q0S25MVyibDWaF3gEyOjN4K+wMjpDb
-        Qjo7k0Xjm14fv1Ipu6YQuZUKAJuYc7Cacjf9UTBe0tsuwHZA1f4hgnb8f4el6MBqkSY1vZ
-        p1aM7ASFIRlh8OEPe4lA/BtEsJ9Sv9Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-290-6hJ8-lZdOYewsG-HbLb0OQ-1; Tue, 28 Apr 2020 18:33:40 -0400
-X-MC-Unique: 6hJ8-lZdOYewsG-HbLb0OQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A04DA108BD0F;
-        Tue, 28 Apr 2020 22:33:38 +0000 (UTC)
-Received: from ovpn-112-24.phx2.redhat.com (ovpn-112-24.phx2.redhat.com [10.3.112.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 50009600D2;
-        Tue, 28 Apr 2020 22:33:37 +0000 (UTC)
-Message-ID: <fa406883f0eace37fe7f658814e29f82a4f0addf.camel@redhat.com>
-Subject: Re: [RFC PATCH 3/3] sched,rt: break out of load balancing if an RT
- task appears
-From:   Scott Wood <swood@redhat.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Rik van Riel <riel@surriel.com>,
-        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Date:   Tue, 28 Apr 2020 17:33:36 -0500
-In-Reply-To: <jhjees7s29u.mognet@arm.com>
-References: <20200428050242.17717-1-swood@redhat.com>
-         <20200428050242.17717-4-swood@redhat.com> <jhjees7s29u.mognet@arm.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 28 Apr 2020 18:33:50 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7976AC03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:33:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=0HhYxuPpvTMfnTjhs6+jawNoSPMXkys6rgqCjV3Lnvs=; b=Nv8yf/Skx7sDnmMOLdUlv8ZEK2
+        FwCXcfTB9/+EN4E+n5HS9BLZvOaH8ZLu7ASy2EtosDk3Tx8mLs4x77hQb5Sae292iCx3kjlH2ZrAE
+        ciKb3Sq7oy5yiPIe/dQf4UASuocUTuWucM4Tf+fD9BxK2AcqTUptYr0NArROGKmL8eNx0crjWm1BZ
+        ErrdXvlV1yWxMFhnNm/kxnPZ/f7vOSjgnkwkepX7MuryK7sOHwO2o9r4fzBiNqmQB8sxNdIFye/NF
+        xpky/zdLvYAk3ca2rEyoFbCj9HX4m5pcU68mcZMGREN8W4bIgWDMf5bA02oXGDbaxB7oKipDisayg
+        PYZXTKSQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTYnA-00040N-VG; Tue, 28 Apr 2020 22:33:29 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5612F304121;
+        Wed, 29 Apr 2020 00:33:27 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3C135286F1E28; Wed, 29 Apr 2020 00:33:27 +0200 (CEST)
+Date:   Wed, 29 Apr 2020 00:33:27 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: Remaining randconfig objtool warnings, linux-next-20200428
+Message-ID: <20200428223327.GC16027@hirez.programming.kicks-ass.net>
+References: <CAK8P3a2qLJkokMGt48JRky=WUeAbJRuNmoD1oqfWdrGSC6y1LA@mail.gmail.com>
+ <20200428161044.caamvx67t2z4t6vd@treble>
+ <CAK8P3a0X4kMW1BQU6x9A2oo6i3-CMxi1h=0PhQgEbBtYWbJa9A@mail.gmail.com>
+ <20200428203855.zapf6jhcp6mbft7i@treble>
+ <20200428215554.GA16027@hirez.programming.kicks-ass.net>
+ <20200428220353.uepo455bj76sym4k@treble>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428220353.uepo455bj76sym4k@treble>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-28 at 22:56 +0100, Valentin Schneider wrote:
-> On 28/04/20 06:02, Scott Wood wrote:
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index dfde7f0ce3db..e7437e4e40b4 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -9394,6 +9400,10 @@ static int should_we_balance(struct lb_env *env)
-> >       struct sched_group *sg = env->sd->groups;
-> >       int cpu, balance_cpu = -1;
+On Tue, Apr 28, 2020 at 05:03:53PM -0500, Josh Poimboeuf wrote:
+> On Tue, Apr 28, 2020 at 11:55:54PM +0200, Peter Zijlstra wrote:
+
+> > binutils.git/gas/configure/tc-i386.c:i386_generate_nops
 > > 
-> > +	/* Run the realtime task now; load balance later. */
-> > +	if (rq_has_runnable_rt_task(env->dst_rq))
-> > +		return 0;
-> > +
+> > When there's too many NOPs (as here) it generates a JMP across the NOPS.
+> > It makes some sort of sense, at some point executing NOPs is going to be
+> > more expensive than a branch.. But shees..
 > 
-> I have a feeling this isn't very nice to CFS tasks, since we would now
-> "waste" load-balance attempts if they happen to coincide with an RT task
-> being runnable.
->
-> On your 72 CPUs machine, the system-wide balance happens (at best) every
-> 72ms if you have idle time, every ~2300ms otherwise (every balance
-> CPU gets to try to balance however, so it's not as horrible as I'm making
-> it sound). This is totally worst-case scenario territory, and you'd hope
-> newidle_balance() could help here and there (as it isn't gated by any
-> balance interval).
-> 
-> Still, even for a single rq, postponing a system-wide balance for a
-> full balance interval (i.e. ~2 secs worst case here) just because we had a
-> single RT task running when we tried to balance seems a bit much.
-> 
-> It may be possible to hack something to detect those cases and reset the
-> interval to "now" when e.g. dequeuing the last RT task (& after having
-> previously aborted a load-balance due to RT/DL/foobar).
+> Urgh.  Even if I tell it specifically to pad with NOPs, it still does
+> this "trick".  I have no idea how to deal with this in objtool.
 
-Yeah, some way to retry at an appropriate time after aborting a rebalance
-would be good.
+This is horrible... but it _might_ just work.
 
-
-> > +
-> > +/* Is there a task of a high priority class? */
-> > +static inline bool rq_has_runnable_rt_task(struct rq *rq)
-> > +{
-> > +	return unlikely(rq->nr_running != rq->cfs.h_nr_running);
-> 
-> Seeing as that can be RT, DL or stopper, that name is somewhat misleading.
-
-rq_has_runnable_rt_dl_task()?  Or is there some term that unambiguously
-encompasses both?
-
--Scott
-
-
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 0e9504fabe52..545f50f5de56 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -599,7 +599,18 @@ SYM_CODE_END(common_spurious)
+ _ASM_NOKPROBE(common_spurious)
+ 
+ /* common_interrupt is a hotpath. Align it */
++SYM_FUNC_START_LOCAL_NOALIGN(__ignore_me)
+ 	.p2align CONFIG_X86_L1_CACHE_SHIFT
++SYM_FUNC_END(__ignore_me)
++
++.pushsection .discard.func_stack_frame_non_standard
++        .align 8
++        .type   __func_stack_frame_non_standard___ignore_me, @object
++        .size   __func_stack_frame_non_standard___ignore_me, 8
++__func_stack_frame_non_standard___ignore_me:
++        .quad   __ignore_me
++.popsection
++
+ SYM_CODE_START_LOCAL(common_interrupt)
+ 	addq	$-0x80, (%rsp)			/* Adjust vector to [-256, -1] range */
+ 	call	interrupt_entry
