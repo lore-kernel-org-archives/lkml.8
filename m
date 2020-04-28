@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63550C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E13ADC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FFFF20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0FDB20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099371;
-	bh=3+ofRS7RE8FekExK6l1Hstl3mc2F4usOKMv2qO5BNHQ=;
+	s=default; t=1588099372;
+	bh=pMrxVaaiiCU86Lgsmkafmskcx5LjP5eRt86sY/KyaF8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cRDuIhJDnFAeVrT6Dr41rKqIuKf5Kp99rbaan9/C2IeuL8vJdcr6tyEiyIreYg/Wj
-	 GackiUvsjIcQOcAPfKaqCLCz/DsNUkv9wmN546cE0WAj3IPX7jLMcUtJAMQuveQIw9
-	 rq93UMgsjPZg0VGpOLIZ4eVuc54DXikyz+QfExyg=
+	b=k19zG9YORere2Qa9oXZzPBNYYFAeyEgVRFV8MhNoD1ptUNXKKXsxfPnb+86FFzO5n
+	 6ZZnYA9wVjtdarAufoom4ClcsQnmqBCrRcqL9eRTEJZlc6neLycb6C/8I4Noc8mG/o
+	 /I7ZwBv6l/4XKu5D3eS95Wht/DggDPjD2/FjRCc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730756AbgD1Smu (ORCPT
+        id S1730956AbgD1Sms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:42:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34956 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:42:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731147AbgD1Smq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:42:46 -0400
+        id S1731139AbgD1Sml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:42:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1464E20575;
-        Tue, 28 Apr 2020 18:42:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 280DC20575;
+        Tue, 28 Apr 2020 18:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099366;
-        bh=3+ofRS7RE8FekExK6l1Hstl3mc2F4usOKMv2qO5BNHQ=;
+        s=default; t=1588099361;
+        bh=pMrxVaaiiCU86Lgsmkafmskcx5LjP5eRt86sY/KyaF8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bO3Cx0UAFnqyAxRz/zN+8C62fwNItTocxNoHmhFYJh3zZAyIBUI+MpT/xTYhTuKHq
-         6hw4Q+kyh2cWvAP48Dibr4bFlIi19Syg2Jl7pisLh6ZDZRQiWI/8/1h3EgSisKFJ31
-         XffWmNplSlsm7dSG3MV4UgTcF0Q4p7i1Uu8aOspI=
+        b=tJWdUjYcapw60T3rF/8cLceHYtHxeq2okLb6Kd+RRymzHIVSMIVg2ofy0UbCmsYqc
+         kB7Htku5F3wmrBfTOsVpMK4HeGZDXe13sZ8uT+dxeTHiuWghLuVxvboayuD4/IR7Qi
+         Z0IOYe+/YdARKrqNMoD4Q5uCcW41TGxAREWb6wiY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 5.4 121/168] tty: rocket, avoid OOB access
-Date:   Tue, 28 Apr 2020 20:24:55 +0200
-Message-Id: <20200428182247.748810829@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Uros Bizjak <ubizjak@gmail.com>
+Subject: [PATCH 5.4 119/168] KVM: VMX: Enable machine check support for 32bit targets
+Date:   Tue, 28 Apr 2020 20:24:53 +0200
+Message-Id: <20200428182247.535009424@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -58,72 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Uros Bizjak <ubizjak@gmail.com>
 
-commit 7127d24372bf23675a36edc64d092dc7fd92ebe8 upstream.
+commit fb56baae5ea509e63c2a068d66a4d8ea91969fca upstream.
 
-init_r_port can access pc104 array out of bounds. pc104 is a 2D array
-defined to have 4 members. Each member has 8 submembers.
-* we can have more than 4 (PCI) boards, i.e. [board] can be OOB
-* line is not modulo-ed by anything, so the first line on the second
-  board can be 4, on the 3rd 12 or alike (depending on previously
-  registered boards). It's zero only on the first line of the first
-  board. So even [line] can be OOB, quite soon (with the 2nd registered
-  board already).
+There is no reason to limit the use of do_machine_check
+to 64bit targets. MCE handling works for both target familes.
 
-This code is broken for ages, so just avoid the OOB accesses and don't
-try to fix it as we would need to find out the correct line number. Use
-the default: RS232, if we are out.
-
-Generally, if anyone needs to set the interface types, a module parameter
-is past the last thing that should be used for this purpose. The
-parameters' description says it's for ISA cards anyway.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: stable <stable@vger.kernel.org>
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Link: https://lore.kernel.org/r/20200417105959.15201-2-jslaby@suse.cz
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: stable@vger.kernel.org
+Fixes: a0861c02a981 ("KVM: Add VT-x machine check support")
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Message-Id: <20200414071414.45636-1-ubizjak@gmail.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/rocket.c |   25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+ arch/x86/kvm/vmx/vmx.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/tty/rocket.c
-+++ b/drivers/tty/rocket.c
-@@ -632,18 +632,21 @@ init_r_port(int board, int aiop, int cha
- 	tty_port_init(&info->port);
- 	info->port.ops = &rocket_port_ops;
- 	info->flags &= ~ROCKET_MODE_MASK;
--	switch (pc104[board][line]) {
--	case 422:
--		info->flags |= ROCKET_MODE_RS422;
--		break;
--	case 485:
--		info->flags |= ROCKET_MODE_RS485;
--		break;
--	case 232:
--	default:
-+	if (board < ARRAY_SIZE(pc104) && line < ARRAY_SIZE(pc104_1))
-+		switch (pc104[board][line]) {
-+		case 422:
-+			info->flags |= ROCKET_MODE_RS422;
-+			break;
-+		case 485:
-+			info->flags |= ROCKET_MODE_RS485;
-+			break;
-+		case 232:
-+		default:
-+			info->flags |= ROCKET_MODE_RS232;
-+			break;
-+		}
-+	else
- 		info->flags |= ROCKET_MODE_RS232;
--		break;
--	}
- 
- 	info->intmask = RXF_TRIG | TXFIFO_MT | SRC_INT | DELTA_CD | DELTA_CTS | DELTA_DSR;
- 	if (sInitChan(ctlp, &info->channel, aiop, chan) == 0) {
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -4566,7 +4566,7 @@ static int handle_rmode_exception(struct
+  */
+ static void kvm_machine_check(void)
+ {
+-#if defined(CONFIG_X86_MCE) && defined(CONFIG_X86_64)
++#if defined(CONFIG_X86_MCE)
+ 	struct pt_regs regs = {
+ 		.cs = 3, /* Fake ring 3 no matter what the guest ran on */
+ 		.flags = X86_EFLAGS_IF,
 
 
