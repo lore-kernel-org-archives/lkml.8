@@ -2,134 +2,111 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24630C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78617C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE848206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:31:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tIUU17d6"
+	by mail.kernel.org (Postfix) with ESMTP id 4FDCF20728
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:36:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588044967;
+	bh=WUekqtlW2qxmY+i/sIRQCBkqdsCrUdGR3PZOPeiwciA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=W/VUvsELbGnArbI6I3E/FIqZJ5LW21nEfTRmaRbZ1NL2D53gxptaaO2ycgGb69Lv4
+	 TTmNOFiVduNmX+2fu8Zt3k7RXV94r5JO2E01Tr89IEJQJ9wO2PF2Scp9NoLhK1HovM
+	 OiYZSrl/Uma2Z6IWvcYk8DDc7rK2OX1PphE0sZgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgD1DbE (ORCPT
+        id S1726337AbgD1DgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 23:31:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43734 "EHLO
+        Mon, 27 Apr 2020 23:36:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbgD1DbD (ORCPT
+        with ESMTP id S1726047AbgD1DgG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 23:31:03 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DA78C03C1A9;
-        Mon, 27 Apr 2020 20:31:03 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id g19so30226608otk.5;
-        Mon, 27 Apr 2020 20:31:02 -0700 (PDT)
+        Mon, 27 Apr 2020 23:36:06 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2D3FC03C1A9
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 20:36:05 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id m2so15639325lfo.6
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 20:36:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jm8vfJ9EYyWFOVTVK1su6QOP18i2GwWwk6iXxu1Gwqg=;
-        b=tIUU17d61/yZf3H3f7qHle7H6xFFYcz/TYc3xCwWv+zz8GQVMUYUJWtQbqOEBaXVCn
-         SHWgaqnH7BSR/SgNiZc04fix5SZOpRu+36gqtZKds2WYSDllT9DtLDGZ6VNifdw2oNL8
-         NJZOZWb6nm14vdzNMbLVzOnQRwvO3w4jdky7VqdpEZAVfKqTrKsuD1qq910GBhgbsTQS
-         k0XEDmplGZKZWut2od4qJoG64IqiQYy1OkZ2IaZ9YLH3stUnyenxmJS64wtfGNGZJ9j/
-         ZAvkELeBXiPY9GCrLI7jebBu/+ckb31IV12xOg/yjj+OHKpX4U6Xse+H5a0WJl7lV89T
-         ZUuQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q1Hl4EoAQeecS6RJeMB353EzxseO3r7Hp2yIzNObp3I=;
+        b=SplrAUntYpA62B1N75YvHPdEO4shjtitO6O7fp81NGqZCL/liBkn4YGhS2ufiW89mA
+         6QRtLc38lw6xNb2vgvLJDvqC9mE3aqUJAqwD+PeOfBSBP94LeZ1hMSN6COmTdIaxaQpS
+         UpK5WWl4Kpc44DM72q0SRTuLkDG5Cy7pTFjlU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jm8vfJ9EYyWFOVTVK1su6QOP18i2GwWwk6iXxu1Gwqg=;
-        b=XbbHw/sk6rxTJIWIONYTzrenuFaJ99KU6bwbiO2ZeouB//QoepT22WDweGmZTNisAy
-         g1FoGuilqS16l7uTeottu82DKMMWx06THmh5x34SmsWwiFrUym6dDWx7h+XL0A4vNwfL
-         W9juxoTwJQRlX8suCkVBqGUPyhrJOQTjEok40RGGmlpMTX44QRF9+vKK5ICMtr8eG1iD
-         BmOpbWWBvJIHunAopIjhOjDwe/+h/DkL0T3uEXxd+Q4duX3ObA0kcynYinLyUhBtSrmL
-         49yGpJq5B5oArFTNtQ/q6LmAPAMMwqKok8mlfQn1aY2t+GUV8TzVv/WzuSR/KsVdQUV8
-         AxPg==
-X-Gm-Message-State: AGi0PuZhnU3U75gmRTfumAjfF/RpXYHZhRq/TzKJKWAK73FZJpj6ihtW
-        kw8uCDzwTX4Am4bFY4eC/jQ=
-X-Google-Smtp-Source: APiQypL+AkA11khZIM6HDPAXBFYXba69RckVwzoOGnXcFnSn58KdrLcc0xLwleE4RoRl5yN7hbSKfQ==
-X-Received: by 2002:a05:6830:11c6:: with SMTP id v6mr20618099otq.166.1588044662222;
-        Mon, 27 Apr 2020 20:31:02 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id q8sm1959615oij.36.2020.04.27.20.31.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 20:31:01 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] hv_netvsc: Fix netvsc_start_xmit's return type
-Date:   Mon, 27 Apr 2020 20:30:43 -0700
-Message-Id: <20200428033042.44561-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q1Hl4EoAQeecS6RJeMB353EzxseO3r7Hp2yIzNObp3I=;
+        b=mTsxgPPCXvW1Zi/fcqKUP3AnF7y8cxraihjGe1moKqEK8HKPB1mLubFexqGpsZJrxh
+         I/kXz3hgI+4ZsNxJ5NVzDqzoG8rxrTy5tMrNMHqzA5QMLviDqmIibGygAFNQpWI1fC+F
+         WZD5LNvl7BxztUwOGV8VEvN3PtLuHzjAkfM+RdkAuoaHp/nlSFm47H9kVmX59IXzwAFk
+         9DtP0MhsXpEBusGfJspwnAsvksNOzTPnzfXnc2wBVB7P/fG0RKmuY/wEcNeuor/Em83i
+         ENp4X6yYclMMMSDijBp7WKwlQNUPvkY4Yikde0etMjM4skv3Rrq9z/PldirCiOqGDCMQ
+         1m1A==
+X-Gm-Message-State: AGi0Pubxl+WVbUCNLZM1xY0+78F3p8fvj8Afjgqw++1C0TvaapJwXDhb
+        hfy4+3DqlE5zyM5187P6P+c1boQIgdw=
+X-Google-Smtp-Source: APiQypJ4zb5UkqWpJUwGQ00ezKOxY4UIAZRncm3SFC+0rQdmo8swN41GyRdN5yfJUoDiilbK9DUuqQ==
+X-Received: by 2002:a19:ae06:: with SMTP id f6mr17411962lfc.97.1588044963580;
+        Mon, 27 Apr 2020 20:36:03 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id j14sm13090863lfm.73.2020.04.27.20.36.02
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 20:36:02 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id k28so15651043lfe.10
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 20:36:02 -0700 (PDT)
+X-Received: by 2002:a19:9109:: with SMTP id t9mr18095968lfd.10.1588044961861;
+ Mon, 27 Apr 2020 20:36:01 -0700 (PDT)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+References: <20200428032745.133556-1-jannh@google.com> <20200428032745.133556-3-jannh@google.com>
+In-Reply-To: <20200428032745.133556-3-jannh@google.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 27 Apr 2020 20:35:45 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjSYTpTH0X8EcGGJD84tsJS62BN3tC6NfzmjvXdSkFVxg@mail.gmail.com>
+Message-ID: <CAHk-=wjSYTpTH0X8EcGGJD84tsJS62BN3tC6NfzmjvXdSkFVxg@mail.gmail.com>
+Subject: Re: [PATCH 2/5] coredump: Fix handling of partial writes in dump_emit()
+To:     Jann Horn <jannh@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Mark Salter <msalter@redhat.com>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-netvsc_start_xmit is used as a callback function for the ndo_start_xmit
-function pointer. ndo_start_xmit's return type is netdev_tx_t but
-netvsc_start_xmit's return type is int.
+On Mon, Apr 27, 2020 at 8:28 PM Jann Horn <jannh@google.com> wrote:
+>
+> After a partial write, we have to update the input buffer pointer.
 
-This causes a failure with Control Flow Integrity (CFI), which requires
-function pointer prototypes and callback function definitions to match
-exactly. When CFI is in enforcing, the kernel panics. When booting a
-CFI kernel with WSL 2, the VM is immediately terminated because of this:
+Interesting. It seems this partial write case never triggers (except
+for actually killing the core-dump).
 
-$ wsl.exe -d ubuntu
-The Windows Subsystem for Linux instance has terminated.
+Or did you find a case where it actually matters?
 
-Avoid this by using the right return type for netvsc_start_xmit.
+Your fix is obviously correct, but it also makes me go "that function
+clearly never actually worked for partial writes, maybe we shouldn't
+even bother?"
 
-Fixes: fceaf24a943d8 ("Staging: hv: add the Hyper-V virtual network driver")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1009
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
-
-Do note that netvsc_xmit still returns int because netvsc_xmit has a
-potential return from netvsc_vf_xmit, which does not return netdev_tx_t
-because of the call to dev_queue_xmit.
-
-I am not sure if that is an oversight that was introduced by
-commit 0c195567a8f6e ("netvsc: transparent VF management") or if
-everything works properly as it is now.
-
-My patch is purely concerned with making the definition match the
-prototype so it should be NFC aside from avoiding the CFI panic.
-
- drivers/net/hyperv/netvsc_drv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index d8e86bdbfba1e..ebcfbae056900 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -707,7 +707,8 @@ static int netvsc_xmit(struct sk_buff *skb, struct net_device *net, bool xdp_tx)
- 	goto drop;
- }
- 
--static int netvsc_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-+static netdev_tx_t netvsc_start_xmit(struct sk_buff *skb,
-+				     struct net_device *ndev)
- {
- 	return netvsc_xmit(skb, ndev, false);
- }
-
-base-commit: 51184ae37e0518fd90cb437a2fbc953ae558cd0d
--- 
-2.26.2
-
+             Linus
