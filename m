@@ -2,66 +2,124 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C4DC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1BEC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13A3020731
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A87B208FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:34:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="g7o6v59i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbgD1UbH (ORCPT
+        id S1726401AbgD1UeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:31:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34308 "EHLO
+        Tue, 28 Apr 2020 16:34:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726284AbgD1UbH (ORCPT
+        by vger.kernel.org with ESMTP id S1726286AbgD1UeK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:31:07 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEDADC03C1AB;
-        Tue, 28 Apr 2020 13:31:06 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id F3D5A120ED578;
-        Tue, 28 Apr 2020 13:31:04 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 13:31:04 -0700 (PDT)
-Message-Id: <20200428.133104.2167354110776431026.davem@davemloft.net>
-To:     kuba@kernel.org
-Cc:     keescook@chromium.org, shuah@kernel.org, netdev@vger.kernel.org,
-        luto@amacapital.net, wad@chromium.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, Tim.Bird@sony.com
-Subject: Re: [PATCH net-next v6 0/5] kselftest: add fixture parameters
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200428010351.331260-1-kuba@kernel.org>
-References: <20200428010351.331260-1-kuba@kernel.org>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 28 Apr 2020 13:31:05 -0700 (PDT)
+        Tue, 28 Apr 2020 16:34:10 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D37DC03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:34:10 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id t8so22873231uap.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:34:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z97Q8zIF1xZ1WiB5BLHXUrpSO7gV7Uk5iXCchLoct18=;
+        b=g7o6v59iRNgpmNU22S7QAHVZZ5eMbcXUaro17i5cvT7gtb4rYzeT5iF82Z8QbSyLos
+         3oyXlsKo3ccwL58lV4OcDoj5R2Qn/eYUWn62IGSYp5gV3DSeSCJGMksU4PPxXsclN2ui
+         cMs1F8RG0iuGsY27CHKe0pK4E5FR+YPotvQ9G+LHh4pczxrc2Gx32+ufbE+9ZLYobY9F
+         8bK3rpag9kjCRt4x6AbU1oaoQiyG9svN3c/8pGjp5mRAdBUfTeFHVYSfWap8vG6SWE8j
+         A8wHuddtQs6fvQyFQTm0sMt8ovIPXHXjC6ORldqbOU9C8r9F/dRR+sU23tqz6vk9FmKF
+         jXiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z97Q8zIF1xZ1WiB5BLHXUrpSO7gV7Uk5iXCchLoct18=;
+        b=ntU9yiDlUiHfHmZUw1qcHxHoUGfYueFoPpTEhtm+yENG+vP9yzzQVN91wqX20QwE3M
+         4Meva/+kimE7+erhk/9uL/GOsznwsyKJfK+nPY+BFFWOL/DILLGyX931ooS+7/ozqqE4
+         QOCnvuCbFTEQaxu3QVou/COHhH1QIKjT0pgP93hMcVzX0E0psrYftgyZZwSSdiA3I92W
+         TYlCpjzbCLKA06dEOPYPXG8TCa6fxeRuWe/ExzL9kZfthVl26NMoQu1bt7c2rl6fkVbH
+         qf/vXRYrCSuyGb9XmO033egokoxeWpj6JdRRGufbCzhJlz+6SvXf7zqPmO1Ef9denb7F
+         Uapg==
+X-Gm-Message-State: AGi0PuaUoj+HJjKybMw9DJX8krY3OvYXshwpMn4aaE0Xf/vNtxIwtc5c
+        rptK1pANQY3S5QKlwpX4bt8wrc+qiwKsdf1lCJO9HA==
+X-Google-Smtp-Source: APiQypIreH+1VhDbJwXHZbOxs7FxoAr4YVLrwqIHB4Ov/kDaB/n1zXGWYYQvnW5yvPxXNWy4O5Ee+qC4VU8WGKGBUKU=
+X-Received: by 2002:a67:e9d9:: with SMTP id q25mr22060001vso.27.1588106049108;
+ Tue, 28 Apr 2020 13:34:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200424161944.6044-1-sudipm.mukherjee@gmail.com>
+In-Reply-To: <20200424161944.6044-1-sudipm.mukherjee@gmail.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Wed, 29 Apr 2020 02:03:33 +0530
+Message-ID: <CAHLCerPm=FssMWhccXbJiCaxakDb-Trz_uOpCAmtwEyaQkeqxQ@mail.gmail.com>
+Subject: Re: [PATCH v2] thermal: ti-soc-thermal: avoid dereferencing ERR_PTR
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc:     Eduardo Valentin <edubezval@gmail.com>, Keerthy <j-keerthy@ti.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
-Date: Mon, 27 Apr 2020 18:03:46 -0700
+On Fri, Apr 24, 2020 at 9:49 PM Sudip Mukherjee
+<sudipm.mukherjee@gmail.com> wrote:
+>
+> On error the function ti_bandgap_get_sensor_data() returns the error
+> code in ERR_PTR() but we only checked if the return value is NULL or
+> not. And, so we can dereference an error code inside ERR_PTR.
+> While at it, convert a check to IS_ERR_OR_NULL.
+>
+> Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-> This set is an attempt to make running tests for different
-> sets of data easier. The direct motivation is the tls
-> test which we'd like to run for TLS 1.2 and TLS 1.3,
-> but currently there is no easy way to invoke the same
-> tests with different parameters.
-> 
-> Tested all users of kselftest_harness.h.
-> 
-> Dave, would it be possible to take these via net-next?
-> It seems we're failing to get Shuah's attention.
-
-Sure, series applied, thanks Jakub.
+> ---
+>  drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+> index d3e959d01606..85776db4bf34 100644
+> --- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+> +++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+> @@ -169,7 +169,7 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
+>
+>         data = ti_bandgap_get_sensor_data(bgp, id);
+>
+> -       if (!data || IS_ERR(data))
+> +       if (!IS_ERR_OR_NULL(data))
+>                 data = ti_thermal_build_data(bgp, id);
+>
+>         if (!data)
+> @@ -196,7 +196,7 @@ int ti_thermal_remove_sensor(struct ti_bandgap *bgp, int id)
+>
+>         data = ti_bandgap_get_sensor_data(bgp, id);
+>
+> -       if (data && data->ti_thermal) {
+> +       if (!IS_ERR_OR_NULL(data) && data->ti_thermal) {
+>                 if (data->our_zone)
+>                         thermal_zone_device_unregister(data->ti_thermal);
+>         }
+> @@ -262,7 +262,7 @@ int ti_thermal_unregister_cpu_cooling(struct ti_bandgap *bgp, int id)
+>
+>         data = ti_bandgap_get_sensor_data(bgp, id);
+>
+> -       if (data) {
+> +       if (!IS_ERR_OR_NULL(data)) {
+>                 cpufreq_cooling_unregister(data->cool_dev);
+>                 if (data->policy)
+>                         cpufreq_cpu_put(data->policy);
+> --
+> 2.11.0
+>
