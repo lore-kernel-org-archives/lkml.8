@@ -6,99 +6,111 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A5CC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B335C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5BBC206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BA86206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:27:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbgD1V0g (ORCPT
+        id S1726481AbgD1V1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:26:36 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:35697 "EHLO
+        Tue, 28 Apr 2020 17:27:50 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:59475 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726256AbgD1V0f (ORCPT
+        with ESMTP id S1726256AbgD1V1u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:26:35 -0400
+        Tue, 28 Apr 2020 17:27:50 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MLAAs-1jll502fZq-00IASJ; Tue, 28 Apr 2020 23:26:00 +0200
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MbRbr-1isGzy40yX-00bpfL; Tue, 28 Apr 2020 23:27:24 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Christian Brauner <christian@brauner.io>,
-        Jonathan Corbet <corbet@lwn.net>
+To:     Mark Brown <broonie@kernel.org>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] samples: fix binderfs sample
-Date:   Tue, 28 Apr 2020 23:25:33 +0200
-Message-Id: <20200428212555.2806258-1-arnd@arndb.de>
+        Randy Dunlap <rdunlap@infradead.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.wolfsonmicro.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: codecs: wm97xx: fix ac97 dependency
+Date:   Tue, 28 Apr 2020 23:26:59 +0200
+Message-Id: <20200428212721.2877627-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:rYdXf2edjRSRRytj6ux8j82psWH/1dATQIpT7zNrCZo6yq2nPvj
- rUgKTicGV0V1PzkBeFhKjT2EE/PlK1X3ZwA4m+WeEM8/AMy7eRkq5buoVSIdjQlD/pFChtB
- kOGmaCS7t5CC8elXbTt4dXYGl1SsYitmQh14DGY5S3fCnxBW+FCN2Y6Ms/5KXt58Fvw7fX9
- RJw7Q5dyuVFPQ6M0A5DMg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VrJRv7ZviYY=:3duZvQoyNDq1uTBx7mgKhL
- Q4fOk4rGDHdl+kNBGgIrWW/wuKzioDm0LeKlC9hLtTOViLru6HZyh2R8EjbU7Qhy5bkk6nZoN
- 6NUXMyKqteYDoNKLGp8f7u3mStsGuxQH3MxRwRKL2dn/uZwxAF327sBG0d+69T5WGaHDmghWo
- hKxCylj/Z75x9PsgUb5Uvv7a7YE9cs8uN2QHiKDDamKWLXmNWH0jeO6A/aqlBy8KHU3y7OnIP
- IF3QEsnREGeKSYsDfkiRCYpdXuZeT6t5Y+TWaLWEUyqha2i3XwKcoq4iwpug72w11nr0P3wKB
- GkF0QMrZFfYLgChLZSAj3odKUHxz/7cVbymPEWNHHhFNEwZMPOJPb4M+VA7q1Ps3n41jLxa2A
- r0TjVsXdbxw+c2pChqlHFue3j9daxzjzwz5p5hfL0ndLASJ81/gRj5hSmA7npqtfpyA6ylMUW
- qkzorM/AtindhfWa4eBvoJKN5cm+jBP8ZGUi3tERFv29RS5N79QBAPBM3CkM4vpHUGarcB/NU
- lNcVQcHxryx0d89aB+LqvWAzqcCa3GYxhIV7R8T5jR9QypXKEWJyYsqXMh45/fOYyLvox1UnT
- QYxOD0FD3xeXpMXc5SgvFVpXhLFzzE+BBC2xDyGg86+AFCota6wY0Q4Wg5Yoyny0appx5SyVD
- 0wgRkWIJAz1nSLcB8o/tskdGOOa5mE5ITLVoGcwbN2fBy1G7SbNPgIngW1j+mUvGW/Hg451bc
- t+giw0xUUCPTF82oFaZRPMfFdRilJHwN2n9UZCNBCk3HEPprVuik7/uyfta/8rVN434331cCg
- t6qgEiO65dIzZfwaws7CbuXqSu1Ajt9JKMaeQupRfgvKPme5Zs=
+X-Provags-ID: V03:K1:plHfexjdZVApeeYxLAvg4KGlWurVjoh6zwIn/tqrNJ5GenZjv/D
+ SOu3gT/FHq9H3n8SpVLPKq+EbuaBFtJ6QBzwtP6ZjS34IK/AT9+Nxt9nJ8oSR56KSiHo0Hm
+ L3qi0f1qKGLoRsZs3njFLrEyXHxyK1WXGUJ/mouBSnUypfoDwLbq/cuJXm+54CE29n3hy3k
+ aXUa6i6o9nMgvGCs0mdjw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6spdvlTUeP4=:ezGBOGOkfKs5xXi84nOUKK
+ vc3TdvTCvmW/yAb4yr55mTZWG61nWuvHBGmNSE7CLJJFF/bTyOYxtG1DzMLl1ktUM9FqVTJ95
+ Yv38MCHBZn83CLUHzOiHeOVZdK+pWyKru8uuiC16WZdePnXK8FOl+T0/PHnJs+c6YIt53NqD+
+ 7aNZdUE6iAeew1k3KkzXQsN353depZcnaOiK+Ku2zR0G+3mlydcu7rW2DHWxm6k1loTLe9HpT
+ txsQuAK70neviPr8jDhirqEzFVd+2/uoBEL5PmXTuCWi2MSIg7zd+AvB3x4WUsY1de2iSm99P
+ UCiXK7vWUd7qEYpUSEvNpYlMdmegyyDIWjKi5B0a6254+RkPRfeAbXq4KwRrZwMo8EJwpY4W8
+ DiUMe6nync6UcUUzbQE+AvmpC3rCC+r+xmirsyW3ciC3giX2mRqrxWHWsUSyDfzZPTvShpoQr
+ Q/HCe+t74s6/Bv13UOe0+jA1jBYE1J5RnZqnAF1Qh4p83r4zg54CrEe7Ufy3m7N61V/UbzGZr
+ 1wsnXXbvXXHRriyf1XqHm3/i7PuzEQ8k3uGxSDUpZXLP0yhhtx2WdILaOeg4QOMDjYnnvDdvm
+ 1wQjrg+mNgP8a+xEQNjDhPjMDRRqT3s1Qr5ohJ0YYOjAP29xx329V06msEP3uFCQyOxA6qQDg
+ K2W3Skq5pfVW8IYlZelxnZso1AOcKN9gEDKmKnwktHpxZCaxxM5AAZVg6PDMda2FyErn5VOS0
+ 6cbcHJrJyAqhOdHd6/9QyFumRW2ZXftFKhRWkdOv9LMJVJ6Q8aSUfUe/AA0SPPbjVnIphCjcU
+ 33eo6blx+kl/RxzQncsMrBgV/cScD5B+roxASW84z8Vd/UBO3w=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A routine check for misspelled Kconfig symbols showed on instance
-from last year, the correct symbol name is CONFIG_ANDROID_BINDERFS,
-not CONFIG_CONFIG_ANDROID_BINDERFS, so the extra prefix must
-be removed in the Kconfig file to allow enabling the sample.
+A recent build fix got the dependency slightly wrong, breaking
+builds with CONFIG_AC97_BUS_NEW:
 
-As the actual sample fails to build as a kernel module, change the
-Makefile enough to get to build as a hostprog instead.
+WARNING: unmet direct dependencies detected for SND_SOC_WM9713
+  Depends on [n]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_SOC_AC97_BUS [=n]
+  Selected by [m]:
+  - SND_SOC_ZYLONITE [=m] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_PXA2XX_SOC [=m] && MACH_ZYLONITE [=y] && AC97_BUS [=n]=n
 
-Fixes: 9762dc1432e1 ("samples: add binderfs sample program")
+WARNING: unmet direct dependencies detected for SND_SOC_WM9712
+  Depends on [n]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_SOC_AC97_BUS [=n]
+  Selected by [m]:
+  - SND_PXA2XX_SOC_EM_X270 [=m] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_PXA2XX_SOC [=m] && (MACH_EM_X270 [=n] || MACH_EXEDA [=n] || MACH_CM_X300 [=y]) && AC97_BUS [=n]=n
+
+Change the dependency to allow either version of the AC97 library
+code.
+
+Fixes: 5a309875787d ("ASoC: Fix SND_SOC_ALL_CODECS imply ac97 fallout")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- samples/Kconfig           | 2 +-
- samples/binderfs/Makefile | 6 +++++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ sound/soc/codecs/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/samples/Kconfig b/samples/Kconfig
-index 5c31971a5745..e0b747cc90c9 100644
---- a/samples/Kconfig
-+++ b/samples/Kconfig
-@@ -171,7 +171,7 @@ config SAMPLE_VFIO_MDEV_MBOCHS
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index 1de97680858f..d911956c591d 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -1626,19 +1626,19 @@ config SND_SOC_WM9090
  
- config SAMPLE_ANDROID_BINDERFS
- 	bool "Build Android binderfs example"
--	depends on CONFIG_ANDROID_BINDERFS
-+	depends on ANDROID_BINDERFS
- 	help
- 	  Builds a sample program to illustrate the use of the Android binderfs
- 	  filesystem.
-diff --git a/samples/binderfs/Makefile b/samples/binderfs/Makefile
-index ea4c93d36256..a3ac5476338a 100644
---- a/samples/binderfs/Makefile
-+++ b/samples/binderfs/Makefile
-@@ -1,2 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
--obj-$(CONFIG_SAMPLE_ANDROID_BINDERFS) += binderfs_example.o
-+ifndef CROSS_COMPILE
-+ifdef CONFIG_SAMPLE_ANDROID_BINDERFS
-+hostprogs := binderfs_example
-+endif
-+endif
+ config SND_SOC_WM9705
+ 	tristate
+-	depends on SND_SOC_AC97_BUS
++	depends on SND_SOC_AC97_BUS || AC97_BUS_NEW
+ 	select REGMAP_AC97
+ 	select AC97_BUS_COMPAT if AC97_BUS_NEW
+ 
+ config SND_SOC_WM9712
+ 	tristate
+-	depends on SND_SOC_AC97_BUS
++	depends on SND_SOC_AC97_BUS || AC97_BUS_NEW
+ 	select REGMAP_AC97
+ 	select AC97_BUS_COMPAT if AC97_BUS_NEW
+ 
+ config SND_SOC_WM9713
+ 	tristate
+-	depends on SND_SOC_AC97_BUS
++	depends on SND_SOC_AC97_BUS || AC97_BUS_NEW
+ 	select REGMAP_AC97
+ 	select AC97_BUS_COMPAT if AC97_BUS_NEW
+ 
 -- 
 2.26.0
 
