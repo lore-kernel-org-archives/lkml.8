@@ -4,24 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C75C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C99C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF5721841
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C32C421841
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:22:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbgD1PSJ (ORCPT
+        id S1728600AbgD1PV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:18:09 -0400
-Received: from 8bytes.org ([81.169.241.247]:37386 "EHLO theia.8bytes.org"
+        Tue, 28 Apr 2020 11:21:59 -0400
+Received: from 8bytes.org ([81.169.241.247]:37630 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728214AbgD1PR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:17:59 -0400
+        id S1728315AbgD1PSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:18:09 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 3FEA2EA5; Tue, 28 Apr 2020 17:17:45 +0200 (CEST)
+        id 23D73F27; Tue, 28 Apr 2020 17:17:50 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -41,9 +40,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 17/75] x86/boot/compressed/64: Don't pre-map memory in KASLR code
-Date:   Tue, 28 Apr 2020 17:16:27 +0200
-Message-Id: <20200428151725.31091-18-joro@8bytes.org>
+Subject: [PATCH v3 42/75] x86/sev-es: Setup GHCB based boot #VC handler
+Date:   Tue, 28 Apr 2020 17:16:52 +0200
+Message-Id: <20200428151725.31091-43-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200428151725.31091-1-joro@8bytes.org>
 References: <20200428151725.31091-1-joro@8bytes.org>
@@ -54,135 +53,267 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-With the page-fault handler in place the identity mapping can be built
-on-demand. So remove the code which manually creates the mappings and
-unexport/remove the functions used for it.
+Add the infrastructure to handle #VC exceptions when the kernel runs
+on virtual addresses and has a GHCB mapped. This handler will be used
+until the runtime #VC handler takes over.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/compressed/ident_map_64.c | 16 ++--------------
- arch/x86/boot/compressed/kaslr.c        | 24 +-----------------------
- arch/x86/boot/compressed/misc.h         | 10 ----------
- 3 files changed, 3 insertions(+), 47 deletions(-)
+ arch/x86/include/asm/segment.h  |   2 +-
+ arch/x86/include/asm/sev-es.h   |   1 +
+ arch/x86/kernel/head64.c        |   6 ++
+ arch/x86/kernel/sev-es-shared.c |  14 ++--
+ arch/x86/kernel/sev-es.c        | 116 ++++++++++++++++++++++++++++++++
+ arch/x86/mm/extable.c           |   1 +
+ 6 files changed, 132 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index aa55e7b5cade..9f6606184797 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -89,11 +89,9 @@ phys_addr_t physical_mask = (1ULL << __PHYSICAL_MASK_SHIFT) - 1;
- static struct x86_mapping_info mapping_info;
+diff --git a/arch/x86/include/asm/segment.h b/arch/x86/include/asm/segment.h
+index 6669164abadc..5b648066504c 100644
+--- a/arch/x86/include/asm/segment.h
++++ b/arch/x86/include/asm/segment.h
+@@ -230,7 +230,7 @@
+ #define NUM_EXCEPTION_VECTORS		32
  
- /*
-- * Adds the specified range to what will become the new identity mappings.
-- * Once all ranges have been added, the new mapping is activated by calling
-- * finalize_identity_maps() below.
-+ * Adds the specified range to the identity mappings.
+ /* Bitmask of exception vectors which push an error code on the stack: */
+-#define EXCEPTION_ERRCODE_MASK		0x00027d00
++#define EXCEPTION_ERRCODE_MASK		0x20027d00
+ 
+ #define GDT_SIZE			(GDT_ENTRIES*8)
+ #define GDT_ENTRY_TLS_ENTRIES		3
+diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
+index b2cbcd40b52e..e1ed963a57ec 100644
+--- a/arch/x86/include/asm/sev-es.h
++++ b/arch/x86/include/asm/sev-es.h
+@@ -74,5 +74,6 @@ static inline u64 lower_bits(u64 val, unsigned int bits)
+ }
+ 
+ extern void vc_no_ghcb(void);
++extern bool vc_boot_ghcb(struct pt_regs *regs);
+ 
+ #endif
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 9586522bfcb3..d83d59c15548 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -386,6 +386,12 @@ void __init do_early_exception(struct pt_regs *regs, int trapnr)
+ 	    early_make_pgtable(native_read_cr2()))
+ 		return;
+ 
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++	if (trapnr == X86_TRAP_VC &&
++	    vc_boot_ghcb(regs))
++		return;
++#endif
++
+ 	early_fixup_exception(regs, trapnr);
+ }
+ 
+diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
+index 5703f9b17e70..3d2299fb5e3f 100644
+--- a/arch/x86/kernel/sev-es-shared.c
++++ b/arch/x86/kernel/sev-es-shared.c
+@@ -9,7 +9,7 @@
+  * and is included directly into both code-bases.
   */
--void add_identity_map(unsigned long start, unsigned long size)
-+static void add_identity_map(unsigned long start, unsigned long size)
- {
- 	unsigned long end = start + size;
  
-@@ -165,16 +163,6 @@ void initialize_identity_maps(void)
- 	write_cr3(top_level_pgt);
+-static void __maybe_unused sev_es_terminate(unsigned int reason)
++static void sev_es_terminate(unsigned int reason)
+ {
+ 	u64 val = GHCB_SEV_TERMINATE;
+ 
+@@ -27,7 +27,7 @@ static void __maybe_unused sev_es_terminate(unsigned int reason)
+ 		asm volatile("hlt\n" : : : "memory");
  }
  
--/*
-- * This switches the page tables to the new level4 that has been built
-- * via calls to add_identity_map() above. If booted via startup_32(),
-- * this is effectively a no-op.
-- */
--void finalize_identity_maps(void)
--{
--	write_cr3(top_level_pgt);
--}
--
- void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
+-static bool __maybe_unused sev_es_negotiate_protocol(void)
++static bool sev_es_negotiate_protocol(void)
  {
- 	unsigned long address = native_read_cr2();
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index 856dc1c9bb0d..c466fb738de0 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -399,8 +399,6 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
- 	 */
- 	mem_avoid[MEM_AVOID_ZO_RANGE].start = input;
- 	mem_avoid[MEM_AVOID_ZO_RANGE].size = (output + init_size) - input;
--	add_identity_map(mem_avoid[MEM_AVOID_ZO_RANGE].start,
--			 mem_avoid[MEM_AVOID_ZO_RANGE].size);
+ 	u64 val;
  
- 	/* Avoid initrd. */
- 	initrd_start  = (u64)boot_params->ext_ramdisk_image << 32;
-@@ -420,14 +418,10 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
- 		;
- 	mem_avoid[MEM_AVOID_CMDLINE].start = cmd_line;
- 	mem_avoid[MEM_AVOID_CMDLINE].size = cmd_line_size;
--	add_identity_map(mem_avoid[MEM_AVOID_CMDLINE].start,
--			 mem_avoid[MEM_AVOID_CMDLINE].size);
- 
- 	/* Avoid boot parameters. */
- 	mem_avoid[MEM_AVOID_BOOTPARAMS].start = (unsigned long)boot_params;
- 	mem_avoid[MEM_AVOID_BOOTPARAMS].size = sizeof(*boot_params);
--	add_identity_map(mem_avoid[MEM_AVOID_BOOTPARAMS].start,
--			 mem_avoid[MEM_AVOID_BOOTPARAMS].size);
- 
- 	/* We don't need to set a mapping for setup_data. */
- 
-@@ -436,11 +430,6 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
- 
- 	/* Enumerate the immovable memory regions */
- 	num_immovable_mem = count_immovable_mem_regions();
--
--#ifdef CONFIG_X86_VERBOSE_BOOTUP
--	/* Make sure video RAM can be used. */
--	add_identity_map(0, PMD_SIZE);
--#endif
+@@ -46,7 +46,7 @@ static bool __maybe_unused sev_es_negotiate_protocol(void)
+ 	return true;
  }
  
- /*
-@@ -919,19 +908,8 @@ void choose_random_location(unsigned long input,
- 		warn("Physical KASLR disabled: no suitable memory region!");
- 	} else {
- 		/* Update the new physical address location. */
--		if (*output != random_addr) {
--			add_identity_map(random_addr, output_size);
-+		if (*output != random_addr)
- 			*output = random_addr;
--		}
--
--		/*
--		 * This loads the identity mapping page table.
--		 * This should only be done if a new physical address
--		 * is found for the kernel, otherwise we should keep
--		 * the old page table to make it be like the "nokaslr"
--		 * case.
--		 */
--		finalize_identity_maps();
- 	}
+-static void __maybe_unused vc_ghcb_invalidate(struct ghcb *ghcb)
++static void vc_ghcb_invalidate(struct ghcb *ghcb)
+ {
+ 	memset(ghcb->save.valid_bitmap, 0, sizeof(ghcb->save.valid_bitmap));
+ }
+@@ -58,9 +58,9 @@ static bool vc_decoding_needed(unsigned long exit_code)
+ 		 exit_code <= SVM_EXIT_LAST_EXCP);
+ }
  
+-static enum es_result __maybe_unused vc_init_em_ctxt(struct es_em_ctxt *ctxt,
+-						     struct pt_regs *regs,
+-						     unsigned long exit_code)
++static enum es_result vc_init_em_ctxt(struct es_em_ctxt *ctxt,
++				      struct pt_regs *regs,
++				      unsigned long exit_code)
+ {
+ 	enum es_result ret = ES_OK;
  
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 345c90fbc500..ea6174bad699 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -98,17 +98,7 @@ static inline void choose_random_location(unsigned long input,
- #endif
+@@ -73,7 +73,7 @@ static enum es_result __maybe_unused vc_init_em_ctxt(struct es_em_ctxt *ctxt,
+ 	return ret;
+ }
  
- #ifdef CONFIG_X86_64
--void initialize_identity_maps(void);
--void add_identity_map(unsigned long start, unsigned long size);
--void finalize_identity_maps(void);
- extern unsigned char _pgtable[];
--#else
--static inline void initialize_identity_maps(void)
--{ }
--static inline void add_identity_map(unsigned long start, unsigned long size)
--{ }
--static inline void finalize_identity_maps(void)
--{ }
- #endif
+-static void __maybe_unused vc_finish_insn(struct es_em_ctxt *ctxt)
++static void vc_finish_insn(struct es_em_ctxt *ctxt)
+ {
+ 	ctxt->regs->ip += ctxt->insn.length;
+ }
+diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+index 0d20770decce..9de5bb23cb0a 100644
+--- a/arch/x86/kernel/sev-es.c
++++ b/arch/x86/kernel/sev-es.c
+@@ -7,7 +7,9 @@
+  * Author: Joerg Roedel <jroedel@suse.de>
+  */
  
- #ifdef CONFIG_EARLY_PRINTK
++#include <linux/sched/debug.h>	/* For show_regs() */
+ #include <linux/kernel.h>
++#include <linux/printk.h>
+ #include <linux/mm.h>
+ 
+ #include <asm/trap_defs.h>
+@@ -15,8 +17,21 @@
+ #include <asm/insn-eval.h>
+ #include <asm/fpu/internal.h>
+ #include <asm/processor.h>
++#include <asm/trap_defs.h>
+ #include <asm/svm.h>
+ 
++/* For early boot hypervisor communication in SEV-ES enabled guests */
++static struct ghcb boot_ghcb_page __bss_decrypted __aligned(PAGE_SIZE);
++
++/*
++ * Needs to be in the .data section because we need it NULL before bss is
++ * cleared
++ */
++static struct ghcb __initdata *boot_ghcb;
++
++/* Needed in vc_early_vc_forward_exception */
++void do_early_exception(struct pt_regs *regs, int trapnr);
++
+ static inline u64 sev_es_rd_ghcb_msr(void)
+ {
+ 	return native_read_msr(MSR_AMD64_SEV_ES_GHCB);
+@@ -161,3 +176,104 @@ static enum es_result vc_read_mem(struct es_em_ctxt *ctxt,
+ 
+ /* Include code shared with pre-decompression boot stage */
+ #include "sev-es-shared.c"
++
++/*
++ * This function runs on the first #VC exception after the kernel
++ * switched to virtual addresses.
++ */
++static bool __init sev_es_setup_ghcb(void)
++{
++	/* First make sure the hypervisor talks a supported protocol. */
++	if (!sev_es_negotiate_protocol())
++		return false;
++	/*
++	 * Clear the boot_ghcb. The first exception comes in before the bss
++	 * section is cleared.
++	 */
++	memset(&boot_ghcb_page, 0, PAGE_SIZE);
++
++	/* Alright - Make the boot-ghcb public */
++	boot_ghcb = &boot_ghcb_page;
++
++	return true;
++}
++
++static void __init vc_early_vc_forward_exception(struct es_em_ctxt *ctxt)
++{
++	int trapnr = ctxt->fi.vector;
++
++	if (trapnr == X86_TRAP_PF)
++		native_write_cr2(ctxt->fi.cr2);
++
++	ctxt->regs->orig_ax = ctxt->fi.error_code;
++	do_early_exception(ctxt->regs, trapnr);
++}
++
++static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
++					 struct ghcb *ghcb,
++					 unsigned long exit_code)
++{
++	enum es_result result;
++
++	switch (exit_code) {
++	default:
++		/*
++		 * Unexpected #VC exception
++		 */
++		result = ES_UNSUPPORTED;
++	}
++
++	return result;
++}
++
++bool __init vc_boot_ghcb(struct pt_regs *regs)
++{
++	unsigned long exit_code = regs->orig_ax;
++	struct es_em_ctxt ctxt;
++	enum es_result result;
++
++	/* Do initial setup or terminate the guest */
++	if (unlikely(boot_ghcb == NULL && !sev_es_setup_ghcb()))
++		sev_es_terminate(GHCB_SEV_ES_REASON_GENERAL_REQUEST);
++
++	vc_ghcb_invalidate(boot_ghcb);
++	result = vc_init_em_ctxt(&ctxt, regs, exit_code);
++
++	if (result == ES_OK)
++		result = vc_handle_exitcode(&ctxt, boot_ghcb, exit_code);
++
++	/* Done - now check the result */
++	switch (result) {
++	case ES_OK:
++		vc_finish_insn(&ctxt);
++		break;
++	case ES_UNSUPPORTED:
++		early_printk("PANIC: Unsupported exit-code 0x%02lx in early #VC exception (IP: 0x%lx)\n",
++				exit_code, regs->ip);
++		goto fail;
++	case ES_VMM_ERROR:
++		early_printk("PANIC: Failure in communication with VMM (exit-code 0x%02lx IP: 0x%lx)\n",
++				exit_code, regs->ip);
++		goto fail;
++	case ES_DECODE_FAILED:
++		early_printk("PANIC: Failed to decode instruction (exit-code 0x%02lx IP: 0x%lx)\n",
++				exit_code, regs->ip);
++		goto fail;
++	case ES_EXCEPTION:
++		vc_early_vc_forward_exception(&ctxt);
++		break;
++	case ES_RETRY:
++		/* Nothing to do */
++		break;
++	default:
++		BUG();
++	}
++
++	return true;
++
++fail:
++	show_regs(regs);
++
++	while (true)
++		halt();
++}
+diff --git a/arch/x86/mm/extable.c b/arch/x86/mm/extable.c
+index b991aa4bdfae..5bcbd413b409 100644
+--- a/arch/x86/mm/extable.c
++++ b/arch/x86/mm/extable.c
+@@ -5,6 +5,7 @@
+ #include <xen/xen.h>
+ 
+ #include <asm/fpu/internal.h>
++#include <asm/sev-es.h>
+ #include <asm/traps.h>
+ #include <asm/kdebug.h>
+ 
 -- 
 2.17.1
 
