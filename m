@@ -2,177 +2,142 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8B7C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CDBC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB71120730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B0A520730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:04:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ekHX1BRP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gXKvxnxN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJpp4Gbs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbgD1QEX (ORCPT
+        id S1728295AbgD1QEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:04:23 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:52795 "EHLO
-        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728037AbgD1QEW (ORCPT
+        Tue, 28 Apr 2020 12:04:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727985AbgD1QEr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:04:22 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 2FE3D5FA;
-        Tue, 28 Apr 2020 12:04:21 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 28 Apr 2020 12:04:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=sOFZ1jPclsSm3u+h/VuhDsJZx7b
-        YOtqGCr5nWlpsVh8=; b=ekHX1BRP+1TfVz1t22l+bCdNvO/JzeQA6e1nC954d4t
-        rugCIEuZ2M2dWlEhMvSRZ4oA5UJN/TFTwHhTkMpX1eHjW/IJqhA24mA1ZLW6ADi2
-        ds41Pi/0PKU7IBUJztJ2fMbH24oDPRpcSKr6TSlUTNwnoEfEms/G9QS+fKVl2iKT
-        g17IGuNcD1m7j2dzaLwyBq/6ZKpJhDjPiYaWNu/1F6BavVzE/KrjFM7DsilU6TLr
-        0lHD+FzZygGLcEevSvRb7A7f4NwRtsm2kphDtYfD1ry+lzvYJvHRigGWVNR+z6+T
-        69c0QuwMZlF4ksNiGEovncrc1hbLSbJT8v1snxvA1Wg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=sOFZ1j
-        PclsSm3u+h/VuhDsJZx7bYOtqGCr5nWlpsVh8=; b=gXKvxnxNmCf3WzsWvfJxkq
-        RNCq20RIfaux0rfvjpbZCbZgyGFomX2PW8pAhVUDi0QyecEHnbpX6L5R7JlQ1EpD
-        aWZSxc8TjVtV/jCZlbvZ6UFzl+c0Z6sIfRUmbtnKfgnKE8XRtgjUEh6tk/dEy/bH
-        NrGFoDPbAk6vIDYzpPMPbJh7RqPmEXKOp6tnBRLNah4Wuoj9k73C/VlBfQV+H4SC
-        1kdf8Ieh8ZjyLvNXatnoL4SRDZBt2lidxPam/d8XFQMLbSvKCXDpHvYkMHgyb6Nr
-        mj2OTA1MuhWAd3DkcEOFCMtT7c3E5O7D9A15hCLzhdqhDMajahNsznB2+jBc1Iew
-        ==
-X-ME-Sender: <xms:A1SoXgPyPISErhLyus-Su-GMKMbZFWO0F3E6774q64G3isa-TqfrWw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedugdelhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:A1SoXgqgsqFCW-8s3uz2IiEo8frR3GgpaC4i3pHB53t_H9S02lhFcw>
-    <xmx:A1SoXmlhcIkmeYJJhvXDDXSA7D1pqfRXHo3SIVaJiuGm_E6fEuZRag>
-    <xmx:A1SoXgzuKmdtl820vHTZvitDHafGzX5L1UfDZrxYMyTmPJNgbsVMng>
-    <xmx:BFSoXu5UwG_QI_x28zWwyD59bvLsERgxEGoqiXQ7gqsokpHr_cgGY4ZNc2I>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0FF803280059;
-        Tue, 28 Apr 2020 12:04:18 -0400 (EDT)
-Date:   Tue, 28 Apr 2020 18:04:17 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Marcus Cooper <codekipper@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: Re: [PATCH 4/7] arm64: dts: allwinner: a64: Add HDMI audio
-Message-ID: <20200428160417.6q5oab2guaumhhwi@gilmour.lan>
-References: <20200426120442.11560-1-peron.clem@gmail.com>
- <20200426120442.11560-5-peron.clem@gmail.com>
- <20200428080020.35qcuylwq2ylmubu@gilmour.lan>
- <CAJiuCcc2LQ4L36KSfO8iLVFBUO6k+zsZFX+_Ovm_10PoWO4AsA@mail.gmail.com>
+        Tue, 28 Apr 2020 12:04:47 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E003FC03C1AB;
+        Tue, 28 Apr 2020 09:04:45 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id w20so22095925ljj.0;
+        Tue, 28 Apr 2020 09:04:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7mUYj4GA/1dIgbyNxbqxWEcPwwbVckITyPakRYctQPs=;
+        b=aJpp4Gbsa77D3CwVDtT/kYQST/DBrxv9rK0Cmb3AfK9jOlmBirwL/8H9udjnDy1uwC
+         OvVx+TPsWhWHJfN1JckNgwNrss927ul1AFg3fExe2Fy4TdkANKvM796IN2LlBBrIHp8x
+         5iLj7jc1kXxAzB5NhwGaq+g+dM/Z7WM6D+dzg7VedmfRtYkQqc9Pv9ynCj43PsNocGzo
+         25FPXPl6+tmpmPnBu0HmtVmrHtuyRJ8LY7pGFF56q3jtZgBgSX9+oFtOIhDi1Inc4+Zu
+         6rhSvD5jHBNcfYsEOOCYr5kQxYQ3YwkhzbXHZnj6ZvK5R6UGkMNrY5K3oxymw4rV66nN
+         GoHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7mUYj4GA/1dIgbyNxbqxWEcPwwbVckITyPakRYctQPs=;
+        b=iErlHJzu5kTsLBEOmKHPwZEEYO5a9Z6WPFOQwZUTszcgHflHUdE+GdSHhprUhqcqRz
+         PzSXLjtXIUFjfyyvWUmjr413W3BPt7VQxymMbq59qRwpSl0yCZxPlA7eKmbQi3poiwSK
+         U1w039t/IeK0zNJDWMh7DZ5ucRzwwzsHofLJDuAviM0HUDCdKG3igo93xh794Gk6tGj4
+         mms4oTLgXSTMEue2QFOg8zsXB+C+BlA7po/O/hofWUq76kWxhJAP17dy/7ii9kl6pqcA
+         fmHQJNaQcXNMFM4FlEz6m1uylV3UcHyYN/aUSVT3jYSi4B/mAkx8mZPK/kEN2mUaczBw
+         uxMw==
+X-Gm-Message-State: AGi0PuZbw4WerVq3ne2ZxrMjQucN9SFBRMDdSBdyjy7tCmJxmN47HMOq
+        RqKept0oqtPjcq0Tr3o5bdjmuvlY
+X-Google-Smtp-Source: APiQypIXNtHvVX8LwOfgEDM/DfnbP2+tEIeXxPj7WLF58KTKZ9BuBggQ1ApM3WiwWyk/G+ctJakpBg==
+X-Received: by 2002:a05:651c:1131:: with SMTP id e17mr19194200ljo.79.1588089883949;
+        Tue, 28 Apr 2020 09:04:43 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id c19sm11233645lfj.18.2020.04.28.09.04.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Apr 2020 09:04:43 -0700 (PDT)
+Subject: Re: [RFC PATCH v1 3/5] media: tegra-video: Move PM runtime handle to
+ streaming
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl
+Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1588047650-29402-1-git-send-email-skomatineni@nvidia.com>
+ <1588047650-29402-4-git-send-email-skomatineni@nvidia.com>
+ <631390cb-9aff-0e3f-6c39-81d6c565987e@gmail.com>
+ <3ef69413-a606-b475-f530-d5534760b73b@nvidia.com>
+ <2b334095-fadb-bf0a-f7a8-62fc798c2bd2@gmail.com>
+ <18a7b095-7f0f-7819-c786-7e011cfd14ed@nvidia.com>
+ <ce31e273-f424-f13e-5cd6-0db2589a2a10@gmail.com>
+ <5741d5d3-e474-e23c-4841-809df5760067@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f6e34203-3e4b-b804-30a5-bf78445ab366@gmail.com>
+Date:   Tue, 28 Apr 2020 19:04:41 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rbultuas4kxpkny5"
-Content-Disposition: inline
-In-Reply-To: <CAJiuCcc2LQ4L36KSfO8iLVFBUO6k+zsZFX+_Ovm_10PoWO4AsA@mail.gmail.com>
+In-Reply-To: <5741d5d3-e474-e23c-4841-809df5760067@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+28.04.2020 18:22, Sowjanya Komatineni пишет:
+> 
+> On 4/28/20 8:15 AM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> 28.04.2020 18:08, Sowjanya Komatineni пишет:
+>>> On 4/28/20 7:59 AM, Dmitry Osipenko wrote:
+>>>> External email: Use caution opening links or attachments
+>>>>
+>>>>
+>>>> 28.04.2020 17:51, Sowjanya Komatineni пишет:
+>>>>> On 4/28/20 6:59 AM, Dmitry Osipenko wrote:
+>>>>>> External email: Use caution opening links or attachments
 
---rbultuas4kxpkny5
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Is it possible to disable this corporate-email message?
 
-On Tue, Apr 28, 2020 at 10:54:00AM +0200, Cl=E9ment P=E9ron wrote:
-> Hi Maxime,
->=20
-> On Tue, 28 Apr 2020 at 10:00, Maxime Ripard <maxime@cerno.tech> wrote:
-> >
-> > On Sun, Apr 26, 2020 at 02:04:39PM +0200, Cl=E9ment P=E9ron wrote:
-> > > From: Marcus Cooper <codekipper@gmail.com>
-> > >
-> > > Add a simple-soundcard to link audio between HDMI and I2S.
-> > >
-> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> > > ---
-> > >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 21 +++++++++++++++++=
-++
-> > >  1 file changed, 21 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm=
-64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > index e56e1e3d4b73..08ab6b5e72a5 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > @@ -102,6 +102,25 @@
-> > >               status =3D "disabled";
-> > >       };
-> > >
-> > > +     hdmi_sound: hdmi-sound {
-> > > +             compatible =3D "simple-audio-card";
-> > > +             simple-audio-card,format =3D "i2s";
-> > > +             simple-audio-card,name =3D "allwinner,hdmi";
-> >
-> > I'm not sure what the usual card name should be like though. I would as=
-sume that
-> > this should be something specific enough so that you're able to differe=
-ntiate
-> > between boards / SoC so that the userspace can choose a different confi=
-guration
-> > based on it?
->=20
-> I really don't know what we should use here,
-> I just have a look at other SoC:
-> rk3328: "HDMI"
-> rk3399: "hdmi-sound"
-> r8a774c0-cat874: "CAT874 HDMI sound"
->=20
-> But maybe it's time to introduce proper name:
-> What about :
-> sun50i-a64-hdmi
-> sun50i-h6-hdmi
+>>>>>>
+>>>>>>
+>>>>>> 28.04.2020 07:20, Sowjanya Komatineni пишет:
+>>>>>>> diff --git a/drivers/staging/media/tegra-video/csi.c
+>>>>>>> b/drivers/staging/media/tegra-video/csi.c
+>>>>>>> index b3dd0c3..29ccdae 100644
+>>>>>>> --- a/drivers/staging/media/tegra-video/csi.c
+>>>>>>> +++ b/drivers/staging/media/tegra-video/csi.c
+>>>>>>> @@ -272,8 +272,25 @@ static int tegra_csi_s_stream(struct
+>>>>>>> v4l2_subdev
+>>>>>>> *subdev, int enable)
+>>>>>>>          struct tegra_vi_channel *chan =
+>>>>>>> v4l2_get_subdev_hostdata(subdev);
+>>>>>>>          struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
+>>>>>>>          struct tegra_csi *csi = csi_chan->csi;
+>>>>>>> +     int ret;
+>>>>>>> +
+>>>>>>> +     if (enable && atomic_add_return(1, &csi->clk_refcnt) == 1) {
+>>>>>>> +             ret = pm_runtime_get_sync(csi->dev);
+>>>>>>> +             if (ret < 0) {
+>>>>>>> +                     dev_err(csi->dev,
+>>>>>>> +                             "failed to get runtime PM: %d\n",
+>>>>>>> ret);
+>>>>>>> +                     pm_runtime_put_noidle(csi->dev);
+>> Why this pm_runtime_put_noidle() is needed? This should be wrong, please
+>> remove it.
+> 
+> pm_runtime_get_sync() increments power.usage_count prior to rpm_resume
+> 
+> if rpm_resume fails it does not decrement usage_count.
+> 
+> So to balance count on failure, calling pm_runtime_put_noidle()
 
-It's pretty much what we've been using for the other sound cards we have, s=
-o it
-makes sense to me.
-
-> How should we handle this with h3 / h5 ?
-> settings the simple-audio-card,name in each SoC dts?
-> Or using sun50i-h3-hdmi as they are both identical?
-
-Yeah, we can do the latter
-
-Maxime
-
---rbultuas4kxpkny5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqhUAQAKCRDj7w1vZxhR
-xThzAQCdfGqGBenInfXFcERmsGo6KmDYj/IpfZqqLJhS7hMAmAEAu4oEes/hmj4+
-lop9h0Zfn5J8S9rkeex26DXrp2LOsQY=
-=x+kX
------END PGP SIGNATURE-----
-
---rbultuas4kxpkny5--
+Hmm.. maybe you're right. I'll need to take a more detailed look.
