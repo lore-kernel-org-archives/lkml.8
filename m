@@ -2,125 +2,105 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B32C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C13BFC83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1142206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:57:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100277;
-	bh=MwHKcYOjOGrxhsjnuqmIHb0rD2QYw2+Z9yeGtyMvrDA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r0ojgrgiR+ubtfqZ9qLpUBGL/5wu0mHXFHXL7SvZJmjFSrDet6tl+S6/DLRcNcpMM
-	 aQvMXza7Gi3DuWNwHt1Y4Zcduhch0cKPCtf9dbuE2+WcbewkmagUSPpfU74a7UHc7H
-	 9NdgGD01oCl5CfwhQmSF5MbGwOL+my0ATVjkEsD4=
+	by mail.kernel.org (Postfix) with ESMTP id 98D83206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ADGKuWeW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729905AbgD1S54 (ORCPT
+        id S1728953AbgD1S6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:57:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729417AbgD1S3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:29:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 28 Apr 2020 14:58:02 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:64802 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729417AbgD1S56 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:57:58 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588100277; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=2Y6b36ayyOGCJzSMhx0uz2jc0TRSogQ1Q1n9GsQYtto=; b=ADGKuWeW2lqY+GeBoYYOmB9/RtXHBAOKOFHxz9ZfOWLXbQPE8S3LtcWda9mcipGg6CX2Z9fC
+ bXynkLeZHgaWpFt8eo0X4UTEipX8u3RRedmbyqP1Ou7yb2C7mYhaeyeYLqI1f5NhMFEftJMk
+ MBvs822Cbhu3FryA7EBUnlSWHvg=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea87cb3.7f844196e570-smtp-out-n03;
+ Tue, 28 Apr 2020 18:57:55 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DE93CC44788; Tue, 28 Apr 2020 18:57:54 +0000 (UTC)
+Received: from [10.46.162.249] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B208820730;
-        Tue, 28 Apr 2020 18:29:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098595;
-        bh=MwHKcYOjOGrxhsjnuqmIHb0rD2QYw2+Z9yeGtyMvrDA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yx60kg3/M2mKy1Rq/QbdydXvj+eMqIewHI++0/2RoB95sp2lxXDDu47/MM82VymEe
-         rtR1DNnH4l47ixszYCwlJLDuoveihjDjI3eBGaGfJy0QJt4nFJpJa3IZV7yS56VXvs
-         NQZBPjRpJdknFnDciVGsemN3T3SkTsGiic7tyPUo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Boris Fiuczynski <fiuczy@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 024/131] s390/cio: avoid duplicated ADD uevents
-Date:   Tue, 28 Apr 2020 20:23:56 +0200
-Message-Id: <20200428182228.151593060@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Authenticated sender: hemantk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BBCCAC4478F;
+        Tue, 28 Apr 2020 18:57:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BBCCAC4478F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
+Subject: Re: [PATCH v3 6/6] bus: mhi: core: Fix channel device name conflict
+To:     Jeffrey Hugo <jhugo@codeaurora.org>,
+        manivannan.sadhasivam@linaro.org
+Cc:     bbhatt@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1588003153-13139-1-git-send-email-jhugo@codeaurora.org>
+ <1588003153-13139-7-git-send-email-jhugo@codeaurora.org>
+From:   Hemant Kumar <hemantk@codeaurora.org>
+Message-ID: <72519148-a677-bfdf-05fc-f14cc3e3bffd@codeaurora.org>
+Date:   Tue, 28 Apr 2020 11:57:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1588003153-13139-7-git-send-email-jhugo@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cornelia Huck <cohuck@redhat.com>
 
-[ Upstream commit 05ce3e53f375295c2940390b2b429e506e07655c ]
 
-The common I/O layer delays the ADD uevent for subchannels and
-delegates generating this uevent to the individual subchannel
-drivers. The io_subchannel driver will do so when the associated
-ccw_device has been registered -- but unconditionally, so more
-ADD uevents will be generated if a subchannel has been unbound
-from the io_subchannel driver and later rebound.
+On 4/27/20 8:59 AM, Jeffrey Hugo wrote:
+> When multiple instances of the same MHI product are present in a system,
+> we can see a splat from mhi_create_devices() - "sysfs: cannot create
+> duplicate filename".
+> 
+> This is because the device names assigned to the MHI channel devices are
+> non-unique.  They consist of the channel's name, and the channel's pipe
+> id.  For identical products, each instance is going to have the same
+> set of channel (both in name and pipe id).
+> 
+> To fix this, we prepend the device name of the parent device that the
+> MHI channels belong to.  Since different instances of the same product
+> should have unique device names, this makes the MHI channel devices for
+> each product also unique.
+> 
+> Additionally, remove the pipe id from the MHI channel device name.  This
+> is an internal detail to the MHI product that provides little value, and
+> imposes too much device specific internal details to userspace.  It is
+> expected that channel with a specific name (ie "SAHARA") has a specific
+> client, and it does not matter what pipe id that channel is enumerated on.
+> The pipe id is an internal detail between the MHI bus, and the hardware.
+> The client is not expected to make decisions based on the pipe id, and to
+> do so would require the client to have intimate knowledge of the hardware,
+> which is inappropiate as it may violate the layering provided by the MHI
+> bus.  The limitation of doing this is that each product may only have one
+> instance of a channel by a unique name.  This limitation is appropriate
+> given the usecases of MHI channels.
+> 
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> ---
+Reviewed-by: Hemant Kumar <hemantk@codeaurora.org>
 
-To fix this, only generate the ADD event if uevents were still
-suppressed for the device.
-
-Fixes: fa1a8c23eb7d ("s390: cio: Delay uevents for subchannels")
-Message-Id: <20200327124503.9794-2-cohuck@redhat.com>
-Reported-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
-Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Reviewed-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/s390/cio/device.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
-index 1540229a37bba..c9bc9a6bd73b7 100644
---- a/drivers/s390/cio/device.c
-+++ b/drivers/s390/cio/device.c
-@@ -827,8 +827,10 @@ static void io_subchannel_register(struct ccw_device *cdev)
- 	 * Now we know this subchannel will stay, we can throw
- 	 * our delayed uevent.
- 	 */
--	dev_set_uevent_suppress(&sch->dev, 0);
--	kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+	if (dev_get_uevent_suppress(&sch->dev)) {
-+		dev_set_uevent_suppress(&sch->dev, 0);
-+		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+	}
- 	/* make it known to the system */
- 	ret = ccw_device_add(cdev);
- 	if (ret) {
-@@ -1036,8 +1038,11 @@ static int io_subchannel_probe(struct subchannel *sch)
- 		 * Throw the delayed uevent for the subchannel, register
- 		 * the ccw_device and exit.
- 		 */
--		dev_set_uevent_suppress(&sch->dev, 0);
--		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+		if (dev_get_uevent_suppress(&sch->dev)) {
-+			/* should always be the case for the console */
-+			dev_set_uevent_suppress(&sch->dev, 0);
-+			kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+		}
- 		cdev = sch_get_cdev(sch);
- 		rc = ccw_device_add(cdev);
- 		if (rc) {
 -- 
-2.20.1
-
-
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
