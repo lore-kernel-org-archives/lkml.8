@@ -2,113 +2,113 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A07B1C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EEAC83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7963C206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7E2206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:49:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DVWMBvyP"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tAHdqKlx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgD1JtA (ORCPT
+        id S1727777AbgD1Jtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 05:49:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52835 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727053AbgD1JtA (ORCPT
+        Tue, 28 Apr 2020 05:49:45 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:20954 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727023AbgD1Jto (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 05:49:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588067339;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=K0XdWdmx06pmDIyCJ8DxJdoMcs4kX2jAJaFbg18kv3c=;
-        b=DVWMBvyPvTk7o/8bx1LxbnrdmLOzCz5W4CHp7AY0QrYSm3HjfbpQuM3Aw+kbXQ+N72kAbq
-        N1IPA4OrIOKIeMzjGlP8QXaCIiuir9wXuXsSOV5LlbtN7NAjOpMPlJ5wvrJEkoOaGJi6qn
-        lZj6QIbyq7rX8yXauVWEJO94ChW4Hs0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-116-M1YCHmVqPait_5HAofQHkw-1; Tue, 28 Apr 2020 05:48:57 -0400
-X-MC-Unique: M1YCHmVqPait_5HAofQHkw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 28 Apr 2020 05:49:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588067383; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=xfElqjHv0o0l7dEGWhAPUtysztIlWw5zreVDtxxMQh4=; b=tAHdqKlxm8iHs78n3m8TWWQlc3G6v0pxjkLq44Pj0I2kj2F9p1l2REm9EJ77sGNB/erupx20
+ DDv0ypRR4TtkICHG3aHakPVGBSZM7td4F5jTi4TnO34B+Xxt4/s9SAZzyoqOGwoFbKS0gQQn
+ 5og2ixeGHQDsoRSZH+c0gHJSRIk=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea7fc35.7fc83ca7bf80-smtp-out-n03;
+ Tue, 28 Apr 2020 09:49:41 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 11CEAC433F2; Tue, 28 Apr 2020 09:49:40 +0000 (UTC)
+Received: from [192.168.43.98] (unknown [157.48.58.87])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E980B462;
-        Tue, 28 Apr 2020 09:48:55 +0000 (UTC)
-Received: from krava (unknown [10.40.196.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9A183648C1;
-        Tue, 28 Apr 2020 09:48:53 +0000 (UTC)
-Date:   Tue, 28 Apr 2020 11:48:51 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: Re: [PATCH 4/7] perf bpf: Decouple creating the evlist from adding
- the SB event
-Message-ID: <20200428094851.GE1476763@krava>
-References: <20200427211935.25789-1-acme@kernel.org>
- <20200427211935.25789-5-acme@kernel.org>
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 49E77C433D2;
+        Tue, 28 Apr 2020 09:49:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 49E77C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH V5 3/3] dt-bindings: geni-se: Add binding for UART pin
+ swap
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Manu Gautam <mgautam@codeaurora.org>, rojay@codeaurora.org,
+        c_skakit@codeaurora.org
+References: <1584095350-841-1-git-send-email-akashast@codeaurora.org>
+ <1584095350-841-4-git-send-email-akashast@codeaurora.org>
+ <CAL_JsqKLoiPUhiJDuYX+bSQwoCLTXOvtNyEB8ti__xMfEDyxNQ@mail.gmail.com>
+ <ee34573a-e4ff-ad43-64ed-53439206d534@codeaurora.org>
+ <20200424205701.GE4525@google.com>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <36e01303-05d7-dbaa-45df-a04138102439@codeaurora.org>
+Date:   Tue, 28 Apr 2020 15:19:33 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427211935.25789-5-acme@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20200424205701.GE4525@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 06:19:32PM -0300, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> Renaming bpf_event__add_sb_event() to evlist__add_sb_event() and
-> requiring that the evlist be allocated beforehand.
+Hi Matthias
 
-hum, this seems to be done in previous patch, maybe you
-need to squash this with the previous one?
+Thanks for notifying, I will make the changes.
 
-jirka
+Regards,
 
-> 
-> This will allow using the same side band thread and evlist to be used
-> for multiple purposes in addition to react to PERF_RECORD_BPF_EVENT soon
-> after they are generated.
-> 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Song Liu <songliubraving@fb.com>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/util/bpf-event.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
-> index 2c7a50509659..68f315c3df5b 100644
-> --- a/tools/perf/util/bpf-event.h
-> +++ b/tools/perf/util/bpf-event.h
-> @@ -45,7 +45,7 @@ static inline int machine__process_bpf(struct machine *machine __maybe_unused,
->  	return 0;
->  }
->  
-> -static inline int evlist__add_bpf_sb_event(struct evlist **evlist __maybe_unused,
-> +static inline int evlist__add_bpf_sb_event(struct evlist *evlist __maybe_unused,
->  					   struct perf_env *env __maybe_unused)
->  {
->  	return 0;
-> -- 
-> 2.21.1
-> 
+Akash
 
+On 4/25/2020 2:27 AM, Matthias Kaehlcke wrote:
+> Hi Akash,
+>
+> On Tue, Mar 24, 2020 at 10:46:40AM +0530, Akash Asthana wrote:
+>> Hi Rob,
+>>
+>> On 3/20/2020 11:37 PM, Rob Herring wrote:
+>>> On Fri, Mar 13, 2020 at 4:29 AM Akash Asthana <akashast@codeaurora.org> wrote:
+>>>> Add documentation to support RX/TX/CTS/RTS pin swap in HW.
+>>>>
+>>>> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+>>>> ---
+>>>> Changes in V5:
+>>>>    -  As per Matthias's comment, remove rx-tx-cts-rts-swap property from UART
+>>>>       child node.
+>>>>
+>>>>    Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 6 ++++++
+>>>>    1 file changed, 6 insertions(+)
+>>> STM32 folks need something similar. Can you move this to a common
+>>> location. That's serial.txt, but that is being converted to DT schema.
+>>>
+>>> Rob
+>> Okay, once serial.txt is converted to DT schema, I will move it there.
+> It has landed upstream:
+>
+> 175a7427bb72 dt-bindings: serial: Convert generic bindings to json-schema
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
