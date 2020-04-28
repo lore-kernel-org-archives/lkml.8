@@ -2,123 +2,192 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E67C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AEEC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA67620575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8058E20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588100075;
+	bh=RvRZy+0vn0RymxPiMiVKt301owknx0EG1BpCtkLJ6w8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RzoXmP8E3/8JAN9meQNqirqa5Nj1yzYfqj/vu5x4BphtYV7GuyLlttYnypLX+D0Zz
+	 YioZbx8GbXgt8M72/cbB2lX3yL6sD/r/r3WcrYQRf9dwo0WE5t3gNJV8sCVfCDpe8b
+	 Jcifu0hs+Yz/i+bnPObgOVs8XM4KwxguFIkMIyBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731121AbgD1SyY (ORCPT
+        id S1731467AbgD1Sye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:54:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729263AbgD1SyV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:54:21 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3438C03C1AB
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:54:21 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jTVMo-0002sR-0A; Tue, 28 Apr 2020 20:54:02 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 40B54100FC0; Tue, 28 Apr 2020 20:54:01 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Jacob Pan \(Jun\)" <jacob.jun.pan@intel.com>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Sohil Mehta <sohil.mehta@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org,
-        jacob.jun.pan@intel.com
-Subject: Re: [PATCH 5/7] x86/mmu: Allocate/free PASID
-In-Reply-To: <20200428112113.000033bd@intel.com>
-References: <1585596788-193989-1-git-send-email-fenghua.yu@intel.com> <1585596788-193989-6-git-send-email-fenghua.yu@intel.com> <87pnbus3du.fsf@nanos.tec.linutronix.de> <20200428112113.000033bd@intel.com>
-Date:   Tue, 28 Apr 2020 20:54:01 +0200
-Message-ID: <87tv13o306.fsf@nanos.tec.linutronix.de>
+        Tue, 28 Apr 2020 14:54:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50432 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728623AbgD1Sdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:33:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93A0320575;
+        Tue, 28 Apr 2020 18:33:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588098832;
+        bh=RvRZy+0vn0RymxPiMiVKt301owknx0EG1BpCtkLJ6w8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OP7g82nIdAOYAkGkK9iDr56pXZCJBZGakT7Bhr4J/u9nr2x9v80MVRkjLR85Vvq2b
+         ZwCdTPu1i867goaNw3ntubmyxCkHJSbGolCvW8MFs2HWuoandSd99PbhytrxsU1oDI
+         YlUUXFBc9KeDDUbR5dO7bhWyFRq6Fm8qOh2CweKo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 062/131] sched: etf: do not assume all sockets are full blown
+Date:   Tue, 28 Apr 2020 20:24:34 +0200
+Message-Id: <20200428182232.762223232@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Jacob Pan (Jun)" <jacob.jun.pan@intel.com> writes:
-> On Sun, 26 Apr 2020 16:55:25 +0200
-> Thomas Gleixner <tglx@linutronix.de> wrote:
->> Fenghua Yu <fenghua.yu@intel.com> writes:
->> > The PASID is freed when the process exits (so no need to keep
->> > reference counts on how many SVM devices are sharing the PASID).  
->> 
->> I'm not buying that. If there is an outstanding request with the PASID
->> of a process then tearing down the process address space and freeing
->> the PASID (which might be reused) is fundamentally broken.
->> 
-> Device driver unbind PASID is tied to FD release. So when a process
-> exits, FD close causes driver to do the following:
->
-> 1. stops DMA
-> 2. unbind PASID (clears the PASID entry in IOMMU, flush all TLBs, drain
-> in flight page requests)
+From: Eric Dumazet <edumazet@google.com>
 
-Fair enough. Explaining that somewhere might be helpful.
+[ Upstream commit a1211bf9a7774706722ba3b18c6157d980319f79 ]
 
-> For bare metal SVM, if the last mmdrop always happens after FD release,
-> we can ensure no outstanding requests at the point of ioasid_free().
-> Perhaps this is a wrong assumption?
+skb->sk does not always point to a full blown socket,
+we need to use sk_fullsock() before accessing fields which
+only make sense on full socket.
 
-If fd release cleans up then how should there be something in flight at
-the final mmdrop?
+BUG: KASAN: use-after-free in report_sock_error+0x286/0x300 net/sched/sch_etf.c:141
+Read of size 1 at addr ffff88805eb9b245 by task syz-executor.5/9630
 
-> For guest SVM, there will be more users of a PASID. I am also
-> working on adding refcounting to ioasid. ioasid_free() will not release
-> the PASID back to the pool until all references are dropped.
+CPU: 1 PID: 9630 Comm: syz-executor.5 Not tainted 5.7.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:382
+ __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
+ kasan_report+0x33/0x50 mm/kasan/common.c:625
+ report_sock_error+0x286/0x300 net/sched/sch_etf.c:141
+ etf_enqueue_timesortedlist+0x389/0x740 net/sched/sch_etf.c:170
+ __dev_xmit_skb net/core/dev.c:3710 [inline]
+ __dev_queue_xmit+0x154a/0x30a0 net/core/dev.c:4021
+ neigh_hh_output include/net/neighbour.h:499 [inline]
+ neigh_output include/net/neighbour.h:508 [inline]
+ ip6_finish_output2+0xfb5/0x25b0 net/ipv6/ip6_output.c:117
+ __ip6_finish_output+0x442/0xab0 net/ipv6/ip6_output.c:143
+ ip6_finish_output+0x34/0x1f0 net/ipv6/ip6_output.c:153
+ NF_HOOK_COND include/linux/netfilter.h:296 [inline]
+ ip6_output+0x239/0x810 net/ipv6/ip6_output.c:176
+ dst_output include/net/dst.h:435 [inline]
+ NF_HOOK include/linux/netfilter.h:307 [inline]
+ NF_HOOK include/linux/netfilter.h:301 [inline]
+ ip6_xmit+0xe1a/0x2090 net/ipv6/ip6_output.c:280
+ tcp_v6_send_synack+0x4e7/0x960 net/ipv6/tcp_ipv6.c:521
+ tcp_rtx_synack+0x10d/0x1a0 net/ipv4/tcp_output.c:3916
+ inet_rtx_syn_ack net/ipv4/inet_connection_sock.c:669 [inline]
+ reqsk_timer_handler+0x4c2/0xb40 net/ipv4/inet_connection_sock.c:763
+ call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1405
+ expire_timers kernel/time/timer.c:1450 [inline]
+ __run_timers kernel/time/timer.c:1774 [inline]
+ __run_timers kernel/time/timer.c:1741 [inline]
+ run_timer_softirq+0x623/0x1600 kernel/time/timer.c:1787
+ __do_softirq+0x26c/0x9f7 kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0x192/0x1d0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+ smp_apic_timer_interrupt+0x19e/0x600 arch/x86/kernel/apic/apic.c:1140
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+ </IRQ>
+RIP: 0010:des_encrypt+0x157/0x9c0 lib/crypto/des.c:792
+Code: 85 22 06 00 00 41 31 dc 41 8b 4d 04 44 89 e2 41 83 e4 3f 4a 8d 3c a5 60 72 72 88 81 e2 3f 3f 3f 3f 48 89 f8 48 c1 e8 03 31 d9 <0f> b6 34 28 48 89 f8 c1 c9 04 83 e0 07 83 c0 03 40 38 f0 7c 09 40
+RSP: 0018:ffffc90003b5f6c0 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
+RAX: 1ffffffff10e4e55 RBX: 00000000d2f846d0 RCX: 00000000d2f846d0
+RDX: 0000000012380612 RSI: ffffffff839863ca RDI: ffffffff887272a8
+RBP: dffffc0000000000 R08: ffff888091d0a380 R09: 0000000000800081
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000012
+R13: ffff8880a8ae8078 R14: 00000000c545c93e R15: 0000000000000006
+ cipher_crypt_one crypto/cipher.c:75 [inline]
+ crypto_cipher_encrypt_one+0x124/0x210 crypto/cipher.c:82
+ crypto_cbcmac_digest_update+0x1b5/0x250 crypto/ccm.c:830
+ crypto_shash_update+0xc4/0x120 crypto/shash.c:119
+ shash_ahash_update+0xa3/0x110 crypto/shash.c:246
+ crypto_ahash_update include/crypto/hash.h:547 [inline]
+ hash_sendmsg+0x518/0xad0 crypto/algif_hash.c:102
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x308/0x7e0 net/socket.c:2362
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2416
+ __sys_sendmmsg+0x195/0x480 net/socket.c:2506
+ __do_sys_sendmmsg net/socket.c:2535 [inline]
+ __se_sys_sendmmsg net/socket.c:2532 [inline]
+ __x64_sys_sendmmsg+0x99/0x100 net/socket.c:2532
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45c829
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f6d9528ec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
+RAX: ffffffffffffffda RBX: 00000000004fc080 RCX: 000000000045c829
+RDX: 0000000000000001 RSI: 0000000020002640 RDI: 0000000000000004
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 00000000000008d7 R14: 00000000004cb7aa R15: 00007f6d9528f6d4
 
-What does more users mean?
+Fixes: 4b15c7075352 ("net/sched: Make etf report drops on error_queue")
+Fixes: 25db26a91364 ("net/sched: Introduce the ETF Qdisc")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Reviewed-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/sched/sch_etf.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
->> > +	if (mm && mm->context.pasid && !(flags &
->> > SVM_FLAG_PRIVATE_PASID)) {
->> > +		/*
->> > +		 * Once a PASID is allocated for this mm, the PASID
->> > +		 * stays with the mm until the mm is dropped. Reuse
->> > +		 * the PASID which has been already allocated for
->> > the
->> > +		 * mm instead of allocating a new one.
->> > +		 */
->> > +		ioasid_set_data(mm->context.pasid, svm);  
->> 
->> So if the PASID is reused several times for different SVMs then every
->> time ioasid_data->private is set to a different SVM. How is that
->> supposed to work?
->> 
-> For the lifetime of the mm, there is only one PASID. svm_bind/unbind_mm
-> could happen many times with different private data: intel_svm.
-> Multiple devices can bind to the same PASID as well. But private data
-> don't change within the first bind and last unbind.
+--- a/net/sched/sch_etf.c
++++ b/net/sched/sch_etf.c
+@@ -77,7 +77,7 @@ static bool is_packet_valid(struct Qdisc
+ 	struct sock *sk = nskb->sk;
+ 	ktime_t now;
+ 
+-	if (!sk)
++	if (!sk || !sk_fullsock(sk))
+ 		return false;
+ 
+ 	if (!sock_flag(sk, SOCK_TXTIME))
+@@ -129,8 +129,9 @@ static void report_sock_error(struct sk_
+ 	struct sock_exterr_skb *serr;
+ 	struct sk_buff *clone;
+ 	ktime_t txtime = skb->tstamp;
++	struct sock *sk = skb->sk;
+ 
+-	if (!skb->sk || !(skb->sk->sk_txtime_report_errors))
++	if (!sk || !sk_fullsock(sk) || !(sk->sk_txtime_report_errors))
+ 		return;
+ 
+ 	clone = skb_clone(skb, GFP_ATOMIC);
+@@ -146,7 +147,7 @@ static void report_sock_error(struct sk_
+ 	serr->ee.ee_data = (txtime >> 32); /* high part of tstamp */
+ 	serr->ee.ee_info = txtime; /* low part of tstamp */
+ 
+-	if (sock_queue_err_skb(skb->sk, clone))
++	if (sock_queue_err_skb(sk, clone))
+ 		kfree_skb(clone);
+ }
+ 
 
-Ok. I read through that spaghetti of intel_svm_bind_mm() again and now I
-start to get an idea how that is supposed to work. What a mess.
 
-That function really wants to be restructured in a way so it is
-understandable to mere mortals. 
-
-Thanks,
-
-        tglx
