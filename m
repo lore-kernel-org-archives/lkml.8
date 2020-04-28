@@ -2,135 +2,142 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 985F9C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58774C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 760CB206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36B6C2072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:56:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gn9Rq/4Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bR8dYcme"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgD1K4R (ORCPT
+        id S1726522AbgD1K42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 06:56:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56988 "EHLO
+        Tue, 28 Apr 2020 06:56:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726345AbgD1K4Q (ORCPT
+        by vger.kernel.org with ESMTP id S1726345AbgD1K42 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 06:56:16 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0765C03C1A9;
-        Tue, 28 Apr 2020 03:56:15 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k13so24132865wrw.7;
-        Tue, 28 Apr 2020 03:56:15 -0700 (PDT)
+        Tue, 28 Apr 2020 06:56:28 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51032C03C1A9;
+        Tue, 28 Apr 2020 03:56:27 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f13so24050221wrm.13;
+        Tue, 28 Apr 2020 03:56:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=C9HT9T3sVHrOZBKILD60eSWOeR7JckWoGT8oUYZeX9Q=;
-        b=gn9Rq/4YAsv3kVD1X98o2XKcvxM6FpneKD79RZzyslKC2FvVwRST4O++pEK8rPexzg
-         r/Vl6RIQLw6FDpHqynBeALOS+dueugLcmWxumA5UrN8TSdspaht7A3+I81+umdeAKya2
-         mHRYuPzt9PBiskyRzZunPj1XcPwCX+UYYZYkYqs183Z+YcYW4wr+QVbs9wHbDCEF2wkq
-         4cH5kzVCdRlFdF2bEKda5tBPci53Lq6Cis4ic31b2lLeLzplNF0g8bL+Nheb5+GllcEX
-         PmSIw060Lvtf3doTKh2doz5hmiI3h8+oGSHK5n79JENB65VZDnmGo7AGrWrJFP9YcFmT
-         pc1A==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4zpVgjm2qz8Yk84jtRhI29r5qWnFI2aIok8af8uxT+w=;
+        b=bR8dYcmeGV6okIwGPvMa/C7avObywMMdpI/uPeHNdFolfzrZBLpoWSC1pdWayMDfxz
+         CVIVRl8IJtyWHI1AKIWAJThyBgeGwC47z8oRLwOY1zJEDnksFx96I7I7aNdqAurCUfAu
+         hvd/M3djVaeW8IPVgDGrHekIe59qvwfmLcOawThoQa1iA9nor/aXCDyIqlXLBZAHmaj8
+         BGReTz5JdvKRbUGLhkS+Cm1oj5ShE894qdpZqyodDBOzfnyuSoMdn7EOqmctyXcZjgr0
+         IExhUHcN+kTCpTQGrdQ7h3It3yqLMnV1wqtTRIE6YEjCRVdkOarq/c81dBCtILzmJ+Be
+         8bbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=C9HT9T3sVHrOZBKILD60eSWOeR7JckWoGT8oUYZeX9Q=;
-        b=kkpUksdtHmDrok5/S+iDOScNf2OWt/KRBxr9rZENFY+AdXQZtqKflcMCuL9R+wrn+Q
-         m727SBTJkAQRKpPCHaG7rRfInJsRvwCAqNAQEgy+THaj/9oJMCLVVp3HY64oE9YH1LrH
-         GsGuVagELtsY9FbMu7gmsKIFJiTR/eAMnAdtW0EsKfyrE2x81AaW4tcFMyNXvGJHMSJ4
-         piNG7qx2CIZkC3z2qWHZ4rvcaBtoKpOgfofOoJiZADOi9qUhvyfXtljl0kOGSxlV07xV
-         rWM54YV2no081vtcX6T8wNuBOb4/L/3xNeydGcqye8mDFx/bB/3Rgk8V/Lj6dFCqDATQ
-         aIsA==
-X-Gm-Message-State: AGi0PuZsHZcfMKVADngLCSBXNpshlWoDThSK3qQx/A4tn/rKDP4ZpN9K
-        LjYZ6U4EmICKeVFQ+ASvdcA=
-X-Google-Smtp-Source: APiQypJpMHNB4ZhFrn8kd+snTeuQ+WeBpbEdrXCMu3bKIrb14Gc+733ciOV7qgr37GnvYQfB6xcd3g==
-X-Received: by 2002:a5d:6946:: with SMTP id r6mr30244836wrw.291.1588071374527;
-        Tue, 28 Apr 2020 03:56:14 -0700 (PDT)
-Received: from localhost.localdomain ([188.24.130.199])
-        by smtp.gmail.com with ESMTPSA id e13sm15530968wrp.15.2020.04.28.03.56.13
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4zpVgjm2qz8Yk84jtRhI29r5qWnFI2aIok8af8uxT+w=;
+        b=t2TBLe3YIuRMmFH2yrLcT5gOF3nYS2NMY207qZR1BWXWu3sYHaIWMU0h19iltvF2B0
+         lWh0f5HvSp26f2OLWQZbHTuK5CHBcaRbyiKUrJSlJ0fLgZbFnGV4xMtcno1zYkvjSBz3
+         FY1mINrtIIxLtSewSa5fI6NysWEnVXSuwGwhw0Sd5RLu8sZTWlwRHDwZ+lBfPa7uOst2
+         PtKzAJik+mQ8lucy9fZDJCm7BPRBIGdnKbcC+JALEEqWOmiNOcupegLxqyAt4FPHYa1f
+         JEEW2m7VwTYXi+PiOQ5lWXIrbRbQAFglltg5rCrdZgU44HVAoeYZ1rozcOY9swmGhP8U
+         5ceA==
+X-Gm-Message-State: AGi0PuYfVi77HeT0qrTG7VuQjL39kXCjgnevrQ4ufkr2NFK2jSGXE87Q
+        q3krUJ/R/I7jYsd+eEdjLnc=
+X-Google-Smtp-Source: APiQypLwIuKAXoo9AyGa7dKXr0iBnmXjImrheIvP+4/+QEKyuX8rMorm720uVhOB+E/z3Eyr66pN8A==
+X-Received: by 2002:adf:ed0e:: with SMTP id a14mr32325586wro.400.1588071386077;
+        Tue, 28 Apr 2020 03:56:26 -0700 (PDT)
+Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
+        by smtp.gmail.com with ESMTPSA id w4sm8593373wro.28.2020.04.28.03.56.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 03:56:13 -0700 (PDT)
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] dma: actions: Fix lockdep splat for owl-dma
-Date:   Tue, 28 Apr 2020 13:56:12 +0300
-Message-Id: <7d503c3dcac2b3ef29d4122a74eacfce142a8f98.1588069418.git.cristian.ciocaltea@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 28 Apr 2020 03:56:25 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 12:56:24 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
+        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 7/8] phy: tegra: xusb: Enable charger detect for
+ Tegra186
+Message-ID: <20200428105624.GI3592148@ulmo>
+References: <1586939108-10075-1-git-send-email-nkristam@nvidia.com>
+ <1586939108-10075-8-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vs0rQTeTompTJjtd"
+Content-Disposition: inline
+In-Reply-To: <1586939108-10075-8-git-send-email-nkristam@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the kernel is build with lockdep support and the owl-dma driver is
-used, the following message is shown:
 
-[    2.496939] INFO: trying to register non-static key.
-[    2.501889] the code is fine but needs lockdep annotation.
-[    2.507357] turning off the locking correctness validator.
-[    2.512834] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.3+ #15
-[    2.519084] Hardware name: Generic DT based system
-[    2.523878] Workqueue: events_freezable mmc_rescan
-[    2.528681] [<801127f0>] (unwind_backtrace) from [<8010da58>] (show_stack+0x10/0x14)
-[    2.536420] [<8010da58>] (show_stack) from [<8080fbe8>] (dump_stack+0xb4/0xe0)
-[    2.543645] [<8080fbe8>] (dump_stack) from [<8017efa4>] (register_lock_class+0x6f0/0x718)
-[    2.551816] [<8017efa4>] (register_lock_class) from [<8017b7d0>] (__lock_acquire+0x78/0x25f0)
-[    2.560330] [<8017b7d0>] (__lock_acquire) from [<8017e5e4>] (lock_acquire+0xd8/0x1f4)
-[    2.568159] [<8017e5e4>] (lock_acquire) from [<80831fb0>] (_raw_spin_lock_irqsave+0x3c/0x50)
-[    2.576589] [<80831fb0>] (_raw_spin_lock_irqsave) from [<8051b5fc>] (owl_dma_issue_pending+0xbc/0x120)
-[    2.585884] [<8051b5fc>] (owl_dma_issue_pending) from [<80668cbc>] (owl_mmc_request+0x1b0/0x390)
-[    2.594655] [<80668cbc>] (owl_mmc_request) from [<80650ce0>] (mmc_start_request+0x94/0xbc)
-[    2.602906] [<80650ce0>] (mmc_start_request) from [<80650ec0>] (mmc_wait_for_req+0x64/0xd0)
-[    2.611245] [<80650ec0>] (mmc_wait_for_req) from [<8065aa10>] (mmc_app_send_scr+0x10c/0x144)
-[    2.619669] [<8065aa10>] (mmc_app_send_scr) from [<80659b3c>] (mmc_sd_setup_card+0x4c/0x318)
-[    2.628092] [<80659b3c>] (mmc_sd_setup_card) from [<80659f0c>] (mmc_sd_init_card+0x104/0x430)
-[    2.636601] [<80659f0c>] (mmc_sd_init_card) from [<8065a3e0>] (mmc_attach_sd+0xcc/0x16c)
-[    2.644678] [<8065a3e0>] (mmc_attach_sd) from [<8065301c>] (mmc_rescan+0x3ac/0x40c)
-[    2.652332] [<8065301c>] (mmc_rescan) from [<80143244>] (process_one_work+0x2d8/0x780)
-[    2.660239] [<80143244>] (process_one_work) from [<80143730>] (worker_thread+0x44/0x598)
-[    2.668323] [<80143730>] (worker_thread) from [<8014b5f8>] (kthread+0x148/0x150)
-[    2.675708] [<8014b5f8>] (kthread) from [<801010b4>] (ret_from_fork+0x14/0x20)
-[    2.682912] Exception stack(0xee8fdfb0 to 0xee8fdff8)
-[    2.687954] dfa0:                                     00000000 00000000 00000000 00000000
-[    2.696118] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    2.704277] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+--vs0rQTeTompTJjtd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The required fix is to use spin_lock_init() on the pchan lock before
-attempting to call any spin_lock_irqsave() in owl_dma_get_pchan().
+On Wed, Apr 15, 2020 at 01:55:07PM +0530, Nagarjuna Kristam wrote:
+> Tegra186 SoC supports charger detect, set corresponding soc flag.
 
-Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
----
- drivers/dma/owl-dma.c | 1 +
- 1 file changed, 1 insertion(+)
+"SoC flag"
 
-diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
-index c683051257fd..d9d0f0488e70 100644
---- a/drivers/dma/owl-dma.c
-+++ b/drivers/dma/owl-dma.c
-@@ -1131,6 +1131,7 @@ static int owl_dma_probe(struct platform_device *pdev)
- 
- 		pchan->id = i;
- 		pchan->base = od->base + OWL_DMA_CHAN_BASE(i);
-+		spin_lock_init(&pchan->lock);
- 	}
- 
- 	/* Init virtual channel */
--- 
-2.26.2
+>=20
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> ---
+> V2:
+>  - Patch re-based.
+> ---
+>  drivers/phy/tegra/xusb-tegra186.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/phy/tegra/xusb-tegra186.c b/drivers/phy/tegra/xusb-t=
+egra186.c
+> index 03bdb5b..12ff492 100644
+> --- a/drivers/phy/tegra/xusb-tegra186.c
+> +++ b/drivers/phy/tegra/xusb-tegra186.c
+> @@ -1041,6 +1041,7 @@ const struct tegra_xusb_padctl_soc tegra186_xusb_pa=
+dctl_soc =3D {
+>  	.ops =3D &tegra186_xusb_padctl_ops,
+>  	.supply_names =3D tegra186_xusb_padctl_supply_names,
+>  	.num_supplies =3D ARRAY_SIZE(tegra186_xusb_padctl_supply_names),
+> +	.charger_detect =3D true,
 
+And this may require an update for the change I suggested in patch 6/8,
+but with that and the typo above addressed, this is:
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--vs0rQTeTompTJjtd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6oC9gACgkQ3SOs138+
+s6FaaBAAmP6cTMD/VpL2q1kX4bzPvzGA+/czi9xUXRWAjNA+OxVvRIdtGKsJOsxm
+YMLW2EBA/g5dBCCvwiA4Ut1QVZBv58vA7hh06C/8lNpo9tJ0pfbmr/knGcD9KQxa
+/JMbscYirr5oYEXUp/lJbFftjzFTg3JoJA7EqPtrv0LWmjuJ18eJwfZbsyjx3G+X
+syGXPc8RJ4/s2Ir5cSZ82ymIb3JShhmNw48SozOdN00PPbBFl+oplCnQKXLxb9QU
+3tSUVwTHalzZQ9mcEKblCWA4G/cRtNa/EK8PdOzW3keLtLM/7N5yZt3By3xQSKFt
+mkKhSch9wCrG88Ks8OlXEsNjnu+DyJ0MdDynWKrlGaCjuL5hkIYOS05q/YF6S3U3
+JmVEYg1r9hOlVNHe1/aVuvgnlT/Ned+zJQnQq6FbjgcYpJBd3V41O5EDnJEuwybY
+QtITnAkeBBPgde0St+AXvreiz9AyzKLTJzGslvWOKR1uV/WroOJRoj3dCGFmhAXy
+v13eNhu+2Kwn1Fa8Qqoc5RhYniTk+0jJqPaVXsJlk1IGeYVmt8IqE1boILE2mSd5
+zCvTbn/lbu56qS7RSx9kneH0yPbQYh6CN1L6jpiHyQKPAW4hiRdeyFayyb9VjWsf
+oOsz+qzEdNi2DUzdPNCMsrAf90QXFhXU+3DZvP8RjbGpKrHHWgA=
+=scSv
+-----END PGP SIGNATURE-----
+
+--vs0rQTeTompTJjtd--
