@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6DBC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A9BC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D317420575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D15942085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099149;
-	bh=70en2y8im9i9iX0DhYhp+taRYiWl+DOFa6w+T0EF4Fg=;
+	s=default; t=1588099153;
+	bh=DssGh3cFfTGPk2oqSA/BtLjd5L3+hLW+cPnbRN+og6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B3jhP9TgS4BiPBpn8eut83RhC2c1Z+hkzVSP0gT7a0M41fu2XsMxy0AuEQ8Gw04U3
-	 Uo420LN/4MYiXAyPjax0O3Ad/3hYkzDtNj0zGcSx9mX/mmncibsIkFlEOU9IDjMJ3h
-	 NrwGi9Xny2VFIPjFxJLmjD65X3d8Y00ZwsBDUVW8=
+	b=dVifrFWY7+fg3jLBU0XIBeWIuPVu2lWf4AGuMKy2OwRFEi6vPKNdsrLcMRJZNlrRr
+	 0kWGOoSrAveJ3Cico5vVbVKOiFtu/RxeuH0XM2e6ZV5GDC//MvwK3Utp8mGUYZgMsZ
+	 +js0B/ug315DFzLTzXXW1Jx4Xpx3TkPr09wnMBUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbgD1SjI (ORCPT
+        id S1730171AbgD1SjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:39:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57746 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:39:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730706AbgD1SjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:39:01 -0400
+        id S1730262AbgD1SjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:39:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C042A20575;
-        Tue, 28 Apr 2020 18:39:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 042DA20B1F;
+        Tue, 28 Apr 2020 18:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099141;
-        bh=70en2y8im9i9iX0DhYhp+taRYiWl+DOFa6w+T0EF4Fg=;
+        s=default; t=1588099148;
+        bh=DssGh3cFfTGPk2oqSA/BtLjd5L3+hLW+cPnbRN+og6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=swUtieol8CW3igpXn2eOqsvHVaSv7xkE12QjVMZqdhcV2TUTvugeFTsJe46L7JvPU
-         eNUnyuONfjxl+lyFIc0FTCg7yOdIUJTrR6G5o+V12r26HA09qLLix15H+QDtizSAob
-         u4ilBs2uEEg6UfglyikVRf7R/LRFj6pcf63H0Li4=
+        b=LhplbMIK98odAK45PqhgEKI13hukQ+Xie8+em5A1Nnt/K8BR/PmK7MZrSVoK+LvAh
+         iJqB9KNoLaarDuAtMlHlhWrHZqF/ldFGAnB3VhU5oopcQvfAy19QEYVizHYOJBNDav
+         E585nYxhQZJMt53hkscVbEuYUKfoWBjjJxIuC3Q4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 5.6 160/167] Revert "serial: uartps: Do not allow use aliases >= MAX_UART_INSTANCES"
-Date:   Tue, 28 Apr 2020 20:25:36 +0200
-Message-Id: <20200428182245.820415415@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Qian Cai <cai@lca.pw>, Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.6 133/167] powerpc/setup_64: Set cache-line-size based on cache-block-size
+Date:   Tue, 28 Apr 2020 20:25:09 +0200
+Message-Id: <20200428182242.259609463@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
 References: <20200428182225.451225420@linuxfoundation.org>
@@ -59,47 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Simek <michal.simek@xilinx.com>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-commit 91c9dfa25c7f95b543c280e0edf1fd8de6e90985 upstream.
+commit 94c0b013c98583614e1ad911e8795ca36da34a85 upstream.
 
-This reverts commit 2088cfd882d0403609bdf426e9b24372fe1b8337.
+If {i,d}-cache-block-size is set and {i,d}-cache-line-size is not, use
+the block-size value for both. Per the devicetree spec cache-line-size
+is only needed if it differs from the block size.
 
-As Johan says, this driver needs a lot more work and these changes are
-only going in the wrong direction:
-  https://lkml.kernel.org/r/20190523091839.GC568@localhost
+Originally the code would fallback from block size to line size. An
+error message was printed if both properties were missing.
 
-Reported-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/dac3898e3e32d963f357fb436ac9a7ac3cbcf933.1585905873.git.michal.simek@xilinx.com
+Later the code was refactored to use clearer names and logic but it
+inadvertently made line size a required property, meaning on systems
+without a line size property we fall back to the default from the
+cputable.
+
+On powernv (OPAL) platforms, since the introduction of device tree CPU
+features (5a61ef74f269 ("powerpc/64s: Support new device tree binding
+for discovering CPU features")), that has led to the wrong value being
+used, as the fallback value is incorrect for Power8/Power9 CPUs.
+
+The incorrect values flow through to the VDSO and also to the sysconf
+values, SC_LEVEL1_ICACHE_LINESIZE etc.
+
+Fixes: bd067f83b084 ("powerpc/64: Fix naming of cache block vs. cache line")
+Cc: stable@vger.kernel.org # v4.11+
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Reported-by: Qian Cai <cai@lca.pw>
+[mpe: Add even more detail to change log]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200416221908.7886-1-chris.packham@alliedtelesis.co.nz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/xilinx_uartps.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/powerpc/kernel/setup_64.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -1724,8 +1724,7 @@ err_out_unregister_driver:
- 	uart_unregister_driver(cdns_uart_data->cdns_uart_driver);
- err_out_id:
- 	mutex_lock(&bitmap_lock);
--	if (cdns_uart_data->id < MAX_UART_INSTANCES)
--		clear_bit(cdns_uart_data->id, bitmap);
-+	clear_bit(cdns_uart_data->id, bitmap);
- 	mutex_unlock(&bitmap_lock);
- 	return rc;
- }
-@@ -1750,8 +1749,7 @@ static int cdns_uart_remove(struct platf
- 	rc = uart_remove_one_port(cdns_uart_data->cdns_uart_driver, port);
- 	port->mapbase = 0;
- 	mutex_lock(&bitmap_lock);
--	if (cdns_uart_data->id < MAX_UART_INSTANCES)
--		clear_bit(cdns_uart_data->id, bitmap);
-+	clear_bit(cdns_uart_data->id, bitmap);
- 	mutex_unlock(&bitmap_lock);
- 	clk_disable_unprepare(cdns_uart_data->uartclk);
- 	clk_disable_unprepare(cdns_uart_data->pclk);
+--- a/arch/powerpc/kernel/setup_64.c
++++ b/arch/powerpc/kernel/setup_64.c
+@@ -534,6 +534,8 @@ static bool __init parse_cache_info(stru
+ 	lsizep = of_get_property(np, propnames[3], NULL);
+ 	if (bsizep == NULL)
+ 		bsizep = lsizep;
++	if (lsizep == NULL)
++		lsizep = bsizep;
+ 	if (lsizep != NULL)
+ 		lsize = be32_to_cpu(*lsizep);
+ 	if (bsizep != NULL)
 
 
