@@ -2,121 +2,84 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDB8C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8A3C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2F25206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B222206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:49:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgD1NtC (ORCPT
+        id S1727890AbgD1NtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:49:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58844 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726798AbgD1NtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:49:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id CF97AAD4B;
-        Tue, 28 Apr 2020 13:48:57 +0000 (UTC)
-Date:   Tue, 28 Apr 2020 15:48:58 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>
-Subject: Re: [PATCH v3 00/10] livepatch,module: Remove .klp.arch and
- module_disable_ro()
-In-Reply-To: <cover.1587812518.git.jpoimboe@redhat.com>
-Message-ID: <alpine.LSU.2.21.2004281541420.6376@pobox.suse.cz>
-References: <cover.1587812518.git.jpoimboe@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 28 Apr 2020 09:49:12 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41056 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726798AbgD1NtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 09:49:12 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 1C32781411DE4945C840;
+        Tue, 28 Apr 2020 21:49:09 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 28 Apr 2020 21:49:02 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] stm class: dummy_stm: fix error return code in dummy_stm_init()
+Date:   Tue, 28 Apr 2020 13:50:19 +0000
+Message-ID: <20200428135019.78920-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 Apr 2020, Josh Poimboeuf wrote:
+Fix to return error code -ENOMEM from the error handling case instead
+of 0(ret can be overwritted to 0 in for loop).
 
-> v3:
-> - klp: split klp_write_relocations() into object/section specific
->   functions [joe]
-> - s390: fix plt/got writes [joe]
-> - s390: remove text_mutex usage [mbenes]
-> - x86: do text_poke_sync() before releasing text_mutex [peterz]
-> - split x86 text_mutex changes into separate patch [mbenes]
-> 
-> v2:
-> - add vmlinux.ko check [peterz]
-> - remove 'klp_object' forward declaration [mbenes]
-> - use text_mutex [jeyu]
-> - fix documentation TOC [jeyu]
-> - fix s390 issues [mbenes]
-> - upstream kpatch-build now supports this
->   (though it's only enabled for Linux >= 5.8)
-> 
-> These patches add simplifications and improvements for some issues Peter
-> found six months ago, as part of his non-writable text code (W^X)
-> cleanups.
-> 
-> Highlights:
-> 
-> - Remove the livepatch arch-specific .klp.arch sections, which were used
->   to do paravirt patching and alternatives patching for livepatch
->   replacement code.
-> 
-> - Add support for jump labels in patched code.
-> 
-> - Remove the last module_disable_ro() usage.
-> 
-> For more background, see this thread:
-> 
->   https://lkml.kernel.org/r/20191021135312.jbbxsuipxldocdjk@treble
-> 
-> This has been tested with kpatch-build integration tests and klp-convert
-> selftests.
-> 
-> Josh Poimboeuf (7):
->   livepatch: Disallow vmlinux.ko
->   livepatch: Apply vmlinux-specific KLP relocations early
->   livepatch: Prevent module-specific KLP rela sections from referencing
->     vmlinux symbols
->   s390: Change s390_kernel_write() return type to match memcpy()
->   livepatch: Remove module_disable_ro() usage
->   module: Remove module_disable_ro()
->   x86/module: Use text_mutex in apply_relocate_add()
-> 
-> Peter Zijlstra (3):
->   livepatch: Remove .klp.arch
->   s390/module: Use s390_kernel_write() for late relocations
->   x86/module: Use text_poke() for late relocations
-> 
->  Documentation/livepatch/module-elf-format.rst |  15 +-
->  arch/s390/include/asm/uaccess.h               |   2 +-
->  arch/s390/kernel/module.c                     | 147 +++++++++------
->  arch/s390/mm/maccess.c                        |   9 +-
->  arch/um/kernel/um_arch.c                      |  16 ++
->  arch/x86/kernel/Makefile                      |   1 -
->  arch/x86/kernel/livepatch.c                   |  53 ------
->  arch/x86/kernel/module.c                      |  43 ++++-
->  include/linux/livepatch.h                     |  17 +-
->  include/linux/module.h                        |   2 -
->  kernel/livepatch/core.c                       | 177 +++++++++++-------
->  kernel/module.c                               |  23 +--
->  12 files changed, 277 insertions(+), 228 deletions(-)
->  delete mode 100644 arch/x86/kernel/livepatch.c
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+---
+ drivers/hwtracing/stm/dummy_stm.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-With the small issue in patch 2 fixed
+diff --git a/drivers/hwtracing/stm/dummy_stm.c b/drivers/hwtracing/stm/dummy_stm.c
+index 38528ffdc0b3..36d32e7afb35 100644
+--- a/drivers/hwtracing/stm/dummy_stm.c
++++ b/drivers/hwtracing/stm/dummy_stm.c
+@@ -68,7 +68,7 @@ static int dummy_stm_link(struct stm_data *data, unsigned int master,
+ 
+ static int dummy_stm_init(void)
+ {
+-	int i, ret = -ENOMEM;
++	int i, ret;
+ 
+ 	if (nr_dummies < 0 || nr_dummies > DUMMY_STM_MAX)
+ 		return -EINVAL;
+@@ -80,8 +80,10 @@ static int dummy_stm_init(void)
+ 
+ 	for (i = 0; i < nr_dummies; i++) {
+ 		dummy_stm[i].name = kasprintf(GFP_KERNEL, "dummy_stm.%d", i);
+-		if (!dummy_stm[i].name)
++		if (!dummy_stm[i].name) {
++			ret = -ENOMEM;
+ 			goto fail_unregister;
++		}
+ 
+ 		dummy_stm[i].sw_start		= master_min;
+ 		dummy_stm[i].sw_end		= master_max;
 
-Acked-by: Miroslav Benes <mbenes@suse.cz>
 
-Great stuff. I am happy we will get rid of the arch-specific code.
 
-M
