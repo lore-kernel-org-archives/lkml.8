@@ -2,144 +2,129 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C57C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B81D0C83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4F820730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9261320730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:05:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FtAXSZMd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HuRn1U2J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbgD1RDY (ORCPT
+        id S1728361AbgD1RFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 13:03:24 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27759 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728089AbgD1RDW (ORCPT
+        Tue, 28 Apr 2020 13:05:18 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:53447 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728250AbgD1RFR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 13:03:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588093400;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zcoS40fbpIucEVEOA18HqlGMwt7Vf5w2w5C7357mLPs=;
-        b=FtAXSZMdsy0+8qWKKothD8tLz8RCrMTPPfroPihP3S+3Xf0LkERa+hlfUjzRMqJVN6JEMq
-        qRwJPWFXYm0OOp+pu3Y9wHLL+9ao7pLCxPSNFH+ORehrTQvaPHg52gQyUhWKaYB1XTsndW
-        D/Q85s1FoKUpFsRr5Psoi4098Hq33JE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-461-Nec0OIyTPYeJqz0YXu2cSw-1; Tue, 28 Apr 2020 13:03:16 -0400
-X-MC-Unique: Nec0OIyTPYeJqz0YXu2cSw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 28 Apr 2020 13:05:17 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588093517; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=mqKQIoILk4/C9tu+s2NOo/+BdCq+TYpvfCmXhPRSth4=; b=HuRn1U2JmkR5++H+8hnPHBqCrumoA25g7d2O9PfdqxvqBapNdBsANhbt6Kghs/KHSn8rPw74
+ Is09GRx50ZrRNYTbWvHlJVVDbrLtj+UoGC7JMPdhQfcEtei7RsLWXcsvQU8IjjxDEVPIJNaT
+ p6Uq+PcNt7JUL+FHuM1zWCQOtaU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea86246.7ff446188e68-smtp-out-n02;
+ Tue, 28 Apr 2020 17:05:10 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3588EC43636; Tue, 28 Apr 2020 17:05:09 +0000 (UTC)
+Received: from [10.110.78.22] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5CFB5835B41;
-        Tue, 28 Apr 2020 17:03:15 +0000 (UTC)
-Received: from treble (ovpn-112-209.rdu2.redhat.com [10.10.112.209])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A2ACE19C58;
-        Tue, 28 Apr 2020 17:03:11 +0000 (UTC)
-Date:   Tue, 28 Apr 2020 12:03:09 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>
-Subject: Re: [PATCH v3 09/10] module: Remove module_disable_ro()
-Message-ID: <20200428170309.xrsmqdwj5qu2q6t6@treble>
-References: <cover.1587812518.git.jpoimboe@redhat.com>
- <33089a8ffb2e724cecfa51d72887ae9bf70354f9.1587812518.git.jpoimboe@redhat.com>
- <20200428162505.GA12860@linux-8ccs.fritz.box>
- <20200428163602.77t6s2qeh4xeacdq@treble>
- <20200428164155.GB12860@linux-8ccs.fritz.box>
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D7B85C433D2;
+        Tue, 28 Apr 2020 17:05:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D7B85C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH v6 0/5] Add SS/HS-USB changes for Qualcomm SM8150 chipset
+To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
+        mgautam@codeaurora.org, vkoul@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <1586472749-18599-1-git-send-email-wcheng@codeaurora.org>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <2e9ec41c-5d98-db66-9395-1651ce24cece@codeaurora.org>
+Date:   Tue, 28 Apr 2020 10:05:07 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <1586472749-18599-1-git-send-email-wcheng@codeaurora.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200428164155.GB12860@linux-8ccs.fritz.box>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 06:41:55PM +0200, Jessica Yu wrote:
-> +++ Josh Poimboeuf [28/04/20 11:36 -0500]:
-> > On Tue, Apr 28, 2020 at 06:25:05PM +0200, Jessica Yu wrote:
-> > > +++ Josh Poimboeuf [25/04/20 06:07 -0500]:
-> > > > module_disable_ro() has no more users.  Remove it.
-> > > >
-> > > > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> > > > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > > 
-> > > Hm, I guess this means we can also remove the module_enable_ro() stubs
-> > > in module.h and make it a static function again (like the other
-> > > module_enable_* functions) as there are no more outside users. I have to
-> > > remind myself after this patchset is merged :-)
-> > 
-> > Ah, true.  I'm respinning the patch set anyway, I can just add this as a
-> > another patch.
+Hi Kishon/Vinod,
+
+Is this series good, and can be picked up?  Noticed that there was
+another recent change to the QMP PHY driver as well:
+https://patchwork.kernel.org/cover/11514761/
+
+Did you want me to rebase my changes on top of that, or the current
+changes are sufficient?
+
+Thanks
+Wesley
+
+On 4/9/2020 3:52 PM, Wesley Cheng wrote:
+> This series adds support for the Synopsis 7nm HSPHY USB driver being
+> used in QCOM chipsets.  The HSPHY register map differs compared to 
+> other PHY revisions.  In addition, modifications and updates are done
+> to the QMP driver to add new registers/offsets, and to update the
+> initialization sequence for enabling the SSUSB path on SM8150.
 > 
-> That would be great. Thanks!
+> Changes in v6:
+>  - Addressed coding style errors in phy-qcom-snps-femto-v2.c
+> 
+> Changes in v5:
+>  - Reorganize IF check for when to use the proper PWRDOWN CTRL offset
+>  - Rename UFS specific offset definitions in the QMP PHY driver to clearly
+>    denote they are UFS specific
+>  - Rename the phy-qcom-snps-7nm driver to phy-qcom-snps-femto-v2
+> 
+> Changes in v4:
+>  - Fix POWERDOWN offset for QMP PHY exit routine, and check for
+>    has_phy_dp_com_ctrl instead of !has_phy_com_ctrl
+> 
+> Changes in v3:
+>  - Use devm_reset_control_get_exclusive instead of referencing index for
+>    reset handle
+> 
+> Changes in v2:
+>  - Fixed YAML errors caught by dt_binding_check
+> 
+> Jack Pham (1):
+>   phy: qcom-qmp: Add SM8150 QMP USB3 PHY support
+> 
+> Wesley Cheng (4):
+>   dt-bindings: phy: Add binding for qcom,usb-snps-femto-v2
+>   phy: qcom-snps: Add SNPS USB PHY driver for QCOM based SOCs
+>   phy: qcom-qmp: Use proper PWRDOWN offset for sm8150 USB
+>   phy: qcom-qmp: Rename UFS PCS QMP v4 registers
+> 
+>  .../bindings/phy/qcom,usb-snps-femto-v2.yaml       |  77 ++++++
+>  drivers/phy/qualcomm/Kconfig                       |  10 +
+>  drivers/phy/qualcomm/Makefile                      |   1 +
+>  drivers/phy/qualcomm/phy-qcom-qmp.c                | 193 +++++++++++++-
+>  drivers/phy/qualcomm/phy-qcom-qmp.h                | 238 +++++++++++++++--
+>  drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c      | 296 +++++++++++++++++++++
+>  6 files changed, 779 insertions(+), 36 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
+>  create mode 100644 drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
+> 
 
-Sneak preview:
-
-From: Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH] module: Make module_enable_ro() static again
-
-Now that module_enable_ro() has no more external users, make it static
-again.
-
-Suggested-by: Jessica Yu <jeyu@kernel.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
- include/linux/module.h | 6 ------
- kernel/module.c        | 4 ++--
- 2 files changed, 2 insertions(+), 8 deletions(-)
-
-diff --git a/include/linux/module.h b/include/linux/module.h
-index e4ef7b36feda..2c2e988bcf10 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -858,12 +858,6 @@ extern int module_sysfs_initialized;
- 
- #define __MODULE_STRING(x) __stringify(x)
- 
--#ifdef CONFIG_STRICT_MODULE_RWX
--extern void module_enable_ro(const struct module *mod, bool after_init);
--#else
--static inline void module_enable_ro(const struct module *mod, bool after_init) { }
--#endif
--
- #ifdef CONFIG_GENERIC_BUG
- void module_bug_finalize(const Elf_Ehdr *, const Elf_Shdr *,
- 			 struct module *);
-diff --git a/kernel/module.c b/kernel/module.c
-index f0e414a01d91..6d8aab60943e 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -2016,7 +2016,7 @@ static void frob_writable_data(const struct module_layout *layout,
- 		   (layout->size - layout->ro_after_init_size) >> PAGE_SHIFT);
- }
- 
--void module_enable_ro(const struct module *mod, bool after_init)
-+static void module_enable_ro(const struct module *mod, bool after_init)
- {
- 	if (!rodata_enabled)
- 		return;
-@@ -2057,7 +2057,7 @@ static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
- }
- 
- #else /* !CONFIG_STRICT_MODULE_RWX */
--/* module_{enable,disable}_ro() stubs are in module.h */
-+void module_enable_ro(const struct module *mod, bool after_init) {}
- static void module_enable_nx(const struct module *mod) { }
- static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
- 				       char *secstrings, struct module *mod)
 -- 
-2.21.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
