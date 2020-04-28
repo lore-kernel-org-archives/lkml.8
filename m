@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF72DC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 333E7C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B64C5206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06853206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099740;
-	bh=OTy+X93/6mEgX405aLqjp2EVUhch7boNXPNfKUUVmU0=;
+	s=default; t=1588099747;
+	bh=n+/17Ma26qtlsBWNMwijsTBxk4UKAi/EZ1WVUM/oUuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AtcvaFEx8UN86TArrIjXaoM+3Dob4F/D+aGWolPNm6S61dmy4GhWhPlXYEIlD8pJx
-	 Q97nJiZZu6hWrCF84SHu+MliwPXJ8sXtmFfldpvMNeyWI+KBsaTc6G9NKdXSNVWuwD
-	 lSyQZyLLH7odgjXRddCx8nTAEJtmWf2Uh3ThuDT8=
+	b=Q/yahlHOZIeQsaWgKi7FDe6zAc7tN4zoNUnujikhtebUJMB+jaOKqnie6GwTa3Xao
+	 H8enp7ZUs49Bzc+4VWKur4FwyMlckIiZU03bMuN51LpwD7fK7eqFfsMd9wFgoYdNby
+	 113FK2R+gGvPOMXUZ58YHVD4htqjO0rym1PpybY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730931AbgD1Sk2 (ORCPT
+        id S1731122AbgD1StF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:40:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58158 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:49:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730792AbgD1SjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:39:21 -0400
+        id S1729732AbgD1SkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:40:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BB0920575;
-        Tue, 28 Apr 2020 18:39:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87D2A2085B;
+        Tue, 28 Apr 2020 18:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099160;
-        bh=OTy+X93/6mEgX405aLqjp2EVUhch7boNXPNfKUUVmU0=;
+        s=default; t=1588099222;
+        bh=n+/17Ma26qtlsBWNMwijsTBxk4UKAi/EZ1WVUM/oUuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QTIBQHc6D3a9r/cTVcd1+cIyAYYdAqLQH/IU6OjV8ohPiTNiycNIPGhIaXOiMFv62
-         8v193TUvSc6Tbt1GqUBPsrr5RUqliShnqxuqiDC8q1/cFME4RHMz0QFJVxGB/UOsPf
-         frzRpxvVVCnlf8aOZtmY6j9Tgy/yQqklEW5YdvZ8=
+        b=EK/eYZu8gyrWuOS8wDg6rm5IrhuRFQzzNhBgpm+jxn6kLm0gU3HqhsxriJFYcIX7r
+         zEVuGgdrUn//pvZmEON6bfGVL/laygO0muqXwfxES6/TYkyUdFh9vcBj6szmRG4L43
+         /Zq/cIt2s7TdkZnbduOKS9xCW7BiMeufThtVGZ+Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+49e69b4d71a420ceda3e@syzkaller.appspotmail.com,
-        Paul Moore <paul@paul-moore.com>
-Subject: [PATCH 4.19 107/131] audit: check the length of userspace generated audit records
-Date:   Tue, 28 Apr 2020 20:25:19 +0200
-Message-Id: <20200428182238.626181804@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 076/168] net: dsa: b53: Fix ARL register definitions
+Date:   Tue, 28 Apr 2020 20:24:10 +0200
+Message-Id: <20200428182241.718312404@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,38 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Moore <paul@paul-moore.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 763dafc520add02a1f4639b500c509acc0ea8e5b upstream.
+[ Upstream commit c2e77a18a7ed65eb48f6e389b6a59a0fd753646a ]
 
-Commit 756125289285 ("audit: always check the netlink payload length
-in audit_receive_msg()") fixed a number of missing message length
-checks, but forgot to check the length of userspace generated audit
-records.  The good news is that you need CAP_AUDIT_WRITE to submit
-userspace audit records, which is generally only given to trusted
-processes, so the impact should be limited.
+The ARL {MAC,VID} tuple and the forward entry were off by 0x10 bytes,
+which means that when we read/wrote from/to ARL bin index 0, we were
+actually accessing the ARLA_RWCTRL register.
 
-Cc: stable@vger.kernel.org
-Fixes: 756125289285 ("audit: always check the netlink payload length in audit_receive_msg()")
-Reported-by: syzbot+49e69b4d71a420ceda3e@syzkaller.appspotmail.com
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- kernel/audit.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/dsa/b53/b53_regs.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -1331,6 +1331,9 @@ static int audit_receive_msg(struct sk_b
- 	case AUDIT_FIRST_USER_MSG2 ... AUDIT_LAST_USER_MSG2:
- 		if (!audit_enabled && msg_type != AUDIT_USER_AVC)
- 			return 0;
-+		/* exit early if there isn't at least one character to print */
-+		if (data_len < 2)
-+			return -EINVAL;
+--- a/drivers/net/dsa/b53/b53_regs.h
++++ b/drivers/net/dsa/b53/b53_regs.h
+@@ -304,7 +304,7 @@
+  *
+  * BCM5325 and BCM5365 share most definitions below
+  */
+-#define B53_ARLTBL_MAC_VID_ENTRY(n)	(0x10 * (n))
++#define B53_ARLTBL_MAC_VID_ENTRY(n)	((0x10 * (n)) + 0x10)
+ #define   ARLTBL_MAC_MASK		0xffffffffffffULL
+ #define   ARLTBL_VID_S			48
+ #define   ARLTBL_VID_MASK_25		0xff
+@@ -316,7 +316,7 @@
+ #define   ARLTBL_VALID_25		BIT(63)
  
- 		err = audit_filter(msg_type, AUDIT_FILTER_USER);
- 		if (err == 1) { /* match or error */
+ /* ARL Table Data Entry N Registers (32 bit) */
+-#define B53_ARLTBL_DATA_ENTRY(n)	((0x10 * (n)) + 0x08)
++#define B53_ARLTBL_DATA_ENTRY(n)	((0x10 * (n)) + 0x18)
+ #define   ARLTBL_DATA_PORT_ID_MASK	0x1ff
+ #define   ARLTBL_TC(tc)			((3 & tc) << 11)
+ #define   ARLTBL_AGE			BIT(14)
 
 
