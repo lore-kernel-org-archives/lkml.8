@@ -2,202 +2,181 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9498FC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB62C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A824205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8E3B206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:53:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ZBnCEL8g";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="2uEqZ6z/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgD1HxT (ORCPT
+        id S1726824AbgD1Hxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:53:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56760 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbgD1HxT (ORCPT
+        Tue, 28 Apr 2020 03:53:50 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:37117 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726253AbgD1Hxt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 03:53:19 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CC7AC03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 00:53:19 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jTL3I-000289-0X; Tue, 28 Apr 2020 09:53:12 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jTL3G-0000xR-7J; Tue, 28 Apr 2020 09:53:10 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Kubecek <mkubecek@suse.cz>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        David Jander <david@protonic.nl>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
-        Marek Vasut <marex@denx.de>,
-        Christian Herber <christian.herber@nxp.com>
-Subject: [PATCH net-next v3 2/2] net: phy: tja11xx: add support for master-slave configuration
-Date:   Tue, 28 Apr 2020 09:53:08 +0200
-Message-Id: <20200428075308.2938-3-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428075308.2938-1-o.rempel@pengutronix.de>
-References: <20200428075308.2938-1-o.rempel@pengutronix.de>
+        Tue, 28 Apr 2020 03:53:49 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 80A095C022F;
+        Tue, 28 Apr 2020 03:53:48 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Tue, 28 Apr 2020 03:53:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=ZPB1hC2KG5pqxR0AOhhwZaeUt+5
+        oFtswYv6gIhtQcvk=; b=ZBnCEL8go8qe1oAOd9Zt9BOKRiQfydtlzVup/5/KW82
+        ChAqOh+rkdwzt91dFzPtFer/+OsQeLrO4owOWYhweqR15jwy4/DcAfycrKvMKZKV
+        717aiWU6D4G7/xo56yNih/yjTqHzd8FMFMNEH7VOKIug5mcg4wgu50raA94utCj1
+        hcW7OljeCPQcSVyynTj4s72aeiQT9cfOQFiJp0WbBAAFsDBzJQq54RYFuvr317Fq
+        a0PaiRQl8H9BPK090IuQDXW/iy5/Aol0T6jJOQ25NNVFVkYe7YBa0XzzDfHBpI+H
+        wtsbsC1mvztAPK8IT/Bj4cY0Ez+JIE+bJBN2QsgDgmQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=ZPB1hC
+        2KG5pqxR0AOhhwZaeUt+5oFtswYv6gIhtQcvk=; b=2uEqZ6z/t9bAOFZM/cRHRw
+        Pvz05NUDRFepI166pCa5B6bFjUQSiy/Kiu7hA7hDHUEYGvXSjcWN1H3Kvwf8LXhA
+        luKFaZb21J1bDo/RrODGyli+2V9I2UypsPC90xqH0jRtbXL9C4mdWjsdTuVKAK8O
+        MqATCTOKBckD1yXuwZvrNMbgTCeSGTyI5ui3UvyWfLC+n0Mf8IX/XijvJFU2IIsu
+        XOk3sCiK8URzoO5r3NILbnKSdQ52PufAVTJSlZNKdcafnjRRlAvIPt/8Y1mrQxNL
+        9G0vOuSvRX8absxHQrEoTaGWTW3psf0K3iDYqmcRd0lMHh+LEXqoZJCkoK67XPXA
+        ==
+X-ME-Sender: <xms:C-GnXrtFziZhvCvgN2bZrBk2hOgEqQnGuTw5-5L1DhLv7CX0k5CkxA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedtgdduvdduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:C-GnXoMcYGXFoTMHJi-tlyoWneC9bs6drcru-P-PIQe-6WvcZPdpNQ>
+    <xmx:C-GnXnVVfGaxHXpZg8Ex9yWuf0sIv7oCJHk9wHNcM839UwSQ4jUjJA>
+    <xmx:C-GnXrW2IZIcL-80XmCsnn7d1Xno45tNUuZX95VOrOjq7754Sb-p4w>
+    <xmx:DOGnXl1ZpTtwuB0YBdGniaZR-3yXiTpMWuGBz8u6-DWDeA85GprxRQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id AB64C3065E9C;
+        Tue, 28 Apr 2020 03:53:47 -0400 (EDT)
+Date:   Tue, 28 Apr 2020 09:53:46 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Peter Vasil <peter.vasil@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] pwm: sun4i: direct clock output support for Allwinner A64
+Message-ID: <20200428075346.xjzmmvios64emg5z@gilmour.lan>
+References: <20200426101122.98318-1-peter.vasil@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="sjnuyyybmloorp7b"
+Content-Disposition: inline
+In-Reply-To: <20200426101122.98318-1-peter.vasil@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The TJA11xx PHYs have a vendor specific Master/Slave configuration bit,
-which is not compatible with IEEE 803.2-2018 spec for 100Base-T1
-devices. So, provide a custom config_ange call back to solve this
-problem.
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/net/phy/nxp-tja11xx.c | 58 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 57 insertions(+), 1 deletion(-)
+--sjnuyyybmloorp7b
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
-index cc766b2d4136e..c316d22ea7530 100644
---- a/drivers/net/phy/nxp-tja11xx.c
-+++ b/drivers/net/phy/nxp-tja11xx.c
-@@ -30,6 +30,7 @@
- #define MII_ECTRL_WAKE_REQUEST		BIT(0)
- 
- #define MII_CFG1			18
-+#define MII_CFG1_MASTER_SLAVE		BIT(15)
- #define MII_CFG1_AUTO_OP		BIT(14)
- #define MII_CFG1_SLEEP_CONFIRM		BIT(6)
- #define MII_CFG1_LED_MODE_MASK		GENMASK(5, 4)
-@@ -167,6 +168,33 @@ static int tja11xx_soft_reset(struct phy_device *phydev)
- 	return genphy_soft_reset(phydev);
- }
- 
-+static int tja11xx_config_aneg(struct phy_device *phydev)
-+{
-+	u16 ctl = 0;
-+	int ret;
-+
-+	switch (phydev->master_slave_set) {
-+	case PORT_MODE_CFG_MASTER_FORCE:
-+	case PORT_MODE_CFG_MASTER_PREFERRED:
-+		ctl |= MII_CFG1_MASTER_SLAVE;
-+		break;
-+	case PORT_MODE_CFG_SLAVE_FORCE:
-+	case PORT_MODE_CFG_SLAVE_PREFERRED:
-+		break;
-+	case PORT_MODE_CFG_UNKNOWN:
-+		return 0;
-+	default:
-+		phydev_warn(phydev, "Unsupported Master/Slave mode\n");
-+		return -ENOTSUPP;
-+	}
-+
-+	ret = phy_modify_changed(phydev, MII_CFG1, MII_CFG1_MASTER_SLAVE, ctl);
-+	if (ret < 0)
-+		return ret;
-+
-+	return __genphy_config_aneg(phydev, ret);
-+}
-+
- static int tja11xx_config_init(struct phy_device *phydev)
- {
- 	int ret;
-@@ -222,12 +250,24 @@ static int tja11xx_config_init(struct phy_device *phydev)
- 
- static int tja11xx_read_status(struct phy_device *phydev)
- {
--	int ret;
-+	int cfg, state = 0;
-+	int ret, cfg1;
-+
-+	phydev->master_slave_get = 0;
- 
- 	ret = genphy_update_link(phydev);
- 	if (ret)
- 		return ret;
- 
-+	cfg1 = phy_read(phydev, MII_CFG1);
-+	if (cfg1 < 0)
-+		return cfg1;
-+
-+	if (cfg1 & MII_CFG1_MASTER_SLAVE)
-+		cfg = PORT_MODE_CFG_MASTER_FORCE;
-+	else
-+		cfg = PORT_MODE_CFG_SLAVE_FORCE;
-+
- 	if (phydev->link) {
- 		ret = phy_read(phydev, MII_COMMSTAT);
- 		if (ret < 0)
-@@ -235,8 +275,20 @@ static int tja11xx_read_status(struct phy_device *phydev)
- 
- 		if (!(ret & MII_COMMSTAT_LINK_UP))
- 			phydev->link = 0;
-+
-+		ret = phy_read(phydev, MII_CFG1);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (cfg1 & MII_CFG1_MASTER_SLAVE)
-+			state = PORT_MODE_STATE_MASTER;
-+		else
-+			state = PORT_MODE_STATE_SLAVE;
- 	}
- 
-+	phydev->master_slave_get = cfg;
-+	phydev->master_slave_state = state;
-+
- 	return 0;
- }
- 
-@@ -504,6 +556,7 @@ static struct phy_driver tja11xx_driver[] = {
- 		.features       = PHY_BASIC_T1_FEATURES,
- 		.probe		= tja11xx_probe,
- 		.soft_reset	= tja11xx_soft_reset,
-+		.config_aneg	= tja11xx_config_aneg,
- 		.config_init	= tja11xx_config_init,
- 		.read_status	= tja11xx_read_status,
- 		.suspend	= genphy_suspend,
-@@ -519,6 +572,7 @@ static struct phy_driver tja11xx_driver[] = {
- 		.features       = PHY_BASIC_T1_FEATURES,
- 		.probe		= tja11xx_probe,
- 		.soft_reset	= tja11xx_soft_reset,
-+		.config_aneg	= tja11xx_config_aneg,
- 		.config_init	= tja11xx_config_init,
- 		.read_status	= tja11xx_read_status,
- 		.suspend	= genphy_suspend,
-@@ -533,6 +587,7 @@ static struct phy_driver tja11xx_driver[] = {
- 		.features       = PHY_BASIC_T1_FEATURES,
- 		.probe		= tja1102_p0_probe,
- 		.soft_reset	= tja11xx_soft_reset,
-+		.config_aneg	= tja11xx_config_aneg,
- 		.config_init	= tja11xx_config_init,
- 		.read_status	= tja11xx_read_status,
- 		.match_phy_device = tja1102_p0_match_phy_device,
-@@ -551,6 +606,7 @@ static struct phy_driver tja11xx_driver[] = {
- 		.features       = PHY_BASIC_T1_FEATURES,
- 		/* currently no probe for Port 1 is need */
- 		.soft_reset	= tja11xx_soft_reset,
-+		.config_aneg	= tja11xx_config_aneg,
- 		.config_init	= tja11xx_config_init,
- 		.read_status	= tja11xx_read_status,
- 		.match_phy_device = tja1102_p1_match_phy_device,
--- 
-2.26.2
+Hi,
 
+On Sun, Apr 26, 2020 at 12:11:22PM +0200, Peter Vasil wrote:
+> Allwinner A64 is capable of a direct clock output on PWM (see A64
+> User Manual chapter 3.10). Add support for this in the sun4i PWM
+> driver and adjust compatibility in sun50i-a64 base device tree.
+>=20
+> Signed-off-by: Peter Vasil <peter.vasil@gmail.com>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 6 ++----
+>  drivers/pwm/pwm-sun4i.c                       | 9 +++++++++
+>  2 files changed, 11 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/b=
+oot/dts/allwinner/sun50i-a64.dtsi
+> index 31143fe64d91..c334fd106854 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -1069,8 +1069,7 @@ gic: interrupt-controller@1c81000 {
+>  		};
+> =20
+>  		pwm: pwm@1c21400 {
+> -			compatible =3D "allwinner,sun50i-a64-pwm",
+> -				     "allwinner,sun5i-a13-pwm";
+> +			compatible =3D "allwinner,sun50i-a64-pwm";
+>  			reg =3D <0x01c21400 0x400>;
+>  			clocks =3D <&osc24M>;
+>  			pinctrl-names =3D "default";
+> @@ -1252,8 +1251,7 @@ r_ir: ir@1f02000 {
+>  		};
+> =20
+>  		r_pwm: pwm@1f03800 {
+> -			compatible =3D "allwinner,sun50i-a64-pwm",
+> -				     "allwinner,sun5i-a13-pwm";
+> +			compatible =3D "allwinner,sun50i-a64-pwm";
+
+There's no need to remove that compatible, it's actually working as intende=
+d..
+
+>  			reg =3D <0x01f03800 0x400>;
+>  			clocks =3D <&osc24M>;
+>  			pinctrl-names =3D "default";
+> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> index 5c677c563349..18fbbe3277d0 100644
+> --- a/drivers/pwm/pwm-sun4i.c
+> +++ b/drivers/pwm/pwm-sun4i.c
+> @@ -352,6 +352,12 @@ static const struct sun4i_pwm_data sun4i_pwm_single_=
+bypass =3D {
+>  	.npwm =3D 1,
+>  };
+> =20
+> +static const struct sun4i_pwm_data sun50i_a64_pwm_data =3D {
+> +	.has_prescaler_bypass =3D true,
+> +	.has_direct_mod_clk_output =3D true,
+> +	.npwm =3D 1,
+> +};
+> +
+>  static const struct sun4i_pwm_data sun50i_h6_pwm_data =3D {
+>  	.has_prescaler_bypass =3D true,
+>  	.has_direct_mod_clk_output =3D true,
+> @@ -374,6 +380,9 @@ static const struct of_device_id sun4i_pwm_dt_ids[] =
+=3D {
+>  	}, {
+>  		.compatible =3D "allwinner,sun8i-h3-pwm",
+>  		.data =3D &sun4i_pwm_single_bypass,
+> +	}, {
+> +		.compatible =3D "allwinner,sun50i-a64-pwm",
+> +		.data =3D &sun50i_a64_pwm_data,
+
+Ie, if the OS only has support for the A13, then it will use it as an A13, =
+and
+if it has support for the A64 variant, then it can use some more advanced
+features.
+
+Maxime
+
+--sjnuyyybmloorp7b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqfhCgAKCRDj7w1vZxhR
+xWYNAP0XwagPq8Ucjl/id9ax9GqE/UVZAeVIhpIf1azXshxpKAEAjhQ3ptJzGoRq
+WPVqQ9VSEdoRLsCRzcOfVK2X5rKvMQQ=
+=sF/u
+-----END PGP SIGNATURE-----
+
+--sjnuyyybmloorp7b--
