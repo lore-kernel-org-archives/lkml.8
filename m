@@ -2,240 +2,256 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F649C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D984C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E03C82070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CED220B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:10:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dMLJbQRz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d3Lktalo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgD1UIi (ORCPT
+        id S1726495AbgD1UJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:08:38 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:51866 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726286AbgD1UIb (ORCPT
+        Tue, 28 Apr 2020 16:09:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59200 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726412AbgD1UJZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:08:31 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SJxG5K007306;
-        Tue, 28 Apr 2020 20:08:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=obAQjQOwpznu0IDV9eQOTSEo+Ud2NPo//XlLR2mtfqI=;
- b=dMLJbQRzQZWDRF9Ts6l5Fvrhd+ZNNDdEjofFnXezDgfUKozOuxsPOI3Sq8zJijwNpEkB
- t/JD51mcNr3bW/Efq8/HZs0hatE6R1YEf/NXkY/6JLUPxAjKE8FFtzXT4n9H5x0gbLHL
- 2YiaiH8YgjAVHfFvfMYSZZQ5Y0UCJEqTPasbhruwXSaI9zFTqzv3fJZZ5YfqFfsL+sJQ
- k+nB6E/w6J4MVipn9saVHrvTI3e6ToO7fTSVxf6dtmJaCh5fhXb8GXJ7yYe/XFXERIWv
- vvJCv2thp3Sd8/DqkDLPfIjVMF5HHrgoqTmVrKKK+CoRgDbpsMLsA8UDrQ3hZSf3FAh9 cw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 30p2p07hw8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 20:08:13 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SK84Go194206;
-        Tue, 28 Apr 2020 20:08:13 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 30mxx0nj0b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 20:08:13 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03SK8BHE002188;
-        Tue, 28 Apr 2020 20:08:11 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 Apr 2020 13:08:11 -0700
-Date:   Tue, 28 Apr 2020 13:08:09 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH V11 06/11] fs/xfs: Make DAX mount option a tri-state
-Message-ID: <20200428200809.GB6742@magnolia>
-References: <20200428002142.404144-1-ira.weiny@intel.com>
- <20200428002142.404144-7-ira.weiny@intel.com>
+        Tue, 28 Apr 2020 16:09:25 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC74DC03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:09:24 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id f3so24747263ioj.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:09:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6b8JEdc86QQaLWgUONgVk5QnyKn0OwJfe4nUlQTwps0=;
+        b=d3LktalotbLI0rJhUPptVS5m6TeC3T7IVM9AmAJQcKzSqXkCYx4sHzfZBRXBWNrhJ9
+         nChBqVreBXCMxoNCEjAdTXCR1vRzfCytEZUtf13z9oltklrIDGVULrwgUMUto7+0T9eP
+         0tAKMU6ESdpJJtGA7/8moPsY9glywvT/o6LZIGOKLkAUj+DSnUNkiSLG/haa3Vu9JQSt
+         XZT9vMf6gbkocCwqFSitNVkd2Xqvyt4YOII+8CJDtXjmcZbbo2a9JtwVOsVq9az4EJs+
+         jOBj56RrVFe/Zh/Ev3wvJuYasVOlY0KYDQx3OsfEiC5t6GDwauOkY9EpJBKZdEGwt0Gx
+         EYUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6b8JEdc86QQaLWgUONgVk5QnyKn0OwJfe4nUlQTwps0=;
+        b=oj8hadvvJHvi+zQ0cCm93ON9ut1ADiurOmDV4guTs4zwJx2B1b0eGCX7ZYh//z40ve
+         smcZTLtRuHy3FzIzgVycGR2fcudrAB+Jqki1hfClySQKxv+qYZIqeLaywuw/cjE57yWw
+         3kz2BMdfz0SpvU+qiby9Ef5XDZcTnGb8OkBGBf2bzYKSIVQwnx4tM9qxVuPzKpdwztr1
+         65svDG3/5t7Photop3Y4yjNhdVKH++xjxv4488Npqphcz5EktnZgfitdjbxzj0hkhra8
+         04bD2NdUl2HKvyf7N066B8X7jdwOsySJx6z+BUCRJABfVfBDBKhYdkC6KUapvzQXzi1r
+         guOg==
+X-Gm-Message-State: AGi0PuZYtSE5NourLISD7/wpwISWj0Qk11CrAzn3xobNGHLS5rsDWpVB
+        c9J/7W17+mG/+DjNEAC6U9u5X2szY5i4htq2tGjdGMuf
+X-Google-Smtp-Source: APiQypIQBpPQQkAuehJj3ca3UUx0zUIWzRrOwv/RHaXCYe3333MWUVd7I0T7xj4J5l8onxqQ42VCv8lSggS7jkyeOw8=
+X-Received: by 2002:a02:b88e:: with SMTP id p14mr25945179jam.36.1588104563944;
+ Tue, 28 Apr 2020 13:09:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428002142.404144-7-ira.weiny@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 bulkscore=0
- suspectscore=0 mlxlogscore=999 phishscore=0 malwarescore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004280157
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1015
- bulkscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
- mlxscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004280157
+References: <20200325201839.15896-1-s-anna@ti.com> <20200325201839.15896-4-s-anna@ti.com>
+ <20200428195855.GC10552@xps15>
+In-Reply-To: <20200428195855.GC10552@xps15>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Tue, 28 Apr 2020 14:09:13 -0600
+Message-ID: <CANLsYkwgCJrDu-Y5iyG0maCVqFqDXW_0vD4Sv2e+-dwryTNaRA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] remoteproc/k3-dsp: Add support for L2RAM loading on
+ C66x DSPs
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 05:21:37PM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> As agreed upon[1].  We make the dax mount option a tri-state.  '-o dax'
-> continues to operate the same.  We add 'always', 'never', and 'inode'
-> (default).
-> 
-> [1] https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+On Tue, 28 Apr 2020 at 13:58, Mathieu Poirier
+<mathieu.poirier@linaro.org> wrote:
+>
+> On Wed, Mar 25, 2020 at 03:18:39PM -0500, Suman Anna wrote:
+> > The resets for the DSP processors on K3 SoCs are managed through the
+> > Power and Sleep Controller (PSC) module. Each DSP typically has two
+> > resets - a global module reset for powering on the device, and a local
+> > reset that affects only the CPU while allowing access to the other
+> > sub-modules within the DSP processor sub-systems.
+> >
+> > The C66x DSPs have two levels of internal RAMs that can be used to
+> > boot from, and the firmware loading into these RAMs require the
+> > local reset to be asserted with the device powered on/enabled using
+> > the module reset. Enhance the K3 DSP remoteproc driver to add support
+> > for loading into the internal RAMs. The local reset is deasserted on
+> > SoC power-on-reset, so logic has to be added in probe in remoteproc
+> > mode to balance the remoteproc state-machine.
+> >
+> > Note that the local resets are a no-op on C71x cores, and the hardware
+> > does not supporting loading into its internal RAMs.
+> >
+> > Signed-off-by: Suman Anna <s-anna@ti.com>
+> > ---
+> >  drivers/remoteproc/ti_k3_dsp_remoteproc.c | 82 +++++++++++++++++++++++
+> >  1 file changed, 82 insertions(+)
+> >
+> > diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+> > index fd0d84f46f90..7b712ef74611 100644
+> > --- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+> > +++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+> > @@ -175,6 +175,9 @@ static int k3_dsp_rproc_reset(struct k3_dsp_rproc *kproc)
+> >               return ret;
+> >       }
+> >
+> > +     if (kproc->data->uses_lreset)
+> > +             return ret;
+> > +
+> >       ret = kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
+> >                                                   kproc->ti_sci_id);
+> >       if (ret) {
+> > @@ -192,6 +195,9 @@ static int k3_dsp_rproc_release(struct k3_dsp_rproc *kproc)
+> >       struct device *dev = kproc->dev;
+> >       int ret;
+> >
+> > +     if (kproc->data->uses_lreset)
+> > +             goto lreset;
+> > +
+> >       ret = kproc->ti_sci->ops.dev_ops.get_device(kproc->ti_sci,
+> >                                                  kproc->ti_sci_id);
+> >       if (ret) {
+> > @@ -199,6 +205,7 @@ static int k3_dsp_rproc_release(struct k3_dsp_rproc *kproc)
+> >               return ret;
+> >       }
+> >
+> > +lreset:
+> >       ret = reset_control_deassert(kproc->reset);
+> >       if (ret) {
+> >               dev_err(dev, "local-reset deassert failed, ret = %d\n", ret);
+> > @@ -210,6 +217,63 @@ static int k3_dsp_rproc_release(struct k3_dsp_rproc *kproc)
+> >       return ret;
+> >  }
+> >
+> > +/*
+> > + * The C66x DSP cores have a local reset that affects only the CPU, and a
+> > + * generic module reset that powers on the device and allows the DSP internal
+> > + * memories to be accessed while the local reset is asserted. This function is
+> > + * used to release the global reset on C66x DSPs to allow loading into the DSP
+> > + * internal RAMs. The .prepare() ops is invoked by remoteproc core before any
+> > + * firmware loading, and is followed by the .start() ops after loading to
+> > + * actually let the C66x DSP cores run. The local reset on C71x cores is a
+> > + * no-op and the global reset cannot be released on C71x cores until after
+> > + * the firmware images are loaded, so this function does nothing for C71x cores.
+> > + */
+> > +static int k3_dsp_rproc_prepare(struct rproc *rproc)
+> > +{
+> > +     struct k3_dsp_rproc *kproc = rproc->priv;
+> > +     struct device *dev = kproc->dev;
+> > +     int ret;
+> > +
+> > +     /* local reset is no-op on C71x processors */
+> > +     if (!kproc->data->uses_lreset)
+> > +             return 0;
+>
+> In k3_dsp_rproc_release() the condition is "if (kproc->data->uses_lreset)" and
+> here it is the opposite, which did a good job at getting me confused.
+>
+> Taking a step back, I assume c71 DSPs will have their own k3_dsp_dev_data where
+> the users_lreset flag will be false.  In that case I think it would make the
+> code easier to understand if the k3_dsp_rproc_ops was declared without the
+> .prepare and .unprepare.  In probe(), if data->uses_lreset is true then
+> k3_dsp_rproc_prepare() and k3_dsp_rproc_unprepare() are set.
+>
 
-Looks good to me,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+I forgot... Since this is a C71 related change, was there a reason to
+lump it with the C66 set?  If not I would simply move that to the C71
+work.
 
---D
-
-> 
-> ---
-> Changes from V10:
-> 	Move show options to xfs_info_set array
-> 
-> Changes from V9:
-> 	Fix indentation in xfs_mount_set_dax_mode()
-> 	Do not report dax=inode
-> 
-> Changes from v8:
-> 	Move NEVER bit to 27
-> 	Use xfs signature style
-> 	use xfs_dax_mode enum
-> 
-> Changes from v7:
-> 	Change to XFS_MOUNT_DAX_NEVER
-> 
-> Changes from v6:
-> 	Use 2 flag bits rather than a field.
-> 	change iflag to inode
-> 
-> Changes from v5:
-> 	New Patch
-> ---
->  fs/xfs/xfs_mount.h |  1 +
->  fs/xfs/xfs_super.c | 46 ++++++++++++++++++++++++++++++++++++++++++----
->  2 files changed, 43 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
-> index f6123fb0113c..37bfb50db809 100644
-> --- a/fs/xfs/xfs_mount.h
-> +++ b/fs/xfs/xfs_mount.h
-> @@ -238,6 +238,7 @@ typedef struct xfs_mount {
->  						   allocator */
->  #define XFS_MOUNT_NOATTR2	(1ULL << 25)	/* disable use of attr2 format */
->  #define XFS_MOUNT_DAX_ALWAYS	(1ULL << 26)
-> +#define XFS_MOUNT_DAX_NEVER	(1ULL << 27)
->  
->  /*
->   * Max and min values for mount-option defined I/O
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index ce169d1c7474..e80bd2c4c279 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -47,6 +47,39 @@ static struct kset *xfs_kset;		/* top-level xfs sysfs dir */
->  static struct xfs_kobj xfs_dbg_kobj;	/* global debug sysfs attrs */
->  #endif
->  
-> +enum xfs_dax_mode {
-> +	XFS_DAX_INODE = 0,
-> +	XFS_DAX_ALWAYS = 1,
-> +	XFS_DAX_NEVER = 2,
-> +};
-> +
-> +static void
-> +xfs_mount_set_dax_mode(
-> +	struct xfs_mount	*mp,
-> +	enum xfs_dax_mode	mode)
-> +{
-> +	switch (mode) {
-> +	case XFS_DAX_INODE:
-> +		mp->m_flags &= ~(XFS_MOUNT_DAX_ALWAYS | XFS_MOUNT_DAX_NEVER);
-> +		break;
-> +	case XFS_DAX_ALWAYS:
-> +		mp->m_flags |= XFS_MOUNT_DAX_ALWAYS;
-> +		mp->m_flags &= ~XFS_MOUNT_DAX_NEVER;
-> +		break;
-> +	case XFS_DAX_NEVER:
-> +		mp->m_flags |= XFS_MOUNT_DAX_NEVER;
-> +		mp->m_flags &= ~XFS_MOUNT_DAX_ALWAYS;
-> +		break;
-> +	}
-> +}
-> +
-> +static const struct constant_table dax_param_enums[] = {
-> +	{"inode",	XFS_DAX_INODE },
-> +	{"always",	XFS_DAX_ALWAYS },
-> +	{"never",	XFS_DAX_NEVER },
-> +	{}
-> +};
-> +
->  /*
->   * Table driven mount option parser.
->   */
-> @@ -59,7 +92,7 @@ enum {
->  	Opt_filestreams, Opt_quota, Opt_noquota, Opt_usrquota, Opt_grpquota,
->  	Opt_prjquota, Opt_uquota, Opt_gquota, Opt_pquota,
->  	Opt_uqnoenforce, Opt_gqnoenforce, Opt_pqnoenforce, Opt_qnoenforce,
-> -	Opt_discard, Opt_nodiscard, Opt_dax,
-> +	Opt_discard, Opt_nodiscard, Opt_dax, Opt_dax_enum,
->  };
->  
->  static const struct fs_parameter_spec xfs_fs_parameters[] = {
-> @@ -103,6 +136,7 @@ static const struct fs_parameter_spec xfs_fs_parameters[] = {
->  	fsparam_flag("discard",		Opt_discard),
->  	fsparam_flag("nodiscard",	Opt_nodiscard),
->  	fsparam_flag("dax",		Opt_dax),
-> +	fsparam_enum("dax",		Opt_dax_enum, dax_param_enums),
->  	{}
->  };
->  
-> @@ -129,7 +163,8 @@ xfs_fs_show_options(
->  		{ XFS_MOUNT_GRPID,		",grpid" },
->  		{ XFS_MOUNT_DISCARD,		",discard" },
->  		{ XFS_MOUNT_LARGEIO,		",largeio" },
-> -		{ XFS_MOUNT_DAX_ALWAYS,		",dax" },
-> +		{ XFS_MOUNT_DAX_ALWAYS,		",dax=always" },
-> +		{ XFS_MOUNT_DAX_NEVER,		",dax=never" },
->  		{ 0, NULL }
->  	};
->  	struct xfs_mount	*mp = XFS_M(root->d_sb);
-> @@ -1261,7 +1296,10 @@ xfs_fc_parse_param(
->  		return 0;
->  #ifdef CONFIG_FS_DAX
->  	case Opt_dax:
-> -		mp->m_flags |= XFS_MOUNT_DAX_ALWAYS;
-> +		xfs_mount_set_dax_mode(mp, XFS_DAX_ALWAYS);
-> +		return 0;
-> +	case Opt_dax_enum:
-> +		xfs_mount_set_dax_mode(mp, result.uint_32);
->  		return 0;
->  #endif
->  	default:
-> @@ -1468,7 +1506,7 @@ xfs_fc_fill_super(
->  		if (!rtdev_is_dax && !datadev_is_dax) {
->  			xfs_alert(mp,
->  			"DAX unsupported by block device. Turning off DAX.");
-> -			mp->m_flags &= ~XFS_MOUNT_DAX_ALWAYS;
-> +			xfs_mount_set_dax_mode(mp, XFS_DAX_NEVER);
->  		}
->  		if (xfs_sb_version_hasreflink(&mp->m_sb)) {
->  			xfs_alert(mp,
-> -- 
-> 2.25.1
-> 
+> I am done reviewing this set.
+>
+> Thanks,
+> Mathieu
+>
+> > +
+> > +     ret = kproc->ti_sci->ops.dev_ops.get_device(kproc->ti_sci,
+> > +                                                 kproc->ti_sci_id);
+> > +     if (ret)
+> > +             dev_err(dev, "module-reset deassert failed, cannot enable internal RAM loading, ret = %d\n",
+> > +                     ret);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +/*
+> > + * This function implements the .unprepare() ops and performs the complimentary
+> > + * operations to that of the .prepare() ops. The function is used to assert the
+> > + * global reset on applicable C66x cores. This completes the second portion of
+> > + * powering down the C66x DSP cores. The cores themselves are only halted in the
+> > + * .stop() callback through the local reset, and the .unprepare() ops is invoked
+> > + * by the remoteproc core after the remoteproc is stopped to balance the global
+> > + * reset.
+> > + */
+> > +static int k3_dsp_rproc_unprepare(struct rproc *rproc)
+> > +{
+> > +     struct k3_dsp_rproc *kproc = rproc->priv;
+> > +     struct device *dev = kproc->dev;
+> > +     int ret;
+> > +
+> > +     /* local reset is no-op on C71x processors */
+> > +     if (!kproc->data->uses_lreset)
+> > +             return 0;
+> > +
+> > +     ret = kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
+> > +                                                 kproc->ti_sci_id);
+> > +     if (ret)
+> > +             dev_err(dev, "module-reset assert failed, ret = %d\n", ret);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> >  /*
+> >   * Power up the DSP remote processor.
+> >   *
+> > @@ -353,6 +417,8 @@ static void *k3_dsp_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
+> >  }
+> >
+> >  static const struct rproc_ops k3_dsp_rproc_ops = {
+> > +     .prepare        = k3_dsp_rproc_prepare,
+> > +     .unprepare      = k3_dsp_rproc_unprepare,
+> >       .start          = k3_dsp_rproc_start,
+> >       .stop           = k3_dsp_rproc_stop,
+> >       .kick           = k3_dsp_rproc_kick,
+> > @@ -644,6 +710,22 @@ static int k3_dsp_rproc_probe(struct platform_device *pdev)
+> >               goto disable_clk;
+> >       }
+> >
+> > +     /*
+> > +      * ensure the DSP local reset is asserted to ensure the DSP doesn't
+> > +      * execute bogus code in .prepare() when the module reset is released.
+> > +      */
+> > +     if (data->uses_lreset) {
+> > +             ret = reset_control_status(kproc->reset);
+> > +             if (ret < 0) {
+> > +                     dev_err(dev, "failed to get reset status, status = %d\n",
+> > +                             ret);
+> > +                     goto release_mem;
+> > +             } else if (ret == 0) {
+> > +                     dev_warn(dev, "local reset is deasserted for device\n");
+> > +                     k3_dsp_rproc_reset(kproc);
+> > +             }
+> > +     }
+> > +
+> >       ret = rproc_add(rproc);
+> >       if (ret) {
+> >               dev_err(dev, "failed to add register device with remoteproc core, status = %d\n",
+> > --
+> > 2.23.0
+> >
