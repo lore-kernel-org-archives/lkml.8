@@ -2,57 +2,55 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA74C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1C9C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62B8C206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFE5020575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100162;
-	bh=ZCSTh/6AgXCmaSmJzyiH3TXBjskx75nrZXromOV6LOw=;
+	s=default; t=1588100163;
+	bh=hWXN9y8ptdsh40s+if0S3OWTf+c6ujYtEvSVOBn3IzE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C2N/qAkx25X/57O5fvY9LPftvzfHt0Eds46guvyy6avr3nJHknC1ICf2F5/pahTMn
-	 qPX7myOMCc2+QcOXOy8WtQAZ8inYDJHSInVnP5bmsHBpy1cjQYBAyCrs1F8pX2K+62
-	 pA/2FEnvBz1tmtxYEEcyF4yc/aiRAjr/aeSZP0Gg=
+	b=ZOCfe+APmQsZtsMsMf829Y1pXFs0ThVtf2Dox2GR7NCssZb53GgrFN/+WVdHtctC0
+	 zJqu4W/xybqG6CH9GDUasJSgGktkAe4pAuOdtRL8F3X0EFTpswUH7maG/wAR7d9Ftn
+	 QoXlMv5/JjIUXE7oU6/4al52LNjU6pnpspWW8gTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgD1S4B (ORCPT
+        id S1729509AbgD1Sz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:56:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47620 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:55:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729741AbgD1Sbu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:31:50 -0400
+        id S1728624AbgD1Sbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:31:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 232CE20B80;
-        Tue, 28 Apr 2020 18:31:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B0B221707;
+        Tue, 28 Apr 2020 18:31:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098709;
-        bh=ZCSTh/6AgXCmaSmJzyiH3TXBjskx75nrZXromOV6LOw=;
+        s=default; t=1588098712;
+        bh=hWXN9y8ptdsh40s+if0S3OWTf+c6ujYtEvSVOBn3IzE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2cXBUKbXxBjTRoY239wSsX87dar9CIipVDVlReV5mtlF4mTiIy0wrCjQxDkItCfMw
-         X5XPJdKtLI71w1KyWILWJ8hzIhD1CucdeTD6NWkwZIbLh4zZBMt2Op2oDuRR+D+MR0
-         E4ICMl55q4UFHkKyt2LCa0ts5k1efHQJGpPWCwLo=
+        b=Rx/gRZmJI9rQw0CVu2SF6dgUB3zbnXdtersBddof3KKih5Wtt98k6DrOx7lTrxD4t
+         POsIB0puhffUc2+Ta+970dp/kkIB5n3PEez1ZwT8Rnf9aqIUDmBf5hiKc41Hju8jwk
+         sj/MSS46oHPVqQ6LThduo7l8Okuuig5GbEfU+kCg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, KarimAllah Ahmed <karahmed@amazon.de>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 044/131] KVM: Introduce a new guest mapping API
-Date:   Tue, 28 Apr 2020 20:24:16 +0200
-Message-Id: <20200428182230.590133855@linuxfoundation.org>
+        stable@vger.kernel.org, William Dauchy <w.dauchy@criteo.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 003/168] net, ip_tunnel: fix interface lookup with no key
+Date:   Tue, 28 Apr 2020 20:22:57 +0200
+Message-Id: <20200428182232.126333532@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,163 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KarimAllah Ahmed <karahmed@amazon.de>
+From: William Dauchy <w.dauchy@criteo.com>
 
-commit e45adf665a53df0db37f784ed87c6b57ddd81885 upstream.
+commit 25629fdaff2ff509dd0b3f5ff93d70a75e79e0a1 upstream.
 
-In KVM, specially for nested guests, there is a dominant pattern of:
+when creating a new ipip interface with no local/remote configuration,
+the lookup is done with TUNNEL_NO_KEY flag, making it impossible to
+match the new interface (only possible match being fallback or metada
+case interface); e.g: `ip link add tunl1 type ipip dev eth0`
 
-	=> map guest memory -> do_something -> unmap guest memory
+To fix this case, adding a flag check before the key comparison so we
+permit to match an interface with no local/remote config; it also avoids
+breaking possible userland tools relying on TUNNEL_NO_KEY flag and
+uninitialised key.
 
-In addition to all this unnecessarily noise in the code due to boiler plate
-code, most of the time the mapping function does not properly handle memory
-that is not backed by "struct page". This new guest mapping API encapsulate
-most of this boiler plate code and also handles guest memory that is not
-backed by "struct page".
+context being on my side, I'm creating an extra ipip interface attached
+to the physical one, and moving it to a dedicated namespace.
 
-The current implementation of this API is using memremap for memory that is
-not backed by a "struct page" which would lead to a huge slow-down if it
-was used for high-frequency mapping operations. The API does not have any
-effect on current setups where guest memory is backed by a "struct page".
-Further patches are going to also introduce a pfn-cache which would
-significantly improve the performance of the memremap case.
+Fixes: c54419321455 ("GRE: Refactor GRE tunneling code.")
+Signed-off-by: William Dauchy <w.dauchy@criteo.com>
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: KarimAllah Ahmed <karahmed@amazon.de>
-Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[bwh: Backported to 4.19 as dependency of commit 1eff70a9abd4
- "x86/kvm: Introduce kvm_(un)map_gfn()"]
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/kvm_host.h | 28 ++++++++++++++++++
- virt/kvm/kvm_main.c      | 64 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 92 insertions(+)
+ net/ipv4/ip_tunnel.c |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 0f99ecc01bc7d..bef95dba14e8b 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -206,6 +206,32 @@ enum {
- 	READING_SHADOW_PAGE_TABLES,
- };
+--- a/net/ipv4/ip_tunnel.c
++++ b/net/ipv4/ip_tunnel.c
+@@ -142,11 +142,8 @@ struct ip_tunnel *ip_tunnel_lookup(struc
+ 			cand = t;
+ 	}
  
-+#define KVM_UNMAPPED_PAGE	((void *) 0x500 + POISON_POINTER_DELTA)
-+
-+struct kvm_host_map {
-+	/*
-+	 * Only valid if the 'pfn' is managed by the host kernel (i.e. There is
-+	 * a 'struct page' for it. When using mem= kernel parameter some memory
-+	 * can be used as guest memory but they are not managed by host
-+	 * kernel).
-+	 * If 'pfn' is not managed by the host kernel, this field is
-+	 * initialized to KVM_UNMAPPED_PAGE.
-+	 */
-+	struct page *page;
-+	void *hva;
-+	kvm_pfn_t pfn;
-+	kvm_pfn_t gfn;
-+};
-+
-+/*
-+ * Used to check if the mapping is valid or not. Never use 'kvm_host_map'
-+ * directly to check for that.
-+ */
-+static inline bool kvm_vcpu_mapped(struct kvm_host_map *map)
-+{
-+	return !!map->hva;
-+}
-+
- /*
-  * Sometimes a large or cross-page mmio needs to be broken up into separate
-  * exits for userspace servicing.
-@@ -711,7 +737,9 @@ struct kvm_memslots *kvm_vcpu_memslots(struct kvm_vcpu *vcpu);
- struct kvm_memory_slot *kvm_vcpu_gfn_to_memslot(struct kvm_vcpu *vcpu, gfn_t gfn);
- kvm_pfn_t kvm_vcpu_gfn_to_pfn_atomic(struct kvm_vcpu *vcpu, gfn_t gfn);
- kvm_pfn_t kvm_vcpu_gfn_to_pfn(struct kvm_vcpu *vcpu, gfn_t gfn);
-+int kvm_vcpu_map(struct kvm_vcpu *vcpu, gpa_t gpa, struct kvm_host_map *map);
- struct page *kvm_vcpu_gfn_to_page(struct kvm_vcpu *vcpu, gfn_t gfn);
-+void kvm_vcpu_unmap(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty);
- unsigned long kvm_vcpu_gfn_to_hva(struct kvm_vcpu *vcpu, gfn_t gfn);
- unsigned long kvm_vcpu_gfn_to_hva_prot(struct kvm_vcpu *vcpu, gfn_t gfn, bool *writable);
- int kvm_vcpu_read_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn, void *data, int offset,
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 4e499b78569b7..ec1479abb29de 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1705,6 +1705,70 @@ struct page *gfn_to_page(struct kvm *kvm, gfn_t gfn)
- }
- EXPORT_SYMBOL_GPL(gfn_to_page);
+-	if (flags & TUNNEL_NO_KEY)
+-		goto skip_key_lookup;
+-
+ 	hlist_for_each_entry_rcu(t, head, hash_node) {
+-		if (t->parms.i_key != key ||
++		if ((!(flags & TUNNEL_NO_KEY) && t->parms.i_key != key) ||
+ 		    t->parms.iph.saddr != 0 ||
+ 		    t->parms.iph.daddr != 0 ||
+ 		    !(t->dev->flags & IFF_UP))
+@@ -158,7 +155,6 @@ struct ip_tunnel *ip_tunnel_lookup(struc
+ 			cand = t;
+ 	}
  
-+static int __kvm_map_gfn(struct kvm_memory_slot *slot, gfn_t gfn,
-+			 struct kvm_host_map *map)
-+{
-+	kvm_pfn_t pfn;
-+	void *hva = NULL;
-+	struct page *page = KVM_UNMAPPED_PAGE;
-+
-+	if (!map)
-+		return -EINVAL;
-+
-+	pfn = gfn_to_pfn_memslot(slot, gfn);
-+	if (is_error_noslot_pfn(pfn))
-+		return -EINVAL;
-+
-+	if (pfn_valid(pfn)) {
-+		page = pfn_to_page(pfn);
-+		hva = kmap(page);
-+	} else {
-+		hva = memremap(pfn_to_hpa(pfn), PAGE_SIZE, MEMREMAP_WB);
-+	}
-+
-+	if (!hva)
-+		return -EFAULT;
-+
-+	map->page = page;
-+	map->hva = hva;
-+	map->pfn = pfn;
-+	map->gfn = gfn;
-+
-+	return 0;
-+}
-+
-+int kvm_vcpu_map(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map)
-+{
-+	return __kvm_map_gfn(kvm_vcpu_gfn_to_memslot(vcpu, gfn), gfn, map);
-+}
-+EXPORT_SYMBOL_GPL(kvm_vcpu_map);
-+
-+void kvm_vcpu_unmap(struct kvm_vcpu *vcpu, struct kvm_host_map *map,
-+		    bool dirty)
-+{
-+	if (!map)
-+		return;
-+
-+	if (!map->hva)
-+		return;
-+
-+	if (map->page)
-+		kunmap(map->page);
-+	else
-+		memunmap(map->hva);
-+
-+	if (dirty) {
-+		kvm_vcpu_mark_page_dirty(vcpu, map->gfn);
-+		kvm_release_pfn_dirty(map->pfn);
-+	} else {
-+		kvm_release_pfn_clean(map->pfn);
-+	}
-+
-+	map->hva = NULL;
-+	map->page = NULL;
-+}
-+EXPORT_SYMBOL_GPL(kvm_vcpu_unmap);
-+
- struct page *kvm_vcpu_gfn_to_page(struct kvm_vcpu *vcpu, gfn_t gfn)
- {
- 	kvm_pfn_t pfn;
--- 
-2.20.1
-
+-skip_key_lookup:
+ 	if (cand)
+ 		return cand;
+ 
 
 
