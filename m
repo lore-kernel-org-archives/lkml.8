@@ -7,60 +7,61 @@ X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B6EC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB50C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F19320775
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F91B206F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:31:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IBIdM0fo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cuojiai9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgD1WbR (ORCPT
+        id S1726850AbgD1Wbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:31:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53298 "EHLO
+        Tue, 28 Apr 2020 18:31:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725934AbgD1WbQ (ORCPT
+        by vger.kernel.org with ESMTP id S1725934AbgD1Wbj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:31:16 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 796C4C03C1AC;
-        Tue, 28 Apr 2020 15:31:15 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id i3so48434ioo.13;
-        Tue, 28 Apr 2020 15:31:15 -0700 (PDT)
+        Tue, 28 Apr 2020 18:31:39 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F01D6C03C1AC;
+        Tue, 28 Apr 2020 15:31:38 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id q10so588635ile.0;
+        Tue, 28 Apr 2020 15:31:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AbVLurtbPKtHGUO+fKKWsxHlmaiK8ej0iLtIbYgvkqY=;
-        b=IBIdM0foFoA5gBiW1ef1KKeppBZReaKSMMZX1oyJcY1c1L2uMEPuVPcKy6lmc+sAFx
-         l4je4q4+5ojZgEzKh96arXUCOprmyOPCZupGvqHnW0rubYTXQtgvwzWBGb7K02HqzNur
-         K246olyhVIx6BQCsRdICvJSyoHwhFP9sJB65eLTS19gViyuTROgTrOTbYqlHY85y+ziT
-         Tq7q8vRFviXV08+giDLPDOxmhvlSdevVEaM1AsjrGAzb1ykqCM17gRYGjwy2EicTmO7O
-         VBJfWBTI7XwFzI4y8cMKEGyjjl0/EWVdWciCOM35CcfbLYF3AfxoDGIgMLB6THtJXHcR
-         jg1g==
+        bh=pZTw3jfL7zZfUennpSHgZiTE9o7fWqpSYhJWm2LJpbM=;
+        b=cuojiai9vpbeWdsleCDJTjjSrLnuxo2JHa3uelMQ1Q7kd0vGDBh73uQlTqcnIITxcl
+         qF8rHAhapMA2yg6d7CqFMch5rwgYcWxq6pRlRVsPg5LOPlFkib4DLjUerqNVYPpABoGx
+         A21QpYR0hnMQVeQDBpxs6CEZjBJ8tsAdtfuEQh1hd6vUKyoKB4Oe9t+pDBlVbco370i6
+         9oA/VPqVs8q6eiAcyo4k6ff+4soOTK3ccgLCFrFKUXDyEC+DrGMryeTPU8lT1zOYXKa+
+         eX4/LwEl399nrMbbul2C1Cx+IBc9Vh36bMqbt8BgmDtVYozSUbysGcbAbVnds7sbxmgx
+         qXvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=AbVLurtbPKtHGUO+fKKWsxHlmaiK8ej0iLtIbYgvkqY=;
-        b=CpkYN3sXhHSdYFQ653kaKcXAs6ZYHBD2WupFhvCxm1PTcy024g100C56zFdclWY+QN
-         TnbidQ0R8aTJhNjFivZfWtIdBwDJn936aiqVf/JbRDPGRfPYJtWLgZZznCLbPswTk58k
-         Tojbh6CaB8DDHaXUe34oMEOuu7EiFRXP1CJ8z8YJortPOIEcrCx5bX+9SRJkkAqRFEHZ
-         zG4/WprcMaDk1KQ6uVVmpgTce95WnKqOAffTJgppQNriXof8uPQs176bdB1GBpUtOK9Q
-         P8HAaOkIE5yq7GEp3IKdwblEYRE0M38f4itNgyEA0hhtJz4CXQSEF+BtaO8QZ5nVGhbG
-         XV5A==
-X-Gm-Message-State: AGi0PuaAzf4xxKuFkEDZdyXoa859r/OYoGosaTEs92ilj+vg2w4Vl4xO
-        4S6sYPTMGULfn13C99GPNU8=
-X-Google-Smtp-Source: APiQypITlznivHE5s76NTZhLuG5WCQNksHdwglL065Fo5oQhRkl5tUHi0dF2wVHrqFXxbF97Hvba0g==
-X-Received: by 2002:a05:6638:22a:: with SMTP id f10mr28076069jaq.59.1588113074806;
-        Tue, 28 Apr 2020 15:31:14 -0700 (PDT)
+        bh=pZTw3jfL7zZfUennpSHgZiTE9o7fWqpSYhJWm2LJpbM=;
+        b=rgQot+yPJvxpXvhsXVe8ovRGraFeiKV7PI0W7LTnYZtxgpXRrV/hPrjShzkaqxYIOb
+         mDodcihsn0csVVI+QO1VKq3VhU4qVWlVMhIh27lnntM4KMuGAUJxKQXEgCBuksFbRsQR
+         6EPKkzU94NT/05znBrqHgivVH7ftj/aWVrOYxXVPhN0dWSgwLVs0k1P/tpMuY5tfL3bj
+         GfdVjePBbSes4QvTDfCjy3RDB8ReX3UCePJZ/2mzdy5boPGB3vlI21ds98bMqwjHFMg1
+         uxw7J7onFdNYHQfvdZ/bwq4nwi8ZpJqj1gNfNRr/PeakixCxsd/k6dR2jvhZJrr6/tOc
+         2xLg==
+X-Gm-Message-State: AGi0Pua4E1XVTAO/gPbeihrqcueFE3+1+y3z0Xo/3PxxKY+47eiC0L8H
+        bPr0uPQYwM3lXTnEHaIJpHA=
+X-Google-Smtp-Source: APiQypJPpv1MlAmiVgJJvTMhXYHU96cF4MSb8jlzsfJSlQyUEWIYFBIv4OMj0vUQXlqz2tkbYRO4TA==
+X-Received: by 2002:a92:9a97:: with SMTP id c23mr28152860ill.7.1588113098347;
+        Tue, 28 Apr 2020 15:31:38 -0700 (PDT)
 Received: from [10.67.49.116] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id a5sm172373ioa.47.2020.04.28.15.31.12
+        by smtp.googlemail.com with ESMTPSA id o89sm205681ili.72.2020.04.28.15.31.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 15:31:13 -0700 (PDT)
-Subject: Re: [PATCH net-next 2/4] net: phy: bcm54140: fix phy_id_mask
+        Tue, 28 Apr 2020 15:31:37 -0700 (PDT)
+Subject: Re: [PATCH net-next 3/4] net: phy: bcm54140: apply the workaround on
+ b0 chips
 To:     Michael Walle <michael@walle.cc>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Andrew Lunn <andrew@lunn.ch>,
@@ -68,7 +69,7 @@ Cc:     Andrew Lunn <andrew@lunn.ch>,
         Russell King <linux@armlinux.org.uk>,
         "David S . Miller" <davem@davemloft.net>
 References: <20200428210854.28088-1-michael@walle.cc>
- <20200428210854.28088-2-michael@walle.cc>
+ <20200428210854.28088-3-michael@walle.cc>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -124,12 +125,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <2112b565-c025-738d-adce-ee1ec0a4e0d1@gmail.com>
-Date:   Tue, 28 Apr 2020 15:31:12 -0700
+Message-ID: <c04de622-295a-3410-d60e-3ea197a4b377@gmail.com>
+Date:   Tue, 28 Apr 2020 15:31:36 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200428210854.28088-2-michael@walle.cc>
+In-Reply-To: <20200428210854.28088-3-michael@walle.cc>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -139,22 +140,12 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 4/28/20 2:08 PM, Michael Walle wrote:
-> Broadcom defines the bits for this PHY as follows:
->   { oui[24:3], model[6:0], revision[2:0] }
+> The lower three bits of the phy_id specifies the chip stepping. The
+> workaround is specifically for the B0 stepping. Apply it only on these
+> chips.
 > 
-> Thus we have to mask the lower three bits only.
-> 
-> Fixes: 6937602ed3f9 ("net: phy: add Broadcom BCM54140 support")
 > Signed-off-by: Michael Walle <michael@walle.cc>
 
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-
-> ---
-> 
-> Please note that although this patch contains a Fixes tag its subject
-> contains the net-next tag, because the commit in question is only in
-> net-next.
-
-Yes, and this is fine, thanks for doing this!
 -- 
 Florian
