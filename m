@@ -2,438 +2,167 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1970C83006
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DDAC83009
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 913DF206F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:07:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588079266;
-	bh=MQoMdUceInH89eBaiNkYYgJHTBuuDfLA5YzYK9YhA14=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=VxVdtiA760VOF3KNxLs36/bjvChyx/7I+Y+oX8YFXy4hfAxFaEO+R6+2jEEXaw2rF
-	 X78hhboruyQO3RX4RzuHlBzTokI74/ASfjgmF8aF8alp7BlQdxxLiJVHtK07TXmQkM
-	 lTrIJyBlhdMH5eIz4NQAlZfdtOLdhw/PqSY/UsTI=
+	by mail.kernel.org (Postfix) with ESMTP id 2CBCB206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:08:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b="UV8SbGzE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgD1NHp (ORCPT
+        id S1726975AbgD1NIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:07:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48118 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726785AbgD1NHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:07:44 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B943B206A1;
-        Tue, 28 Apr 2020 13:07:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588079263;
-        bh=MQoMdUceInH89eBaiNkYYgJHTBuuDfLA5YzYK9YhA14=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BHGqWGkrUxuj1sqUvNvbrhi+mHKIgGeAEAILmH6/HvmlP0FYu2yGauQ15/wf2ii5d
-         I35bv5gh79p3quSgAV+MuNzxYEGBreSfpalQmCxZfHRUu5+ur0ssYINt1zF2dr+Zky
-         CW4n5NJRgAtJGp2MFFM7j6vnUjVFSndAtnIYN5W8=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jTPxd-007MU2-NR; Tue, 28 Apr 2020 14:07:41 +0100
-Date:   Tue, 28 Apr 2020 14:07:40 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+        Tue, 28 Apr 2020 09:08:01 -0400
+Received: from mail-eopbgr70095.outbound.protection.outlook.com ([40.107.7.95]:5156
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726785AbgD1NIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 09:08:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EnW6/KHlCkMSusuFHFB6Eo7N90jhIJICCa+Lj8tlMdSVI1oYlc0xsJ3CJrvzm6lvRROooZwtqohKh5ose4v9F86CNv4rePtSVW7eDZq+MviTqrE9IKyUkt1wN31cYfIStgB2r28LTDERlDcMeT1saw3kwwlt3ubuiY6pCbU0qNbnv4GGqfJF4M2ZGoLXZNN+ClSfFtfc1sc4fAVOJYsYym4udfdKQ+Rzrv3VbIsLeuphQOQWeXe4KtYZK/g56nDQFCWI7Zi0CdJ1QDb/g1VBU0CCfl70psNC/Vtp8meGiVGPYMV10OLKJzApzjAn4EcBvSJM3WuCgpwdgqEOKy+MLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UYgtue5ALmZyrZ0qSvjVDjS0jeWW1DvnFGoTKM/dvxo=;
+ b=aFBsi00W7FAB3W82qxAIo+j0IEBNBaNkElVeAOYOXAhRJk8UPCQf9mJS5B8Si4/Dg/jT04MEir0xESTX5qIFCoYlzjGZY3SmzRllx6YlTtxrXS9CpiopXdNWS9V8Zdnipf/TtswRSKd6k105z5c7Nw3DmshO1oQHZIGeWe9OGNcM2HPsNr3iBW6k4KhCkCdHU2t2O6rJrLMHOkRc/ox+qkUmx+affcSZWuyywQF5GTO7nyv31gKpduvymU4Qxii+IPHee4+DjuE3HXkKnb/6ADMJSFLL7MAFh7mDvfYYlLBnTgc3PiiqLt/uv1KfNZ+a/kN8pX+MltSwLqIyMG3Dnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
+ dkim=pass header.d=prevas.dk; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UYgtue5ALmZyrZ0qSvjVDjS0jeWW1DvnFGoTKM/dvxo=;
+ b=UV8SbGzExRDyCOO0lppk7O6oEleGNh6+kN6dZaGbB1+75QQfRY4yhPoc0WW4seF7mMlpyUGHZOsQgRuB8zwaNgVt/kxZO48B13yMnXYKE/FwjnSOePQ7lFlhvrrlsOXJWVcQVnzfvUXKl3Rb2ZERouzn0kkYxLSAnBC8Nq5FswA=
+Authentication-Results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=prevas.dk;
+Received: from VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:803:e1::21)
+ by VI1PR10MB3664.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:800:13f::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Tue, 28 Apr
+ 2020 13:07:55 +0000
+Received: from VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::f0ac:4e97:2536:faa]) by VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::f0ac:4e97:2536:faa%7]) with mapi id 15.20.2937.023; Tue, 28 Apr 2020
+ 13:07:55 +0000
+Subject: Re: [PATCH RT 10/30] hrtimer: Prevent using
+ hrtimer_grab_expiry_lock() on migration_base
+To:     Tom Zanussi <zanussi@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] irqchip: Add Loongson PCH MSI controller
-Message-ID: <20200428140740.1a417695@why>
-In-Reply-To: <20200428063247.2223499-5-jiaxun.yang@flygoat.com>
-References: <20200422142428.1249684-1-jiaxun.yang@flygoat.com>
-        <20200428063247.2223499-1-jiaxun.yang@flygoat.com>
-        <20200428063247.2223499-5-jiaxun.yang@flygoat.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Carsten Emde <C.Emde@osadl.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        John Kacur <jkacur@redhat.com>, Daniel Wagner <wagi@monom.org>,
+        Julien Grall <julien.grall@arm.com>
+References: <20200123203930.646725253@goodmis.org>
+ <20200123203943.749508731@goodmis.org>
+ <1a5e52a6-39e4-ac9a-e11a-5df261e83068@prevas.dk>
+ <7fce15e17cd3bef1216473386718e3cfd67349a4.camel@kernel.org>
+From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Message-ID: <049616fa-8908-e845-057f-d9482a483597@prevas.dk>
+Date:   Tue, 28 Apr 2020 15:07:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <7fce15e17cd3bef1216473386718e3cfd67349a4.camel@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, chenhc@lemote.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-ClientProxiedBy: AM7PR02CA0018.eurprd02.prod.outlook.com
+ (2603:10a6:20b:100::28) To VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:803:e1::21)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.149] (5.186.116.45) by AM7PR02CA0018.eurprd02.prod.outlook.com (2603:10a6:20b:100::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Tue, 28 Apr 2020 13:07:54 +0000
+X-Originating-IP: [5.186.116.45]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: df3f89bb-932b-454e-6abd-08d7eb752aa7
+X-MS-TrafficTypeDiagnostic: VI1PR10MB3664:
+X-Microsoft-Antispam-PRVS: <VI1PR10MB36646FFEF1CDADC25DED850093AC0@VI1PR10MB3664.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0387D64A71
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(396003)(366004)(376002)(346002)(136003)(39850400004)(36756003)(44832011)(16576012)(186003)(7416002)(26005)(478600001)(8676002)(2616005)(956004)(316002)(4326008)(66556008)(16526019)(66476007)(81156014)(2906002)(52116002)(5660300002)(8976002)(31686004)(66946007)(86362001)(110136005)(8936002)(54906003)(6486002)(31696002);DIR:OUT;SFP:1102;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XQ+vRukWLkbOTcUJniu7VuHNZhz4sxUqQAhFqbYMLVF0+q6IBdjVOyqltFXYlmUlKkjUD2QXd3IG98bbE2/zknxkdIbTbNLKm3ZQ9SaEeeSCuxOi10Q1O48vA768ipxlLmWl/L+MpgVuUh1A7eB4DN9QY5e9zWHWA1MvVU5WtkBQ+v69hHHdmrVeWFh3/fIugFGayzpmFE87z6CYgyOVy96uwvF92gT9oJq27jxvdUkOvk9kcFN7dacieEghTRqZ12Q8dXOPkDNn5wMvc1PSsh/7Nb8Z0goB84N0+UWtiu8wVJYSqkyb6iep9u3ELesw5lKTBhsrWZJjb3HNVb6h3MlhnzNqAlYa5/2aHByIHBwJ6lv3AkGc9JE+gtqjkR924l11euXIhPVIs4ZzDM6HHTAmSfDAxTuuOYZ3/UckHWpwv/0VxfLp7IYtOE4/T7nT
+X-MS-Exchange-AntiSpam-MessageData: GKJ7mpXZ6BbzHM28WvBkCPWLNMZ40WUSt0SJUIDBD2wR7dU+fzGO0ncI9je0YikWfBzTedi5hrTq7T1F5aqlMeXpAFnMb0OeFrn+MhugyHKjI1cAhvthyW1WG146n2IK79jlvLS4zzSPoZ63/hQizy9YOeIvnqaEuUXY2euhqf8gF6dCWAufK173IvqEuOZwdimkw9695EzVbuKRynTZQhZoAARxbhGeQJC3GCcurzMNn9OLnk33JzNyqyHlRbTJNJYeXGuB1r5czamyWhj/YasjcG2MYXuQlto/JRZYePc/ghooOEvFofljwk15MKVWz2UQKRJD83PZCBKnzjQsPbE1FgeuPAF+bLMqQWjFlCUlbEpP1J6SGMyLfZP8dIRn70Zl5t7J1o4kzm1+G7Fgp7ACgE/LxOAdChJ38PGIo2qC/TTLJgRhvbA/E8LvY8r8DbDOzGTl9y/Ve3Cho5/ToQT4c8qYZfsZw0iCfOCytk3DW7RcnthwMQH0vHj8whgPMmXA75KvrRF232XK+UqTuOp32v2hg2tRA0kPEptjHU8Cvs7wgmMfYmMnyWqBFDOT82DtkiCZl8T958psh1puXvdaGgAdJHt0NN3dt24X+jqbFKNWM7W8RQ414Ixx9lycM+6jCctJoSK1lZja8AD7wiJWZpKW0Po/ZmZOJhZVLb4wIrgk29HcdwNy4+d1gWYca65sTpFZJY13oaU5BNnxmBwcdC+LgaO1aAanxg0ae6kIHJRQYzSmmoSsSwKs5lXk/QZqICM29FWk/2pG/frpJvpKVWx57BUMmtmiMAM1a5A=
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: df3f89bb-932b-454e-6abd-08d7eb752aa7
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2020 13:07:55.7209
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qQzcumqelZ/pOGiqguznwXvXuO/BZjVWnkuI/6SyGGMT/neEYi+ft0wF914SeDRmaguB5W+LsvGvKf0hEhWbNFvX409tZL0TKZZifAulpmQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB3664
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 14:32:44 +0800
-Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+On 28/04/2020 14.59, Tom Zanussi wrote:
+> On Tue, 2020-04-28 at 09:03 +0200, Rasmus Villemoes wrote:
 
-> This controller appears on Loongson LS7A family of PCH to transform
-> interrupts from PCI MSI into HyperTransport vectorized interrrupts
-> and send them to procrssor's HT vector controller.
+>> Hold on a second. This patch (hrtimer: Prevent using
+>> hrtimer_grab_expiry_lock() on migration_base) indeed seems to
+>> implement
+>> the optimization implied by the above, namely avoid the lock/unlock
+>> in
+>> case base == migration_base:
+>>
+>>> -	if (timer->is_soft && base && base->cpu_base) {
+>>> +	if (timer->is_soft && base != &migration_base) {
+>>
+>> But the followup patch (hrtimer: Add a missing bracket and hide
+>> `migration_base on !SMP) to fix the build on !SMP [the missing
+>> bracket
+>> part seems to have been fixed when backporting the above to 4.19-rt]
+>> replaces that logic by
+>>
+>> +static inline bool is_migration_base(struct hrtimer_clock_base
+>> *base)
+>> +{
+>> +	return base == &migration_base;
+>> +}
+>> +
+>> ...
+>> -	if (timer->is_soft && base != &migration_base) {
+>> +	if (timer->is_soft && is_migration_base(base)) {
+>>
+>> in the SMP case, i.e. the exact opposite condition. One of these
+>> can't
+>> be correct.
+>>
+>> Assuming the followup patch was wrong and the condition should have
+>> read
+>>
+>>   timer->is_soft && !is_migration_base(base)
+>>
+>> while keeping is_migration_base() false on !SMP might explain the
+>> problem I see. But I'd like someone who knows this code to chime in.
+>>
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> --
-> v2:
-> 	- Style clean-ups
-> 	- Add ack callback
-> 	- Use bitmap_find_free_region
-> ---
->  drivers/irqchip/Kconfig                |  10 +
->  drivers/irqchip/Makefile               |   1 +
->  drivers/irqchip/irq-loongson-pch-msi.c | 259 +++++++++++++++++++++++++
->  3 files changed, 270 insertions(+)
->  create mode 100644 drivers/irqchip/irq-loongson-pch-msi.c
+> I don't know this code, but I think you're correct - the followup patch
+> reversed the condition by forgetting the !.
 > 
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index 5524a621638c..0b6b826dd843 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -549,4 +549,14 @@ config LOONGSON_PCH_PIC
->  	help
->  	  Support for the Loongson PCH PIC Controller.
->  
-> +config LOONGSON_PCH_MSI
-> +	bool "Loongson PCH PIC Controller"
-> +	depends on MACH_LOONGSON64 || COMPILE_TEST
-> +	depends on PCI
-> +	default MACH_LOONGSON64
-> +	select IRQ_DOMAIN_HIERARCHY
-> +	select PCI_MSI
-> +	help
-> +	  Support for the Loongson PCH MSI Controller.
-> +
->  endmenu
-> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> index acc72331cec8..3a4ce283189a 100644
-> --- a/drivers/irqchip/Makefile
-> +++ b/drivers/irqchip/Makefile
-> @@ -109,3 +109,4 @@ obj-$(CONFIG_LOONGSON_LIOINTC)		+= irq-loongson-liointc.o
->  obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
->  obj-$(CONFIG_LOONGSON_HTVEC)		+= irq-loongson-htvec.o
->  obj-$(CONFIG_LOONGSON_PCH_PIC)		+= irq-loongson-pch-pic.o
-> +obj-$(CONFIG_LOONGSON_PCH_MSI)		+= irq-loongson-pch-msi.o
-> diff --git a/drivers/irqchip/irq-loongson-pch-msi.c b/drivers/irqchip/irq-loongson-pch-msi.c
-> new file mode 100644
-> index 000000000000..5b4d607a899e
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-loongson-pch-msi.c
-> @@ -0,0 +1,259 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + *  Copyright (C) 2020, Jiaxun Yang <jiaxun.yang@flygoat.com>
-> + *  Loongson PCH MSI support
-> + */
-> +
-> +#define pr_fmt(fmt) "pch-msi: " fmt
-> +
-> +#include <linux/irqchip.h>
-> +#include <linux/msi.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_pci.h>
-> +#include <linux/pci.h>
-> +#include <linux/slab.h>
-> +
-> +struct pch_msi_data {
-> +	spinlock_t		msi_map_lock;
-> +	phys_addr_t		doorbell;
-> +	u32			irq_first;	/* The vector number that MSIs starts */
-> +	u32			num_irqs;	/* The number of vectors for MSIs */
-> +	unsigned long		*msi_map;
-> +};
-> +
-> +static void pch_msi_mask_msi_irq(struct irq_data *d)
-> +{
-> +	pci_msi_mask_irq(d);
-> +	irq_chip_mask_parent(d);
-> +}
-> +
-> +static void pch_msi_unmask_msi_irq(struct irq_data *d)
-> +{
-> +	pci_msi_unmask_irq(d);
-> +	irq_chip_unmask_parent(d);
-> +}
-> +
-> +static struct irq_chip pch_msi_irq_chip = {
-> +	.name			= "PCH MSI",
-> +	.irq_mask		= pch_msi_mask_msi_irq,
-> +	.irq_unmask		= pch_msi_unmask_msi_irq,
-> +	.irq_ack		= irq_chip_ack_parent,
-> +	.irq_set_affinity	= irq_chip_set_affinity_parent,
-> +};
-> +
-> +static int pch_msi_allocate_hwirq(struct pch_msi_data *priv, int num_req)
-> +{
-> +	int first;
-> +
-> +	spin_lock(&priv->msi_map_lock);
+> So, does your problem go away when you make that change?
 
-Why does it have to be a spinlock? As far as I can tell, we never
-allocate MSIs from non-preemptible contexts.
+Yes, it does. (I'll have to ask the customer to check in their setup
+whether the boot hang also vanishes).
 
-> +
-> +	first = bitmap_find_free_region(priv->msi_map, priv->num_irqs,
-> +					get_count_order(num_req));
-> +	if (first < 0) {
-> +		spin_unlock(&priv->msi_map_lock);
-> +		return -ENOSPC;
-> +	}
-> +
-> +	bitmap_set(priv->msi_map, first, num_req);
+Essentially, adding that ! is equivalent to reverting the two patches on
+!SMP (which I also tested): Before, the condition was
 
-What is that for? bitmap_find_free_region has already done the work for
-you.
+  timer->is_soft && base && base->cpu_base
 
-> +	spin_unlock(&priv->msi_map_lock);
-> +
-> +	return priv->irq_first + first;
-> +}
-> +
-> +static void pch_msi_free_hwirq(struct pch_msi_data *priv,
-> +				int hwirq, int num_req)
-> +{
-> +	int first = hwirq - priv->irq_first;
-> +
-> +	spin_lock(&priv->msi_map_lock);
-> +	bitmap_clear(priv->msi_map, first, num_req);
-
-bitmap_clear doesn't reverse the effects of bitmap_find_free_region.
-
-> +	spin_unlock(&priv->msi_map_lock);
-> +}
-> +
-> +static void pch_msi_compose_msi_msg(struct irq_data *data,
-> +					struct msi_msg *msg)
-> +{
-> +	struct pch_msi_data *priv = irq_data_get_irq_chip_data(data);
-> +
-> +	msg->address_hi = upper_32_bits(priv->doorbell);
-> +	msg->address_lo = lower_32_bits(priv->doorbell);
-> +	msg->data = data->hwirq;
-> +}
-> +
-> +static struct msi_domain_info pch_msi_domain_info = {
-> +	.flags		= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-> +			  MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
-> +	.chip	= &pch_msi_irq_chip,
-> +};
-> +
-> +static struct irq_chip middle_irq_chip = {
-> +	.name			= "PCH MSI Middle",
-
-This "middle" thing doesn't mean anything. What it really implements is
-a generic MSI irqchip. What you call PCH MSI seems to be PCI-MSI. Pretty
-confusing.
-
-> +	.irq_mask		= irq_chip_mask_parent,
-> +	.irq_unmask		= irq_chip_unmask_parent,
-> +	.irq_ack		= irq_chip_ack_parent,
-> +	.irq_set_affinity	= irq_chip_set_affinity_parent,
-> +	.irq_compose_msi_msg	= pch_msi_compose_msi_msg,
-> +};
-> +
-> +static int pch_msi_parent_domain_alloc(struct irq_domain *domain,
-> +					unsigned int virq, int hwirq)
-> +{
-> +	struct irq_fwspec fwspec;
-> +	int ret;
-> +
-> +	fwspec.fwnode = domain->parent->fwnode;
-> +	fwspec.param_count = 1;
-> +	fwspec.param[0] = hwirq;
-> +
-> +	ret = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
-> +	if (ret)
-> +		return ret;
-> +
-> +	irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
-> +					&middle_irq_chip, NULL);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pch_msi_middle_domain_alloc(struct irq_domain *domain,
-> +					   unsigned int virq,
-> +					   unsigned int nr_irqs, void *args)
-> +{
-> +	struct pch_msi_data *priv = domain->host_data;
-> +	int hwirq, err, i;
-> +
-> +	hwirq = pch_msi_allocate_hwirq(priv, nr_irqs);
-> +	if (hwirq < 0)
-> +		return hwirq;
-> +
-> +	for (i = 0; i < nr_irqs; i++) {
-> +		err = pch_msi_parent_domain_alloc(domain, virq + i, hwirq + i);
-> +		if (err)
-> +			goto err_hwirq;
-> +
-> +		irq_domain_set_hwirq_and_chip(domain, virq + i, hwirq + i,
-> +					      &middle_irq_chip, priv);
-
-So you're doing that twice per MSI. I think once is enough.
-
-> +	}
-> +
-> +	return 0;
-> +
-> +err_hwirq:
-> +	while (--i >= 0)
-> +		irq_domain_free_irqs_parent(domain, virq, i);
-
-This looks very wrong. Why isn't it just:
-
-	irq_domain_free_irqs_parent(domain, virq, i - 1);
-
-?
-
-> +
-> +	pch_msi_free_hwirq(priv, hwirq, nr_irqs);
-
-And when you look at the whole error handling (once fixed), it is
-exactly pch_msi_middle_domain_free(). So why not calling this directly?
-
-> +	return err;
-> +}
-> +
-> +static void pch_msi_middle_domain_free(struct irq_domain *domain,
-> +					   unsigned int virq,
-> +					   unsigned int nr_irqs)
-> +{
-> +	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
-> +	struct pch_msi_data *priv = irq_data_get_irq_chip_data(d);
-> +
-> +	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
-> +	pch_msi_free_hwirq(priv, d->hwirq, nr_irqs);
-> +}
-> +
-> +static const struct irq_domain_ops pch_msi_middle_domain_ops = {
-> +	.alloc	= pch_msi_middle_domain_alloc,
-> +	.free	= pch_msi_middle_domain_free,
-> +};
-> +
-> +static int pch_msi_init_domains(struct pch_msi_data *priv,
-> +				struct device_node *node,
-> +				struct device_node *parent)
-> +{
-> +	struct irq_domain *middle_domain, *msi_domain,
-> *parent_domain; +
-> +	parent_domain = irq_find_host(parent);
-> +	if (!parent_domain) {
-> +		pr_err("Failed to find the parent domain\n");
-> +		return -ENXIO;
-> +	}
-
-Can't you check this early in the probe routine and bail out?
-
-> +
-> +	middle_domain = irq_domain_add_linear(NULL, priv->num_irqs,
-> +						&pch_msi_middle_domain_ops,
-> +						priv);
-
-NULL isn't an acceptable parameter. This irqdomain really belongs to
-the node. See irq_domain_update_bus_token() to specialize the domain so
-that its allocation doesn't clash with the PCI domain that you allocate
-below (DOMAIN_BUS_NEXUS is used by quite a few drivers).
-
-Also, please use irq_domain_create_linear instead, in order
-to be consistent with the rest of the API usage in this file.
-
-> +	if (!middle_domain) {
-> +		pr_err("Failed to create the MSI middle domain\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	middle_domain->parent = parent_domain;
-> +
-> +	msi_domain = pci_msi_create_irq_domain(of_node_to_fwnode(node),
-> +					       &pch_msi_domain_info,
-> +					       middle_domain);
-> +	if (!msi_domain) {
-> +		pr_err("Failed to create MSI domain\n");
-> +		irq_domain_remove(middle_domain);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int pch_msi_init(struct device_node *node,
-> +			    struct device_node *parent)
-> +{
-> +	struct pch_msi_data *priv;
-> +	struct resource res;
-> +	int ret;
-> +
-> +	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	spin_lock_init(&priv->msi_map_lock);
-> +
-> +	ret = of_address_to_resource(node, 0, &res);
-> +	if (ret) {
-> +		pr_err("Failed to allocate resource\n");
-> +		goto err_priv;
-> +	}
-> +
-> +	priv->doorbell = res.start;
-> +
-> +	if (of_property_read_u32(node, "loongson,msi-base-vec",
-> +				&priv->irq_first)) {
-> +		pr_err("Unable to parse MSI vec base\n");
-> +		ret = -EINVAL;
-> +		goto err_priv;
-> +	}
-> +
-> +	if (of_property_read_u32(node, "loongson,msi-num-vecs",
-> +				&priv->num_irqs)) {
-> +		pr_err("Unable to parse MSI vec number\n");
-> +		ret = -EINVAL;
-> +		goto err_priv;
-> +	}
-> +
-> +	priv->msi_map = kcalloc(BITS_TO_LONGS(priv->num_irqs),
-> +				sizeof(*priv->msi_map),
-> +				GFP_KERNEL);
-
-We have bitmap_alloc() that should already do the right thing.
-
-> +	if (!priv->msi_map) {
-> +		ret = -ENOMEM;
-> +		goto err_priv;
-> +	}
-> +
-> +	pr_debug("Registering %d MSIs, starting at %d\n",
-> +		 priv->num_irqs, priv->irq_first);
-> +
-> +	ret = pch_msi_init_domains(priv, node, parent);
-> +	if (ret)
-> +		goto err_map;
-> +
-> +	return 0;
-> +
-> +err_map:
-> +	kfree(priv->msi_map);
-> +err_priv:
-> +	kfree(priv);
-> +	return ret;
-> +}
-> +
-> +IRQCHIP_DECLARE(pch_msi, "loongson,pch-msi-1.0", pch_msi_init);
-
+and, assuming the NULL pointer checks are indeed redundant, that's the
+same as "timer->is_soft". Appending " && !is_migration_base()" to that,
+with is_migration_base() always false as on !SMP, doesn't change anything.
 
 Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Rasmus
