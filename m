@@ -2,82 +2,89 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9109AC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E400C83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 708D92082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 096912082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:25:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cN0Bqq2/"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aJO9db+u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgD1RXp (ORCPT
+        id S1728383AbgD1RZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 13:23:45 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:56436 "EHLO
+        Tue, 28 Apr 2020 13:25:06 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:57646 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728212AbgD1RXo (ORCPT
+        with ESMTP id S1728022AbgD1RZF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 13:23:44 -0400
+        Tue, 28 Apr 2020 13:25:05 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SHN2qP036115;
-        Tue, 28 Apr 2020 17:23:34 GMT
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SHMjTX035908;
+        Tue, 28 Apr 2020 17:24:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=nYRe3Y8uXuglxFzIR12FaigY66zRmKUyGWDwXjiXdU8=;
- b=cN0Bqq2/+5KRYNGOWfNpmF2uU9/AZOaZnRLCqrEa8dn/0TSCuzme1svSzlLnwkW+8rYK
- jzh/40NuUaLzABl4FTCby60G7PoklecspEg0nyHSr1hxFRfjRyZwPFsZ6tGzrZBTmWee
- MvmtIlZOmgx7CjGwclIUJCMoLxqkrrj5A1oyoVl2EYeGhENkvDUFWwnT/c/bu8D04hVX
- FXm09Uq2SZSxcK+ljsRt4CiKw7kNzfsHCiowYVFK1yRlJ3r4JdBHENHhhQDcWvdxLv18
- Sm7ZZuhoihIJCxCDuZ817tUtdbF8Ml176gGjCnb6k6HPu5udZg67li7HyjLtkdB5fIzE Nw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 30nucg1br4-1
+ in-reply-to : content-transfer-encoding; s=corp-2020-01-29;
+ bh=a1DRwVeeZI8m8zRrIZSIlkJajtV66/ligL8DUqPAkjE=;
+ b=aJO9db+uOkB7e+WYGZXpXPaUytTt5+432QDnBzrkB9IFcDAm8NdTKrnhgbvT90fu5xwA
+ ZfS/N++Pru08Hu4sTwXFhs3NaEABtCV42M4IZQuMuD2W3Xh3GaaAYYYOStSePUOT7hV9
+ X2IVRvEYZq+fIT+cLXn5Tzc5LR6tq0EOUUBG8ye13FKmxtE4HhmB8ifs7ueHYkXhU0CF
+ j8EF6v8Nsr9DTn9Nu70LDxzl/C9xSaTsCawSc7q4yo1AyQF+vT+jhOtOfOfKiuAD1qSl
+ 0ca+4QpA2ZUocSNimSYRkVjffZRD5BnfNYy8KXGOidf4Ya6FwUWZ+oN3DnEkBmTVRRzF 3w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 30nucg1bx6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 17:23:34 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SHC1EK003111;
-        Tue, 28 Apr 2020 17:21:34 GMT
+        Tue, 28 Apr 2020 17:24:54 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SHMxng050675;
+        Tue, 28 Apr 2020 17:24:53 GMT
 Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 30mxrt194w-1
+        by aserp3020.oracle.com with ESMTP id 30my0dseh2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 17:21:34 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03SHLUSY017447;
-        Tue, 28 Apr 2020 17:21:30 GMT
-Received: from kadam (/41.57.98.10)
+        Tue, 28 Apr 2020 17:24:53 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03SHOpMO019149;
+        Tue, 28 Apr 2020 17:24:52 GMT
+Received: from char.us.oracle.com (/10.152.32.25)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 Apr 2020 10:21:29 -0700
-Date:   Tue, 28 Apr 2020 20:21:16 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Sinan Kaya <okaya@kernel.org>
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        agross@kernel.org, bjorn.andersson@linaro.org, vkoul@kernel.org,
-        dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: qcom_hidma: Simplify error handling path in
- hidma_probe
-Message-ID: <20200428172116.GG2014@kadam>
-References: <20200427111043.70218-1-christophe.jaillet@wanadoo.fr>
- <20200428125426.GE2014@kadam>
- <1efa0186-7fbe-9cb5-2719-2d7192f99e27@kernel.org>
+        with ESMTP ; Tue, 28 Apr 2020 10:24:51 -0700
+Received: by char.us.oracle.com (Postfix, from userid 1000)
+        id BC1D26A011D; Tue, 28 Apr 2020 13:25:14 -0400 (EDT)
+Date:   Tue, 28 Apr 2020 13:25:14 -0400
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
+        joe.jin@oracle.com
+Cc:     Peng Fan <peng.fan@nxp.com>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH] xen/swiotlb: correct the check for
+ xen_destroy_contiguous_region
+Message-ID: <20200428172514.GA24178@char.us.oracle.com>
+References: <1588059225-11245-1-git-send-email-peng.fan@nxp.com>
+ <1c01e97a-adcd-a703-55b5-8975b4ce4d2c@suse.com>
+ <DB6PR0402MB2760A05135338B0CBB28123488AC0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+ <dba804ea-4268-24ff-7447-ddef00e9e20c@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1efa0186-7fbe-9cb5-2719-2d7192f99e27@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <dba804ea-4268-24ff-7447-ddef00e9e20c@suse.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Transfer-Encoding: quoted-printable
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=2
- mlxlogscore=999 malwarescore=0 bulkscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004280136
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
+ suspectscore=2 adultscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280137
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 priorityscore=1501
  mlxlogscore=999 impostorscore=0 suspectscore=2 malwarescore=0
  lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
  bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
@@ -87,34 +94,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I apologize, I wrote my code hurriedly and did no explain the bug well.
-I understood what the code is doing, but my fix was missing an if
-condition.
+On Tue, Apr 28, 2020 at 12:19:41PM +0200, J=FCrgen Gro=DF wrote:
+> On 28.04.20 10:25, Peng Fan wrote:
 
-On Tue, Apr 28, 2020 at 12:01:15PM -0400, Sinan Kaya wrote:
-> On 4/28/2020 8:54 AM, Dan Carpenter wrote:
-> >> @@ -897,7 +897,6 @@ static int hidma_probe(struct platform_device *pdev)
-> >>  	if (msi)
-> >             ^^^
-> > This test doesn't work.  It will call free hidma_free_msis() if the
-> > hidma_request_msi() call fails.  We should do:
-> > 
-> > 	if (msi) {
-> > 		rc = hidma_request_msi(dmadev, pdev);
-> > 		msi = false;
+Adding Joe Jin.
 
-What I meant to say here was:
+Joe, didn't you have some ideas on how this could be implemented?
 
-	if (msi) {
-		rc = hidma_request_msi(dmadev, pdev);
-		if (rc)
-			msi = false;
-
-Otherwise we end up checking freeing the msi in the error handling
-code when we did not take it.
-
-Hopefully, that clears things up?
-
-regards,
-dan carpenter
-
+> > > Subject: Re: [PATCH] xen/swiotlb: correct the check for
+> > > xen_destroy_contiguous_region
+> > >=20
+> > > On 28.04.20 09:33, peng.fan@nxp.com wrote:
+> > > > From: Peng Fan <peng.fan@nxp.com>
+> > > >=20
+> > > > When booting xen on i.MX8QM, met:
+> > > > "
+> > > > [    3.602128] Unable to handle kernel paging request at virtual =
+address
+> > > 0000000000272d40
+> > > > [    3.610804] Mem abort info:
+> > > > [    3.613905]   ESR =3D 0x96000004
+> > > > [    3.617332]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+> > > > [    3.623211]   SET =3D 0, FnV =3D 0
+> > > > [    3.626628]   EA =3D 0, S1PTW =3D 0
+> > > > [    3.630128] Data abort info:
+> > > > [    3.633362]   ISV =3D 0, ISS =3D 0x00000004
+> > > > [    3.637630]   CM =3D 0, WnR =3D 0
+> > > > [    3.640955] [0000000000272d40] user address but active_mm is
+> > > swapper
+> > > > [    3.647983] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+> > > > [    3.654137] Modules linked in:
+> > > > [    3.677285] Hardware name: Freescale i.MX8QM MEK (DT)
+> > > > [    3.677302] Workqueue: events deferred_probe_work_func
+> > > > [    3.684253] imx6q-pcie 5f000000.pcie: PCI host bridge to bus 0=
+000:00
+> > > > [    3.688297] pstate: 60000005 (nZCv daif -PAN -UAO)
+> > > > [    3.688310] pc : xen_swiotlb_free_coherent+0x180/0x1c0
+> > > > [    3.693993] pci_bus 0000:00: root bus resource [bus 00-ff]
+> > > > [    3.701002] lr : xen_swiotlb_free_coherent+0x44/0x1c0
+> > > > "
+> > > >=20
+> > > > In xen_swiotlb_alloc_coherent, if !(dev_addr + size - 1 <=3D dma_=
+mask)
+> > > > or range_straddles_page_boundary(phys, size) are true, it will cr=
+eate
+> > > > contiguous region. So when free, we need to free contiguous regio=
+n use
+> > > > upper check condition.
+> > >=20
+> > > No, this will break PV guests on x86.
+> >=20
+> > Could you share more details why alloc and free not matching for the =
+check?
+>=20
+> xen_create_contiguous_region() is needed only in case:
+>=20
+> - the bus address is not within dma_mask, or
+> - the memory region is not physically contiguous (can happen only for
+>   PV guests)
+>=20
+> In any case it should arrange for the memory to be suitable for the
+> DMA operation, so to be contiguous and within dma_mask afterwards. So
+> xen_destroy_contiguous_region() should only ever called for areas
+> which match above criteria, as otherwise we can be sure
+> xen_create_contiguous_region() was not used for making the area DMA-abl=
+e
+> in the beginning.
+>=20
+> And this is very important in the PV case, as in those guests the page
+> tables are containing the host-PFNs, not the guest-PFNS, and
+> xen_create_contiguous_region() will fiddle with host- vs. guest-PFN
+> arrangements, and xen_destroy_contiguous_region() is reverting this
+> fiddling. Any call of xen_destroy_contiguous_region() for an area it
+> was not intended to be called for might swap physical pages beneath
+> random virtual addresses, which was the reason for this test to be
+> added by me.
+>=20
+>=20
+> Juergen
+>=20
+> >=20
+> > Thanks,
+> > Peng.
+> >=20
+> > >=20
+> > > I think there is something wrong with your setup in combination wit=
+h the ARM
+> > > xen_create_contiguous_region() implementation.
+> > >=20
+> > > Stefano?
+> > >=20
+> > >=20
+> > > Juergen
+> > >=20
+> > > >=20
+> > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > > ---
+> > > >    drivers/xen/swiotlb-xen.c | 4 ++--
+> > > >    1 file changed, 2 insertions(+), 2 deletions(-)
+> > > >=20
+> > > > diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.=
+c
+> > > > index b6d27762c6f8..ab96e468584f 100644
+> > > > --- a/drivers/xen/swiotlb-xen.c
+> > > > +++ b/drivers/xen/swiotlb-xen.c
+> > > > @@ -346,8 +346,8 @@ xen_swiotlb_free_coherent(struct device *hwde=
+v,
+> > > size_t size, void *vaddr,
+> > > >    	/* Convert the size to actually allocated. */
+> > > >    	size =3D 1UL << (order + XEN_PAGE_SHIFT);
+> > > >=20
+> > > > -	if (!WARN_ON((dev_addr + size - 1 > dma_mask) ||
+> > > > -		     range_straddles_page_boundary(phys, size)) &&
+> > > > +	if (((dev_addr + size - 1 > dma_mask) ||
+> > > > +	    range_straddles_page_boundary(phys, size)) &&
+> > > >    	    TestClearPageXenRemapped(virt_to_page(vaddr)))
+> > > >    		xen_destroy_contiguous_region(phys, order);
+> > > >=20
+> > > >=20
+> >=20
+>=20
