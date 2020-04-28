@@ -2,214 +2,78 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5E2C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0E1C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45F65206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:57:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="A4dGhCCa"
+	by mail.kernel.org (Postfix) with ESMTP id 1C754206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:58:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgD1N5D (ORCPT
+        id S1727804AbgD1N6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:57:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57246 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727026AbgD1N5C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:57:02 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E9B7C03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 06:57:02 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id o19so21806117qkk.5
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 06:57:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=bnjOOvh4SMYLoB4ygqU5KXt2AopllOYg67zW9fgDCNE=;
-        b=A4dGhCCaKxI4AU9G03hChxAqCSkhA71uO8KNLuohGzG0mJFT4Lp6Wh1TKfGr5BNZc6
-         Q/uT3GKjILE5nH9jbXtaoVq0q/4Ee+BQTiDpYeQvuKGelLa75+6+EbUJkiyblBO7VWZx
-         EXkLAGCs9OrP5m4MxvNr/jqwft6y6pT8ofrzBGlRY2CTsidC8jTeekQN5oeUzuJVhtB3
-         URjAAr77a9wxzmUiiwDD0eBCUtz1Us87LVmw5R4Z1nXvGsMOarA8oFckw/57kYPNCc1n
-         Be3JJqAC0MlLAhHu7rUn0cmV/bGFX8kuzDhvETpzLgIv3wrrnb9+gEezBdhVN/OCgWN3
-         l8zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=bnjOOvh4SMYLoB4ygqU5KXt2AopllOYg67zW9fgDCNE=;
-        b=HMZNt7adUqSymM4LupxsbpOy3l+iMLVnFXqJ++Au9Kz2z994oRUut6X/wAeQnYr1iT
-         u44O1XDFWQrajcq0Kqaouxnoq/7du7w5jNCe0jQmxyhQVnLpPcfDBDYITf1TO/wfJ9o1
-         XUxRfVmUZqIMjLL0/+Mc7mx0K0XGXh0Q980cuHCMBS6N5VqXKvNagA86RbWCmv5iQ5tP
-         h7oR4WCJ+Vd3Zfex0z4f7frmiyIsdotRw4wd6hinVVfYQH/92WRzR5EK37NPZ09d0q0Z
-         ZHFGfpAeBcq+CfVR+OPWPwTq7uxexD6ygE5IcY9QxgSV4xl62R74f413zZxdGq4Dpl/A
-         CQ1w==
-X-Gm-Message-State: AGi0PuY47DAdcZ+wJRpND9PdyJ0UsKetcwmQNDI4TxDjuT6eeYdXZKAk
-        6iDvaRyDDXWnv7j1Dv8Zjp/01w==
-X-Google-Smtp-Source: APiQypLeiLlI+LOU+p/8ztIa9gNMSBld4WWzJ561dEk9dxi+ri8pRessRnzlrEK+25gUPQWqWAcxIg==
-X-Received: by 2002:a05:620a:70f:: with SMTP id 15mr27416361qkc.68.1588082221618;
-        Tue, 28 Apr 2020 06:57:01 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id r6sm14179799qtc.28.2020.04.28.06.57.00
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 Apr 2020 06:57:00 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: linux-next boot error: WARNING: suspicious RCU usage in
- ipmr_get_table
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <CACT4Y+YnjK+kq0pfb5fe-q1bqe2T1jq_mvKHf--Z80Z3wkyK1Q@mail.gmail.com>
-Date:   Tue, 28 Apr 2020 09:56:59 -0400
-Cc:     syzbot <syzbot+1519f497f2f9f08183c6@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>, kuba@kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "paul E. McKenney" <paulmck@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <34558B83-103E-4205-8D3D-534978D5A498@lca.pw>
-References: <000000000000df9a9805a455e07b@google.com>
- <CACT4Y+YnjK+kq0pfb5fe-q1bqe2T1jq_mvKHf--Z80Z3wkyK1Q@mail.gmail.com>
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        Amol Grover <frextrite@gmail.com>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Tue, 28 Apr 2020 09:58:04 -0400
+Received: from mga12.intel.com ([192.55.52.136]:27104 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726931AbgD1N6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 09:58:04 -0400
+IronPort-SDR: /74rwQnrjotUXmDSSHPMkq3HGA+2Snwij6E047qaHy1ZXISuL0w13MlSuJMLEbnlFqw0ArDLgZ
+ CB/UZ/E7dOcQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 06:58:03 -0700
+IronPort-SDR: a32MKs1Vc4Ev+5F+oxdlzBOXniz5YLkYcl5nVoILGCbw18YTPY7day0GsxsDV7PMwMEoh9s9rX
+ r1jtTbxK5XnA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,327,1583222400"; 
+   d="scan'208";a="432192414"
+Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
+  by orsmga005.jf.intel.com with ESMTP; 28 Apr 2020 06:58:03 -0700
+Subject: Re: [PATCH] firmware: stratix10-svc: Drop unnecessary checking for
+ and populating /firmware/ node
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-kernel@vger.kernel.org
+References: <20200421173256.34897-1-sudeep.holla@arm.com>
+ <8ca3666f-8ff1-3c3c-d40b-81c024b37bdd@linux.intel.com>
+ <20200423081149.GB18538@bogus>
+ <2b2e29ec-ebbf-3ee6-acc9-3722a2fabbfb@linux.intel.com>
+ <20200428083238.GA21288@bogus>
+From:   Richard Gong <richard.gong@linux.intel.com>
+Message-ID: <a583b842-585d-888e-49e5-32a16dfab8a6@linux.intel.com>
+Date:   Tue, 28 Apr 2020 09:14:25 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200428083238.GA21288@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+On 4/28/20 3:32 AM, Sudeep Holla wrote:
+> On Mon, Apr 27, 2020 at 02:12:56PM -0500, Richard Gong wrote:
+>> Hi Sudeep,
+>>
+>> In our dts, firmware is not under root node. You can refer to
+>> arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi for details.
+>>
+>> This is why we need check and populate firmware node.
+>>
+> 
+> Ah that's bad. One of very few DTS I see firmware node not in the root.Per the Devicetree Specification, there is no need to define firmware 
+under the root node. Some examples are fsl-ls1012a.dtsi and 
+hi6220-hikey.dts.
 
-> On Apr 28, 2020, at 4:57 AM, Dmitry Vyukov <dvyukov@google.com> wrote:
->> net/ipv4/ipmr.c:136 RCU-list traversed in non-reader section!!
-
-=
-https://lore.kernel.org/netdev/20200222063835.14328-2-frextrite@gmail.com/=
-
-
-Never been picked up for a few months due to some reasons. You could =
-probably
-need to convince David, Paul, Steven or Linus to unblock the bot or =
-carry patches
-on your own?
-
->> net/ipv6/ip6mr.c:124 RCU-list traversed in non-reader section!!
-
-Not sure about this if anyone is working on it. Adding a few people...
-
->>=20
->> other info that might help us debug this:
->>=20
->>=20
->> rcu_scheduler_active =3D 2, debug_locks =3D 1
->> 1 lock held by swapper/0/1:
->> #0: ffffffff8a5a6330 (pernet_ops_rwsem){+.+.}-{3:3}, at: =
-register_pernet_subsys+0x16/0x40 net/core/net_namespace.c:1257
->>=20
->> stack backtrace:
->> CPU: 0 PID: 1 Comm: swapper/0 Not tainted =
-5.7.0-rc3-next-20200428-syzkaller #0
->> Hardware name: Google Google Compute Engine/Google Compute Engine, =
-BIOS Google 01/01/2011
->> Call Trace:
->> __dump_stack lib/dump_stack.c:77 [inline]
->> dump_stack+0x18f/0x20d lib/dump_stack.c:118
->> ip6mr_get_table+0x153/0x180 net/ipv6/ip6mr.c:124
->> ip6mr_new_table+0x1b/0x70 net/ipv6/ip6mr.c:382
->> ip6mr_rules_init net/ipv6/ip6mr.c:236 [inline]
->> ip6mr_net_init+0x133/0x3f0 net/ipv6/ip6mr.c:1310
->> ops_init+0xaf/0x420 net/core/net_namespace.c:151
->> __register_pernet_operations net/core/net_namespace.c:1140 [inline]
->> register_pernet_operations+0x346/0x840 net/core/net_namespace.c:1217
->> register_pernet_subsys+0x25/0x40 net/core/net_namespace.c:1258
->> ip6_mr_init+0x49/0x152 net/ipv6/ip6mr.c:1363
->> inet6_init+0x1d7/0x6dc net/ipv6/af_inet6.c:1032
->> do_one_initcall+0x10a/0x7d0 init/main.c:1159
->> do_initcall_level init/main.c:1232 [inline]
->> do_initcalls init/main.c:1248 [inline]
->> do_basic_setup init/main.c:1268 [inline]
->> kernel_init_freeable+0x501/0x5ae init/main.c:1454
->> kernel_init+0xd/0x1bb init/main.c:1359
->> ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
->>=20
->> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
->> WARNING: suspicious RCU usage
->> 5.7.0-rc3-next-20200428-syzkaller #0 Not tainted
->> -----------------------------
->> security/integrity/evm/evm_main.c:231 RCU-list traversed in =
-non-reader section!!
-
-Ditto.
-
->>=20
->> other info that might help us debug this:
->>=20
->>=20
->> rcu_scheduler_active =3D 2, debug_locks =3D 1
->> 2 locks held by systemd/1:
->> #0: ffff888098dfa450 (sb_writers#8){.+.+}-{0:0}, at: sb_start_write =
-include/linux/fs.h:1659 [inline]
->> #0: ffff888098dfa450 (sb_writers#8){.+.+}-{0:0}, at: =
-mnt_want_write+0x3a/0xb0 fs/namespace.c:354
->> #1: ffff8880988e8310 (&type->i_mutex_dir_key#6){++++}-{3:3}, at: =
-inode_lock include/linux/fs.h:799 [inline]
->> #1: ffff8880988e8310 (&type->i_mutex_dir_key#6){++++}-{3:3}, at: =
-vfs_setxattr+0x92/0xf0 fs/xattr.c:219
->>=20
->> stack backtrace:
->> CPU: 0 PID: 1 Comm: systemd Not tainted =
-5.7.0-rc3-next-20200428-syzkaller #0
->> Hardware name: Google Google Compute Engine/Google Compute Engine, =
-BIOS Google 01/01/2011
->> Call Trace:
->> __dump_stack lib/dump_stack.c:77 [inline]
->> dump_stack+0x18f/0x20d lib/dump_stack.c:118
->> evm_protected_xattr+0x1c2/0x210 security/integrity/evm/evm_main.c:231
->> evm_protect_xattr.isra.0+0xb6/0x3d0 =
-security/integrity/evm/evm_main.c:318
->> evm_inode_setxattr+0xc4/0xf0 security/integrity/evm/evm_main.c:387
->> security_inode_setxattr+0x18f/0x200 security/security.c:1297
->> vfs_setxattr+0xa7/0xf0 fs/xattr.c:220
->> setxattr+0x23d/0x330 fs/xattr.c:451
->> path_setxattr+0x170/0x190 fs/xattr.c:470
->> __do_sys_setxattr fs/xattr.c:485 [inline]
->> __se_sys_setxattr fs/xattr.c:481 [inline]
->> __x64_sys_setxattr+0xc0/0x160 fs/xattr.c:481
->> do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
->> entry_SYSCALL_64_after_hwframe+0x49/0xb3
->> RIP: 0033:0x7fe46005e67a
->> Code: 48 8b 0d 21 18 2b 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f =
-84 00 00 00 00 00 0f 1f 44 00 00 49 89 ca b8 bc 00 00 00 0f 05 <48> 3d =
-01 f0 ff ff 73 01 c3 48 8b 0d ee 17 2b 00 f7 d8 64 89 01 48
->> RSP: 002b:00007fffef423568 EFLAGS: 00000246 ORIG_RAX: =
-00000000000000bc
->> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fe46005e67a
->> RDX: 00007fffef4235e0 RSI: 0000556ea53ddf9b RDI: 0000556ea6766760
->> RBP: 0000556ea53ddf9b R08: 0000000000000000 R09: 0000000000000030
->> R10: 0000000000000020 R11: 0000000000000246 R12: 00007fffef4235e0
->> R13: 0000000000000020 R14: 0000000000000000 R15: 0000556ea6751700
->>=20
->> security/device_cgroup.c:357 RCU-list traversed in non-reader =
-section!!
-
-=
-https://lore.kernel.org/lkml/20200406105950.GA2285@workstation-kernel-dev/=
-
-
-The same story. The patch had been ignored for a while.
-
-
-
+> But this driver is the only one duplicating the codethen Commit 3aa0582fdb82 should be extended to handle firmware which is 
+not defined under the root node. I am not sure if it is doable.
+>
+Regards,
+Richard
