@@ -2,198 +2,144 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01697C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE7FC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D109420730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:28:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098537;
-	bh=g7nDN8bMUX+TVyPmjey7LH7mE1g2N7A8qf3m/woDus8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HIl8C9iMXNJSpGjgtrtRxlAeikmh4vaQQJhEyqqFf2fwFbuDklsqgD3xhREFj9/81
-	 9O1C1L3Fn++s1/B2G9IEM/o+GW6XQifQXIx2AbqwZY9vWVZPjohhxDWP1YWaiOsL10
-	 LcYYk9U/3x104hVWSSU8r+hj4b/7HTFbw5DTrKZ4=
+	by mail.kernel.org (Postfix) with ESMTP id 94806208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:29:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WAN0XTlq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729276AbgD1S25 (ORCPT
+        id S1729293AbgD1S3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:28:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41782 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728714AbgD1S2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:28:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41E9620BED;
-        Tue, 28 Apr 2020 18:28:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098521;
-        bh=g7nDN8bMUX+TVyPmjey7LH7mE1g2N7A8qf3m/woDus8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wEtdy/QzkRqQmEOcpUUD780nBEhhIP0gnxxhYeQpShuKslFjNXlEZ3CwWtY9Aiel5
-         BTHTsELAph3TQaChQIlKkWgHwsXKDLsCIxBb/iAx1xOpq1cqpnsRFZ+bcCxJcnovk4
-         6HxuE2YvZnQOcytY3fHNwyuZx+ibW4T1YWKYFZAA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 007/131] arm64: errata: Hide CTR_EL0.DIC on systems affected by Neoverse-N1 #1542419
-Date:   Tue, 28 Apr 2020 20:23:39 +0200
-Message-Id: <20200428182226.169493108@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 28 Apr 2020 14:29:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729252AbgD1S2u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:28:50 -0400
+Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E8C0C03C1AB
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:28:50 -0700 (PDT)
+Received: by mail-ua1-x936.google.com with SMTP id u12so22422046uau.10
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:28:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f/XwBbLkEh8phQ95fLV4nvFtsIP3mkVsJnj8xG8scE8=;
+        b=WAN0XTlq4dxb8wrs+nT2PbnjlpSq7chuyteuwEMn96/7AOOGem7ekWgRWtzAvwOzKx
+         PKFEOhSLdIedo07x1i2sgt8oyyJVlNtGLZf2UUelfLvgsNssf6PmkU/DZOSBku1fn+48
+         OM/Cs9HsIxN93Hr7u/8WWv4Agtv+tZ1dsW6Q2da3fFo5tr21cwe46RREHNZ+xX5al3vc
+         8CgYRONb/4XpoVwHbTiEaaGAM13dU9pdzGwGllHcJv63WrOlrHJggnIDErviQ0HrASH8
+         qChjz/di+PTzVhNl9LYssncj5PLEW3HyAkC6Z3wvqpUtoCSTnIBS7n/Srba0s14wbwcU
+         uRMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f/XwBbLkEh8phQ95fLV4nvFtsIP3mkVsJnj8xG8scE8=;
+        b=dqloDcinq6pxskcGRIiONyE2SnGHGukfA+FBiIxTLOG8D2I2OCzr+iIeCyO+5DIEwz
+         AOurmtGfczK90pvjPuDW+79bJmaZDTuYzukBiMhA0qJCEGNdbrmwCysoMHy41ThFfuf5
+         iFyr5gOLQj9K4aHm3JQVBZqtzR2DFSVOtu8PR7rKJz1yUp69POF3gojp60pQ1DhUK7cV
+         GYSJCPR6Ven9qy9BgUGRujLYOkyOoMrGZrfUi/FpRkxtekkPxgU8wtzQmk2zoNTj2L1X
+         0gsrU0HsGBLOEmPpBlxTdsZC9hoEDBtmeoCotsKBm8XOHmEtzp2LysopJRfjf+hzWJoK
+         0w8w==
+X-Gm-Message-State: AGi0PuYzFT9VQ3WexVwamCOuFxXxBDsiSJvY2WHtE3LYL4SKQCB+V4td
+        L29Decl4KIqzQ7afr7o/6itsND7YAHF20hYdCvPZ2esZ3Ok=
+X-Google-Smtp-Source: APiQypIPLpbzHNNLZpXEAf+650jmQB3r/F3EhRmGSbAU3pN+aqynUxnOr1EpW493XzMnY2Q7G6nEyiS9OKt8CKFC2NA=
+X-Received: by 2002:a67:dd98:: with SMTP id i24mr23242699vsk.239.1588098529151;
+ Tue, 28 Apr 2020 11:28:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200424153859.GA1481119@chrisdown.name> <CAJuCfpGnJBEvQTUeJ_U6+rHmPcMjw_pPL+QFj7Sec5fHZPH67w@mail.gmail.com>
+ <CAJuCfpFhsN1=kDK0tU8aWeNt5Dj6U_1rC_dVT-27a4TL_hF0gA@mail.gmail.com> <20200428113456.GA2170292@chrisdown.name>
+In-Reply-To: <20200428113456.GA2170292@chrisdown.name>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Tue, 28 Apr 2020 11:28:37 -0700
+Message-ID: <CAJuCfpH+einwioO4bKxFaE0jPKDgFG5P2+fx-4D6OvKst9dvVQ@mail.gmail.com>
+Subject: Re: PSI poll() support for unprivileged users
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+On Tue, Apr 28, 2020 at 4:34 AM Chris Down <chris@chrisdown.name> wrote:
+>
+> Hey Suren,
+>
+> Suren Baghdasaryan writes:
+> >> > I'm building a userspace daemon for desktop users which notifies based on
+> >> > pressure events, and it's particularly janky to ask people to run such a
+> >> > notifier as root: the notification mechanism is usually tied to the user's
+> >> > display server auth, and the surrounding environment is generally pretty
+> >> > important to maintain. In addition to this, just in general this doesn't feel
+> >> > like the kind of feature that by its nature needs to be restricted to root --
+> >> > it seems reasonable that there would be unprivileged users which want to use
+> >> > this, and that not using RT threads would be acceptable in that scenario.
+> >>
+> >> For these cases you can provide a userspace privileged daemon that
+> >> will relay pressure notifications to its unprivileged clients. This is
+> >> what we do on Android - Android Management Server registers its PSI
+> >> triggers and then relays low memory notifications to unprivileged
+> >> apps.
+> >> Another approach is taken by Android Low Memory Killer Daemon (lmkd)
+> >> which is an unprivileged process but registers its PSI triggers. The
+> >> trick is that the init process executes "chmod 0664
+> >> /proc/pressure/memory" from its init script and further restrictions
+> >> are enforced by selinux policy granting only LMKD write access to this
+> >> file.
+> >>
+> >> Would any of these options work for you?
+>
+> Hmm, I think these are reasonable options when you have control over the
+> system, but not so great if you don't. For example, I want to get pressure
+> notifications for my logind seat, but that doesn't necessarily imply that I
+> have administrative access to the machine.
+>
+> >> > Have you considered making the per-cgroup RT threads optional? If the
+> >> > processing isn't done in the FIFO kthread for unprivileged users, I think it
+> >> > should be safe to allow them to write to pressure files (perhaps with some
+> >> > additional limits or restrictions on things like the interval, as needed).
+> >>
+> >> I didn't consider that as I viewed memory condition tracking that
+> >> consumes kernel resources as being potentially exploitable. RT threads
+> >> did make that more of an issue but even without them I'm not sure we
+> >> should allow unprivileged processes to create unlimited numbers of
+> >> triggers each of which is not really free.
+>
+> There's precedent for other similar issues like this in the kernel, eg. rates
+> for some ICMP packets, where we enforce a static limit in the kernel for
+> unprivileged users. I'd imagine we can do something similar here, too.
+>
+> >Thinking some more about this. LMKD in the above-mentioned usecase is
+> >not a privileged process but it is granted access to PSI triggers by a
+> >privileged init process+sepolicy and it needs RT threads to react to
+> >memory pressure promptly without being preempted. If we allow only the
+> >privileged users to have RT threads for PSI triggers then that
+> >requirement would break this scenario and LMKD won't be able to use RT
+> >threads.
+>
+> Well, fiddlesticks :-)
+>
+> If we needed to have both, I don't know what the interface would look like, but
+> yes, it sounds overcomplicated. I'll think about it some more.
 
-[ Upstream commit 05460849c3b51180d5ada3373d0449aea19075e4 ]
+Yeah, the only idea I could come up with was to tie RT thread usage to
+some selinux policy instead of using file permissions or being root.
+But I have very little experience with selinux to tell you whether
+there might be issues with such an approach.
 
-Cores affected by Neoverse-N1 #1542419 could execute a stale instruction
-when a branch is updated to point to freshly generated instructions.
-
-To workaround this issue we need user-space to issue unnecessary
-icache maintenance that we can trap. Start by hiding CTR_EL0.DIC.
-
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-[ Removed cpu_enable_trap_ctr_access() hunk due to no 4afe8e79da92]
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- Documentation/arm64/silicon-errata.txt |  1 +
- arch/arm64/Kconfig                     | 16 ++++++++++++++++
- arch/arm64/include/asm/cpucaps.h       |  3 ++-
- arch/arm64/kernel/cpu_errata.c         | 22 ++++++++++++++++++++++
- arch/arm64/kernel/traps.c              |  3 +++
- 5 files changed, 44 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/arm64/silicon-errata.txt b/Documentation/arm64/silicon-errata.txt
-index eeb3fc9d777b8..667ea906266ed 100644
---- a/Documentation/arm64/silicon-errata.txt
-+++ b/Documentation/arm64/silicon-errata.txt
-@@ -59,6 +59,7 @@ stable kernels.
- | ARM            | Cortex-A73      | #858921         | ARM64_ERRATUM_858921        |
- | ARM            | Cortex-A55      | #1024718        | ARM64_ERRATUM_1024718       |
- | ARM            | Cortex-A76      | #1463225        | ARM64_ERRATUM_1463225       |
-+| ARM            | Neoverse-N1     | #1542419        | ARM64_ERRATUM_1542419       |
- | ARM            | MMU-500         | #841119,#826419 | N/A                         |
- |                |                 |                 |                             |
- | Cavium         | ThunderX ITS    | #22375, #24313  | CAVIUM_ERRATUM_22375        |
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 51fe21f5d0783..1fe3e5cb29278 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -499,6 +499,22 @@ config ARM64_ERRATUM_1463225
- 
- 	  If unsure, say Y.
- 
-+config ARM64_ERRATUM_1542419
-+	bool "Neoverse-N1: workaround mis-ordering of instruction fetches"
-+	default y
-+	help
-+	  This option adds a workaround for ARM Neoverse-N1 erratum
-+	  1542419.
-+
-+	  Affected Neoverse-N1 cores could execute a stale instruction when
-+	  modified by another CPU. The workaround depends on a firmware
-+	  counterpart.
-+
-+	  Workaround the issue by hiding the DIC feature from EL0. This
-+	  forces user-space to perform cache maintenance.
-+
-+	  If unsure, say Y.
-+
- config CAVIUM_ERRATUM_22375
- 	bool "Cavium erratum 22375, 24313"
- 	default y
-diff --git a/arch/arm64/include/asm/cpucaps.h b/arch/arm64/include/asm/cpucaps.h
-index c3de0bbf0e9a2..df8fe8ecc37e1 100644
---- a/arch/arm64/include/asm/cpucaps.h
-+++ b/arch/arm64/include/asm/cpucaps.h
-@@ -53,7 +53,8 @@
- #define ARM64_HAS_STAGE2_FWB			32
- #define ARM64_WORKAROUND_1463225		33
- #define ARM64_SSBS				34
-+#define ARM64_WORKAROUND_1542419		35
- 
--#define ARM64_NCAPS				35
-+#define ARM64_NCAPS				36
- 
- #endif /* __ASM_CPUCAPS_H */
-diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-index 71888808ded72..76490b0cefcee 100644
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -643,6 +643,18 @@ needs_tx2_tvm_workaround(const struct arm64_cpu_capabilities *entry,
- 	return false;
- }
- 
-+static bool __maybe_unused
-+has_neoverse_n1_erratum_1542419(const struct arm64_cpu_capabilities *entry,
-+				int scope)
-+{
-+	u32 midr = read_cpuid_id();
-+	bool has_dic = read_cpuid_cachetype() & BIT(CTR_DIC_SHIFT);
-+	const struct midr_range range = MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1);
-+
-+	WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
-+	return is_midr_in_range(midr, &range) && has_dic;
-+}
-+
- #ifdef CONFIG_HARDEN_EL2_VECTORS
- 
- static const struct midr_range arm64_harden_el2_vectors[] = {
-@@ -834,6 +846,16 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
- 		ERRATA_MIDR_RANGE_LIST(tx2_family_cpus),
- 		.matches = needs_tx2_tvm_workaround,
- 	},
-+#endif
-+#ifdef CONFIG_ARM64_ERRATUM_1542419
-+	{
-+		/* we depend on the firmware portion for correctness */
-+		.desc = "ARM erratum 1542419 (kernel portion)",
-+		.capability = ARM64_WORKAROUND_1542419,
-+		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
-+		.matches = has_neoverse_n1_erratum_1542419,
-+		.cpu_enable = cpu_enable_trap_ctr_access,
-+	},
- #endif
- 	{
- 	}
-diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-index c8dc3a3640e7e..253b7f84a5a0d 100644
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -481,6 +481,9 @@ static void ctr_read_handler(unsigned int esr, struct pt_regs *regs)
- 	int rt = (esr & ESR_ELx_SYS64_ISS_RT_MASK) >> ESR_ELx_SYS64_ISS_RT_SHIFT;
- 	unsigned long val = arm64_ftr_reg_user_value(&arm64_ftr_reg_ctrel0);
- 
-+	if (cpus_have_const_cap(ARM64_WORKAROUND_1542419))
-+		val &= ~BIT(CTR_DIC_SHIFT);
-+
- 	pt_regs_write_reg(regs, rt, val);
- 
- 	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
--- 
-2.20.1
-
-
-
+>
+> Thanks,
+>
+> Chris
