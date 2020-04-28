@@ -2,163 +2,185 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8536C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F520C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61E02206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:05:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="jibHKywq"
+	by mail.kernel.org (Postfix) with ESMTP id 7B157206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:05:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgD1KFN (ORCPT
+        id S1727895AbgD1KFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 06:05:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49042 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727107AbgD1KFM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 06:05:12 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A45C2C03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 03:05:12 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id k12so2058324wmj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 03:05:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=l+k7yFMhMisNWSRZhvrwWfroBahbWYYcttXSTYKeIwQ=;
-        b=jibHKywqEOHP7s5Uq17E8ygefJpPB+KB36cR9akz/wwH6GF74Ovy8y7nrJQgKD/v86
-         +ADgY4xegjPKGLTcL6BJ0oyxEBc/3ebLDa6cz/R1bKVedxmKa2fGhgObMZIWZ0aSYDV9
-         qIlGzv7MRvovl3lA5TeZpfsQe5hz34ij7dOQw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=l+k7yFMhMisNWSRZhvrwWfroBahbWYYcttXSTYKeIwQ=;
-        b=nq02ZieKS0OLfQ/diBePwp+ou8+dUj7QMkDnfqp1TcWNfU6WQkCwJ8iekFOIi8QLB2
-         abMfKHmJc9A0wt3uHU7BzTiT0btkr2s3YFmMjx9UCLX4nIy/D9U90FnWPNyeu/yrvV55
-         L7euDK49P3l4Yv7aO8fkjpbl1ofl9lF3mcO0pCdl49Rly9kd5N7nL0cPlw5NwchBWIZH
-         IBJzRxTPAKZBu+JY0wzPv+sw2jZodPX1fCtF204UlNb+p5GoIhiA5u0Nxb70+95xR9Hl
-         dmQOyj9JK1DBLc2r3Cp/TfkvBXH8EjgaEsuMO9okAW3UbHyc402bBdHNi2uD29qE8KAr
-         Jwog==
-X-Gm-Message-State: AGi0PuZgEdF5/xMxibrZiFr5m9bQNURY76NutNNW+L3a/SeTd0fCTtG3
-        kFgvcz780VigkTEloWrGcO5U8g==
-X-Google-Smtp-Source: APiQypKQTCBtHEwl9qfvTCZEBaYghpXpXAL7yjy18ziiEevrdg+jQUjp5/w1QV7rvuqsCLOMh3LRRQ==
-X-Received: by 2002:a1c:dc8b:: with SMTP id t133mr3745031wmg.117.1588068311327;
-        Tue, 28 Apr 2020 03:05:11 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id 138sm2786040wmb.14.2020.04.28.03.05.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 03:05:10 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 12:05:08 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     Xin Ji <xji@analogixsemi.com>, devel@driverdev.osuosl.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        lkml <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: Re: [PATCH v7 2/2] drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to
- DP bridge driver
-Message-ID: <20200428100508.GD3456981@phenom.ffwll.local>
-Mail-Followup-To: Nicolas Boichat <drinkcat@chromium.org>,
-        Xin Ji <xji@analogixsemi.com>, devel@driverdev.osuosl.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        lkml <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Sheng Pan <span@analogixsemi.com>
-References: <cover.1582529411.git.xji@analogixsemi.com>
- <a81adcf2e79d440edcb7b3989f31efcb80a6e9ff.1582529411.git.xji@analogixsemi.com>
- <CANMq1KBfB6tXFqYGvr=8fV_bpCV5GbVHeEbRs+fuaZba65-OPw@mail.gmail.com>
- <20200424065124.GA31922@xin-VirtualBox>
- <CANMq1KBJ6f74aNAr8BwC3wz8MEeJzwXOQE44gv6C=DNzYmUWCQ@mail.gmail.com>
+        Tue, 28 Apr 2020 06:05:18 -0400
+Received: from mail.wangsu.com ([123.103.51.198]:51258 "EHLO wangsu.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727086AbgD1KFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 06:05:18 -0400
+X-Greylist: delayed 373 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 Apr 2020 06:05:13 EDT
+Received: by ajax-webmail-app1 (Coremail) ; Tue, 28 Apr 2020 17:58:30 +0800
+ (GMT+08:00)
+X-Originating-IP: [221.226.85.138]
+Date:   Tue, 28 Apr 2020 17:58:30 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   =?UTF-8?B?5p6X6ZGr6b6Z?= <linxl3@wangsu.com>
+To:     "Wanpeng Li" <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        "Sean Christopherson" <sean.j.christopherson@intel.com>,
+        "Vitaly Kuznetsov" <vkuznets@redhat.com>,
+        "Wanpeng Li" <wanpengli@tencent.com>,
+        "Jim Mattson" <jmattson@google.com>,
+        "Joerg Roedel" <joro@8bytes.org>,
+        "Haiwei Li" <lihaiwei@tencent.com>
+Subject: Re: [PATCH v4 6/7] KVM: X86: TSCDEADLINE MSR emulation fastpath
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190723(4416cd1d)
+ Copyright (c) 2002-2020 www.mailtech.cn chinanetcenter
+In-Reply-To: <1588055009-12677-7-git-send-email-wanpengli@tencent.com>
+References: <1588055009-12677-1-git-send-email-wanpengli@tencent.com>
+ <1588055009-12677-7-git-send-email-wanpengli@tencent.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANMq1KBJ6f74aNAr8BwC3wz8MEeJzwXOQE44gv6C=DNzYmUWCQ@mail.gmail.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+Message-ID: <15150824.2a36.171c0394538.Coremail.linxl3@wangsu.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: xjNnewBHJexG_qdelLwLAA--.54W
+X-CM-SenderInfo: holq5zmt6zt0xjvxhudrp/1tbiAQIADFKcUQI90gABs8
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+        CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+        daVFxhVjvjDU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 08:12:04PM +0800, Nicolas Boichat wrote:
-> On Fri, Apr 24, 2020 at 2:51 PM Xin Ji <xji@analogixsemi.com> wrote:
-> >
-> > On Thu, Apr 23, 2020 at 07:55:15PM +0800, Nicolas Boichat wrote:
-> > > Hi,
-> > >
-> > > Just commenting on the mode_fixup function that was added in v7.
-> > >
-> > [snip]
-> > > > +       /*
-> > > > +        * once illegal timing detected, use default HFP, HSYNC, HBP
-> > > > +        */
-> > > > +       if (hblanking < HBLANKING_MIN || (hfp < HP_MIN && hbp < HP_MIN)) {
-> > >
-> > > should this be adj_hblanking/adj_hfp/adj_hbp?
-> > NO, need check original HFP and HBP, if they are not legal, driver need
-> > set default value to adj_hsync, adj_hfp, adj_hbp.
-> > >
-> > > > +               adj_hsync = SYNC_LEN_DEF;
-> > > > +               adj_hfp = HFP_HBP_DEF;
-> > > > +               adj_hbp = HFP_HBP_DEF;
-> > > > +               vref = adj->clock * 1000 / (adj->htotal * adj->vtotal);
-> > > > +               if (hblanking < HBLANKING_MIN) {
-> > > > +                       delta_adj = HBLANKING_MIN - hblanking;
-> > > > +                       adj_clock = vref * delta_adj * adj->vtotal;
-> > > > +                       adj->clock += DIV_ROUND_UP(adj_clock, 1000);
-> > > > +               } else {
-> > > > +                       delta_adj = hblanking - HBLANKING_MIN;
-> > > > +                       adj_clock = vref * delta_adj * adj->vtotal;
-> > > > +                       adj->clock -= DIV_ROUND_UP(adj_clock, 1000);
-> > > > +               }
-> > > > +
-> > > > +               DRM_WARN("illegal hblanking timing, use default.\n");
-> > > > +               DRM_WARN("hfp(%d),hbp(%d),hsync(%d).\n", hfp, hbp, hsync);
-> > >
-> > > How likely is it that this mode is going to work? Can you just return
-> > > false here to reject the mode?
-> > We want to set the default minimal Hblancking value, then it may display,
-> > otherwise. If we just return false, there is no display for sure.
-> 
-> Right, understand your argument. I'm pondering if it's not just better
-> to reject the mode rather than trying a timing that is definitely
-> quite different from what the monitor was asking for. No super strong
-> opinion, I'll let other people on the list weigh in.
-
-Yeah mode_fixup is supposed to be used to adjust the mode in intermediate
-stages (e.g. if you go from progressive to interlaced only at the end of
-your pipeline or something like that). It's not meant for adjusting the
-mode yout actually put out through a hdmi or dp connector. For fixed
-panels adjusting modes to fit the panel is also fairly common, but not for
-external outputs.
-
-Since this is a DP bridge I'd say no adjusting, just reject what doesn't
-fit.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+T24gVHVlc2RheSwgMjggQXByIDIwMjAgYXQgMTQ6MjMsIFdhbnBlbmcgTGkgPGtlcm5lbGx3cEBn
+bWFpbC5jb20+IHdyb3RlOgomZ3Q7IAomZ3Q7IEZyb206IFdhbnBlbmcgTGkgPHdhbnBlbmdsaUB0
+ZW5jZW50LmNvbT4KJmd0OyAKJmd0OyBUaGlzIHBhdGNoIGltcGxlbWVudHMgdHNjZGVhbGluZSBt
+c3IgZW11bGF0aW9uIGZhc3RwYXRoLCBhZnRlciB3cm1zciAKJmd0OyB0c2NkZWFkbGluZSB2bWV4
+aXQsIGhhbmRsZSBpdCBhcyBzb29uIGFzIHBvc3NpYmxlIGFuZCB2bWVudHJ5IGltbWVkaWF0ZWx5
+IAomZ3Q7IHdpdGhvdXQgY2hlY2tpbmcgdmFyaW91cyBrdm0gc3R1ZmYgd2hlbiBwb3NzaWJsZS4K
+Jmd0OyAKJmd0OyBUZXN0ZWQtYnk6IEhhaXdlaSBMaSA8bGloYWl3ZWlAdGVuY2VudC5jb20+CiZn
+dDsgQ2M6IEhhaXdlaSBMaSA8bGloYWl3ZWlAdGVuY2VudC5jb20+CiZndDsgU2lnbmVkLW9mZi1i
+eTogV2FucGVuZyBMaSA8d2FucGVuZ2xpQHRlbmNlbnQuY29tPgomZ3Q7IC0tLQomZ3Q7ICBhcmNo
+L3g4Ni9rdm0vbGFwaWMuYyAgIHwgMTggKysrKysrKysrKysrLS0tLS0tCiZndDsgIGFyY2gveDg2
+L2t2bS92bXgvdm14LmMgfCAxMiArKysrKysrKy0tLS0KJmd0OyAgYXJjaC94ODYva3ZtL3g4Ni5j
+ICAgICB8IDMwICsrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLQomZ3Q7ICAzIGZpbGVzIGNo
+YW5nZWQsIDQ0IGluc2VydGlvbnMoKyksIDE2IGRlbGV0aW9ucygtKQomZ3Q7IAomZ3Q7IGRpZmYg
+LS1naXQgYS9hcmNoL3g4Ni9rdm0vbGFwaWMuYyBiL2FyY2gveDg2L2t2bS9sYXBpYy5jCiZndDsg
+aW5kZXggMzhmN2RjOS4uMzU4OTIzNyAxMDA2NDQKJmd0OyAtLS0gYS9hcmNoL3g4Ni9rdm0vbGFw
+aWMuYwomZ3Q7ICsrKyBiL2FyY2gveDg2L2t2bS9sYXBpYy5jCiZndDsgQEAgLTE1OTMsNyArMTU5
+Myw3IEBAIHN0YXRpYyB2b2lkIGt2bV9hcGljX2luamVjdF9wZW5kaW5nX3RpbWVyX2lycXMoc3Ry
+dWN0IGt2bV9sYXBpYyAqYXBpYykKJmd0OyAgCX0KJmd0OyAgfQomZ3Q7ICAKJmd0OyAtc3RhdGlj
+IHZvaWQgYXBpY190aW1lcl9leHBpcmVkKHN0cnVjdCBrdm1fbGFwaWMgKmFwaWMpCiZndDsgK3N0
+YXRpYyB2b2lkIGFwaWNfdGltZXJfZXhwaXJlZChzdHJ1Y3Qga3ZtX2xhcGljICphcGljLCBib29s
+IGZyb21fdGltZXJfZm4pCiZndDsgIHsKJmd0OyAgCXN0cnVjdCBrdm1fdmNwdSAqdmNwdSA9IGFw
+aWMtJmd0O3ZjcHU7CiZndDsgIAlzdHJ1Y3Qga3ZtX3RpbWVyICprdGltZXIgPSAmYW1wO2FwaWMt
+Jmd0O2xhcGljX3RpbWVyOwomZ3Q7IEBAIC0xNjA0LDYgKzE2MDQsMTIgQEAgc3RhdGljIHZvaWQg
+YXBpY190aW1lcl9leHBpcmVkKHN0cnVjdCBrdm1fbGFwaWMgKmFwaWMpCiZndDsgIAlpZiAoYXBp
+Y19sdnR0X3RzY2RlYWRsaW5lKGFwaWMpIHx8IGt0aW1lci0mZ3Q7aHZfdGltZXJfaW5fdXNlKQom
+Z3Q7ICAJCWt0aW1lci0mZ3Q7ZXhwaXJlZF90c2NkZWFkbGluZSA9IGt0aW1lci0mZ3Q7dHNjZGVh
+ZGxpbmU7CiZndDsgIAomZ3Q7ICsJaWYgKCFmcm9tX3RpbWVyX2ZuICZhbXA7JmFtcDsgdmNwdS0m
+Z3Q7YXJjaC5hcGljdl9hY3RpdmUpIHsKJmd0OyArCQlXQVJOX09OKGt2bV9nZXRfcnVubmluZ192
+Y3B1KCkgIT0gdmNwdSk7CiZndDsgKwkJa3ZtX2FwaWNfaW5qZWN0X3BlbmRpbmdfdGltZXJfaXJx
+cyhhcGljKTsKJmd0OyArCQlyZXR1cm47CiZndDsgKwl9CiZndDsgKwomZ3Q7ICAJaWYgKGt2bV91
+c2VfcG9zdGVkX3RpbWVyX2ludGVycnVwdChhcGljLSZndDt2Y3B1KSkgewomZ3Q7ICAJCWlmIChh
+cGljLSZndDtsYXBpY190aW1lci50aW1lcl9hZHZhbmNlX25zKQomZ3Q7ICAJCQlfX2t2bV93YWl0
+X2xhcGljX2V4cGlyZSh2Y3B1KTsKJmd0OyBAQCAtMTY0Myw3ICsxNjQ5LDcgQEAgc3RhdGljIHZv
+aWQgc3RhcnRfc3dfdHNjZGVhZGxpbmUoc3RydWN0IGt2bV9sYXBpYyAqYXBpYykKJmd0OyAgCQll
+eHBpcmUgPSBrdGltZV9zdWJfbnMoZXhwaXJlLCBrdGltZXItJmd0O3RpbWVyX2FkdmFuY2VfbnMp
+OwomZ3Q7ICAJCWhydGltZXJfc3RhcnQoJmFtcDtrdGltZXItJmd0O3RpbWVyLCBleHBpcmUsIEhS
+VElNRVJfTU9ERV9BQlNfSEFSRCk7CiZndDsgIAl9IGVsc2UKJmd0OyAtCQlhcGljX3RpbWVyX2V4
+cGlyZWQoYXBpYyk7CiZndDsgKwkJYXBpY190aW1lcl9leHBpcmVkKGFwaWMsIGZhbHNlKTsKJmd0
+OyAgCiZndDsgIAlsb2NhbF9pcnFfcmVzdG9yZShmbGFncyk7CiZndDsgIH0KJmd0OyBAQCAtMTc1
+MSw3ICsxNzU3LDcgQEAgc3RhdGljIHZvaWQgc3RhcnRfc3dfcGVyaW9kKHN0cnVjdCBrdm1fbGFw
+aWMgKmFwaWMpCiZndDsgIAomZ3Q7ICAJaWYgKGt0aW1lX2FmdGVyKGt0aW1lX2dldCgpLAomZ3Q7
+ICAJCQlhcGljLSZndDtsYXBpY190aW1lci50YXJnZXRfZXhwaXJhdGlvbikpIHsKJmd0OyAtCQlh
+cGljX3RpbWVyX2V4cGlyZWQoYXBpYyk7CiZndDsgKwkJYXBpY190aW1lcl9leHBpcmVkKGFwaWMs
+IGZhbHNlKTsKJmd0OyAgCiZndDsgIAkJaWYgKGFwaWNfbHZ0dF9vbmVzaG90KGFwaWMpKQomZ3Q7
+ICAJCQlyZXR1cm47CiZndDsgQEAgLTE4MTMsNyArMTgxOSw3IEBAIHN0YXRpYyBib29sIHN0YXJ0
+X2h2X3RpbWVyKHN0cnVjdCBrdm1fbGFwaWMgKmFwaWMpCiZndDsgIAkJaWYgKGF0b21pY19yZWFk
+KCZhbXA7a3RpbWVyLSZndDtwZW5kaW5nKSkgewomZ3Q7ICAJCQljYW5jZWxfaHZfdGltZXIoYXBp
+Yyk7CiZndDsgIAkJfSBlbHNlIGlmIChleHBpcmVkKSB7CiZndDsgLQkJCWFwaWNfdGltZXJfZXhw
+aXJlZChhcGljKTsKJmd0OyArCQkJYXBpY190aW1lcl9leHBpcmVkKGFwaWMsIGZhbHNlKTsKJmd0
+OyAgCQkJY2FuY2VsX2h2X3RpbWVyKGFwaWMpOwomZ3Q7ICAJCX0KJmd0OyAgCX0KJmd0OyBAQCAt
+MTg2Myw3ICsxODY5LDcgQEAgdm9pZCBrdm1fbGFwaWNfZXhwaXJlZF9odl90aW1lcihzdHJ1Y3Qg
+a3ZtX3ZjcHUgKnZjcHUpCiZndDsgIAkJZ290byBvdXQ7CiZndDsgIAlXQVJOX09OKHN3YWl0X2Fj
+dGl2ZSgmYW1wO3ZjcHUtJmd0O3dxKSk7CiZndDsgIAljYW5jZWxfaHZfdGltZXIoYXBpYyk7CiZn
+dDsgLQlhcGljX3RpbWVyX2V4cGlyZWQoYXBpYyk7CiZndDsgKwlhcGljX3RpbWVyX2V4cGlyZWQo
+YXBpYywgZmFsc2UpOwomZ3Q7ICAKJmd0OyAgCWlmIChhcGljX2x2dHRfcGVyaW9kKGFwaWMpICZh
+bXA7JmFtcDsgYXBpYy0mZ3Q7bGFwaWNfdGltZXIucGVyaW9kKSB7CiZndDsgIAkJYWR2YW5jZV9w
+ZXJpb2RpY190YXJnZXRfZXhwaXJhdGlvbihhcGljKTsKJmd0OyBAQCAtMjM2OSw3ICsyMzc1LDcg
+QEAgc3RhdGljIGVudW0gaHJ0aW1lcl9yZXN0YXJ0IGFwaWNfdGltZXJfZm4oc3RydWN0IGhydGlt
+ZXIgKmRhdGEpCiZndDsgIAlzdHJ1Y3Qga3ZtX3RpbWVyICprdGltZXIgPSBjb250YWluZXJfb2Yo
+ZGF0YSwgc3RydWN0IGt2bV90aW1lciwgdGltZXIpOwomZ3Q7ICAJc3RydWN0IGt2bV9sYXBpYyAq
+YXBpYyA9IGNvbnRhaW5lcl9vZihrdGltZXIsIHN0cnVjdCBrdm1fbGFwaWMsIGxhcGljX3RpbWVy
+KTsKJmd0OyAgCiZndDsgLQlhcGljX3RpbWVyX2V4cGlyZWQoYXBpYyk7CiZndDsgKwlhcGljX3Rp
+bWVyX2V4cGlyZWQoYXBpYywgdHJ1ZSk7CiZndDsgIAomZ3Q7ICAJaWYgKGxhcGljX2lzX3Blcmlv
+ZGljKGFwaWMpKSB7CiZndDsgIAkJYWR2YW5jZV9wZXJpb2RpY190YXJnZXRfZXhwaXJhdGlvbihh
+cGljKTsKJmd0OyBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva3ZtL3ZteC92bXguYyBiL2FyY2gveDg2
+L2t2bS92bXgvdm14LmMKJmd0OyBpbmRleCBjZTE5YjBlLi5iYjVjNGYxIDEwMDY0NAomZ3Q7IC0t
+LSBhL2FyY2gveDg2L2t2bS92bXgvdm14LmMKJmd0OyArKysgYi9hcmNoL3g4Ni9rdm0vdm14L3Zt
+eC5jCiZndDsgQEAgLTU5OTQsNyArNTk5NCw4IEBAIHN0YXRpYyBpbnQgdm14X2hhbmRsZV9leGl0
+KHN0cnVjdCBrdm1fdmNwdSAqdmNwdSwgZmFzdHBhdGhfdCBleGl0X2Zhc3RwYXRoKQomZ3Q7ICAJ
+aWYgKGV4aXRfZmFzdHBhdGggPT0gRVhJVF9GQVNUUEFUSF9TS0lQX0VNVUxfSU5TKSB7CiZndDsg
+IAkJa3ZtX3NraXBfZW11bGF0ZWRfaW5zdHJ1Y3Rpb24odmNwdSk7CkNhbiB3ZSBtb3ZlIHRoaXMg
+a3ZtX3NraXBfZW11bGF0ZWRfaW5zdHJ1Y3Rpb24gdG8gaGFuZGxlX2Zhc3RwYXRoX3NldF9tc3Jf
+aXJxb2ZmPyBUaGlzIHdpbGwga2VlcCB0aGUgc3R5bGUgY29uc2lzdGVudC4KJmd0OyAgCQlyZXR1
+cm4gMTsKJmd0OyAtCX0KJmd0OyArCX0gZWxzZSBpZiAoZXhpdF9mYXN0cGF0aCA9PSBFWElUX0ZB
+U1RQQVRIX05PUCkKJmd0OyArCQlyZXR1cm4gMTsKJmd0OyAgCiZndDsgIAlpZiAoZXhpdF9yZWFz
+b24gJmd0Oz0ga3ZtX3ZteF9tYXhfZXhpdF9oYW5kbGVycykKJmd0OyAgCQlnb3RvIHVuZXhwZWN0
+ZWRfdm1leGl0OwomZ3Q7IEBAIC02NjA1LDYgKzY2MDYsNyBAQCBzdGF0aWMgZmFzdHBhdGhfdCB2
+bXhfdmNwdV9ydW4oc3RydWN0IGt2bV92Y3B1ICp2Y3B1KQomZ3Q7ICAJc3RydWN0IHZjcHVfdm14
+ICp2bXggPSB0b192bXgodmNwdSk7CiZndDsgIAl1bnNpZ25lZCBsb25nIGNyMywgY3I0OwomZ3Q7
+ICAKJmd0OyArUkVFTlRFUl9HVUVTVDoKJmd0OyAgCS8qIFJlY29yZCB0aGUgZ3Vlc3QncyBuZXQg
+dmNwdSB0aW1lIGZvciBlbmZvcmNlZCBOTUkgaW5qZWN0aW9ucy4gKi8KJmd0OyAgCWlmICh1bmxp
+a2VseSghZW5hYmxlX3ZubWkgJmFtcDsmYW1wOwomZ3Q7ICAJCSAgICAgdm14LSZndDtsb2FkZWRf
+dm1jcy0mZ3Q7c29mdF92bm1pX2Jsb2NrZWQpKQomZ3Q7IEBAIC02Nzc5LDEwICs2NzgxLDEyIEBA
+IHN0YXRpYyBmYXN0cGF0aF90IHZteF92Y3B1X3J1bihzdHJ1Y3Qga3ZtX3ZjcHUgKnZjcHUpCiZn
+dDsgIAomZ3Q7ICAJZXhpdF9mYXN0cGF0aCA9IHZteF9leGl0X2hhbmRsZXJzX2Zhc3RwYXRoKHZj
+cHUpOwomZ3Q7ICAJaWYgKGV4aXRfZmFzdHBhdGggPT0gRVhJVF9GQVNUUEFUSF9SRUVOVEVSX0dV
+RVNUKSB7CiZndDsgLQkJaWYgKCFrdm1fdmNwdV9leGl0X3JlcXVlc3QodmNwdSkpCiZndDsgKwkJ
+aWYgKCFrdm1fdmNwdV9leGl0X3JlcXVlc3QodmNwdSkpIHsKJmd0OyAgCQkJdm14X3N5bmNfcGly
+X3RvX2lycih2Y3B1KTsKJmd0OyAtCQllbHNlCiZndDsgLQkJCWV4aXRfZmFzdHBhdGggPSBFWElU
+X0ZBU1RQQVRIX05PUDsKJmd0OyArCQkJLyogc3RhdGljIGNhbGwgaXMgYmV0dGVyIHdpdGggcmV0
+cG9saW5lcyAqLwomZ3Q7ICsJCQlnb3RvIFJFRU5URVJfR1VFU1Q7CiZndDsgKwkJfQomZ3Q7ICsJ
+CWV4aXRfZmFzdHBhdGggPSBFWElUX0ZBU1RQQVRIX05PUDsKJmd0OyAgCX0KJmd0OyAgCiZndDsg
+IAlyZXR1cm4gZXhpdF9mYXN0cGF0aDsKJmd0OyBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva3ZtL3g4
+Ni5jIGIvYXJjaC94ODYva3ZtL3g4Ni5jCiZndDsgaW5kZXggYWZlMDUyYy4uZjNhNWZlNCAxMDA2
+NDQKJmd0OyAtLS0gYS9hcmNoL3g4Ni9rdm0veDg2LmMKJmd0OyArKysgYi9hcmNoL3g4Ni9rdm0v
+eDg2LmMKJmd0OyBAQCAtMTYxNiwyNyArMTYxNiw0NSBAQCBzdGF0aWMgaW50IGhhbmRsZV9mYXN0
+cGF0aF9zZXRfeDJhcGljX2ljcl9pcnFvZmYoc3RydWN0IGt2bV92Y3B1ICp2Y3B1LCB1NjQgZGF0
+YQomZ3Q7ICAJcmV0dXJuIDE7CiZndDsgIH0KJmd0OyAgCiZndDsgK3N0YXRpYyBpbnQgaGFuZGxl
+X2Zhc3RwYXRoX3NldF90c2NkZWFkbGluZShzdHJ1Y3Qga3ZtX3ZjcHUgKnZjcHUsIHU2NCBkYXRh
+KQomZ3Q7ICt7CiZndDsgKwlpZiAoIWt2bV94ODZfb3BzLnNldF9odl90aW1lciB8fAomZ3Q7ICsJ
+CWt2bV9td2FpdF9pbl9ndWVzdCh2Y3B1LSZndDtrdm0pIHx8CiZndDsgKwkJa3ZtX2Nhbl9wb3N0
+X3RpbWVyX2ludGVycnVwdCh2Y3B1KSkKJmd0OyArCQlyZXR1cm4gMTsKJmd0OyArCiZndDsgKwlr
+dm1fc2V0X2xhcGljX3RzY2RlYWRsaW5lX21zcih2Y3B1LCBkYXRhKTsKJmd0OyArCXJldHVybiAw
+OwomZ3Q7ICt9CiZndDsgKwomZ3Q7ICBmYXN0cGF0aF90IGhhbmRsZV9mYXN0cGF0aF9zZXRfbXNy
+X2lycW9mZihzdHJ1Y3Qga3ZtX3ZjcHUgKnZjcHUpCiZndDsgIHsKJmd0OyAgCXUzMiBtc3IgPSBr
+dm1fcmN4X3JlYWQodmNwdSk7CiZndDsgIAl1NjQgZGF0YTsKJmd0OyAtCWludCByZXQgPSAwOwom
+Z3Q7ICsJaW50IHJldCA9IEVYSVRfRkFTVFBBVEhfTk9ORTsKJmd0OyAgCiZndDsgIAlzd2l0Y2gg
+KG1zcikgewomZ3Q7ICAJY2FzZSBBUElDX0JBU0VfTVNSICsgKEFQSUNfSUNSICZndDsmZ3Q7IDQp
+OgomZ3Q7ICAJCWRhdGEgPSBrdm1fcmVhZF9lZHhfZWF4KHZjcHUpOwomZ3Q7IC0JCXJldCA9IGhh
+bmRsZV9mYXN0cGF0aF9zZXRfeDJhcGljX2ljcl9pcnFvZmYodmNwdSwgZGF0YSk7CiZndDsgKwkJ
+aWYgKCFoYW5kbGVfZmFzdHBhdGhfc2V0X3gyYXBpY19pY3JfaXJxb2ZmKHZjcHUsIGRhdGEpKQom
+Z3Q7ICsJCQlyZXQgPSBFWElUX0ZBU1RQQVRIX1NLSVBfRU1VTF9JTlM7CiZndDsgKwkJYnJlYWs7
+CiZndDsgKwljYXNlIE1TUl9JQTMyX1RTQ0RFQURMSU5FOgomZ3Q7ICsJCWRhdGEgPSBrdm1fcmVh
+ZF9lZHhfZWF4KHZjcHUpOwomZ3Q7ICsJCWlmICghaGFuZGxlX2Zhc3RwYXRoX3NldF90c2NkZWFk
+bGluZSh2Y3B1LCBkYXRhKSkKJmd0OyArCQkJcmV0ID0gRVhJVF9GQVNUUEFUSF9SRUVOVEVSX0dV
+RVNUOwomZ3Q7ICAJCWJyZWFrOwomZ3Q7ICAJZGVmYXVsdDoKJmd0OyAtCQlyZXR1cm4gRVhJVF9G
+QVNUUEFUSF9OT05FOwomZ3Q7ICsJCXJldCA9IEVYSVRfRkFTVFBBVEhfTk9ORTsKJmd0OyAgCX0K
+Jmd0OyAgCiZndDsgLQlpZiAoIXJldCkgewomZ3Q7ICsJaWYgKHJldCAhPSBFWElUX0ZBU1RQQVRI
+X05PTkUpIHsKJmd0OyAgCQl0cmFjZV9rdm1fbXNyX3dyaXRlKG1zciwgZGF0YSk7CiZndDsgLQkJ
+cmV0dXJuIEVYSVRfRkFTVFBBVEhfU0tJUF9FTVVMX0lOUzsKJmd0OyArCQlpZiAocmV0ID09IEVY
+SVRfRkFTVFBBVEhfUkVFTlRFUl9HVUVTVCkKJmd0OyArCQkJa3ZtX3NraXBfZW11bGF0ZWRfaW5z
+dHJ1Y3Rpb24odmNwdSk7CgomZ3Q7ICAJfQomZ3Q7ICAKJmd0OyAtCXJldHVybiBFWElUX0ZBU1RQ
+QVRIX05PTkU7CiZndDsgKwlyZXR1cm4gcmV0OwomZ3Q7ICB9CiZndDsgIEVYUE9SVF9TWU1CT0xf
+R1BMKGhhbmRsZV9mYXN0cGF0aF9zZXRfbXNyX2lycW9mZik7CiZndDsgIAomZ3Q7IC0tIAomZ3Q7
+IDIuNy40Cjwvd2FucGVuZ2xpQHRlbmNlbnQuY29tPjwvbGloYWl3ZWlAdGVuY2VudC5jb20+PC9s
+aWhhaXdlaUB0ZW5jZW50LmNvbT48L3dhbnBlbmdsaUB0ZW5jZW50LmNvbT48L2tlcm5lbGx3cEBn
+bWFpbC5jb20+
