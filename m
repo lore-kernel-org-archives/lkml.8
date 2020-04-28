@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2EDC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D8DC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEFB92085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83D2F2085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:33:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098827;
-	bh=3+ofRS7RE8FekExK6l1Hstl3mc2F4usOKMv2qO5BNHQ=;
+	s=default; t=1588098832;
+	bh=1bJXgS9EGSsKXLluKrL63N6r/YnFN67KmUdN1uqhg/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0F3lDEHtn4m4bojYfTr79ist5OU079906Sm89gcJu7DLxjVgfSQbX86xyEAhk/g06
-	 /ZAuB1XdMMjvF8rHoXzgB/fDpxXjeN4VKJPSowpF+Y4Z19zUMhZ6oUcjl6GK0NvnoV
-	 u8hhyu4yzvvG814lm5hEG7M7QFgRgSczdhDknrWw=
+	b=ZoZiwjHIh8kqi0pFTK0c161OD98ltPRC5g9QlTHAyc4Wc5/nqBNnomJdfx2hTExWA
+	 1orCmyQzcVC08RKgen5UHhBkey7qpjouCtaCBTG5TqyIEgeRyqY725Ut/Cr77eGCCj
+	 D18aO+PD1RwT+M1nG3c4UuDNvg5tXI1IjbW77MzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729981AbgD1Sdq (ORCPT
+        id S1729997AbgD1Sdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:33:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50252 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:33:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729972AbgD1Sdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:33:42 -0400
+        id S1729975AbgD1Sdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:33:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7DD42085B;
-        Tue, 28 Apr 2020 18:33:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5327621835;
+        Tue, 28 Apr 2020 18:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098822;
-        bh=3+ofRS7RE8FekExK6l1Hstl3mc2F4usOKMv2qO5BNHQ=;
+        s=default; t=1588098824;
+        bh=1bJXgS9EGSsKXLluKrL63N6r/YnFN67KmUdN1uqhg/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FnC0tzq24L4giuQpDVL0mucAUt8DlcRAyHKsjuCHnwolIT560zqyXdegSNmHdu6EW
-         xwoFSTWM9Xa/nnqvgfAbaaPwsSkSW9OKG6G6iQHQ1yjRKa45NwvwWN0nApKVF0cqM/
-         fwWzPOP2OfKO+N/KLuu3qxnjZZum0u7Wr0d0x1Hg=
+        b=1RDm59Y6ocUZgEO2JO6OlR2DUpqKpc0MkN6HSmzKuxejMX3B+HHckEQBFrumu7lL7
+         RSD3eGh7O1VJ2bKje4dZ4I57havyHwr/3O114eNMul8HZ3+Cb6q8CgvLSwGgoY7xpT
+         JzewWZ5ITmQG+ihNRbI7lPLcOF9y3+Jy7g0m3Jwc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 5.6 116/167] tty: rocket, avoid OOB access
-Date:   Tue, 28 Apr 2020 20:24:52 +0200
-Message-Id: <20200428182239.903525901@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 061/131] net/x25: Fix x25_neigh refcnt leak when receiving frame
+Date:   Tue, 28 Apr 2020 20:24:33 +0200
+Message-Id: <20200428182232.644879270@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,72 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-commit 7127d24372bf23675a36edc64d092dc7fd92ebe8 upstream.
+[ Upstream commit f35d12971b4d814cdb2f659d76b42f0c545270b6 ]
 
-init_r_port can access pc104 array out of bounds. pc104 is a 2D array
-defined to have 4 members. Each member has 8 submembers.
-* we can have more than 4 (PCI) boards, i.e. [board] can be OOB
-* line is not modulo-ed by anything, so the first line on the second
-  board can be 4, on the 3rd 12 or alike (depending on previously
-  registered boards). It's zero only on the first line of the first
-  board. So even [line] can be OOB, quite soon (with the 2nd registered
-  board already).
+x25_lapb_receive_frame() invokes x25_get_neigh(), which returns a
+reference of the specified x25_neigh object to "nb" with increased
+refcnt.
 
-This code is broken for ages, so just avoid the OOB accesses and don't
-try to fix it as we would need to find out the correct line number. Use
-the default: RS232, if we are out.
+When x25_lapb_receive_frame() returns, local variable "nb" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
 
-Generally, if anyone needs to set the interface types, a module parameter
-is past the last thing that should be used for this purpose. The
-parameters' description says it's for ISA cards anyway.
+The reference counting issue happens in one path of
+x25_lapb_receive_frame(). When pskb_may_pull() returns false, the
+function forgets to decrease the refcnt increased by x25_get_neigh(),
+causing a refcnt leak.
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: stable <stable@vger.kernel.org>
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Link: https://lore.kernel.org/r/20200417105959.15201-2-jslaby@suse.cz
+Fix this issue by calling x25_neigh_put() when pskb_may_pull() returns
+false.
+
+Fixes: cb101ed2c3c7 ("x25: Handle undersized/fragmented skbs")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/tty/rocket.c |   25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+ net/x25/x25_dev.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/rocket.c
-+++ b/drivers/tty/rocket.c
-@@ -632,18 +632,21 @@ init_r_port(int board, int aiop, int cha
- 	tty_port_init(&info->port);
- 	info->port.ops = &rocket_port_ops;
- 	info->flags &= ~ROCKET_MODE_MASK;
--	switch (pc104[board][line]) {
--	case 422:
--		info->flags |= ROCKET_MODE_RS422;
--		break;
--	case 485:
--		info->flags |= ROCKET_MODE_RS485;
--		break;
--	case 232:
--	default:
-+	if (board < ARRAY_SIZE(pc104) && line < ARRAY_SIZE(pc104_1))
-+		switch (pc104[board][line]) {
-+		case 422:
-+			info->flags |= ROCKET_MODE_RS422;
-+			break;
-+		case 485:
-+			info->flags |= ROCKET_MODE_RS485;
-+			break;
-+		case 232:
-+		default:
-+			info->flags |= ROCKET_MODE_RS232;
-+			break;
-+		}
-+	else
- 		info->flags |= ROCKET_MODE_RS232;
--		break;
--	}
+--- a/net/x25/x25_dev.c
++++ b/net/x25/x25_dev.c
+@@ -120,8 +120,10 @@ int x25_lapb_receive_frame(struct sk_buf
+ 		goto drop;
+ 	}
  
- 	info->intmask = RXF_TRIG | TXFIFO_MT | SRC_INT | DELTA_CD | DELTA_CTS | DELTA_DSR;
- 	if (sInitChan(ctlp, &info->channel, aiop, chan) == 0) {
+-	if (!pskb_may_pull(skb, 1))
++	if (!pskb_may_pull(skb, 1)) {
++		x25_neigh_put(nb);
+ 		return 0;
++	}
+ 
+ 	switch (skb->data[0]) {
+ 
 
 
