@@ -2,114 +2,145 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE10BC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E816C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C85D4206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DDD22075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:36:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588088209;
+	bh=l0NLaKTv3GfrHfkQrzcpRatjCbCwdGZ7kiB7pI0E218=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=zz+fgJ8EGDhtZgdDs90ohNrMyXKa4g+lWn9mt3h+6KMqxPUDUwDs+qByDT16GIWNi
+	 TyDbnDAnlrCzI8sFarZwbNE0lLllI9nBUteYslz3XoWHCUUxj2t8IjLh5q2cYdM8ys
+	 Y0PvH//ljKU4hrBmLbISfZo5Ovp5e6U9OiMr38u0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbgD1PgR (ORCPT
+        id S1728322AbgD1Pgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:36:17 -0400
-Received: from mout-p-202.mailbox.org ([80.241.56.172]:63956 "EHLO
-        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727931AbgD1PgQ (ORCPT
+        Tue, 28 Apr 2020 11:36:48 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39890 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728212AbgD1Pgs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:36:16 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 49BQjB3yHRzQlHm;
-        Tue, 28 Apr 2020 17:36:14 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id Rw9K7dG0uHR5; Tue, 28 Apr 2020 17:36:10 +0200 (CEST)
-Date:   Wed, 29 Apr 2020 01:35:58 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Cyril Hrubis <chrubis@suse.cz>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        linux-arch@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        lkp@lists.01.org, Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
-        ltp@lists.linux.it
-Subject: Re: [LTP] [fs] ce436509a8: ltp.openat203.fail
-Message-ID: <20200428153558.r32pgvymgk56urtu@yavin.dot.cyphar.com>
-References: <f969e7d45a8e83efc1ca13d675efd8775f13f376.1586830316.git.josh@joshtriplett.org>
- <20200427135210.GB5770@shao2-debian>
- <20200427142733.GD7661@rei>
- <20200428005126.6wncibudt6ohghvc@yavin.dot.cyphar.com>
- <20200428153022.GC4244@yuki.lan>
+        Tue, 28 Apr 2020 11:36:48 -0400
+Received: by mail-wr1-f67.google.com with SMTP id b11so25162409wrs.6;
+        Tue, 28 Apr 2020 08:36:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gDQQvbPT3Kzf63XvecjBNGYEsk2bb2xd9NhLfULiqJg=;
+        b=SUMpmmDX5YCXEq7htWjwhumb3JYP70c6FIYvFkaULiBW+zwMFV05VyLdwMKQyGx4Qh
+         LdeizPZwOo1SoiBClsWPVNwAVARqkL1IgTcVYXQEmo2SgAN29qz4BCaLuJCgVCEZJqEc
+         Uv97FgTi0AOC3XBbGmkCnj/6bQy6ekdCUVH1rP1MvX0ETXghToDKnmgPc3Fdphh0Onbj
+         H8Jebl4cqwhPaeccxoV9UMz07BKQjtjmMs6HDKWUNwnk+sN01Bs3CvgUbkKbAhT2JMyh
+         OjG8sD3PuQbS4b/5eaxa4NiPKrDQJrAcYU91QT9g/XIU1tl+9eH5q5YSdI46DAQ7Z1R5
+         uBTA==
+X-Gm-Message-State: AGi0Pub0+T/iNjuMlANL5fdhTAo3UBI2ejSQ1hrrG3bZPmRYl86lgJYF
+        wdL3+C13HpaIzjnEBSnI2anbPJlV
+X-Google-Smtp-Source: APiQypIOusuwAcr33CB5Ldy0/gal7sLr8hHFrxFgnuMNsSelBzKOp9T5ByiX4HEIJfDkRsL82eG/gw==
+X-Received: by 2002:adf:84c2:: with SMTP id 60mr33197060wrg.65.1588088204974;
+        Tue, 28 Apr 2020 08:36:44 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id w12sm25355384wrk.56.2020.04.28.08.36.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 08:36:43 -0700 (PDT)
+From:   Wei Liu <wei.liu@kernel.org>
+To:     linux-pci@vger.kernel.org,
+        Xen Development List <xen-devel@lists.xenproject.org>
+Cc:     linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, x86@kernel.org,
+        sstabellini@kernel.org, Michael Kelley <mikelley@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+Subject: [PATCH] x86/xen: drop an unused parameter gsi_override
+Date:   Tue, 28 Apr 2020 15:36:40 +0000
+Message-Id: <20200428153640.76476-1-wei.liu@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qekeybbajeoqkaf2"
-Content-Disposition: inline
-In-Reply-To: <20200428153022.GC4244@yuki.lan>
-X-Rspamd-Queue-Id: D19511738
-X-Rspamd-Score: -8.94 / 15.00 / 15.00
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+All callers within the same file pass in -1 (no override).
 
---qekeybbajeoqkaf2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+---
+ arch/x86/pci/xen.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-On 2020-04-28, Cyril Hrubis <chrubis@suse.cz> wrote:
-> Hi!
-> > > > commit: ce436509a8e109330c56bb4d8ec87d258788f5f4 ("[PATCH v4 2/3] f=
-s: openat2: Extend open_how to allow userspace-selected fds")
-> > > > url: https://github.com/0day-ci/linux/commits/Josh-Triplett/Support=
--userspace-selected-fds/20200414-102939
-> > > > base: https://git.kernel.org/cgit/linux/kernel/git/shuah/linux-ksel=
-ftest.git next
-> > >=20
-> > > This commit adds fd parameter to the how structure where LTP test was
-> > > previously passing garbage, which obviously causes the difference in
-> > > errno.
-> > >=20
-> > > This could be safely ignored for now, if the patch gets merged the te=
-st
-> > > needs to be updated.
-> >=20
-> > It wouldn't be a bad idea to switch the test to figure out the ksize of
-> > the struct, so that you only add bad padding after that. But then again,
-> > this would be a bit ugly -- having CHECK_FIELDS would make this simpler.
->=20
-> Any pointers how can be the size figured out without relying on the
-> E2BIG we are testing for? Does the kernel export it somewhere?
+diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
+index 91220cc25854..e3f1ca316068 100644
+--- a/arch/x86/pci/xen.c
++++ b/arch/x86/pci/xen.c
+@@ -60,8 +60,7 @@ static int xen_pcifront_enable_irq(struct pci_dev *dev)
+ }
+ 
+ #ifdef CONFIG_ACPI
+-static int xen_register_pirq(u32 gsi, int gsi_override, int triggering,
+-			     bool set_pirq)
++static int xen_register_pirq(u32 gsi, int triggering, bool set_pirq)
+ {
+ 	int rc, pirq = -1, irq = -1;
+ 	struct physdev_map_pirq map_irq;
+@@ -94,9 +93,6 @@ static int xen_register_pirq(u32 gsi, int gsi_override, int triggering,
+ 		name = "ioapic-level";
+ 	}
+ 
+-	if (gsi_override >= 0)
+-		gsi = gsi_override;
+-
+ 	irq = xen_bind_pirq_gsi_to_irq(gsi, map_irq.pirq, shareable, name);
+ 	if (irq < 0)
+ 		goto out;
+@@ -112,12 +108,12 @@ static int acpi_register_gsi_xen_hvm(struct device *dev, u32 gsi,
+ 	if (!xen_hvm_domain())
+ 		return -1;
+ 
+-	return xen_register_pirq(gsi, -1 /* no GSI override */, trigger,
++	return xen_register_pirq(gsi, trigger,
+ 				 false /* no mapping of GSI to PIRQ */);
+ }
+ 
+ #ifdef CONFIG_XEN_DOM0
+-static int xen_register_gsi(u32 gsi, int gsi_override, int triggering, int polarity)
++static int xen_register_gsi(u32 gsi, int triggering, int polarity)
+ {
+ 	int rc, irq;
+ 	struct physdev_setup_gsi setup_gsi;
+@@ -128,7 +124,7 @@ static int xen_register_gsi(u32 gsi, int gsi_override, int triggering, int polar
+ 	printk(KERN_DEBUG "xen: registering gsi %u triggering %d polarity %d\n",
+ 			gsi, triggering, polarity);
+ 
+-	irq = xen_register_pirq(gsi, gsi_override, triggering, true);
++	irq = xen_register_pirq(gsi, triggering, true);
+ 
+ 	setup_gsi.gsi = gsi;
+ 	setup_gsi.triggering = (triggering == ACPI_EDGE_SENSITIVE ? 0 : 1);
+@@ -148,7 +144,7 @@ static int xen_register_gsi(u32 gsi, int gsi_override, int triggering, int polar
+ static int acpi_register_gsi_xen(struct device *dev, u32 gsi,
+ 				 int trigger, int polarity)
+ {
+-	return xen_register_gsi(gsi, -1 /* no GSI override */, trigger, polarity);
++	return xen_register_gsi(gsi, trigger, polarity);
+ }
+ #endif
+ #endif
+@@ -491,7 +487,7 @@ int __init pci_xen_initial_domain(void)
+ 		if (acpi_get_override_irq(irq, &trigger, &polarity) == -1)
+ 			continue;
+ 
+-		xen_register_pirq(irq, -1 /* no GSI override */,
++		xen_register_pirq(irq,
+ 			trigger ? ACPI_LEVEL_SENSITIVE : ACPI_EDGE_SENSITIVE,
+ 			true /* Map GSI to PIRQ */);
+ 	}
+-- 
+2.20.1
 
-No, you would have to effectively binary search on -E2BIG at the moment.
-CHECK_FIELDS is a proposal I have which would allow you to get get the
-size of the in-kernel struct, but it's still a proposal.
-
-In theory you could get the size through BTF, but it's probably more
-effort than it's worth to implement that.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---qekeybbajeoqkaf2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXqhNWwAKCRCdlLljIbnQ
-Esn9AQCkc2dq/DSy5/MYZkNgJc7GfzxvLJGPqfhRlbD3A09eyQEA0CfnnSVqWzit
-PCqYg2CM/EUK36nHPWj7vQb7o8bFSQo=
-=TzFl
------END PGP SIGNATURE-----
-
---qekeybbajeoqkaf2--
