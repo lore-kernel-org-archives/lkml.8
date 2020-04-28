@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE72C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B2AC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 991DF208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C788E208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099002;
-	bh=VGOifJHmLgVMAh/k+tNnXuqKA0OK2c3ZLlbJQg8bEKc=;
+	s=default; t=1588099005;
+	bh=FK7eUuzCW4GPx08jc70s2BZ2va0uZtioF7V7N9/9Ugk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i4DcyAnDgsQKdax9BLunpyD9iIGkPxKPP0ktc1dabyXlNYm6PDsLshlDS9adB38L0
-	 Kgc+h/BAoeWBOXV3Egp0iIXR4UzyNAvMdsbI5ECJD+I1lJCUa7Hi4xz0uCnJzEBv6R
-	 WGkdRAHl4vJVID7dAlT76J8dK+JaSCjbawy5BXJI=
+	b=1f6ooEPrJLn5s1MCb4OowNDY0EVQFT6aQBy/fqfHfZtzuXRDOWOKzip+GFaspGXFc
+	 Jzf9vjhTPzyKudpm1Aegnmcqqt/LW0M/ELiCuAXp55rMwpLeljNns+KjX/jv9+90h2
+	 oBExDmOZadMXyNT/8oxV/16rV1N1zonGPH2CqX08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730390AbgD1Sgl (ORCPT
+        id S1730396AbgD1Sgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:36:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53988 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:36:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729327AbgD1Sgb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:36:31 -0400
+        id S1729857AbgD1Sgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:36:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B16820575;
-        Tue, 28 Apr 2020 18:36:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68A4D20575;
+        Tue, 28 Apr 2020 18:36:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098991;
-        bh=VGOifJHmLgVMAh/k+tNnXuqKA0OK2c3ZLlbJQg8bEKc=;
+        s=default; t=1588098995;
+        bh=FK7eUuzCW4GPx08jc70s2BZ2va0uZtioF7V7N9/9Ugk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tLo+Qz487KxXGSHbEVOsistE9TocGFSCf+AeyqzK16Rccwbm9YBxEzuK6x7hv9uye
-         pQzASRGZyIYaVqz/+zxOuMA6DS+rFoKPcup+Gw0v27SQle7PhtKl3b/HSfwyOSY33c
-         JuF9plWNh+sae52CAb83QvdRi2TMLIWfrW+xs6lw=
+        b=YNYwmCNCzmXpssW7WwFV+0xxjxUrd42EZhzDJsk7mL+O7xgthHe5HUZzXrIhXBFKM
+         Ag7cbVuMdu7+VC3P6jqh9RYVoK+tUHvkBeehboM2UtS8ZQ9JIpH2qOowazHzfrOzUP
+         WdQ5tHu6PeAuoLz6zLFkxYGManQ2/G8QjwJ7Gnuk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 5.6 141/167] staging: vt6656: Fix pairwise key entry save.
-Date:   Tue, 28 Apr 2020 20:25:17 +0200
-Message-Id: <20200428182243.459210929@linuxfoundation.org>
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.19 083/131] iio: xilinx-xadc: Make sure not exceed maximum samplerate
+Date:   Tue, 28 Apr 2020 20:24:55 +0200
+Message-Id: <20200428182235.352564767@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,86 +60,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-commit 0b59f10b1d8fe8d50944f21f5d403df9303095a8 upstream.
+commit 3b7f9dbb827ce8680b98490215e698b6079a9ec5 upstream.
 
-The problem is that the group key was saved as VNT_KEY_DEFAULTKEY
-was over written by the VNT_KEY_GROUP_ADDRESS index.
+The XADC supports a samplerate of up to 1MSPS. Unfortunately the hardware
+does not have a FIFO, which means it generates an interrupt for each
+conversion sequence. At one 1MSPS this creates an interrupt storm that
+causes the system to soft-lock.
 
-mac80211 could not clear the mac_addr in the default key.
+For this reason the driver limits the maximum samplerate to 150kSPS.
+Currently this check is only done when setting a new samplerate. But it is
+also possible that the initial samplerate configured in the FPGA bitstream
+exceeds the limit.
 
-The VNT_KEY_DEFAULTKEY is not necesscary so remove it and set as
-VNT_KEY_GROUP_ADDRESS.
+In this case when starting to capture data without first changing the
+samplerate the system can overload.
 
-mac80211 can clear any key using vnt_mac_disable_keyentry.
+To prevent this check the currently configured samplerate in the probe
+function and reduce it to the maximum if necessary.
 
-Fixes: f9ef05ce13e4 ("staging: vt6656: Fix pairwise key for non station modes")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/da2f7e7f-1658-1320-6eee-0f55770ca391@gmail.com
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Fixes: bdc8cda1d010 ("iio:adc: Add Xilinx XADC driver")
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6656/key.c      |   14 +++-----------
- drivers/staging/vt6656/main_usb.c |    6 +++++-
- 2 files changed, 8 insertions(+), 12 deletions(-)
+ drivers/iio/adc/xilinx-xadc-core.c |   78 ++++++++++++++++++++++++++++---------
+ 1 file changed, 60 insertions(+), 18 deletions(-)
 
---- a/drivers/staging/vt6656/key.c
-+++ b/drivers/staging/vt6656/key.c
-@@ -83,9 +83,6 @@ static int vnt_set_keymode(struct ieee80
- 	case  VNT_KEY_PAIRWISE:
- 		key_mode |= mode;
- 		key_inx = 4;
--		/* Don't save entry for pairwise key for station mode */
--		if (priv->op_mode == NL80211_IFTYPE_STATION)
--			clear_bit(entry, &priv->key_entry_inuse);
- 		break;
+--- a/drivers/iio/adc/xilinx-xadc-core.c
++++ b/drivers/iio/adc/xilinx-xadc-core.c
+@@ -103,6 +103,16 @@ static const unsigned int XADC_ZYNQ_UNMA
+ 
+ #define XADC_FLAGS_BUFFERED BIT(0)
+ 
++/*
++ * The XADC hardware supports a samplerate of up to 1MSPS. Unfortunately it does
++ * not have a hardware FIFO. Which means an interrupt is generated for each
++ * conversion sequence. At 1MSPS sample rate the CPU in ZYNQ7000 is completely
++ * overloaded by the interrupts that it soft-lockups. For this reason the driver
++ * limits the maximum samplerate 150kSPS. At this rate the CPU is fairly busy,
++ * but still responsive.
++ */
++#define XADC_MAX_SAMPLERATE 150000
++
+ static void xadc_write_reg(struct xadc *xadc, unsigned int reg,
+ 	uint32_t val)
+ {
+@@ -835,11 +845,27 @@ static const struct iio_buffer_setup_ops
+ 	.postdisable = &xadc_postdisable,
+ };
+ 
++static int xadc_read_samplerate(struct xadc *xadc)
++{
++	unsigned int div;
++	uint16_t val16;
++	int ret;
++
++	ret = xadc_read_adc_reg(xadc, XADC_REG_CONF2, &val16);
++	if (ret)
++		return ret;
++
++	div = (val16 & XADC_CONF2_DIV_MASK) >> XADC_CONF2_DIV_OFFSET;
++	if (div < 2)
++		div = 2;
++
++	return xadc_get_dclk_rate(xadc) / div / 26;
++}
++
+ static int xadc_read_raw(struct iio_dev *indio_dev,
+ 	struct iio_chan_spec const *chan, int *val, int *val2, long info)
+ {
+ 	struct xadc *xadc = iio_priv(indio_dev);
+-	unsigned int div;
+ 	uint16_t val16;
+ 	int ret;
+ 
+@@ -892,41 +918,31 @@ static int xadc_read_raw(struct iio_dev
+ 		*val = -((273150 << 12) / 503975);
+ 		return IIO_VAL_INT;
+ 	case IIO_CHAN_INFO_SAMP_FREQ:
+-		ret = xadc_read_adc_reg(xadc, XADC_REG_CONF2, &val16);
+-		if (ret)
++		ret = xadc_read_samplerate(xadc);
++		if (ret < 0)
+ 			return ret;
+ 
+-		div = (val16 & XADC_CONF2_DIV_MASK) >> XADC_CONF2_DIV_OFFSET;
+-		if (div < 2)
+-			div = 2;
+-
+-		*val = xadc_get_dclk_rate(xadc) / div / 26;
+-
++		*val = ret;
+ 		return IIO_VAL_INT;
  	default:
  		return -EINVAL;
-@@ -109,7 +106,6 @@ static int vnt_set_keymode(struct ieee80
- int vnt_set_keys(struct ieee80211_hw *hw, struct ieee80211_sta *sta,
- 		 struct ieee80211_vif *vif, struct ieee80211_key_conf *key)
- {
--	struct ieee80211_bss_conf *conf = &vif->bss_conf;
- 	struct vnt_private *priv = hw->priv;
- 	u8 *mac_addr = NULL;
- 	u8 key_dec_mode = 0;
-@@ -151,16 +147,12 @@ int vnt_set_keys(struct ieee80211_hw *hw
- 		key->flags |= IEEE80211_KEY_FLAG_GENERATE_IV;
  	}
- 
--	if (key->flags & IEEE80211_KEY_FLAG_PAIRWISE) {
-+	if (key->flags & IEEE80211_KEY_FLAG_PAIRWISE)
- 		vnt_set_keymode(hw, mac_addr, key, VNT_KEY_PAIRWISE,
- 				key_dec_mode, true);
--	} else {
--		vnt_set_keymode(hw, mac_addr, key, VNT_KEY_DEFAULTKEY,
-+	else
-+		vnt_set_keymode(hw, mac_addr, key, VNT_KEY_GROUP_ADDRESS,
- 				key_dec_mode, true);
- 
--		vnt_set_keymode(hw, (u8 *)conf->bssid, key,
--				VNT_KEY_GROUP_ADDRESS, key_dec_mode, true);
--	}
--
- 	return 0;
  }
---- a/drivers/staging/vt6656/main_usb.c
-+++ b/drivers/staging/vt6656/main_usb.c
-@@ -865,8 +865,12 @@ static int vnt_set_key(struct ieee80211_
- 			return -EOPNOTSUPP;
- 		break;
- 	case DISABLE_KEY:
--		if (test_bit(key->hw_key_idx, &priv->key_entry_inuse))
-+		if (test_bit(key->hw_key_idx, &priv->key_entry_inuse)) {
- 			clear_bit(key->hw_key_idx, &priv->key_entry_inuse);
+ 
+-static int xadc_write_raw(struct iio_dev *indio_dev,
+-	struct iio_chan_spec const *chan, int val, int val2, long info)
++static int xadc_write_samplerate(struct xadc *xadc, int val)
+ {
+-	struct xadc *xadc = iio_priv(indio_dev);
+ 	unsigned long clk_rate = xadc_get_dclk_rate(xadc);
+ 	unsigned int div;
+ 
+ 	if (!clk_rate)
+ 		return -EINVAL;
+ 
+-	if (info != IIO_CHAN_INFO_SAMP_FREQ)
+-		return -EINVAL;
+-
+ 	if (val <= 0)
+ 		return -EINVAL;
+ 
+ 	/* Max. 150 kSPS */
+-	if (val > 150000)
+-		val = 150000;
++	if (val > XADC_MAX_SAMPLERATE)
++		val = XADC_MAX_SAMPLERATE;
+ 
+ 	val *= 26;
+ 
+@@ -939,7 +955,7 @@ static int xadc_write_raw(struct iio_dev
+ 	 * limit.
+ 	 */
+ 	div = clk_rate / val;
+-	if (clk_rate / div / 26 > 150000)
++	if (clk_rate / div / 26 > XADC_MAX_SAMPLERATE)
+ 		div++;
+ 	if (div < 2)
+ 		div = 2;
+@@ -950,6 +966,17 @@ static int xadc_write_raw(struct iio_dev
+ 		div << XADC_CONF2_DIV_OFFSET);
+ }
+ 
++static int xadc_write_raw(struct iio_dev *indio_dev,
++	struct iio_chan_spec const *chan, int val, int val2, long info)
++{
++	struct xadc *xadc = iio_priv(indio_dev);
 +
-+			vnt_mac_disable_keyentry(priv, key->hw_key_idx);
++	if (info != IIO_CHAN_INFO_SAMP_FREQ)
++		return -EINVAL;
++
++	return xadc_write_samplerate(xadc, val);
++}
++
+ static const struct iio_event_spec xadc_temp_events[] = {
+ 	{
+ 		.type = IIO_EV_TYPE_THRESH,
+@@ -1237,6 +1264,21 @@ static int xadc_probe(struct platform_de
+ 	if (ret)
+ 		goto err_free_samplerate_trigger;
+ 
++	/*
++	 * Make sure not to exceed the maximum samplerate since otherwise the
++	 * resulting interrupt storm will soft-lock the system.
++	 */
++	if (xadc->ops->flags & XADC_FLAGS_BUFFERED) {
++		ret = xadc_read_samplerate(xadc);
++		if (ret < 0)
++			goto err_free_samplerate_trigger;
++		if (ret > XADC_MAX_SAMPLERATE) {
++			ret = xadc_write_samplerate(xadc, XADC_MAX_SAMPLERATE);
++			if (ret < 0)
++				goto err_free_samplerate_trigger;
 +		}
++	}
 +
- 	default:
- 		break;
- 	}
+ 	ret = request_irq(xadc->irq, xadc->ops->interrupt_handler, 0,
+ 			dev_name(&pdev->dev), indio_dev);
+ 	if (ret)
 
 
