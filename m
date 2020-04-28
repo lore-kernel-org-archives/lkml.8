@@ -2,97 +2,103 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A70C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A5CC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02DE4206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:24:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aws0RLC8"
+	by mail.kernel.org (Postfix) with ESMTP id D5BBC206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:26:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgD1VYw (ORCPT
+        id S1726468AbgD1V0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:24:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726282AbgD1VYv (ORCPT
+        Tue, 28 Apr 2020 17:26:36 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:35697 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726256AbgD1V0f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:24:51 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73701C03C1AC;
-        Tue, 28 Apr 2020 14:24:51 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id y24so355021wma.4;
-        Tue, 28 Apr 2020 14:24:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zb7LzoAznLFO4xh93OzPl5Gk/vjaZwZU1XohHV7MrJc=;
-        b=aws0RLC8kF78hcBigDsWrLtx64615jTQ1kP286WBAk3gnucdA/dPcXz+5qx06ab28r
-         8SMeiNTy31aTlWPYuknfa9DL/fzfcFyQDAtB7IV0y7YbqoKbZjI16PvsQ+fnR7vVoI04
-         n8+IV7mwWcEFdkbT0tKImrTRJG26sn1nj0gKtD9yW0NzgqNlONzg9uNWd7XyKBi4oD6N
-         u4k1ZEK1oYB4ofl1vnn4ayBhScEfxI9FlLldXh2KCySlQzNCgQHU8WMvG8LI+NVhxOrR
-         Q2fDiFH9c5OSNN3QHql0rEbY6Iyo/Gv361QL8QFX8Ix3cGOxmr52YruscRmHt7mxn67F
-         MqOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zb7LzoAznLFO4xh93OzPl5Gk/vjaZwZU1XohHV7MrJc=;
-        b=N6STyyTbZcoErgkJLmdDeO8/gxOJVBuHyhmWfWtymHYwNR8oFvPJNWhkiBYfBVdbmU
-         yCru1oD0DvY8fR8NWCc2ta03T+Db/0Gs+i7A4Cj2RF+yp1OJByIOWSBgBySmgJMTwNeN
-         Mpx2YaOFL0pn/k0akB1A5SE6lGr7bZJmdc4vS5r3s4jg0vY4oRIa3xsaT4he7/1q4HS4
-         u+LkG4v7NBIOd//SB/yA5kcVb0heASbKFRXP2AhnPomtvvUn3rrKIsCy7IRLW5oH1nDB
-         KTLP+/TbKN688HOew2eynjiFOnBicxS/4cGqfnEqyIfPIKRRL6eTYle1AA/yNsWZQ3rD
-         dRIg==
-X-Gm-Message-State: AGi0Puam1s+UnrI+UEt29DIyNH6v4MQ0Ye2qz0J63YxbYG9w720v73Kr
-        Qg/xxi1UoV20nmyFnzcR7fc=
-X-Google-Smtp-Source: APiQypIMBVANqX5mS1XhUTfaHLqCbfuUp9eJdnNb6wPSFjXp5rIT+MYNnUAD9kaUtKywbmW2zbvBiQ==
-X-Received: by 2002:a1c:4e15:: with SMTP id g21mr6441082wmh.29.1588109090241;
-        Tue, 28 Apr 2020 14:24:50 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id j13sm26876116wro.51.2020.04.28.14.24.49
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Apr 2020 14:24:49 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 21:24:49 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/9] XArray: entry in last level is not expected to be a
- node
-Message-ID: <20200428212449.2ww7ftgvrkcn4c7n@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200330123643.17120-1-richard.weiyang@gmail.com>
- <20200330123643.17120-6-richard.weiyang@gmail.com>
- <20200330124842.GY22483@bombadil.infradead.org>
+        Tue, 28 Apr 2020 17:26:35 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MLAAs-1jll502fZq-00IASJ; Tue, 28 Apr 2020 23:26:00 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Christian Brauner <christian@brauner.io>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] samples: fix binderfs sample
+Date:   Tue, 28 Apr 2020 23:25:33 +0200
+Message-Id: <20200428212555.2806258-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330124842.GY22483@bombadil.infradead.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:rYdXf2edjRSRRytj6ux8j82psWH/1dATQIpT7zNrCZo6yq2nPvj
+ rUgKTicGV0V1PzkBeFhKjT2EE/PlK1X3ZwA4m+WeEM8/AMy7eRkq5buoVSIdjQlD/pFChtB
+ kOGmaCS7t5CC8elXbTt4dXYGl1SsYitmQh14DGY5S3fCnxBW+FCN2Y6Ms/5KXt58Fvw7fX9
+ RJw7Q5dyuVFPQ6M0A5DMg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:VrJRv7ZviYY=:3duZvQoyNDq1uTBx7mgKhL
+ Q4fOk4rGDHdl+kNBGgIrWW/wuKzioDm0LeKlC9hLtTOViLru6HZyh2R8EjbU7Qhy5bkk6nZoN
+ 6NUXMyKqteYDoNKLGp8f7u3mStsGuxQH3MxRwRKL2dn/uZwxAF327sBG0d+69T5WGaHDmghWo
+ hKxCylj/Z75x9PsgUb5Uvv7a7YE9cs8uN2QHiKDDamKWLXmNWH0jeO6A/aqlBy8KHU3y7OnIP
+ IF3QEsnREGeKSYsDfkiRCYpdXuZeT6t5Y+TWaLWEUyqha2i3XwKcoq4iwpug72w11nr0P3wKB
+ GkF0QMrZFfYLgChLZSAj3odKUHxz/7cVbymPEWNHHhFNEwZMPOJPb4M+VA7q1Ps3n41jLxa2A
+ r0TjVsXdbxw+c2pChqlHFue3j9daxzjzwz5p5hfL0ndLASJ81/gRj5hSmA7npqtfpyA6ylMUW
+ qkzorM/AtindhfWa4eBvoJKN5cm+jBP8ZGUi3tERFv29RS5N79QBAPBM3CkM4vpHUGarcB/NU
+ lNcVQcHxryx0d89aB+LqvWAzqcCa3GYxhIV7R8T5jR9QypXKEWJyYsqXMh45/fOYyLvox1UnT
+ QYxOD0FD3xeXpMXc5SgvFVpXhLFzzE+BBC2xDyGg86+AFCota6wY0Q4Wg5Yoyny0appx5SyVD
+ 0wgRkWIJAz1nSLcB8o/tskdGOOa5mE5ITLVoGcwbN2fBy1G7SbNPgIngW1j+mUvGW/Hg451bc
+ t+giw0xUUCPTF82oFaZRPMfFdRilJHwN2n9UZCNBCk3HEPprVuik7/uyfta/8rVN434331cCg
+ t6qgEiO65dIzZfwaws7CbuXqSu1Ajt9JKMaeQupRfgvKPme5Zs=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 05:48:42AM -0700, Matthew Wilcox wrote:
->On Mon, Mar 30, 2020 at 12:36:39PM +0000, Wei Yang wrote:
->> If an entry is at the last level, whose parent's shift is 0, it is not
->> expected to be a node. We can just leverage the xa_is_node() check to
->> break the loop instead of check shift additionally.
->
->I know you didn't run the test suite after making this change.
+A routine check for misspelled Kconfig symbols showed on instance
+from last year, the correct symbol name is CONFIG_ANDROID_BINDERFS,
+not CONFIG_CONFIG_ANDROID_BINDERFS, so the extra prefix must
+be removed in the Kconfig file to allow enabling the sample.
 
-Hi, Matthew
+As the actual sample fails to build as a kernel module, change the
+Makefile enough to get to build as a hostprog instead.
 
-Would you mind picking up this thread again? Or what other concern you have?
+Fixes: 9762dc1432e1 ("samples: add binderfs sample program")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ samples/Kconfig           | 2 +-
+ samples/binderfs/Makefile | 6 +++++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
+diff --git a/samples/Kconfig b/samples/Kconfig
+index 5c31971a5745..e0b747cc90c9 100644
+--- a/samples/Kconfig
++++ b/samples/Kconfig
+@@ -171,7 +171,7 @@ config SAMPLE_VFIO_MDEV_MBOCHS
+ 
+ config SAMPLE_ANDROID_BINDERFS
+ 	bool "Build Android binderfs example"
+-	depends on CONFIG_ANDROID_BINDERFS
++	depends on ANDROID_BINDERFS
+ 	help
+ 	  Builds a sample program to illustrate the use of the Android binderfs
+ 	  filesystem.
+diff --git a/samples/binderfs/Makefile b/samples/binderfs/Makefile
+index ea4c93d36256..a3ac5476338a 100644
+--- a/samples/binderfs/Makefile
++++ b/samples/binderfs/Makefile
+@@ -1,2 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-obj-$(CONFIG_SAMPLE_ANDROID_BINDERFS) += binderfs_example.o
++ifndef CROSS_COMPILE
++ifdef CONFIG_SAMPLE_ANDROID_BINDERFS
++hostprogs := binderfs_example
++endif
++endif
 -- 
-Wei Yang
-Help you, Help me
+2.26.0
+
