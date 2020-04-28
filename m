@@ -2,58 +2,135 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 561C3C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06909C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D55C20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D390120730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588098976;
+	bh=SC/vqzeMx1k3k9AAbtjSE5BmU6VVJ9MANDBe3abuSXk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fbPfEo4fLkPpvLxv+PR67bGmJgKNfcdqZgafDOzkZCaY0d6NjOSy3Fz9HrgI+Potl
+	 xJaq05SnIdO86EiwH6FodJUP91mDWxzk0EDSSDAAz42LscQSEgDbL5b8JQ/Tq+eJh2
+	 PWldiqAp/ZX7wUlzTNXl2EQ/Tb668n/4bWVt5RUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730343AbgD1SgG (ORCPT
+        id S1729850AbgD1SgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:36:06 -0400
-Received: from ms.lwn.net ([45.79.88.28]:41378 "EHLO ms.lwn.net"
+        Tue, 28 Apr 2020 14:36:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730333AbgD1SgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:36:02 -0400
-Received: from lwn.net (localhost [127.0.0.1])
+        id S1730350AbgD1SgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:36:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id D03822D6;
-        Tue, 28 Apr 2020 18:36:01 +0000 (UTC)
-Date:   Tue, 28 Apr 2020 12:36:00 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Stephen Kitt <steve@sk2.org>
-Cc:     Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        devel@lists.orangefs.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: orangefs: fix pvfs2tab literal block
-Message-ID: <20200428123600.2f0f908f@lwn.net>
-In-Reply-To: <20200424153515.134500-1-steve@sk2.org>
-References: <20200424153515.134500-1-steve@sk2.org>
-Organization: LWN.net
+        by mail.kernel.org (Postfix) with ESMTPSA id 983A920575;
+        Tue, 28 Apr 2020 18:36:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588098969;
+        bh=SC/vqzeMx1k3k9AAbtjSE5BmU6VVJ9MANDBe3abuSXk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YWiYW7P+Zq4yYi+6aJut2wVori1DfiPwspEBsSTOvfoJUqU+d7p01oGHBtry2mk2A
+         0Hk7MimYoYfTZhP9vg10EeilxFYuj+E/zY5kRJ3HQKVkvBoUJynFDe+3gUECs5GmjU
+         xGHiovHAHMfP3h/3aEqgWEYZp5RfFtv2yIxeq8y8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Franti=C5=A1ek=20Ku=C4=8Dera?= <franta-linux@frantovo.cz>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 040/168] ALSA: usb-audio: Add Pioneer DJ DJM-250MK2 quirk
+Date:   Tue, 28 Apr 2020 20:23:34 +0200
+Message-Id: <20200428182236.822436730@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020 17:35:15 +0200
-Stephen Kitt <steve@sk2.org> wrote:
+From: František Kučera <franta-linux@frantovo.cz>
 
-> Following a merge fix-up, the literal block is introduced too early;
-> this patch merges the localhost mention with the introduction, fixing
-> 
-> 	Documentation/filesystems/orangefs.rst:124: WARNING: Literal block expected; none found.
-> 
-> Signed-off-by: Stephen Kitt <steve@sk2.org>
+[ Upstream commit 73d8c94084341e2895169a0462dbc18167f01683 ]
 
-Applied, thanks.
+Pioneer DJ DJM-250MK2 is a mixer that acts like a USB sound card.
+The MIDI controller part is standard but the PCM part is "vendor specific".
+Output is enabled by this quirk: 8 channels, 48 000 Hz, S24_3LE.
+Input is not working.
 
-jon
+Signed-off-by: František Kučera <franta-linux@frantovo.cz>
+Link: https://lore.kernel.org/r/20200401095907.3387-1-konference@frantovo.cz
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/usb/quirks-table.h | 42 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+
+diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
+index d187aa6d50db0..dcaf9eed9a415 100644
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -3592,5 +3592,47 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge", "HVR-950Q"),
+ 		}
+ 	}
+ },
++{
++	/*
++	 * Pioneer DJ DJM-250MK2
++	 * PCM is 8 channels out @ 48 fixed (endpoints 0x01).
++	 * The output from computer to the mixer is usable.
++	 *
++	 * The input (phono or line to computer) is not working.
++	 * It should be at endpoint 0x82 and probably also 8 channels,
++	 * but it seems that it works only with Pioneer proprietary software.
++	 * Even on officially supported OS, the Audacity was unable to record
++	 * and Mixxx to recognize the control vinyls.
++	 */
++	USB_DEVICE_VENDOR_SPEC(0x2b73, 0x0017),
++	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
++		.ifnum = QUIRK_ANY_INTERFACE,
++		.type = QUIRK_COMPOSITE,
++		.data = (const struct snd_usb_audio_quirk[]) {
++			{
++				.ifnum = 0,
++				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
++				.data = &(const struct audioformat) {
++					.formats = SNDRV_PCM_FMTBIT_S24_3LE,
++					.channels = 8, // outputs
++					.iface = 0,
++					.altsetting = 1,
++					.altset_idx = 1,
++					.endpoint = 0x01,
++					.ep_attr = USB_ENDPOINT_XFER_ISOC|
++						USB_ENDPOINT_SYNC_ASYNC,
++					.rates = SNDRV_PCM_RATE_48000,
++					.rate_min = 48000,
++					.rate_max = 48000,
++					.nr_rates = 1,
++					.rate_table = (unsigned int[]) { 48000 }
++				}
++			},
++			{
++				.ifnum = -1
++			}
++		}
++	}
++},
+ 
+ #undef USB_DEVICE_VENDOR_SPEC
+-- 
+2.20.1
+
+
+
