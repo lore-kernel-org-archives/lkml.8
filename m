@@ -2,183 +2,244 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17D6C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EE8C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC3BD20757
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 825F0206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:14:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mKIrYxCL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=daemons-net.20150623.gappssmtp.com header.i=@daemons-net.20150623.gappssmtp.com header.b="rwFbMZSM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgD1JMm (ORCPT
+        id S1726892AbgD1JN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 05:12:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40866 "EHLO
+        Tue, 28 Apr 2020 05:13:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726462AbgD1JMk (ORCPT
+        by vger.kernel.org with ESMTP id S1726402AbgD1JN6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 05:12:40 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F5E2C03C1A9;
-        Tue, 28 Apr 2020 02:12:39 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id s10so23763208wrr.0;
-        Tue, 28 Apr 2020 02:12:39 -0700 (PDT)
+        Tue, 28 Apr 2020 05:13:58 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A646C03C1A9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 02:13:58 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id t40so860116pjb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 02:13:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1oDTbvwHgrD9ZLQPoK5BGfLkEAfVqa/XbZPM5vd3Q8M=;
-        b=mKIrYxCLJGvLcaKAR7v0QOQ0y9M4srcwbTFsCmuZvgrQyJRkaXvANAdmTtNkD0ku7j
-         y9rPVeA2X8Pd/j7SZSeTZmeATo47du3gf1PYTB/HhXxfBMBxkVtvKOU2GhTTsea7vSJF
-         HyQ0zXX4gyATDmoUnH/MThJP6jkNE8v8XsD4C2WAPoBmZK0dIKLr4e1i2BFjl+u/eq7X
-         W0CtS7RKxmFIxFIYpe72A78Ifx6PsyPWf0CKvt8lbVjYgUp0vA7DSl+AaY5gNlJ19jI/
-         K0jGjDsCeQulIS+VF9S8xiPREnmqif60Uk/hJYfK3nlG6qK4ghrcLlemsKahtKN3VmqI
-         PaRQ==
+        d=daemons-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xUhBUrl9Kc4rstZhnUAfruOOJTFBX99jmJUUZfVXyT8=;
+        b=rwFbMZSM6Syhnc+1CcRzNtF7U0iyDH0CNNHXC3G36/pyUqb8WDFG0/PPqeEU4fAFPC
+         6L+siEA1kb+C5CXi61p5JoGpWp9/GHAjLIlKDmhMs0HwuEr3ktJUnst1YAzcYTT5l2Pv
+         qAEVjK5pL9efJW8kc2I4gpiB8r2hr8k2+t7sS59ETfG36Ovx8FNtmbB3Wab+sOh1NpRI
+         aT0Nxzf0B8xpYVY2p5sUvm6gdu4dDk8zumi0abTIzv3Nw7TTBot3/8ks+BrVqNm2pSXm
+         3pGYDOLVlxufA18qd0MPx96Tnq2H3+Jtj2T4Yu5EFodxfTu02a/EhAE6Rx3WxEyLg8Qs
+         +WUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1oDTbvwHgrD9ZLQPoK5BGfLkEAfVqa/XbZPM5vd3Q8M=;
-        b=FX3vVA/rlj1m5t5krIcsE3nKkCC78cw74H468RhlQXVDR1R14PzxKVAFfgeDIZFQFs
-         izIRb+0FkX8R78aCUXY/sSxx0278iSQnf8ao3oxP1X7KLQplU7DNVLhkqnJf+jEXjf9i
-         RyUfE+U8vIfqNDqlyN5Ns5N72cVrWDz5+X1etibg70Oz8JRnA4ZxtqkXRjSgYLkkv2IL
-         SdY8ndXgRbED6OfBfUoLfFE9ESfIqJ9AuwZXWEZ1XiB/yKK19tVniq5RJEygMvOPUGnn
-         J+6ymQvMXksecDfq8ewRQ/jNJBJJEAt8Dc1UHLrg6qw2dHN8q2iY1qR8BU2uham1WS5m
-         FyiA==
-X-Gm-Message-State: AGi0PubVilxOaEbFXh8p86eNsDnO2Rvb7i6wcVO1trcO+QJyCX5HuZUv
-        C2su12b5lcan1JFkK3iVnL4=
-X-Google-Smtp-Source: APiQypJAWt32dlGrt2LtTHrQxFplAS8Y/IJS/ek3mWd5g/SljrZNxJd4yzL7aRQge7JgtKbLer+nmg==
-X-Received: by 2002:a5d:498d:: with SMTP id r13mr33376413wrq.374.1588065158164;
-        Tue, 28 Apr 2020 02:12:38 -0700 (PDT)
-Received: from ubuntu-G3 (ip5f5bfcc8.dynamic.kabel-deutschland.de. [95.91.252.200])
-        by smtp.googlemail.com with ESMTPSA id j17sm27352474wrb.46.2020.04.28.02.12.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Apr 2020 02:12:37 -0700 (PDT)
-Message-ID: <d75ec0cd8bdc4da05a11d57bdc33399a8ebbc3d7.camel@gmail.com>
-Subject: Re: [PATCH v2 5/5] scsi: ufs: UFS Host Performance Booster(HPB)
- driver
-From:   Bean Huo <huobean@gmail.com>
-To:     Bart Van Assche <bvanassche@acm.org>,
-        Avri Altman <Avri.Altman@wdc.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>
-Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Tue, 28 Apr 2020 11:12:33 +0200
-In-Reply-To: <b2584ba8-3542-1aae-5802-e59d218e1553@acm.org>
-References: <20200416203126.1210-1-beanhuo@micron.com>
-         <20200416203126.1210-6-beanhuo@micron.com>
-         <8921adc3-0c1e-eb16-4a22-1a2a583fc8b3@acm.org>
-         <SN6PR04MB4640851C163648C54EB274C5FCD00@SN6PR04MB4640.namprd04.prod.outlook.com>
-         <SN6PR04MB4640ABB2BB5D2CE5AA2C3778FCD10@SN6PR04MB4640.namprd04.prod.outlook.com>
-         <12e8ad61-caa4-3d28-c1d7-febe99a488fb@acm.org>
-         <SN6PR04MB4640A33BBE0CD58107D7FC69FCAF0@SN6PR04MB4640.namprd04.prod.outlook.com>
-         <b2584ba8-3542-1aae-5802-e59d218e1553@acm.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xUhBUrl9Kc4rstZhnUAfruOOJTFBX99jmJUUZfVXyT8=;
+        b=YJkdDzSCon8TGCDHiwj9TDAIbRaUmDPwPZ4ekOs/G+uimMO/kaEhctXkNeFXvc+e6y
+         V+QijzilcrJr9KgSAkTdXtMh455+/yVzcaf0XWVwZpxZ5ic9NK2TUGyVrZYqz/5Rjx8C
+         z9f9oo50QkgcF05YBibJHvsvD2kvaIIh4aAMrvrXq+AP6qOrZG51ris0xkcywt5mXIFp
+         10iN8ZNhmJ9SwZgRaTI6MTLegxHefb9RjePimxOGz2GjgDdYhsg/xpv+FA7LULCgAW1w
+         GAsJkkV3NiOMjljXsQjaEmGupaqY1rCsL47lLj3bUZqC9bOP2Xo8KPWUumNHDXnqhCNd
+         v1DA==
+X-Gm-Message-State: AGi0PuZd5lfZLZ0MSOfK6GnnWhXuwcNdG6I9P/EHIv6z1VNasHJhbB7I
+        uGpshRgTjpPjYsuA29Q2UBLi
+X-Google-Smtp-Source: APiQypK432KZI5avbvytPqeej2cdwTFN1mYbR/vnZB1jogWWvBSxHuDu1/TXaLEzwgxyaC3nF2FabA==
+X-Received: by 2002:a17:90a:290f:: with SMTP id g15mr3903364pjd.93.1588065237310;
+        Tue, 28 Apr 2020 02:13:57 -0700 (PDT)
+Received: from localhost.localdomain ([47.156.151.166])
+        by smtp.googlemail.com with ESMTPSA id f74sm1803376pje.3.2020.04.28.02.13.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 02:13:56 -0700 (PDT)
+From:   Clay McClure <clay@daemons.net>
+Cc:     Clay McClure <clay@daemons.net>, Arnd Bergmann <arnd@arndb.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Nicolas Pitre <nicolas.pitre@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Mao Wenan <maowenan@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Edward Cree <ecree@solarflare.com>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Josh Triplett <josh@joshtriplett.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: Select PTP_1588_CLOCK in PTP-specific drivers
+Date:   Tue, 28 Apr 2020 02:07:47 -0700
+Message-Id: <20200428090749.31983-1-clay@daemons.net>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-04-27 at 20:36 -0700, Bart Van Assche wrote:
-> On 2020-04-26 23:13, Avri Altman wrote:
-> > > On 2020-04-25 01:59, Avri Altman wrote:
-> > 
-> > HPB support is comprised of 4 main duties:
-> > 1) Read the device HPB configuration
-> > 2) Attend the device's recommendations that are embedded in the
-> > sense buffer
-> > 3) L2P cache management - This entails sending 2 new scsi commands
-> > (opcodes were taken from the vendor pool):
-> > 	a. HPB-READ-BUFFER - read L2P physical addresses for a
-> > subregion
-> > 	b. HPB-WRITE-BUFFER - notify the device that a region is
-> > inactive (in host-managed mode)
-> > 4) Use HPB-READ: a 3rd new scsi command (again - uses the vendor
-> > pool) to perform read operation instead of READ10.  HPB-READ
-> > carries both the logical and the physical addresses.
-> > 
-> > I will let Bean defend the Samsung approach of using a single LLD
-> > to attend all 4 duties.
-> > 
-> > Another approach might be to split those duties between 2 modules:
-> >  - A LLD that will perform the first 2 - those can be done only
-> > using ufs privet stuff, and 
-> >  - another module in scsi mid-layer that will be responsible of L2P
-> > cache management,
-> >   and HPB-READ command setup.
-> > A framework to host the scsi mid-layer module can be the scsi
-> > device handler.
-> > 
-> > The scsi-device-handler infrastructure was added to the kernel
-> > mainly to facilitate multiple paths for storage devices.
-> > The HPB framework, although far from the original intention of the
-> > authors, might as well fit in.
-> > In that sense, using READs and HPB_READs intermittently, can be
-> > perceived as a multi-path.
-> > 
-> > Scsi device handlers are also attached to a specific scsi_device
-> > (lun).
-> > This can serve as the glue linking between the ufs LLD and the
-> > device handler which resides in the scsi level.
-> > 
-> > Device handlers comes with a rich and handy set of APIs & ops,
-> > which we can use to support HPB.
-> > Specifically we can use it to attach & activate the device handler,
-> > only after the ufs driver verified that HPB is supported by both
-> > the platform and the device. 
-> > 
-> > The 2 modules can communicate using the handler_data opaque
-> > pointer,
-> > and the handler’s set_params op-mode: which is an open protocol
-> > essentially,
-> > and we can use it to pass the sense buffer in its full or just a
-> > parsed version.
-> > 
-> > Being a scsi mid-layer module, it will not break anything while
-> > sending
-> > HPB-READ-BUFFER and HPB-WRITE-BUFFER as part of the L2P cache
-> > management duties.
-> > 
-> > Last but not least, the device handler is already hooked in the
-> > scsi command setup flow - scsi_setup_fs_cmnd(),
-> > So we get the hook into HPB-READ prep_fn for free.   
-> >  
-> > Later on, we might want to export the L2P cache management logic to
-> > user-space.
-> > Locating the L2P cache management in scsi mid-layer will enable us
-> > to do so, using the scsi-netlink or some other means.
-> 
-> 
-> - Will preparing a SCSI command involve executing a SCSI command? If
-> so,
->   how will it be prevented that execution of that internally
-> submitted
->   SCSI command triggers a deadlock due to tag exhaustion?
-> 
-> Thanks,
-> 
+Commit d1cbfd771ce8 ("ptp_clock: Allow for it to be optional") changed
+all PTP-capable Ethernet drivers from `select PTP_1588_CLOCK` to `imply
+PTP_1588_CLOCK`, "in order to break the hard dependency between the PTP
+clock subsystem and ethernet drivers capable of being clock providers."
+As a result it is possible to build PTP-capable Ethernet drivers without
+the PTP subsystem by deselecting PTP_1588_CLOCK. Drivers are required to
+handle the missing dependency gracefully.
 
-No, as for the HPB READ, it will replace SCSI READ in SCSI request
-executing path in case L2P entry hit in HPB cache. so it still uses the
-previously assigned tag.
+Some PTP-capable Ethernet drivers (e.g., TI_CPSW) factor their PTP code
+out into separate drivers (e.g., TI_CPTS_MOD). The above commit also
+changed these PTP-specific drivers to `imply PTP_1588_CLOCK`, making it
+possible to build them without the PTP subsystem. But as Grygorii
+Strashko noted in [1]:
 
-As for the HPB BUFFER READ and HPB BUFFER WRITE, should beg for a new
-tag from hba->cmd_queue.
+On Wed, Apr 22, 2020 at 02:16:11PM +0300, Grygorii Strashko wrote:
 
-Bean
+> Another question is that CPTS completely nonfunctional in this case and
+> it was never expected that somebody will even try to use/run such
+> configuration (except for random build purposes).
+
+In my view, enabling a PTP-specific driver without the PTP subsystem is
+a configuration error made possible by the above commit. Kconfig should
+not allow users to create a configuration with missing dependencies that
+results in "completely nonfunctional" drivers.
+
+I audited all network drivers that call ptp_clock_register() and found
+six that look like PTP-specific drivers that are likely nonfunctional
+without PTP_1588_CLOCK:
+
+    NET_DSA_MV88E6XXX_PTP
+    NET_DSA_SJA1105_PTP
+    MACB_USE_HWSTAMP
+    CAVIUM_PTP
+    TI_CPTS_MOD
+    PTP_1588_CLOCK_IXP46X
+
+Note how they all reference PTP or timestamping in their name; this is a
+clue that they depend on PTP_1588_CLOCK.
+
+Change these drivers back [2] to `select PTP_1588_CLOCK`. Note that this
+requires also selecting POSIX_TIMERS, a transitive dependency of
+PTP_1588_CLOCK.
+
+[1]: https://lkml.org/lkml/2020/4/22/1056
+
+[2]: NET_DSA_SJA1105_PTP had never declared any type of dependency on
+PTP_1588_CLOCK (`imply` or otherwise); adding it here seems appropriate.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Richard Cochran <richardcochran@gmail.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+Fixes: d1cbfd771ce8 ("ptp_clock: Allow for it to be optional")
+Signed-off-by: Clay McClure <clay@daemons.net>
+---
+ drivers/net/dsa/mv88e6xxx/Kconfig    | 3 ++-
+ drivers/net/dsa/sja1105/Kconfig      | 2 ++
+ drivers/net/ethernet/cadence/Kconfig | 3 ++-
+ drivers/net/ethernet/cavium/Kconfig  | 3 ++-
+ drivers/net/ethernet/ti/Kconfig      | 2 +-
+ drivers/net/ethernet/xscale/Kconfig  | 3 ++-
+ 6 files changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/dsa/mv88e6xxx/Kconfig b/drivers/net/dsa/mv88e6xxx/Kconfig
+index 6435020d690d..6e8250599eb1 100644
+--- a/drivers/net/dsa/mv88e6xxx/Kconfig
++++ b/drivers/net/dsa/mv88e6xxx/Kconfig
+@@ -25,7 +25,8 @@ config NET_DSA_MV88E6XXX_PTP
+ 	default n
+ 	depends on NET_DSA_MV88E6XXX_GLOBAL2
+ 	imply NETWORK_PHY_TIMESTAMPING
+-	imply PTP_1588_CLOCK
++	select PTP_1588_CLOCK
++	select POSIX_TIMERS
+ 	help
+ 	  Say Y to enable PTP hardware timestamping on Marvell 88E6xxx switch
+ 	  chips that support it.
+diff --git a/drivers/net/dsa/sja1105/Kconfig b/drivers/net/dsa/sja1105/Kconfig
+index 0fe1ae173aa1..84349b6c8c44 100644
+--- a/drivers/net/dsa/sja1105/Kconfig
++++ b/drivers/net/dsa/sja1105/Kconfig
+@@ -20,6 +20,8 @@ tristate "NXP SJA1105 Ethernet switch family support"
+ config NET_DSA_SJA1105_PTP
+ 	bool "Support for the PTP clock on the NXP SJA1105 Ethernet switch"
+ 	depends on NET_DSA_SJA1105
++	select PTP_1588_CLOCK
++	select POSIX_TIMERS
+ 	help
+ 	  This enables support for timestamping and PTP clock manipulations in
+ 	  the SJA1105 DSA driver.
+diff --git a/drivers/net/ethernet/cadence/Kconfig b/drivers/net/ethernet/cadence/Kconfig
+index 53b50c24d9c9..bc792c334903 100644
+--- a/drivers/net/ethernet/cadence/Kconfig
++++ b/drivers/net/ethernet/cadence/Kconfig
+@@ -36,7 +36,8 @@ config MACB_USE_HWSTAMP
+ 	bool "Use IEEE 1588 hwstamp"
+ 	depends on MACB
+ 	default y
+-	imply PTP_1588_CLOCK
++	select PTP_1588_CLOCK
++	select POSIX_TIMERS
+ 	---help---
+ 	  Enable IEEE 1588 Precision Time Protocol (PTP) support for MACB.
+ 
+diff --git a/drivers/net/ethernet/cavium/Kconfig b/drivers/net/ethernet/cavium/Kconfig
+index 6a700d34019e..bae58c488792 100644
+--- a/drivers/net/ethernet/cavium/Kconfig
++++ b/drivers/net/ethernet/cavium/Kconfig
+@@ -54,7 +54,8 @@ config	THUNDER_NIC_RGX
+ config CAVIUM_PTP
+ 	tristate "Cavium PTP coprocessor as PTP clock"
+ 	depends on 64BIT && PCI
+-	imply PTP_1588_CLOCK
++	select PTP_1588_CLOCK
++	select POSIX_TIMERS
+ 	---help---
+ 	  This driver adds support for the Precision Time Protocol Clocks and
+ 	  Timestamping coprocessor (PTP) found on Cavium processors.
+diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+index 89cec778cf2d..1177953790c5 100644
+--- a/drivers/net/ethernet/ti/Kconfig
++++ b/drivers/net/ethernet/ti/Kconfig
+@@ -92,7 +92,7 @@ config TI_CPTS_MOD
+ 	depends on TI_CPTS
+ 	default y if TI_CPSW=y || TI_KEYSTONE_NETCP=y || TI_CPSW_SWITCHDEV=y
+ 	select NET_PTP_CLASSIFY
+-	imply PTP_1588_CLOCK
++	select PTP_1588_CLOCK
+ 	default m
+ 
+ config TI_K3_AM65_CPSW_NUSS
+diff --git a/drivers/net/ethernet/xscale/Kconfig b/drivers/net/ethernet/xscale/Kconfig
+index 98aa7b8ddb06..82d4ec3c6398 100644
+--- a/drivers/net/ethernet/xscale/Kconfig
++++ b/drivers/net/ethernet/xscale/Kconfig
+@@ -30,7 +30,8 @@ config IXP4XX_ETH
+ config PTP_1588_CLOCK_IXP46X
+ 	tristate "Intel IXP46x as PTP clock"
+ 	depends on IXP4XX_ETH
+-	depends on PTP_1588_CLOCK
++	select PTP_1588_CLOCK
++	select POSIX_TIMERS
+ 	default y
+ 	help
+ 	  This driver adds support for using the IXP46X as a PTP
+-- 
+2.20.1
 
