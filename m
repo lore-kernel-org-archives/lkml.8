@@ -2,131 +2,111 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A72DC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E18C7C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6C8520663
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:03:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Z+8pq0oL";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aKShKvUn"
+	by mail.kernel.org (Postfix) with ESMTP id C201B206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:04:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbgD1KD6 (ORCPT
+        id S1727860AbgD1KEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 06:03:58 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:52533 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726932AbgD1KD6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 06:03:58 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id E5B58580339;
-        Tue, 28 Apr 2020 06:03:56 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 28 Apr 2020 06:03:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=bfyRrpRNqGk3bD/MI+xjZ+HE0Cw
-        EJYIH+SprH0vjLlU=; b=Z+8pq0oLT7a7qD4AKlOw9YLXd1wCk+G5aFOuHQFD01Q
-        VnJYOdscNtcwEibPnzQneHtKoUU7enhp8cxYc1EA3G1pGsxGAeGS1aNwePclf9mH
-        VQQMTMh+wXvTfzhWyee5I4vNMeo+xoSMG8gxhgQ7FDquy9GbcthWjoiXYP7FoA1O
-        rJkpe5z3kH2X8K2nW4Et6B64dKFvB1TMcJ//Vvwf5n8YAlXIaHKhD/gbZy87i5GA
-        cbikWRD5p3os1pJ3bcMkWCvgzUVelxrYXNi98FiXbOoXQCubQMDE2i/Yu5/idrEL
-        34TfwHISWbYuSQepV+1XgM177rWCVMGD8DVZm4gK/6Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=bfyRrp
-        RNqGk3bD/MI+xjZ+HE0CwEJYIH+SprH0vjLlU=; b=aKShKvUn+J6r4/GBqVSb6o
-        elewB6YnWE7rJO+jVEJHKRX4qnBUT1NiNi61EIf0Uj7MRQQ0TDWkuZZatiEUgA4A
-        6+XeQYmrshabRuNRRLG6MCkEv7Xn2mF7FwJ0yz8j5DdLo5ayy9OqY78AkdhzHeIh
-        LZCI4EqlGDQPy+TsahyxA4bii2cD1Sm0b0XlWQmzRRCdEm0WFT3PeBuaTYWwJwNc
-        ZAeeNUF90qjoRJ6xIcpC4gj8LMubqPoWb1iSJ6hieSuXL+7Entcf2wLJbvhn/xrP
-        DuAhJd467p8NcYG9hH/zDVMG/v0DRJksBSlAmvG40Nsu2mi1yttJG3DAGQbTwi6w
-        ==
-X-ME-Sender: <xms:i_-nXnb__Ic3afkNaHTDJn_hnUgQ8f6wDG4silLUF2ixSudkZyDfTQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedugddvfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:i_-nXu8dzWVuc8z1fAXfP7ybogPcfXXlgD3KZKJfk32Kc9wV2AgxHg>
-    <xmx:i_-nXhAdiBirlYu-f1yUYyaGg5OEHxra4pz9fgh-oyX_R6XcdYGWwA>
-    <xmx:i_-nXisdpIP3hBSqk-PMGUylNUNDEQpJG3LXCm4WKEqpm9PK-QUm1w>
-    <xmx:jP-nXpDH7HYCZWyhumEYlOf9r1wEUbGPrrUzjtNvcc6Z03kLmP-kIA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D877D3280068;
-        Tue, 28 Apr 2020 06:03:54 -0400 (EDT)
-Date:   Tue, 28 Apr 2020 12:03:52 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Alistair Francis <alistair@alistair23.me>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth <linux-bluetooth@vger.kernel.org>, wens@csie.org,
-        anarsoul@gmail.com, devicetree@vger.kernel.org,
-        alistair23@gmail.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [DO-NOT-MERGE][PATCH v4 3/3] arm64: allwinner: Enable Bluetooth
- and WiFi on sopine baseboard
-Message-ID: <20200428100352.g7g7kh5e4vpde3es@gilmour.lan>
-References: <20200425155531.2816584-1-alistair@alistair23.me>
- <20200425155531.2816584-3-alistair@alistair23.me>
- <417EB5CB-F57F-4B7E-A81E-9ECE166BE217@holtmann.org>
+        Tue, 28 Apr 2020 06:04:38 -0400
+Received: from lnfm1.sai.msu.ru ([93.180.26.255]:49917 "EHLO lnfm1.sai.msu.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727107AbgD1KEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 06:04:37 -0400
+Received: from dragon.sai.msu.ru (dragon.sai.msu.ru [93.180.26.172])
+        by lnfm1.sai.msu.ru (8.14.1/8.12.8) with ESMTP id 03SA3tiw019532;
+        Tue, 28 Apr 2020 13:04:00 +0300
+Received: from oak.local (unknown [188.123.231.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client did not present a certificate)
+        by dragon.sai.msu.ru (Postfix) with ESMTPSA id 1C034EB39;
+        Tue, 28 Apr 2020 13:03:56 +0300 (MSK)
+From:   "Matwey V. Kornilov" <matwey@sai.msu.ru>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/ZYNQ
+        ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
+Cc:     matwey.kornilov@gmail.com,
+        "Matwey V. Kornilov" <matwey@sai.msu.ru>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/ZYNQ
+        ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] ARM: dts: zynq: Fix ethernet PHY for v5 schematics
+Date:   Tue, 28 Apr 2020 13:03:49 +0300
+Message-Id: <20200428100350.12699-1-matwey@sai.msu.ru>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <752db40d-5aed-4a97-a050-bc1376547f87@xilinx.com>
+References: <752db40d-5aed-4a97-a050-bc1376547f87@xilinx.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tpogyn2zhltbavuh"
-Content-Disposition: inline
-In-Reply-To: <417EB5CB-F57F-4B7E-A81E-9ECE166BE217@holtmann.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There are at least two different versions existing for MYIR Zturn:
 
---tpogyn2zhltbavuh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ * v4 schematics has Atheros AR8035 PHY at 0b000
+     http://www.myirtech.com/download/Zynq7000/Z-TURNBOARD_schematic.pdf
+ * v5 schematics has Micrel KSZ9031 PHY at 0b011
+     v5 schematics available at DVD disk supplied with the board
 
-Hi Marcel,
+Specify both PHYs to make ethernet interface working for any board
+revision. This commit relies on of_mdiobus_register() behavior.
+When phy-handle is missed, every nested PHY node is considered,
+while ENODEVs are ignored.
 
-On Tue, Apr 28, 2020 at 11:51:24AM +0200, Marcel Holtmann wrote:
-> Hi Alistair,
->=20
-> > The sopine board has an optional RTL8723BS WiFi + BT module that can be
-> > connected to UART1. Add this to the device tree so that it will work
-> > for users if connected.
-> >=20
-> > Signed-off-by: Alistair Francis <alistair@alistair23.me>
-> > ---
-> > .../allwinner/sun50i-a64-sopine-baseboard.dts | 29 +++++++++++++++++++
-> > 1 file changed, 29 insertions(+)
->=20
-> so I am bit confused on what to do with this series? Do you want me to ap=
-ply a
-> subset of patches or do you require specific reviews or acks?
+Before the patch:
 
-Applying 1 and 2 and leaving 3 aside would be great :)
+[   28.295002] macb e000b000.ethernet eth0: Could not attach PHY (-19)
 
-Thanks!
-Maxime
+After the patch:
 
---tpogyn2zhltbavuh
-Content-Type: application/pgp-signature; name="signature.asc"
+[   28.257365] macb e000b000.ethernet eth0: PHY [e000b000.ethernet-ffffffff:00] driver [Micrel KSZ9031 Gigabit PHY] (irq=POLL)
+[   28.257384] macb e000b000.ethernet eth0: configuring for phy/rgmii-id link mode
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
+---
+Changes since v1:
+ - reworded commit message
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqf/gwAKCRDj7w1vZxhR
-xYVMAP4nKDRimgu3t5jMwZnN+FtExoWjy6v+yWcUECMXuEsnGQEAzpQYH50JCwwP
-eZsHDHII6Y9Hkgf0t2cj0zr5cBRAGwM=
-=avZ8
------END PGP SIGNATURE-----
+ arch/arm/boot/dts/zynq-zturn.dts | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
---tpogyn2zhltbavuh--
+diff --git a/arch/arm/boot/dts/zynq-zturn.dts b/arch/arm/boot/dts/zynq-zturn.dts
+index 5ec616ebca08..07da9cf60d02 100644
+--- a/arch/arm/boot/dts/zynq-zturn.dts
++++ b/arch/arm/boot/dts/zynq-zturn.dts
+@@ -67,10 +67,17 @@
+ &gem0 {
+ 	status = "okay";
+ 	phy-mode = "rgmii-id";
+-	phy-handle = <&ethernet_phy>;
+ 
+-	ethernet_phy: ethernet-phy@0 {
+-		reg = <0x0>;
++	ethernet-phy@0 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <0>;
++		max-speed = <1000>;
++	};
++
++	ethernet-phy@3 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <3>;
++		max-speed = <1000>;
+ 	};
+ };
+ 
+-- 
+2.16.4
+
