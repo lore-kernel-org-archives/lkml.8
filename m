@@ -4,185 +4,240 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA38C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D43D7C8300A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DFCE206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:44:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3BF9206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:44:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="AYMBQ5jy";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZY6CGG8k"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mk2RHuyP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgD1MoI (ORCPT
+        id S1726841AbgD1MoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:44:08 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:34927 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726544AbgD1MoH (ORCPT
+        Tue, 28 Apr 2020 08:44:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726678AbgD1MoX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:44:07 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id 0C4676F6;
-        Tue, 28 Apr 2020 08:44:06 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Tue, 28 Apr 2020 08:44:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=d
-        81mc83rtLbzYCQx45eznvL30ABgy1B2NEW9gCbmbGU=; b=AYMBQ5jy/HW/5XGoW
-        GTqf46FDFIgEB3NEWG0ME72zzBcZR4eJEaKfclpfuKFnyKGI0XjpbeDIyQe0D/J8
-        geO+qegJO41qfkOLdiveFlFlZg4/QAlGeCj7ZcuakfvjIdxeiTRx8aWSiRG5a9cU
-        1jKYZypbGdHW8KOdXmtM9Xm5mlzO84S/YlNWr36OoT99DCYs/zZDGuVU3rl6IyFW
-        cYSrE+9k3ONNKIXTv8znuj7P0+fQ0aVAQwRW+qBkxWgfBm6tQoOHiDbAHAvHN54r
-        +6GCE1Kbnciptr4M3lpaVAvkr/t8riEN0nwyo+FJYX/cMoEbMyNeDQS3pT/MiT+K
-        cltuw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=d81mc83rtLbzYCQx45eznvL30ABgy1B2NEW9gCbmb
-        GU=; b=ZY6CGG8klxg7W7sK7rOTd0RhOk/Gr7meFL9+oxZRJTrfPBlZwBHXxLhpV
-        4gFNvmFeWFDMoYGe4r3/X1ttf/3rLecZi9oPHgYANQr6ATNf6E7l5wylilVNz/tY
-        Gv+8Fj6bYNref6hCI8uyBuTrHBJ+XZ3Qt05Fd2W0djDCSEeBrxLpsATGMUqqI5jp
-        YnqxQde97a4SQA3EMuXp3oAbnBLJ0AYJA3jEavzbfP7tWZagWjlYQ+wUI/5DocUr
-        bGQFvPwT2LXL+OFTZAHC0lvZhZdTSe1u7whSDi2CYQaxgWibadhq9/zppl/we0aa
-        0nJHaj848W5Z12G3rs9Y9s6Omg6CQ==
-X-ME-Sender: <xms:FiWoXpeuavyAzCq4yaRCwkRjRQZCNdH9qwlD8Ttu3i2IyyHJrQo0Cw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedugdehhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtugfgjgesthekre
-    dttddtudenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheq
-    necukfhppeekfedrkeeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:FiWoXhpL9VAaIZ8mmT2kjYWY2fG9Mw7iFOn9SNwuizLoCpIdv73wzw>
-    <xmx:FiWoXmea4WkrFY2G6S9hachCAI6NmUmpOrPWQU949hrsAyz9BEVE-Q>
-    <xmx:FiWoXpohrAAApJe0MP5m6wEyJM9s7n2AsyzWCWJrEYMEz1cJAsNdmw>
-    <xmx:FiWoXpaptbVCjvg68_aGea_g0KQighH5MGGhsG_LMHPcT_AEav-CPQ>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 25A82328006A;
-        Tue, 28 Apr 2020 08:44:06 -0400 (EDT)
-Date:   Tue, 28 Apr 2020 14:44:01 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Akira shimahara <akira215corp@gmail.com>
-Cc:     zbr@ioremap.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] Changes in w1_therm.c and adding w1_therm.h
-Message-ID: <20200428124401.GA1269471@kroah.com>
-References: <20200423144116.GA7319@kroah.com>
- <20200425153141.247055-1-akira215corp@gmail.com>
- <20200426075141.GB2100063@kroah.com>
- <1b002fb8caf1755b89882fd7a3bbac1565959a6d.camel@gmail.com>
- <20200426170901.GA2139089@kroah.com>
- <97cc7047c5c3892c4a52a6a1fcc6ec948e0796ac.camel@gmail.com>
+        Tue, 28 Apr 2020 08:44:23 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC9FBC03C1A9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 05:44:21 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id e25so21320542ljg.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 05:44:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YYJpKvgRNwf06GUmtJtBJkQp9t7R4gewPU7zZ78LA+s=;
+        b=mk2RHuyP1dBXuBJrfAOgE4aTk4QCMyQynOZyfN/yKbZbhy4BXeuLtNyFWDHODwzeiC
+         cZKJ0bVU4Ila7ewhdJekO1M+Wqxfp716yNDK2+Og+KI5m2rbWx57Aj0V6nqGLaBXph2W
+         OOWSF68o4YAQpct91VaidNWsvZj83lArAOLnjGwMYsGxnFxHmNa1YdAlCpfR0tj5XxK+
+         8MKWraI/EYHPVVtw/vaaxx5bFK2CH81c2JV2yoSEurhiT6jz1zgMS6zL/d5sszc6eENO
+         TiWgE8A9eEXIojHW3wV6d8AZ7FuUF2mtZstIdmwW+DMcv/BWbMcxHYBhFddLM/NuQGIy
+         vd+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YYJpKvgRNwf06GUmtJtBJkQp9t7R4gewPU7zZ78LA+s=;
+        b=so3DFilzB22TkX1T6cS/zR73gN20zTbnt0YXXWunto7f+9zOa2yWLWExlCDfd0eIDw
+         1nlNM0kIp2IgcVw/WR6/EfPNkBb6Ht3swtjHMZ72KuFkW3wn2GJWbFPpkFjFU6zQsB2V
+         eT3WSA/OL4rfJvUYUuoVVgxXJx9Fft3/BZXzOk2vu7Pfk1cEcaN66hMJ8nSfnHk47hMd
+         08dVtmge8tHfyKgghIm6sHQ1FgknZROIpr2WjJIOX25tJ4IPkSSmPmocLkuMxCj7GzYg
+         hp5timyhwuGJEBcrWQJtNDeeKfWVr7DteJHSTXroTSAHknlx1BYeTJCbqZf8zOk2Z6AQ
+         6tzQ==
+X-Gm-Message-State: AGi0PuZzKxE+NX3+7ZXqmpEl/GBLySHq5knZiDUHEvW21Zg09KVA5P/o
+        INK5XjtUBOboRSAu+1ONAbn5wZj9q9HQ+GlXKXuRIg==
+X-Google-Smtp-Source: APiQypLwu6uj/vOvGPr2x0PmORxYHaK42JWpzfvhR7IaWOGGQ5sMKsweb+hLcKNmLiQz6ikMd8hEcH9LBAJglrU6wZE=
+X-Received: by 2002:a05:651c:32e:: with SMTP id b14mr17623187ljp.277.1588077860337;
+ Tue, 28 Apr 2020 05:44:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <97cc7047c5c3892c4a52a6a1fcc6ec948e0796ac.camel@gmail.com>
+References: <20200423162548.129661-1-dianders@chromium.org> <20200423092431.v3.1.Ia50267a5549392af8b37e67092ca653a59c95886@changeid>
+In-Reply-To: <20200423092431.v3.1.Ia50267a5549392af8b37e67092ca653a59c95886@changeid>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 28 Apr 2020 14:44:09 +0200
+Message-ID: <CACRpkdYsw1uFf_PVkRwibXUtQOwvWa7jqiw6aT9AdmkLLyqisQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/6] drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 07:20:30PM +0200, Akira shimahara wrote:
-> Le dimanche 26 avril 2020 à 19:09 +0200, Greg KH a écrit :
-> > On Sun, Apr 26, 2020 at 02:36:52PM +0200, Akira shimahara wrote:
-> > > Le dimanche 26 avril 2020 à 09:51 +0200, Greg KH a écrit :
-> > > > On Sat, Apr 25, 2020 at 05:31:41PM +0200, Akira Shimahara wrote:
-> > > > > From: Akira SHIMAHARA <akira215corp@gmail.com>
-> > > > > 
-> > > > > Patch for enhacement of w1_therm module. Added features :
-> > > > >  - Bulk read : send one command for all the slaves
-> > > > >  		on the bus to trigger temperature conversion
-> > > > >  - Optimized conversion time regarding to device resolution
-> > > > >  - Dedicated sysfs entry for powering read,
-> > > > >  		resolution set/get, eeprom save/restore
-> > > > >  - Alarms settings and reading
-> > > > >  - Code optimization to mitigate bus traffic
-> > > > >  		(devices information are stored to avoid
-> > > > > 		interrogating each device every-time)
-> > > > > 
-> > > > > Following sysfs entry are added :
-> > > > >  - temperature (RO) : return the temperature in 1/1000°
-> > > > >  - ext_power (RO) : return the power status of the device
-> > > > >  - resolution (RW) : get or set the device resolution
-> > > > > (supported
-> > > > > devices)
-> > > > >  - eeprom (WO) :trigger a save or restore to/from device EEPROM
-> > > > >  - alarms (RW) : read or write TH and TL in the device RAM
-> > > > >  - therm_bulk_read (RW) : Attribute at master level to trigger
-> > > > >  		bulk read and to survey the progress of devices
-> > > > > conversions
-> > > > >  - w1_slave has been kept for compatibility
-> > > > > 
-> > > > > Main motivation was to improve temperature reading speed, which
-> > > > > depend
-> > > > > on resolution settings of devices. The module store the powwer
-> > > > > status and
-> > > > > the resolution of each device so that during reading operation,
-> > > > > no
-> > > > > transaction is required on the bus, which improve speed.
-> > > > > The hardware status is checked as soon as a new device is
-> > > > > detected, 
-> > > > > when a user change occurred, or when the corresponding sys file
-> > > > > is 
-> > > > > accessed by user.
-> > > > > 
-> > > > > The bulk read allow to trigger convserion of all devices on the
-> > > > > bus
-> > > > > at
-> > > > > the same time. It will apply a strong pull up on the line if at
-> > > > > least
-> > > > > one device required it. The duration of the pull up is the max
-> > > > > time
-> > > > > required by a device on the line.
-> > > > > 
-> > > > > Please let me know any feedback you have on this patch.
-> > > > > 
-> > > > > Thanks ahead,
-> > > > > 
-> > > > > Signed-off-by: Akira Shimahara <akira215corp@gmail.com>
-> > > > > ---
-> > > > > Changes in v2:
-> > > > >  - Adding documentation in Documentatin/ABI/testing/sysfs-
-> > > > > driver-
-> > > > > w1_therm
-> > > > >  - Updating existing documentation in
-> > > > > Documentation/w1/slaves/w1_therm.rst
-> > > > > 
-> > > > >  drivers/w1/slaves/w1_therm.c | 1406
-> > > > > ++++++++++++++++++++++++++--
-> > > > > ------
-> > > > >  drivers/w1/slaves/w1_therm.h |  386 ++++++++++
-> > > > >  2 files changed, 1470 insertions(+), 322 deletions(-)
-> > > > >  create mode 100644 drivers/w1/slaves/w1_therm.h
-> > > > 
-> > > > No documentation files are added here :(
-> > > > 
-> > > 
-> > > It's in the PATCH 2/2 included in the previous mail. You want me to
-> > > merge in one commit ?. I thought it was easier for you to keep a
-> > > track
-> > > of the v1.
-> > 
-> > What previous mail?  I don't see a patch 2/2 here, did you not cc:
-> > me?
-> > 
-> > thanks,
-> > 
-> > greg kh
-> 
-> I'm so sorry Greg, I made a mistake. Please find hereby the patch 2/2.
-> Let me know if you want me to merge into 1 commit.
+On Thu, Apr 23, 2020 at 6:26 PM Douglas Anderson <dianders@chromium.org> wrote:
 
-No, multiple patches are good.
+> The ti-sn65dsi86 MIPI DSI to eDP bridge chip has 4 pins on it that can
+> be used as GPIOs in a system.  Each pin can be configured as input,
+> output, or a special function for the bridge chip.  These are:
+> - GPIO1: SUSPEND Input
+> - GPIO2: DSIA VSYNC
+> - GPIO3: DSIA HSYNC or VSYNC
+> - GPIO4: PWM
+>
+> Let's expose these pins as GPIOs.  A few notes:
+> - Access to ti-sn65dsi86 is via i2c so we set "can_sleep".
+> - These pins can't be configured for IRQ.
+> - There are no programmable pulls or other fancy features.
+> - Keeping the bridge chip powered might be expensive.  The driver is
+>   setup such that if all used GPIOs are only inputs we'll power the
+>   bridge chip on just long enough to read the GPIO and then power it
+>   off again.  Setting a GPIO as output will keep the bridge powered.
+> - If someone releases a GPIO we'll implicitly switch it to an input so
+>   we no longer need to keep the bridge powered for it.
+>
+> Because of all of the above limitations we just need to implement a
+> bare-bones GPIO driver.  The device tree bindings already account for
+> this device being a GPIO controller so we only need the driver changes
+> for it.
+>
+> NOTE: Despite the fact that these pins are nominally muxable I don't
+> believe it makes sense to expose them through the pinctrl interface as
+> well as the GPIO interface.  The special functions are things that the
+> bridge chip driver itself would care about and it can just configure
+> the pins as needed.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-And the first patch really should be split up into smaller pieces too.
-Each patch should only do 1 thing, not lots of things all at once.  
+Pretty cool.
 
-Can you do that and send a patch series please?
+I wonder if this chip could use the generic regmap GPIO helpers
+that we are working on when they come around?
+https://lore.kernel.org/linux-gpio/20200423174543.17161-11-michael@walle.cc/
 
-thanks,
+> +#include <linux/gpio/driver.h>
+> +#include <linux/gpio.h>
 
-greg k-h
+Only <linux/gpio/driver.h> should be needed else you are doing
+something wrong.
+
+> + * @gchip:        If we expose our GPIOs, this is used.
+> + * @gchip_output: A cache of whether we've set GPIOs to output.  This
+> + *                serves double-duty of keeping track of the direction and
+> + *                also keeping track of whether we've incremented the
+> + *                pm_runtime reference count for this pin, which we do
+> + *                whenever a pin is configured as an output.
+
+That sounds a bit hairy but I guess it's fine.
+
+> + */
+>  struct ti_sn_bridge {
+>         struct device                   *dev;
+>         struct regmap                   *regmap;
+> @@ -102,6 +136,9 @@ struct ti_sn_bridge {
+>         struct gpio_desc                *enable_gpio;
+>         struct regulator_bulk_data      supplies[SN_REGULATOR_SUPPLY_NUM];
+>         int                             dp_lanes;
+> +
+> +       struct gpio_chip                gchip;
+> +       DECLARE_BITMAP(gchip_output, SN_NUM_GPIOS);
+
+Do you really need a bitmap for 4 bits? Can't you just have something
+like an u8 and check bit 0,1,2,3 ... well I suppose it has some elegance to
+it as well but... hm.
+
+> +static struct ti_sn_bridge *gchip_to_pdata(struct gpio_chip *chip)
+> +{
+> +       return container_of(chip, struct ti_sn_bridge, gchip);
+> +}
+> +
+> +static int ti_sn_bridge_gpio_get_direction(struct gpio_chip *chip,
+> +                                          unsigned int offset)
+> +{
+> +       struct ti_sn_bridge *pdata = gchip_to_pdata(chip);
+
+Is there some specific reason why you don't just use
+gpiochip_get_data()?
+
+> +       /*
+> +        * We already have to keep track of the direction because we use
+> +        * that to figure out whether we've powered the device.  We can
+> +        * just return that rather than (maybe) powering up the device
+> +        * to ask its direction.
+> +        */
+> +       return test_bit(offset, pdata->gchip_output) ?
+> +               GPIOF_DIR_OUT : GPIOF_DIR_IN;
+> +}
+
+Don't use these legacy defines, they are for consumers.
+Use GPIO_LINE_DIRECTION_IN  and GPIO_LINE_DIRECTION_OUT.
+from <linux/gpio/driver.h>
+
+> +       ret = regmap_read(pdata->regmap, SN_GPIO_IO_REG, &val);
+> +       pm_runtime_put(pdata->dev);
+> +
+> +       if (ret)
+> +               return ret;
+> +
+> +       return (val >> (SN_GPIO_INPUT_SHIFT + offset)) & 1;
+
+My preferred way to do this is:
+
+#include <linux/bits.h>
+
+return !!(val & BIT(SN_GPIO_INPUT_SHIFT + offset));
+
+> +static void ti_sn_bridge_gpio_set(struct gpio_chip *chip, unsigned int offset,
+> +                                 int val)
+> +{
+> +       struct ti_sn_bridge *pdata = gchip_to_pdata(chip);
+> +       int ret;
+> +
+> +       if (!test_bit(offset, pdata->gchip_output)) {
+> +               dev_err(pdata->dev, "Ignoring GPIO set while input\n");
+> +               return;
+> +       }
+> +
+> +       val &= 1;
+> +       ret = regmap_update_bits(pdata->regmap, SN_GPIO_IO_REG,
+> +                                BIT(SN_GPIO_OUTPUT_SHIFT + offset),
+> +                                val << (SN_GPIO_OUTPUT_SHIFT + offset));
+
+Looks like a job for the generic helper library.
+
+> +static int ti_sn_bridge_gpio_direction_input(struct gpio_chip *chip,
+> +                                            unsigned int offset)
+> +{
+> +       struct ti_sn_bridge *pdata = gchip_to_pdata(chip);
+> +       int shift = offset * 2;
+> +       int ret;
+> +
+> +       if (!test_and_clear_bit(offset, pdata->gchip_output))
+> +               return 0;
+> +
+> +       ret = regmap_update_bits(pdata->regmap, SN_GPIO_CTRL_REG,
+> +                                0x3 << shift, SN_GPIO_MUX_INPUT << shift);
+
+But this 0x03 does not look very generic, it's not just 1 bit but 2.
+
+Overall it looks good, just the minor things above need fixing or
+looking into.
+
+Yours,
+Linus Walleij
