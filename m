@@ -6,25 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 856E3C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F25C83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD2A2227E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 183962223E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbgD1PSR (ORCPT
+        id S1728471AbgD1PSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:18:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728288AbgD1PSF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:18:05 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44496C03C1AB;
-        Tue, 28 Apr 2020 08:18:05 -0700 (PDT)
+        Tue, 28 Apr 2020 11:18:22 -0400
+Received: from 8bytes.org ([81.169.241.247]:37428 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728277AbgD1PSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:18:06 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 86B32F14; Tue, 28 Apr 2020 17:17:48 +0200 (CEST)
+        id DDC92F1C; Tue, 28 Apr 2020 17:17:48 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -44,9 +40,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 34/75] x86/head/64: Switch to initial stack earlier
-Date:   Tue, 28 Apr 2020 17:16:44 +0200
-Message-Id: <20200428151725.31091-35-joro@8bytes.org>
+Subject: [PATCH v3 36/75] x86/head/64: Load IDT earlier
+Date:   Tue, 28 Apr 2020 17:16:46 +0200
+Message-Id: <20200428151725.31091-37-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200428151725.31091-1-joro@8bytes.org>
 References: <20200428151725.31091-1-joro@8bytes.org>
@@ -57,46 +53,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Make sure there is a stack once the kernel runs from virual addresses.
-At this stage any secondary CPU which boots will have lost its stack
-because the kernel switched to a new page-table which does not map the
-real-mode stack anymore.
-
-This is needed for handling early #VC exceptions caused by instructions
-like CPUID.
+Load the IDT right after switching to virtual addresses in head_64.S
+so that the kernel can handle #VC exceptions.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/head_64.S | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/x86/kernel/head64.c  | 15 +++++++++++++++
+ arch/x86/kernel/head_64.S | 17 +++++++++++++++++
+ 2 files changed, 32 insertions(+)
 
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 206a4b6144c2..0ecdf28291fc 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -489,3 +489,18 @@ void __init x86_64_start_reservations(char *real_mode_data)
+ 
+ 	start_kernel();
+ }
++
++void __head early_idt_setup_early_handler(unsigned long physaddr)
++{
++	gate_desc *idt = fixup_pointer(idt_table, physaddr);
++	int i;
++
++	for (i = 0; i < NUM_EXCEPTION_VECTORS; i++) {
++		struct idt_data data;
++		gate_desc desc;
++
++		init_idt_data(&data, i, early_idt_handler_array[i]);
++		idt_init_desc(&desc, &data);
++		native_write_idt_entry(idt, i, &desc);
++	}
++}
 diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index b5ff38bb32f2..301a76f317f3 100644
+index 301a76f317f3..c63e6bd432da 100644
 --- a/arch/x86/kernel/head_64.S
 +++ b/arch/x86/kernel/head_64.S
-@@ -194,6 +194,12 @@ SYM_CODE_START(secondary_startup_64)
- 	movl	initial_gs+4(%rip),%edx
- 	wrmsr
- 
+@@ -104,6 +104,20 @@ SYM_CODE_START_NOALIGN(startup_64)
+ 	leaq	_text(%rip), %rdi
+ 	pushq	%rsi
+ 	call	__startup_64
++	/* Save return value */
++	pushq	%rax
++
 +	/*
-+	 * Setup a boot time stack - Any secondary CPU will have lost its stack
-+	 * by now because the cr3-switch above unmaps the real-mode stack
++	 * Load IDT with early handlers - needed for SEV-ES
++	 * Do this here because this must only happen on the boot CPU
++	 * and the code below is shared with secondary CPU bringup.
 +	 */
-+	movq initial_stack(%rip), %rsp
++	leaq	_text(%rip), %rdi
++	call	early_idt_setup_early_handler
++
++	/* Restore __startup_64 return value*/
++	popq	%rax
++	/* Restore pointer to real_mode_data */
+ 	popq	%rsi
+ 
+ 	/* Form the CR3 value being sure to include the CR3 modifier */
+@@ -200,6 +214,9 @@ SYM_CODE_START(secondary_startup_64)
+ 	 */
+ 	movq initial_stack(%rip), %rsp
+ 
++	/* Load IDT */
++	lidt	idt_descr(%rip)
 +
  	/* Check if nx is implemented */
  	movl	$0x80000001, %eax
  	cpuid
-@@ -214,9 +220,6 @@ SYM_CODE_START(secondary_startup_64)
- 	/* Make changes effective */
- 	movq	%rax, %cr0
- 
--	/* Setup a boot time stack */
--	movq initial_stack(%rip), %rsp
--
- 	/* zero EFLAGS after setting rsp */
- 	pushq $0
- 	popfq
 -- 
 2.17.1
 
