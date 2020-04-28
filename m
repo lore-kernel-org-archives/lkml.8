@@ -2,110 +2,89 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDCFC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC4AC83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D332206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D21620775
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:06:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgD1OGa (ORCPT
+        id S1728002AbgD1OGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:06:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgD1OGa (ORCPT
+        Tue, 28 Apr 2020 10:06:46 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:61561 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726942AbgD1OGq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:06:30 -0400
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD4CBC03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 07:06:29 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:d03f:8af3:4e83:6587])
-        by albert.telenet-ops.be with bizsmtp
-        id YE6S2200U27aUyk06E6S0e; Tue, 28 Apr 2020 16:06:26 +0200
-Received: from geert (helo=localhost)
-        by ramsan with local-esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jTQsU-0003Ly-B4; Tue, 28 Apr 2020 16:06:26 +0200
-Date:   Tue, 28 Apr 2020 16:06:26 +0200 (CEST)
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] media: place CEC menu before MEDIA_SUPPORT
-In-Reply-To: <32565659d6778e92bd9ac7d17622149bd95973c5.1586944045.git.mchehab+huawei@kernel.org>
-Message-ID: <alpine.DEB.2.21.2004281600310.12370@ramsan.of.borg>
-References: <cover.1586944045.git.mchehab+huawei@kernel.org> <32565659d6778e92bd9ac7d17622149bd95973c5.1586944045.git.mchehab+huawei@kernel.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+        Tue, 28 Apr 2020 10:06:46 -0400
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 28 Apr 2020 19:36:43 +0530
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 28 Apr 2020 19:36:24 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id BD7E328DA; Tue, 28 Apr 2020 19:36:23 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: [PATCH v6 0/4] Add QMP V3 USB3 PHY support for SC7180 
+Date:   Tue, 28 Apr 2020 19:36:11 +0530
+Message-Id: <1588082775-19959-1-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- 	Hi Mauro,
+Add QMP V3 USB3 PHY entries for SC7180 in phy driver and
+device tree bindings.
 
-On Wed, 15 Apr 2020, Mauro Carvalho Chehab wrote:
-> The only item that opens at the CEC Kconfig menu is related
-> to Remote Controller. Also, its support should not depend on
-> media support, so it makes sense to keep both RC and CEC together.
->
-> After this change, the main media menus that are visible
-> under "Device Drivers" menu are:
->
-> 	<*> Remote Controller support  --->
-> 	[ ] HDMI CEC RC integration (NEW)
-> 	< > HDMI CEC drivers
-> 	<M> Multimedia support  --->
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+changes in v6:
+*Added separate yaml file for USB3 DP PHY bindings.
 
-Thanks for your patch, which is now commit 46d2a3b964ddbe63 ("media:
-place CEC menu before MEDIA_SUPPORT") in media/master.
+changes in v5:
+*Addressed comments from Matthias in yaml file.
+*Dropped PATCH 4/4 as it is landed in linux-next. 
 
-> --- a/drivers/media/cec/Kconfig
-> +++ b/drivers/media/cec/Kconfig
-> @@ -11,3 +20,14 @@ config CEC_PIN_ERROR_INJ
-> 	depends on CEC_PIN && DEBUG_FS
-> 	help
-> 	  This option enables CEC error injection using debugfs.
-> +
-> +config MEDIA_CEC_SUPPORT
-> +	bool
-> +	prompt "HDMI CEC drivers"
+changes in v4:
+*Addressed comments from Matthias and Rob in yaml file.
 
-This is now visible in a media-less and head-less kernel...
+changes in v3:
+*Addressed Rob's comments in yaml file.
+*Sepearated the SC7180 support in yaml patch.
+*corrected the phy reset entries in device tree.
 
-> +	default y if !MEDIA_SUPPORT_FILTER
+changes in v2:
+*Remove global phy reset in QMP PHY.
+*Convert QMP PHY bindings to yaml.
 
-... and in that case even defaults to y:
+Sandeep Maheswaram (4):
+  dt-bindings: phy: qcom,qmp: Convert QMP PHY bindings to yaml
+  dt-bindings: phy: qcom,qmp-usb3-dp: Add dt bindings for USB3 DP PHY
+  dt-bindings: phy: qcom,qmp-usb3-dp: Add support for SC7180
+  phy: qcom-qmp: Add QMP V3 USB3 PHY support for SC7180
 
-     $ grep MEDIA .config
-     CONFIG_MEDIA_CEC_SUPPORT=y
-     # CONFIG_MEDIA_SUPPORT is not set
+ .../devicetree/bindings/phy/qcom,qmp-phy.yaml      | 311 +++++++++++++++++++++
+ .../bindings/phy/qcom,qmp-usb3-dp-phy.yaml         | 136 +++++++++
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 242 ----------------
+ drivers/phy/qualcomm/phy-qcom-qmp.c                |  38 +++
+ 4 files changed, 485 insertions(+), 242 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml
+ delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
 
-Is that intentional?
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
-> +	help
-> +	  Enable support for HDMI CEC (Consumer Electronics Control),
-> +	  which is an optional HDMI feature.
-> +
-> +	  Say Y when you have an HDMI receiver, transmitter or a USB CEC
-> +	  adapter that supports HDMI CEC.
-> --
-
-Gr{oetje,eeting}s,
-
- 						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
- 							    -- Linus Torvalds
