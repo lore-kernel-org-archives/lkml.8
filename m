@@ -2,56 +2,54 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B74C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 089C1C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63F6B206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7D33206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100013;
-	bh=x+3uj04gfbt089WFQK1mEWtg4dmCnvjijoKeHZ4uEF4=;
+	s=default; t=1588100018;
+	bh=9Um0vAykLhr43EzMSP1g/LNXoL1Lkg+VbMjwiFsQ5WI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZnxxRW402MlJNc3O8EH+2xoKATYqfTGXUJ3MgERDaEEcPL/oZdxtf27AG9avb6reZ
-	 gaff8vJlVbg9+ZXseBo/Mg3dK+gKzIMVoq+7bhRPT8VhUxJlwITSLQsDDflCV6PPMP
-	 P1RsapmurF7VRlBHqjvls75w4+9pY3ZB+Lr1ubv8=
+	b=0s6SxrZFW7qaDeeLKahMGqjhnoCIlJlhdPrAJkAQ2pL0YT3qjUkvJsiZIU3TpGhqd
+	 ZuRl4u5sXLwFJUKbja2zIFxkntKHi5HcLnfR2N72w9SyT54Qhev8K5gxPb7yd13/ri
+	 jNfJfxaCRAnKnTGmGWih6XzE1AIa+B0ovRAU/iMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730473AbgD1Sxc (ORCPT
+        id S1731090AbgD1Sxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:53:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52076 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:53:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730191AbgD1SfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:35:03 -0400
+        id S1730174AbgD1Se4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:34:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA540217D8;
-        Tue, 28 Apr 2020 18:35:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DDA120B80;
+        Tue, 28 Apr 2020 18:34:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098903;
-        bh=x+3uj04gfbt089WFQK1mEWtg4dmCnvjijoKeHZ4uEF4=;
+        s=default; t=1588098895;
+        bh=9Um0vAykLhr43EzMSP1g/LNXoL1Lkg+VbMjwiFsQ5WI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Avq1cB4Qh/L6k+wiyfQRT4UPM0hVHlqNuYp/I22xmmXk8KnZj5MOJd65fIyiy0aao
-         7coWZWb9TP1L+zfdctp0saVGLIjlgZWIwYF61T9XxBcCQLE94LwJ7VKM+2Zkdlf6Xr
-         eWSI3F6tbaQJFCrGOYLHihB5NKnijVt/P9nrupX4=
+        b=2eWyc2tHMWa1oZ04wRUcejhtDqaxVeS0zLQl7Z1N4Sz/Q1MlcU3oa2Idc/uO/LtuU
+         bdlGWpmv9yfDwZlK+wz++plrmf/1EjegYvXWxUQj4+43jHC4t/xSYUDU8QGI0kya34
+         QLvWLKVvUpe2dy6aQWztJBSBmpimiWccy8MIyCWk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Farman <farman@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 029/168] s390/cio: generate delayed uevent for vfio-ccw subchannels
-Date:   Tue, 28 Apr 2020 20:23:23 +0200
-Message-Id: <20200428182235.413040677@linuxfoundation.org>
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 070/131] xfrm: Always set XFRM_TRANSFORMED in xfrm{4,6}_output_finish
+Date:   Tue, 28 Apr 2020 20:24:42 +0200
+Message-Id: <20200428182233.732402940@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,48 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cornelia Huck <cohuck@redhat.com>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit 2bc55eaeb88d30accfc1b6ac2708d4e4b81ca260 ]
+[ Upstream commit 0c922a4850eba2e668f73a3f1153196e09abb251 ]
 
-The common I/O layer delays the ADD uevent for subchannels and
-delegates generating this uevent to the individual subchannel
-drivers. The vfio-ccw I/O subchannel driver, however, did not
-do that, and will not generate an ADD uevent for subchannels
-that had not been bound to a different driver (or none at all,
-which also triggers the uevent).
+IPSKB_XFRM_TRANSFORMED and IP6SKB_XFRM_TRANSFORMED are skb flags set by
+xfrm code to tell other skb handlers that the packet has been passed
+through the xfrm output functions. Simplify the code and just always
+set them rather than conditionally based on netfilter enabled thus
+making the flag available for other users.
 
-Generate the ADD uevent at the end of the probe function if
-uevents were still suppressed for the device.
-
-Message-Id: <20200327124503.9794-3-cohuck@redhat.com>
-Fixes: 63f1934d562d ("vfio: ccw: basic implementation for vfio_ccw driver")
-Reviewed-by: Eric Farman <farman@linux.ibm.com>
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/s390/cio/vfio_ccw_drv.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/ipv4/xfrm4_output.c |    2 --
+ net/ipv6/xfrm6_output.c |    2 --
+ 2 files changed, 4 deletions(-)
 
-diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-index e401a3d0aa570..339a6bc0339b0 100644
---- a/drivers/s390/cio/vfio_ccw_drv.c
-+++ b/drivers/s390/cio/vfio_ccw_drv.c
-@@ -167,6 +167,11 @@ static int vfio_ccw_sch_probe(struct subchannel *sch)
- 	if (ret)
- 		goto out_disable;
+--- a/net/ipv4/xfrm4_output.c
++++ b/net/ipv4/xfrm4_output.c
+@@ -77,9 +77,7 @@ int xfrm4_output_finish(struct sock *sk,
+ {
+ 	memset(IPCB(skb), 0, sizeof(*IPCB(skb)));
  
-+	if (dev_get_uevent_suppress(&sch->dev)) {
-+		dev_set_uevent_suppress(&sch->dev, 0);
-+		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+	}
-+
- 	VFIO_CCW_MSG_EVENT(4, "bound to subchannel %x.%x.%04x\n",
- 			   sch->schid.cssid, sch->schid.ssid,
- 			   sch->schid.sch_no);
--- 
-2.20.1
-
+-#ifdef CONFIG_NETFILTER
+ 	IPCB(skb)->flags |= IPSKB_XFRM_TRANSFORMED;
+-#endif
+ 
+ 	return xfrm_output(sk, skb);
+ }
+--- a/net/ipv6/xfrm6_output.c
++++ b/net/ipv6/xfrm6_output.c
+@@ -130,9 +130,7 @@ int xfrm6_output_finish(struct sock *sk,
+ {
+ 	memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
+ 
+-#ifdef CONFIG_NETFILTER
+ 	IP6CB(skb)->flags |= IP6SKB_XFRM_TRANSFORMED;
+-#endif
+ 
+ 	return xfrm_output(sk, skb);
+ }
 
 
