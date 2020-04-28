@@ -2,157 +2,117 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2915CC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E46FC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0479D206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70133206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:52:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ftbhbo46"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YbQwT+y9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbgD1OvH (ORCPT
+        id S1727108AbgD1Owm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:51:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37458 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727878AbgD1OvG (ORCPT
+        Tue, 28 Apr 2020 10:52:42 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:7589 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727775AbgD1Owm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:51:06 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 316FFC03C1AB;
-        Tue, 28 Apr 2020 07:51:06 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id b12so23092687ion.8;
-        Tue, 28 Apr 2020 07:51:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GgeqmdEmb09cwWnZURvh19BHVHs9QFAo9j/uyja5xe8=;
-        b=ftbhbo46DIoclP20MgqTJq6QQRg5IIitlwWEB+J2uWIkW1NTCjW5+JN0e+g2WLF9vX
-         EKTRwC5obL6iWDl+wsizqv27kDrSnFwS5opGl2Zcq/MAtIokvA2YFVb/2/tWigKsAib0
-         uOLaSE6BjfNoo30LntGvtNE2THRjybP1x/+YqnPP2BlCbHmTKKEBQzl/FzpdYc0xsuyD
-         IFf76F2YqZH5MyVkpyeq5vO1yglnBvM0Qo75HG5bdTFhecuJIxKxzuiPOzs5nIBDXZs4
-         fNpAWwOZwDSEjEVCu5IZKwpebijosF2ybxlz7kyBJ12/OlwYf9qgogeqZMxcghVtFbM+
-         rlFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GgeqmdEmb09cwWnZURvh19BHVHs9QFAo9j/uyja5xe8=;
-        b=bTqFpyoiPtffcMw88C4BXE+eBW+ylqIcYwwNcvXoc60Xn6XYBmUjKxXcxC2cpR8tMw
-         b80XLKReEX7EDfrRr2mX/DZFzSBmmjYmZ1LYld+SyuDGPYaI9VN7UTCaDsSO1OT91AQM
-         BTLUQ/5lB+TzU6zcJ5N52d4ny1kBNvi8zKwGdjwRRFVViDJJw7JrXduiwqnkZgJ8MpnV
-         DL05KkHW38p/iCpr7s9DRvGF2CamYv3LRvd3NKWc2EwULbm9y536SWFD6WS9E7HRHaZE
-         A1eXjGrefgP1N2tY8G9fG4uRUxEH8wvcq+biWBzPEUZg0ALFIIIv6mT/vTuJyztnxL6N
-         mlXw==
-X-Gm-Message-State: AGi0PuYsMxrskcv+3hUDTufFGgl3mqN/vrytRO9VNTHAakCo1kYllZU8
-        nDdIIhHOzpBVXkfsq77Fcdd44CD4Ab/V2hDmsFM=
-X-Google-Smtp-Source: APiQypKTD+S1WqOLrfRlXdxvtseawzRWMNX6kR8updafIakHcwBAhBmXxHQROLhLlZ95M3jOMARBiMD5WpWSOUrqEXQ=
-X-Received: by 2002:a5d:9494:: with SMTP id v20mr26401979ioj.101.1588085465427;
- Tue, 28 Apr 2020 07:51:05 -0700 (PDT)
+        Tue, 28 Apr 2020 10:52:42 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea842c00000>; Tue, 28 Apr 2020 07:50:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 28 Apr 2020 07:52:41 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 28 Apr 2020 07:52:41 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Apr
+ 2020 14:52:41 +0000
+Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Apr
+ 2020 14:52:40 +0000
+Subject: Re: [RFC PATCH v1 3/5] media: tegra-video: Move PM runtime handle to
+ streaming
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>
+CC:     <linux-media@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1588047650-29402-1-git-send-email-skomatineni@nvidia.com>
+ <1588047650-29402-4-git-send-email-skomatineni@nvidia.com>
+ <631390cb-9aff-0e3f-6c39-81d6c565987e@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <3ef69413-a606-b475-f530-d5534760b73b@nvidia.com>
+Date:   Tue, 28 Apr 2020 07:51:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200426161605.52121-1-samuel@sholland.org>
-In-Reply-To: <20200426161605.52121-1-samuel@sholland.org>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Tue, 28 Apr 2020 16:50:54 +0200
-Message-ID: <CAJiuCcdgDd=xrGU6iDjo=Og+OW=4cbrLG_NWZpzRZXdjJbnRXQ@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v2] arm64: dts: allwinner: a64: Remove
- unused SPDIF sound card
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Marcus Cooper <codekipper@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <631390cb-9aff-0e3f-6c39-81d6c565987e@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588085440; bh=7Vr55oxdvlc54RS7GqDJrEUI+/BVLfeLIuIbc/K80U4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=YbQwT+y92pw9Dr0Uq+/Dh/yatrxwXV5i+q6Xv8qfIdM/KUhdW84OmV+0j25fCWynu
+         eXAzB2/+UwfyoA6OweHYTcyn7qah9oQmKdX6n30AW0efAKj7l5SMeVE8B6KXYNJ6oX
+         QQq2Q1+7kC7WOx1gLKVVU7FqsId3AFn0O4yXaRnRDFqRmTCYV7VJCrEsvfihCOKUoF
+         3YfWbUiBuBWLwsX4jNgtHlavQggUCSo1kTRptJiZGH432/3CSV8Q0uAL2fnYhBVhsB
+         u4a6t9DF0pR0EjtlhZpnfC4mto9r+VbJ85+xrWdv191Fj9Sc67M6RRfU0kMLpvJN+c
+         w7HaPSShQES3A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Sun, 26 Apr 2020 at 18:12, Samuel Holland <samuel@sholland.org> wrote:
+On 4/28/20 6:59 AM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
 >
-> As of v5.7-rc2, Linux now prints the following message at boot:
 >
->   [   33.848525] platform sound_spdif: deferred probe pending
->
-> This is because sound_spdif is waiting on its CPU DAI &spdif to probe,
-> but &spdif is disabled in the device tree.
->
-> Exposure of the SPDIF pin is board-specific functionality, so the sound
-> card and codec DAI belong in the individual board DTS, not the SoC DTSI.
-> In fact, no in-tree A64 board DTS enables &spdif, so let's remove the
-> card and DAI entirely.
+> 28.04.2020 07:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> diff --git a/drivers/staging/media/tegra-video/csi.c b/drivers/staging/m=
+edia/tegra-video/csi.c
+>> index b3dd0c3..29ccdae 100644
+>> --- a/drivers/staging/media/tegra-video/csi.c
+>> +++ b/drivers/staging/media/tegra-video/csi.c
+>> @@ -272,8 +272,25 @@ static int tegra_csi_s_stream(struct v4l2_subdev *s=
+ubdev, int enable)
+>>        struct tegra_vi_channel *chan =3D v4l2_get_subdev_hostdata(subdev=
+);
+>>        struct tegra_csi_channel *csi_chan =3D to_csi_chan(subdev);
+>>        struct tegra_csi *csi =3D csi_chan->csi;
+>> +     int ret;
+>> +
+>> +     if (enable && atomic_add_return(1, &csi->clk_refcnt) =3D=3D 1) {
+>> +             ret =3D pm_runtime_get_sync(csi->dev);
+>> +             if (ret < 0) {
+>> +                     dev_err(csi->dev,
+>> +                             "failed to get runtime PM: %d\n", ret);
+>> +                     pm_runtime_put_noidle(csi->dev);
+>> +                     atomic_dec(&csi->clk_refcnt);
+>> +                     return ret;
+>> +             }
+>> +     }
+>> +
+>> +     ret =3D csi->ops->csi_streaming(csi_chan, chan->pg_mode, enable);
+>>
+>> -     return csi->ops->csi_streaming(csi_chan, chan->pg_mode, enable);
+>> +     if ((ret < 0 || !enable) && atomic_dec_and_test(&csi->clk_refcnt))
+>> +             pm_runtime_put_sync(csi->dev);
+> Runtime PM maintains its own refcount, why these
+> clk_refcnt/power_on_refcnt are needed?
 
-CC: Marcus Cooper <codekipper@gmail.com>
+Streaming is per channel and we can't turn power/clocks off while other=20
+channels may still be running.
 
-Without any value :
-Acked-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-
-Regards,
-Clement
-
->
-> This reverts commit 78e071370a86473f25923e03b51cbbadacf8be0f.
->
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> ---
->
-> Changes since v1:
->  - Remove the node instead of disabling it
->  - Also remove the codec DAI
->
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 18 ------------------
->  1 file changed, 18 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/b=
-oot/dts/allwinner/sun50i-a64.dtsi
-> index 31143fe64d91..c26cc1fcaffd 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -154,24 +154,6 @@ link_codec: simple-audio-card,codec {
->                 };
->         };
->
-> -       sound_spdif {
-> -               compatible =3D "simple-audio-card";
-> -               simple-audio-card,name =3D "On-board SPDIF";
-> -
-> -               simple-audio-card,cpu {
-> -                       sound-dai =3D <&spdif>;
-> -               };
-> -
-> -               simple-audio-card,codec {
-> -                       sound-dai =3D <&spdif_out>;
-> -               };
-> -       };
-> -
-> -       spdif_out: spdif-out {
-> -               #sound-dai-cells =3D <0>;
-> -               compatible =3D "linux,spdif-dit";
-> -       };
-> -
->         timer {
->                 compatible =3D "arm,armv8-timer";
->                 allwinner,erratum-unknown1;
-> --
-> 2.24.1
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msg=
-id/linux-sunxi/20200426161605.52121-1-samuel%40sholland.org.
