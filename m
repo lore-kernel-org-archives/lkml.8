@@ -2,90 +2,113 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3484CC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2836BC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF17D20730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Dqd2nQnS"
+	by mail.kernel.org (Postfix) with ESMTP id EF7AF206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588100183;
+	bh=vpnBgYOMkZl24zZAF+Gw4N8jzNY5K3OYGZBkJNrDpe0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=V+73Pq0Srw0FVen5c35qokaohfMMjksEyACdMAwvd5+smivzNpjEIZokqsOP7DY4R
+	 hBDHrMUWZWZAuQayrs6bPBcxdbOsl8aWxJjUCZNycfygxz0kzrLoeTLTd7BIXew02P
+	 yu5NnzQ/dIV0apxFJ2pP18xjvTXT7QpDW6tg95zQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbgD1S4T (ORCPT
+        id S1729689AbgD1Sbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:56:19 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:53225 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729175AbgD1S4Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:56:16 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588100176; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=wBBFoP1nlQZwT1olHqun3h+s+Vta5d2qFcH5weMHSD0=; b=Dqd2nQnSbQSLC8OVmEiD2KU2nDD3ND/BzC0dHDf7jdRiOrW1r1MDqYmpjZA4emC274VwxiOM
- x48YgW607YqjWzIyigUjeF1IoHrdhzZ4fh9ntvB7a7f876897aw9obslVm9j1M6s8wB1odWs
- QsbFXyTUvStuAeInqJUpyeM1LM4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea87c46.7f3530f41e30-smtp-out-n01;
- Tue, 28 Apr 2020 18:56:06 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4DF57C433F2; Tue, 28 Apr 2020 18:56:05 +0000 (UTC)
-Received: from [10.46.162.249] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 28 Apr 2020 14:31:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729182AbgD1Sba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:31:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: hemantk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4D712C43637;
-        Tue, 28 Apr 2020 18:56:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4D712C43637
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
-Subject: Re: [PATCH v3 3/6] bus: mhi: core: Offload register accesses to the
- controller
-To:     Jeffrey Hugo <jhugo@codeaurora.org>,
-        manivannan.sadhasivam@linaro.org
-Cc:     bbhatt@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1588003153-13139-1-git-send-email-jhugo@codeaurora.org>
- <1588003153-13139-4-git-send-email-jhugo@codeaurora.org>
-From:   Hemant Kumar <hemantk@codeaurora.org>
-Message-ID: <ba5e3217-afa0-95ae-406a-034d88d979b0@codeaurora.org>
-Date:   Tue, 28 Apr 2020 11:56:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mail.kernel.org (Postfix) with ESMTPSA id D93A42186A;
+        Tue, 28 Apr 2020 18:31:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588098690;
+        bh=vpnBgYOMkZl24zZAF+Gw4N8jzNY5K3OYGZBkJNrDpe0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iIO335iqsjWcbbdtLSEIUIuCtuYyDKbEcPa+rVCJeZxV8rczGtLLsY9I02ryqLTia
+         3bf4FOefCnLrjSLCzyhwSRTRJOWtMG0ecb1mDyAGYvPjl2hzogopK7zOUi/mPgtRdm
+         4smG5jnP36pwnkvh8AXUEtzF2vd6An8sRKKIr8NI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Matthew Ruffell <matthew.ruffell@canonical.com>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Paul Wise <pabs3@bonedaddy.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.6 099/167] coredump: fix null pointer dereference on coredump
+Date:   Tue, 28 Apr 2020 20:24:35 +0200
+Message-Id: <20200428182237.696357713@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <1588003153-13139-4-git-send-email-jhugo@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+
+commit db973a7289dad24e6c017dcedc6aee886579dc3a upstream.
+
+If the core_pattern is set to "|" and any process segfaults then we get
+a null pointer derefernce while trying to coredump. The call stack shows:
+
+    RIP: do_coredump+0x628/0x11c0
+
+When the core_pattern has only "|" there is no use of trying the
+coredump and we can check that while formating the corename and exit
+with an error.
+
+After this change I get:
+
+    format_corename failed
+    Aborting core
+
+Fixes: 315c69261dd3 ("coredump: split pipe command whitespace before expanding template")
+Reported-by: Matthew Ruffell <matthew.ruffell@canonical.com>
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Paul Wise <pabs3@bonedaddy.net>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Neil Horman <nhorman@tuxdriver.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200416194612.21418-1-sudipm.mukherjee@gmail.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/coredump.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/fs/coredump.c
++++ b/fs/coredump.c
+@@ -211,6 +211,8 @@ static int format_corename(struct core_n
+ 			return -ENOMEM;
+ 		(*argv)[(*argc)++] = 0;
+ 		++pat_ptr;
++		if (!(*pat_ptr))
++			return -ENOMEM;
+ 	}
+ 
+ 	/* Repeat as long as we have more pattern to process and more output
 
 
-On 4/27/20 8:59 AM, Jeffrey Hugo wrote:
-> When reading or writing MHI registers, the core assumes that the physical
-> link is a memory mapped PCI link.  This assumption may not hold for all
-> MHI devices.  The controller knows what is the physical link (ie PCI, I2C,
-> SPI, etc), and therefore knows the proper methods to access that link.
-> The controller can also handle link specific error scenarios, such as
-> reading -1 when the PCI link went down.
-> 
-> Therefore, it is appropriate that the MHI core requests the controller to
-> make register accesses on behalf of the core, which abstracts the core
-> from link specifics, and end up removing an unnecessary assumption.
-> 
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> ---
-Reviewed-by: Hemant Kumar <hemantk@codeaurora.org>
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
