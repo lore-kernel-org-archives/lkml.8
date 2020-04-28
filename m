@@ -2,129 +2,107 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BCAC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FCEC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E68B20730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:36:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RPH9rvFl"
+	by mail.kernel.org (Postfix) with ESMTP id 161E820731
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:36:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgD1Vgj (ORCPT
+        id S1726815AbgD1Vg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:36:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59529 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726272AbgD1Vgj (ORCPT
+        Tue, 28 Apr 2020 17:36:57 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:34859 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbgD1Vg4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:36:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588109798;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=VxNwBZUZ2kN7UJQo+O+guQfCddd05dL5E51oV8I0MCk=;
-        b=RPH9rvFlHeOn3EKLgpYsTT6wtP8XBnl8E+VDJYJNk3nfAxvLyk0JYiEzgkgFMQA8tr5ebm
-        mOjYPaZPrLMsDGFooIlH1NyKPYlF97vtwnT1OJjYwrby3KPYeVTjzw12qD3OEkCwIL1vMq
-        ZzGHcjalJL1tXrtErK6M0zlvjthNB6w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-374-sDMcUIM7OkuVg8DCyCAglg-1; Tue, 28 Apr 2020 17:36:35 -0400
-X-MC-Unique: sDMcUIM7OkuVg8DCyCAglg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1DC98107B7CD;
-        Tue, 28 Apr 2020 21:36:33 +0000 (UTC)
-Received: from krava (ovpn-112-36.ams2.redhat.com [10.36.112.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 829215C1BE;
-        Tue, 28 Apr 2020 21:36:30 +0000 (UTC)
-Date:   Tue, 28 Apr 2020 23:36:27 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>, Ingo Molnar <mingo@elte.hu>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Tue, 28 Apr 2020 17:36:56 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1McY0L-1itOfZ46RB-00d2eD; Tue, 28 Apr 2020 23:36:21 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
+        Jann Horn <jannh@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "bibo,mao" <bibo.mao@intel.com>,
-        "Ziqian SUN (Zamir)" <zsun@redhat.com>, stable@vger.kernel.org
-Subject: Re: [PATCHv2] kretprobe: Prevent triggering kretprobe from within
- kprobe_flush_task
-Message-ID: <20200428213627.GI1476763@krava>
-References: <20200409184451.GG3309111@krava>
- <20200409201336.GH3309111@krava>
- <20200410093159.0d7000a08fd76c2eaf1398f8@kernel.org>
- <20200414160338.GE208694@krava>
- <20200415090507.GG208694@krava>
- <20200416105506.904b7847a1b621b75463076d@kernel.org>
- <20200416091320.GA322899@krava>
- <20200416224250.7a53fb581e50aa32df75a0cf@kernel.org>
- <20200416143104.GA400699@krava>
- <20200417163810.ffe5c9145eae281fc493932c@kernel.org>
+        Vince Weaver <vincent.weaver@maine.edu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/unwind/orc: fix unused function warnings
+Date:   Tue, 28 Apr 2020 23:36:09 +0200
+Message-Id: <20200428213618.3587684-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417163810.ffe5c9145eae281fc493932c@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:iaNq6q+5ghuiuu58m8LDk4FJ+tg9i4IQrI1GyGElrpxuId1+22D
+ VIJiaE0zxaYhdSTSSgu49Ibry/VJtOUnMokgybPHRnmeb4iQg5lq+4qLD/vmYTyMG652DBt
+ 28850mZsR3dd5y+U+XK1EzFAtbaERUrGATv9Z0zrbwrRzfU3+SDZ/VZ80OkTLiBh0AxJcn3
+ 2XS8/InY1dUCo8N2tlrxw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:R+m5ze29tqA=:QpckBXBwcVg6O2gB5XStoB
+ S9blV3NsPizSTRkCf5W+GX+x9x0x/1v3//L7vSYIs1YmyNIHrqprfPIunPHC4vywjPlRGKHbj
+ qlh0lzf7YV0hkzi/XRFAwcvQj0JGK9XXOgiCg2KrMhpgXEbXuFZFzwHaKM/x8j4aJn+uuoNW8
+ XOm3HH9dqTc3ffosO2QO079AimD8a3epjFxdj5H5rzlva15pkgrkKv6UaoT2gozSuCgUPJ7Ld
+ puXDIsXzcBGZWmB3GNO4proSD8HI1NG3Q7gFEBm5HQKQ1zJ1XSgnr5v69Zm9FRsX+iHW/AtGM
+ Oes1f+uuvfgh5ZGl0g1KNCujKpLQfCt2JxpF6uRujHbyp9dFm6JnIYceVg3dl6JxsOOH3NucZ
+ EGWWaejChg4hT27AlFQZzYrqtepOIvpe5DmBZSvY5Gz5hwD3SsOJdGdFcL2K5lb92IoKa/CTS
+ zq6GX1CJ7KQdp/TtYLGkGM2s3Js8HEi3noyxaZbnVZPXAu4hRZSvs5tfz7yXyQsvj8oJ3Y9W1
+ MQqEKJgEOFLrrDp5A9kW7NwK+c678TOW0p7fK9MGovBCnR3xFR8ELNEe12RON7B8rgUb5AiEc
+ mDPrbihkJcw1SxC3cJnP/tIxkYN89y/x2AD2WF9ZDp4t4CNSu22tLuteva3GnuLdM5mubiEwj
+ wKWpuA+Dbi7IMIyIAvNfLw8mJbSOhkuaBOPMsZwstdfDAaghglLyMv6iqgVhhVNBW5sM0SD4n
+ npgA4vJzNjH6yy4Znvkuo/NoLm/+bs1q88ZDv/lEKlgD9ovLWu3nDkGYrHS3LxDov79ACGp7/
+ YbWokPONatvrA/NsD/3kWwXxXXdI4ht2ZD53DiOqeVdahYgCpg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 04:38:10PM +0900, Masami Hiramatsu wrote:
+Without CONFIG_MODULES, these two variables are unused:
 
-SNIP
+arch/x86/kernel/unwind_orc.c:29:26: error: 'cur_orc_table' defined but not used [-Werror=unused-variable]
+   29 | static struct orc_entry *cur_orc_table = __start_orc_unwind;
+      |                          ^~~~~~~~~~~~~
+arch/x86/kernel/unwind_orc.c:28:13: error: 'cur_orc_ip_table' defined but not used [-Werror=unused-variable]
+   28 | static int *cur_orc_ip_table = __start_orc_unwind_ip;
+      |             ^~~~~~~~~~~~~~~~
 
-> > 
-> > The code within the kretprobe handler checks for probe reentrancy,
-> > so we won't trigger any _raw_spin_lock_irqsave probe in there.
-> > 
-> > The problem is in outside kprobe_flush_task, where we call:
-> > 
-> >   kprobe_flush_task
-> >     kretprobe_table_lock
-> >       raw_spin_lock_irqsave
-> >         _raw_spin_lock_irqsave
-> > 
-> > where _raw_spin_lock_irqsave triggers the kretprobe and installs
-> > kretprobe_trampoline handler on _raw_spin_lock_irqsave return.
-> > 
-> > The kretprobe_trampoline handler is then executed with already
-> > locked kretprobe_table_locks, and first thing it does is to
-> > lock kretprobe_table_locks ;-) the whole lockup path like:
-> > 
-> >   kprobe_flush_task
-> >     kretprobe_table_lock
-> >       raw_spin_lock_irqsave
-> >         _raw_spin_lock_irqsave ---> probe triggered, kretprobe_trampoline installed
-> > 
-> >         ---> kretprobe_table_locks locked
-> > 
-> >         kretprobe_trampoline
-> >           trampoline_handler
-> >             kretprobe_hash_lock(current, &head, &flags);  <--- deadlock
-> > 
-> > Adding kprobe_busy_begin/end helpers that mark code with fake
-> > probe installed to prevent triggering of another kprobe within
-> > this code.
-> > 
-> > Using these helpers in kprobe_flush_task, so the probe recursion
-> > protection check is hit and the probe is never set to prevent
-> > above lockup.
-> > 
-> 
-> Thanks Jiri!
-> 
-> Ingo, could you pick this up?
+Move them into the #ifdef section.
 
-Ingo, any chance you could take this one?
+Fixes: 153eb2223c79 ("x86/unwind/orc: Convert global variables to static")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/x86/kernel/unwind_orc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-thanks,
-jirka
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index 0ebc11a8bb45..ea8f2aba663f 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -25,8 +25,6 @@ static bool orc_init __ro_after_init;
+ static unsigned int lookup_num_blocks __ro_after_init;
+ 
+ static DEFINE_MUTEX(sort_mutex);
+-static int *cur_orc_ip_table = __start_orc_unwind_ip;
+-static struct orc_entry *cur_orc_table = __start_orc_unwind;
+ 
+ static inline unsigned long orc_ip(const int *ip)
+ {
+@@ -191,6 +189,8 @@ static struct orc_entry *orc_find(unsigned long ip)
+ }
+ 
+ #ifdef CONFIG_MODULES
++static int *cur_orc_ip_table = __start_orc_unwind_ip;
++static struct orc_entry *cur_orc_table = __start_orc_unwind;
+ 
+ static void orc_sort_swap(void *_a, void *_b, int size)
+ {
+-- 
+2.26.0
 
