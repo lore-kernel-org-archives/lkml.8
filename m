@@ -2,54 +2,55 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B3AC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EFBC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80700217D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4049F21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098668;
-	bh=btMmoRmbm0aFeh7V8QPWVWglOxt22/y9OzCifBjnb+c=;
+	s=default; t=1588098671;
+	bh=mdH9Iw+tpsIVT6b8XCff/ERcE3qWDEk3zy2/+emkh6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jiuo4P/qiiM2lOXNPAxzpe1lJi8c0EuStQYWUlJKOGcTzsRDcLAjj1tLJQH75TZaU
-	 Pxo2Mi8H8LwSZB0Z4oJkfD0ymSL71YdKj5bA7D1Cq9W2jlfVHJG/48c9E7T706idee
-	 pLQwfrpoqfCEG2B9oD0yTcl1ujmpLfiJGhQ7n++g=
+	b=wHsyU1LMHH6krE8wqslhvPygTZjpAmC2KBQ2FduMC2JkZd/uSMNuLIopI+dQ+y+r1
+	 FORR0WG8lTGtoSPt/gpSeT40hhogc5+MWbCb+NlCmQFkviK1/R5vplqXDNq3OP4INp
+	 SD+iON4F4TOWWPh8lL2el5EwlolgRSMjLE2yo2FU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729612AbgD1SbH (ORCPT
+        id S1729619AbgD1SbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:31:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46144 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:31:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729579AbgD1Sa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:30:57 -0400
+        id S1729588AbgD1Sa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:30:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1EE021707;
-        Tue, 28 Apr 2020 18:30:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3054A20B80;
+        Tue, 28 Apr 2020 18:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098656;
-        bh=btMmoRmbm0aFeh7V8QPWVWglOxt22/y9OzCifBjnb+c=;
+        s=default; t=1588098658;
+        bh=mdH9Iw+tpsIVT6b8XCff/ERcE3qWDEk3zy2/+emkh6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l3E5yr1vtajT14zdGBpy2ROuRXl7F3d5mAhvbeb+b7FEsBJQzZjOsLqwp7rQACYsl
-         u19Zp4E6qYY0897X01FHmIQ1++EtBPTP39oX9TLv+SZkFtd+vZJYpi9N9rUEDlyQKh
-         eIKDNGa8vbh8kB1y9nYec+r0/AkLiXpa4sxudDJw=
+        b=gkfT2QG9JD7pfmwFyT3DKF3we5Hphay0ZXNWOIa/6GS+EXMp/1xhalCzw3v+bhG68
+         E+GNV1UJQ3g+y4wM1xyHgSqF2/9UcIoMITkICfQ5tnrhW1EkdQ7xx88dMBXjnB9dhe
+         mRtETCxXgjPIWexazi6r5LRzjFnsf+FHatUqytMU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Kyungtae Kim <kt0755@gmail.com>
-Subject: [PATCH 5.6 093/167] USB: core: Fix free-while-in-use bug in the USB S-Glibrary
-Date:   Tue, 28 Apr 2020 20:24:29 +0200
-Message-Id: <20200428182236.786952756@linuxfoundation.org>
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 036/131] PCI/ASPM: Allow re-enabling Clock PM
+Date:   Tue, 28 Apr 2020 20:24:08 +0200
+Message-Id: <20200428182229.618808952@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,90 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-commit 056ad39ee9253873522f6469c3364964a322912b upstream.
+[ Upstream commit 35efea32b26f9aacc99bf07e0d2cdfba2028b099 ]
 
-FuzzUSB (a variant of syzkaller) found a free-while-still-in-use bug
-in the USB scatter-gather library:
+Previously Clock PM could not be re-enabled after being disabled by
+pci_disable_link_state() because clkpm_capable was reset.  Change this by
+adding a clkpm_disable field similar to aspm_disable.
 
-BUG: KASAN: use-after-free in atomic_read
-include/asm-generic/atomic-instrumented.h:26 [inline]
-BUG: KASAN: use-after-free in usb_hcd_unlink_urb+0x5f/0x170
-drivers/usb/core/hcd.c:1607
-Read of size 4 at addr ffff888065379610 by task kworker/u4:1/27
-
-CPU: 1 PID: 27 Comm: kworker/u4:1 Not tainted 5.5.11 #2
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-1.10.2-1ubuntu1 04/01/2014
-Workqueue: scsi_tmf_2 scmd_eh_abort_handler
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xce/0x128 lib/dump_stack.c:118
- print_address_description.constprop.4+0x21/0x3c0 mm/kasan/report.c:374
- __kasan_report+0x153/0x1cb mm/kasan/report.c:506
- kasan_report+0x12/0x20 mm/kasan/common.c:639
- check_memory_region_inline mm/kasan/generic.c:185 [inline]
- check_memory_region+0x152/0x1b0 mm/kasan/generic.c:192
- __kasan_check_read+0x11/0x20 mm/kasan/common.c:95
- atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
- usb_hcd_unlink_urb+0x5f/0x170 drivers/usb/core/hcd.c:1607
- usb_unlink_urb+0x72/0xb0 drivers/usb/core/urb.c:657
- usb_sg_cancel+0x14e/0x290 drivers/usb/core/message.c:602
- usb_stor_stop_transport+0x5e/0xa0 drivers/usb/storage/transport.c:937
-
-This bug occurs when cancellation of the S-G transfer races with
-transfer completion.  When that happens, usb_sg_cancel() may continue
-to access the transfer's URBs after usb_sg_wait() has freed them.
-
-The bug is caused by the fact that usb_sg_cancel() does not take any
-sort of reference to the transfer, and so there is nothing to prevent
-the URBs from being deallocated while the routine is trying to use
-them.  The fix is to take such a reference by incrementing the
-transfer's io->count field while the cancellation is in progres and
-decrementing it afterward.  The transfer's URBs are not deallocated
-until io->complete is triggered, which happens when io->count reaches
-zero.
-
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-and-tested-by: Kyungtae Kim <kt0755@gmail.com>
-CC: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2003281615140.14837-100000@netrider.rowland.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/4e8a66db-7d53-4a66-c26c-f0037ffaa705@gmail.com
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/core/message.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/pci/pcie/aspm.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
---- a/drivers/usb/core/message.c
-+++ b/drivers/usb/core/message.c
-@@ -588,12 +588,13 @@ void usb_sg_cancel(struct usb_sg_request
- 	int i, retval;
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index af79a7168677d..db2efa219028c 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -67,6 +67,7 @@ struct pcie_link_state {
+ 	u32 clkpm_capable:1;		/* Clock PM capable? */
+ 	u32 clkpm_enabled:1;		/* Current Clock PM state */
+ 	u32 clkpm_default:1;		/* Default Clock PM state by BIOS */
++	u32 clkpm_disable:1;		/* Clock PM disabled */
  
- 	spin_lock_irqsave(&io->lock, flags);
--	if (io->status) {
-+	if (io->status || io->count == 0) {
- 		spin_unlock_irqrestore(&io->lock, flags);
- 		return;
- 	}
- 	/* shut everything down */
- 	io->status = -ECONNRESET;
-+	io->count++;		/* Keep the request alive until we're done */
- 	spin_unlock_irqrestore(&io->lock, flags);
+ 	/* Exit latencies */
+ 	struct aspm_latency latency_up;	/* Upstream direction exit latency */
+@@ -164,8 +165,11 @@ static void pcie_set_clkpm_nocheck(struct pcie_link_state *link, int enable)
  
- 	for (i = io->entries - 1; i >= 0; --i) {
-@@ -607,6 +608,12 @@ void usb_sg_cancel(struct usb_sg_request
- 			dev_warn(&io->dev->dev, "%s, unlink --> %d\n",
- 				 __func__, retval);
+ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
+ {
+-	/* Don't enable Clock PM if the link is not Clock PM capable */
+-	if (!link->clkpm_capable)
++	/*
++	 * Don't enable Clock PM if the link is not Clock PM capable
++	 * or Clock PM is disabled
++	 */
++	if (!link->clkpm_capable || link->clkpm_disable)
+ 		enable = 0;
+ 	/* Need nothing if the specified equals to current state */
+ 	if (link->clkpm_enabled == enable)
+@@ -195,7 +199,8 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
  	}
-+
-+	spin_lock_irqsave(&io->lock, flags);
-+	io->count--;
-+	if (!io->count)
-+		complete(&io->complete);
-+	spin_unlock_irqrestore(&io->lock, flags);
+ 	link->clkpm_enabled = enabled;
+ 	link->clkpm_default = enabled;
+-	link->clkpm_capable = (blacklist) ? 0 : capable;
++	link->clkpm_capable = capable;
++	link->clkpm_disable = blacklist ? 1 : 0;
  }
- EXPORT_SYMBOL_GPL(usb_sg_cancel);
  
+ static bool pcie_retrain_link(struct pcie_link_state *link)
+@@ -1106,10 +1111,9 @@ static void __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
+ 		link->aspm_disable |= ASPM_STATE_L1;
+ 	pcie_config_aspm_link(link, policy_to_aspm_state(link));
+ 
+-	if (state & PCIE_LINK_STATE_CLKPM) {
+-		link->clkpm_capable = 0;
+-		pcie_set_clkpm(link, 0);
+-	}
++	if (state & PCIE_LINK_STATE_CLKPM)
++		link->clkpm_disable = 1;
++	pcie_set_clkpm(link, policy_to_clkpm_state(link));
+ 	mutex_unlock(&aspm_lock);
+ 	if (sem)
+ 		up_read(&pci_bus_sem);
+-- 
+2.20.1
+
 
 
