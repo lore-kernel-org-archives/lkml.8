@@ -2,126 +2,112 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5902DC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D33C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 277B720661
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB9220661
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:16:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G1StGchj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TmnTM02F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbgD1HOv (ORCPT
+        id S1726357AbgD1HQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:14:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbgD1HOv (ORCPT
+        Tue, 28 Apr 2020 03:16:52 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32768 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725867AbgD1HQw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 03:14:51 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B87C9C03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 00:14:50 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id d17so23337901wrg.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 00:14:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=MS2o89rPX08fYfLG56pnKr91VCgwEiweba5HnccU9ZY=;
-        b=G1StGchj6YAW1ze/OrIrILEJzpeXsicEtD4oGcWyIGFpfJ+EPofToUYVrvEyhlvJbE
-         WSXT0g+0OzVtQhxGSKdLTgDaRWpp5+av8l249FJcFr6DS1CMmH1/5s8iWjXPgTcNCw10
-         4CFkO2DJMIB8mwxjCwV7KpEhULORcPvxj7R4vlG7eTvhXJcreESVeNzD7P4FNRbes2Xe
-         Q+++dP9EQHBlcY8JIMNVZczd+5HaMDdGCVJxcYjTuQfivY+YSXiIbsGCzn92SItilBvc
-         cu2RclbU0a/8vvXEov68dyZu3nIH/dj4Pn7p2YVkXXLFO1lHt6dsAHQzQZCszRguQCr6
-         D68g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=MS2o89rPX08fYfLG56pnKr91VCgwEiweba5HnccU9ZY=;
-        b=uQgr6W5edugcuhQRJjaZbxfocdjb0TEnP0MmKJZv0WpAF5dsUMS0HDpyErswk5Y4rm
-         nM1w3LUhsqp35IV+gqJ9OLP9O5oCg8ZtwSEUeG2Zo2RghDzwNBsQGUpQXRcX1Ov9Xbzq
-         RdfloKRpEIa39bUzchAX97uhXl1mpHOO7pu7S+2GamgatjSkM7QtmQwCKhcbFTn6rszg
-         xoTj17pcRKthLD3W5eX78VD4Noch17X3Ydd9YA7vz+NNJvfxbw0FCFTFqUL5086Rvi/F
-         yGWtgMupOq2WkY2uo2noBz7I+qELLDXg7/+/2+EcUxiFzvzKox2ZhSjiqItsLsebrYqP
-         WAmw==
-X-Gm-Message-State: AGi0Puadi1J+Mghljz1rViGu37uJ7v3ZBGi18yPfQ+Q7mWSPkB8NfRzv
-        Ol2k+6MQRfrZIQYaglojtF8EKXhMGDY=
-X-Google-Smtp-Source: APiQypLogJ8rGITshHsXLcH0LuHNPeq7kANbK4kjgMSFMdJlyRndRqefSALVr8/vzkRFOUvdPCb9Ng==
-X-Received: by 2002:adf:82f5:: with SMTP id 108mr30618064wrc.43.1588058089492;
-        Tue, 28 Apr 2020 00:14:49 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id d7sm23722846wrn.78.2020.04.28.00.14.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 00:14:48 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 08:14:47 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] mfd: syscon: Add Spreadtrum physical regmap bus
- support
-Message-ID: <20200428071447.GJ3559@dell>
-References: <c2fd765aa388d4510194ba02c017e39bde57c8d4.1587478171.git.baolin.wang7@gmail.com>
- <CADBw62rJ8VYTgnW_3q4=TkCyZx2B1DHsG+oOmiph8FLsukUROQ@mail.gmail.com>
- <20200427090518.GG3559@dell>
- <CADBw62qXtNnoNq0F1iZrvQHryMTy86GEqcD-qXBzsJJL-B8mQg@mail.gmail.com>
+        Tue, 28 Apr 2020 03:16:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588058211;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0B3gnfAi+vC2wNO8K4I/DfPuZmGhtWSGMZXgFSeqqJA=;
+        b=TmnTM02FZkvw3FiJSOb01mbRKqrPYsYi7yD06BBxEQObplgrgy0Rs95LQBED7sekuyiaPW
+        hmXUBNJ6Lf1JZuAZ6GttsXi34IOFeNyiDIcuM0Y6hPQKLNHTRN6j7JRzzxXFzkOb2SvHOm
+        Vx+FnF6Mja54BCYfNYF456Ug8sM76Uw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-40-NMKKXlh1OaaR_bN8nV9F5A-1; Tue, 28 Apr 2020 03:16:45 -0400
+X-MC-Unique: NMKKXlh1OaaR_bN8nV9F5A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9C04F107ACCD;
+        Tue, 28 Apr 2020 07:16:43 +0000 (UTC)
+Received: from treble (ovpn-112-209.rdu2.redhat.com [10.10.112.209])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4814F5C1B2;
+        Tue, 28 Apr 2020 07:16:41 +0000 (UTC)
+Date:   Tue, 28 Apr 2020 02:16:40 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH] x86/unwind/orc: Move ORC sorting variables under
+ CONFIG_MODULE
+Message-ID: <20200428071640.psn5m7eh3zt2in4v@treble>
+References: <20200428162910.0dee6f52@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADBw62qXtNnoNq0F1iZrvQHryMTy86GEqcD-qXBzsJJL-B8mQg@mail.gmail.com>
+In-Reply-To: <20200428162910.0dee6f52@canb.auug.org.au>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020, Baolin Wang wrote:
+Fix the following warnings seen with !CONFIG_MODULE:
 
-> On Mon, Apr 27, 2020 at 5:05 PM Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > On Mon, 27 Apr 2020, Baolin Wang wrote:
-> >
-> > > Hi Arnd and Lee,
-> > >
-> > > On Tue, Apr 21, 2020 at 10:13 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> > > >
-> > > > Some platforms such as Spreadtrum platform, define a special method to
-> > > > update bits of the registers instead of read-modify-write, which means
-> > > > we should use a physical regmap bus to define the reg_update_bits()
-> > > > operation instead of the MMIO regmap bus. Thus we can register a new
-> > > > physical regmap bus into syscon core to support this.
-> > > >
-> > > > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> > >
-> > > Do you have any comments for this patch? Thanks.
-> >
-> > Yes.  I'm not accepting it, sorry.
-> >
-> > I'd rather you duplicate the things you need from of_syscon_register()
-> > in your own driver than taint this one.
-> 
-> Thanks for your comments and I can understand your concern. But we
-> still want to use the standard syscon APIs in syscon.c, which means we
-> still need insert an callback or registration or other similar methods
-> to support vendor specific regmap bus. Otherwise we should invent some
-> similar syscon APIs in our vendor syscon driver, like
-> sprd_syscon_regmap_lookup_by_phandle/sprd_syscon_regmap_lookup_by_compatible.
+  arch/x86/kernel/unwind_orc.c:29:26: warning: 'cur_orc_table' defined but not used [-Wunused-variable]
+     29 | static struct orc_entry *cur_orc_table = __start_orc_unwind;
+        |                          ^~~~~~~~~~~~~
+  arch/x86/kernel/unwind_orc.c:28:13: warning: 'cur_orc_ip_table' defined but not used [-Wunused-variable]
+     28 | static int *cur_orc_ip_table = __start_orc_unwind_ip;
+        |             ^~~~~~~~~~~~~~~~
 
-So long as the generic driver stays generic.  Providing a registration
-function sounds cleaner than tainting the code with vendor specifics.
+Fixes: 153eb2223c79 ("x86/unwind/orc: Convert global variables to static")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+---
+ arch/x86/kernel/unwind_orc.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-> Arnd, what do you think? Thanks.
-
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index 0ebc11a8bb45..5b0bd8581fe6 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -24,10 +24,6 @@ extern struct orc_entry __stop_orc_unwind[];
+ static bool orc_init __ro_after_init;
+ static unsigned int lookup_num_blocks __ro_after_init;
+ 
+-static DEFINE_MUTEX(sort_mutex);
+-static int *cur_orc_ip_table = __start_orc_unwind_ip;
+-static struct orc_entry *cur_orc_table = __start_orc_unwind;
+-
+ static inline unsigned long orc_ip(const int *ip)
+ {
+ 	return (unsigned long)ip + *ip;
+@@ -192,6 +188,10 @@ static struct orc_entry *orc_find(unsigned long ip)
+ 
+ #ifdef CONFIG_MODULES
+ 
++static DEFINE_MUTEX(sort_mutex);
++static int *cur_orc_ip_table = __start_orc_unwind_ip;
++static struct orc_entry *cur_orc_table = __start_orc_unwind;
++
+ static void orc_sort_swap(void *_a, void *_b, int size)
+ {
+ 	struct orc_entry *orc_a, *orc_b;
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.21.1
+
