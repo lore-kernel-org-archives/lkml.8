@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360C8C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 739CEC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 094062075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E7EA206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:39:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="g/lIuDSB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="e0gzjcuc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgD1NjA (ORCPT
+        id S1727887AbgD1NjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:39:00 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:11654 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727824AbgD1Niz (ORCPT
+        Tue, 28 Apr 2020 09:39:10 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:50725 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727857AbgD1NjJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:38:55 -0400
+        Tue, 28 Apr 2020 09:39:09 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588081134; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1588081149; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=NUqZ6nBRUTDuFsuKEN4/TdAg0ONBkj78rZ9jiUu6P8I=; b=g/lIuDSBIKmSwZZyMjsUxh7Tf+hy94nbuFXgzWqxKmg6MYPk4Zb2vgM/rOSHp3V6Ap9uoq71
- SVL8t9h2RU2UrObywzrXFqwp/oVsCsnxZN9/Dd+CSorFhSYrweMJ4xP/65hNGM6z5Tz0coI+
- jF7o3azyGTI/d7c7Ug9DAcoNRoI=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ bh=zTfgCKgZhNN0wQQH7aPuClfYB8SFxYbAbvgr05qtVWM=; b=e0gzjcucugMMi5kBSHtLuGZlYieLVMEcUgArIsJwyu22XrBJPVZlwnT5zqPoTaVQWSKBQe8e
+ 3TWhIU+oDnd40dm/yzOvSfpeV2ngaVeoknjmOSUz10F1tUXrGidY44ac+njEqGGnENGRkp8G
+ I3CRm6bs4WrDC6SZ1U+aA95zPlU=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea831ee.7f7765bd8a78-smtp-out-n02;
- Tue, 28 Apr 2020 13:38:54 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5ea831fd.7ff4c8f90110-smtp-out-n04;
+ Tue, 28 Apr 2020 13:39:09 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D33EAC4478C; Tue, 28 Apr 2020 13:38:53 +0000 (UTC)
+        id 9344FC447A1; Tue, 28 Apr 2020 13:39:06 +0000 (UTC)
 Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CC6DDC4478C;
-        Tue, 28 Apr 2020 13:38:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CC6DDC4478C
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 64070C44793;
+        Tue, 28 Apr 2020 13:39:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 64070C44793
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
 From:   Rajendra Nayak <rnayak@codeaurora.org>
@@ -51,9 +51,9 @@ To:     viresh.kumar@linaro.org, sboyd@kernel.org,
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, mka@chromium.org,
         Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v3 04/17] arm64: dts: sc7180: Add OPP table for all qup devices
-Date:   Tue, 28 Apr 2020 19:02:52 +0530
-Message-Id: <1588080785-6812-5-git-send-email-rnayak@codeaurora.org>
+Subject: [PATCH v3 07/17] arm64: dts: sdm845: Add DSI and MDP OPP tables and power-domains
+Date:   Tue, 28 Apr 2020 19:02:55 +0530
+Message-Id: <1588080785-6812-8-git-send-email-rnayak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
 References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
@@ -62,315 +62,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-qup has a requirement to vote on the performance state of the CX domain
-in sc7180 devices. Add OPP tables for these and also add power-domains
-property for all qup instances.
+Add the OPP tables for DSI and MDP based on the perf state/clk
+requirements, and add the power-domains property to specify the
+scalable power domain.
 
 Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 ---
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 79 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 59 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 998f101..efba600 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -417,6 +417,25 @@
- 			status = "disabled";
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 36b9fb1..7a625ad 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -3309,6 +3309,59 @@
+ 			#reset-cells = <1>;
  		};
  
-+		qup_opp_table: qup-opp-table {
++		mdp_opp_table: mdp-opp-table {
 +			compatible = "operating-points-v2";
 +
-+			opp-75000000 {
-+				opp-hz = /bits/ 64 <75000000>;
++			opp-19200000 {
++				opp-hz = /bits/ 64 <19200000>;
++				required-opps = <&rpmhpd_opp_min_svs>;
++			};
++
++			opp-171428571 {
++				opp-hz = /bits/ 64 <171428571>;
 +				required-opps = <&rpmhpd_opp_low_svs>;
 +			};
 +
-+			opp-100000000 {
-+				opp-hz = /bits/ 64 <100000000>;
-+				required-opps = <&rpmhpd_opp_svs>;
++			opp-344000000 {
++				opp-hz = /bits/ 64 <344000000>;
++				required-opps = <&rpmhpd_opp_svs_l1>;
 +			};
 +
-+			opp-128000000 {
-+				opp-hz = /bits/ 64 <128000000>;
++			opp-430000000 {
++				opp-hz = /bits/ 64 <430000000>;
 +				required-opps = <&rpmhpd_opp_nom>;
 +			};
 +		};
 +
- 		qupv3_id_0: geniqup@8c0000 {
- 			compatible = "qcom,geni-se-qup";
- 			reg = <0 0x008c0000 0 0x6000>;
-@@ -452,6 +471,8 @@
- 				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
++		dsi_opp_table: dsi-opp-table {
++			compatible = "operating-points-v2";
++
++			opp-19200000 {
++				opp-hz = /bits/ 64 <19200000>;
++				required-opps = <&rpmhpd_opp_min_svs>;
++			};
++
++			opp-180000000 {
++				opp-hz = /bits/ 64 <180000000>;
++				required-opps = <&rpmhpd_opp_low_svs>;
++			};
++
++			opp-275000000 {
++				opp-hz = /bits/ 64 <275000000>;
++				required-opps = <&rpmhpd_opp_svs>;
++			};
++
++			opp-328580000 {
++				opp-hz = /bits/ 64 <328580000>;
++				required-opps = <&rpmhpd_opp_svs_l1>;
++			};
++
++			opp-358000000 {
++				opp-hz = /bits/ 64 <358000000>;
++				required-opps = <&rpmhpd_opp_nom>;
++			};
++		};
++
+ 		mdss: mdss@ae00000 {
+ 			compatible = "qcom,sdm845-mdss";
+ 			reg = <0 0x0ae00000 0 0x1000>;
+@@ -3353,6 +3406,8 @@
+ 						  <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
+ 				assigned-clock-rates = <300000000>,
+ 						       <19200000>;
++				operating-points-v2 = <&mdp_opp_table>;
++				power-domains = <&rpmhpd SDM845_CX>;
  
-@@ -463,6 +484,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart0_default>;
- 				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
+ 				interrupt-parent = <&mdss>;
+ 				interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+@@ -3399,6 +3454,8 @@
+ 					      "core",
+ 					      "iface",
+ 					      "bus";
++				operating-points-v2 = <&dsi_opp_table>;
++				power-domains = <&rpmhpd SDM845_CX>;
  
-@@ -476,6 +499,8 @@
- 				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
+ 				phys = <&dsi0_phy>;
+ 				phy-names = "dsi";
+@@ -3463,6 +3520,8 @@
+ 					      "core",
+ 					      "iface",
+ 					      "bus";
++				operating-points-v2 = <&dsi_opp_table>;
++				power-domains = <&rpmhpd SDM845_CX>;
  
-@@ -489,6 +514,8 @@
- 				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -500,6 +527,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart1_default>;
- 				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -513,6 +542,8 @@
- 				interrupts = <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -524,6 +555,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart2_default>;
- 				interrupts = <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -537,6 +570,8 @@
- 				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -550,6 +585,8 @@
- 				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -561,6 +598,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart3_default>;
- 				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -574,6 +613,8 @@
- 				interrupts = <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -585,6 +626,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart4_default>;
- 				interrupts = <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -598,6 +641,8 @@
- 				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -611,6 +656,8 @@
- 				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -622,6 +669,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart5_default>;
- 				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 		};
-@@ -661,6 +710,8 @@
- 				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -672,6 +723,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart6_default>;
- 				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -685,6 +738,8 @@
- 				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -696,6 +751,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart7_default>;
- 				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -709,6 +766,8 @@
- 				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -722,6 +781,8 @@
- 				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -733,6 +794,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart8_default>;
- 				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -746,6 +809,8 @@
- 				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -757,6 +822,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart9_default>;
- 				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -770,6 +837,8 @@
- 				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -783,6 +852,8 @@
- 				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -794,6 +865,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart10_default>;
- 				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -807,6 +880,8 @@
- 				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -820,6 +895,8 @@
- 				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -831,6 +908,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart11_default>;
- 				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 		};
+ 				phys = <&dsi1_phy>;
+ 				phy-names = "dsi";
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
