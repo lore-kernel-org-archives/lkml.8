@@ -2,128 +2,198 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB84FC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E00C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA9CD206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:36:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FwnL/1+A"
+	by mail.kernel.org (Postfix) with ESMTP id 09540206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgD1Ogm (ORCPT
+        id S1728045AbgD1OhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:36:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727845AbgD1Ogm (ORCPT
+        Tue, 28 Apr 2020 10:37:09 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3958 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727122AbgD1OhI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:36:42 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 097B0C03C1AB;
-        Tue, 28 Apr 2020 07:36:42 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id k6so23087033iob.3;
-        Tue, 28 Apr 2020 07:36:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=VPA9Kxr39ERnqwIoc2UJSAp5IoBA3dbxr68iA+juyP0=;
-        b=FwnL/1+AgacLVrzfCLrLz36o10+EmBtDT+Vx71m9oQ+I8Ep9EruaY8kVJkEYTxwWXr
-         9mOoV34Me4r25FtQL4YIVI1WVIVyNTGJK3zSm5wkSCPHE+jnDdwe8NCx9Zz/Iyqozj4x
-         Ru/LBFO5YLFEmUqcxt3LPB/c+vkH0Gq2GNhQFwD/3Om8Pufxq/LBJGmYKrJI2cgyygFA
-         /KDRbpoVEG3SaE2JJ1Sl/nF5C1H4Disv6rZrIdh6EUgw/R53UwhrWWCzxwA8WJVh/hUy
-         JPoJ0VP1t3RZs7VoNBMzXnRTP2nnt1Cw16eNbJ98uAjMlPANVBDzEt5854f2gIwdTT4i
-         c67w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VPA9Kxr39ERnqwIoc2UJSAp5IoBA3dbxr68iA+juyP0=;
-        b=WzRe62VY2fVIL1IhtQvYz6EQVb3prMW0c60WnxpoAr3WvziSBEuwjQ2FNqueVGxnuV
-         9snfiGGQOmbJhZbEj6Z3eGX3emZEeobvt/DzYtFfUjOdQ9XWvycrBqj0gsg8RSbfoTyS
-         SVj3H8ACgpJbuGT5fy2+4cK+XlzwO2X1liBaJ0rB9XIY11Z/786ED+U5p5rjZ0IkQwpw
-         FdIVjgfaoIoj0VWTI93bP1WTak3UOiU6TpAHZ6zvFW81Bj/SK8sNwAh6JIRlz5XC37/p
-         2HiNWe+zX8v7pIXO8Ug1X9KLSfvnZ+qN48wU640iPmC7o3jy+7gM0cK6PUtMi79yPeEt
-         KoyA==
-X-Gm-Message-State: AGi0PuZ/Fjg8nvaHNkZkwoDV1MilUEwbst40VP+a1gEvZvQtiS55RL2J
-        G+rh5viAMLZ+DuRTqSBly5BRLEFibuDVpNulMY8=
-X-Google-Smtp-Source: APiQypJWKcOZwolIsn7a73yc4aMqWx+mk2KAdEK/HRRLB/AFX92WYN4FJ4pKWxX8TsolxV933sbSRmnXvsBuyeUoSoo=
-X-Received: by 2002:a5d:84d4:: with SMTP id z20mr15044943ior.36.1588084601133;
- Tue, 28 Apr 2020 07:36:41 -0700 (PDT)
+        Tue, 28 Apr 2020 10:37:08 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03SEUlsr090684;
+        Tue, 28 Apr 2020 10:37:05 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh6ug458-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 10:37:04 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03SEUxfK091974;
+        Tue, 28 Apr 2020 10:37:04 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh6ug44g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 10:37:04 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03SEUQqq002130;
+        Tue, 28 Apr 2020 14:37:03 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma04dal.us.ibm.com with ESMTP id 30mcu6kua2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 14:37:03 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03SEb16r54395262
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 14:37:01 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B4579112064;
+        Tue, 28 Apr 2020 14:37:01 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 36E98112066;
+        Tue, 28 Apr 2020 14:37:01 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.144.216])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 28 Apr 2020 14:37:01 +0000 (GMT)
+Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
+ resource in use
+To:     Harald Freudenberger <freude@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     borntraeger@de.ibm.com, cohuck@redhat.com, mjrosato@linux.ibm.com,
+        pasic@linux.ibm.com, alex.williamson@redhat.com,
+        kwankhede@nvidia.com, jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+ <20200407192015.19887-4-akrowiak@linux.ibm.com>
+ <75bcbc06-f38f-1aff-138f-5d2a2dd3f7b6@linux.ibm.com>
+ <162f7dbc-9dd0-0a42-0d1a-8412a9a848e7@linux.ibm.com>
+ <8646519e-a04d-341d-8197-944bf0a1ca4d@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <10913b5e-e6e2-81f5-5d4c-56ab01a8b5f4@linux.ibm.com>
+Date:   Tue, 28 Apr 2020 10:37:00 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200426104115.22630-1-peron.clem@gmail.com> <20200426104115.22630-8-peron.clem@gmail.com>
- <20200428081444.vddwswsorl5tf7yp@gilmour.lan>
-In-Reply-To: <20200428081444.vddwswsorl5tf7yp@gilmour.lan>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Tue, 28 Apr 2020 16:36:30 +0200
-Message-ID: <CAJiuCcf6xzB+HhV4GSOuawi3FJDeA4dvHXkKMV36+UF8gLLj7w@mail.gmail.com>
-Subject: Re: [PATCH v3 7/7] arm64: dts: sun50i-h6: Add HDMI audio to H6 DTSI
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Marcus Cooper <codekipper@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <8646519e-a04d-341d-8197-944bf0a1ca4d@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-28_09:2020-04-28,2020-04-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
+ suspectscore=3 bulkscore=0 spamscore=0 mlxscore=0 impostorscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
 
-On Tue, 28 Apr 2020 at 10:14, Maxime Ripard <maxime@cerno.tech> wrote:
->
-> On Sun, Apr 26, 2020 at 12:41:15PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> >
-> > Add a simple-soundcard to link audio between HDMI and I2S.
-> >
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 31 ++++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/=
-boot/dts/allwinner/sun50i-h6.dtsi
-> > index a5ee68388bd3..558fe63739cb 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > @@ -88,6 +88,24 @@
-> >                       (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> >       };
-> >
-> > +     sound_hdmi: sound {
-> > +             compatible =3D "simple-audio-card";
-> > +             simple-audio-card,format =3D "i2s";
-> > +             simple-audio-card,name =3D "allwinner-hdmi";
->
-> It doesn't seem to be on purpose, but the name is different from the othe=
-r
-> series you sent.
 
-Indeed, I have sent this serie before looking at the other.
+On 4/28/20 7:07 AM, Harald Freudenberger wrote:
+> On 28.04.20 00:24, Tony Krowiak wrote:
+>>
+>> On 4/27/20 4:20 AM, Pierre Morel wrote:
+>>>
+>>> On 2020-04-07 21:20, Tony Krowiak wrote:
+>>>> Introduces a new driver callback to prevent a root user from unbinding
+>>>> an AP queue from its device driver if the queue is in use. The intent of
+>>>> this callback is to provide a driver with the means to prevent a root user
+>>>> from inadvertently taking a queue away from a guest and giving it to the
+>>>> host while the guest is still using it.
+>>> How can we know, at this point if the guest uses or not the queue?
+>> The struct ap_matrix_mdev has a field, struct kvm *kvm, which holds a pointer to KVM when
+>> the matrix mdev is in use by a guest. This patch series also introduces a shadow_crycb (soon to
+>> be shadow_apcb) which holds the AP configuration for the guest. Between those two things,
+>> the driver can detect when a queue is in use by a guest.
+>>
+>>> Do you want to say that this prevents to take away a queue when it is currently assigned to a VFIO device?
+>>> and with a guest currently using this VFIO device?
+>> No, I do not. The intent here is to enforce the proper procedure for giving up a queue so it is done
+>> deliberately. Before taking a queue away from the matrix mdev, its APQN should be unassigned
+>> from the matrix mdev. That is not to say that if there are major objections to this that we can't
+>> base in_use upon the queue being in use by a guest at the time. Maybe that is preferable to
+>> the community. I'll leave it to them to state their case.
+>>
+>>>> The callback will
+>>>> be invoked whenever a change to the AP bus's sysfs apmask or aqmask
+>>>> attributes would result in one or more AP queues being removed from its
+>>>> driver. If the callback responds in the affirmative for any driver
+>>>> queried, the change to the apmask or aqmask will be rejected with a device
+>>>> in use error.
+>>> AFAIU you mean that Linux's driver's binding and unbinding mechanism is not sufficient to avoid this issue because unbind can not be refused by the driver.
+>> Correct!
+>>
+>>>
+>>> The reason why we do not want a single queue to be removed from the VFIO driver is because the VFIO drivers works on a matrix, not on queues, and for the matrix to be consistent it needs to acquire all queues defined by the cross product of all APID and AQID assigned to the matrix.
+>> Not correct. The reason why is because we do not want a queue to be surreptitiously removed
+>> without the guest administrator being aware of its removal.
+>>
+>>> This functionality is valid for the host as for the guests and is handled automatically by the firmware with the CRYCB.
+>>> The AP bus uses QCI to retrieve the host CRYCB and build the hosts AP queues.
+>>>
+>>> If instead to mix VFIO CRYCB matrix handling and queues at the same level inside the AP bus we separate these different firmware entities in two different software entities.
+>>>
+>>> If we make the AP bus sit above a CRYCB/Matrix bus, and in the way virtualize the QCI and test AP queue instructions:
+>>> - we can directly pass a matrix device to the guest though a VFIO matrix device
+>>> - the consistence will be automatic
+>>> - the VFIO device and parent device will be of the same kind which would make the design much more clearer.
+>>> - there will be no need for these callback because the consistence of the matrix will be guaranteed by firmware
+>> As stated in my response above, the issue here is not consistency. While the design you describe
+>> may be reasonable, it is a major departure from what is out in the field. In other words, that ship
+>> has sailed.
+>>
+>>>
+>>>> For this patch, only non-default drivers will be queried. Currently,
+>>>> there is only one non-default driver, the vfio_ap device driver.
+>>> You mean that the admin may take queues away from the "default driver", while the queue is in use, to give it to an other driver?
+>>> Why is it to avoid in one way and not in the other way?
+>> Because the default drivers have direct control over the queues and can ensure they are empty
+>> and reset before giving up control. The vfio driver does not have direct control over the queues
+>> because they have been passed through to the guest.
+> No, that's not true. The 'default' drivers have no change to do anything with an APQN when it is removed
+> from the driver. They get the very same notification which is the remove() callback as the vfio dd gets
+> and have the very same change to do something here. The more interesting thing here is, that the remove()
+> callback invocation is usually because a hardware HAS BEEN GONE AWAY. Neither the 'default' drivers
+> nor the vfio dd can do a reset on a not-any-more existing APQN.
+> And it is also not true that the vfio dd has no direct control over the queue because they have been passed
+> through to the guest. It's the job of the vfio dd to modify the guest's APM, AQM, ADM masks to disable
+> the guest's access to the APQN and then the vfio can (try to) do a reset.
 
-I will change this to keep coherency, once we agree on the correct card nam=
-e.
+The context here is when a sysadmin deliberately takes one or more 
+queues away from a
+guest by changing the apmask or aqmask; we are not talking about the the 
+case where an
+adapter is deconfigured or disappears. The idea here is to prevent a 
+sysadmin for the host
+from taking a queue away from a KVM guest that is using it. IMHO, control
+over that queue should belong to the guest until such time as the guest 
+gives it up or the
+guest is terminated. Since the zcrypt drivers are directly responsible 
+for their AP queues,
+it is not necessary to implement this callback, although there is 
+nothing precluding that.
 
-Thanks for the review,
-Clement
+>>>> The
+>>>> vfio_ap device driver manages AP queues passed through to one or more
+>>>> guests
+>>> I read this as if a queue may be passed to several guest...
+>>> please, rephrase or explain.
+>> AP queues is plural, so it is true that AP queues can be passed through
+>> to more than one guest. I see your point, however, so I'll reword that
+>> to be more clear.
+>>
+>>>> and we don't want to unexpectedly take AP resources away from
+>>>> guests which are most likely independently administered.
+>>> When you say "independently administered", you mean as a second admin inside the host, don't you?
+>> I mean that a guest can be administered by a different person than the host administrator.
+>> Again, I'll try to clarify this.
+>>
+>>>
+>>> Regards,
+>>> Pierre
+>>>
 
->
-> Maxime
