@@ -2,129 +2,115 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7545BC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE2F0C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BEF1206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D903206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:21:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbgD1GRi (ORCPT
+        id S1726337AbgD1GVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 02:17:38 -0400
-Received: from mga14.intel.com ([192.55.52.115]:14174 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726258AbgD1GRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 02:17:38 -0400
-IronPort-SDR: 6aXIsBinpEfVIAM1O58JEgJbGel1RqKVIfoovdBmQu8xS6ZiXCbJotkyIsOUwAg1CQp1Mqttdm
- 2SNC+UcUcTFA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 23:17:37 -0700
-IronPort-SDR: mRAV00zSt3LyjUtwUnQBgVJYxZssHaTeZYd55g7dy7apgmpnumrhAXhHjflr8IZvS/GcJEj/DG
- fJ/ZM+6gzOrQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,327,1583222400"; 
-   d="scan'208";a="257519578"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 27 Apr 2020 23:17:37 -0700
-Received: from [10.214.149.60] (vramuthx-mobl1.gar.corp.intel.com [10.214.149.60])
-        by linux.intel.com (Postfix) with ESMTP id 39A80580B9C;
-        Mon, 27 Apr 2020 23:17:32 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v3 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        hauke.mehrtens@intel.com, qi-ming.wu@intel.com,
-        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
-        richard@nod.at, brendanhiggins@google.com,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-References: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200423162113.38055-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200424183612.4cfdbb6a@collabora.com> <20200427175127.0518c193@xps13>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <cba30ccb-c190-d4d6-eab9-6083bd5d2aad@linux.intel.com>
-Date:   Tue, 28 Apr 2020 14:17:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 28 Apr 2020 02:21:15 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11912 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726042AbgD1GVO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 02:21:14 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03S63Cth143380;
+        Tue, 28 Apr 2020 02:20:59 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mguvmxya-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 02:20:59 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03S63EM4143427;
+        Tue, 28 Apr 2020 02:20:58 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mguvmxxd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 02:20:58 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03S6EQIv018731;
+        Tue, 28 Apr 2020 06:20:56 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03ams.nl.ibm.com with ESMTP id 30mcu5nexn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 06:20:56 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03S6KsOC65339552
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 06:20:54 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2038CA4040;
+        Tue, 28 Apr 2020 06:20:54 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D6E96A4051;
+        Tue, 28 Apr 2020 06:20:53 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Tue, 28 Apr 2020 06:20:53 +0000 (GMT)
+Date:   Tue, 28 Apr 2020 08:20:53 +0200
+From:   Sven Schnelle <svens@linux.ibm.com>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     svens@stackframe.org, Thomas Gleixner <tglx@linutronix.de>,
+        Steve Winslow <swinslow@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] selftests/vDSO: prevent SIGFPE if vdso_info.nbucket
+ is zero
+Message-ID: <20200428062053.GA62357@tuxmaker.boeblingen.de.ibm.com>
+References: <20200404203704.69412-1-svens@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200427175127.0518c193@xps13>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200404203704.69412-1-svens@linux.ibm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-28_02:2020-04-27,2020-04-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 clxscore=1011 mlxlogscore=999 mlxscore=0 suspectscore=0
+ bulkscore=0 adultscore=0 impostorscore=0 phishscore=0 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280051
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miquel,
+On Sat, Apr 04, 2020 at 10:37:03PM +0200, Sven Schnelle wrote:
+> If vdso_info can't be parsed correctly, vdso_info.nbucket might
+> contain zero. Add a check and return NULL which will fail the
+> symbol lookup.
 
-    Thank you very much for the review comments and your time...
+Ping?
 
-On 27/4/2020 11:51 pm, Miquel Raynal wrote:
-> Hi Ramuthevar,
 > 
->>> +static int ebu_nand_probe(struct platform_device *pdev)
->>> +{
->>> +	struct device *dev = &pdev->dev;
->>> +	struct ebu_nand_controller *ebu_host;
->>> +	struct nand_chip *nand;
->>> +	phys_addr_t nandaddr_pa;
->>> +	struct mtd_info *mtd;
->>> +	struct resource *res;
->>> +	int ret;
->>> +	u32 cs;
->>> +
->>> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
->>> +	if (!ebu_host)
->>> +		return -ENOMEM;
->>> +
->>> +	ebu_host->dev = dev;
->>> +	nand_controller_init(&ebu_host->controller);
->>> +
->>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
->>> +	ebu_host->ebu_addr = devm_ioremap_resource(&pdev->dev, res);
->>> +	if (IS_ERR(ebu_host->ebu_addr))
->>> +		return PTR_ERR(ebu_host->ebu_addr);
->>> +
->>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
->>> +	ebu_host->nand_addr = devm_ioremap_resource(&pdev->dev, res);
->>> +	if (IS_ERR(ebu_host->nand_addr))
->>> +		return PTR_ERR(ebu_host->nand_addr);
->>> +
->>> +	ret = device_property_read_u32(dev, "nand,cs", &cs);
->>
->> CS ids should be encoded in the reg property (see [1]).
+> Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+> ---
+>  tools/testing/selftests/vDSO/parse_vdso.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> Is it your choice to only support a single CS or is it actually a
-> controller limitation?
-
-Yes , its controller limitation to support only one CS
-
-Regards
-Vadivel
-  If the latter, it would be much better I think
-> to anticipate the addition of the support for another CS. And in
-> this case there are many places in this driver that should be
-> more generic.
-> 
->>> +	if (ret) {
->>> +		dev_err(dev, "failed to get chip select: %d\n", ret);
->>> +		return ret;
->>> +	}
->>> +
->>> +	ebu_host->cs = cs;
->>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "nand_cs0");
-> 
-> Thanks,
-> Miquèl
+> diff --git a/tools/testing/selftests/vDSO/parse_vdso.c b/tools/testing/selftests/vDSO/parse_vdso.c
+> index 1dbb4b87268f..8e5a70a24d9a 100644
+> --- a/tools/testing/selftests/vDSO/parse_vdso.c
+> +++ b/tools/testing/selftests/vDSO/parse_vdso.c
+> @@ -226,6 +226,9 @@ void *vdso_sym(const char *version, const char *name)
+>  		return 0;
+>  
+>  	ver_hash = elf_hash(version);
+> +	if (!vdso_info.nbucket)
+> +		return NULL;
+> +
+>  	ELF(Word) chain = vdso_info.bucket[elf_hash(name) % vdso_info.nbucket];
+>  
+>  	for (; chain != STN_UNDEF; chain = vdso_info.chain[chain]) {
+> -- 
+> 2.17.1
 > 
