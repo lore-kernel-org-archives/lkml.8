@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EFEC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD0DC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4922085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 692522085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099943;
-	bh=44T7SWIY83Obrz2DWLQSdXGRagyEww4zB2z4m9v9SEk=;
+	s=default; t=1588099946;
+	bh=pPWSAVZuifoUZ2jm5X/KEw5fQZuk+oSpyd1hqiwzJmk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=abmS2DcQ6oTnS3g8s79Do/x66sUk1N5Y7HyUPg/GbaBuSnYYNxlo3tI4aBz44CnQc
-	 1d/6hM6MxJzV45CQKO9uyYzbLLwo+RjVfgOXzMHTVnivBpOHXyTRpUg8jKUSjVBcYP
-	 YlH1ZhxdzGkwYTNCkN/2Mmfq/YtE0oTEnrR57pBY=
+	b=mfKFfrzr0EgCOD8WeM6SgFATirUg4cERoCy1/ZRT2rjA5uMsp4Wt/fbd0TdDRNETz
+	 oEmLRZUiDxQ1BAyjgvTXgLJyDh+Rga1PlDM0zHfo1hdNZWj/Gj8FKa288JsajZEkQI
+	 mjZQF89mSKzXFGfaLm/koFszLV1LRGA5hCZomuOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730906AbgD1SwW (ORCPT
+        id S1729368AbgD1SgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:52:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53654 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:36:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730364AbgD1SgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:36:16 -0400
+        id S1730344AbgD1SgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:36:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7EB020575;
-        Tue, 28 Apr 2020 18:36:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35C90208E0;
+        Tue, 28 Apr 2020 18:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098976;
-        bh=44T7SWIY83Obrz2DWLQSdXGRagyEww4zB2z4m9v9SEk=;
+        s=default; t=1588098966;
+        bh=pPWSAVZuifoUZ2jm5X/KEw5fQZuk+oSpyd1hqiwzJmk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VX3B2fC4PBnGPwgzUnUBYc4Vsoor1+mtqGUOP4ism2iCeq7YrKpyO8FTJFmxgCKcP
-         4eAbMXRAtVpqPwyFxoXzp0k9KSA+6WQavK35rMzAqjcxEjOW/1NbErrEvEa/B720dH
-         407cY9nqq6UAzC5XIArDDrZlzaOhx7B4U41kwJn0=
+        b=fASaxovU7S81jfrAfOYQcDVGzIS4kUNRVg5sG7lOFq+1vSfKjgma0PPdaKb2iNjx7
+         RSKyf5mBm2LqFG9uwJMbnahHXxMWApg9ivlkerN7ir9cpxUXb6fJrvMldHNCY/HG49
+         E646biUcgrvI1ox487Hm/1C+tr7Getdsa7Hv5WPk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 081/131] iio: xilinx-xadc: Fix clearing interrupt when enabling trigger
-Date:   Tue, 28 Apr 2020 20:24:53 +0200
-Message-Id: <20200428182235.120764718@linuxfoundation.org>
+        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
+Subject: [PATCH 5.6 138/167] staging: vt6656: Dont set RCR_MULTICAST or RCR_BROADCAST by default.
+Date:   Tue, 28 Apr 2020 20:25:14 +0200
+Message-Id: <20200428182242.988631767@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,42 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
+From: Malcolm Priestley <tvboxspy@gmail.com>
 
-commit f954b098fbac4d183219ce5b42d76d6df2aed50a upstream.
+commit 0f8240bfc070033a4823b19883efd3d38c7735cc upstream.
 
-When enabling the trigger and unmasking the end-of-sequence (EOS) interrupt
-the EOS interrupt should be cleared from the status register. Otherwise it
-is possible that it was still set from a previous capture. If that is the
-case the interrupt would fire immediately even though no conversion has
-been done yet and stale data is being read from the device.
+mac80211/users control whether multicast is on or off don't enable it by default.
 
-The old code only clears the interrupt if the interrupt was previously
-unmasked. Which does not make much sense since the interrupt is always
-masked at this point and in addition masking the interrupt does not clear
-the interrupt from the status register. So the clearing needs to be done
-unconditionally.
+Fixes an issue when multicast/broadcast is always on allowing other beacons through
+in power save.
 
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Fixes: bdc8cda1d010 ("iio:adc: Add Xilinx XADC driver")
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: db8f37fa3355 ("staging: vt6656: mac80211 conversion: main_usb add functions...")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
+Link: https://lore.kernel.org/r/2c24c33d-68c4-f343-bd62-105422418eac@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/xilinx-xadc-core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/vt6656/main_usb.c |    8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
---- a/drivers/iio/adc/xilinx-xadc-core.c
-+++ b/drivers/iio/adc/xilinx-xadc-core.c
-@@ -675,7 +675,7 @@ static int xadc_trigger_set_state(struct
+--- a/drivers/staging/vt6656/main_usb.c
++++ b/drivers/staging/vt6656/main_usb.c
+@@ -817,15 +817,11 @@ static void vnt_configure(struct ieee802
+ {
+ 	struct vnt_private *priv = hw->priv;
+ 	u8 rx_mode = 0;
+-	int rc;
  
- 	spin_lock_irqsave(&xadc->lock, flags);
- 	xadc_read_reg(xadc, XADC_AXI_REG_IPIER, &val);
--	xadc_write_reg(xadc, XADC_AXI_REG_IPISR, val & XADC_AXI_INT_EOS);
-+	xadc_write_reg(xadc, XADC_AXI_REG_IPISR, XADC_AXI_INT_EOS);
- 	if (state)
- 		val |= XADC_AXI_INT_EOS;
- 	else
+ 	*total_flags &= FIF_ALLMULTI | FIF_OTHER_BSS | FIF_BCN_PRBRESP_PROMISC;
+ 
+-	rc = vnt_control_in(priv, MESSAGE_TYPE_READ, MAC_REG_RCR,
+-			    MESSAGE_REQUEST_MACREG, sizeof(u8), &rx_mode);
+-
+-	if (!rc)
+-		rx_mode = RCR_MULTICAST | RCR_BROADCAST;
++	vnt_control_in(priv, MESSAGE_TYPE_READ, MAC_REG_RCR,
++		       MESSAGE_REQUEST_MACREG, sizeof(u8), &rx_mode);
+ 
+ 	dev_dbg(&priv->usb->dev, "rx mode in = %x\n", rx_mode);
+ 
 
 
