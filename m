@@ -2,128 +2,131 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EF6C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A72DC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63CB1206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C8520663
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:03:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nrCK7SnA"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Z+8pq0oL";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aKShKvUn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgD1KDh (ORCPT
+        id S1727846AbgD1KD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 06:03:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726932AbgD1KDh (ORCPT
+        Tue, 28 Apr 2020 06:03:58 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:52533 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726932AbgD1KD6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 06:03:37 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 248C6C03C1A9;
-        Tue, 28 Apr 2020 03:03:37 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t7so2250913plr.0;
-        Tue, 28 Apr 2020 03:03:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B47MWor82gS9pbzIegeM3QuLFmWB3mDHdrQ9VL++afI=;
-        b=nrCK7SnAoBKnsW47PH6KdJVngh2wmddILURXMBln553biX696/xlswk8+NI/1huiq/
-         WAUd13XaNPT/agYm3VF4fXKbJDWG2CXvOKTe/7X6KnmC67lkkTGb6oO9b8PedRKHbEyT
-         RBYDscitMQ+Fim7G2Qx0nNTXy395hfXXdkDJx6rwMp82tLUu6EgmS42LAB2EFi6EUUJY
-         hZBaNewYyMTmdIQJi2G6WImQvKHZbwoMXlQ+JxOqT5KOB9VF2CDqhSf8SVh7O+vRfusT
-         nmVdC4HGEPmKO9VbnnAlKgKC+Z6lWj4eDnq4he3J0IkVJwyyP/1BmKICCYoD45iQ70WB
-         unTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B47MWor82gS9pbzIegeM3QuLFmWB3mDHdrQ9VL++afI=;
-        b=tvo+MWeeBOE7cVHhTUdaX5IoTUirn4YIPMvmQlQ42hSubkdrAQITNX0guJvj6Z8aBD
-         wL4P5f7EtXTsCiliZrh7sTjyoaGkHcPPQUyrrzk6BKKgT7YXBJr1z0UODW/hdfikFxkY
-         xUEwkYFcRx1fIt9kVTV3ERrnbKdTdGb0OyTpbbLsw7g79i03xJvL5z73FKOCvKP0I+pa
-         lPot7i0K8nMUunWh344bH69737e8/FBQe7CIu7ilCpyBtqxC39db8bUobfoQMGtl/4qy
-         OBsirPKTi6RpGrQC/8WMDOAGs0TkWVT2dVBQUqhGQoxVGkcdVVDnwDo8Fh2wgMiLClTU
-         QJAg==
-X-Gm-Message-State: AGi0PuawYZpu+qHAbm9fOYwZmuGQWbM7sjjxdmeCqzrOB7ShB7hkJYRQ
-        vppuKjhyMXKHtf3mXDDTvu1AdKtswh0OZ1as8Oo=
-X-Google-Smtp-Source: APiQypI5K60dAdHo8M/GOcGL+EVrmv/aPEuWFNph9FWRnFIr9C0KmKwQlz6TD7ILooulyHou0b63fJIotf/Kz9lrtlo=
-X-Received: by 2002:a17:90a:224b:: with SMTP id c69mr4246982pje.8.1588068216432;
- Tue, 28 Apr 2020 03:03:36 -0700 (PDT)
+        Tue, 28 Apr 2020 06:03:58 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id E5B58580339;
+        Tue, 28 Apr 2020 06:03:56 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 28 Apr 2020 06:03:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=bfyRrpRNqGk3bD/MI+xjZ+HE0Cw
+        EJYIH+SprH0vjLlU=; b=Z+8pq0oLT7a7qD4AKlOw9YLXd1wCk+G5aFOuHQFD01Q
+        VnJYOdscNtcwEibPnzQneHtKoUU7enhp8cxYc1EA3G1pGsxGAeGS1aNwePclf9mH
+        VQQMTMh+wXvTfzhWyee5I4vNMeo+xoSMG8gxhgQ7FDquy9GbcthWjoiXYP7FoA1O
+        rJkpe5z3kH2X8K2nW4Et6B64dKFvB1TMcJ//Vvwf5n8YAlXIaHKhD/gbZy87i5GA
+        cbikWRD5p3os1pJ3bcMkWCvgzUVelxrYXNi98FiXbOoXQCubQMDE2i/Yu5/idrEL
+        34TfwHISWbYuSQepV+1XgM177rWCVMGD8DVZm4gK/6Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=bfyRrp
+        RNqGk3bD/MI+xjZ+HE0CwEJYIH+SprH0vjLlU=; b=aKShKvUn+J6r4/GBqVSb6o
+        elewB6YnWE7rJO+jVEJHKRX4qnBUT1NiNi61EIf0Uj7MRQQ0TDWkuZZatiEUgA4A
+        6+XeQYmrshabRuNRRLG6MCkEv7Xn2mF7FwJ0yz8j5DdLo5ayy9OqY78AkdhzHeIh
+        LZCI4EqlGDQPy+TsahyxA4bii2cD1Sm0b0XlWQmzRRCdEm0WFT3PeBuaTYWwJwNc
+        ZAeeNUF90qjoRJ6xIcpC4gj8LMubqPoWb1iSJ6hieSuXL+7Entcf2wLJbvhn/xrP
+        DuAhJd467p8NcYG9hH/zDVMG/v0DRJksBSlAmvG40Nsu2mi1yttJG3DAGQbTwi6w
+        ==
+X-ME-Sender: <xms:i_-nXnb__Ic3afkNaHTDJn_hnUgQ8f6wDG4silLUF2ixSudkZyDfTQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedugddvfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:i_-nXu8dzWVuc8z1fAXfP7ybogPcfXXlgD3KZKJfk32Kc9wV2AgxHg>
+    <xmx:i_-nXhAdiBirlYu-f1yUYyaGg5OEHxra4pz9fgh-oyX_R6XcdYGWwA>
+    <xmx:i_-nXisdpIP3hBSqk-PMGUylNUNDEQpJG3LXCm4WKEqpm9PK-QUm1w>
+    <xmx:jP-nXpDH7HYCZWyhumEYlOf9r1wEUbGPrrUzjtNvcc6Z03kLmP-kIA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D877D3280068;
+        Tue, 28 Apr 2020 06:03:54 -0400 (EDT)
+Date:   Tue, 28 Apr 2020 12:03:52 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Alistair Francis <alistair@alistair23.me>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>, wens@csie.org,
+        anarsoul@gmail.com, devicetree@vger.kernel.org,
+        alistair23@gmail.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [DO-NOT-MERGE][PATCH v4 3/3] arm64: allwinner: Enable Bluetooth
+ and WiFi on sopine baseboard
+Message-ID: <20200428100352.g7g7kh5e4vpde3es@gilmour.lan>
+References: <20200425155531.2816584-1-alistair@alistair23.me>
+ <20200425155531.2816584-3-alistair@alistair23.me>
+ <417EB5CB-F57F-4B7E-A81E-9ECE166BE217@holtmann.org>
 MIME-Version: 1.0
-References: <20200423220056.29450-1-john.stultz@linaro.org>
- <jhj1rodyeu1.mognet@arm.com> <CALAqxLW+CBMxj_5gCF5yLcX8dhM7Fg6oOL-zot0ZZT6PW6R04g@mail.gmail.com>
- <jhj1ro9bzhg.mognet@arm.com> <CAHp75VeE_J-GE9o6QVxBk6RJ2fjSwATfR1etaT0CXCgAiidjPQ@mail.gmail.com>
- <jhjimhkrnw1.mognet@arm.com>
-In-Reply-To: <jhjimhkrnw1.mognet@arm.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 28 Apr 2020 13:03:25 +0300
-Message-ID: <CAHp75VfJCVh0HRw4G8o0603XEJe6LdUnvrrugxgU0oyOWRCBPA@mail.gmail.com>
-Subject: Re: [RFC][PATCH] serial: amba-pl011: Make sure we initialize the
- port.lock spinlock
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tpogyn2zhltbavuh"
+Content-Disposition: inline
+In-Reply-To: <417EB5CB-F57F-4B7E-A81E-9ECE166BE217@holtmann.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 11:54 AM Valentin Schneider
-<valentin.schneider@arm.com> wrote:
->
->
-> On 27/04/20 10:02, Andy Shevchenko wrote:
-> >> I did a tiny bit of git spelunking; I found a commit that changed
-> >> uart_console_enabled() into uart_console() within
-> >> uart_port_spin_lock_init():
-> >>
-> >>   a3cb39d258ef ("serial: core: Allow detach and attach serial device for console")
-> >>
-> >> Reverting just that one change in uart_port_spin_lock_init() seems to go
-> >> fine on both Juno & HiKey960, but I think that doesn't play well with the
-> >> rest of the aforementioned commit. I think that this initial (index, line)
-> >> tuple is to blame, though I've added Andy in Cc just in case.
-> >
-> > The above mentioned commit reveals the issue in the code which doesn't
-> > register console properly.
-> >
-> > See what I put in 0f87aa66e8c31 ("serial: sunhv: Initialize lock for
-> > non-registered console").
->
-> Thanks for the pointer. I'm still a puzzled as to why it goes fine on one
-> board and not on another, but at this point I don't have any better
-> suggestion than the unconditional init.
 
-My patch relied on the behaviour of 8250 [1] and that comment (near to
-spin lock initialization routine).
-It seems AMBA UART drivers unconditionally assign consoles ([2], [3])
-without registering it properly at console_initcall().
+--tpogyn2zhltbavuh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Least invasive fix is what John's patch does, but real fix is to do
-something like 8250 does.
+Hi Marcel,
 
-So, the rule of thumb is simple: if we assign console to the port we
-must initialize the lock even if we are not registering console.
-I dunno the history of different behaviours among drivers and what
-change(s) brought us to the messy spin lock initialization code in
-them.
+On Tue, Apr 28, 2020 at 11:51:24AM +0200, Marcel Holtmann wrote:
+> Hi Alistair,
+>=20
+> > The sopine board has an optional RTL8723BS WiFi + BT module that can be
+> > connected to UART1. Add this to the device tree so that it will work
+> > for users if connected.
+> >=20
+> > Signed-off-by: Alistair Francis <alistair@alistair23.me>
+> > ---
+> > .../allwinner/sun50i-a64-sopine-baseboard.dts | 29 +++++++++++++++++++
+> > 1 file changed, 29 insertions(+)
+>=20
+> so I am bit confused on what to do with this series? Do you want me to ap=
+ply a
+> subset of patches or do you require specific reviews or acks?
 
-[1]: https://elixir.bootlin.com/linux/v5.7-rc3/source/drivers/tty/serial/8250/8250_core.c#L684
-[2]: https://elixir.bootlin.com/linux/v5.7-rc3/source/drivers/tty/serial/amba-pl010.c#L691
-[3]: https://elixir.bootlin.com/linux/v5.7-rc3/source/drivers/tty/serial/amba-pl011.c#L2496
+Applying 1 and 2 and leaving 3 aside would be great :)
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks!
+Maxime
+
+--tpogyn2zhltbavuh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqf/gwAKCRDj7w1vZxhR
+xYVMAP4nKDRimgu3t5jMwZnN+FtExoWjy6v+yWcUECMXuEsnGQEAzpQYH50JCwwP
+eZsHDHII6Y9Hkgf0t2cj0zr5cBRAGwM=
+=avZ8
+-----END PGP SIGNATURE-----
+
+--tpogyn2zhltbavuh--
