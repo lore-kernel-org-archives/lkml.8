@@ -2,58 +2,54 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B460FC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F90C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8558320BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D1D320B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:38:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099082;
-	bh=yQ6aID271zdK9xX3B67e6G0sAZgVThLB4LeaZjRwPu8=;
+	s=default; t=1588099088;
+	bh=xv6Xa/NTH0AM12nexRMkvIfuY4SCnsO9x8Wyz9bb3W4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rVcipTekq4TKcnEfiYyhMBjjQWaHPc8Jq9T4Ivl2DJcmlb2HhbuoU0lywHG8Yp/3o
-	 DEibu4hFVJjqsa+XVMG+8crOTfmRPHvhnz4BpgkmjS5znManuceEmwuAVDKQFRsp58
-	 Okn6jdxkggDHhKVAoWgkpfoRaBws4joaFAl8ARkI=
+	b=yhArb37ai9OfLSONRQQ7rkYVJxmoueGpJhnhRxbQFGcbR+QuLePpb/41dAzF8PQhy
+	 cDZc47HRxii7Krp6Sezw9dJ+LPeOTNvPT5KoS1cWAMiOUiLLCp8965rWBkb7yEz3Y4
+	 AJ3EHMGigFqb4IquACvdtKxx+XXaOfe298I+VQ3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730575AbgD1SiB (ORCPT
+        id S1730590AbgD1SiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:38:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56188 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:38:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730554AbgD1Shz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:37:55 -0400
+        id S1730564AbgD1Sh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:37:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92DAA20B1F;
-        Tue, 28 Apr 2020 18:37:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 052E920575;
+        Tue, 28 Apr 2020 18:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099075;
-        bh=yQ6aID271zdK9xX3B67e6G0sAZgVThLB4LeaZjRwPu8=;
+        s=default; t=1588099077;
+        bh=xv6Xa/NTH0AM12nexRMkvIfuY4SCnsO9x8Wyz9bb3W4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fWnFgFmNC9NcJ3tPwjFKbT5PHFYoKylluaOCcnZUA5cucN/gGUB9bbF0k+aahbLwl
-         c0m7+m3aOaHrQ3e8Zuycv7LWzPgNBKPMR36zf1hjKNmhUeGDSeglXYc8BjTXXb4G1I
-         u8J6Eipzp+Cl2jQ4abvOePskNavVMdP+k8UVIgNQ=
+        b=rVF8dx87nikiFIAC7O7uDKSRXl60C23os4ULMy9cF4BkVl6VmSAVwb8MEf3PeYlFw
+         bjMVAU1iE/mLtUMMKseX+W/AaDGiP23jeZ3frowD+adBgyuCTmR67MdajF4YuH9nO8
+         NhpJ3k+roA8ONFc5I8WhJPvQtNtt+B1ONvYc4o1E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Benesh <scott.benesh@microsemi.com>,
-        Scott Teel <scott.teel@microsemi.com>,
-        Kevin Barnett <kevin.barnett@microsemi.com>,
-        Don Brace <don.brace@microsemi.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 053/168] scsi: smartpqi: fix problem with unique ID for physical device
-Date:   Tue, 28 Apr 2020 20:23:47 +0200
-Message-Id: <20200428182238.611507226@linuxfoundation.org>
+        stable@vger.kernel.org, Naoki Kiryu <naonaokiryu2@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 5.6 152/167] usb: typec: altmode: Fix typec_altmode_get_partner sometimes returning an invalid pointer
+Date:   Tue, 28 Apr 2020 20:25:28 +0200
+Message-Id: <20200428182244.800972270@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,174 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Barnett <kevin.barnett@microsemi.com>
+From: Naoki Kiryu <naonaokiryu2@gmail.com>
 
-[ Upstream commit 5b083b305b49f65269b888885455b8c0cf1a52e4 ]
+commit 0df9433fcae02215c8fd79690c134d535c7bb905 upstream.
 
-Obtain the unique IDs from the RLL and RPL instead of VPD page 83h.
+Before this commit, typec_altmode_get_partner would return a
+const struct typec_altmode * pointing to address 0x08 when
+to_altmode(adev)->partner was NULL.
 
-Link: https://lore.kernel.org/r/157048751833.11757.11996314786914610803.stgit@brunhilda
-Reviewed-by: Scott Benesh <scott.benesh@microsemi.com>
-Reviewed-by: Scott Teel <scott.teel@microsemi.com>
-Signed-off-by: Kevin Barnett <kevin.barnett@microsemi.com>
-Signed-off-by: Don Brace <don.brace@microsemi.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Add a check for to_altmode(adev)->partner being NULL to fix this.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206365
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1785972
+Fixes: 5f54a85db5df ("usb: typec: Make sure an alt mode exist before getting its partner")
+Cc: stable@vger.kernel.org
+Signed-off-by: Naoki Kiryu <naonaokiryu2@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20200422144345.43262-1-hdegoede@redhat.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/smartpqi/smartpqi.h      |  1 -
- drivers/scsi/smartpqi/smartpqi_init.c | 99 ++++-----------------------
- 2 files changed, 12 insertions(+), 88 deletions(-)
+ drivers/usb/typec/bus.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/smartpqi/smartpqi.h b/drivers/scsi/smartpqi/smartpqi.h
-index 2aa81b22f2695..7a3a942b40df0 100644
---- a/drivers/scsi/smartpqi/smartpqi.h
-+++ b/drivers/scsi/smartpqi/smartpqi.h
-@@ -907,7 +907,6 @@ struct pqi_scsi_dev {
- 	u8	scsi3addr[8];
- 	__be64	wwid;
- 	u8	volume_id[16];
--	u8	unique_id[16];
- 	u8	is_physical_device : 1;
- 	u8	is_external_raid_device : 1;
- 	u8	is_expander_smp_device : 1;
-diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
-index 793793343950e..5ae074505386a 100644
---- a/drivers/scsi/smartpqi/smartpqi_init.c
-+++ b/drivers/scsi/smartpqi/smartpqi_init.c
-@@ -648,79 +648,6 @@ static inline int pqi_scsi_inquiry(struct pqi_ctrl_info *ctrl_info,
- 		buffer, buffer_length, vpd_page, NULL, NO_TIMEOUT);
- }
- 
--static bool pqi_vpd_page_supported(struct pqi_ctrl_info *ctrl_info,
--	u8 *scsi3addr, u16 vpd_page)
--{
--	int rc;
--	int i;
--	int pages;
--	unsigned char *buf, bufsize;
--
--	buf = kzalloc(256, GFP_KERNEL);
--	if (!buf)
--		return false;
--
--	/* Get the size of the page list first */
--	rc = pqi_scsi_inquiry(ctrl_info, scsi3addr,
--				VPD_PAGE | SCSI_VPD_SUPPORTED_PAGES,
--				buf, SCSI_VPD_HEADER_SZ);
--	if (rc != 0)
--		goto exit_unsupported;
--
--	pages = buf[3];
--	if ((pages + SCSI_VPD_HEADER_SZ) <= 255)
--		bufsize = pages + SCSI_VPD_HEADER_SZ;
--	else
--		bufsize = 255;
--
--	/* Get the whole VPD page list */
--	rc = pqi_scsi_inquiry(ctrl_info, scsi3addr,
--				VPD_PAGE | SCSI_VPD_SUPPORTED_PAGES,
--				buf, bufsize);
--	if (rc != 0)
--		goto exit_unsupported;
--
--	pages = buf[3];
--	for (i = 1; i <= pages; i++)
--		if (buf[3 + i] == vpd_page)
--			goto exit_supported;
--
--exit_unsupported:
--	kfree(buf);
--	return false;
--
--exit_supported:
--	kfree(buf);
--	return true;
--}
--
--static int pqi_get_device_id(struct pqi_ctrl_info *ctrl_info,
--	u8 *scsi3addr, u8 *device_id, int buflen)
--{
--	int rc;
--	unsigned char *buf;
--
--	if (!pqi_vpd_page_supported(ctrl_info, scsi3addr, SCSI_VPD_DEVICE_ID))
--		return 1; /* function not supported */
--
--	buf = kzalloc(64, GFP_KERNEL);
--	if (!buf)
--		return -ENOMEM;
--
--	rc = pqi_scsi_inquiry(ctrl_info, scsi3addr,
--				VPD_PAGE | SCSI_VPD_DEVICE_ID,
--				buf, 64);
--	if (rc == 0) {
--		if (buflen > 16)
--			buflen = 16;
--		memcpy(device_id, &buf[SCSI_VPD_DEVICE_ID_IDX], buflen);
--	}
--
--	kfree(buf);
--
--	return rc;
--}
--
- static int pqi_identify_physical_device(struct pqi_ctrl_info *ctrl_info,
- 	struct pqi_scsi_dev *device,
- 	struct bmic_identify_physical_device *buffer,
-@@ -1405,14 +1332,6 @@ static int pqi_get_device_info(struct pqi_ctrl_info *ctrl_info,
- 		}
- 	}
- 
--	if (pqi_get_device_id(ctrl_info, device->scsi3addr,
--		device->unique_id, sizeof(device->unique_id)) < 0)
--		dev_warn(&ctrl_info->pci_dev->dev,
--			"Can't get device id for scsi %d:%d:%d:%d\n",
--			ctrl_info->scsi_host->host_no,
--			device->bus, device->target,
--			device->lun);
--
- out:
- 	kfree(buffer);
- 
-@@ -6319,7 +6238,7 @@ static ssize_t pqi_unique_id_show(struct device *dev,
- 	struct scsi_device *sdev;
- 	struct pqi_scsi_dev *device;
- 	unsigned long flags;
--	unsigned char uid[16];
-+	u8 unique_id[16];
- 
- 	sdev = to_scsi_device(dev);
- 	ctrl_info = shost_to_hba(sdev->host);
-@@ -6332,16 +6251,22 @@ static ssize_t pqi_unique_id_show(struct device *dev,
- 			flags);
- 		return -ENODEV;
- 	}
--	memcpy(uid, device->unique_id, sizeof(uid));
+--- a/drivers/usb/typec/bus.c
++++ b/drivers/usb/typec/bus.c
+@@ -208,7 +208,10 @@ EXPORT_SYMBOL_GPL(typec_altmode_vdm);
+ const struct typec_altmode *
+ typec_altmode_get_partner(struct typec_altmode *adev)
+ {
+-	return adev ? &to_altmode(adev)->partner->adev : NULL;
++	if (!adev || !to_altmode(adev)->partner)
++		return NULL;
 +
-+	if (device->is_physical_device) {
-+		memset(unique_id, 0, 8);
-+		memcpy(unique_id + 8, &device->wwid, sizeof(device->wwid));
-+	} else {
-+		memcpy(unique_id, device->volume_id, sizeof(device->volume_id));
-+	}
- 
- 	spin_unlock_irqrestore(&ctrl_info->scsi_device_list_lock, flags);
- 
- 	return snprintf(buffer, PAGE_SIZE,
- 		"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X\n",
--		uid[0], uid[1], uid[2], uid[3],
--		uid[4], uid[5], uid[6], uid[7],
--		uid[8], uid[9], uid[10], uid[11],
--		uid[12], uid[13], uid[14], uid[15]);
-+		unique_id[0], unique_id[1], unique_id[2], unique_id[3],
-+		unique_id[4], unique_id[5], unique_id[6], unique_id[7],
-+		unique_id[8], unique_id[9], unique_id[10], unique_id[11],
-+		unique_id[12], unique_id[13], unique_id[14], unique_id[15]);
++	return &to_altmode(adev)->partner->adev;
  }
+ EXPORT_SYMBOL_GPL(typec_altmode_get_partner);
  
- static ssize_t pqi_lunid_show(struct device *dev,
--- 
-2.20.1
-
 
 
