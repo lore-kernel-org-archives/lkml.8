@@ -2,133 +2,156 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF885C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE72BC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7F5F206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0C3D206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:22:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ndxswZIS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgD1IVw (ORCPT
+        id S1726876AbgD1IWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 04:21:52 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34708 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgD1IVv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 04:21:51 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jTLUl-0004Ab-MP; Tue, 28 Apr 2020 08:21:35 +0000
-Date:   Tue, 28 Apr 2020 10:21:33 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Hagen Paul Pfeifer <hagen@jauu.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Jann Horn <jannh@google.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Brian Gerst <brgerst@gmail.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [RFC v2] ptrace, pidfd: add pidfd_ptrace syscall
-Message-ID: <20200428082133.kusyjofgg7w2lchg@wittgenstein>
-References: <CAHk-=wga3O=BoKZXR27-CDnAFareWcMxXhpWerwtCffdaH6_ow@mail.gmail.com>
- <B7A115CB-0C8C-4719-B97B-74D94231CD1E@amacapital.net>
- <CAHk-=whQzOsh9O2uhUO2VETD+hrzjKMpEJpzoUby5QHMcvgPKg@mail.gmail.com>
+        Tue, 28 Apr 2020 04:22:01 -0400
+Received: from mail-eopbgr80048.outbound.protection.outlook.com ([40.107.8.48]:59167
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726515AbgD1IWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 04:22:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U5H2aIphdnPovewkY4VGFM4sEWxGucBW08FKFscQtKPSo9JzDk83sn//dkPshb8CeHlyiwcMQWK7JlKSFG8m2gPT15fGczgFqHJKnXQrMydMTfwCmRYvE137VjCp9vzSaG2zx5y8ROWCU3wSIH1xlLCVaF0VBnL7BiN5RDU9ejiwwEeN+Gc3aILVhr8ppOqlcwkmHNVLLmK/JGSfrcxWp6h9LwDgo0Ht9va0l5JwI0gXyaZ9KDHx5Jahb3+MQeUBhIh0Y01LTKxDCpODY+lGL+j+7CJEGMmxR9Wk9WL3riy6Yjnv5sECpgr4RStHdaR6wdX09SuXbQQxs/zapVBk9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wQixSruRATExyVZtZCrE5ENirdmhwGn1bocmC67jGto=;
+ b=JWTlSPsac0kD2VNKVZCJuqVb8yJeVNJrGdMB2QQkeBHzICO4rhsDXXCdamZegwYAI9PymtAvRHupoCXQhG6AHjN3Z8XTFy9CImnCWTy/LFi2Pxd9YjIvjXSO8nPTTEu55yqOIGxyMDgvJqWrojnQiWbW4ewiA0VydSyIn+bF+pqEp50DhmzcrWAaaUWZZf21X/VHRdWzr1FE+dzvIkINks9JygKiWZ3zX56b3O9II45qjrnu9loXz4TJWEJ6SdF2q9+/12dL1DK8pH0YmLE9fRZmviR2iW89hEaLPTm4QQAiK5fkYM+vJ1dRMdB9j/kA/PiGVpFoJz2JymrHkGjn0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wQixSruRATExyVZtZCrE5ENirdmhwGn1bocmC67jGto=;
+ b=ndxswZISDVn8wI6Z0pa9Aw8u9R77/2lMLv4rcsuApcCCn+mP/W1rpAYxiMQzTd4tb8hOffvPNImYOHoGljIltHbV0B3IDSfINwfj24ABLEO5cSQ8yRPKvcYEYef4Cj8ab5WxMjTdLR3Fv1cNwzn0z0+kwjGYGGkptDJ05hULEhA=
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+ by DB6PR0402MB2711.eurprd04.prod.outlook.com (2603:10a6:4:96::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Tue, 28 Apr
+ 2020 08:21:57 +0000
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.2937.023; Tue, 28 Apr 2020
+ 08:21:57 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH] xen/swiotlb: correct the check for
+ xen_destroy_contiguous_region
+Thread-Topic: [PATCH] xen/swiotlb: correct the check for
+ xen_destroy_contiguous_region
+Thread-Index: AQHWHTCUGLGxU19LnkuMxSfwKxPy/aiOLEEAgAAFDsA=
+Date:   Tue, 28 Apr 2020 08:21:57 +0000
+Message-ID: <DB6PR0402MB2760981C819B03D6B5647E9288AC0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+References: <1588059225-11245-1-git-send-email-peng.fan@nxp.com>
+ <20200428080210.GA25643@infradead.org>
+In-Reply-To: <20200428080210.GA25643@infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: infradead.org; dkim=none (message not signed)
+ header.d=none;infradead.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 3a00cf67-1e01-4158-e862-08d7eb4d37b0
+x-ms-traffictypediagnostic: DB6PR0402MB2711:|DB6PR0402MB2711:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR0402MB2711A6F924BF5D255E08D54E88AC0@DB6PR0402MB2711.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0387D64A71
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(39860400002)(376002)(346002)(136003)(66946007)(8936002)(66476007)(9686003)(2906002)(52536014)(6506007)(5660300002)(44832011)(186003)(6916009)(54906003)(478600001)(4326008)(76116006)(66446008)(26005)(86362001)(316002)(8676002)(7696005)(55016002)(33656002)(81156014)(64756008)(66556008)(71200400001);DIR:OUT;SFP:1101;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: VM71IWGXE3SwEEh2mDk7gfmURNYDtfOPiQj91KRW0oVO6zySpVZux+pfJsu72Otvr8aotNQYOSehTedrTwzWpe1QoVKsPaxrBS2uJCZRz+k/Ti/FWihC/qhket7/H2A/dMro2leaDWFfiTkyQi86o/3oB3pmCKu8vNgH/IYlbKxN5gpPbHfNmRG5e34YbWRwnWCQFF/QcH8gLKhrPS6VGCYrDwwfUV6BZu/bIJcY2Pb72ldDOY8LcrTM99B4lsLlp8UPK8/bf+pkYiLHmF45rW2YfNHxWUqCKg9Z+OL16I2/K4FhUxIHpylsugUhfh61KPY+KQTkEgSTJT1J08RkMx+hP/LjJtCqlZyFZf56x9eqls093YNM/AgCmP6VCKc6n1+aTJh46jQr/BGhjwKwxV7IJgNfC1PJp/4UYYs+6OGpDK6ZaFoIWdIAP65LFy7t
+x-ms-exchange-antispam-messagedata: bYjanyY2rDDlFDlA3j/qvRVrfl4J6802rWDkQ9uV/kKT/zwxdiUtD/47rXKxWNUTmHQrbuCQhq603T2gXVvQzykLu5y60RQ84yZVpOhSallw4eSExSHMZW1XHVbKtLKBEGbUplGBinzav8gLdlwMow8DalH0SJSmqGT+hmj6+dxJYjlL6SgJw8idJG6sPgM8aPuISLKzvThngtJ+Ix26DQ+t+oulWLL/O30DXZY0RSJCrcszh0DLLstawAbkKGBmZJGGj0XvWYkvSFErdSRfWCgJoGtYgkQ2ImGT1Zk5Yx5p+X/Yd2hnQBmbzXep/NIZjqROsLkCe0s4bee8YNggotbfKcsADeoqKqVzlHEHLXMDmAsSELO6OPaH3uCBOcauDGY5IeB/WZU1ubK5Kq4t0+zvyon1lchAHXFvCVPzPP4gjiamBr1uESYi6lJkz71GRGcO2JBreWTWSncwQGIjknVd4HZ8erlKsX/2Io3P2onci7MRpfzoKuVnVCcJSxq+JbnYBJ9E18xw7Mgzz7uOzMrSjYRAaeMl2ZVpUldJ8oKZMu579Zc07Y324gB8bQTIiS9d+ujTCk5NERg3LCppFoI1OaGoBtki8rXtaMIee1wxWTyyZdOcxIkiyp2JboSHiXuQjFXvXhuX8HNmrU9t+cUyw3aU5ehSpRgU0L1Sndha+0H2Qi47DL4G0ervA6cbC6XJRXD7pFDELqg5c9mniNSTdI67onWQMZY/kLSXLSl+P2vUl0yJ0EC42zh4CNCOb+ZpDSnvluQJs7/EcVfk+Hj4DbniN1Y1WRVocXKAIZU=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHk-=whQzOsh9O2uhUO2VETD+hrzjKMpEJpzoUby5QHMcvgPKg@mail.gmail.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a00cf67-1e01-4158-e862-08d7eb4d37b0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2020 08:21:57.4904
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XDN9/R5qN4ueHEAz+1Qrdqcr+lModtbpD/a/8lw00gnsSqQ6YQ5/jqmVdggcWCIfKhL7RQmhdDqD99sRV+flRQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2711
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 09:28:14PM -0700, Linus Torvalds wrote:
-> On Mon, Apr 27, 2020 at 9:17 PM Andy Lutomirski <luto@amacapital.net> wrote:
+> Subject: Re: [PATCH] xen/swiotlb: correct the check for
+> xen_destroy_contiguous_region
+>=20
+> On Tue, Apr 28, 2020 at 03:33:45PM +0800, peng.fan@nxp.com wrote:
 > >
-> > I hate to say this, but I’m not convinced that asking the gdb folks is
-> > the right approach. GDB has an ancient architecture and is
-> > *incredibly* buggy. I’m sure ptrace is somewhere on the pain point
-> > list, but I suspect it’s utterly dwarfed by everything else.
-> 
-> You may be right. However, if gdbn isn't going to use it, then I
-> seriously don't think it's worth changing much.
-> 
-> It might be worth looking at people who don't use ptrace() for
-> debugging, but for "incidental" reasons. IOW sandboxing, tracing,
-> things like that.
-> 
-> Maybe those people want things that are simpler and don't actually
-> need the kinds of hard serialization that ptrace() wants.
-> 
-> I'd rather add a few really simple things that might not be a full
-> complement of operations for a debugger, but exactly because they
-> aren't a full debugger, maybe they are things that we can tell are
-> obviously secure and simple?
+> > In xen_swiotlb_alloc_coherent, if !(dev_addr + size - 1 <=3D dma_mask)
+> > or range_straddles_page_boundary(phys, size) are true, it will create
+> > contiguous region. So when free, we need to free contiguous region use
+> > upper check condition.
+> >
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >  drivers/xen/swiotlb-xen.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+> > index b6d27762c6f8..ab96e468584f 100644
+> > --- a/drivers/xen/swiotlb-xen.c
+> > +++ b/drivers/xen/swiotlb-xen.c
+> > @@ -346,8 +346,8 @@ xen_swiotlb_free_coherent(struct device *hwdev,
+> size_t size, void *vaddr,
+> >  	/* Convert the size to actually allocated. */
+> >  	size =3D 1UL << (order + XEN_PAGE_SHIFT);
+> >
+> > -	if (!WARN_ON((dev_addr + size - 1 > dma_mask) ||
+> > -		     range_straddles_page_boundary(phys, size)) &&
+> > +	if (((dev_addr + size - 1 > dma_mask) ||
+> > +	    range_straddles_page_boundary(phys, size)) &&
+> >  	    TestClearPageXenRemapped(virt_to_page(vaddr)))
+>=20
+> No need for the inner braces.
+>=20
+> But more importantly please factor our a helper that can be used by alloc=
+ and
+> free to make sure that they always stay in sync.  Something
 
-I think the biggest non-anecdotal user of ptrace() besides debuggers
-is actually criu (and strace of course). They use it to inject parasite
-code (their phrasing not mine) into another task to handle restoring the
-parts of a task that can't be restored from the outside. Looking through
-their repo they make quite a bit of use of ptrace functionality including
-some arch specific bits:
-PTRACE_GETREGSET
-PTRACE_GETFPREGS
-PTRACE_PEEKUSER
-PTRACE_POKEUSER
-PTRACE_CONT
-PTRACE_SETREGSET
-PTRACE_GETVFPREGS /* arm/arm64 */
-PTRACE_GETVRREGS /* powerpc */
-PTRACE_GETVSRREGS /* powerpc */
-PTRACE_EVENT_STOP
-PTRACE_GETSIGMASK
-PTRACE_INTERRUPT
-PTRACE_DETACH
-PTRACE_GETSIGINFO
-PTRACE_SEIZE
-PTRACE_SETSIGMASK
-PTRACE_SI_EVENT
-PTRACE_SYSCALL
-PTRACE_SETOPTIONS
-PTRACE_ATTACH
-PTRACE_O_SUSPEND_SECCOMP
-PTRACE_PEEKSIGINFO
-PTRACE_SECCOMP_GET_FILTER
-PTRACE_SECCOMP_GET_METADATA
+Thanks for reviewing. I'll take your suggestion in v2. Before that,
+I would wait to see if there are more comments in this patch,
+because there are several history commits touching this place.
 
-So I guess strace and criu would be the ones to go and ask and if they
-don't care enough we already need to start squinting for other larg-ish
-users. proot comes to mind
-https://github.com/proot-me/proot
+Thanks,
+Peng.
 
-(From personal experience, most of the time when ptrace is used in a
- non-debugger codebase it's either to plug a security hole exploitable
- through ptracing the task and the fix is ptracing that very task to
- prevent the attacker from ptracing it (where non-dumpability alone
- doesn't cut it) or the idea is dropped immediately to not lose the
- ability to use a debugger on the program.)
+> like:
+>=20
+> static inline bool xen_swiotlb_need_contiguous_region(struct device *dev,
+> 		phys_addr_t phys, size_t size)
+> {
+>=20
+> 	return xen_phys_to_bus(phys) + size - 1 > dev->coherent_dma_mask ||
+> 		range_straddles_page_boundary(phys, size)) }
 
-Christian
