@@ -2,98 +2,73 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB72C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 538D7C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41C31206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B7CA20746
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:25:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588091111;
+	bh=OfzuQfCr95V52OJ0ynUHWXMas+ESmMauGDE883x1Bok=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XFLth00FFrEpmPIdSIy+r+QpTlO1ZzRmhO99DjZXySC8aDRUd0idYi5Ulaavijxp1
+	 HSySycetUKgiVkIKHGJFKzI58wpG/5a8XaEKq7qvyGJhldlxSx7iNaUSXAuUc3d7aj
+	 fS13hLqwHvqH6sLA0ZCcyKQEiGAfXE+dXFnjSqP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbgD1QYK (ORCPT
+        id S1728327AbgD1QZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:24:10 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:63502 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727920AbgD1QYK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:24:10 -0400
-Received: from fsav301.sakura.ne.jp (fsav301.sakura.ne.jp [153.120.85.132])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 03SGNTwR043009;
-        Wed, 29 Apr 2020 01:23:29 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav301.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav301.sakura.ne.jp);
- Wed, 29 Apr 2020 01:23:29 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav301.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 03SGNNE4042973
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Wed, 29 Apr 2020 01:23:29 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-References: <20200424024239.63607-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200425004609.GE8982@jagdpanzerIV.localdomain>
- <842ff40b-a232-6098-4333-996a3033b30a@i-love.sakura.ne.jp>
- <20200427062117.GC486@jagdpanzerIV.localdomain>
- <4dae86af-1d9a-f5a8-cff6-aa91ec038a79@i-love.sakura.ne.jp>
- <20200428121828.GP28637@dhcp22.suse.cz>
- <b4d74234-8009-9ffd-011f-bd5d1a4b85f6@i-love.sakura.ne.jp>
- <20200428154532.GU28637@dhcp22.suse.cz>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <b1d507b1-dae7-f526-c74a-d465ddecea6a@i-love.sakura.ne.jp>
-Date:   Wed, 29 Apr 2020 01:23:15 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 28 Apr 2020 12:25:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43394 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727920AbgD1QZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 12:25:10 -0400
+Received: from linux-8ccs.fritz.box (p3EE2CE96.dip0.t-ipconnect.de [62.226.206.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A65A206D8;
+        Tue, 28 Apr 2020 16:25:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588091109;
+        bh=OfzuQfCr95V52OJ0ynUHWXMas+ESmMauGDE883x1Bok=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gMjWzoDa4nFQZBB9EN5J1uwi75ghkxF7M4Aru0k1+9JBSbD5YiUY7ixisqmdNNmdP
+         +/IaMJB0obmdWB9vYrQLHTmjuHS9ewBCWv1jERNvvdYAGcIpeYy2Ud2BYCJJlB/uFb
+         TqVgTgbwwpWbFXpZBJkALYZgFrK5anTqVX+yT7Pw=
+Date:   Tue, 28 Apr 2020 18:25:05 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>
+Subject: Re: [PATCH v3 09/10] module: Remove module_disable_ro()
+Message-ID: <20200428162505.GA12860@linux-8ccs.fritz.box>
+References: <cover.1587812518.git.jpoimboe@redhat.com>
+ <33089a8ffb2e724cecfa51d72887ae9bf70354f9.1587812518.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200428154532.GU28637@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <33089a8ffb2e724cecfa51d72887ae9bf70354f9.1587812518.git.jpoimboe@redhat.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/04/29 0:45, Michal Hocko wrote:
-> On Tue 28-04-20 22:11:19, Tetsuo Handa wrote:
->> Existing KERN_$LEVEL allows a user to determine whether he/she wants that message
->> to be printed on consoles (even if it spams his/her operation doing on consoles), and
->> at the same time constrains that user whether that message is saved to log files.
->> KERN_NO_CONSOLES allows a user to control whether he/she wants that message to be
->> saved to log files (without spamming his/her operation doing on consoles).
-> 
-> I understand that. But how do I know whether the user considers the
-> particular information important enough to be dumped on the console.
-> This sounds like a policy in the kernel to me.
++++ Josh Poimboeuf [25/04/20 06:07 -0500]:
+>module_disable_ro() has no more users.  Remove it.
+>
+>Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+>Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-I'm still unable to understand your question.
+Hm, I guess this means we can also remove the module_enable_ro() stubs
+in module.h and make it a static function again (like the other
+module_enable_* functions) as there are no more outside users. I have to
+remind myself after this patchset is merged :-)
 
->                                                I simply cannot forsee
-> any console configuration to tell whether my information is going to
-> swamp the console to no use or not.
-
-Neither can I.
-
->                                     Compare that to KERN_$LEVEL instead.
-> I know that an information is of low/high importance. It is the user
-> policy to decide and base some filtering on top of that priority.
-
-Whether to use KERN_NO_CONSOLES is not per-importance basis but per-content basis.
-
-Since both pr_info("[%7d] %5d %5d %8lu %8lu %8ld %8lu         %5hd %s\n", ...) from dump_tasks() and
-pr_info("oom-kill:constraint=%s,nodemask=%*pbl", ...) from dump_oom_summary() use KERN_INFO importance,
-existing KERN_$LEVEL-based approach cannot handle these messages differently. Since changing the former to
-e.g. KERN_DEBUG will cause userspace to discard the messages, we effectively can't change KERN_$LEVEL.
-If the kernel allows the former to use KERN_NO_CONSOLES in addition to KERN_INFO, the administrator can
-select from two choices: printing "both the former and the latter" or "only the latter" to consoles.
-
+Jessica
