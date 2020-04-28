@@ -2,110 +2,126 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A75E9C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FAA8C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB742054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B42820731
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:33:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="A6Qr1MDO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TuyorktZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgD1Wdg (ORCPT
+        id S1726949AbgD1Wdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:33:36 -0400
-Received: from ozlabs.org ([203.11.71.1]:41531 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725934AbgD1Wdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:33:36 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 28 Apr 2020 18:33:46 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60780 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726515AbgD1Wdp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 18:33:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588113224;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cfynA1GS9zoR/R+KpFpTNVmup6mUfUXSRebr4yyqKDI=;
+        b=TuyorktZyDcRWUXloJrwe0Tfg64aII8VJRRHGeZ7Q0S25MVyibDWaF3gEyOjN4K+wMjpDb
+        Qjo7k0Xjm14fv1Ipu6YQuZUKAJuYc7Cacjf9UTBe0tsuwHZA1f4hgnb8f4el6MBqkSY1vZ
+        p1aM7ASFIRlh8OEPe4lA/BtEsJ9Sv9Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-290-6hJ8-lZdOYewsG-HbLb0OQ-1; Tue, 28 Apr 2020 18:33:40 -0400
+X-MC-Unique: 6hJ8-lZdOYewsG-HbLb0OQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Bbyf4z3Bz9sSX;
-        Wed, 29 Apr 2020 08:33:29 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588113214;
-        bh=uF9jTsPem/DV1ITxLtEQfZ0b/1wCIoJnnwNR9iBcZWw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=A6Qr1MDOkhEDmPWqTAmkW6Q4GCkRNiYqvEcp0R+eVDPB3s4A2ccfrpYS1escF2DKU
-         8GGeCsx8vhGRwLm6aDwXWBbCFRYCmPNy+xDqtVS3uqhXQaGyg648cdJ2b4k5w9dm3b
-         w8JU/EMpuDDkOwk9yVOxL7JBLmeNfpWLuP/jmpPf7cDYtHciCvGkQT7lbyDbHttOAy
-         9aQ6xyw4Q12NXwgcaa2BAcO1vlZGCiEOP+l731ZH15DddwzQVHjp5LlTjW9wzIznaX
-         W09JJGqULfffE0fpJ/+mvgtjPAwMgU+sV6aCjB50s1x+IMqwdYD8xBbAukEGhHe9G3
-         agG7bQJTFhKgg==
-Date:   Wed, 29 Apr 2020 08:33:29 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: linux-next: build failure after merge of the drm-misc tree
-Message-ID: <20200429083329.30ff39a1@canb.auug.org.au>
-In-Reply-To: <20200420130118.7a866fd5@canb.auug.org.au>
-References: <20200420130118.7a866fd5@canb.auug.org.au>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A04DA108BD0F;
+        Tue, 28 Apr 2020 22:33:38 +0000 (UTC)
+Received: from ovpn-112-24.phx2.redhat.com (ovpn-112-24.phx2.redhat.com [10.3.112.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 50009600D2;
+        Tue, 28 Apr 2020 22:33:37 +0000 (UTC)
+Message-ID: <fa406883f0eace37fe7f658814e29f82a4f0addf.camel@redhat.com>
+Subject: Re: [RFC PATCH 3/3] sched,rt: break out of load balancing if an RT
+ task appears
+From:   Scott Wood <swood@redhat.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Rik van Riel <riel@surriel.com>,
+        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
+Date:   Tue, 28 Apr 2020 17:33:36 -0500
+In-Reply-To: <jhjees7s29u.mognet@arm.com>
+References: <20200428050242.17717-1-swood@redhat.com>
+         <20200428050242.17717-4-swood@redhat.com> <jhjees7s29u.mognet@arm.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/dDJJ.aCsF+jJXjljCKelcwt";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/dDJJ.aCsF+jJXjljCKelcwt
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Mon, 20 Apr 2020 13:01:18 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+On Tue, 2020-04-28 at 22:56 +0100, Valentin Schneider wrote:
+> On 28/04/20 06:02, Scott Wood wrote:
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index dfde7f0ce3db..e7437e4e40b4 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -9394,6 +9400,10 @@ static int should_we_balance(struct lb_env *env)
+> >       struct sched_group *sg = env->sd->groups;
+> >       int cpu, balance_cpu = -1;
+> > 
+> > +	/* Run the realtime task now; load balance later. */
+> > +	if (rq_has_runnable_rt_task(env->dst_rq))
+> > +		return 0;
+> > +
+> 
+> I have a feeling this isn't very nice to CFS tasks, since we would now
+> "waste" load-balance attempts if they happen to coincide with an RT task
+> being runnable.
 >
-> After merging the drm-misc tree, today's linux-next build (powerpc
-> allyesconfig) failed like this:
->=20
-> drivers/video/fbdev/controlfb.c: In function 'controlfb_mmap':
-> drivers/video/fbdev/controlfb.c:756:23: error: implicit declaration of fu=
-nction 'pgprot_cached_wthru'; did you mean 'pgprot_cached'? [-Werror=3Dimpl=
-icit-function-declaration]
->   756 |   vma->vm_page_prot =3D pgprot_cached_wthru(vma->vm_page_prot);
->       |                       ^~~~~~~~~~~~~~~~~~~
->       |                       pgprot_cached
-> drivers/video/fbdev/controlfb.c:756:23: error: incompatible types when as=
-signing to type 'pgprot_t' {aka 'struct <anonymous>'} from type 'int'
->=20
-> Presumably exposed by commit
->=20
->   a07a63b0e24d ("video: fbdev: controlfb: add COMPILE_TEST support")
->=20
-> I just turned off COMPILE_TEST again for today.  Please let me know when
-> this is fixed.
+> On your 72 CPUs machine, the system-wide balance happens (at best) every
+> 72ms if you have idle time, every ~2300ms otherwise (every balance
+> CPU gets to try to balance however, so it's not as horrible as I'm making
+> it sound). This is totally worst-case scenario territory, and you'd hope
+> newidle_balance() could help here and there (as it isn't gated by any
+> balance interval).
+> 
+> Still, even for a single rq, postponing a system-wide balance for a
+> full balance interval (i.e. ~2 secs worst case here) just because we had a
+> single RT task running when we tried to balance seems a bit much.
+> 
+> It may be possible to hack something to detect those cases and reset the
+> interval to "now" when e.g. dequeuing the last RT task (& after having
+> previously aborted a load-balance due to RT/DL/foobar).
 
-This still appears to have not been addressed.
+Yeah, some way to retry at an appropriate time after aborting a rebalance
+would be good.
 
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/dDJJ.aCsF+jJXjljCKelcwt
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> > +
+> > +/* Is there a task of a high priority class? */
+> > +static inline bool rq_has_runnable_rt_task(struct rq *rq)
+> > +{
+> > +	return unlikely(rq->nr_running != rq->cfs.h_nr_running);
+> 
+> Seeing as that can be RT, DL or stopper, that name is somewhat misleading.
 
------BEGIN PGP SIGNATURE-----
+rq_has_runnable_rt_dl_task()?  Or is there some term that unambiguously
+encompasses both?
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6orzkACgkQAVBC80lX
-0Gy4Dgf/bbH2FoAF3e4cOY6NEO6bgilUq/iWrSZpE68n8E4vpUYxj8buZrgeqtnw
-EfgJ/oIUvdn7qGotbzGNbolIQYd93tVqDOTuKu6GO9D4zgN8tpg8qATHXRyyD903
-L4b8GRVVmPX/xqLvWV7wjYIwGT8IJHockOSl8KDwcZI1b+CR7U4KicnLQ5+GrREJ
-0w2iTXn7aTYc6A2mybo+eczofNx9JCWkcDVLpxzkLBSGXmIOyMMWPMMQxgGk7zx3
-tvWivMNERFbYLHTkI7u7fm4cF2EH5xtcTHvBfhN/7nw9REymaIfeGSX7HRRaXxO3
-ao3ZJJecZA8Crzo0u15bMogPUSwS7A==
-=pvTD
------END PGP SIGNATURE-----
+-Scott
 
---Sig_/dDJJ.aCsF+jJXjljCKelcwt--
+
