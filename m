@@ -2,212 +2,169 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB16EC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6156DC83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71D7020B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:29:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="o2L95dSg"
+	by mail.kernel.org (Postfix) with ESMTP id 432D5208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:29:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588094963;
+	bh=KVlfB6OONnLYWB6zTD4NzqP3muDeWV4yVUIppLNLLR4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=l2THQv9QcMBuAQTP/QG3QO56U2FqCRRSgZZE0OviOhgcHCdo0JQwapaaastbdTo9z
+	 2Taw2K5HL/L2lwLkscuElnVokUDmxoPEH2ht5AhYaBVGFd6P0U/ivr9+POAMvfXArA
+	 Rsv/TtxXG39Xze95GERDJ2bek/txmSDnWypDkl6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728448AbgD1R3S (ORCPT
+        id S1728491AbgD1R3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 13:29:18 -0400
-Received: from mga11.intel.com ([192.55.52.93]:17496 "EHLO mga11.intel.com"
+        Tue, 28 Apr 2020 13:29:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728022AbgD1R3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 13:29:18 -0400
-IronPort-SDR: IWKNWzn1INJii2d/787ba0UOU0YmRN56ICq1vgvh80swa9v6QMnf3JWGhLBCdRMvdnjvbECca0
- VdD6jsloPp1Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 10:29:17 -0700
-IronPort-SDR: YAPcPEdbQc+Gb7FcELvHmj3R9QtJgAGc/iaX2bCs1XcQ4FDIzQ4EaCpkwwzR4yqF6fGtxTGN3e
- seeL6jPFWInw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
-   d="scan'208";a="293928944"
-Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
-  by orsmga008.jf.intel.com with ESMTP; 28 Apr 2020 10:29:17 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 28 Apr 2020 10:29:16 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 28 Apr 2020 10:29:16 -0700
-Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 28 Apr 2020 10:29:16 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.103)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 28 Apr 2020 10:29:13 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aSCB87zbIJZqJXfdnBnDtcNFZeRrmR+5zLOl5tE1CHBTUR5g+++rwzvy7Q0x3Tfr9qDk5ThyBdCEjyWzM7FjGMOj4bPeJ1Joxt4VxkhHiQKYGJSYEYO9NNDF/Ne2WtOJvA802DthtOelyargGRBkoo+iqRG3GB4ahmxbVWAdYyF6pz45f8qFFY0ewFKlWjnSDzuiE12qGHMOEBOkNk8mvoIB3sKSlmcHGeqwWEX/xjYdx4E51b4i9Br6olRHFWo61mEu1INcGi/KHvzkhY3nJBmwtZ0L13Xa2RGMMe3XQCgF5Ow93hzfC5BKRcImWvaHJYA9Iuw1N6rfI1tn9eSiDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UgOwVG4MVUnA9SKhbaMo8mlvmPGEFkhuV/AWRFnGvlo=;
- b=XIro00H6F/OJxfjTHhfDxlBBpjaLZV0abOdiHcq+95UWsbADJl6+tdbJxdI/SWEJ5TMWgCV7z3/22eVp+1uYeZeGh3iUHdnEubu2/WBrNSZoRTDSv7k+4/vD5K0inh/+jmVT5FnG38xUhsamiZGLrehSYn86nUhOm0m0PibrgGGvJTw+DcSrRBOUJwN6vKHYxmEajYF2cbmqWKgVFZAK+tFOAAY859jQTR4iYAN/W4671G9YYmycebl5QKbQXAsF3mj1iwYW4dUYofbimG4eoxR2GOo8JLAlk4CiZaHWN9J4aatIkGzKwddc43k99bAsb8DiodKMbivKkHSIfXMOGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UgOwVG4MVUnA9SKhbaMo8mlvmPGEFkhuV/AWRFnGvlo=;
- b=o2L95dSgQvkn1ERBdLQ4wbbKkwIr0hddfYKwKpAd01GAANvzrl/qM0HLE3nn7JC9iXxlZOj+Lr92/IcazvZapE8QrKnVcWXiNF7Q9mZ+I2HJgA/nzUWytZbYm9iXRAJFvPBBARVHjuRJGM1pyWRG22AcjK4ho/NHjuOA1I3PjoM=
-Received: from BN6PR1101MB2132.namprd11.prod.outlook.com
- (2603:10b6:405:5b::22) by BN6PR1101MB2242.namprd11.prod.outlook.com
- (2603:10b6:405:58::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Tue, 28 Apr
- 2020 17:29:08 +0000
-Received: from BN6PR1101MB2132.namprd11.prod.outlook.com
- ([fe80::344b:59bc:1455:37a6]) by BN6PR1101MB2132.namprd11.prod.outlook.com
- ([fe80::344b:59bc:1455:37a6%11]) with mapi id 15.20.2937.026; Tue, 28 Apr
- 2020 17:29:08 +0000
-From:   "Lu, Brent" <brent.lu@intel.com>
-To:     =?utf-8?B?QW1hZGV1c3ogU8WCYXdpxYRza2k=?= 
-        <amadeuszx.slawinski@linux.intel.com>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-CC:     Kate Stewart <kstewart@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Jie Yang" <yang.jie@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>
-Subject: RE: [PATCH] ASoC: Intel: sst: ipc command timeout
-Thread-Topic: [PATCH] ASoC: Intel: sst: ipc command timeout
-Thread-Index: AQHWDxGPcERmvVi2FUaZ0GDzXVeqv6h4uesAgAAAnRCAAFQWgIAEY1sggAkDsACACG0YUA==
-Date:   Tue, 28 Apr 2020 17:29:08 +0000
-Message-ID: <BN6PR1101MB2132D23B042284DDA667642A97AC0@BN6PR1101MB2132.namprd11.prod.outlook.com>
-References: <1586506705-3194-1-git-send-email-brent.lu@intel.com>
- <4f495cf1-4740-cf3b-196f-cc850c503b43@linux.intel.com>
- <BN6PR1101MB21328B6F4147640D07F9E40A97DA0@BN6PR1101MB2132.namprd11.prod.outlook.com>
- <c8309abf-cbfb-a3db-5aa7-2e2f748a6d34@intel.com>
- <BN6PR1101MB21328C54E66082227B9F497A97D50@BN6PR1101MB2132.namprd11.prod.outlook.com>
- <5e84c48c-a5d1-b2ff-c197-5efa478c5916@linux.intel.com>
-In-Reply-To: <5e84c48c-a5d1-b2ff-c197-5efa478c5916@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [36.230.209.79]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e697d8a3-4bfd-4b8d-0098-08d7eb99a87f
-x-ms-traffictypediagnostic: BN6PR1101MB2242:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN6PR1101MB2242E09934E435DCEA44C09E97AC0@BN6PR1101MB2242.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0387D64A71
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR1101MB2132.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(39860400002)(136003)(396003)(376002)(366004)(55016002)(9686003)(8676002)(2906002)(66556008)(7416002)(26005)(8936002)(186003)(52536014)(64756008)(66476007)(76116006)(478600001)(66946007)(66446008)(316002)(6506007)(7696005)(54906003)(110136005)(5660300002)(86362001)(33656002)(71200400001)(4326008);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: opOEUjMhcqXmoELYVJWLX0FEXrq/C4t3ne7YTQ4s4RGYmqflmVLGOOz/PJNdiHet0CfibtKUk90R5onxNnWeTjcaomtnA1lCHNOipY3K52/XuquxCWd/vl2m6qyAzocPHb0OECqo3Ytbw+kG0Mr8zK6dp5cqnhEPhH/VyeF7gpivvCnYmIe981YDDrHLGg0WX9MFNLLIxQxwty0gMtJkGf6ubajrPdRcbpdL9ho8EfWSjLrWw9xhSYpkSJ21zazxP6ygoc4gZemS47nnRhqhfFBRwnT1piwlBrelxIvO0TFGza9JdghauE2uqs3iRroPIBhwU4UvYqBnOi1e5+1wR6/YgJ8+h+YPKO/w3WOmTwj1zw9nVL8hgEq+L/RgJgS1So5PbQ6NhJkGQdi/uO9ZNL7iFYS7bpFnfNXxNMNlD+s3VOlzwPN/VWQ1V1ZmPBu3
-x-ms-exchange-antispam-messagedata: JqUIoj8SO3e1HfISpnf045IDgi5AgPP0AIYNqAAFO6Lr8zT04QzSooWIlmcoZsi9b6ZmUPunIRG+JJw2kNX5G7npDwG3rTC7aye+wUhT0I1O5xtpUV2xOXXMyy+oLK+8neGTGseBvPezB51+gN/G6LHJ8cZJyKcCb2w8j/rAVzCcVw4Cx/LtBLmX8ikpGq5Hlxj4IchC4HU9UU3sK70oZAI6Hv9jCt2pBlHr3S97JQhqY66/0490xnA7Gw20r1wNpfHuntwv0WDELEHidAPpNhGcqypP/r32qn1N/KIzsED6fyNgJ/wwiCra7OeVq1WliSo+QoX0qkp11OjA8ZyAxnJh0xF2R008RKj4MgYSYamDThWrXPBkvUTDRXVR0IkWi6viG9hvQG9HXC/WsNvWgsNw1PliKYDx3iChIskXoQgbApUBmb8LHm9lAStHEB8ysrEqRPiqgaSSALyuiZhW9c15Jc91p84ptbwMAiSEzL5r3cXImikSgI2ujXTQBnJ/lJQEESQg1VYrcniiHMLeZWsD2g4+roNhSBm/gc9vgx8af4Jfqwt5mPzEMVvGH9FheEqyXsZX993uqJo8GxC24CRabi6I5B8QO/64yX7c9BxvIWHJ5Av8pfIu7PEpxq1FkeiunlA/bfH21t70WfjJYxb6e0N0NaCGoPKbPLJLj7D/LmcnFMEwHMxMDPc6m5DwN+rt032z5cpRXy99RGJdGfqe7iZSdEA+X9OAFOJqd5sK6fHVEQiQaPPMRh7CuFauVb+xMbNnx+gb5H03JdtqJmfhaxXx89r/FiOjEMBePc8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1728462AbgD1R3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 13:29:20 -0400
+Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38D1C2085B;
+        Tue, 28 Apr 2020 17:29:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588094959;
+        bh=KVlfB6OONnLYWB6zTD4NzqP3muDeWV4yVUIppLNLLR4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=MxwYE2w2lKs5eDKpwbNX8Fs+0pJ2GijfEqIhf7nzZ8rNyGiqrQMqA93fspMHjHEQy
+         Gw+tm+13xO0WK8HHvcXokteJtLGtgYcWO7MhuD9yqRTerZnvx93JLJfSxb/V0s16tO
+         KFYuby1C0slOe4Y0mFMyK52Kj6NclZLuIfB8arWs=
+Date:   Tue, 28 Apr 2020 12:29:17 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc:     Shannon Nelson <snelson@pensando.io>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Martin Habets <mhabets@solarflare.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        netdev@vger.kernel.org, bjorn@helgaas.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, rjw@rjwysocki.net,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, skhan@linuxfoundation.org
+Subject: Re: [Linux-kernel-mentees] [PATCH v2 2/2] realtek/8139cp: Remove
+ Legacy Power Management
+Message-ID: <20200428172917.GA177492@google.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: e697d8a3-4bfd-4b8d-0098-08d7eb99a87f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2020 17:29:08.2415
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: o7P5bVa/EKEE8Py/C9lHSLJ7Sk8tFtzWB/ImguGcFdaHYL79hG60BAP/4KeX3qtzAEKzfv+Ri0AyyiXLtS5EJQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1101MB2242
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428144314.24533-3-vaibhavgupta40@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiANCj4gSSd2ZSBsb29rZWQgYXQgdGhlIGNvZGUgYW5kIGJ5dF9pc19kc3BfYnVzeSBzZWVtcyBz
-dXNwaWNpb3VzIHRvIG1lLg0KPiBDYW4geW91IGNoZWNrIGlmIGZvbGxvd2luZyBjaGFuZ2UgZml4
-ZXMgcHJvYmxlbSBmb3IgeW91Og0KPiANCj4gZGlmZiAtLWdpdCBhL3NvdW5kL3NvYy9pbnRlbC9i
-YXl0cmFpbC9zc3QtYmF5dHJhaWwtaXBjLmMNCj4gYi9zb3VuZC9zb2MvaW50ZWwvYmF5dHJhaWwv
-c3N0LWJheXRyYWlsLWlwYy5jDQo+IGluZGV4IDc0Mjc0YmQzOGY3YS4uMzQ3NDZmZDg3MWIwIDEw
-MDY0NA0KPiAtLS0gYS9zb3VuZC9zb2MvaW50ZWwvYmF5dHJhaWwvc3N0LWJheXRyYWlsLWlwYy5j
-DQo+ICsrKyBiL3NvdW5kL3NvYy9pbnRlbC9iYXl0cmFpbC9zc3QtYmF5dHJhaWwtaXBjLmMNCj4g
-QEAgLTY2Niw4ICs2NjYsOCBAQCBzdGF0aWMgYm9vbCBieXRfaXNfZHNwX2J1c3koc3RydWN0IHNz
-dF9kc3AgKmRzcCkNCj4gICB7DQo+ICAgICAgICAgIHU2NCBpcGN4Ow0KPiANCj4gLSAgICAgICBp
-cGN4ID0gc3N0X2RzcF9zaGltX3JlYWRfdW5sb2NrZWQoZHNwLCBTU1RfSVBDWCk7DQo+IC0gICAg
-ICAgcmV0dXJuIChpcGN4ICYgKFNTVF9JUENYX0JVU1kgfCBTU1RfSVBDWF9ET05FKSk7DQo+ICsg
-ICAgICAgaXBjeCA9IHNzdF9kc3Bfc2hpbV9yZWFkNjRfdW5sb2NrZWQoZHNwLCBTU1RfSVBDWCk7
-DQo+ICsgICAgICAgcmV0dXJuIChpcGN4ICYgKFNTVF9CWVRfSVBDWF9CVVNZIHwgU1NUX0JZVF9J
-UENYX0RPTkUpKTsNCj4gICB9DQo+IA0KPiAgIGludCBzc3RfYnl0X2RzcF9pbml0KHN0cnVjdCBk
-ZXZpY2UgKmRldiwgc3RydWN0IHNzdF9wZGF0YSAqcGRhdGEpDQo+IA0KPiBXZSBzZWVtIHRvIHRy
-ZWF0IFNTVF9JUENYIGFzIDMyIGJpdCByZWdpc3RlciBpbnN0ZWFkIG9mIDY0IG9uZSwgd2hpY2gg
-bWF5DQo+IGV4cGxhaW4gd3JvbmcgYmVoYXZpb3VyLiAoU3BlY2lmaWNhdGlvbiBzYXlzIGl0IGlz
-IDY0IGJpdCByZWdpc3RlcikuDQo+IA0KPiBUaGFua3MsDQo+IEFtYWRldXN6DQoNCkhpIEFtYWRl
-dXN6LA0KDQpUaGUgcGF0Y2ggZG9lcyBub3Qgd29yayBidXQgSSBtYW5hZ2VkIHRvIGNyZWF0ZSBh
-IHdvcmthcm91bmQganVzdCBmb3INCnJlZmVyZW5jZS4gU3RpbGwgZG9uJ3Qga25vdyB3aHkgZmly
-c3QgcmVhZCBpbiBzc3RfYnl0X2lycV90aHJlYWQgcmV0dXJucw0KaW5jb3JyZWN0IHZhbHVlLg0K
-DQpkaWZmIC0tZ2l0IGEvc291bmQvc29jL2ludGVsL2JheXRyYWlsL3NzdC1iYXl0cmFpbC1pcGMu
-YyBiL3NvdW5kL3NvYy9pbnRlbC9iYXl0cmFpbC9zc3QtYmF5dHJhaWwtaXBjLmMNCmluZGV4IDVi
-YmFhNjY3YmVjMS4uNTZjNTU3Y2I3MjJkIDEwMDY0NA0KLS0tIGEvc291bmQvc29jL2ludGVsL2Jh
-eXRyYWlsL3NzdC1iYXl0cmFpbC1pcGMuYw0KKysrIGIvc291bmQvc29jL2ludGVsL2JheXRyYWls
-L3NzdC1iYXl0cmFpbC1pcGMuYw0KQEAgLTEyLDYgKzEyLDcgQEANCiAgKiBtb3JlIGRldGFpbHMu
-DQogICovDQoNCisjZGVmaW5lIERFQlVHDQogI2luY2x1ZGUgPGxpbnV4L3R5cGVzLmg+DQogI2lu
-Y2x1ZGUgPGxpbnV4L2tlcm5lbC5oPg0KICNpbmNsdWRlIDxsaW51eC9saXN0Lmg+DQpAQCAtMzEz
-LDcgKzMxNCw3IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBzc3RfYnl0X2lycV90aHJlYWQoaW50IGly
-cSwgdm9pZCAqY29udGV4dCkNCiAgICAgICAgc3RydWN0IHNzdF9kc3AgKnNzdCA9IChzdHJ1Y3Qg
-c3N0X2RzcCAqKSBjb250ZXh0Ow0KICAgICAgICBzdHJ1Y3Qgc3N0X2J5dCAqYnl0ID0gc3N0X2Rz
-cF9nZXRfdGhyZWFkX2NvbnRleHQoc3N0KTsNCiAgICAgICAgc3RydWN0IHNzdF9nZW5lcmljX2lw
-YyAqaXBjID0gJmJ5dC0+aXBjOw0KLSAgICAgICB1NjQgaGVhZGVyOw0KKyAgICAgICB1NjQgaGVh
-ZGVyLCBtYXNrLCBvbGQsIG5ldzsNCiAgICAgICAgdW5zaWduZWQgbG9uZyBmbGFnczsNCg0KICAg
-ICAgICBzcGluX2xvY2tfaXJxc2F2ZSgmc3N0LT5zcGlubG9jaywgZmxhZ3MpOw0KQEAgLTMzMiwx
-MCArMzMzLDMyIEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBzc3RfYnl0X2lycV90aHJlYWQoaW50IGly
-cSwgdm9pZCAqY29udGV4dCkNCiAgICAgICAgICAgICAgICAgKiBwcm9jZXNzZWQgdGhlIG1lc3Nh
-Z2UgYW5kIGNhbiBhY2NlcHQgbmV3LiBDbGVhciBkYXRhIHBhcnQNCiAgICAgICAgICAgICAgICAg
-KiBvZiB0aGUgaGVhZGVyDQogICAgICAgICAgICAgICAgICovDQotICAgICAgICAgICAgICAgc3N0
-X2RzcF9zaGltX3VwZGF0ZV9iaXRzNjRfdW5sb2NrZWQoc3N0LCBTU1RfSVBDRCwNCi0gICAgICAg
-ICAgICAgICAgICAgICAgIFNTVF9CWVRfSVBDRF9ET05FIHwgU1NUX0JZVF9JUENEX0JVU1kgfA0K
-LSAgICAgICAgICAgICAgICAgICAgICAgSVBDX0hFQURFUl9EQVRBKElQQ19IRUFERVJfREFUQV9N
-QVNLKSwNCi0gICAgICAgICAgICAgICAgICAgICAgIFNTVF9CWVRfSVBDRF9ET05FKTsNCisgICAg
-ICAgICAgICAgICAvKiBpbmxpbmUgdGhlIHNzdF9kc3Bfc2hpbV91cGRhdGVfYml0czY0X3VubG9j
-a2VkIGZ1bmN0aW9uICovDQorICAgICAgICAgICAgICAgbWFzayA9IFNTVF9CWVRfSVBDRF9ET05F
-IHwgU1NUX0JZVF9JUENEX0JVU1kgfA0KKyAgICAgICAgICAgICAgICAgICAgICAgSVBDX0hFQURF
-Ul9EQVRBKElQQ19IRUFERVJfREFUQV9NQVNLKTsNCisgICAgICAgICAgICAgICBvbGQgPSBzc3Rf
-ZHNwX3NoaW1fcmVhZDY0X3VubG9ja2VkKHNzdCwgU1NUX0lQQ0QpOw0KKyAgICAgICAgICAgICAg
-IG5ldyA9IChvbGQgJiAofm1hc2spKSB8IChTU1RfQllUX0lQQ0RfRE9ORSAmIG1hc2spOw0KKw0K
-KyAgICAgICAgICAgICAgIGlmIChvbGQgIT0gbmV3KQ0KKyAgICAgICAgICAgICAgICAgICAgICAg
-c3N0X2RzcF9zaGltX3dyaXRlNjRfdW5sb2NrZWQoc3N0LCBTU1RfSVBDRCwgbmV3KTsNCisNCisg
-ICAgICAgICAgICAgICAvKg0KKyAgICAgICAgICAgICAgICAqIHdvcmthcm91bmQsIGdpdmUgaXQg
-YSBzZWNvbmQgY2hhbmNlIGlmIHRoZSBTU1RfSVBDRA0KKyAgICAgICAgICAgICAgICAqIGNoYW5n
-ZXMNCisgICAgICAgICAgICAgICAgKi8NCisgICAgICAgICAgICAgICBpZiAob2xkICE9IGhlYWRl
-cikgew0KKyAgICAgICAgICAgICAgICAgICAgICAgZGV2X2RiZyhpcGMtPmRldiwgIiVzOiBoZWFk
-ZXIgMHglbGx4IG9sZCAweCVsbHhcbiIsDQorICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IF9fZnVuY19fLCBoZWFkZXIsIG9sZCk7DQorICAgICAgICAgICAgICAgICAgICAgICBpZiAob2xk
-ICYgU1NUX0JZVF9JUENEX0JVU1kpIHsNCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-aWYgKG9sZCAmIElQQ19OT1RJRklDQVRJT04pIHsNCisgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAvKiBtZXNzYWdlIGZyb20gQURTUCAqLw0KKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHNzdF9ieXRfcHJvY2Vzc19ub3RpZmljYXRpb24oYnl0LCAm
-ZmxhZ3MpOw0KKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9IGVsc2Ugew0KKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8qIHJlcGx5IGZyb20gQURTUCAqLw0K
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNzdF9ieXRfcHJvY2Vzc19y
-ZXBseShieXQsIG9sZCk7DQorICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0NCisgICAg
-ICAgICAgICAgICAgICAgICAgIH0NCisgICAgICAgICAgICAgICB9DQogICAgICAgICAgICAgICAg
-LyogdW5tYXNrIG1lc3NhZ2UgcmVxdWVzdCBpbnRlcnJ1cHRzICovDQogICAgICAgICAgICAgICAg
-c3N0X2RzcF9zaGltX3VwZGF0ZV9iaXRzNjRfdW5sb2NrZWQoc3N0LCBTU1RfSU1SWCwNCiAgICAg
-ICAgICAgICAgICAgICAgICAgIFNTVF9CWVRfSU1SWF9SRVFVRVNULCAwKTsNCg==
+On Tue, Apr 28, 2020 at 08:13:14PM +0530, Vaibhav Gupta wrote:
+> Upgrade power management from legacy to generic using dev_pm_ops.
+> 
+> Add "__maybe_unused" attribute to resume() and susend() callbacks
+> definition to suppress compiler warnings.
+> 
+> Generic callback requires an argument of type "struct device*". Hence,
+> convert it to "struct net_device*" using "dev_get_drv_data()" to use
+> it in the callback.
+> 
+> Most of the cleaning part is to remove pci_save_state(),
+> pci_set_power_state(), etc power management function calls.
+> 
+> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+> ---
+>  drivers/net/ethernet/realtek/8139cp.c | 25 +++++++------------------
+>  1 file changed, 7 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/realtek/8139cp.c b/drivers/net/ethernet/realtek/8139cp.c
+> index 60d342f82fb3..4f2fb1393966 100644
+> --- a/drivers/net/ethernet/realtek/8139cp.c
+> +++ b/drivers/net/ethernet/realtek/8139cp.c
+> @@ -2054,10 +2054,9 @@ static void cp_remove_one (struct pci_dev *pdev)
+>  	free_netdev(dev);
+>  }
+>  
+> -#ifdef CONFIG_PM
+> -static int cp_suspend (struct pci_dev *pdev, pm_message_t state)
+> +static int __maybe_unused cp_suspend(struct device *device)
+>  {
+> -	struct net_device *dev = pci_get_drvdata(pdev);
+> +	struct net_device *dev = dev_get_drvdata(device);
+>  	struct cp_private *cp = netdev_priv(dev);
+>  	unsigned long flags;
+>  
+> @@ -2075,16 +2074,12 @@ static int cp_suspend (struct pci_dev *pdev, pm_message_t state)
+>  
+>  	spin_unlock_irqrestore (&cp->lock, flags);
+>  
+> -	pci_save_state(pdev);
+> -	pci_enable_wake(pdev, pci_choose_state(pdev, state), cp->wol_enabled);
+
+This one is a little more interesting because it relies on the driver
+state (cp->wol_enabled).  IIUC, the corresponding pci_enable_wake() in
+the generic path is in pci_prepare_to_sleep() (called from
+pci_pm_suspend_noirq()).
+
+But of course the generic path doesn't look at cp->wol_enabled.  It
+looks at device_may_wakeup(), but I don't know whether there's a
+connection between that and cp->wol_enabled.
+
+> -	pci_set_power_state(pdev, pci_choose_state(pdev, state));
+> -
+>  	return 0;
+>  }
+>  
+> -static int cp_resume (struct pci_dev *pdev)
+> +static int __maybe_unused cp_resume(struct device *device)
+>  {
+> -	struct net_device *dev = pci_get_drvdata (pdev);
+> +	struct net_device *dev = dev_get_drvdata(device);
+>  	struct cp_private *cp = netdev_priv(dev);
+>  	unsigned long flags;
+>  
+> @@ -2093,10 +2088,6 @@ static int cp_resume (struct pci_dev *pdev)
+>  
+>  	netif_device_attach (dev);
+>  
+> -	pci_set_power_state(pdev, PCI_D0);
+> -	pci_restore_state(pdev);
+> -	pci_enable_wake(pdev, PCI_D0, 0);
+> -
+>  	/* FIXME: sh*t may happen if the Rx ring buffer is depleted */
+>  	cp_init_rings_index (cp);
+>  	cp_init_hw (cp);
+> @@ -2111,7 +2102,6 @@ static int cp_resume (struct pci_dev *pdev)
+>  
+>  	return 0;
+>  }
+> -#endif /* CONFIG_PM */
+>  
+>  static const struct pci_device_id cp_pci_tbl[] = {
+>          { PCI_DEVICE(PCI_VENDOR_ID_REALTEK,     PCI_DEVICE_ID_REALTEK_8139), },
+> @@ -2120,15 +2110,14 @@ static const struct pci_device_id cp_pci_tbl[] = {
+>  };
+>  MODULE_DEVICE_TABLE(pci, cp_pci_tbl);
+>  
+> +static SIMPLE_DEV_PM_OPS(cp_pm_ops, cp_suspend, cp_resume);
+> +
+>  static struct pci_driver cp_driver = {
+>  	.name         = DRV_NAME,
+>  	.id_table     = cp_pci_tbl,
+>  	.probe        =	cp_init_one,
+>  	.remove       = cp_remove_one,
+> -#ifdef CONFIG_PM
+> -	.resume       = cp_resume,
+> -	.suspend      = cp_suspend,
+> -#endif
+> +	.driver.pm    = &cp_pm_ops,
+>  };
+>  
+>  module_pci_driver(cp_driver);
+> -- 
+> 2.26.2
+> 
