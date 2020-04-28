@@ -2,123 +2,171 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D28C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1EAC83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94AB92137B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BD442137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:58:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fW8/VJuK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nzmQliv6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726662AbgD1U6j (ORCPT
+        id S1726684AbgD1U6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:58:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726636AbgD1U6h (ORCPT
+        Tue, 28 Apr 2020 16:58:43 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:50778 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726344AbgD1U6i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:58:37 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25D86C03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:58:37 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id rh22so18392501ejb.12
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:58:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OSzO1rJO0R184LhoOiiy43Vbf5CZ5lYIXfcp6IiNMuk=;
-        b=fW8/VJuKoPUP7uviDlRt5iWPklR6159dL8OqPXAYkQt9jT0QXQH20Vj9C11FGoyFvc
-         OmLtFM7kkC1koJGiB6xpfGZtZ5KQla2TT0FJ0a62xNBnSaBDE5mcnxixIXf215wOmA2x
-         bz5s03577i+7pt7SX5d+h4+D+TvfNRIGHm5exgfywa5JPZAkLGGlYKVJ1xOOXfp4y32z
-         H/OOSJvk+DvAC9eCBwXFeQ72VKvf6z6DSYPHye8eGQW9zYal4Z7bSHNJMbnI/Ugqef1v
-         U6385QbNHByFEDZBtIQhEEYNiVIsvaguzMhSGX7AJ6VGb7NALY801/q3RB/Dl4z90Kza
-         Ej5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OSzO1rJO0R184LhoOiiy43Vbf5CZ5lYIXfcp6IiNMuk=;
-        b=nci4K0bmrQkfgOw9J7branEgAC+U6jwDcE2vm/xUURCLTw4qvNdLWqfLp4lCodp3Jf
-         C2ck+/vK9wmXvwGSgDPPCGbQ68AhZct11xOb6gpqMQ90be03Ise8aGTamFXZVIQooCZ4
-         IO2naSjFSsv8h3swMFdbgWIjTiOh6f3ypGUbeO5Jgxwdz8I2HqkT1r6hX1yGuzQA/Pbl
-         l9ipIRmW11SqeE6KxhEzdXgh3424wY9k2QAfweJJkpW9xSjit+3ScYOoOppiYfJFrNI3
-         eS4PAjySXlTh2ds0SPTSLVakUiRio/QOYP58AdPukMxbKYsZpQ6P7bVBcTm+LBpkm8z+
-         lb/A==
-X-Gm-Message-State: AGi0PuYoPTeDmkeWOYh4Z6Gecr6OURq1FtUVx0hp6H9WGeuYNSmszRmo
-        HWCJu/59tBYXbGgPpg0alfiRYM7vjbOnmz6rMSwqEw==
-X-Google-Smtp-Source: APiQypIDmIaYEXVfqX5Ab4PeJvhjul4YnZzP2xIfW1kiZtODLOShV6xLWrmLPJ+wBx6xyCCV+2sKrWG5awxiNEHaSK4=
-X-Received: by 2002:a17:906:5918:: with SMTP id h24mr27104025ejq.210.1588107515478;
- Tue, 28 Apr 2020 13:58:35 -0700 (PDT)
+        Tue, 28 Apr 2020 16:58:38 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SKqvaJ036359;
+        Tue, 28 Apr 2020 20:56:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=3EBd0JFCCDiBFwAIUR2awq/QssydoJhBBr3apN0hNL4=;
+ b=nzmQliv6J5k3gHWPvWJnPS0vCXA935IwAWlquOi+UB4cAOG5GVA8x0EevBJ6Y7/4S/Wk
+ cv/nnjbngxq/xJG7dp3yAjkB+bsgpWoDW9qZNV+cAqAZns+fDRhkr+rg2+tDHEZ/681c
+ xkLQsXTstu9RMA24ANZwGtc5hQztAHf/yefkq+EIN6UcQxslL2wUYZ6Tq5F8xiUINzSg
+ WRLXyPu9XyyVs0d1h1qHTOO5xQEIKOY9IVd4tzdbzR0qekcaam1PlrOpTOfy61AeKw2P
+ r2lDbxIbSa7ZBs2XqvAuCMXzfVZKlVpJeAzcr+bTdwGyAVkjeLBKw+Kw/mVMVWpq+i94 sQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 30nucg2bth-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 20:56:31 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SKr0DT002838;
+        Tue, 28 Apr 2020 20:56:31 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 30my0ebuum-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 20:56:31 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03SKuJJT014969;
+        Tue, 28 Apr 2020 20:56:20 GMT
+Received: from monkey.oracle.com (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Apr 2020 13:56:19 -0700
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Longpeng <longpeng2@huawei.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Mina Almasry <almasrymina@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: [PATCH v4 0/4] Clean up hugetlb boot command line processing
+Date:   Tue, 28 Apr 2020 13:56:10 -0700
+Message-Id: <20200428205614.246260-1-mike.kravetz@oracle.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-References: <20200428181010.170568-1-swboyd@chromium.org> <20200428181010.170568-3-swboyd@chromium.org>
-In-Reply-To: <20200428181010.170568-3-swboyd@chromium.org>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Tue, 28 Apr 2020 21:58:24 +0100
-Message-ID: <CAJ9a7VjJpZWMJFkwxwnc=w8p1cemx-vM7yrWWWEHp_ThjkJoSA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] coresight: Avoid casting void pointers
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
+ suspectscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280163
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
+ mlxlogscore=999 impostorscore=0 suspectscore=0 malwarescore=0
+ lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by mike.leach@linaro.org
+v4 -
+   Fixed huge page order definitions for arm64 (Qian Cai)
+   Removed hugepages_supported() checks in command line processing as
+     powerpc does not set hugepages_supported until later in boot (Sandipan)
+   Added Acks, Reviews and Tested (Will, Gerald, Anders, Sandipan)
 
-On Tue, 28 Apr 2020 at 19:10, Stephen Boyd <swboyd@chromium.org> wrote:
->
-> We don't need to cast void pointers, such as the amba_id data. Assign to
-> a local variable to make the code prettier and also return NULL instead
-> of 0 to make sparse happy.
->
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Mike Leach <mike.leach@linaro.org>
-> Reviewed-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->
-> Thanks Joe for finding my thinko!
->
->  drivers/hwtracing/coresight/coresight-priv.h | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-> index 5a36f0f50899..36c943ae94d5 100644
-> --- a/drivers/hwtracing/coresight/coresight-priv.h
-> +++ b/drivers/hwtracing/coresight/coresight-priv.h
-> @@ -215,9 +215,12 @@ cti_remove_assoc_from_csdev(struct coresight_device *csdev) {}
->  /* extract the data value from a UCI structure given amba_id pointer. */
->  static inline void *coresight_get_uci_data(const struct amba_id *id)
->  {
-> -       if (id->data)
-> -               return ((struct amba_cs_uci_id *)(id->data))->data;
-> -       return 0;
-> +       struct amba_cs_uci_id *uci_id = id->data;
-> +
-> +       if (!uci_id)
-> +               return NULL;
-> +
-> +       return uci_id->data;
->  }
->
->  void coresight_release_platform_data(struct coresight_device *csdev,
-> --
-> Sent by a computer, using git, on the internet
->
+v3 -
+   Used weak attribute method of defining arch_hugetlb_valid_size.
+     This eliminates changes to arch specific hugetlb.h files (Peter)
+   Updated documentation (Peter, Randy)
+   Fixed handling of implicitly specified gigantic page preallocation
+     in existing code and removed documentation of such.  There is now
+     no difference between handling of gigantic and non-gigantic pages.
+     (Peter, Nitesh).
+     This requires the most review as there is a small change to
+     undocumented behavior.  See patch 4 commit message for details.
+   Added Acks and Reviews (Mina, Peter)
 
+v2 -
+   Fix build errors with patch 1 (Will)
+   Change arch_hugetlb_valid_size arg to unsigned long and remove
+     irrelevant 'extern' keyword (Christophe)
+   Documentation and other misc changes (Randy, Christophe, Mina)
+   Do not process command line options if !hugepages_supported()
+     (Dave, but it sounds like we may want to additional changes to
+      hugepages_supported() for x86?  If that is needed I would prefer
+      a separate patch.)
+
+Longpeng(Mike) reported a weird message from hugetlb command line processing
+and proposed a solution [1].  While the proposed patch does address the
+specific issue, there are other related issues in command line processing.
+As hugetlbfs evolved, updates to command line processing have been made to
+meet immediate needs and not necessarily in a coordinated manner.  The result
+is that some processing is done in arch specific code, some is done in arch
+independent code and coordination is problematic.  Semantics can vary between
+architectures.
+
+The patch series does the following:
+- Define arch specific arch_hugetlb_valid_size routine used to validate
+  passed huge page sizes.
+- Move hugepagesz= command line parsing out of arch specific code and into
+  an arch independent routine.
+- Clean up command line processing to follow desired semantics and
+  document those semantics.
+
+[1] https://lore.kernel.org/linux-mm/20200305033014.1152-1-longpeng2@huawei.com
+
+Mike Kravetz (4):
+  hugetlbfs: add arch_hugetlb_valid_size
+  hugetlbfs: move hugepagesz= parsing to arch independent code
+  hugetlbfs: remove hugetlb_add_hstate() warning for existing hstate
+  hugetlbfs: clean up command line processing
+
+ .../admin-guide/kernel-parameters.txt         |  40 ++--
+ Documentation/admin-guide/mm/hugetlbpage.rst  |  35 ++++
+ arch/arm64/mm/hugetlbpage.c                   |  30 +--
+ arch/powerpc/mm/hugetlbpage.c                 |  30 +--
+ arch/riscv/mm/hugetlbpage.c                   |  24 +--
+ arch/s390/mm/hugetlbpage.c                    |  24 +--
+ arch/sparc/mm/init_64.c                       |  43 +----
+ arch/x86/mm/hugetlbpage.c                     |  23 +--
+ include/linux/hugetlb.h                       |   2 +-
+ mm/hugetlb.c                                  | 180 ++++++++++++++----
+ 10 files changed, 260 insertions(+), 171 deletions(-)
 
 -- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+2.25.4
+
