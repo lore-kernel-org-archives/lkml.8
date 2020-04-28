@@ -2,209 +2,129 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6BCC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DC8C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 135CC206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFED7206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:05:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fdw7gz7M"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Wlm/MYlJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbgD1TFF (ORCPT
+        id S1728888AbgD1TFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 15:05:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49122 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728539AbgD1TFF (ORCPT
+        Tue, 28 Apr 2020 15:05:20 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:35112 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728777AbgD1TFT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 15:05:05 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3E4FC03C1AB;
-        Tue, 28 Apr 2020 12:05:04 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id e26so34682167otr.2;
-        Tue, 28 Apr 2020 12:05:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9mawD2gvz/eqn5BFKTza4oVQ2SByQxW/24pgvyCMUE8=;
-        b=Fdw7gz7MMVRw9oItUSWDsiTku21evW1zad4hFmvLnJEQYB25msghyg8QPQMeTxErrg
-         xfhyK4xVf2Nw5qnZLBngikg5i99Mzng3gvVBZlhV1MHkx36wpr0N9dsjmcGz7lKtkYlv
-         R1kPrvqAyfQlciybOZJB9mlsDpBAPp/bsb0/KxKz8fJXMmuP0kH6k+oVtaW8qPthLaJe
-         UMHLt5U8/mn9DQ0v843hXBGhWu5esf3JikvFUxMWgx8fZZP6c6O/Wvd8WLb5vpCDCAYp
-         bAT9VNr2S2TozkuextPiUIFVM0/0OV92JrJg+D61BG//01Yt4OdpMgM8SbiwR/dKn0hh
-         3uZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9mawD2gvz/eqn5BFKTza4oVQ2SByQxW/24pgvyCMUE8=;
-        b=aw/XSBb2UdUbRIoALJUzE+PTa4+rSYAcSqr4MQ9UnfZ19Noes4hmxJesYCwxBdX3Ba
-         Chp7PMw1ipxqFB1S4aBE0eWtwTHOKtbGJdUzg9MDn3vf+jyW0hNyiJdIWAWBUch3dXPF
-         4HWITmAG7bpEf6/SsWCDzIwYUaVy6fk80nCF/h78F4L1YS3Ezilcip4YnwPo/VygHGEo
-         M/PLYpom0KFdHmneaKpCDm6/uzpj3cptPVf7kZTj5zXwnCak+w680JzvEO8EJlzq4OIX
-         CaOQa5ys3t4J52R5rzR6/JqjmklfPBnxFYBUXIbwSp9DF8NqHdCmhdZqtcSJzLz4nFF2
-         UPIg==
-X-Gm-Message-State: AGi0PuYnxCjeVodmjPjX0nPddByziWXVhz80Kp5QaaMODDHzsqKmKosP
-        YP5yMiYeLMWGEJzFZDwYgyw=
-X-Google-Smtp-Source: APiQypKQbJq0XD420xh+OdLmBYlmBeL4TIoGxvn2rlBhDIrLX4rpFLBUzLsA6hEWYXqgEBS8v4qsAw==
-X-Received: by 2002:aca:488a:: with SMTP id v132mr4198275oia.166.1588100704232;
-        Tue, 28 Apr 2020 12:05:04 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id t10sm5186959oou.38.2020.04.28.12.05.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 12:05:01 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 12:04:59 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org
-Subject: Re: linux-next: Tree for Apr 28
-Message-ID: <20200428190459.GA2299615@ubuntu-s3-xlarge-x86>
-References: <20200428181006.06b4e3bc@canb.auug.org.au>
+        Tue, 28 Apr 2020 15:05:19 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SIwkx8029355;
+        Tue, 28 Apr 2020 19:05:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=4nI+wEGFfrdWDDzaHjo9Ldz40UivhTylcpIh/VH8/r0=;
+ b=Wlm/MYlJnPlyZyAL6CSOUDbfC3MspXPq8LL+QC+hPmOivWaB72JP1ox2ymQ+KjytVycQ
+ xA0v3QnrN8ukgnKowqvIBNSSIMvZ1laqia6+wBoSbxLoERyXZtf61i1GRP6Sesg8iWp6
+ rxKVCHwCF9qyN/2CUnTvti59iV3cjPFsM2XWrbRIyDHwlhtTS8Y9ZGblNpXx8KN+jnPh
+ 2svHv9yi9jKdxO5bPGi2784mVlECmys4hDafDrq7ismJdCHtdG9cx1LcU2R1DbBqXB7a
+ SYSy8GLqV0jsUP7BGk9XvR0WuwxQLia1fS6CYkKWx9+5lfEFkxCgN9Ww3vVBIZM8heIU OA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 30nucg1v19-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 19:05:14 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SIvuWv121231;
+        Tue, 28 Apr 2020 19:03:13 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 30mxx0gu9h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 19:03:13 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03SJ3Coa027361;
+        Tue, 28 Apr 2020 19:03:12 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Apr 2020 12:03:12 -0700
+Date:   Tue, 28 Apr 2020 22:03:06 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Jerome Pouiller <Jerome.Pouiller@silabs.com>
+Cc:     Suraj Upadhyay <usuraj35@gmail.com>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] staging: wfx: cleanup long lines in data_tx.c
+Message-ID: <20200428190306.GM2014@kadam>
+References: <20200425113234.GA14492@blackclown>
+ <8518467.FNpd3NTrYF@pc-42>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200428181006.06b4e3bc@canb.auug.org.au>
+In-Reply-To: <8518467.FNpd3NTrYF@pc-42>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 bulkscore=0
+ suspectscore=0 mlxlogscore=999 phishscore=0 malwarescore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004280150
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
+ mlxlogscore=999 impostorscore=0 suspectscore=0 malwarescore=0
+ lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 06:10:06PM +1000, Stephen Rothwell wrote:
-> Hi all,
+On Mon, Apr 27, 2020 at 11:50:23AM +0000, Jerome Pouiller wrote:
+> On Saturday 25 April 2020 13:32:34 CEST Suraj Upadhyay wrote:
+> > Break lines with length over 80 characters to
+> > conform to the linux coding style and refactor
+> > wherever necessary.
+> > 
+> > Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
+> > ---
+> > 
+> > Changes in v4:
+> > 	- Added a space after declaration in wfx_get_hw_rate().
+> > 	- A checkpatch warning for this commit is retained at line 75,
+> > 	  to maintain uniformity in function declarations. (Reviewer
+> > 	  jerome suggested).
+> > 
+> > Changes in v3:
+> >         - Changed the temporary variable name for the memzcmp statement
+> >           to is_used. (as suggested).
+> >         - Added a temporary ieee80211_supported_band variable to address
+> >           the problem in wfx_get_hw_rate() more efficiently. (not
+> >           suggested, but still).
+> > 
+> > Changes in v2:
+> >         - Introduced a temporary variable for the memzcmp statement.
+> >         - Addressed the checkpatch problem with wfx_get_hw_rate().
+> >         - Restored the function definition of wfx_tx_get_tx_parms
+> >           as suggested by the reviewer.
+> >         - Added suggested changes for req->packet_id statement.
+> > 
+> >  drivers/staging/wfx/data_tx.c | 40 +++++++++++++++++++++++------------
+> >  1 file changed, 26 insertions(+), 14 deletions(-)
 > 
-> Changes since 20200424:
-> 
-> The qcom tree still had its build failure for which I reverted a commit.
-> 
-> The hwmon-staging tree gained a build failure for which I reverted
-> a commit.
-> 
-> The mac80211-next tree gained a build failure so I used the version
-> from next-20200424.
-> 
-> The drm-misc tree still had its build failure for which I disabled a
-> COMPILE_TEST setting.
-> 
-> The akpm-current tree gained a conflict against the risc-v tree.
-> 
-> The akpm tree lost a patch that turned up elsewhere.
-> 
-> Non-merge commits (relative to Linus' tree): 4451
->  5474 files changed, 151275 insertions(+), 63274 deletions(-)
+> This patch does not contain the suggestions from Dan. However, it is
+> sufficient from my personal point of view.
 
-I am seeing the following build error on s390 defconfig, caused by
-commit 743f242d65ec ("mm: support compat_sys_process_madvise").
-Apologies if it has already been reported, I did a search of lore and
-found nothing.
+Yeah.  It's fine.  It wasn't 100% cut and paste from my suggestions but
+it did address the stuff I cared about.  Thanks!
 
-Cheers,
-Nathan
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-$ make -j$(nproc) -s ARCH=s390 CROSS_COMPILE=s390x-linux- defconfig all
-...
-mm/madvise.c: In function '__se_compat_sys_process_madvise':
-./include/linux/compiler.h:394:38: error: call to '__compiletime_assert_162' declared with attribute error: BUILD_BUG_ON failed: sizeof(unsigned long) > 4 && !__TYPE_IS_PTR(unsigned long)
-  394 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-      |                                      ^
-./include/linux/compiler.h:375:4: note: in definition of macro '__compiletime_assert'
-  375 |    prefix ## suffix();    \
-      |    ^~~~~~
-./include/linux/compiler.h:394:2: note: in expansion of macro '_compiletime_assert'
-  394 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-      |  ^~~~~~~~~~~~~~~~~~~
-./include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
-   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-      |                                     ^~~~~~~~~~~~~~~~~~
-./include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-      |  ^~~~~~~~~~~~~~~~
-./arch/s390/include/asm/compat.h:18:2: note: in expansion of macro 'BUILD_BUG_ON'
-   18 |  BUILD_BUG_ON(sizeof(t) > 4 && !__TYPE_IS_PTR(t)); \
-      |  ^~~~~~~~~~~~
-./include/linux/syscalls.h:110:27: note: in expansion of macro '__SC_DELOUSE'
-  110 | #define __MAP3(m,t,a,...) m(t,a), __MAP2(m,__VA_ARGS__)
-      |                           ^
-./include/linux/syscalls.h:111:35: note: in expansion of macro '__MAP3'
-  111 | #define __MAP4(m,t,a,...) m(t,a), __MAP3(m,__VA_ARGS__)
-      |                                   ^~~~~~
-./include/linux/syscalls.h:112:35: note: in expansion of macro '__MAP4'
-  112 | #define __MAP5(m,t,a,...) m(t,a), __MAP4(m,__VA_ARGS__)
-      |                                   ^~~~~~
-./include/linux/syscalls.h:113:35: note: in expansion of macro '__MAP5'
-  113 | #define __MAP6(m,t,a,...) m(t,a), __MAP5(m,__VA_ARGS__)
-      |                                   ^~~~~~
-./include/linux/syscalls.h:114:22: note: in expansion of macro '__MAP6'
-  114 | #define __MAP(n,...) __MAP##n(__VA_ARGS__)
-      |                      ^~~~~
-./arch/s390/include/asm/syscall_wrapper.h:80:36: note: in expansion of macro '__MAP'
-   80 |   long ret = __do_compat_sys##name(__MAP(x,__SC_DELOUSE,__VA_ARGS__));\
-      |                                    ^~~~~
-./include/linux/compat.h:66:2: note: in expansion of macro 'COMPAT_SYSCALL_DEFINEx'
-   66 |  COMPAT_SYSCALL_DEFINEx(6, _##name, __VA_ARGS__)
-      |  ^~~~~~~~~~~~~~~~~~~~~~
-mm/madvise.c:1314:1: note: in expansion of macro 'COMPAT_SYSCALL_DEFINE6'
- 1314 | COMPAT_SYSCALL_DEFINE6(process_madvise, int, which, compat_pid_t, upid,
-      | ^~~~~~~~~~~~~~~~~~~~~~
-./include/linux/compiler.h:394:38: error: call to '__compiletime_assert_164' declared with attribute error: BUILD_BUG_ON failed: sizeof(unsigned long) > 4 && !__TYPE_IS_PTR(unsigned long)
-  394 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-      |                                      ^
-./include/linux/compiler.h:375:4: note: in definition of macro '__compiletime_assert'
-  375 |    prefix ## suffix();    \
-      |    ^~~~~~
-./include/linux/compiler.h:394:2: note: in expansion of macro '_compiletime_assert'
-  394 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-      |  ^~~~~~~~~~~~~~~~~~~
-./include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
-   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-      |                                     ^~~~~~~~~~~~~~~~~~
-./include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-      |  ^~~~~~~~~~~~~~~~
-./arch/s390/include/asm/compat.h:18:2: note: in expansion of macro 'BUILD_BUG_ON'
-   18 |  BUILD_BUG_ON(sizeof(t) > 4 && !__TYPE_IS_PTR(t)); \
-      |  ^~~~~~~~~~~~
-./include/linux/syscalls.h:108:27: note: in expansion of macro '__SC_DELOUSE'
-  108 | #define __MAP1(m,t,a,...) m(t,a)
-      |                           ^
-./include/linux/syscalls.h:109:35: note: in expansion of macro '__MAP1'
-  109 | #define __MAP2(m,t,a,...) m(t,a), __MAP1(m,__VA_ARGS__)
-      |                                   ^~~~~~
-./include/linux/syscalls.h:110:35: note: in expansion of macro '__MAP2'
-  110 | #define __MAP3(m,t,a,...) m(t,a), __MAP2(m,__VA_ARGS__)
-      |                                   ^~~~~~
-./include/linux/syscalls.h:111:35: note: in expansion of macro '__MAP3'
-  111 | #define __MAP4(m,t,a,...) m(t,a), __MAP3(m,__VA_ARGS__)
-      |                                   ^~~~~~
-./include/linux/syscalls.h:112:35: note: in expansion of macro '__MAP4'
-  112 | #define __MAP5(m,t,a,...) m(t,a), __MAP4(m,__VA_ARGS__)
-      |                                   ^~~~~~
-./include/linux/syscalls.h:113:35: note: in expansion of macro '__MAP5'
-  113 | #define __MAP6(m,t,a,...) m(t,a), __MAP5(m,__VA_ARGS__)
-      |                                   ^~~~~~
-./include/linux/syscalls.h:114:22: note: in expansion of macro '__MAP6'
-  114 | #define __MAP(n,...) __MAP##n(__VA_ARGS__)
-      |                      ^~~~~
-./arch/s390/include/asm/syscall_wrapper.h:80:36: note: in expansion of macro '__MAP'
-   80 |   long ret = __do_compat_sys##name(__MAP(x,__SC_DELOUSE,__VA_ARGS__));\
-      |                                    ^~~~~
-./include/linux/compat.h:66:2: note: in expansion of macro 'COMPAT_SYSCALL_DEFINEx'
-   66 |  COMPAT_SYSCALL_DEFINEx(6, _##name, __VA_ARGS__)
-      |  ^~~~~~~~~~~~~~~~~~~~~~
-mm/madvise.c:1314:1: note: in expansion of macro 'COMPAT_SYSCALL_DEFINE6'
- 1314 | COMPAT_SYSCALL_DEFINE6(process_madvise, int, which, compat_pid_t, upid,
-      | ^~~~~~~~~~~~~~~~~~~~~~
-make[2]: *** [scripts/Makefile.build:266: mm/madvise.o] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [Makefile:1723: mm] Error 2
-make[1]: *** Waiting for unfinished jobs....
-...
+regards,
+dan carpenter
+
