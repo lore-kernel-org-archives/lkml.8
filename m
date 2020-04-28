@@ -2,136 +2,107 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA010C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C884CC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD7A206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A69F7206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:24:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wbyZMmT9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbgD1LWD (ORCPT
+        id S1726546AbgD1LYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:22:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:49720 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726458AbgD1LWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:22:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 69C3730E;
-        Tue, 28 Apr 2020 04:22:02 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.1.132])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B3713F73D;
-        Tue, 28 Apr 2020 04:22:00 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 12:21:57 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Gavin Shan <gshan@redhat.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        steve.capper@arm.com, catalin.marinas@arm.com, broonie@kernel.org,
-        will@kernel.org, shan.gavin@gmail.com
-Subject: Re: [PATCH v2] arm64/kernel: Fix range on invalidating dcache for
- boot page tables
-Message-ID: <20200428112157.GB15519@C02TD0UTHF1T.local>
-References: <20200427235700.112220-1-gshan@redhat.com>
+        Tue, 28 Apr 2020 07:24:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbgD1LYP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 07:24:15 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 637C6C03C1AB
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 04:24:15 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id j3so20997780ljg.8
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 04:24:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dtSCC/6Zk0CAn9Haq8H1TnXYmgXgUR49no/7MjmVHFQ=;
+        b=wbyZMmT9xNXh+i0FXuT8+Zx0WQdZUgyX61MnLeN982X/SWM7j8uLKdx4JNX0goNrlW
+         XNleJW0Aumfkz+/nYc6WoQ8Mbrxe3w1WLfSNynijdPAXIoQCU3Axz5WeoIANm/zvra2V
+         ijUUTgiTMZ8y0QAkIuJ2Bp78VCRcPB15ZdTKvt9ubTDohSlkhyXFMXv4xeDA7kXorXIc
+         jgucg0wgYdFFOPB7eDr41HD8vwo4BbHTO7E1pPV6RY/Q68xD3pDZwrTL4LOvetZ3bQ51
+         zH9VJUmgfofrM3p7AOv5Jsy5qEsxI1mNerRs3/gEPO5WEqb6omAGtU1ZPiO6iCLwZeNd
+         V+ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dtSCC/6Zk0CAn9Haq8H1TnXYmgXgUR49no/7MjmVHFQ=;
+        b=H5BDpLAbQcUhtOI1+4VKAXk0glE3UObr0Ribp/T2pIZIHTtg8zCZAJD1kL0qpxsJvC
+         WYU/7aS5cTLYMLPU6VkOHk7VBZKOIniT99cJxC+R0LCHot+H/T9OdAKkZfZEAi8BKS04
+         u4UgYdZ23Tv0TOmBV1FWrDWgculsQD/yPh+MfyDwhdtrwVsigdrULjcy4TiYa+jgNReo
+         jVV72EJHwAKRlFS1qFPry8rMYevgfjSUBy6CTiHGHiGWsNWqKi2UVgVYL6K7ydxDnEOk
+         hYFiXrOmbSrUCnvhQGpEM/0+38X7TCrESkvFQSn/wDa2yQnbpILJykAJx5+DoHI739xV
+         cKTw==
+X-Gm-Message-State: AGi0PubhruTc5sa82lzQcSp+HmpWP1MrKwYz9PKdjj48WslC2Q1JEpS+
+        XtQp69VPLvJnNNe+8vAKVDm5JpIS0qrSJxwzRLTOOg==
+X-Google-Smtp-Source: APiQypIAZegG6Qn5JvZ0uvEzFCZSmajX66iK5f+sKRerbAwYFi9OxxOsRKHMp8MI1JCk0ToY+5PLv4Mls7VQnu506Fk=
+X-Received: by 2002:a2e:8805:: with SMTP id x5mr18067893ljh.223.1588073053796;
+ Tue, 28 Apr 2020 04:24:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427235700.112220-1-gshan@redhat.com>
+References: <20200420134800.31604-1-benjamin.gaignard@st.com> <20200420134800.31604-2-benjamin.gaignard@st.com>
+In-Reply-To: <20200420134800.31604-2-benjamin.gaignard@st.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 28 Apr 2020 13:24:01 +0200
+Message-ID: <CACRpkdatGwWyruTLC=+BUtnunvqyxnXAYDhcHqy26oeud8Bs1w@mail.gmail.com>
+Subject: Re: [PATCH 1/5] dt-bindings: bus: Add firewall bindings
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 09:57:00AM +1000, Gavin Shan wrote:
-> Prior to commit 8eb7e28d4c642c31 ("arm64/mm: move runtime pgds to
-> rodata"), idmap_pgd_dir, tramp_pg_dir, reserved_ttbr0, swapper_pg_dir,
-> and init_pg_dir were contiguous at the end of the kernel image. The
-> maintenance at the end of __create_page_tables assumed these were
-> contiguous, and affected everything from the start of idmap_pg_dir
-> to the end of init_pg_dir.
-> 
-> That commit moved all but init_pg_dir into the .rodata section, with
-> other data placed between idmap_pg_dir and init_pg_dir, but did not
-> update the maintenance. Hence the maintenance is performed on much
-> more data than necessary (but as the bootloader previously made this
-> clean to the PoC there is no functional problem).
-> 
-> As we only alter idmap_pg_dir, and init_pg_dir, we only need to perform
-> maintenance for these. As the other dirs are in .rodata, the bootloader
-> will have initialised them as expected and cleaned them to the PoC. The
-> kernel will initialize them as necessary after enabling the MMU.
-> 
-> This patch reworks the maintenance to only cover the idmap_pg_dir and
-> init_pg_dir to avoid this unnecessary work.
-> 
-> Signed-off-by: Gavin Shan <gshan@redhat.com>
+Hi Benjamin,
 
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+On Mon, Apr 20, 2020 at 3:48 PM Benjamin Gaignard
+<benjamin.gaignard@st.com> wrote:
+>
+> Add schemas for firewall consumer and provider.
+>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 
-Mark.
-
-> ---
-> v2: Include the suggested commit log    (Mark Rutland)
->     Improved comments and code          (Mark Rutland)
-> ---
->  arch/arm64/include/asm/pgtable.h |  1 +
->  arch/arm64/kernel/head.S         | 12 +++++++++---
->  arch/arm64/kernel/vmlinux.lds.S  |  1 +
->  3 files changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> index 8c20e2bd6287..5caff09c6a3a 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -457,6 +457,7 @@ extern pgd_t init_pg_dir[PTRS_PER_PGD];
->  extern pgd_t init_pg_end[];
->  extern pgd_t swapper_pg_dir[PTRS_PER_PGD];
->  extern pgd_t idmap_pg_dir[PTRS_PER_PGD];
-> +extern pgd_t idmap_pg_end[];
->  extern pgd_t tramp_pg_dir[PTRS_PER_PGD];
->  
->  extern void set_swapper_pgd(pgd_t *pgdp, pgd_t pgd);
-> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-> index 57a91032b4c2..32f5ecbec0ea 100644
-> --- a/arch/arm64/kernel/head.S
-> +++ b/arch/arm64/kernel/head.S
-> @@ -394,13 +394,19 @@ SYM_FUNC_START_LOCAL(__create_page_tables)
->  
->  	/*
->  	 * Since the page tables have been populated with non-cacheable
-> -	 * accesses (MMU disabled), invalidate the idmap and swapper page
-> -	 * tables again to remove any speculatively loaded cache lines.
-> +	 * accesses (MMU disabled), invalidate those tables again to
-> +	 * remove any speculatively loaded cache lines.
->  	 */
-> +	dmb	sy
+> +$id: http://devicetree.org/schemas/bus/stm32/firewall-consumer.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->  	adrp	x0, idmap_pg_dir
-> +	adrp	x1, idmap_pg_end
-> +	sub	x1, x1, x0
-> +	bl	__inval_dcache_area
+> +title: Common Bus Firewall consumer binding
 > +
-> +	adrp	x0, init_pg_dir
->  	adrp	x1, init_pg_end
->  	sub	x1, x1, x0
-> -	dmb	sy
->  	bl	__inval_dcache_area
->  
->  	ret	x28
-> diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
-> index 497f9675071d..94402aaf5f5c 100644
-> --- a/arch/arm64/kernel/vmlinux.lds.S
-> +++ b/arch/arm64/kernel/vmlinux.lds.S
-> @@ -139,6 +139,7 @@ SECTIONS
->  
->  	idmap_pg_dir = .;
->  	. += IDMAP_DIR_SIZE;
-> +	idmap_pg_end = .;
->  
->  #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
->  	tramp_pg_dir = .;
-> -- 
-> 2.23.0
-> 
+> +maintainers:
+> +  - Benjamin Gaignard <benjamin.gaignard@st.com>
+
+This really needs a description: to tell what is going on and what
+these firewalls
+are for and how they are supposed to work.
+
+I suppose just a bit of cut'n'paste from the cover letter :D
+
+Otherwise it looks good to me.
+
+Yours,
+Linus Walleij
