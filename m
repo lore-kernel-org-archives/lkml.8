@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FE1C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A03C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7279920575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBA5A20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:00:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100431;
-	bh=ZiUdqKospF+UNT9RUZ6+tHc5LkH7Gx4VOkmKVEXiG4A=;
+	s=default; t=1588100432;
+	bh=zxMAMCUGege0v8kJLkpgkDzKu7rKYEby4bGm0U/va+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JjWMjWgyxB4KSj8Bd4csxfv1Mc55YbkCFzUV0e8o2Ze915b2cM2wS6Mo6MJwiDsP2
-	 p8v2ko2CHkPQWQgTDq0c4i5PrZJKRXRtt7lTs+acnM6sj5U03RkK5Nky33jws/Htuz
-	 y/x9iZrCgeqHipTLx6nkeZg0HrpDcBLdK0mwfsxU=
+	b=WggIdP8RCvBLpJw2+hMd+FF+d0lhK3/8iuWt1Sj8gdSul/mWlBOHPU1AgQoxv+MFC
+	 G07ywcgljyCCD+XgvYnx3ucUAuLHPorKC25GTA4W6j3xklgpO9CDEebTAFHDk2WE0W
+	 jWft3zU8Ljs2fNfvNvyEcOGu9oNV+/OBFYSCaxUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbgD1S11 (ORCPT
+        id S1728969AbgD1S1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:27:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39432 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:27:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728949AbgD1S1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:27:19 -0400
+        id S1728934AbgD1S1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:27:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4F85208E0;
-        Tue, 28 Apr 2020 18:27:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AAF920B1F;
+        Tue, 28 Apr 2020 18:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098439;
-        bh=ZiUdqKospF+UNT9RUZ6+tHc5LkH7Gx4VOkmKVEXiG4A=;
+        s=default; t=1588098441;
+        bh=zxMAMCUGege0v8kJLkpgkDzKu7rKYEby4bGm0U/va+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bmOiyJegdX/t3ss0NlRmbqzhtdIMQQRhgSdIU5/jBy5la1TmrhiSVr4LdUMmhUDSp
-         Mcnn72qEUQamvl9KQP7tij67cynJfSnVqL1NIYmXJCcQjdQIvjKRDq5adf43LnVTeM
-         HM/0ZFVb9Ui8fyCJZClWNco0f49ObuIcpoGZYKtE=
+        b=B8QijU5mp0xBPBWxBZSDNt+S9iYSZo/UyPkKR0ToXylM+jL6Q9DpbYd+S0C53cieg
+         uk9goOngtPNNMtPujOq8QisbNFF4EWDtmXoHlhYvmHJaQlFdL4+/VChPwOywlXxXyc
+         kqtY6r0BKg20m1iby8Wz0lGLV4KpcQkoz8b8IdBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
+        stable@vger.kernel.org, Javed Hasan <jhasan@marvell.com>,
+        Saurav Kashyap <skashyap@marvell.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 007/167] scsi: lpfc: Fix crash in target side cable pulls hitting WAIT_FOR_UNREG
-Date:   Tue, 28 Apr 2020 20:23:03 +0200
-Message-Id: <20200428182226.179126653@linuxfoundation.org>
+Subject: [PATCH 5.6 008/167] scsi: libfc: If PRLI rejected, move rport to PLOGI state
+Date:   Tue, 28 Apr 2020 20:23:04 +0200
+Message-Id: <20200428182226.289083165@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
 References: <20200428182225.451225420@linuxfoundation.org>
@@ -61,73 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Javed Hasan <jhasan@marvell.com>
 
-[ Upstream commit 807e7353d8a7105ce884d22b0dbc034993c6679c ]
+[ Upstream commit 45e544bfdab2014d11c7595b8ccc3c4715a09015 ]
 
-Kernel is crashing with the following stacktrace:
+If PRLI reject code indicates "rejected status", move rport state machine
+back to PLOGI state.
 
-  BUG: unable to handle kernel NULL pointer dereference at
-    00000000000005bc
-  IP: lpfc_nvme_register_port+0x1a8/0x3a0 [lpfc]
-  ...
-  Call Trace:
-  lpfc_nlp_state_cleanup+0x2b2/0x500 [lpfc]
-  lpfc_nlp_set_state+0xd7/0x1a0 [lpfc]
-  lpfc_cmpl_prli_prli_issue+0x1f7/0x450 [lpfc]
-  lpfc_disc_state_machine+0x7a/0x1e0 [lpfc]
-  lpfc_cmpl_els_prli+0x16f/0x1e0 [lpfc]
-  lpfc_sli_sp_handle_rspiocb+0x5b2/0x690 [lpfc]
-  lpfc_sli_handle_slow_ring_event_s4+0x182/0x230 [lpfc]
-  lpfc_do_work+0x87f/0x1570 [lpfc]
-  kthread+0x10d/0x130
-  ret_from_fork+0x35/0x40
-
-During target side fault injections, it is possible to hit the
-NLP_WAIT_FOR_UNREG case in lpfc_nvme_remoteport_delete. A prior commit
-fixed a rebind and delete race condition, but called lpfc_nlp_put
-unconditionally. This triggered a deletion and the crash.
-
-Fix by movng nlp_put to inside the NLP_WAIT_FOR_UNREG case, where the nlp
-will be being unregistered/removed. Leave the reference if the flag isn't
-set.
-
-Link: https://lore.kernel.org/r/20200322181304.37655-8-jsmart2021@gmail.com
-Fixes: b15bd3e6212e ("scsi: lpfc: Fix nvme remoteport registration race conditions")
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Link: https://lore.kernel.org/r/20200327060208.17104-2-skashyap@marvell.com
+Signed-off-by: Javed Hasan <jhasan@marvell.com>
+Signed-off-by: Saurav Kashyap <skashyap@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_nvme.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/scsi/libfc/fc_rport.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
-index db4a04a207ece..cb40217d5cc14 100644
---- a/drivers/scsi/lpfc/lpfc_nvme.c
-+++ b/drivers/scsi/lpfc/lpfc_nvme.c
-@@ -382,13 +382,15 @@ lpfc_nvme_remoteport_delete(struct nvme_fc_remote_port *remoteport)
- 	if (ndlp->upcall_flags & NLP_WAIT_FOR_UNREG) {
- 		ndlp->nrport = NULL;
- 		ndlp->upcall_flags &= ~NLP_WAIT_FOR_UNREG;
--	}
--	spin_unlock_irq(&vport->phba->hbalock);
-+		spin_unlock_irq(&vport->phba->hbalock);
+diff --git a/drivers/scsi/libfc/fc_rport.c b/drivers/scsi/libfc/fc_rport.c
+index da6e97d8dc3bb..6bb8917b99a19 100644
+--- a/drivers/scsi/libfc/fc_rport.c
++++ b/drivers/scsi/libfc/fc_rport.c
+@@ -1208,9 +1208,15 @@ static void fc_rport_prli_resp(struct fc_seq *sp, struct fc_frame *fp,
+ 		rjt = fc_frame_payload_get(fp, sizeof(*rjt));
+ 		if (!rjt)
+ 			FC_RPORT_DBG(rdata, "PRLI bad response\n");
+-		else
++		else {
+ 			FC_RPORT_DBG(rdata, "PRLI ELS rejected, reason %x expl %x\n",
+ 				     rjt->er_reason, rjt->er_explan);
++			if (rjt->er_reason == ELS_RJT_UNAB &&
++			    rjt->er_explan == ELS_EXPL_PLOGI_REQD) {
++				fc_rport_enter_plogi(rdata);
++				goto out;
++			}
++		}
+ 		fc_rport_error_retry(rdata, FC_EX_ELS_RJT);
+ 	}
  
--	/* Remove original register reference. The host transport
--	 * won't reference this rport/remoteport any further.
--	 */
--	lpfc_nlp_put(ndlp);
-+		/* Remove original register reference. The host transport
-+		 * won't reference this rport/remoteport any further.
-+		 */
-+		lpfc_nlp_put(ndlp);
-+	} else {
-+		spin_unlock_irq(&vport->phba->hbalock);
-+	}
- 
-  rport_err:
- 	return;
 -- 
 2.20.1
 
