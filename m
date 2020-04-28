@@ -2,124 +2,255 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B13F1C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD84C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CEAF206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29DAA20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588089496;
-	bh=9TW1ekAy/plmUmvDsp58sZbU5BRtwtBDznTog9YdzDs=;
+	s=default; t=1588089530;
+	bh=XURTnujkc5v5JlmmNUQa1ZLAMcR9qrI6O60YpCe1NZs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=USyS4N47BEa2DQnmNkodT6vsScuhAoPN499Kbtqe/eHHXWIWrcZGptFIEJHxImcjC
-	 DAeDTZ/gulIbqufjtzQentxvD1WxpIFeZ7zexjeCul+Rkul3E5w1Jn1bph6jjmpD9O
-	 NpYsmlzXr0aTqXBCBlhoKr8YIIlpzimVWdoWpn50=
+	b=b6j37mAl5ioFEv+BAEhX0pc//LEW7Q5U1jIbqC214IXbXHJGgzeZNK3nEyGV+BLSz
+	 e5/2m1WhE/0Di7koOuDOCDkytC/HK3MR7Kc4vgN1fLLQ3mRtObrEWTI8qdScT1HG1x
+	 SA/FuedqNUglbSFOukY8+V8zcW3387Fbu/uDcA+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbgD1P6P (ORCPT
+        id S1728312AbgD1P6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:58:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54488 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728225AbgD1P6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:58:15 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E97F20661;
-        Tue, 28 Apr 2020 15:58:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588089494;
-        bh=9TW1ekAy/plmUmvDsp58sZbU5BRtwtBDznTog9YdzDs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vggH6IunjsexihMHuZ1LkEoFGXuw/IsSxeF2VISAqmeWQP8cRjRMT7X2QWbDImWmx
-         OkPGHCXNhAH5LR5or/+ahqXHmRVJV5D9ITw0a745tCajzLCI147NRzZ6E9/fKW6Ldi
-         W1x0zIwY+AggNwLUsuJzGxqokq3OUMBXC0Ow9y10=
-Date:   Tue, 28 Apr 2020 16:58:12 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H . J . Lu " <hjl.tools@gmail.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Weimer <fweimer@redhat.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v10 00/13] arm64: Branch Target Identification support
-Message-ID: <20200428155808.GJ5677@sirena.org.uk>
-References: <20200316165055.31179-1-broonie@kernel.org>
- <20200422154436.GJ4898@sirena.org.uk>
- <20200422162954.GF3585@gaia>
- <20200428132804.GF6791@willie-the-truck>
- <20200428151205.GH5677@sirena.org.uk>
- <20200428151815.GB12697@willie-the-truck>
+        Tue, 28 Apr 2020 11:58:49 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33864 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728105AbgD1P6s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:58:48 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 72so33488335otu.1;
+        Tue, 28 Apr 2020 08:58:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MivbelJxNHa4mdFZfVhvWBP5Vwv2IXDtOtO6A6eppmk=;
+        b=YyGmKNyi5r8qSORYGgMGiUdYHSnp9UN1KD7+lKwZwpJMfGiJiiUsxarrNvQGpc+H0r
+         +C/aDCl6iYlD87DXHuVDy6+O14W61UNHXtGmxT4hVRAXvK2vKdFhsT4HxvyAXbFojI8Z
+         rjp/eh6shjNdbdeBKRyliI/B8XG3oHfSL35UNz1hs4X2n8O5+TUTP5R7OS2H8eyt8REV
+         awUSWmRjH3TDTk271vPr75IK7tbeZS5nPiL/LxFrYiQGotfZYdnamSUaVBHjKr7cc/04
+         tSfKx9xALeA+bxT0TNHaK1j4LJC0JTBQRY+lzid7cBnWwUfx5KcE8J5/lGLaqP1NhGJE
+         aHmQ==
+X-Gm-Message-State: AGi0PuauXMIsuI2o9pDf57Co8LKUzu5++qnY3V9pfYnPZhrPczaXycj1
+        mqMgh29Fdtk4pKBqGt5JAA==
+X-Google-Smtp-Source: APiQypL2q5pmI3xD++E1lAurIiqAjUjSCNH77eIrxVFi+r/6KnDIqJqluLOrTGCDXGiX60gxAFnFzg==
+X-Received: by 2002:aca:4a0c:: with SMTP id x12mr3438710oia.19.1588089527751;
+        Tue, 28 Apr 2020 08:58:47 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q142sm4938585oic.44.2020.04.28.08.58.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 08:58:47 -0700 (PDT)
+Received: (nullmailer pid 2205 invoked by uid 1000);
+        Tue, 28 Apr 2020 15:58:46 -0000
+Date:   Tue, 28 Apr 2020 10:58:46 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] devicetree: bindings: phy: Document ipq806x dwc3
+ qcom phy
+Message-ID: <20200428155846.GA29778@bogus>
+References: <20200415210729.9618-1-ansuelsmth@gmail.com>
+ <20200415210729.9618-2-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="GvznHscUikHnwW2p"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200428151815.GB12697@willie-the-truck>
-X-Cookie: Eschew obfuscation.
+In-Reply-To: <20200415210729.9618-2-ansuelsmth@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 15, 2020 at 11:07:27PM +0200, Ansuel Smith wrote:
+> Document dwc3 qcom phy hs and ss phy bindings needed to correctly
+> inizialize and use usb on ipq806x SoC.
+> 
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+> v3:
+> * Use explicit reg instead of regmap
+> 
+>  .../bindings/phy/qcom,ipq806x-usb-phy-hs.yaml | 58 +++++++++++++++
+>  .../bindings/phy/qcom,ipq806x-usb-phy-ss.yaml | 70 +++++++++++++++++++
+>  2 files changed, 128 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+> new file mode 100644
+> index 000000000000..c019de7478e3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+> @@ -0,0 +1,58 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-hs.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm ipq806x usb DWC3 HS PHY CONTROLLER
+> +
+> +maintainers:
+> +  - Ansuel Smith <ansuelsmth@gmail.com>
+> +
+> +description:
+> +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
+> +  controllers used in ipq806x. Each DWC3 PHY controller should have its
+> +  own node.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq806x-usb-phy-hs
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    description: |
+> +      - "ref" Is required
+> +      - "xo"	Optional external reference clock
+> +    items:
+> +      - const: ref
+> +      - const: xo
+> +
+> +required:
+> +  - compatible
+> +  - "#phy-cells"
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
+> +
+> +    hs_phy_0: phy@110f8800 {
+> +      compatible = "qcom,ipq806x-usb-phy-hs";
+> +      reg = <0x110f8800 0x30>;
+> +      clocks = <&gcc USB30_0_UTMI_CLK>;
+> +      clock-names = "ref";
+> +      #phy-cells = <0>;
+> +    };
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+> new file mode 100644
+> index 000000000000..29a7d3aed289
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+> @@ -0,0 +1,70 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-ss.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm ipq806x usb DWC3 SS PHY CONTROLLER
+> +
+> +maintainers:
+> +  - Ansuel Smith <ansuelsmth@gmail.com>
+> +
+> +description:
+> +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
+> +  controllers used in ipq806x. Each DWC3 PHY controller should have its
+> +  own node.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq806x-usb-phy-ss
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    description: |
+> +      - "ref" Is required
+> +      - "xo"	Optional external reference clock
+> +    items:
+> +      - const: ref
+> +      - const: xo
+> +
+> +  rx_eq:
 
---GvznHscUikHnwW2p
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+qcom,rx-eq
 
-On Tue, Apr 28, 2020 at 04:18:16PM +0100, Will Deacon wrote:
-> On Tue, Apr 28, 2020 at 04:12:05PM +0100, Mark Brown wrote:
+> +    maxItems: 1
 
-> > It's probably easier for me if you just use the existing branch, I've
-> > already got a branch based on a merge down.
+Is this an array?
 
-> Okey doke, I'll funnel that in the direction of linux-next then. It does
-> mean that any subsequent patches for 5.8 that depend on BTI will need to
-> be based on this branch, so as long as you're ok with that then it's fine
-> by me (since I won't be able to apply patches if they refer to changes
-> introduced in the recent merge window).
+> +    description: Override value for rx_eq. Default is 4.
+> +
+> +  tx_deamp_3_5db:
 
-That's not a problem, that's what I've got already and if I try to send
-everything based off -rc3 directly the series would get unmanagably
-large.  Actually unless you think it's a bad idea I think what I'll do
-is go and send out a couple of the preparatory changes (the insn updates
-and the last bit of annotation conversions) separately for that branch
-while I finalize the revisions of the main BTI kernel bit, hopefully
-that'll make the review a bit more approachable.
+qcom,tx-deamp-3-5db
 
---GvznHscUikHnwW2p
-Content-Type: application/pgp-signature; name="signature.asc"
+> +    maxItems: 1
+> +    description: Override value for transmit preemphasis. Default is 23.
 
------BEGIN PGP SIGNATURE-----
+default: 23
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6oUo8ACgkQJNaLcl1U
-h9ANJwf/WRlo08Mn6rULa8b3pqa1bQzdRN/zAGUfNf93UHKMH2yvxQZ6GTGie8us
-Kw24VCNz5n7f6AjcO0v+vH6pAJxlD2DHraSawXDaEKZJ2YMnFSryzWFrWJr12klT
-DRRRi3+D2+GBFPflADAl2YaCfEV9D2USZGPG6OB/gkF43dmK1VIAon0ixx8WL7dw
-GtmV9U8DZlC9FrJd7gh9jbJGYiIgZ7hcMR2eyuzH5Z2gW4WPwWOkfd+pc9eBuyNl
-vbBauk5tAYnPssGMtNUG7M9gakg5U1GsRBY7E1QUJ97iMAUqiKN2Z1mharmqU6cs
-sswMEKQMo98MespYoImEM/wHQ5GqJw==
-=KIkv
------END PGP SIGNATURE-----
+> +
+> +  mpll:
 
---GvznHscUikHnwW2p--
+qcom,mpll
+
+> +    maxItems: 1
+> +    description: Override value for mpll. Default is 0.
+
+Constraints?
+
+default: 0
+
+> +
+> +required:
+> +  - compatible
+> +  - "#phy-cells"
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
+> +
+> +    ss_phy_0: phy@110f8830 {
+> +      compatible = "qcom,ipq806x-usb-phy-ss";
+> +      reg = <0x110f8830 0x30>;
+> +      clocks = <&gcc USB30_0_MASTER_CLK>;
+> +      clock-names = "ref";
+> +      #phy-cells = <0>;
+> +    };
+> -- 
+> 2.25.1
+> 
