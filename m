@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF076C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C2AC83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91CDE206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED293206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:24:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbgD1PYG (ORCPT
+        id S1728895AbgD1PYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:24:06 -0400
-Received: from 8bytes.org ([81.169.241.247]:37630 "EHLO theia.8bytes.org"
+        Tue, 28 Apr 2020 11:24:14 -0400
+Received: from 8bytes.org ([81.169.241.247]:37428 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728204AbgD1PR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:17:58 -0400
+        id S1728173AbgD1PRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:17:54 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id E238FE96; Tue, 28 Apr 2020 17:17:44 +0200 (CEST)
+        id 1B48DCC0; Tue, 28 Apr 2020 17:17:44 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -40,9 +40,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 15/75] x86/boot/compressed/64: Add page-fault handler
-Date:   Tue, 28 Apr 2020 17:16:25 +0200
-Message-Id: <20200428151725.31091-16-joro@8bytes.org>
+Subject: [PATCH v3 11/75] x86/boot/compressed/64: Disable red-zone usage
+Date:   Tue, 28 Apr 2020 17:16:21 +0200
+Message-Id: <20200428151725.31091-12-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200428151725.31091-1-joro@8bytes.org>
 References: <20200428151725.31091-1-joro@8bytes.org>
@@ -53,118 +53,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Install a page-fault handler to add an identity mapping to addresses
-not yet mapped. Also do some checking whether the error code is sane.
+The x86-64 ABI defines a red-zone on the stack:
 
-This makes non SEV-ES machines use the exception handling
-infrastructure in the pre-decompressions boot code too, making it less
-likely to break in the future.
+  The 128-byte area beyond the location pointed to by %rsp is considered
+  to be reserved and shall not be modified by signal or interrupt
+  handlers. Therefore, functions may use this area for temporary data
+  that is not needed across function calls. In particular, leaf
+  functions may use this area for their entire stack frame, rather than
+  adjusting the stack pointer in the prologue and epilogue. This area is
+  known as the red zone.
+
+This is not compatible with exception handling, because the IRET frame
+written by the hardware at the stack pointer and the functions to handle
+the exception will overwrite the temporary variables of the interrupted
+function, causing undefined behavior. So disable red-zones for the
+pre-decompression boot code.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/compressed/ident_map_64.c    | 33 ++++++++++++++++++++++
- arch/x86/boot/compressed/idt_64.c          |  2 ++
- arch/x86/boot/compressed/idt_handlers_64.S |  2 ++
- arch/x86/boot/compressed/misc.h            |  6 ++++
- 4 files changed, 43 insertions(+)
+ arch/x86/boot/Makefile            | 2 +-
+ arch/x86/boot/compressed/Makefile | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index 3a2115582920..33bdf923cbab 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -19,11 +19,13 @@
- /* No PAGE_TABLE_ISOLATION support needed either: */
- #undef CONFIG_PAGE_TABLE_ISOLATION
+diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+index e17be90ab312..93f1320fc7bf 100644
+--- a/arch/x86/boot/Makefile
++++ b/arch/x86/boot/Makefile
+@@ -65,7 +65,7 @@ clean-files += cpustr.h
  
-+#include "error.h"
- #include "misc.h"
+ # ---------------------------------------------------------------------------
  
- /* These actually do the work of building the kernel identity maps. */
- #include <asm/init.h>
- #include <asm/pgtable.h>
-+#include <asm/trap_defs.h>
- /* Use the static base for this part of the boot process */
- #undef __PAGE_OFFSET
- #define __PAGE_OFFSET __PAGE_OFFSET_BASE
-@@ -163,3 +165,34 @@ void finalize_identity_maps(void)
- {
- 	write_cr3(top_level_pgt);
- }
-+
-+void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
-+{
-+	unsigned long address = native_read_cr2();
-+
-+	/*
-+	 * Check for unexpected error codes. Unexpected are:
-+	 *	- Faults on present pages
-+	 *	- User faults
-+	 *	- Reserved bits set
-+	 */
-+	if (error_code & (X86_PF_PROT | X86_PF_USER | X86_PF_RSVD)) {
-+		/* Print some information for debugging */
-+		error_putstr("Unexpected page-fault:");
-+		error_putstr("\nError Code: ");
-+		error_puthex(error_code);
-+		error_putstr("\nCR2: 0x");
-+		error_puthex(address);
-+		error_putstr("\nRIP relative to _head: 0x");
-+		error_puthex(regs->ip - (unsigned long)_head);
-+		error_putstr("\n");
-+
-+		error("Stopping.\n");
-+	}
-+
-+	/*
-+	 * Error code is sane - now identity map the 2M region around
-+	 * the faulting address.
-+	 */
-+	add_identity_map(address & PMD_MASK, PMD_SIZE);
-+}
-diff --git a/arch/x86/boot/compressed/idt_64.c b/arch/x86/boot/compressed/idt_64.c
-index 46ecea671b90..99cc78062684 100644
---- a/arch/x86/boot/compressed/idt_64.c
-+++ b/arch/x86/boot/compressed/idt_64.c
-@@ -39,5 +39,7 @@ void load_stage2_idt(void)
- {
- 	boot_idt_desc.address = (unsigned long)boot_idt;
- 
-+	set_idt_entry(X86_TRAP_PF, boot_page_fault);
-+
- 	load_boot_idt(&boot_idt_desc);
- }
-diff --git a/arch/x86/boot/compressed/idt_handlers_64.S b/arch/x86/boot/compressed/idt_handlers_64.S
-index f86ea872d860..eda50cbdafa0 100644
---- a/arch/x86/boot/compressed/idt_handlers_64.S
-+++ b/arch/x86/boot/compressed/idt_handlers_64.S
-@@ -67,3 +67,5 @@ SYM_FUNC_END(\name)
- 
- 	.text
- 	.code64
-+
-+EXCEPTION_HANDLER	boot_page_fault do_boot_page_fault error_code=1
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 3a030a878d53..345c90fbc500 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -37,6 +37,9 @@
- #define memptr unsigned
- #endif
- 
-+/* boot/compressed/vmlinux start and end markers */
-+extern char _head[], _end[];
-+
- /* misc.c */
- extern memptr free_mem_ptr;
- extern memptr free_mem_end_ptr;
-@@ -146,4 +149,7 @@ extern pteval_t __default_kernel_pte_mask;
- extern gate_desc boot_idt[BOOT_IDT_ENTRIES];
- extern struct desc_ptr boot_idt_desc;
- 
-+/* IDT Entry Points */
-+void boot_page_fault(void);
-+
- #endif /* BOOT_COMPRESSED_MISC_H */
+-KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP
++KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP -mno-red-zone
+ KBUILD_AFLAGS	:= $(KBUILD_CFLAGS) -D__ASSEMBLY__
+ KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+ KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 5f7c262bcc99..085d5f083f50 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -30,7 +30,7 @@ KBUILD_CFLAGS := -m$(BITS) -O2
+ KBUILD_CFLAGS += -fno-strict-aliasing $(call cc-option, -fPIE, -fPIC)
+ KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
+ cflags-$(CONFIG_X86_32) := -march=i386
+-cflags-$(CONFIG_X86_64) := -mcmodel=small
++cflags-$(CONFIG_X86_64) := -mcmodel=small -mno-red-zone
+ KBUILD_CFLAGS += $(cflags-y)
+ KBUILD_CFLAGS += -mno-mmx -mno-sse
+ KBUILD_CFLAGS += $(call cc-option,-ffreestanding)
 -- 
 2.17.1
 
