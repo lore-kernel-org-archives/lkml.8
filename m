@@ -2,135 +2,152 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD6BC83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D527C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56E2E206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 551CB206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:53:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UAyjAIan"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QG1Ei70T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbgD1OxF (ORCPT
+        id S1728091AbgD1Oxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:53:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37750 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727775AbgD1OxE (ORCPT
+        Tue, 28 Apr 2020 10:53:37 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:7664 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727775AbgD1Oxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:53:04 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8064AC03C1AB;
-        Tue, 28 Apr 2020 07:53:03 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id p8so10428563pgi.5;
-        Tue, 28 Apr 2020 07:53:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/JpZ0+eTyvNRtNOYk4xxR3kczphsAY370jAlUixwt7E=;
-        b=UAyjAIan1d3dX0IGuqchgOq9ZJxc+1lIdjWmNns+yfgfuI9rJ8BpOvKq6w9S7tvB9B
-         lLaadMowzbiCMvG5JRaPPT2L/hk97E2Cg9e4glNhJTGWIm+SHU5YSb5eT6eALpNuFKv+
-         8T6aN/cfUtXyX8sOwX+1abnlj8Z829PzZdUvcpNTyOG1GHxna/TV2gSedASndyIQykIX
-         0ykK1jTkLm79a1tXkNpPGC/DUaHIjN33R4XY7YM+jCm5hR4Wmc8Ddv9htBSpxXJy2Mlq
-         jLZ6JOvN4eRgZ5K/dnQ5gnQS+KPQOz7GBtYYq+8sjKPZBXDeL/bZJUBif8PmCgmMhpzr
-         vW8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/JpZ0+eTyvNRtNOYk4xxR3kczphsAY370jAlUixwt7E=;
-        b=Nxis812MwUoBqc0tNuiVc/ZCBgCTZNJrWM9dmQ6Rykyc+Szub0kNGinGz9e4qDS7iF
-         8evWgKeUZnXKw8RzBA5CdNLBZCzvpgRaZ/FDUr76bcH1+JEMIPHhf86DTTVuknx1FIwM
-         SNAQ9qI3MeOotmhidPO3PB50hFrq09u5sSBoue96mva1r4hmXWR+wFblS44g5qYaW+RD
-         f8cuozJq316svSTLqBXyCT9BXmCAY1VplEovKkdo/zbqoQp/gDLh5hTRCbfxtVA7UrSY
-         8UHjeFZ3fSKuiJg5NJzAyvWochdj/aDsPziK/LgNlliixwUNwYPdz9Fb4sy9lwqtGkjf
-         YnIQ==
-X-Gm-Message-State: AGi0PuYFhtO1FOPHDTpPtRREC7ZT/C5ojnY7t/03xAin78de55KUaiUw
-        taqBbb1mGufR3XdJ9gvbqwc=
-X-Google-Smtp-Source: APiQypLZPibccVXPkfV9YKUx6XHMdVSQdB9T6nrvmqRSAJTVcXZudPqtpdseKkYT4ifhgZWyy3MFng==
-X-Received: by 2002:a62:7515:: with SMTP id q21mr31848066pfc.1.1588085582953;
-        Tue, 28 Apr 2020 07:53:02 -0700 (PDT)
-Received: from localhost ([89.208.244.169])
-        by smtp.gmail.com with ESMTPSA id bg6sm2223231pjb.21.2020.04.28.07.53.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Apr 2020 07:53:02 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 22:52:57 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>, yash.shah@sifive.com,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH net v1] net: macb: fix an issue about leak related system
- resources
-Message-ID: <20200428145257.GA3622@nuc8i5>
-References: <20200425125737.5245-1-zhengdejin5@gmail.com>
- <CAHp75VceH08X5oWSCXhx8O0Bsx9u=Tm+DVQowG+mC3Vs2=ruVQ@mail.gmail.com>
- <20200428032453.GA32072@nuc8i5>
- <acdfcb8d-9079-1340-09d5-2c10383f9c26@microchip.com>
- <20200428131159.GA2128@nuc8i5>
- <CAHp75VdAuo=UiTa+xJ8qFqbxqHVeL_M6nahhzXKbGHqvovoKMA@mail.gmail.com>
+        Tue, 28 Apr 2020 10:53:36 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea842f60000>; Tue, 28 Apr 2020 07:51:34 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 28 Apr 2020 07:53:36 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 28 Apr 2020 07:53:36 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Apr
+ 2020 14:53:36 +0000
+Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Apr
+ 2020 14:53:35 +0000
+Subject: Re: [RFC PATCH v1 0/5] media: tegra: Tegra video driver follow-up
+ patches
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>
+CC:     <digetx@gmail.com>, <linux-media@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1588047650-29402-1-git-send-email-skomatineni@nvidia.com>
+ <5f065fc5-0f45-6b9e-068c-28d0a2e4684e@xs4all.nl>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <8ae1bfca-e4bf-ed67-8945-646a6121875a@nvidia.com>
+Date:   Tue, 28 Apr 2020 07:52:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdAuo=UiTa+xJ8qFqbxqHVeL_M6nahhzXKbGHqvovoKMA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <5f065fc5-0f45-6b9e-068c-28d0a2e4684e@xs4all.nl>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588085494; bh=p+kXoWpy+6lidCfK/jU6nAwd2T6v9oCDp2I442hw04E=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=QG1Ei70TnkYDcvOlU4yGcBofHLqeT+hSrFgWQjnYJezhhNEWf5fhl4x/d881flD9e
+         Q6Y6ASs02xQ1vLs+fFbUzXMxl/TNgq89FSfLqRXR/FsiNnzdaZyUv4rH4ATif2/k85
+         zgezNQtXt+Dk3innTsICvNyEWDTIuYy/385Hv+rJIq/JoF6bfXyS7ZFRcJSlPOuoPD
+         zBpKORMoFHqhlSvwvOft86/VlGVkI6O76TXdN1JFWs1rJFC4s+OvBeLs6rrePg/yM9
+         9gbg+ECwZwSgXq5QE8NhGn2twkKsCPjkElgv9E4FYbxB3un1B6S09nxVBhjKwchzta
+         wTYl0zGEb4i7g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 05:04:32PM +0300, Andy Shevchenko wrote:
-> On Tue, Apr 28, 2020 at 4:12 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
-> > On Tue, Apr 28, 2020 at 10:42:56AM +0200, Nicolas Ferre wrote:
-> > > On 28/04/2020 at 05:24, Dejin Zheng wrote:
-> > > > On Mon, Apr 27, 2020 at 01:33:41PM +0300, Andy Shevchenko wrote:
-> > > > > On Sat, Apr 25, 2020 at 3:57 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
-> > > > > >
-> > > > > > A call of the function macb_init() can fail in the function
-> > > > > > fu540_c000_init. The related system resources were not released
-> > > > > > then. use devm_ioremap() to replace ioremap() for fix it.
-> > > > > >
-> > > > >
-> > > > > Why not to go further and convert to use devm_platform_ioremap_resource()?
-> > > > >
-> > > > devm_platform_ioremap_resource() will call devm_request_mem_region(),
-> > > > and here did not do it.
-> > >
-> > > And what about devm_platform_get_and_ioremap_resource()? This would
-> > > streamline this whole fu540_c000_init() function.
-> > >
-> > Nicolas, the function devm_platform_get_and_ioremap_resource() will also
-> > call devm_request_mem_region(), after call it, These IO addresses will
-> > be monopolized by this driver. the devm_ioremap() and ioremap() are not
-> > do this. if this IO addresses will be shared with the other driver, call
-> > devm_platform_get_and_ioremap_resource() may be fail.
-> 
-> I guess request region is a right thing to do. If driver is sharing
-> this IO region with something else, it is a delayed bomb attack and
-> has to be fixed.
-> 
+
+On 4/28/20 12:38 AM, Hans Verkuil wrote:
+> External email: Use caution opening links or attachments
 >
-I did encounter IO address sharing, for example, some registers are shared
-by both PHY and USB controllers on Tegra SoCs. See link[1] for details.
-If many people think that devm_request_mem_region() should be added
-here, I will send patch v2 and convert to use
-devm_platform_ioremap_resource(). Thanks very much!
-
-link[1]: https://patchwork.ozlabs.org/project/linux-tegra/patch/20200127135841.17935-1-zhengdejin5@gmail.com/
-
-BR,
-Dejin
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+>
+> On 28/04/2020 06:20, Sowjanya Komatineni wrote:
+>> This is a fllow-up to some last feedback received for Tegra VI driver RFC
+>> v10 patches.
+>> https://patchwork.linuxtv.org/cover/63334/
+>>
+>>
+>> Sowjanya Komatineni (5):
+>>    MAINTAINERS: Rename Tegra Video driver path
+>>    media: tegra: Rename driver path to tegra-video
+>>    media: tegra-video: Move PM runtime handle to streaming
+>>    media: tegra-video: Rearrange SoC specific to Tegra210 and cleanup
+>>      files
+>>    media: tegra-video: Remove module macros for vi and csi driver
+>>
+>>   MAINTAINERS                                  |    2 +-
+>>   drivers/staging/media/Kconfig                |    2 +-
+>>   drivers/staging/media/Makefile               |    2 +-
+>>   drivers/staging/media/tegra-video/Kconfig    |   12 +
+>>   drivers/staging/media/tegra-video/Makefile   |    8 +
+>>   drivers/staging/media/tegra-video/TODO       |   10 +
+>>   drivers/staging/media/tegra-video/csi.c      |  536 ++++++++++++
+>>   drivers/staging/media/tegra-video/csi.h      |  146 ++++
+>>   drivers/staging/media/tegra-video/tegra210.c | 1080 ++++++++++++++++++++++++
+>>   drivers/staging/media/tegra-video/vi.c       | 1082 +++++++++++++++++++++++++
+>>   drivers/staging/media/tegra-video/vi.h       |  258 ++++++
+>>   drivers/staging/media/tegra-video/video.c    |  155 ++++
+>>   drivers/staging/media/tegra-video/video.h    |   29 +
+>>   drivers/staging/media/tegra/Kconfig          |   12 -
+>>   drivers/staging/media/tegra/Makefile         |    8 -
+>>   drivers/staging/media/tegra/TODO             |   10 -
+>>   drivers/staging/media/tegra/common.h         |  259 ------
+>>   drivers/staging/media/tegra/csi.c            |  604 --------------
+>>   drivers/staging/media/tegra/csi.h            |  144 ----
+>>   drivers/staging/media/tegra/tegra210.c       |  708 ----------------
+>>   drivers/staging/media/tegra/tegra210.h       |  190 -----
+>>   drivers/staging/media/tegra/vi.c             | 1127 --------------------------
+>>   drivers/staging/media/tegra/vi.h             |   72 --
+>>   drivers/staging/media/tegra/video.c          |  153 ----
+>>   drivers/staging/media/tegra/video.h          |   29 -
+>>   25 files changed, 3319 insertions(+), 3319 deletions(-)
+> I thought that the follow-up series was just a rename of a directory
+> and perhaps one or two smaller changes, but this is too much change.
+> I prefer to have a v11 instead with all these changes incorporated.
+>
+> Sorry about that,
+>
+>          Hans
+OK Will send v11. Thanks Hans
+>
+>>   create mode 100644 drivers/staging/media/tegra-video/Kconfig
+>>   create mode 100644 drivers/staging/media/tegra-video/Makefile
+>>   create mode 100644 drivers/staging/media/tegra-video/TODO
+>>   create mode 100644 drivers/staging/media/tegra-video/csi.c
+>>   create mode 100644 drivers/staging/media/tegra-video/csi.h
+>>   create mode 100644 drivers/staging/media/tegra-video/tegra210.c
+>>   create mode 100644 drivers/staging/media/tegra-video/vi.c
+>>   create mode 100644 drivers/staging/media/tegra-video/vi.h
+>>   create mode 100644 drivers/staging/media/tegra-video/video.c
+>>   create mode 100644 drivers/staging/media/tegra-video/video.h
+>>   delete mode 100644 drivers/staging/media/tegra/Kconfig
+>>   delete mode 100644 drivers/staging/media/tegra/Makefile
+>>   delete mode 100644 drivers/staging/media/tegra/TODO
+>>   delete mode 100644 drivers/staging/media/tegra/common.h
+>>   delete mode 100644 drivers/staging/media/tegra/csi.c
+>>   delete mode 100644 drivers/staging/media/tegra/csi.h
+>>   delete mode 100644 drivers/staging/media/tegra/tegra210.c
+>>   delete mode 100644 drivers/staging/media/tegra/tegra210.h
+>>   delete mode 100644 drivers/staging/media/tegra/vi.c
+>>   delete mode 100644 drivers/staging/media/tegra/vi.h
+>>   delete mode 100644 drivers/staging/media/tegra/video.c
+>>   delete mode 100644 drivers/staging/media/tegra/video.h
+>>
