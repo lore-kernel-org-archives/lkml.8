@@ -2,105 +2,133 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80458C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A31AC83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54F3820757
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:46:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588095995;
-	bh=j3bTtoIIUPj7NXfVVVlBiiQhi4vbnqLz0OFAIRrsoeA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O3M2GhjbOyrZKpF3Ok2r9AtcwN6n1DfMA/kqXULs6Hsfi4JrA2dMGhCXg13itDSSR
-	 8GTEyVKHBKUnaQeEsOQfm9wvKLkUCie03hyTwjUp1lG0DV6jFZsE0SqOeyyTw7yTYf
-	 Q6C/TUui6WuORv1OBCY0J9l8aKoDkxbxtk3cfQog=
+	by mail.kernel.org (Postfix) with ESMTP id 2679220757
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:46:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbgD1Rqe (ORCPT
+        id S1728526AbgD1Rqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 13:46:34 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33977 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727074AbgD1Rqe (ORCPT
+        Tue, 28 Apr 2020 13:46:51 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35190 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727074AbgD1Rqv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 13:46:34 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 72so34157988otu.1;
-        Tue, 28 Apr 2020 10:46:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3WcS7Mhffi/ZvcyLI4LRv8y4jUCf0d6xnP7vZtTWf5c=;
-        b=PliWV0gHbhdcoDAy598Ar8iEt3MRb0ZTN00uLhqGTfjG7eps13uxqdOgQ1EUHCUpee
-         jAKJNl2wI8tUxmGe2e+n/4JJuLP0L/kB0HioOcMXZZWWB6p+74pOOGkp+6f6Vn5DHemZ
-         dfOqNDfRZF8RTH8q5ztCfZxIG08MobvkWDozbfdJPt09dTHxB17S5jfZq5tVzGJ/hNyY
-         BUQDk6irLVdQ/L0S92/46fJDHCjtGp6q/z2rmW9VrwMLtbGIvW9T9CzpC49bC0R2wvw4
-         Quwbuo1481szp87JRJv5WbKtX5HJcy4owkVJLmJS9iPOkWrnA3jZds16Y0c9jVbJ7K/O
-         luow==
-X-Gm-Message-State: AGi0PuYEiOxza7aeMCtioTgI/J+rIUKWF9dznhHQgNpgic9CnlMr2+UK
-        1MZ1DZ2ep0xo07cQrk5Urw==
-X-Google-Smtp-Source: APiQypIzPDUJS/tGE1UCLLtRvxgOZxpHzXWWQYtSEyKLdPJwzs/JDuLjnOnJIRTrv0BdtQGwZ6EQ0Q==
-X-Received: by 2002:a05:6830:1149:: with SMTP id x9mr10207955otq.332.1588095992006;
-        Tue, 28 Apr 2020 10:46:32 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q15sm4959468otk.78.2020.04.28.10.46.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 10:46:30 -0700 (PDT)
-Received: (nullmailer pid 4835 invoked by uid 1000);
-        Tue, 28 Apr 2020 17:46:30 -0000
-Date:   Tue, 28 Apr 2020 12:46:30 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     saravanak@google.com, linux-kernel@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH v3 2/2] of: property: Do not link to disabled devices
-Message-ID: <20200428174630.GA4698@bogus>
-References: <20200420120101.31405-1-nsaenzjulienne@suse.de>
- <20200420120101.31405-3-nsaenzjulienne@suse.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420120101.31405-3-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 28 Apr 2020 13:46:51 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03SHZ0T7018100;
+        Tue, 28 Apr 2020 13:46:44 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30pjmjf4tq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 13:46:44 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03SHepiB028904;
+        Tue, 28 Apr 2020 17:46:42 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04fra.de.ibm.com with ESMTP id 30mcu592aa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 17:46:42 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03SHkeYk26280154
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 17:46:40 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2B02811C06E;
+        Tue, 28 Apr 2020 17:46:40 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E9DBE11C05E;
+        Tue, 28 Apr 2020 17:46:38 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.198.90])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 28 Apr 2020 17:46:38 +0000 (GMT)
+Message-ID: <1588095998.5195.49.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 6/6] ima: Fix return value of ima_write_policy()
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
+        krzysztof.struczynski@huawei.com, stable@vger.kernel.org
+Date:   Tue, 28 Apr 2020 13:46:38 -0400
+In-Reply-To: <20200427103128.19229-1-roberto.sassu@huawei.com>
+References: <20200427102900.18887-1-roberto.sassu@huawei.com>
+         <20200427103128.19229-1-roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-28_12:2020-04-28,2020-04-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ adultscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
+ mlxscore=0 mlxlogscore=999 suspectscore=0 clxscore=1015 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004280130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Apr 2020 14:01:02 +0200, Nicolas Saenz Julienne wrote:
-> When creating a consumer/supplier relationship between two devices,
-> make sure the supplier node is actually active. Otherwise this will
-> create a link relationship that will never be fulfilled. This, in the
-> worst case scenario, will hang the system during boot.
+Hi Roberto,
+
+On Mon, 2020-04-27 at 12:31 +0200, Roberto Sassu wrote:
+> This patch fixes the return value of ima_write_policy() when a new policy
+> is directly passed to IMA and the current policy requires appraisal of the
+> file containing the policy. Currently, if appraisal is not in ENFORCE mode,
+> ima_write_policy() returns 0 and leads user space applications to an
+> endless loop. Fix this issue by denying the operation regardless of the
+> appraisal mode.
 > 
-> Note that, in practice, the fact that a device-tree represented
-> consumer/supplier relationship isn't fulfilled will not prevent devices
-> from successfully probing.
+> Changelog
 > 
-> Fixes: a3e1d1a7f5fc ("of: property: Add functional dependency link from DT bindings")
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> v1:
+> - deny the operation in all cases (suggested by Mimi, Krzysztof)
+
+Relatively recently, people have moved away from including the
+"Changelog" in the upstream commit. (I'm removing them now.)  
+
 > 
+> Cc: stable@vger.kernel.org # 4.10.x
+> Fixes: 19f8a84713edc ("ima: measure and appraise the IMA policy itself")
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+
+Without the Changelog, the only way of acknowledging people's
+contributions is by including their tags.  Krzysztof, did you want to
+add your "Reviewed-by" tag?
+
 > ---
-> 
-> Changes since v2:
->  - Correct code comment
->  - Use already available return handling code
-> 
-> Changes since v1:
->  - Move availability check into the compatible search code and stop if
->    node disabled
-> 
->  drivers/of/property.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
-> 
 
-Applied, thanks.
+People have started putting the Changelog or any comments immediately
+below the separator "---" here.
 
-Rob
+thanks,
+
+Mimi
+
+>  security/integrity/ima/ima_fs.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
+> index 8b030a1c5e0d..e3fcad871861 100644
+> --- a/security/integrity/ima/ima_fs.c
+> +++ b/security/integrity/ima/ima_fs.c
+> @@ -338,8 +338,7 @@ static ssize_t ima_write_policy(struct file *file, const char __user *buf,
+>  		integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL, NULL,
+>  				    "policy_update", "signed policy required",
+>  				    1, 0);
+> -		if (ima_appraise & IMA_APPRAISE_ENFORCE)
+> -			result = -EACCES;
+> +		result = -EACCES;
+>  	} else {
+>  		result = ima_parse_add_rule(data);
+>  	}
+
