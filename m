@@ -2,133 +2,85 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B16C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6319C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 671C9206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:33:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588069984;
-	bh=1clsmZJegjw8HaJ5Njou1QrUs1up4U7zJZaJATRxhWg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a1Fi+pJK16uHfN0c4HOqPrVc12Q/VKQoGZvmCExKrYtVuio3RSFjkJ0FuzKCSE7mv
-	 sW5VXJzccQgX7gj3V9XMxmF/PVLhjNKUdAKV0MsSGVJPUIXlfSzV7eilkwJmZZLxn8
-	 loZAi6kZ4TqIa4CG5ELKF4dSCn6B/hZkQ5+Henp0=
+	by mail.kernel.org (Postfix) with ESMTP id 9A866206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:34:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbgD1KdD (ORCPT
+        id S1726437AbgD1KeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 06:33:03 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40428 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbgD1KdD (ORCPT
+        Tue, 28 Apr 2020 06:34:11 -0400
+Received: from ms10.pegatroncorp.com ([192.72.126.90]:60666 "EHLO
+        ms9.pegatroncorp.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726276AbgD1KeL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 06:33:03 -0400
-Received: by mail-ed1-f67.google.com with SMTP id d16so15981718edq.7;
-        Tue, 28 Apr 2020 03:33:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3D2uMdzrOa8rVE8whnBxczkr3C+t2CoAy11SOmQRQD8=;
-        b=kh3V/Sxb1F3U5B/AIL8eVXrxlqactmu1bnT5rW0GEI5Pwrn2Dh6It6uWRyqcgU0gI/
-         kZ2cORojJ+JsDTVypsfrncIisZn30OVc0HujLiQLcpOEU0gnvq2Nz7Dm+4qzU7LbviK6
-         OnUQCGRnUyuOZrvOjT9P3XDIkqwGDz4/4cUPHjRZKH7pKK8K+Lv8lG/w4J4Z9n5hFck2
-         mk3lGPUfzq4C/92ILFs4KB9SD5F+YKaPmrCYts37vBZ5FyVTESeDD8137CWwxB6s6pik
-         bxlzVcmTclEuoEUae7C9Q2c1Z82ROLAMbi42JNe2YD6935Fixutis3+2I9coT10RQqV4
-         YMsQ==
-X-Gm-Message-State: AGi0PuaWKtZvbuU7GBFHeBfBJcpKajovRiSVvVAhcWMLAeZPK66ulR2V
-        wucibn4iUEYi4lfJf7gxUFE=
-X-Google-Smtp-Source: APiQypKul1M9hkner9c2dBAchlt9cSNlRgYLaNiYw2GS2Dty7nUnjKL4Mbse6v9dCx57cSCvUOLYIA==
-X-Received: by 2002:a50:951c:: with SMTP id u28mr21259827eda.310.1588069980922;
-        Tue, 28 Apr 2020 03:33:00 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.237])
-        by smtp.googlemail.com with ESMTPSA id ce18sm414140ejb.61.2020.04.28.03.32.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Apr 2020 03:33:00 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 12:32:27 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     kgene@kernel.org, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/13] arm: dts: s5pv210: Correct FIMC definitions
-Message-ID: <20200428103227.GE23963@kozik-lap>
-References: <20200426183604.28494-1-xc-racer2@live.ca>
- <BN6PR04MB0660823C87DE000BCDF36C3AA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+        Tue, 28 Apr 2020 06:34:11 -0400
+X-Greylist: delayed 618 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 Apr 2020 06:34:10 EDT
+Received: from pps.filterd (ptwppsf03.pega.corp.pegatron [127.0.0.1])
+        by ptwppsf03.pega.corp.pegatron (8.16.0.21/8.16.0.21) with SMTP id 03SATbeo024161;
+        Tue, 28 Apr 2020 18:33:28 +0800
+Received: from ptw-ex-cashub15.pega.corp.pegatron ([172.18.6.20])
+        by ptwppsf03.pega.corp.pegatron with ESMTP id 30nvwmnqyk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 18:33:28 +0800
+Received: from PTW-EX-37.PEGA.CORP.PEGATRON ([fe80::5466:11cb:50e:8c0e]) by
+ PTW-EX-CASHUB15.PEGA.CORP.PEGATRON ([::1]) with mapi id 14.03.0279.002; Tue,
+ 28 Apr 2020 18:33:28 +0800
+From:   =?utf-8?B?TGVzbGllIEhzaWEo5aSP6YKm6YCyX1BlZ2F0cm9uKQ==?= 
+        <Leslie_Hsia@pegatroncorp.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?utf-8?B?SGVybWVzIEhzaWVoKOisneaXu+WKrV9QZWdhdHJvbik=?= 
+        <Hermes_Hsieh@pegatroncorp.com>,
+        "jesse.sung@canonical.com" <jesse.sung@canonical.com>,
+        "jic23@kernel.org" <jic23@kernel.org>
+Subject: =?utf-8?B?5Zue5pS2OiBbUEFUQ0hdIHN1YnN5c3RlbTogQW1wbGlmaWVyIGRyaXZlciBm?=
+ =?utf-8?Q?or_TAS5805M,Texas_instruments?=
+Thread-Topic: [PATCH] subsystem: Amplifier driver for TAS5805M,Texas
+ instruments
+Thread-Index: AdYdSHQUPiejJoGiQP+tgEu7AqbpKA==
+X-CallingTelephoneNumber: IPM.Note
+X-VoiceMessageDuration: 17
+X-FaxNumberOfPages: 0
+Date:   Tue, 28 Apr 2020 10:33:27 +0000
+Message-ID: <754706C925201D4896E92CCAD6B38E4401F0F733C0@PTW-EX-37.PEGA.CORP.PEGATRON>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.192.178.208]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <BN6PR04MB0660823C87DE000BCDF36C3AA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 11:36:03AM -0700, Jonathan Bakker wrote:
-> The extended mainscaler is only available on FIMC1 and there
-> are minimum pixel alignments that differ from the default.
-> Additionally, the cam-if interface is available on all three
-> while FIMC2 has no rotators.  The lcd-wb interface is supported
-> on FIMC1.
-> 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> ---
->  arch/arm/boot/dts/s5pv210.dtsi | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
-> index b3b6ad2889f9..3cbf6c05f42a 100644
-> --- a/arch/arm/boot/dts/s5pv210.dtsi
-> +++ b/arch/arm/boot/dts/s5pv210.dtsi
-> @@ -626,7 +626,7 @@
->  				clock-names = "fimc",
->  						"sclk_fimc";
->  				samsung,pix-limits = <4224 8192 1920 4224>;
-> -				samsung,mainscaler-ext;
-> +				samsung,min-pix-alignment = <16 8>;
->  				samsung,cam-if;
->  			};
->  
-> @@ -639,9 +639,11 @@
->  						<&clocks SCLK_FIMC1>;
->  				clock-names = "fimc",
->  						"sclk_fimc";
-> -				samsung,pix-limits = <4224 8192 1920 4224>;
->  				samsung,mainscaler-ext;
-> +				samsung,min-pix-alignment = <1 1>;
-> +				samsung,pix-limits = <4224 8192 1920 4224>;
-
-The line just moved around. I guess this was not intended?
-
-Best regards,
-Krzysztof
-
->  				samsung,cam-if;
-> +				samsung,lcd-wb;
->  			};
->  
->  			fimc2: fimc@fb400000 {
-> @@ -653,9 +655,10 @@
->  						<&clocks SCLK_FIMC2>;
->  				clock-names = "fimc",
->  						"sclk_fimc";
-> -				samsung,pix-limits = <4224 8192 1920 4224>;
-> -				samsung,mainscaler-ext;
-> -				samsung,lcd-wb;
-> +				samsung,pix-limits = <1920 8192 1280 1920>;
-> +				samsung,min-pix-alignment = <16 8>;
-> +				samsung,rotators = <0>;
-> +				samsung,cam-if;
->  			};
->  		};
->  
-> -- 
-> 2.20.1
-> 
+TGVzbGllIEhzaWEo5aSP6YKm6YCyX1BlZ2F0cm9uKSDluIzmnJvlm57mlLbpgJnlsIHpg7Xku7Yg
+W1tQQVRDSF0gc3Vic3lzdGVtOiBBbXBsaWZpZXIgZHJpdmVyIGZvciBUQVM1ODA1TSxUZXhhcyBp
+bnN0cnVtZW50c13jgIINCg0KDQpUaGlzIGUtbWFpbCBhbmQgaXRzIGF0dGFjaG1lbnQgbWF5IGNv
+bnRhaW4gaW5mb3JtYXRpb24gdGhhdCBpcyBjb25maWRlbnRpYWwgb3IgcHJpdmlsZWdlZCwgYW5k
+IGFyZSBzb2xlbHkgZm9yIHRoZSB1c2Ugb2YgdGhlIGluZGl2aWR1YWwgdG8gd2hvbSB0aGlzIGUt
+bWFpbCBpcyBhZGRyZXNzZWQuIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZCByZWNpcGllbnQg
+b3IgaGF2ZSByZWNlaXZlZCBpdCBhY2NpZGVudGFsbHksIHBsZWFzZSBpbW1lZGlhdGVseSBub3Rp
+ZnkgdGhlIHNlbmRlciBieSByZXBseSBlLW1haWwgYW5kIGRlc3Ryb3kgYWxsIGNvcGllcyBvZiB0
+aGlzIGVtYWlsIGFuZCBpdHMgYXR0YWNobWVudC4gUGxlYXNlIGJlIGFkdmlzZWQgdGhhdCBhbnkg
+dW5hdXRob3JpemVkIHVzZSwgZGlzY2xvc3VyZSwgZGlzdHJpYnV0aW9uIG9yIGNvcHlpbmcgb2Yg
+dGhpcyBlbWFpbCBvciBpdHMgYXR0YWNobWVudCBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLg0KDQrm
+nKzpm7vlrZDpg7Xku7blj4rlhbbpmYTku7blj6/og73lkKvmnInmqZ/lr4bmiJbkvp3ms5Xlj5fn
+ibnmrornrqHliLbkuYvos4foqIrvvIzlg4XkvpvmnKzpm7vlrZDpg7Xku7bkuYvlj5fmlofogIXk
+vb/nlKjjgILlj7Dnq6/lpoLpnZ7mnKzpm7vlrZDpg7Xku7bkuYvlj5fmlofogIXmiJboqqTmlLbm
+nKzpm7vlrZDpg7Xku7bvvIzoq4vnq4vljbPlm57opobpg7Xku7bpgJrnn6Xlr4Tku7bkurrvvIzk
+uKbpirfmr4DmnKzpm7vlrZDpg7Xku7bkuYvmiYDmnInopIfmnKzlj4rpmYTku7bjgILku7vkvZXm
+nKrntpPmjojmrIrogIzkvb/nlKjjgIHmj63pnLLjgIHmlaPkvYjmiJbopIfoo73mnKzpm7vlrZDp
+g7Xku7bmiJblhbbpmYTku7bkuYvooYzngrrvvIznmoblmrTmoLznpoHmraIg44CCDQoNCg==
