@@ -2,130 +2,252 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4783C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEEAC83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8245A2137B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F942137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:59:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kxvn03Qc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sT8+oE5b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729300AbgD1T6O (ORCPT
+        id S1729358AbgD1T67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 15:58:14 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:42674 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728559AbgD1T6O (ORCPT
+        Tue, 28 Apr 2020 15:58:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728559AbgD1T66 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 15:58:14 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SJrp4B001622;
-        Tue, 28 Apr 2020 19:58:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=fgVW8SHlL4lo+HxxlLz7Gr/ftUNHzPDePQJYvyyrBI4=;
- b=kxvn03Qcj77WKcY+oCnkzbE133TkmTB5xUfqKzOiKDKPtM8JYr5FTFTykSLs80QP5loP
- i4ZDn+GZWw09SkJOERPGEniHA0LmQTZREao0ypUmcLamJUgU8kApDaoJl2CSRqzL/0EJ
- pCgCJo8SMDgqn0z2i413gk7zMFA82a6opg1BJYb1rL25ShA/Z4M1+H4iED7ubC5z2qKU
- 6fcp/x5CL3bxl0wlh9kLOy6eOWdfJfok6rpGsPA6aFNhF+JmoVW79vL5GnchWKvv9718
- IllIoBefAQcgtXrFa3g7Gn9GFjTxO0U3Sspnx9A9pej0RdJzotn65MH13yRTz6UokuvX qQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 30p2p07gbe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 19:58:08 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SJqfKu164941;
-        Tue, 28 Apr 2020 19:56:08 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 30mxpgv1yb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 19:56:08 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03SJu6sf008267;
-        Tue, 28 Apr 2020 19:56:06 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 Apr 2020 12:56:06 -0700
-Date:   Tue, 28 Apr 2020 22:56:00 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Suraj Upadhyay <usuraj35@gmail.com>
-Cc:     Jerome Pouiller <Jerome.Pouiller@silabs.com>,
-        devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] staging: wfx: cleanup long lines in data_tx.c
-Message-ID: <20200428195600.GN2014@kadam>
-References: <20200425113234.GA14492@blackclown>
- <8518467.FNpd3NTrYF@pc-42>
- <20200427115827.GA3214@blackclown>
+        Tue, 28 Apr 2020 15:58:58 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9F48C03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 12:58:58 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id t9so43659pjw.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 12:58:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fEZQSwqgdVgK8Dc4Lm4abA9DcTezznGRFVnE2xG2IhU=;
+        b=sT8+oE5b8EB90ljmegCi/3tIIqW0jgecb5RExDQPsz102kqx09Bs6j+ye6jzW66MGf
+         ZrPnKe/P0Gnk3bK1WDlTx+WMEjbuRQiZt2IYr7zexD74xlMRzqiZKq7RsC0v7C4meSE8
+         zX2eyGoWuSijH0XPRkT77jr3jXzE5LUi1SzaoeSkDgbwS3rHYjvUlhhP4HfFlKHJea3l
+         F7stqe/gmTTYfZAoZ8gLWVy/bhNZM5/D6I8f7L7RQC5dwr3wBIiq4fCP3UtU5xcVVp1X
+         SziCu1BuDc0YGieJcgzyzSlobUfVpyNB6e5hDh9tTnyMsHai3RSRFcU0Ns1FLMtqs+d/
+         oeyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fEZQSwqgdVgK8Dc4Lm4abA9DcTezznGRFVnE2xG2IhU=;
+        b=tC4YdQCzsowWdom8wM3y+FP/wiNMiPSunwJUQIvyRTGDjlcxMmTOuMZ1yo81dcpdvX
+         qvGa2wMZlY8gvVo9BhPXJfN/tQNmBxM7JXLz2NxAWv7FNCP1Dtbs5Sp1ugQ8YnkU5G6R
+         7VRFva8QPdiq9eVbe0ZjbvckmKZDNQDZDInwBjyYIFs6pXx5PUv3m9XZBF3BpIhpuvV5
+         S3Ff4wscM9AVEgM1AEz7PmFUsGwvNOx4BCZ3ehTxuOe7Dizv7Df2adj553l1YCHe9MBd
+         gJHdP5v0DCUCEvQFkJYeum7H5nKflQ7JNjh6CWZmvyQ+T4yxLDHfXkWq8fRIrWoD4Pv+
+         0e3A==
+X-Gm-Message-State: AGi0PuawfjX67aDwh47Cgk+TssF75E6SlxpMcjR4OWiANIjAzNYz00bA
+        GP77dBq+Xpttw+PmJ7M3MwzIug==
+X-Google-Smtp-Source: APiQypIK57JLnFpeho7mksYIVHhBF3Gc0olKcF4/PHj0nDqZdhZ94PjsIr3TYZMoZ/Z4b3mdOz7plw==
+X-Received: by 2002:a17:902:8ec1:: with SMTP id x1mr30230396plo.180.1588103937943;
+        Tue, 28 Apr 2020 12:58:57 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id t23sm2924285pji.32.2020.04.28.12.58.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 12:58:57 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 13:58:55 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] remoteproc/k3-dsp: Add support for L2RAM loading on
+ C66x DSPs
+Message-ID: <20200428195855.GC10552@xps15>
+References: <20200325201839.15896-1-s-anna@ti.com>
+ <20200325201839.15896-4-s-anna@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200427115827.GA3214@blackclown>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 bulkscore=0 adultscore=0 phishscore=0 suspectscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004280156
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1015
- bulkscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
- mlxscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004280156
+In-Reply-To: <20200325201839.15896-4-s-anna@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 05:28:27PM +0530, Suraj Upadhyay wrote:
-> On Mon, Apr 27, 2020 at 11:50:23AM +0000, Jerome Pouiller wrote:
-> > On Saturday 25 April 2020 13:32:34 CEST Suraj Upadhyay wrote:
-> > > Break lines with length over 80 characters to
-> > > conform to the linux coding style and refactor
-> > > wherever necessary.
-> > > 
-> > > Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
-> > > ---
-> > > 
-> > > Changes in v4:
-> > > 	- Added a space after declaration in wfx_get_hw_rate().
-> > > 	- A checkpatch warning for this commit is retained at line 75,
-> > > 	  to maintain uniformity in function declarations. (Reviewer
-> > > 	  jerome suggested).
-> > > 
-> > > Changes in v3:
-> > >         - Changed the temporary variable name for the memzcmp statement
-> > >           to is_used. (as suggested).
-> > >         - Added a temporary ieee80211_supported_band variable to address
-> > >           the problem in wfx_get_hw_rate() more efficiently. (not
-> > >           suggested, but still).
-> > > 
-> > > Changes in v2:
-> > >         - Introduced a temporary variable for the memzcmp statement.
-> > >         - Addressed the checkpatch problem with wfx_get_hw_rate().
-> > >         - Restored the function definition of wfx_tx_get_tx_parms
-> > >           as suggested by the reviewer.
-> > >         - Added suggested changes for req->packet_id statement.
-> > > 
-> > >  drivers/staging/wfx/data_tx.c | 40 +++++++++++++++++++++++------------
-> > >  1 file changed, 26 insertions(+), 14 deletions(-)
-> > 
-> > This patch does not contain the suggestions from Dan. However, it is
-> > sufficient from my personal point of view.
+On Wed, Mar 25, 2020 at 03:18:39PM -0500, Suman Anna wrote:
+> The resets for the DSP processors on K3 SoCs are managed through the
+> Power and Sleep Controller (PSC) module. Each DSP typically has two
+> resets - a global module reset for powering on the device, and a local
+> reset that affects only the CPU while allowing access to the other
+> sub-modules within the DSP processor sub-systems.
 > 
-> Yes, I considered them but thought it would be bad to introduce a new
-> variable at every iteration of the for-loop.
+> The C66x DSPs have two levels of internal RAMs that can be used to
+> boot from, and the firmware loading into these RAMs require the
+> local reset to be asserted with the device powered on/enabled using
+> the module reset. Enhance the K3 DSP remoteproc driver to add support
+> for loading into the internal RAMs. The local reset is deasserted on
+> SoC power-on-reset, so logic has to be added in probe in remoteproc
+> mode to balance the remoteproc state-machine.
 > 
+> Note that the local resets are a no-op on C71x cores, and the hardware
+> does not supporting loading into its internal RAMs.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> ---
+>  drivers/remoteproc/ti_k3_dsp_remoteproc.c | 82 +++++++++++++++++++++++
+>  1 file changed, 82 insertions(+)
+> 
+> diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+> index fd0d84f46f90..7b712ef74611 100644
+> --- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+> +++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+> @@ -175,6 +175,9 @@ static int k3_dsp_rproc_reset(struct k3_dsp_rproc *kproc)
+>  		return ret;
+>  	}
+>  
+> +	if (kproc->data->uses_lreset)
+> +		return ret;
+> +
+>  	ret = kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
+>  						    kproc->ti_sci_id);
+>  	if (ret) {
+> @@ -192,6 +195,9 @@ static int k3_dsp_rproc_release(struct k3_dsp_rproc *kproc)
+>  	struct device *dev = kproc->dev;
+>  	int ret;
+>  
+> +	if (kproc->data->uses_lreset)
+> +		goto lreset;
+> +
+>  	ret = kproc->ti_sci->ops.dev_ops.get_device(kproc->ti_sci,
+>  						   kproc->ti_sci_id);
+>  	if (ret) {
+> @@ -199,6 +205,7 @@ static int k3_dsp_rproc_release(struct k3_dsp_rproc *kproc)
+>  		return ret;
+>  	}
+>  
+> +lreset:
+>  	ret = reset_control_deassert(kproc->reset);
+>  	if (ret) {
+>  		dev_err(dev, "local-reset deassert failed, ret = %d\n", ret);
+> @@ -210,6 +217,63 @@ static int k3_dsp_rproc_release(struct k3_dsp_rproc *kproc)
+>  	return ret;
+>  }
+>  
+> +/*
+> + * The C66x DSP cores have a local reset that affects only the CPU, and a
+> + * generic module reset that powers on the device and allows the DSP internal
+> + * memories to be accessed while the local reset is asserted. This function is
+> + * used to release the global reset on C66x DSPs to allow loading into the DSP
+> + * internal RAMs. The .prepare() ops is invoked by remoteproc core before any
+> + * firmware loading, and is followed by the .start() ops after loading to
+> + * actually let the C66x DSP cores run. The local reset on C71x cores is a
+> + * no-op and the global reset cannot be released on C71x cores until after
+> + * the firmware images are loaded, so this function does nothing for C71x cores.
+> + */
+> +static int k3_dsp_rproc_prepare(struct rproc *rproc)
+> +{
+> +	struct k3_dsp_rproc *kproc = rproc->priv;
+> +	struct device *dev = kproc->dev;
+> +	int ret;
+> +
+> +	/* local reset is no-op on C71x processors */
+> +	if (!kproc->data->uses_lreset)
+> +		return 0;
 
-It's not bad at all.  I don't know why someone would think that.
+In k3_dsp_rproc_release() the condition is "if (kproc->data->uses_lreset)" and
+here it is the opposite, which did a good job at getting me confused.
 
-regards,
-dan carpenter
+Taking a step back, I assume c71 DSPs will have their own k3_dsp_dev_data where
+the users_lreset flag will be false.  In that case I think it would make the
+code easier to understand if the k3_dsp_rproc_ops was declared without the
+.prepare and .unprepare.  In probe(), if data->uses_lreset is true then
+k3_dsp_rproc_prepare() and k3_dsp_rproc_unprepare() are set.
 
+I am done reviewing this set.
+
+Thanks,
+Mathieu
+
+> +
+> +	ret = kproc->ti_sci->ops.dev_ops.get_device(kproc->ti_sci,
+> +						    kproc->ti_sci_id);
+> +	if (ret)
+> +		dev_err(dev, "module-reset deassert failed, cannot enable internal RAM loading, ret = %d\n",
+> +			ret);
+> +
+> +	return ret;
+> +}
+> +
+> +/*
+> + * This function implements the .unprepare() ops and performs the complimentary
+> + * operations to that of the .prepare() ops. The function is used to assert the
+> + * global reset on applicable C66x cores. This completes the second portion of
+> + * powering down the C66x DSP cores. The cores themselves are only halted in the
+> + * .stop() callback through the local reset, and the .unprepare() ops is invoked
+> + * by the remoteproc core after the remoteproc is stopped to balance the global
+> + * reset.
+> + */
+> +static int k3_dsp_rproc_unprepare(struct rproc *rproc)
+> +{
+> +	struct k3_dsp_rproc *kproc = rproc->priv;
+> +	struct device *dev = kproc->dev;
+> +	int ret;
+> +
+> +	/* local reset is no-op on C71x processors */
+> +	if (!kproc->data->uses_lreset)
+> +		return 0;
+> +
+> +	ret = kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
+> +						    kproc->ti_sci_id);
+> +	if (ret)
+> +		dev_err(dev, "module-reset assert failed, ret = %d\n", ret);
+> +
+> +	return ret;
+> +}
+> +
+>  /*
+>   * Power up the DSP remote processor.
+>   *
+> @@ -353,6 +417,8 @@ static void *k3_dsp_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
+>  }
+>  
+>  static const struct rproc_ops k3_dsp_rproc_ops = {
+> +	.prepare	= k3_dsp_rproc_prepare,
+> +	.unprepare	= k3_dsp_rproc_unprepare,
+>  	.start		= k3_dsp_rproc_start,
+>  	.stop		= k3_dsp_rproc_stop,
+>  	.kick		= k3_dsp_rproc_kick,
+> @@ -644,6 +710,22 @@ static int k3_dsp_rproc_probe(struct platform_device *pdev)
+>  		goto disable_clk;
+>  	}
+>  
+> +	/*
+> +	 * ensure the DSP local reset is asserted to ensure the DSP doesn't
+> +	 * execute bogus code in .prepare() when the module reset is released.
+> +	 */
+> +	if (data->uses_lreset) {
+> +		ret = reset_control_status(kproc->reset);
+> +		if (ret < 0) {
+> +			dev_err(dev, "failed to get reset status, status = %d\n",
+> +				ret);
+> +			goto release_mem;
+> +		} else if (ret == 0) {
+> +			dev_warn(dev, "local reset is deasserted for device\n");
+> +			k3_dsp_rproc_reset(kproc);
+> +		}
+> +	}
+> +
+>  	ret = rproc_add(rproc);
+>  	if (ret) {
+>  		dev_err(dev, "failed to add register device with remoteproc core, status = %d\n",
+> -- 
+> 2.23.0
+> 
