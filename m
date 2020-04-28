@@ -2,300 +2,192 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3ACFC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38272C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C91FA2072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DA01206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:14:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="X7/t914n"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Hr1YK70d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgD1VM4 (ORCPT
+        id S1726682AbgD1VOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:12:56 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:53776 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726274AbgD1VMz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:12:55 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SL3HKC120082;
-        Tue, 28 Apr 2020 21:12:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=VNVPJDAdbkMh1W9V8jsrS4bwFmxf64AOFnoK0lDjDlI=;
- b=X7/t914nYpwnSnpwlpwttxFpYHNn4A0MNbQ46lELupv4vZko0r6OSMFgwT77N3Ah5m//
- 4Z7YQihcf1Ef2cxaskChraVi4cMUzRwzn7H5h57m08RZD9Lly/SwsFVWzEp0ZP8Vu0dX
- Ltau1HNBOWt7f6bquQKnvUiddwFIdzsm3y7v0zKYEZolvnQvI/QbWF5p4+g/SVfuI4T2
- hr2Azn6t/leLW1sHNj5iqUodcKxbzAj31ByWDYUMOh20u5ZJ4iIk8nNE5vp92VKVyjHy
- P54a/XulSYSEkMJBDWfykOpnoKwTb54kEWFV0J2eU7sjCLmr5SZx+5VVg3iVsu3i76Mz LQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 30p2p07tfy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 21:12:38 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SL79RX054313;
-        Tue, 28 Apr 2020 21:12:38 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 30my0ed7ek-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 21:12:37 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03SLCYko023876;
-        Tue, 28 Apr 2020 21:12:35 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 Apr 2020 14:12:34 -0700
-Date:   Tue, 28 Apr 2020 14:12:32 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH V11 04/11] Documentation/dax: Update Usage section
-Message-ID: <20200428211232.GI6733@magnolia>
-References: <20200428002142.404144-1-ira.weiny@intel.com>
- <20200428002142.404144-5-ira.weiny@intel.com>
- <20200428202738.GE6742@magnolia>
- <20200428205309.GA406458@iweiny-DESK2.sc.intel.com>
+        Tue, 28 Apr 2020 17:14:17 -0400
+Received: from mail-eopbgr700043.outbound.protection.outlook.com ([40.107.70.43]:6721
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726279AbgD1VOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 17:14:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iTtBXRGtw6wB44IkzZwlHse3MDOh6xOW7kZQoN87GKLxZG2aCUdktfErIt8OAe3prZJZSvka5cfbINcU6UPfHthzuC9me4pQvB7lWsQ0p/KzuTWkmQFuAxH4tHyqghELuPg7M+PlX8L+SXhbhIUR1WjqPN+2Jvqlh4OTYqH6fBBMZ27MajA7gWIkSRio+M4apiWwnjVMQ0U1Rx2XtJ1qLfWxTmE5O+EbxZMXDFmWcn2cASIeJ1N+f/7+/cTYs/v3zN05LjqVJNL2uSouaopDqps4fmIaBT7pLdCEnhuR6ygVIw8CS32mUQaq5xSJcOT2Bw6Liyn7Xcem9x9EaPtavw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H8JRHBLnCrTe0yoD3p7g3tQHmQu6ep73fVpa8sdCEqk=;
+ b=kcTynlgw/Tvm5SgzxAegCdH3MYxjrtujCSFEULg3BaP/TJKot+G0ZnOtv+zdCj/qMFFYuwcZ/tcWv8MJA5uPFs3zrPv5moH7hsfRYJbJN0MZkFt+Zj8Vpi0xAO36mXEzwbNTdxclYZozytpvbIAxZ/fkG3ag/UytyTY8hmGpRdOPU6WCFliIYCAgm+/GibdZb8t3+0v2xn4RieIXyP9kW/OSW0l1Wj0jNu71F+bRI1TTFdPaH7zna1PNdVGH+utvROEhwEcszrOIEb8YJNUCzDOPJ7xy/D5GjW3lGkMmCrD9WMZsdG6++NjXvZFkpLBrMctWKXPRWMKa37OFpnK3Rw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H8JRHBLnCrTe0yoD3p7g3tQHmQu6ep73fVpa8sdCEqk=;
+ b=Hr1YK70duSazGvEgZoeAx2pORj6esAX0Jq+EtoO7cHjGm6ASUoRT/d96gMs3x3u4GJt3CsvWFD0lMwApKakF0u/u3SPBcI6zHlpeARxt09Z8lekV8gHUzBOAXSNVXKT+oeb+mPzbgsUxuvPuI/hjwMmXsNSE+kwW3iTYOvNHCCM=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB3420.namprd12.prod.outlook.com (2603:10b6:5:3a::27) by
+ DM6PR12MB4532.namprd12.prod.outlook.com (2603:10b6:5:2af::24) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2937.22; Tue, 28 Apr 2020 21:14:13 +0000
+Received: from DM6PR12MB3420.namprd12.prod.outlook.com
+ ([fe80::7545:386:8328:18a0]) by DM6PR12MB3420.namprd12.prod.outlook.com
+ ([fe80::7545:386:8328:18a0%6]) with mapi id 15.20.2958.019; Tue, 28 Apr 2020
+ 21:14:13 +0000
+From:   Sanjay R Mehta <Sanju.Mehta@amd.com>
+To:     vkoul@kernel.org
+Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
+        Thomas.Lendacky@amd.com, Shyam-sundar.S-k@amd.com,
+        Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        Sanjay R Mehta <sanju.mehta@amd.com>
+Subject: [PATCH v4 0/3] Add support for AMD PTDMA controller driver
+Date:   Tue, 28 Apr 2020 16:13:33 -0500
+Message-Id: <1588108416-49050-1-git-send-email-Sanju.Mehta@amd.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA1PR0101CA0034.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:22::20) To DM6PR12MB3420.namprd12.prod.outlook.com
+ (2603:10b6:5:3a::27)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428205309.GA406458@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
- suspectscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004280165
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1015
- bulkscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
- mlxscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004280165
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from sanjuamdntb2.amd.com (165.204.156.251) by MA1PR0101CA0034.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:22::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2958.19 via Frontend Transport; Tue, 28 Apr 2020 21:14:09 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [165.204.156.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 74a30a49-9e76-4d74-ace0-08d7ebb919e7
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4532:|DM6PR12MB4532:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB4532CB05A3FB6CFF1C56A2E7E5AC0@DM6PR12MB4532.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0387D64A71
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3420.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(366004)(346002)(136003)(376002)(186003)(4326008)(16526019)(6916009)(36756003)(26005)(52116002)(7696005)(2906002)(8936002)(6666004)(5660300002)(66946007)(956004)(66476007)(2616005)(6486002)(966005)(66556008)(478600001)(86362001)(316002)(8676002);DIR:OUT;SFP:1101;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 7b5GX7r2EQMyAumVzny1TDTc3wGTjEpvg5N/MTvx48SP5XjuyBG1uE/BkaM7ypul7zDmdRCoJidhC4PppEY6tgoTetQLkYDeJB4CSRUThydrF16Jj0TRXXaLwI+wUwE/CMUeTcc/XjmKvKthAJPyXWKJkm35/c0HBQ2psLyE1ZQIBbScf252o3H/rhLnkB6AVMkUsbRxNGwa/ZW2eru2QrY/czlRRnpYKBGEO9VnOKkDD48DWrhzPVWN9pbXp2dz8uCsSzAsRjP2rbWZ0OiPIWQBxVXsTC4vU+MJewpyYfFLf0ZGCQzaHOEw8TqG4UChV8NcMWveH3TZH+CSax/rbqdl4pPDNBYYx+pVexChKhudo44Mm4yfdx0+89C/Y1TZ1Rd1UWNkKKc98eZjbkBIwztF76jFw2fJP6Aep3gyviVR1DMfKCw/VAa62xv3w05H6BvQ+TgDTVWrTHN+VonCAW/Bc/PyE/gxZ8ZK+JCOpbfa6oRQPl5GZTuybsNtRqioE8cV21w3BHiHTUCfZPrYoA==
+X-MS-Exchange-AntiSpam-MessageData: QYCnPxLPpAmOubDIrJXZ2XC7mjc33/9sdNa33ty0KHnCj7O+9cT1D+gQ76GOU3w9J/GnprMWh2s3nKET/AsEfuNIUYTHcH2jPvfxfnTL8nI9dpulFpJg9BR9VGMU04Krjh6wDU6EUPf8ZdG+XjfeuxCQNWbEa/yD8T60OPk/gE6sJ8cNp339L+M0bMWQUE3rtOk4l2h5IxFEChohgzgQy+KUJhp+s3qT4Ob63F6p1L0DDGgcjNo1xSxqF98baVapk5wZML4yAijV6jKEhCrCWZDYhTjWahtuwMJC8ZM8LtZPN67Z4l6v41Gc0/XPTOoFgBf+HvXONuqhyR57vnpOCx9Yrf1kRz/b1W7qAcx2RyWszuQtd5mqfY5FNOg7qvMGjw39MG1hltnZTUy7k6JCBW7Puate2KMEFgiTMOvoIlUIhc+UpJf1pHhKpF/V06jqhPx2nNS7ig7MpqB/1lwFL80rgC+pztfIA/T9g6CuieKdpEVJufmR74ZWs1Ftglo3DMtm47xOtwUZZg1TL19q1bgCx/VIVEokCZLmciw6PmXg13QiPKzv2uL10K3A9mFebFaFTF7/3RLDGxLHivrlGr+dF4gx1XL+w/sxMnfwpUpHrqZj3N7fk7q8cfopW2IGvrCiyoEE/CDHOawpE8sW6U7O/5lZGnwngmMN056xonkIHcPt9xbHxP8lXia14DmNEUAx7PnsLWuRJ3PMrjXvVRxeXI0nWhDxBXMKTBsbI70sji0/Q30TSvBl4vvKEz1nYJ7iXTiZ/vV5j6Z1WSAmeD3pmnbbckSI8dvmuIuktnsSfexmwa72zf4yW7s9eEQ4
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 74a30a49-9e76-4d74-ace0-08d7ebb919e7
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2020 21:14:13.6352
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EvKKeVJqqDK0Phj2qa8YmK3g+T9ogHKiCAZakoP702/7wHvLrYzNZHs0assNhkeGPzeD2xcZDPG78uGOGTLvcg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4532
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 01:53:10PM -0700, Ira Weiny wrote:
-> On Tue, Apr 28, 2020 at 01:27:38PM -0700, Darrick J. Wong wrote:
-> > On Mon, Apr 27, 2020 at 05:21:35PM -0700, ira.weiny@intel.com wrote:
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> 
-> [snip]
-> 
-> > > +
-> > > + 3. If the persistent FS_XFLAG_DAX flag is set on a directory, this flag will
-> > > +    be inherited by all regular files and sub directories that are subsequently
-> > 
-> > Well, I'm at the level of minor edits: "...and subdirectories that..."
-> 
-> Done.
-> 
-> > 
-> > > +    created in this directory. Files and subdirectories that exist at the time
-> > > +    this flag is set or cleared on the parent directory are not modified by
-> > > +    this modification of the parent directory.
-> > > +
-> > > + 4. There exists dax mount options which can override FS_XFLAG_DAX in the
-> > > +    setting of the S_DAX flag.  Given underlying storage which supports DAX the
-> > > +    following hold.
-> > 
-> > "hold:"
-> 
-> Dene.
-> 
-> > 
-> > > +
-> > > +    "-o dax=inode"  means "follow FS_XFLAG_DAX" and is the default.
-> > > +
-> > > +    "-o dax=never"  means "never set S_DAX, ignore FS_XFLAG_DAX."
-> > > +
-> > > +    "-o dax=always" means "always set S_DAX ignore FS_XFLAG_DAX."
-> > > +
-> > > +    "-o dax"        is a legacy option which is an alias for "dax=always".
-> > > +		    This may be removed in the future so "-o dax=always" is
-> > > +		    the preferred method for specifying this behavior.
-> > > +
-> > > +    NOTE: Setting and inheritance affect FS_XFLAG_DAX at all times even when
-> > > +    the file system is mounted with a dax option.
-> > 
-> > We can also clear the flag at any time no matter the mount option state.
-> > Perhaps:
-> > 
-> > "NOTE: Modifications to and inheritance behavior of FS_XFLAG_DAX remain
-> > the same even when the filesystem is mounted with a dax option."
-> 
-> Done.
-> 
-> > 
-> > > +    However, in-core inode state
-> > > +    (S_DAX) will be overridden until the file system is remounted with
-> > > +    dax=inode and the inode is evicted from kernel memory.
-> > > +
-> > > + 5. The DAX policy can be changed via:
-> > 
-> > "The S_DAX policy".  I don't want people to get confused.
-> 
-> Done.
-> 
-> > 
-> > > +
-> > > +    a) Set the parent directory FS_XFLAG_DAX as needed before files are created
-> > > +
-> > > +    b) Set the appropriate dax="foo" mount option
-> > > +
-> > > +    c) Change the FS_XFLAG_DAX on existing regular files and directories. This
-> > > +       has runtime constraints and limitations that are described in 6) below.
-> > 
-> > "Setting", and "Changing" at the front of these three bullet points?
-> > 
-> > Were you to put these together as full sentences, you'd want them to
-> > read "The DAX policy can be changed via setting the parent directory
-> > FS_XFLAG_DAX..."
-> > 
-> 
-> Done.
-> 
-> > > +
-> > > + 6. When changing the DAX policy via toggling the persistent FS_XFLAG_DAX flag,
-> > 
-> > "When changing the S_DAX policy..."
-> 
-> Done.
-> 
-> > 
-> > > +    the change in behaviour for existing regular files may not occur
-> > > +    immediately.  If the change must take effect immediately, the administrator
-> > > +    needs to:
-> > > +
-> > > +    a) stop the application so there are no active references to the data set
-> > > +       the policy change will affect
-> > > +
-> > > +    b) evict the data set from kernel caches so it will be re-instantiated when
-> > > +       the application is restarted. This can be acheived by:
-> > 
-> > "achieved"
-> 
-> Done.
-> 
-> > 
-> > > +
-> > > +       i. drop-caches
-> > > +       ii. a filesystem unmount and mount cycle
-> > > +       iii. a system reboot
-> > > +
-> > > +
-> > > +Details
-> > > +-------
-> > > +
-> > > +There are 2 per-file dax flags.  One is a persistent inode setting (FS_XFLAG_DAX)
-> > > +and the other is a volatile flag indicating the active state of the feature
-> > > +(S_DAX).
-> > > +
-> > > +FS_XFLAG_DAX is preserved within the file system.  This persistent config
-> > > +setting can be set, cleared and/or queried using the FS_IOC_FS[GS]ETXATTR ioctl
-> > > +(see ioctl_xfs_fsgetxattr(2)) or an utility such as 'xfs_io'.
-> > > +
-> > > +New files and directories automatically inherit FS_XFLAG_DAX from
-> > > +their parent directory _when_ _created_.  Therefore, setting FS_XFLAG_DAX at
-> > > +directory creation time can be used to set a default behavior for an entire
-> > > +sub-tree.
-> > > +
-> > > +To clarify inheritance here are 3 examples:
-> > 
-> > "...inheritance, here are..."
-> 
-> Done.
-> 
-> > 
-> > > +
-> > > +Example A:
-> > > +
-> > > +mkdir -p a/b/c
-> > > +xfs_io -c 'chattr +x' a
-> > > +mkdir a/b/c/d
-> > > +mkdir a/e
-> > > +
-> > > +	dax: a,e
-> > > +	no dax: b,c,d
-> > > +
-> > > +Example B:
-> > > +
-> > > +mkdir a
-> > > +xfs_io -c 'chattr +x' a
-> > > +mkdir -p a/b/c/d
-> > > +
-> > > +	dax: a,b,c,d
-> > > +	no dax:
-> > > +
-> > > +Example C:
-> > > +
-> > > +mkdir -p a/b/c
-> > > +xfs_io -c 'chattr +x' c
-> > > +mkdir a/b/c/d
-> > > +
-> > > +	dax: c,d
-> > > +	no dax: a,b
-> > > +
-> > > +
-> > > +The current enabled state (S_DAX) is set when a file inode is instantiated in
-> > > +memory by the kernel.  It is set based on the underlying media support, the
-> > > +value of FS_XFLAG_DAX and the file systems dax mount option setting.
-> > 
-> > "...and the file system's dax mount option string."
-> 
-> No. I don't think string is the right word here.  It is the setting not the
-> string which is controlling the behavior.  How about:
-> 
-> "...and the file system's dax mount option."
+From: Sanjay R Mehta <sanju.mehta@amd.com>
 
-Oops.  I miscopied that; all I really wanted was the apostrophe-s after
-"file system".
+This patch series adds support for AMD PTDMA controller which
+performs high bandwidth memory-to-memory and IO copy operation and
+performs DMA transfer through queue based descriptor management.
 
-"...and the file system's dax mount option setting."
+AMD Processor has multiple ptdma device instances and each controller
+has single queue. The driver also adds support for for multiple PTDMA
+instances, each device will get an unique identifier and uniquely
+named resources.
 
-would have been fine.
+v4:
+	- modified DMA channel and descriptor management using virt-dma layer
+	  instead of list based management.
+	- return only status of the cookie from pt_tx_status
+	- copyright year changed from 2019 to 2020
+	- removed dummy code for suspend & resume
+	- used bitmask and genmask
 
---D
+v3:
+        - Fixed the sparse warnings.
 
-> 
-> > 
-> > > +
-> > > +statx can be used to query S_DAX.  NOTE that a directory will never have S_DAX
-> > 
-> > "Note that only regular files will ever have S_DAX set..."?
-> 
-> Done.
-> 
-> Ira
-> 
-> > 
-> > --D
-> > 
-> > > +set and therefore statx will never indicate that S_DAX is set on directories.
-> > > +
-> > > +Setting the FS_XFLAG_DAX (specifically or through inheritance) occurs even if
-> > > +the underlying media does not support dax and/or the file system is overridden
-> > > +with a mount option.
-> > > +
-> > >  
-> > >  
-> > >  Implementation Tips for Block Driver Writers
-> > > -- 
-> > > 2.25.1
-> > > 
+v2:
+        - Added controller description in cover letter
+        - Removed "default m" from Kconfig
+        - Replaced low_address() and high_address() functions with kernel
+          API's lower_32_bits & upper_32_bits().
+        - Removed the BH handler function pt_core_irq_bh() and instead
+          handling transaction in irq handler itself.
+        - Moved presetting of command queue registers into new function
+          "init_cmdq_regs()"
+        - Removed the kernel thread dependency to submit transaction.
+        - Increased the hardware command queue size to 32 and adding it
+          as a module parameter.
+        - Removed backlog command queue handling mechanism.
+        - Removed software command queue handling and instead submitting
+          transaction command directly to
+          hardware command queue.
+        - Added tasklet structure variable in "struct pt_device".
+          This is used to invoke pt_do_cmd_complete() upon receiving interrupt
+          for command completion.
+        - pt_core_perform_passthru() function parameters are modified and it is
+          now used to submit command directly to hardware from dmaengine framew
+        - Removed below structures, enums, macros and functions, as these value
+          constants. Making command submission simple,
+           - Removed "union pt_function"  and several macros like PT_VERSION,
+             PT_BYTESWAP, PT_CMD_* etc..
+           - enum pt_passthru_bitwise, enum pt_passthru_byteswap, enum pt_memty
+             struct pt_dma_info, struct pt_data, struct pt_mem, struct pt_passt
+             struct pt_op,
+
+Links of the review comments for v4:
+1. https://lkml.org/lkml/2020/1/24/12
+2. https://lkml.org/lkml/2020/1/24/17
+
+Links of the review comments for v2:
+1. https://lkml.org/lkml/2019/12/27/630
+2. https://lkml.org/lkml/2020/1/3/23
+3. https://lkml.org/lkml/2020/1/3/314
+4. https://lkml.org/lkml/2020/1/10/100
+
+Links of the review comments for v1:
+1. https://lkml.org/lkml/2019/9/24/490
+2. https://lkml.org/lkml/2019/9/24/399
+3. https://lkml.org/lkml/2019/9/24/862
+4. https://lkml.org/lkml/2019/9/24/122
+
+Sanjay R Mehta (3):
+  dmaengine: ptdma: Initial driver for the AMD PTDMA controller
+  dmaengine: ptdma: register PTDMA controller as a DMA resource
+  dmaengine: ptdma: Add debugfs entries for PTDMA information
+
+ MAINTAINERS                         |   6 +
+ drivers/dma/Kconfig                 |   2 +
+ drivers/dma/Makefile                |   1 +
+ drivers/dma/ptdma/Kconfig           |  13 +
+ drivers/dma/ptdma/Makefile          |  12 +
+ drivers/dma/ptdma/ptdma-debugfs.c   | 237 ++++++++++++++
+ drivers/dma/ptdma/ptdma-dev.c       | 460 +++++++++++++++++++++++++++
+ drivers/dma/ptdma/ptdma-dmaengine.c | 597 ++++++++++++++++++++++++++++++++++++
+ drivers/dma/ptdma/ptdma-pci.c       | 253 +++++++++++++++
+ drivers/dma/ptdma/ptdma.h           | 375 ++++++++++++++++++++++
+ 10 files changed, 1956 insertions(+)
+ create mode 100644 drivers/dma/ptdma/Kconfig
+ create mode 100644 drivers/dma/ptdma/Makefile
+ create mode 100644 drivers/dma/ptdma/ptdma-debugfs.c
+ create mode 100644 drivers/dma/ptdma/ptdma-dev.c
+ create mode 100644 drivers/dma/ptdma/ptdma-dmaengine.c
+ create mode 100644 drivers/dma/ptdma/ptdma-pci.c
+ create mode 100644 drivers/dma/ptdma/ptdma.h
+
+-- 
+2.7.4
+
