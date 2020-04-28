@@ -2,104 +2,66 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB60C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5E4C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 372472072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A462072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:58:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgD1V6b (ORCPT
+        id S1726766AbgD1V6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:58:31 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:59571 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbgD1V6b (ORCPT
+        Tue, 28 Apr 2020 17:58:50 -0400
+Received: from smtprelay0147.hostedemail.com ([216.40.44.147]:35370 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726286AbgD1V6u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:58:31 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1M433w-1jTYEw1kga-00087w; Tue, 28 Apr 2020 23:58:06 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] acpi: avoid uninialized-variable warning
-Date:   Tue, 28 Apr 2020 23:55:57 +0200
-Message-Id: <20200428215804.48481-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Tue, 28 Apr 2020 17:58:50 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 2DC23181D341E;
+        Tue, 28 Apr 2020 21:58:49 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: rose21_1295f4037b114
+X-Filterd-Recvd-Size: 1507
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf07.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 28 Apr 2020 21:58:47 +0000 (UTC)
+Message-ID: <d367cca3297fc07f5fc155f1e0b9b0e93c1b3cdf.camel@perches.com>
+Subject: Re: [PATCH -next] perf script: remove unneeded conversion to bool
+From:   Joe Perches <joe@perches.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Zou Wei <zou_wei@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 28 Apr 2020 14:58:46 -0700
+In-Reply-To: <20200428175046.GD5460@kernel.org>
+References: <1587904265-865-1-git-send-email-zou_wei@huawei.com>
+         <20200428175046.GD5460@kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:UioHM7Mj+0Eo0lESm9cPbfkNKElkE5FMMWyONEoJUL+MKkYiYil
- oFmRQoS00WIFOIRokjNgrOqfgyz+XZriPo4zilWeliotO9S216I/cUxqpEmo2dh5CZGDKCS
- 9U9ZGSAOV5LRyV+xcupEmhAsnbvLiU+fUCaM1Ky1ouQVgw2NeL6Jxhwk2V4XGc3/PVefbyE
- C/tpE041GA1fONZ4EGXEg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:cvniJsNKSy0=:5TtgRtaldRNY5gEaxEUgyV
- TsLJswhqx9Rrt16rpyK+XAOskon0V4l9A5tlxioAw3pOJ0NukBjJqdEMwc+sqTo3s+wxvoSh5
- wZ8mireBKdITbU+2gXsXjqtmDmg6lTkvtf4k3Pk8Zd/V4k3k5Ne1i8JZdtAiVK9XdWwjZ8EhA
- Hy/4QfZkmnLK5sLJKOZ0ee6RI2a2vRPnkgzQth9cf9aaAii6EtNY3tdrAp0oWihzADADePcol
- DyFrn6EwEyBlzawwvT3di6zIY7qsaLZ6Y62RgNiuDvwb0mX1cIKrz/ZYZ3ZO2B0MQ5qMyNqku
- R0+4dcEhmzA3SRDEejgpErvQeUQf/K7yl33TcmaiGmR2jiU5A16IKrH/FHHtOKvZYYKYGqvzb
- bHIfWeRtFSzlPmQxFJ6ACepqCV+SgvMi20+fjlWhYo8claiKAqq6REucizeCPN6AiYIsZflLw
- oS/LnV3g7dw1oHCAstVwigFpFZAH7xLMkB0EMj+6FmwLfzaMaQ+6iN4PmVnqnmb/+Fud77XPO
- pOnjWYUwgwY64tVx6rHSTGIsF/tacQkbdiwAy47jT/n4pCnWRdXDh11A4TKAJmGjQRxyk2iR9
- wYuE32CYEeA1nLYrJOAuVhRlH5Dx27esK/X7F/wOQnaHJVBkT0z11+OqucfP6WSCGvyhD80Xi
- 8v13g8uGsC8W1NNpidgz2b30o6AS7Mu4OzzaaDE0Y2tb2EvcY71W+B5TVv/2sV1JHNFb53kmm
- ymyNn76swXp5C3NXGyajcLdb8xkP5W9fbCFpwjjKikABlKvItV1sMFnNDK/S8LnK/2UPHQPth
- MllxHZHqBfzknC7kbWgeHH6rof/qredVGu9j/ZJdO3n0QM8YLw=
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Older compilers like gcc-4.8 produce a bogus warning here
+On Tue, 2020-04-28 at 14:50 -0300, Arnaldo Carvalho de Melo wrote:
+> Em Sun, Apr 26, 2020 at 08:31:05PM +0800, Zou Wei escreveu:
+> > This issue was detected by using the Coccinelle software:
+> > 
+> > tools/perf/builtin-script.c:3285:48-53: WARNING: conversion to bool not needed here
+> > tools/perf/builtin-script.c:2839:36-41: WARNING: conversion to bool not needed here
+> > 
+> > The conversion to bool is unneeded, remove it
+> 
+> Thanks, applied,
 
-In file included from include/linux/compiler_types.h:68:0,
-                 from <command-line>:0:
-drivers/acpi/property.c: In function 'acpi_data_prop_read':
-include/linux/compiler-gcc.h:75:45: error: 'obj' may be used uninitialized in this function [-Werror=maybe-uninitialized]
- #define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __COUNTER__)
-                                             ^
-drivers/acpi/property.c:934:27: note: 'obj' was declared here
-  const union acpi_object *obj;
-                           ^
-
-Ensure the output is always initialized even when returning an error
-to avoid the warning.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/acpi/property.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-index e601c4511a8b..3aa71daeb0b4 100644
---- a/drivers/acpi/property.c
-+++ b/drivers/acpi/property.c
-@@ -587,8 +587,10 @@ static int acpi_data_get_property_array(const struct acpi_device_data *data,
- 	int ret, i;
- 
- 	ret = acpi_data_get_property(data, name, ACPI_TYPE_PACKAGE, &prop);
--	if (ret)
-+	if (ret && obj) {
-+		*obj = NULL;
- 		return ret;
-+	}
- 
- 	if (type != ACPI_TYPE_ANY) {
- 		/* Check that all elements are of correct type. */
--- 
-2.26.0
+Did you read the patch?
+It's broken, unless some other patch was applied.
 
