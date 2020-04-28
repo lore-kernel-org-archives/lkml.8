@@ -2,91 +2,147 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A15C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B3AC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 465D320B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C6DZmlh+"
+	by mail.kernel.org (Postfix) with ESMTP id 80700217D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:31:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588098668;
+	bh=btMmoRmbm0aFeh7V8QPWVWglOxt22/y9OzCifBjnb+c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Jiuo4P/qiiM2lOXNPAxzpe1lJi8c0EuStQYWUlJKOGcTzsRDcLAjj1tLJQH75TZaU
+	 Pxo2Mi8H8LwSZB0Z4oJkfD0ymSL71YdKj5bA7D1Cq9W2jlfVHJG/48c9E7T706idee
+	 pLQwfrpoqfCEG2B9oD0yTcl1ujmpLfiJGhQ7n++g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbgD1SbE (ORCPT
+        id S1729612AbgD1SbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:31:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43760 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729581AbgD1Sa4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:30:56 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A77BCC03C1AB
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:30:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=lGqR9F+kdPJv1A8Me44RtuAlEYognn42SVvVNy+QNK4=; b=C6DZmlh+pr+6ZHDsRi3KCUKFEu
-        7wBKtqQhf0ASPZx0BdvqZoZ/UIn+SQoAPryACfCRo7z323zTcs/OjYM0rw2qclcwDcocj9o8t/kKU
-        wbNXHPtQ6YP0cp3Yoen8GZUr5qpFDQlt4MklKtHUIlHLuITdzs0g726zhdB5B5ibDCwMnrPsr921N
-        Fg5dSl9/U7LhdrbhsVP/lVo9oUYe8ig8QQS8Q13+xwQwpAPqobxee6Xhf2A+ok1AEADBlR365StHu
-        P+/ELE/qgvvGRu8gN00+f8dymVd3/p8sY2HCq6yXgXYz+jvjHzghZ1KI4lTMFx39qivdHOFRU4kgQ
-        wjEr7YDg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTV02-0005eD-SV; Tue, 28 Apr 2020 18:30:31 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Tue, 28 Apr 2020 14:31:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46144 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729579AbgD1Sa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:30:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A38DF30797F;
-        Tue, 28 Apr 2020 20:30:28 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 874C0201F9F0A; Tue, 28 Apr 2020 20:30:28 +0200 (CEST)
-Date:   Tue, 28 Apr 2020 20:30:28 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     alexandre.chartre@oracle.com, linux-kernel@vger.kernel.org,
-        jthierry@redhat.com, tglx@linutronix.de, x86@kernel.org,
-        mbenes@suse.cz
-Subject: Re: [PATCH 8/8] x86/retpoline: Fix retpoline unwind
-Message-ID: <20200428183028.GB13575@hirez.programming.kicks-ass.net>
-References: <20200423125013.452964352@infradead.org>
- <20200423125043.129313983@infradead.org>
- <20200424193028.tecqlugzzue2n5vj@treble>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1EE021707;
+        Tue, 28 Apr 2020 18:30:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588098656;
+        bh=btMmoRmbm0aFeh7V8QPWVWglOxt22/y9OzCifBjnb+c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=l3E5yr1vtajT14zdGBpy2ROuRXl7F3d5mAhvbeb+b7FEsBJQzZjOsLqwp7rQACYsl
+         u19Zp4E6qYY0897X01FHmIQ1++EtBPTP39oX9TLv+SZkFtd+vZJYpi9N9rUEDlyQKh
+         eIKDNGa8vbh8kB1y9nYec+r0/AkLiXpa4sxudDJw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Kyungtae Kim <kt0755@gmail.com>
+Subject: [PATCH 5.6 093/167] USB: core: Fix free-while-in-use bug in the USB S-Glibrary
+Date:   Tue, 28 Apr 2020 20:24:29 +0200
+Message-Id: <20200428182236.786952756@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200424193028.tecqlugzzue2n5vj@treble>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 02:30:28PM -0500, Josh Poimboeuf wrote:
-> On Thu, Apr 23, 2020 at 02:47:25PM +0200, Peter Zijlstra wrote:
-> >  .macro CALL_NOSPEC reg:req
-> >  #ifdef CONFIG_RETPOLINE
-> > -	ANNOTATE_NOSPEC_ALTERNATIVE
-> > -	ALTERNATIVE_2 __stringify(ANNOTATE_RETPOLINE_SAFE; call *%\reg),\
-> > -		__stringify(RETPOLINE_CALL %\reg), X86_FEATURE_RETPOLINE,\
-> > -		__stringify(lfence; ANNOTATE_RETPOLINE_SAFE; call *%\reg), X86_FEATURE_RETPOLINE_AMD
-> > +	/*
-> > +	 * This cannot be ALTERNATIVE_2 like with JMP_NOSPEC, because ORC
-> > +	 * unwind data is alternative invariant and needs stack modifying
-> > +	 * instructions to be in the same place for all alternatives.
-> > +	 *
-> > +	 * IOW the CALL instruction must be at the same offset for all cases.
-> > +	 */
-> > +	ALTERNATIVE "", "lfence", X86_FEATURE_RETPOLINE_AMD
-> > +	ALTERNATIVE __stringify(ANNOTATE_RETPOLINE_SAFE; call *%\reg), \
-> > +		    __stringify(call __x86_retpoline_\reg), X86_FEATURE_RETPOLINE
-> 
-> I'm missing why ALTERNATIVE_2 wouldn't work here.  How is the call a
-> "stack modifying instruction"?  It's not an intra-function call so it
-> shouldn't affect ORC at all, right?
+From: Alan Stern <stern@rowland.harvard.edu>
 
-My bad. I find it hard not to consider CALL a stack modification. Let me
-fix that.
+commit 056ad39ee9253873522f6469c3364964a322912b upstream.
+
+FuzzUSB (a variant of syzkaller) found a free-while-still-in-use bug
+in the USB scatter-gather library:
+
+BUG: KASAN: use-after-free in atomic_read
+include/asm-generic/atomic-instrumented.h:26 [inline]
+BUG: KASAN: use-after-free in usb_hcd_unlink_urb+0x5f/0x170
+drivers/usb/core/hcd.c:1607
+Read of size 4 at addr ffff888065379610 by task kworker/u4:1/27
+
+CPU: 1 PID: 27 Comm: kworker/u4:1 Not tainted 5.5.11 #2
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+1.10.2-1ubuntu1 04/01/2014
+Workqueue: scsi_tmf_2 scmd_eh_abort_handler
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xce/0x128 lib/dump_stack.c:118
+ print_address_description.constprop.4+0x21/0x3c0 mm/kasan/report.c:374
+ __kasan_report+0x153/0x1cb mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:639
+ check_memory_region_inline mm/kasan/generic.c:185 [inline]
+ check_memory_region+0x152/0x1b0 mm/kasan/generic.c:192
+ __kasan_check_read+0x11/0x20 mm/kasan/common.c:95
+ atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
+ usb_hcd_unlink_urb+0x5f/0x170 drivers/usb/core/hcd.c:1607
+ usb_unlink_urb+0x72/0xb0 drivers/usb/core/urb.c:657
+ usb_sg_cancel+0x14e/0x290 drivers/usb/core/message.c:602
+ usb_stor_stop_transport+0x5e/0xa0 drivers/usb/storage/transport.c:937
+
+This bug occurs when cancellation of the S-G transfer races with
+transfer completion.  When that happens, usb_sg_cancel() may continue
+to access the transfer's URBs after usb_sg_wait() has freed them.
+
+The bug is caused by the fact that usb_sg_cancel() does not take any
+sort of reference to the transfer, and so there is nothing to prevent
+the URBs from being deallocated while the routine is trying to use
+them.  The fix is to take such a reference by incrementing the
+transfer's io->count field while the cancellation is in progres and
+decrementing it afterward.  The transfer's URBs are not deallocated
+until io->complete is triggered, which happens when io->count reaches
+zero.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-and-tested-by: Kyungtae Kim <kt0755@gmail.com>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2003281615140.14837-100000@netrider.rowland.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/usb/core/message.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -588,12 +588,13 @@ void usb_sg_cancel(struct usb_sg_request
+ 	int i, retval;
+ 
+ 	spin_lock_irqsave(&io->lock, flags);
+-	if (io->status) {
++	if (io->status || io->count == 0) {
+ 		spin_unlock_irqrestore(&io->lock, flags);
+ 		return;
+ 	}
+ 	/* shut everything down */
+ 	io->status = -ECONNRESET;
++	io->count++;		/* Keep the request alive until we're done */
+ 	spin_unlock_irqrestore(&io->lock, flags);
+ 
+ 	for (i = io->entries - 1; i >= 0; --i) {
+@@ -607,6 +608,12 @@ void usb_sg_cancel(struct usb_sg_request
+ 			dev_warn(&io->dev->dev, "%s, unlink --> %d\n",
+ 				 __func__, retval);
+ 	}
++
++	spin_lock_irqsave(&io->lock, flags);
++	io->count--;
++	if (!io->count)
++		complete(&io->complete);
++	spin_unlock_irqrestore(&io->lock, flags);
+ }
+ EXPORT_SYMBOL_GPL(usb_sg_cancel);
+ 
+
+
