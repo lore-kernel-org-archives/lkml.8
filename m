@@ -2,160 +2,185 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FEEC83006
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 772F5C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 436FB206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 510C3206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:19:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MB+/7DZ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbgD1NSP (ORCPT
+        id S1727079AbgD1NTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:18:15 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:34972 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbgD1NSO (ORCPT
+        Tue, 28 Apr 2020 09:19:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51348 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbgD1NTQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:18:14 -0400
-Received: by mail-il1-f199.google.com with SMTP id r5so23040138ilq.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 06:18:13 -0700 (PDT)
+        Tue, 28 Apr 2020 09:19:16 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BF8AC03C1A9;
+        Tue, 28 Apr 2020 06:19:16 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id d184so10679577pfd.4;
+        Tue, 28 Apr 2020 06:19:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to;
+        bh=9V8NGb4AZ2RYw4Pj3bOqh3h9Qct8iU5udnsWWNp45qk=;
+        b=MB+/7DZ5GSHml6jVwN8/DERad6OKJ63v6w4l3BSwSR6N1WTV6m0b9eyAYm8yMOint3
+         j2WLUUuEBvZ4oyvK6NYKg3mAZarOC0x2GORFtjvGsg8zZjgJZv8kPtMfS0fPxNfyFq0+
+         px7WcgAX0tfVSHOCCGr63VPIStK41b0g6VtxwdwtzvlAPTyMqFXVHXNqmE5mo8uS/glw
+         uH/BgsePXW8yfb3tQTbztGfHxGP6JQnAH/kZOBea5sF0ktg40pz9Df1m9PdJjwa/y344
+         r6MdKkShuMukgc1NpdOlzydojqQV1CLFAJPzntEU9W82do+Z++4Bo60fH/YoFJOa7QAy
+         YCMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=cO1dmFjxj7pHgf6wRSI/Jxa/CJInWZCNMVN5MW1ZKzY=;
-        b=n2y65/VgmVecHy7sFuTtapmK/uOngxMki0JaD/6aL58Rm7PYmHi+jGNlb7EkVuhJAD
-         D0yBdI5shSxvEUhzCURtumCS1ivcNqCajUI/jZ0ZjVgy+CPDaA/HGbxt3+owsAGkbTGz
-         xIVI/bxP7cMV0cMSqyVUoA2MuOi1umwB827PKNtoIFT/OEDnAqY4M+8beCx35LQ3qCMk
-         XZRmGmqw2Idw5Caj+/66NHyBAMepsiSt7W09Obo8ZyJnfX3zlNoXAdTgQ7Hy3FsX6wGO
-         E1RkB5MbUb3Z+NODNu4lmDO+zIgM5TNzBr8qehQiUU5AJ35dXTXtGiB+NZq+OtRBf+9B
-         Sbtg==
-X-Gm-Message-State: AGi0PuYqNWUOOnBpKLrMsmXr+AIUc7jDB2U6o8kkKEvEGTTnV5s3l6XW
-        jlXAIoR5jKsieVKCJwpm8XxxkUycoTrhG7vpRU1X4ZcTxE0T
-X-Google-Smtp-Source: APiQypJBIh6sWAk2VEH67hkKX92uJASxIyEFLfJT+ARXHfA+2StVE5xLgV2uAHqaoDV1NZZBwy9nTgFUgWjVtq3tx3om0yfkOcEJ
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to;
+        bh=9V8NGb4AZ2RYw4Pj3bOqh3h9Qct8iU5udnsWWNp45qk=;
+        b=rrO7MVFCDPYX5akpIHCcNbt9Dh8asRMFuth86XKO3EkL/hHWMYiMj75qCaZ8ZvTynl
+         eyGFKnYmzzkWj6Kd+xaBH42teUguWsuZMK++0zLL/RhfAqMjlNkGqloD5zPhwG/cyMWc
+         x9YW8YE0T/gmCRXyqjCcv6hgfIVcRqMi2Uj65MgP70nWJ1/tMFFniglSSB4+dIH2XjAt
+         G+J4cFGp7RWHyQDEc1kB2RsJMB/9EV1kKf+dZQPI9x1Do0BuXewOpRQ+XpRbSAbc9Spy
+         uaIZateDEDTpAkYq5qGEhHE1BqiDH9YmFix8lJOCG+JlSgkzU51+vRgw3sPSPc9m2Mgh
+         OYOA==
+X-Gm-Message-State: AGi0Pub/1cGA037Ajl/F435y0IF1i6XvFqrPXOR0CBG5oPtdTm8b4VI9
+        ri3S/bp1nekmfKrqUwIyWu4=
+X-Google-Smtp-Source: APiQypJ6QoKIe/yDx/vlNHJTxE8wVE2LTUlsxM7nsYnXYHvG/46XI/kQkRhdM19oaeyK89tjgKdp8g==
+X-Received: by 2002:aa7:83c8:: with SMTP id j8mr17436552pfn.272.1588079955648;
+        Tue, 28 Apr 2020 06:19:15 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e2sm2141037pjt.2.2020.04.28.06.19.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Apr 2020 06:19:14 -0700 (PDT)
+Subject: Re: linux-next: build failure after merge of the hwmon-staging tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrej Picej <andpicej@gmail.com>
+References: <20200428163655.28eeeae0@canb.auug.org.au>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <9ff86023-9ee1-23d8-1d84-4bb7b984d6a1@roeck-us.net>
+Date:   Tue, 28 Apr 2020 06:19:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a02:8247:: with SMTP id q7mr3992896jag.68.1588079893206;
- Tue, 28 Apr 2020 06:18:13 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 06:18:13 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e8dc1d05a459a988@google.com>
-Subject: KMSAN: uninit-value in sctp_rcv
-From:   syzbot <syzbot+95632cde252ddaed5a8e@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, glider@google.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
-        marcelo.leitner@gmail.com, netdev@vger.kernel.org,
-        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
-        vyasevich@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200428163655.28eeeae0@canb.auug.org.au>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="yPjthReYaDvY0QJpa80gNltCeyxym1HMw"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--yPjthReYaDvY0QJpa80gNltCeyxym1HMw
+Content-Type: multipart/mixed; boundary="w6zyBSBrSZMhh3lT77tDjdtsIaoplyuvn"
 
-syzbot found the following crash on:
+--w6zyBSBrSZMhh3lT77tDjdtsIaoplyuvn
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-HEAD commit:    bfa90a4a kmsan: remove __GFP_NO_KMSAN_SHADOW
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=11d13ca7e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a5915107b3106aaa
-dashboard link: https://syzkaller.appspot.com/bug?extid=95632cde252ddaed5a8e
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13076490100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12996d80100000
+On 4/27/20 11:36 PM, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> After merging the hwmon-staging tree, today's linux-next build (powerpc=
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+95632cde252ddaed5a8e@syzkaller.appspotmail.com
+> allyesconfig) failed like this:
+>=20
+> drivers/hwmon/lm70.c: In function 'lm70_probe':
+> drivers/hwmon/lm70.c:186:34: error: 'lm70_acpi_ids' undeclared (first u=
+se in this function); did you mean 'lm70_of_ids'?
+>   186 |   acpi_match =3D acpi_match_device(lm70_acpi_ids, &spi->dev);
+>       |                                  ^~~~~~~~~~~~~
+>       |                                  lm70_of_ids
+>=20
+> Caused by commit
+>=20
+>   02b925a9104d ("hwmon: (lm70) Add support for ACPI")
+>=20
+> CONFIG_ACPI is not set.
+>=20
+> I have reverted that commit for today.
+>=20
 
-batman_adv: batadv0: Interface activated: batadv_slave_1
-=====================================================
-BUG: KMSAN: uninit-value in __sctp_rcv_walk_lookup net/sctp/input.c:1208 [inline]
-BUG: KMSAN: uninit-value in __sctp_rcv_lookup_harder net/sctp/input.c:1287 [inline]
-BUG: KMSAN: uninit-value in __sctp_rcv_lookup net/sctp/input.c:1307 [inline]
-BUG: KMSAN: uninit-value in sctp_rcv+0x2b2d/0x5410 net/sctp/input.c:159
-CPU: 0 PID: 8827 Comm: syz-executor885 Not tainted 5.6.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- __sctp_rcv_walk_lookup net/sctp/input.c:1208 [inline]
- __sctp_rcv_lookup_harder net/sctp/input.c:1287 [inline]
- __sctp_rcv_lookup net/sctp/input.c:1307 [inline]
- sctp_rcv+0x2b2d/0x5410 net/sctp/input.c:159
- ip_protocol_deliver_rcu+0x700/0xbc0 net/ipv4/ip_input.c:204
- ip_local_deliver_finish net/ipv4/ip_input.c:231 [inline]
- NF_HOOK include/linux/netfilter.h:307 [inline]
- ip_local_deliver+0x62a/0x7c0 net/ipv4/ip_input.c:252
- dst_input include/net/dst.h:442 [inline]
- ip_rcv_finish net/ipv4/ip_input.c:428 [inline]
- NF_HOOK include/linux/netfilter.h:307 [inline]
- ip_rcv+0x6cf/0x750 net/ipv4/ip_input.c:538
- __netif_receive_skb_one_core net/core/dev.c:5187 [inline]
- __netif_receive_skb net/core/dev.c:5301 [inline]
- netif_receive_skb_internal net/core/dev.c:5391 [inline]
- netif_receive_skb+0xbb5/0xf20 net/core/dev.c:5450
- tun_rx_batched include/linux/skbuff.h:4351 [inline]
- tun_get_user+0x6aef/0x6f60 drivers/net/tun.c:1997
- tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2026
- call_write_iter include/linux/fs.h:1902 [inline]
- new_sync_write fs/read_write.c:483 [inline]
- __vfs_write+0xa5a/0xca0 fs/read_write.c:496
- vfs_write+0x44a/0x8f0 fs/read_write.c:558
- ksys_write+0x267/0x450 fs/read_write.c:611
- __do_sys_write fs/read_write.c:623 [inline]
- __se_sys_write+0x92/0xb0 fs/read_write.c:620
- __x64_sys_write+0x4a/0x70 fs/read_write.c:620
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x443679
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fffee474918 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000003172 RCX: 0000000000443679
-RDX: 000000000000fdef RSI: 0000000020000240 RDI: 0000000000000003
-RBP: 00007fffee474940 R08: 0000000000000000 R09: 0000000000000000
-R10: 000000000000aa14 R11: 0000000000000246 R12: 656c6c616b7a7973
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+I fixed it up. And I'll have to add test builds with CONFIG_ACPI=3Dn.
 
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
- kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:80
- slab_alloc_node mm/slub.c:2801 [inline]
- __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4420
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1081 [inline]
- alloc_skb_with_frags+0x18c/0xa70 net/core/skbuff.c:5764
- sock_alloc_send_pskb+0xada/0xc60 net/core/sock.c:2245
- tun_alloc_skb drivers/net/tun.c:1529 [inline]
- tun_get_user+0x10ae/0x6f60 drivers/net/tun.c:1843
- tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2026
- call_write_iter include/linux/fs.h:1902 [inline]
- new_sync_write fs/read_write.c:483 [inline]
- __vfs_write+0xa5a/0xca0 fs/read_write.c:496
- vfs_write+0x44a/0x8f0 fs/read_write.c:558
- ksys_write+0x267/0x450 fs/read_write.c:611
- __do_sys_write fs/read_write.c:623 [inline]
- __se_sys_write+0x92/0xb0 fs/read_write.c:620
- __x64_sys_write+0x4a/0x70 fs/read_write.c:620
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-=====================================================
+Guenter
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+--w6zyBSBrSZMhh3lT77tDjdtsIaoplyuvn--
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+--yPjthReYaDvY0QJpa80gNltCeyxym1HMw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEiHPvMQj9QTOCiqgVyx8mb86fmYEFAl6oLVEACgkQyx8mb86f
+mYE9HxAAlINbNCK068e99lAVH3Uv2RTjA3nId0/EeXTfoVbGeAlVfxIk/mwtg1g/
+QXy48fb2NMfDqQyfTz1cIUpwC75zhfSuCW/Dmy4I5ZyBGafkEAeS6qNwzAgTvdlV
+Cm4kPzBwFDenAl054qdFo8PtSwmyl+RO6EzBwiAqjlD0jG783B2ug/GqXK4HYv+u
+vwoxrpBXYtBK7b5s7uuw7lrxGzbcKyAk90Aa2VvbremOWDg0cIrbgeMqH0EyFxe0
+TRmfyrHAeKJ68oVozvIirgxWJFoq3viAvTYiw4jAfEjAumXJ1dFevrsLL9WKCL7M
+ypjITow/7lKV+HOneEC+r+5qPu4btQBdD5k8vYVJU9ngqdspSX13diRoYZpMAsIk
+DI8cQZ3cHVCpuYV2fs/YSxAxcg1rldfUdAW59sYgUm8MPoR2u1GcJiatE7hzgDwT
++LxU1oYqRYBie8Z3sd79fYlO24rqqbqf1ZmaS0kvi5z+iEjBz7RnpsyPHfzb/K8H
+h7b3j80AW1PtBzsJmxIK6xReFrHvm8RrxQcwXTmVGNwkpuQFZnkFTGDqATErSP5A
+B4qdThxHr67kuJTgIFhRZQn70aUeTDU8RjFAh89MJ9jB/YXwpuNqd/7cRVDYzd7n
+6QaEQNkOTUknSvfFIMpUftRXiekGkP48Eof45+J9OJQHMuwwgfs=
+=aaJD
+-----END PGP SIGNATURE-----
+
+--yPjthReYaDvY0QJpa80gNltCeyxym1HMw--
