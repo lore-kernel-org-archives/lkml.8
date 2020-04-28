@@ -2,147 +2,186 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85ADEC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED02C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8A2206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 544222075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:06:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RfxPovGh"
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="hO81LZGW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgD1HGf (ORCPT
+        id S1726507AbgD1HGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:06:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725917AbgD1HGe (ORCPT
+        Tue, 28 Apr 2020 03:06:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49374 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbgD1HGy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 03:06:34 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D971C03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 00:06:34 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id y4so20303941ljn.7
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 00:06:34 -0700 (PDT)
+        Tue, 28 Apr 2020 03:06:54 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11280C03C1A9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 00:06:54 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id k12so1450322wmj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 00:06:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=f8dcXHpZYKAipoXZGyaEz/tWNqY1LAbrIqWxYKIaqms=;
-        b=RfxPovGhXqLMR84oBjNHQnl7m08K/jrND9sk0zk7DoGrMWX+qWHr43W16a8/Ob00dF
-         ecgyq1eDECALCl0Jymc6gxk8+vpNgufOKcSPfdDGa2LIkiRhm1zJ3yajX0ffjNFLCVXn
-         iuCTAmoT/unRNx/pQPXpUYo8NVf6DW0QTDCyvV+MJ1qsyggUfuZmmj1WFydd+cztcHCB
-         bB+MIJNVQgT7elVp6TcK9tsksxpZfc/wrlPPMC0cyhM2xQrPpryf/G3xIwktqaQ3ZSch
-         1IqfUOc8o4KwbCpRU1oHNX89FEj4+oVS3EOtdwxukmxmD/MOG2cNF0P4F9H2vWfoPjVQ
-         eJpA==
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=5xMxzq1+6fPKftxXFu1ru4KGONd/NB7Kh51Ynpspd1U=;
+        b=hO81LZGWWo8vQjLiiioyCkIRbDV6DOkETpCDAwqQdX+A5qxIQgwr1HYewNk54bxA7U
+         VUidLvM9h71FNcWZnNJYZ3yOumKakvofrrqMoUqQuNJ7S80BnFrt1MtCsxiIHLBGb4cO
+         /TddRb91i9lTxuviX7DN+kD+9PvS58iLrlpFqIYwBT7Q93N0FCiNKQFEmUhyq2+dHicN
+         ZNjbd84dQDNMQQUw9JGt9oqx+VP7v1BvscRU593V9qpLgb9ryM4WUBikbEQEXkJ4GqT4
+         qC6/5rkcMwZBBZ0ve117vQ1OEL6fiBT3fkqtDQQFh32D6t2ccFohocb83Vh/DdeY6Wzv
+         eqlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=f8dcXHpZYKAipoXZGyaEz/tWNqY1LAbrIqWxYKIaqms=;
-        b=Nel/LSmy8n0pHu8ohYOUIMGkq17fqy9EgKR+DdrGMER8BmfoRYyb0QadatPJofFsxc
-         C19Gfv74jjcLpQPXEMUoIV0VY+IxCXJ1Or6mc+noN7H2KkNmjF4ls83mKNAEsRG3lN6L
-         iE/cI+BxZtPr0/ryRTvJ0fZiWOOAbyloNS+jM4iEkSai1IFdq7HwG+R10w7fwgUQk+tE
-         vDgScPaY3moBNRi8kPK3fmJUcG3JnMGk2R10O81a9XMpjHxoeND4lbM5c7gmGcPQvyFi
-         paTv/ucUFb2uisjqi6/ZEjPBJGTMUVcYhDJbgf8K4YGsVw2pakgIq/f6HSrXnuzvFTFj
-         Yj3g==
-X-Gm-Message-State: AGi0PuaajGn8z/zNIvE3BiF6GcHDGEpIbcDLJhtB0VdBgJofX3ToV0Be
-        iqpW2fUMq3KXDfomzQX2qKKvd3BS+icYhi/Q3DU=
-X-Google-Smtp-Source: APiQypL4UAbd+qjCfVTQrqkGfDjaDSsoYzHp/cmLfa4egSjfV+eVrKQDQym88AGDAGfZKFjRAZlE4FiwBBuyLYRiAC8=
-X-Received: by 2002:a2e:9818:: with SMTP id a24mr16591112ljj.126.1588057592851;
- Tue, 28 Apr 2020 00:06:32 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=5xMxzq1+6fPKftxXFu1ru4KGONd/NB7Kh51Ynpspd1U=;
+        b=b+xqvFjVpH8PEfI5K7AMaugVZLbbtealMAzvzX4XwdOGk2M6FW6w7YnoJgzNoj+hm3
+         8sMU8RspavjwFfqrsXKqg6MI9sa06Es8Ajvh/9zkHs/MbWFTll/t2ziUJH+QSEC9CzUP
+         VWwFlSJo3dNa1CbR2lfK2tUq8TO0Q9iYv47br/QeNHaa1Q+LBzmcecPR2gQcZWk8hzAr
+         jPy+yL3KIMaR3t+Rdqr8jTESffWIN7WW+o8FX8VNLrLRUdiW/zAvF6lFKayh1oBGJekI
+         +KMMlVdny2rYLqyUFT26iI02Nm5WJLSk49AXFnLLGap5xjFE82XmN36ABAA+MvMAiSKA
+         Dj6g==
+X-Gm-Message-State: AGi0PubrrUj95vjqipXcnV4M4mxXwWpl+B+prlqtLHS2fPTm9u1u6EAI
+        iws9M8hVu928doAJO3uqig+/Rw==
+X-Google-Smtp-Source: APiQypLJlkHPjon8EswejZeDOa29Qh08hz2eo34BgU9hmyxGa6xTEGyLyDc2U6KDsMGt3wkaBlFeFw==
+X-Received: by 2002:a7b:cf2b:: with SMTP id m11mr2697226wmg.147.1588057612762;
+        Tue, 28 Apr 2020 00:06:52 -0700 (PDT)
+Received: from localhost (ip-5-186-121-52.cgn.fibianet.dk. [5.186.121.52])
+        by smtp.gmail.com with ESMTPSA id l9sm23897081wrq.83.2020.04.28.00.06.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 00:06:52 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 09:06:51 +0200
+From:   Javier =?utf-8?B?R29uesOhbGV6?= <javier@javigon.com>
+To:     Niklas Cassel <Niklas.Cassel@wdc.com>
+Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Igor Konopko <igor.j.konopko@intel.com>,
+        Matias =?utf-8?B?QmrDuHJsaW5n?= <mb@lightnvm.io>,
+        Jens Axboe <axboe@kernel.dk>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] nvme: prevent double free in nvme_alloc_ns() error
+ handling
+Message-ID: <20200428070651.qbsyivvaakflipr4@mpHalley.localdomain>
+References: <20200427123443.520469-1-niklas.cassel@wdc.com>
+ <20200427180311.nssquibbak5ib4oo@mpHalley.localdomain>
+ <20200427182245.GA547726@localhost.localdomain>
 MIME-Version: 1.0
-References: <c2fd765aa388d4510194ba02c017e39bde57c8d4.1587478171.git.baolin.wang7@gmail.com>
- <CADBw62rJ8VYTgnW_3q4=TkCyZx2B1DHsG+oOmiph8FLsukUROQ@mail.gmail.com> <20200427090518.GG3559@dell>
-In-Reply-To: <20200427090518.GG3559@dell>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Tue, 28 Apr 2020 15:06:21 +0800
-Message-ID: <CADBw62qXtNnoNq0F1iZrvQHryMTy86GEqcD-qXBzsJJL-B8mQg@mail.gmail.com>
-Subject: Re: [PATCH v3] mfd: syscon: Add Spreadtrum physical regmap bus support
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200427182245.GA547726@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 5:05 PM Lee Jones <lee.jones@linaro.org> wrote:
+On 27.04.2020 18:22, Niklas Cassel wrote:
+>On Mon, Apr 27, 2020 at 08:03:11PM +0200, Javier González wrote:
+>> On 27.04.2020 14:34, Niklas Cassel wrote:
+>> > When jumping to the out_put_disk label, we will call put_disk(), which will
+>> > trigger a call to disk_release(), which calls blk_put_queue().
+>> >
+>> > Later in the cleanup code, we do blk_cleanup_queue(), which will also call
+>> > blk_put_queue().
+>> >
+>> > Putting the queue twice is incorrect, and will generate a KASAN splat.
+>> >
+>> > Set the disk->queue pointer to NULL, before calling put_disk(), so that the
+>> > first call to blk_put_queue() will not free the queue.
+>> >
+>> > The second call to blk_put_queue() uses another pointer to the same queue,
+>> > so this call will still free the queue.
+>> >
+>> > Fixes: 85136c010285 ("lightnvm: simplify geometry enumeration")
+>> > Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
+>> > ---
+>> > drivers/nvme/host/core.c | 2 ++
+>> > 1 file changed, 2 insertions(+)
+>> >
+>> > diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+>> > index 91c1bd659947..f2adea96b04c 100644
+>> > --- a/drivers/nvme/host/core.c
+>> > +++ b/drivers/nvme/host/core.c
+>> > @@ -3642,6 +3642,8 @@ static void nvme_alloc_ns(struct nvme_ctrl *ctrl, unsigned nsid)
+>> >
+>> >       return;
+>> >  out_put_disk:
+>> > +      /* prevent double queue cleanup */
+>> > +      ns->disk->queue = NULL;
+>> >       put_disk(ns->disk);
+>> >  out_unlink_ns:
+>> >       mutex_lock(&ctrl->subsys->lock);
+>> > --
+>> > 2.25.3
+>> >
+>> What about delaying the assignment of ns->disk?
+>>
+>> diff --git i/drivers/nvme/host/core.c w/drivers/nvme/host/core.c
+>> index a4d8c90ee7cc..6da4a9ced945 100644
+>> --- i/drivers/nvme/host/core.c
+>> +++ w/drivers/nvme/host/core.c
+>> @@ -3541,7 +3541,6 @@ static int nvme_alloc_ns(struct nvme_ctrl *ctrl, unsigned nsid)
+>>         disk->queue = ns->queue;
+>>         disk->flags = flags;
+>>         memcpy(disk->disk_name, disk_name, DISK_NAME_LEN);
+>> -       ns->disk = disk;
+>>
+>>         __nvme_revalidate_disk(disk, id);
+>>
+>> @@ -3553,6 +3552,8 @@ static int nvme_alloc_ns(struct nvme_ctrl *ctrl, unsigned nsid)
+>>                 }
+>>         }
+>>
+>> +       ns->disk = disk;
+>> +
 >
-> On Mon, 27 Apr 2020, Baolin Wang wrote:
+>Hello Javier!
 >
-> > Hi Arnd and Lee,
-> >
-> > On Tue, Apr 21, 2020 at 10:13 PM Baolin Wang <baolin.wang7@gmail.com> w=
-rote:
-> > >
-> > > Some platforms such as Spreadtrum platform, define a special method t=
-o
-> > > update bits of the registers instead of read-modify-write, which mean=
-s
-> > > we should use a physical regmap bus to define the reg_update_bits()
-> > > operation instead of the MMIO regmap bus. Thus we can register a new
-> > > physical regmap bus into syscon core to support this.
-> > >
-> > > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> >
-> > Do you have any comments for this patch? Thanks.
 >
-> Yes.  I'm not accepting it, sorry.
+>The only case where we jump to the out_put_disk label, is if the
+>nvme_nvm_register() call failed.
 >
-> I'd rather you duplicate the things you need from of_syscon_register()
-> in your own driver than taint this one.
-
-Thanks for your comments and I can understand your concern. But we
-still want to use the standard syscon APIs in syscon.c, which means we
-still need insert an callback or registration or other similar methods
-to support vendor specific regmap bus. Otherwise we should invent some
-similar syscon APIs in our vendor syscon driver, like
-sprd_syscon_regmap_lookup_by_phandle/sprd_syscon_regmap_lookup_by_compatibl=
-e.
-
-Arnd, what do you think? Thanks.
-
-> > > ---
-> > > Changes from v2:
-> > >  - Fix building errors without enabling CONFIG_ARCH_SPRD.
-> > >
-> > > Changes from v1:
-> > >  - Add WARN_ONCE() for seting bits and clearing bits at the same time=
-.
-> > >  - Remove the Spreadtrum SoC syscon driver, instead moving the regmap=
-_bus
-> > >  instance into syscon.c driver.
-> > >
-> > > Changes from RFC v2:
-> > >  - Drop regmap change, which was applied by Mark.
-> > >  - Add more information about how to use set/clear.
-> > >  - Add checking to ensure the platform is compatible with
-> > >  using a new physical regmap bus.
-> > >
-> > > Changes from RFC v1:
-> > >  - Add new helper to registers a physical regmap bus instead of
-> > >  using the MMIO bus.
-> > > ---
-> > >  drivers/mfd/syscon.c | 83 ++++++++++++++++++++++++++++++++++++++++++=
---
-> > >  1 file changed, 81 insertions(+), 2 deletions(-)
+>In that case, we want to undo the alloc_disk_node() operation, i.e.,
+>decrease the refcount.
 >
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Linaro Services Technical Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+>If we don't set "ns->disk = disk;" before the call to nvme_nvm_register(),
+>then, if register fails, and we jump to the put_disk(ns->disk) label,
+>ns->disk will be NULL, so the recount will not be decreased, so I assume
+>that this memory would then be a memory leak.
+>
+>
+>I think that the problem is that the block functions are a bit messy.
+>Most drivers seem to do blk_cleanup_queue() first and then do put_disk(),
+>but some drivers do it in the opposite way, so I think that we might have
+>some more use-after-free bugs in some of these drivers that do it in the
+>opposite way.
+>
 
+Hi Niklas,
 
+Yes, the out_put_disk label was introduced at the same time as the
+LightNVM entry point. We can do a better job at separating the cleanup
+functions, but as far as I can see ns->disk is not used in the LightNVM
+initialization, so delaying the initialization should be ok. Part of
+this should be also changing the out_put_disk to put_disk(disk).
 
---=20
-Baolin Wang
+Note that initializing other namespace types here do not require
+ns->disk either, so delaying initialization should be ok. We have been
+running with this patch locally for some time.
+
+This said, this is an alternative as your fix works.
+
+Javier
+
