@@ -2,115 +2,96 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A2FC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49083C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D71A8206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 162AF206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:00:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kUNbrCtm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BU+9LphH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgD1N7i (ORCPT
+        id S1727831AbgD1OAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:59:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57642 "EHLO
+        Tue, 28 Apr 2020 10:00:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726868AbgD1N7h (ORCPT
+        with ESMTP id S1726868AbgD1OAt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:59:37 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C55DC03C1A9;
-        Tue, 28 Apr 2020 06:59:37 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id a21so18685126ljj.11;
-        Tue, 28 Apr 2020 06:59:37 -0700 (PDT)
+        Tue, 28 Apr 2020 10:00:49 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87806C03C1A9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 07:00:49 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id d25so2050677lfi.11
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 07:00:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/zDDEPocLsCCoVeXtmXy84tPsu7600voeG3oAn4ZlpA=;
-        b=kUNbrCtmRLSJ/pudx3+TenRiaadVEt9iw7/4tzRtVz5f/MZveB8dNvKk2/ugbTRJhR
-         Zc4pUnkymtC8EutfUFzMyYsKttPwsPjlD6AaornIRldASJA4iHMJ02RsgXc4oiL45RPT
-         zuqWAUPYL+6qHrzh95mLH2MjhNtZYNXaEkibHmCeipxrXopGe4oUAiY8S40ud8JKMSLh
-         rUeu1zEG2pwxbmZLiK1vLU7VzezAMwC6qkcj3zjVopvb/eXGcoHRakxEt9D3gR7mzqtw
-         H8nTX7D79cjA+d+H2H/UCv2J5pHS+HBmTR/vmPF7lkGMzHjulmVeSQIxE1hi5q2A5tSX
-         3bkg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CwLBtHMxIouz6WBeC7Ry6rusTbPMGQuVa1Crv6UC2Xo=;
+        b=BU+9LphHkBjB7hH3z9ucS+MQDbJGncdMqaSIrZNJDwbF7FB/iurPpMj9+WTW1eINtV
+         S+zPTDnJ2xc37hyY/wcVjeGHslM6ThBq1dhnjpBW/0YueJvJrSSUE4hAHM9EEyacv3Ro
+         B4Za1VsqsZSuElBjM85ap7CwkGKyGxqqN7dtffSV9ZXfDzfNtS9JLqmcjjuPzSrfUaBK
+         svAItVmk9afH4cQWB3NgbC+jjqW/aQxBvNk83ZIHRMWRmn1wKI1nxz2I3zt0djJgqNvX
+         6pfBW4YM3wGhGZ0YVH8s1R7KHYvSvKB3Tydn+/GBEY6VmzY0tVzY4gNFP0OsRxKZZLkF
+         EAxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/zDDEPocLsCCoVeXtmXy84tPsu7600voeG3oAn4ZlpA=;
-        b=HN7w7/PfUjQkDZv3rGz8agSN5Kwqkn052WjMehxM+sZ3HrlmLVaFLH0L/Y74Mb03X1
-         GEWsMI50J6AWUlqq3b2skmdluZbhmMamiinkpzRP11WYUar4n86c6IGcZWr1/5WyJ3jA
-         ZJemSsszHmN3sbCOOJxlRjIv6wzic0qNqHiP+L9mTwfUtP5xrVP9AxvsIx5Mq2i7DIb7
-         t5JQ+ceb30D6SGg1ABFjm+Ri1rRkg3oy3VSddUbNFXrcSJozQwfSqky7X1tf4JBFm5S2
-         QnvjOSdX2P2PJqIiNj8OcPXtYmryQ0lglpC1voPj5+HEbQcxzto6kWzZOVVXW/1yFpuU
-         Fkfg==
-X-Gm-Message-State: AGi0PuZtkNHXYQ2SftoZ/iLPX3pbxu2CPqEcFtJXV+70aXKLaq/s9Wz9
-        YpMu81w4kjca356hHJ+/G9cjQQ5I
-X-Google-Smtp-Source: APiQypKJJuzlxQ9mHh3+8CqA33Kq/xzKGGJF2P2UiVJ2Y2mGNO1HupwCr8Yqb6gYmn+InovKMBfcPA==
-X-Received: by 2002:a2e:85d1:: with SMTP id h17mr18032882ljj.70.1588082372333;
-        Tue, 28 Apr 2020 06:59:32 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id o3sm14358371lfl.78.2020.04.28.06.59.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 06:59:31 -0700 (PDT)
-Subject: Re: [RFC PATCH v1 3/5] media: tegra-video: Move PM runtime handle to
- streaming
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl
-Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1588047650-29402-1-git-send-email-skomatineni@nvidia.com>
- <1588047650-29402-4-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <631390cb-9aff-0e3f-6c39-81d6c565987e@gmail.com>
-Date:   Tue, 28 Apr 2020 16:59:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CwLBtHMxIouz6WBeC7Ry6rusTbPMGQuVa1Crv6UC2Xo=;
+        b=rV223RtFioUQo0aHlV3mfc2+rAk/btfg0sFGXV4IF+S2WLarJ4JTIKl3lBk15LPatF
+         W+KwObCCzsiTw496gz76wJv7bgTHTPLXi28fTMTS/7ypSWXzvKcCy9/DdJP3neQ9yODc
+         E9S8L98x8VNOwatLOVOl+Lp3LdTjFfy5ELMdDkY+A+8Gt99aocNOAh1ZX425b4FodiZL
+         4G9qBpJCkHvzIj6B14+9B5Nb2LBiQKue/UX/4VSTsDAqbJ0jZGrfGY5HtXKKPnPv4Dcg
+         UiguYgxKlWQnoGey+RrRhUtY6OWUZ5S9p1hGdcuW3a1b+7mc5J/jnT61fZnkR9Zzn3bK
+         oaog==
+X-Gm-Message-State: AGi0PuZbZ6y2Jpi+cGSwZBUAmcvngVI/BEdcY2TftaJ+OB9VH6pNgz7K
+        jzVXksXMCHS5ypYAzj3NVXp0PjTddYPbL+LBAZRKkg==
+X-Google-Smtp-Source: APiQypIYzSbT7CAknI2cCMtFL2RX7gZahBzPYkhQq2sZJSILQBDs0uGsOEbqwcRELaTFxqJh/6Pd64SWJfEU4rNWbvI=
+X-Received: by 2002:ac2:5c4e:: with SMTP id s14mr19555025lfp.77.1588082448005;
+ Tue, 28 Apr 2020 07:00:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1588047650-29402-4-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200425044655.166257-1-davidgow@google.com>
+In-Reply-To: <20200425044655.166257-1-davidgow@google.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 28 Apr 2020 16:00:36 +0200
+Message-ID: <CACRpkdY=CvSyKO+LpGqu06XVq5pdwycMwyey3U=-qzFY+Dpv4g@mail.gmail.com>
+Subject: Re: [PATCH] gpio: of: Build fails if CONFIG_OF_DYNAMIC enabled
+ without CONFIG_OF_GPIO
+To:     David Gow <davidgow@google.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Frank Rowand <frank.rowand@sony.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-28.04.2020 07:20, Sowjanya Komatineni пишет:
-> diff --git a/drivers/staging/media/tegra-video/csi.c b/drivers/staging/media/tegra-video/csi.c
-> index b3dd0c3..29ccdae 100644
-> --- a/drivers/staging/media/tegra-video/csi.c
-> +++ b/drivers/staging/media/tegra-video/csi.c
-> @@ -272,8 +272,25 @@ static int tegra_csi_s_stream(struct v4l2_subdev *subdev, int enable)
->  	struct tegra_vi_channel *chan = v4l2_get_subdev_hostdata(subdev);
->  	struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
->  	struct tegra_csi *csi = csi_chan->csi;
-> +	int ret;
-> +
-> +	if (enable && atomic_add_return(1, &csi->clk_refcnt) == 1) {
-> +		ret = pm_runtime_get_sync(csi->dev);
-> +		if (ret < 0) {
-> +			dev_err(csi->dev,
-> +				"failed to get runtime PM: %d\n", ret);
-> +			pm_runtime_put_noidle(csi->dev);
-> +			atomic_dec(&csi->clk_refcnt);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	ret = csi->ops->csi_streaming(csi_chan, chan->pg_mode, enable);
->  
-> -	return csi->ops->csi_streaming(csi_chan, chan->pg_mode, enable);
-> +	if ((ret < 0 || !enable) && atomic_dec_and_test(&csi->clk_refcnt))
-> +		pm_runtime_put_sync(csi->dev);
+On Sat, Apr 25, 2020 at 6:46 AM David Gow <davidgow@google.com> wrote:
 
-Runtime PM maintains its own refcount, why these
-clk_refcnt/power_on_refcnt are needed?
+> The symbol 'gpio_of_notifier' doesn't exist without both CONFIG_OF_GPIO
+> and CONFIG_OF_DYNAMIC enabled, but is referenced when only
+> CONFIG_OF_DYNAMIC is enabled.
+>
+> This broke building with 'make ARCH=um allyesconfig':
+> ---------------
+> /usr/bin/ld: drivers/gpio/gpiolib.o: in function `gpiolib_dev_init':
+> ./drivers/gpio/gpiolib.c:5293: undefined reference to `gpio_of_notifier'
+> collect2: error: ld returned 1 exit status
+> ---------------
+>
+> Fixes: 63636d956c45 ("gpio: of: Add DT overlay support for GPIO hogs")
+> Signed-off-by: David Gow <davidgow@google.com>
+
+Patch applied for fixes since it fixes a regression,
+I recommend looking a bit down the dependency
+chain as indicated by Geert if you have time!
+
+Yours,
+Linus Walleij
