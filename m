@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6B7C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4B0C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6DC206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA332206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100342;
-	bh=CuotRLngCO9FT5A0gb2kCZe4KvFkWTY71lykbHFyFJU=;
+	s=default; t=1588100344;
+	bh=KJZZUMnaScaKKkoBLATWqgCIiHq3IBMc/5/i548oEgY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rUpQsl8IbFnCLCMuXa28yoZxB/PWWkl9uA6RQqJn9yAbQLyE4S16nXIdwr+aJ+bkv
-	 Y2dtnvG+p6eXeqwzxYmPhnAQ9tEHmvyoRAc8Kssm03RiM5/AXS4RFo8LpJA2rxTwwN
-	 Q+EovZvzdiBq0GRHDto8iLqDz8nosh2ye4yWC02E=
+	b=Gb8YmBDxHyELLoBl+BUE2qgkCgzhApaYW1zbQxvri1V42RSO7a6ey4pYuCbpyTNAY
+	 ylPKTQkSbVk1h19sNrKHynX629X/KGlgdV+UTmnB7IjxwjX+ghyDMN+TURZPRMt6RT
+	 tCM07EY9m5rQweJubJ6r7VRb5PXtmj/LyZZ8g6u0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730207AbgD1S7B (ORCPT
+        id S1729249AbgD1S2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:59:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42208 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:28:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729262AbgD1S2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:28:54 -0400
+        id S1728683AbgD1S2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:28:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67D8B20730;
-        Tue, 28 Apr 2020 18:28:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55E6720BED;
+        Tue, 28 Apr 2020 18:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098533;
-        bh=CuotRLngCO9FT5A0gb2kCZe4KvFkWTY71lykbHFyFJU=;
+        s=default; t=1588098516;
+        bh=KJZZUMnaScaKKkoBLATWqgCIiHq3IBMc/5/i548oEgY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CiqstQeXwC3Qx86wqbY0JgMVRhcuwa86Hs62ypsZ08o1eoW+U0/hhAo943qhMo+AI
-         mUQFOw67JoBri1zcRRHkodBYittQl+wdk7pSG/+PW5weM333KLf+s7kgxJQkuOvcZc
-         n0MwfhKX+Drpe4WmYoZJY+idIKrfpA/SYVyXPFlM=
+        b=ym3raZQgHxOPAFIqUlwFTk0Ne+dgFE22slFgNnGTSGWcluHvA7p1JcUP+kjKVFStb
+         FgeIiImtSY29bWekkkq+Mg+Ufr6zIkJZ6EsJO3XvsLLKCTZSEbd9bNL2j945wMEeTB
+         3+EDtaqqkFNlEFciix0DoaOfi7FF4jn4L9uc/r4E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        James Morse <james.morse@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 009/131] arm64: compat: Workaround Neoverse-N1 #1542419 for compat user-space
-Date:   Tue, 28 Apr 2020 20:23:41 +0200
-Message-Id: <20200428182226.363035019@linuxfoundation.org>
+Subject: [PATCH 4.19 006/131] arm64: Add part number for Neoverse N1
+Date:   Tue, 28 Apr 2020 20:23:38 +0200
+Message-Id: <20200428182226.086088112@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
 References: <20200428182224.822179290@linuxfoundation.org>
@@ -60,58 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
 
-[ Upstream commit: 222fc0c8503d98cec3cb2bac2780cdd21a6e31c0 ]
+[ Upstream commit 0cf57b86859c49381addb3ce47be70aadf5fd2c0 ]
 
-Compat user-space is unable to perform ICIMVAU instructions from
-user-space. Instead it uses a compat-syscall. Add the workaround for
-Neoverse-N1 #1542419 to this code path.
+New CPU, new part number. You know the drill.
 
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: James Morse <james.morse@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/sys_compat.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/include/asm/cputype.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/kernel/sys_compat.c b/arch/arm64/kernel/sys_compat.c
-index 010212d35700e..5a9b220aef6cf 100644
---- a/arch/arm64/kernel/sys_compat.c
-+++ b/arch/arm64/kernel/sys_compat.c
-@@ -19,6 +19,7 @@
-  */
+diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
+index fa770c070fddf..3cd936b1c79c1 100644
+--- a/arch/arm64/include/asm/cputype.h
++++ b/arch/arm64/include/asm/cputype.h
+@@ -80,6 +80,7 @@
+ #define ARM_CPU_PART_CORTEX_A35		0xD04
+ #define ARM_CPU_PART_CORTEX_A55		0xD05
+ #define ARM_CPU_PART_CORTEX_A76		0xD0B
++#define ARM_CPU_PART_NEOVERSE_N1	0xD0C
  
- #include <linux/compat.h>
-+#include <linux/cpufeature.h>
- #include <linux/personality.h>
- #include <linux/sched.h>
- #include <linux/sched/signal.h>
-@@ -28,6 +29,7 @@
+ #define APM_CPU_PART_POTENZA		0x000
  
- #include <asm/cacheflush.h>
- #include <asm/system_misc.h>
-+#include <asm/tlbflush.h>
- #include <asm/unistd.h>
- 
- static long
-@@ -41,6 +43,15 @@ __do_compat_cache_op(unsigned long start, unsigned long end)
- 		if (fatal_signal_pending(current))
- 			return 0;
- 
-+		if (cpus_have_const_cap(ARM64_WORKAROUND_1542419)) {
-+			/*
-+			 * The workaround requires an inner-shareable tlbi.
-+			 * We pick the reserved-ASID to minimise the impact.
-+			 */
-+			__tlbi(aside1is, 0);
-+			dsb(ish);
-+		}
-+
- 		ret = __flush_cache_user_range(start, start + chunk);
- 		if (ret)
- 			return ret;
+@@ -107,6 +108,7 @@
+ #define MIDR_CORTEX_A35 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A35)
+ #define MIDR_CORTEX_A55 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A55)
+ #define MIDR_CORTEX_A76 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A76)
++#define MIDR_NEOVERSE_N1 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_NEOVERSE_N1)
+ #define MIDR_THUNDERX	MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX)
+ #define MIDR_THUNDERX_81XX MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX_81XX)
+ #define MIDR_THUNDERX_83XX MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX_83XX)
 -- 
 2.20.1
 
