@@ -2,142 +2,158 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83844C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD479C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C58A20730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882D720731
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:27:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HYO8E/N+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbgD1W1E (ORCPT
+        id S1726501AbgD1W10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:27:04 -0400
-Received: from mail-mw2nam12olkn2016.outbound.protection.outlook.com ([40.92.23.16]:8416
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725934AbgD1W1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:27:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nkdx0M1xi5DH7btJElQCubeiZ9tdLpuBSwLlxyOe5UpWa2g4pUyydm+HKc4ollnxhfpmP8vwowk9PfXQnTAuebN+UiH+DvbQ+L/akIy5xp5UJL9VidxRppHBJM75xdSpbo1IKoAlvAGcNQaqcmJdw3mHqNRLaMOM/oTXNq8rddCnfK6r0CtzwkNBE8cWHMFcVpAtRSUZFf1sGs2D0M4JFyybTygn0ePuryvLw8CNiQd1ItukndrwbE1mI6d7Wnq4/74u6dAYG2JOQqn3TkMwYKPk4aKSfH5wp1U6u0tKrhuhLEohGTInQbSNCrYk3YmBEPWoXLIhg2LtFlTjwznGBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7itvH72Lf8/BIyooOhXrufjzxN5TetRYwA38SP+/GMY=;
- b=BePJ9u7IFynQgmgs9a9jGKW0IU7CoY1ZNA38+TfKj69yBX797kYfCGHWtRNeT977jAh14r95KeIksjMAMOy/OIoJ6uuBte8n7rp8eAzt6LVjVYE/6X7tVH2IfeRGFQi4aQRHY/zds+s4tBTgpp6Z2DZJelHxHf+3u358H8210ljh6RQrIi1survo4McVcN201gDQYZ5vPkSof7pHsqu8VPQWxR2ATAn7sMUsozVUUutvCgH90KpQsGmUUNpq407xkvYmqjWrVIy22D4Qn9A1rJrGBtRaWCVqY+b+eWr5ZHFMo42sY1e3el/2flrK9aS9DxnVpe1bbhLzFiMn/Aq3Iw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
- header.d=live.ca; arc=none
-Received: from BN8NAM12FT011.eop-nam12.prod.protection.outlook.com
- (2a01:111:e400:fc66::41) by
- BN8NAM12HT167.eop-nam12.prod.protection.outlook.com (2a01:111:e400:fc66::356)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.12; Tue, 28 Apr
- 2020 22:27:02 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:fc66::50) by BN8NAM12FT011.mail.protection.outlook.com
- (2a01:111:e400:fc66::402) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.12 via Frontend
- Transport; Tue, 28 Apr 2020 22:27:02 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:C7DCDD148CB2087ED420E081F5EBC88E5527FCA1C4FC3D1128897164CF3F6BBD;UpperCasedChecksum:92D1B590B52F58DDB75D61BDCAD58885F096AAB589AA0F9A23CB0AFBE2B9C046;SizeAsReceived:9151;Count:50
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2937.023; Tue, 28 Apr 2020
- 22:27:02 +0000
-Subject: Re: [PATCH 10/13] arm: dts: s5pv210: aries: Enable ADC node
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     kgene@kernel.org, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200426183604.28494-1-xc-racer2@live.ca>
- <BN6PR04MB0660998092302F2A78065E79A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
- <20200428102921.GD23963@kozik-lap>
-From:   Jonathan Bakker <xc-racer2@live.ca>
-Message-ID: <BN6PR04MB0660AB5103CCD61C5288D653A3AC0@BN6PR04MB0660.namprd04.prod.outlook.com>
-Date:   Tue, 28 Apr 2020 15:26:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-In-Reply-To: <20200428102921.GD23963@kozik-lap>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MWHPR18CA0042.namprd18.prod.outlook.com
- (2603:10b6:320:31::28) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <62ca9795-c76b-12b3-3211-bcdb26889b2d@live.ca>
+        Tue, 28 Apr 2020 18:27:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52694 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725934AbgD1W1Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 18:27:24 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74DEC03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:27:24 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id l25so44296vso.6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:27:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MneTeEsl9HAajGzseS68PtFpQqpR7WXRnzKFmK+XRpk=;
+        b=HYO8E/N+MMu6+8V05SjealqWlT/rFE3JYskdr3qTSPz02pknp0CcrhldrgkWJ1cVim
+         j5eXn6RdtT3vlvnGs1toIFmKpvlBcvau1rE3BkF1izMMBMb+rvJ3u+zJrD4+/X7Uw+2B
+         NKsPeC6OehmoRRTMka8FVUXHf0DP2shJ97Org=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MneTeEsl9HAajGzseS68PtFpQqpR7WXRnzKFmK+XRpk=;
+        b=A1+hNfshwg5Mc1xaBHAeQGid/aq1kLCuH3f+iH59aWkVXPA2VrYyNFSFq+/rANSHh/
+         i93zVOGQR8GLwxIKGbUxQo4ZzWRes+9C0YNbN8bJbDFCe/JgDalQ15RESYvj5oO+rva4
+         RPqxpYLzTJri5rnBawXpzyby8BZgx2NjPhjaBCqI/lW/Uo05yOQfZl6TKBOtnujNCsM1
+         MRjGnzoJxt0A9kE+cv+BdiMuSd0bgrbeMih7RGngtbq6zwzsBZzy13eQxrtMtO7uaWjK
+         BZxbnHjUhp/5R8r/Na3/HliPdinmsyEhMCRMSAjRsUQHtKXxTguW4L0ayDDRU8bRtsqY
+         /FLA==
+X-Gm-Message-State: AGi0PuaxaZfZzZCBQrHPG6TxLEkGTehPavZ1Khzz64o6OYkikkTJPiIk
+        lOvbjYcQKxhNrixfBTDOHW9z0ED5tz0=
+X-Google-Smtp-Source: APiQypI2yk5m788ZF5BblG7N+HqIQWtNumnzXtjJdxRcwoeKUmol1NC+XNXRaBxsA5pwxpKwvsFRxg==
+X-Received: by 2002:a67:3315:: with SMTP id z21mr23680309vsz.82.1588112843379;
+        Tue, 28 Apr 2020 15:27:23 -0700 (PDT)
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com. [209.85.221.175])
+        by smtp.gmail.com with ESMTPSA id t141sm5282472vke.26.2020.04.28.15.27.22
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Apr 2020 15:27:22 -0700 (PDT)
+Received: by mail-vk1-f175.google.com with SMTP id q200so127362vka.13
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 15:27:22 -0700 (PDT)
+X-Received: by 2002:a1f:9605:: with SMTP id y5mr22452968vkd.75.1588112842024;
+ Tue, 28 Apr 2020 15:27:22 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2001:569:fb67:7300:9f89:4b96:de0b:cd14] (2001:569:fb67:7300:9f89:4b96:de0b:cd14) by MWHPR18CA0042.namprd18.prod.outlook.com (2603:10b6:320:31::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend Transport; Tue, 28 Apr 2020 22:27:00 +0000
-X-Microsoft-Original-Message-ID: <62ca9795-c76b-12b3-3211-bcdb26889b2d@live.ca>
-X-TMN:  [NFK4o9QntSLW+rPc3Qww0XOsZPTQLu6IRnItikB7u8yhWHTWDbeWNksYhRdkoTBA]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 52bc821a-f3f4-4d63-b8df-08d7ebc345b1
-X-MS-TrafficTypeDiagnostic: BN8NAM12HT167:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0BGQXLYY1NsFi8RNUvS/keKHBv3MiB9uJUsm7AhxaFax/oygZul1DklhHPYgpuAvl3vDBrHdj7g5KX1Oi+iXYic25Md/5uw5UC6fwlLoadeS1HlzzYLrenYdN8VRDFx64JVZN6P345IjcNCyxQBTa9RhHhulpAUGW5tHAzj06rWwjPkVFhYCiThf4z6g27RgBTJy1AZtc8p8YwX1F1rWXg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: kxv6flq79EBs4EWlkvxXzKtkTR+OWen7+u62Iqmion7HpLKPkg0ESNaPxzNlk1RBqPjcMzavVLndc/1GAEfyemBeGU4C8990/8s2/YPxfn9MNclk33K4OwXxCmuy7IBYBl8eYEbzU9AjHupw3QI7ncWHXk3M/qLsqxIVag3h21ZCitONVIWYLiDc986SxgDBEBlGNTcWrdG6xn5XXng+QQ==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 52bc821a-f3f4-4d63-b8df-08d7ebc345b1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2020 22:27:02.0208
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8NAM12HT167
+References: <1588073914-15712-1-git-send-email-smasetty@codeaurora.org>
+In-Reply-To: <1588073914-15712-1-git-send-email-smasetty@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 28 Apr 2020 15:27:09 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WPG4x+TTu5-169EPObhvtPEpodzjnk2WSBCQgR434xdA@mail.gmail.com>
+Message-ID: <CAD=FV=WPG4x+TTu5-169EPObhvtPEpodzjnk2WSBCQgR434xdA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: arm-smmu: Add a new compatible string and a clock
+To:     Sharat Masetty <smasetty@codeaurora.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rob Herring <robh@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+Hi,
 
-On 2020-04-28 3:29 a.m., Krzysztof Kozlowski wrote:
-> On Sun, Apr 26, 2020 at 11:36:01AM -0700, Jonathan Bakker wrote:
->> On aries boards, the ADC is used for things such as jack detection
->> and battery temperature monitoring.  It is connected to ldo4 of max8998,
->> so only enable that regulator when we are actually using the ADC.
->>
->> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
->> ---
->>  arch/arm/boot/dts/s5pv210-aries.dtsi | 11 ++++++-----
->>  1 file changed, 6 insertions(+), 5 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/s5pv210-aries.dtsi b/arch/arm/boot/dts/s5pv210-aries.dtsi
->> index f30bdcb9c083..a103ddb0d720 100644
->> --- a/arch/arm/boot/dts/s5pv210-aries.dtsi
->> +++ b/arch/arm/boot/dts/s5pv210-aries.dtsi
->> @@ -193,11 +193,6 @@
->>  					regulator-name = "VADC_3.3V";
->>  					regulator-min-microvolt = <3300000>;
->>  					regulator-max-microvolt = <3300000>;
->> -					regulator-always-on;
->> -
->> -					regulator-state-mem {
->> -						regulator-off-in-suspend;
->> -					};
-> 
-> I would expect to keep it disabled during suspend. Why you had to remove
-> this part?
+On Tue, Apr 28, 2020 at 4:39 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
+>
+> This patch adds a new compatible string for sc7180 and also an
+> additional clock listing needed to power the TBUs and the TCU.
+>
+> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 7 +++++++
+>  1 file changed, 7 insertions(+)
 
-It was my thinking that if nothing was using it, then it would automatically be disabled and stay
-that way over suspend.
+nit: mention sc7180 in subject, like:
 
-However, looking at things again, it does make sense to make sure that it is disabled as it serves
-no purpose to stay enabled over suspend.  I'll remove this change for v2.
+dt-bindings: arm-smmu: Add sc7180 compatible string and mem_iface clock
 
-> 
-> Best regards,
-> Krzysztof
-> 
 
-Thanks,
-Jonathan
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> index 6515dbe..15946ac 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> @@ -28,6 +28,7 @@ properties:
+>            - enum:
+>                - qcom,msm8996-smmu-v2
+>                - qcom,msm8998-smmu-v2
+> +              - qcom,sc7180-smmu-v2
+>                - qcom,sdm845-smmu-v2
+>            - const: qcom,smmu-v2
+>
+> @@ -113,16 +114,22 @@ properties:
+>        present in such cases.
+>
+>    clock-names:
+> +    minItems: 2
+> +    maxItems: 3
+>      items:
+>        - const: bus
+>        - const: iface
+> +      - const: mem_iface_clk
+
+People usually frown on clock-names ending in "_clk".  Just name it "mem_iface".
+
+
+>    clocks:
+> +    minItems: 2
+> +    maxItems: 3
+>      items:
+>        - description: bus clock required for downstream bus access and for the
+>            smmu ptw
+>        - description: interface clock required to access smmu's registers
+>            through the TCU's programming interface.
+> +      - description: clock required for the SMMU TBUs and the TCU
+
+Is this clock only needed for sc7180, or would it be useful if we
+enabled certain features on existing devices?  Please document exactly
+when someone would provide this clock and when they'd leave it off.
+
+...also: maybe it's obvious to those that understand IOMMUs in depth,
+but to me I have no idea what your description means and why it's
+different from the other two clocks.  Any way you could punch up your
+description a little bit?
+
+Looking at sdm845 I see that this clock seems to exist but wasn't
+listed in the IOMMU device tree node.  Is that a mistake on sdm845?
+...or is it just fine because the GPU holds the clock?  Is there a
+reason the sdm845 solution and the sc7180 solution shouldn't be the
+same (AKA we should either add this clock to the sdm845 device tree
+file or remove it from sc7180)?
+
+Thanks!
+
+-Doug
