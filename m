@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE47BC83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADD4C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1BBB21D94
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25D6121BE5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbgD1PSg (ORCPT
+        id S1728567AbgD1PSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:18:36 -0400
-Received: from 8bytes.org ([81.169.241.247]:37910 "EHLO theia.8bytes.org"
+        Tue, 28 Apr 2020 11:18:39 -0400
+Received: from 8bytes.org ([81.169.241.247]:37428 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728413AbgD1PSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:18:18 -0400
+        id S1728395AbgD1PSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:18:20 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 6BC3EF42; Tue, 28 Apr 2020 17:17:54 +0200 (CEST)
+        id D7287F4A; Tue, 28 Apr 2020 17:17:55 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -40,9 +40,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 63/75] x86/sev-es: Handle #DB Events
-Date:   Tue, 28 Apr 2020 17:17:13 +0200
-Message-Id: <20200428151725.31091-64-joro@8bytes.org>
+Subject: [PATCH v3 70/75] x86/head/64: Setup TSS early for secondary CPUs
+Date:   Tue, 28 Apr 2020 17:17:20 +0200
+Message-Id: <20200428151725.31091-71-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200428151725.31091-1-joro@8bytes.org>
 References: <20200428151725.31091-1-joro@8bytes.org>
@@ -53,58 +53,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Handle #VC exceptions caused by #DB exceptions in the guest. Do not
-forward them to the hypervisor and handle them with do_debug() instead.
+The #VC exception will trigger very early in head_64.S, when the first
+CPUID instruction is executed. When secondary CPUs boot, they already
+load the real system IDT, which has the #VC handler configured to be
+using an IST stack. IST stacks require a TSS to be loaded, to set up the
+TSS early for bringing up the secondary CPUs. Use the RW version of
+early, until cpu_init() switches to the RO mapping.
+
+On the boot CPU the TSS will also be loaded early, but not used as the
+the early #VC handlers do not use IST stacks.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/sev-es.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ arch/x86/include/asm/desc.h |  2 ++
+ arch/x86/kernel/head64.c    | 13 +++++++++++++
+ arch/x86/kernel/head_64.S   |  3 +++
+ 3 files changed, 18 insertions(+)
 
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 050a15da9ae5..03095bc7b563 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -882,6 +882,19 @@ static enum es_result vc_handle_trap_ac(struct ghcb *ghcb,
- 	return ES_EXCEPTION;
+diff --git a/arch/x86/include/asm/desc.h b/arch/x86/include/asm/desc.h
+index 30e2a0e863b6..0777b100dc63 100644
+--- a/arch/x86/include/asm/desc.h
++++ b/arch/x86/include/asm/desc.h
+@@ -40,6 +40,8 @@ static inline void fill_ldt(struct desc_struct *desc, const struct user_desc *in
+ 	desc->l			= 0;
  }
  
-+static enum es_result vc_handle_trap_db(struct ghcb *ghcb,
-+					struct es_em_ctxt *ctxt)
++extern unsigned char boot_gdt[];
++
+ extern struct desc_ptr idt_descr;
+ extern gate_desc idt_table[];
+ extern const struct desc_ptr debug_idt_descr;
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index d83d59c15548..30a6d09fd9d0 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -523,6 +523,19 @@ void __head early_idt_setup_early_handler(unsigned long physaddr)
+ 	}
+ }
+ 
++void __head early_load_tss(void)
 +{
-+	/*
-+	 * Calling do_debug() directly does not work, because it might enable
-+	 * IRQs and the GHCB is active. Forward the exception and call it later
-+	 * from vc_forward_exception().
-+	 */
-+	ctxt->fi.vector = X86_TRAP_DB;
-+	ctxt->fi.error_code = 0;
-+	return ES_EXCEPTION;
++	struct desc_struct *gdt = (struct desc_struct *)boot_gdt;
++	struct tss_struct *tss = this_cpu_ptr(&cpu_tss_rw);
++	tss_desc tss_desc;
++
++	set_tssldt_descriptor(&tss_desc, (unsigned long)tss, DESC_TSS,
++			      __KERNEL_TSS_LIMIT);
++	native_write_gdt_entry(gdt, GDT_ENTRY_TSS, &tss_desc, DESC_TSS);
++
++	asm volatile("ltr %w0"::"q" (GDT_ENTRY_TSS*8));
 +}
 +
- static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 					 struct ghcb *ghcb,
- 					 unsigned long exit_code)
-@@ -895,6 +908,9 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 	case SVM_EXIT_WRITE_DR7:
- 		result = vc_handle_dr7_write(ghcb, ctxt);
- 		break;
-+	case SVM_EXIT_EXCP_BASE + X86_TRAP_DB:
-+		result = vc_handle_trap_db(ghcb, ctxt);
-+		break;
- 	case SVM_EXIT_EXCP_BASE + X86_TRAP_AC:
- 		result = vc_handle_trap_ac(ghcb, ctxt);
- 		break;
-@@ -960,6 +976,9 @@ static void vc_forward_exception(struct es_em_ctxt *ctxt)
- 	case X86_TRAP_AC:
- 		do_alignment_check(ctxt->regs, error_code);
- 		break;
-+	case X86_TRAP_DB:
-+		do_debug(ctxt->regs, error_code);
-+		break;
- 	default:
- 		pr_emerg("Unsupported exception in #VC instruction emulation - can't continue\n");
- 		BUG();
+ void __head early_idt_setup(unsigned long physbase)
+ {
+ 	gate_desc *idt = fixup_pointer(idt_table, physbase);
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 4d84a0c72e36..7f2d5e14db73 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -220,6 +220,9 @@ SYM_CODE_START(secondary_startup_64)
+ 	 */
+ 	movq initial_stack(%rip), %rsp
+ 
++	/* Setup a TSS for early IST handlers - needs %gs to be set up */
++	call	early_load_tss
++
+ 	/* Load IDT */
+ 	lidt	idt_descr(%rip)
+ 
 -- 
 2.17.1
 
