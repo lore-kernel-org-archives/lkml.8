@@ -2,244 +2,222 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EE8C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1142C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 825F0206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70E52206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:16:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=daemons-net.20150623.gappssmtp.com header.i=@daemons-net.20150623.gappssmtp.com header.b="rwFbMZSM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b8TK5lRu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgD1JN6 (ORCPT
+        id S1726883AbgD1JQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 05:13:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41064 "EHLO
+        Tue, 28 Apr 2020 05:16:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726402AbgD1JN6 (ORCPT
+        by vger.kernel.org with ESMTP id S1726552AbgD1JQz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 05:13:58 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A646C03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 02:13:58 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id t40so860116pjb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 02:13:58 -0700 (PDT)
+        Tue, 28 Apr 2020 05:16:55 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C6CFC03C1A9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 02:16:54 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id t14so23718481wrw.12
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 02:16:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daemons-net.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=xUhBUrl9Kc4rstZhnUAfruOOJTFBX99jmJUUZfVXyT8=;
-        b=rwFbMZSM6Syhnc+1CcRzNtF7U0iyDH0CNNHXC3G36/pyUqb8WDFG0/PPqeEU4fAFPC
-         6L+siEA1kb+C5CXi61p5JoGpWp9/GHAjLIlKDmhMs0HwuEr3ktJUnst1YAzcYTT5l2Pv
-         qAEVjK5pL9efJW8kc2I4gpiB8r2hr8k2+t7sS59ETfG36Ovx8FNtmbB3Wab+sOh1NpRI
-         aT0Nxzf0B8xpYVY2p5sUvm6gdu4dDk8zumi0abTIzv3Nw7TTBot3/8ks+BrVqNm2pSXm
-         3pGYDOLVlxufA18qd0MPx96Tnq2H3+Jtj2T4Yu5EFodxfTu02a/EhAE6Rx3WxEyLg8Qs
-         +WUw==
+        bh=kol2KnUcVyH0F7Ix7H0VZWG4kz6cZK2B84uPA/+NLmw=;
+        b=b8TK5lRu2zdjHITUnvvgSNq0/t93vnrQav69WlFUmdAImx/QVnBdaMJhSSstXj/vmp
+         c4vsNZG6H64f48aO3ug9CSBci33QqvxxEmV/nUCvNBeJsf1O9+Jze6a/ky7hUtRzM94+
+         fBfpv3prrsqZsGudTQmxieV6v1qUSaQqYxufroh+dxH0D/UgWt6Xl7gmr5K7qcRX91VB
+         NR2iqxHu0A6YnnsZPfeTPUyvKsVhrPfYzgIRmB0L7BIxJbke+HopvQbMi84lOyKf0WiI
+         B0cg6zstCm5gE4ikZjVuET9oxlAqknEE4s2x+LI1ua0BBG1G+4gp87qCSWDK9zYghAVL
+         S46A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=xUhBUrl9Kc4rstZhnUAfruOOJTFBX99jmJUUZfVXyT8=;
-        b=YJkdDzSCon8TGCDHiwj9TDAIbRaUmDPwPZ4ekOs/G+uimMO/kaEhctXkNeFXvc+e6y
-         V+QijzilcrJr9KgSAkTdXtMh455+/yVzcaf0XWVwZpxZ5ic9NK2TUGyVrZYqz/5Rjx8C
-         z9f9oo50QkgcF05YBibJHvsvD2kvaIIh4aAMrvrXq+AP6qOrZG51ris0xkcywt5mXIFp
-         10iN8ZNhmJ9SwZgRaTI6MTLegxHefb9RjePimxOGz2GjgDdYhsg/xpv+FA7LULCgAW1w
-         GAsJkkV3NiOMjljXsQjaEmGupaqY1rCsL47lLj3bUZqC9bOP2Xo8KPWUumNHDXnqhCNd
-         v1DA==
-X-Gm-Message-State: AGi0PuZd5lfZLZ0MSOfK6GnnWhXuwcNdG6I9P/EHIv6z1VNasHJhbB7I
-        uGpshRgTjpPjYsuA29Q2UBLi
-X-Google-Smtp-Source: APiQypK432KZI5avbvytPqeej2cdwTFN1mYbR/vnZB1jogWWvBSxHuDu1/TXaLEzwgxyaC3nF2FabA==
-X-Received: by 2002:a17:90a:290f:: with SMTP id g15mr3903364pjd.93.1588065237310;
-        Tue, 28 Apr 2020 02:13:57 -0700 (PDT)
-Received: from localhost.localdomain ([47.156.151.166])
-        by smtp.googlemail.com with ESMTPSA id f74sm1803376pje.3.2020.04.28.02.13.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 02:13:56 -0700 (PDT)
-From:   Clay McClure <clay@daemons.net>
-Cc:     Clay McClure <clay@daemons.net>, Arnd Bergmann <arnd@arndb.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Nicolas Pitre <nicolas.pitre@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Mao Wenan <maowenan@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Edward Cree <ecree@solarflare.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Josh Triplett <josh@joshtriplett.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: Select PTP_1588_CLOCK in PTP-specific drivers
-Date:   Tue, 28 Apr 2020 02:07:47 -0700
-Message-Id: <20200428090749.31983-1-clay@daemons.net>
-X-Mailer: git-send-email 2.20.1
+        bh=kol2KnUcVyH0F7Ix7H0VZWG4kz6cZK2B84uPA/+NLmw=;
+        b=ORLAfY5owI9O7Fxzrwt2IbBXguxWG8CqoU2EA7nHlWTcVgNEZfhv1znHzC4s23MG/0
+         LmtMLm9RxRMhd+w5EFYAziNwgpGpKQP7kv6I5rtPB31osXBmLp8CDtCfZIErGbxRMCRE
+         wLrLxhTJaK0EobiKzAbqH8dLOT0K2BWloUO4Gy4YKS1rYz/Yg040GlVTD/JteTj+cJYC
+         Vnv9zDNQQE4WAnUd74yhoi5w6GSVCck0+sBkSG8JBwgwx84M5mwAGAYSIBCT+b58m37m
+         BhYX3Wv5a3Y5V749og/vX4d33T9i6vWNPcwVO+WxDL4YcKGE8nDvA41fmNeyJRl3F7DO
+         z+1g==
+X-Gm-Message-State: AGi0PuZUcphptAcgIz6x6ULtgUKHbh2pHhl/YqlxxY2diydKp1Q1X6vc
+        gxGkxcks2EhzhPqDYHysxoxoOQ==
+X-Google-Smtp-Source: APiQypI1NaFanMBSA/9TXktEMwg92qBduRtE849bebURjum+Ps+JfDCHR5BF5kVxyiG6aXCkG+KrrQ==
+X-Received: by 2002:a5d:4843:: with SMTP id n3mr31480285wrs.7.1588065412820;
+        Tue, 28 Apr 2020 02:16:52 -0700 (PDT)
+Received: from localhost.localdomain ([87.120.218.65])
+        by smtp.googlemail.com with ESMTPSA id k14sm25005543wrp.53.2020.04.28.02.16.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 Apr 2020 02:16:52 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     linux-pm@vger.kernel.org, evgreen@chromium.org,
+        bjorn.andersson@linaro.org
+Cc:     akashast@codeaurora.org, linux-kernel@vger.kernel.org,
+        georgi.djakov@linaro.org
+Subject: [PATCH] interconnect: Add helpers for enabling/disabling a path
+Date:   Tue, 28 Apr 2020 12:16:50 +0300
+Message-Id: <20200428091650.27669-1-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit d1cbfd771ce8 ("ptp_clock: Allow for it to be optional") changed
-all PTP-capable Ethernet drivers from `select PTP_1588_CLOCK` to `imply
-PTP_1588_CLOCK`, "in order to break the hard dependency between the PTP
-clock subsystem and ethernet drivers capable of being clock providers."
-As a result it is possible to build PTP-capable Ethernet drivers without
-the PTP subsystem by deselecting PTP_1588_CLOCK. Drivers are required to
-handle the missing dependency gracefully.
+There is a repeated pattern in multiple drivers where they want to switch
+the bandwidth between zero and some other value. This is happening often
+in the suspend/resume callbacks. Let's add helper functions to enable and
+disable the path, so that callers don't have to take care of remembering
+the bandwidth values and handle this in the framework instead.
 
-Some PTP-capable Ethernet drivers (e.g., TI_CPSW) factor their PTP code
-out into separate drivers (e.g., TI_CPTS_MOD). The above commit also
-changed these PTP-specific drivers to `imply PTP_1588_CLOCK`, making it
-possible to build them without the PTP subsystem. But as Grygorii
-Strashko noted in [1]:
+With this patch the users can call icc_disable() and icc_enable() to lower
+their bandwidth request to zero and then restore it back to it's previous
+value.
 
-On Wed, Apr 22, 2020 at 02:16:11PM +0300, Grygorii Strashko wrote:
-
-> Another question is that CPTS completely nonfunctional in this case and
-> it was never expected that somebody will even try to use/run such
-> configuration (except for random build purposes).
-
-In my view, enabling a PTP-specific driver without the PTP subsystem is
-a configuration error made possible by the above commit. Kconfig should
-not allow users to create a configuration with missing dependencies that
-results in "completely nonfunctional" drivers.
-
-I audited all network drivers that call ptp_clock_register() and found
-six that look like PTP-specific drivers that are likely nonfunctional
-without PTP_1588_CLOCK:
-
-    NET_DSA_MV88E6XXX_PTP
-    NET_DSA_SJA1105_PTP
-    MACB_USE_HWSTAMP
-    CAVIUM_PTP
-    TI_CPTS_MOD
-    PTP_1588_CLOCK_IXP46X
-
-Note how they all reference PTP or timestamping in their name; this is a
-clue that they depend on PTP_1588_CLOCK.
-
-Change these drivers back [2] to `select PTP_1588_CLOCK`. Note that this
-requires also selecting POSIX_TIMERS, a transitive dependency of
-PTP_1588_CLOCK.
-
-[1]: https://lkml.org/lkml/2020/4/22/1056
-
-[2]: NET_DSA_SJA1105_PTP had never declared any type of dependency on
-PTP_1588_CLOCK (`imply` or otherwise); adding it here seems appropriate.
-
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-Fixes: d1cbfd771ce8 ("ptp_clock: Allow for it to be optional")
-Signed-off-by: Clay McClure <clay@daemons.net>
+Suggested-by: Evan Green <evgreen@chromium.org>
+Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 ---
- drivers/net/dsa/mv88e6xxx/Kconfig    | 3 ++-
- drivers/net/dsa/sja1105/Kconfig      | 2 ++
- drivers/net/ethernet/cadence/Kconfig | 3 ++-
- drivers/net/ethernet/cavium/Kconfig  | 3 ++-
- drivers/net/ethernet/ti/Kconfig      | 2 +-
- drivers/net/ethernet/xscale/Kconfig  | 3 ++-
- 6 files changed, 11 insertions(+), 5 deletions(-)
+ drivers/interconnect/core.c     | 50 ++++++++++++++++++++++++++++++++-
+ drivers/interconnect/internal.h |  2 ++
+ include/linux/interconnect.h    | 12 ++++++++
+ 3 files changed, 63 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/mv88e6xxx/Kconfig b/drivers/net/dsa/mv88e6xxx/Kconfig
-index 6435020d690d..6e8250599eb1 100644
---- a/drivers/net/dsa/mv88e6xxx/Kconfig
-+++ b/drivers/net/dsa/mv88e6xxx/Kconfig
-@@ -25,7 +25,8 @@ config NET_DSA_MV88E6XXX_PTP
- 	default n
- 	depends on NET_DSA_MV88E6XXX_GLOBAL2
- 	imply NETWORK_PHY_TIMESTAMPING
--	imply PTP_1588_CLOCK
-+	select PTP_1588_CLOCK
-+	select POSIX_TIMERS
- 	help
- 	  Say Y to enable PTP hardware timestamping on Marvell 88E6xxx switch
- 	  chips that support it.
-diff --git a/drivers/net/dsa/sja1105/Kconfig b/drivers/net/dsa/sja1105/Kconfig
-index 0fe1ae173aa1..84349b6c8c44 100644
---- a/drivers/net/dsa/sja1105/Kconfig
-+++ b/drivers/net/dsa/sja1105/Kconfig
-@@ -20,6 +20,8 @@ tristate "NXP SJA1105 Ethernet switch family support"
- config NET_DSA_SJA1105_PTP
- 	bool "Support for the PTP clock on the NXP SJA1105 Ethernet switch"
- 	depends on NET_DSA_SJA1105
-+	select PTP_1588_CLOCK
-+	select POSIX_TIMERS
- 	help
- 	  This enables support for timestamping and PTP clock manipulations in
- 	  the SJA1105 DSA driver.
-diff --git a/drivers/net/ethernet/cadence/Kconfig b/drivers/net/ethernet/cadence/Kconfig
-index 53b50c24d9c9..bc792c334903 100644
---- a/drivers/net/ethernet/cadence/Kconfig
-+++ b/drivers/net/ethernet/cadence/Kconfig
-@@ -36,7 +36,8 @@ config MACB_USE_HWSTAMP
- 	bool "Use IEEE 1588 hwstamp"
- 	depends on MACB
- 	default y
--	imply PTP_1588_CLOCK
-+	select PTP_1588_CLOCK
-+	select POSIX_TIMERS
- 	---help---
- 	  Enable IEEE 1588 Precision Time Protocol (PTP) support for MACB.
+diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+index 2c6515e3ecf1..6af68e506ac2 100644
+--- a/drivers/interconnect/core.c
++++ b/drivers/interconnect/core.c
+@@ -158,6 +158,7 @@ static struct icc_path *path_init(struct device *dev, struct icc_node *dst,
+ 		hlist_add_head(&path->reqs[i].req_node, &node->req_list);
+ 		path->reqs[i].node = node;
+ 		path->reqs[i].dev = dev;
++		path->reqs[i].enabled = true;
+ 		/* reference to previous node was saved during path traversal */
+ 		node = node->reverse;
+ 	}
+@@ -249,9 +250,12 @@ static int aggregate_requests(struct icc_node *node)
+ 	if (p->pre_aggregate)
+ 		p->pre_aggregate(node);
  
-diff --git a/drivers/net/ethernet/cavium/Kconfig b/drivers/net/ethernet/cavium/Kconfig
-index 6a700d34019e..bae58c488792 100644
---- a/drivers/net/ethernet/cavium/Kconfig
-+++ b/drivers/net/ethernet/cavium/Kconfig
-@@ -54,7 +54,8 @@ config	THUNDER_NIC_RGX
- config CAVIUM_PTP
- 	tristate "Cavium PTP coprocessor as PTP clock"
- 	depends on 64BIT && PCI
--	imply PTP_1588_CLOCK
-+	select PTP_1588_CLOCK
-+	select POSIX_TIMERS
- 	---help---
- 	  This driver adds support for the Precision Time Protocol Clocks and
- 	  Timestamping coprocessor (PTP) found on Cavium processors.
-diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
-index 89cec778cf2d..1177953790c5 100644
---- a/drivers/net/ethernet/ti/Kconfig
-+++ b/drivers/net/ethernet/ti/Kconfig
-@@ -92,7 +92,7 @@ config TI_CPTS_MOD
- 	depends on TI_CPTS
- 	default y if TI_CPSW=y || TI_KEYSTONE_NETCP=y || TI_CPSW_SWITCHDEV=y
- 	select NET_PTP_CLASSIFY
--	imply PTP_1588_CLOCK
-+	select PTP_1588_CLOCK
- 	default m
+-	hlist_for_each_entry(r, &node->req_list, req_node)
++	hlist_for_each_entry(r, &node->req_list, req_node) {
++		if (!r->enabled)
++			continue;
+ 		p->aggregate(node, r->tag, r->avg_bw, r->peak_bw,
+ 			     &node->avg_bw, &node->peak_bw);
++	}
  
- config TI_K3_AM65_CPSW_NUSS
-diff --git a/drivers/net/ethernet/xscale/Kconfig b/drivers/net/ethernet/xscale/Kconfig
-index 98aa7b8ddb06..82d4ec3c6398 100644
---- a/drivers/net/ethernet/xscale/Kconfig
-+++ b/drivers/net/ethernet/xscale/Kconfig
-@@ -30,7 +30,8 @@ config IXP4XX_ETH
- config PTP_1588_CLOCK_IXP46X
- 	tristate "Intel IXP46x as PTP clock"
- 	depends on IXP4XX_ETH
--	depends on PTP_1588_CLOCK
-+	select PTP_1588_CLOCK
-+	select POSIX_TIMERS
- 	default y
- 	help
- 	  This driver adds support for using the IXP46X as a PTP
--- 
-2.20.1
-
+ 	return 0;
+ }
+@@ -546,6 +550,50 @@ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
+ }
+ EXPORT_SYMBOL_GPL(icc_set_bw);
+ 
++int icc_disable(struct icc_path *path)
++{
++	int i;
++
++	if (!path)
++		return 0;
++
++	if (WARN_ON(IS_ERR(path) || !path->num_nodes))
++		return -EINVAL;
++
++	mutex_lock(&icc_lock);
++
++	for (i = 0; i < path->num_nodes; i++)
++		path->reqs[i].enabled = false;
++
++	mutex_unlock(&icc_lock);
++
++	return icc_set_bw(path, path->reqs[0].avg_bw,
++			  path->reqs[0].peak_bw);
++}
++EXPORT_SYMBOL_GPL(icc_disable);
++
++int icc_enable(struct icc_path *path)
++{
++	int i;
++
++	if (!path)
++		return 0;
++
++	if (WARN_ON(IS_ERR(path) || !path->num_nodes))
++		return -EINVAL;
++
++	mutex_lock(&icc_lock);
++
++	for (i = 0; i < path->num_nodes; i++)
++		path->reqs[i].enabled = true;
++
++	mutex_unlock(&icc_lock);
++
++	return icc_set_bw(path, path->reqs[0].avg_bw,
++			  path->reqs[0].peak_bw);
++}
++EXPORT_SYMBOL_GPL(icc_enable);
++
+ /**
+  * icc_get() - return a handle for path between two endpoints
+  * @dev: the device requesting the path
+diff --git a/drivers/interconnect/internal.h b/drivers/interconnect/internal.h
+index bf18cb7239df..f5f82a5c939e 100644
+--- a/drivers/interconnect/internal.h
++++ b/drivers/interconnect/internal.h
+@@ -14,6 +14,7 @@
+  * @req_node: entry in list of requests for the particular @node
+  * @node: the interconnect node to which this constraint applies
+  * @dev: reference to the device that sets the constraints
++ * @enabled: indicates whether the path with this request is enabled
+  * @tag: path tag (optional)
+  * @avg_bw: an integer describing the average bandwidth in kBps
+  * @peak_bw: an integer describing the peak bandwidth in kBps
+@@ -22,6 +23,7 @@ struct icc_req {
+ 	struct hlist_node req_node;
+ 	struct icc_node *node;
+ 	struct device *dev;
++	bool enabled;
+ 	u32 tag;
+ 	u32 avg_bw;
+ 	u32 peak_bw;
+diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
+index d70a914cba11..21dd232d81ff 100644
+--- a/include/linux/interconnect.h
++++ b/include/linux/interconnect.h
+@@ -29,6 +29,8 @@ struct icc_path *icc_get(struct device *dev, const int src_id,
+ 			 const int dst_id);
+ struct icc_path *of_icc_get(struct device *dev, const char *name);
+ void icc_put(struct icc_path *path);
++int icc_disable(struct icc_path *path);
++int icc_enable(struct icc_path *path);
+ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
+ void icc_set_tag(struct icc_path *path, u32 tag);
+ 
+@@ -50,6 +52,16 @@ static inline void icc_put(struct icc_path *path)
+ {
+ }
+ 
++static inline int icc_disable(struct icc_path *path)
++{
++	return 0;
++}
++
++static inline int icc_enable(struct icc_path *path)
++{
++	return 0;
++}
++
+ static inline int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
+ {
+ 	return 0;
