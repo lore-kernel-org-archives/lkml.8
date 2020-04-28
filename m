@@ -2,223 +2,598 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FD4C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F4FC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CC3521707
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ACB520BED
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:54:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LABNHxPV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s7bKaNQ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729258AbgD1TxQ (ORCPT
+        id S1729293AbgD1TyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 15:53:16 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49983 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728559AbgD1TxO (ORCPT
+        Tue, 28 Apr 2020 15:54:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56778 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728819AbgD1TyF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 15:53:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588103592;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4JD+gHvkJvespyjIlkjyjMoB5DMAouYrS8n21jslAx0=;
-        b=LABNHxPVs6eRXtE/aC8BdXz91Oae9IaTD7mb0Z/VtmmuuxH0qhe4RW2t9IKTch5SlqOujn
-        eC9+0AZNkQ8VDPSaJILDJtq3QcISRhwYEiY8E4uEErIMI++IC6Y2awsMbhtEEUeiLhqKYB
-        y58n/yAgbNgOvIZRGUfabCvT/U4yFDg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-493-Byye7za3NwWBNI5jgT_TdA-1; Tue, 28 Apr 2020 15:53:07 -0400
-X-MC-Unique: Byye7za3NwWBNI5jgT_TdA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CD85E108BD17;
-        Tue, 28 Apr 2020 19:53:05 +0000 (UTC)
-Received: from treble (ovpn-112-209.rdu2.redhat.com [10.10.112.209])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BA1071C950;
-        Tue, 28 Apr 2020 19:53:04 +0000 (UTC)
-Date:   Tue, 28 Apr 2020 14:53:01 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     alexandre.chartre@oracle.com, linux-kernel@vger.kernel.org,
-        jthierry@redhat.com, tglx@linutronix.de, x86@kernel.org,
-        mbenes@suse.cz
-Subject: Re: [PATCH v2 01/14] objtool: Allow branches within the same
- alternative.
-Message-ID: <20200428195301.szkrjfvrjahsbuhb@treble>
-References: <20200428191101.886208539@infradead.org>
- <20200428191659.438842526@infradead.org>
+        Tue, 28 Apr 2020 15:54:05 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99849C03C1AB
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 12:54:03 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id p8so10966282pgi.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 12:54:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PZgDa/Fq0Ei9i3EeMD9351M4X890P0OTSjoSz5BWees=;
+        b=s7bKaNQ3GDrNLgjhfyND0NKiVcVGNLZXWDivq/luHobNvgDfNXIPsvAJm61w4+BTqf
+         /BPE0O9tEf+2D+lSTRqUTZIO4MVCj2RUTqfxjz/J9GFqwnlIWdLVF4cCYKMKAIUdzcfh
+         +abC8Ezz5YoxKIbAk8DwyN3gQGW/2BO5w7VSEij8hmINMk+A/sfXPyktcRQBi+BEdHOj
+         YZhU7zbBILC+kkJzugnwzGB5Rq0WtVwI2auTx+djshY8PSTnYoJqxX+b0YmhdQ1Lj3h2
+         ml6QCv2S+b93JPnW+OqslZTB+fP0aFJkpwUei7xRD2KxB4xomPwux4LAFjgpUlJo0yvP
+         muyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PZgDa/Fq0Ei9i3EeMD9351M4X890P0OTSjoSz5BWees=;
+        b=QvxjXlYmKfqkIViiWg5GRF65TVVwKXdt98abmlS1/3u5qOZS+0bvab5xooGhpxpDsk
+         MVJwbKh/HVX+HIB4HqDnAuVKLwBIxVUz6f6bxFpjZvXwmqX7nSbbZUGiKJCCtbi9qUNc
+         DP9Kj7FUJatLgzr71fKoRkUO/6dLwv+l6+MypFdvTdWud9Tf+gLHEuMnACMlAvhQGTL1
+         dtZiDl544Q15U06RjGDV30SvLSeKn1YwRm/vQgs8kPT6WUqXHTN3kQUNMXX387blzDii
+         wEX+9UTYxt8nuGCotA5YwPUf1RQN6Ds+kUjNInYH3C7xvY4yRF74JaFbz68UnATwkTC1
+         UKzw==
+X-Gm-Message-State: AGi0PuZQFBgfkMkQX1PcsvlAFG3NuXKotB9dqM/XGzwn4WKLx4XQweBU
+        AKXDGLP5zb9mXGj8b1naOErJelixQZB0xAPFwK5Vew==
+X-Google-Smtp-Source: APiQypK3Sekvo8xltMEhxYtCRvJnKfZmDnNO7QIu2egu9IypHVq3f3FvRfvvQfg4a1RGW0c2D28sS/fCTgbD7tVJfAo=
+X-Received: by 2002:a62:5289:: with SMTP id g131mr21982219pfb.318.1588103642496;
+ Tue, 28 Apr 2020 12:54:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200428191659.438842526@infradead.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <e7920e1960ed65410f00c3400bdeccb27553c736.1588103144.git.andreyknvl@google.com>
+In-Reply-To: <e7920e1960ed65410f00c3400bdeccb27553c736.1588103144.git.andreyknvl@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 28 Apr 2020 21:53:51 +0200
+Message-ID: <CAAeHK+yscLbzCh3P5uhOpxtB8-xhQbBSmSHpj6ugM=AMqjE7NA@mail.gmail.com>
+Subject: Re: [PATCH] usb: raw-gadget: fix gadget endpoint selection
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 09:11:02PM +0200, Peter Zijlstra wrote:
-> From: Alexandre Chartre <alexandre.chartre@oracle.com>
-> 
-> Currently objtool prevents any branch to an alternative. While preventing
-> branching from the outside to the middle of an alternative makes perfect
-> sense, branching within the same alternative should be allowed. To do so,
-> identify each alternative and check that a branch to an alternative comes
-> from the same alternative.
-> 
-> Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Link: https://lkml.kernel.org/r/20200414103618.12657-3-alexandre.chartre@oracle.com
+On Tue, Apr 28, 2020 at 9:46 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+>
+> Currently automatic gadget endpoint selection based on required features
+> doesn't work. Raw Gadget tries iterating over the list of available
+> endpoints and finding one that has the right direction and transfer type.
+> Unfortunately selecting arbitrary gadget endpoints (even if they satisfy
+> feature requirements) doesn't work, as (depending on the UDC driver) they
+> might have fixed addresses, and one also needs to provide matching
+> endpoint addresses in the descriptors sent to the host.
+>
+> The composite framework deals with this by assigning endpoint addresses
+> in usb_ep_autoconfig() before enumeration starts. This approach won't work
+> with Raw Gadget as the endpoints are supposed to be enabled after a
+> set_configuration/set_interface request from the host, so it's too late to
+> patch the endpoint descriptors that had already been sent to the host.
+>
+> For Raw Gadget we take the another approach. Similarly to GadgetFS, we
+> allow the user to make the decision as to which gadget endpoints to use.
+>
+> This patch adds another Raw Gadget ioctl USB_RAW_IOCTL_EPS_INFO that
+> exposes information about all non-control endpoints that a currently
+> connected UDC has. This information includes endpoints addresses, as well
+> as their capabilities and limits to allow the user to chose the most
+> fitting gadget endpoint.
+>
+> The USB_RAW_IOCTL_EP_ENABLE ioctl is updated to use the proper endpoint
+> validation routine usb_gadget_ep_match_desc() and also now accepts an
+> optional usb_ss_ep_comp_descriptor argument.
+>
+> These changes affect the portability of the gadgets that use Raw Gadget
+> when running on different UDCs. Nevertheless, as long as the user relies
+> on the information provided by USB_RAW_IOCTL_EPS_INFO to dynamically
+> choose endpoint addresses, UDC-agnostic gadgets can still be written with
+> Raw Gadget.
+>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 
-I still don't like this patch, other than the "alt_group =
-alt_group_next_index++" thing as a prerequisite for the next patch.
+Hi Alan,
 
-Instead of all this, let's just get rid of the 
+This patch uses the approach that I mentioned in the discussion about
+endpoint selection. Does this look acceptable?
 
-  "don't know how to handle branch to middle of alternative instruction group"
+I'm not sure which endpoint limits it makes sense to expose via
+USB_RAW_IOCTL_EPS_INFO. I'm more or less sure about maxpacket_limit
+and max_streams, but I don't exactly know what maxburst is used for.
+Maybe there are some others?
 
-warning, which I think we decided is useless and not worth the effort
-anyway.
+I also wonder if we need to expose ep0 limits via USB_RAW_IOCTL_EPS_INFO too.
+expose ep0 parameters?
+
+Thanks!
+
 
 > ---
->  tools/objtool/check.c |   26 ++++++++++++++++++++------
->  tools/objtool/check.h |    3 ++-
->  2 files changed, 22 insertions(+), 7 deletions(-)
-> 
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -770,7 +770,9 @@ static int handle_group_alt(struct objto
->  			    struct instruction *orig_insn,
->  			    struct instruction **new_insn)
->  {
-> +	static unsigned int alt_group_next_index = 1;
->  	struct instruction *last_orig_insn, *last_new_insn, *insn, *fake_jump = NULL;
-> +	unsigned int alt_group = alt_group_next_index++;
->  	unsigned long dest_off;
->  
->  	last_orig_insn = NULL;
-> @@ -779,7 +781,7 @@ static int handle_group_alt(struct objto
->  		if (insn->offset >= special_alt->orig_off + special_alt->orig_len)
->  			break;
->  
-> -		insn->alt_group = true;
-> +		insn->alt_group = alt_group;
->  		last_orig_insn = insn;
->  	}
->  
-> @@ -813,6 +815,7 @@ static int handle_group_alt(struct objto
->  	}
->  
->  	last_new_insn = NULL;
-> +	alt_group = alt_group_next_index++;
->  	insn = *new_insn;
->  	sec_for_each_insn_from(file, insn) {
->  		if (insn->offset >= special_alt->new_off + special_alt->new_len)
-> @@ -822,6 +825,7 @@ static int handle_group_alt(struct objto
->  
->  		insn->ignore = orig_insn->ignore_alts;
->  		insn->func = orig_insn->func;
-> +		insn->alt_group = alt_group;
->  
->  		/*
->  		 * Since alternative replacement code is copy/pasted by the
-> @@ -2163,6 +2167,15 @@ static int validate_return(struct symbol
->  	return 0;
+>  Documentation/usb/raw-gadget.rst       |   6 +-
+>  drivers/usb/gadget/legacy/raw_gadget.c | 194 ++++++++++++++++---------
+>  include/uapi/linux/usb/raw_gadget.h    |  84 ++++++++++-
+>  3 files changed, 207 insertions(+), 77 deletions(-)
+>
+> diff --git a/Documentation/usb/raw-gadget.rst b/Documentation/usb/raw-gadget.rst
+> index 9e78cb858f86..42bd446d72b2 100644
+> --- a/Documentation/usb/raw-gadget.rst
+> +++ b/Documentation/usb/raw-gadget.rst
+> @@ -27,11 +27,7 @@ differences are:
+>  3. Raw Gadget provides a way to select a UDC device/driver to bind to,
+>     while GadgetFS currently binds to the first available UDC.
+>
+> -4. Raw Gadget uses predictable endpoint names (handles) across different
+> -   UDCs (as long as UDCs have enough endpoints of each required transfer
+> -   type).
+> -
+> -5. Raw Gadget has ioctl-based interface instead of a filesystem-based one.
+> +4. Raw Gadget has ioctl-based interface instead of a filesystem-based one.
+>
+>  Userspace interface
+>  ~~~~~~~~~~~~~~~~~~~
+> diff --git a/drivers/usb/gadget/legacy/raw_gadget.c b/drivers/usb/gadget/legacy/raw_gadget.c
+> index 7b241992ad5a..cbf4b0572188 100644
+> --- a/drivers/usb/gadget/legacy/raw_gadget.c
+> +++ b/drivers/usb/gadget/legacy/raw_gadget.c
+> @@ -7,6 +7,7 @@
+>   */
+>
+>  #include <linux/compiler.h>
+> +#include <linux/ctype.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/delay.h>
+>  #include <linux/kref.h>
+> @@ -123,8 +124,6 @@ static void raw_event_queue_destroy(struct raw_event_queue *queue)
+>
+>  struct raw_dev;
+>
+> -#define USB_RAW_MAX_ENDPOINTS 32
+> -
+>  enum ep_state {
+>         STATE_EP_DISABLED,
+>         STATE_EP_ENABLED,
+> @@ -134,6 +133,7 @@ struct raw_ep {
+>         struct raw_dev          *dev;
+>         enum ep_state           state;
+>         struct usb_ep           *ep;
+> +       u8                      addr;
+>         struct usb_request      *req;
+>         bool                    urb_queued;
+>         bool                    disabling;
+> @@ -168,7 +168,8 @@ struct raw_dev {
+>         bool                            ep0_out_pending;
+>         bool                            ep0_urb_queued;
+>         ssize_t                         ep0_status;
+> -       struct raw_ep                   eps[USB_RAW_MAX_ENDPOINTS];
+> +       struct raw_ep                   eps[USB_RAW_EPS_NUM_MAX];
+> +       int                             eps_num;
+>
+>         struct completion               ep0_done;
+>         struct raw_event_queue          queue;
+> @@ -202,7 +203,7 @@ static void dev_free(struct kref *kref)
+>                 usb_ep_free_request(dev->gadget->ep0, dev->req);
+>         }
+>         raw_event_queue_destroy(&dev->queue);
+> -       for (i = 0; i < USB_RAW_MAX_ENDPOINTS; i++) {
+> +       for (i = 0; i < USB_RAW_EPS_NUM_MAX; i++) {
+>                 if (dev->eps[i].state != STATE_EP_ENABLED)
+>                         continue;
+>                 usb_ep_disable(dev->eps[i].ep);
+> @@ -249,12 +250,26 @@ static void gadget_ep0_complete(struct usb_ep *ep, struct usb_request *req)
+>         complete(&dev->ep0_done);
 >  }
->  
-> +static bool is_branch_to_alternative(struct instruction *from,
-> +				     struct instruction *to)
+>
+> +static u8 get_ep_addr(const char *name)
 > +{
-> +	if (!from || !to->alt_group || !list_empty(&to->alts))
-> +		return false;
-> +
-> +	return (from->alt_group != to->alt_group);
+> +       /* If the endpoint has fixed function (named as e.g. "ep12out-bulk"),
+> +        * parse the endpoint address from its name. We deliberately use
+> +        * deprecated simple_strtoul() function here, as the number isn't
+> +        * followed by '\0' nor '\n'.
+> +        */
+> +       if (isdigit(name[2]))
+> +               return simple_strtoul(&name[2], NULL, 10);
+> +       /* Otherwise the endpoint is configurable (named as e.g. "ep-a"). */
+> +       return USB_RAW_EP_ADDR_ANY;
 > +}
 > +
->  /*
->   * Follow the branch starting at the given instruction, and recursively follow
->   * any other branches (jumps).  Meanwhile, track the frame pointer state at
-> @@ -2170,6 +2183,7 @@ static int validate_return(struct symbol
->   * tools/objtool/Documentation/stack-validation.txt.
->   */
->  static int validate_branch(struct objtool_file *file, struct symbol *func,
-> +			   struct instruction *from,
->  			   struct instruction *insn, struct insn_state state)
+>  static int gadget_bind(struct usb_gadget *gadget,
+>                         struct usb_gadget_driver *driver)
 >  {
->  	struct alternative *alt;
-> @@ -2180,7 +2194,7 @@ static int validate_branch(struct objtoo
->  
->  	sec = insn->sec;
->  
-> -	if (insn->alt_group && list_empty(&insn->alts)) {
-> +	if (is_branch_to_alternative(from, insn)) {
->  		WARN_FUNC("don't know how to handle branch to middle of alternative instruction group",
->  			  sec, insn->offset);
->  		return 1;
-> @@ -2227,7 +2241,7 @@ static int validate_branch(struct objtoo
->  				if (alt->skip_orig)
->  					skip_orig = true;
->  
-> -				ret = validate_branch(file, func, alt->insn, state);
-> +				ret = validate_branch(file, func, NULL, alt->insn, state);
->  				if (ret) {
->  					if (backtrace)
->  						BT_FUNC("(alt)", insn);
-> @@ -2271,7 +2285,7 @@ static int validate_branch(struct objtoo
->  
->  			} else if (insn->jump_dest) {
->  				ret = validate_branch(file, func,
-> -						      insn->jump_dest, state);
-> +						      insn, insn->jump_dest, state);
->  				if (ret) {
->  					if (backtrace)
->  						BT_FUNC("(branch)", insn);
-> @@ -2402,7 +2416,7 @@ static int validate_unwind_hints(struct
->  
->  	while (&insn->list != &file->insn_list && (!sec || insn->sec == sec)) {
->  		if (insn->hint && !insn->visited) {
-> -			ret = validate_branch(file, insn->func, insn, state);
-> +			ret = validate_branch(file, insn->func, NULL, insn, state);
->  			if (ret && backtrace)
->  				BT_FUNC("<=== (hint)", insn);
->  			warnings += ret;
-> @@ -2543,7 +2557,7 @@ static int validate_symbol(struct objtoo
->  
->  	state->uaccess = sym->uaccess_safe;
->  
-> -	ret = validate_branch(file, insn->func, insn, *state);
-> +	ret = validate_branch(file, insn->func, NULL, insn, *state);
->  	if (ret && backtrace)
->  		BT_FUNC("<=== (sym)", insn);
->  	return ret;
-> --- a/tools/objtool/check.h
-> +++ b/tools/objtool/check.h
-> @@ -30,12 +30,13 @@ struct instruction {
->  	unsigned int len;
->  	enum insn_type type;
->  	unsigned long immediate;
-> -	bool alt_group, dead_end, ignore, ignore_alts;
-> +	bool dead_end, ignore, ignore_alts;
->  	bool hint;
->  	bool retpoline_safe;
->  	s8 instr;
->  	u8 visited;
->  	u8 ret_offset;
-> +	int alt_group;
->  	struct symbol *call_dest;
->  	struct instruction *jump_dest;
->  	struct instruction *first_jump_src;
-> 
-> 
-
--- 
-Josh
-
+> -       int ret = 0;
+> +       int ret = 0, i = 0;
+>         struct raw_dev *dev = container_of(driver, struct raw_dev, driver);
+>         struct usb_request *req;
+> +       struct usb_ep *ep;
+>         unsigned long flags;
+>
+>         if (strcmp(gadget->name, dev->udc_name) != 0)
+> @@ -273,6 +288,13 @@ static int gadget_bind(struct usb_gadget *gadget,
+>         dev->req->context = dev;
+>         dev->req->complete = gadget_ep0_complete;
+>         dev->gadget = gadget;
+> +       gadget_for_each_ep(ep, dev->gadget) {
+> +               dev->eps[i].ep = ep;
+> +               dev->eps[i].addr = get_ep_addr(ep->name);
+> +               dev->eps[i].state = STATE_EP_DISABLED;
+> +               i++;
+> +       }
+> +       dev->eps_num = i;
+>         spin_unlock_irqrestore(&dev->lock, flags);
+>
+>         /* Matches kref_put() in gadget_unbind(). */
+> @@ -555,7 +577,7 @@ static void *raw_alloc_io_data(struct usb_raw_ep_io *io, void __user *ptr,
+>
+>         if (copy_from_user(io, ptr, sizeof(*io)))
+>                 return ERR_PTR(-EFAULT);
+> -       if (io->ep >= USB_RAW_MAX_ENDPOINTS)
+> +       if (io->ep >= USB_RAW_EPS_NUM_MAX)
+>                 return ERR_PTR(-EINVAL);
+>         if (!usb_raw_io_flags_valid(io->flags))
+>                 return ERR_PTR(-EINVAL);
+> @@ -682,52 +704,30 @@ static int raw_ioctl_ep0_read(struct raw_dev *dev, unsigned long value)
+>         return ret;
+>  }
+>
+> -static bool check_ep_caps(struct usb_ep *ep,
+> -                               struct usb_endpoint_descriptor *desc)
+> -{
+> -       switch (usb_endpoint_type(desc)) {
+> -       case USB_ENDPOINT_XFER_ISOC:
+> -               if (!ep->caps.type_iso)
+> -                       return false;
+> -               break;
+> -       case USB_ENDPOINT_XFER_BULK:
+> -               if (!ep->caps.type_bulk)
+> -                       return false;
+> -               break;
+> -       case USB_ENDPOINT_XFER_INT:
+> -               if (!ep->caps.type_int)
+> -                       return false;
+> -               break;
+> -       default:
+> -               return false;
+> -       }
+> -
+> -       if (usb_endpoint_dir_in(desc) && !ep->caps.dir_in)
+> -               return false;
+> -       if (usb_endpoint_dir_out(desc) && !ep->caps.dir_out)
+> -               return false;
+> -
+> -       return true;
+> -}
+> -
+>  static int raw_ioctl_ep_enable(struct raw_dev *dev, unsigned long value)
+>  {
+>         int ret = 0, i;
+>         unsigned long flags;
+> -       struct usb_endpoint_descriptor *desc;
+> -       struct usb_ep *ep = NULL;
+> +       struct usb_raw_ep_descs *descs;
+> +       struct usb_endpoint_descriptor *ep_desc;
+> +       struct usb_ss_ep_comp_descriptor *comp_desc = NULL;
+> +       struct raw_ep *ep;
+>
+> -       desc = memdup_user((void __user *)value, sizeof(*desc));
+> -       if (IS_ERR(desc))
+> -               return PTR_ERR(desc);
+> +       descs = memdup_user((void __user *)value, sizeof(*descs));
+> +       if (IS_ERR(descs))
+> +               return PTR_ERR(descs);
+> +
+> +       ep_desc = &descs->ep;
+> +       if (descs->comp.bLength != 0)
+> +               comp_desc = &descs->comp;
+>
+>         /*
+>          * Endpoints with a maxpacket length of 0 can cause crashes in UDC
+>          * drivers.
+>          */
+> -       if (usb_endpoint_maxp(desc) == 0) {
+> +       if (usb_endpoint_maxp(ep_desc) == 0) {
+>                 dev_dbg(dev->dev, "fail, bad endpoint maxpacket\n");
+> -               kfree(desc);
+> +               kfree(descs);
+>                 return -EINVAL;
+>         }
+>
+> @@ -743,41 +743,38 @@ static int raw_ioctl_ep_enable(struct raw_dev *dev, unsigned long value)
+>                 goto out_free;
+>         }
+>
+> -       for (i = 0; i < USB_RAW_MAX_ENDPOINTS; i++) {
+> -               if (dev->eps[i].state == STATE_EP_ENABLED)
+> +       for (i = 0; i < dev->eps_num; i++) {
+> +               ep = &dev->eps[i];
+> +               if (ep->state != STATE_EP_DISABLED)
+>                         continue;
+> -               break;
+> -       }
+> -       if (i == USB_RAW_MAX_ENDPOINTS) {
+> -               dev_dbg(&dev->gadget->dev,
+> -                               "fail, no device endpoints available\n");
+> -               ret = -EBUSY;
+> -               goto out_free;
+> -       }
+> -
+> -       gadget_for_each_ep(ep, dev->gadget) {
+> -               if (ep->enabled)
+> +               if (ep->addr != usb_endpoint_num(ep_desc) &&
+> +                               ep->addr != USB_RAW_EP_ADDR_ANY)
+>                         continue;
+> -               if (!check_ep_caps(ep, desc))
+> +               if (!usb_gadget_ep_match_desc(dev->gadget, ep->ep,
+> +                                                       ep_desc, comp_desc))
+>                         continue;
+> -               ep->desc = desc;
+> -               ret = usb_ep_enable(ep);
+> +               /* Gadget subsystem requires us to assign only a pointer to the
+> +                * endpoint descriptor here, but technically we store pointer
+> +                * to a usb_raw_ep_descs struct with both ep and comp
+> +                * descriptors to be later freed by raw_ioctl_ep_disable().
+> +                */
+> +               ep->ep->desc = ep_desc;
+> +               ret = usb_ep_enable(ep->ep);
+>                 if (ret < 0) {
+>                         dev_err(&dev->gadget->dev,
+>                                 "fail, usb_ep_enable returned %d\n", ret);
+>                         goto out_free;
+>                 }
+> -               dev->eps[i].req = usb_ep_alloc_request(ep, GFP_ATOMIC);
+> -               if (!dev->eps[i].req) {
+> +               ep->req = usb_ep_alloc_request(ep->ep, GFP_ATOMIC);
+> +               if (!ep->req) {
+>                         dev_err(&dev->gadget->dev,
+>                                 "fail, usb_ep_alloc_request failed\n");
+> -                       usb_ep_disable(ep);
+> +                       usb_ep_disable(ep->ep);
+>                         ret = -ENOMEM;
+>                         goto out_free;
+>                 }
+> -               dev->eps[i].ep = ep;
+> -               dev->eps[i].state = STATE_EP_ENABLED;
+> -               ep->driver_data = &dev->eps[i];
+> +               ep->state = STATE_EP_ENABLED;
+> +               ep->ep->driver_data = ep;
+>                 ret = i;
+>                 goto out_unlock;
+>         }
+> @@ -786,7 +783,7 @@ static int raw_ioctl_ep_enable(struct raw_dev *dev, unsigned long value)
+>         ret = -EBUSY;
+>
+>  out_free:
+> -       kfree(desc);
+> +       kfree(descs);
+>  out_unlock:
+>         spin_unlock_irqrestore(&dev->lock, flags);
+>         return ret;
+> @@ -796,9 +793,9 @@ static int raw_ioctl_ep_disable(struct raw_dev *dev, unsigned long value)
+>  {
+>         int ret = 0, i = value;
+>         unsigned long flags;
+> -       const void *desc;
+> +       const void *descs;
+>
+> -       if (i < 0 || i >= USB_RAW_MAX_ENDPOINTS)
+> +       if (i < 0 || i >= USB_RAW_EPS_NUM_MAX)
+>                 return -EINVAL;
+>
+>         spin_lock_irqsave(&dev->lock, flags);
+> @@ -836,10 +833,10 @@ static int raw_ioctl_ep_disable(struct raw_dev *dev, unsigned long value)
+>
+>         spin_lock_irqsave(&dev->lock, flags);
+>         usb_ep_free_request(dev->eps[i].ep, dev->eps[i].req);
+> -       desc = dev->eps[i].ep->desc;
+> +       descs = dev->eps[i].ep->desc;
+>         dev->eps[i].ep = NULL;
+>         dev->eps[i].state = STATE_EP_DISABLED;
+> -       kfree(desc);
+> +       kfree(descs);
+>         dev->eps[i].disabling = false;
+>
+>  out_unlock:
+> @@ -1027,6 +1024,64 @@ static int raw_ioctl_vbus_draw(struct raw_dev *dev, unsigned long value)
+>         return ret;
+>  }
+>
+> +static void fill_ep_caps(struct usb_ep_caps *caps,
+> +                               struct usb_raw_ep_caps *raw_caps)
+> +{
+> +       raw_caps->type_control = caps->type_control;
+> +       raw_caps->type_iso = caps->type_iso;
+> +       raw_caps->type_bulk = caps->type_bulk;
+> +       raw_caps->type_int = caps->type_int;
+> +       raw_caps->dir_in = caps->dir_in;
+> +       raw_caps->dir_out = caps->dir_out;
+> +}
+> +
+> +static void fill_ep_limits(struct usb_ep *ep, struct usb_raw_ep_limits *limits)
+> +{
+> +       limits->maxpacket_limit = ep->maxpacket_limit;
+> +       limits->max_streams = ep->max_streams;
+> +       limits->maxburst = ep->maxburst;
+> +}
+> +
+> +static int raw_ioctl_eps_info(struct raw_dev *dev, unsigned long value)
+> +{
+> +       int ret = 0, i;
+> +       unsigned long flags;
+> +       struct usb_raw_eps_info info;
+> +       struct raw_ep *ep;
+> +
+> +       spin_lock_irqsave(&dev->lock, flags);
+> +       if (dev->state != STATE_DEV_RUNNING) {
+> +               dev_dbg(dev->dev, "fail, device is not running\n");
+> +               ret = -EINVAL;
+> +               spin_unlock_irqrestore(&dev->lock, flags);
+> +               goto out;
+> +       }
+> +       if (!dev->gadget) {
+> +               dev_dbg(dev->dev, "fail, gadget is not bound\n");
+> +               ret = -EBUSY;
+> +               spin_unlock_irqrestore(&dev->lock, flags);
+> +               goto out;
+> +       }
+> +
+> +       memset(&info, 0, sizeof(info));
+> +       for (i = 0; i < dev->eps_num; i++) {
+> +               ep = &dev->eps[i];
+> +               strscpy(&info.eps[i].name[0], ep->ep->name,
+> +                               USB_RAW_EP_NAME_MAX);
+> +               info.eps[i].addr = ep->addr;
+> +               fill_ep_caps(&ep->ep->caps, &info.eps[i].caps);
+> +               fill_ep_limits(ep->ep, &info.eps[i].limits);
+> +       }
+> +       ret = dev->eps_num;
+> +       spin_unlock_irqrestore(&dev->lock, flags);
+> +
+> +       if (copy_to_user((void __user *)value, &info, sizeof(info)))
+> +               ret = -EFAULT;
+> +
+> +out:
+> +       return ret;
+> +}
+> +
+>  static long raw_ioctl(struct file *fd, unsigned int cmd, unsigned long value)
+>  {
+>         struct raw_dev *dev = fd->private_data;
+> @@ -1069,6 +1124,9 @@ static long raw_ioctl(struct file *fd, unsigned int cmd, unsigned long value)
+>         case USB_RAW_IOCTL_VBUS_DRAW:
+>                 ret = raw_ioctl_vbus_draw(dev, value);
+>                 break;
+> +       case USB_RAW_IOCTL_EPS_INFO:
+> +               ret = raw_ioctl_eps_info(dev, value);
+> +               break;
+>         default:
+>                 ret = -EINVAL;
+>         }
+> diff --git a/include/uapi/linux/usb/raw_gadget.h b/include/uapi/linux/usb/raw_gadget.h
+> index 8544802b25bd..6ae626d17f0c 100644
+> --- a/include/uapi/linux/usb/raw_gadget.h
+> +++ b/include/uapi/linux/usb/raw_gadget.h
+> @@ -93,6 +93,75 @@ struct usb_raw_ep_io {
+>         __u8            data[0];
+>  };
+>
+> +/*
+> + * struct usb_raw_ep_descs - argument for USB_RAW_IOCTL_EP_ENABLE ioctl.
+> + * @ep: Endpoint descriptor.
+> + * @comp: SuperSpeed Endpoint Companion descriptor.
+> + *
+> + * Both of these descriptors are only used by the gadget subsystem including
+> + * the UDC driver and don't affect the descriptors that are sent to the host.
+> + * However, the user must make sure that the host and the gadget sides agree
+> + * on the used endpoint parameters (such as e.g. endpoint addresses).
+> + */
+> +struct usb_raw_ep_descs {
+> +       struct usb_endpoint_descriptor          ep;
+> +       struct usb_ss_ep_comp_descriptor        comp;
+> +};
+> +
+> +/* Maximum number of non-control endpoints in struct usb_raw_eps_info. */
+> +#define USB_RAW_EPS_NUM_MAX    30
+> +
+> +/* Maximum length of UDC endpoint name in struct usb_raw_ep_info. */
+> +#define USB_RAW_EP_NAME_MAX    16
+> +
+> +/* Used as addr in struct usb_raw_ep_info if endpoint accepts any address. */
+> +#define USB_RAW_EP_ADDR_ANY    0xff
+> +
+> +/*
+> + * struct usb_raw_ep_caps - exposes endpoint capabilities from
+> + *     struct usb_ep_caps.
+> + */
+> +struct usb_raw_ep_caps {
+> +       __u32   type_control:1;
+> +       __u32   type_iso:1;
+> +       __u32   type_bulk:1;
+> +       __u32   type_int:1;
+> +       __u32   dir_in:1;
+> +       __u32   dir_out:1;
+> +};
+> +
+> +/*
+> + * struct usb_raw_ep_limits - exposes endpoint limits from struct usb_ep.
+> + */
+> +struct usb_raw_ep_limits {
+> +       __u32   maxpacket_limit;
+> +       __u32   max_streams;
+> +       __u32   maxburst;
+> +};
+> +
+> +/*
+> + * struct usb_raw_ep_info - stores information about a gadget endpoint.
+> + * @name: Name of the endpoint as it is defined in the UDC driver.
+> + * @addr: Address of the endpoint that must be specified in the endpoint
+> + *     descriptor passed to USB_RAW_IOCTL_EP_ENABLE ioctl.
+> + * @caps: Endpoint capabilities.
+> + * @limits: Endpoint limits.
+> + */
+> +struct usb_raw_ep_info {
+> +       __u8                            name[USB_RAW_EP_NAME_MAX];
+> +       __u32                           addr;
+> +       struct usb_raw_ep_caps          caps;
+> +       struct usb_raw_ep_limits        limits;
+> +};
+> +
+> +/*
+> + * struct usb_raw_eps_info - argument for USB_RAW_IOCTL_EPS_INFO ioctl.
+> + * eps: Structures that store information about non-control endpoints.
+> + */
+> +struct usb_raw_eps_info {
+> +       struct usb_raw_ep_info  eps[USB_RAW_EPS_NUM_MAX];
+> +};
+> +
+>  /*
+>   * Initializes a Raw Gadget instance.
+>   * Accepts a pointer to the usb_raw_init struct as an argument.
+> @@ -126,12 +195,12 @@ struct usb_raw_ep_io {
+>  #define USB_RAW_IOCTL_EP0_READ         _IOWR('U', 4, struct usb_raw_ep_io)
+>
+>  /*
+> - * Finds an endpoint that supports the transfer type specified in the
+> - * descriptor and enables it.
+> - * Accepts a pointer to the usb_endpoint_descriptor struct as an argument.
+> + * Finds an endpoint that satisfies the parameters specified in the provided
+> + * descriptors (address, transfer type, etc.) and enables it.
+> + * Accepts a pointer to the usb_raw_ep_descs struct as an argument.
+>   * Returns enabled endpoint handle on success or negative error code on failure.
+>   */
+> -#define USB_RAW_IOCTL_EP_ENABLE                _IOW('U', 5, struct usb_endpoint_descriptor)
+> +#define USB_RAW_IOCTL_EP_ENABLE                _IOW('U', 5, struct usb_raw_ep_descs)
+>
+>  /* Disables specified endpoint.
+>   * Accepts endpoint handle as an argument.
+> @@ -164,4 +233,11 @@ struct usb_raw_ep_io {
+>   */
+>  #define USB_RAW_IOCTL_VBUS_DRAW                _IOW('U', 10, __u32)
+>
+> +/* Fills in the usb_raw_eps_info structure with information about non-control
+> + * endpoints available for the currently connected UDC.
+> + * Returns the number of available endpoints on success or negative error code
+> + * on failure.
+> + */
+> +#define USB_RAW_IOCTL_EPS_INFO         _IOR('U', 11, struct usb_raw_eps_info)
+> +
+>  #endif /* _UAPI__LINUX_USB_RAW_GADGET_H */
+> --
+> 2.26.2.303.gf8c07b1a785-goog
+>
