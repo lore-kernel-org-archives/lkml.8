@@ -4,24 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE009C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61303C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9325C206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 476E2206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:24:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728906AbgD1PYe (ORCPT
+        id S1728929AbgD1PYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:24:34 -0400
-Received: from 8bytes.org ([81.169.241.247]:37386 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728132AbgD1PRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:17:50 -0400
+        Tue, 28 Apr 2020 11:24:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41598 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728099AbgD1PRs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:17:48 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18BFEC03C1AB;
+        Tue, 28 Apr 2020 08:17:48 -0700 (PDT)
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id B07BBBFC; Tue, 28 Apr 2020 17:17:43 +0200 (CEST)
+        id 0F00080A; Tue, 28 Apr 2020 17:17:42 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -41,9 +44,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 08/75] x86/umip: Factor out instruction decoding
-Date:   Tue, 28 Apr 2020 17:16:18 +0200
-Message-Id: <20200428151725.31091-9-joro@8bytes.org>
+Subject: [PATCH v3 04/75] x86/cpufeatures: Add SEV-ES CPU feature
+Date:   Tue, 28 Apr 2020 17:16:14 +0200
+Message-Id: <20200428151725.31091-5-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200428151725.31091-1-joro@8bytes.org>
 References: <20200428151725.31091-1-joro@8bytes.org>
@@ -52,126 +55,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-Factor out the code used to decode an instruction with the correct
-address and operand sizes to a helper function.
+Add CPU feature detection for Secure Encrypted Virtualization with
+Encrypted State. This feature enhances SEV by also encrypting the
+guest register state, making it in-accessible to the hypervisor.
 
-No functional changes.
-
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/insn-eval.h |  2 ++
- arch/x86/kernel/umip.c           | 23 +---------------
- arch/x86/lib/insn-eval.c         | 45 ++++++++++++++++++++++++++++++++
- 3 files changed, 48 insertions(+), 22 deletions(-)
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ arch/x86/kernel/cpu/amd.c          | 3 ++-
+ arch/x86/kernel/cpu/scattered.c    | 1 +
+ 3 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
-index b8b9ef1bbd06..b4ff3e3316d1 100644
---- a/arch/x86/include/asm/insn-eval.h
-+++ b/arch/x86/include/asm/insn-eval.h
-@@ -21,5 +21,7 @@ unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx);
- int insn_get_code_seg_params(struct pt_regs *regs);
- int insn_fetch_from_user(struct pt_regs *regs,
- 			 unsigned char buf[MAX_INSN_SIZE]);
-+bool insn_decode(struct pt_regs *regs, struct insn *insn,
-+		 unsigned char buf[MAX_INSN_SIZE], int buf_size);
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index db189945e9b0..ade59fca283a 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -234,6 +234,7 @@
+ #define X86_FEATURE_EPT_AD		( 8*32+17) /* Intel Extended Page Table access-dirty bit */
+ #define X86_FEATURE_VMCALL		( 8*32+18) /* "" Hypervisor supports the VMCALL instruction */
+ #define X86_FEATURE_VMW_VMMCALL		( 8*32+19) /* "" VMware prefers VMMCALL hypercall instruction */
++#define X86_FEATURE_SEV_ES		( 8*32+20) /* AMD Secure Encrypted Virtualization - Encrypted State */
  
- #endif /* _ASM_X86_INSN_EVAL_H */
-diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
-index c9e5345da793..47d4d32e9cad 100644
---- a/arch/x86/kernel/umip.c
-+++ b/arch/x86/kernel/umip.c
-@@ -324,7 +324,6 @@ bool fixup_umip_exception(struct pt_regs *regs)
- 	unsigned long *reg_addr;
- 	void __user *uaddr;
- 	struct insn insn;
--	int seg_defs;
- 
- 	if (!regs)
- 		return false;
-@@ -339,27 +338,7 @@ bool fixup_umip_exception(struct pt_regs *regs)
- 	if (!nr_copied)
- 		return false;
- 
--	insn_init(&insn, buf, nr_copied, user_64bit_mode(regs));
--
--	/*
--	 * Override the default operand and address sizes with what is specified
--	 * in the code segment descriptor. The instruction decoder only sets
--	 * the address size it to either 4 or 8 address bytes and does nothing
--	 * for the operand bytes. This OK for most of the cases, but we could
--	 * have special cases where, for instance, a 16-bit code segment
--	 * descriptor is used.
--	 * If there is an address override prefix, the instruction decoder
--	 * correctly updates these values, even for 16-bit defaults.
--	 */
--	seg_defs = insn_get_code_seg_params(regs);
--	if (seg_defs == -EINVAL)
--		return false;
--
--	insn.addr_bytes = INSN_CODE_SEG_ADDR_SZ(seg_defs);
--	insn.opnd_bytes = INSN_CODE_SEG_OPND_SZ(seg_defs);
--
--	insn_get_length(&insn);
--	if (nr_copied < insn.length)
-+	if (!insn_decode(regs, &insn, buf, nr_copied))
- 		return false;
- 
- 	umip_inst = identify_insn(&insn);
-diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
-index 0c4f7ebc261b..0bbb814d4851 100644
---- a/arch/x86/lib/insn-eval.c
-+++ b/arch/x86/lib/insn-eval.c
-@@ -1407,3 +1407,48 @@ int insn_fetch_from_user(struct pt_regs *regs, unsigned char buf[MAX_INSN_SIZE])
- 
- 	return MAX_INSN_SIZE - not_copied;
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (EBX), word 9 */
+ #define X86_FEATURE_FSGSBASE		( 9*32+ 0) /* RDFSBASE, WRFSBASE, RDGSBASE, WRGSBASE instructions*/
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 547ad7bbf0e0..6b036291b9b3 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -610,7 +610,7 @@ static void early_detect_mem_encrypt(struct cpuinfo_x86 *c)
+ 	 *	      If BIOS has not enabled SME then don't advertise the
+ 	 *	      SME feature (set in scattered.c).
+ 	 *   For SEV: If BIOS has not enabled SEV then don't advertise the
+-	 *            SEV feature (set in scattered.c).
++	 *            SEV and SEV_ES feature (set in scattered.c).
+ 	 *
+ 	 *   In all cases, since support for SME and SEV requires long mode,
+ 	 *   don't advertise the feature under CONFIG_X86_32.
+@@ -641,6 +641,7 @@ static void early_detect_mem_encrypt(struct cpuinfo_x86 *c)
+ 		setup_clear_cpu_cap(X86_FEATURE_SME);
+ clear_sev:
+ 		setup_clear_cpu_cap(X86_FEATURE_SEV);
++		setup_clear_cpu_cap(X86_FEATURE_SEV_ES);
+ 	}
  }
-+
-+/**
-+ * insn_decode() - Decode an instruction
-+ * @regs:	Structure with register values as seen when entering kernel mode
-+ * @insn:	Structure to store decoded instruction
-+ * @buf:	Buffer containing the instruction bytes
-+ * @buf_size:   Number of instruction bytes available in buf
-+ *
-+ * Decodes the instruction provided in buf and stores the decoding results in
-+ * insn. Also determines the correct address and operand sizes.
-+ *
-+ * Returns:
-+ *
-+ * True if instruction was decoded, False otherwise.
-+ */
-+bool insn_decode(struct pt_regs *regs, struct insn *insn,
-+		 unsigned char buf[MAX_INSN_SIZE], int buf_size)
-+{
-+	int seg_defs;
-+
-+	insn_init(insn, buf, buf_size, user_64bit_mode(regs));
-+
-+	/*
-+	 * Override the default operand and address sizes with what is specified
-+	 * in the code segment descriptor. The instruction decoder only sets
-+	 * the address size it to either 4 or 8 address bytes and does nothing
-+	 * for the operand bytes. This OK for most of the cases, but we could
-+	 * have special cases where, for instance, a 16-bit code segment
-+	 * descriptor is used.
-+	 * If there is an address override prefix, the instruction decoder
-+	 * correctly updates these values, even for 16-bit defaults.
-+	 */
-+	seg_defs = insn_get_code_seg_params(regs);
-+	if (seg_defs == -EINVAL)
-+		return false;
-+
-+	insn->addr_bytes = INSN_CODE_SEG_ADDR_SZ(seg_defs);
-+	insn->opnd_bytes = INSN_CODE_SEG_OPND_SZ(seg_defs);
-+
-+	insn_get_length(insn);
-+	if (buf_size < insn->length)
-+		return false;
-+
-+	return true;
-+}
+ 
+diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
+index 62b137c3c97a..30f354989cf1 100644
+--- a/arch/x86/kernel/cpu/scattered.c
++++ b/arch/x86/kernel/cpu/scattered.c
+@@ -41,6 +41,7 @@ static const struct cpuid_bit cpuid_bits[] = {
+ 	{ X86_FEATURE_MBA,		CPUID_EBX,  6, 0x80000008, 0 },
+ 	{ X86_FEATURE_SME,		CPUID_EAX,  0, 0x8000001f, 0 },
+ 	{ X86_FEATURE_SEV,		CPUID_EAX,  1, 0x8000001f, 0 },
++	{ X86_FEATURE_SEV_ES,		CPUID_EAX,  3, 0x8000001f, 0 },
+ 	{ 0, 0, 0, 0, 0 }
+ };
+ 
 -- 
 2.17.1
 
