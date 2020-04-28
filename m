@@ -4,104 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC60C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB53C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C44F02072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E766520737
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:54:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgD1VyH (ORCPT
+        id S1726754AbgD1VyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:54:07 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:60615 "EHLO
+        Tue, 28 Apr 2020 17:54:25 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:44633 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgD1VyG (ORCPT
+        with ESMTP id S1725934AbgD1VyY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:54:06 -0400
+        Tue, 28 Apr 2020 17:54:24 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MCb2L-1jLXg80zTf-009eZu; Tue, 28 Apr 2020 23:53:39 +0200
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1N6LIF-1j5YGB1AzJ-016ghU; Tue, 28 Apr 2020 23:54:10 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Nick Crews <ncrews@chromium.org>,
-        Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jiri Kosina <jkosina@suse.cz>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] hid: intel-ish-hid: avoid bogus uninitialized-variable warning
-Date:   Tue, 28 Apr 2020 23:53:29 +0200
-Message-Id: <20200428215337.4094575-1-arnd@arndb.de>
+To:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/bridge: fix stack usage warning on old gcc
+Date:   Tue, 28 Apr 2020 23:53:54 +0200
+Message-Id: <20200428215408.4111675-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:2FKBEa32wyJPA0mE8M/M1O47fPCgP45rg2E7G9JyGaGIAZXxfsY
- MH9dZNJMaC76Sxk0dd77zKlBp9RJ6OsxkJF1c6nSns+Oh02YIMMOygA5U89nDK+EmQsntnl
- 0A5oHhCh2RmkUS00EreoOntTKj2hwg6+lmxV0etXvuyrR7EektDviCafwKYqMSlZbG8CMep
- khZTfzTLQjngBifC+CyfA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yAEbmVLzEWw=:hRDnaNEXdyARuZImKascUC
- R7qX0iopfno5voQFTOTGV6MgxRV/WV8m4Uhte+QEuPuXy/b8MdDPvTNPm3X+uthzg2dpMDXxO
- YhrvC9Cme7hQOGTI1dd0lGfRPqD7xQ8aM+VwUNjf0hAi+rscafk8KUfWCHGIXKmlpa9MtMBc3
- fggZTxvE/J87SP4GvB1cAuhAm6pbMyCXIRp/cpEXVxBcb6MwDNcLlrKWOhQRKLkfvmNCD/v7i
- Js8vEobvPIQIbCwnqbhPVqA3I8D3fV5O+5AjSgc0v7+v5sn9Yd0c0/j14u81zNFjBXXXGbBBJ
- 1AXgMqe0aGe+INAXDyEp2s2UBoHcG3WmGLpt5rSIwQZdBMhu2keTwde7yS7s56LgSQaLpmNaG
- xn4kgxTr28k14V/BhvpmfEeDoRemyr9ugTNLkFNLXBXCgAln3foxFWb7W1IUi9DxCOACtbJzb
- TsiKbSQCJe6f3HkfzHjYx1yslf4rhFCgbqPuMVg/iph280IPBfThrIHiP2PeH+N9KnMrF1aY4
- 4hpyW/tfIjy996MhsId+RiMu2S73wNrcfp6TYB0jC8DNHkP/dhmJ8ANqueFPA2eB4NtBywF/K
- W7GYnMxXCLvzE7KLqBBodY9K1MY2KZv95g6ix8SQRS+QWBE/hLgfTD4owkO2U38rOGNMVaICk
- mcijowvhuV8XmlohTPH+JHVRmgO10tOQ91/nsqZAIQ4Qf57kCgYxiP9hJkVUs6z9ypNEqAu4s
- sZLmAc3c/ofY9jTwAYOgNneikmAVBZrBtY7OegO/DN7hyUZH3v495fyJKHhCzV2cj2ho/yHHB
- EOAM4UJ35HObPYvLzNy04EmIkccW4yNWO6MRafvlfBGXt0lqFI=
+X-Provags-ID: V03:K1:iHy77Rgu9/Qf8z+D5jGM8zx0JRD4tfbl7zP0c3hDGD/7Ft21SO3
+ I4IsJ+jGm/bVAWJqL1Rgf8I2wrapU26otg4sIofhMQb4XOZnwxaw31TkmIbV3Vlrbsbo54Q
+ P/dVYkN3nJTFgE7FH/ZOxI7PtDR5ElP19dDF4HjIELGFelpb9qmkGN6N5JtO+SltH/uj40E
+ u1b00TzYaa+Jebr1QgvEA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:L/hkBWoUTWU=:bxdNUJcDA92RjQs7Q9QheM
+ QaDyFm0mRKkwmCMy1a0hjVZpquNsrPNbdFKl//hzhASrhSfI+Gheh2b0astjApDRPCLgxrswt
+ egURzEGVfCqKE10n/8+Y0APtrnX9MjRb7pbHdZVcK7w7Xpo9ahfsmcibn8HczBc4ut3ICeuRL
+ Hy35WFSdVEC7Yj0EXPEiMwHCWuYB0UTm7KZ6ep2c97qg0En0DB9eFytqqJdXtnd0Nc1TkQxwv
+ iCO5wTaDNlt7ybbZzSVA6eH6XMri1zKO6wHdMESMbk5TtTAebz4qzanlBB1IIcuWJkPkTBFMo
+ ux7nSD03mSQtQmz4IQJjfG0aIi6d2NGNyM2zT3dRPcwQyUfHwLfqRal9QHpQhtZR7O7Kq2ZvT
+ bGoxwqZ8LjCMh3Yrj+/NN0iUb5k6fN9LfFHHTj3k0P8r2GiWuWmcni+XzGH8/9M20QsdzHlju
+ Q1VrxfFhXeEQn7o08nEaCNa9YuTeyEPCe73nmLw6dFh1Kzlm5IvhOXaOQ68hKZLG/qx2wic1b
+ V+KeQDH2Du2SrZ3r4fne5t63amyneyrMRXS5PGb8GNqvnIsUCjha0m+tjhtj5AZUdhMVybTGC
+ miRpldWtpPTjOXvaeWCsUH4NUHisorKza7HhxubccmW9QrsaJpffPL17Y1Sk+F2sMZZACDYBp
+ 4JwBe/Opi/K/ccx2Rqn39JOiLjXw08FdevcWgFiiYMhyXaKfGZCtz48KSwaUUft1ewrKPNwTI
+ mmccUZrDPDF68mtgKgpGYBywesmUvDkM1XfwO3vGd6ScMzcAPZ4ZP72ajdmC82zxH3Zh6ln2D
+ bp+nQsgzlJTgITvS11vzPCFG7qC3L+ShsNvVbGGHQCjcV43nEA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Older compilers like gcc-4.8 don't see that the variable is
-initialized when it is used:
+Some older versions of gcc badly optimize code that passes
+an inline function argument into another function by reference,
+causing huge stack usage:
 
-In file included from include/linux/compiler_types.h:68:0,
-                 from <command-line>:0:
-drivers/hid/intel-ish-hid/ishtp-fw-loader.c: In function 'load_fw_from_host':
-include/linux/compiler-gcc.h:75:45: warning: 'fw_info.ldr_capability.max_dma_buf_size' may be used uninitialized in this function [-Wmaybe-uninitialized]
- #define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __COUNTER__)
-                                             ^
-drivers/hid/intel-ish-hid/ishtp-fw-loader.c:770:22: note: 'fw_info.ldr_capability.max_dma_buf_size' was declared here
-  struct shim_fw_info fw_info;
-                      ^
+drivers/gpu/drm/bridge/tc358768.c: In function 'tc358768_bridge_pre_enable':
+drivers/gpu/drm/bridge/tc358768.c:840:1: error: the frame size of 2256 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
 
-Make sure to initialize it before returning an error from ish_query_loader_prop().
+Use a temporary variable as a workaround and add a comment pointing
+to the gcc bug.
 
-Fixes: 91b228107da3 ("HID: intel-ish-hid: ISH firmware loader client driver")
+Fixes: ff1ca6397b1d ("drm/bridge: Add tc358768 driver")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/hid/intel-ish-hid/ishtp-fw-loader.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/bridge/tc358768.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/intel-ish-hid/ishtp-fw-loader.c b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
-index aa2dbed30fc3..6cf59fd26ad7 100644
---- a/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
-+++ b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
-@@ -480,6 +480,7 @@ static int ish_query_loader_prop(struct ishtp_cl_data *client_data,
- 			    sizeof(ldr_xfer_query_resp));
- 	if (rv < 0) {
- 		client_data->flag_retry = true;
-+		*fw_info = (struct shim_fw_info){};
- 		return rv;
- 	}
+diff --git a/drivers/gpu/drm/bridge/tc358768.c b/drivers/gpu/drm/bridge/tc358768.c
+index 1b39e8d37834..6650fe4cfc20 100644
+--- a/drivers/gpu/drm/bridge/tc358768.c
++++ b/drivers/gpu/drm/bridge/tc358768.c
+@@ -178,6 +178,8 @@ static int tc358768_clear_error(struct tc358768_priv *priv)
  
-@@ -489,6 +490,7 @@ static int ish_query_loader_prop(struct ishtp_cl_data *client_data,
- 			"data size %d is not equal to size of loader_xfer_query_response %zu\n",
- 			rv, sizeof(struct loader_xfer_query_response));
- 		client_data->flag_retry = true;
-+		*fw_info = (struct shim_fw_info){};
- 		return -EMSGSIZE;
- 	}
+ static void tc358768_write(struct tc358768_priv *priv, u32 reg, u32 val)
+ {
++	/* work around https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81715 */
++	int tmpval = val;
+ 	size_t count = 2;
  
+ 	if (priv->error)
+@@ -187,7 +189,7 @@ static void tc358768_write(struct tc358768_priv *priv, u32 reg, u32 val)
+ 	if (reg < 0x100 || reg >= 0x600)
+ 		count = 1;
+ 
+-	priv->error = regmap_bulk_write(priv->regmap, reg, &val, count);
++	priv->error = regmap_bulk_write(priv->regmap, reg, &tmpval, count);
+ }
+ 
+ static void tc358768_read(struct tc358768_priv *priv, u32 reg, u32 *val)
 -- 
 2.26.0
 
