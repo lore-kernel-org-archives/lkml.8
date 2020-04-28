@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B030C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E448FC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F48920575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BABB920575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099663;
-	bh=tmh35UJvyYHRPIWPl8OnlJ6fR0bdJxantC3ZCA4S3iY=;
+	s=default; t=1588099669;
+	bh=hR2xFyMklUsgvm7Lpdse90FWVnFI6b1YvMiQ4fPId0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Km0VOzAReU5dNW2rODQ+7Fvyz04+8QWp1RFLq0K1A+Jau5KWxFM6WATwkkqHYZNIV
-	 8oGB3jDPUnBeTgprv9qvhvGssOh7FYdp7Lm7YSOiitqzUz6Bu/pJlrlx1La6kmeALn
-	 GpHay01SEKJAVKmiZaraVgrL0unpjJBIfsYOFnVs=
+	b=COVGBHbyHMuNNWWl04YA6ununO4Cw1FpEF58gKTLkRtjrw1dVlnnW3fBd7HSUvKUf
+	 vkfiKOAKfwyyl98IxSrLiYFv9w5374aF0ydu85LRMJzsICM7sInC+SaygsACayNbSu
+	 B4gA0gl+m/zKPUDuIY63qzxHGZDLrzs4sdJ4PrlQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731034AbgD1Slv (ORCPT
+        id S1730562AbgD1Srs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:41:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33394 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:47:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731025AbgD1Slq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:41:46 -0400
+        id S1729775AbgD1Slk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:41:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BE272085B;
-        Tue, 28 Apr 2020 18:41:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 283FC2076A;
+        Tue, 28 Apr 2020 18:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099305;
-        bh=tmh35UJvyYHRPIWPl8OnlJ6fR0bdJxantC3ZCA4S3iY=;
+        s=default; t=1588099300;
+        bh=hR2xFyMklUsgvm7Lpdse90FWVnFI6b1YvMiQ4fPId0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=meGPoORY2YzzcIoOEp8DtXBrDmtOvw97BLZEfekmUJfzD6VU/LNDwDwDQ2XvO9yEz
-         o3+qxy+I/TNH+SjHjA/H0pjGnIDQGjMt6aEvkmMjy8gwZ/icmsrCpdUd/RCEvGMhtb
-         UhrYM0qDjIokBhN9ZY0cGbKi78v6mT1I5mwkdjZQ=
+        b=ey96uNbDjqQiT0hiTJ2u3EGR3S1ghY8TH4nv4McCTvP2MyoLKVGr66kyqOqxDPn/A
+         ekDqL1kCoqmLtbkSUX9E1nxVUitlZHUl5VXpsHnKJvF9qoNcQO06pub5qorx0vNcUY
+         gbHP/cC/M5J4L/t43XtJiOReekUv618zHUrwLuWc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 5.6 162/167] Revert "serial: uartps: Move Port ID to device data structure"
-Date:   Tue, 28 Apr 2020 20:25:38 +0200
-Message-Id: <20200428182246.085906563@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH 4.19 131/131] s390/mm: fix page table upgrade vs 2ndary address mode accesses
+Date:   Tue, 28 Apr 2020 20:25:43 +0200
+Message-Id: <20200428182241.844668589@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,103 +60,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Simek <michal.simek@xilinx.com>
+From: Christian Borntraeger <borntraeger@de.ibm.com>
 
-commit 492cc08bc16c44e2e587362ada3f6269dee2be22 upstream.
+commit 316ec154810960052d4586b634156c54d0778f74 upstream.
 
-This reverts commit bed25ac0e2b6ab8f9aed2d20bc9c3a2037311800.
+A page table upgrade in a kernel section that uses secondary address
+mode will mess up the kernel instructions as follows:
 
-As Johan says, this driver needs a lot more work and these changes are
-only going in the wrong direction:
-  https://lkml.kernel.org/r/20190523091839.GC568@localhost
+Consider the following scenario: two threads are sharing memory.
+On CPU1 thread 1 does e.g. strnlen_user().  That gets to
+        old_fs = enable_sacf_uaccess();
+        len = strnlen_user_srst(src, size);
+and
+                "   la    %2,0(%1)\n"
+                "   la    %3,0(%0,%1)\n"
+                "   slgr  %0,%0\n"
+                "   sacf  256\n"
+                "0: srst  %3,%2\n"
+in strnlen_user_srst().  At that point we are in secondary space mode,
+control register 1 points to kernel page table and instruction fetching
+happens via c1, rather than usual c13.  Interrupts are not disabled, for
+obvious reasons.
 
-Reported-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/eb0ec98fecdca9b79c1a3ac0c30c668b6973b193.1585905873.git.michal.simek@xilinx.com
+On CPU2 thread 2 does MAP_FIXED mmap(), forcing the upgrade of page table
+from 3-level to e.g. 4-level one.  We'd allocated new top-level table,
+set it up and now we hit this:
+                notify = 1;
+                spin_unlock_bh(&mm->page_table_lock);
+        }
+        if (notify)
+                on_each_cpu(__crst_table_upgrade, mm, 0);
+OK, we need to actually change over to use of new page table and we
+need that to happen in all threads that are currently running.  Which
+happens to include the thread 1.  IPI is delivered and we have
+static void __crst_table_upgrade(void *arg)
+{
+        struct mm_struct *mm = arg;
+
+        if (current->active_mm == mm)
+                set_user_asce(mm);
+        __tlb_flush_local();
+}
+run on CPU1.  That does
+static inline void set_user_asce(struct mm_struct *mm)
+{
+        S390_lowcore.user_asce = mm->context.asce;
+OK, user page table address updated...
+        __ctl_load(S390_lowcore.user_asce, 1, 1);
+... and control register 1 set to it.
+        clear_cpu_flag(CIF_ASCE_PRIMARY);
+}
+
+IPI is run in home space mode, so it's fine - insns are fetched
+using c13, which always points to kernel page table.  But as soon
+as we return from the interrupt, previous PSW is restored, putting
+CPU1 back into secondary space mode, at which point we no longer
+get the kernel instructions from the kernel mapping.
+
+The fix is to only fixup the control registers that are currently in use
+for user processes during the page table update.  We must also disable
+interrupts in enable_sacf_uaccess to synchronize the cr and
+thread.mm_segment updates against the on_each-cpu.
+
+Fixes: 0aaba41b58bc ("s390: remove all code using the access register mode")
+Cc: stable@vger.kernel.org # 4.15+
+Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+Reviewed-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/xilinx_uartps.c |   20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+ arch/s390/lib/uaccess.c |    4 ++++
+ arch/s390/mm/pgalloc.c  |   16 ++++++++++++++--
+ 2 files changed, 18 insertions(+), 2 deletions(-)
 
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -189,7 +189,6 @@ MODULE_PARM_DESC(rx_timeout, "Rx timeout
-  * @pclk:		APB clock
-  * @cdns_uart_driver:	Pointer to UART driver
-  * @baud:		Current baud rate
-- * @id:			Port ID
-  * @clk_rate_change_nb:	Notifier block for clock changes
-  * @quirks:		Flags for RXBS support.
-  */
-@@ -199,7 +198,6 @@ struct cdns_uart {
- 	struct clk		*pclk;
- 	struct uart_driver	*cdns_uart_driver;
- 	unsigned int		baud;
--	int			id;
- 	struct notifier_block	clk_rate_change_nb;
- 	u32			quirks;
- 	bool cts_override;
-@@ -1424,7 +1422,7 @@ MODULE_DEVICE_TABLE(of, cdns_uart_of_mat
-  */
- static int cdns_uart_probe(struct platform_device *pdev)
+--- a/arch/s390/lib/uaccess.c
++++ b/arch/s390/lib/uaccess.c
+@@ -64,10 +64,13 @@ mm_segment_t enable_sacf_uaccess(void)
  {
--	int rc, irq;
-+	int rc, id, irq;
- 	struct uart_port *port;
- 	struct resource *res;
- 	struct cdns_uart *cdns_uart_data;
-@@ -1450,18 +1448,18 @@ static int cdns_uart_probe(struct platfo
- 		return -ENOMEM;
+ 	mm_segment_t old_fs;
+ 	unsigned long asce, cr;
++	unsigned long flags;
  
- 	/* Look for a serialN alias */
--	cdns_uart_data->id = of_alias_get_id(pdev->dev.of_node, "serial");
--	if (cdns_uart_data->id < 0)
--		cdns_uart_data->id = 0;
-+	id = of_alias_get_id(pdev->dev.of_node, "serial");
-+	if (id < 0)
-+		id = 0;
- 
--	if (cdns_uart_data->id >= CDNS_UART_NR_PORTS) {
-+	if (id >= CDNS_UART_NR_PORTS) {
- 		dev_err(&pdev->dev, "Cannot get uart_port structure\n");
- 		return -ENODEV;
+ 	old_fs = current->thread.mm_segment;
+ 	if (old_fs & 1)
+ 		return old_fs;
++	/* protect against a concurrent page table upgrade */
++	local_irq_save(flags);
+ 	current->thread.mm_segment |= 1;
+ 	asce = S390_lowcore.kernel_asce;
+ 	if (likely(old_fs == USER_DS)) {
+@@ -83,6 +86,7 @@ mm_segment_t enable_sacf_uaccess(void)
+ 		__ctl_load(asce, 7, 7);
+ 		set_cpu_flag(CIF_ASCE_SECONDARY);
  	}
++	local_irq_restore(flags);
+ 	return old_fs;
+ }
+ EXPORT_SYMBOL(enable_sacf_uaccess);
+--- a/arch/s390/mm/pgalloc.c
++++ b/arch/s390/mm/pgalloc.c
+@@ -72,8 +72,20 @@ static void __crst_table_upgrade(void *a
+ {
+ 	struct mm_struct *mm = arg;
  
- 	/* There is a need to use unique driver name */
- 	driver_name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%s%d",
--				     CDNS_UART_NAME, cdns_uart_data->id);
-+				     CDNS_UART_NAME, id);
- 	if (!driver_name)
- 		return -ENOMEM;
+-	if (current->active_mm == mm)
+-		set_user_asce(mm);
++	/* we must change all active ASCEs to avoid the creation of new TLBs */
++	if (current->active_mm == mm) {
++		S390_lowcore.user_asce = mm->context.asce;
++		if (current->thread.mm_segment == USER_DS) {
++			__ctl_load(S390_lowcore.user_asce, 1, 1);
++			/* Mark user-ASCE present in CR1 */
++			clear_cpu_flag(CIF_ASCE_PRIMARY);
++		}
++		if (current->thread.mm_segment == USER_DS_SACF) {
++			__ctl_load(S390_lowcore.user_asce, 7, 7);
++			/* enable_sacf_uaccess does all or nothing */
++			WARN_ON(!test_cpu_flag(CIF_ASCE_SECONDARY));
++		}
++	}
+ 	__tlb_flush_local();
+ }
  
-@@ -1469,7 +1467,7 @@ static int cdns_uart_probe(struct platfo
- 	cdns_uart_uart_driver->driver_name = driver_name;
- 	cdns_uart_uart_driver->dev_name	= CDNS_UART_TTY_NAME;
- 	cdns_uart_uart_driver->major = CDNS_UART_MAJOR;
--	cdns_uart_uart_driver->minor = cdns_uart_data->id;
-+	cdns_uart_uart_driver->minor = id;
- 	cdns_uart_uart_driver->nr = 1;
- 
- #ifdef CONFIG_SERIAL_XILINX_PS_UART_CONSOLE
-@@ -1480,7 +1478,7 @@ static int cdns_uart_probe(struct platfo
- 
- 	strncpy(cdns_uart_console->name, CDNS_UART_TTY_NAME,
- 		sizeof(cdns_uart_console->name));
--	cdns_uart_console->index = cdns_uart_data->id;
-+	cdns_uart_console->index = id;
- 	cdns_uart_console->write = cdns_uart_console_write;
- 	cdns_uart_console->device = uart_console_device;
- 	cdns_uart_console->setup = cdns_uart_console_setup;
-@@ -1502,7 +1500,7 @@ static int cdns_uart_probe(struct platfo
- 	 * registration because tty_driver structure is not filled.
- 	 * name_base is 0 by default.
- 	 */
--	cdns_uart_uart_driver->tty_driver->name_base = cdns_uart_data->id;
-+	cdns_uart_uart_driver->tty_driver->name_base = id;
- 
- 	match = of_match_node(cdns_uart_of_match, pdev->dev.of_node);
- 	if (match && match->data) {
 
 
