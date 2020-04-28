@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35013C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C6BC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F55C206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6594C21569
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100297;
-	bh=7BTCKefDT84d2/S2Tue3QMduXeDM7kTMjbqZL7HrA/E=;
+	s=default; t=1588100299;
+	bh=MPhBk2aXHqgv91j67B1ChdciQB186ig6fgBa5Q4UlzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HlUJjto5olBLx+CCimwoPbQBMmZQu0PV1nqBX4aQFwCO2EWCrZtmoAXWtSKi2dSkd
-	 Ar0pSHAWyqa7ZFGqSrcXXlKae0tS3EM6XxMB+lKnnIS8r92pwFyqS7/R4rjFfF5Cw3
-	 DUHnZ0upFlVJxXnYVWerzfM5GoscID2Ep12Y3i6s=
+	b=j9oLPKvZ00Noj5q3XE/h1csXCJqzZ1sbD1QkDjoqI14zD8U8alyz4Z+R+NVMQMddU
+	 TvPlFMsDZVibam+hHaljIIKCGuBaMMOtSflmKA93czwTBdp6bJwNefVRIk53CvHT7n
+	 338Ha/a9Cw6jD3JLZygfByugeRUsreyd5FMgdyw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729383AbgD1S3i (ORCPT
+        id S1730065AbgD1S6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:29:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43336 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:58:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729369AbgD1S3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:29:34 -0400
+        id S1729382AbgD1S3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:29:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95D3C20BED;
-        Tue, 28 Apr 2020 18:29:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73E0820757;
+        Tue, 28 Apr 2020 18:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098573;
-        bh=7BTCKefDT84d2/S2Tue3QMduXeDM7kTMjbqZL7HrA/E=;
+        s=default; t=1588098577;
+        bh=MPhBk2aXHqgv91j67B1ChdciQB186ig6fgBa5Q4UlzU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G850iyVJeX3hCRJS83fo1BayE5Mi/fFlKRNYkskpqB5Xm691jCuyk7nQQig+84tjV
-         IpOZb5X6niuXAqdCNntLFSDB6CYl62R7T3d2EJt28EZDsUEUWrNp0FPAZa3EgLNjGX
-         mlPZKl0My496yhLmLtl+Eoj7yv1gQTEIY0JeUnV0=
+        b=Lwef6vvDpfADJh/DMgSuEefIW3VjJ7TreX633MBcv+lg04B3xYr95TiiAO4zqtaPT
+         kNpnVLmknUknPeZ90/5L2JvyILLLzv4mPOAGrwxraSwRjnX+UFp+Ekg+itcugyo+5b
+         jyGxatvzbJ3Fp4JaCwBMv2+ycbawkPRd2WJ/SGZo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 075/167] KEYS: Avoid false positive ENOMEM error on key read
-Date:   Tue, 28 Apr 2020 20:24:11 +0200
-Message-Id: <20200428182234.441830864@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Johnathan Smithinovic <johnathan.smithinovic@gmx.at>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 076/167] ALSA: hda: Remove ASUS ROG Zenith from the blacklist
+Date:   Tue, 28 Apr 2020 20:24:12 +0200
+Message-Id: <20200428182234.567917963@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
 References: <20200428182225.451225420@linuxfoundation.org>
@@ -60,167 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 4f0882491a148059a52480e753b7f07fc550e188 ]
+[ Upstream commit a8cf44f085ac12c0b5b8750ebb3b436c7f455419 ]
 
-By allocating a kernel buffer with a user-supplied buffer length, it
-is possible that a false positive ENOMEM error may be returned because
-the user-supplied length is just too large even if the system do have
-enough memory to hold the actual key data.
+The commit 3c6fd1f07ed0 ("ALSA: hda: Add driver blacklist") added a
+new blacklist for the devices that are known to have empty codecs, and
+one of the entries was ASUS ROG Zenith II (PCI SSID 1043:874f).
+However, it turned out that the very same PCI SSID is used for the
+previous model that does have the valid HD-audio codecs and the change
+broke the sound on it.
 
-Moreover, if the buffer length is larger than the maximum amount of
-memory that can be returned by kmalloc() (2^(MAX_ORDER-1) number of
-pages), a warning message will also be printed.
+This patch reverts the corresponding entry as a temporary solution.
+Although Zenith II and co will see get the empty HD-audio bus again,
+it'd be merely resource wastes and won't affect the functionality,
+so it's no end of the world.  We'll need to address this later,
+e.g. by either switching to DMI string matching or using PCI ID &
+SSID pairs.
 
-To reduce this possibility, we set a threshold (PAGE_SIZE) over which we
-do check the actual key length first before allocating a buffer of the
-right size to hold it. The threshold is arbitrary, it is just used to
-trigger a buffer length check. It does not limit the actual key length
-as long as there is enough memory to satisfy the memory request.
-
-To further avoid large buffer allocation failure due to page
-fragmentation, kvmalloc() is used to allocate the buffer so that vmapped
-pages can be used when there is not a large enough contiguous set of
-pages available for allocation.
-
-In the extremely unlikely scenario that the key keeps on being changed
-and made longer (still <= buflen) in between 2 __keyctl_read_key()
-calls, the __keyctl_read_key() calling loop in keyctl_read_key() may
-have to be iterated a large number of times, but definitely not infinite.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: 3c6fd1f07ed0 ("ALSA: hda: Add driver blacklist")
+Reported-by: Johnathan Smithinovic <johnathan.smithinovic@gmx.at>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200419071926.22683-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/keys/internal.h | 12 +++++++++
- security/keys/keyctl.c   | 58 +++++++++++++++++++++++++++++-----------
- 2 files changed, 55 insertions(+), 15 deletions(-)
+ sound/pci/hda/hda_intel.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index ba3e2da14ceff..6d0ca48ae9a50 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -16,6 +16,8 @@
- #include <linux/keyctl.h>
- #include <linux/refcount.h>
- #include <linux/compat.h>
-+#include <linux/mm.h>
-+#include <linux/vmalloc.h>
- 
- struct iovec;
- 
-@@ -349,4 +351,14 @@ static inline void key_check(const struct key *key)
- 
- #endif
- 
-+/*
-+ * Helper function to clear and free a kvmalloc'ed memory object.
-+ */
-+static inline void __kvzfree(const void *addr, size_t len)
-+{
-+	if (addr) {
-+		memset((void *)addr, 0, len);
-+		kvfree(addr);
-+	}
-+}
- #endif /* _INTERNAL_H */
-diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
-index 106e16f9006b4..5e01192e222a0 100644
---- a/security/keys/keyctl.c
-+++ b/security/keys/keyctl.c
-@@ -339,7 +339,7 @@ long keyctl_update_key(key_serial_t id,
- 	payload = NULL;
- 	if (plen) {
- 		ret = -ENOMEM;
--		payload = kmalloc(plen, GFP_KERNEL);
-+		payload = kvmalloc(plen, GFP_KERNEL);
- 		if (!payload)
- 			goto error;
- 
-@@ -360,7 +360,7 @@ long keyctl_update_key(key_serial_t id,
- 
- 	key_ref_put(key_ref);
- error2:
--	kzfree(payload);
-+	__kvzfree(payload, plen);
- error:
- 	return ret;
- }
-@@ -827,7 +827,8 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
- 	struct key *key;
- 	key_ref_t key_ref;
- 	long ret;
--	char *key_data;
-+	char *key_data = NULL;
-+	size_t key_data_len;
- 
- 	/* find the key first */
- 	key_ref = lookup_user_key(keyid, 0, 0);
-@@ -878,24 +879,51 @@ can_read_key:
- 	 * Allocating a temporary buffer to hold the keys before
- 	 * transferring them to user buffer to avoid potential
- 	 * deadlock involving page fault and mmap_sem.
-+	 *
-+	 * key_data_len = (buflen <= PAGE_SIZE)
-+	 *		? buflen : actual length of key data
-+	 *
-+	 * This prevents allocating arbitrary large buffer which can
-+	 * be much larger than the actual key length. In the latter case,
-+	 * at least 2 passes of this loop is required.
- 	 */
--	key_data = kmalloc(buflen, GFP_KERNEL);
-+	key_data_len = (buflen <= PAGE_SIZE) ? buflen : 0;
-+	for (;;) {
-+		if (key_data_len) {
-+			key_data = kvmalloc(key_data_len, GFP_KERNEL);
-+			if (!key_data) {
-+				ret = -ENOMEM;
-+				goto key_put_out;
-+			}
-+		}
- 
--	if (!key_data) {
--		ret = -ENOMEM;
--		goto key_put_out;
--	}
--	ret = __keyctl_read_key(key, key_data, buflen);
-+		ret = __keyctl_read_key(key, key_data, key_data_len);
-+
-+		/*
-+		 * Read methods will just return the required length without
-+		 * any copying if the provided length isn't large enough.
-+		 */
-+		if (ret <= 0 || ret > buflen)
-+			break;
-+
-+		/*
-+		 * The key may change (unlikely) in between 2 consecutive
-+		 * __keyctl_read_key() calls. In this case, we reallocate
-+		 * a larger buffer and redo the key read when
-+		 * key_data_len < ret <= buflen.
-+		 */
-+		if (ret > key_data_len) {
-+			if (unlikely(key_data))
-+				__kvzfree(key_data, key_data_len);
-+			key_data_len = ret;
-+			continue;	/* Allocate buffer */
-+		}
- 
--	/*
--	 * Read methods will just return the required length without
--	 * any copying if the provided length isn't large enough.
--	 */
--	if (ret > 0 && ret <= buflen) {
- 		if (copy_to_user(buffer, key_data, ret))
- 			ret = -EFAULT;
-+		break;
- 	}
--	kzfree(key_data);
-+	__kvzfree(key_data, key_data_len);
- 
- key_put_out:
- 	key_put(key);
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index f41d8b7864c1e..af21e9583c0d3 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2076,7 +2076,6 @@ static void pcm_mmap_prepare(struct snd_pcm_substream *substream,
+  * should be ignored from the beginning.
+  */
+ static const struct snd_pci_quirk driver_blacklist[] = {
+-	SND_PCI_QUIRK(0x1043, 0x874f, "ASUS ROG Zenith II / Strix", 0),
+ 	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
+ 	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
+ 	{}
 -- 
 2.20.1
 
