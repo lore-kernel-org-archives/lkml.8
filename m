@@ -2,115 +2,94 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D876AC83009
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D98C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF141206F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:05:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588082702;
-	bh=rtdH15C83PFAbN1gAsoBF+7zYDniWyH9qG+D2A8wQHU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yqD4caZXkUiHjVR1/C/a0nUMawgBA0+xSQhbsSLdUGQx/wVv5Qt6K+W4s3WkrjC5g
-	 hg/VwwFHjCiSufNfOfBf8jlFBwYsFDDFC162UwahtpJcrIwVd9x4X7h6VbZWJHWDUC
-	 KR+wkFe80sbdR0CCvs/uJbA3FZF95I9YLy1SlZdo=
+	by mail.kernel.org (Postfix) with ESMTP id 66D39206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:05:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p4OEQHwX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgD1OFC (ORCPT
+        id S1727977AbgD1OFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:05:02 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41497 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727933AbgD1OFB (ORCPT
+        Tue, 28 Apr 2020 10:05:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58604 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727110AbgD1OFl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:05:01 -0400
-Received: by mail-ot1-f65.google.com with SMTP id c3so32729054otp.8;
-        Tue, 28 Apr 2020 07:05:01 -0700 (PDT)
+        Tue, 28 Apr 2020 10:05:41 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF07CC03C1A9;
+        Tue, 28 Apr 2020 07:05:40 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id m2so16978691lfo.6;
+        Tue, 28 Apr 2020 07:05:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=r3hzm7yTEE9xqQrbBm8OOfDWzkr0IEj+zeX1Eo846UY=;
+        b=p4OEQHwXTSirIiP6YEPENS2RQpq4t+1vw3fDD9fE9E8qcWtTcCZjEiliG02mYh8L94
+         Ywbew18Wx/pTNrgJ+iHkP5dxm6P9hnXERGOxdOLboqd3bVsAeMPPfDmhx/9sHfnt+4FR
+         TEESang+PBYT9XsK31s2qaADmj/AtHch+sKPWBZm3AnGtBIgwYadBoNSVOsqG4GpuNWm
+         Td/NDuBgeXQR3rdklugeFSOOfDo1Sa/LSfOniv818VlOnD8TxHpSK0/bETwCF0a+liRJ
+         C0QxMCjnQIp6K07U1Qxed5S1lL+fJTnCz2dFKVL4R2Hx9NpJ8t83Ddf5qX9NH5EGIiwY
+         1f+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CsXsbPmc/AQsgDmce1lCUxAQ9qNPMT/YUlbmJYg9aAk=;
-        b=brvVanV3TZMIUOWOMhHsrJOERIhwXEwCAklGhfMWC0hNOpLWbbXTd24woXvLtPHT9w
-         uasexgtz7ulYt19L5a6Hac2XHsdWtfDA6axQChHCCobIStkHsCd9Xfquevz3ZIgk2krB
-         UwRXmcYV3xdw4r/S+1xwJy+eYVNa0iQOba6qZ0enuxPyLjQ/SVFEqg40GsA2m/+GTFPv
-         /IPc4FwYOpW3ciiN6OHnJ4DRHX+RQg3gjCDCiZQpLL2HVMNa+poIPzLB4pxnQXSPh9BS
-         /VLZxQnQ7XAkr78NM9csLyHpQ9G7j+qrz+jv447RbOYr6jo1DEjyC80KWrJxTPsGyNup
-         sxeA==
-X-Gm-Message-State: AGi0PubgRlM3LueCxu0C5tLigqypecwBHQ19lDA0IYEBrQOJBGxz3fqV
-        gDPW8g3D9pEhJ3LD9rfJKu3tHvI=
-X-Google-Smtp-Source: APiQypKb2JF8s+fM9v/SS//A1mpGTbCm5LO0BD+cx6dpOnHXjQ4YaX4fx4QV3shJkWB6WKHF1e8NQQ==
-X-Received: by 2002:aca:5513:: with SMTP id j19mr2978201oib.31.1588082700621;
-        Tue, 28 Apr 2020 07:05:00 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u1sm2536938oif.54.2020.04.28.07.04.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 07:05:00 -0700 (PDT)
-Received: (nullmailer pid 713 invoked by uid 1000);
-        Tue, 28 Apr 2020 14:04:59 -0000
-Date:   Tue, 28 Apr 2020 09:04:59 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     devicetree@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: Re: [PATCH 1/2] dt-bindings: mfd: Document QTI I2C PMIC controller
-Message-ID: <20200428140459.GA15128@bogus>
-References: <cover.1588037638.git.gurus@codeaurora.org>
- <362fc93ff06d19788bfb0387eac86e6976decb98.1588037638.git.gurus@codeaurora.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=r3hzm7yTEE9xqQrbBm8OOfDWzkr0IEj+zeX1Eo846UY=;
+        b=rvQewAiAQQg29GHhXgGxX7iWhEyKPL5vK95a8av+TfPIbkGP9VI91V4qWVVKI8ZxWt
+         1q9TGd8Yyv9LcghToZDTL3e6gVSJfFvuc8wb4lNUq90mueYinWI+y/N/9zYTCP6I1GuZ
+         wYh/VlWuv3XzpvTv594Dfgnq4rRas4hF7lFRRvxCZkGe7v4l/cauj9ukKKgZVOgWy+Ty
+         /gRXm4Vi0+yVBqhT/zmznLoR3sMCjYIDXbzxQW50tsOgxlyPbRJpnpTJkcSMqVUCT+tt
+         TJxArA4AtcZ9P8EXGy8HhgTCn5nKx3itWiRl1gTknNEXgVHP0vyNAT0XiWZVUNFuauNw
+         LVZQ==
+X-Gm-Message-State: AGi0PuadPeqQ6Lq4QfUjXg/Q8Y67Qt/XdcCmJhJ+EcloQIxIb6Nyg1zt
+        e9WxWSUh9GIi1PtP1jqB95ZhsEFE
+X-Google-Smtp-Source: APiQypKxN3pfvXCQL3vLYQ1O+Zw8BJKyVvfYPi9WBRQ+0uc2Ezri5OcRPNp9EyLJ5HnBfm7cUFyp2A==
+X-Received: by 2002:ac2:53a6:: with SMTP id j6mr19174715lfh.153.1588082736038;
+        Tue, 28 Apr 2020 07:05:36 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id v7sm14124531lfq.55.2020.04.28.07.05.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Apr 2020 07:05:35 -0700 (PDT)
+Subject: Re: [RFC PATCH v1 3/5] media: tegra-video: Move PM runtime handle to
+ streaming
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl
+Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1588047650-29402-1-git-send-email-skomatineni@nvidia.com>
+ <1588047650-29402-4-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4d069601-5507-dc8f-0cbc-acd8fd7324b3@gmail.com>
+Date:   Tue, 28 Apr 2020 17:05:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <362fc93ff06d19788bfb0387eac86e6976decb98.1588037638.git.gurus@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1588047650-29402-4-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Apr 2020 19:18:01 -0700, Guru Das Srinagesh wrote:
-> The Qualcomm Technologies, Inc. I2C PMIC Controller is used by
-> multi-function PMIC devices which communicate over the I2C bus.  The
-> controller enumerates all child nodes as platform devices, and
-> instantiates a regmap interface for them to communicate over the I2C
-> bus.
-> 
-> The controller also controls interrupts for all of the children platform
-> devices.  The controller handles the summary interrupt by deciphering
-> which peripheral triggered the interrupt, and which of the peripheral
-> interrupts were triggered.  Finally, it calls the interrupt handlers for
-> each of the virtual interrupts that were registered.
-> 
-> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> ---
->  .../devicetree/bindings/mfd/qcom,i2c-pmic.yaml     | 89 ++++++++++++++++++++++
->  1 file changed, 89 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/qcom,i2c-pmic.yaml
-> 
+28.04.2020 07:20, Sowjanya Komatineni пишет:
+> +	ret = csi->ops->csi_streaming(csi_chan, chan->pg_mode, enable);
+>  
+> -	return csi->ops->csi_streaming(csi_chan, chan->pg_mode, enable);
+> +	if ((ret < 0 || !enable) && atomic_dec_and_test(&csi->clk_refcnt))
+> +		pm_runtime_put_sync(csi->dev);
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-Error: Documentation/devicetree/bindings/mfd/qcom,i2c-pmic.example.dts:17.1-7 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/mfd/qcom,i2c-pmic.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/mfd/qcom,i2c-pmic.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-See https://patchwork.ozlabs.org/patch/1278158
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+There shouldn't be a need to sync the RPM here, hence just
+pm_runtime_put(csi->dev). Same for the VI.
