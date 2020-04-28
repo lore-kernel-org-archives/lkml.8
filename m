@@ -2,89 +2,273 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73644C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF65C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 421CC206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:04:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588115077;
-	bh=bo21LaVDiN3p5qRExTfq+J7LOaI4TxtlxHpokeU5a/o=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bHvhcRJUq+hqCnptl11doCD1Pbgnqy1ZPbG0Qn9EwE66M8hE8a+h5mQOKF9kEWinX
-	 3dODhs7IE9cYhBfEoYkILzOZo1ibSox90ZGONojwgZm8YvJxKYjmu5hrIW5SLq90m9
-	 hx0ECD/gba8NOQJG9s7XJ/9hPNk+CQhgfMnyyhnU=
+	by mail.kernel.org (Postfix) with ESMTP id AF93D20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:05:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ff90YolC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgD1XEg (ORCPT
+        id S1726750AbgD1XFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 19:04:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42782 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726181AbgD1XEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 19:04:36 -0400
-Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E881120656;
-        Tue, 28 Apr 2020 23:04:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588115075;
-        bh=bo21LaVDiN3p5qRExTfq+J7LOaI4TxtlxHpokeU5a/o=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=yFtq8fVR/VOkhVWVlZwlZokdulMlFu18XJsQJY7pDxJcDZzrCvZYs0XLTYNZmxQFB
-         TBC5AJbU1fcRxpBlV7gSsUZbbrInB3b/KP1iNNFQvhDadkU4ftnPdNkgd7QRwiGDNB
-         fSoqdmY8NaFIDGsoCMkQHQ8Ab/XP58R2TcfoPOUo=
-Date:   Tue, 28 Apr 2020 16:04:34 -0700 (PDT)
-From:   Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-cc:     Srivatsa Vaddagiri <vatsa@codeaurora.org>, konrad.wilk@oracle.com,
-        jasowang@redhat.com, jan.kiszka@siemens.com, will@kernel.org,
-        stefano.stabellini@xilinx.com, iommu@lists.linux-foundation.org,
-        virtualization@lists.linux-foundation.org,
-        virtio-dev@lists.oasis-open.org, tsoni@codeaurora.org,
-        pratikp@codeaurora.org, christoffer.dall@arm.com,
-        alex.bennee@linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] virtio: Add bounce DMA ops
-In-Reply-To: <20200428163448-mutt-send-email-mst@kernel.org>
-Message-ID: <alpine.DEB.2.21.2004281556180.29217@sstabellini-ThinkPad-T480s>
-References: <1588073958-1793-1-git-send-email-vatsa@codeaurora.org> <1588073958-1793-6-git-send-email-vatsa@codeaurora.org> <20200428121232-mutt-send-email-mst@kernel.org> <20200428174952.GA5097@quicinc.com> <20200428163448-mutt-send-email-mst@kernel.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 28 Apr 2020 19:05:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58528 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726181AbgD1XFH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 19:05:07 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98943C03C1AC;
+        Tue, 28 Apr 2020 16:05:05 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id r4so70016pgg.4;
+        Tue, 28 Apr 2020 16:05:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OjJ5lkg1Spa2pHRhBVhPWyI04zZ1npMrbFicpXWRXp0=;
+        b=ff90YolCFxjjV5p1tbixfWh0U6qzImOzHdkazzhl5kWQCGabPh3Ga4arNL2YbTsg5d
+         6E7XDhfO1/dwSH9ieZWYfA9N3vu789ugxLGWShhV50kmi59KOf4TfZA4qkEjvyOd0pwR
+         N+BQvkB5boGT9S0dwCzR1mkK9t4BjGaPYPJgv3JdKpX0nsD8G79p8Gu5rBTb6xNrbziV
+         HJJ7B1/wtjwFhUjy+y6Y6fKc4secmoCWtkfGPAP3nW7n1o+6BNuOSvTr9BdfLvQmXWOm
+         ux+SdbhVvtWrZ4Wy2hZNA5ii2bpFPM//4UoqLvfpVsqsP86+sGnjFKksMesyAYge3b8X
+         I8yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OjJ5lkg1Spa2pHRhBVhPWyI04zZ1npMrbFicpXWRXp0=;
+        b=kd2qKYBZphORrj/smM1HYOi/pgomye64bCYQEARKzBKpRyD9PgK0UhMUeFAB551Atc
+         MP694j6OMK5dTbj5Q6mkCpN+CpypC3jQhlmVHXZP2LKeIrWRnskgTMopBxygwsfH5fNR
+         sxen/sabON963V1s+nYxEIRrQ332aL87exYGIvoZ2blvEE0YfYwnoD6JugV8SMhq/cli
+         MsK6xVWOwYlUkNQS/z7liNWoEsYAp/S6yVaQY3RD04wAiftbIT51KGWozGuot89E29vA
+         HA+yL1AKQ6p+VJgGmsKPQdKLiyL3BDQujEm+dx0Vniqt4GeOUyBkBQiWAIkRd2DC3zkI
+         qBPw==
+X-Gm-Message-State: AGi0PuZ/s5uG6bgcTstJmBfRk2nas18LmqLwgQCgA0ybL0YXeFPoXqtV
+        RwKTg/ZaNw7muoN84nVaP7Y=
+X-Google-Smtp-Source: APiQypLu4dusfDC7xJb8Pw7XeEEotS4W6yEwwbKMn3SwAWifb0MypZ91g0JTZ8Wkla/3vLPujEYirQ==
+X-Received: by 2002:a63:d544:: with SMTP id v4mr15718370pgi.361.1588115105081;
+        Tue, 28 Apr 2020 16:05:05 -0700 (PDT)
+Received: from syed ([106.202.21.137])
+        by smtp.gmail.com with ESMTPSA id t28sm13510913pgo.46.2020.04.28.16.05.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 Apr 2020 16:05:04 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 04:34:48 +0530
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     andriy.shevchenko@linux.intel.com, vilhelm.gray@gmail.com,
+        arnd@arndb.de, linus.walleij@linaro.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/4] bitops: Introduce the the for_each_set_clump macro
+Message-ID: <022ae57bdffae9c9c84ef878601a65e40626873b.1588112715.git.syednwaris@gmail.com>
+References: <cover.1588112714.git.syednwaris@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1588112714.git.syednwaris@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020, Michael S. Tsirkin wrote:
-> On Tue, Apr 28, 2020 at 11:19:52PM +0530, Srivatsa Vaddagiri wrote:
-> > * Michael S. Tsirkin <mst@redhat.com> [2020-04-28 12:17:57]:
-> > 
-> > > Okay, but how is all this virtio specific?  For example, why not allow
-> > > separate swiotlbs for any type of device?
-> > > For example, this might make sense if a given device is from a
-> > > different, less trusted vendor.
-> > 
-> > Is swiotlb commonly used for multiple devices that may be on different trust
-> > boundaries (and not behind a hardware iommu)?
+This macro iterates for each group of bits (clump) with set bits,
+within a bitmap memory region. For each iteration, "start" is set to
+the bit offset of the found clump, while the respective clump value is
+stored to the location pointed by "clump". Additionally, the
+bitmap_get_value and bitmap_set_value functions are introduced to
+respectively get and set a value of n-bits in a bitmap memory region.
+The n-bits can have any size less than or equal to BITS_PER_LONG.
+Moreover, during setting value of n-bit in bitmap, if a situation arise
+that the width of next n-bit is exceeding the word boundary, then it
+will divide itself such that some portion of it is stored in that word,
+while the remaining portion is stored in the next higher word. Similar
+situation occurs while retrieving value of n-bits from bitmap.
 
-The trust boundary is not a good way of describing the scenario and I
-think it leads to miscommunication.
+Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+---
+Changes in v3:
+ - No change
 
-A better way to describe the scenario would be that the device can only
-DMA to/from a small reserved-memory region advertised on device tree.
+Changes in v2:
+ - No change
 
-Do we have other instances of devices that can only DMA to/from very
-specific and non-configurable address ranges? If so, this series could
-follow their example.
+ include/asm-generic/bitops/find.h | 19 ++++++++++
+ include/linux/bitmap.h            | 61 +++++++++++++++++++++++++++++++
+ include/linux/bitops.h            | 13 +++++++
+ lib/find_bit.c                    | 14 +++++++
+ 4 files changed, 107 insertions(+)
 
+diff --git a/include/asm-generic/bitops/find.h b/include/asm-generic/bitops/find.h
+index 9fdf21302fdf..4e6600759455 100644
+--- a/include/asm-generic/bitops/find.h
++++ b/include/asm-generic/bitops/find.h
+@@ -97,4 +97,23 @@ extern unsigned long find_next_clump8(unsigned long *clump,
+ #define find_first_clump8(clump, bits, size) \
+ 	find_next_clump8((clump), (bits), (size), 0)
+ 
++/**
++ * find_next_clump - find next clump with set bits in a memory region
++ * @clump: location to store copy of found clump
++ * @addr: address to base the search on
++ * @size: bitmap size in number of bits
++ * @offset: bit offset at which to start searching
++ * @clump_size: clump size in bits
++ *
++ * Returns the bit offset for the next set clump; the found clump value is
++ * copied to the location pointed by @clump. If no bits are set, returns @size.
++ */
++extern unsigned long find_next_clump(unsigned long *clump,
++				      const unsigned long *addr,
++				      unsigned long size, unsigned long offset,
++				      unsigned long clump_size);
++
++#define find_first_clump(clump, bits, size, clump_size) \
++	find_next_clump((clump), (bits), (size), 0, (clump_size))
++
+ #endif /*_ASM_GENERIC_BITOPS_FIND_H_ */
+diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
+index 99058eb81042..7ab2c65fc964 100644
+--- a/include/linux/bitmap.h
++++ b/include/linux/bitmap.h
+@@ -75,7 +75,11 @@
+  *  bitmap_from_arr32(dst, buf, nbits)          Copy nbits from u32[] buf to dst
+  *  bitmap_to_arr32(buf, src, nbits)            Copy nbits from buf to u32[] dst
+  *  bitmap_get_value8(map, start)               Get 8bit value from map at start
++ *  bitmap_get_value(map, start, nbits)		Get bit value of size
++ *						'nbits' from map at start
+  *  bitmap_set_value8(map, value, start)        Set 8bit value to map at start
++ *  bitmap_set_value(map, value, start, nbits)	Set bit value of size 'nbits'
++ *						of map at start
+  *
+  * Note, bitmap_zero() and bitmap_fill() operate over the region of
+  * unsigned longs, that is, bits behind bitmap till the unsigned long
+@@ -563,6 +567,34 @@ static inline unsigned long bitmap_get_value8(const unsigned long *map,
+ 	return (map[index] >> offset) & 0xFF;
+ }
+ 
++/**
++ * bitmap_get_value - get a value of n-bits from the memory region
++ * @map: address to the bitmap memory region
++ * @start: bit offset of the n-bit value
++ * @nbits: size of value in bits
++ *
++ * Returns value of nbits located at the @start bit offset within the @map
++ * memory region.
++ */
++static inline unsigned long bitmap_get_value(const unsigned long *map,
++					      unsigned long start,
++					      unsigned long nbits)
++{
++	const size_t index = BIT_WORD(start);
++	const unsigned long offset = start % BITS_PER_LONG;
++	const unsigned long ceiling = roundup(start + 1, BITS_PER_LONG);
++	const unsigned long space = ceiling - start;
++	unsigned long value_low, value_high;
++
++	if (space >= nbits)
++		return (map[index] >> offset) & GENMASK(nbits - 1, 0);
++	else {
++		value_low = map[index] & BITMAP_FIRST_WORD_MASK(start);
++		value_high = map[index + 1] & BITMAP_LAST_WORD_MASK(start + nbits);
++		return (value_low >> offset) | (value_high << space);
++	}
++}
++
+ /**
+  * bitmap_set_value8 - set an 8-bit value within a memory region
+  * @map: address to the bitmap memory region
+@@ -579,6 +611,35 @@ static inline void bitmap_set_value8(unsigned long *map, unsigned long value,
+ 	map[index] |= value << offset;
+ }
+ 
++/**
++ * bitmap_set_value - set n-bit value within a memory region
++ * @map: address to the bitmap memory region
++ * @value: value of nbits
++ * @start: bit offset of the n-bit value
++ * @nbits: size of value in bits
++ */
++static inline void bitmap_set_value(unsigned long *map,
++				    unsigned long value,
++				    unsigned long start, unsigned long nbits)
++{
++	const size_t index = BIT_WORD(start);
++	const unsigned long offset = start % BITS_PER_LONG;
++	const unsigned long ceiling = roundup(start + 1, BITS_PER_LONG);
++	const unsigned long space = ceiling - start;
++
++	value &= GENMASK(nbits - 1, 0);
++
++	if (space >= nbits) {
++		map[index] &= ~(GENMASK(nbits + offset - 1, offset));
++		map[index] |= value << offset;
++	} else {
++		map[index] &= ~BITMAP_FIRST_WORD_MASK(start);
++		map[index] |= value << offset;
++		map[index + 1] &= ~BITMAP_LAST_WORD_MASK(start + nbits);
++		map[index + 1] |= (value >> space);
++	}
++}
++
+ #endif /* __ASSEMBLY__ */
+ 
+ #endif /* __LINUX_BITMAP_H */
+diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+index 9acf654f0b19..41c2d9ce63e7 100644
+--- a/include/linux/bitops.h
++++ b/include/linux/bitops.h
+@@ -62,6 +62,19 @@ extern unsigned long __sw_hweight64(__u64 w);
+ 	     (start) < (size); \
+ 	     (start) = find_next_clump8(&(clump), (bits), (size), (start) + 8))
+ 
++/**
++ * for_each_set_clump - iterate over bitmap for each clump with set bits
++ * @start: bit offset to start search and to store the current iteration offset
++ * @clump: location to store copy of current 8-bit clump
++ * @bits: bitmap address to base the search on
++ * @size: bitmap size in number of bits
++ * @clump_size: clump size in bits
++ */
++#define for_each_set_clump(start, clump, bits, size, clump_size) \
++	for ((start) = find_first_clump(&(clump), (bits), (size), (clump_size)); \
++	     (start) < (size); \
++	     (start) = find_next_clump(&(clump), (bits), (size), (start) + (clump_size), (clump_size)))
++
+ static inline int get_bitmask_order(unsigned int count)
+ {
+ 	int order;
+diff --git a/lib/find_bit.c b/lib/find_bit.c
+index 49f875f1baf7..1341bd39b32a 100644
+--- a/lib/find_bit.c
++++ b/lib/find_bit.c
+@@ -190,3 +190,17 @@ unsigned long find_next_clump8(unsigned long *clump, const unsigned long *addr,
+ 	return offset;
+ }
+ EXPORT_SYMBOL(find_next_clump8);
++
++unsigned long find_next_clump(unsigned long *clump, const unsigned long *addr,
++			       unsigned long size, unsigned long offset,
++			       unsigned long clump_size)
++{
++	offset = find_next_bit(addr, size, offset);
++	if (offset == size)
++		return size;
++
++	offset = rounddown(offset, clump_size);
++	*clump = bitmap_get_value(addr, offset, clump_size);
++	return offset;
++}
++EXPORT_SYMBOL(find_next_clump);
+-- 
+2.26.2
 
-> Even a hardware iommu does not imply a 100% security from malicious
-> hardware. First lots of people use iommu=pt for performance reasons.
-> Second even without pt, unmaps are often batched, and sub-page buffers
-> might be used for DMA, so we are not 100% protected at all times.
