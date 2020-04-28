@@ -2,179 +2,76 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF151C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D34D1C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94DF0206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B13C0206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 09:38:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgD1JhM (ORCPT
+        id S1727094AbgD1JiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 05:37:12 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3323 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726477AbgD1JhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 05:37:11 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9BE3D3B50836C88B459B;
-        Tue, 28 Apr 2020 17:37:08 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 28 Apr 2020 17:36:59 +0800
-From:   Zou Wei <zou_wei@huawei.com>
-To:     <trenn@suse.com>, <shuah@kernel.org>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH -next] cpupower: Remove unneeded semicolon
-Date:   Tue, 28 Apr 2020 17:43:15 +0800
-Message-ID: <1588066995-71840-1-git-send-email-zou_wei@huawei.com>
-X-Mailer: git-send-email 2.6.2
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+        Tue, 28 Apr 2020 05:38:12 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:46509 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727052AbgD1JiL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 05:38:11 -0400
+Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 3E7ABCECEA;
+        Tue, 28 Apr 2020 11:47:49 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] Bluetooth: Terminate the link if pairing is cancelled
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200414115512.1.I9dd050ead919f2cc3ef83d4e866de537c7799cf3@changeid>
+Date:   Tue, 28 Apr 2020 11:38:09 +0200
+Cc:     Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        ChromeOS Bluetooth Upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        Alain Michaud <alainm@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <DF70A2DA-9E5F-4524-8F20-2EC7CF70597F@holtmann.org>
+References: <20200414115512.1.I9dd050ead919f2cc3ef83d4e866de537c7799cf3@changeid>
+To:     Manish Mandlik <mmandlik@google.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes coccicheck warnings:
+Hi Manish,
 
-tools/power/cpupower/utils/cpupower-info.c:65:2-3: Unneeded semicolon
-tools/power/cpupower/utils/cpupower-set.c:75:2-3: Unneeded semicolon
-tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c:120:2-3: Unneeded semicolon
-tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c:175:2-3: Unneeded semicolon
-tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c:56:2-3: Unneeded semicolon
-tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c:75:2-3: Unneeded semicolon
-tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c:82:2-3: Unneeded semicolon
-tools/power/cpupower/utils/idle_monitor/nhm_idle.c:94:2-3: Unneeded semicolon
-tools/power/cpupower/utils/idle_monitor/snb_idle.c:80:2-3: Unneeded semicolon
+> If user decides to cancel ongoing pairing process (e.g. by clicking
+> the cancel button on the pairing/passkey window), abort any ongoing
+> pairing and then terminate the link.
+> 
+> Signed-off-by: Manish Mandlik <mmandlik@google.com>
+> ---
+> Hello Linux-Bluetooth,
+> 
+>  This patch aborts any ongoing pairing and then terminates the link
+>  by calling hci_abort_conn() in cancel_pair_device() function.
+> 
+>  However, I'm not very sure if hci_abort_conn() should be called here
+>  in cancel_pair_device() or in smp for example to terminate the link
+>  after it had sent the pairing failed PDU.
+> 
+>  Please share your thoughts on this.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zou Wei <zou_wei@huawei.com>
----
- tools/power/cpupower/utils/cpupower-info.c                | 2 +-
- tools/power/cpupower/utils/cpupower-set.c                 | 2 +-
- tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c | 2 +-
- tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c   | 6 +++---
- tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c    | 2 +-
- tools/power/cpupower/utils/idle_monitor/nhm_idle.c        | 2 +-
- tools/power/cpupower/utils/idle_monitor/snb_idle.c        | 2 +-
- 7 files changed, 9 insertions(+), 9 deletions(-)
+I am look into this. Just bare with me for a bit to verify the call chain.
 
-diff --git a/tools/power/cpupower/utils/cpupower-info.c b/tools/power/cpupower/utils/cpupower-info.c
-index d3755ea..0ba61a2 100644
---- a/tools/power/cpupower/utils/cpupower-info.c
-+++ b/tools/power/cpupower/utils/cpupower-info.c
-@@ -62,7 +62,7 @@ int cmd_info(int argc, char **argv)
- 		default:
- 			print_wrong_arg_exit();
- 		}
--	};
-+	}
- 
- 	if (!params.params)
- 		params.params = 0x7;
-diff --git a/tools/power/cpupower/utils/cpupower-set.c b/tools/power/cpupower/utils/cpupower-set.c
-index 3cca6f7..052044d 100644
---- a/tools/power/cpupower/utils/cpupower-set.c
-+++ b/tools/power/cpupower/utils/cpupower-set.c
-@@ -72,7 +72,7 @@ int cmd_set(int argc, char **argv)
- 		default:
- 			print_wrong_arg_exit();
- 		}
--	};
-+	}
- 
- 	if (!params.params)
- 		print_wrong_arg_exit();
-diff --git a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-index 20f4634..5edd35b 100644
---- a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-+++ b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-@@ -117,7 +117,7 @@ static int amd_fam14h_get_pci_info(struct cstate *state,
- 		break;
- 	default:
- 		return -1;
--	};
-+	}
- 	return 0;
- }
- 
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-index a65f7d0..8b42c2f 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-+++ b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-@@ -53,7 +53,7 @@ static int cpuidle_start(void)
- 			dprint("CPU %d - State: %d - Val: %llu\n",
- 			       cpu, state, previous_count[cpu][state]);
- 		}
--	};
-+	}
- 	return 0;
- }
- 
-@@ -72,7 +72,7 @@ static int cpuidle_stop(void)
- 			dprint("CPU %d - State: %d - Val: %llu\n",
- 			       cpu, state, previous_count[cpu][state]);
- 		}
--	};
-+	}
- 	return 0;
- }
- 
-@@ -172,7 +172,7 @@ static struct cpuidle_monitor *cpuidle_register(void)
- 		cpuidle_cstates[num].id = num;
- 		cpuidle_cstates[num].get_count_percent =
- 			cpuidle_get_count_percent;
--	};
-+	}
- 
- 	/* Free this at program termination */
- 	previous_count = malloc(sizeof(long long *) * cpu_count);
-diff --git a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
-index 97ad323..55e55b6 100644
---- a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
-+++ b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
-@@ -79,7 +79,7 @@ static int hsw_ext_get_count(enum intel_hsw_ext_id id, unsigned long long *val,
- 		break;
- 	default:
- 		return -1;
--	};
-+	}
- 	if (read_msr(cpu, msr, val))
- 		return -1;
- 	return 0;
-diff --git a/tools/power/cpupower/utils/idle_monitor/nhm_idle.c b/tools/power/cpupower/utils/idle_monitor/nhm_idle.c
-index 1142711..16eaf00 100644
---- a/tools/power/cpupower/utils/idle_monitor/nhm_idle.c
-+++ b/tools/power/cpupower/utils/idle_monitor/nhm_idle.c
-@@ -91,7 +91,7 @@ static int nhm_get_count(enum intel_nhm_id id, unsigned long long *val,
- 		break;
- 	default:
- 		return -1;
--	};
-+	}
- 	if (read_msr(cpu, msr, val))
- 		return -1;
- 
-diff --git a/tools/power/cpupower/utils/idle_monitor/snb_idle.c b/tools/power/cpupower/utils/idle_monitor/snb_idle.c
-index df8b223..811d63a 100644
---- a/tools/power/cpupower/utils/idle_monitor/snb_idle.c
-+++ b/tools/power/cpupower/utils/idle_monitor/snb_idle.c
-@@ -77,7 +77,7 @@ static int snb_get_count(enum intel_snb_id id, unsigned long long *val,
- 		break;
- 	default:
- 		return -1;
--	};
-+	}
- 	if (read_msr(cpu, msr, val))
- 		return -1;
- 	return 0;
--- 
-2.6.2
+Regards
+
+Marcel
 
