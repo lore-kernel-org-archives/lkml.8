@@ -2,120 +2,93 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 377D5C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FE3C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A4D52072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 636C02072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:20:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oVE56PpM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbgD1MUJ (ORCPT
+        id S1726836AbgD1MUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:20:09 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:52580 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbgD1MUJ (ORCPT
+        Tue, 28 Apr 2020 08:20:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726645AbgD1MUy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:20:09 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jTPDT-0006cz-Aw; Tue, 28 Apr 2020 06:19:59 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jTPDS-00016K-Gn; Tue, 28 Apr 2020 06:19:59 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
-        <87ftcv1nqe.fsf@x220.int.ebiederm.org>
-        <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
-        <20200424173927.GB26802@redhat.com>
-        <87mu6ymkea.fsf_-_@x220.int.ebiederm.org>
-        <875zdmmj4y.fsf_-_@x220.int.ebiederm.org>
-        <CAHk-=whvktUC9VbzWLDw71BHbV4ofkkuAYsrB5Rmxnhc-=kSeQ@mail.gmail.com>
-        <878sihgfzh.fsf@x220.int.ebiederm.org>
-        <CAHk-=wjSM9mgsDuX=ZTy2L+S7wGrxZMcBn054As_Jyv8FQvcvQ@mail.gmail.com>
-Date:   Tue, 28 Apr 2020 07:16:44 -0500
-In-Reply-To: <CAHk-=wjSM9mgsDuX=ZTy2L+S7wGrxZMcBn054As_Jyv8FQvcvQ@mail.gmail.com>
-        (Linus Torvalds's message of "Mon, 27 Apr 2020 13:27:40 -0700")
-Message-ID: <87sggnajpv.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 28 Apr 2020 08:20:54 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 630F5C03C1A9;
+        Tue, 28 Apr 2020 05:20:54 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id z25so32132220otq.13;
+        Tue, 28 Apr 2020 05:20:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HEakP3BtxjrtzgVk40jbRNVCPopEEl2PBz5jMBYZCac=;
+        b=oVE56PpMDFxR0zO4k9lfsaLvi7hqxAlke11voP7oMZjEXpSI1birbRwawrQK9QtMSD
+         xquQX6QebCLp/DbhCYXc62xYd/CXcJ3fXZreM8uDTMozSPXYWNkpmfqLuLuzWI8zIkIQ
+         XX3d10p1u/7iCDhqpEbbs0MjczLLwvj8HkfAXzp0KNmFE3drSAhFbicpOwud2F6Fqpc4
+         oB+vScljfSnnn7++OKsyTE9zUp0V7XEMwKZq132YDCiCMH+de5hAFoB3Al6c/8412b+j
+         sSuUVLpHY8pdLjyCaYE+VzC7zzOeRf/kaFBDRfrsMR7QCDkGLq61u/tqzf7nesjOMbv2
+         6KvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HEakP3BtxjrtzgVk40jbRNVCPopEEl2PBz5jMBYZCac=;
+        b=aGpDFYe+Ct7I4oWwpi2MlYmTv/TqloTLLDp38vl3ISP5TilPD5XpiSmNfP4sETqPbs
+         /PW3iOQk9UXBnSEUL+HFE4Lb7iZj2slBmJ4Nr+VDpfpCvGZ6OCt5Q4Ek34VtgVdNRdeD
+         Rm7+aYEFZbhhxsYsg7mDWtlFRQf8647yc5NXybYAgCGaZJmcWvTRuPnFhvToAl/ii921
+         bOj9MJI5Oc9q71OpRvg4c6NNUJu+NGmdcS3AhMHx24lEgZoMSp50i+rApcJpE1ooYoks
+         vk+k5qRvVx0s6+jR4YBZHNR2vW291+in+e17lBEZKrSnUvMQ6LoOj/ZRhpyFyqaJhX4T
+         EPQA==
+X-Gm-Message-State: AGi0PuYZ9LPsJdic/BMyR7pKCYJN12ww5kzfn5DEfEYamiYxB2G0gmpn
+        lr3aDl6IGkcvMIgjyCKsN/zu4h8y3Nx9zExTlY4=
+X-Google-Smtp-Source: APiQypK5pXVXyGbHlFz3rzAt9zBWxyAstAXK+xYvkVxekeAXou+WcJ2uJpsQfGYUqBHQrNUECrJU86hNRYQ9QGL2zFU=
+X-Received: by 2002:aca:fc0a:: with SMTP id a10mr2749752oii.77.1588076453793;
+ Tue, 28 Apr 2020 05:20:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jTPDS-00016K-Gn;;;mid=<87sggnajpv.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+Ca6+ElOCctvOcWA7bIRbvwRUv+5ClZTc=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH v4 0/2] proc: Ensure we see the exit of each process tid exactly
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+References: <CAGngYiVa9v9jGPNu4W+KHUnvemKU-BVE89-XNLcWOmoZjAPMTg@mail.gmail.com>
+ <e5f05ee3-515b-7b13-5125-b6d7a03ac031@gmail.com>
+In-Reply-To: <e5f05ee3-515b-7b13-5125-b6d7a03ac031@gmail.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Tue, 28 Apr 2020 08:20:42 -0400
+Message-ID: <CAGngYiU_gDceVw9G7id6PmpdJt1iegoNVA3-ozkQzDFN9hUR5g@mail.gmail.com>
+Subject: Re: [Q] devicetree overlays
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Frank, thank you for sharing your expertise. Much appreciated !
 
-In the work to remove proc_mnt I noticed that we were calling
-proc_flush_task now proc_flush_pid possibly multiple times for the same
-pid because of how de_thread works.
-
-This is a bare minimal patchset to sort out de_thread, by introducing
-exchange_tids and the helper of exchange_tids hlists_swap_heads_rcu.
-
-The actual call of exchange_tids should be slowpath so I have
-prioritized readability over getting every last drop of performance.
-
-I have also read through a bunch of the code to see if I could find
-anything that would be affected by this change.  Users of
-has_group_leader_pid were a good canidates.  But I also looked at other
-cases that might have a pid->task->pid transition.  I ignored other
-sources of races with de_thread and exec as those are preexisting.
-
-I found a close call with send_signals user of task_active_pid_ns, but
-all pids of a thread group are guaranteeds to be in the same pid
-namespace so there is not a problem.
-
-I found a few pieces of debugging code that do:
-
-	task = pid_task(pid, PIDTYPE_PID);
-        if (task) {
-        	printk("%u\n", task->pid);
-        }
-
-But I can't see how we care if it happens at the wrong moment that
-task->pid might not match pid_nr(pid);
-
-Similarly because the code in posix-cpu-timers goes pid->task->pid it
-feels like there should be a problem.  But as the code that works with
-PIDTYPE_PID is only available within the thread group, and as de_thread
-kills all of the other threads before it makes any changes of this
-kind the race can not happen.
-
-In short I don't think this change will introduce any regressions.
-
-Eric W. Biederman (2):
-      rculist: Add hlists_swap_heads_rcu
-      proc: Ensure we see the exit of each process tid exactly once
-
- fs/exec.c               |  5 +----
- include/linux/pid.h     |  1 +
- include/linux/rculist.h | 21 +++++++++++++++++++++
- kernel/pid.c            | 19 +++++++++++++++++++
- 4 files changed, 42 insertions(+), 4 deletions(-)
-
-Eric
+On Mon, Apr 27, 2020 at 4:26 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> On 4/16/20 9:46 AM, Sven Van Asbroeck wrote:
+> > My situation is this: I have hardware which consists of several modules.
+> > Knowledge about the type and location of these modules is located in an
+> > on-board eeprom.
+> >
+> > So now I need to assemble a devicetree, by puzzling various 'blobs' together.
+> > This could be done in the bootloader,
+>
+> Do this, if at all reasonably possible.
+>
+> > - is there perhaps a more canonical / idiomatic way to solve this?
+>
+> Yes, apply the overlays before booting.
