@@ -2,173 +2,107 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B35CC83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CE4C83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17E3A206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 00:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42F7C206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:03:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YKt1hryq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CHcQb9jd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbgD1A73 (ORCPT
+        id S1726348AbgD1BDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 20:59:29 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51578 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726263AbgD1A73 (ORCPT
+        Mon, 27 Apr 2020 21:03:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48842 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726263AbgD1BDD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 20:59:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588035567;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eCXtDAIPXE5kafrfekAlH3tsNBYP9X2R1z9BOoq2aRk=;
-        b=YKt1hryqKzUo05yylcpxXYsCc9Wahcu3yB2apuNgIGBO6XqwerZThLoUu9SebE6e1OHxUI
-        gg9VyNAdt7LXUxSjDYqwyRP+Doe9XgsG1nzVb31tgSUzfTG+rEp1T3kKtI5Swg11khYtmh
-        rm0M2AxyeGdtxh1lxt8sjjTtctHpxCU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-249-Z_pq3ejJNnaSiSk3m0hvjw-1; Mon, 27 Apr 2020 20:59:20 -0400
-X-MC-Unique: Z_pq3ejJNnaSiSk3m0hvjw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4D786468;
-        Tue, 28 Apr 2020 00:59:19 +0000 (UTC)
-Received: from localhost.localdomain (vpn2-54-127.bne.redhat.com [10.64.54.127])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C40F750C22;
-        Tue, 28 Apr 2020 00:59:16 +0000 (UTC)
-Reply-To: Gavin Shan <gshan@redhat.com>
-Subject: Re: [PATCH] arm64/mm: Reject invalid NUMA option
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>, shan.gavin@gmail.com,
-        will@kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20200424045314.16017-1-gshan@redhat.com>
- <20200424101132.GC1167@C02TD0UTHF1T.local>
-From:   Gavin Shan <gshan@redhat.com>
-Message-ID: <f83c0ce1-b1b2-31f4-60c8-15567b87a8ff@redhat.com>
-Date:   Tue, 28 Apr 2020 10:59:14 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Mon, 27 Apr 2020 21:03:03 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0A81C03C1A8
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 18:03:03 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id a7so381587pju.2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 18:03:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1KP0Ez7hKSnKb+povEU3BzAbH8Pt0yNwSNaVttztrRk=;
+        b=CHcQb9jdYyP6gCgFKoXSog75I+fwwXi8tHwq3opxqfLD6dG55Dk+bqbxAE6/DC0LAL
+         h7jn1mQIl6kqwVpYNyXzUYgmpWsue1PASrSuim/H5yEzov1PrhYU3ZaWEWKGUA2Lrvsp
+         Os2oC73xaWQfiRX49BC2SQKEUbSVbIG6AdZIU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1KP0Ez7hKSnKb+povEU3BzAbH8Pt0yNwSNaVttztrRk=;
+        b=Ot3kGVUHQrscm4YvQDenXE762YwCd15ap/P5oyc/Y5LXNFDEAA8qRDSvMkfEwJQwWj
+         QT3ghl+tUOT7nTEF9OJYa7hlc+5tDz0hGLsISggMRoGD2LGaLyU/VFD/c5Qw88UImLJM
+         Cqi8YqiEVF29/aqLdDzOYjD2UwsGAH+d0AFDOivs/elAQBzuNkZoNZIZ/wEjF2hEqujk
+         M5XO08jQO4jirRJeBbwLs2wVAc7MWKjbfPacOSrCp8VZexmOtGB4MEcJpaYphONXscQd
+         X1HcucyKOc0rlImAWV3FDuOUhn7DRSnYkaT2jRvWHWkGGSif9g6EyJqfjyNP1vjwSRzA
+         Ntxg==
+X-Gm-Message-State: AGi0PuaQ60vqgzYmuiYIdusMfc93cBzMUc2FLkkhS5em/VTzhKJK2fsX
+        NdlgfszaU4ELzy5CHdftIfsWyecz3Vc=
+X-Google-Smtp-Source: APiQypLW7LTz7ruoIMuR0LUUdSjDAZvB0lrl+jFCby4+jUoewb6428yRiCp9YX/6VyhmwAHvc7MXlg==
+X-Received: by 2002:a17:90b:2388:: with SMTP id mr8mr1765611pjb.107.1588035783213;
+        Mon, 27 Apr 2020 18:03:03 -0700 (PDT)
+Received: from dlunevwfh.Home (n1-43-86-194.mas2.nsw.optusnet.com.au. [1.43.86.194])
+        by smtp.gmail.com with ESMTPSA id q6sm9392922pfh.193.2020.04.27.18.03.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 Apr 2020 18:03:02 -0700 (PDT)
+From:   Daniil Lunev <dlunev@chromium.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Prashant Malani <pmalani@chromium.org>,
+        Daniil Lunev <dlunev@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: [PATCH] platform/chrome: cros_ec_typec: Handle NULL EC pointer during probe.
+Date:   Tue, 28 Apr 2020 11:02:56 +1000
+Message-Id: <20200428110253.1.I926f6741079cafb04ecb592130aef75b24ad31ae@changeid>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200424101132.GC1167@C02TD0UTHF1T.local>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+Missing EC in device hierarchy causes NULL pointer to be returned to the
+probe function which leads to NULL pointer dereference when trying to
+send a command to the EC. This can be the case if the device is missing
+or incorrectly configured in the firmware blob. Even if the situation
+occures, the driver shall not cause a kernel panic as the condition is
+not critical for the system functions.
 
-On 4/24/20 8:11 PM, Mark Rutland wrote:
-> [Adding Steve, who added str_has_prefix()]
-> 
-> On Fri, Apr 24, 2020 at 02:53:14PM +1000, Gavin Shan wrote:
->> The NUMA option is parsed by str_has_prefix() and the invalid option
->> like "numa=o" can be regarded as "numa=off" wrongly.
-> 
-> Are you certain that can pass? If that can happen, str_has_prefix() is
-> misnamed and does not seem to do what its kerneldoc says it does, as
-> "off" is not a prefix of "o".
-> 
+Signed-off-by: Daniil Lunev <dlunev@chromium.org>
+---
 
-Yes, It's possible. str_has_prefix() depends on strncmp(). In this particular
-case, it's equal to the snippet of code as below: strncmp() returns zero.
-str_has_prefix() returns 3.
+ drivers/platform/chrome/cros_ec_typec.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-int strncmp(const char *cs, const char *ct, size_t count)
-{
-         unsigned char c1, c2;
-
-         while (count) {
-                 c1 = *cs++;
-                 c2 = *ct++;
-                 if (c1 != c2)
-                         return c1 < c2 ? -1 : 1;
-                 if (!c1)                             /* break after first character is compared */
-                         break;
-                 count--;
-         }
-         return 0;                                    /* 0 returned */
-}
-
-static __always_inline size_t str_has_prefix(const char *str, const char *prefix)
-{
-         size_t len = strlen("o");
-         return strncmp("o", "off", 1) == 0 ? len : 0;
-}
-
->> This fixes the issue with sysfs_streq(), which have more sanity checks,
->> to avoid accepting the invalid options.
-> 
-> That doesn't sound immediately right, since this is an early parameter,
-> which has nothing to do with sysfs. Perhaps that's just a misleading
-> name?
-> 
-
-sysfs_streq() was introduced to compare the parameters received from sysfs
-entry, but I don't think it has to be necessarily tied with sysfs entry.
-So the name is bit misleading. Alternatively, we also can fix it in another
-way (as below) if we try to avoid using sysfs_streq().
-
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index 4decf1659700..b0c1ec78f50f 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -29,9 +29,13 @@ static __init int numa_parse_early_param(char *opt)
-  {
-         if (!opt)
-                 return -EINVAL;
--       if (str_has_prefix(opt, "off"))
+diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+index 874269c07073..30d99c930445 100644
+--- a/drivers/platform/chrome/cros_ec_typec.c
++++ b/drivers/platform/chrome/cros_ec_typec.c
+@@ -301,6 +301,11 @@ static int cros_typec_probe(struct platform_device *pdev)
+ 
+ 	typec->dev = dev;
+ 	typec->ec = dev_get_drvdata(pdev->dev.parent);
++	if (!typec->ec) {
++		dev_err(dev, "Failed to get Cros EC data\n");
++		return -EINVAL;
++	}
 +
-+       if (strlen(opt) >= 3 && str_has_prefix(opt, "off"))
-                 numa_off = true;
-
-> Thanks,
-> Mark.
-> 
-
-Thanks,
-Gavin
-
->> Signed-off-by: Gavin Shan <gshan@redhat.com>
->> ---
->>   arch/arm64/mm/numa.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
->> index 4decf1659700..bd458b28616a 100644
->> --- a/arch/arm64/mm/numa.c
->> +++ b/arch/arm64/mm/numa.c
->> @@ -29,7 +29,8 @@ static __init int numa_parse_early_param(char *opt)
->>   {
->>   	if (!opt)
->>   		return -EINVAL;
->> -	if (str_has_prefix(opt, "off"))
->> +
->> +	if (sysfs_streq(opt, "off"))
->>   		numa_off = true;
->>   
->>   	return 0;
->> -- 
->> 2.23.0
->>
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+ 	platform_set_drvdata(pdev, typec);
+ 
+ 	ret = cros_typec_get_cmd_version(typec);
+-- 
+2.24.1
 
