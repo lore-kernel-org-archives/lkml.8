@@ -2,52 +2,52 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FA0C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A731C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7082085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBB3B208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098455;
-	bh=6ymh/gctQCv87rOAbajxYDLg4dT8WsPkBqaz1SKp9Is=;
+	s=default; t=1588098462;
+	bh=/AT+BPEtbgPhVXoYP8gxORxx9FEIM787m91UbGqpI24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f4pl3VjMMped7QU/w+IGnnMEDVKKQFh7w35rPGZfJ6kKZ3NaEXbt61Bx+pl2+6OPb
-	 vcIigBokQ+KSYu8UAoRQ/pTnSTtCMI7Yxe+ifr8BqiJvAN5fMPvwJ7TaK/sxa6qWHx
-	 9XS85Skggzkgp/W8xhKFZE85sf9UdIDXreO26OxE=
+	b=dtU+UbhC5nFY3QZhrE8+IG3UtBk64ARkvczje/aV2f/VIY0Uhrr/Dumy7LimDPzo4
+	 bL15aTkh2+yJ8tF53oHzxTMsqQAkjpWlTZrTXzEHLkFVyQP4LyCEtZGx9YmPvMBtOS
+	 gBDcPd+/IU2SjXtiOa49Ri5ZvEMSsSPOR7DX69D8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729011AbgD1S1e (ORCPT
+        id S1729046AbgD1S1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:27:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39682 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:27:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728994AbgD1S13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:27:29 -0400
+        id S1729004AbgD1S1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:27:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6712208E0;
-        Tue, 28 Apr 2020 18:27:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 386F2208E0;
+        Tue, 28 Apr 2020 18:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098449;
-        bh=6ymh/gctQCv87rOAbajxYDLg4dT8WsPkBqaz1SKp9Is=;
+        s=default; t=1588098451;
+        bh=/AT+BPEtbgPhVXoYP8gxORxx9FEIM787m91UbGqpI24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pX9SogFx6wj02Uiae7J6sL9jpOpJk80dzNWLkc+UTcEEY3OSqvYiX9x4lgAAa2Aor
-         RbH5hhJMRcBitLX9uJB6/HLjq/BQ6Vj5BrFqHrPZpgt3xHRK/f1JNKbPqxE+OURE/8
-         EW9dvpioDqXqQC/4ctH8+k3/3bbi2Skv0glOIRZw=
+        b=yf3fobAAQPdSuyI2jB6c8/oW6LbjDsL9ajGiiA4ezhNMon4fSY/2pXQyYyTIV/Kbi
+         UB9CmxU1VakV/MZ34C6qgTOFNSNFHAPKvFfZKJ3cITNYyWVwhSw1PSDssIJDGALK5Z
+         SwbGtuF+ILlzZooEVH/JGOa3l3Ot294e8UayuyDs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 037/167] perf/core: Disable page faults when getting phys address
-Date:   Tue, 28 Apr 2020 20:23:33 +0200
-Message-Id: <20200428182229.820308186@linuxfoundation.org>
+        stable@vger.kernel.org, Manoj Malviya <manojmalviya@chelsio.com>,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 046/167] cxgb4: fix large delays in PTP synchronization
+Date:   Tue, 28 Apr 2020 20:23:42 +0200
+Message-Id: <20200428182230.896691289@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
 References: <20200428182225.451225420@linuxfoundation.org>
@@ -60,71 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 
-[ Upstream commit d3296fb372bf7497b0e5d0478c4e7a677ec6f6e9 ]
+[ Upstream commit bd019427bf3623ee3c7d2845cf921bbf4c14846c ]
 
-We hit following warning when running tests on kernel
-compiled with CONFIG_DEBUG_ATOMIC_SLEEP=y:
+Fetching PTP sync information from mailbox is slow and can take
+up to 10 milliseconds. Reduce this unnecessary delay by directly
+reading the information from the corresponding registers.
 
- WARNING: CPU: 19 PID: 4472 at mm/gup.c:2381 __get_user_pages_fast+0x1a4/0x200
- CPU: 19 PID: 4472 Comm: dummy Not tainted 5.6.0-rc6+ #3
- RIP: 0010:__get_user_pages_fast+0x1a4/0x200
- ...
- Call Trace:
-  perf_prepare_sample+0xff1/0x1d90
-  perf_event_output_forward+0xe8/0x210
-  __perf_event_overflow+0x11a/0x310
-  __intel_pmu_pebs_event+0x657/0x850
-  intel_pmu_drain_pebs_nhm+0x7de/0x11d0
-  handle_pmi_common+0x1b2/0x650
-  intel_pmu_handle_irq+0x17b/0x370
-  perf_event_nmi_handler+0x40/0x60
-  nmi_handle+0x192/0x590
-  default_do_nmi+0x6d/0x150
-  do_nmi+0x2f9/0x3c0
-  nmi+0x8e/0xd7
-
-While __get_user_pages_fast() is IRQ-safe, it calls access_ok(),
-which warns on:
-
-  WARN_ON_ONCE(!in_task() && !pagefault_disabled())
-
-Peter suggested disabling page faults around __get_user_pages_fast(),
-which gets rid of the warning in access_ok() call.
-
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20200407141427.3184722-1-jolsa@kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 9c33e4208bce ("cxgb4: Add PTP Hardware Clock (PHC) support")
+Signed-off-by: Manoj Malviya <manojmalviya@chelsio.com>
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/events/core.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c |   27 +++++--------------------
+ drivers/net/ethernet/chelsio/cxgb4/t4_regs.h   |    3 ++
+ 2 files changed, 9 insertions(+), 21 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 243717177f446..533c193481899 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -6734,9 +6734,12 @@ static u64 perf_virt_to_phys(u64 virt)
- 		 * Try IRQ-safe __get_user_pages_fast first.
- 		 * If failed, leave phys_addr as 0.
- 		 */
--		if ((current->mm != NULL) &&
--		    (__get_user_pages_fast(virt, 1, 0, &p) == 1))
--			phys_addr = page_to_phys(p) + virt % PAGE_SIZE;
-+		if (current->mm != NULL) {
-+			pagefault_disable();
-+			if (__get_user_pages_fast(virt, 1, 0, &p) == 1)
-+				phys_addr = page_to_phys(p) + virt % PAGE_SIZE;
-+			pagefault_enable();
-+		}
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
+@@ -311,32 +311,17 @@ static int cxgb4_ptp_adjtime(struct ptp_
+  */
+ static int cxgb4_ptp_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
+ {
+-	struct adapter *adapter = (struct adapter *)container_of(ptp,
+-				   struct adapter, ptp_clock_info);
+-	struct fw_ptp_cmd c;
++	struct adapter *adapter = container_of(ptp, struct adapter,
++					       ptp_clock_info);
+ 	u64 ns;
+-	int err;
  
- 		if (p)
- 			put_page(p);
--- 
-2.20.1
-
+-	memset(&c, 0, sizeof(c));
+-	c.op_to_portid = cpu_to_be32(FW_CMD_OP_V(FW_PTP_CMD) |
+-				     FW_CMD_REQUEST_F |
+-				     FW_CMD_READ_F |
+-				     FW_PTP_CMD_PORTID_V(0));
+-	c.retval_len16 = cpu_to_be32(FW_CMD_LEN16_V(sizeof(c) / 16));
+-	c.u.ts.sc = FW_PTP_SC_GET_TIME;
+-
+-	err = t4_wr_mbox(adapter, adapter->mbox, &c, sizeof(c), &c);
+-	if (err < 0) {
+-		dev_err(adapter->pdev_dev,
+-			"PTP: %s error %d\n", __func__, -err);
+-		return err;
+-	}
++	ns = t4_read_reg(adapter, T5_PORT_REG(0, MAC_PORT_PTP_SUM_LO_A));
++	ns |= (u64)t4_read_reg(adapter,
++			       T5_PORT_REG(0, MAC_PORT_PTP_SUM_HI_A)) << 32;
+ 
+ 	/* convert to timespec*/
+-	ns = be64_to_cpu(c.u.ts.tm);
+ 	*ts = ns_to_timespec64(ns);
+-
+-	return err;
++	return 0;
+ }
+ 
+ /**
+--- a/drivers/net/ethernet/chelsio/cxgb4/t4_regs.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/t4_regs.h
+@@ -1900,6 +1900,9 @@
+ 
+ #define MAC_PORT_CFG2_A 0x818
+ 
++#define MAC_PORT_PTP_SUM_LO_A 0x990
++#define MAC_PORT_PTP_SUM_HI_A 0x994
++
+ #define MPS_CMN_CTL_A	0x9000
+ 
+ #define COUNTPAUSEMCRX_S    5
 
 
