@@ -2,79 +2,73 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C06C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF60C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C3BC206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FFCC206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:34:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgD1LeU (ORCPT
+        id S1726757AbgD1Ler (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:34:20 -0400
-Received: from elvis.franken.de ([193.175.24.41]:58686 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726450AbgD1LeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:34:19 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jTOV6-0004MF-03; Tue, 28 Apr 2020 13:34:08 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 33224C0344; Tue, 28 Apr 2020 13:33:26 +0200 (CEST)
-Date:   Tue, 28 Apr 2020 13:33:26 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, john.garry@huawei.com,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Stephen Kitt <steve@sk2.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
-        Daniel Silsby <dansilsby@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] MIPS: Massage address spaces headers
-Message-ID: <20200428113326.GD11443@alpha.franken.de>
-References: <20200428021437.2000066-1-jiaxun.yang@flygoat.com>
- <20200428021437.2000066-2-jiaxun.yang@flygoat.com>
+        Tue, 28 Apr 2020 07:34:47 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:53384 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726450AbgD1Leq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 07:34:46 -0400
+Received: from fsav301.sakura.ne.jp (fsav301.sakura.ne.jp [153.120.85.132])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 03SBXTin099181;
+        Tue, 28 Apr 2020 20:33:29 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav301.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav301.sakura.ne.jp);
+ Tue, 28 Apr 2020 20:33:29 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav301.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 03SBXT6c099160
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Tue, 28 Apr 2020 20:33:29 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+References: <20200424024239.63607-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20200425004609.GE8982@jagdpanzerIV.localdomain>
+ <842ff40b-a232-6098-4333-996a3033b30a@i-love.sakura.ne.jp>
+ <20200427062117.GC486@jagdpanzerIV.localdomain>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <4dae86af-1d9a-f5a8-cff6-aa91ec038a79@i-love.sakura.ne.jp>
+Date:   Tue, 28 Apr 2020 20:33:21 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428021437.2000066-2-jiaxun.yang@flygoat.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200427062117.GC486@jagdpanzerIV.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 10:14:12AM +0800, Jiaxun Yang wrote:
-> That would allow us modify kernel vm address spaces without
-> step into the hell of includes.
+On 2020/04/27 15:21, Sergey Senozhatsky wrote:
+>> KERN_NO_CONSOLES is for type of messages where "saved for later analysis" is
+>> important but "printed for immediate notification" is not important.
+>> In other words, KERN_NO_CONSOLES is NOT for dying messages where "printed for
+>> immediate notification" is important.
 > 
-> Also use some marcos for address spaces to make spaces.h more
-> clear.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> per-console loglevel is a user configurable parameter.
+> KERN_NO_CONSOLES is a hard-coded policy.
 
-I don't like this patch as I can't see a good reason for shuffling
-stuff arround. Can you drop this from this series ?
+But given that whether to use KERN_NO_CONSOLES is configurable via e.g. sysctl,
+KERN_NO_CONSOLES will become a user configurable parameter. What's still wrong?
 
-Thomas.
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
