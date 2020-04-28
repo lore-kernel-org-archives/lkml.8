@@ -2,203 +2,209 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE7CC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8C1C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3509A206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B50A2206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:12:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kWAvqgz7"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="kkAfDby8";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bBHd/JsD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728038AbgD1OLY (ORCPT
+        id S1728052AbgD1OL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:11:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726949AbgD1OLX (ORCPT
+        Tue, 28 Apr 2020 10:11:59 -0400
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:49361 "EHLO
+        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726949AbgD1OL7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:11:23 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 829F8C03C1A9;
-        Tue, 28 Apr 2020 07:11:23 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id h69so10379486pgc.8;
-        Tue, 28 Apr 2020 07:11:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xjtieliq6TUIPTk1KZwdT+BI4FV+JKQhvNa0mOc/Kj0=;
-        b=kWAvqgz7oheXnWxczzfP5mI2EuexL0EIvHoPiPWeTnApOMqC9Z4PcsRFMa+c+auGPF
-         81oKdZe1dndBoNPJY5zXrkkDVQje37rIguzUSPjUftqhkTeZCg2wK3DcwpsroedAlTGh
-         p3jFZt/S/s3S3X7QyBTOiwgDS+sCXq4IKGrEKqnGYBtOh428LZHyXAirvSBKKG037jMT
-         1LZ6EpQWGIcRE7ftpM0qCaV6h2WghjLCV8wdgA8jREstsMi8XgNO7B9CzIwAluxPTNYb
-         47ToXf9UrLPu4cKIC+cgwtQDoCcozWhjow50CxvsRHLYimjaUMOoydaR1txRFdCGO5qU
-         UQag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xjtieliq6TUIPTk1KZwdT+BI4FV+JKQhvNa0mOc/Kj0=;
-        b=jUXTpQ4sldbWybphWtR/Ue+5+Po78N15lm1Dte4u1jwqaN2VLDq+w/JwFlM6MeP405
-         Sy/vSV/v8xFlzoWhxmA78JibgqLXTRlUzj8aPvIad61lWcRhjPavhipyo7bbRMfcq0RF
-         491qUu9Tr8EQW6Oc8nzDiWczz8XYfqq25Cp3RZSBINw8QZUBBXeOP9tP/zBHbIublK/l
-         JKMIcUJaPEPONO950DBdgahWoAil3SVmsTkbRuM6sj2tw5VGdtlzX8nBn9hCRwVOZCHZ
-         ZXDqMJTZeIk6HaRwFk2Ji/jHvQIMnlCp4fRC9Se+VczVH4mN23i1enL4JwQcwSGKITwS
-         9NPw==
-X-Gm-Message-State: AGi0PubXkH99Sy2jgw4sP5/uvQ0/Ssgldq7pheBqGoeCMt7iFZN4oPDv
-        v88KlyD1QseMLGg30mqMPw==
-X-Google-Smtp-Source: APiQypKQmLuR+ZTcuQosMy20qQlPtC6e9KuT+BurmUwR+/+YrWnT8lz/gDrfNUIdcS4V12CpzIJj2Q==
-X-Received: by 2002:a63:b219:: with SMTP id x25mr1764030pge.251.1588083082791;
-        Tue, 28 Apr 2020 07:11:22 -0700 (PDT)
-Received: from madhuparna-HP-Notebook ([2402:3a80:d33:c58:9c84:8ece:9d0f:426b])
-        by smtp.gmail.com with ESMTPSA id h8sm1708015pfo.143.2020.04.28.07.11.17
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Apr 2020 07:11:21 -0700 (PDT)
-From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
-Date:   Tue, 28 Apr 2020 19:41:14 +0530
-To:     Qian Cai <cai@lca.pw>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Amol Grover <frextrite@gmail.com>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        syzbot <syzbot+1519f497f2f9f08183c6@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>, kuba@kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "paul E. McKenney" <paulmck@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: Re: linux-next boot error: WARNING: suspicious RCU usage in
- ipmr_get_table
-Message-ID: <20200428141114.GA23123@madhuparna-HP-Notebook>
-References: <000000000000df9a9805a455e07b@google.com>
- <CACT4Y+YnjK+kq0pfb5fe-q1bqe2T1jq_mvKHf--Z80Z3wkyK1Q@mail.gmail.com>
- <34558B83-103E-4205-8D3D-534978D5A498@lca.pw>
+        Tue, 28 Apr 2020 10:11:59 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id EFC1A537;
+        Tue, 28 Apr 2020 10:11:57 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 28 Apr 2020 10:11:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=0KxVBVYs0AHv0VR+aaPL51bJk2Z
+        WuGKpm7rDGF8ENwE=; b=kkAfDby8QBaDdrJ1JRkLM/F29ZwOJzwSujk6jFkoXmK
+        +JWMFoK9WBDj7xOwbZKgqb/Fju1dSU11CZhAq52yKoxalEb8KKoZQdcfmUISVt6X
+        fx7s879sWd5J8bmToMA9NkZHJoZaZXwssls/Fbw5sKwBHqMMm54LcBJwPgLnoIGr
+        OJtvYyOkVHO6EJATQvi5I7tGkqOY1Q44z6ITVeeaBYwOV+WsHeUT7WtA7+3vY+JJ
+        iL6okA2iVaN2lzxwdote8eyfApTznZ4PjPsr/uDgr4+ZD+9rCleri0+m5B+rbAy0
+        WCLSxOPxJOuvc3c41zBREU8Qd4acVN+j+Waf8qujdGg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=0KxVBV
+        Ys0AHv0VR+aaPL51bJk2ZWuGKpm7rDGF8ENwE=; b=bBHd/JsDzd6U6Jj2pk7r7s
+        9adptEPJ8bYklmwPx6yoQQ/ryib1GSykxnuaWNnExFhquvkshGFntpl6bHUJNvdt
+        WgbH1K8p5Lua1RkzMUuavW2cYU6lLqnJA+lBnDvy//kvkflb8xac3R/YM/eK6RZ4
+        Gxc/ONbNv2xZupjyAJS+WY7KPu/HFMUiIHITfbPKUw59g+J/aDrZ1zxJAPIvweBv
+        YJwoWpQvvZiPbeXqCMYOAur3cmRVVKqF2Btgfz9yhrm5FWgfXgAZRla9QdSzg+CU
+        8a7fZ7Qp7TUKZdnjPPOB8YI/naft2DZy70hhutGFGbVW6RzoIQ5eQ0VNKOXJZkDA
+        ==
+X-ME-Sender: <xms:qjmoXngQ8rthCZWjGsXrGgb9BU3wlMpYgnW19yBbuUdNu-Gp-hyAeQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedugdejfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
+    epghhithhhuhgsrdgtohhmnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgv
+    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnh
+    hordhtvggthh
+X-ME-Proxy: <xmx:qjmoXia97xJ_LAD6HQ2iwwEZv8R9l0WbUjJHriZj3eb9E9axqhz_0w>
+    <xmx:qjmoXjFmd0IAb6sxOvQHrwfq2RtQHVkpXeXPe6H_e2pKJX9zp9-iIw>
+    <xmx:qjmoXnYfLgaSFWDw2vxpO7O7Vo87vq-osznzrGEZ8q58YO_BLeFzGA>
+    <xmx:rTmoXgf2m6B-6uM1t3STX1ynXZnyhixiG59_yF8LDNvM0l47f7i3TUCQZ4U>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2CDE9328005A;
+        Tue, 28 Apr 2020 10:11:54 -0400 (EDT)
+Date:   Tue, 28 Apr 2020 16:11:49 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Phil Elwell <phil@raspberrypi.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 91/91] ARM: dts: bcm2711: Enable the display pipeline
+Message-ID: <20200428141149.22n24halgw3p3qa6@gilmour.lan>
+References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+ <7e7941611dad8106e5d9b03eeae06a6aefc0772c.1587742492.git-series.maxime@cerno.tech>
+ <aba321ef-16fa-4f9b-a3a6-47b394daeac2@i2se.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2uzyukowame55xt3"
 Content-Disposition: inline
-In-Reply-To: <34558B83-103E-4205-8D3D-534978D5A498@lca.pw>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <aba321ef-16fa-4f9b-a3a6-47b394daeac2@i2se.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 09:56:59AM -0400, Qian Cai wrote:
-> 
-> 
-> > On Apr 28, 2020, at 4:57 AM, Dmitry Vyukov <dvyukov@google.com> wrote:
-> >> net/ipv4/ipmr.c:136 RCU-list traversed in non-reader section!!
-> 
-> https://lore.kernel.org/netdev/20200222063835.14328-2-frextrite@gmail.com/
-> 
-> Never been picked up for a few months due to some reasons. You could probably
-> need to convince David, Paul, Steven or Linus to unblock the bot or carry patches
-> on your own?
-> 
-> >> net/ipv6/ip6mr.c:124 RCU-list traversed in non-reader section!!
-> 
-> Not sure about this if anyone is working on it. Adding a few people...
->
-I will have a look at this one.
 
-> >> 
-> >> other info that might help us debug this:
-> >> 
-> >> 
-> >> rcu_scheduler_active = 2, debug_locks = 1
-> >> 1 lock held by swapper/0/1:
-> >> #0: ffffffff8a5a6330 (pernet_ops_rwsem){+.+.}-{3:3}, at: register_pernet_subsys+0x16/0x40 net/core/net_namespace.c:1257
-> >> 
-> >> stack backtrace:
-> >> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc3-next-20200428-syzkaller #0
-> >> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> >> Call Trace:
-> >> __dump_stack lib/dump_stack.c:77 [inline]
-> >> dump_stack+0x18f/0x20d lib/dump_stack.c:118
-> >> ip6mr_get_table+0x153/0x180 net/ipv6/ip6mr.c:124
-> >> ip6mr_new_table+0x1b/0x70 net/ipv6/ip6mr.c:382
-> >> ip6mr_rules_init net/ipv6/ip6mr.c:236 [inline]
-> >> ip6mr_net_init+0x133/0x3f0 net/ipv6/ip6mr.c:1310
-> >> ops_init+0xaf/0x420 net/core/net_namespace.c:151
-> >> __register_pernet_operations net/core/net_namespace.c:1140 [inline]
-> >> register_pernet_operations+0x346/0x840 net/core/net_namespace.c:1217
-> >> register_pernet_subsys+0x25/0x40 net/core/net_namespace.c:1258
-> >> ip6_mr_init+0x49/0x152 net/ipv6/ip6mr.c:1363
-> >> inet6_init+0x1d7/0x6dc net/ipv6/af_inet6.c:1032
-> >> do_one_initcall+0x10a/0x7d0 init/main.c:1159
-> >> do_initcall_level init/main.c:1232 [inline]
-> >> do_initcalls init/main.c:1248 [inline]
-> >> do_basic_setup init/main.c:1268 [inline]
-> >> kernel_init_freeable+0x501/0x5ae init/main.c:1454
-> >> kernel_init+0xd/0x1bb init/main.c:1359
-> >> ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
-> >> 
-> >> =============================
-> >> WARNING: suspicious RCU usage
-> >> 5.7.0-rc3-next-20200428-syzkaller #0 Not tainted
-> >> -----------------------------
-> >> security/integrity/evm/evm_main.c:231 RCU-list traversed in non-reader section!!
-> 
-> Ditto.
->
-I am working on this one(evm_main.c). I am in touch with the maintaners
-and I will fix this one soon.
+--2uzyukowame55xt3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thank you,
-Madhuparna
-> >> 
-> >> other info that might help us debug this:
-> >> 
-> >> 
-> >> rcu_scheduler_active = 2, debug_locks = 1
-> >> 2 locks held by systemd/1:
-> >> #0: ffff888098dfa450 (sb_writers#8){.+.+}-{0:0}, at: sb_start_write include/linux/fs.h:1659 [inline]
-> >> #0: ffff888098dfa450 (sb_writers#8){.+.+}-{0:0}, at: mnt_want_write+0x3a/0xb0 fs/namespace.c:354
-> >> #1: ffff8880988e8310 (&type->i_mutex_dir_key#6){++++}-{3:3}, at: inode_lock include/linux/fs.h:799 [inline]
-> >> #1: ffff8880988e8310 (&type->i_mutex_dir_key#6){++++}-{3:3}, at: vfs_setxattr+0x92/0xf0 fs/xattr.c:219
-> >> 
-> >> stack backtrace:
-> >> CPU: 0 PID: 1 Comm: systemd Not tainted 5.7.0-rc3-next-20200428-syzkaller #0
-> >> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> >> Call Trace:
-> >> __dump_stack lib/dump_stack.c:77 [inline]
-> >> dump_stack+0x18f/0x20d lib/dump_stack.c:118
-> >> evm_protected_xattr+0x1c2/0x210 security/integrity/evm/evm_main.c:231
-> >> evm_protect_xattr.isra.0+0xb6/0x3d0 security/integrity/evm/evm_main.c:318
-> >> evm_inode_setxattr+0xc4/0xf0 security/integrity/evm/evm_main.c:387
-> >> security_inode_setxattr+0x18f/0x200 security/security.c:1297
-> >> vfs_setxattr+0xa7/0xf0 fs/xattr.c:220
-> >> setxattr+0x23d/0x330 fs/xattr.c:451
-> >> path_setxattr+0x170/0x190 fs/xattr.c:470
-> >> __do_sys_setxattr fs/xattr.c:485 [inline]
-> >> __se_sys_setxattr fs/xattr.c:481 [inline]
-> >> __x64_sys_setxattr+0xc0/0x160 fs/xattr.c:481
-> >> do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-> >> entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> >> RIP: 0033:0x7fe46005e67a
-> >> Code: 48 8b 0d 21 18 2b 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 49 89 ca b8 bc 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ee 17 2b 00 f7 d8 64 89 01 48
-> >> RSP: 002b:00007fffef423568 EFLAGS: 00000246 ORIG_RAX: 00000000000000bc
-> >> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fe46005e67a
-> >> RDX: 00007fffef4235e0 RSI: 0000556ea53ddf9b RDI: 0000556ea6766760
-> >> RBP: 0000556ea53ddf9b R08: 0000000000000000 R09: 0000000000000030
-> >> R10: 0000000000000020 R11: 0000000000000246 R12: 00007fffef4235e0
-> >> R13: 0000000000000020 R14: 0000000000000000 R15: 0000556ea6751700
-> >> 
-> >> security/device_cgroup.c:357 RCU-list traversed in non-reader section!!
-> 
-> https://lore.kernel.org/lkml/20200406105950.GA2285@workstation-kernel-dev/
-> 
-> The same story. The patch had been ignored for a while.
-> 
-> 
-> 
+Hi Stefan,
+
+On Sat, Apr 25, 2020 at 10:54:22PM +0200, Stefan Wahren wrote:
+> Hi Maxime,
+>=20
+> Am 24.04.20 um 17:35 schrieb Maxime Ripard:
+> > Now that all the drivers have been adjusted for it, let's bring in the
+> > necessary device tree changes.
+> >
+> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> > ---
+> >  arch/arm/boot/dts/bcm2711-rpi-4-b.dts |  46 +++++++++++-
+> >  arch/arm/boot/dts/bcm2711.dtsi        | 115 ++++++++++++++++++++++++++-
+> >  2 files changed, 160 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/=
+bcm2711-rpi-4-b.dts
+> > index 3205d2dfa898..0efbc4412dc9 100644
+> > --- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+> > +++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+> > @@ -220,3 +220,49 @@
+> >  &vchiq {
+> >  	interrupts =3D <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> >  };
+> > +
+> > +&vc4 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&pixelvalve0 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&pixelvalve1 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&pixelvalve2 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&pixelvalve3 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&pixelvalve4 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&hdmi0 {
+> > +	clocks =3D <&firmware_clocks 13>, <&dvp 0>;
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&ddc0 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&hdmi1 {
+> > +	clocks =3D <&firmware_clocks 13>, <&dvp 1>;
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&ddc1 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&hvs {
+> > +	clocks =3D <&firmware_clocks 4>;
+> > +};
+> > diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711=
+=2Edtsi
+> > index 00bcaed1be32..a6549fa6e62b 100644
+> > --- a/arch/arm/boot/dts/bcm2711.dtsi
+> > +++ b/arch/arm/boot/dts/bcm2711.dtsi
+> > @@ -12,6 +12,11 @@
+> > =20
+> >  	interrupt-parent =3D <&gicv2>;
+> > =20
+> ...
+> > +
+> > +		ddc0: i2c@7ef04500 {
+> > +			compatible =3D "brcm,bcm2711-hdmi-i2c";
+> > +			reg =3D <0x7ef04500 0x100>, <0x7ef00b00 0x300>;
+> > +			reg-names =3D "bsc", "auto-i2c";
+> > +			clock-frequency =3D <390000>;
+>=20
+> according to a patch [1] from Dave Stevenson the i2c clock frequencies
+> are too high.
+>=20
+> [1] -
+> https://github.com/raspberrypi/linux/pull/3515/commits/c09f108de27e8bd199=
+5e7713c6128fa79e69579a
+
+Good catch, I'll merge it in my next round of changes
+
+Maxime
+
+--2uzyukowame55xt3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqg5pQAKCRDj7w1vZxhR
+xQ1LAP91xvr/EAIzvWK5E+bjOZazwPcp4DpONK5z9Xr2cRoGMgD/dGYehbr08g+i
+YgQKRp6pnmAlE6W5yIlpR5WwrJ2vSwQ=
+=6BJB
+-----END PGP SIGNATURE-----
+
+--2uzyukowame55xt3--
