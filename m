@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CA6C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53127C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 591BD2076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 304E32085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:38:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099102;
-	bh=H90Nsv+wVP4/LXJzxuG2raP4TI0h0wB2gXft8jWlVFI=;
+	s=default; t=1588099109;
+	bh=wtqI/g9Pa7thEIBev7QK2KGUrwesgzWnQWSAGQ6GSDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1uGEWT1WS66siiN6Gl4qiV/SnR/zd45JsCVKw0OexQFA9lmX0ehbKH6k2JTixAAwF
-	 FSR/2kA6B7FdjieGOH7D6t7UYWefBkRBofAkoB7EgigPfQ6qanW7KOmNkLEuHJQheJ
-	 T3TDRtxV0xTHM5y9amC4swDvHdWgS0uUrW4cm/Ik=
+	b=GYHBZPQKhLZe9zZW09BJBnLkogiRLxupsxac8WvTfMT57thm0A1idLJ/sNaqYtTDn
+	 tah5CKw264wdS9hxjkFfZzK5wE3yUOeXbKJSA+IlPsX3ZMfASfO3xZUeulungP5Bdf
+	 JQLsuD25t96PeOmJy0Z/7rehO3AZEtNgwgIz6In0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730620AbgD1SiV (ORCPT
+        id S1730628AbgD1Si1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:38:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56634 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:38:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729691AbgD1SiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:38:15 -0400
+        id S1730219AbgD1SiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:38:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 631822076A;
-        Tue, 28 Apr 2020 18:38:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC4D72085B;
+        Tue, 28 Apr 2020 18:38:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099094;
-        bh=H90Nsv+wVP4/LXJzxuG2raP4TI0h0wB2gXft8jWlVFI=;
+        s=default; t=1588099102;
+        bh=wtqI/g9Pa7thEIBev7QK2KGUrwesgzWnQWSAGQ6GSDE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uDcxW9R5bmt15V4mx1Go+EbRgLjun1r5o6e0CAWYR07iur0nQ0C99fuaK79RRw09v
-         rAKydZiDg29/JDKbrYpJ5SNup7Yh8/zb0VzjH8SdwRlMFMzYbdSTH57WJuRQ5yQbTg
-         +C27u4Ni37jKeDxnjVv1Cl2mmEHYuKbQJRBV9qvk=
+        b=AkXEuJz/2bXivCbI/MAHjiKJzcS4arV6kUxVz4Lzb58Ncw1ZNwPMu5aBV7C8L8mwK
+         Os2+KyoOGxLWvnYuISF2BW91QX37xCEMS5WhUv/k9SyO0QVdLJcD0OZXnUkM4djIjO
+         I3Ptp2tEyoD3YpqIgXYMpGrZeHITYuIu9PCU3YMc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 096/131] ALSA: hda/realtek - Add new codec supported for ALC245
-Date:   Tue, 28 Apr 2020 20:25:08 +0200
-Message-Id: <20200428182237.142509361@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 5.6 155/167] xhci: Dont clear hub TT buffer on ep0 protocol stall
+Date:   Tue, 28 Apr 2020 20:25:31 +0200
+Message-Id: <20200428182245.176380797@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,47 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit 7fbdcd8301a84c09cebfa64f1317a6dafeec9188 upstream.
+commit 8f97250c21f0cf36434bf5b7ddf4377406534cd1 upstream.
 
-Enable new codec supported for ALC245.
+The default control endpoint ep0 can return a STALL indicating the
+device does not support the control transfer requests. This is called
+a protocol stall and does not halt the endpoint.
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/8c0804738b2c42439f59c39c8437817f@realtek.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+xHC behaves a bit different. Its internal endpoint state will always
+be halted on any stall, even if the device side of the endpiont is not
+halted. So we do need to issue the reset endpoint command to clear the
+xHC host intenal endpoint halt state, but should not request the HS hub
+to clear the TT buffer unless device side of endpoint is halted.
+
+Clearing the hub TT buffer at protocol stall caused ep0 to become
+unresponsive for some FS/LS devices behind HS hubs, and class drivers
+failed to set the interface due to timeout:
+
+usb 1-2.1: 1:1: usb_set_interface failed (-110)
+
+Fixes: ef513be0a905 ("usb: xhci: Add Clear_TT_Buffer")
+Cc: <stable@vger.kernel.org> # v5.3
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200421140822.28233-4-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/usb/host/xhci-ring.c |   16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -380,6 +380,7 @@ static void alc_fill_eapd_coef(struct hd
- 	case 0x10ec0233:
- 	case 0x10ec0235:
- 	case 0x10ec0236:
-+	case 0x10ec0245:
- 	case 0x10ec0255:
- 	case 0x10ec0256:
- 	case 0x10ec0257:
-@@ -7792,6 +7793,7 @@ static int patch_alc269(struct hda_codec
- 		spec->gen.mixer_nid = 0;
- 		break;
- 	case 0x10ec0215:
-+	case 0x10ec0245:
- 	case 0x10ec0285:
- 	case 0x10ec0289:
- 		spec->codec_variant = ALC269_TYPE_ALC215;
-@@ -8913,6 +8915,7 @@ static const struct hda_device_id snd_hd
- 	HDA_CODEC_ENTRY(0x10ec0234, "ALC234", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0235, "ALC233", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0236, "ALC236", patch_alc269),
-+	HDA_CODEC_ENTRY(0x10ec0245, "ALC245", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0255, "ALC255", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0256, "ALC256", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0257, "ALC257", patch_alc269),
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -1872,7 +1872,6 @@ static void xhci_cleanup_halted_endpoint
+ 		ep->ep_state |= EP_HARD_CLEAR_TOGGLE;
+ 		xhci_cleanup_stalled_ring(xhci, slot_id, ep_index, stream_id,
+ 					  td);
+-		xhci_clear_hub_tt_buffer(xhci, td, ep);
+ 	}
+ 	xhci_ring_cmd_db(xhci);
+ }
+@@ -1993,11 +1992,18 @@ static int finish_td(struct xhci_hcd *xh
+ 	if (trb_comp_code == COMP_STALL_ERROR ||
+ 		xhci_requires_manual_halt_cleanup(xhci, ep_ctx,
+ 						trb_comp_code)) {
+-		/* Issue a reset endpoint command to clear the host side
+-		 * halt, followed by a set dequeue command to move the
+-		 * dequeue pointer past the TD.
+-		 * The class driver clears the device side halt later.
++		/*
++		 * xhci internal endpoint state will go to a "halt" state for
++		 * any stall, including default control pipe protocol stall.
++		 * To clear the host side halt we need to issue a reset endpoint
++		 * command, followed by a set dequeue command to move past the
++		 * TD.
++		 * Class drivers clear the device side halt from a functional
++		 * stall later. Hub TT buffer should only be cleared for FS/LS
++		 * devices behind HS hubs for functional stalls.
+ 		 */
++		if ((ep_index != 0) || (trb_comp_code != COMP_STALL_ERROR))
++			xhci_clear_hub_tt_buffer(xhci, td, ep);
+ 		xhci_cleanup_halted_endpoint(xhci, slot_id, ep_index,
+ 					ep_ring->stream_id, td, EP_HARD_RESET);
+ 	} else {
 
 
