@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7CFC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7786C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B05920B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 859412054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:43:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099405;
-	bh=aT9hg1sNSwLGT6XuCK3dDWR6DyvsBM1bIaw3wIjbf28=;
+	s=default; t=1588099412;
+	bh=Jq+43dOowewCe+eyDo+Q0xe3EHHPuoR53eIrtwTUFs8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tpSNq3y+QEOw0eA+NDW4hL2PLO91OHqHyw+4cAsPRucMDQUQEN1zq5TZNGwDhSg0A
-	 mkXwNyqui0aUtQjcrzuRAs7gBzgIolemsOGKURFB3yaCM6DoJl/rUb8QaRsiloJ1P2
-	 /I2l/GL2/bb+adbA5sLLncrx8FM+XpIxKwPhz9x8=
+	b=Dv4KnhI1WNdgeVhoztPa7GDpB5geN327bL6dx9zSP0s7erZvWivu1OCIIdMUDL3QE
+	 oCcjZqtX2Ej7e44og/arVdEMPW0K6uLsS5GOACo0nPIJkumqecUyOQ7KtMKtgfg7yk
+	 3HLjPTBXeIOB2X3rman9cWwiBjDds/IiQa/n6eF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbgD1SnY (ORCPT
+        id S1729600AbgD1Snb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:43:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35626 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:43:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731219AbgD1SnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:43:21 -0400
+        id S1731226AbgD1Sn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:43:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DB3120575;
-        Tue, 28 Apr 2020 18:43:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AE622085B;
+        Tue, 28 Apr 2020 18:43:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099400;
-        bh=aT9hg1sNSwLGT6XuCK3dDWR6DyvsBM1bIaw3wIjbf28=;
+        s=default; t=1588099408;
+        bh=Jq+43dOowewCe+eyDo+Q0xe3EHHPuoR53eIrtwTUFs8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CcOT7e2+XBIurtNVMBGnJ858hkWBciuBrtZMzqq5iRNdJEZhbRf5i/cfgjR6akm7O
-         3j6WRTYIZNXA2c65CsIX5f1R8zY6fqR1Coy6ESq8BQVxO+f7Q5YY2DLE+jbWb1FF+n
-         zhqIHbVOCmS1nvhU1LfmHjH+cr73VXPFwt0eIgGE=
+        b=k96YHEOA3dHuGy+/FckMF12MOoZ5Q/rgBMC798f6h7ByXslZQqaJc7/0G1s7wLebP
+         gw8Aoraz6n7m0VdC5jsXNHAZSk/OYkVRwV4T92ZJQnMML8PkfZg7usgZiNSQSrnIxy
+         B+P3xAA/SDsYMLbtXbcyXmzw9VGLOpN5a2nVmdUY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Paulo Alcantara (SUSE)" <pc@cjr.nz>,
-        Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Aurelien Aptel <aaptel@suse.com>
-Subject: [PATCH 5.4 133/168] cifs: fix uninitialised lease_key in open_shroot()
-Date:   Tue, 28 Apr 2020 20:25:07 +0200
-Message-Id: <20200428182248.820379456@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 5.4 136/168] staging: comedi: dt2815: fix writing hi byte of analog output
+Date:   Tue, 28 Apr 2020 20:25:10 +0200
+Message-Id: <20200428182249.101499577@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -61,41 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paulo Alcantara <pc@cjr.nz>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit 0fe0781f29dd8ab618999e6bda33c782ebbdb109 upstream.
+commit ed87d33ddbcd9a1c3b5ae87995da34e6f51a862c upstream.
 
-SMB2_open_init() expects a pre-initialised lease_key when opening a
-file with a lease, so set pfid->lease_key prior to calling it in
-open_shroot().
+The DT2815 analog output command is 16 bits wide, consisting of the
+12-bit sample value in bits 15 to 4, the channel number in bits 3 to 1,
+and a voltage or current selector in bit 0.  Both bytes of the 16-bit
+command need to be written in turn to a single 8-bit data register.
+However, the driver currently only writes the low 8-bits.  It is broken
+and appears to have always been broken.
 
-This issue was observed when performing some DFS failover tests and
-the lease key was never randomly generated.
+Electronic copies of the DT2815 User's Manual seem impossible to find
+online, but looking at the source code, a best guess for the sequence
+the driver intended to use to write the analog output command is as
+follows:
 
-Signed-off-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Aurelien Aptel <aaptel@suse.com>
-CC: Stable <stable@vger.kernel.org>
+1. Wait for the status register to read 0x00.
+2. Write the low byte of the command to the data register.
+3. Wait for the status register to read 0x80.
+4. Write the high byte of the command to the data register.
+
+Step 4 is missing from the driver.  Add step 4 to (hopefully) fix the
+driver.
+
+Also add a "FIXME" comment about setting bit 0 of the low byte of the
+command.  Supposedly, it is used to choose between voltage output and
+current output, but the current driver always sets it to 1.
+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200406142015.126982-1-abbotti@mev.co.uk
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2ops.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/staging/comedi/drivers/dt2815.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -664,6 +664,11 @@ int open_shroot(unsigned int xid, struct
- 	if (smb3_encryption_required(tcon))
- 		flags |= CIFS_TRANSFORM_REQ;
+--- a/drivers/staging/comedi/drivers/dt2815.c
++++ b/drivers/staging/comedi/drivers/dt2815.c
+@@ -92,6 +92,7 @@ static int dt2815_ao_insn(struct comedi_
+ 	int ret;
  
-+	if (!server->ops->new_lease_key)
-+		return -EIO;
+ 	for (i = 0; i < insn->n; i++) {
++		/* FIXME: lo bit 0 chooses voltage output or current output */
+ 		lo = ((data[i] & 0x0f) << 4) | (chan << 1) | 0x01;
+ 		hi = (data[i] & 0xff0) >> 4;
+ 
+@@ -105,6 +106,8 @@ static int dt2815_ao_insn(struct comedi_
+ 		if (ret)
+ 			return ret;
+ 
++		outb(hi, dev->iobase + DT2815_DATA);
 +
-+	server->ops->new_lease_key(pfid);
-+
- 	memset(rqst, 0, sizeof(rqst));
- 	resp_buftype[0] = resp_buftype[1] = CIFS_NO_BUFFER;
- 	memset(rsp_iov, 0, sizeof(rsp_iov));
+ 		devpriv->ao_readback[chan] = data[i];
+ 	}
+ 	return i;
 
 
