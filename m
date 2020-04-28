@@ -2,98 +2,115 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE90C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1B7C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96B39206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:27:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IlC/VOx7"
+	by mail.kernel.org (Postfix) with ESMTP id 47DCD206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:30:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588073438;
+	bh=bmn/QeL07kN6ZF+drWtdbMskzMxoYTgWWIqxwCRdXf4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KC6r5KOA06LNSHD3rjP74UVpYJpSvaQ8bHyGlG6LNaggs+TAwZll5tZcirGjZ1U8H
+	 1HCBYl13tjCI5lOVNaX4NNa1O2svQJbh3GOmAOUab1w0gYtgQZIKyOWhKMsT5EVIKr
+	 ustACZ5CmNoTdfNE6dGo3FdIspw+3eJkHkhBi4jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbgD1L1m (ORCPT
+        id S1726595AbgD1Lah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:27:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33760 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgD1L1m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:27:42 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0ECFC03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 04:27:40 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id u15so21069461ljd.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 04:27:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w4DBB5klIf0QGN/n9IvG0hKMODa1zR1xeD/KT5pKouk=;
-        b=IlC/VOx7VfCTd5g54ZVjw1O2wowU46ZNSWyKU7C2o/3/+KitIdB8TuO0aNjIEXy/b3
-         1CYsDa6aMA5AxnQMibCFECQw+g+U0px/vFoGMbzWNC/cjx3oVVU+3an0ngq/2hnxrMor
-         1TRCEwFybe93aUXkf5s3QErJqGxX0H9v90MR4x+K/AKQlHer0jyoCZXIr7J57Kjr31h7
-         iXi6D8HBLXmlRPYMg36hO4SczFFUE0PNBb/8EDLDuf0W8rP6Yyg+joeqAyoNORCOVwOE
-         1Odn5dRJqRXNdpW6I/EfW4woZUUzM27PsCMtVOGBOikvLw8i2+QgctW5kmr9OUL13ORw
-         vOtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w4DBB5klIf0QGN/n9IvG0hKMODa1zR1xeD/KT5pKouk=;
-        b=m2RYzmKMwyd+952ffOvGbcDiva7ZbIV+6/zm+ht9ulj6xEyNkc56HHpUTnD9vduWQe
-         pEsc3TXnJfAbytcQ6Z/a/ued2w9mS6323rUO8rh47ZYkzx7LtYG0iv0VZD/oVKR6ap89
-         jrbdnbpicdrMQokKMF+hN1KshtJyiQ6tgbPippH7f3IyO1FW4yvoZHPnRxO2D9c0cmK7
-         KAfeYDpn/R0d/E9Z27eJUo36R4OCZ4tMonVuJYENfMOhJbX99LQtWK8H371n4LLBJntX
-         EOt0eOfTpFj3q3R+eZd4ZrqIuVzn1eGI/ubM4lYv5xtoQi3kiVWnv8umm3opAAsZ1KdF
-         o1pA==
-X-Gm-Message-State: AGi0PubZL9+9bjqIMwH2Dn9yPRSRxSd3HGOstdbs8bHwTvfP6n3d4GPg
-        l4yBlNja+30p7YGQw7XvW70NUzbbeuKUYLxNVOTS7A==
-X-Google-Smtp-Source: APiQypKV704QjuX9brkHXyi9vW51TMuZXm1a3RD2HH//58wkwqAcG575ohaDZ1tUc941Eh8di8C386pjHZ1m4wCHMpE=
-X-Received: by 2002:a05:651c:1058:: with SMTP id x24mr17947683ljm.39.1588073259176;
- Tue, 28 Apr 2020 04:27:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200421142402.9524-1-zhengdejin5@gmail.com>
-In-Reply-To: <20200421142402.9524-1-zhengdejin5@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Apr 2020 13:27:28 +0200
-Message-ID: <CACRpkdaM88YebrRWPF=0navD8P9cEFYfepmEYb2+mw8LyNc5mw@mail.gmail.com>
-Subject: Re: [PATCH v3] pinctrl: fix several typos
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Joe Perches <joe@perches.com>,
+        Tue, 28 Apr 2020 07:30:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40382 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726419AbgD1Lag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 07:30:36 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99138206A1;
+        Tue, 28 Apr 2020 11:30:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588073436;
+        bh=bmn/QeL07kN6ZF+drWtdbMskzMxoYTgWWIqxwCRdXf4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QXN7mTggzYM5iyN9EKtU2t26wDOabguc6BJyfL9I9ZktUFES2RtQ9TuYb3oSdKyGJ
+         h9SKy7kOhvpYLmygqhauu4Ndgh/XXWktuuTitkA5oIm7y+SidIvmVZ/jNqIM4m5+sV
+         /8R2NSjfbzEFBH4knAeFN8+52tqfm+s60t0W5LpM=
+Date:   Tue, 28 Apr 2020 12:30:33 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Leslie =?utf-8?B?SHNpYSjlpI/pgqbpgLJfUGVnYXRyb24p?= 
+        <Leslie_Hsia@pegatroncorp.com>
+Cc:     "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Hermes =?utf-8?B?SHNpZWgo6Kyd5pe75YqtX1BlZ2F0cm9uKQ==?= 
+        <Hermes_Hsieh@pegatroncorp.com>,
+        "jesse.sung@canonical.com" <jesse.sung@canonical.com>,
+        "jic23@kernel.org" <jic23@kernel.org>
+Subject: Re: [PATCH] subsystem: Amplifier driver for TAS5805M,Texas
+ instruments
+Message-ID: <20200428113033.GE5677@sirena.org.uk>
+References: <754706C925201D4896E92CCAD6B38E4401F0F733E3@PTW-EX-37.PEGA.CORP.PEGATRON>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bi5JUZtvcfApsciF"
+Content-Disposition: inline
+In-Reply-To: <754706C925201D4896E92CCAD6B38E4401F0F733E3@PTW-EX-37.PEGA.CORP.PEGATRON>
+X-Cookie: Eschew obfuscation.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 4:24 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
 
-> use codespell to fix lots of typos over frontends.
->
-> CC: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> ---
-> v2 -> v3:
->         - remove the changed of "thru -> through" in the
->           pinctrl-nomadik-db8500.c by Joe's suggestion.
+--bi5JUZtvcfApsciF
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Patch applied.
+On Tue, Apr 28, 2020 at 10:43:18AM +0000, Leslie Hsia(=E5=A4=8F=E9=82=A6=E9=
+=80=B2_Pegatron) wrote:
+>   *   Author: Leslie Hsia
+>   *   Amplifier driver for TAS5805M, initial the amplifier and set the so=
+und parameter.
+>   *   Signed-off-by: Leslie Hsia <Leslie_Hsia@pegatroncorp.com<mailto:Les=
+lie_Hsia@pegatroncorp.com>>
 
-Yours,
-Linus Walleij
+Please follow the patch submission process that is described in
+Documentation/process/submitting-patches.rst in the kernel source.  Take
+a look at other submissions on the list and follow a similar process.
+There also appear to be both IIO and ASoC drivers in there which is at
+best a bit weird.
+
+Having done a quick scan through your code it doesn't actually seem to
+integrate with the subsystem at all (there's no
+snd_soc_register_codec())=20
+
+Please submit patches using subject lines reflecting the style for the
+subsystem, this makes it easier for people to identify relevant patches.
+Look at what existing commits in the area you're changing are doing and
+make sure your subject lines visually resemble what they're doing.
+There's no need to resubmit to fix this alone.
+
+--bi5JUZtvcfApsciF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6oE9gACgkQJNaLcl1U
+h9CBNwf9GnZKlT7pJP/Ffhe6NYK62tVJxbnR+kIljUUaRAdSQyXtO0R54DP6U890
+CZoGgcrPIG+TYwY+mFJ29DaTKGVWGlkoXsEQi4kECGmKLKTH3lfY698eXGqJM4WZ
+TplTUGDbl1n08WOpqdLeX1XdEXM+LHqBAAG7KmNgk/MYFFnVN0QMADONgtAW/6SW
+vfyMttbzzRAOYGZ5wUsnL6+O1qShCElLKOzhcIj+3XDD+rt+iejwrq0hd1CUndWY
+Zd7ENnySP+KAtk4pYfr0UbjNzdSbKDnQgLEiRFNoCHizBF/+28O0PslkVKSgAjpQ
+2TGhh2N0R+7r03DW5Kpuj7U6xxPZvQ==
+=n/8D
+-----END PGP SIGNATURE-----
+
+--bi5JUZtvcfApsciF--
