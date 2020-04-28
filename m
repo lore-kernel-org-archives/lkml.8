@@ -2,357 +2,131 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C054CC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCE3C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F35A21569
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD92214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:59:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XrsK8xeo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gV/CkO5+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgD1U7g (ORCPT
+        id S1726817AbgD1U7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:59:36 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49278 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbgD1U7c (ORCPT
+        Tue, 28 Apr 2020 16:59:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726788AbgD1U7f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:59:32 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SKrEfT127581;
-        Tue, 28 Apr 2020 20:56:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=yafpg0ZcOknBY/UGErpDFCg6X+mq+m/vIF/cVy7REbg=;
- b=XrsK8xeolwpyFzMVP4FN7eFg6N8v21y3lvojPKKtjc9TelN+4v4u0St8L2wCPmMjAlsr
- 3eoJJRP6TEGjNciIrzjM/W8OUs29A+/hNp+5bT1uayN9rUw4C5EFkCnvMaihEusch6OQ
- 0aA8ajw6C08TKnOrVfo3qtyh0fDeoOvwCvvC6FBeDuCDFCXVcnnO7Cct1qx3AGzyTw+0
- 9qMJPo5U7VOPBWqH11AW5kL1jAPNIn4NgYHSqObGclrhOXLW3tNkRyzjwHpydwY1APjC
- Ghe/P2meZhwVKqHDrkS4iScKnvP53SSMXM2ZeqrOV6bOBjUmkS/95BzEt+WFfl608pBF wA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 30p01nrvqj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 20:56:31 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SKpujh172035;
-        Tue, 28 Apr 2020 20:56:30 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 30mxx0rr6p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 20:56:30 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03SKuQY2015084;
-        Tue, 28 Apr 2020 20:56:26 GMT
-Received: from monkey.oracle.com (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 Apr 2020 13:56:26 -0700
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Longpeng <longpeng2@huawei.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Mina Almasry <almasrymina@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: [PATCH v4 2/4] hugetlbfs: move hugepagesz= parsing to arch independent code
-Date:   Tue, 28 Apr 2020 13:56:12 -0700
-Message-Id: <20200428205614.246260-3-mike.kravetz@oracle.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200428205614.246260-1-mike.kravetz@oracle.com>
-References: <20200428205614.246260-1-mike.kravetz@oracle.com>
+        Tue, 28 Apr 2020 16:59:35 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5E90C03C1AD;
+        Tue, 28 Apr 2020 13:59:34 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id a21so189725ljj.11;
+        Tue, 28 Apr 2020 13:59:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=f76tELWeD+Cq+rZ2nxZRf+Lr/87HEoPSQFMjularl7s=;
+        b=gV/CkO5+yDyR2BtTpL6acO8ksCDaXgZ/Mdr2KfSt7vXdkvrp4vOh/EADiQ+zywJynU
+         SW+xHfk1uQ7+y0BZmXWDIBpHOcaYmayvBGUtylXj+cpbhBc7CTIYYMNu+GmNXzuoNrcK
+         LQQL+TKgLOAdzqkzJdIXnyxJl2ESUoKsAUj7M8ZORs+qdnsrzVtbAW4m+j9OmrKINiQL
+         kMqQ9fkjfLUv92lX/AsSVbgu57rLtx+1xZzxIXBJqv0tzjziR3KKb4pVigwpCSfoe2Sh
+         4ziWCwAOPAaSd2ZobdNxQWOKAXSX/P3uF0WYwAfizNleUDYBDPtSggXR9NgJBbf/lPNL
+         8O1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=f76tELWeD+Cq+rZ2nxZRf+Lr/87HEoPSQFMjularl7s=;
+        b=EPU3xjR8w9QEJZq2MmapaNW5YSooUYV45aW5krcuxC1g6AwAP9IaLO/7qVUvKa3Gga
+         91DEX1ST1OaFKv9ytZoCexAh1Ucou4z4IRcWaQaSrFyATwKnSnIX2XyBRQMRS1eKoSZV
+         /NVfRrXBdo3u+NsdsFCVJJEvaiYNzNLN/ki3gNhlENK2vMwv/v9rGl49CTDof9QAENRe
+         xipLfP9SxJ1C85TLwQaQ2svZ2CKrrZo3x/9VB3oFtjB7lsedotPEY+j2SXThhMa9BPDr
+         Jf6ijn53C75UhE+9oF7+mCRHu72J+f7KrVeFATvmCUljrQ9K7YBHTsPrMyuQe5z0X44O
+         5oSg==
+X-Gm-Message-State: AGi0PuYdM8UgCgt+38IInbfpEOBzZ6dULILcOc0OpKm4PuBM4VG41SOp
+        i8oSokk7FqJ4R6K6rL8mFYEGZx56lQkIVQ==
+X-Google-Smtp-Source: APiQypIyLU6bchTrGUBspJZC7W9x7kj6ckHQy61yTYUJR3oMfNtrovTxVulDU2ZLcnOnbM6O4XdWEQ==
+X-Received: by 2002:a2e:909a:: with SMTP id l26mr18315311ljg.262.1588107572992;
+        Tue, 28 Apr 2020 13:59:32 -0700 (PDT)
+Received: from pc638.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id z21sm295483ljh.42.2020.04.28.13.59.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 13:59:32 -0700 (PDT)
+From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        RCU <rcu@vger.kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: [PATCH 04/24] rcu/tree: Repeat the monitor if any free channel is busy
+Date:   Tue, 28 Apr 2020 22:58:43 +0200
+Message-Id: <20200428205903.61704-5-urezki@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200428205903.61704-1-urezki@gmail.com>
+References: <20200428205903.61704-1-urezki@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 bulkscore=0
- suspectscore=0 mlxlogscore=999 phishscore=0 malwarescore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004280163
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 clxscore=1011
- phishscore=0 mlxlogscore=999 adultscore=0 priorityscore=1501 mlxscore=0
- suspectscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004280163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that architectures provide arch_hugetlb_valid_size(), parsing
-of "hugepagesz=" can be done in architecture independent code.
-Create a single routine to handle hugepagesz= parsing and remove
-all arch specific routines.  We can also remove the interface
-hugetlb_bad_size() as this is no longer used outside arch independent
-code.
+It can be that one of the channels can not be detached
+due to the fact that its free channel and previous data
+has not been processed yet. From the other hand another
+channel can be successfully detached causing the monitor
+work to stop.
 
-This also provides consistent behavior of hugetlbfs command line
-options.  The hugepagesz= option should only be specified once for
-a specific size, but some architectures allow multiple instances.
-This appears to be more of an oversight when code was added by some
-architectures to set up ALL huge pages sizes.
+To prevent that, if there are any channels are still in
+pending state after a detach attempt, just reschedule
+the monitor work.
 
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-Acked-by: Mina Almasry <almasrymina@google.com>
-Reviewed-by: Peter Xu <peterx@redhat.com>
-Acked-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>  [s390]
-Acked-by: Will Deacon <will@kernel.org>
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 ---
- arch/arm64/mm/hugetlbpage.c   | 15 ---------------
- arch/powerpc/mm/hugetlbpage.c | 15 ---------------
- arch/riscv/mm/hugetlbpage.c   | 16 ----------------
- arch/s390/mm/hugetlbpage.c    | 18 ------------------
- arch/sparc/mm/init_64.c       | 22 ----------------------
- arch/x86/mm/hugetlbpage.c     | 16 ----------------
- include/linux/hugetlb.h       |  1 -
- mm/hugetlb.c                  | 23 +++++++++++++++++------
- 8 files changed, 17 insertions(+), 109 deletions(-)
+ kernel/rcu/tree.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-index 069b96ee2aec..f706b821aba6 100644
---- a/arch/arm64/mm/hugetlbpage.c
-+++ b/arch/arm64/mm/hugetlbpage.c
-@@ -476,18 +476,3 @@ bool __init arch_hugetlb_valid_size(unsigned long size)
- 
- 	return false;
- }
--
--static __init int setup_hugepagesz(char *opt)
--{
--	unsigned long ps = memparse(opt, &opt);
--
--	if (arch_hugetlb_valid_size(ps)) {
--		add_huge_page_size(ps);
--		return 1;
--	}
--
--	hugetlb_bad_size();
--	pr_err("hugepagesz: Unsupported page size %lu K\n", ps >> 10);
--	return 0;
--}
--__setup("hugepagesz=", setup_hugepagesz);
-diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
-index de54d2a37830..2c3fa0a7787b 100644
---- a/arch/powerpc/mm/hugetlbpage.c
-+++ b/arch/powerpc/mm/hugetlbpage.c
-@@ -589,21 +589,6 @@ static int __init add_huge_page_size(unsigned long long size)
- 	return 0;
- }
- 
--static int __init hugepage_setup_sz(char *str)
--{
--	unsigned long long size;
--
--	size = memparse(str, &str);
--
--	if (add_huge_page_size(size) != 0) {
--		hugetlb_bad_size();
--		pr_err("Invalid huge page size specified(%llu)\n", size);
--	}
--
--	return 1;
--}
--__setup("hugepagesz=", hugepage_setup_sz);
--
- static int __init hugetlbpage_init(void)
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 1487af8e11e8..0762ac06f0b7 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -2995,7 +2995,7 @@ static void kfree_rcu_work(struct work_struct *work)
+ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
  {
- 	bool configured = false;
-diff --git a/arch/riscv/mm/hugetlbpage.c b/arch/riscv/mm/hugetlbpage.c
-index da1f516bc451..4e5d7e9f0eef 100644
---- a/arch/riscv/mm/hugetlbpage.c
-+++ b/arch/riscv/mm/hugetlbpage.c
-@@ -22,22 +22,6 @@ bool __init arch_hugetlb_valid_size(unsigned long size)
- 		return false;
- }
+ 	struct kfree_rcu_cpu_work *krwp;
+-	bool queued = false;
++	bool repeat = false;
+ 	int i;
  
--static __init int setup_hugepagesz(char *opt)
--{
--	unsigned long ps = memparse(opt, &opt);
--
--	if (arch_hugetlb_valid_size(ps)) {
--		hugetlb_add_hstate(ilog2(ps) - PAGE_SHIFT);
--		return 1;
--	}
--
--	hugetlb_bad_size();
--	pr_err("hugepagesz: Unsupported page size %lu M\n", ps >> 20);
--	return 0;
--
--}
--__setup("hugepagesz=", setup_hugepagesz);
--
- #ifdef CONFIG_CONTIG_ALLOC
- static __init int gigantic_pages_init(void)
- {
-diff --git a/arch/s390/mm/hugetlbpage.c b/arch/s390/mm/hugetlbpage.c
-index ac25b207624c..242dfc0d462d 100644
---- a/arch/s390/mm/hugetlbpage.c
-+++ b/arch/s390/mm/hugetlbpage.c
-@@ -261,24 +261,6 @@ bool __init arch_hugetlb_valid_size(unsigned long size)
- 		return false;
- }
- 
--static __init int setup_hugepagesz(char *opt)
--{
--	unsigned long size;
--	char *string = opt;
--
--	size = memparse(opt, &opt);
--	if (arch_hugetlb_valid_size(size)) {
--		hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
--	} else {
--		hugetlb_bad_size();
--		pr_err("hugepagesz= specifies an unsupported page size %s\n",
--			string);
--		return 0;
--	}
--	return 1;
--}
--__setup("hugepagesz=", setup_hugepagesz);
--
- static unsigned long hugetlb_get_unmapped_area_bottomup(struct file *file,
- 		unsigned long addr, unsigned long len,
- 		unsigned long pgoff, unsigned long flags)
-diff --git a/arch/sparc/mm/init_64.c b/arch/sparc/mm/init_64.c
-index 2bfe8e22b706..4618f96fd30f 100644
---- a/arch/sparc/mm/init_64.c
-+++ b/arch/sparc/mm/init_64.c
-@@ -397,28 +397,6 @@ bool __init arch_hugetlb_valid_size(unsigned long size)
- 
- 	return true;
- }
--
--static int __init setup_hugepagesz(char *string)
--{
--	unsigned long long hugepage_size;
--	int rc = 0;
--
--	hugepage_size = memparse(string, &string);
--
--	if (!arch_hugetlb_valid_size((unsigned long)hugepage_size)) {
--		hugetlb_bad_size();
--		pr_err("hugepagesz=%llu not supported by MMU.\n",
--			hugepage_size);
--		goto out;
--	}
--
--	add_huge_page_size(hugepage_size);
--	rc = 1;
--
--out:
--	return rc;
--}
--__setup("hugepagesz=", setup_hugepagesz);
- #endif	/* CONFIG_HUGETLB_PAGE */
- 
- void update_mmu_cache(struct vm_area_struct *vma, unsigned long address, pte_t *ptep)
-diff --git a/arch/x86/mm/hugetlbpage.c b/arch/x86/mm/hugetlbpage.c
-index 1c4372bfe782..937d640a89e3 100644
---- a/arch/x86/mm/hugetlbpage.c
-+++ b/arch/x86/mm/hugetlbpage.c
-@@ -191,22 +191,6 @@ bool __init arch_hugetlb_valid_size(unsigned long size)
- 		return false;
- }
- 
--static __init int setup_hugepagesz(char *opt)
--{
--	unsigned long ps = memparse(opt, &opt);
--
--	if (arch_hugetlb_valid_size(ps)) {
--		hugetlb_add_hstate(ilog2(ps) - PAGE_SHIFT);
--	} else {
--		hugetlb_bad_size();
--		printk(KERN_ERR "hugepagesz: Unsupported page size %lu M\n",
--			ps >> 20);
--		return 0;
--	}
--	return 1;
--}
--__setup("hugepagesz=", setup_hugepagesz);
--
- #ifdef CONFIG_CONTIG_ALLOC
- static __init int gigantic_pages_init(void)
- {
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 2eb15f5ab01e..0c13706054ef 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -519,7 +519,6 @@ int huge_add_to_page_cache(struct page *page, struct address_space *mapping,
- int __init __alloc_bootmem_huge_page(struct hstate *h);
- int __init alloc_bootmem_huge_page(struct hstate *h);
- 
--void __init hugetlb_bad_size(void);
- void __init hugetlb_add_hstate(unsigned order);
- bool __init arch_hugetlb_valid_size(unsigned long size);
- struct hstate *size_to_hstate(unsigned long size);
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 63ca4241ea87..6a8454bc2917 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -3262,12 +3262,6 @@ bool __init __attribute((weak)) arch_hugetlb_valid_size(unsigned long size)
- 	return size == HPAGE_SIZE;
- }
- 
--/* Should be called on processing a hugepagesz=... option */
--void __init hugetlb_bad_size(void)
--{
--	parsed_valid_hugepagesz = false;
--}
--
- void __init hugetlb_add_hstate(unsigned int order)
- {
- 	struct hstate *h;
-@@ -3337,6 +3331,23 @@ static int __init hugetlb_nrpages_setup(char *s)
- }
- __setup("hugepages=", hugetlb_nrpages_setup);
- 
-+static int __init hugepagesz_setup(char *s)
-+{
-+	unsigned long size;
+ 	lockdep_assert_held(&krcp->lock);
+@@ -3033,11 +3033,14 @@ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
+ 			 * been detached following each other, one by one.
+ 			 */
+ 			queue_rcu_work(system_wq, &krwp->rcu_work);
+-			queued = true;
+ 		}
 +
-+	size = (unsigned long)memparse(s, NULL);
-+
-+	if (!arch_hugetlb_valid_size(size)) {
-+		parsed_valid_hugepagesz = false;
-+		pr_err("HugeTLB: unsupported hugepagesz %s\n", s);
-+		return 0;
-+	}
-+
-+	hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
-+	return 1;
-+}
-+__setup("hugepagesz=", hugepagesz_setup);
-+
- static int __init default_hugepagesz_setup(char *s)
- {
- 	unsigned long size;
++		/* Repeat if any "free" corresponding channel is still busy. */
++		if (krcp->bhead || krcp->head)
++			repeat = true;
+ 	}
+ 
+-	return queued;
++	return !repeat;
+ }
+ 
+ static inline void kfree_rcu_drain_unlock(struct kfree_rcu_cpu *krcp,
 -- 
-2.25.4
+2.20.1
 
