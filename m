@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 825A0C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502ABC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63013206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2236620575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100352;
-	bh=eO8J7hh6A8rBgI/YiovNcnO/X1TvlHJT9v+oUP1nFq4=;
+	s=default; t=1588100368;
+	bh=P6jXdtiM2P12sUoZgceri2ClraTQWPxOWn+nWO+mJ5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c+xcRyEy14OLsMsaQLrzN6bhFQHatovEVeYg9LnBqeU9g1LHhQSWk7qUGgjkpn1Ap
-	 0nCeBWwFnrqCJ2mNnD4RSPRFKs7DT0J4GxNes35brHos8QmEPSkvQI2AyQR5RdfHit
-	 TBC1fDwxXHJ6vxBndIZKkBG59qw62eQsME/ic2Iw=
+	b=sk6bFboz3XYgyQpqDrM+U6ywiVgsztZbXq/1lQRP/oRW8kx7O28rK/Gm/S4OJqdkY
+	 OVI2i7Nk3zZciYL9d8pbhrDogMi01PX6+HDm/cAWOuSR6Dt8A2qo18RFT0ywfi5ht+
+	 Wxrur0aspVflYUeUezl+tB6/yLl5Y+WhERBdukCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729503AbgD1S7L (ORCPT
+        id S1729524AbgD1S70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:59:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41894 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:59:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729233AbgD1S2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:28:44 -0400
+        id S1728671AbgD1S2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:28:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9B37214AF;
-        Tue, 28 Apr 2020 18:28:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7966F208E0;
+        Tue, 28 Apr 2020 18:28:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098524;
-        bh=eO8J7hh6A8rBgI/YiovNcnO/X1TvlHJT9v+oUP1nFq4=;
+        s=default; t=1588098511;
+        bh=P6jXdtiM2P12sUoZgceri2ClraTQWPxOWn+nWO+mJ5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VQVMIKhFqyhesbjoHZTTIKfgv8XVAYZxuICh6VTgCL67XlO1/jIhkEHrWFbXtVpFj
-         re8UwpMd3UB0XHXIM7qA3oa7Vij/sE2+4X3MLsjzxu5DNIVR6HhzXIP0093MLeLkG9
-         BYwvna6yDzMsJTg+iqfP0XjJkMpNsRbnpJDFsO+I=
+        b=KbVa0UbZMjFj8IVRznvnmeYsTXnKHuj4QJfmwg6syeJwOHbx8xCcbpdRYrPyhj5sR
+         R5pFwvw4qdJIaczAG+VKsck3lP23dYLFmwI0xWoIhCHyCTZGjU9PXnsak+Fc6XWt9X
+         yJQL3m9eCXVLrGNXRyE/w/zjAyFx10P+vZBcXj10=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 066/167] net: dsa: b53: Fix valid setting for MDB entries
-Date:   Tue, 28 Apr 2020 20:24:02 +0200
-Message-Id: <20200428182233.315245775@linuxfoundation.org>
+        stable@vger.kernel.org, Jeremy Sowden <jeremy@azazel.net>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.19 005/131] vti4: removed duplicate log message.
+Date:   Tue, 28 Apr 2020 20:23:37 +0200
+Message-Id: <20200428182226.007648856@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,35 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Jeremy Sowden <jeremy@azazel.net>
 
-[ Upstream commit eab167f4851a19c514469dfa81147f77e17b5b20 ]
+commit 01ce31c57b3f07c91c9d45bbaf126124cce83a5d upstream.
 
-When support for the MDB entries was added, the valid bit was correctly
-changed to be assigned depending on the remaining port bitmask, that is,
-if there were no more ports added to the entry's port bitmask, the entry
-now becomes invalid. There was another assignment a few lines below that
-would override this which would invalidate entries even when there were
-still multiple ports left in the MDB entry.
+Removed info log-message if ipip tunnel registration fails during
+module-initialization: it adds nothing to the error message that is
+written on all failures.
 
-Fixes: 5d65b64a3d97 ("net: dsa: b53: Add support for MDB")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: dd9ee3444014e ("vti4: Fix a ipip packet processing bug in 'IPCOMP' virtual tunnel")
+Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/dsa/b53/b53_common.c |    1 -
- 1 file changed, 1 deletion(-)
 
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -1541,7 +1541,6 @@ static int b53_arl_op(struct b53_device
- 		ent.is_valid = !!(ent.port);
- 	}
+---
+ net/ipv4/ip_vti.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -677,10 +677,8 @@ static int __init vti_init(void)
  
--	ent.is_valid = is_valid;
- 	ent.vid = vid;
- 	ent.is_static = true;
- 	ent.is_age = false;
+ 	msg = "ipip tunnel";
+ 	err = xfrm4_tunnel_register(&ipip_handler, AF_INET);
+-	if (err < 0) {
+-		pr_info("%s: cant't register tunnel\n",__func__);
++	if (err < 0)
+ 		goto xfrm_tunnel_failed;
+-	}
+ 
+ 	msg = "netlink interface";
+ 	err = rtnl_link_register(&vti_link_ops);
 
 
