@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF40BC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CA6C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 959DD208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 591BD2076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099099;
-	bh=TeaS1cHqlCEkbfMEujQm1NjPPa5FBQpNl0nQJJvqyCU=;
+	s=default; t=1588099102;
+	bh=H90Nsv+wVP4/LXJzxuG2raP4TI0h0wB2gXft8jWlVFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gZF0aCFi5VAF/L82t1aXtdyp8xufYldrdNOlDdEOZlq8NDp2J3/pLT958TZ5A89BW
-	 eYy4WlSO1w7bl6WGYdkFvLqgtiZb+z5T9Xn7sdr9rK/menlawag878NVR6/yRB+Ja2
-	 9duMIEKgxF3T3IYZetYKZOijtFBkJFR7D7caIBKU=
+	b=1uGEWT1WS66siiN6Gl4qiV/SnR/zd45JsCVKw0OexQFA9lmX0ehbKH6k2JTixAAwF
+	 FSR/2kA6B7FdjieGOH7D6t7UYWefBkRBofAkoB7EgigPfQ6qanW7KOmNkLEuHJQheJ
+	 T3TDRtxV0xTHM5y9amC4swDvHdWgS0uUrW4cm/Ik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730198AbgD1SiS (ORCPT
+        id S1730620AbgD1SiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:38:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56574 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:38:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730605AbgD1SiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:38:12 -0400
+        id S1729691AbgD1SiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:38:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB28F208E0;
-        Tue, 28 Apr 2020 18:38:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 631822076A;
+        Tue, 28 Apr 2020 18:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099092;
-        bh=TeaS1cHqlCEkbfMEujQm1NjPPa5FBQpNl0nQJJvqyCU=;
+        s=default; t=1588099094;
+        bh=H90Nsv+wVP4/LXJzxuG2raP4TI0h0wB2gXft8jWlVFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TNpkI/OY9kWlvZ8K0+OB0Le8OUAwzMfbk28zupLagcCEpBsGsKWywYjWaI6gwOtrI
-         E00rn6Doj8NFVsP1alTj+Y2/EVZ507iukfU4y2dk9X3jv0e9W88bNnlZRfiGANHmUT
-         nhBbH9KUUGGAMjVSCQhQOyssCV8jAGCRwLKLovV4=
+        b=uDcxW9R5bmt15V4mx1Go+EbRgLjun1r5o6e0CAWYR07iur0nQ0C99fuaK79RRw09v
+         rAKydZiDg29/JDKbrYpJ5SNup7Yh8/zb0VzjH8SdwRlMFMzYbdSTH57WJuRQ5yQbTg
+         +C27u4Ni37jKeDxnjVv1Cl2mmEHYuKbQJRBV9qvk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 5.6 154/167] xhci: prevent bus suspend if a roothub port detected a over-current condition
-Date:   Tue, 28 Apr 2020 20:25:30 +0200
-Message-Id: <20200428182245.044598334@linuxfoundation.org>
+        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 096/131] ALSA: hda/realtek - Add new codec supported for ALC245
+Date:   Tue, 28 Apr 2020 20:25:08 +0200
+Message-Id: <20200428182237.142509361@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,47 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Kailang Yang <kailang@realtek.com>
 
-commit e9fb08d617bfae5471d902112667d0eeb9dee3c4 upstream.
+commit 7fbdcd8301a84c09cebfa64f1317a6dafeec9188 upstream.
 
-Suspending the bus and host controller while a port is in a over-current
-condition may halt the host.
-Also keep the roothub running if over-current is active.
+Enable new codec supported for ALC245.
 
+Signed-off-by: Kailang Yang <kailang@realtek.com>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200421140822.28233-3-mathias.nyman@linux.intel.com
+Link: https://lore.kernel.org/r/8c0804738b2c42439f59c39c8437817f@realtek.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-hub.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ sound/pci/hda/patch_realtek.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -1569,6 +1569,8 @@ int xhci_hub_status_data(struct usb_hcd
- 		}
- 		if ((temp & PORT_RC))
- 			reset_change = true;
-+		if (temp & PORT_OC)
-+			status = 1;
- 	}
- 	if (!status && !reset_change) {
- 		xhci_dbg(xhci, "%s: stopping port polling.\n", __func__);
-@@ -1634,6 +1636,13 @@ retry:
- 				 port_index);
- 			goto retry;
- 		}
-+		/* bail out if port detected a over-current condition */
-+		if (t1 & PORT_OC) {
-+			bus_state->bus_suspended = 0;
-+			spin_unlock_irqrestore(&xhci->lock, flags);
-+			xhci_dbg(xhci, "Bus suspend bailout, port over-current detected\n");
-+			return -EBUSY;
-+		}
- 		/* suspend ports in U0, or bail out for new connect changes */
- 		if ((t1 & PORT_PE) && (t1 & PORT_PLS_MASK) == XDEV_U0) {
- 			if ((t1 & PORT_CSC) && wake_enabled) {
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -380,6 +380,7 @@ static void alc_fill_eapd_coef(struct hd
+ 	case 0x10ec0233:
+ 	case 0x10ec0235:
+ 	case 0x10ec0236:
++	case 0x10ec0245:
+ 	case 0x10ec0255:
+ 	case 0x10ec0256:
+ 	case 0x10ec0257:
+@@ -7792,6 +7793,7 @@ static int patch_alc269(struct hda_codec
+ 		spec->gen.mixer_nid = 0;
+ 		break;
+ 	case 0x10ec0215:
++	case 0x10ec0245:
+ 	case 0x10ec0285:
+ 	case 0x10ec0289:
+ 		spec->codec_variant = ALC269_TYPE_ALC215;
+@@ -8913,6 +8915,7 @@ static const struct hda_device_id snd_hd
+ 	HDA_CODEC_ENTRY(0x10ec0234, "ALC234", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0235, "ALC233", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0236, "ALC236", patch_alc269),
++	HDA_CODEC_ENTRY(0x10ec0245, "ALC245", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0255, "ALC255", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0256, "ALC256", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0257, "ALC257", patch_alc269),
 
 
