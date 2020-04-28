@@ -2,55 +2,55 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06909C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E45C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D390120730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C422208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098976;
-	bh=SC/vqzeMx1k3k9AAbtjSE5BmU6VVJ9MANDBe3abuSXk=;
+	s=default; t=1588098980;
+	bh=Q64Ow6VBZtzyiC+N2RsYCDfDIxKIc+BL1MbI7J3IJXY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fbPfEo4fLkPpvLxv+PR67bGmJgKNfcdqZgafDOzkZCaY0d6NjOSy3Fz9HrgI+Potl
-	 xJaq05SnIdO86EiwH6FodJUP91mDWxzk0EDSSDAAz42LscQSEgDbL5b8JQ/Tq+eJh2
-	 PWldiqAp/ZX7wUlzTNXl2EQ/Tb668n/4bWVt5RUk=
+	b=WBU4PGAproUvxckgGOInYsWRAan0Dotf5u0Nv8jz+7aNv01FD7USpC55eYZrK/lL3
+	 8MsreycUe+azSw86ZFuXCjkj/vzA2HcPSHhcc2KSSolTcx/gSCwi6AfQy67nqWo1au
+	 PYiZgDcFoz7nraFWfJK68f8nrnrisWS3Hq/ERNZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729850AbgD1SgP (ORCPT
+        id S1730370AbgD1SgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:36:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53568 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:36:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730350AbgD1SgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:36:09 -0400
+        id S1730358AbgD1SgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:36:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 983A920575;
-        Tue, 28 Apr 2020 18:36:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CDF12085B;
+        Tue, 28 Apr 2020 18:36:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098969;
-        bh=SC/vqzeMx1k3k9AAbtjSE5BmU6VVJ9MANDBe3abuSXk=;
+        s=default; t=1588098971;
+        bh=Q64Ow6VBZtzyiC+N2RsYCDfDIxKIc+BL1MbI7J3IJXY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YWiYW7P+Zq4yYi+6aJut2wVori1DfiPwspEBsSTOvfoJUqU+d7p01oGHBtry2mk2A
-         0Hk7MimYoYfTZhP9vg10EeilxFYuj+E/zY5kRJ3HQKVkvBoUJynFDe+3gUECs5GmjU
-         xGHiovHAHMfP3h/3aEqgWEYZp5RfFtv2yIxeq8y8=
+        b=d6DyNhVfc2LIQRTM+SOV7V1tYsP6FEj81UezWwgUsfkAflmkpK08HBVTnT4S0wMQa
+         kluXPn/JpvqUmbVT9POGdVNTo3nmoEJoUn7BdkUoD+7wjkEyzMugbLDP9dAL/vdIm5
+         V3sYfYDlF2kQayTJbCVXy9lBis55JL2ClQ/VUg2c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Franti=C5=A1ek=20Ku=C4=8Dera?= <franta-linux@frantovo.cz>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 040/168] ALSA: usb-audio: Add Pioneer DJ DJM-250MK2 quirk
-Date:   Tue, 28 Apr 2020 20:23:34 +0200
-Message-Id: <20200428182236.822436730@linuxfoundation.org>
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.19 080/131] iio: xilinx-xadc: Fix ADC-B powerdown
+Date:   Tue, 28 Apr 2020 20:24:52 +0200
+Message-Id: <20200428182234.994797952@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,77 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: František Kučera <franta-linux@frantovo.cz>
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-[ Upstream commit 73d8c94084341e2895169a0462dbc18167f01683 ]
+commit e44ec7794d88f918805d700240211a9ec05ed89d upstream.
 
-Pioneer DJ DJM-250MK2 is a mixer that acts like a USB sound card.
-The MIDI controller part is standard but the PCM part is "vendor specific".
-Output is enabled by this quirk: 8 channels, 48 000 Hz, S24_3LE.
-Input is not working.
+The check for shutting down the second ADC is inverted. This causes it to
+be powered down when it should be enabled. As a result channels that are
+supposed to be handled by the second ADC return invalid conversion results.
 
-Signed-off-by: František Kučera <franta-linux@frantovo.cz>
-Link: https://lore.kernel.org/r/20200401095907.3387-1-konference@frantovo.cz
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Fixes: bdc8cda1d010 ("iio:adc: Add Xilinx XADC driver")
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/usb/quirks-table.h | 42 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ drivers/iio/adc/xilinx-xadc-core.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
-index d187aa6d50db0..dcaf9eed9a415 100644
---- a/sound/usb/quirks-table.h
-+++ b/sound/usb/quirks-table.h
-@@ -3592,5 +3592,47 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge", "HVR-950Q"),
- 		}
- 	}
- },
-+{
-+	/*
-+	 * Pioneer DJ DJM-250MK2
-+	 * PCM is 8 channels out @ 48 fixed (endpoints 0x01).
-+	 * The output from computer to the mixer is usable.
-+	 *
-+	 * The input (phono or line to computer) is not working.
-+	 * It should be at endpoint 0x82 and probably also 8 channels,
-+	 * but it seems that it works only with Pioneer proprietary software.
-+	 * Even on officially supported OS, the Audacity was unable to record
-+	 * and Mixxx to recognize the control vinyls.
-+	 */
-+	USB_DEVICE_VENDOR_SPEC(0x2b73, 0x0017),
-+	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
-+		.ifnum = QUIRK_ANY_INTERFACE,
-+		.type = QUIRK_COMPOSITE,
-+		.data = (const struct snd_usb_audio_quirk[]) {
-+			{
-+				.ifnum = 0,
-+				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
-+				.data = &(const struct audioformat) {
-+					.formats = SNDRV_PCM_FMTBIT_S24_3LE,
-+					.channels = 8, // outputs
-+					.iface = 0,
-+					.altsetting = 1,
-+					.altset_idx = 1,
-+					.endpoint = 0x01,
-+					.ep_attr = USB_ENDPOINT_XFER_ISOC|
-+						USB_ENDPOINT_SYNC_ASYNC,
-+					.rates = SNDRV_PCM_RATE_48000,
-+					.rate_min = 48000,
-+					.rate_max = 48000,
-+					.nr_rates = 1,
-+					.rate_table = (unsigned int[]) { 48000 }
-+				}
-+			},
-+			{
-+				.ifnum = -1
-+			}
-+		}
-+	}
-+},
+--- a/drivers/iio/adc/xilinx-xadc-core.c
++++ b/drivers/iio/adc/xilinx-xadc-core.c
+@@ -723,13 +723,14 @@ static int xadc_power_adc_b(struct xadc
+ {
+ 	uint16_t val;
  
- #undef USB_DEVICE_VENDOR_SPEC
--- 
-2.20.1
-
++	/* Powerdown the ADC-B when it is not needed. */
+ 	switch (seq_mode) {
+ 	case XADC_CONF1_SEQ_SIMULTANEOUS:
+ 	case XADC_CONF1_SEQ_INDEPENDENT:
+-		val = XADC_CONF2_PD_ADC_B;
++		val = 0;
+ 		break;
+ 	default:
+-		val = 0;
++		val = XADC_CONF2_PD_ADC_B;
+ 		break;
+ 	}
+ 
 
 
