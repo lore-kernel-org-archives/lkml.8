@@ -2,208 +2,107 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09564C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7673AC83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1B6B206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:50:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="b0KZlUDC"
+	by mail.kernel.org (Postfix) with ESMTP id 50D85206F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:50:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbgD1Muu (ORCPT
+        id S1727092AbgD1Mu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:50:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726930AbgD1Mus (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:50:48 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43117C03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 05:50:48 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id x4so2623426wmj.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 05:50:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=IJwZdm/27BG35A63f5QLfwSuwxh6v7svpz8baWGJ+rE=;
-        b=b0KZlUDCbPr3AGniEFxQ2PAfeUZ9+O09I7oVG1Y0/2PmPOuUg+IOA5fzL7hjognD46
-         mF5I8HnLNtnVp/Xwt9M3ow9HxqOG8lPKqx+nqKLEsWdJBEtL674YPRZmqLSth8OQbRgS
-         3atuukLZLleeVou50Xsd1VS1b3N7bjGdyGguJGj5q1AI2oT6IKAlwR2iFDW0gk7CBB7G
-         eYPqfDjjSto7GqeeUj8Bgmic6SuD4IpNMuHYcO20edQc/XlJB2zjPmHuhNxD4HkulThZ
-         r7IGiWPDVdjIsvulhCtc314fTKTMG/6DTE8SeG5D3Fu5hMeMrCbNdFPx9W5e2CPB8Mrx
-         AlWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=IJwZdm/27BG35A63f5QLfwSuwxh6v7svpz8baWGJ+rE=;
-        b=tDrjaNx5Tvva2G/J7ioBOC6tYani4ZHwC0Q7UmCBFQ75yTfpc/PkGrINwhQS/g/VLT
-         vmuPRU2N02rUdF4In2jlfvUNCwxbI6Bx6bYU2wz9kqKZLWu9Zfs+zm16GSROCFawHdAW
-         YtpTDKhb0xVSLId6gdf3ckWbKIsNwZDN2uwOjjZnQ3X/gcBWVXjWFdUFo7wMGJLqp6DB
-         Csrz/j3UV1f/p3JjGCHLe4kg/AEOVriHjVcnAzpZFRlxvh0PtDlKhQxXDi81WFKnepdW
-         8bPbmKFCavtFj2PuJ5AqXWD0O1lBK77/cODRD1Ij1sdmQZJ4jVjLVeBJRNqCveANYLDr
-         CDTQ==
-X-Gm-Message-State: AGi0PuZhdLGheFgypq3Ms2ivQPu+m3rvO0tE0mQoudEHDA2SgNTdTc3g
-        agGpe4Rve6Jw+6a/0ZFZtxtCHD9leB5elg==
-X-Google-Smtp-Source: APiQypI4GXgVmhhEeQIBGhSJdIMiX55vtNCd8Ptr/2M2oTsu6SjPh/MuDhZHRFXFoTDrvI7aiFMEDA==
-X-Received: by 2002:a05:600c:1109:: with SMTP id b9mr4408443wma.116.1588078246765;
-        Tue, 28 Apr 2020 05:50:46 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e35:2ec0:82b0:4460:3fd3:382:4a71])
-        by smtp.gmail.com with ESMTPSA id q184sm3246115wma.25.2020.04.28.05.50.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 05:50:46 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     linux-media@vger.kernel.org, hverkuil-cisco@xs4all.nl
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Maxime Jourdan <mjourdan@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 2/3] media: meson: vdec: fix another case of VP9 buffer shortage
-Date:   Tue, 28 Apr 2020 14:50:35 +0200
-Message-Id: <20200428125036.9401-3-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200428125036.9401-1-narmstrong@baylibre.com>
-References: <20200428125036.9401-1-narmstrong@baylibre.com>
+        Tue, 28 Apr 2020 08:50:56 -0400
+Received: from mga18.intel.com ([134.134.136.126]:54668 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727071AbgD1Mux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 08:50:53 -0400
+IronPort-SDR: 1rgqmyF9lNl2HI94eQaItmlRhjx/XyFIfLfHwvOOC4hprRprkUAMequgZnX9YTBmoYifi+FVUR
+ WdVifkj72xkA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 05:50:52 -0700
+IronPort-SDR: SCQqSllUydQSHNN+qQ7dk5wAut5zz6fYbhReVhnikxqFFMRrSYFI7FjQSqPzVDIbL7k/3aJrl1
+ wfTwI3PK4ZWA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,327,1583222400"; 
+   d="scan'208";a="292845050"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 28 Apr 2020 05:50:47 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jTPhJ-003YnF-8d; Tue, 28 Apr 2020 15:50:49 +0300
+Date:   Tue, 28 Apr 2020 15:50:49 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 05/16] mfd: Add support for Kontron sl28cpld
+ management controller
+Message-ID: <20200428125049.GU185537@smile.fi.intel.com>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-6-michael@walle.cc>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423174543.17161-6-michael@walle.cc>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Jourdan <mjourdan@baylibre.com>
+On Thu, Apr 23, 2020 at 07:45:32PM +0200, Michael Walle wrote:
+> This patch adds core support for the board management controller found
+> on the SMARC-sAL28 board. It consists of the following functions:
+>  - watchdog
+>  - GPIO controller
+>  - PWM controller
+>  - fan sensor
+>  - interrupt controller
 
-- Redo the logic where VP9 gets fresh CAPTURE buffers. The previous code
-  could lead to a hardlock.
-- Reserve 4 margin buffers instead of 3, as apparently there are corner
-  cases where 3 is not enough.
+...
 
-Fixes: e9a3eb4819ca ("media: meson: vdec: add VP9 input support")
-Fixes: 00c43088aa68 ("media: meson: vdec: add VP9 decoder support")
-Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/staging/media/meson/vdec/codec_vp9.c | 41 +++++++++++++-------
- drivers/staging/media/meson/vdec/esparser.c  | 24 ++++++------
- 2 files changed, 38 insertions(+), 27 deletions(-)
+>  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+>  
+>  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
+> +
+> +obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
 
-diff --git a/drivers/staging/media/meson/vdec/codec_vp9.c b/drivers/staging/media/meson/vdec/codec_vp9.c
-index 897f5d7a6aad..28a7e62e7371 100644
---- a/drivers/staging/media/meson/vdec/codec_vp9.c
-+++ b/drivers/staging/media/meson/vdec/codec_vp9.c
-@@ -1185,6 +1185,29 @@ static void codec_vp9_set_mc(struct amvdec_session *sess,
- 	amvdec_write_dos(core, VP9D_MPP_REF_SCALE_ENBL, scale);
- }
- 
-+/*
-+ * Get a free VB2 buffer that isn't currently used.
-+ * VP9 references are held sometimes for so long that it's not really an option
-+ * to hold them until they're no longer referenced, as it would delay the
-+ * CAPTURE queue too much
-+ */
-+static struct vb2_v4l2_buffer *get_free_vbuf(struct amvdec_session *sess)
-+{
-+	struct codec_vp9 *vp9 = sess->priv;
-+	struct vb2_v4l2_buffer *vbuf = v4l2_m2m_dst_buf_remove(sess->m2m_ctx);
-+	struct vb2_v4l2_buffer *vbuf2;
-+
-+	if (!vbuf)
-+		return NULL;
-+
-+	if (!codec_vp9_get_frame_by_idx(vp9, vbuf->vb2_buf.index))
-+		return vbuf;
-+
-+	vbuf2 = get_free_vbuf(sess);
-+	v4l2_m2m_buf_queue(sess->m2m_ctx, vbuf);
-+	return vbuf2;
-+}
-+
- static struct vp9_frame *codec_vp9_get_new_frame(struct amvdec_session *sess)
- {
- 	struct codec_vp9 *vp9 = sess->priv;
-@@ -1196,25 +1219,13 @@ static struct vp9_frame *codec_vp9_get_new_frame(struct amvdec_session *sess)
- 	if (!new_frame)
- 		return NULL;
- 
--	vbuf = v4l2_m2m_dst_buf_remove(sess->m2m_ctx);
-+	vbuf = get_free_vbuf(sess);
- 	if (!vbuf) {
- 		dev_err(sess->core->dev, "No dst buffer available\n");
- 		kfree(new_frame);
- 		return NULL;
- 	}
- 
--	while (codec_vp9_get_frame_by_idx(vp9, vbuf->vb2_buf.index)) {
--		struct vb2_v4l2_buffer *old_vbuf = vbuf;
--
--		vbuf = v4l2_m2m_dst_buf_remove(sess->m2m_ctx);
--		v4l2_m2m_buf_queue(sess->m2m_ctx, old_vbuf);
--		if (!vbuf) {
--			dev_err(sess->core->dev, "No dst buffer available\n");
--			kfree(new_frame);
--			return NULL;
--		}
--	}
--
- 	new_frame->vbuf = vbuf;
- 	new_frame->index = vbuf->vb2_buf.index;
- 	new_frame->intra_only = param->p.intra_only;
-@@ -1267,8 +1278,10 @@ static void codec_vp9_process_frame(struct amvdec_session *sess)
- 		codec_vp9_rm_noshow_frame(sess);
- 
- 	vp9->cur_frame = codec_vp9_get_new_frame(sess);
--	if (!vp9->cur_frame)
-+	if (!vp9->cur_frame) {
-+		amvdec_abort(sess);
- 		return;
-+	}
- 
- 	pr_debug("frame %d: type: %08X; show_exist: %u; show: %u, intra_only: %u\n",
- 		 vp9->cur_frame->index,
-diff --git a/drivers/staging/media/meson/vdec/esparser.c b/drivers/staging/media/meson/vdec/esparser.c
-index db7022707ff8..814bb0587e3b 100644
---- a/drivers/staging/media/meson/vdec/esparser.c
-+++ b/drivers/staging/media/meson/vdec/esparser.c
-@@ -301,21 +301,19 @@ esparser_queue(struct amvdec_session *sess, struct vb2_v4l2_buffer *vbuf)
- 	u32 offset;
- 	u32 pad_size;
- 
--	/*
--	 * When max ref frame is held by VP9, this should be -= 3 to prevent a
--	 * shortage of CAPTURE buffers on the decoder side.
--	 * For the future, a good enhancement of the way this is handled could
--	 * be to notify new capture buffers to the decoding modules, so that
--	 * they could pause when there is no capture buffer available and
--	 * resume on this notification.
--	 */
--	if (sess->fmt_out->pixfmt == V4L2_PIX_FMT_VP9) {
--		if (codec_ops->num_pending_bufs)
--			num_dst_bufs = codec_ops->num_pending_bufs(sess);
--
-+	if (codec_ops->num_pending_bufs) {
-+		num_dst_bufs = codec_ops->num_pending_bufs(sess);
- 		num_dst_bufs += v4l2_m2m_num_dst_bufs_ready(sess->m2m_ctx);
-+		/*
-+		 * When max ref frame is held by VP9, this should be -= 4
-+		 * to prevent a shortage of CAPTURE buffers on the decoder side.
-+		 * For the future, a good enhancement of the way this is handled
-+		 * could be to notify new capture buffers to the decoding
-+		 * modules, so that they could pause when there is no capture
-+		 * buffer available and resume on this notification.
-+		 */
- 		if (sess->fmt_out->pixfmt == V4L2_PIX_FMT_VP9)
--			num_dst_bufs -= 3;
-+			num_dst_bufs -= 4;
- 
- 		if (esparser_vififo_get_free_space(sess) < payload_size ||
- 		    atomic_read(&sess->esparser_queued_bufs) >= num_dst_bufs)
+Perhaps keep an order?
+
+...
+
+> +	return devm_mfd_add_devices(dev, -1, sl28cpld_devs,
+
+-1 has its own definition.
+
+> +				    ARRAY_SIZE(sl28cpld_devs), NULL,
+> +				    i2c->irq, NULL);
+> +}
+
 -- 
-2.22.0
+With Best Regards,
+Andy Shevchenko
+
 
