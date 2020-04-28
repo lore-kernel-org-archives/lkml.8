@@ -2,112 +2,98 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1317C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A054BC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9482A20731
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 737AA20730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 23:22:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VxOM/1Z0"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="m3O9Ac1/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbgD1XUn (ORCPT
+        id S1726508AbgD1XWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 19:20:43 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38723 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725853AbgD1XUn (ORCPT
+        Tue, 28 Apr 2020 19:22:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726181AbgD1XWB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 19:20:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588116041;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=awX/WDzY4v/mrZcN7vzH0b6aC46+DakYZAFmWm381lc=;
-        b=VxOM/1Z0VXK3kLd30XNn6dEIWGc78lqIjVsU2iLW9+pjmCxbRcxfK/6IMNQCNuGpynQ4S8
-        hvY3din3xA5aBWc+grWJTgqj8frleQ2p3P8dYa5J6hvtSXrj50gnUC3M82M/DlpLG4Gpsw
-        W1yOHJO9wpyEg+UZw63nmQhAuG4zjqo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-510-tV07bsIDNPug05Cx3avFfg-1; Tue, 28 Apr 2020 19:20:36 -0400
-X-MC-Unique: tV07bsIDNPug05Cx3avFfg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 28 Apr 2020 19:22:01 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1FACC03C1AC;
+        Tue, 28 Apr 2020 16:22:00 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81E68800C78;
-        Tue, 28 Apr 2020 23:20:34 +0000 (UTC)
-Received: from ovpn-112-24.phx2.redhat.com (ovpn-112-24.phx2.redhat.com [10.3.112.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D634C5D710;
-        Tue, 28 Apr 2020 23:20:32 +0000 (UTC)
-Message-ID: <89043649a64fc97dd90eb25c85bcc8f65483cf4f.camel@redhat.com>
-Subject: Re: [RFC PATCH 1/3] sched/fair: Call newidle_balance() from
- finish_task_switch()
-From:   Scott Wood <swood@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Rik van Riel <riel@surriel.com>,
-        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Date:   Tue, 28 Apr 2020 18:20:32 -0500
-In-Reply-To: <20200428230204.GE16027@hirez.programming.kicks-ass.net>
-References: <20200428050242.17717-1-swood@redhat.com>
-         <20200428050242.17717-2-swood@redhat.com> <jhjftcns35d.mognet@arm.com>
-         <20200428220917.GB16027@hirez.programming.kicks-ass.net>
-         <c4a8d1f044b721a2c396fa00a0244eff0b851ae4.camel@redhat.com>
-         <20200428230204.GE16027@hirez.programming.kicks-ass.net>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Bd2Y3fX2z9sSG;
+        Wed, 29 Apr 2020 09:21:57 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588116117;
+        bh=ZBQZ70IVNtIsyM3Fb+ANegyNEK1zfaoFq4NXJJWI390=;
+        h=Date:From:To:Cc:Subject:From;
+        b=m3O9Ac1/jFj0XdDA/ELs+GUMyWetHtnX/LzpdnIAMkU9AgzA56keGwcF9wXEfYlL3
+         fAH/9yoj9kAoXKulHXWjPWpKoK+s9v5pf/Koc7mjS7mEzNJaNl2yy7jtvZ88eHBQN/
+         9Z0+H4EAZhZR4RSpEEnXCvekl52mwNcXjdSUBcW+XaOX/E27YuBGpDs9hUnWW/1KtP
+         Cct2/+0diIdvoLhcVzz+ugoXXuaxRlu7oh7Smv1A/qCh2Q3LbyKdQfUBqKbQ1U0oj9
+         8ww1VpJSsdWfIfMcSp2gvSPwfYno3BQJLOjg94hZKdB5yE6QKow0rEObFx6cGDW98+
+         Ai5z6aVEht4QA==
+Date:   Wed, 29 Apr 2020 09:21:54 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+Subject: linux-next: build warning after merge of the scsi-fixes tree
+Message-ID: <20200429092154.35958687@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: multipart/signed; boundary="Sig_/z_24ddm1Dy_+MBU73fB4v_X";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-29 at 01:02 +0200, Peter Zijlstra wrote:
-> On Tue, Apr 28, 2020 at 05:55:03PM -0500, Scott Wood wrote:
-> > On Wed, 2020-04-29 at 00:09 +0200, Peter Zijlstra wrote:
-> > > Also, if you move it this late, this is entirely the wrong place. If
-> > > you
-> > > do it after the context switch either use the balance_callback or put
-> > > it
-> > > in the idle path.
-> > > 
-> > > But what Valentin said; this needs a fair bit of support, the whole
-> > > reason we've never done this is to avoid that double context switch...
-> > > 
-> > 
-> > balance_callback() enters with the rq lock held but BH not separately
-> 
-> BH? softirqs you mean? Pray tell more.
+--Sig_/z_24ddm1Dy_+MBU73fB4v_X
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-In https://lore.kernel.org/lkml/5122CD9C.9070702@oracle.com/ the need to
-keep softirqs disabled during rebalance was brought up, but simply wrapping
-the lock dropping in local_bh_enable()/local_bh_disable() meant that
-local_bh_enable() would be called with interrupts disabled, which isn't
-allowed.
+Hi all,
 
-> > disabled, which interferes with the ability to enable interrupts but not
-> > BH.
-> > It also gets called from rt_mutex_setprio() and __sched_setscheduler(),
-> > and
-> > I didn't want the caller of those to be stuck with the latency.
-> 
-> You're not reading it right.
+After merging the scsi-fixes tree, today's linux-next build (powerpc
+ppc64_defconfig) produced this warning:
 
-Could you elaborate?
+drivers/scsi/ibmvscsi/ibmvscsi.c: In function 'ibmvscsi_remove':
+drivers/scsi/ibmvscsi/ibmvscsi.c:2323:16: warning: unused variable 'flags' =
+[-Wunused-variable]
+ 2323 |  unsigned long flags;
+      |                ^~~~~
 
--Scott
+Introduced by commit
 
+  5b77d181bee1 ("scsi: ibmvscsi: Fix WARN_ON during event pool release")
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/z_24ddm1Dy_+MBU73fB4v_X
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6oupIACgkQAVBC80lX
+0GyjZgf/VPECcQ0svkuvTHGTJslNGOplzTHkkRBXq5RxCfHNxx+DC+pgrSxxcM6S
+GWXY1AOHEygcdYrCFoI9AaLHYmANZFhr23c5d0Owv4wQ3urpbHDG2fN2M3POUZ0m
+qIE4bEKi5QJcZhdH43tjOVFT7IIaPqzVojGFnG2Z8R2omhhqlKr252WqNa0+aBWj
+WUn7lalmRaHrCXTsYz4lrJ/LlFBJJJVglxyVjo9+7XDJXSzTwXQmoCTkWDdYPj/1
+VfvdZtSnsgZN2S5eY7NCujmVEbyWFDGR16WRRYezpMLKyduf12+S1ikodiNzLx1M
+okT62BaoHyXTTLNTq6L+2fJuRo34RQ==
+=zzgx
+-----END PGP SIGNATURE-----
+
+--Sig_/z_24ddm1Dy_+MBU73fB4v_X--
