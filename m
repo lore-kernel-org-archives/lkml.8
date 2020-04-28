@@ -2,61 +2,53 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F800C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64395C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43762206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41EB5206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100199;
-	bh=wWcxu4OCfXEK46Bg8kOK4Q6L/CNCdcIft+WVM10h9XI=;
+	s=default; t=1588100201;
+	bh=uXlG7zY2R4nQkPMFSwhbfOPelFo9eV73KDF2pnAMz+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R/rqaaa0QBiSr+j5hvBSBPIU91px6rWFt6iw5GoQk0Sf+Mm2NNeAiToAoV8w0Tklp
-	 SiNM4cDCUJ0/8FcwA5KTYlgYkNNS98aOloQrA/bmvfWpR9auXAj3+sFLU+nDK6O8mS
-	 16dzHH5WVrHjQMFY2VVXEHvTO3dDDC8/Rw+tDPqI=
+	b=ydzy/jr2W+0WJLM0R4l7dc6Wt29mPzuQiwgcy630hiO0+VYoHnGwh1TGYdNDV7NbR
+	 fs33LS91UQqIZ+5J76Z2wKbk5bZ5f/2ZMW+OQyNsx1z2RdBjagrgU5lzS3zIbcPp2g
+	 1qtzVt25+nkf+g0ccOsQZWKQ7L33qR1yV4F4fGWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729975AbgD1S4i (ORCPT
+        id S1730321AbgD1S4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:56:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46590 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:56:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729629AbgD1SbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:31:13 -0400
+        id S1729623AbgD1SbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:31:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9071921835;
-        Tue, 28 Apr 2020 18:31:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4ACA720B80;
+        Tue, 28 Apr 2020 18:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098673;
-        bh=wWcxu4OCfXEK46Bg8kOK4Q6L/CNCdcIft+WVM10h9XI=;
+        s=default; t=1588098670;
+        bh=uXlG7zY2R4nQkPMFSwhbfOPelFo9eV73KDF2pnAMz+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=02xWl1/LkFb+0EEK3geRcM5BCvxpyAmIBaenG57G4FDhoZFyBzz/P9So9GhRCE6o5
-         S/hrbxBws0gipcT7yuLLmWfJKioIBl1g1L8R2n2bikPOagyK4H50qjFCOy6eOzPgp7
-         IFVpmiioh0H1YuLpPrIN434l08MYi5jtLu/xTFzw=
+        b=BRtPWbqsTTaxYAlSgB10cxR/HMRA327LPqvkTlxjWSPf42QOeH5X7MxiQrtkiudn2
+         P6WWtNtsw1iz3AkqUugkEAO/J1wxFROqapSskfTs3JgTJmglGz7Z52Yraabg8FUX/5
+         0LPAP2py4EfJMeJIHxWi96/mpc4zi7dd1zW6uBZQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 021/131] selftests: kmod: fix handling test numbers above 9
-Date:   Tue, 28 Apr 2020 20:23:53 +0200
-Message-Id: <20200428182227.772659813@linuxfoundation.org>
+        stable@vger.kernel.org, Amit Singh Tomar <amittomer25@gmail.com>
+Subject: [PATCH 5.6 096/167] tty: serial: owl: add "much needed" clk_prepare_enable()
+Date:   Tue, 28 Apr 2020 20:24:32 +0200
+Message-Id: <20200428182237.275211321@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -66,64 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Amit Singh Tomar <amittomer25@gmail.com>
 
-[ Upstream commit 6d573a07528308eb77ec072c010819c359bebf6e ]
+commit abf42d2f333b21bf8d33b2fbb8a85fa62037ac01 upstream.
 
-get_test_count() and get_test_enabled() were broken for test numbers
-above 9 due to awk interpreting a field specification like '$0010' as
-octal rather than decimal.  Fix it by stripping the leading zeroes.
+commit 8ba92cf59335 ("arm64: dts: actions: s700: Add Clock Management Unit")
+breaks the UART on Cubieboard7-lite (based on S700 SoC), This is due to the
+fact that generic clk routine clk_disable_unused() disables the gate clks,
+and that in turns disables OWL UART (but UART driver never enables it). To
+prove this theory, Andre suggested to use "clk_ignore_unused" in kernel
+commnd line and it worked (Kernel happily lands into RAMFS world :)).
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jeff Vander Stoep <jeffv@google.com>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: NeilBrown <neilb@suse.com>
-Link: http://lkml.kernel.org/r/20200318230515.171692-5-ebiggers@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This commit fix this up by adding clk_prepare_enable().
+
+Fixes: 8ba92cf59335 ("arm64: dts: actions: s700: Add Clock Management Unit")
+Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1587067917-1400-1-git-send-email-amittomer25@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/testing/selftests/kmod/kmod.sh | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/tty/serial/owl-uart.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
-index 0a76314b44149..1f118916a83e4 100755
---- a/tools/testing/selftests/kmod/kmod.sh
-+++ b/tools/testing/selftests/kmod/kmod.sh
-@@ -505,18 +505,23 @@ function test_num()
- 	fi
- }
+--- a/drivers/tty/serial/owl-uart.c
++++ b/drivers/tty/serial/owl-uart.c
+@@ -680,6 +680,12 @@ static int owl_uart_probe(struct platfor
+ 		return PTR_ERR(owl_port->clk);
+ 	}
  
--function get_test_count()
-+function get_test_data()
- {
- 	test_num $1
--	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
-+	local field_num=$(echo $1 | sed 's/^0*//')
-+	echo $ALL_TESTS | awk '{print $'$field_num'}'
-+}
++	ret = clk_prepare_enable(owl_port->clk);
++	if (ret) {
++		dev_err(&pdev->dev, "could not enable clk\n");
++		return ret;
++	}
 +
-+function get_test_count()
-+{
-+	TEST_DATA=$(get_test_data $1)
- 	LAST_TWO=${TEST_DATA#*:*}
- 	echo ${LAST_TWO%:*}
- }
+ 	owl_port->port.dev = &pdev->dev;
+ 	owl_port->port.line = pdev->id;
+ 	owl_port->port.type = PORT_OWL;
+@@ -712,6 +718,7 @@ static int owl_uart_remove(struct platfo
  
- function get_test_enabled()
- {
--	test_num $1
--	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
-+	TEST_DATA=$(get_test_data $1)
- 	echo ${TEST_DATA#*:*:}
- }
+ 	uart_remove_one_port(&owl_uart_driver, &owl_port->port);
+ 	owl_uart_ports[pdev->id] = NULL;
++	clk_disable_unprepare(owl_port->clk);
  
--- 
-2.20.1
-
+ 	return 0;
+ }
 
 
