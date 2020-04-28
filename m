@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B47C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE47BC83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFF4D2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1BBB21D94
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728537AbgD1PSd (ORCPT
+        id S1728559AbgD1PSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:18:33 -0400
-Received: from 8bytes.org ([81.169.241.247]:37428 "EHLO theia.8bytes.org"
+        Tue, 28 Apr 2020 11:18:36 -0400
+Received: from 8bytes.org ([81.169.241.247]:37910 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728393AbgD1PSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:18:15 -0400
+        id S1728413AbgD1PSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:18:18 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id BA371F33; Tue, 28 Apr 2020 17:17:52 +0200 (CEST)
+        id 6BC3EF42; Tue, 28 Apr 2020 17:17:54 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -40,9 +40,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 55/75] x86/sev-es: Handle WBINVD Events
-Date:   Tue, 28 Apr 2020 17:17:05 +0200
-Message-Id: <20200428151725.31091-56-joro@8bytes.org>
+Subject: [PATCH v3 63/75] x86/sev-es: Handle #DB Events
+Date:   Tue, 28 Apr 2020 17:17:13 +0200
+Message-Id: <20200428151725.31091-64-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200428151725.31091-1-joro@8bytes.org>
 References: <20200428151725.31091-1-joro@8bytes.org>
@@ -51,45 +51,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-Implement a handler for #VC exceptions caused by WBINVD instructions.
+Handle #VC exceptions caused by #DB exceptions in the guest. Do not
+forward them to the hypervisor and handle them with do_debug() instead.
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-[ jroedel@suse.de: Adapt to #VC handling framework ]
-Co-developed-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/sev-es.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/x86/kernel/sev-es.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 6100f8ac61d4..a8c0d865ca22 100644
+index 050a15da9ae5..03095bc7b563 100644
 --- a/arch/x86/kernel/sev-es.c
 +++ b/arch/x86/kernel/sev-es.c
-@@ -799,6 +799,12 @@ static enum es_result vc_handle_dr7_read(struct ghcb *ghcb,
- 	return ES_OK;
+@@ -882,6 +882,19 @@ static enum es_result vc_handle_trap_ac(struct ghcb *ghcb,
+ 	return ES_EXCEPTION;
  }
  
-+static enum es_result vc_handle_wbinvd(struct ghcb *ghcb,
-+				       struct es_em_ctxt *ctxt)
++static enum es_result vc_handle_trap_db(struct ghcb *ghcb,
++					struct es_em_ctxt *ctxt)
 +{
-+	return sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_WBINVD, 0, 0);
++	/*
++	 * Calling do_debug() directly does not work, because it might enable
++	 * IRQs and the GHCB is active. Forward the exception and call it later
++	 * from vc_forward_exception().
++	 */
++	ctxt->fi.vector = X86_TRAP_DB;
++	ctxt->fi.error_code = 0;
++	return ES_EXCEPTION;
 +}
 +
  static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
  					 struct ghcb *ghcb,
  					 unsigned long exit_code)
-@@ -821,6 +827,9 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 	case SVM_EXIT_MSR:
- 		result = vc_handle_msr(ghcb, ctxt);
+@@ -895,6 +908,9 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 	case SVM_EXIT_WRITE_DR7:
+ 		result = vc_handle_dr7_write(ghcb, ctxt);
  		break;
-+	case SVM_EXIT_WBINVD:
-+		result = vc_handle_wbinvd(ghcb, ctxt);
++	case SVM_EXIT_EXCP_BASE + X86_TRAP_DB:
++		result = vc_handle_trap_db(ghcb, ctxt);
 +		break;
- 	case SVM_EXIT_NPF:
- 		result = vc_handle_mmio(ghcb, ctxt);
+ 	case SVM_EXIT_EXCP_BASE + X86_TRAP_AC:
+ 		result = vc_handle_trap_ac(ghcb, ctxt);
  		break;
+@@ -960,6 +976,9 @@ static void vc_forward_exception(struct es_em_ctxt *ctxt)
+ 	case X86_TRAP_AC:
+ 		do_alignment_check(ctxt->regs, error_code);
+ 		break;
++	case X86_TRAP_DB:
++		do_debug(ctxt->regs, error_code);
++		break;
+ 	default:
+ 		pr_emerg("Unsupported exception in #VC instruction emulation - can't continue\n");
+ 		BUG();
 -- 
 2.17.1
 
