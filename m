@@ -2,105 +2,95 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	TVD_SUBJ_WIPE_DEBT,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7287C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F91C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4167208FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:44:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JpEdhd4c"
+	by mail.kernel.org (Postfix) with ESMTP id F3258206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:44:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgD1OoE (ORCPT
+        id S1728035AbgD1OoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:44:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36354 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727803AbgD1OoD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:44:03 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D46AC03C1AB;
-        Tue, 28 Apr 2020 07:44:03 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id c21so7633701plz.4;
-        Tue, 28 Apr 2020 07:44:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TmxpJsxXAhcqB+ToVZExhvip4vVPdz5UbfhJp3pb3Rg=;
-        b=JpEdhd4cifBh5c7FfGbQpg7esariuAxGZdmCnyS/MuOKKFBlwHW46H+u1qAsGkWl2h
-         4zsWi/VrJlXbHu2CYHRUPR8FdH6YM7fffG20ZpEkzng0T+DtKmC1H9/5dQLJRCNMRcQa
-         4ED3iCvKAwqCjZNfyGqwfdqN5vXclVNZoOeViUVVt/8pmrJscHsJFlDwK8J43xsZwEt1
-         u/qhIc6lEJyZp8T3pBgvhLjqZpJjnDttudRto6wWbva5vb2YHplTH8wq8Re/V+hYO8Vj
-         USNMAP8K5ZuSDjJD4nEPMj+G2fUUFVQ2z9yRkyupnmoBFtpYnoAJbhf8Va1tuig3gSIX
-         fVaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TmxpJsxXAhcqB+ToVZExhvip4vVPdz5UbfhJp3pb3Rg=;
-        b=M8bCgYQ6zwlPtZEQFasWqyGRFuhTmavTnseT6BdZjxZDq2DihpQllaW7OxN2IFrAR5
-         ECUTUK/ExXE3XRKKn3bYFCPJv96d79Dml0ZMxKanSMVb/rKsT8moNqQj5VMqELwIVH9r
-         Pi0oju/Exs8ZaJQCR83IUKRqHREvNAfjqbZe1aDKOLwd7neVDpaGJ3RpgdYnXttbyNLK
-         +HkE1mcr5jOcoBiI5dW2sj9blawqe33/zJPiyCWZUvAn5a9GV/5Sb+uxgrpBiUpp4ksY
-         qa8QUuWAfSbcRk5fb02ALxmYfIxWZnwJaccOMFJvrPLkjPJ1wTcciIguZGyDtXTBYbaH
-         YTzg==
-X-Gm-Message-State: AGi0PuYj+btVWUxn5vIbVzJHVvsFSp4DDByIOXjhwgw5x+UFYlfb7JvK
-        dr2f0PMUs1GATmxROB1ZhN8=
-X-Google-Smtp-Source: APiQypLErRiVfS2BcM1F3SXg4qY/JpZaLDKctoUkSw9scfkA5By0Gg4GrF2ZF7DuR5iYOoa+PNuylg==
-X-Received: by 2002:a17:902:5ac2:: with SMTP id g2mr13356131plm.167.1588085041193;
-        Tue, 28 Apr 2020 07:44:01 -0700 (PDT)
-Received: from varodek.localdomain ([2401:4900:40f3:10a2:97c1:b981:9f1:d7d0])
-        by smtp.gmail.com with ESMTPSA id d203sm15053203pfd.79.2020.04.28.07.43.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 07:44:00 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Shannon Nelson <snelson@pensando.io>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Martin Habets <mhabets@solarflare.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        netdev@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, rjw@rjwysocki.net
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, skhan@linuxfoundation.org
-Subject: [Linux-kernel-mentees] [PATCH v2 0/2] realtek ethernet : remove legacy power management callbacks.
-Date:   Tue, 28 Apr 2020 20:13:12 +0530
-Message-Id: <20200428144314.24533-1-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 28 Apr 2020 10:44:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41824 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727803AbgD1OoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 10:44:12 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B23E206C0;
+        Tue, 28 Apr 2020 14:44:11 +0000 (UTC)
+Date:   Tue, 28 Apr 2020 10:44:09 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Xiao Yang <yangx.jy@cn.fujitsu.com>
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH] kernel/trace: Stop and wait for kthread on preempt irq
+ module unload
+Message-ID: <20200428104409.0995ceb0@gandalf.local.home>
+In-Reply-To: <5EA80319.7080005@cn.fujitsu.com>
+References: <20200424223630.224895-1-joel@joelfernandes.org>
+        <5EA80319.7080005@cn.fujitsu.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The purpose of this patch series is to remove legacy power management callbacks
-from realtek ethernet drivers.
+On Tue, 28 Apr 2020 18:19:05 +0800
+Xiao Yang <yangx.jy@cn.fujitsu.com> wrote:
 
-The callbacks performing suspend() and resume() operations are still calling
-pci_save_state(), pci_set_power_state(), etc. and handling the powermanagement
-themselves, which is not recommended.
+> Hi Joel,
+> 
+> Thanks for your quick fix.
+> 
+> Unfortunately, it fixes my original panic but introduces other
+> issues(two wanings and one panic) on my arm64 vm, as below:
+>
 
-The conversion requires the removal of the those function calls and change the
-callback definition accordingly.
+Does the following on top of Joel's patch fix it?
 
-Vaibhav Gupta (2):
-  realtek/8139too: Remove Legacy Power Management
-  realtek/8139cp: Remove Legacy Power Management
+-- Steve
 
- drivers/net/ethernet/realtek/8139cp.c  | 25 +++++++------------------
- drivers/net/ethernet/realtek/8139too.c | 26 +++++++-------------------
- 2 files changed, 14 insertions(+), 37 deletions(-)
-
--- 
-2.26.2
-
+diff --git a/kernel/trace/preemptirq_delay_test.c b/kernel/trace/preemptirq_delay_test.c
+index 1c28ca20e30b..6d9131ae7e8c 100644
+--- a/kernel/trace/preemptirq_delay_test.c
++++ b/kernel/trace/preemptirq_delay_test.c
+@@ -113,15 +113,27 @@ static int preemptirq_delay_run(void *data)
+ 
+ 	for (i = 0; i < s; i++)
+ 		(testfuncs[i])(i);
++
++	while (!kthread_should_stop()) {
++		schedule();
++		set_current_state(TASK_INTERRUPTIBLE);
++	}
++
++	__set_current_state(TASK_RUNNING);
++
+ 	return 0;
+ }
+ 
+ static struct task_struct *preemptirq_start_test(void)
+ {
++	struct task_struct *task;
+ 	char task_name[50];
+ 
+ 	snprintf(task_name, sizeof(task_name), "%s_test", test_mode);
+-	return kthread_run(preemptirq_delay_run, NULL, task_name);
++	task = kthread_run(preemptirq_delay_run, NULL, task_name);
++	if (IS_ERR(task))
++		return NULL;
++	return task;
+ }
+ 
+ 
+ 
