@@ -2,83 +2,79 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6F9C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B29C2C83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32E20206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96FF2206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:13:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgD1OML (ORCPT
+        id S1727934AbgD1ONw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:12:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:52556 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726949AbgD1OMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:12:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 70BA131B;
-        Tue, 28 Apr 2020 07:12:10 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 667233F68F;
-        Tue, 28 Apr 2020 07:12:09 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 15:11:58 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Richard Gong <richard.gong@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] firmware: stratix10-svc: Drop unnecessary checking for
- and populating /firmware/ node
-Message-ID: <20200428141148.GA11737@bogus>
-References: <20200421173256.34897-1-sudeep.holla@arm.com>
- <8ca3666f-8ff1-3c3c-d40b-81c024b37bdd@linux.intel.com>
- <20200423081149.GB18538@bogus>
- <2b2e29ec-ebbf-3ee6-acc9-3722a2fabbfb@linux.intel.com>
- <20200428083238.GA21288@bogus>
- <a583b842-585d-888e-49e5-32a16dfab8a6@linux.intel.com>
+        Tue, 28 Apr 2020 10:13:52 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50156 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727104AbgD1ONw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 10:13:52 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8F55461E685899CC7FBD;
+        Tue, 28 Apr 2020 22:13:50 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 28 Apr 2020 22:13:43 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] drm/mcde: dsi: Fix return value check in dev_err()
+Date:   Tue, 28 Apr 2020 14:14:59 +0000
+Message-ID: <20200428141459.87624-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a583b842-585d-888e-49e5-32a16dfab8a6@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 09:14:25AM -0500, Richard Gong wrote:
-> Hi,
-> 
-> On 4/28/20 3:32 AM, Sudeep Holla wrote:
-> > On Mon, Apr 27, 2020 at 02:12:56PM -0500, Richard Gong wrote:
-> > > Hi Sudeep,
-> > > 
-> > > In our dts, firmware is not under root node. You can refer to
-> > > arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi for details.
-> > > 
-> > > This is why we need check and populate firmware node.
-> > > 
-> > 
-> > Ah that's bad. One of very few DTS I see firmware node not in the
-> > root.
->
-> Per the Devicetree Specification, there is no need to define firmware
-> under the root node. Some examples are fsl-ls1012a.dtsi and
-> hi6220-hikey.dts.
->
+In case of error, the function of_drm_find_bridge() returns NULL pointer
+not ERR_PTR(). The IS_ERR() test in the return value check should be
+replaced with NULL test.
 
-Yes I checked that before I replied, otherwise I would have asked to change
-😉 
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+---
+ drivers/gpu/drm/mcde/mcde_dsi.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-> > But this driver is the only one duplicating the code
-> then Commit 3aa0582fdb82 should be extended to handle firmware which is
-> not defined under the root node. I am not sure if it is doable.
+diff --git a/drivers/gpu/drm/mcde/mcde_dsi.c b/drivers/gpu/drm/mcde/mcde_dsi.c
+index 7af5ebb0c436..e705afc08c4e 100644
+--- a/drivers/gpu/drm/mcde/mcde_dsi.c
++++ b/drivers/gpu/drm/mcde/mcde_dsi.c
+@@ -1073,10 +1073,9 @@ static int mcde_dsi_bind(struct device *dev, struct device *master,
+ 			panel = NULL;
+ 
+ 			bridge = of_drm_find_bridge(child);
+-			if (IS_ERR(bridge)) {
+-				dev_err(dev, "failed to find bridge (%ld)\n",
+-					PTR_ERR(bridge));
+-				return PTR_ERR(bridge);
++			if (!bridge) {
++				dev_err(dev, "failed to find bridge\n");
++				return -EINVAL;
+ 			}
+ 		}
+ 	}
 
-I agree, I need to take a look at it again.
 
--- 
-Regards,
-Sudeep
+
+
+
