@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CA2C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF133C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB46C208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A67B20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:26:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098386;
-	bh=2Yt0GEIOnb1UROGjHj/AA7XQbzWuUZ4lC2KbQHLFdw4=;
+	s=default; t=1588098389;
+	bh=Zl39YaVNOpEw+1FqGTKQv1RKhpb4hDsvXuv532WrKls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2WLGn8S2E9+Xz3ys6FUKxxCd3n2ArKhv7OPutgnUKuCeMd/vlkhRD7zUssx3u1HLx
-	 B6KFkl4tSVnPHzCx6eY2K2LEKslPZFk/Ph7NryNHzYr+p9lwjM3AY3ftogJGgS0kOZ
-	 FzdmF0/fmQ2cIclmL2npx82OQZDDgVE7jIy1mYnE=
+	b=uSbxWB1Nh2w9vblxTNhhHKsf58Up+XKhQjZq44CmGTqiwVwCDbHPM6/quu2pMm/qP
+	 rqidByNorOIRBanxZrnOoZ8/Y+hCQ3h77aGx/asqlZNuovb/aP8HIlApXW5XRIaiXE
+	 p9bGt6avIDFT4smAVXJRRyNKedNYhXLv53gofYI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbgD1S00 (ORCPT
+        id S1728745AbgD1S02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:26:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37788 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:26:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728705AbgD1S0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:26:21 -0400
+        id S1728717AbgD1S0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:26:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50BA820730;
-        Tue, 28 Apr 2020 18:26:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6C73208E0;
+        Tue, 28 Apr 2020 18:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098380;
-        bh=2Yt0GEIOnb1UROGjHj/AA7XQbzWuUZ4lC2KbQHLFdw4=;
+        s=default; t=1588098383;
+        bh=Zl39YaVNOpEw+1FqGTKQv1RKhpb4hDsvXuv532WrKls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M5VqsSq9cpBslmGwuliU86i/xYZiAS+KQMWGmE4Icw4G7r71cFx/Rv7MDPSUttSFW
-         tcsdGp8gdNdUxWvvljgoYjfzjqbsO4SOl/K90ND7S5RNyRPIzNCYpsuTIKfolA//IO
-         dgg0688Zj1sOQNYA5I7g6SyXphE6WrhJyq4t34qU=
+        b=fMu2wPCfP1C46h4KeynTYSxBiOkbgnMS2n+EX2UtLSjVsVGvI9xh4eW4qM0P5mAFI
+         Lpn8zAAjn5H2q3TXkD/41O34UHNdINPLSFGOaliHAyB0Keic1fi1XgchqHITnczmYp
+         bGL+X8sqB/wj8/DoXgP35r/zTtTAbiWeA148yuCI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Hannes Reinecke <hare@suse.de>, Christoph Hellwig <hch@lst.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 017/167] ASoC: Intel: atom: Take the drv->lock mutex before calling sst_send_slot_map()
-Date:   Tue, 28 Apr 2020 20:23:13 +0200
-Message-Id: <20200428182227.386721214@linuxfoundation.org>
+Subject: [PATCH 5.6 018/167] nvme: fix deadlock caused by ANA update wrong locking
+Date:   Tue, 28 Apr 2020 20:23:14 +0200
+Message-Id: <20200428182227.502660835@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
 References: <20200428182225.451225420@linuxfoundation.org>
@@ -61,40 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Sagi Grimberg <sagi@grimberg.me>
 
-[ Upstream commit 81630dc042af998b9f58cd8e2c29dab9777ea176 ]
+[ Upstream commit 657f1975e9d9c880fa13030e88ba6cc84964f1db ]
 
-sst_send_slot_map() uses sst_fill_and_send_cmd_unlocked() because in some
-places it is called with the drv->lock mutex already held.
+The deadlock combines 4 flows in parallel:
+- ns scanning (triggered from reconnect)
+- request timeout
+- ANA update (triggered from reconnect)
+- I/O coming into the mpath device
 
-So it must always be called with the mutex locked. This commit adds missing
-locking in the sst_set_be_modules() code-path.
+(1) ns scanning triggers disk revalidation -> update disk info ->
+    freeze queue -> but blocked, due to (2)
 
-Fixes: 24c8d14192cc ("ASoC: Intel: mrfld: add DSP core controls")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200402185359.3424-1-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+(2) timeout handler reference the g_usage_counter - > but blocks in
+    the transport .timeout() handler, due to (3)
+
+(3) the transport timeout handler (indirectly) calls nvme_stop_queue() ->
+    which takes the (down_read) namespaces_rwsem - > but blocks, due to (4)
+
+(4) ANA update takes the (down_write) namespaces_rwsem -> calls
+    nvme_mpath_set_live() -> which synchronize the ns_head srcu
+    (see commit 504db087aacc) -> but blocks, due to (5)
+
+(5) I/O came into nvme_mpath_make_request -> took srcu_read_lock ->
+    direct_make_request > blk_queue_enter -> but blocked, due to (1)
+
+==> the request queue is under freeze -> deadlock.
+
+The fix is making ANA update take a read lock as the namespaces list
+is not manipulated, it is just the ns and ns->head that are being
+updated (which is protected with the ns->head lock).
+
+Fixes: 0d0b660f214dc ("nvme: add ANA support")
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Keith Busch <kbusch@kernel.org>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/atom/sst-atom-controls.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/nvme/host/multipath.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/intel/atom/sst-atom-controls.c b/sound/soc/intel/atom/sst-atom-controls.c
-index f883c9340eeee..df8f7994d3b7a 100644
---- a/sound/soc/intel/atom/sst-atom-controls.c
-+++ b/sound/soc/intel/atom/sst-atom-controls.c
-@@ -966,7 +966,9 @@ static int sst_set_be_modules(struct snd_soc_dapm_widget *w,
- 	dev_dbg(c->dev, "Enter: widget=%s\n", w->name);
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index a11900cf3a365..906dc0faa48ec 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -514,7 +514,7 @@ static int nvme_update_ana_state(struct nvme_ctrl *ctrl,
+ 	if (!nr_nsids)
+ 		return 0;
  
- 	if (SND_SOC_DAPM_EVENT_ON(event)) {
-+		mutex_lock(&drv->lock);
- 		ret = sst_send_slot_map(drv);
-+		mutex_unlock(&drv->lock);
- 		if (ret)
- 			return ret;
- 		ret = sst_send_pipe_module_params(w, k);
+-	down_write(&ctrl->namespaces_rwsem);
++	down_read(&ctrl->namespaces_rwsem);
+ 	list_for_each_entry(ns, &ctrl->namespaces, list) {
+ 		unsigned nsid = le32_to_cpu(desc->nsids[n]);
+ 
+@@ -525,7 +525,7 @@ static int nvme_update_ana_state(struct nvme_ctrl *ctrl,
+ 		if (++n == nr_nsids)
+ 			break;
+ 	}
+-	up_write(&ctrl->namespaces_rwsem);
++	up_read(&ctrl->namespaces_rwsem);
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
