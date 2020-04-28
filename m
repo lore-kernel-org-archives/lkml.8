@@ -2,179 +2,74 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E59C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB83BC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2C92072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 860592082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 11:14:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Ruu9H6kP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nIyNbar6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgD1LOL (ORCPT
+        id S1726746AbgD1LOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:14:11 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:17840 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726574AbgD1LOI (ORCPT
+        Tue, 28 Apr 2020 07:14:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59868 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbgD1LOQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:14:08 -0400
-X-UUID: 203fd53efa284bc6b17b2621e585f0d3-20200428
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=YLjL6OC5wWyz5Tp0h7RYckijnQ+Qae5bGKWcHOM4Cfc=;
-        b=Ruu9H6kPV3y23iinbpu4vBgfY7phzb7yBTTOm26xG8sk/SL0NUIJ7sp2IYj0ucgHvgZpgeN0lapXYmXfVYScDXRC5AeBa7TjRKJndmQE1qnaN9XCEpXYhwuEtaNEzs9As1TzgZeyKy8QaftLCihpWrQQFE1fgmelVPBkw9JLu1s=;
-X-UUID: 203fd53efa284bc6b17b2621e585f0d3-20200428
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 103957734; Tue, 28 Apr 2020 19:14:04 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 28 Apr 2020 19:13:56 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 28 Apr 2020 19:13:54 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <asutoshd@codeaurora.org>
-CC:     <beanhuo@micron.com>, <cang@codeaurora.org>,
-        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v1 2/4] scsi: ufs: add "index" in parameter list of ufshcd_query_flag()
-Date:   Tue, 28 Apr 2020 19:13:53 +0800
-Message-ID: <20200428111355.1776-3-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200428111355.1776-1-stanley.chu@mediatek.com>
-References: <20200428111355.1776-1-stanley.chu@mediatek.com>
+        Tue, 28 Apr 2020 07:14:16 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9510C03C1A9;
+        Tue, 28 Apr 2020 04:14:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Z+2cHsAhwOcwa/ZOru5Iyu559NSgRTBiKbey/voC8u8=; b=nIyNbar6GQ2gfHkkoUVhjswdA8
+        Vkwis7Zk1JPnkr1oXjqfrAthCSBE1dcsEZHAGvSeAMEZXOEGEaU9ODVZ0BE/qRQWfW8sq/3X6uARA
+        asc0G24RG36WSB4dHiVq/3rXfqsnY5iKDhlMjfJlqCrKKDhDh6ORdOVQDti48qO5nzcpPZywR2MCO
+        EyC4qcxNpUwymMgQiGoSnY+uivQ9/bdOqOiIiucHyDujj5d4Po652GcaUO4eeDEVucor+8IbdJrnh
+        PV92NQ3xzaLTRs8ar9EuIBJ/yRZk9WTpdosuE4NxDu+LzeW84kI2tH/yfayOfP2FPmiSlcCyVzJHr
+        SxuOYjFg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTOBf-0006yn-Vr; Tue, 28 Apr 2020 11:14:03 +0000
+Date:   Tue, 28 Apr 2020 04:14:03 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Wei Yongjun <weiyongjun1@huawei.com>
+Cc:     Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Waiman Long <longman@redhat.com>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH -next] ipc: use GFP_ATOMIC under spin lock
+Message-ID: <20200428111403.GJ29705@bombadil.infradead.org>
+References: <20200428034736.27850-1-weiyongjun1@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428034736.27850-1-weiyongjun1@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rm9yIHByZXBhcmF0aW9uIG9mIERlZGljYXRlZCBMVSBzdXBwb3J0IG9uIFdyaXRlQm9vc3RlciBm
-ZWF0dXJlLA0KImluZGV4IiBwYXJhbWV0ZXIgc2hhbGwgYmUgYWRkZWQgYW5kIGFsbG93ZWQgdG8g
-YmUgc3BlY2lmaWVkDQpieSBjYWxsZXJzLg0KDQpTaWduZWQtb2ZmLWJ5OiBTdGFubGV5IENodSA8
-c3RhbmxleS5jaHVAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9zY3NpL3Vmcy91ZnMtc3lz
-ZnMuYyB8ICAyICstDQogZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYyAgICB8IDI4ICsrKysrKysr
-KysrKysrKy0tLS0tLS0tLS0tLS0NCiBkcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5oICAgIHwgIDIg
-Ky0NCiAzIGZpbGVzIGNoYW5nZWQsIDE3IGluc2VydGlvbnMoKyksIDE1IGRlbGV0aW9ucygtKQ0K
-DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zY3NpL3Vmcy91ZnMtc3lzZnMuYyBiL2RyaXZlcnMvc2Nz
-aS91ZnMvdWZzLXN5c2ZzLmMNCmluZGV4IDkzNDg0NDA4YmM0MC4uYjg2YjZhNDBkN2U2IDEwMDY0
-NA0KLS0tIGEvZHJpdmVycy9zY3NpL3Vmcy91ZnMtc3lzZnMuYw0KKysrIGIvZHJpdmVycy9zY3Np
-L3Vmcy91ZnMtc3lzZnMuYw0KQEAgLTYzMSw3ICs2MzEsNyBAQCBzdGF0aWMgc3NpemVfdCBfbmFt
-ZSMjX3Nob3coc3RydWN0IGRldmljZSAqZGV2LAkJCQlcDQogCXN0cnVjdCB1ZnNfaGJhICpoYmEg
-PSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsJCQlcDQogCXBtX3J1bnRpbWVfZ2V0X3N5bmMoaGJhLT5k
-ZXYpOwkJCQkJXA0KIAlyZXQgPSB1ZnNoY2RfcXVlcnlfZmxhZyhoYmEsIFVQSVVfUVVFUllfT1BD
-T0RFX1JFQURfRkxBRywJXA0KLQkJUVVFUllfRkxBR19JRE4jI191bmFtZSwgJmZsYWcpOwkJCQlc
-DQorCQlRVUVSWV9GTEFHX0lETiMjX3VuYW1lLCAwLCAmZmxhZyk7CQkJXA0KIAlwbV9ydW50aW1l
-X3B1dF9zeW5jKGhiYS0+ZGV2KTsJCQkJCVwNCiAJaWYgKHJldCkJCQkJCQkJXA0KIAkJcmV0dXJu
-IC1FSU5WQUw7CQkJCQkJXA0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMg
-Yi9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQppbmRleCAxMTE4MTJjNTMwNGEuLjQ2NWVlMDIz
-ZWE0YiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMNCisrKyBiL2RyaXZl
-cnMvc2NzaS91ZnMvdWZzaGNkLmMNCkBAIC0yNzgyLDEzICsyNzgyLDEzIEBAIHN0YXRpYyBpbmxp
-bmUgdm9pZCB1ZnNoY2RfaW5pdF9xdWVyeShzdHJ1Y3QgdWZzX2hiYSAqaGJhLA0KIH0NCiANCiBz
-dGF0aWMgaW50IHVmc2hjZF9xdWVyeV9mbGFnX3JldHJ5KHN0cnVjdCB1ZnNfaGJhICpoYmEsDQot
-CWVudW0gcXVlcnlfb3Bjb2RlIG9wY29kZSwgZW51bSBmbGFnX2lkbiBpZG4sIGJvb2wgKmZsYWdf
-cmVzKQ0KKwllbnVtIHF1ZXJ5X29wY29kZSBvcGNvZGUsIGVudW0gZmxhZ19pZG4gaWRuLCB1OCBp
-bmRleCwgYm9vbCAqZmxhZ19yZXMpDQogew0KIAlpbnQgcmV0Ow0KIAlpbnQgcmV0cmllczsNCiAN
-CiAJZm9yIChyZXRyaWVzID0gMDsgcmV0cmllcyA8IFFVRVJZX1JFUV9SRVRSSUVTOyByZXRyaWVz
-KyspIHsNCi0JCXJldCA9IHVmc2hjZF9xdWVyeV9mbGFnKGhiYSwgb3Bjb2RlLCBpZG4sIGZsYWdf
-cmVzKTsNCisJCXJldCA9IHVmc2hjZF9xdWVyeV9mbGFnKGhiYSwgb3Bjb2RlLCBpZG4sIGluZGV4
-LCBmbGFnX3Jlcyk7DQogCQlpZiAocmV0KQ0KIAkJCWRldl9kYmcoaGJhLT5kZXYsDQogCQkJCSIl
-czogZmFpbGVkIHdpdGggZXJyb3IgJWQsIHJldHJpZXMgJWRcbiIsDQpAQCAtMjgwOSwxNiArMjgw
-OSwxNyBAQCBzdGF0aWMgaW50IHVmc2hjZF9xdWVyeV9mbGFnX3JldHJ5KHN0cnVjdCB1ZnNfaGJh
-ICpoYmEsDQogICogQGhiYTogcGVyLWFkYXB0ZXIgaW5zdGFuY2UNCiAgKiBAb3Bjb2RlOiBmbGFn
-IHF1ZXJ5IHRvIHBlcmZvcm0NCiAgKiBAaWRuOiBmbGFnIGlkbiB0byBhY2Nlc3MNCisgKiBAaW5k
-ZXg6IGZsYWcgaW5kZXggdG8gYWNjZXNzDQogICogQGZsYWdfcmVzOiB0aGUgZmxhZyB2YWx1ZSBh
-ZnRlciB0aGUgcXVlcnkgcmVxdWVzdCBjb21wbGV0ZXMNCiAgKg0KICAqIFJldHVybnMgMCBmb3Ig
-c3VjY2Vzcywgbm9uLXplcm8gaW4gY2FzZSBvZiBmYWlsdXJlDQogICovDQogaW50IHVmc2hjZF9x
-dWVyeV9mbGFnKHN0cnVjdCB1ZnNfaGJhICpoYmEsIGVudW0gcXVlcnlfb3Bjb2RlIG9wY29kZSwN
-Ci0JCQllbnVtIGZsYWdfaWRuIGlkbiwgYm9vbCAqZmxhZ19yZXMpDQorCQkJZW51bSBmbGFnX2lk
-biBpZG4sIHU4IGluZGV4LCBib29sICpmbGFnX3JlcykNCiB7DQogCXN0cnVjdCB1ZnNfcXVlcnlf
-cmVxICpyZXF1ZXN0ID0gTlVMTDsNCiAJc3RydWN0IHVmc19xdWVyeV9yZXMgKnJlc3BvbnNlID0g
-TlVMTDsNCi0JaW50IGVyciwgaW5kZXggPSAwLCBzZWxlY3RvciA9IDA7DQorCWludCBlcnIsIHNl
-bGVjdG9yID0gMDsNCiAJaW50IHRpbWVvdXQgPSBRVUVSWV9SRVFfVElNRU9VVDsNCiANCiAJQlVH
-X09OKCFoYmEpOw0KQEAgLTQxNzUsNyArNDE3Niw3IEBAIHN0YXRpYyBpbnQgdWZzaGNkX2NvbXBs
-ZXRlX2Rldl9pbml0KHN0cnVjdCB1ZnNfaGJhICpoYmEpDQogCWJvb2wgZmxhZ19yZXMgPSB0cnVl
-Ow0KIA0KIAllcnIgPSB1ZnNoY2RfcXVlcnlfZmxhZ19yZXRyeShoYmEsIFVQSVVfUVVFUllfT1BD
-T0RFX1NFVF9GTEFHLA0KLQkJUVVFUllfRkxBR19JRE5fRkRFVklDRUlOSVQsIE5VTEwpOw0KKwkJ
-UVVFUllfRkxBR19JRE5fRkRFVklDRUlOSVQsIDAsIE5VTEwpOw0KIAlpZiAoZXJyKSB7DQogCQlk
-ZXZfZXJyKGhiYS0+ZGV2LA0KIAkJCSIlcyBzZXR0aW5nIGZEZXZpY2VJbml0IGZsYWcgZmFpbGVk
-IHdpdGggZXJyb3IgJWRcbiIsDQpAQCAtNDE4Niw3ICs0MTg3LDcgQEAgc3RhdGljIGludCB1ZnNo
-Y2RfY29tcGxldGVfZGV2X2luaXQoc3RydWN0IHVmc19oYmEgKmhiYSkNCiAJLyogcG9sbCBmb3Ig
-bWF4LiAxMDAwIGl0ZXJhdGlvbnMgZm9yIGZEZXZpY2VJbml0IGZsYWcgdG8gY2xlYXIgKi8NCiAJ
-Zm9yIChpID0gMDsgaSA8IDEwMDAgJiYgIWVyciAmJiBmbGFnX3JlczsgaSsrKQ0KIAkJZXJyID0g
-dWZzaGNkX3F1ZXJ5X2ZsYWdfcmV0cnkoaGJhLCBVUElVX1FVRVJZX09QQ09ERV9SRUFEX0ZMQUcs
-DQotCQkJUVVFUllfRkxBR19JRE5fRkRFVklDRUlOSVQsICZmbGFnX3Jlcyk7DQorCQkJUVVFUllf
-RkxBR19JRE5fRkRFVklDRUlOSVQsIDAsICZmbGFnX3Jlcyk7DQogDQogCWlmIChlcnIpDQogCQlk
-ZXZfZXJyKGhiYS0+ZGV2LA0KQEAgLTUwMDEsNyArNTAwMiw3IEBAIHN0YXRpYyBpbnQgdWZzaGNk
-X2VuYWJsZV9hdXRvX2Jrb3BzKHN0cnVjdCB1ZnNfaGJhICpoYmEpDQogCQlnb3RvIG91dDsNCiAN
-CiAJZXJyID0gdWZzaGNkX3F1ZXJ5X2ZsYWdfcmV0cnkoaGJhLCBVUElVX1FVRVJZX09QQ09ERV9T
-RVRfRkxBRywNCi0JCQlRVUVSWV9GTEFHX0lETl9CS09QU19FTiwgTlVMTCk7DQorCQkJUVVFUllf
-RkxBR19JRE5fQktPUFNfRU4sIDAsIE5VTEwpOw0KIAlpZiAoZXJyKSB7DQogCQlkZXZfZXJyKGhi
-YS0+ZGV2LCAiJXM6IGZhaWxlZCB0byBlbmFibGUgYmtvcHMgJWRcbiIsDQogCQkJCV9fZnVuY19f
-LCBlcnIpOw0KQEAgLTUwNTEsNyArNTA1Miw3IEBAIHN0YXRpYyBpbnQgdWZzaGNkX2Rpc2FibGVf
-YXV0b19ia29wcyhzdHJ1Y3QgdWZzX2hiYSAqaGJhKQ0KIAl9DQogDQogCWVyciA9IHVmc2hjZF9x
-dWVyeV9mbGFnX3JldHJ5KGhiYSwgVVBJVV9RVUVSWV9PUENPREVfQ0xFQVJfRkxBRywNCi0JCQlR
-VUVSWV9GTEFHX0lETl9CS09QU19FTiwgTlVMTCk7DQorCQkJUVVFUllfRkxBR19JRE5fQktPUFNf
-RU4sIDAsIE5VTEwpOw0KIAlpZiAoZXJyKSB7DQogCQlkZXZfZXJyKGhiYS0+ZGV2LCAiJXM6IGZh
-aWxlZCB0byBkaXNhYmxlIGJrb3BzICVkXG4iLA0KIAkJCQlfX2Z1bmNfXywgZXJyKTsNCkBAIC01
-MjE3LDcgKzUyMTgsNyBAQCBzdGF0aWMgaW50IHVmc2hjZF93Yl9jdHJsKHN0cnVjdCB1ZnNfaGJh
-ICpoYmEsIGJvb2wgZW5hYmxlKQ0KIAkJb3Bjb2RlID0gVVBJVV9RVUVSWV9PUENPREVfQ0xFQVJf
-RkxBRzsNCiANCiAJcmV0ID0gdWZzaGNkX3F1ZXJ5X2ZsYWdfcmV0cnkoaGJhLCBvcGNvZGUsDQot
-CQkJCSAgICAgIFFVRVJZX0ZMQUdfSUROX1dCX0VOLCBOVUxMKTsNCisJCQkJICAgICAgUVVFUllf
-RkxBR19JRE5fV0JfRU4sIDAsIE5VTEwpOw0KIAlpZiAocmV0KSB7DQogCQlkZXZfZXJyKGhiYS0+
-ZGV2LCAiJXMgd3JpdGUgYm9vc3RlciAlcyBmYWlsZWQgJWRcbiIsDQogCQkJX19mdW5jX18sIGVu
-YWJsZSA/ICJlbmFibGUiIDogImRpc2FibGUiLCByZXQpOw0KQEAgLTUyNDEsNyArNTI0Miw3IEBA
-IHN0YXRpYyBpbnQgdWZzaGNkX3diX3RvZ2dsZV9mbHVzaF9kdXJpbmdfaDgoc3RydWN0IHVmc19o
-YmEgKmhiYSwgYm9vbCBzZXQpDQogCQl2YWwgPSBVUElVX1FVRVJZX09QQ09ERV9DTEVBUl9GTEFH
-Ow0KIA0KIAlyZXR1cm4gdWZzaGNkX3F1ZXJ5X2ZsYWdfcmV0cnkoaGJhLCB2YWwsDQotCQkJICAg
-ICAgIFFVRVJZX0ZMQUdfSUROX1dCX0JVRkZfRkxVU0hfRFVSSU5HX0hJQkVSTjgsDQorCQkJICAg
-ICAgIFFVRVJZX0ZMQUdfSUROX1dCX0JVRkZfRkxVU0hfRFVSSU5HX0hJQkVSTjgsIDAsDQogCQkJ
-CSAgICAgICBOVUxMKTsNCiB9DQogDQpAQCAtNTI2Miw3ICs1MjYzLDggQEAgc3RhdGljIGludCB1
-ZnNoY2Rfd2JfYnVmX2ZsdXNoX2VuYWJsZShzdHJ1Y3QgdWZzX2hiYSAqaGJhKQ0KIAkJcmV0dXJu
-IDA7DQogDQogCXJldCA9IHVmc2hjZF9xdWVyeV9mbGFnX3JldHJ5KGhiYSwgVVBJVV9RVUVSWV9P
-UENPREVfU0VUX0ZMQUcsDQotCQkJCSAgICAgIFFVRVJZX0ZMQUdfSUROX1dCX0JVRkZfRkxVU0hf
-RU4sIE5VTEwpOw0KKwkJCQkgICAgICBRVUVSWV9GTEFHX0lETl9XQl9CVUZGX0ZMVVNIX0VOLA0K
-KwkJCQkgICAgICAwLCBOVUxMKTsNCiAJaWYgKHJldCkNCiAJCWRldl9lcnIoaGJhLT5kZXYsICIl
-cyBXQiAtIGJ1ZiBmbHVzaCBlbmFibGUgZmFpbGVkICVkXG4iLA0KIAkJCV9fZnVuY19fLCByZXQp
-Ow0KQEAgLTUyODEsNyArNTI4Myw3IEBAIHN0YXRpYyBpbnQgdWZzaGNkX3diX2J1Zl9mbHVzaF9k
-aXNhYmxlKHN0cnVjdCB1ZnNfaGJhICpoYmEpDQogCQlyZXR1cm4gMDsNCiANCiAJcmV0ID0gdWZz
-aGNkX3F1ZXJ5X2ZsYWdfcmV0cnkoaGJhLCBVUElVX1FVRVJZX09QQ09ERV9DTEVBUl9GTEFHLA0K
-LQkJCQkgICAgICBRVUVSWV9GTEFHX0lETl9XQl9CVUZGX0ZMVVNIX0VOLCBOVUxMKTsNCisJCQkJ
-ICAgICAgUVVFUllfRkxBR19JRE5fV0JfQlVGRl9GTFVTSF9FTiwgMCwgTlVMTCk7DQogCWlmIChy
-ZXQpIHsNCiAJCWRldl93YXJuKGhiYS0+ZGV2LCAiJXM6IFdCIC0gYnVmIGZsdXNoIGRpc2FibGUg
-ZmFpbGVkICVkXG4iLA0KIAkJCSBfX2Z1bmNfXywgcmV0KTsNCkBAIC03MjU0LDcgKzcyNTYsNyBA
-QCBzdGF0aWMgaW50IHVmc2hjZF9kZXZpY2VfcGFyYW1zX2luaXQoc3RydWN0IHVmc19oYmEgKmhi
-YSkNCiAJdWZzX2ZpeHVwX2RldmljZV9zZXR1cChoYmEpOw0KIA0KIAlpZiAoIXVmc2hjZF9xdWVy
-eV9mbGFnX3JldHJ5KGhiYSwgVVBJVV9RVUVSWV9PUENPREVfUkVBRF9GTEFHLA0KLQkJCVFVRVJZ
-X0ZMQUdfSUROX1BXUl9PTl9XUEUsICZmbGFnKSkNCisJCQlRVUVSWV9GTEFHX0lETl9QV1JfT05f
-V1BFLCAwLCAmZmxhZykpDQogCQloYmEtPmRldl9pbmZvLmZfcG93ZXJfb25fd3BfZW4gPSBmbGFn
-Ow0KIA0KIAkvKiBQcm9iZSBtYXhpbXVtIHBvd2VyIG1vZGUgY28tc3VwcG9ydGVkIGJ5IGJvdGgg
-VUZTIGhvc3QgYW5kIGRldmljZSAqLw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2NzaS91ZnMvdWZz
-aGNkLmggYi9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5oDQppbmRleCAwNTY1MzdlNTJjMTkuLmU1
-NTVkNzk0ZDQ0MSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmgNCisrKyBi
-L2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmgNCkBAIC05NDYsNyArOTQ2LDcgQEAgaW50IHVmc2hj
-ZF9yZWFkX2Rlc2NfcGFyYW0oc3RydWN0IHVmc19oYmEgKmhiYSwNCiBpbnQgdWZzaGNkX3F1ZXJ5
-X2F0dHIoc3RydWN0IHVmc19oYmEgKmhiYSwgZW51bSBxdWVyeV9vcGNvZGUgb3Bjb2RlLA0KIAkJ
-ICAgICAgZW51bSBhdHRyX2lkbiBpZG4sIHU4IGluZGV4LCB1OCBzZWxlY3RvciwgdTMyICphdHRy
-X3ZhbCk7DQogaW50IHVmc2hjZF9xdWVyeV9mbGFnKHN0cnVjdCB1ZnNfaGJhICpoYmEsIGVudW0g
-cXVlcnlfb3Bjb2RlIG9wY29kZSwNCi0JZW51bSBmbGFnX2lkbiBpZG4sIGJvb2wgKmZsYWdfcmVz
-KTsNCisJZW51bSBmbGFnX2lkbiBpZG4sIHU4IGluZGV4LCBib29sICpmbGFnX3Jlcyk7DQogDQog
-dm9pZCB1ZnNoY2RfYXV0b19oaWJlcm44X2VuYWJsZShzdHJ1Y3QgdWZzX2hiYSAqaGJhKTsNCiB2
-b2lkIHVmc2hjZF9hdXRvX2hpYmVybjhfdXBkYXRlKHN0cnVjdCB1ZnNfaGJhICpoYmEsIHUzMiBh
-aGl0KTsNCi0tIA0KMi4xOC4wDQo=
+On Tue, Apr 28, 2020 at 03:47:36AM +0000, Wei Yongjun wrote:
+> The function ipc_id_alloc() is called from ipc_addid(), in which
+> a spin lock is held, so we should use GFP_ATOMIC instead.
+> 
+> Fixes: de5738d1c364 ("ipc: convert ipcs_idr to XArray")
+> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 
+I see why you think that, but it's not true.  Yes, we hold a spinlock, but
+the spinlock is in an object which is not reachable from any other CPU.
+So it's not possible to deadlock.  This probably confuses all kinds
+of automated checkers, and I should probably rewrite the code to not
+acquire the new spinlock until we're already holding the xa_lock.
+
+Converting to GFP_ATOMIC is completely wrong.
