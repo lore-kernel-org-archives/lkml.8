@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9CCC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D28C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0BE220661
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A19EB20661
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:58:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbgD1E6P (ORCPT
+        id S1726426AbgD1E6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 00:58:15 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:39710 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbgD1E6O (ORCPT
+        Tue, 28 Apr 2020 00:58:16 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:43319 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbgD1E6P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 00:58:14 -0400
-Received: by mail-il1-f197.google.com with SMTP id c11so13769027ilr.6
+        Tue, 28 Apr 2020 00:58:15 -0400
+Received: by mail-il1-f199.google.com with SMTP id c15so21381653ilj.10
         for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 21:58:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=jDxTq18iQLRP71qk5eZAXRKfx5I/e7pacfifgvLqqOY=;
-        b=eCqDl+Q6oxJQp1Dzq2UtZSTmZ46tZSWWrE6vauHZFSwekKDuSbxymzZ+1SRuX6xse0
-         oF8iyFhvocm4VHtj36kIhBtkwnTXuYdNU0qXJgcPEinrczwz/wNcS05/gz7XS5SqYH3M
-         AJgolZJHNiZdAa9T1pDhgTG9ZpFiwDpHGOrGFdNlsaXWI5Iuagxw8aDM74/wlYZNWk4/
-         z8X/AAMXYieowiOJQ+5CfyqqXUYHU7Equ1LKuL8FW6lxoh9yAiTKe4hcew28hjto4aC+
-         3ugMPIedZMJTU7E95Sgrys8FMtO5sjvqbRgjvjLSS1g8l1BAm9s1iEH9LhpFbarorSaY
-         bOTQ==
-X-Gm-Message-State: AGi0PuY0COwFXX33Fja62Rbr+oUxKonCIbCZh2JzxaqjZSJRtzamljdp
-        9Eyn3ReT/Q+Wk4nKqbvPo2vwtysVcdIMgTx0SGQkCKTFYYo9
-X-Google-Smtp-Source: APiQypKO9qT/WbPujDkprL5mYneQXm6Kg8tQh8e3bmDL4h64jSR4p3haxuo0qZycTXhbhCbPjGczxXFFh3CIJ4A2NyTkzmECUpH3
+        bh=7F1aDoPHpWlTaSgIOAU2VyXYU38Q2emXLxNiu+PeuWM=;
+        b=uSmWfl0WInKQcXWQ6Wcxz8ANhRWQ9xijHIMQdDTdXNE1Z+qEbt2KVEEtWj+/zSr0Yg
+         1jv6F2W61R6Brc0N/l3ZCC26QYr50srGVwvdST2jur/5vYS5EY4ULJ+e+5G0GWYUMQlj
+         SjyJgVdxZROamF6dG3XbfUQHHtgoZJjEq3YotuH9EWn2+CUTwIqSgcvdNzpbHDUeCSej
+         2DyUZKC1po8Zw9W8+cr45NirM9L4vUVRHMf05yVi6pkJ6bvwLFnnu8Ad/RqCCghTBlov
+         7hXBY/r/ppNIQaCmV9ORhhQMzmw0jUDdG7j7Gfis7x6TPBABiJZXdbGfRHh39Az+Or1H
+         a0Xg==
+X-Gm-Message-State: AGi0Pub2jPkEeCkgRKN8m8Rls80QiX0IEDr1saLxiZV5tUFLgJlaMOIf
+        x0FSnDQ6GspZN99ywfGAaHzcJi7spFXI9766lxr/r6pPFGL9
+X-Google-Smtp-Source: APiQypKZ/ub7lhv/P7/kfGfe8pCyn9E0MTQFbDcw1TbJsDosJI/Ht5rzL2v6lKHMeiMROvR8F42LhsQBR94HAt4sUGIWd/5H0wC9
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8c81:: with SMTP id g1mr8512085ion.197.1588049893648;
+X-Received: by 2002:a02:cc19:: with SMTP id n25mr22996968jap.107.1588049893942;
  Mon, 27 Apr 2020 21:58:13 -0700 (PDT)
 Date:   Mon, 27 Apr 2020 21:58:13 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cbf17205a452ad4f@google.com>
-Subject: net test error: KASAN: null-ptr-deref Write in x25_disconnect
-From:   syzbot <syzbot+6db548b615e5aeefdce2@syzkaller.appspotmail.com>
-To:     andrew.hendry@gmail.com, davem@davemloft.net,
+Message-ID: <000000000000d06aa005a452ad5c@google.com>
+Subject: bpf test error: KASAN: null-ptr-deref Write in x25_disconnect
+From:   syzbot <syzbot+6b89cf96299c875daf8a@syzkaller.appspotmail.com>
+To:     allison@lohutok.net, andrew.hendry@gmail.com, davem@davemloft.net,
         gregkh@linuxfoundation.org, kuba@kernel.org,
         linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org,
         netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
@@ -59,17 +59,17 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    37255e7a Merge tag 'batadv-net-for-davem-20200427' of git:..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=12b2e5d8100000
+HEAD commit:    18f02ad1 bpf: Fix sk_psock refcnt leak when receiving mess..
+git tree:       bpf
+console output: https://syzkaller.appspot.com/x/log.txt?x=14fc2208100000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=b7a70e992f2f9b68
-dashboard link: https://syzkaller.appspot.com/bug?extid=6db548b615e5aeefdce2
+dashboard link: https://syzkaller.appspot.com/bug?extid=6b89cf96299c875daf8a
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6db548b615e5aeefdce2@syzkaller.appspotmail.com
+Reported-by: syzbot+6b89cf96299c875daf8a@syzkaller.appspotmail.com
 
 can: request_module (can-proto-0) failed.
 can: request_module (can-proto-0) failed.
@@ -80,9 +80,9 @@ BUG: KASAN: null-ptr-deref in refcount_sub_and_test include/linux/refcount.h:266
 BUG: KASAN: null-ptr-deref in refcount_dec_and_test include/linux/refcount.h:294 [inline]
 BUG: KASAN: null-ptr-deref in x25_neigh_put include/net/x25.h:253 [inline]
 BUG: KASAN: null-ptr-deref in x25_disconnect+0x253/0x370 net/x25/x25_subr.c:361
-Write of size 4 at addr 00000000000000d8 by task syz-fuzzer/7147
+Write of size 4 at addr 00000000000000d8 by task syz-fuzzer/7029
 
-CPU: 0 PID: 7147 Comm: syz-fuzzer Not tainted 5.7.0-rc2-syzkaller #0
+CPU: 0 PID: 7029 Comm: syz-fuzzer Not tainted 5.7.0-rc2-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
@@ -109,12 +109,12 @@ Call Trace:
  entry_SYSCALL_64_after_hwframe+0x49/0xb3
 RIP: 0033:0x4afb40
 Code: 8b 7c 24 10 48 8b 74 24 18 48 8b 54 24 20 49 c7 c2 00 00 00 00 49 c7 c0 00 00 00 00 49 c7 c1 00 00 00 00 48 8b 44 24 08 0f 05 <48> 3d 01 f0 ff ff 76 20 48 c7 44 24 28 ff ff ff ff 48 c7 44 24 30
-RSP: 002b:000000c0001e94f8 EFLAGS: 00000216 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 000000c00002c000 RCX: 00000000004afb40
+RSP: 002b:000000c0001d94f8 EFLAGS: 00000216 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 000000c00002e500 RCX: 00000000004afb40
 RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 000000c0001e9538 R08: 0000000000000000 R09: 0000000000000000
+RBP: 000000c0001d9538 R08: 0000000000000000 R09: 0000000000000000
 R10: 0000000000000000 R11: 0000000000000216 R12: ffffffffffffffff
-R13: 0000000000000164 R14: 0000000000000163 R15: 0000000000000200
+R13: 0000000000000163 R14: 0000000000000162 R15: 0000000000000200
 ==================================================================
 
 
