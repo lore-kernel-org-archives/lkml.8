@@ -2,107 +2,145 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64395C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC44C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41EB5206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25152206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100201;
-	bh=uXlG7zY2R4nQkPMFSwhbfOPelFo9eV73KDF2pnAMz+E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ydzy/jr2W+0WJLM0R4l7dc6Wt29mPzuQiwgcy630hiO0+VYoHnGwh1TGYdNDV7NbR
-	 fs33LS91UQqIZ+5J76Z2wKbk5bZ5f/2ZMW+OQyNsx1z2RdBjagrgU5lzS3zIbcPp2g
-	 1qtzVt25+nkf+g0ccOsQZWKQ7L33qR1yV4F4fGWc=
+	s=default; t=1588100208;
+	bh=0305n2qo1oQ3Gv0+MWmU1c/cqoXpogKBnneHyGLLyPY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZaTn1VHvnah9SPKK0SE5ryJn7Cfu7AZWprndsB75GVwUzfpJk+Iv9vchJLKupfFVt
+	 nk/zGQxIjb8Pr5Sxolr8/8BoDF3R71ng0iHQnCq1NjYg6DpcjhauMgZTekQIXBqwO2
+	 wT69LkPevMHGbBdYhKFiXpAJlkx7sjriyWzLuKx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730321AbgD1S4k (ORCPT
+        id S1729945AbgD1S4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:56:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46502 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:56:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729623AbgD1SbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:31:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1729313AbgD1S4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:56:45 -0400
+Received: from linux-8ccs.fritz.box (p3EE2CE96.dip0.t-ipconnect.de [62.226.206.150])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4ACA720B80;
-        Tue, 28 Apr 2020 18:31:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41F4D206D6;
+        Tue, 28 Apr 2020 18:56:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098670;
-        bh=uXlG7zY2R4nQkPMFSwhbfOPelFo9eV73KDF2pnAMz+E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BRtPWbqsTTaxYAlSgB10cxR/HMRA327LPqvkTlxjWSPf42QOeH5X7MxiQrtkiudn2
-         P6WWtNtsw1iz3AkqUugkEAO/J1wxFROqapSskfTs3JgTJmglGz7Z52Yraabg8FUX/5
-         0LPAP2py4EfJMeJIHxWi96/mpc4zi7dd1zW6uBZQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amit Singh Tomar <amittomer25@gmail.com>
-Subject: [PATCH 5.6 096/167] tty: serial: owl: add "much needed" clk_prepare_enable()
-Date:   Tue, 28 Apr 2020 20:24:32 +0200
-Message-Id: <20200428182237.275211321@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1588100204;
+        bh=0305n2qo1oQ3Gv0+MWmU1c/cqoXpogKBnneHyGLLyPY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XmppFroab/0dGguUy2yW9Hk84ASbMa+V+IWa0oxQVj1XJ+FCM+G/02uRkxpmN6onG
+         tw9qS4NAgnOx12Svzdl+qDCGlez8Hdx2N4Vn0ipalARdUiPlzSHswOrdmhg+seLH0p
+         rdVL0Rv1DP1YQePgYr/IuLr+Y2KCuihM3UhbdGFQ=
+Date:   Tue, 28 Apr 2020 20:56:40 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>
+Subject: Re: [PATCH v3 09/10] module: Remove module_disable_ro()
+Message-ID: <20200428185639.GC12860@linux-8ccs.fritz.box>
+References: <cover.1587812518.git.jpoimboe@redhat.com>
+ <33089a8ffb2e724cecfa51d72887ae9bf70354f9.1587812518.git.jpoimboe@redhat.com>
+ <20200428162505.GA12860@linux-8ccs.fritz.box>
+ <20200428163602.77t6s2qeh4xeacdq@treble>
+ <20200428164155.GB12860@linux-8ccs.fritz.box>
+ <20200428170309.xrsmqdwj5qu2q6t6@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200428170309.xrsmqdwj5qu2q6t6@treble>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amit Singh Tomar <amittomer25@gmail.com>
++++ Josh Poimboeuf [28/04/20 12:03 -0500]:
+>On Tue, Apr 28, 2020 at 06:41:55PM +0200, Jessica Yu wrote:
+>> +++ Josh Poimboeuf [28/04/20 11:36 -0500]:
+>> > On Tue, Apr 28, 2020 at 06:25:05PM +0200, Jessica Yu wrote:
+>> > > +++ Josh Poimboeuf [25/04/20 06:07 -0500]:
+>> > > > module_disable_ro() has no more users.  Remove it.
+>> > > >
+>> > > > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+>> > > > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> > >
+>> > > Hm, I guess this means we can also remove the module_enable_ro() stubs
+>> > > in module.h and make it a static function again (like the other
+>> > > module_enable_* functions) as there are no more outside users. I have to
+>> > > remind myself after this patchset is merged :-)
+>> >
+>> > Ah, true.  I'm respinning the patch set anyway, I can just add this as a
+>> > another patch.
+>>
+>> That would be great. Thanks!
+>
+>Sneak preview:
+>
+>From: Josh Poimboeuf <jpoimboe@redhat.com>
+>Subject: [PATCH] module: Make module_enable_ro() static again
+>
+>Now that module_enable_ro() has no more external users, make it static
+>again.
+>
+>Suggested-by: Jessica Yu <jeyu@kernel.org>
+>Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+>---
+> include/linux/module.h | 6 ------
+> kernel/module.c        | 4 ++--
+> 2 files changed, 2 insertions(+), 8 deletions(-)
+>
+>diff --git a/include/linux/module.h b/include/linux/module.h
+>index e4ef7b36feda..2c2e988bcf10 100644
+>--- a/include/linux/module.h
+>+++ b/include/linux/module.h
+>@@ -858,12 +858,6 @@ extern int module_sysfs_initialized;
+>
+> #define __MODULE_STRING(x) __stringify(x)
+>
+>-#ifdef CONFIG_STRICT_MODULE_RWX
+>-extern void module_enable_ro(const struct module *mod, bool after_init);
+>-#else
+>-static inline void module_enable_ro(const struct module *mod, bool after_init) { }
+>-#endif
+>-
+> #ifdef CONFIG_GENERIC_BUG
+> void module_bug_finalize(const Elf_Ehdr *, const Elf_Shdr *,
+> 			 struct module *);
+>diff --git a/kernel/module.c b/kernel/module.c
+>index f0e414a01d91..6d8aab60943e 100644
+>--- a/kernel/module.c
+>+++ b/kernel/module.c
+>@@ -2016,7 +2016,7 @@ static void frob_writable_data(const struct module_layout *layout,
+> 		   (layout->size - layout->ro_after_init_size) >> PAGE_SHIFT);
+> }
+>
+>-void module_enable_ro(const struct module *mod, bool after_init)
+>+static void module_enable_ro(const struct module *mod, bool after_init)
+> {
+> 	if (!rodata_enabled)
+> 		return;
+>@@ -2057,7 +2057,7 @@ static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
+> }
+>
+> #else /* !CONFIG_STRICT_MODULE_RWX */
+>-/* module_{enable,disable}_ro() stubs are in module.h */
+>+void module_enable_ro(const struct module *mod, bool after_init) {}
 
-commit abf42d2f333b21bf8d33b2fbb8a85fa62037ac01 upstream.
+Missing static here, but otherwise looks good. Thanks!
 
-commit 8ba92cf59335 ("arm64: dts: actions: s700: Add Clock Management Unit")
-breaks the UART on Cubieboard7-lite (based on S700 SoC), This is due to the
-fact that generic clk routine clk_disable_unused() disables the gate clks,
-and that in turns disables OWL UART (but UART driver never enables it). To
-prove this theory, Andre suggested to use "clk_ignore_unused" in kernel
-commnd line and it worked (Kernel happily lands into RAMFS world :)).
-
-This commit fix this up by adding clk_prepare_enable().
-
-Fixes: 8ba92cf59335 ("arm64: dts: actions: s700: Add Clock Management Unit")
-Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1587067917-1400-1-git-send-email-amittomer25@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/tty/serial/owl-uart.c |    7 +++++++
- 1 file changed, 7 insertions(+)
-
---- a/drivers/tty/serial/owl-uart.c
-+++ b/drivers/tty/serial/owl-uart.c
-@@ -680,6 +680,12 @@ static int owl_uart_probe(struct platfor
- 		return PTR_ERR(owl_port->clk);
- 	}
- 
-+	ret = clk_prepare_enable(owl_port->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "could not enable clk\n");
-+		return ret;
-+	}
-+
- 	owl_port->port.dev = &pdev->dev;
- 	owl_port->port.line = pdev->id;
- 	owl_port->port.type = PORT_OWL;
-@@ -712,6 +718,7 @@ static int owl_uart_remove(struct platfo
- 
- 	uart_remove_one_port(&owl_uart_driver, &owl_port->port);
- 	owl_uart_ports[pdev->id] = NULL;
-+	clk_disable_unprepare(owl_port->clk);
- 
- 	return 0;
- }
-
-
+> static void module_enable_nx(const struct module *mod) { }
+> static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
+> 				       char *secstrings, struct module *mod)
+>-- 
+>2.21.1
+>
