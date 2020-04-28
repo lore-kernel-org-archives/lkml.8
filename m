@@ -2,183 +2,140 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E44C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9F0C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6D802072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 486422072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:23:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QKBLrqvd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgD1MWf (ORCPT
+        id S1726829AbgD1MX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:22:35 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:52196 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgD1MWf (ORCPT
+        Tue, 28 Apr 2020 08:23:27 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:43304 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726645AbgD1MX1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:22:35 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jTPFy-0003Ok-26; Tue, 28 Apr 2020 06:22:34 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jTPFx-0001RA-3Z; Tue, 28 Apr 2020 06:22:33 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
-        <87ftcv1nqe.fsf@x220.int.ebiederm.org>
-        <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
-        <20200424173927.GB26802@redhat.com>
-        <87mu6ymkea.fsf_-_@x220.int.ebiederm.org>
-        <875zdmmj4y.fsf_-_@x220.int.ebiederm.org>
-        <CAHk-=whvktUC9VbzWLDw71BHbV4ofkkuAYsrB5Rmxnhc-=kSeQ@mail.gmail.com>
-        <878sihgfzh.fsf@x220.int.ebiederm.org>
-        <CAHk-=wjSM9mgsDuX=ZTy2L+S7wGrxZMcBn054As_Jyv8FQvcvQ@mail.gmail.com>
-        <87sggnajpv.fsf_-_@x220.int.ebiederm.org>
-Date:   Tue, 28 Apr 2020 07:19:18 -0500
-In-Reply-To: <87sggnajpv.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Tue, 28 Apr 2020 07:16:44 -0500")
-Message-ID: <87h7x3ajll.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 28 Apr 2020 08:23:27 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588076606; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=ur5ZOryjha/YHWLiOVj8eFSzWKndQ45R+vkiliUrPiY=;
+ b=QKBLrqvdpQzQ2tvfB2BQzPaImoq3zc+nAT2eLEP1iqA/Y8TU4Uy8/oMtkv5mfHZ5vnouiW0q
+ Vq3zdQ/JvjLuWpA80g2fkGg13ApLT0swLOj93wSIncmeEcQANm8sY/8RiJ4cLab+dInzWxvR
+ sVWa/54u8wIpN8kaicFvkWaeMr4=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea82035.7feb23e3bed8-smtp-out-n02;
+ Tue, 28 Apr 2020 12:23:17 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A4BC4C433BA; Tue, 28 Apr 2020 12:23:17 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1F6D1C433D2;
+        Tue, 28 Apr 2020 12:23:17 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jTPFx-0001RA-3Z;;;mid=<87h7x3ajll.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19xBeyjONRsiGZZw00Q0+732yg+SgZZji8=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH v4 2/2] proc: Ensure we see the exit of each process tid exactly once
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 28 Apr 2020 17:53:17 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>, mike.leach@linaro.org
+Cc:     mathieu.poirier@linaro.org, swboyd@chromium.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple
+ connections
+In-Reply-To: <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com>
+References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
+ <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com>
+ <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
+ <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com>
+Message-ID: <668ea1283a6dd6b34e701972f6f71034@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-04-27 19:23, Suzuki K Poulose wrote:
+> On 04/27/2020 10:45 AM, Mike Leach wrote:
+[...]
+>>> 
+>>> This is not sufficient. You must prevent another session trying to
+>>> enable the other port of the replicator as this could silently fail
+>>> the "on-going" session. Not ideal. Fail the attempt to enable a port
+>>> if the other port is active. You could track this in software and
+>>> fail early.
+>>> 
+>>> Suzuki
+>> 
+>> While I have no issue in principle with not enabling a path to a sink
+>> that is not in use - indeed in some cases attaching to unused sinks
+>> can cause back-pressure that slows throughput (cf TPIU) - I am
+>> concerned that this modification is masking an underlying issue with
+>> the platform in question.
+>> 
+>> Should we decide to enable the diversion of different IDs to different
+>> sinks or allow different sessions go to different sinks, then this has
+>> potential to fail on the SC7180 SoC - and it will be difficult in
+>> future to associate a problem with this discussion.
+> 
+> Mike,
+> 
+> I think thats a good point.
+> Sai, please could we narrow down this to the real problem and may be
+> work around it for the "device" ? Do we know which sink is causing the
+> back pressure ? We could then push the "work around" to the replicator
+> it is connected to.
+> 
+> Suzuki
 
-When the thread group leader changes during exec and the old leaders
-thread is reaped proc_flush_pid will flush the dentries for the entire
-process because the leader still has it's original pid.
+Hi Suzuki, Mike,
 
-Fix this by exchanging the pids in an rcu safe manner,
-and wrapping the code to do that up in a helper exchange_tids.
+To add some more to the information provided earlier, 
+swao_replicator(6b06000) and etf are
+in AOSS (Always-On-SubSystem) group. Also TPIU(connected to 
+qdss_replicator) and EUD(connected
+to swao_replicator) sinks are unused.
 
-When I removed switch_exec_pids and introduced this behavior
-in d73d65293e3e ("[PATCH] pidhash: kill switch_exec_pids") there
-really was nothing that cared as flushing happened with
-the cached dentry and de_thread flushed both of them on exec.
+Please ignore the id filter values provided earlier.
+Here are ID filter values after boot and before enabling replicator. As 
+per
+these idfilter values, we should not try to enable replicator if its 
+already
+enabled (in this case for swao_replicator) right?
 
-This lack of fully exchanging pids became a problem a few months later
-when I introduced 48e6484d4902 ("[PATCH] proc: Rewrite the proc dentry
-flush on exit optimization").  Which overlooked the de_thread case
-was no longer swapping pids, and I was looking up proc dentries
-by task->pid.
+localhost ~ # cat 
+/sys/bus/amba/devices/6b06000.replicator/replicator1/mgmt/idfilter0
+0x0
+localhost ~ # cat 
+/sys/bus/amba/devices/6b06000.replicator/replicator1/mgmt/idfilter1
+0x0
 
-The current behavior isn't properly a bug as everything in proc will
-continue to work correctly just a little bit less efficiently.  Fix
-this just so there are no little surprise corner cases waiting to bite
-people.
+localhost ~ # cat 
+/sys/bus/amba/devices/6046000.replicator/replicator0/mgmt/idfilter0
+0xff
+localhost ~ # cat 
+/sys/bus/amba/devices/6046000.replicator/replicator0/mgmt/idfilter1
+0xff
 
--- Oleg points out this could be an issue in next_tgid in proc where
-   has_group_leader_pid is called, and reording some of the assignments
-   should fix that.
+I think the unused sink EUD(also in AOSS group) probably is causing the 
+backpressure here.
 
--- Oleg points out this will break the 10 year old hack in __exit_signal.c
->	/*
->	 * This can only happen if the caller is de_thread().
->	 * FIXME: this is the temporary hack, we should teach
->	 * posix-cpu-timers to handle this case correctly.
->	 */
->	if (unlikely(has_group_leader_pid(tsk)))
->		posix_cpu_timers_exit_group(tsk);
+Thanks,
+Sai
 
-The code in next_tgid has been changed to use PIDTYPE_TGID,
-and the posix cpu timers code has been fixed so it does not
-need the 10 year old hack, so this should be safe to merge
-now.
-
-Fixes: 48e6484d4902 ("[PATCH] proc: Rewrite the proc dentry flush on exit optimization").
-Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
----
- fs/exec.c           |  5 +----
- include/linux/pid.h |  1 +
- kernel/pid.c        | 19 +++++++++++++++++++
- 3 files changed, 21 insertions(+), 4 deletions(-)
-
-diff --git a/fs/exec.c b/fs/exec.c
-index 06b4c550af5d..9b60f927afd7 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1186,11 +1186,8 @@ static int de_thread(struct task_struct *tsk)
- 
- 		/* Become a process group leader with the old leader's pid.
- 		 * The old leader becomes a thread of the this thread group.
--		 * Note: The old leader also uses this pid until release_task
--		 *       is called.  Odd but simple and correct.
- 		 */
--		tsk->pid = leader->pid;
--		change_pid(tsk, PIDTYPE_PID, task_pid(leader));
-+		exchange_tids(tsk, leader);
- 		transfer_pid(leader, tsk, PIDTYPE_TGID);
- 		transfer_pid(leader, tsk, PIDTYPE_PGID);
- 		transfer_pid(leader, tsk, PIDTYPE_SID);
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index cc896f0fc4e3..2159ffca63fc 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -102,6 +102,7 @@ extern void attach_pid(struct task_struct *task, enum pid_type);
- extern void detach_pid(struct task_struct *task, enum pid_type);
- extern void change_pid(struct task_struct *task, enum pid_type,
- 			struct pid *pid);
-+extern void exchange_tids(struct task_struct *task, struct task_struct *old);
- extern void transfer_pid(struct task_struct *old, struct task_struct *new,
- 			 enum pid_type);
- 
-diff --git a/kernel/pid.c b/kernel/pid.c
-index c835b844aca7..6d5d0a5bda82 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -363,6 +363,25 @@ void change_pid(struct task_struct *task, enum pid_type type,
- 	attach_pid(task, type);
- }
- 
-+void exchange_tids(struct task_struct *left, struct task_struct *right)
-+{
-+	struct pid *pid1 = left->thread_pid;
-+	struct pid *pid2 = right->thread_pid;
-+	struct hlist_head *head1 = &pid1->tasks[PIDTYPE_PID];
-+	struct hlist_head *head2 = &pid2->tasks[PIDTYPE_PID];
-+
-+	/* Swap the single entry tid lists */
-+	hlists_swap_heads_rcu(head1, head2);
-+
-+	/* Swap the per task_struct pid */
-+	rcu_assign_pointer(left->thread_pid, pid2);
-+	rcu_assign_pointer(right->thread_pid, pid1);
-+
-+	/* Swap the cached value */
-+	WRITE_ONCE(left->pid, pid_nr(pid2));
-+	WRITE_ONCE(right->pid, pid_nr(pid1));
-+}
-+
- /* transfer_pid is an optimization of attach_pid(new), detach_pid(old) */
- void transfer_pid(struct task_struct *old, struct task_struct *new,
- 			   enum pid_type type)
 -- 
-2.20.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
