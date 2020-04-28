@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF27C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 869D5C83005
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0E0021973
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 623DF206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:28:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I3TqNZ+o"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IidsVYIW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgD1D2K (ORCPT
+        id S1726505AbgD1D2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 23:28:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43226 "EHLO
+        Mon, 27 Apr 2020 23:28:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbgD1D2G (ORCPT
+        with ESMTP id S1726487AbgD1D2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 23:28:06 -0400
+        Mon, 27 Apr 2020 23:28:16 -0400
 Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44EDFC03C1A9
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 20:28:06 -0700 (PDT)
-Received: by mail-qv1-xf4a.google.com with SMTP id c89so20403156qva.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 20:28:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B397AC03C1A9
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 20:28:16 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id r10so21071570qvw.23
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 20:28:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=oz1fQ07v4YKej2hlWP6qWEvyAtsuOx0qHOmBf6H8EEU=;
-        b=I3TqNZ+omoMhei62DCjjFhvToBgLQ/mzKXtTiQk26/Z5mE9W3slhueOYb+z8GilAMC
-         uJiJnXNo6zMWUJK5fxe8p2Clt0BrANXorqf5ejL3fjOyojaAeijiBitnGvTxkfmUvtk5
-         Oo7NlfGIo6V3y/5pocLkkx6t8Ss8qBGDmgrARr+67qmzWEXVLYp/RFVVh/KoqwASWwPE
-         LeSD+Oj61O/Z74sMssGhSL5Fu1c3GwuoL3JonPdkpa7ffE2p5AG02vHLj7jS4QiYw7q5
-         cGhGmYlwlCMnZ+TzyelO2CkY4EzLolMoho7DCGot0I1FyuWa+tJ3zOEFil++xSYeEETq
-         eZBQ==
+        bh=S74qc3gT0+GaAOfxP9OW8h7LX2dHXzF9FcHNnI79iRU=;
+        b=IidsVYIWxuA6ZMq4mduyFOFvGK2ppYXoJH0wqJkIqqc+oYorXd4D8TC5648uk83yp9
+         Wk6TRGHazyI7/dl0YaKYN69J4JYYCXH0CXmm45CYpg5crMvD0sBEhoVk0OCbke9ON03l
+         t++54shNE4fldweicnAFUG7BlPQRKlLvBj3ELH6NgoiG7tKyqU09KfhIbfcLrXBCqA5+
+         ERaEY1qXQhMRhOoex9Yt2JzsgbxA1o9//qxW7Rl64iVEwEvm2M5aNBfC/sbBWFTgc2W9
+         OB2UUdMDfKlny1MscN1lZUlNUVq8y5d3lfxTGrfnTL+k4Xh6lfcXpgzN0XvkrZqCgzwF
+         SQ4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=oz1fQ07v4YKej2hlWP6qWEvyAtsuOx0qHOmBf6H8EEU=;
-        b=os33Y1AWUdadbwxAPZnvMcDLDD1fA/AvQIQvbFf3GBOJgzme1KsM7kk7YUkrm4qy6e
-         OG5nvfTu9GAHAw99fVgmGuyXG1hoose6hmFxiblnQYHE3Ov724KVyfDjPrQkgDAKz/ld
-         NqU/sERHKxRFRVGUaOxLuflnF1+0fkaCRMCbQ1M+rtYGyqbFleu/m0/wiWeY8oeLvojb
-         fhV3MWjBXs6WZ3yFlBYQ5O9g12JyhmnmuvYTxCjJzxL1YKhadFznzEEFRMsOpNVLHOx7
-         GAoj99c4nDwatRr7GcdrgVK+GhMG2Ljndo3RwphIYOCukfz7ExBSpcRbBAk5VTa1FByh
-         xNFw==
-X-Gm-Message-State: AGi0PuZrmvpVHPzkAo6577QZRNnm3/8XUiKcG5SX3z9PVY4E8bE/qawN
-        DtJa97Q9r3YpGd7RiwR9wYsBDMw9rw==
-X-Google-Smtp-Source: APiQypJE2oducFJ7QqE/S1GqpExEa0j+XC+oVynygSXLNhNvPC4n0hoqiHIFqgoaUYcyeTNIUgqu5F2EbA==
-X-Received: by 2002:a0c:8b48:: with SMTP id d8mr26408306qvc.195.1588044485433;
- Mon, 27 Apr 2020 20:28:05 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 05:27:42 +0200
+        bh=S74qc3gT0+GaAOfxP9OW8h7LX2dHXzF9FcHNnI79iRU=;
+        b=I8hC3uv0iUmvHe/bsF5vRfOiS4uOKvNipaShxVECC2ftzzNofbTBf6uEzfnCFaR3jI
+         z07+fHdm5N09VAOESlFmh6+HnscN1QdWqu57wbW5XCknYXPToPVqaC4kvKMKnBPFSc8I
+         FjqhDHDRVPLrgC6/2eKNly+KY078cgX118HQoDTncmSMEeohn+LUjgwUrnfq44D7UTfk
+         oNcH9P67r6emvPq8rIMVRSx3cNkfGbLj8BvxKMUv5zHuGcygGlTNWkeURuzKXXW010fm
+         hVtM0NSTNsvZE9qgadCNVqC9GhXwsKNpXyHxdI4vkKhdCT9TFsor9IbYtRrSR3/e9Bq2
+         cFeA==
+X-Gm-Message-State: AGi0PuaIqstggpRLgYKkUaW0ezpHhAOrkg49GrS5lcOxfEx0vqWdY6pX
+        nNymoXanr2XfLjWwZbIBU4xbbfaD5g==
+X-Google-Smtp-Source: APiQypKNWrwmeyovNjE39gEB3tk3kbcuILr7RYV7vdkJNUwXcv+LEB33zDblKbOqInzqOcSp3nptjlK/lg==
+X-Received: by 2002:a0c:99ca:: with SMTP id y10mr18997354qve.217.1588044495889;
+ Mon, 27 Apr 2020 20:28:15 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 05:27:45 +0200
 In-Reply-To: <20200428032745.133556-1-jannh@google.com>
-Message-Id: <20200428032745.133556-3-jannh@google.com>
+Message-Id: <20200428032745.133556-6-jannh@google.com>
 Mime-Version: 1.0
 References: <20200428032745.133556-1-jannh@google.com>
 X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-Subject: [PATCH 2/5] coredump: Fix handling of partial writes in dump_emit()
+Subject: [PATCH 5/5] mm/gup: Take mmap_sem in get_dump_page()
 From:   Jann Horn <jannh@google.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
@@ -83,27 +83,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After a partial write, we have to update the input buffer pointer.
+Properly take the mmap_sem before calling into the GUP code from
+get_dump_page(); and play nice, allowing __get_user_pages_locked() to drop
+the mmap_sem if it has to sleep.
 
-Fixes: 2507a4fbd48a ("make dump_emit() use vfs_write() instead of banging at ->f_op->write directly")
-Cc: stable@vger.kernel.org
+This requires adjusting the check in __get_user_pages_locked() to be
+slightly less strict: While `vmas != NULL` is normally incompatible with
+the lock-dropping retry logic, it's fine if we only want a single page,
+because then retries can only happen when we haven't grabbed any pages yet.
+
 Signed-off-by: Jann Horn <jannh@google.com>
 ---
- fs/coredump.c | 1 +
- 1 file changed, 1 insertion(+)
+ mm/gup.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/fs/coredump.c b/fs/coredump.c
-index 408418e6aa131..047f5a11dbee7 100644
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -833,6 +833,7 @@ int dump_emit(struct coredump_params *cprm, const void *addr, int nr)
- 		cprm->written += n;
- 		cprm->pos += n;
- 		nr -= n;
-+		addr += n;
+diff --git a/mm/gup.c b/mm/gup.c
+index 9a7e83772f1fe..4bb4149c0e259 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1261,7 +1261,8 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
+ 
+ 	if (locked) {
+ 		/* if VM_FAULT_RETRY can be returned, vmas become invalid */
+-		BUG_ON(vmas);
++		if (WARN_ON(vmas && nr_pages != 1))
++			return -EFAULT;
+ 		/* check caller initialized locked */
+ 		BUG_ON(*locked != 1);
  	}
- 	return 1;
+@@ -1548,18 +1549,28 @@ static long __get_user_pages_locked(struct task_struct *tsk,
+  * NULL wherever the ZERO_PAGE, or an anonymous pte_none, has been found -
+  * allowing a hole to be left in the corefile to save diskspace.
+  *
+- * Called without mmap_sem, but after all other threads have been killed.
++ * Called without mmap_sem (takes and releases the mmap_sem by itself).
+  */
+ struct page *get_dump_page(unsigned long addr)
+ {
++	struct mm_struct *mm = current->mm;
+ 	struct vm_area_struct *vma;
+ 	struct page *page;
++	int locked = 1;
++	int ret;
+ 
+-	if (__get_user_pages(current, current->mm, addr, 1,
+-			     FOLL_FORCE | FOLL_DUMP | FOLL_GET, &page, &vma,
+-			     NULL) < 1)
++	if (down_read_killable(&mm->mmap_sem))
++		return NULL;
++	ret = __get_user_pages_locked(current, mm, addr, 1, &page, &vma,
++				      &locked,
++				      FOLL_FORCE | FOLL_DUMP | FOLL_GET);
++	if (ret != 1) {
++		if (locked)
++			up_read(&mm->mmap_sem);
+ 		return NULL;
++	}
+ 	flush_cache_page(vma, addr, page_to_pfn(page));
++	up_read(&mm->mmap_sem);
+ 	return page;
  }
+ 
 -- 
 2.26.2.303.gf8c07b1a785-goog
 
