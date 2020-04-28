@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87927C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61879C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AB0120575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3461420575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099181;
-	bh=D9g+QV6XCtXp85Svy09N/Ta/Qa7jGk5KWKU5R6WX/pc=;
+	s=default; t=1588099186;
+	bh=eXqulRKgCbhK/vdN577jO3NtMQkVPTtQIS/j7zOPAAs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YF8LexxyjyTxNOdeaaYf/FcMnob5kfr6taVuYXegfa3eFWfwh2KnzJXQrOjwZ5q9O
-	 xhVUraJNd+iWssV/wCiozZTvcF26RBlFxSU7+iuqKdGTET5O9SUp+ZudkUKxNiNsk2
-	 RDbIMhoszYjYs6h7BcnfNcfQM3NoGDnLS+WH41jE=
+	b=noFHfZg0gCNxkZMI410YwO+aT7XZkw974W6SmKJZxsJwaw34pZRFMW7SIdMFPmShp
+	 OQyRXSkVZusBT8hveBDrgFglc/o/XM/s4UfWaT6/7CEomnkmMA7JoatvKAxZ24MtC4
+	 pnLTws0IG9LkxhOhV0v7cniT+1LojdV46AxsYj5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730783AbgD1Sjk (ORCPT
+        id S1730285AbgD1Sjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:39:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58482 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:39:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730397AbgD1Sji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:39:38 -0400
+        id S1730780AbgD1Sjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:39:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E75120575;
-        Tue, 28 Apr 2020 18:39:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF96F20730;
+        Tue, 28 Apr 2020 18:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099177;
-        bh=D9g+QV6XCtXp85Svy09N/Ta/Qa7jGk5KWKU5R6WX/pc=;
+        s=default; t=1588099180;
+        bh=eXqulRKgCbhK/vdN577jO3NtMQkVPTtQIS/j7zOPAAs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oe2vukQdHmsIQ8bM7/v3yKPGbBnQqYmb8SkafocGsfica1aRgEiPAtWarJHkOayE+
-         3IP0v+za0k9lx7od3FOJUWuEaevHT5zTFC7z/CZXaN/Xk+dZb8pWNZJQigwJITQxO9
-         qoTv3ZBOp/+OBiefICzUU4IkIGsbiNowcvVBMuxI=
+        b=DIcGjACjNAbyEPZbAh7WrOU5ta+fsRu7m7KlHd6ieogGt90tlfuMx27/fmsErY0Aw
+         /0s6HSLD8bPlAho6mQH13K83+sDtmkGsC090hGlCpqiNFU/6ahEAruxqNRcTNTMzbZ
+         wWd9WbkdP5mnnu8OwMeep3bYjRs7ZZfA58itFrPs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Uros Bizjak <ubizjak@gmail.com>
-Subject: [PATCH 4.19 103/131] KVM: VMX: Enable machine check support for 32bit targets
-Date:   Tue, 28 Apr 2020 20:25:15 +0200
-Message-Id: <20200428182238.098107828@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.6 166/167] powerpc/mm: Fix CONFIG_PPC_KUAP_DEBUG on PPC32
+Date:   Tue, 28 Apr 2020 20:25:42 +0200
+Message-Id: <20200428182246.639393215@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,36 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uros Bizjak <ubizjak@gmail.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit fb56baae5ea509e63c2a068d66a4d8ea91969fca upstream.
+commit feb8e960d780e170e992a70491eec9dd68f4dbf2 upstream.
 
-There is no reason to limit the use of do_machine_check
-to 64bit targets. MCE handling works for both target familes.
+CONFIG_PPC_KUAP_DEBUG is not selectable because it depends on PPC_32
+which doesn't exists.
 
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: stable@vger.kernel.org
-Fixes: a0861c02a981 ("KVM: Add VT-x machine check support")
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Message-Id: <20200414071414.45636-1-ubizjak@gmail.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixing it leads to a deadlock due to a vital register getting
+clobbered in _switch().
+
+Change dependency to PPC32 and use r0 instead of r4 in _switch()
+
+Fixes: e2fb9f544431 ("powerpc/32: Prepare for Kernel Userspace Access Protection")
+Cc: stable@vger.kernel.org # v5.2+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/540242f7d4573f7cdf1b3bf46bb35f743b2cd68f.1587124651.git.christophe.leroy@c-s.fr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/kernel/entry_32.S         |    2 +-
+ arch/powerpc/platforms/Kconfig.cputype |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -7015,7 +7015,7 @@ static int handle_rmode_exception(struct
-  */
- static void kvm_machine_check(void)
- {
--#if defined(CONFIG_X86_MCE) && defined(CONFIG_X86_64)
-+#if defined(CONFIG_X86_MCE)
- 	struct pt_regs regs = {
- 		.cs = 3, /* Fake ring 3 no matter what the guest ran on */
- 		.flags = X86_EFLAGS_IF,
+--- a/arch/powerpc/kernel/entry_32.S
++++ b/arch/powerpc/kernel/entry_32.S
+@@ -710,7 +710,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_SPE)
+ 	stw	r10,_CCR(r1)
+ 	stw	r1,KSP(r3)	/* Set old stack pointer */
+ 
+-	kuap_check r2, r4
++	kuap_check r2, r0
+ #ifdef CONFIG_SMP
+ 	/* We need a sync somewhere here to make sure that if the
+ 	 * previous task gets rescheduled on another CPU, it sees all
+--- a/arch/powerpc/platforms/Kconfig.cputype
++++ b/arch/powerpc/platforms/Kconfig.cputype
+@@ -397,7 +397,7 @@ config PPC_KUAP
+ 
+ config PPC_KUAP_DEBUG
+ 	bool "Extra debugging for Kernel Userspace Access Protection"
+-	depends on PPC_KUAP && (PPC_RADIX_MMU || PPC_32)
++	depends on PPC_KUAP && (PPC_RADIX_MMU || PPC32)
+ 	help
+ 	  Add extra debugging for Kernel Userspace Access Protection (KUAP)
+ 	  If you're unsure, say N.
 
 
