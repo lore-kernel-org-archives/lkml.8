@@ -2,127 +2,96 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 009A5C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1D0C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D419C206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:01:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100488;
-	bh=gepK8epY5y1X2So4zmONyxVbZIzOOcoBP1WVOXiBqls=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CzT6dS1cfHQBXldRTe5UnmWRUTRB2uVfchtTlb+5byLx+h8LACsLih5McgEbifGyr
-	 3PkFVDOZrz45Rq/cQRV2mor0D0VWwfvCABtyCXdgDOmflzVC1wKf/oy0PI50LL/9/T
-	 XBc/I58ntK34vGJzxD/NQC/V4TnCTnqvLk6BYWGE=
+	by mail.kernel.org (Postfix) with ESMTP id CE03C206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:01:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728723AbgD1S0Y (ORCPT
+        id S1729387AbgD1TBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:26:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728700AbgD1S0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:26:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Tue, 28 Apr 2020 15:01:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728625AbgD1TBb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 15:01:31 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F8DDC03C1AB;
+        Tue, 28 Apr 2020 12:01:31 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D408D2137B;
-        Tue, 28 Apr 2020 18:26:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098378;
-        bh=gepK8epY5y1X2So4zmONyxVbZIzOOcoBP1WVOXiBqls=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vl4z8MefVfuMsFk5pObC85rtwoKbAlaqiIx5JEORS9NN6qtyoW/3/S9wFUkeJMMg9
-         mjUVDKFSPiu319w7W/dP5EnRaVpCx04YORyXZnotVE5RLoCGGJSWEmpVCrIuM1CM95
-         hE6UC7/5hCfZHcsccFciP0PVtit/RF0X0NlGD0jQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Santosh Sivaraj <santosh@fossix.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 016/167] tools/test/nvdimm: Fix out of tree build
-Date:   Tue, 28 Apr 2020 20:23:12 +0200
-Message-Id: <20200428182227.276694339@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by ms.lwn.net (Postfix) with ESMTPSA id 9121944A;
+        Tue, 28 Apr 2020 19:01:29 +0000 (UTC)
+Date:   Tue, 28 Apr 2020 13:01:28 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-cachefs@redhat.com,
+        codalist@coda.cs.cmu.edu, linux-fsdevel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH v3 00/29] Convert files to ReST - part 2
+Message-ID: <20200428130128.22c4b973@lwn.net>
+In-Reply-To: <cover.1588021877.git.mchehab+huawei@kernel.org>
+References: <cover.1588021877.git.mchehab+huawei@kernel.org>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Santosh Sivaraj <santosh@fossix.org>
+On Mon, 27 Apr 2020 23:16:52 +0200
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 
-[ Upstream commit 1f776799628139d0da47e710ad86eb58d987ff66 ]
+> This is the second part of a series I wrote sometime ago where I manually
+> convert lots of files to be properly parsed by Sphinx as ReST files.
+> 
+> As it touches on lot of stuff, this series is based on today's linux-next, 
+> at tag next-20190617.
+> 
+> The first version of this series had 57 patches. The first part with 28 patches
+> were already merged. Right now, there are still ~76  patches pending applying
+> (including this series), and that's because I opted to do ~1 patch per converted
+>  directory.
+> 
+> That sounds too much to be send on a single round. So, I'm opting to split
+> it on 3 parts for the conversion, plus a final patch adding orphaned books
+> to existing ones. 
+> 
+> Those patches should probably be good to be merged either by subsystem
+> maintainers or via the docs tree.
 
-Out of tree build using
+So I'm happy to merge this set, but there is one thing that worries me a
+bit... 
 
-   make M=tools/test/nvdimm O=/tmp/build -C /tmp/build
+>  fs/cachefiles/Kconfig                         |    4 +-
+>  fs/coda/Kconfig                               |    2 +-
+>  fs/configfs/inode.c                           |    2 +-
+>  fs/configfs/item.c                            |    2 +-
+>  fs/fscache/Kconfig                            |    8 +-
+>  fs/fscache/cache.c                            |    8 +-
+>  fs/fscache/cookie.c                           |    2 +-
+>  fs/fscache/object.c                           |    4 +-
+>  fs/fscache/operation.c                        |    2 +-
+>  fs/locks.c                                    |    2 +-
+>  include/linux/configfs.h                      |    2 +-
+>  include/linux/fs_context.h                    |    2 +-
+>  include/linux/fscache-cache.h                 |    4 +-
+>  include/linux/fscache.h                       |   42 +-
+>  include/linux/lsm_hooks.h                     |    2 +-
 
-fails with the following error
+I'd feel a bit better if I could get an ack or two from filesystem folks
+before I venture that far out of my own yard...what say you all?
 
-make: Entering directory '/tmp/build'
-  CC [M]  tools/testing/nvdimm/test/nfit.o
-linux/tools/testing/nvdimm/test/nfit.c:19:10: fatal error: nd-core.h: No such file or directory
-   19 | #include <nd-core.h>
-      |          ^~~~~~~~~~~
-compilation terminated.
+Thanks,
 
-That is because the kbuild file uses $(src) which points to
-tools/testing/nvdimm, $(srctree) correctly points to root of the linux
-source tree.
-
-Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
-Link: https://lore.kernel.org/r/20200114054051.4115790-1-santosh@fossix.org
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/testing/nvdimm/Kbuild      | 4 ++--
- tools/testing/nvdimm/test/Kbuild | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/tools/testing/nvdimm/Kbuild b/tools/testing/nvdimm/Kbuild
-index dbebf05f59313..47f9cc9dcd94b 100644
---- a/tools/testing/nvdimm/Kbuild
-+++ b/tools/testing/nvdimm/Kbuild
-@@ -21,8 +21,8 @@ DRIVERS := ../../../drivers
- NVDIMM_SRC := $(DRIVERS)/nvdimm
- ACPI_SRC := $(DRIVERS)/acpi/nfit
- DAX_SRC := $(DRIVERS)/dax
--ccflags-y := -I$(src)/$(NVDIMM_SRC)/
--ccflags-y += -I$(src)/$(ACPI_SRC)/
-+ccflags-y := -I$(srctree)/drivers/nvdimm/
-+ccflags-y += -I$(srctree)/drivers/acpi/nfit/
- 
- obj-$(CONFIG_LIBNVDIMM) += libnvdimm.o
- obj-$(CONFIG_BLK_DEV_PMEM) += nd_pmem.o
-diff --git a/tools/testing/nvdimm/test/Kbuild b/tools/testing/nvdimm/test/Kbuild
-index fb3c3d7cdb9bd..75baebf8f4ba1 100644
---- a/tools/testing/nvdimm/test/Kbuild
-+++ b/tools/testing/nvdimm/test/Kbuild
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
--ccflags-y := -I$(src)/../../../../drivers/nvdimm/
--ccflags-y += -I$(src)/../../../../drivers/acpi/nfit/
-+ccflags-y := -I$(srctree)/drivers/nvdimm/
-+ccflags-y += -I$(srctree)/drivers/acpi/nfit/
- 
- obj-m += nfit_test.o
- obj-m += nfit_test_iomap.o
--- 
-2.20.1
-
-
-
+jon
