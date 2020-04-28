@@ -2,56 +2,55 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E74F3C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C817DC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3FA72186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8CF221775
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:32:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098770;
-	bh=mNN3goFAdj6cbIOVlz0S+XGlyz6dKS6SjydtWTzaTLw=;
+	s=default; t=1588098774;
+	bh=uwHpq0c4se3+HxWbMzyYSyeGaIC4RLN0iuO/eA7PMvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qK1T1Uzs1Oc42+uTCzFw4N+hzxYuZb2tY5v5ssB4qyw7g0H8zJHVyrEJ3oIReCOns
-	 WLGN9GPbCUBU88nb350lgIsA66fcDAel4OMqNDagB0VvuyhfWn32WlxWcV+XxUrqiI
-	 HfeM1Dquk8zWinxAJuaVmsEgMLEdcmhscLFgcd44=
+	b=bppV8k1j0LexEy5hwPFikha/D3kaiE3LisrnVfN27l0TI7v0rxd4dLEJbbXhnUOLQ
+	 +0bVVjuCpOwAX7SO0cwnxq37KtFPOcDZIZupjYk3x0LuACTDhGjjl1d77fS3nOFwGF
+	 1aLrOx6Ob4FKa20lCFq7bIu+TPOoDGqrOulJBBTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbgD1Sct (ORCPT
+        id S1729862AbgD1Scx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:32:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49040 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:32:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729847AbgD1Scq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:32:46 -0400
+        id S1729853AbgD1Sct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:32:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95AE221707;
-        Tue, 28 Apr 2020 18:32:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0199421775;
+        Tue, 28 Apr 2020 18:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098766;
-        bh=mNN3goFAdj6cbIOVlz0S+XGlyz6dKS6SjydtWTzaTLw=;
+        s=default; t=1588098768;
+        bh=uwHpq0c4se3+HxWbMzyYSyeGaIC4RLN0iuO/eA7PMvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=so8idE6I28Sjdt5EeFXqXc348NyBcvbn0OhCSl19Y2Cd5MgGzGoAWjhyiYRpKgP//
-         voNT7UtsHEvCO4qiKb9UnAZV7grqY3Pv6Bm0giYP2a7o2j/ZTLPN3NFz6+wcM2zz6j
-         I0aR1RMtOnH1hJIWMNKAUQHYRzGnT+m8hsB6gqZY=
+        b=IoyMSh/F5eAgBPcdmTjV3AC0n3ac8Xgzvj2Mc8470/F3XAHxSVDZUqxYGR4SnpNa3
+         /bQQg1F9e6tMwh3covIh0O+7xBUJBc4GRo0xT6ToreIdhDA2UZU6uJBx/Qvb0SjtRz
+         tYZYyYx69IPlU5AzBWmIcKRD75nyp0HO6uxF6Urk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 009/168] watchdog: reset last_hw_keepalive time at start
-Date:   Tue, 28 Apr 2020 20:23:03 +0200
-Message-Id: <20200428182232.852576017@linuxfoundation.org>
+        stable@vger.kernel.org, Manoj Malviya <manojmalviya@chelsio.com>,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 054/131] cxgb4: fix large delays in PTP synchronization
+Date:   Tue, 28 Apr 2020 20:24:26 +0200
+Message-Id: <20200428182231.757495996@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,42 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 
-[ Upstream commit 982bb70517aef2225bad1d802887b733db492cc0 ]
+[ Upstream commit bd019427bf3623ee3c7d2845cf921bbf4c14846c ]
 
-Currently the watchdog core does not initialize the last_hw_keepalive
-time during watchdog startup. This will cause the watchdog to be pinged
-immediately if enough time has passed from the system boot-up time, and
-some types of watchdogs like K3 RTI does not like this.
+Fetching PTP sync information from mailbox is slow and can take
+up to 10 milliseconds. Reduce this unnecessary delay by directly
+reading the information from the corresponding registers.
 
-To avoid the issue, setup the last_hw_keepalive time during watchdog
-startup.
-
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20200302200426.6492-3-t-kristo@ti.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 9c33e4208bce ("cxgb4: Add PTP Hardware Clock (PHC) support")
+Signed-off-by: Manoj Malviya <manojmalviya@chelsio.com>
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/watchdog/watchdog_dev.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c |   27 +++++--------------------
+ drivers/net/ethernet/chelsio/cxgb4/t4_regs.h   |    3 ++
+ 2 files changed, 9 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-index ce04edc69e5f0..c4147e93aa7d4 100644
---- a/drivers/watchdog/watchdog_dev.c
-+++ b/drivers/watchdog/watchdog_dev.c
-@@ -282,6 +282,7 @@ static int watchdog_start(struct watchdog_device *wdd)
- 	if (err == 0) {
- 		set_bit(WDOG_ACTIVE, &wdd->status);
- 		wd_data->last_keepalive = started_at;
-+		wd_data->last_hw_keepalive = started_at;
- 		watchdog_update_worker(wdd);
- 	}
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
+@@ -311,32 +311,17 @@ static int cxgb4_ptp_adjtime(struct ptp_
+  */
+ static int cxgb4_ptp_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
+ {
+-	struct adapter *adapter = (struct adapter *)container_of(ptp,
+-				   struct adapter, ptp_clock_info);
+-	struct fw_ptp_cmd c;
++	struct adapter *adapter = container_of(ptp, struct adapter,
++					       ptp_clock_info);
+ 	u64 ns;
+-	int err;
  
--- 
-2.20.1
-
+-	memset(&c, 0, sizeof(c));
+-	c.op_to_portid = cpu_to_be32(FW_CMD_OP_V(FW_PTP_CMD) |
+-				     FW_CMD_REQUEST_F |
+-				     FW_CMD_READ_F |
+-				     FW_PTP_CMD_PORTID_V(0));
+-	c.retval_len16 = cpu_to_be32(FW_CMD_LEN16_V(sizeof(c) / 16));
+-	c.u.ts.sc = FW_PTP_SC_GET_TIME;
+-
+-	err = t4_wr_mbox(adapter, adapter->mbox, &c, sizeof(c), &c);
+-	if (err < 0) {
+-		dev_err(adapter->pdev_dev,
+-			"PTP: %s error %d\n", __func__, -err);
+-		return err;
+-	}
++	ns = t4_read_reg(adapter, T5_PORT_REG(0, MAC_PORT_PTP_SUM_LO_A));
++	ns |= (u64)t4_read_reg(adapter,
++			       T5_PORT_REG(0, MAC_PORT_PTP_SUM_HI_A)) << 32;
+ 
+ 	/* convert to timespec*/
+-	ns = be64_to_cpu(c.u.ts.tm);
+ 	*ts = ns_to_timespec64(ns);
+-
+-	return err;
++	return 0;
+ }
+ 
+ /**
+--- a/drivers/net/ethernet/chelsio/cxgb4/t4_regs.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/t4_regs.h
+@@ -1896,6 +1896,9 @@
+ 
+ #define MAC_PORT_CFG2_A 0x818
+ 
++#define MAC_PORT_PTP_SUM_LO_A 0x990
++#define MAC_PORT_PTP_SUM_HI_A 0x994
++
+ #define MPS_CMN_CTL_A	0x9000
+ 
+ #define COUNTPAUSEMCRX_S    5
 
 
