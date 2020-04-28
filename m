@@ -2,101 +2,73 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12232C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEEEC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4000206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:48:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SojYqesW"
+	by mail.kernel.org (Postfix) with ESMTP id E52C0206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:49:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgD1IsU (ORCPT
+        id S1726826AbgD1It2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 04:48:20 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:57245 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726363AbgD1IsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 04:48:19 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49BFfT6qWNz9sPF;
-        Tue, 28 Apr 2020 18:48:17 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588063698;
-        bh=d8AgwdncpihCPJg9Rd0sNUrNC0g+QP45tDJm6gWK3Cg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SojYqesW58phHbQG92YTOXWFyG1CL20YQeymfkPtH/jiAyZ7W2xMClpbN0EEKIyY/
-         1P0m87AqkhVaaaxtSDwCGBpeny34qq1Hh0pPSfAPqV+Yle3ekg2YycdOHru7pdzkuB
-         +fLOqnSLkUaXO5QAWbnQIxKTAPRFbuZXTa1m1l+nDRjWqZ/BBz3MeXhNI+4z7FUafd
-         zQIRCuBcNBZDzPrI3pBuf03HCVARZmTaS4dMdMQ/N+LVbkNCxkadWVAecZQJ8ZQUlL
-         zmdfNeUMWuGFxLu0akQAtPIGnlD/z5HpzkCsvBF04VxMBdhO+KHlBSl9lPvSq767h2
-         wRsLFFVRi4ZmQ==
-Date:   Tue, 28 Apr 2020 18:48:15 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Rob Clark <robdclark@gmail.com>, Sean Paul <seanpaul@chromium.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "kernelci.org bot" <bot@kernelci.org>
-Subject: Re: linux-next: build failure in Linus tree
-Message-ID: <20200428184815.7b790114@canb.auug.org.au>
-In-Reply-To: <20200420214611.17a6411f@canb.auug.org.au>
-References: <20200420214611.17a6411f@canb.auug.org.au>
+        Tue, 28 Apr 2020 04:49:28 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35677 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbgD1It1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 04:49:27 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jTLvc-00011u-S6; Tue, 28 Apr 2020 08:49:20 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/i915/gt: fix spelling mistake "evalution" -> "evaluation"
+Date:   Tue, 28 Apr 2020 09:49:20 +0100
+Message-Id: <20200428084920.1035125-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/0z0YOynmG9pzEO7kb5P94hw";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/0z0YOynmG9pzEO7kb5P94hw
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Colin Ian King <colin.king@canonical.com>
 
-Hi all,
+There is a spelling mistaking in a pr_notice message. Fix it.
 
-On Mon, 20 Apr 2020 21:46:11 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Hi all,
->=20
-> [reported by kernelci.org bot]
->=20
-> For a while now, building Linus' tree, the linux-next build (arm
-> qcom_defconfig) fails like this:
->=20
-> ERROR: modpost: "rd_full" [drivers/gpu/drm/msm/msm.ko] undefined!
->=20
-> Caused by commit
->=20
->   e515af8d4a6f ("drm/msm: devcoredump should dump MSM_SUBMIT_BO_DUMP buff=
-ers")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/i915/gt/selftest_rps.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-We are still getting this.
---=20
-Cheers,
-Stephen Rothwell
+diff --git a/drivers/gpu/drm/i915/gt/selftest_rps.c b/drivers/gpu/drm/i915/gt/selftest_rps.c
+index 181b29fa5b58..6ce7003bf92f 100644
+--- a/drivers/gpu/drm/i915/gt/selftest_rps.c
++++ b/drivers/gpu/drm/i915/gt/selftest_rps.c
+@@ -282,7 +282,7 @@ int live_rps_clock_interval(void *arg)
+ 						  GEN6_RP_CUR_UP_EI),
+ 			     10)) {
+ 			/* Just skip the test; assume lack of HW support */
+-			pr_notice("%s: rps evalution interval not ticking\n",
++			pr_notice("%s: rps evaluation interval not ticking\n",
+ 				  engine->name);
+ 			err = -ENODEV;
+ 		} else {
+-- 
+2.25.1
 
---Sig_/0z0YOynmG9pzEO7kb5P94hw
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6n7c8ACgkQAVBC80lX
-0GwR4Af/XALLXSlMEOSxthKX8naGN+PyEq5PeXevBxEILH6SsZSOqPnMIvzcWu8W
-1QXUA7xjVSjJ3L6cTioY/JB5PbPhgNdyWts2kztevKjk2jdCZUz17Qh37s5NnyhJ
-C3RC3Pjo6wa5JdvUHyfsVE2tleWgaTTNLLQIqFRRs91QVU3RmtDhSlUoG9ZwnLbt
-I3b1f17Gzj1WMRKnsqH4eBMLcXnPb+BBI7gDASxrdRt5x6ZdqeTC5HV38FL77Hon
-AGaoaBRge7XwdZ4kCH9uuSDaruMJBa9HyP6ISSY8NCafU8N+uUScwf7wtzWnEUSu
-xdnTgD0LbeOG7XWkKpgbu1uLiZP6tQ==
-=V6e8
------END PGP SIGNATURE-----
-
---Sig_/0z0YOynmG9pzEO7kb5P94hw--
