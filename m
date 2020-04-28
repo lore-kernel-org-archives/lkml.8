@@ -2,132 +2,183 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BF2C8300B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E44C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D85AA2072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:21:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gESl0rih"
+	by mail.kernel.org (Postfix) with ESMTP id B6D802072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 12:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgD1MVh (ORCPT
+        id S1726819AbgD1MWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:21:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726861AbgD1MVg (ORCPT
+        Tue, 28 Apr 2020 08:22:35 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:52196 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgD1MWf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:21:36 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED1D5C03C1AD
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 05:21:34 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id w20so21259739ljj.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 05:21:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=66PEvgq166rYm5NNqO/K4FUqV5SVNdU/W11wcLnh4KU=;
-        b=gESl0rihIt+DG1G40TUmI/KlPAmkk1+4Aiwp1MDMPvqaBcQyaLgL0tP2AHgbZg5nk0
-         Zpdq1rk6wT2WQ+bLxj3SVmtk9lXfualx8/Cw8wEteyO31K3kSq/vUb86877Of6KdH0io
-         f2COEG+8BhNtvaxctV6KpKzRKGo/JVpELc5SyrcjWxVrbK+uiUKLtkQXzxgTWv2WgMiG
-         Qiz0ZwMhbhudDACBVjvsTLMiMV8Sf0tjqm4cdShDq0oNkVfXuXFN6tDh9kF34y0SLf6s
-         MzV7Ht5jWfSj0hMkPlHRIvJQX83Mdi5vEpjcfQ1aZMcZ/HOCfb2pg8UsWyQjOj1fdaUH
-         4Uyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=66PEvgq166rYm5NNqO/K4FUqV5SVNdU/W11wcLnh4KU=;
-        b=bHB+nWuyBLbsIDRadVsJKf1b9nTclgtlZSLt6qcCSGxc+MWd0HZajuEw34BDtjkKB9
-         sJaC4+jIDi6HmUf03rTNruqxvTd3X+IuF1WlUyb/4GJAgm6qRBGOnvfMaLCB69jiLs0k
-         U/5w56zERtppTiqVy3U3fV7PeNZdv+oFBTJSbb1H2OHfLmDLQix5zPGar3DOY1N7SV0b
-         K7wVMUqJG4M4I1XO0DlB5j29ICJa2iouZXQYT21HcRHyxGaxlbrvI3+Gc1huKBR0CZbV
-         cQjmzsgRCQ3ucNat4QP7v6NYhby6vEbU5DpDpt7Os5i1vobi4DjTlx82OaRODk/VMLpV
-         TVNg==
-X-Gm-Message-State: AGi0Pubhi2w0PD2NOBOInyENCLpzfC7mDZpIPrhk24wRkrblL7ZMrGAO
-        SUmmcIU29cnXOdzdeG8I/DPyXQRuXG2/lsFU+i64UA==
-X-Google-Smtp-Source: APiQypLFGrgmnKJg9/f+LHPrCacUiDgVAehn8XuE+AFvss3TzqvRIrzE2HTQI0KghqzPidyFO40ACxVTMr2WJwrJBP0=
-X-Received: by 2002:a05:651c:32e:: with SMTP id b14mr17558469ljp.277.1588076493277;
- Tue, 28 Apr 2020 05:21:33 -0700 (PDT)
+        Tue, 28 Apr 2020 08:22:35 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jTPFy-0003Ok-26; Tue, 28 Apr 2020 06:22:34 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jTPFx-0001RA-3Z; Tue, 28 Apr 2020 06:22:33 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
+        <87ftcv1nqe.fsf@x220.int.ebiederm.org>
+        <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
+        <20200424173927.GB26802@redhat.com>
+        <87mu6ymkea.fsf_-_@x220.int.ebiederm.org>
+        <875zdmmj4y.fsf_-_@x220.int.ebiederm.org>
+        <CAHk-=whvktUC9VbzWLDw71BHbV4ofkkuAYsrB5Rmxnhc-=kSeQ@mail.gmail.com>
+        <878sihgfzh.fsf@x220.int.ebiederm.org>
+        <CAHk-=wjSM9mgsDuX=ZTy2L+S7wGrxZMcBn054As_Jyv8FQvcvQ@mail.gmail.com>
+        <87sggnajpv.fsf_-_@x220.int.ebiederm.org>
+Date:   Tue, 28 Apr 2020 07:19:18 -0500
+In-Reply-To: <87sggnajpv.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Tue, 28 Apr 2020 07:16:44 -0500")
+Message-ID: <87h7x3ajll.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20200423162548.129661-1-dianders@chromium.org> <20200423092431.v3.3.I53fed5b501a31e7a7fa13268ebcdd6b77bd0cadd@changeid>
-In-Reply-To: <20200423092431.v3.3.I53fed5b501a31e7a7fa13268ebcdd6b77bd0cadd@changeid>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Apr 2020 14:21:22 +0200
-Message-ID: <CACRpkdZEhqaiStFPdg3VOamKnCMjMsj+MMXimqmHW6eSGah+nQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/6] drm/panel-simple: Support hpd-gpios for delaying prepare()
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-XM-SPF: eid=1jTPFx-0001RA-3Z;;;mid=<87h7x3ajll.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19xBeyjONRsiGZZw00Q0+732yg+SgZZji8=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH v4 2/2] proc: Ensure we see the exit of each process tid exactly once
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 6:26 PM Douglas Anderson <dianders@chromium.org> wrote:
 
-> People use panel-simple when they have panels that are builtin to
-> their device.  In these cases the HPD (Hot Plug Detect) signal isn't
-> really used for hotplugging devices but instead is used for power
-> sequencing.  Panel timing diagrams (especially for eDP panels) usually
-> have the HPD signal in them and it acts as an indicator that the panel
-> is ready for us to talk to it.
->
-> Sometimes the HPD signal is hooked up to a normal GPIO on a system.
-> In this case we need to poll it in the correct place to know that the
-> panel is ready for us.  In some system designs the right place for
-> this is panel-simple.
->
-> When adding this support, we'll account for the case that there might
-> be a circular dependency between panel-simple and the provider of the
-> GPIO.  The case this was designed for was for the "ti-sn65dsi86"
-> bridge chip.  If HPD is hooked up to one of the GPIOs provided by the
-> bridge chip then in our probe function we'll always get back
-> -EPROBE_DEFER.  Let's handle this by allowing this GPIO to show up
-> late if we saw -EPROBE_DEFER during probe.  NOTE: since the
-> gpio_get_optional() is used, if the "hpd-gpios" isn't there our
-> variable will just be NULL and we won't do anything in prepare().
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->
-> Changes in v3:
-> - Remind how gpio_get_optional() works in the commit message.
+When the thread group leader changes during exec and the old leaders
+thread is reaped proc_flush_pid will flush the dentries for the entire
+process because the leader still has it's original pid.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Fix this by exchanging the pids in an rcu safe manner,
+and wrapping the code to do that up in a helper exchange_tids.
 
-I have a small inkling to protest against calling this driver "panel-simple"
-as we tend to stockpile things like this.
+When I removed switch_exec_pids and introduced this behavior
+in d73d65293e3e ("[PATCH] pidhash: kill switch_exec_pids") there
+really was nothing that cared as flushing happened with
+the cached dentry and de_thread flushed both of them on exec.
 
-I suppose panel-panacea.c is a better name at this point :/
+This lack of fully exchanging pids became a problem a few months later
+when I introduced 48e6484d4902 ("[PATCH] proc: Rewrite the proc dentry
+flush on exit optimization").  Which overlooked the de_thread case
+was no longer swapping pids, and I was looking up proc dentries
+by task->pid.
 
-Yours,
-Linus Walleij
+The current behavior isn't properly a bug as everything in proc will
+continue to work correctly just a little bit less efficiently.  Fix
+this just so there are no little surprise corner cases waiting to bite
+people.
+
+-- Oleg points out this could be an issue in next_tgid in proc where
+   has_group_leader_pid is called, and reording some of the assignments
+   should fix that.
+
+-- Oleg points out this will break the 10 year old hack in __exit_signal.c
+>	/*
+>	 * This can only happen if the caller is de_thread().
+>	 * FIXME: this is the temporary hack, we should teach
+>	 * posix-cpu-timers to handle this case correctly.
+>	 */
+>	if (unlikely(has_group_leader_pid(tsk)))
+>		posix_cpu_timers_exit_group(tsk);
+
+The code in next_tgid has been changed to use PIDTYPE_TGID,
+and the posix cpu timers code has been fixed so it does not
+need the 10 year old hack, so this should be safe to merge
+now.
+
+Fixes: 48e6484d4902 ("[PATCH] proc: Rewrite the proc dentry flush on exit optimization").
+Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
+---
+ fs/exec.c           |  5 +----
+ include/linux/pid.h |  1 +
+ kernel/pid.c        | 19 +++++++++++++++++++
+ 3 files changed, 21 insertions(+), 4 deletions(-)
+
+diff --git a/fs/exec.c b/fs/exec.c
+index 06b4c550af5d..9b60f927afd7 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1186,11 +1186,8 @@ static int de_thread(struct task_struct *tsk)
+ 
+ 		/* Become a process group leader with the old leader's pid.
+ 		 * The old leader becomes a thread of the this thread group.
+-		 * Note: The old leader also uses this pid until release_task
+-		 *       is called.  Odd but simple and correct.
+ 		 */
+-		tsk->pid = leader->pid;
+-		change_pid(tsk, PIDTYPE_PID, task_pid(leader));
++		exchange_tids(tsk, leader);
+ 		transfer_pid(leader, tsk, PIDTYPE_TGID);
+ 		transfer_pid(leader, tsk, PIDTYPE_PGID);
+ 		transfer_pid(leader, tsk, PIDTYPE_SID);
+diff --git a/include/linux/pid.h b/include/linux/pid.h
+index cc896f0fc4e3..2159ffca63fc 100644
+--- a/include/linux/pid.h
++++ b/include/linux/pid.h
+@@ -102,6 +102,7 @@ extern void attach_pid(struct task_struct *task, enum pid_type);
+ extern void detach_pid(struct task_struct *task, enum pid_type);
+ extern void change_pid(struct task_struct *task, enum pid_type,
+ 			struct pid *pid);
++extern void exchange_tids(struct task_struct *task, struct task_struct *old);
+ extern void transfer_pid(struct task_struct *old, struct task_struct *new,
+ 			 enum pid_type);
+ 
+diff --git a/kernel/pid.c b/kernel/pid.c
+index c835b844aca7..6d5d0a5bda82 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -363,6 +363,25 @@ void change_pid(struct task_struct *task, enum pid_type type,
+ 	attach_pid(task, type);
+ }
+ 
++void exchange_tids(struct task_struct *left, struct task_struct *right)
++{
++	struct pid *pid1 = left->thread_pid;
++	struct pid *pid2 = right->thread_pid;
++	struct hlist_head *head1 = &pid1->tasks[PIDTYPE_PID];
++	struct hlist_head *head2 = &pid2->tasks[PIDTYPE_PID];
++
++	/* Swap the single entry tid lists */
++	hlists_swap_heads_rcu(head1, head2);
++
++	/* Swap the per task_struct pid */
++	rcu_assign_pointer(left->thread_pid, pid2);
++	rcu_assign_pointer(right->thread_pid, pid1);
++
++	/* Swap the cached value */
++	WRITE_ONCE(left->pid, pid_nr(pid2));
++	WRITE_ONCE(right->pid, pid_nr(pid1));
++}
++
+ /* transfer_pid is an optimization of attach_pid(new), detach_pid(old) */
+ void transfer_pid(struct task_struct *old, struct task_struct *new,
+ 			   enum pid_type type)
+-- 
+2.20.1
+
