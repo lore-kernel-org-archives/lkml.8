@@ -2,112 +2,114 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23395C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4217C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC55A21D7B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588102585;
-	bh=GmogTBc6/7y6v6XDsNvTmidqfwyjrjtV6nfEWlF4Sgw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fZrJrGRryfckguBMjcgzHYtd+KeegqE1oh++59rB69A2wvCVuGaqFiT6d6/I2zfN9
-	 P36HrflwpWC0BaDrljGXbZ4Bjo1OkGDVGRPPIBoZi6Z/OpugsDFAiyNeYjhoW5tc7F
-	 w5cNzpbTTxP18RqyMxY1+raqAxsoK6xluwkTWaSA=
+	by mail.kernel.org (Postfix) with ESMTP id A6DD721D7B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:38:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbgD1TgY (ORCPT
+        id S1728957AbgD1TiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 15:36:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54016 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728474AbgD1TgX (ORCPT
+        Tue, 28 Apr 2020 15:38:18 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:36930 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728474AbgD1TiR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 15:36:23 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E64C03C1AB
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 12:36:22 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id h4so9204625ljg.12
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 12:36:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dz35P/wW75JPScBtg1LhfcQt3MDYh9XOUGljSwITyf8=;
-        b=LfNc2eHH26/bLReUobhiNZUaI4Psyh9CFL0F1oIKCTUu4vYDhvCgsiEQz9hbdMB4Rb
-         KnW7pgutm0LfGxr8LV/zvOfjwMUdhySRv26V+yGk/hx4ZZ8MwH38PG53Ti+BpE8dcWd8
-         gESAnzEV3eglxpHRlSSfv7r5LQPSduZHTrUtA=
+        Tue, 28 Apr 2020 15:38:17 -0400
+Received: by mail-io1-f71.google.com with SMTP id c26so25563148ioa.4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 12:38:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dz35P/wW75JPScBtg1LhfcQt3MDYh9XOUGljSwITyf8=;
-        b=N7+gaIDVSMGZSfajUufrLApFvi54HhrkFIJYDJJYQZyFKSvUv1fTR1DzjtieQNoIAG
-         +LrA2VovykqBiKk7CBKhCQdZHGnwvEvgTo0P/2XhdvjxiBeL3ioiv3ypqAvoFnBN2Dmu
-         0W+KGlWOEwI2P8akbSVVYpUs0S3lPtoWQXOjZNZ0nEvHlEPEKSpdzacbpxZ2JmVg/wcf
-         E1CGmP7Ul8PUvjd4wSlr+ArpaUg1KKfsa+wTca/Oz7mvXRpqO//Q/Z9Di9yqBDyCcqJs
-         tv5wO9IVpJCFk02wAZnQkdtjScZoipyL5Hb9vMDjKHmaSVa+voIa7q7BTSwNSaS9qw1u
-         hBCA==
-X-Gm-Message-State: AGi0PuZt/5u8KS1kBoyKFvcrFlvP3ycO3nbCI0p3oHmwUqe9/n2LBMyN
-        3yCnCCZa3WnawwCSmTyAxL+qhA72Mcw=
-X-Google-Smtp-Source: APiQypKRYFA59aU4Es6ZpQfG7jZjjuSkpfmGARdo8CZf1SmH9ewnhIP4XkXSrKSF4sCGgNqlOs6/8A==
-X-Received: by 2002:a2e:3208:: with SMTP id y8mr18760165ljy.282.1588102580573;
-        Tue, 28 Apr 2020 12:36:20 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id t16sm192621lff.72.2020.04.28.12.36.19
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 12:36:19 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id a21so19871187ljj.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 12:36:19 -0700 (PDT)
-X-Received: by 2002:a2e:7308:: with SMTP id o8mr18561211ljc.16.1588102578694;
- Tue, 28 Apr 2020 12:36:18 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=eDc8NZEKFhvGM6dQ3kv1NE06m1a7uFN0dbkh7RytWGA=;
+        b=Fq10NL4y2IJLG8GB+vUzXThSjth3N/bYw2BPd0kxDgOBFtRvtiiQqh7P4qpu0nB1qc
+         qZ8VMEwQXxBuHgcYQ4bjvv2IESUJXgk5+OuUkYECtYZABzVW0O1X359aRcn4bZ5rUJyQ
+         uiUhqK3U4oOSLwnfkTqurRZjWXqFhMCuUeQWCI8y119kG5vU8726PlqhocpHh0IieSe5
+         PunU+pnUy+eOS2R7JJn3iM0xQd5tS6oVsQyx1AaYg8UBWwnnkniDPQQS0F++puUi4LG8
+         mFDZypWhqM4aFmjC+4I/yatDSFTCYPIDBfXak1TtRCmNw+gtl4uLbal5tSatkiEVKEdO
+         IlJA==
+X-Gm-Message-State: AGi0Pub6bSJgFG40KJyiEA2sq99eWdcFhyWxkMPcQ693TZeJ7WGK7Skg
+        RsFsliOoFLS/2yNQCEF+WVDGwXF49YMqb7GiIEnEBhpz2lVg
+X-Google-Smtp-Source: APiQypIEFXc6pRBKZG5veE+k1ZMkPrZdlFSYtHt4b+M+rJ3vtx2X+beJ6e6vYmreUCgHtZcT7jfIf2I4WjT50f61CK5A5jAoWbFJ
 MIME-Version: 1.0
-References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
- <87ftcv1nqe.fsf@x220.int.ebiederm.org> <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
- <20200424173927.GB26802@redhat.com> <87mu6ymkea.fsf_-_@x220.int.ebiederm.org>
- <875zdmmj4y.fsf_-_@x220.int.ebiederm.org> <CAHk-=whvktUC9VbzWLDw71BHbV4ofkkuAYsrB5Rmxnhc-=kSeQ@mail.gmail.com>
- <878sihgfzh.fsf@x220.int.ebiederm.org> <CAHk-=wjSM9mgsDuX=ZTy2L+S7wGrxZMcBn054As_Jyv8FQvcvQ@mail.gmail.com>
- <87sggnajpv.fsf_-_@x220.int.ebiederm.org> <CAHk-=wiBYMoimvtc_DrwKN5EaQ98AmPryqYX6a-UE_VGP6LMrw@mail.gmail.com>
- <87zhav783k.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87zhav783k.fsf@x220.int.ebiederm.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 28 Apr 2020 12:36:02 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjtGJH-jpy2=LuuSPjXp=C+xzxS+oj0E0udzLbnb1Wnag@mail.gmail.com>
-Message-ID: <CAHk-=wjtGJH-jpy2=LuuSPjXp=C+xzxS+oj0E0udzLbnb1Wnag@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] proc: Ensure we see the exit of each process tid exactly
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>
+X-Received: by 2002:a92:cb4c:: with SMTP id f12mr28882461ilq.263.1588102694984;
+ Tue, 28 Apr 2020 12:38:14 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 12:38:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000000638405a45ef96d@google.com>
+Subject: KMSAN: uninit-value in ax25_connect
+From:   syzbot <syzbot+c82752228ed975b0a623@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, glider@google.com, jreuter@yaina.de,
+        kuba@kernel.org, linux-hams@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        ralf@linux-mips.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 11:59 AM Eric W. Biederman
-<ebiederm@xmission.com> wrote:
->
-> Linus Torvalds <torvalds@linux-foundation.org> writes:
-> >
-> > I think the series looks fine.
->
-> Mind if I translate that into
->
-> Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-> on the patches?
+Hello,
 
-Sure, go right ahead.
+syzbot found the following crash on:
 
-            Linus
+HEAD commit:    8bbbc5cf kmsan: don't compile memmove
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=14c92275e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cd0e9a6b0e555cc3
+dashboard link: https://syzkaller.appspot.com/bug?extid=c82752228ed975b0a623
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11d74a75e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14694b45e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+c82752228ed975b0a623@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in ax25_connect+0x92d/0x1e00 net/ax25/af_ax25.c:1203
+CPU: 1 PID: 11844 Comm: syz-executor808 Not tainted 5.6.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ ax25_connect+0x92d/0x1e00 net/ax25/af_ax25.c:1203
+ __sys_connect_file net/socket.c:1857 [inline]
+ __sys_connect+0x6f7/0x770 net/socket.c:1874
+ __do_sys_connect net/socket.c:1885 [inline]
+ __se_sys_connect net/socket.c:1882 [inline]
+ __ia32_sys_connect+0xdb/0x130 net/socket.c:1882
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7ff7d99
+Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000ff80833c EFLAGS: 00000246 ORIG_RAX: 000000000000016a
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000020000000
+RDX: 000000000000003c RSI: 00000000080ea078 RDI: 00000000ff808390
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
+Local variable ----address@__sys_connect created at:
+ __sys_connect+0xf7/0x770 net/socket.c:1870
+ __sys_connect+0xf7/0x770 net/socket.c:1870
+=====================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
