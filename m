@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 921FBC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDAFC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 720DB20730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BF6F2085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:35:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098910;
-	bh=L24Z/pnJD8Hs0p2+ekS4GjMizN9gO9MLeOJpLDy3rLo=;
+	s=default; t=1588098913;
+	bh=ENd1jNNo5OkQqzs81452LlPPJZkaniS6ivTo+Kng45o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IIq34bpein9CO8ggkrnWmOd5NSODK96+9yuiOLV5n4JClVqNi16C8vZyvXxzsfpd+
-	 J5LKLqZ3DZGr1VCU9FTtYeBH4WSyrRYtT2BBvgG0HlpidYyi6GelE/b6/deR9YwC53
-	 pByOcV7kE+dmjWBnai6gFUUUYbmIMHiXXNe/H1Q0=
+	b=GQ+3m+nNNu5gwIeM6hpjWah4t3RjjW5vT4tp2zOoMnrilX7ZmMvRsQ+7hIhjfwJo9
+	 KzZ+UDgjpxD4hrCHw0ZQhH7fP+jZ75d1h67145o2sL4NPXzYXhdO2qiXsiWkYjyysL
+	 D8F9nPX5keRqGzobjqoP7dX0fLcYnp9HtquSsSgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730210AbgD1SfJ (ORCPT
+        id S1730217AbgD1SfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:35:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52106 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:35:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729424AbgD1SfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:35:06 -0400
+        id S1728668AbgD1SfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:35:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 500A22085B;
-        Tue, 28 Apr 2020 18:35:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC07420575;
+        Tue, 28 Apr 2020 18:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098905;
-        bh=L24Z/pnJD8Hs0p2+ekS4GjMizN9gO9MLeOJpLDy3rLo=;
+        s=default; t=1588098908;
+        bh=ENd1jNNo5OkQqzs81452LlPPJZkaniS6ivTo+Kng45o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yxYpfvg4yNn0WZ+7pqoPvdJfBkQy4AOigvPqCqIAZllGNS4qE23zNcWCE8C4BKnQR
-         BM7y7AvWbG8E18doZskAanleOEyVOHY6L8Mka/5FLcQ5uanhs6IIeQqXxfbjp1eYw6
-         7lWfKfhpusFe3qF5qu22UVcRg8iEB9j36/hwFVDs=
+        b=zlKj/voj70zTcETokcR3BKufhjDuAa8/3mZGgm9oRSUNTvBmjduNW3CVt0WZpwI6v
+         5XTw+Y7B4SxQWeFMmCSxfFrMo6UmZ2r75jLf3x4PGYpLMuK5IrRDtEr8TXac1wnDcw
+         Fm9+9ee0FvZTwgoS9TD9AZ1vKkGv1q5kOHhJUYQw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Trev Larock <trev@larock.ca>,
-        David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 071/131] vrf: Check skb for XFRM_TRANSFORMED flag
-Date:   Tue, 28 Apr 2020 20:24:43 +0200
-Message-Id: <20200428182233.851420820@linuxfoundation.org>
+        stable@vger.kernel.org, Ilan Peer <ilan.peer@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.6 127/167] iwlwifi: mvm: Do not declare support for ACK Enabled Aggregation
+Date:   Tue, 28 Apr 2020 20:25:03 +0200
+Message-Id: <20200428182241.412541212@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,44 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Ilan Peer <ilan.peer@intel.com>
 
-[ Upstream commit 16b9db1ce34ff00d6c18e82825125cfef0cdfb13 ]
+commit 38af8d5a90a8c3b41ff0484855e24bd55b43ce9d upstream.
 
-To avoid a loop with qdiscs and xfrms, check if the skb has already gone
-through the qdisc attached to the VRF device and then to the xfrm layer.
-If so, no need for a second redirect.
+As this was not supposed to be enabled to begin with.
 
-Fixes: 193125dbd8eb ("net: Introduce VRF device driver")
-Reported-by: Trev Larock <trev@larock.ca>
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Ilan Peer <ilan.peer@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/iwlwifi.20200417100405.53dbc3c6c36b.Idfe118546b92cc31548b2211472a5303c7de5909@changeid
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/vrf.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/net/vrf.c
-+++ b/drivers/net/vrf.c
-@@ -478,7 +478,8 @@ static struct sk_buff *vrf_ip6_out(struc
- 	if (rt6_need_strict(&ipv6_hdr(skb)->daddr))
- 		return skb;
- 
--	if (qdisc_tx_is_default(vrf_dev))
-+	if (qdisc_tx_is_default(vrf_dev) ||
-+	    IP6CB(skb)->flags & IP6SKB_XFRM_TRANSFORMED)
- 		return vrf_ip6_out_direct(vrf_dev, sk, skb);
- 
- 	return vrf_ip6_out_redirect(vrf_dev, skb);
-@@ -692,7 +693,8 @@ static struct sk_buff *vrf_ip_out(struct
- 	    ipv4_is_lbcast(ip_hdr(skb)->daddr))
- 		return skb;
- 
--	if (qdisc_tx_is_default(vrf_dev))
-+	if (qdisc_tx_is_default(vrf_dev) ||
-+	    IPCB(skb)->flags & IPSKB_XFRM_TRANSFORMED)
- 		return vrf_ip_out_direct(vrf_dev, sk, skb);
- 
- 	return vrf_ip_out_redirect(vrf_dev, skb);
+---
+ drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
+@@ -532,8 +532,7 @@ static struct ieee80211_sband_iftype_dat
+ 					IEEE80211_HE_MAC_CAP1_TF_MAC_PAD_DUR_16US |
+ 					IEEE80211_HE_MAC_CAP1_MULTI_TID_AGG_RX_QOS_8,
+ 				.mac_cap_info[2] =
+-					IEEE80211_HE_MAC_CAP2_32BIT_BA_BITMAP |
+-					IEEE80211_HE_MAC_CAP2_ACK_EN,
++					IEEE80211_HE_MAC_CAP2_32BIT_BA_BITMAP,
+ 				.mac_cap_info[3] =
+ 					IEEE80211_HE_MAC_CAP3_OMI_CONTROL |
+ 					IEEE80211_HE_MAC_CAP3_MAX_AMPDU_LEN_EXP_VHT_2,
+@@ -617,8 +616,7 @@ static struct ieee80211_sband_iftype_dat
+ 					IEEE80211_HE_MAC_CAP1_TF_MAC_PAD_DUR_16US |
+ 					IEEE80211_HE_MAC_CAP1_MULTI_TID_AGG_RX_QOS_8,
+ 				.mac_cap_info[2] =
+-					IEEE80211_HE_MAC_CAP2_BSR |
+-					IEEE80211_HE_MAC_CAP2_ACK_EN,
++					IEEE80211_HE_MAC_CAP2_BSR,
+ 				.mac_cap_info[3] =
+ 					IEEE80211_HE_MAC_CAP3_OMI_CONTROL |
+ 					IEEE80211_HE_MAC_CAP3_MAX_AMPDU_LEN_EXP_VHT_2,
 
 
