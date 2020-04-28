@@ -2,95 +2,81 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63ADEC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CF4C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B533206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56E52206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 05:07:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbgD1FF1 (ORCPT
+        id S1726411AbgD1FHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 01:05:27 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:53195 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726042AbgD1FF1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 01:05:27 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R691e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TwvHWrt_1588050323;
-Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TwvHWrt_1588050323)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 28 Apr 2020 13:05:24 +0800
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-To:     jeyu@kernel.org, corbet@lwn.net, rdunlap@infradead.org,
-        mchehab+samsung@kernel.org, tglx@linutronix.de,
-        akpm@linux-foundation.org, gregkh@linuxfoundation.org,
-        pawan.kumar.gupta@linux.intel.com, jgross@suse.com
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        tianjia.zhang@linux.alibaba.com
-Subject: [PATCH v2] module: Allow to disable modsign in kernel cmdline
-Date:   Tue, 28 Apr 2020 13:05:23 +0800
-Message-Id: <20200428050523.47253-1-tianjia.zhang@linux.alibaba.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 28 Apr 2020 01:07:13 -0400
+Received: from mga07.intel.com ([134.134.136.100]:28385 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725792AbgD1FHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 01:07:12 -0400
+IronPort-SDR: KK0D1eBQKzvWp2vlkrTGbugLjpQObnNuvH3ABzwy7VtZAk/2SVTYKp2j4TbcxwFkTF7NBE7ecK
+ wFGQYr6xld2g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 22:07:12 -0700
+IronPort-SDR: LhndOMvmy3OMlNNwE0WpgyY+lTgFSgbB/3QGupkQt5Y2JaSUXRuxq6csNWSqk2GUAkUKeMnoMI
+ g9e3av3P5FdA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,326,1583222400"; 
+   d="scan'208";a="432049751"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 27 Apr 2020 22:07:09 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jTISa-000Gk9-UA; Tue, 28 Apr 2020 13:07:08 +0800
+Date:   Tue, 28 Apr 2020 13:06:27 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Like Xu <like.xu@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kbuild-all@lists.01.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wei.w.wang@intel.com,
+        ak@linux.intel.com
+Subject: [RFC PATCH] KVM: x86/pmu: kvm_pmu_lbr_cleanup() can be static
+Message-ID: <20200428050627.GA26449@41ada6197895>
+References: <20200423081412.164863-10-like.xu@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423081412.164863-10-like.xu@linux.intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This option allows to disable modsign completely at the beginning,
-and turn off by set the kernel cmdline `no_modsig_enforce` when
-`CONFIG_MODULE_SIG_FORCE` is enabled.
 
-Yet another change allows to always show the current status of
-modsign through `/sys/module/module/parameters/sig_enforce`.
-
-Signed-off-by: Jia Zhang <zhang.jia@linux.alibaba.com>
-Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Signed-off-by: kbuild test robot <lkp@intel.com>
 ---
- Documentation/admin-guide/kernel-parameters.txt | 6 ++++++
- kernel/module.c                                 | 8 ++++++++
- 2 files changed, 14 insertions(+)
+ pmu.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 7bc83f3d9bdf..00ed7566959f 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3190,6 +3190,12 @@
- 	noirqdebug	[X86-32] Disables the code which attempts to detect and
- 			disable unhandled interrupt sources.
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index 7dad899850bb3..b9b6d16651c8b 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -452,7 +452,7 @@ static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
+ 	return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
+ }
  
-+	no_modsig_enforce
-+			[KNL] When CONFIG_MODULE_SIG_FORCE is set, this option
-+			allows to disable modsign completely at the beginning.
-+			This means that modules without (valid) signatures will
-+			success to load.
-+
- 	no_timer_check	[X86,APIC] Disables the code which tests for
- 			broken timer IRQ sources.
- 
-diff --git a/kernel/module.c b/kernel/module.c
-index 646f1e2330d2..0e68e1286377 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -269,6 +269,14 @@ static void module_assert_mutex_or_preempt(void)
- 
- static bool sig_enforce = IS_ENABLED(CONFIG_MODULE_SIG_FORCE);
- module_param(sig_enforce, bool_enable_only, 0644);
-+#ifdef CONFIG_MODULE_SIG_FORCE
-+static int __init set_no_modsig_enforce(char *str)
-+{
-+	sig_enforce = false;
-+	return 1;
-+}
-+__setup("no_modsig_enforce", set_no_modsig_enforce);
-+#endif /* !CONFIG_MODULE_SIG_FORCE */
- 
- /*
-  * Export sig_enforce kernel cmdline parameter to allow other subsystems rely
--- 
-2.17.1
-
+-void kvm_pmu_lbr_cleanup(struct kvm_vcpu *vcpu)
++static void kvm_pmu_lbr_cleanup(struct kvm_vcpu *vcpu)
+ {
+ 	if (kvm_x86_ops.pmu_ops->lbr_cleanup)
+ 		kvm_x86_ops.pmu_ops->lbr_cleanup(vcpu);
