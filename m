@@ -2,93 +2,122 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3924C83004
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B069AC83000
 	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A43032076A
+	by mail.kernel.org (Postfix) with ESMTP id 9142120730
 	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:48:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgD1Vsy (ORCPT
+        id S1726561AbgD1Vsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:48:54 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:40589 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgD1Vsy (ORCPT
+        Tue, 28 Apr 2020 17:48:33 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:45678 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbgD1Vsc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:48:54 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MLi0U-1jlDUS435U-00HhCE; Tue, 28 Apr 2020 23:47:57 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Shreyas NC <shreyas.nc@intel.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: component: suppress uninitialized-variable warning
-Date:   Tue, 28 Apr 2020 23:47:31 +0200
-Message-Id: <20200428214754.3925368-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Tue, 28 Apr 2020 17:48:32 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jTY5f-0000df-CT; Tue, 28 Apr 2020 15:48:31 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jTY5e-0001mX-HZ; Tue, 28 Apr 2020 15:48:31 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
+        <87ftcv1nqe.fsf@x220.int.ebiederm.org>
+        <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
+        <20200424173927.GB26802@redhat.com>
+        <87mu6ymkea.fsf_-_@x220.int.ebiederm.org>
+        <875zdmmj4y.fsf_-_@x220.int.ebiederm.org>
+        <CAHk-=whvktUC9VbzWLDw71BHbV4ofkkuAYsrB5Rmxnhc-=kSeQ@mail.gmail.com>
+        <878sihgfzh.fsf@x220.int.ebiederm.org>
+        <CAHk-=wjSM9mgsDuX=ZTy2L+S7wGrxZMcBn054As_Jyv8FQvcvQ@mail.gmail.com>
+        <87sggnajpv.fsf_-_@x220.int.ebiederm.org>
+        <20200428180540.GB29960@redhat.com>
+        <87mu6v70in.fsf_-_@x220.int.ebiederm.org>
+Date:   Tue, 28 Apr 2020 16:45:16 -0500
+In-Reply-To: <87mu6v70in.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Tue, 28 Apr 2020 16:39:44 -0500")
+Message-ID: <87ftcn709f.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:CwaJqqI8UP3UYQa9QLeTXBcxWgnAERLM8vCOxjOOEAo6dfRILDf
- LeO9h10wirIWDwv/JYCpujsz5ihmwXnxr5ZVnF6fjlXBTOrFpjkS7YaQllg/u4+ORwbI1DA
- kxCRbtdDyAV9QhcaU6Ziis4Gf2mVE3FsnWg1aXZZw9CUh5bIjY2/t57C93Zp4lBmTZ7TttH
- +ODOByIu1hjDFoMEOa2qA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6OOAtvjEG8Y=:39ln5prj9KTgnldiZQ01UN
- 4E3DgmxckBBa2DYf+ZhSgu5LP8rnoU4Hn209TkYgCfE1JcUIQUVKc/WxtcufErSo5Cc7wuQ0C
- HzlYNLD3iSHxe5f1tCMwO8ru5sj5J/nmxJyQgnRJBVi8lw1vkMQkGitCz+OLeOY+Xkm7LQHj+
- V91Wxldp5CR+OCHKLSESyA5Nj6Rzkrh4nqMngtnppNsj2qvsL9xrnD2Iga7qBJaHX/dL+PStU
- dtKwcK1elD3BzM2KXiqaHTMVVuFlCz1zUpsUv/cikpiuzJamzjci0ZWzeBdl6RiWJiHjH+lsM
- hx3dh4hwNbG2rLrazrEwtbyddf5jJ/nAkstwqCtI0eLABTQw2U3fFUd8uTvw6hkJXQJy1RsHp
- 6hfMFZo5TnxcX6XNMqRQ0wyGPO0xDafn/aDE0+zEY0JnYszQKfE85vev6MjWpsKXu8Vff+iY/
- CU4S0ZY0Dqo0udPP37uRzHRDaPBBCezqthWPPmnYPOxpIKRoZpQeqOxjJVqshsVgo/eS/XOhz
- sVaaRy6A9tzG6A/Fr3p6EEbmQlKG7/Coa6/JJX2HNLK7iCBoiqtV1Krye5+yFtr5g/qx44Vjn
- JI0JvW5voZeBQ7Z3Wg6rkaQwb4KjEIq8PIcqU6rHlwMQcACLtK1cKXHsD4RtvxI1cbLwsNrem
- gjSO8tyhRV/HJgNb/CJDwwLG3BcVxxs3gNsQHaCBW2oxsagTe4FiE7kCNQ96DGWhLp0m/g6HK
- cPul8V6+pl7neS9mdT0KYU4hbbof7Giftobzl2I8G7gB/qL5AIBUhBfchAoLWZkBBgZyLdXyK
- 7RbxwSNM9GBeW26VXpc/C6BmMmULaQ6gPa4JRNaynwd9MnuCKQ=
+Content-Type: text/plain
+X-XM-SPF: eid=1jTY5e-0001mX-HZ;;;mid=<87ftcn709f.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+YRFQ4RI9aGkdk8fxRwEOjHQ36OWDX+Bg=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH v1 1/4] posix-cpu-timer: Tidy up group_leader logic in lookup_task
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Old versions of gcc (tested on gcc-4.8) produce a warning for
-correct code:
 
-sound/soc/soc-compress.c: In function 'soc_compr_open':
-sound/soc/soc-compress.c:75:28: error: 'component' is used uninitialized in this function [-Werror=uninitialized]
-  struct snd_soc_component *component, *save = NULL;
+Replace has_group_leader_pid with thread_group_leader.  Years ago Oleg
+suggested changing thread_group_leader to has_group_leader_pid to handle
+races.  Looking at the code then and now I don't see how it ever helped.
+Especially as then the code really did need to be the
+thread_group_leader.
 
-Change the for_each_rtd_components() macro to ensure 'component'
-gets initialized to a value the compiler does not complain about.
+Today it doesn't make a difference if thread_group_leader races with
+de_thread as the task returned from lookup_task in the non-thread case
+is just used to find values in task->signal.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Since the races with de_thread have never been handled revert
+has_group_header_pid to thread_group_leader for clarity.
+
+Update the comment in lookup_task to remove implementation details that
+are no longer true and to mention task->signal instead of task->sighand,
+as the relevant cpu timer details are all in task->signal.
+
+Ref: 55e8c8eb2c7b ("posix-cpu-timers: Store a reference to a pid not a task")
+Ref: c0deae8c9587 ("posix-cpu-timers: Rcu_read_lock/unlock protect find_task_by_vpid call")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- include/sound/soc.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/time/posix-cpu-timers.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/include/sound/soc.h b/include/sound/soc.h
-index 907afbc652f2..69a82487fa9b 100644
---- a/include/sound/soc.h
-+++ b/include/sound/soc.h
-@@ -1179,7 +1179,7 @@ struct snd_soc_pcm_runtime {
- #define asoc_rtd_to_codec(rtd, n) (rtd)->dais[n + (rtd)->num_cpus]
+diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
+index 2fd3b3fa68bf..e4051e417bcb 100644
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -69,12 +69,8 @@ static struct task_struct *lookup_task(const pid_t pid, bool thread,
+ 	if (gettime) {
+ 		/*
+ 		 * For clock_gettime(PROCESS) the task does not need to be
+-		 * the actual group leader. tsk->sighand gives
++		 * the actual group leader. task->signal gives
+ 		 * access to the group's clock.
+-		 *
+-		 * Timers need the group leader because they take a
+-		 * reference on it and store the task pointer until the
+-		 * timer is destroyed.
+ 		 */
+ 		return (p == current || thread_group_leader(p)) ? p : NULL;
+ 	}
+@@ -82,7 +78,7 @@ static struct task_struct *lookup_task(const pid_t pid, bool thread,
+ 	/*
+ 	 * For processes require that p is group leader.
+ 	 */
+-	return has_group_leader_pid(p) ? p : NULL;
++	return thread_group_leader(p) ? p : NULL;
+ }
  
- #define for_each_rtd_components(rtd, i, component)			\
--	for ((i) = 0;							\
-+	for ((i) = 0, component = NULL;					\
- 	     ((i) < rtd->num_components) && ((component) = rtd->components[i]);\
- 	     (i)++)
- #define for_each_rtd_cpu_dais(rtd, i, dai)				\
+ static struct task_struct *__get_task_for_clock(const clockid_t clock,
 -- 
-2.26.0
+2.20.1
 
