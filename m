@@ -2,56 +2,58 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A66C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF968C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF4A206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD769206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100042;
-	bh=2ljyNe12FS2y0Tkn2bvU7tbSgoTZOjBeAZoiWEP65sY=;
+	s=default; t=1588100046;
+	bh=9k2uZ6RQiqnzLgXK2TCNkD6hSDYgS+p6jb9lpz1K5iA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kejCMEtvEFt4UpUOxg57uSTndCqsQjA1Zye4nNDm6n5ue6c6SceeS2ENhtDmBHs4e
-	 t9dwxfTHoJ0l+oXUbkoLqrxgW2RZUjD0lEJISV4zmhKxXLLQXas5N4jayO/PPfb70R
-	 WlrLBSn7+Tt/g2NARNzkw+9u8d2Wv1hLo4xrUl9A=
+	b=tjtXH3sYqyQK8R3kAzj+yBxSgKoDkPfDjxRvvDgbo4QPUyE1yfSgfTVW6k/7ltsv6
+	 dvADp2RzXg/khpg6Q6/DIU2z06tpubqzKT/i6OFBr+GKHxNVVlgAdhT1PWq6pgXXW3
+	 hilq3wR4qCjuNSNxX6tiw2jHIDsZXyCjdHvo1zec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730450AbgD1SyB (ORCPT
+        id S1730038AbgD1SeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:54:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51378 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:34:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730064AbgD1See (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:34:34 -0400
+        id S1730026AbgD1SeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:34:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6673821707;
-        Tue, 28 Apr 2020 18:34:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C52D20B80;
+        Tue, 28 Apr 2020 18:34:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098873;
-        bh=2ljyNe12FS2y0Tkn2bvU7tbSgoTZOjBeAZoiWEP65sY=;
+        s=default; t=1588098846;
+        bh=9k2uZ6RQiqnzLgXK2TCNkD6hSDYgS+p6jb9lpz1K5iA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y1uGqttDn81bna15sFbJYKQksHitx6PhE1azjPctOWywTMjpx7OwQ6liMaDsT5g4x
-         XaUV0VnEtZkwySdAuqiFJZwgaUITCJW5Bb1PCO8EtFhDFvrq1m9H2L+28u1+TFu08q
-         mivJ3IjikCnmhs2euvQ1XJpKJdIUZWbpgSnk1KUc=
+        b=tYrMZcvkjul1pVo6fVCIARno4lDHHbv2LHK2X2cyQty7uumsEoi8JNGDaN4vvZddI
+         bzjfHqr4htNi+VwkgPsm6h4dxaxxbI3XdpExJMcdmn6AmDE1/r3kVAucC6IcK+F2Dr
+         fEjK3UPXbHk1GIwzk8wpEgoRVkdexEPx9wDHYYvA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 011/168] scsi: lpfc: Fix crash after handling a pci error
-Date:   Tue, 28 Apr 2020 20:23:05 +0200
-Message-Id: <20200428182233.120645460@linuxfoundation.org>
+Subject: [PATCH 4.19 052/131] x86/KVM: Clean up hosts steal time structure
+Date:   Tue, 28 Apr 2020 20:24:24 +0200
+Message-Id: <20200428182231.504632549@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,45 +63,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-[ Upstream commit 4cd70891308dfb875ef31060c4a4aa8872630a2e ]
+commit a6bd811f1209fe1c64c9f6fd578101d6436c6b6e upstream.
 
-Injecting EEH on a 32GB card is causing kernel oops
+Now that we are mapping kvm_steal_time from the guest directly we
+don't need keep a copy of it in kvm_vcpu_arch.st. The same is true
+for the stime field.
 
-The pci error handler is doing an IO flush and the offline code is also
-doing an IO flush. When the 1st flush is complete the hdwq is destroyed
-(freed), yet the second flush accesses the hdwq and crashes.
+This is part of CVE-2019-3016.
 
-Added a check in lpfc_sli4_fush_io_rings to check both the HBA_IOQ_FLUSH
-flag and the hdwq pointer to see if it is already set and not already
-freed.
-
-Link: https://lore.kernel.org/r/20200322181304.37655-6-jsmart2021@gmail.com
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Reviewed-by: Joao Martins <joao.m.martins@oracle.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/include/asm/kvm_host.h |  3 +--
+ arch/x86/kvm/x86.c              | 11 +++--------
+ 2 files changed, 4 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 1692ce913b7f0..a951e1c8165ed 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -4013,6 +4013,11 @@ lpfc_sli_flush_io_rings(struct lpfc_hba *phba)
- 	struct lpfc_iocbq *piocb, *next_iocb;
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index ca9c7110b99dd..33136395db8fc 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -622,10 +622,9 @@ struct kvm_vcpu_arch {
+ 	bool pvclock_set_guest_stopped_request;
  
- 	spin_lock_irq(&phba->hbalock);
-+	if (phba->hba_flag & HBA_IOQ_FLUSH ||
-+	    !phba->sli4_hba.hdwq) {
-+		spin_unlock_irq(&phba->hbalock);
-+		return;
-+	}
- 	/* Indicate the I/O queues are flushed */
- 	phba->hba_flag |= HBA_IOQ_FLUSH;
- 	spin_unlock_irq(&phba->hbalock);
+ 	struct {
++		u8 preempted;
+ 		u64 msr_val;
+ 		u64 last_steal;
+-		struct gfn_to_hva_cache stime;
+-		struct kvm_steal_time steal;
+ 		struct gfn_to_pfn_cache cache;
+ 	} st;
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index d77822e03ff6b..6bfc9eaf8dee0 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2418,7 +2418,7 @@ static void record_steal_time(struct kvm_vcpu *vcpu)
+ 	if (xchg(&st->preempted, 0) & KVM_VCPU_FLUSH_TLB)
+ 		kvm_vcpu_flush_tlb(vcpu, false);
+ 
+-	vcpu->arch.st.steal.preempted = 0;
++	vcpu->arch.st.preempted = 0;
+ 
+ 	if (st->version & 1)
+ 		st->version += 1;  /* first time write, random junk */
+@@ -2577,11 +2577,6 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		if (data & KVM_STEAL_RESERVED_MASK)
+ 			return 1;
+ 
+-		if (kvm_gfn_to_hva_cache_init(vcpu->kvm, &vcpu->arch.st.stime,
+-						data & KVM_STEAL_VALID_BITS,
+-						sizeof(struct kvm_steal_time)))
+-			return 1;
+-
+ 		vcpu->arch.st.msr_val = data;
+ 
+ 		if (!(data & KVM_MSR_ENABLED))
+@@ -3280,7 +3275,7 @@ static void kvm_steal_time_set_preempted(struct kvm_vcpu *vcpu)
+ 	if (!(vcpu->arch.st.msr_val & KVM_MSR_ENABLED))
+ 		return;
+ 
+-	if (vcpu->arch.st.steal.preempted)
++	if (vcpu->arch.st.preempted)
+ 		return;
+ 
+ 	if (kvm_map_gfn(vcpu, vcpu->arch.st.msr_val >> PAGE_SHIFT, &map,
+@@ -3290,7 +3285,7 @@ static void kvm_steal_time_set_preempted(struct kvm_vcpu *vcpu)
+ 	st = map.hva +
+ 		offset_in_page(vcpu->arch.st.msr_val & KVM_STEAL_VALID_BITS);
+ 
+-	st->preempted = vcpu->arch.st.steal.preempted = KVM_VCPU_PREEMPTED;
++	st->preempted = vcpu->arch.st.preempted = KVM_VCPU_PREEMPTED;
+ 
+ 	kvm_unmap_gfn(vcpu, &map, &vcpu->arch.st.cache, true, true);
+ }
 -- 
 2.20.1
 
