@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED0EC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1984C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1417021707
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92B92070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:19:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SEyLIiii"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qz67HFhv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbgD1TTk (ORCPT
+        id S1728870AbgD1TTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 15:19:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51358 "EHLO
+        Tue, 28 Apr 2020 15:19:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728377AbgD1TTi (ORCPT
+        by vger.kernel.org with ESMTP id S1728498AbgD1TTi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Apr 2020 15:19:38 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AB6CC03C1AD
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 818D3C035495
         for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 12:19:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=nzdDBr3oaZauQiS6KFZixaG0IDQ3jdStMDtJDHE6Yc8=; b=SEyLIiiiLtiLGSmRrErCbUwxh6
-        3+n+nqDIMv0D1h8k1zZnviIjzH+HhpqRFvP344NwebN2hR6Zhg8hd+yjuabwumZW4pjrvU7DlRVMD
-        U4Q60OhnnAfmo/xa60Sth6lj3m/sh7DskoCNf+IxCkaRIDc79DTdah8XS433jZEMXb7tfFRumWXY0
-        EgIa7A4uUu1EYzmWHmNFXWtQcFNvjuNuGG2m/V6NLwrm+ozeNwHafoHHs5dKLXKbBiGx24mSfZcET
-        aXpf1O6mJrB02FEKsmxVMRpBbL+vof6YAyUVBqF6eG5HBivEIrwcr6MJJTS+k9Ojv6XX01E3/hGE8
-        CABWnBGA==;
+        bh=NrsVwe4TzastsXwURfp0/elwEEkYtzFdxS+HUS5Whw0=; b=qz67HFhvgX2F37f9m8k7CcIdFN
+        a1Q/cgf0ReGEaCQCrOQlpuqzFHPsSVehEvjnQ/09JKXovBi3voBz+xiwzfpCb9v6ZvwHwrWSSoEGq
+        taFZtxfrkURMSULXhbIkrg7MwVryP63vl6poAOy9qH2L+V9QrAF5SrZuppEQz0+iPETqF/iWwyLsJ
+        DJLIi/3lP2JhaN0W+9KbLNaRuoRwgRjUs60qycMI9b3LSx05nBJ0SAXIoP7Hih6rWWPNkQ6U+IndQ
+        fRx5MfzGhYAgK2S709RGx+QH6ZU0AcW+vtGnLkr4dOSJPlKiGvVSB0bCbiEKdoJYRUl6CTqubfswp
+        PVIGmxCw==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTVlQ-0006Vi-5h; Tue, 28 Apr 2020 19:19:28 +0000
+        id 1jTVlR-0006WB-Uj; Tue, 28 Apr 2020 19:19:30 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 90A6130753D;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B7C1E30775A;
         Tue, 28 Apr 2020 21:19:26 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 79DD02392F88F; Tue, 28 Apr 2020 21:19:26 +0200 (CEST)
-Message-Id: <20200428191659.438842526@infradead.org>
+        id 9368E25D01317; Tue, 28 Apr 2020 21:19:26 +0200 (CEST)
+Message-Id: <20200428191659.854203028@infradead.org>
 User-Agent: quilt/0.65
-Date:   Tue, 28 Apr 2020 21:11:02 +0200
+Date:   Tue, 28 Apr 2020 21:11:09 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     jpoimboe@redhat.com, alexandre.chartre@oracle.com
 Cc:     linux-kernel@vger.kernel.org, jthierry@redhat.com,
         tglx@linutronix.de, x86@kernel.org, mbenes@suse.cz,
         peterz@infradead.org
-Subject: [PATCH v2 01/14] objtool: Allow branches within the same alternative.
+Subject: [PATCH v2 08/14] objtool: Remove INSN_STACK
 References: <20200428191101.886208539@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,144 +62,224 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Chartre <alexandre.chartre@oracle.com>
+With the unconditional use of handle_insn_ops(), INSN_STACK has lost
+its purpose. Remove it.
 
-Currently objtool prevents any branch to an alternative. While preventing
-branching from the outside to the middle of an alternative makes perfect
-sense, branching within the same alternative should be allowed. To do so,
-identify each alternative and check that a branch to an alternative comes
-from the same alternative.
-
-Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+Suggested-by: Julien Thierry <jthierry@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200414103618.12657-3-alexandre.chartre@oracle.com
 ---
- tools/objtool/check.c |   26 ++++++++++++++++++++------
- tools/objtool/check.h |    3 ++-
- 2 files changed, 22 insertions(+), 7 deletions(-)
+ tools/objtool/arch.h            |    1 -
+ tools/objtool/arch/x86/decode.c |   23 -----------------------
+ tools/objtool/check.c           |    3 ---
+ 3 files changed, 27 deletions(-)
 
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -770,7 +770,9 @@ static int handle_group_alt(struct objto
- 			    struct instruction *orig_insn,
- 			    struct instruction **new_insn)
- {
-+	static unsigned int alt_group_next_index = 1;
- 	struct instruction *last_orig_insn, *last_new_insn, *insn, *fake_jump = NULL;
-+	unsigned int alt_group = alt_group_next_index++;
- 	unsigned long dest_off;
+--- a/tools/objtool/arch.h
++++ b/tools/objtool/arch.h
+@@ -21,7 +21,6 @@ enum insn_type {
+ 	INSN_RETURN,
+ 	INSN_EXCEPTION_RETURN,
+ 	INSN_CONTEXT_SWITCH,
+-	INSN_STACK,
+ 	INSN_BUG,
+ 	INSN_NOP,
+ 	INSN_STAC,
+--- a/tools/objtool/arch/x86/decode.c
++++ b/tools/objtool/arch/x86/decode.c
+@@ -141,7 +141,6 @@ int arch_decode_instruction(const struct
+ 		if (rex_w && !rex_b && modrm_mod == 3 && modrm_rm == 4) {
  
- 	last_orig_insn = NULL;
-@@ -779,7 +781,7 @@ static int handle_group_alt(struct objto
- 		if (insn->offset >= special_alt->orig_off + special_alt->orig_len)
+ 			/* add/sub reg, %rsp */
+-			*type = INSN_STACK;
+ 			ADD_OP(op) {
+ 				op->src.type = OP_SRC_ADD;
+ 				op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
+@@ -154,7 +153,6 @@ int arch_decode_instruction(const struct
+ 	case 0x50 ... 0x57:
+ 
+ 		/* push reg */
+-		*type = INSN_STACK;
+ 		ADD_OP(op) {
+ 			op->src.type = OP_SRC_REG;
+ 			op->src.reg = op_to_cfi_reg[op1 & 0x7][rex_b];
+@@ -166,7 +164,6 @@ int arch_decode_instruction(const struct
+ 	case 0x58 ... 0x5f:
+ 
+ 		/* pop reg */
+-		*type = INSN_STACK;
+ 		ADD_OP(op) {
+ 			op->src.type = OP_SRC_POP;
+ 			op->dest.type = OP_DEST_REG;
+@@ -178,7 +175,6 @@ int arch_decode_instruction(const struct
+ 	case 0x68:
+ 	case 0x6a:
+ 		/* push immediate */
+-		*type = INSN_STACK;
+ 		ADD_OP(op) {
+ 			op->src.type = OP_SRC_CONST;
+ 			op->dest.type = OP_DEST_PUSH;
+@@ -196,7 +192,6 @@ int arch_decode_instruction(const struct
+ 
+ 		if (modrm == 0xe4) {
+ 			/* and imm, %rsp */
+-			*type = INSN_STACK;
+ 			ADD_OP(op) {
+ 				op->src.type = OP_SRC_AND;
+ 				op->src.reg = CFI_SP;
+@@ -215,7 +210,6 @@ int arch_decode_instruction(const struct
  			break;
  
--		insn->alt_group = true;
-+		insn->alt_group = alt_group;
- 		last_orig_insn = insn;
- 	}
+ 		/* add/sub imm, %rsp */
+-		*type = INSN_STACK;
+ 		ADD_OP(op) {
+ 			op->src.type = OP_SRC_ADD;
+ 			op->src.reg = CFI_SP;
+@@ -229,7 +223,6 @@ int arch_decode_instruction(const struct
+ 		if (rex_w && !rex_r && modrm_mod == 3 && modrm_reg == 4) {
  
-@@ -813,6 +815,7 @@ static int handle_group_alt(struct objto
- 	}
+ 			/* mov %rsp, reg */
+-			*type = INSN_STACK;
+ 			ADD_OP(op) {
+ 				op->src.type = OP_SRC_REG;
+ 				op->src.reg = CFI_SP;
+@@ -242,7 +235,6 @@ int arch_decode_instruction(const struct
+ 		if (rex_w && !rex_b && modrm_mod == 3 && modrm_rm == 4) {
  
- 	last_new_insn = NULL;
-+	alt_group = alt_group_next_index++;
- 	insn = *new_insn;
- 	sec_for_each_insn_from(file, insn) {
- 		if (insn->offset >= special_alt->new_off + special_alt->new_len)
-@@ -822,6 +825,7 @@ static int handle_group_alt(struct objto
+ 			/* mov reg, %rsp */
+-			*type = INSN_STACK;
+ 			ADD_OP(op) {
+ 				op->src.type = OP_SRC_REG;
+ 				op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
+@@ -258,7 +250,6 @@ int arch_decode_instruction(const struct
+ 		    (modrm_mod == 1 || modrm_mod == 2) && modrm_rm == 5) {
  
- 		insn->ignore = orig_insn->ignore_alts;
- 		insn->func = orig_insn->func;
-+		insn->alt_group = alt_group;
+ 			/* mov reg, disp(%rbp) */
+-			*type = INSN_STACK;
+ 			ADD_OP(op) {
+ 				op->src.type = OP_SRC_REG;
+ 				op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
+@@ -270,7 +261,6 @@ int arch_decode_instruction(const struct
+ 		} else if (rex_w && !rex_b && modrm_rm == 4 && sib == 0x24) {
  
- 		/*
- 		 * Since alternative replacement code is copy/pasted by the
-@@ -2163,6 +2167,15 @@ static int validate_return(struct symbol
- 	return 0;
- }
+ 			/* mov reg, disp(%rsp) */
+-			*type = INSN_STACK;
+ 			ADD_OP(op) {
+ 				op->src.type = OP_SRC_REG;
+ 				op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
+@@ -286,7 +276,6 @@ int arch_decode_instruction(const struct
+ 		if (rex_w && !rex_b && modrm_mod == 1 && modrm_rm == 5) {
  
-+static bool is_branch_to_alternative(struct instruction *from,
-+				     struct instruction *to)
-+{
-+	if (!from || !to->alt_group || !list_empty(&to->alts))
-+		return false;
-+
-+	return (from->alt_group != to->alt_group);
-+}
-+
- /*
-  * Follow the branch starting at the given instruction, and recursively follow
-  * any other branches (jumps).  Meanwhile, track the frame pointer state at
-@@ -2170,6 +2183,7 @@ static int validate_return(struct symbol
-  * tools/objtool/Documentation/stack-validation.txt.
-  */
- static int validate_branch(struct objtool_file *file, struct symbol *func,
-+			   struct instruction *from,
- 			   struct instruction *insn, struct insn_state state)
- {
- 	struct alternative *alt;
-@@ -2180,7 +2194,7 @@ static int validate_branch(struct objtoo
+ 			/* mov disp(%rbp), reg */
+-			*type = INSN_STACK;
+ 			ADD_OP(op) {
+ 				op->src.type = OP_SRC_REG_INDIRECT;
+ 				op->src.reg = CFI_BP;
+@@ -299,7 +288,6 @@ int arch_decode_instruction(const struct
+ 			   modrm_mod != 3 && modrm_rm == 4) {
  
- 	sec = insn->sec;
+ 			/* mov disp(%rsp), reg */
+-			*type = INSN_STACK;
+ 			ADD_OP(op) {
+ 				op->src.type = OP_SRC_REG_INDIRECT;
+ 				op->src.reg = CFI_SP;
+@@ -314,7 +302,6 @@ int arch_decode_instruction(const struct
+ 	case 0x8d:
+ 		if (sib == 0x24 && rex_w && !rex_b && !rex_x) {
  
--	if (insn->alt_group && list_empty(&insn->alts)) {
-+	if (is_branch_to_alternative(from, insn)) {
- 		WARN_FUNC("don't know how to handle branch to middle of alternative instruction group",
- 			  sec, insn->offset);
- 		return 1;
-@@ -2227,7 +2241,7 @@ static int validate_branch(struct objtoo
- 				if (alt->skip_orig)
- 					skip_orig = true;
+-			*type = INSN_STACK;
+ 			ADD_OP(op) {
+ 				if (!insn.displacement.value) {
+ 					/* lea (%rsp), reg */
+@@ -332,7 +319,6 @@ int arch_decode_instruction(const struct
+ 		} else if (rex == 0x48 && modrm == 0x65) {
  
--				ret = validate_branch(file, func, alt->insn, state);
-+				ret = validate_branch(file, func, NULL, alt->insn, state);
- 				if (ret) {
- 					if (backtrace)
- 						BT_FUNC("(alt)", insn);
-@@ -2271,7 +2285,7 @@ static int validate_branch(struct objtoo
+ 			/* lea disp(%rbp), %rsp */
+-			*type = INSN_STACK;
+ 			ADD_OP(op) {
+ 				op->src.type = OP_SRC_ADD;
+ 				op->src.reg = CFI_BP;
+@@ -350,7 +336,6 @@ int arch_decode_instruction(const struct
+ 			 * Restoring rsp back to its original value after a
+ 			 * stack realignment.
+ 			 */
+-			*type = INSN_STACK;
+ 			ADD_OP(op) {
+ 				op->src.type = OP_SRC_ADD;
+ 				op->src.reg = CFI_R10;
+@@ -368,7 +353,6 @@ int arch_decode_instruction(const struct
+ 			 * Restoring rsp back to its original value after a
+ 			 * stack realignment.
+ 			 */
+-			*type = INSN_STACK;
+ 			ADD_OP(op) {
+ 				op->src.type = OP_SRC_ADD;
+ 				op->src.reg = CFI_R13;
+@@ -382,7 +366,6 @@ int arch_decode_instruction(const struct
  
- 			} else if (insn->jump_dest) {
- 				ret = validate_branch(file, func,
--						      insn->jump_dest, state);
-+						      insn, insn->jump_dest, state);
- 				if (ret) {
- 					if (backtrace)
- 						BT_FUNC("(branch)", insn);
-@@ -2402,7 +2416,7 @@ static int validate_unwind_hints(struct
+ 	case 0x8f:
+ 		/* pop to mem */
+-		*type = INSN_STACK;
+ 		ADD_OP(op) {
+ 			op->src.type = OP_SRC_POP;
+ 			op->dest.type = OP_DEST_MEM;
+@@ -395,7 +378,6 @@ int arch_decode_instruction(const struct
  
- 	while (&insn->list != &file->insn_list && (!sec || insn->sec == sec)) {
- 		if (insn->hint && !insn->visited) {
--			ret = validate_branch(file, insn->func, insn, state);
-+			ret = validate_branch(file, insn->func, NULL, insn, state);
- 			if (ret && backtrace)
- 				BT_FUNC("<=== (hint)", insn);
- 			warnings += ret;
-@@ -2543,7 +2557,7 @@ static int validate_symbol(struct objtoo
+ 	case 0x9c:
+ 		/* pushf */
+-		*type = INSN_STACK;
+ 		ADD_OP(op) {
+ 			op->src.type = OP_SRC_CONST;
+ 			op->dest.type = OP_DEST_PUSHF;
+@@ -404,7 +386,6 @@ int arch_decode_instruction(const struct
  
- 	state->uaccess = sym->uaccess_safe;
+ 	case 0x9d:
+ 		/* popf */
+-		*type = INSN_STACK;
+ 		ADD_OP(op) {
+ 			op->src.type = OP_SRC_POPF;
+ 			op->dest.type = OP_DEST_MEM;
+@@ -443,7 +424,6 @@ int arch_decode_instruction(const struct
+ 		} else if (op2 == 0xa0 || op2 == 0xa8) {
  
--	ret = validate_branch(file, insn->func, insn, *state);
-+	ret = validate_branch(file, insn->func, NULL, insn, *state);
- 	if (ret && backtrace)
- 		BT_FUNC("<=== (sym)", insn);
- 	return ret;
---- a/tools/objtool/check.h
-+++ b/tools/objtool/check.h
-@@ -30,12 +30,13 @@ struct instruction {
- 	unsigned int len;
- 	enum insn_type type;
- 	unsigned long immediate;
--	bool alt_group, dead_end, ignore, ignore_alts;
-+	bool dead_end, ignore, ignore_alts;
- 	bool hint;
- 	bool retpoline_safe;
- 	s8 instr;
- 	u8 visited;
- 	u8 ret_offset;
-+	int alt_group;
- 	struct symbol *call_dest;
- 	struct instruction *jump_dest;
- 	struct instruction *first_jump_src;
+ 			/* push fs/gs */
+-			*type = INSN_STACK;
+ 			ADD_OP(op) {
+ 				op->src.type = OP_SRC_CONST;
+ 				op->dest.type = OP_DEST_PUSH;
+@@ -452,7 +432,6 @@ int arch_decode_instruction(const struct
+ 		} else if (op2 == 0xa1 || op2 == 0xa9) {
+ 
+ 			/* pop fs/gs */
+-			*type = INSN_STACK;
+ 			ADD_OP(op) {
+ 				op->src.type = OP_SRC_POP;
+ 				op->dest.type = OP_DEST_MEM;
+@@ -469,7 +448,6 @@ int arch_decode_instruction(const struct
+ 		 * mov bp, sp
+ 		 * pop bp
+ 		 */
+-		*type = INSN_STACK;
+ 		ADD_OP(op)
+ 			op->dest.type = OP_DEST_LEAVE;
+ 
+@@ -537,7 +515,6 @@ int arch_decode_instruction(const struct
+ 		else if (modrm_reg == 6) {
+ 
+ 			/* push from mem */
+-			*type = INSN_STACK;
+ 			ADD_OP(op) {
+ 				op->src.type = OP_SRC_CONST;
+ 				op->dest.type = OP_DEST_PUSH;
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2327,9 +2327,6 @@ static int validate_branch(struct objtoo
+ 			}
+ 			return 0;
+ 
+-		case INSN_STACK:
+-			break;
+-
+ 		case INSN_STAC:
+ 			if (state.uaccess) {
+ 				WARN_FUNC("recursive UACCESS enable", sec, insn->offset);
 
 
