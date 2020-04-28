@@ -2,91 +2,108 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94475C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55289C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB45206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32E7A206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:09:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JT5Jd0qb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Kf6lgipz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgD1WJR (ORCPT
+        id S1726941AbgD1WJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:09:17 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43817 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726272AbgD1WJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:09:17 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49BbQf3cd9z9sRY;
-        Wed, 29 Apr 2020 08:09:13 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588111755;
-        bh=TViBikPorOaB5TqqtiAjuNVCMV59yaYrMGN1aLmguKA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=JT5Jd0qbw+fhNJ/j2gknOeWxYBVasxKL6OpY+3P6SaPAyOmZBtkjvh8yjgPiE4+dZ
-         EAMAliZE7yCr33FjBmxZJnT8TjyaF6jd7mNSEXvEy8+tWcmeGC2s64FwzzUpS5/l4W
-         VRSVlzjngPagvKJSZiJXf/qpY6nuKMNsPvIqILQtWKVYCSVRm11fFQatZGhBzvMt50
-         3WelOBzVW+RM3axmjrVfjFFrth3esLcQO97A9MCTXH7b6DFJcRCJugKgEHCIw++r76
-         MlJGD788JC3SnlU8K8DNib/HJyhCfmukidH3lcSzeMxt6MKanPpseHj8JBvbz0eEXM
-         P6xmtCCsOvw1A==
-Date:   Wed, 29 Apr 2020 08:09:13 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Amit K Bag <amit.k.bag@intel.com>,
-        "Tumkur Narayan, Chethan" <chethan.tumkur.narayan@intel.com>,
-        "Hegde, Raghuram" <raghuram.hegde@intel.com>
-Subject: linux-next: Signed-off-by missing for commit in the bluetooth tree
-Message-ID: <20200429080913.7d9239f4@canb.auug.org.au>
+        Tue, 28 Apr 2020 18:09:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726333AbgD1WJy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 18:09:54 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 024E0C03C1AC;
+        Tue, 28 Apr 2020 15:09:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=i0UfKrqGLok7Kx5f2Cnl5Y270Tvst3mtRJd6yLGqJ7Q=; b=Kf6lgipzK8W4jussQcrLvosJGP
+        BWWpUDPQ4c1/fRbFfTLIiMSiRrJv4jMyvhi4dSuZaSXocSoI5VPcjJNMspUEfKsoE/qp6TW7Mb0oY
+        OYDJz3lYCZbAlXbeyzfZzVp0R4cR+0SGTMh+PjdxeGg2ntiapu3vswq28kuD2k2QBTFPveLj4wqeu
+        wHmpRdvu4caEBo3FIgpvlX0t3HOeTUeEqfszfmJfetg9aNe5fUepdPTsk3+38aRagkH7POjETbWl3
+        c2Ca/hPvRG97k4r13U/hBBCDTCsVJQJLvw8FRE7tqOJh0dmBxnwjvUwT+cEt14ezIZnPV3LHLEkQc
+        ISDCgZlQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTYPo-00040d-Ce; Tue, 28 Apr 2020 22:09:20 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B45F2301224;
+        Wed, 29 Apr 2020 00:09:17 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 96CB8286C2DCC; Wed, 29 Apr 2020 00:09:17 +0200 (CEST)
+Date:   Wed, 29 Apr 2020 00:09:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Scott Wood <swood@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Rik van Riel <riel@surriel.com>,
+        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
+Subject: Re: [RFC PATCH 1/3] sched/fair: Call newidle_balance() from
+ finish_task_switch()
+Message-ID: <20200428220917.GB16027@hirez.programming.kicks-ass.net>
+References: <20200428050242.17717-1-swood@redhat.com>
+ <20200428050242.17717-2-swood@redhat.com>
+ <jhjftcns35d.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+0ZH1C3_Cvy06NlFZEqLh7z";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <jhjftcns35d.mognet@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+0ZH1C3_Cvy06NlFZEqLh7z
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Apr 28, 2020 at 10:37:18PM +0100, Valentin Schneider wrote:
+> 
+> On 28/04/20 06:02, Scott Wood wrote:
+> > Thus, newidle_balance() is entered with interrupts enabled, which allows
+> > (in the next patch) enabling interrupts when the lock is dropped.
+> >
+> > Signed-off-by: Scott Wood <swood@redhat.com>
+> > ---
+> >  kernel/sched/core.c  |  7 ++++---
+> >  kernel/sched/fair.c  | 45 ++++++++++++++++----------------------------
+> >  kernel/sched/sched.h |  6 ++----
+> >  3 files changed, 22 insertions(+), 36 deletions(-)
+> >
+> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > index 9a2fbf98fd6f..0294beb8d16c 100644
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -3241,6 +3241,10 @@ static struct rq *finish_task_switch(struct task_struct *prev)
+> >       }
+> >
+> >       tick_nohz_task_switch();
+> > +
+> > +	if (is_idle_task(current))
+> > +		newidle_balance();
+> > +
+> 
+> This means we must go through a switch_to(idle) before figuring out we
+> could've switched to a CFS task, and do it then. I'm curious to see the
+> performance impact of that.
 
-Hi all,
+Also, if you move it this late, this is entirely the wrong place. If you
+do it after the context switch either use the balance_callback or put it
+in the idle path.
 
-Commit
-
-  bf1f79470a62 ("Bluetooth: btusb: Add support for Intel Bluetooth Device T=
-yphoon Peak (8087:0032)")
-
-is missing a Signed-off-by from its author.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/+0ZH1C3_Cvy06NlFZEqLh7z
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6oqYkACgkQAVBC80lX
-0GxnXgf8CDdKAMZMqk6c18Yy8RtuFFW1mOxfLm2PttVc92+ypOijdYGRlh/0LzU9
-Uji6/9TS4Hd2QVZvQdmjXB/5xNYuF/ioupoWSbD04dCOB9khW92CM0nbWDRHU7VV
-6tqgdm0GBzs5ZJFYvus3cJp4M+TeyA5SzDww2ucmg4yNiphrYQXHATtEdUrm/lK8
-nY5+mEf1LpMSiQuda1G3nWN2tAMAqjb8tLFYQAHdYg9Sg2XZugpO2fKmUlUADbc8
-KXHbJDmV+CYMoR3PXEoQZGjtafB7iUBZFTRJkidf6T3JTgmjX/po4EEcIdqdYM4s
-vPzmVgPWDB0kJjua/H6EZEsuVHs//Q==
-=Qi8l
------END PGP SIGNATURE-----
-
---Sig_/+0ZH1C3_Cvy06NlFZEqLh7z--
+But what Valentin said; this needs a fair bit of support, the whole
+reason we've never done this is to avoid that double context switch...
