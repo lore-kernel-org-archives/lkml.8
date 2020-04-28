@@ -2,140 +2,198 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDCDC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC78C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 235E4206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 415EE206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:10:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XK+3/aOK"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="he537WK9";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="lWqr+mlL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgD1HJ6 (ORCPT
+        id S1726441AbgD1HKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:09:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbgD1HJ5 (ORCPT
+        Tue, 28 Apr 2020 03:10:24 -0400
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:62544 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725867AbgD1HKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 03:09:57 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9733FC03C1AA
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 00:09:57 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f13so23261236wrm.13
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 00:09:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=lMEa6R/eYAIqk1WFDzSBGM7+C3iUTrOyPMrRdGdHxQI=;
-        b=XK+3/aOKMdWUeiVuCoBZONtKCMfLLzYajSsCKOXfvsR6utqJUQhr+6FIry9ABFD6g1
-         HFBeJpmo1mf3rvsdRFrXS8PXKlhAuKWiCd9I6K7lZfGYcZJ79v1T5YimjffH0G9yj87q
-         aLSE8hWboyqXwcsegUE2bW4HB/6ZE6+LDN9X1l6E91g1+1xWVoCwP/OTOeOQUY/bk+IP
-         ZYMbzeihgHkWc2ALWXiCsvcM6w3y3gNigL8hdyGqEsu+u9b0PIBuG+nKgpYIEUEBlD65
-         LRvndNI/a7Stuwyeb/MaYykxFCyRuZKjpvL/mlSn+6riTQ/VGOs0cZMmhJ1yKIhho5/C
-         9frw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=lMEa6R/eYAIqk1WFDzSBGM7+C3iUTrOyPMrRdGdHxQI=;
-        b=QzEmaq8UDm/wP4T4bdzbtB04XptoBm3QbRs7L4lsJlnMCO36IeH5BtlrCgzuNAEcUH
-         2zL5XwLwSv6qViGI30TmqtUJCTH5+kcPf9VFtqapK5chGZFjk2qpMENbUnRTqXdwuBkm
-         iKHIx5tht3NteADHKtskh8ULytNwzdUFGHAjdVpX0O4SzXcLw7j4ICZ+PPSMVf/Ofwrh
-         lQyaZ5EIwBlssboszk+NsWe52PGFsy5XCanu9LbRL9FQor7Rc8bd08KN0tZZKty0Y1A2
-         BkHXVLvxbwDgQMmPfA8GZnCWTc/PssWRCCSYt5zEUBILUz/lQ2azv8fUwGiT0SIKhWKC
-         5EIQ==
-X-Gm-Message-State: AGi0PuaeJ5DiY4e4Qpk78PlpZgKYB6w6XSqt2Zf1DyHYtOxwlNrZ0q/3
-        fwo3w1s6d6LSB+Xi30PKvVlesGT9vcc=
-X-Google-Smtp-Source: APiQypK0KOM5V4C2Z5llck0w8pFFM5So+4+1Ay4saK2Pj2qjCPKB3yWrM321BmZUfw8SL8WDLVr+bw==
-X-Received: by 2002:a5d:51c6:: with SMTP id n6mr31406670wrv.314.1588057796054;
-        Tue, 28 Apr 2020 00:09:56 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id j4sm23732081wrm.85.2020.04.28.00.09.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 00:09:55 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 08:09:53 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Milo Kim <milo.kim@ti.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH] backlight: lp855x: Ensure regulators are disabled on
- probe failure
-Message-ID: <20200428070953.GI3559@dell>
-References: <20200224140748.2182-1-jonathanh@nvidia.com>
+        Tue, 28 Apr 2020 03:10:23 -0400
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03S78Klr013117;
+        Tue, 28 Apr 2020 00:10:15 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=MqN/k1tn11u8dAwLdQH3r+vRyzKOV+MNaZ18+SCPNUc=;
+ b=he537WK9WsaODCxmhC6MkwCedIbYIN67PsTQl95EWxbSWZKdnPeUiW3Sh4GtPMum2esM
+ ZoGVx3Kk0I9s6pEMSphp/fX0Dbpp7MoV12/unJGoO/pdhMqQHG+Csw5PW1ZAmmBQzD94
+ Mgi+AE50MOqHujLUYxonSWJDrS7tX524dZ+R9LDIsimqFnqPtlthMP2Z7mts3I1auVu/
+ 8nsjiBKttuKlQczDsqd/bX98dbkquShdCG3TwG5S+I3PVl4GxdurL/4Iek/46G4sJ5Ta
+ TGt94hlOwIGjhXbOD0tOJ5BH5sWObkKWmMlwkeJ8QvXLWH6IVg1bYxo7UTQEGn5eYs5B Og== 
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2046.outbound.protection.outlook.com [104.47.66.46])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 30mhrv2xqn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 00:10:14 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=drGcKee342QwGME6gQ91czxyJp8OulGqJXmdA6RkGS/TLiqifhwrnNoCtWog2AAyVVGflUpKPFMC/klOCE85yDHaUW4Gaqi3MHY78KXwIK1xFr3YZc298VIzejZLE9dC78naBU7dHkq3ui7MbC6fvfAzJ9A8YDAlXrxBz3CbePQtgGZNJf9d/j99WiDpTed9wZrMLiwKgg5XDMeuZ2dWROD28qKw/OCwZyZtI9UFIdKp+sMiCKqlLc84So8O4yzOA6lKjGORIefz5s33l9D0haoU3C8xNlfOah+DlFZtHK8BbNImi3CjhNnWLrVkjjU2NcCEW3QR3mFeNQczOYRi3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MqN/k1tn11u8dAwLdQH3r+vRyzKOV+MNaZ18+SCPNUc=;
+ b=QRAdcA6nmqLic/lpbVMVney872IpHZbkUWzQIYd/aqek5wSnvRS30oEuGLS8zh8saozQp1TXTitCHHZRThYb76WhROX8sFcWIDZm/B6W1o+vEo4Hq6fBCRv60ZIZwsnqrtmsxT66V+F2Vzt5B30Caot6fBJAJIKY0KDbEU1zmxcPevdQeVSXxTvUDcWGeAcvySvuOm9uMhF2Ovjzo+2EVJzNk0WdS8suz5+nqJJuvEhGE5m2tToTe1QQyrdcj/JRRXOto59kcswepmuJFoCOz7Awum7p5sx5fKujPxI+5Yy3rKhrjifDiTKJXA7GDEqxv5xjqaR7l9VSePeKHp6jcw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 64.207.220.244) smtp.rcpttodomain=arm.com smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MqN/k1tn11u8dAwLdQH3r+vRyzKOV+MNaZ18+SCPNUc=;
+ b=lWqr+mlLKFFGs47nYK0d9D31u+Dq3m9SEiZkWiTH3+vzKqkdl4o4zyik9TQA7p4nCPps+BOCHZXUQqsxtvpVGWupsBWWQg5Lcpmja7rd+ib+pl4PWNx0r+hKi6p8bWCczq62obw99GnuIChFDJnG7neldM2W9Ac/TW7uHLij32M=
+Received: from BN6PR13CA0005.namprd13.prod.outlook.com (2603:10b6:404:10a::15)
+ by SN6PR07MB4398.namprd07.prod.outlook.com (2603:10b6:805:5f::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Tue, 28 Apr
+ 2020 07:10:10 +0000
+Received: from BN8NAM12FT008.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:404:10a:cafe::ee) by BN6PR13CA0005.outlook.office365.com
+ (2603:10b6:404:10a::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.14 via Frontend
+ Transport; Tue, 28 Apr 2020 07:10:10 +0000
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 64.207.220.244 as permitted sender) receiver=protection.outlook.com;
+ client-ip=64.207.220.244; helo=wcmailrelayl01.cadence.com;
+Received: from wcmailrelayl01.cadence.com (64.207.220.244) by
+ BN8NAM12FT008.mail.protection.outlook.com (10.13.183.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2921.12 via Frontend Transport; Tue, 28 Apr 2020 07:10:09 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id 03S7A6aT203012
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 00:10:08 -0700
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Tue, 28 Apr 2020 09:10:05 +0200
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Tue, 28 Apr 2020 09:10:05 +0200
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 03S7A5VF029222;
+        Tue, 28 Apr 2020 09:10:05 +0200
+Received: (from yamonkar@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 03S7A5ch029221;
+        Tue, 28 Apr 2020 09:10:05 +0200
+From:   Yuti Amonkar <yamonkar@cadence.com>
+To:     <linux-kernel@vger.kernel.org>, <kishon@ti.com>,
+        <mark.rutland@arm.com>, <maxime@cerno.tech>
+CC:     <jsarha@ti.com>, <tomi.valkeinen@ti.com>, <praneeth@ti.com>,
+        <mparab@cadence.com>, <sjakhade@cadence.com>,
+        <yamonkar@cadence.com>
+Subject: [PATCH v1 1/2] phy: Add max_link_rate as a PHY attribute along with APIs to get/set its value
+Date:   Tue, 28 Apr 2020 09:10:03 +0200
+Message-ID: <1588057804-29161-2-git-send-email-yamonkar@cadence.com>
+X-Mailer: git-send-email 2.4.5
+In-Reply-To: <1588057804-29161-1-git-send-email-yamonkar@cadence.com>
+References: <1588057804-29161-1-git-send-email-yamonkar@cadence.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200224140748.2182-1-jonathanh@nvidia.com>
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:64.207.220.244;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:wcmailrelayl01.cadence.com;PTR:unused.mynethost.com;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(396003)(136003)(39860400002)(36092001)(46966005)(54906003)(82310400002)(26005)(47076004)(356005)(426003)(36756003)(186003)(336012)(8676002)(36906005)(5660300002)(478600001)(2906002)(81156014)(8936002)(110136005)(2616005)(42186006)(4326008)(316002)(82740400003)(86362001)(107886003)(81166007)(70586007)(70206006);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f47d04d6-442d-4d79-2e8d-08d7eb433005
+X-MS-TrafficTypeDiagnostic: SN6PR07MB4398:
+X-Microsoft-Antispam-PRVS: <SN6PR07MB4398E1F594FDF7CA84443BC4D2AC0@SN6PR07MB4398.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-Forefront-PRVS: 0387D64A71
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: fyr1l4MVQjvLag6QDUBG33Dd3lFBGEM2LTxnGRfjnIiLhVMzbkF5Bc+ZaF425TOApDTwkWxTstAl6UHQfQg/qn0C5ZICu6GCXW2D6Pivk1IHk+4MXUx3XetlBGETn3WT8jqfFt81qb8RS6ud8KVNhz9LYrzryhh3stIFfznW2v1Lxw4LoVI0Qn5932H1HTXMHPFH/rRy/V0W2stGFHcpUCrP0RKsZYqZkyCT4T7KUptWEGzrol9I1q9meOuSVKtNeyMogkLXspfqLcXWF0b0hMOq94GCcbim8vvQKv86GIAu7gAnU0e3+FjyYTgtzRxeKh+Q+kmcJ//f4ho+8zakOQcFdFCze6ZR0dZwPhd3fK2Xh3m4HWMWEvByfn3qFsv3LE9Yc4+gKSVx2tXC0RQxVSlkzNedFHKwxycFldngh4Zg2M8PUT+yWtYsQQw+amo3oQpovD1gQtI200iBlSv8eKHn/6RZn//d0eRy1EAvkHsUlTb8D0nCKR4vHvdUbWjYQv/WRrOLZypR95jv6tOi/Toysdty18ZC+V4IHZNpiCo=
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2020 07:10:09.5777
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f47d04d6-442d-4d79-2e8d-08d7eb433005
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.244];Helo=[wcmailrelayl01.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR07MB4398
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-28_03:2020-04-27,2020-04-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 phishscore=0
+ mlxlogscore=999 mlxscore=0 priorityscore=1501 impostorscore=0
+ lowpriorityscore=0 clxscore=1015 suspectscore=0 adultscore=0 spamscore=0
+ bulkscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Feb 2020, Jon Hunter wrote:
+The patch adds a pair of APIs that allow the generic PHY subsystem to
+provide information on the maximum value of link rate supported by the
+PHY. The PHY provider driver may use phy_set_max_link_rate() to set the
+maximum link rate that the PHY supports. The controller driver may then
+use phy_get_max_link_rate() to fetch the PHY link rate in order to
+properly configure the controller.
 
-> If probing the LP885x backlight fails after the regulators have been
-> enabled, then the following warning is seen when releasing the
-> regulators ...
-> 
->  WARNING: CPU: 1 PID: 289 at drivers/regulator/core.c:2051 _regulator_put.part.28+0x158/0x160
->  Modules linked in: tegra_xudc lp855x_bl(+) host1x pwm_tegra ip_tables x_tables ipv6 nf_defrag_ipv6
->  CPU: 1 PID: 289 Comm: systemd-udevd Not tainted 5.6.0-rc2-next-20200224 #1
->  Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
-> 
->  ...
-> 
->  Call trace:
->   _regulator_put.part.28+0x158/0x160
->   regulator_put+0x34/0x50
->   devm_regulator_release+0x10/0x18
->   release_nodes+0x12c/0x230
->   devres_release_all+0x34/0x50
->   really_probe+0x1c0/0x370
->   driver_probe_device+0x58/0x100
->   device_driver_attach+0x6c/0x78
->   __driver_attach+0xb0/0xf0
->   bus_for_each_dev+0x68/0xc8
->   driver_attach+0x20/0x28
->   bus_add_driver+0x160/0x1f0
->   driver_register+0x60/0x110
->   i2c_register_driver+0x40/0x80
->   lp855x_driver_init+0x20/0x1000 [lp855x_bl]
->   do_one_initcall+0x58/0x1a0
->   do_init_module+0x54/0x1d0
->   load_module+0x1d80/0x21c8
->   __do_sys_finit_module+0xe8/0x100
->   __arm64_sys_finit_module+0x18/0x20
->   el0_svc_common.constprop.3+0xb0/0x168
->   do_el0_svc+0x20/0x98
->   el0_sync_handler+0xf4/0x1b0
->   el0_sync+0x140/0x180
-> 
-> Fix this by ensuring that the regulators are disabled, if enabled, on
-> probe failure.
-> 
-> Finally, ensure that the vddio regulator is disabled in the driver
-> remove handler.
-> 
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
->  drivers/video/backlight/lp855x_bl.c | 20 ++++++++++++++++----
->  1 file changed, 16 insertions(+), 4 deletions(-)
+Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+---
+ include/linux/phy/phy.h | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-Applied, thanks.
-
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index bcee8eba62b3..a8b7b4a2b8de 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -119,6 +119,7 @@ struct phy_ops {
+  */
+ struct phy_attrs {
+ 	u32			bus_width;
++	u32			max_link_rate;
+ 	enum phy_mode		mode;
+ };
+ 
+@@ -231,6 +232,16 @@ static inline void phy_set_bus_width(struct phy *phy, int bus_width)
+ {
+ 	phy->attrs.bus_width = bus_width;
+ }
++
++static inline int phy_get_max_link_rate(struct phy *phy)
++{
++	return phy->attrs.max_link_rate;
++}
++
++static inline void phy_set_max_link_rate(struct phy *phy, int link_rate)
++{
++	phy->attrs.max_link_rate = link_rate;
++}
+ struct phy *phy_get(struct device *dev, const char *string);
+ struct phy *phy_optional_get(struct device *dev, const char *string);
+ struct phy *devm_phy_get(struct device *dev, const char *string);
+@@ -389,6 +400,16 @@ static inline void phy_set_bus_width(struct phy *phy, int bus_width)
+ 	return;
+ }
+ 
++static inline int phy_get_max_link_rate(struct phy *phy)
++{
++	return -ENOSYS;
++}
++
++static inline void phy_set_max_link_rate(struct phy *phy, int link_rate)
++{
++	return;
++}
++
+ static inline struct phy *phy_get(struct device *dev, const char *string)
+ {
+ 	return ERR_PTR(-ENOSYS);
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.26.1
+
