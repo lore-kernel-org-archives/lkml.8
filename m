@@ -2,178 +2,219 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 373DCC83003
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E72C83005
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D14520728
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F15A1206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 02:29:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="KUUydT39"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgD1CTF (ORCPT
+        id S1726312AbgD1C3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 22:19:05 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40060 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726261AbgD1CTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 22:19:04 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 76E57BEF60CBAFF6AC79;
-        Tue, 28 Apr 2020 10:19:02 +0800 (CST)
-Received: from [10.65.58.147] (10.65.58.147) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 28 Apr 2020
- 10:19:00 +0800
-Subject: Re: [PATCH v4] pci: Make return value of pcie_capability_read*()
- consistent
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Saheed Bolarinwa <refactormyself@gmail.com>
-References: <20200427181304.GA214573@google.com>
-CC:     <bjorn@helgaas.com>, <skhan@linuxfoundation.org>,
-        <linux-pci@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        <linux-mips@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <4cc16e59-d346-5523-5072-eebe77d06a08@hisilicon.com>
-Date:   Tue, 28 Apr 2020 10:19:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Mon, 27 Apr 2020 22:29:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33956 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726261AbgD1C3I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 22:29:08 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22C4BC03C1A9
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 19:29:07 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id x23so15572720lfq.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 19:29:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=+uGJzCGEZzpm9VH9v4SN7yHKhIbgY4iai+hN2gQwj7k=;
+        b=KUUydT39YgoMICFNQ29Gp22uxFO9wPacG05nzpU8Ri9QKU1lmnF/YOVmDYkCseg/xC
+         t0ZKWtHSsGC9GbJQ+F3uAWU3VXe0/3zJD17HXskl9GF4C7WRUlkVZd3o8DxCJuyzBcPt
+         DOz91j6aoWByuRHWJEwfJQBGs8LkpZc2HGp6EcTf0AnRBq1saxtKg/ybeRc6pppGbtNi
+         DN4ZdMeBGUfMiSwSD7WYV/JQaL/ZucoyQItg0xsDcfOjOXzVU4VFBzLx5G2vl8g1dw6C
+         DZ6KimzbeEJ5gvfKL86BpvTHdedylChqwOdIZ9g2sCiMTG/tl8pQZoFzhVg42RFXHiAK
+         82lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=+uGJzCGEZzpm9VH9v4SN7yHKhIbgY4iai+hN2gQwj7k=;
+        b=dTNpK2kCba0AUusLKd0iA06L+ot/UPLJ9BPLNt1etdhZnUPckQWj0lm6KE4Y0RpP7v
+         Z8DbR77DKRpk2k0s4u3fMjag5h/jLwC6mMjBHLVi1wYR9fWA6kOJ/UZOjBfSzvbi+fn/
+         KipEne5GQ02K+5BRXCNH7y1fVbkyz9Yy/HbhZrOtyfGAIaAQYNuI9RF3mIsRD4mxpQTY
+         WdvGi4eVkytZD0wZvwWVHIQvs/H9Jn3z6+ChD8qd0O0gL/ZkRH2rj3U6loKk5goPKzAz
+         zCNsE+re/8Otct8nmmE5BZufJrrVVU81eDTdGRionAfHk1i8l5iLdXhj0M12rkeiQNuS
+         Gnjw==
+X-Gm-Message-State: AGi0Pua0qE/qTlp9Lj6ZNPAesJ3NKTLq/BUExWBRxUFVe/cT491iHG22
+        K3tord+IDGtyFlxd1ztmACI9CA==
+X-Google-Smtp-Source: APiQypIsxF+967Us38v4D2URSli5eYkS88vfjKMguWtQBZcMphNaX0Sjm0AX+vOlPiyoT5NgY0dfWA==
+X-Received: by 2002:ac2:4426:: with SMTP id w6mr17323851lfl.8.1588040945426;
+        Mon, 27 Apr 2020 19:29:05 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id q24sm12683484lfc.29.2020.04.27.19.29.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 19:29:04 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 04:29:04 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: timer: renesas: ostm: Convert to json-schema
+Message-ID: <20200428022904.GC1208690@oden.dyn.berto.se>
+References: <20200427193224.29548-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-In-Reply-To: <20200427181304.GA214573@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.58.147]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200427193224.29548-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/28 2:13, Bjorn Helgaas wrote:
->
-> I'm starting to think we're approaching this backwards.  I searched
-> for PCIBIOS_FUNC_NOT_SUPPORTED, PCIBIOS_BAD_VENDOR_ID, and the other
-> error values.  Almost every use is a *return* in a config accessor.
-> There are very, very few *tests* for these values.
+Hi Geert,
 
-If we have certain reasons to reserve PCI_BIOS* error to identify PCI errors
-in PCI drivers, maybe redefine the PCI_BIOS* to generic error codes can solve
-the issues, and no need to call pcibios_err_to_errno() to do the conversion.
-Few changes may be made to current codes. One possible patch may
-look like below. Otherwise, maybe convert all PCI_BIOS* errors to generic error
-codes is a better idea.
+Thanks for your patch.
 
-Not sure it's the best way or not. Just FYI.
+On 2020-04-27 21:32:24 +0200, Geert Uytterhoeven wrote:
+> Convert the Renesas OS Timer (OSTM) Device Tree binding documentation to
+> json-schema.
+> 
+> Document missing properties.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+Reviewed-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 83ce1cd..843987c 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -675,14 +675,18 @@ static inline bool pci_dev_msi_enabled(struct pci_dev *pci_dev) { return false;
- 
- /* Error values that may be returned by PCI functions */
- #define PCIBIOS_SUCCESSFUL		0x00
--#define PCIBIOS_FUNC_NOT_SUPPORTED	0x81
--#define PCIBIOS_BAD_VENDOR_ID		0x83
--#define PCIBIOS_DEVICE_NOT_FOUND	0x86
--#define PCIBIOS_BAD_REGISTER_NUMBER	0x87
--#define PCIBIOS_SET_FAILED		0x88
--#define PCIBIOS_BUFFER_TOO_SMALL	0x89
--
--/* Translate above to generic errno for passing back through non-PCI code */
-+#define PCIBIOS_FUNC_NOT_SUPPORTED	-ENOENT
-+#define PCIBIOS_BAD_VENDOR_ID		-ENOTTY
-+#define PCIBIOS_DEVICE_NOT_FOUND	-ENODEV
-+#define PCIBIOS_BAD_REGISTER_NUMBER	-EFAULT
-+#define PCIBIOS_SET_FAILED		-EIO
-+#define PCIBIOS_BUFFER_TOO_SMALL	-ENOSPC
-+
-+/**
-+ * Translate above to generic errno for passing back through non-PCI code
-+ *
-+ * Deprecated. Use the PCIBIOS_* directly without a translation.
-+ */
- static inline int pcibios_err_to_errno(int err)
- {
- 	if (err <= PCIBIOS_SUCCESSFUL)
-@@ -690,17 +694,12 @@ static inline int pcibios_err_to_errno(int err)
- 
- 	switch (err) {
- 	case PCIBIOS_FUNC_NOT_SUPPORTED:
--		return -ENOENT;
- 	case PCIBIOS_BAD_VENDOR_ID:
--		return -ENOTTY;
- 	case PCIBIOS_DEVICE_NOT_FOUND:
--		return -ENODEV;
- 	case PCIBIOS_BAD_REGISTER_NUMBER:
--		return -EFAULT;
- 	case PCIBIOS_SET_FAILED:
--		return -EIO;
- 	case PCIBIOS_BUFFER_TOO_SMALL:
--		return -ENOSPC;
-+		return err;
- 	}
- 
- 	return -ERANGE;
+> ---
+> For a clean dtbs_check, this depends on "[PATCH] ARM: dts: r7s9210: Remove
+> bogus clock-names from OSTM nodes"
+> (https://lore.kernel.org/r/20200427192932.28967-1-geert+renesas@glider.be)
+> which I intend to queue as a fix for v5.7.
+> 
+>  .../bindings/timer/renesas,ostm.txt           | 31 ----------
+>  .../bindings/timer/renesas,ostm.yaml          | 59 +++++++++++++++++++
+>  2 files changed, 59 insertions(+), 31 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/timer/renesas,ostm.txt
+>  create mode 100644 Documentation/devicetree/bindings/timer/renesas,ostm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/renesas,ostm.txt b/Documentation/devicetree/bindings/timer/renesas,ostm.txt
+> deleted file mode 100644
+> index 81a78f8bcf170a82..0000000000000000
+> --- a/Documentation/devicetree/bindings/timer/renesas,ostm.txt
+> +++ /dev/null
+> @@ -1,31 +0,0 @@
+> -* Renesas OS Timer (OSTM)
+> -
+> -The OSTM is a multi-channel 32-bit timer/counter with fixed clock
+> -source that can operate in either interval count down timer or free-running
+> -compare match mode.
+> -
+> -Channels are independent from each other.
+> -
+> -Required Properties:
+> -
+> -  - compatible: must be one or more of the following:
+> -    - "renesas,r7s72100-ostm" for the R7S72100 (RZ/A1) OSTM
+> -    - "renesas,r7s9210-ostm" for the R7S9210 (RZ/A2) OSTM
+> -    - "renesas,ostm" for any OSTM
+> -		This is a fallback for the above renesas,*-ostm entries
+> -
+> -  - reg: base address and length of the register block for a timer channel.
+> -
+> -  - interrupts: interrupt specifier for the timer channel.
+> -
+> -  - clocks: clock specifier for the timer channel.
+> -
+> -Example: R7S72100 (RZ/A1H) OSTM node
+> -
+> -	ostm0: timer@fcfec000 {
+> -		compatible = "renesas,r7s72100-ostm", "renesas,ostm";
+> -		reg = <0xfcfec000 0x30>;
+> -		interrupts = <GIC_SPI 102 IRQ_TYPE_EDGE_RISING>;
+> -		clocks = <&mstp5_clks R7S72100_CLK_OSTM0>;
+> -		power-domains = <&cpg_clocks>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/timer/renesas,ostm.yaml b/Documentation/devicetree/bindings/timer/renesas,ostm.yaml
+> new file mode 100644
+> index 0000000000000000..600d47ab7d58570f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/renesas,ostm.yaml
+> @@ -0,0 +1,59 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/timer/renesas,ostm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas OS Timer (OSTM)
+> +
+> +maintainers:
+> +  - Chris Brandt <chris.brandt@renesas.com>
+> +  - Geert Uytterhoeven <geert+renesas@glider.be>
+> +
+> +description:
+> +  The OSTM is a multi-channel 32-bit timer/counter with fixed clock source that
+> +  can operate in either interval count down timer or free-running compare match
+> +  mode.
+> +
+> +  Channels are independent from each other.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - renesas,r7s72100-ostm # RZ/A1H
+> +          - renesas,r7s9210-ostm  # RZ/A2M
+> +      - const: renesas,ostm       # Generic
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - power-domains
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/r7s72100-clock.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    ostm0: timer@fcfec000 {
+> +            compatible = "renesas,r7s72100-ostm", "renesas,ostm";
+> +            reg = <0xfcfec000 0x30>;
+> +            interrupts = <GIC_SPI 102 IRQ_TYPE_EDGE_RISING>;
+> +            clocks = <&mstp5_clks R7S72100_CLK_OSTM0>;
+> +            power-domains = <&cpg_clocks>;
+> +    };
+> -- 
+> 2.17.1
+> 
 
-
->
-> For example, the only tests for PCIBIOS_FUNC_NOT_SUPPORTED are in
-> xen_pcibios_err_to_errno() and pcibios_err_to_errno(), i.e., we're
-> just converting that value to -ENOENT or the Xen-specific thing.
->
-> So I think the best approach might be to remove the PCIBIOS_* error
-> values completely and replace them with the corresponding values from
-> pcibios_err_to_errno().  For example, a part of the patch would look
-> like this:
->
-> diff --git a/arch/mips/pci/ops-emma2rh.c b/arch/mips/pci/ops-emma2rh.c
-> index 65f47344536c..d4d9c902c147 100644
-> --- a/arch/mips/pci/ops-emma2rh.c
-> +++ b/arch/mips/pci/ops-emma2rh.c
-> @@ -100,7 +100,7 @@ static int pci_config_read(struct pci_bus *bus, unsigned int devfn, int where,
->  		break;
->  	default:
->  		emma2rh_out32(EMMA2RH_PCI_IWIN0_CTR, backup_win0);
-> -		return PCIBIOS_FUNC_NOT_SUPPORTED;
-> +		return -ENOENT;
->  	}
->  
->  	emma2rh_out32(EMMA2RH_PCI_IWIN0_CTR, backup_win0);
-> @@ -149,7 +149,7 @@ static int pci_config_write(struct pci_bus *bus, unsigned int devfn, int where,
->  		break;
->  	default:
->  		emma2rh_out32(EMMA2RH_PCI_IWIN0_CTR, backup_win0);
-> -		return PCIBIOS_FUNC_NOT_SUPPORTED;
-> +		return -ENOENT;
->  	}
->  	*(volatile u32 *)(base + (PCI_FUNC(devfn) << 8) +
->  			  (where & 0xfffffffc)) = data;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 83ce1cdf5676..f95637a8d391 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -675,7 +675,6 @@ static inline bool pci_dev_msi_enabled(struct pci_dev *pci_dev) { return false;
->  
->  /* Error values that may be returned by PCI functions */
->  #define PCIBIOS_SUCCESSFUL		0x00
-> -#define PCIBIOS_FUNC_NOT_SUPPORTED	0x81
->  #define PCIBIOS_BAD_VENDOR_ID		0x83
->  #define PCIBIOS_DEVICE_NOT_FOUND	0x86
->  #define PCIBIOS_BAD_REGISTER_NUMBER	0x87
-> @@ -689,8 +688,6 @@ static inline int pcibios_err_to_errno(int err)
->  		return err; /* Assume already errno */
->  
->  	switch (err) {
-> -	case PCIBIOS_FUNC_NOT_SUPPORTED:
-> -		return -ENOENT;
->  	case PCIBIOS_BAD_VENDOR_ID:
->  		return -ENOTTY;
->  	case PCIBIOS_DEVICE_NOT_FOUND:
-> .
->
-
+-- 
+Regards,
+Niklas Söderlund
