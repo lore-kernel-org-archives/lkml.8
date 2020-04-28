@@ -2,129 +2,100 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D95AC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD60C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B94021835
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PzZLYwaa"
+	by mail.kernel.org (Postfix) with ESMTP id 9FCF621835
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:34:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588098883;
+	bh=n+/17Ma26qtlsBWNMwijsTBxk4UKAi/EZ1WVUM/oUuk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ifAcZNpDKN/cbKm/VzvwrptGUXlLtrNSn0oqsyMHR2A+MpaHWxWmvds6US7IzxOpJ
+	 ARVVnxhWGGK6yt7XCh8/ZqKMwcz8y9h+g7OevWSirYcsFkpOvzXfLmCuh/RH3TILrC
+	 tUncRWgT5oJTp5XRgo/fkL6Magc/Itab1g8LWun8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730124AbgD1Sej (ORCPT
+        id S1730147AbgD1Sen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:34:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44284 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730121AbgD1SeX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:34:23 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92B68C03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:34:23 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t7so2849312plr.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:34:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d8J9/+H1aJgIU0iPd3k8kUXfWA6cvbV7BCbp34hUMis=;
-        b=PzZLYwaag6VROB6/jTlW9RHPa3Znmxxj1gxVDF7bKVaHEe7DgmI6oiMixvFxC0hifr
-         6AF8PGrk53GEMQ2uvcLzz3tI9y6/4PYq8kHzbjRPRIjS+cqFJCnOlLMmxdtHPHCQTetS
-         rY9cdvBZM1YJK3ZB6JqBBSWL6fq8YJap+HZZkKlX6Xu1QVzE54vkzpuw2khc0Bfwu+1/
-         e1R+H9YvIHUv+u5g7rByKatPq1NJikTUOYTQ7eLDvr0JUW+MNOD19ptMr14AMCOoevYW
-         jyjAxHQzyIrOk/0iPRnrkpFhUlEvmaqOesnOkoASIrNQZLh6Z9a6eXSwSh/WDEDBNNlD
-         Gz8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d8J9/+H1aJgIU0iPd3k8kUXfWA6cvbV7BCbp34hUMis=;
-        b=Fkfq8ldrV2+9g4CbnbDOammReNyziuU5TqJf42DOxCZ0RP0iLDBhhe4M18q8VTXLXm
-         dtwrDSPCnHyD8uF0OUFEdwnacxIQbgc5vySUat8NK+CbSDpBQ1d5F/HMiZTr1YsruyM1
-         IfPbchnnvNjiPHfZs0uqRKt4Ccx3+kWTW6JZAt4p/Qdec6gv8hfsl0l3n+NkBDhWiVaN
-         fyypBdVXv2eHaYuWcGRjD0JgHFb79gp9ePe0SY+Ia6je6wMEiJywC2qVFNmFADlY6b2q
-         B5MxEKhctt1WigOwPL9pmoTrlXJlhtGLs0oJERIYceAMFDGz+aUjdzFWHHgjb5XvBx1W
-         ycIg==
-X-Gm-Message-State: AGi0PuZxXffQIN/Nv55MRwMjPkrzcghZzkClASVX1amCiKklsVvfCnGA
-        Ga+aCF/aBp69NWoZRAXDeZf+NZTaT/HDqyffbv0DFw==
-X-Google-Smtp-Source: APiQypK4DziNhv8yRj8qmx9ucMaNvJnzarNstlH/ET2gZdf27UdoomqisWjZrSKO9zFfc0EmggwKCgxi0dJ9zlfGZ2Y=
-X-Received: by 2002:a17:902:988e:: with SMTP id s14mr29496990plp.179.1588098862653;
- Tue, 28 Apr 2020 11:34:22 -0700 (PDT)
+        Tue, 28 Apr 2020 14:34:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730140AbgD1Seb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:34:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1E6A21707;
+        Tue, 28 Apr 2020 18:34:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588098871;
+        bh=n+/17Ma26qtlsBWNMwijsTBxk4UKAi/EZ1WVUM/oUuk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QPcGRuQcyXKAJ2BfvsiHCK42B3KHRXM5XVXSN+aQS2cTmfYnlDH0X38KW6h2Thbnw
+         a8Ww17Izhio9x/E/YqGvoqpKmF5Oszsy8Sj99BqdKDZOwkh9XNXIlHCfcobd05LlE5
+         cBHc2bHYrPvHcYMt5wzN3Hs9vD82eFNsaragQ59k=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 067/131] net: dsa: b53: Fix ARL register definitions
+Date:   Tue, 28 Apr 2020 20:24:39 +0200
+Message-Id: <20200428182233.367679256@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+References: <20200428182224.822179290@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200428174221.2040849-1-natechancellor@gmail.com>
-In-Reply-To: <20200428174221.2040849-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 28 Apr 2020 11:34:11 -0700
-Message-ID: <CAKwvOd=cb-dyWGeMoCE4+zdgA1R=t=QPkzU9EGiCtgdzXke_cw@mail.gmail.com>
-Subject: Re: [PATCH] dpaa2-eth: Use proper division helper in dpaa2_dbg_ch_show
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Ioana Radulescu <ruxandra.radulescu@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 10:43 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> When building arm32 allmodconfig:
->
-> ERROR: modpost: "__aeabi_uldivmod"
-> [drivers/net/ethernet/freescale/dpaa2/fsl-dpaa2-eth.ko] undefined!
->
-> frames and cdan are both of type __u64 (unsigned long long) so we need
-> to use div64_u64 to avoid this issues.
->
-> Fixes: 460fd830dd9d ("dpaa2-eth: add channel stat to debugfs")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1012
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-Don't forget reported by tags to show some love to our bots! Thanks
-for the patch.
-Reported-by: kernelci.org bot <bot@kernelci.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+[ Upstream commit c2e77a18a7ed65eb48f6e389b6a59a0fd753646a ]
 
-> ---
->  drivers/net/ethernet/freescale/dpaa2/dpaa2-eth-debugfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth-debugfs.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth-debugfs.c
-> index 80291afff3ea..0a31e4268dfb 100644
-> --- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth-debugfs.c
-> +++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth-debugfs.c
-> @@ -139,7 +139,7 @@ static int dpaa2_dbg_ch_show(struct seq_file *file, void *offset)
->                            ch->stats.dequeue_portal_busy,
->                            ch->stats.frames,
->                            ch->stats.cdan,
-> -                          ch->stats.frames / ch->stats.cdan,
-> +                          div64_u64(ch->stats.frames, ch->stats.cdan),
->                            ch->buf_count);
->         }
->
->
-> base-commit: 0fd02a5d3eb7020a7e1801f8d7f01891071c85e4
-> --
-> 2.26.2
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200428174221.2040849-1-natechancellor%40gmail.com.
+The ARL {MAC,VID} tuple and the forward entry were off by 0x10 bytes,
+which means that when we read/wrote from/to ARL bin index 0, we were
+actually accessing the ARLA_RWCTRL register.
+
+Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/dsa/b53/b53_regs.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/drivers/net/dsa/b53/b53_regs.h
++++ b/drivers/net/dsa/b53/b53_regs.h
+@@ -304,7 +304,7 @@
+  *
+  * BCM5325 and BCM5365 share most definitions below
+  */
+-#define B53_ARLTBL_MAC_VID_ENTRY(n)	(0x10 * (n))
++#define B53_ARLTBL_MAC_VID_ENTRY(n)	((0x10 * (n)) + 0x10)
+ #define   ARLTBL_MAC_MASK		0xffffffffffffULL
+ #define   ARLTBL_VID_S			48
+ #define   ARLTBL_VID_MASK_25		0xff
+@@ -316,7 +316,7 @@
+ #define   ARLTBL_VALID_25		BIT(63)
+ 
+ /* ARL Table Data Entry N Registers (32 bit) */
+-#define B53_ARLTBL_DATA_ENTRY(n)	((0x10 * (n)) + 0x08)
++#define B53_ARLTBL_DATA_ENTRY(n)	((0x10 * (n)) + 0x18)
+ #define   ARLTBL_DATA_PORT_ID_MASK	0x1ff
+ #define   ARLTBL_TC(tc)			((3 & tc) << 11)
+ #define   ARLTBL_AGE			BIT(14)
 
 
-
--- 
-Thanks,
-~Nick Desaulniers
