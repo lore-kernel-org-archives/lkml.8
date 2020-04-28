@@ -2,123 +2,122 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AC2C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76441C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF606206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EF95206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:27:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="fN9YNTV5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbgD1O0u (ORCPT
+        id S1727886AbgD1O11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:26:50 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36815 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgD1O0t (ORCPT
+        Tue, 28 Apr 2020 10:27:27 -0400
+Received: from mail2.candelatech.com ([208.74.158.173]:56784 "EHLO
+        mail3.candelatech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbgD1O11 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:26:49 -0400
-Received: by mail-pf1-f193.google.com with SMTP id z1so9065414pfn.3;
-        Tue, 28 Apr 2020 07:26:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Q536HUdRDiwCeFtyBvxsfcPLV6dHJL7EQUA8DH0pwk4=;
-        b=dofea+5K95Dm5q5kAcGTgwL29/bTfhMQWkNwLKTSDIVnAFHKLO0n9KVDa+KHbt0HR3
-         RX9QsfeAgQmJl0kw96M2kAgzuGmQtxtCTJSQ3i/csjLuubtoLY4qGqV5a4d1xbIvvhQB
-         wXeaqWLSWRr926gNGFSAS+ywmnDCvi1ULEP5rLmZiMwH12/7Kq8SrFVNKaYl/njYSnps
-         rZxQKl/cBqBUoH0VLYG39+RQggXLjLb1DXTtIvonQXxbWz8oMF2dgRzlHQmHgAOagVWm
-         28ZS+R7VzGca+RlLx8XQgHO8w9QtLjHytjLhSOWJU2AL1s40BVbl/e6DM6afjcu0/Pfq
-         9Mzw==
-X-Gm-Message-State: AGi0PuZFq3Vt6dc4FP/aDxVuAzq8OvDMUAe2r40KfVjff/hBWYQ6Tc9g
-        K08pNORXQoBMLc+33MzJpx8VR3+n0vyeGg==
-X-Google-Smtp-Source: APiQypKaYa1OICrT5Gzv72KonLdVK19a8CS/obsWPt4MMYBIUsWSbVHGbJG0oRBMavCXDgyfT4rHEg==
-X-Received: by 2002:a62:ee02:: with SMTP id e2mr5444174pfi.161.1588084008048;
-        Tue, 28 Apr 2020 07:26:48 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:1473:9ec8:73db:e572? ([2601:647:4000:d7:1473:9ec8:73db:e572])
-        by smtp.gmail.com with ESMTPSA id y21sm15047059pfm.219.2020.04.28.07.26.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 07:26:47 -0700 (PDT)
-Subject: Re: [PATCH][next] scsi: qla2xxx: make 1 bit bit-fields unsigned int
-To:     Colin King <colin.king@canonical.com>,
-        Nilesh Javali <njavali@marvell.com>,
-        GR-QLogic-Storage-Upstream@marvell.com,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Arun Easi <aeasi@marvell.com>,
-        Himanshu Madhani <himanshu.madhani@oracle.com>,
-        linux-scsi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200428102013.1040598-1-colin.king@canonical.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <0c085901-349e-63f5-2dce-679eca553718@acm.org>
-Date:   Tue, 28 Apr 2020 07:26:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 28 Apr 2020 10:27:27 -0400
+Received: from [192.168.254.4] (unknown [50.34.219.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail3.candelatech.com (Postfix) with ESMTPSA id 15B2313C283;
+        Tue, 28 Apr 2020 07:27:24 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com 15B2313C283
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
+        s=default; t=1588084046;
+        bh=uJfi3yqJT689k/koN7HWdgLdOqnl3VJ1ES5anj/Umb4=;
+        h=Subject:To:References:Cc:From:Date:In-Reply-To:From;
+        b=fN9YNTV5I6Omibnf0OY3BKpmE5av8OT+WHtiZg9c5deRZt+tc41d0scOzOMwQcsE1
+         1mbSWQDZN5tzgPiAi0/Jqj4JsaNr4pVg/5zKq8s8NyTSl5kP1hEWAAtX5x5x/lfBEw
+         yDb5OYYRI/biBC0TzdbjdWp4DVChOKz3ofS9HIyY=
+Subject: Re: [PATCH] ath10k: increase rx buffer size to 2048
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        Sven Eckelmann <sven@narfation.org>
+References: <20200205191043.21913-1-linus.luessing@c0d3.blue>
+ <3300912.TRQvxCK2vZ@bentobox> <3097447.aZuNXRJysd@sven-edge>
+ <87blnblsyv.fsf@codeaurora.org>
+Cc:     ath10k@lists.infradead.org,
+        =?UTF-8?Q?Linus_L=c3=bcssing?= <linus.luessing@c0d3.blue>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        =?UTF-8?Q?Linus_L=c3=bcssing?= <ll@simonwunderlich.de>,
+        mail@adrianschmutzler.de
+From:   Ben Greear <greearb@candelatech.com>
+Message-ID: <db0f12d8-0604-70fa-81ad-5c1060eb0c6e@candelatech.com>
+Date:   Tue, 28 Apr 2020 07:27:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200428102013.1040598-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <87blnblsyv.fsf@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-28 03:20, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The bitfields mpi_fw_dump_reading and mpi_fw_dumped are currently signed
-> which is not recommended as the representation is an implementation defined
-> behaviour.  Fix this by making the bit-fields unsigned ints.
-> 
-> Fixes: cbb01c2f2f63 ("scsi: qla2xxx: Fix MPI failure AEN (8200) handling")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/scsi/qla2xxx/qla_def.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/scsi/qla2xxx/qla_def.h b/drivers/scsi/qla2xxx/qla_def.h
-> index daa9e936887b..172ea4e5887d 100644
-> --- a/drivers/scsi/qla2xxx/qla_def.h
-> +++ b/drivers/scsi/qla2xxx/qla_def.h
-> @@ -4248,8 +4248,8 @@ struct qla_hw_data {
->  	int		fw_dump_reading;
->  	void		*mpi_fw_dump;
->  	u32		mpi_fw_dump_len;
-> -	int		mpi_fw_dump_reading:1;
-> -	int		mpi_fw_dumped:1;
-> +	unsigned int	mpi_fw_dump_reading:1;
-> +	unsigned int	mpi_fw_dumped:1;
->  	int		prev_minidump_failed;
->  	dma_addr_t	eft_dma;
->  	void		*eft;
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+
+On 04/28/2020 05:01 AM, Kalle Valo wrote:
+> Sven Eckelmann <sven@narfation.org> writes:
+>
+>> On Wednesday, 1 April 2020 09:00:49 CEST Sven Eckelmann wrote:
+>>> On Wednesday, 5 February 2020 20:10:43 CEST Linus Lüssing wrote:
+>>>> From: Linus Lüssing <ll@simonwunderlich.de>
+>>>>
+>>>> Before, only frames with a maximum size of 1528 bytes could be
+>>>> transmitted between two 802.11s nodes.
+>>>>
+>>>> For batman-adv for instance, which adds its own header to each frame,
+>>>> we typically need an MTU of at least 1532 bytes to be able to transmit
+>>>> without fragmentation.
+>>>>
+>>>> This patch now increases the maxmimum frame size from 1528 to 1656
+>>>> bytes.
+>>> [...]
+>>>
+>>> @Kalle, I saw that this patch was marked as deferred [1] but I couldn't find
+>>> any mail why it was done so. It seems like this currently creates real world
+>>> problems - so would be nice if you could explain shortly what is currently
+>>> blocking its acceptance.
+>>
+>> Ping?
+>
+> Sorry for the delay, my plan was to first write some documentation about
+> different hardware families but haven't managed to do that yet.
+>
+> My problem with this patch is that I don't know what hardware and
+> firmware versions were tested, so it needs analysis before I feel safe
+> to apply it. The ath10k hardware families are very different that even
+> if a patch works perfectly on one ath10k hardware it could still break
+> badly on another one.
+>
+> What makes me faster to apply ath10k patches is to have comprehensive
+> analysis in the commit log. This shows me the patch author has
+> considered about all hardware families, not just the one he is testing
+> on, and that I don't need to do the analysis myself.
+
+It has been in ath10k-ct for a while, and that has some fairly wide coverage
+in OpenWrt, so likely if there were problems we would have seen it already.
+
+I did not make any specific changes to firmware to support this, so upstream
+firmware should behave similarly.
+
+Seems like upstream ath10k could really benefit from having some test beds
+so you can actually test code on different chips and have confidence
+in your changes!
+
+Thanks,
+Ben
+
+-- 
+Ben Greear <greearb@candelatech.com>
+Candela Technologies Inc  http://www.candelatech.com
