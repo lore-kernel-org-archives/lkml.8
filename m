@@ -2,138 +2,103 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3241C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E95C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1C65206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2643206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 22:08:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u8UHPtK1"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="r8jzenhz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726745AbgD1WIn (ORCPT
+        id S1726886AbgD1WIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:08:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49742 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726343AbgD1WIm (ORCPT
+        Tue, 28 Apr 2020 18:08:47 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:60913 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbgD1WIq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:08:42 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A34C8C03C1AC;
-        Tue, 28 Apr 2020 15:08:42 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id n16so2869pgb.7;
-        Tue, 28 Apr 2020 15:08:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CucLDCAtx0OGxZhd7U3+pHytapXL85CWzXGFNadaJVE=;
-        b=u8UHPtK1e2CkwXwCIbugkPBrGfbll+2jZRPd5hxNVAPnRdPNIiaxQLWp0qctJuW3hZ
-         TQFg2KWVdic6sCbm+fpRzywFvfjmaUkbLEEn5PbkAlomVTmvOWXUD5FSP1Zu/yCMXkXK
-         7ul0qqpWHaXihJh4pYp4s3vBZuwjBPTll67qRISvg2JYnb2NK3vh7k6/fNBoWBC6IZAp
-         /cWNk3N9t21YNqm50XA+Khtsc+vJCGhaNxST1UR/2EmPAPdKNdxutjKcyn5drifpKyK9
-         pbpYNYt29TzmKJ0HSGrWGLy08Jdw006OMQr022lPvHNYIZyKTyUZQOmmzZPG7TdAa3Uw
-         /ewA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CucLDCAtx0OGxZhd7U3+pHytapXL85CWzXGFNadaJVE=;
-        b=dNf/0FjqaZR0ZfxqTbBoCQN0k7b/KhUH6Mju/lLK/bjiDUq199yYDX6DvUcwUzrV/D
-         djzcqxPNjYbQth0jzxLMY0e0HRazylwbS6CV74wP5QC0qFGvIrnB9c3693ToOrIE5tlx
-         9LqhuKsBCFJDeDjMb6YmodzssS7gGSwi8956K6bCkm3yANZaa0xzEmTCQ1oIM+BvBvBu
-         1W0ex5glu6pJPncJWnMhzLFY9iDHphYjTRiOf+sJjSkuh4+mlztmu3MiSriDKNyup4It
-         oPC97QnlehvYA8TIRitYBMmIEACX01GoCxrGHeYdZBnMlDVL/UK8cACb4rKFCJth+7Lq
-         WIww==
-X-Gm-Message-State: AGi0PuafWH6U3glVNvKjAlWqintt+ZSLFJqHfeI/abJQUFR270+uQ5YZ
-        uklF3dlX7UuaFLZEP12Nw2fIvVpxLEthPE7y1Ro=
-X-Google-Smtp-Source: APiQypII6SQ5Okuw51pNlgbiYJwS78/56MsUavstfIBtJG+uEuAH2KEa+LkeL7KGv5KMNZ+oiRyok8ChtOfvf7/z2/E=
-X-Received: by 2002:a62:f908:: with SMTP id o8mr1552806pfh.170.1588111722155;
- Tue, 28 Apr 2020 15:08:42 -0700 (PDT)
+        Tue, 28 Apr 2020 18:08:46 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id C90EA22723;
+        Wed, 29 Apr 2020 00:08:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1588111724;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=myGuBLUwQYONGjQ6yZ2CWpyFDpYWeIGIuAOZQXqOz/Q=;
+        b=r8jzenhzebzmYYalcaQtE0JxGupuhw3zKZ42/KHT/2f5rtX79ok+ZubXV6YamOPkgpoIPn
+        byVFcAGXonBNy/VPK/GkmYVMnpUkISIk/nnghW+r1BUN6uie7sUdPArGdhU4Bf2L6B3wmK
+        MigNaM8w3vqC6Km8uIaabeY1jzcB3+w=
 MIME-Version: 1.0
-References: <20200428215804.48481-1-arnd@arndb.de>
-In-Reply-To: <20200428215804.48481-1-arnd@arndb.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 29 Apr 2020 01:08:30 +0300
-Message-ID: <CAHp75VfSny=nSeiCnjE8MwL=hLT92G--9qy6=_0mittzuPxc-A@mail.gmail.com>
-Subject: Re: [PATCH] acpi: avoid uninialized-variable warning
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 29 Apr 2020 00:08:43 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next 4/4] net: phy: bcm54140: add second PHY ID
+In-Reply-To: <20200428212926.GE30459@lunn.ch>
+References: <20200428210854.28088-1-michael@walle.cc>
+ <20200428210854.28088-4-michael@walle.cc> <20200428212926.GE30459@lunn.ch>
+Message-ID: <272c9ebf238c61603ea947fea0d51b02@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: C90EA22723
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[7];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,armlinux.org.uk,davemloft.net];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 1:03 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> Older compilers like gcc-4.8 produce a bogus warning here
->
-> In file included from include/linux/compiler_types.h:68:0,
->                  from <command-line>:0:
-> drivers/acpi/property.c: In function 'acpi_data_prop_read':
-> include/linux/compiler-gcc.h:75:45: error: 'obj' may be used uninitialized in this function [-Werror=maybe-uninitialized]
->  #define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __COUNTER__)
->                                              ^
-> drivers/acpi/property.c:934:27: note: 'obj' was declared here
->   const union acpi_object *obj;
->                            ^
->
-> Ensure the output is always initialized even when returning an error
-> to avoid the warning.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/acpi/property.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-> index e601c4511a8b..3aa71daeb0b4 100644
-> --- a/drivers/acpi/property.c
-> +++ b/drivers/acpi/property.c
-> @@ -587,8 +587,10 @@ static int acpi_data_get_property_array(const struct acpi_device_data *data,
->         int ret, i;
->
->         ret = acpi_data_get_property(data, name, ACPI_TYPE_PACKAGE, &prop);
-> -       if (ret)
-> +       if (ret && obj) {
+Hi Andrew,
 
-It changes semantics and requires obj to be non-NULL.
+Am 2020-04-28 23:29, schrieb Andrew Lunn:
+> On Tue, Apr 28, 2020 at 11:08:54PM +0200, Michael Walle wrote:
+>> This PHY have to PHY IDs depending on its mode. Adjust the mask so 
+>> that
+>> it includes both IDs.
+> 
+> Hi Michael
+> 
+> I don't have a strong opinion, but maybe list it as two different
+> PHYs? I do sometimes grep for PHY IDs, and that would not work due to
+> the odd mask.
 
-Should be
-if (ret) {
-  if (obj)
-    *obj = NULL;
-  return ret;
-}
+Me neither. I just looked odd to have actually the same PHY listed twice
+with just another id. That makes me wonder if it is possible to have
+the same PHY driver name twice. IIRC it is at leased used somewhere
+in the sysfs. If that is true, I'd prefer to just have one PHY
+"BCM54140" instead of a "BCM54140 (QSGMII)" and "BCM54140 (4x SGMII)".
+Because it is actually the same PHY but only another interface towards
+the MAC is used.
 
-> +               *obj = NULL;
->                 return ret;
-> +       }
->
->         if (type != ACPI_TYPE_ANY) {
->                 /* Check that all elements are of correct type. */
-> --
-> 2.26.0
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+-michael
