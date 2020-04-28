@@ -2,63 +2,67 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 889A8C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5ED0C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6983E206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C880020730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:19:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbgD1VS7 (ORCPT
+        id S1726750AbgD1VTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:18:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726279AbgD1VS7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:18:59 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5FC7C03C1AC;
-        Tue, 28 Apr 2020 14:18:58 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTXd1-00Dlr7-U7; Tue, 28 Apr 2020 21:18:56 +0000
-Date:   Tue, 28 Apr 2020 22:18:55 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [git pull] vfs.git fixes
-Message-ID: <20200428211855.GZ23230@ZenIV.linux.org.uk>
+        Tue, 28 Apr 2020 17:19:24 -0400
+Received: from mga01.intel.com ([192.55.52.88]:45107 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726483AbgD1VTX (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 17:19:23 -0400
+IronPort-SDR: ekVH395EVnQm27mw07g689x6lmqlcL2e3bk2L3l7/2/Efa5YwfQ+8faRKTUNO/spJnXeG5bMDX
+ w4j/t6ghRF8g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 14:19:22 -0700
+IronPort-SDR: bag5SpE7t8r86mNew+tfQwib1/3eh0Vj6dUD+4YqpzkfxlBlQKaFJ7gOdWS6sNKGasCi2QMv9r
+ zFZn5zgfZ/Cg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
+   d="scan'208";a="336756828"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by orsmga001.jf.intel.com with ESMTP; 28 Apr 2020 14:19:22 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 78168301A7A; Tue, 28 Apr 2020 14:19:22 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 14:19:22 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jin Yao <yao.jin@linux.intel.com>, acme@kernel.org,
+        jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH] perf stat: Fix uncore event mixed metric with workload
+ error issue
+Message-ID: <20200428211922.GA874567@tassilo.jf.intel.com>
+References: <20200427144116.27330-1-yao.jin@linux.intel.com>
+ <20200428105155.GG1476763@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200428105155.GG1476763@krava>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Two old bugs...
+> I wonder this would break some expectations.. would it be
+> more safe to detect duration event and bypass it from the
+> decission? but maybe the case I'm worried about is not a
+> problem at all.. Andi?
 
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+Don't see what it would break.
 
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+Yes maybe we need to special case duration_time more, but that would
+be a much bigger patch.
 
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
-
-for you to fetch changes up to b0d3869ce9eeacbb1bbd541909beeef4126426d5:
-
-  propagate_one(): mnt_set_mountpoint() needs mount_lock (2020-04-27 10:37:14 -0400)
-
-----------------------------------------------------------------
-Al Viro (2):
-      dlmfs_file_write(): fix the bogosity in handling non-zero *ppos
-      propagate_one(): mnt_set_mountpoint() needs mount_lock
-
- fs/ocfs2/dlmfs/dlmfs.c | 27 ++++++++++++---------------
- fs/pnode.c             |  9 ++++-----
- 2 files changed, 16 insertions(+), 20 deletions(-)
+-Andi
