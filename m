@@ -2,61 +2,73 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 766CCC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E412DC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF1A206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2CBD206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:02:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726405AbgD1HBg (ORCPT
+        id S1726435AbgD1HCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:01:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48552 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725867AbgD1HBg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 03:01:36 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4999C03C1A9;
-        Tue, 28 Apr 2020 00:01:35 -0700 (PDT)
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.93)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1jTKFH-000sfA-60; Tue, 28 Apr 2020 09:01:31 +0200
-Message-ID: <c3922c972277ff627c0308a94dfe3f25ba3b333f.camel@sipsolutions.net>
-Subject: Re: linux-next: build failure after merge of the mac80211-next tree
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Wireless <linux-wireless@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Tue, 28 Apr 2020 09:01:30 +0200
-In-Reply-To: <20200428122930.51b6a9c2@canb.auug.org.au>
-References: <20200428122930.51b6a9c2@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 28 Apr 2020 03:02:04 -0400
+Received: from verein.lst.de ([213.95.11.211]:54417 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbgD1HCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 03:02:03 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 10B4D68CEC; Tue, 28 Apr 2020 09:02:01 +0200 (CEST)
+Date:   Tue, 28 Apr 2020 09:02:00 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Martijn Coenen <maco@android.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ming Lei <ming.lei@redhat.com>,
+        Narayan Kamath <narayan@google.com>,
+        Zimuzo Ezeozue <zezeozue@google.com>, kernel-team@android.com,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martijn Coenen <maco@google.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: Re: [PATCH v3 0/9] Add a new LOOP_SET_FD_AND_STATUS ioctl
+Message-ID: <20200428070200.GC18754@lst.de>
+References: <20200427074222.65369-1-maco@android.com> <20200427170613.GA13686@lst.de> <CAB0TPYGZc_n-b5xtNsbJxEiqpLMqE=RcXGuy7C2vbY18mKZ6_A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAB0TPYGZc_n-b5xtNsbJxEiqpLMqE=RcXGuy7C2vbY18mKZ6_A@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-28 at 12:29 +1000, Stephen Rothwell wrote:
-> Hi all,
+On Mon, Apr 27, 2020 at 10:34:35PM +0200, Martijn Coenen wrote:
+> > Also maybe an explicit direct I/O flag, and maybe
+> > enough padding with a future proof flags bitmap that we can easily
+> > extend it for new features if they pop up?
 > 
-> After merging the mac80211-next tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
-> 
-> Caused by commit
-> 
->   6cd536fe62ef ("cfg80211: change internal management frame registration API")
+> Sounds good. I'm thinking these flags should be separate from
+> LO_FLAGS_; even though there is already a LO_FLAGS_DIRECT_IO, as far
+> as I can tell it can only be used to tell whether it's enabled, not to
+> actually enable it. And it would just get confusing if we add more
+> flags later. Maybe something like LO_FD_STATUS_FLAG_DIRECT_IO ?
 
-Yeah. I forgot about staging. I guess I'll throw in a quick fix.
+I think reusing LO_FLAGS_DIRECT_IO makes sense to me - we have 32
+flags in the existing flags field (at least for loop_info64), so
+we might as well use the field and the flags.  Then we need flags
+validation in that we don't accept new flags through the old
+interface, and the new one validates that no unknown flags are passed.
 
-johannes
+E.g. in the LOOP_SET_STATUS / LOOP_SET_STATUS64 handler do:
 
+	lo->lo_flags &= ~(LO_LEGACY_FLAGS);
+
+and then in the main function reject anything not known.
+
+And then maybe add something like 64 bytes of padding to the end of the
+new structure, so that we can use flags to expand to it.
