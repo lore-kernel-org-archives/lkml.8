@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C49AC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0EEC83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69EE3206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 715F020575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099465;
-	bh=Nv00CSXHSYZ2jzF94Kj6ncrK6XLUFRa3xNn2PDJj00E=;
+	s=default; t=1588099468;
+	bh=SYcstaTmz5kLRXaXsVYOwtRBxzojpc98XB8EkQONjts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VaFwopBD3Bh1IPpkcYsHU5oFOmr/2KB+z3iV/kc1o+MPfveJipfzgik9Y10VXOJKs
-	 38iZgN+LHWkPg1XT4/3nwqJ4/d7ncLNE7HZyGS1Nosy601X4Jg0CcVV5bPHT4xfYJO
-	 DCq3sXc3PW9Pwo04Wp7rOt9HwOtnHcf5dFv97E8o=
+	b=f7o5SUKaJkEAb1r6pA+P/k9JQV8vrWYN6PZAe+ifWh+tRfrSDIwOISNoD1hilJ9eN
+	 yWhWov1TdDMi4vcnU36Pb2RDNcq1CsHy4iUbdejS3QyZm3W54vIGMQXiYqFv4ZEpeR
+	 2e/IOGjUoLIaIRRbN47zAqNHj1ceFw/YHTxq0vQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731375AbgD1SoU (ORCPT
+        id S1731509AbgD1So1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:44:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37166 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:44:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731358AbgD1SoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:44:15 -0400
+        id S1731372AbgD1SoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:44:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 305DA206D6;
-        Tue, 28 Apr 2020 18:44:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2972720575;
+        Tue, 28 Apr 2020 18:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099454;
-        bh=Nv00CSXHSYZ2jzF94Kj6ncrK6XLUFRa3xNn2PDJj00E=;
+        s=default; t=1588099459;
+        bh=SYcstaTmz5kLRXaXsVYOwtRBxzojpc98XB8EkQONjts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lDlXTesosdyG/ZsmifjJThoFLEW7RKcH+BgvrfEcUOeVu0ymSGT44GLH18U87ryEs
-         DTDTnVUKC+8+NbiyIOg0y2u9jvqZEDAsHIZc4YWkFNS7metUO7UQKOIYjYSdRIeAXV
-         ie91wg9f27kFH/53CID8fKr4H8j2EHhN6uSPIR3k=
+        b=i2yXxYtO5sh4g/S0zny8yPDO67WrwlgWoyHiL4Cc0v66NANwGBjLLQbel1rBpiWdE
+         0vxpv2KSvi344DhhI0Nv/9Ge6m+YebW4mu0LDBk3CS4JF4VMsqQM7MVf9OyP+mkfX/
+         oDr88E7oDSNXH950dXLvaERmhwTr8jgK+OnVK6zY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>,
-        Hao Bui <hao.bui.yg@renesas.com>,
-        KAZUMI HARADA <kazumi.harada.rh@renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 5.4 157/168] serial: sh-sci: Make sure status register SCxSR is read in correct sequence
-Date:   Tue, 28 Apr 2020 20:25:31 +0200
-Message-Id: <20200428182251.024775394@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH 5.4 159/168] Revert "serial: uartps: Use the same dynamic major number for all ports"
+Date:   Tue, 28 Apr 2020 20:25:33 +0200
+Message-Id: <20200428182251.173351093@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -63,51 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>
+From: Michal Simek <michal.simek@xilinx.com>
 
-commit 3dc4db3662366306e54ddcbda4804acb1258e4ba upstream.
+commit 8da1a3940da4b0e82848ec29b835486890bc9232 upstream.
 
-For SCIF and HSCIF interfaces the SCxSR register holds the status of
-data that is to be read next from SCxRDR register, But where as for
-SCIFA and SCIFB interfaces SCxSR register holds status of data that is
-previously read from SCxRDR register.
+This reverts commit ab262666018de6f4e206b021386b93ed0c164316.
 
-This patch makes sure the status register is read depending on the port
-types so that errors are caught accordingly.
+As Johan says, this driver needs a lot more work and these changes are
+only going in the wrong direction:
+  https://lkml.kernel.org/r/20190523091839.GC568@localhost
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>
-Signed-off-by: Hao Bui <hao.bui.yg@renesas.com>
-Signed-off-by: KAZUMI HARADA <kazumi.harada.rh@renesas.com>
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/1585333048-31828-1-git-send-email-kazuhiro.fujita.jg@renesas.com
+Reported-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/14a565fc1e14a5ec6cc6a6710deb878ae8305f22.1585905873.git.michal.simek@xilinx.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/sh-sci.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/tty/serial/xilinx_uartps.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -873,9 +873,16 @@ static void sci_receive_chars(struct uar
- 				tty_insert_flip_char(tport, c, TTY_NORMAL);
- 		} else {
- 			for (i = 0; i < count; i++) {
--				char c = serial_port_in(port, SCxRDR);
-+				char c;
+--- a/drivers/tty/serial/xilinx_uartps.c
++++ b/drivers/tty/serial/xilinx_uartps.c
+@@ -30,13 +30,13 @@
  
--				status = serial_port_in(port, SCxSR);
-+				if (port->type == PORT_SCIF ||
-+				    port->type == PORT_HSCIF) {
-+					status = serial_port_in(port, SCxSR);
-+					c = serial_port_in(port, SCxRDR);
-+				} else {
-+					c = serial_port_in(port, SCxRDR);
-+					status = serial_port_in(port, SCxSR);
-+				}
- 				if (uart_handle_sysrq_char(port, c)) {
- 					count--; i--;
- 					continue;
+ #define CDNS_UART_TTY_NAME	"ttyPS"
+ #define CDNS_UART_NAME		"xuartps"
++#define CDNS_UART_MAJOR		0	/* use dynamic node allocation */
+ #define CDNS_UART_FIFO_SIZE	64	/* FIFO size */
+ #define CDNS_UART_REGISTER_SPACE	0x1000
+ #define TX_TIMEOUT		500000
+ 
+ /* Rx Trigger level */
+ static int rx_trigger_level = 56;
+-static int uartps_major;
+ module_param(rx_trigger_level, uint, 0444);
+ MODULE_PARM_DESC(rx_trigger_level, "Rx trigger level, 1-63 bytes");
+ 
+@@ -1521,7 +1521,7 @@ static int cdns_uart_probe(struct platfo
+ 	cdns_uart_uart_driver->owner = THIS_MODULE;
+ 	cdns_uart_uart_driver->driver_name = driver_name;
+ 	cdns_uart_uart_driver->dev_name	= CDNS_UART_TTY_NAME;
+-	cdns_uart_uart_driver->major = uartps_major;
++	cdns_uart_uart_driver->major = CDNS_UART_MAJOR;
+ 	cdns_uart_uart_driver->minor = cdns_uart_data->id;
+ 	cdns_uart_uart_driver->nr = 1;
+ 
+@@ -1550,7 +1550,6 @@ static int cdns_uart_probe(struct platfo
+ 		goto err_out_id;
+ 	}
+ 
+-	uartps_major = cdns_uart_uart_driver->tty_driver->major;
+ 	cdns_uart_data->cdns_uart_driver = cdns_uart_uart_driver;
+ 
+ 	/*
 
 
