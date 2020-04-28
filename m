@@ -2,243 +2,178 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79198C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17390C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51FCD206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:03:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NSCU00RN"
+	by mail.kernel.org (Postfix) with ESMTP id EF3E1206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:04:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgD1NDa (ORCPT
+        id S1726889AbgD1NEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:03:30 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:18965 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726746AbgD1ND3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:03:29 -0400
-X-UUID: 0e6d1158628d4808a4178ec4f6e9d79a-20200428
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=tAiU8DufUg5a+y6LZBlNyLKlmwCnn5CoVFDN0/EIDYc=;
-        b=NSCU00RN0Lhm1i9wBXCRug2Sruqc7RMnjoaB09brRK3mVrLPWnr2GzfLIrBt+vy9CfWJKb0gy444k5HPpjYV2cktmxfMfY6mvknsfL7HtA97QzaFXfRXIemqVhT3XD0wmvRG57lhuRd+80b+90XNN7VUHRR2kVBbfGWyL5pPKWQ=;
-X-UUID: 0e6d1158628d4808a4178ec4f6e9d79a-20200428
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <yong.mao@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1388229187; Tue, 28 Apr 2020 21:03:16 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 28 Apr
- 2020 21:03:14 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 28 Apr 2020 21:03:12 +0800
-Message-ID: <1588078947.730.11.camel@mhfsdcap03>
-Subject: Re: [PATCH v5 4/5] mmc: mediatek: command queue support
-From:   "yong.mao@mediatek.com" <yong.mao@mediatek.com>
-To:     Chun-Hung Wu <chun-hung.wu@mediatek.com>
-CC:     <mirq-linux@rere.qmqm.pl>, Jonathan Hunter <jonathanh@nvidia.com>,
-        "Al Cooper" <alcooperx@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Kate Stewart" <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Pan Bian <bianpan2016@163.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>,
-        <devicetree@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-tegra@vger.kernel.org>, <kernel-team@android.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 28 Apr 2020 21:02:27 +0800
-In-Reply-To: <1588031768-23677-5-git-send-email-chun-hung.wu@mediatek.com>
-References: <1588031768-23677-1-git-send-email-chun-hung.wu@mediatek.com>
-         <1588031768-23677-5-git-send-email-chun-hung.wu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 28 Apr 2020 09:04:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56196 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726746AbgD1NEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 09:04:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0B96AAC5F;
+        Tue, 28 Apr 2020 13:04:36 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id EB7251E1294; Tue, 28 Apr 2020 15:04:35 +0200 (CEST)
+Date:   Tue, 28 Apr 2020 15:04:35 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH V11 10/11] fs: Introduce DCACHE_DONTCACHE
+Message-ID: <20200428130435.GA6426@quack2.suse.cz>
+References: <20200428002142.404144-1-ira.weiny@intel.com>
+ <20200428002142.404144-11-ira.weiny@intel.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: B19EDFDF45EA2A4C07BC3620755AB4A39CAA9E16B388784C1B5A658AB4906C472000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428002142.404144-11-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA0LTI4IGF0IDA3OjU2ICswODAwLCBDaHVuLUh1bmcgV3Ugd3JvdGU6DQo+
-IFN1cHBvcnQgY29tbWFuZCBxdWV1ZSBmb3IgbXQ2Nzc5IHBsYXRmb3JtLg0KPiBhLiBBZGQgbXNk
-Y19zZXRfYnVzeV90aW1lb3V0KCkgdG8gY2FsY3VsYXRlIGVtbWMgd3JpdGUgdGltZW91dA0KPiBi
-LiBDb25uZWN0IG10ayBtc2RjIGRyaXZlciB0byBjcWhjaSBkcml2ZXIgdGhyb3VnaA0KPiAgICBo
-b3N0LT5jcV9ob3N0LT5vcHMgPSAmbXNkY19jbWRxX29wczsNCj4gYy4gbXNkY19jbWRxX2lycSgp
-IHdpbGwgbGluayB1cCB3aXRoIGNxY2hpX2lycSgpLiBCZXNpZGVzLCBpdCBwcm92aWRlcw0KPiAg
-ICBtb3JlIGlycSBlcnJvciBtZXNzYWdlcyBsaWtlIFJTUENSQ0VSUi9DTURUTy9EQVRBQ1JDRVJS
-L0RBVFRNTy4NCj4gZC4gVXNlIHRoZSBvcHRpb25zIGJlbG93IHRvIHNlcGFyYXRlIHN1cHBvcnQg
-Zm9yIENRSENJIG9yIG5vdCwgYmVjYXVzZQ0KPiAgICBzb21lIG9mIG91ciBwbGF0Zm9ybSBkb2Vz
-IG5vdCBzdXBwb3J0IENRSENJIGhlbmNlIG5vIGtlcm5lbCBvcHRpb246DQo+ICAgIENPTkZJR19N
-TUNfQ1FIQ0kuDQo+ICAgICNpZiBJU19FTkFCTEVEKENPTkZJR19NTUNfQ1FIQ0kpDQo+ICAgIFhY
-WCAvL1N1cHBvcnQgQ1FIQ0kNCj4gICAgI2Vsc2UNCj4gICAgWFhYIC8vTm90IHN1cHBvcnQgQ1FI
-Q0kNCj4gICAgI2VuZGlmDQo+IA0KUGxlYXNlIHNwbGl0IHRoaXMgcGF0Y2ggaW50byBmb2xsb3dp
-bmcgcGF0Y2hlcw0KMS4gc3VwcG9ydCBtdDY3NzkgaW4gbXRrLXNkLmMNCjIuIGFkZCBuZXcgQVBJ
-IGZvciBjYWxjdWxhdGUgdGltZW91dA0KMy4gc3VwcG9ydCBjbWRxIGZlYXR1cmUNCg0KPiBTaWdu
-ZWQtb2ZmLWJ5OiBDaHVuLUh1bmcgV3UgPGNodW4taHVuZy53dUBtZWRpYXRlay5jb20+DQo+IC0t
-LQ0KPiAgZHJpdmVycy9tbWMvaG9zdC9tdGstc2QuYyB8IDExOSArKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMTE5IGluc2Vy
-dGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21tYy9ob3N0L210ay1zZC5jIGIv
-ZHJpdmVycy9tbWMvaG9zdC9tdGstc2QuYw0KPiBpbmRleCBhMjMyOGZiLi44NTE2ODg4IDEwMDY0
-NA0KPiAtLS0gYS9kcml2ZXJzL21tYy9ob3N0L210ay1zZC5jDQo+ICsrKyBiL2RyaXZlcnMvbW1j
-L2hvc3QvbXRrLXNkLmMNCj4gQEAgLTMxLDYgKzMxLDggQEANCj4gICNpbmNsdWRlIDxsaW51eC9t
-bWMvc2Rpby5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L21tYy9zbG90LWdwaW8uaD4NCj4gIA0KPiAr
-I2luY2x1ZGUgImNxaGNpLmgiDQo+ICsNCj4gICNkZWZpbmUgTUFYX0JEX05VTSAgICAgICAgICAx
-MDI0DQo+ICANCj4gIC8qLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0qLw0KPiBAQCAtMTUxLDYgKzE1Myw3IEBA
-DQo+ICAjZGVmaW5lIE1TRENfSU5UX0RNQV9CRENTRVJSICAgICgweDEgPDwgMTcpCS8qIFcxQyAq
-Lw0KPiAgI2RlZmluZSBNU0RDX0lOVF9ETUFfR1BEQ1NFUlIgICAoMHgxIDw8IDE4KQkvKiBXMUMg
-Ki8NCj4gICNkZWZpbmUgTVNEQ19JTlRfRE1BX1BST1RFQ1QgICAgKDB4MSA8PCAxOSkJLyogVzFD
-ICovDQo+ICsjZGVmaW5lIE1TRENfSU5UX0NNRFEgICAgICAgICAgICgweDEgPDwgMjgpCS8qIFcx
-QyAqLw0KPiAgDQo+ICAvKiBNU0RDX0lOVEVOIG1hc2sgKi8NCj4gICNkZWZpbmUgTVNEQ19JTlRF
-Tl9NTUNJUlEgICAgICAgKDB4MSA8PCAwKQkvKiBSVyAqLw0KPiBAQCAtMTgxLDYgKzE4NCw3IEBA
-DQo+ICAvKiBTRENfQ0ZHIG1hc2sgKi8NCj4gICNkZWZpbmUgU0RDX0NGR19TRElPSU5UV0tVUCAg
-ICAgKDB4MSA8PCAwKQkvKiBSVyAqLw0KPiAgI2RlZmluZSBTRENfQ0ZHX0lOU1dLVVAgICAgICAg
-ICAoMHgxIDw8IDEpCS8qIFJXICovDQo+ICsjZGVmaW5lIFNEQ19DRkdfV1JEVE9DICAgICAgICAg
-ICgweDFmZmYgIDw8IDIpICAvKiBSVyAqLw0KPiAgI2RlZmluZSBTRENfQ0ZHX0JVU1dJRFRIICAg
-ICAgICAoMHgzIDw8IDE2KQkvKiBSVyAqLw0KPiAgI2RlZmluZSBTRENfQ0ZHX1NESU8gICAgICAg
-ICAgICAoMHgxIDw8IDE5KQkvKiBSVyAqLw0KPiAgI2RlZmluZSBTRENfQ0ZHX1NESU9JREUgICAg
-ICAgICAoMHgxIDw8IDIwKQkvKiBSVyAqLw0KPiBAQCAtMjI5LDYgKzIzMyw3IEBADQo+ICAjZGVm
-aW5lIE1TRENfUEFUQ0hfQklUX0RFQ1JDVE1PICAgKDB4MSA8PCAzMCkJLyogUlcgKi8NCj4gIA0K
-PiAgI2RlZmluZSBNU0RDX1BBVENIX0JJVDFfQ01EVEEgICAgICgweDcgPDwgMykgICAgLyogUlcg
-Ki8NCj4gKyNkZWZpbmUgTVNEQ19QQjFfQlVTWV9DSEVDS19TRUwgICAoMHgxIDw8IDcpICAgIC8q
-IFJXICovDQo+ICAjZGVmaW5lIE1TRENfUEFUQ0hfQklUMV9TVE9QX0RMWSAgKDB4ZiA8PCA4KSAg
-ICAvKiBSVyAqLw0KPiAgDQo+ICAjZGVmaW5lIE1TRENfUEFUQ0hfQklUMl9DRkdSRVNQICAgKDB4
-MSA8PCAxNSkgICAvKiBSVyAqLw0KPiBAQCAtNDMyLDYgKzQzNyw3IEBAIHN0cnVjdCBtc2RjX2hv
-c3Qgew0KPiAgCXN0cnVjdCBtc2RjX3NhdmVfcGFyYSBzYXZlX3BhcmE7IC8qIHVzZWQgd2hlbiBn
-YXRlIEhDTEsgKi8NCj4gIAlzdHJ1Y3QgbXNkY190dW5lX3BhcmEgZGVmX3R1bmVfcGFyYTsgLyog
-ZGVmYXVsdCB0dW5lIHNldHRpbmcgKi8NCj4gIAlzdHJ1Y3QgbXNkY190dW5lX3BhcmEgc2F2ZWRf
-dHVuZV9wYXJhOyAvKiB0dW5lIHJlc3VsdCBvZiBDTUQyMS9DTUQxOSAqLw0KPiArCXN0cnVjdCBj
-cWhjaV9ob3N0ICpjcV9ob3N0Ow0KPiAgfTsNCj4gIA0KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBt
-dGtfbW1jX2NvbXBhdGlibGUgbXQ4MTM1X2NvbXBhdCA9IHsNCj4gQEAgLTUyOCw2ICs1MzQsMTgg
-QEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfbW1jX2NvbXBhdGlibGUgbXQ3NjIwX2NvbXBhdCA9
-IHsNCj4gIAkudXNlX2ludGVybmFsX2NkID0gdHJ1ZSwNCj4gIH07DQo+ICANCj4gK3N0YXRpYyBj
-b25zdCBzdHJ1Y3QgbXRrX21tY19jb21wYXRpYmxlIG10Njc3OV9jb21wYXQgPSB7DQo+ICsJLmNs
-a19kaXZfYml0cyA9IDEyLA0KPiArCS5oczQwMF90dW5lID0gZmFsc2UsDQo+ICsJLnBhZF90dW5l
-X3JlZyA9IE1TRENfUEFEX1RVTkUwLA0KPiArCS5hc3luY19maWZvID0gdHJ1ZSwNCj4gKwkuZGF0
-YV90dW5lID0gdHJ1ZSwNCj4gKwkuYnVzeV9jaGVjayA9IHRydWUsDQo+ICsJLnN0b3BfY2xrX2Zp
-eCA9IHRydWUsDQo+ICsJLmVuaGFuY2VfcnggPSB0cnVlLA0KPiArCS5zdXBwb3J0XzY0ZyA9IHRy
-dWUsDQo+ICt9Ow0KPiArDQo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBtc2Rj
-X29mX2lkc1tdID0gew0KPiAgCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTM1LW1tYyIs
-IC5kYXRhID0gJm10ODEzNV9jb21wYXR9LA0KPiAgCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWss
-bXQ4MTczLW1tYyIsIC5kYXRhID0gJm10ODE3M19jb21wYXR9LA0KPiBAQCAtNTM3LDYgKzU1NSw3
-IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG1zZGNfb2ZfaWRzW10gPSB7DQo+
-ICAJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDc2MjItbW1jIiwgLmRhdGEgPSAmbXQ3NjIy
-X2NvbXBhdH0sDQo+ICAJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDg1MTYtbW1jIiwgLmRh
-dGEgPSAmbXQ4NTE2X2NvbXBhdH0sDQo+ICAJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDc2
-MjAtbW1jIiwgLmRhdGEgPSAmbXQ3NjIwX2NvbXBhdH0sDQo+ICsJeyAuY29tcGF0aWJsZSA9ICJt
-ZWRpYXRlayxtdDY3NzktbW1jIiwgLmRhdGEgPSAmbXQ2Nzc5X2NvbXBhdH0sDQo+ICAJe30NCj4g
-IH07DQo+ICBNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBtc2RjX29mX2lkcyk7DQo+IEBAIC03NDAs
-NiArNzU5LDE1IEBAIHN0YXRpYyB2b2lkIG1zZGNfc2V0X3RpbWVvdXQoc3RydWN0IG1zZGNfaG9z
-dCAqaG9zdCwgdTY0IG5zLCB1NjQgY2xrcykNCj4gIAkJICAgICAgKHUzMikodGltZW91dCA+IDI1
-NSA/IDI1NSA6IHRpbWVvdXQpKTsNCj4gIH0NCj4gIA0KPiArc3RhdGljIHZvaWQgbXNkY19zZXRf
-YnVzeV90aW1lb3V0KHN0cnVjdCBtc2RjX2hvc3QgKmhvc3QsIHU2NCBucywgdTY0IGNsa3MpDQo+
-ICt7DQo+ICsJdTY0IHRpbWVvdXQ7DQo+ICsNCj4gKwl0aW1lb3V0ID0gbXNkY190aW1lb3V0X2Nh
-bChob3N0LCBucywgY2xrcyk7DQo+ICsJc2RyX3NldF9maWVsZChob3N0LT5iYXNlICsgU0RDX0NG
-RywgU0RDX0NGR19XUkRUT0MsDQo+ICsJCSAgICAgICh1MzIpKHRpbWVvdXQgPiA4MTkxID8gODE5
-MSA6IHRpbWVvdXQpKTsNCj4gK30NCj4gKw0KPiAgc3RhdGljIHZvaWQgbXNkY19nYXRlX2Nsb2Nr
-KHN0cnVjdCBtc2RjX2hvc3QgKmhvc3QpDQo+ICB7DQo+ICAJY2xrX2Rpc2FibGVfdW5wcmVwYXJl
-KGhvc3QtPnNyY19jbGtfY2cpOw0KPiBAQCAtMTQyNiw2ICsxNDU0LDM2IEBAIHN0YXRpYyB2b2lk
-IG1zZGNfZW5hYmxlX3NkaW9faXJxKHN0cnVjdCBtbWNfaG9zdCAqbW1jLCBpbnQgZW5iKQ0KPiAg
-CQlwbV9ydW50aW1lX3B1dF9ub2lkbGUoaG9zdC0+ZGV2KTsNCj4gIH0NCj4gIA0KPiArI2lmIElT
-X0VOQUJMRUQoQ09ORklHX01NQ19DUUhDSSkNCj4gK3N0YXRpYyBpcnFyZXR1cm5fdCBtc2RjX2Nt
-ZHFfaXJxKHN0cnVjdCBtc2RjX2hvc3QgKmhvc3QsIHUzMiBpbnRzdHMpDQo+ICt7DQo+ICsJaW50
-IGNtZF9lcnIgPSAwLCBkYXRfZXJyID0gMDsNCj4gKw0KPiArCWlmIChpbnRzdHMgJiBNU0RDX0lO
-VF9SU1BDUkNFUlIpIHsNCj4gKwkJY21kX2VyciA9ICh1bnNpZ25lZCBpbnQpLUVJTFNFUTsNCj4g
-KwkJZGV2X2Vycihob3N0LT5kZXYsICIlczogQ01EIENSQyBFUlIiLCBfX2Z1bmNfXyk7DQo+ICsJ
-fSBlbHNlIGlmIChpbnRzdHMgJiBNU0RDX0lOVF9DTURUTU8pIHsNCj4gKwkJY21kX2VyciA9ICh1
-bnNpZ25lZCBpbnQpLUVUSU1FRE9VVDsNCj4gKwkJZGV2X2Vycihob3N0LT5kZXYsICIlczogQ01E
-IFRJTUVPVVQgRVJSIiwgX19mdW5jX18pOw0KPiArCX0NCj4gKw0KPiArCWlmIChpbnRzdHMgJiBN
-U0RDX0lOVF9EQVRDUkNFUlIpIHsNCj4gKwkJZGF0X2VyciA9ICh1bnNpZ25lZCBpbnQpLUVJTFNF
-UTsNCj4gKwkJZGV2X2Vycihob3N0LT5kZXYsICIlczogREFUQSBDUkMgRVJSIiwgX19mdW5jX18p
-Ow0KPiArCX0gZWxzZSBpZiAoaW50c3RzICYgTVNEQ19JTlRfREFUVE1PKSB7DQo+ICsJCWRhdF9l
-cnIgPSAodW5zaWduZWQgaW50KS1FVElNRURPVVQ7DQo+ICsJCWRldl9lcnIoaG9zdC0+ZGV2LCAi
-JXM6IERBVEEgVElNRU9VVCBFUlIiLCBfX2Z1bmNfXyk7DQo+ICsJfQ0KPiArDQo+ICsJaWYgKGNt
-ZF9lcnIgfHwgZGF0X2Vycikgew0KPiArCQlkZXZfZXJyKGhvc3QtPmRldiwgImNtZF9lcnIgPSAl
-ZCwgZGF0X2VyciA9JWQsIGludHN0cyA9IDB4JXgiLA0KPiArCQkJY21kX2VyciwgZGF0X2Vyciwg
-aW50c3RzKTsNCj4gKwl9DQo+ICsNCj4gKwlyZXR1cm4gY3FoY2lfaXJxKGhvc3QtPm1tYywgMCwg
-Y21kX2VyciwgZGF0X2Vycik7DQo+ICt9DQo+ICsjZW5kaWYNCj4gKw0KPiAgc3RhdGljIGlycXJl
-dHVybl90IG1zZGNfaXJxKGludCBpcnEsIHZvaWQgKmRldl9pZCkNCj4gIHsNCj4gIAlzdHJ1Y3Qg
-bXNkY19ob3N0ICpob3N0ID0gKHN0cnVjdCBtc2RjX2hvc3QgKikgZGV2X2lkOw0KPiBAQCAtMTQ2
-Miw2ICsxNTIwLDE2IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBtc2RjX2lycShpbnQgaXJxLCB2b2lk
-ICpkZXZfaWQpDQo+ICAJCWlmICghKGV2ZW50cyAmIChldmVudF9tYXNrICYgfk1TRENfSU5UX1NE
-SU9JUlEpKSkNCj4gIAkJCWJyZWFrOw0KPiAgDQo+ICsjaWYgSVNfRU5BQkxFRChDT05GSUdfTU1D
-X0NRSENJKQ0KPiArCQlpZiAoKGhvc3QtPm1tYy0+Y2FwczIgJiBNTUNfQ0FQMl9DUUUpICYmDQo+
-ICsJCSAgICAoZXZlbnRzICYgTVNEQ19JTlRfQ01EUSkpIHsNCj4gKwkJCW1zZGNfY21kcV9pcnEo
-aG9zdCwgZXZlbnRzKTsNCj4gKwkJCS8qIGNsZWFyIGludGVycnVwdHMgKi8NCj4gKwkJCXdyaXRl
-bChldmVudHMsIGhvc3QtPmJhc2UgKyBNU0RDX0lOVCk7DQo+ICsJCQlyZXR1cm4gSVJRX0hBTkRM
-RUQ7DQo+ICsJCX0NCj4gKyNlbmRpZg0KPiArDQo+ICAJCWlmICghbXJxKSB7DQo+ICAJCQlkZXZf
-ZXJyKGhvc3QtPmRldiwNCj4gIAkJCQkiJXM6IE1SUT1OVUxMOyBldmVudHM9JTA4WDsgZXZlbnRf
-bWFzaz0lMDhYXG4iLA0KPiBAQCAtMjE0Niw2ICsyMjE0LDM2IEBAIHN0YXRpYyBpbnQgbXNkY19n
-ZXRfY2Qoc3RydWN0IG1tY19ob3N0ICptbWMpDQo+ICAJCXJldHVybiAhdmFsOw0KPiAgfQ0KPiAg
-DQo+ICtzdGF0aWMgdm9pZCBtc2RjX2NxZV9lbmFibGUoc3RydWN0IG1tY19ob3N0ICptbWMpDQo+
-ICt7DQo+ICsJc3RydWN0IG1zZGNfaG9zdCAqaG9zdCA9IG1tY19wcml2KG1tYyk7DQo+ICsNCj4g
-KwkvKiBlbmFibGUgY21kcSBpcnEgKi8NCj4gKwl3cml0ZWwoTVNEQ19JTlRfQ01EUSwgaG9zdC0+
-YmFzZSArIE1TRENfSU5URU4pOw0KPiArCS8qIGVuYWJsZSBidXN5IGNoZWNrICovDQo+ICsJc2Ry
-X3NldF9iaXRzKGhvc3QtPmJhc2UgKyBNU0RDX1BBVENIX0JJVDEsIE1TRENfUEIxX0JVU1lfQ0hF
-Q0tfU0VMKTsNCj4gKwkvKiBkZWZhdWx0IHdyaXRlIGRhdGEgLyBidXN5IHRpbWVvdXQgMjBzICov
-DQo+ICsJbXNkY19zZXRfYnVzeV90aW1lb3V0KGhvc3QsIDIwICogMTAwMDAwMDAwMFVMTCwgMCk7
-DQo+ICsJLyogZGVmYXVsdCByZWFkIGRhdGEgdGltZW91dCAxcyAqLw0KPiArCW1zZGNfc2V0X3Rp
-bWVvdXQoaG9zdCwgMTAwMDAwMDAwMFVMTCwgMCk7DQo+ICt9DQo+ICsNCj4gK3ZvaWQgbXNkY19j
-cWVfZGlzYWJsZShzdHJ1Y3QgbW1jX2hvc3QgKm1tYywgYm9vbCByZWNvdmVyeSkNCj4gK3sNCj4g
-KwlzdHJ1Y3QgbXNkY19ob3N0ICpob3N0ID0gbW1jX3ByaXYobW1jKTsNCj4gKw0KPiArCS8qIGRp
-c2FibGUgY21kcSBpcnEgKi8NCj4gKwlzZHJfY2xyX2JpdHMoaG9zdC0+YmFzZSArIE1TRENfSU5U
-RU4sIE1TRENfSU5UX0NNRFEpOw0KPiArCS8qIGRpc2FibGUgYnVzeSBjaGVjayAqLw0KPiArCXNk
-cl9jbHJfYml0cyhob3N0LT5iYXNlICsgTVNEQ19QQVRDSF9CSVQxLCBNU0RDX1BCMV9CVVNZX0NI
-RUNLX1NFTCk7DQo+ICsNCj4gKwlpZiAocmVjb3ZlcnkpIHsNCj4gKwkJc2RyX3NldF9maWVsZCho
-b3N0LT5iYXNlICsgTVNEQ19ETUFfQ1RSTCwNCj4gKwkJCSAgICAgIE1TRENfRE1BX0NUUkxfU1RP
-UCwgMSk7DQo+ICsJCW1zZGNfcmVzZXRfaHcoaG9zdCk7DQo+ICsJfQ0KPiArfQ0KPiArDQo+ICBz
-dGF0aWMgY29uc3Qgc3RydWN0IG1tY19ob3N0X29wcyBtdF9tc2RjX29wcyA9IHsNCj4gIAkucG9z
-dF9yZXEgPSBtc2RjX3Bvc3RfcmVxLA0KPiAgCS5wcmVfcmVxID0gbXNkY19wcmVfcmVxLA0KPiBA
-QCAtMjE2Miw2ICsyMjYwLDExIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbW1jX2hvc3Rfb3BzIG10
-X21zZGNfb3BzID0gew0KPiAgCS5od19yZXNldCA9IG1zZGNfaHdfcmVzZXQsDQo+ICB9Ow0KPiAg
-DQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGNxaGNpX2hvc3Rfb3BzIG1zZGNfY21kcV9vcHMgPSB7
-DQo+ICsJLmVuYWJsZSAgICAgICAgID0gbXNkY19jcWVfZW5hYmxlLA0KPiArCS5kaXNhYmxlICAg
-ICAgICA9IG1zZGNfY3FlX2Rpc2FibGUsDQo+ICt9Ow0KPiArDQo+ICBzdGF0aWMgdm9pZCBtc2Rj
-X29mX3Byb3BlcnR5X3BhcnNlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsDQo+ICAJCQkJ
-ICAgc3RydWN0IG1zZGNfaG9zdCAqaG9zdCkNCj4gIHsNCj4gQEAgLTIzMTIsNiArMjQxNSwyMiBA
-QCBzdGF0aWMgaW50IG1zZGNfZHJ2X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYp
-DQo+ICAJCWhvc3QtPmRtYV9tYXNrID0gRE1BX0JJVF9NQVNLKDMyKTsNCj4gIAltbWNfZGV2KG1t
-YyktPmRtYV9tYXNrID0gJmhvc3QtPmRtYV9tYXNrOw0KPiAgDQo+ICsjaWYgSVNfRU5BQkxFRChD
-T05GSUdfTU1DX0NRSENJKQ0KPiArCWlmIChtbWMtPmNhcHMyICYgTU1DX0NBUDJfQ1FFKSB7DQo+
-ICsJCWhvc3QtPmNxX2hvc3QgPSBkZXZtX2t6YWxsb2MoaG9zdC0+bW1jLT5wYXJlbnQsDQo+ICsJ
-CQkJCSAgICAgc2l6ZW9mKCpob3N0LT5jcV9ob3N0KSwNCj4gKwkJCQkJICAgICBHRlBfS0VSTkVM
-KTsNCnNob3VsZCBmcmVlIHRoaXMgbWVtb3J5IGlmIGl0IGlzIG5vdCB1c2VkIGFueSBtb3JlLg0K
-PiArCQlob3N0LT5jcV9ob3N0LT5jYXBzIHw9IENRSENJX1RBU0tfREVTQ19TWl8xMjg7DQo+ICsJ
-CWhvc3QtPmNxX2hvc3QtPm1taW8gPSBob3N0LT5iYXNlICsgMHg4MDA7DQo+ICsJCWhvc3QtPmNx
-X2hvc3QtPm9wcyA9ICZtc2RjX2NtZHFfb3BzOw0KPiArCQljcWhjaV9pbml0KGhvc3QtPmNxX2hv
-c3QsIG1tYywgdHJ1ZSk7DQo+ICsJCW1tYy0+bWF4X3NlZ3MgPSAxMjg7DQo+ICsJCS8qIGNxaGNp
-IDE2Yml0IGxlbmd0aCAqLw0KPiArCQkvKiAwIHNpemUsIG1lYW5zIDY1NTM2IHNvIHdlIGRvbid0
-IGhhdmUgdG8gLTEgaGVyZSAqLw0KPiArCQltbWMtPm1heF9zZWdfc2l6ZSA9IDY0ICogMTAyNDsN
-Cj4gKwl9DQo+ICsjZW5kaWYNCj4gKw0KPiAgCWhvc3QtPnRpbWVvdXRfY2xrcyA9IDMgKiAxMDQ4
-NTc2Ow0KPiAgCWhvc3QtPmRtYS5ncGQgPSBkbWFfYWxsb2NfY29oZXJlbnQoJnBkZXYtPmRldiwN
-Cj4gIAkJCQkyICogc2l6ZW9mKHN0cnVjdCBtdF9ncGRtYV9kZXNjKSwNCg0K
+On Mon 27-04-20 17:21:41, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> DCACHE_DONTCACHE indicates a dentry should not be cached on final
+> dput().
+> 
+> Also add a helper function to mark DCACHE_DONTCACHE on all dentries
+> pointing to a specific inode when that inode is being set I_DONTCACHE.
+> 
+> This facilitates dropping dentry references to inodes sooner which
+> require eviction to swap S_DAX mode.
+> 
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
+The patch looks good to me. You can add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> 
+> ---
+> Changes from V10:
+> 	rename to d_mark_dontcache()
+> 	Move function to fs/dcache.c
+> 
+> Changes from V9:
+> 	modify i_state under i_lock
+> 	Update comment
+> 		"Purge from memory on final dput()"
+> 
+> Changes from V8:
+> 	Update commit message
+> 	Use mark_inode_dontcache in XFS
+> 	Fix locking...  can't use rcu here.
+> 	Change name to mark_inode_dontcache
+> ---
+>  fs/dcache.c            | 19 +++++++++++++++++++
+>  fs/xfs/xfs_icache.c    |  2 +-
+>  include/linux/dcache.h |  2 ++
+>  include/linux/fs.h     |  1 +
+>  4 files changed, 23 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/dcache.c b/fs/dcache.c
+> index b280e07e162b..0d07fb335b78 100644
+> --- a/fs/dcache.c
+> +++ b/fs/dcache.c
+> @@ -647,6 +647,10 @@ static inline bool retain_dentry(struct dentry *dentry)
+>  		if (dentry->d_op->d_delete(dentry))
+>  			return false;
+>  	}
+> +
+> +	if (unlikely(dentry->d_flags & DCACHE_DONTCACHE))
+> +		return false;
+> +
+>  	/* retain; LRU fodder */
+>  	dentry->d_lockref.count--;
+>  	if (unlikely(!(dentry->d_flags & DCACHE_LRU_LIST)))
+> @@ -656,6 +660,21 @@ static inline bool retain_dentry(struct dentry *dentry)
+>  	return true;
+>  }
+>  
+> +void d_mark_dontcache(struct inode *inode)
+> +{
+> +	struct dentry *de;
+> +
+> +	spin_lock(&inode->i_lock);
+> +	hlist_for_each_entry(de, &inode->i_dentry, d_u.d_alias) {
+> +		spin_lock(&de->d_lock);
+> +		de->d_flags |= DCACHE_DONTCACHE;
+> +		spin_unlock(&de->d_lock);
+> +	}
+> +	inode->i_state |= I_DONTCACHE;
+> +	spin_unlock(&inode->i_lock);
+> +}
+> +EXPORT_SYMBOL(d_mark_dontcache);
+> +
+>  /*
+>   * Finish off a dentry we've decided to kill.
+>   * dentry->d_lock must be held, returns with it unlocked.
+> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+> index de76f7f60695..888646d74d7d 100644
+> --- a/fs/xfs/xfs_icache.c
+> +++ b/fs/xfs/xfs_icache.c
+> @@ -559,7 +559,7 @@ xfs_iget_cache_miss(
+>  	 */
+>  	iflags = XFS_INEW;
+>  	if (flags & XFS_IGET_DONTCACHE)
+> -		VFS_I(ip)->i_state |= I_DONTCACHE;
+> +		d_mark_dontcache(VFS_I(ip));
+>  	ip->i_udquot = NULL;
+>  	ip->i_gdquot = NULL;
+>  	ip->i_pdquot = NULL;
+> diff --git a/include/linux/dcache.h b/include/linux/dcache.h
+> index c1488cc84fd9..a81f0c3cf352 100644
+> --- a/include/linux/dcache.h
+> +++ b/include/linux/dcache.h
+> @@ -177,6 +177,8 @@ struct dentry_operations {
+>  
+>  #define DCACHE_REFERENCED		0x00000040 /* Recently used, don't discard. */
+>  
+> +#define DCACHE_DONTCACHE		0x00000080 /* Purge from memory on final dput() */
+> +
+>  #define DCACHE_CANT_MOUNT		0x00000100
+>  #define DCACHE_GENOCIDE			0x00000200
+>  #define DCACHE_SHRINK_LIST		0x00000400
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 44bd45af760f..7c3e8c0306e0 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -3055,6 +3055,7 @@ static inline int generic_drop_inode(struct inode *inode)
+>  	return !inode->i_nlink || inode_unhashed(inode) ||
+>  		(inode->i_state & I_DONTCACHE);
+>  }
+> +extern void d_mark_dontcache(struct inode *inode);
+>  
+>  extern struct inode *ilookup5_nowait(struct super_block *sb,
+>  		unsigned long hashval, int (*test)(struct inode *, void *),
+> -- 
+> 2.25.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
