@@ -2,103 +2,114 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E7CC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 464D7C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9EC92072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 234422064C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:53:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="meYDDc/N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgD1VxV (ORCPT
+        id S1726608AbgD1Vxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:53:21 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:52425 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgD1VxU (ORCPT
+        Tue, 28 Apr 2020 17:53:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725934AbgD1Vxh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:53:20 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MNbtD-1joGmV3G95-00P4Gf; Tue, 28 Apr 2020 23:46:44 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, kbuild test robot <lkp@intel.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Richard Fitzgerald <rf@opensource.wolfsonmicro.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: rt5682: fix I2C/Soundwire dependencies
-Date:   Tue, 28 Apr 2020 23:46:14 +0200
-Message-Id: <20200428214642.3925004-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Tue, 28 Apr 2020 17:53:37 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB734C03C1AE
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 14:53:36 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id 198so18118434lfo.7
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 14:53:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EebmjuehlITayp5XUzqWL+oJJRo+KSj0cYhRYx1gdlA=;
+        b=meYDDc/NArsPldNgBgNJvrPvMIFHwYS0eD8aPeUWYtpdZTlFyEn5GX2LksPqglJHgk
+         EVKmWqoVAaKuViS0X3GMxJ9j0QsRi1r5ZKpNap+JbNg/5cX+nBJxgWnQhnkvD2Z/sVVX
+         s2B8DMwznPP6crTK8gUVsUUkGnYEKkHNtBtdcOzPkOmvNQUDNhVU0QRbAAalgjJZWIxV
+         winagD3FWbOyBtQIEzXVoPMBuIu7pPRBIThcQ8C6bjb58g9R+VrgHTziKQ/43+2qZeu/
+         palfN8xIHpmdSHyeWb0FLV51Hiqb/9NFSSiq07YOp6F//OanEJIE8W7br+Rn/PCPIyZW
+         2Oww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EebmjuehlITayp5XUzqWL+oJJRo+KSj0cYhRYx1gdlA=;
+        b=Hii5Q8O6eTowGTewhS4Np4KVIJEITWxPA2/nFnVbpu6O0EVfZQs6DtRKIN3Y74oHlG
+         nlEwXBh2Vmp4wpEcZPceEpeQizeHDcfFeG7sKOIizUzfvU9SFRQbzlvhSRoDwIdTwsfQ
+         xYDtN84Cul8xL0cuoIuXFiOuy/BejbubpMZf0dLsK5HcP/Zmv5C+iRKQjWsGI5S2i+dc
+         krZ9mP5aOoSLlW8tB0pv948FrXWqwOhqeJ+8vKqzKZLtnbNV4KPhWcWNN5c3X2gAavfs
+         kR3ESP4LlTfNl+oivLn7nyOKWg3h5/xLXqFvvI7CULVCR+K6vUJf7V16/wsg+FGtySxb
+         zFLA==
+X-Gm-Message-State: AGi0PuaVtC7lO7Loo9BxVdsYM0ZstqZJrAnS6P+7bWrbikq5ZFnDGu3S
+        6LABcEjLZmL+fKpF93dPSK0mLmHnmuM3KYMqQuvuQw==
+X-Google-Smtp-Source: APiQypJuhLaNNHXGi961rAv3/PkE4xDpF8B341WyZL4HyhwZWoY06bgKp3ljqCOSSkgZEFkd7QpCeUqGrWARsTp/EHo=
+X-Received: by 2002:ac2:4257:: with SMTP id m23mr20189275lfl.141.1588110814972;
+ Tue, 28 Apr 2020 14:53:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:LjpCd0o0srZhlkXmKTYqi2kzkFjj8wOMi3UgGvZfhHwihrM2ZVK
- po+jmWaIRXwaEFPAix4bogG21pyYWTA+mjs+9fJP7UQkVRxcH099TCrSRRrDi2zbSW3q6fH
- aBP1db4kBRs2/IQtjmZPXOXXW9bJN+qqAuialfeXrl4bYwkfWYhxGD6X5GE7NBtKxHJhoNw
- YBnj+zR/OD1wyM18k0xUw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HYoyrD0Ue6w=:BXj4wZR0Lv+12HKpBsqM17
- np4UgAR2bidZI702Fck5rWtV6f30t+cY2Z1h1Mdp+pK/u2oU7VY2mIAGENzf0X8pWAkE9HkB4
- ldiYe6sgTeOmULgYtTA/02n+BW9cMik3hhkNUIBz+HXbv/s9wZfFafAmVj8a54X7ooMw7/7UN
- ek3qXmLzVjY+daiUpZa4h7scwPxmyozfe6NTil/tG+2/BFFojwQOdFf2NPZ0sRt0sTgnzohwf
- 5OmAabCtDjl4u3WBwDHfL0dzMKNlSSOtN0jJf3nSPEfZ9teWREUOcdHoVmeQPSqUdTNkhFmHo
- HTUN2FuRpzZRFmiMbk1FBoIbzB/NwT0F3g6BZKlDY9CwDfLrIwtLJbYnWKL1tEyJ9UDZAMxeg
- tt3xddjus2dUsFbRcfK/OdXBuERHinRovIxU6eQtBw7iiPXBad734hDr2Nn7HKU5y7/s4K4iT
- o7CAT8oo1SVtkOL6gOIeGcqQcKClDdY3kdmFrCGW7Z6fIwBxpSUROTzT4rtschARW0FweaJ9D
- 70loHcBinHpDL1hqW3ttSHxgGZrcJ2RWjs5UTTMobsWaR2OJSzQF9LWf/vrRcUPn84Azh8bAK
- 33boGdmdv1reOFemwApMxY+uqBkOiBf1uKG0EAq3qp291pJWGbkhHqLpljwuiA4tlIcUzaWMi
- FFloM5xVecN5uhQu0NnplgCdyuBUt5WTADQGIDePXhOlLN6mA6qHoPnq1oLfQbgZ3/YjNzwG1
- KOwzOmayjyUJyRYo7SM8gpE0x05V7am5Io6uDZLu8+2tE50j9OHtDZODoixjFf9N6tNYYNItB
- wnuq+nglwCGDY633oQyCC072krANYMM7kLjuMB7WJ6RA+8L8BA=
+References: <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com>
+ <87imi8nzlw.fsf@x220.int.ebiederm.org> <CAHk-=wgh4zts+3hdkGzHLJ6pBGumcJ=23gRbMfubDrLstis2Bg@mail.gmail.com>
+ <CAHk-=whKHpERyVv2-C+kxq9KV_mJPW3hkGDpn6f4yOvs+au8SA@mail.gmail.com>
+ <20200411182043.GA3136@redhat.com> <CAHk-=wgwXpKepChGi4ZhQVxZxD0ic8s2CDXvUmqBTMaKGz-fjg@mail.gmail.com>
+ <20200412195049.GA23824@redhat.com> <CAHk-=wiDwR+6ugYaKEGHfYteLF+NH5xu=T7uuUTkK9y-hr6zow@mail.gmail.com>
+ <AM6PR03MB51708CF53D8A02086427DAC2E4AC0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wi_zr9dwX3UBYvgkmm6eVQfRP50orryJ6ZVAxuFqdSG5A@mail.gmail.com>
+ <20200428190836.GC29960@redhat.com> <CAHk-=wi03QRcUR1DfbEr+Pw-DAMENzY-FuRcGawtj9p597=p2w@mail.gmail.com>
+ <CAG48ez03ABTa-KbCtFHqB1hOT7dgAM96c3kiw-e80B+utSEwYw@mail.gmail.com> <CAHk-=wjTLnMuZmBO2foeHhsLAoUTpUi7oBVJ67F4XKB+tdEDbQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wjTLnMuZmBO2foeHhsLAoUTpUi7oBVJ67F4XKB+tdEDbQ@mail.gmail.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 28 Apr 2020 23:53:08 +0200
+Message-ID: <CAG48ez3EQOvdbzu9aO-cEAJwF_=fJzn1Cg0LMs3ruc=5r1ie5w@mail.gmail.com>
+Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Waiman Long <longman@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If one of the two is a loadable module, the combined driver must
-not be built-in:
+On Tue, Apr 28, 2020 at 11:37 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+> On Tue, Apr 28, 2020 at 2:06 PM Jann Horn <jannh@google.com> wrote:
+> > In execve:
+> >
+> >  - After the point of no return, but before we start waiting for the
+> >    other threads to go away, finish calculating our post-execve creds
+> >    and stash them somewhere in the task_struct or so.
+> >  - Drop the cred_guard_mutex.
+> >  - Wait for the other threads to die.
+> >  - Take the cred_guard_mutex again.
+> >  - Clear out the pointer in the task_struct.
+> >  - Finish execve and install the new creds.
+> >  - Drop the cred_guard_mutex again.
+> >
+> > Then in ptrace_may_access, after taking the cred_guard_mutex, we'd
+> > know that the target task is either outside execve or in the middle of
+> > execve, with old and new credentials known; and then we could say "you
+> > only get to access that task if you're capable relative to *both* its
+> > old and new credentials, since the task currently has both state from
+> > the old executable and from the new one".
+>
+> That doesn't solve the problem with "check_unsafe_exec()" - you might
+> miss setting LSM_UNSAFE_PTRACE.
 
-aarch64-linux-ld: sound/soc/codecs/rt5682.o: in function `rt5682_sdw_hw_free':
-rt5682.c:(.text+0xb34): undefined reference to `sdw_stream_remove_slave'
-aarch64-linux-ld: sound/soc/codecs/rt5682.o: in function `rt5682_sdw_hw_params':
-rt5682.c:(.text+0xe78): undefined reference to `sdw_stream_add_slave'
-
-In particular, the soundwire driver must not be built-in if
-CONFIG_I2C=m.
-
-Fixes: 5549ea647997 ("ASoC: rt5682: fix unmet dependencies")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- sound/soc/codecs/Kconfig | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 1ce76f04c154..d911956c591d 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -1137,10 +1137,13 @@ config SND_SOC_RT5677_SPI
- config SND_SOC_RT5682
- 	tristate
- 	depends on I2C || SOUNDWIRE
-+	depends on SOUNDWIRE || !SOUNDWIRE
-+	depends on I2C || !I2C
- 
- config SND_SOC_RT5682_SDW
- 	tristate "Realtek RT5682 Codec - SDW"
- 	depends on SOUNDWIRE
-+	depends on I2C || !I2C
- 	select SND_SOC_RT5682
- 	select REGMAP_SOUNDWIRE
- 
--- 
-2.26.0
-
+You don't need LSM_UNSAFE_PTRACE if the tracer has already passed a
+ptrace_may_access() check against the post-execve creds of the target
+- that's no different from having done PTRACE_ATTACH after execve is
+over.
