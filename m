@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3498AC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0529EC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D13520575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C752B208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099192;
-	bh=jTkbz6y8N+xHaIkPwxT3Swbov8LWwYRkjGnhFasGZuc=;
+	s=default; t=1588099194;
+	bh=bfMmx3fYjly39Pex01XfPoaA0tBtUA1c8xYcYUBstT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z85McRVQpRTwXRKTXc7RJ/IXYI0+ij8fXokd/PV3kzTbG2f7ii2NvuR7tSfrshMRp
-	 1EthQPUt8rZ0WIx3yMB0Z/buhLOkHi1naHQ/xaSoXq8cfXryulk+m85aaBKzkjnqwL
-	 kvtImx+XcmVSUvyqCRZmfU7yjfgy02fGj8lISGzk=
+	b=ZxRge9ghJuyGEVkSQrfE5mc32kmtxYjaLNyqfc4xflZ7QN74gfMhfFxRxVdSX5TP8
+	 Jin3pZbK2PfmQ0Zfc5J44cDpdtBQ8czGH9VahCBpSKuTV5yNtTxyf9r7O5owcYIW+H
+	 8VnT6DrLggCbdnqPSyC6TSQyrr8ZRsfmG3lxP9+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730801AbgD1Sju (ORCPT
+        id S1730784AbgD1Sjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:39:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58648 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:39:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730415AbgD1Sjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:39:45 -0400
+        id S1730806AbgD1Sjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:39:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D903620730;
-        Tue, 28 Apr 2020 18:39:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA22B20575;
+        Tue, 28 Apr 2020 18:39:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099185;
-        bh=jTkbz6y8N+xHaIkPwxT3Swbov8LWwYRkjGnhFasGZuc=;
+        s=default; t=1588099190;
+        bh=bfMmx3fYjly39Pex01XfPoaA0tBtUA1c8xYcYUBstT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HGRwaFgchut9kj4Lz80PVo6Fl6q6nEEegUxKQlVkKa9Gshl9u/Ulz3FVBZzEztXxi
-         D17G8xpBAZhafdxf4tzAzwlr99DZuxhr6GagpYR2LegsSoTBufu90W9mRGB8+aReq9
-         ELM0XdGVlivnBOTLVUA+5LgXdenHzxa+wpgsOA7w=
+        b=Yt+7Sk6F9BzqsZEy+5ontDYeJ+Xnf5kXGRs5Wf95ROwFDCD8stLM8M+mW6KV4f4vw
+         8ETGOgoUlyk0D5UEk5kvvH995sRUywhEMGOOya/k4vFV6lIEZC4KWRsTqAYJugobzb
+         DB7JSw6dsnCkzE+kuKWh24ed2sBBi9c39OQZnRfQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mordechay Goodstein <mordechay.goodstein@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.19 110/131] iwlwifi: mvm: beacon statistics shouldnt go backwards
-Date:   Tue, 28 Apr 2020 20:25:22 +0200
-Message-Id: <20200428182239.053291784@linuxfoundation.org>
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 070/168] selftests: Fix suppress test in fib_tests.sh
+Date:   Tue, 28 Apr 2020 20:24:04 +0200
+Message-Id: <20200428182240.825189111@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,55 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mordechay Goodstein <mordechay.goodstein@intel.com>
+From: David Ahern <dsahern@gmail.com>
 
-commit 290d5e4951832e39d10f4184610dbf09038f8483 upstream.
+[ Upstream commit 2c1dd4c110627c2a4f006643f074119205cfcff4 ]
 
-We reset statistics also in case that we didn't reassoc so in
-this cases keep last beacon counter.
+fib_tests is spewing errors:
+    ...
+    Cannot open network namespace "ns1": No such file or directory
+    Cannot open network namespace "ns1": No such file or directory
+    Cannot open network namespace "ns1": No such file or directory
+    Cannot open network namespace "ns1": No such file or directory
+    ping: connect: Network is unreachable
+    Cannot open network namespace "ns1": No such file or directory
+    Cannot open network namespace "ns1": No such file or directory
+    ...
 
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Mordechay Goodstein <mordechay.goodstein@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/iwlwifi.20200417100405.1f9142751fbc.Ifbfd0f928a0a761110b8f4f2ca5483a61fb21131@changeid
+Each test entry in fib_tests is supposed to do its own setup and
+cleanup. Right now the $IP commands in fib_suppress_test are
+failing because there is no ns1. Add the setup/cleanup and logging
+expected for each test.
+
+Fixes: ca7a03c41753 ("ipv6: do not free rt if FIB_LOOKUP_NOREF is set on suppress rule")
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Cc: Jason A. Donenfeld <Jason@zx2c4.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/rx.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ tools/testing/selftests/net/fib_tests.sh |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
-@@ -587,6 +587,7 @@ void iwl_mvm_rx_rx_mpdu(struct iwl_mvm *
+--- a/tools/testing/selftests/net/fib_tests.sh
++++ b/tools/testing/selftests/net/fib_tests.sh
+@@ -618,16 +618,22 @@ fib_nexthop_test()
  
- struct iwl_mvm_stat_data {
- 	struct iwl_mvm *mvm;
-+	__le32 flags;
- 	__le32 mac_id;
- 	u8 beacon_filter_average_energy;
- 	void *general;
-@@ -630,6 +631,13 @@ static void iwl_mvm_stat_iterator(void *
- 		}
- 	}
- 
-+	/* make sure that beacon statistics don't go backwards with TCM
-+	 * request to clear statistics
-+	 */
-+	if (le32_to_cpu(data->flags) & IWL_STATISTICS_REPLY_FLG_CLEAR)
-+		mvmvif->beacon_stats.accu_num_beacons +=
-+			mvmvif->beacon_stats.num_beacons;
+ fib_suppress_test()
+ {
++	echo
++	echo "FIB rule with suppress_prefixlength"
++	setup
 +
- 	if (mvmvif->id != id)
- 		return;
+ 	$IP link add dummy1 type dummy
+ 	$IP link set dummy1 up
+ 	$IP -6 route add default dev dummy1
+ 	$IP -6 rule add table main suppress_prefixlength 0
+-	ping -f -c 1000 -W 1 1234::1 || true
++	ping -f -c 1000 -W 1 1234::1 >/dev/null 2>&1
+ 	$IP -6 rule del table main suppress_prefixlength 0
+ 	$IP link del dummy1
  
-@@ -790,6 +798,7 @@ void iwl_mvm_handle_rx_statistics(struct
+ 	# If we got here without crashing, we're good.
+-	return 0
++	log_test 0 0 "FIB rule suppress test"
++
++	cleanup
+ }
  
- 		flags = stats->flag;
- 	}
-+	data.flags = flags;
- 
- 	iwl_mvm_rx_stats_check_trigger(mvm, pkt);
- 
+ ################################################################################
 
 
