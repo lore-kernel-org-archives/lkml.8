@@ -4,23 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 076C3C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B74C83009
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF7BD206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F6120757
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:24:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbgD1PRx (ORCPT
+        id S1728910AbgD1PYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:17:53 -0400
+        Tue, 28 Apr 2020 11:24:25 -0400
 Received: from 8bytes.org ([81.169.241.247]:37416 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728102AbgD1PRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:17:49 -0400
+        id S1728154AbgD1PRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:17:51 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 4A8A88A8; Tue, 28 Apr 2020 17:17:43 +0200 (CEST)
+        id C5C50BAD; Tue, 28 Apr 2020 17:17:43 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -40,9 +41,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 06/75] x86/insn: Make inat-tables.c suitable for pre-decompression code
-Date:   Tue, 28 Apr 2020 17:16:16 +0200
-Message-Id: <20200428151725.31091-7-joro@8bytes.org>
+Subject: [PATCH v3 09/75] x86/insn: Add insn_get_modrm_reg_off()
+Date:   Tue, 28 Apr 2020 17:16:19 +0200
+Message-Id: <20200428151725.31091-10-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200428151725.31091-1-joro@8bytes.org>
 References: <20200428151725.31091-1-joro@8bytes.org>
@@ -53,155 +54,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-The inat-tables.c file has some arrays in it that contain pointers to
-other arrays. These pointers need to be relocated when the kernel
-image is moved to a different location.
-
-The pre-decompression boot-code has no support for applying ELF
-relocations, so initialize these arrays at runtime in the
-pre-decompression code to make sure all pointers are correctly
-initialized.
+Add a function to the instruction decoder which returns the pt_regs
+offset of the register specified in the reg field of the modrm byte.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- arch/x86/tools/gen-insn-attr-x86.awk       | 50 +++++++++++++++++++++-
- tools/arch/x86/tools/gen-insn-attr-x86.awk | 50 +++++++++++++++++++++-
- 2 files changed, 98 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/insn-eval.h |  1 +
+ arch/x86/lib/insn-eval.c         | 23 +++++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
 
-diff --git a/arch/x86/tools/gen-insn-attr-x86.awk b/arch/x86/tools/gen-insn-attr-x86.awk
-index a42015b305f4..af38469afd14 100644
---- a/arch/x86/tools/gen-insn-attr-x86.awk
-+++ b/arch/x86/tools/gen-insn-attr-x86.awk
-@@ -362,6 +362,9 @@ function convert_operands(count,opnd,       i,j,imm,mod)
- END {
- 	if (awkchecked != "")
- 		exit 1
+diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
+index b4ff3e3316d1..1e343010129e 100644
+--- a/arch/x86/include/asm/insn-eval.h
++++ b/arch/x86/include/asm/insn-eval.h
+@@ -17,6 +17,7 @@
+ 
+ void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs);
+ int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs);
++int insn_get_modrm_reg_off(struct insn *insn, struct pt_regs *regs);
+ unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx);
+ int insn_get_code_seg_params(struct pt_regs *regs);
+ int insn_fetch_from_user(struct pt_regs *regs,
+diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
+index 0bbb814d4851..371da15f1343 100644
+--- a/arch/x86/lib/insn-eval.c
++++ b/arch/x86/lib/insn-eval.c
+@@ -20,6 +20,7 @@
+ 
+ enum reg_type {
+ 	REG_TYPE_RM = 0,
++	REG_TYPE_REG,
+ 	REG_TYPE_INDEX,
+ 	REG_TYPE_BASE,
+ };
+@@ -441,6 +442,13 @@ static int get_reg_offset(struct insn *insn, struct pt_regs *regs,
+ 			regno += 8;
+ 		break;
+ 
++	case REG_TYPE_REG:
++		regno = X86_MODRM_REG(insn->modrm.value);
 +
-+	print "#ifndef __BOOT_COMPRESSED\n"
++		if (X86_REX_R(insn->rex_prefix.value))
++			regno += 8;
++		break;
 +
- 	# print escape opcode map's array
- 	print "/* Escape opcode map array */"
- 	print "const insn_attr_t * const inat_escape_tables[INAT_ESC_MAX + 1]" \
-@@ -388,6 +391,51 @@ END {
- 		for (j = 0; j < max_lprefix; j++)
- 			if (atable[i,j])
- 				print "	["i"]["j"] = "atable[i,j]","
--	print "};"
-+	print "};\n"
-+
-+	print "#else /* !__BOOT_COMPRESSED */\n"
-+
-+	print "/* Escape opcode map array */"
-+	print "static const insn_attr_t *inat_escape_tables[INAT_ESC_MAX + 1]" \
-+	      "[INAT_LSTPFX_MAX + 1];"
-+	print ""
-+
-+	print "/* Group opcode map array */"
-+	print "static const insn_attr_t *inat_group_tables[INAT_GRP_MAX + 1]"\
-+	      "[INAT_LSTPFX_MAX + 1];"
-+	print ""
-+
-+	print "/* AVX opcode map array */"
-+	print "static const insn_attr_t *inat_avx_tables[X86_VEX_M_MAX + 1]"\
-+	      "[INAT_LSTPFX_MAX + 1];"
-+	print ""
-+
-+	print "static void inat_init_tables(void)"
-+	print "{"
-+
-+	# print escape opcode map's array
-+	print "\t/* Print Escape opcode map array */"
-+	for (i = 0; i < geid; i++)
-+		for (j = 0; j < max_lprefix; j++)
-+			if (etable[i,j])
-+				print "\tinat_escape_tables["i"]["j"] = "etable[i,j]";"
-+	print ""
-+
-+	# print group opcode map's array
-+	print "\t/* Print Group opcode map array */"
-+	for (i = 0; i < ggid; i++)
-+		for (j = 0; j < max_lprefix; j++)
-+			if (gtable[i,j])
-+				print "\tinat_group_tables["i"]["j"] = "gtable[i,j]";"
-+	print ""
-+	# print AVX opcode map's array
-+	print "\t/* Print AVX opcode map array */"
-+	for (i = 0; i < gaid; i++)
-+		for (j = 0; j < max_lprefix; j++)
-+			if (atable[i,j])
-+				print "\tinat_avx_tables["i"]["j"] = "atable[i,j]";"
-+
-+	print "}"
-+	print "#endif"
+ 	case REG_TYPE_INDEX:
+ 		regno = X86_SIB_INDEX(insn->sib.value);
+ 		if (X86_REX_X(insn->rex_prefix.value))
+@@ -809,6 +817,21 @@ int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs)
+ 	return get_reg_offset(insn, regs, REG_TYPE_RM);
  }
  
-diff --git a/tools/arch/x86/tools/gen-insn-attr-x86.awk b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-index a42015b305f4..af38469afd14 100644
---- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
-+++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-@@ -362,6 +362,9 @@ function convert_operands(count,opnd,       i,j,imm,mod)
- END {
- 	if (awkchecked != "")
- 		exit 1
++/**
++ * insn_get_modrm_reg_off() - Obtain register in reg part of the ModRM byte
++ * @insn:	Instruction containing the ModRM byte
++ * @regs:	Register values as seen when entering kernel mode
++ *
++ * Returns:
++ *
++ * The register indicated by the reg part of the ModRM byte. The
++ * register is obtained as an offset from the base of pt_regs.
++ */
++int insn_get_modrm_reg_off(struct insn *insn, struct pt_regs *regs)
++{
++	return get_reg_offset(insn, regs, REG_TYPE_REG);
++}
 +
-+	print "#ifndef __BOOT_COMPRESSED\n"
-+
- 	# print escape opcode map's array
- 	print "/* Escape opcode map array */"
- 	print "const insn_attr_t * const inat_escape_tables[INAT_ESC_MAX + 1]" \
-@@ -388,6 +391,51 @@ END {
- 		for (j = 0; j < max_lprefix; j++)
- 			if (atable[i,j])
- 				print "	["i"]["j"] = "atable[i,j]","
--	print "};"
-+	print "};\n"
-+
-+	print "#else /* !__BOOT_COMPRESSED */\n"
-+
-+	print "/* Escape opcode map array */"
-+	print "static const insn_attr_t *inat_escape_tables[INAT_ESC_MAX + 1]" \
-+	      "[INAT_LSTPFX_MAX + 1];"
-+	print ""
-+
-+	print "/* Group opcode map array */"
-+	print "static const insn_attr_t *inat_group_tables[INAT_GRP_MAX + 1]"\
-+	      "[INAT_LSTPFX_MAX + 1];"
-+	print ""
-+
-+	print "/* AVX opcode map array */"
-+	print "static const insn_attr_t *inat_avx_tables[X86_VEX_M_MAX + 1]"\
-+	      "[INAT_LSTPFX_MAX + 1];"
-+	print ""
-+
-+	print "static void inat_init_tables(void)"
-+	print "{"
-+
-+	# print escape opcode map's array
-+	print "\t/* Print Escape opcode map array */"
-+	for (i = 0; i < geid; i++)
-+		for (j = 0; j < max_lprefix; j++)
-+			if (etable[i,j])
-+				print "\tinat_escape_tables["i"]["j"] = "etable[i,j]";"
-+	print ""
-+
-+	# print group opcode map's array
-+	print "\t/* Print Group opcode map array */"
-+	for (i = 0; i < ggid; i++)
-+		for (j = 0; j < max_lprefix; j++)
-+			if (gtable[i,j])
-+				print "\tinat_group_tables["i"]["j"] = "gtable[i,j]";"
-+	print ""
-+	# print AVX opcode map's array
-+	print "\t/* Print AVX opcode map array */"
-+	for (i = 0; i < gaid; i++)
-+		for (j = 0; j < max_lprefix; j++)
-+			if (atable[i,j])
-+				print "\tinat_avx_tables["i"]["j"] = "atable[i,j]";"
-+
-+	print "}"
-+	print "#endif"
- }
- 
+ /**
+  * get_seg_base_limit() - obtain base address and limit of a segment
+  * @insn:	Instruction. Must be valid.
 -- 
 2.17.1
 
