@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7786C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FCBC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 859412054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EEF120730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:43:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099412;
-	bh=Jq+43dOowewCe+eyDo+Q0xe3EHHPuoR53eIrtwTUFs8=;
+	s=default; t=1588099416;
+	bh=c9H+qpd47HYJ1J9D3GTa+VjseQBJ8oDJHKlKlFAPWDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dv4KnhI1WNdgeVhoztPa7GDpB5geN327bL6dx9zSP0s7erZvWivu1OCIIdMUDL3QE
-	 oCcjZqtX2Ej7e44og/arVdEMPW0K6uLsS5GOACo0nPIJkumqecUyOQ7KtMKtgfg7yk
-	 3HLjPTBXeIOB2X3rman9cWwiBjDds/IiQa/n6eF8=
+	b=0l+sTQPi3Wza/sX9V7Ow9vOfWG2emecHxnk4Cftb8cZIgCMM19dYRAsMJp6j90D5n
+	 VcZoIlGEEuGVfPUe6EgiAUXs7MT9MOAXYgkWnKDvzwJOFbPPwjWCAWxOtZt35x6RsN
+	 6pjCXH4nqyRABQSbhX/E7JGATFoe4dZIHjZysrVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbgD1Snb (ORCPT
+        id S1731257AbgD1Snf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:43:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35888 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:43:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731226AbgD1Sn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:43:28 -0400
+        id S1730284AbgD1Snb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:43:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AE622085B;
-        Tue, 28 Apr 2020 18:43:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29C8E20730;
+        Tue, 28 Apr 2020 18:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099408;
-        bh=Jq+43dOowewCe+eyDo+Q0xe3EHHPuoR53eIrtwTUFs8=;
+        s=default; t=1588099410;
+        bh=c9H+qpd47HYJ1J9D3GTa+VjseQBJ8oDJHKlKlFAPWDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k96YHEOA3dHuGy+/FckMF12MOoZ5Q/rgBMC798f6h7ByXslZQqaJc7/0G1s7wLebP
-         gw8Aoraz6n7m0VdC5jsXNHAZSk/OYkVRwV4T92ZJQnMML8PkfZg7usgZiNSQSrnIxy
-         B+P3xAA/SDsYMLbtXbcyXmzw9VGLOpN5a2nVmdUY=
+        b=TmAOsZZubuC+FUTpLa3CsxpKeBPaWqrhFXP+HMD2HFDiVAQbQzu3c2eBsEfDL8L6f
+         oNZ9mqxyEKjBe2rsgD0Zv2dEQV86ZYtxUPxLi4lfI2VaLRksvrwGsj4up70x9vPxe+
+         iXPx6fGJ70S1I/3nUpEr1nNtdBWzNEgMV+aTchAM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 5.4 136/168] staging: comedi: dt2815: fix writing hi byte of analog output
-Date:   Tue, 28 Apr 2020 20:25:10 +0200
-Message-Id: <20200428182249.101499577@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>
+Subject: [PATCH 5.4 097/168] USB: early: Handle AMDs spec-compliant identifiers, too
+Date:   Tue, 28 Apr 2020 20:24:31 +0200
+Message-Id: <20200428182244.617311979@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -58,62 +58,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Jann Horn <jannh@google.com>
 
-commit ed87d33ddbcd9a1c3b5ae87995da34e6f51a862c upstream.
+commit 7dbdb53d72a51cea9b921d9dbba54be00752212a upstream.
 
-The DT2815 analog output command is 16 bits wide, consisting of the
-12-bit sample value in bits 15 to 4, the channel number in bits 3 to 1,
-and a voltage or current selector in bit 0.  Both bytes of the 16-bit
-command need to be written in turn to a single 8-bit data register.
-However, the driver currently only writes the low 8-bits.  It is broken
-and appears to have always been broken.
+This fixes a bug that causes the USB3 early console to freeze after
+printing a single line on AMD machines because it can't parse the
+Transfer TRB properly.
 
-Electronic copies of the DT2815 User's Manual seem impossible to find
-online, but looking at the source code, a best guess for the sequence
-the driver intended to use to write the analog output command is as
-follows:
+The spec at
+https://www.intel.com/content/dam/www/public/us/en/documents/technical-specifications/extensible-host-controler-interface-usb-xhci.pdf
+says in section "4.5.1 Device Context Index" that the Context Index,
+also known as Endpoint ID according to
+section "1.6 Terms and Abbreviations", is normally computed as
+`DCI = (Endpoint Number * 2) + Direction`, which matches the current
+definitions of XDBC_EPID_OUT and XDBC_EPID_IN.
 
-1. Wait for the status register to read 0x00.
-2. Write the low byte of the command to the data register.
-3. Wait for the status register to read 0x80.
-4. Write the high byte of the command to the data register.
+However, the numbering in a Debug Capability Context data structure is
+supposed to be different:
+Section "7.6.3.2 Endpoint Contexts and Transfer Rings" explains that a
+Debug Capability Context data structure has the endpoints mapped to indices
+0 and 1.
 
-Step 4 is missing from the driver.  Add step 4 to (hopefully) fix the
-driver.
+Change XDBC_EPID_OUT/XDBC_EPID_IN to the spec-compliant values, add
+XDBC_EPID_OUT_INTEL/XDBC_EPID_IN_INTEL with Intel's incorrect values, and
+let xdbc_handle_tx_event() handle both.
 
-Also add a "FIXME" comment about setting bit 0 of the low byte of the
-command.  Supposedly, it is used to choose between voltage output and
-current output, but the current driver always sets it to 1.
+I have verified that with this patch applied, the USB3 early console works
+on both an Intel and an AMD machine.
 
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200406142015.126982-1-abbotti@mev.co.uk
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: aeb9dd1de98c ("usb/early: Add driver for xhci debug capability")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jann Horn <jannh@google.com>
+Link: https://lore.kernel.org/r/20200401074619.8024-1-jannh@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/dt2815.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/usb/early/xhci-dbc.c |    8 ++++----
+ drivers/usb/early/xhci-dbc.h |   18 ++++++++++++++++--
+ 2 files changed, 20 insertions(+), 6 deletions(-)
 
---- a/drivers/staging/comedi/drivers/dt2815.c
-+++ b/drivers/staging/comedi/drivers/dt2815.c
-@@ -92,6 +92,7 @@ static int dt2815_ao_insn(struct comedi_
- 	int ret;
+--- a/drivers/usb/early/xhci-dbc.c
++++ b/drivers/usb/early/xhci-dbc.c
+@@ -728,19 +728,19 @@ static void xdbc_handle_tx_event(struct
+ 	case COMP_USB_TRANSACTION_ERROR:
+ 	case COMP_STALL_ERROR:
+ 	default:
+-		if (ep_id == XDBC_EPID_OUT)
++		if (ep_id == XDBC_EPID_OUT || ep_id == XDBC_EPID_OUT_INTEL)
+ 			xdbc.flags |= XDBC_FLAGS_OUT_STALL;
+-		if (ep_id == XDBC_EPID_IN)
++		if (ep_id == XDBC_EPID_IN || ep_id == XDBC_EPID_IN_INTEL)
+ 			xdbc.flags |= XDBC_FLAGS_IN_STALL;
  
- 	for (i = 0; i < insn->n; i++) {
-+		/* FIXME: lo bit 0 chooses voltage output or current output */
- 		lo = ((data[i] & 0x0f) << 4) | (chan << 1) | 0x01;
- 		hi = (data[i] & 0xff0) >> 4;
- 
-@@ -105,6 +106,8 @@ static int dt2815_ao_insn(struct comedi_
- 		if (ret)
- 			return ret;
- 
-+		outb(hi, dev->iobase + DT2815_DATA);
-+
- 		devpriv->ao_readback[chan] = data[i];
+ 		xdbc_trace("endpoint %d stalled\n", ep_id);
+ 		break;
  	}
- 	return i;
+ 
+-	if (ep_id == XDBC_EPID_IN) {
++	if (ep_id == XDBC_EPID_IN || ep_id == XDBC_EPID_IN_INTEL) {
+ 		xdbc.flags &= ~XDBC_FLAGS_IN_PROCESS;
+ 		xdbc_bulk_transfer(NULL, XDBC_MAX_PACKET, true);
+-	} else if (ep_id == XDBC_EPID_OUT) {
++	} else if (ep_id == XDBC_EPID_OUT || ep_id == XDBC_EPID_OUT_INTEL) {
+ 		xdbc.flags &= ~XDBC_FLAGS_OUT_PROCESS;
+ 	} else {
+ 		xdbc_trace("invalid endpoint id %d\n", ep_id);
+--- a/drivers/usb/early/xhci-dbc.h
++++ b/drivers/usb/early/xhci-dbc.h
+@@ -120,8 +120,22 @@ struct xdbc_ring {
+ 	u32			cycle_state;
+ };
+ 
+-#define XDBC_EPID_OUT		2
+-#define XDBC_EPID_IN		3
++/*
++ * These are the "Endpoint ID" (also known as "Context Index") values for the
++ * OUT Transfer Ring and the IN Transfer Ring of a Debug Capability Context data
++ * structure.
++ * According to the "eXtensible Host Controller Interface for Universal Serial
++ * Bus (xHCI)" specification, section "7.6.3.2 Endpoint Contexts and Transfer
++ * Rings", these should be 0 and 1, and those are the values AMD machines give
++ * you; but Intel machines seem to use the formula from section "4.5.1 Device
++ * Context Index", which is supposed to be used for the Device Context only.
++ * Luckily the values from Intel don't overlap with those from AMD, so we can
++ * just test for both.
++ */
++#define XDBC_EPID_OUT		0
++#define XDBC_EPID_IN		1
++#define XDBC_EPID_OUT_INTEL	2
++#define XDBC_EPID_IN_INTEL	3
+ 
+ struct xdbc_state {
+ 	u16			vendor;
 
 
