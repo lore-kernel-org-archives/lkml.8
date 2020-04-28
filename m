@@ -2,86 +2,108 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2FDC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E364C83009
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8F57206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:08:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="lIb50WEi"
+	by mail.kernel.org (Postfix) with ESMTP id 17AC7206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:08:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbgD1OIR (ORCPT
+        id S1728122AbgD1OIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:08:17 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:52108 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726868AbgD1OIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:08:16 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49BNlc73xQz2n;
-        Tue, 28 Apr 2020 16:08:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1588082894; bh=3kjocTgjQohJ4pvumUVIZjNBlHYyJdLbO1K0n36TMPo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lIb50WEiUjQ2fPMkU753BcaE+htplcmVRe983VwDjhi35EgHzj11pC1UYmDAPaUVX
-         3BOEUavVG3oJhGVCF5L+mGEFnWiBgdRWO3rh0lZMbWSROCB44wo665XLsF6tXv4IXV
-         NKwkABYOkU/wsNRXX/oqCzvvHd8zjSVFasWKoOro8lE9btxtAiy33SDZhmj/nFSfdl
-         aGVNa5yhLJARq9lfPFugz8ayT0vbqs1Lt+dWTPEV3Nu5iAqlYaB6rw/NbdQx7pezLW
-         YKClsBolqx5rHC3IBO8BPNYZyqPZKG/s9nDWMA40G1jUryT7HKoXFuoavaf1XaQ6YX
-         NAXm1OVsR17lQ==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Tue, 28 Apr 2020 16:08:11 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     David Heidelberg <david@ixit.cz>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        James Chen <james.chen@emc.com.tw>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        Scott Liu <scott.liu@emc.com.tw>,
-        Linux Input <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 10/10] dt-bindings: input: touchscreen: elants_i2c:
- convert to YAML
-Message-ID: <20200428140811.GA4355@qmqm.qmqm.pl>
-References: <cover.1587916846.git.mirq-linux@rere.qmqm.pl>
- <222105a9c09ac85f0c03224ef7acb8a6d6e237d5.1587916846.git.mirq-linux@rere.qmqm.pl>
- <CAL_JsqLtvKgZYeb8xqT1nXa1Xja2Dxr6PBKixD6tN50cZ2xH5g@mail.gmail.com>
+        Tue, 28 Apr 2020 10:08:25 -0400
+Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:47039 "EHLO
+        smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727807AbgD1OIY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 10:08:24 -0400
+Received: from pro2.mail.ovh.net (unknown [10.108.4.3])
+        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id 24867500160D;
+        Tue, 28 Apr 2020 16:08:22 +0200 (CEST)
+Received: from localhost (89.70.31.203) by DAG2EX1.emp2.local (172.16.2.11)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Tue, 28 Apr
+ 2020 16:08:21 +0200
+Date:   Tue, 28 Apr 2020 16:06:53 +0200
+From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/6] iio: chemical: scd30: add core driver
+Message-ID: <20200428140653.GA10280@arch>
+References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
+ <20200422141135.86419-2-tomasz.duszynski@octakon.com>
+ <CAHp75VcbaGYj76qkDJnTnuG5SM215qVmFo7FLR6YzHA37PgF_g@mail.gmail.com>
+ <20200424190413.GA2731@arch>
+ <CAHp75Vdajf7Ci3ytxP7Qs9=fFaxvVBQoL5uh+HUDwxHS5r9MUg@mail.gmail.com>
+ <20200425184130.GA37271@arch>
+ <CAHp75Vez8wSaYHbXmvfXUS5N+vScQqHGg055DNKrEnCunP7awA@mail.gmail.com>
+ <20200428075606.GB6908@arch>
+ <CAHp75VdKqVvJg7T=42w1SzKSDbfWjYKMomgQBshiMAW=_e0y_w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqLtvKgZYeb8xqT1nXa1Xja2Dxr6PBKixD6tN50cZ2xH5g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHp75VdKqVvJg7T=42w1SzKSDbfWjYKMomgQBshiMAW=_e0y_w@mail.gmail.com>
+X-Originating-IP: [89.70.31.203]
+X-ClientProxiedBy: DAG1EX1.emp2.local (172.16.2.1) To DAG2EX1.emp2.local
+ (172.16.2.11)
+X-Ovh-Tracer-Id: 4095460913286765727
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedriedugdejvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkfhggtggujghisehttdertddttdejnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecukfhppedtrddtrddtrddtpdekledrjedtrdefuddrvddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehjihgtvdefsehkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 04:14:15PM -0500, Rob Herring wrote:
-> On Sun, Apr 26, 2020 at 11:11 AM Micha³ Miros³aw
-> <mirq-linux@rere.qmqm.pl> wrote:
+On Tue, Apr 28, 2020 at 01:16:47PM +0300, Andy Shevchenko wrote:
+> On Tue, Apr 28, 2020 at 10:57 AM Tomasz Duszynski
+> <tomasz.duszynski@octakon.com> wrote:
 > >
-> > From: David Heidelberg <david@ixit.cz>
+> > On Sat, Apr 25, 2020 at 09:52:25PM +0300, Andy Shevchenko wrote:
+> > > On Sat, Apr 25, 2020 at 9:42 PM Tomasz Duszynski
+> > > <tomasz.duszynski@octakon.com> wrote:
+> > > > On Sat, Apr 25, 2020 at 02:43:35PM +0300, Andy Shevchenko wrote:
+> > > > > On Fri, Apr 24, 2020 at 10:05 PM Tomasz Duszynski
+> > > > > <tomasz.duszynski@octakon.com> wrote:
+> > > > > > On Wed, Apr 22, 2020 at 10:49:44PM +0300, Andy Shevchenko wrote:
+> > > > > > > On Wed, Apr 22, 2020 at 5:22 PM Tomasz Duszynski
+> > > > > > > <tomasz.duszynski@octakon.com> wrote:
+> > >
+> > > ...
+> > >
+> > > > > > As for ABI that's in
+> > > > > > a separate patch.
+> > > > >
+> > > > > It's not good from bisectability point of view. If by some reason this
+> > > > > patch or documentation patch gets reverted, the other one will be
+> > > > > dangling.
+> > > > > Please, unify them.
+> > > > >
+> > > >
+> > > > Huh? Reverting core and leaving leftovers would be wrong and pointless.
+> > >
+> > > Exactly my point why it should be one patch. To secure impossibility
+> > > to do pointless reverts.
+> > >
 > >
-> > Convert elants_i2c.txt DT binding to YAML and put into correct directory.
-> 
-> Resend to the DT list or this won't be in my review queue. Looks okay
-> from a quick scan.
+> > But the same applies to other driver parts like i2c or serial
+> > interfaces. I don't buy it.
+>
+> They won't compile without core driver, right? Absence of the
+> documentation OTOH doesn't prevent build.
+>
 
-Hi Rob,
+Fair enough.
 
-This is the same patch that David already sent to the list about
-a week ago [1].  Do you need it resent? (Whole patchset or just the patch?)
-
-[1] https://lore.kernel.org/linux-devicetree/20200423173253.711725-2-david@ixit.cz/
-
-Best Regards,
-Micha³ Miros³aw
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
