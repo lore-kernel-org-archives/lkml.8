@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95E7C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8854DC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A90D220757
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6305520BED
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098553;
-	bh=OTZ+ErN3r00KAVGJdxg0S/gLRj0CxBmRG3ZKxw2O9fc=;
+	s=default; t=1588098559;
+	bh=qNus+Aotl4Ykw5mSaayfce2H6rMn0LHCUbNcuJPfFkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XhHbQxxdScNE2CdFqr8Hzkol1cynuP73kLnCfH1PX3QyTIqIIaWAWBpuTIg4QxvJq
-	 gVg92+VhiMAvvm+o6+UY7Re3/sbTEPJnBmRmDF6ChQfvFJ4MNkAHp4j6ugutR+XeL+
-	 6VwLyZic8/popK5y19NjrFJn8wGAL8DCl258Xq8I=
+	b=PCO6odVFwLK7TEosX/PoxTOM6nnxhA0Sse6c2DKOjh8Lj8jz2ywp3/Yl5URBiE9dK
+	 mQS6G9kwhvu9B1LH5hGw+eDo1jtTipOwANZavMcFXObc66J80ufxa+Fl4em/0snGVn
+	 H06OK2RvH5S8K8wOuNZW75w0p8uGQAdxCqhsHHTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729312AbgD1S3M (ORCPT
+        id S1729330AbgD1S3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:29:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42346 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:29:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729278AbgD1S27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:28:59 -0400
+        id S1729306AbgD1S3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:29:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49471208E0;
-        Tue, 28 Apr 2020 18:28:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24A2120B80;
+        Tue, 28 Apr 2020 18:29:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098538;
-        bh=OTZ+ErN3r00KAVGJdxg0S/gLRj0CxBmRG3ZKxw2O9fc=;
+        s=default; t=1588098548;
+        bh=qNus+Aotl4Ykw5mSaayfce2H6rMn0LHCUbNcuJPfFkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P7z/wzfhC4ohoIMqpBwCLq5KVbzWqjJSbdwEWVub+WHYm80L0vOJ25lHqwzpgDimd
-         kPCiu+P77LzgcXu2X6BQI5GtCvVQae3/xmAkNbL+FosM6EQtLZQgGF+aCe3oIZaE85
-         yizhglBjT2DfTP1Q1CnYg3DVKomI3RIjrAhEUQso=
+        b=H1FUFKtN3GKC/CGLZU2pqUl8Jm1x6vH5+JsM7fJnkNNNDPqr2c/meVwP+EeiMrLTn
+         bivTgO1PU9ifVNGlNOAzjqzwnNp4nxjhB9QAa4bxlWrncOCFq0rwWKtlq01+/TrGK5
+         KPK2tOIFJyNmpzOqVwHvZVozDFGgOhLjmA2km8SI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        James Morse <james.morse@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org, James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 010/131] arm64: Silence clang warning on mismatched value/register sizes
-Date:   Tue, 28 Apr 2020 20:23:42 +0200
-Message-Id: <20200428182226.500043031@linuxfoundation.org>
+Subject: [PATCH 4.19 012/131] scsi: lpfc: Fix kasan slab-out-of-bounds error in lpfc_unreg_login
+Date:   Tue, 28 Apr 2020 20:23:44 +0200
+Message-Id: <20200428182226.716275284@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
 References: <20200428182224.822179290@linuxfoundation.org>
@@ -62,37 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Catalin Marinas <catalin.marinas@arm.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit: 27a22fbdeedd6c5c451cf5f830d51782bf50c3a2 ]
+[ Upstream commit 38503943c89f0bafd9e3742f63f872301d44cbea ]
 
-Clang reports a warning on the __tlbi(aside1is, 0) macro expansion since
-the value size does not match the register size specified in the inline
-asm. Construct the ASID value using the __TLBI_VADDR() macro.
+The following kasan bug was called out:
 
-Fixes: 222fc0c8503d ("arm64: compat: Workaround Neoverse-N1 #1542419 for compat user-space")
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Cc: James Morse <james.morse@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: James Morse <james.morse@arm.com>
+ BUG: KASAN: slab-out-of-bounds in lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ Read of size 2 at addr ffff889fc7c50a22 by task lpfc_worker_3/6676
+ ...
+ Call Trace:
+ dump_stack+0x96/0xe0
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ print_address_description.constprop.6+0x1b/0x220
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ __kasan_report.cold.9+0x37/0x7c
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ kasan_report+0xe/0x20
+ lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ lpfc_sli_def_mbox_cmpl+0x334/0x430 [lpfc]
+ ...
+
+When processing the completion of a "Reg Rpi" login mailbox command in
+lpfc_sli_def_mbox_cmpl, a call may be made to lpfc_unreg_login. The vpi is
+extracted from the completing mailbox context and passed as an input for
+the next. However, the vpi stored in the mailbox command context is an
+absolute vpi, which for SLI4 represents both base + offset.  When used with
+a non-zero base component, (function id > 0) this results in an
+out-of-range access beyond the allocated phba->vpi_ids array.
+
+Fix by subtracting the function's base value to get an accurate vpi number.
+
+Link: https://lore.kernel.org/r/20200322181304.37655-2-jsmart2021@gmail.com
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/sys_compat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_sli.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/kernel/sys_compat.c b/arch/arm64/kernel/sys_compat.c
-index 5a9b220aef6cf..3ef9d0a3ac1dc 100644
---- a/arch/arm64/kernel/sys_compat.c
-+++ b/arch/arm64/kernel/sys_compat.c
-@@ -48,7 +48,7 @@ __do_compat_cache_op(unsigned long start, unsigned long end)
- 			 * The workaround requires an inner-shareable tlbi.
- 			 * We pick the reserved-ASID to minimise the impact.
- 			 */
--			__tlbi(aside1is, 0);
-+			__tlbi(aside1is, __TLBI_VADDR(0, 0));
- 			dsb(ish);
- 		}
- 
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index a801917d3c193..a56a939792ac1 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -2472,6 +2472,8 @@ lpfc_sli_def_mbox_cmpl(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
+ 	    !pmb->u.mb.mbxStatus) {
+ 		rpi = pmb->u.mb.un.varWords[0];
+ 		vpi = pmb->u.mb.un.varRegLogin.vpi;
++		if (phba->sli_rev == LPFC_SLI_REV4)
++			vpi -= phba->sli4_hba.max_cfg_param.vpi_base;
+ 		lpfc_unreg_login(phba, vpi, rpi, pmb);
+ 		pmb->vport = vport;
+ 		pmb->mbox_cmpl = lpfc_sli_def_mbox_cmpl;
 -- 
 2.20.1
 
