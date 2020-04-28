@@ -2,53 +2,54 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92737C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33533C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72B672085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10CE120575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:41:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099273;
-	bh=BaVgmSjHEIJgkpOKzHo70T1UmYKAxEl2kDM9lEUxyGc=;
+	s=default; t=1588099277;
+	bh=gVkCTT7aKl7b5KYjlXqa/ptP+uByH23DvSWnJ3HuPo0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gN55ilTlRVwFTTPSHpQuBWRe6jyV3+SgreyKvYQP2vk9im6nuyrP2a+wEXeLccDe2
-	 uBaT626KG+XnQfiMKRI9kJFcIXmuy8+RUm/UTlcaYv8TgUBVmAdGj9ZDKO4Ny/b5kt
-	 6+EOdneEUMFxdIAC60K0YP5jtlyywW81tSjY07Uk=
+	b=zCyG6HZ9dgTbSFI2A9ii86e8kR587Xtr3u8HvCVdZljicwwBNzuFzYFUQYADXqDFQ
+	 s1e8CWxJV4Yxmsm507kkoVzVrWETVc5NdVDESHIGzSNPCmhH0hqcGH4R8zsYYPx+sd
+	 FUTBrulJnWDfl6zpLAPsrEo8bT3hxsEE12vPwx/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730974AbgD1SlL (ORCPT
+        id S1730675AbgD1SlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:41:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60692 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:41:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730969AbgD1SlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:41:09 -0400
+        id S1730975AbgD1SlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:41:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5260D2085B;
-        Tue, 28 Apr 2020 18:41:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB51D20B1F;
+        Tue, 28 Apr 2020 18:41:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099268;
-        bh=BaVgmSjHEIJgkpOKzHo70T1UmYKAxEl2kDM9lEUxyGc=;
+        s=default; t=1588099271;
+        bh=gVkCTT7aKl7b5KYjlXqa/ptP+uByH23DvSWnJ3HuPo0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RixPxm9qZoRDmVfsEEZ2hXY6p4KVsSxl3SskNZuqV6RzJKwJUEf9zEv1B0g/Z5LGg
-         Sia5JHSIkZepOT2CRjo79mFOOVxfAm2EhoZxgBwnTAYV+ndaQMw5LRKfmBTrNQIUz6
-         yLFGApVvIVgPGBkguqZKfCYiCaksIvuQTReku2qI=
+        b=TMNI8HWUKGWE5bx5k20XMbo+x8/PM2kyof4EjZB/fGowVNGJwBvJMq/1Zh22JVilV
+         ZJ2moTLJqtrmyYCp1ilSX8qQKcjyCwPrZTht4m0Xbf//ZslH3lVo5SxtlcWKk32w/l
+         ur4hDQT/uG+ykhDg/5vu2LrYSV2m1fnHJM4eEDy0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 4.19 125/131] UAS: fix deadlock in error handling and PM flushing work
-Date:   Tue, 28 Apr 2020 20:25:37 +0200
-Message-Id: <20200428182240.988236185@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 085/168] ALSA: usb-audio: Add static mapping table for ALC1220-VB-based mobos
+Date:   Tue, 28 Apr 2020 20:24:19 +0200
+Message-Id: <20200428182242.982035560@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,99 +59,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit f6cc6093a729ede1ff5658b493237c42b82ba107 upstream.
+[ Upstream commit a43c1c41bc5145971d06edc42a6b1e8faa0e2bc3 ]
 
-A SCSI error handler and block runtime PM must not allocate
-memory with GFP_KERNEL. Furthermore they must not wait for
-tasks allocating memory with GFP_KERNEL.
-That means that they cannot share a workqueue with arbitrary tasks.
+TRX40 mobos from MSI and others with ALC1220-VB USB-audio device need
+yet more quirks for the proper control names.
 
-Fix this for UAS using a private workqueue.
+This patch provides the mapping table for those boards, correcting the
+FU names for volume and mute controls as well as the terminal names
+for jack controls.  It also improves build_connector_control() not to
+add the directional suffix blindly if the string is given from the
+mapping table.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Fixes: f9dc024a2da1f ("uas: pre_reset and suspend: Fix a few races")
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200415141750.811-2-oneukum@suse.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+With this patch applied, the new UCM profiles will be effective.
 
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206873
+Link: https://lore.kernel.org/r/20200420062036.28567-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/storage/uas.c |   43 ++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 40 insertions(+), 3 deletions(-)
+ sound/usb/mixer.c        | 12 +++++++++---
+ sound/usb/mixer_maps.c   | 24 +++++++++++++++++++++---
+ sound/usb/quirks-table.h | 14 ++++++++++++++
+ 3 files changed, 44 insertions(+), 6 deletions(-)
 
---- a/drivers/usb/storage/uas.c
-+++ b/drivers/usb/storage/uas.c
-@@ -81,6 +81,19 @@ static void uas_free_streams(struct uas_
- static void uas_log_cmd_state(struct scsi_cmnd *cmnd, const char *prefix,
- 				int status);
- 
-+/*
-+ * This driver needs its own workqueue, as we need to control memory allocation.
-+ *
-+ * In the course of error handling and power management uas_wait_for_pending_cmnds()
-+ * needs to flush pending work items. In these contexts we cannot allocate memory
-+ * by doing block IO as we would deadlock. For the same reason we cannot wait
-+ * for anything allocating memory not heeding these constraints.
-+ *
-+ * So we have to control all work items that can be on the workqueue we flush.
-+ * Hence we cannot share a queue and need our own.
-+ */
-+static struct workqueue_struct *workqueue;
-+
- static void uas_do_work(struct work_struct *work)
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index 5661994e13e7d..f9586a6ea05b6 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -1755,8 +1755,10 @@ static void build_connector_control(struct usb_mixer_interface *mixer,
  {
- 	struct uas_dev_info *devinfo =
-@@ -109,7 +122,7 @@ static void uas_do_work(struct work_stru
- 		if (!err)
- 			cmdinfo->state &= ~IS_IN_WORK_LIST;
- 		else
--			schedule_work(&devinfo->work);
-+			queue_work(workqueue, &devinfo->work);
+ 	struct snd_kcontrol *kctl;
+ 	struct usb_mixer_elem_info *cval;
++	const struct usbmix_name_map *map;
+ 
+-	if (check_ignored_ctl(find_map(imap, term->id, 0)))
++	map = find_map(imap, term->id, 0);
++	if (check_ignored_ctl(map))
+ 		return;
+ 
+ 	cval = kzalloc(sizeof(*cval), GFP_KERNEL);
+@@ -1788,8 +1790,12 @@ static void build_connector_control(struct usb_mixer_interface *mixer,
+ 		usb_mixer_elem_info_free(cval);
+ 		return;
  	}
- out:
- 	spin_unlock_irqrestore(&devinfo->lock, flags);
-@@ -134,7 +147,7 @@ static void uas_add_work(struct uas_cmd_
- 
- 	lockdep_assert_held(&devinfo->lock);
- 	cmdinfo->state |= IS_IN_WORK_LIST;
--	schedule_work(&devinfo->work);
-+	queue_work(workqueue, &devinfo->work);
+-	get_connector_control_name(mixer, term, is_input, kctl->id.name,
+-				   sizeof(kctl->id.name));
++
++	if (check_mapped_name(map, kctl->id.name, sizeof(kctl->id.name)))
++		strlcat(kctl->id.name, " Jack", sizeof(kctl->id.name));
++	else
++		get_connector_control_name(mixer, term, is_input, kctl->id.name,
++					   sizeof(kctl->id.name));
+ 	kctl->private_free = snd_usb_mixer_elem_free;
+ 	snd_usb_mixer_add_control(&cval->head, kctl);
  }
- 
- static void uas_zap_pending(struct uas_dev_info *devinfo, int result)
-@@ -1236,7 +1249,31 @@ static struct usb_driver uas_driver = {
- 	.id_table = uas_usb_ids,
+diff --git a/sound/usb/mixer_maps.c b/sound/usb/mixer_maps.c
+index 3a54ca04ec4c0..28eec0e0aa5e4 100644
+--- a/sound/usb/mixer_maps.c
++++ b/sound/usb/mixer_maps.c
+@@ -359,6 +359,24 @@ static const struct usbmix_name_map asus_rog_map[] = {
+ 	{}
  };
  
--module_usb_driver(uas_driver);
-+static int __init uas_init(void)
-+{
-+	int rv;
++/* TRX40 mobos with Realtek ALC1220-VB */
++static const struct usbmix_name_map trx40_mobo_map[] = {
++	{ 18, NULL }, /* OT, IEC958 - broken response, disabled */
++	{ 19, NULL, 12 }, /* FU, Input Gain Pad - broken response, disabled */
++	{ 16, "Speaker" },		/* OT */
++	{ 22, "Speaker Playback" },	/* FU */
++	{ 7, "Line" },			/* IT */
++	{ 19, "Line Capture" },		/* FU */
++	{ 17, "Front Headphone" },	/* OT */
++	{ 23, "Front Headphone Playback" },	/* FU */
++	{ 8, "Mic" },			/* IT */
++	{ 20, "Mic Capture" },		/* FU */
++	{ 9, "Front Mic" },		/* IT */
++	{ 21, "Front Mic Capture" },	/* FU */
++	{ 24, "IEC958 Playback" },	/* FU */
++	{}
++};
 +
-+	workqueue = alloc_workqueue("uas", WQ_MEM_RECLAIM, 0);
-+	if (!workqueue)
-+		return -ENOMEM;
-+
-+	rv = usb_register(&uas_driver);
-+	if (rv) {
-+		destroy_workqueue(workqueue);
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit uas_exit(void)
-+{
-+	usb_deregister(&uas_driver);
-+	destroy_workqueue(workqueue);
-+}
-+
-+module_init(uas_init);
-+module_exit(uas_exit);
+ /*
+  * Control map entries
+  */
+@@ -480,7 +498,7 @@ static struct usbmix_ctl_map usbmix_ctl_maps[] = {
+ 	},
+ 	{	/* Gigabyte TRX40 Aorus Pro WiFi */
+ 		.id = USB_ID(0x0414, 0xa002),
+-		.map = asus_rog_map,
++		.map = trx40_mobo_map,
+ 	},
+ 	{	/* ASUS ROG Zenith II */
+ 		.id = USB_ID(0x0b05, 0x1916),
+@@ -492,11 +510,11 @@ static struct usbmix_ctl_map usbmix_ctl_maps[] = {
+ 	},
+ 	{	/* MSI TRX40 Creator */
+ 		.id = USB_ID(0x0db0, 0x0d64),
+-		.map = asus_rog_map,
++		.map = trx40_mobo_map,
+ 	},
+ 	{	/* MSI TRX40 */
+ 		.id = USB_ID(0x0db0, 0x543d),
+-		.map = asus_rog_map,
++		.map = trx40_mobo_map,
+ 	},
+ 	{ 0 } /* terminator */
+ };
+diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
+index dcaf9eed9a415..8c2f5c23e1b43 100644
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -3635,4 +3635,18 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge", "HVR-950Q"),
+ 	}
+ },
  
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR(
++#define ALC1220_VB_DESKTOP(vend, prod) { \
++	USB_DEVICE(vend, prod),	\
++	.driver_info = (unsigned long) & (const struct snd_usb_audio_quirk) { \
++		.vendor_name = "Realtek", \
++		.product_name = "ALC1220-VB-DT", \
++		.profile_name = "Realtek-ALC1220-VB-Desktop", \
++		.ifnum = QUIRK_NO_INTERFACE \
++	} \
++}
++ALC1220_VB_DESKTOP(0x0414, 0xa002), /* Gigabyte TRX40 Aorus Pro WiFi */
++ALC1220_VB_DESKTOP(0x0db0, 0x0d64), /* MSI TRX40 Creator */
++ALC1220_VB_DESKTOP(0x0db0, 0x543d), /* MSI TRX40 */
++#undef ALC1220_VB_DESKTOP
++
+ #undef USB_DEVICE_VENDOR_SPEC
+-- 
+2.20.1
+
 
 
