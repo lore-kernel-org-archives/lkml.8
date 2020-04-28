@@ -2,143 +2,118 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9988C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1473C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0B03206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7945C206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 07:41:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kOyFEvAD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgD1Hk7 convert rfc822-to-8bit (ORCPT
+        id S1726550AbgD1HlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:40:59 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:11039 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbgD1Hk6 (ORCPT
+        Tue, 28 Apr 2020 03:41:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbgD1HlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 03:40:58 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 65549240008;
-        Tue, 28 Apr 2020 07:40:50 +0000 (UTC)
-Date:   Tue, 28 Apr 2020 09:40:49 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        hauke.mehrtens@intel.com, qi-ming.wu@intel.com, vigneshr@ti.com,
-        arnd@arndb.de, richard@nod.at, brendanhiggins@google.com,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-Subject: Re: [PATCH v3 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200428094049.3c0d4730@xps13>
-In-Reply-To: <f72b5ae0-b0ac-61b8-8f64-c0e0f48afe02@linux.intel.com>
-References: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200423162113.38055-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200424183612.4cfdbb6a@collabora.com>
-        <20200427175127.0518c193@xps13>
-        <cba30ccb-c190-d4d6-eab9-6083bd5d2aad@linux.intel.com>
-        <20200428082759.25065146@collabora.com>
-        <38334812-21b9-5b2c-db84-01c9eacc84d0@linux.intel.com>
-        <20200428084704.5e04232a@collabora.com>
-        <f72b5ae0-b0ac-61b8-8f64-c0e0f48afe02@linux.intel.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 28 Apr 2020 03:41:02 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4138C03C1A9;
+        Tue, 28 Apr 2020 00:41:01 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id u6so20357125ljl.6;
+        Tue, 28 Apr 2020 00:41:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VSTKTi7V/q8CR6GcenKRp2sd1IMvYmp6ucZc3EIquso=;
+        b=kOyFEvAD625k7UDFOwe9BZLpS7/vLFtFjHy216Sutod4zwnaNSUlio82wfoFHL5dhN
+         b7RYEGF6sTA+ekHf8CJ61EF4VXftF0do3jrp0G5QJK8tvzEKVuBNXv+1E85fY0AzNfY5
+         580zwNW6D0bPed8EeHBjhLEykcpe51TLmbaqT0LyuzZ2ycDarJmHWFQ/jHwmGD4xB5I9
+         4/NAYvgP/4YuWe8pa22A5pq3oJ4If2NyucXWPFv2OM19Ms2f04mVieBce2CWd4eDPWtP
+         5onydc7U0x8nATzGI+IgEwzH8b4u9Ki5MPx/EgO2W4sGG6CC3dtKNqnNwZQ1Jp1olqUX
+         tMlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VSTKTi7V/q8CR6GcenKRp2sd1IMvYmp6ucZc3EIquso=;
+        b=kF+kMhRmsSJIEqGn0QsANvcg/PsJk+23mwoHyH9DnU5dt03dMdzjjuL0cVDSY4fOGJ
+         WS3npISCIczvff36PhFteHDjI+C8BK3R8mZXhDdwTNmSpkaRbrMNL6X+mkqslWnPoS+H
+         fZ5FNrE/uQFvGDWY0Oa7IYRDYWjG7TXtPnTtsP2E8UhrDrcoMokHunPGhruirPXyD+Io
+         1dYhpMgpRl/mJl01jKdAoH2zwPma36mVO2mPlN8Id2JbzQoAMlis01hL6Gt/EJvhrTWA
+         eFmznKq9r06sRDw+CauqBruo1Ns2l0WaZ0xvWty/hfGQBO+Qy8WVfiXzDF5ZiP5olY25
+         SKJg==
+X-Gm-Message-State: AGi0PuYTdsfCpFcZyKsqqlhWn4ruCo6QJCs69YvqdBN9SFf1TLlpidKE
+        Vgt2PgiNs7Ie2iCUMFeGQPA=
+X-Google-Smtp-Source: APiQypJdmUu6b0MWQu3fBzo17XXGzEpTTUzA724t8KPOwQjDlXn6PmWYi7HieJOZZAHyE3DW8Yyhgg==
+X-Received: by 2002:a2e:9616:: with SMTP id v22mr17013316ljh.62.1588059660206;
+        Tue, 28 Apr 2020 00:41:00 -0700 (PDT)
+Received: from curiosity (ip-195-182-157-78.clients.cmk.ru. [195.182.157.78])
+        by smtp.gmail.com with ESMTPSA id b16sm13482050lfj.2.2020.04.28.00.40.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 00:40:59 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 10:45:27 +0300
+From:   Sergey Matyukevich <geomatsi@gmail.com>
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Wireless <linux-wireless@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the mac80211-next tree
+Message-ID: <20200428074527.GA3912@curiosity>
+References: <20200428122930.51b6a9c2@canb.auug.org.au>
+ <c3922c972277ff627c0308a94dfe3f25ba3b333f.camel@sipsolutions.net>
+ <20200428072543.GA2630@curiosity>
+ <baae77876a4b73de83aa6dcc27257da231777c22.camel@sipsolutions.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <baae77876a4b73de83aa6dcc27257da231777c22.camel@sipsolutions.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vadivel MuruganX,
-
-"Ramuthevar, Vadivel MuruganX"
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote on Tue, 28 Apr 2020
-14:50:35 +0800:
-
-> Hi Boris,
-> 
-> On 28/4/2020 2:47 pm, Boris Brezillon wrote:
-> > On Tue, 28 Apr 2020 14:40:58 +0800
-> > "Ramuthevar, Vadivel MuruganX"
-> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> >   
-> >> Hi Boris,
-> >>
-> >> On 28/4/2020 2:27 pm, Boris Brezillon wrote:  
-> >>> On Tue, 28 Apr 2020 14:17:30 +0800
-> >>> "Ramuthevar, Vadivel MuruganX"
-> >>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:  
-> >>>    >>>> Hi Miquel,  
-> >>>>
-> >>>>       Thank you very much for the review comments and your time...
-> >>>>
-> >>>> On 27/4/2020 11:51 pm, Miquel Raynal wrote:  
-> >>>>> Hi Ramuthevar,  
-> >>>>>       >>>>>>> +static int ebu_nand_probe(struct platform_device *pdev)  
-> >>>>>>> +{
-> >>>>>>> +	struct device *dev = &pdev->dev;
-> >>>>>>> +	struct ebu_nand_controller *ebu_host;
-> >>>>>>> +	struct nand_chip *nand;
-> >>>>>>> +	phys_addr_t nandaddr_pa;
-> >>>>>>> +	struct mtd_info *mtd;
-> >>>>>>> +	struct resource *res;
-> >>>>>>> +	int ret;
-> >>>>>>> +	u32 cs;
-> >>>>>>> +
-> >>>>>>> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
-> >>>>>>> +	if (!ebu_host)
-> >>>>>>> +		return -ENOMEM;
-> >>>>>>> +
-> >>>>>>> +	ebu_host->dev = dev;
-> >>>>>>> +	nand_controller_init(&ebu_host->controller);
-> >>>>>>> +
-> >>>>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
-> >>>>>>> +	ebu_host->ebu_addr = devm_ioremap_resource(&pdev->dev, res);
-> >>>>>>> +	if (IS_ERR(ebu_host->ebu_addr))
-> >>>>>>> +		return PTR_ERR(ebu_host->ebu_addr);
-> >>>>>>> +
-> >>>>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
-> >>>>>>> +	ebu_host->nand_addr = devm_ioremap_resource(&pdev->dev, res);
-> >>>>>>> +	if (IS_ERR(ebu_host->nand_addr))
-> >>>>>>> +		return PTR_ERR(ebu_host->nand_addr);
-> >>>>>>> +
-> >>>>>>> +	ret = device_property_read_u32(dev, "nand,cs", &cs);  
-> >>>>>>
-> >>>>>> CS ids should be encoded in the reg property (see [1]).  
-> >>>>>
-> >>>>> Is it your choice to only support a single CS or is it actually a
-> >>>>> controller limitation?  
-> >>>>
-> >>>> Yes , its controller limitation to support only one CS  
-> >>>
-> >>> I'm pretty sure that's not true, otherwise you wouldn't have to select
-> >>> the CS you want to use :P.  
-> >>
-> >> At a time it supports only one chip select.  
+On Tue, Apr 28, 2020 at 09:24:16AM +0200, Johannes Berg wrote:
+> On Tue, 2020-04-28 at 10:25 +0300, Sergey Matyukevich wrote:
+> > On Tue, Apr 28, 2020 at 09:01:30AM +0200, Johannes Berg wrote:
+> > > On Tue, 2020-04-28 at 12:29 +1000, Stephen Rothwell wrote:
+> > > > Hi all,
+> > > > 
+> > > > After merging the mac80211-next tree, today's linux-next build (x86_64
+> > > > allmodconfig) failed like this:
+> > > > 
+> > > > Caused by commit
+> > > > 
+> > > >   6cd536fe62ef ("cfg80211: change internal management frame registration API")
+> > > 
+> > > Yeah. I forgot about staging. I guess I'll throw in a quick fix.
+> > > 
+> > > johannes
 > > 
-> > Yes, like 99% of the NAND controllers, but that doesn't mean you can't
-> > support multi-CS chips. All you have to do is attach an array of
-> > ebu_nand_cs to your ebu_nand_chip (as done in the atmel driver I
-> > pointed to). nand_operation.cs tells you which CS (index in your
-> > ebu_nand_cs array) a specific operation is targeting, and you can pick
-> > the right MMIO range/reg value based on that.  
+> > Hello Johannes,
+> > 
+> > Could you please take a look at the following fix for this issue:
+> > https://patchwork.kernel.org/patch/11509497/
 > 
-> Agreed, sure I will add that and update next series of patches .
+> Heh. I was just fixing it too, missed your patch. How do you like this
+> fix?
+> 
+> https://p.sipsolutions.net/0638ee56c2e48a30.txt
 
-There are also many other places where you assume blindly that there
-is only one CS. You can check the Atmel NAND controller driver as Boris
-said and we will probably propose more little changes to be more
-generic.
+Looks good. But I have a couple of questions:
 
-Thanks,
-Miquèl
+- why cleanup vif->mgmt_frame_reg in wilc_mac_open ?
+
+- previously wilc_wfi_p2p_rx was called only for PROBE_REQ and ACTION,
+  now it will be called for all the other registred frames as well
+
+Regards,
+Sergey
