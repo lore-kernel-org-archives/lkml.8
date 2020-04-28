@@ -2,102 +2,126 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B98C83005
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C26DEC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40CEA206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9578A206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 03:25:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UVi818O1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fg/4Bznn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbgD1DVQ (ORCPT
+        id S1726345AbgD1DZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 23:21:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42160 "EHLO
+        Mon, 27 Apr 2020 23:25:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbgD1DVQ (ORCPT
+        with ESMTP id S1726271AbgD1DZA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 23:21:16 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EFC1C03C1A9;
-        Mon, 27 Apr 2020 20:21:15 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id y4so19897061ljn.7;
-        Mon, 27 Apr 2020 20:21:15 -0700 (PDT)
+        Mon, 27 Apr 2020 23:25:00 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D19AC03C1A9;
+        Mon, 27 Apr 2020 20:25:00 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t16so7786515plo.7;
+        Mon, 27 Apr 2020 20:25:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x/KX6i1az01qEnInKFuUccobP96F3x7Gqm3MaoBdJ1Q=;
-        b=UVi818O1g/ys1qy9aULO5Os7hjcuazADOhDicMJbdwxPYfKJ0KXenLnaHZ/EVAjfyI
-         VhHPvEDSPICTW84/LuGvbfbcirm05QOSXCLwtWN2SrMNQruewqCFlk8HE148KcpKyzOZ
-         Wt0Mi4hWm0E+XfmCqAOJtUyBXcMwktVuTttJ5hMBEfP4TezrmrMJoB6bdRvHtvf+bYlo
-         OIQ9/Z/RjL6b3s933PBPt4fgi2gng5FzJxsPHMZ006EPAdpKDQopz1rZBIF/kzTkR1Nh
-         HIfAOv6iVSZKEqF1OKAOBSq5gDlDgiDrWO70TZzK6udJl8XQ2vpzRPZ+Pf151IF9cmNU
-         MkLA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pdrvzD+DuU91+ygk7eb413XuXlCm15QQGsmxIoU0CRg=;
+        b=fg/4BznnQOB3wPtojWBAwoEZ+UaAWf3aAGVQGM7viXJ2Ke7uVbsoIZO0kIxJypVDv5
+         UHzFcCU5y6XQpmfaQa8x8qJzY2Z2CS5aF55ZPYtjDQYubHol+2B+QV4NP6l78BVP+5Vr
+         DY/uJ2BdGA+RE1oiK/LZTJMlfTluihtFJtGFvfz1QvhbImtdVwWW7476eHC0QROeVW4m
+         gi73+OOo7sYuy+XQKLFGORd7tmvB1/fVTBZZylEyuF2EtFooYvBAHQ/+wA0V5aAOYmVC
+         L76Z+UZrRLgsWX+VbH5sltYYcPj4I+asv/fxIItuV0tBZeb1V/8dCkLwiatm8MpxQDbJ
+         y1Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x/KX6i1az01qEnInKFuUccobP96F3x7Gqm3MaoBdJ1Q=;
-        b=MV0bMm51WaQm88A5JP1IJBCd7ztjC40sDSciqT1rbjobEbpMVM3ohwJZ5p9RAY+4N+
-         YlUk47+EFHtD0aXxlQPid7RGeVDsr6+jX+BLMfXKiMhKFzwyjkEDeCRUTj4wd4lkuVgc
-         6sxQwzC4AXAtm7AQ1qUhcBTGrP83XQsJdhmEfbsOb3HyjdHIyuGK1BaggW/NuA2V6Qy5
-         VdbTcITfV+n6kR4g3g5HDFVKAmx494Oo5YBcPbojmwzb+NI3s+WxdemxvzsSOd70H3Zm
-         fqVtt7nz6tWPjcw95fy8B2JHAYKeL42pCmPSG6ihpaTKSKzyCKDQBvaqekTRpWvgsZch
-         aAxg==
-X-Gm-Message-State: AGi0PuZ9ScIV20uDR9WNqTdwRv2GYkoLBBgd4js7BK4no1GGbyqhkoRU
-        PP+QTnlDk98eVmVmVeH4oT+RVcBscLfD5TKHtAg=
-X-Google-Smtp-Source: APiQypILa/9TL4Q9y6eHfQLCYco80j1PteU65bPrjee3cUAWC4E6yZG8jsBsMkLJqfyHL2969E9h0fnNTN/tC33+olU=
-X-Received: by 2002:a05:651c:2011:: with SMTP id s17mr15147194ljo.242.1588044074054;
- Mon, 27 Apr 2020 20:21:14 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pdrvzD+DuU91+ygk7eb413XuXlCm15QQGsmxIoU0CRg=;
+        b=qmqkiYUFjnW/oWDoNolS5pINW58v40zPGB2OGJH8LbAn+s1I9LbILkc2UQ/ul2BByA
+         PwGoGnzFNfREFfYjUBi///AFAkeFHc/x0u8gRveTb0ltnapfXlCV0vXab15Xl+OrBg4l
+         LLXxQ9hirSVfOl5a/9FiFh5VCX/cctzOO6R45jwvH+J6OTrveqFtX78Nuylbz8PhM323
+         1ewUmEM81IjU4Knrl8RnVyuF/XSqhcrMdKdCtKPpMmG0aw14w0LqdnANlNF0ZyHEVVZw
+         GQvF2fMol0Nky7lhoSd1/AGBr9Y/OHBx+8p1MoYLVvD+w0mQNpKclJ5Wb7Q8LgM2Z/Ud
+         YdhQ==
+X-Gm-Message-State: AGi0PuaHV+ZIc3hWu6cwxx1zvKquZK48Jxi/Prkz2hbVANjAJ0KpatX9
+        gsvdOu583RVMQDkEReoQZJtDyiaX
+X-Google-Smtp-Source: APiQypIC9LjO0hlNaH6042Opu83OU/BOZTnUNUgBOQYF2xQYkRw/EwJgy9qpkGjwuKpKCkS7w7Jbgw==
+X-Received: by 2002:a17:902:d34a:: with SMTP id l10mr26700867plk.234.1588044299733;
+        Mon, 27 Apr 2020 20:24:59 -0700 (PDT)
+Received: from localhost ([89.208.244.169])
+        by smtp.gmail.com with ESMTPSA id r63sm13769546pfr.42.2020.04.27.20.24.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 27 Apr 2020 20:24:59 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 11:24:53 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        yash.shah@sifive.com, netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net v1] net: macb: fix an issue about leak related system
+ resources
+Message-ID: <20200428032453.GA32072@nuc8i5>
+References: <20200425125737.5245-1-zhengdejin5@gmail.com>
+ <CAHp75VceH08X5oWSCXhx8O0Bsx9u=Tm+DVQowG+mC3Vs2=ruVQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <8d29eba045ef18c5489e122b3668afc20431f15d.1588043236.git.baolin.wang7@gmail.com>
- <4b224e7bb703e15469e5cd79a54f7bc00a790fc5.1588043236.git.baolin.wang7@gmail.com>
- <62b3d9fc-1cc9-ac42-69e5-1c7bdac7bd0c@infradead.org>
-In-Reply-To: <62b3d9fc-1cc9-ac42-69e5-1c7bdac7bd0c@infradead.org>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Tue, 28 Apr 2020 11:21:03 +0800
-Message-ID: <CADBw62pRRqMW2c0OASS5KbwpjENr-kVnZwXcdLom5-sHUhntXw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] mailbox: sprd: Add Spreadtrum mailbox driver
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     robh+dt@kernel.org, jassisinghbrar@gmail.com,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VceH08X5oWSCXhx8O0Bsx9u=Tm+DVQowG+mC3Vs2=ruVQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 11:16 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 4/27/20 8:10 PM, Baolin Wang wrote:
-> > diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-> > index 5a577a6734cf..e03f3fb5caed 100644
-> > --- a/drivers/mailbox/Kconfig
-> > +++ b/drivers/mailbox/Kconfig
-> > @@ -236,4 +236,12 @@ config SUN6I_MSGBOX
-> >         various Allwinner SoCs. This mailbox is used for communication
-> >         between the application CPUs and the power management coprocessor.
+On Mon, Apr 27, 2020 at 01:33:41PM +0300, Andy Shevchenko wrote:
+> On Sat, Apr 25, 2020 at 3:57 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
 > >
-> > +config SPRD_MBOX
-> > +     tristate "Spreadtrum Mailbox"
-> > +     depends on ARCH_SPRD || COMPILE_TEST
-> > +     help
-> > +       Mailbox driver implementation for the Spreadtrum platform. It is used
-> > +       to send message between application processors and MCU. Say Y here if
-> > +       you want to build the Spreatrum mailbox controller driver.
+> > A call of the function macb_init() can fail in the function
+> > fu540_c000_init. The related system resources were not released
+> > then. use devm_ioremap() to replace ioremap() for fix it.
+> >
+> 
+> Why not to go further and convert to use devm_platform_ioremap_resource()?
 >
->                                 ^^typo^^
+devm_platform_ioremap_resource() will call devm_request_mem_region(),
+and here did not do it.
 
-Ah, should be 'Spreadtrum', thanks for pointing it out.
-Let's wait for Jassi's comments for this patch.
-
--- 
-Baolin Wang
+> > Fixes: c218ad559020ff9 ("macb: Add support for SiFive FU540-C000")
+> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> > ---
+> >  drivers/net/ethernet/cadence/macb_main.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+> > index a0e8c5bbabc0..edba2eb56231 100644
+> > --- a/drivers/net/ethernet/cadence/macb_main.c
+> > +++ b/drivers/net/ethernet/cadence/macb_main.c
+> > @@ -4178,7 +4178,7 @@ static int fu540_c000_init(struct platform_device *pdev)
+> >         if (!res)
+> >                 return -ENODEV;
+> >
+> > -       mgmt->reg = ioremap(res->start, resource_size(res));
+> > +       mgmt->reg = devm_ioremap(&pdev->dev, res->start, resource_size(res));
+> >         if (!mgmt->reg)
+> >                 return -ENOMEM;
+> >
+> > --
+> > 2.25.0
+> >
+> 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
