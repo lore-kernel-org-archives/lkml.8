@@ -2,102 +2,134 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC69C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A661C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D033A20757
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D50CB2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:53:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="btf9HJsI"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="YWWcul4n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbgD1RxF (ORCPT
+        id S1728710AbgD1Rxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 13:53:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728420AbgD1RxF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 13:53:05 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D016BC03C1AD
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 10:53:04 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x17so24984781wrt.5
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 10:53:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v7ZheI6bSLrba/+brpRVrq5vYClF+WQ9iVO178jEk78=;
-        b=btf9HJsIOuNOn/IaKbfEXolv40jSRzhjuA7EQllCso1sWwBvadsB7piU0hkDwFkkRG
-         LaY0rDWvMUKkER6yps4hDEpVnL0fVqydIPLDTQo63yH6uPIfFJNB8jGZBOdwRYZGKCYL
-         BSTV9m9vj4HDIWkBSOeFIYrD3pfTLjVSy0IjdrJvAlmOlyJE4bWWR0NSzr0dptFQ90zI
-         Uz55v2Aego1u6y92cVjuPpMztMf2e6mr0bHdHBFG22uDECmKCdAtU/l7wqJSuXnGifdz
-         9vJFSjsRbToibdoDhCJXMnWg4cJknVMhLuOw2zE/PKHpaBnwqYeyJtTbE2iGgsKdy1rc
-         +WEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v7ZheI6bSLrba/+brpRVrq5vYClF+WQ9iVO178jEk78=;
-        b=nm7rLBXFohznEtr2Ss1bAITm9+zJiAJbIc5y6kNORXCpzAKpqkvLbiYTSIOYo3wP3n
-         S6GgPKRD8NDnx9j77g9k9326t4oMredQKr3Uw9Lg0JXDM+xPw0lTjDHOIFORqiR3xkCk
-         I67ybUhx1rfKRhgtxORZdX+rUgJqOeMOuoxoPQI956hKjSeWXw7+VzssyJdybP4DKtpr
-         UBZa8BgA1CqQPzzXWkaGDDxWX/0qYqHWsu0ZLgIvf4LUh6NhccHGwstm4qp29waO7crm
-         0t+wJ/sbpxnWR44EikYXzIQBuBytW1NfVQLoK96J0ovEovEfmlhZOLWY7xjlOPBXTOaz
-         L4Dg==
-X-Gm-Message-State: AGi0PuYnL6qLFvQPtkPutEYEZyFCJQolUgiFSZGxEvrAMcSykxDFeZEv
-        ExZ6sGD0FFgVNccRL8KuDxTpGA==
-X-Google-Smtp-Source: APiQypJBzvsMCtmM5SRHuXXkW8Kz57HKLHp0Lw/JQvJ56JGgP4HXd6+ek1foHwIi/20tTjW8a25S/g==
-X-Received: by 2002:adf:f784:: with SMTP id q4mr34356002wrp.102.1588096383541;
-        Tue, 28 Apr 2020 10:53:03 -0700 (PDT)
-Received: from xps7590.local ([37.120.81.28])
-        by smtp.gmail.com with ESMTPSA id k9sm27936467wrd.17.2020.04.28.10.53.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 10:53:02 -0700 (PDT)
-From:   Robert Foss <robert.foss@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Maxime Ripard <maxime@cerno.tech>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Robert Foss <robert.foss@linaro.org>
-Subject: [PATCH v5 v5 0/3] media: ov8856: Add devicetree support
-Date:   Tue, 28 Apr 2020 19:52:52 +0200
-Message-Id: <20200428175255.1608569-1-robert.foss@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        Tue, 28 Apr 2020 13:53:32 -0400
+Received: from mout.web.de ([212.227.15.14]:43959 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728420AbgD1Rxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 13:53:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588096373;
+        bh=tnjQv2P9gGiR9Mb9PDJN0nYvFGdtYNLKJDSs4Sk2/Wg=;
+        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
+        b=YWWcul4nCyZy4q/m9sIPWVgxeHXOqy4GKNkUhCkxeEi0o3cg4DhWAabyuyngxrBKW
+         +bxwPzloZkbJwV200G4wkj4Hm8EC1e4LdwRfNs6cSwQwZNlcwYpX9wWouyLlZIHOLC
+         a7OVYOvcIDa/NG8Gx8X0eRwZpZE1j25wgS/cL+o8=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.179.255]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mho04-1iyqYP1sW0-00dlUG; Tue, 28
+ Apr 2020 19:52:53 +0200
+Cc:     linux-kernel@vger.kernel.org, Allison Randal <allison@lohutok.net>,
+        Andrew Hendry <andrew.hendry@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Subject: Re: [PATCH] net/x25: Fix null-ptr-deref in x25_disconnect
+To:     YueHaibing <yuehaibing@huawei.com>, linux-x25@vger.kernel.org,
+        netdev@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <2638b7a4-4c19-ca4d-3931-7442378b3b30@web.de>
+Date:   Tue, 28 Apr 2020 19:52:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:D5/9WS1n/ydLkrFWaCYUuA4RQwaKOb89GOlnieaVZKBrNRqf6kr
+ UoMzoB2pLTZl6gA4fmmrFbVBMDZVw0MjoX6zt4PkiyKKxfBjWA1zXqGJlirnPO/9yqNrWCp
+ xzt4SxE3UO3blTGfxJtnP2L8GvX3vnvqzogoyZeAlDRuuNy7oadUiBvzx9a/Wj37uixtEdv
+ vLvfAD+YNOfki4H+QnP8A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:hLzm4VX9290=:Wbx3fxI0yP8205erAsqsma
+ jOiY1m+lb9YZcLS4jeUR03WYQN5irLNmtExn0/gGR+4z+zbYqclKds6ByzLMJybmQndX8yR5W
+ Sl3r9Q4RIWVNf9Sb+29W3+3TVyFOZUwnwtHVwE58XVExf5yBQIBOvlcGnPrSvamZpWU9I2nBg
+ CoLRqL2dwxOIYqN0L01FtWM7J5sMHGOKKGYtPokyjwXmoUWaYDuUXC8CF0QQkWYEFHNkBDJYa
+ LyQMy/zd8990igYKG9szmtRb9q9i70u3pHzIOyeHMwxVekL26lCE0CqIPvYviUsy9aXGkN4VG
+ BauCcJv6D2AL2D1kxAs/BW/y28aMcE87tcQKNEsnH01s0Wa8JwnRvBKrvNHgx/z7gtfXlQoRI
+ qpFqHn4pyDe5w2WKA5DBoK0sXygwUcU0ktAYx/hyPHx3qeayVF2CnNXGi7c3xGRB113XAmqC9
+ /bhkAMDP50D9G7Gi5yx2RgrPtWtjxCYaLdGKJGfCPMo69CbEd5iLTpyJzqS0aB7YLAKJrU/Ml
+ nMpyIX1yIAG5ZmUDcYYCNr9FtuTFZTgD4bD3AHpQtIXJsmR/2RsqLtXTm4AGPT1hSwM0bb3Hx
+ z4i8HXLXdB86iiPpEOb86Vj/ib3XTBjln5pZrBgciluknS41hlCnvsKoW1ihA10KXbf6X6QwX
+ MnRAOs9bm8J5E6OeYr82fa9aRbQD3ekNynD8Jwfh+4+fFxqg538GhDsOV8u50uiWjCiNovRNy
+ sOB2TTh3IG+eTlePpYyBinvxHzUOjbPbvyYSRy+CHAwuimVPRfL+AulmrXuj3YmAiosCp9m2X
+ uCn401FHaRPTNYeWg380v0WALmWiYlboLtqX8h0Nw/rVgZjXoRhkk5XhiARJ01gS5Wlw12dtQ
+ SwxN23qDi5mZHav54HapF0xqPyyNKVYSAFVpRtrbYcnzvd0gIkBAMILVq2CI3tcAf798ndwyF
+ zZftihsle2+PfaF0YDo0gX8ZmrDiev6QNBy1APsYsf9GQ/GHPO6cRQeaRNdxg3kBbfVKAnOzX
+ 1OMiALPc/u78QN9eqPnh8ArydZWx3zkOumSqxA/sswzyXd4s3+9zGBX/La8+qzi3ya7T94PBC
+ 7SruHzxA/HqIfuigvsQZsqOu/wQC0Jt9vAqjPR/5HUYD4L+EZRHcf5MXmZ8UaLNon6OBvKJRK
+ Zl3/ozxHv9XMRUa8IbD2gpF5FZOkw9k7YrW8iUWKp0Enb6fAcYNg3AsWCdhSRVo6t2kcm8jnG
+ ghPQwhVMKlA2CrNMA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds devicetree support to the ov8856 driver.
-In order to to aid debugging and enable future sensor
-modes to be supported, module revision detection is also added.
+> We should check null before do x25_neigh_put in x25_disconnect,
+> otherwise may cause null-ptr-deref like this:
 
+Will it be clearer to use the term =E2=80=9Cnull pointer dereference=E2=80=
+=9D
+in the final commit subject?
 
-Dongchun Zhu (1):
-  media: dt-bindings: ov8856: Document YAML bindings
-
-Robert Foss (2):
-  media: ov8856: Add devicetree support
-  media: ov8856: Implement sensor module revision identification
-
- .../devicetree/bindings/media/i2c/ov8856.yaml | 140 +++++++++++++
- MAINTAINERS                                   |   1 +
- drivers/media/i2c/ov8856.c                    | 192 ++++++++++++++++--
- 3 files changed, 320 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-
--- 
-2.25.1
-
+Regards,
+Markus
