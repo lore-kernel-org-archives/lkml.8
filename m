@@ -2,57 +2,53 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF949C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF554C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9F7720575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA54020575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:51:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099912;
-	bh=5rg1mbDvVPgqk2qdN1TJwA1lpQ8pvGe+EL4GcEoRhmI=;
+	s=default; t=1588099917;
+	bh=s6XcISL1TY3nhTD3l8bwB8tGpUxjHneG3fVmYe2L/ig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o5L6vnT/L1lFOjMfErHgAacAMqrcz14i0Twb44pG1jgex/ZsVMsOBF/9Up+9hhRYZ
-	 p1LOpZekJogG5A7QSRV4k/z0b4HJ+RsE42SSuFJwRBChchBGNbTISZ3QwajMF2fehI
-	 hhy6XpTloKqnDO8EnHjVuhrddSwQtdd1WOFhVjpA=
+	b=aMqn9GCp4Ic/xm4HO3+HlhaRhDysFH6OS4DJ1FdMJLvxdgLCettIHV0ot1D6z0o5V
+	 FCfsZgB9Kit5ApuJ+uh7bSiuEzvctuXZgkce2PupHKe1vn8n+hM2bY1eU7GJcVq5hw
+	 TuZHuuQnSHUSrftdxBDXPcfiwtLLk6w1PugfC/3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbgD1Sgr (ORCPT
+        id S1730855AbgD1Sv4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:36:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54218 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:51:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730387AbgD1Sgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:36:41 -0400
+        id S1730399AbgD1Sgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:36:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A4152085B;
-        Tue, 28 Apr 2020 18:36:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AC20208E0;
+        Tue, 28 Apr 2020 18:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099000;
-        bh=5rg1mbDvVPgqk2qdN1TJwA1lpQ8pvGe+EL4GcEoRhmI=;
+        s=default; t=1588099006;
+        bh=s6XcISL1TY3nhTD3l8bwB8tGpUxjHneG3fVmYe2L/ig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WUF11odStdhHw88SkrjapEZ+MaR9kYCSHLPx3XE3b/yGrpMNaU7wd0ddjhHD5raoe
-         ID2+cBbxRaX8Ysek4VyM1D5BT3K4ovmC9HD9ZYJ0jFgb9G0XEniNGf5u0C1td7ko8D
-         Kga9PNYB7FVFQgDYGTz0mCdS9RcQktdQnOH3fcQo=
+        b=HBQmZj0+IRXNZfUV3FCpRPeNYc4SA/rWG/cBsGun4HMOjvTCdhVvlPOc+WIY+I0Vb
+         2+wMyyHotquC2ZbPWu2bmv8JmjnkTYMohe0rPBvVIfuaw4BJC2AHRi8br5r46DZEaM
+         qvTOvDdQ43SLhQ0gcUJ2RRAK+cBaeX4KhAltuuEI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yongqiang Sun <yongqiang.sun@amd.com>,
-        Tony Cheng <Tony.Cheng@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 044/168] drm/amd/display: Not doing optimize bandwidth if flip pending.
-Date:   Tue, 28 Apr 2020 20:23:38 +0200
-Message-Id: <20200428182237.448944669@linuxfoundation.org>
+        stable@vger.kernel.org, Benjamin Lee <ben@b1c1l1.com>
+Subject: [PATCH 5.6 143/167] mei: me: fix irq number stored in hw struct
+Date:   Tue, 28 Apr 2020 20:25:19 +0200
+Message-Id: <20200428182243.717421299@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,73 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yongqiang Sun <yongqiang.sun@amd.com>
+From: Benjamin Lee <ben@b1c1l1.com>
 
-[ Upstream commit 9941b8129030c9202aaf39114477a0e58c0d6ffc ]
+commit fec874a81b3ec280b91034d892a432fc71fd1522 upstream.
 
-[Why]
-In some scenario like 1366x768 VSR enabled connected with a 4K monitor
-and playing 4K video in clone mode, underflow will be observed due to
-decrease dppclk when previouse surface scan isn't finished
+Commit 261b3e1f2a01 ("mei: me: store irq number in the hw struct.")
+stores the irq number in the hw struct before MSI is enabled.  This
+caused a regression for mei_me_synchronize_irq() waiting for the wrong
+irq number.  On my laptop this causes a hang on shutdown.  Fix the issue
+by storing the irq number after enabling MSI.
 
-[How]
-In this use case, surface flip is switching between 4K and 1366x768,
-1366x768 needs smaller dppclk, and when decrease the clk and previous
-surface scan is for 4K and scan isn't done, underflow will happen.  Not
-doing optimize bandwidth in case of flip pending.
+Fixes: 261b3e1f2a01 ("mei: me: store irq number in the hw struct.")
+Signed-off-by: Benjamin Lee <ben@b1c1l1.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200417184538.349550-1-ben@b1c1l1.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Yongqiang Sun <yongqiang.sun@amd.com>
-Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/misc/mei/pci-me.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index 71c574d1e8be2..2028dc017f7a0 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -1182,6 +1182,26 @@ bool dc_commit_state(struct dc *dc, struct dc_state *context)
- 	return (result == DC_OK);
- }
+--- a/drivers/misc/mei/pci-me.c
++++ b/drivers/misc/mei/pci-me.c
+@@ -212,11 +212,12 @@ static int mei_me_probe(struct pci_dev *
+ 	}
+ 	hw = to_me_hw(dev);
+ 	hw->mem_addr = pcim_iomap_table(pdev)[0];
+-	hw->irq = pdev->irq;
+ 	hw->read_fws = mei_me_read_fws;
  
-+static bool is_flip_pending_in_pipes(struct dc *dc, struct dc_state *context)
-+{
-+	int i;
-+	struct pipe_ctx *pipe;
-+
-+	for (i = 0; i < MAX_PIPES; i++) {
-+		pipe = &context->res_ctx.pipe_ctx[i];
-+
-+		if (!pipe->plane_state)
-+			continue;
-+
-+		/* Must set to false to start with, due to OR in update function */
-+		pipe->plane_state->status.is_flip_pending = false;
-+		dc->hwss.update_pending_status(pipe);
-+		if (pipe->plane_state->status.is_flip_pending)
-+			return true;
-+	}
-+	return false;
-+}
-+
- bool dc_post_update_surfaces_to_stream(struct dc *dc)
- {
- 	int i;
-@@ -1192,6 +1212,9 @@ bool dc_post_update_surfaces_to_stream(struct dc *dc)
+ 	pci_enable_msi(pdev);
  
- 	post_surface_trace(dc);
- 
-+	if (is_flip_pending_in_pipes(dc, context))
-+		return true;
++	hw->irq = pdev->irq;
 +
- 	for (i = 0; i < dc->res_pool->pipe_count; i++)
- 		if (context->res_ctx.pipe_ctx[i].stream == NULL ||
- 		    context->res_ctx.pipe_ctx[i].plane_state == NULL) {
--- 
-2.20.1
-
+ 	 /* request and enable interrupt */
+ 	irqflags = pci_dev_msi_enabled(pdev) ? IRQF_ONESHOT : IRQF_SHARED;
+ 
 
 
