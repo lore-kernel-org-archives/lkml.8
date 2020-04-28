@@ -2,98 +2,156 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5630BC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 551F5C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30EB7206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EFCD2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 04:17:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ufQlri23"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="yiHvCuge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgD1EQm (ORCPT
+        id S1726373AbgD1ERc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 00:16:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51254 "EHLO
+        Tue, 28 Apr 2020 00:17:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgD1EQl (ORCPT
+        with ESMTP id S1726357AbgD1ERa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 00:16:41 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6ABDC03C1AC
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 21:16:41 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id c21so7018042plz.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 21:16:41 -0700 (PDT)
+        Tue, 28 Apr 2020 00:17:30 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82B03C03C1AC
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 21:17:29 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id s10so7850971plr.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 21:17:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zcgS21itL78D0fddZORH8FPW/WTSqwnt4JvHvdMFx7M=;
-        b=ufQlri23Hn5ru/QSTcDsigIaefd5C8Jo5G5DkNvJRr4nSLBva7mhaxr6KHKCH3qeTx
-         /Bc79XJKqxu+ihH4ya/wTgZdOnZywUMQ1JP7qtjss5SWsvyAH7Su9xWwd49NLWmbd4hS
-         5qxZMnb5z7V+twQp5imipUmU2MwThi/RgGG4LLd33jcXNPiI3vy1tgAjd6etrFwyYWwF
-         P/AKKwj6SjqwCUMWQctIla27pnCn3KxHWUkk7i8YF/UbPyEBHrHtiKng33yKzHJuHywy
-         nb3BfPt+Z520YNe/axeSo8pf1paBOXEafEZqqdtGssUlVesX3uOgJ+u4mn66VmcGpgHA
-         pJfg==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=8h84Asdal8ddGdf/Sbj5GbMgUMmfxecNR/DGTl7C5Ms=;
+        b=yiHvCugecQvQXY4FTuCZbAeqgRSihOJpQiYtv4ucRIIrYF1q36lTJjRozoR5D2wm8l
+         VF5mZ+dZWbk4kz4QBYd/2RYXIZsNZUFA3jT2mhccQQOrk4CDxQfdWsRtKyQt+hzc65zA
+         /Lwe94WK5jLX/Xkq6KGUGJSydKi60TWSj82uliq2QsNMQOdvgmjwYgBolGWdJVeZIlJw
+         zEBx5YWicx1ACchhvJrZuuhjE2KatYX7Roy/bZsMcDTdbNnn9ggDu3FliVQKv3H8etFL
+         c1VjXCKqOC68ekMz/k10f3g29XEVCnMCtiCVnoVGRNtETVAeyEvWVFrv+Cxld/ekYTKu
+         eJSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zcgS21itL78D0fddZORH8FPW/WTSqwnt4JvHvdMFx7M=;
-        b=mdH8qk7zfEYNfXMS7gUWJgpdzQRFnW55Aub1KTtG4/nD4ymaiYYR+51sFPv29Vcsl0
-         qjgw7nG1hBm43/dgSnWY0cOxn0x3aZjEdgwc9WcIA9TRD2CWhSYXS3g5WkkP1L7tUE89
-         /MekYy94oNdDQccap8hecYgwBJN/eJCfQw6xlmCTMXblM+wqbCeTwSf2z+t6PGAauwPF
-         UYHB9+zRZ7V8BjE//7VEBFgsWeBo9xyapT6g0c64mqRMoKEaKNsYJeRTqXYtuxY3UsDb
-         oyqEEaNqGrO9+TZ+T0tkNq25tQuA3VWv3gDjRhch3G1RdP00HhC5rOct6Bc2rKk/w3zE
-         yerw==
-X-Gm-Message-State: AGi0Pub4DIwtSm1mSoHEPyLtf13HuSrq+7gFMBPq38YUj80J4bMtAt85
-        rkSqMCNyYwq6ce6FzW5CO/ZxWQ==
-X-Google-Smtp-Source: APiQypLHi61r4xiv8wVJwGtp90je7+VC7t1lXTr4tVyxSHVN84FrrQP9s5jjTw2j/zSh39NDp6sR0A==
-X-Received: by 2002:a17:90a:690b:: with SMTP id r11mr2630271pjj.119.1588047401459;
-        Mon, 27 Apr 2020 21:16:41 -0700 (PDT)
-Received: from localhost ([122.171.118.46])
-        by smtp.gmail.com with ESMTPSA id f30sm752667pje.29.2020.04.27.21.16.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 Apr 2020 21:16:40 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 09:46:36 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Guillaume Tucker <guillaume.tucker@collabora.com>
-Cc:     Peng Fan <peng.fan@nxp.com>, kernelci@groups.io,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Fabio Estevam <festevam@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: next/master bisection: baseline.dmesg.alert on imx8mn-ddr4-evk
-Message-ID: <20200428041636.loakok7yfqg3hcsl@vireshk-i7>
-References: <5ea44ff8.1c69fb81.f246c.d02d@mx.google.com>
- <8af4842d-d576-fd6f-ac6b-2ef3482742b7@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8af4842d-d576-fd6f-ac6b-2ef3482742b7@collabora.com>
-User-Agent: NeoMutt/20180716-391-311a52
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=8h84Asdal8ddGdf/Sbj5GbMgUMmfxecNR/DGTl7C5Ms=;
+        b=j5pReb5pk9W1VvobbofOOVCu9fAHchHj4O9Lcy2WMpc9wniIt455nEEHYlNWOLGM0F
+         aEjEkETq2CqVpMwi9ndz6GsWVgtaRQkhJEk5J5zwZmYrAPnqSsXZJh13ZLGsqoSl4/99
+         SiTzNVfrAOrvqeJal0HNSkEyhD9Ye0qcVFdzxfuFVRf9RQWr6WTScmz7rYImvQSgEw5B
+         ffbrdzqRNcUyvWru688CWYErQhIHvPPrvfSp5dIHrMLOkQT5uz479P52etdiNkOI2nY5
+         fzpgI6Z9T24DNeObqMmAh8oTOG1up2zz/Rm88T3NKfm3nxByGq0iJE5FelQhShj4+G/B
+         Rylw==
+X-Gm-Message-State: AGi0PuZ+H5yBvgacGcOMBXHhRY/REqdTZdsua39ag0G4cwz260SJKIsG
+        KnMGt0DSEfI4+rewpCO3LkvK1w==
+X-Google-Smtp-Source: APiQypJLqu+Wcex4ySa91E5OvARz+j/btwustQ54FAzsCqbRYotfFZWp6P/WtLNIim1eeXg4dsa0kQ==
+X-Received: by 2002:a17:90a:2b8f:: with SMTP id u15mr2718879pjd.137.1588047448950;
+        Mon, 27 Apr 2020 21:17:28 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:95ae:5ea5:619c:8559? ([2601:646:c200:1ef2:95ae:5ea5:619c:8559])
+        by smtp.gmail.com with ESMTPSA id z190sm13652412pfb.1.2020.04.27.21.17.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 21:17:28 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC v2] ptrace, pidfd: add pidfd_ptrace syscall
+Date:   Mon, 27 Apr 2020 21:17:26 -0700
+Message-Id: <B7A115CB-0C8C-4719-B97B-74D94231CD1E@amacapital.net>
+References: <CAHk-=wga3O=BoKZXR27-CDnAFareWcMxXhpWerwtCffdaH6_ow@mail.gmail.com>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Hagen Paul Pfeifer <hagen@jauu.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Jann Horn <jannh@google.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Brian Gerst <brgerst@gmail.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In-Reply-To: <CAHk-=wga3O=BoKZXR27-CDnAFareWcMxXhpWerwtCffdaH6_ow@mail.gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+X-Mailer: iPhone Mail (17E262)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27-04-20, 14:00, Guillaume Tucker wrote:
-> Please see the bisection report below about a boot failure.
-> 
-> Reports aren't automatically sent to the public while we're
-> trialing new bisection features on kernelci.org but this one
-> looks valid.
 
-@Peng: I have dropped your patch now, please resend it once you have
-fixed the issue.
 
--- 
-viresh
+> On Apr 27, 2020, at 6:36 PM, Linus Torvalds <torvalds@linux-foundation.org=
+> wrote:
+>=20
+> =EF=BB=BFOn Mon, Apr 27, 2020 at 5:46 PM Aleksa Sarai <cyphar@cyphar.com> w=
+rote:
+>>=20
+>> I agree. It would be a shame to add a new ptrace syscall and not take
+>> the opportunity to fix the multitude of problems with the existing API.
+>> But that's a Pandora's box which we shouldn't open unless we want to
+>> wait a long time to get an API everyone is okay with -- a pretty high
+>> price to just get pidfds support in ptrace.
+>=20
+> We should really be very very careful with some "smarter ptrace".
+> We've had _so_ many security issues with ptrace that it's not even
+> funny.
+>=20
+> And that's ignoring all the practical issues we've had.
+>=20
+> I would definitely not want to have anything that looks like ptrace AT
+> ALL using pidfd. If we have a file descriptor to specify the target
+> process, then we should probably take advantage of that file
+> descriptor to actually make it more of a asynchronous interface that
+> doesn't cause the kinds of deadlocks that we've had with ptrace.
+>=20
+> The synchronous nature of ptrace() means that not only do we have
+> those nasty deadlocks, it's also very very expensive to use. It also
+> has some other fundamental problems, like the whole "take over parent"
+> and the SIGCHLD behavior.
+>=20
+> It also is hard to ptrace a ptracer. Which is annoying when you're
+> debugging gdb or strace or whatever.
+>=20
+> So I think the thing to do is ask the gdb (and strace) people if they
+> have any _very_ particular painpoints that we could perhaps help with.
+>=20
+> And then very carefully think things through and not repeat all the
+> mistakes ptrace did.
+>=20
+> I'm not very optimistic.
+
+I hate to say this, but I=E2=80=99m not convinced that asking the gdb folks i=
+s the right approach. GDB has an ancient architecture and is *incredibly* bu=
+ggy.  I=E2=80=99m sure ptrace is somewhere on the pain point list, but I sus=
+pect it=E2=80=99s utterly dwarfed by everything else.
+
+Maybe the LLDB people would have a better perspective?  The rr folks would b=
+e a good bet, too. Or, and I know this is sacrilege, the VSCode people?
+
+
+I think one requirement for a better ptrace is that it should work if you tr=
+y to debug, simultaneously, a debugger and its debugee. Maybe not perfectly,=
+ but it should work. And you should be able to debug init.
+
+Another major pain point I=E2=80=99ve seen is compat. A 64-bit debugger shou=
+ld be able to debug a program that switches back and forth between 32-bit an=
+d 64-bit.  A debugger that is entirely unaware of a set of registers should b=
+e able to debug a process using those registers.
