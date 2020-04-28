@@ -2,66 +2,88 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5E4C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0142FC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94A462072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C294920737
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:58:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mkX4NZaN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgD1V6u (ORCPT
+        id S1726841AbgD1V66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:58:50 -0400
-Received: from smtprelay0147.hostedemail.com ([216.40.44.147]:35370 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726286AbgD1V6u (ORCPT
+        Tue, 28 Apr 2020 17:58:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726286AbgD1V65 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:58:50 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 2DC23181D341E;
-        Tue, 28 Apr 2020 21:58:49 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: rose21_1295f4037b114
-X-Filterd-Recvd-Size: 1507
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 28 Apr 2020 21:58:47 +0000 (UTC)
-Message-ID: <d367cca3297fc07f5fc155f1e0b9b0e93c1b3cdf.camel@perches.com>
-Subject: Re: [PATCH -next] perf script: remove unneeded conversion to bool
-From:   Joe Perches <joe@perches.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Zou Wei <zou_wei@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 28 Apr 2020 14:58:46 -0700
-In-Reply-To: <20200428175046.GD5460@kernel.org>
-References: <1587904265-865-1-git-send-email-zou_wei@huawei.com>
-         <20200428175046.GD5460@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Tue, 28 Apr 2020 17:58:57 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3F18C03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 14:58:56 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id k23so19377ios.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 14:58:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Lnb/AuomAQNJo8vC00yUB5kS4MsOuZB4Ct4ocKwuxdk=;
+        b=mkX4NZaNgVNkDyA54xwp26Mz+IRfpG1ztLCsGFY2+Q8scP70EZBen1e/opZFQUaqlu
+         VJ5Rp3psn0rcwas6GrwhtKAnlAsUMCJwnICnwwnEFuTuYssLk0gb3UiqYMLHl5xTHTzi
+         gLhIEZwFQq1pLhwwjwjrCp6Vx9Yt4PsflleMy1hgrW1LffY+tBffmmXWGBUqvxlJ+2Kh
+         S15d2MNup5bdK3efqdbfh+lDsG3Tj3O6M4oehDOMG8bH+cLrtwHmg3DVQfN/vJgExQTy
+         Sn89OHYrhTvStmTNGHpU5K0R86SV6xMjDV6poX65cA+KQPjNmK97WyfbQHpqPcjQVa6Z
+         xG3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Lnb/AuomAQNJo8vC00yUB5kS4MsOuZB4Ct4ocKwuxdk=;
+        b=K7ozczrOZqPxTKktD4hUM+Q0Hb3oZ3Ob7XmTM6OYRSDCT2/KytCdc1g3g7gVe7UGS/
+         phzzEzN8uairxHdDmF4QhJpSEFEZCM5Zd8eBa1eLN30jiEyAtTCSH0g9D9pXgO4c8eCx
+         M4EpIgd+bjFTG7oUxHDW6XoKI7FXTmJLUIeCfxquFWqyFCXapBdjyxd96JvNETI4xgNZ
+         O0RkFQCpI56UoWshVifVX03Njao1zrCYc6rw8hhI6fVuvHrCsVeeRmqEI1tnjyiSE+NE
+         2EdFi/MDgHMKqpa85TjmcUnsN0HQQHOV7Xf6kaoFNFR3B408cwMmW968U1oISOHyaqS8
+         PTqg==
+X-Gm-Message-State: AGi0PuaO2PPZfVZgwGtswYQaXDkKBOzqKPnJkCOPwx/+PiwvYaVUAq4Z
+        xeFbtY/opUr8eeGdWqvZ2QFeNiewJ0m1nx1fMmtHEg==
+X-Google-Smtp-Source: APiQypJIb0ErMY4mtUsYmzA6Yv167R2fgOgPSoZqyTb9YnVxaEYquhArv+3g934sjJXNag31V/j4bT9VoIQAlxJU3/g=
+X-Received: by 2002:a5e:a610:: with SMTP id q16mr28126485ioi.75.1588111136020;
+ Tue, 28 Apr 2020 14:58:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200423022550.15113-1-sean.j.christopherson@intel.com> <20200423022550.15113-9-sean.j.christopherson@intel.com>
+In-Reply-To: <20200423022550.15113-9-sean.j.christopherson@intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Tue, 28 Apr 2020 14:58:44 -0700
+Message-ID: <CALMp9eQav5s4SceVD=3zYb-RYkNHs+8F3hMUASBYrcJcyUterQ@mail.gmail.com>
+Subject: Re: [PATCH 08/13] KVM: nVMX: Preserve IRQ/NMI priority irrespective
+ of exiting behavior
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Oliver Upton <oupton@google.com>,
+        Peter Shier <pshier@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-28 at 14:50 -0300, Arnaldo Carvalho de Melo wrote:
-> Em Sun, Apr 26, 2020 at 08:31:05PM +0800, Zou Wei escreveu:
-> > This issue was detected by using the Coccinelle software:
-> > 
-> > tools/perf/builtin-script.c:3285:48-53: WARNING: conversion to bool not needed here
-> > tools/perf/builtin-script.c:2839:36-41: WARNING: conversion to bool not needed here
-> > 
-> > The conversion to bool is unneeded, remove it
-> 
-> Thanks, applied,
-
-Did you read the patch?
-It's broken, unless some other patch was applied.
-
+On Wed, Apr 22, 2020 at 7:26 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> Short circuit vmx_check_nested_events() if an unblocked IRQ/NMI is
+> pending and needs to be injected into L2, priority between coincident
+> events is not dependent on exiting behavior.
+>
+> Fixes: b6b8a1451fc4 ("KVM: nVMX: Rework interception of IRQs and NMIs")
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
