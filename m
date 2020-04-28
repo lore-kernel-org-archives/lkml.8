@@ -2,86 +2,133 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED12AC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBFBC83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC7A520746
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0488020746
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:31:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgD1Pbk (ORCPT
+        id S1728443AbgD1Pbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:31:40 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45675 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727917AbgD1Pbj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:31:39 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e20so33291189otk.12;
-        Tue, 28 Apr 2020 08:31:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H0LOD7XbNY8f26IcdF+mTtRkvNc/cLKM59So7aS3RUw=;
-        b=Kh4h/h4ROTQqDh64ylfpPGzS3za/yVYdFZeoCZxjL3yGkQXvlwvtNpURUK1+ORePif
-         FkgMwjMxG5nmKPLcAjbrGMOrbSCUKJvztugDgxSCw95QFpzH+Nprzjt9iU+pG1w6Rqm1
-         g0ROcLt4kN7c923mEgQKQY7VV+H1Fxrm6L0UF4ym/y4+8HQQrydr51L3xUqGda2C/O4F
-         E/bAqqPWO/K49lG7sxmsHoOB9+ZzP0D2iy5oh154/50qzbGpf5FMCSbOSV1vVLOXrPFb
-         TO5oJSMciPYaXxzyfXWBWK0bRul4ZkeSCrzQtgsKclWFXk7cFl3OIm9qFGQPrXPsWGOc
-         pmAg==
-X-Gm-Message-State: AGi0PuZv1ZHZAXM48nUJoXo3HXMFm0JbV745xWMHdMjoQb/5vvE904/5
-        wRVBhgt/GvnKjuRuqnE0C6ZSQabUn7V6MT42UbI=
-X-Google-Smtp-Source: APiQypKmPPMRmFDEpK+pbxelea00daQWJAo2cqKdKqvVtb9z1shjQduzXoV/x4KObl7etnUGy2BDWPAjQyNgmtVAs6E=
-X-Received: by 2002:a9d:7d85:: with SMTP id j5mr21717225otn.107.1588087898648;
- Tue, 28 Apr 2020 08:31:38 -0700 (PDT)
+        Tue, 28 Apr 2020 11:31:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:54322 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727917AbgD1Pbu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:31:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0538B30E;
+        Tue, 28 Apr 2020 08:31:50 -0700 (PDT)
+Received: from [10.37.12.125] (unknown [10.37.12.125])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E0ACA3F305;
+        Tue, 28 Apr 2020 08:31:44 -0700 (PDT)
+Subject: Re: [PATCH v3 4/4] thermal: cpuidle: Register cpuidle cooling device
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rui.zhang@intel.com
+Cc:     amit.kucheria@verdurent.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "open list:CPU IDLE TIME MANAGEMENT FRAMEWORK" 
+        <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CPUIDLE DRIVER - ARM PSCI" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200414220837.9284-1-daniel.lezcano@linaro.org>
+ <20200414220837.9284-4-daniel.lezcano@linaro.org>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <db4eeecf-2126-e455-ef02-fc034c631e09@arm.com>
+Date:   Tue, 28 Apr 2020 16:31:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <1587987364-4566-1-git-send-email-hadar.gat@arm.com> <1587987364-4566-3-git-send-email-hadar.gat@arm.com>
-In-Reply-To: <1587987364-4566-3-git-send-email-hadar.gat@arm.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 28 Apr 2020 17:31:25 +0200
-Message-ID: <CAMuHMdWdgnqAp8rHyMj9gCXD2WBweeB6g38OV6S2MJ5KFLyvcw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] hwrng: cctrng - change default to n
-To:     Hadar Gat <hadar.gat@arm.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <ofir.drang@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200414220837.9284-4-daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 1:39 PM Hadar Gat <hadar.gat@arm.com> wrote:
-> For many users, the Arm CryptoCell HW is not available, so the default for
-> HW_RANDOM_CCTRNG should to n.
-> Remove the line to follow the convention - 'n' is the default anyway so no
-> need to state it explicitly.
->
-> Signed-off-by: Hadar Gat <hadar.gat@arm.com>
 
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Gr{oetje,eeting}s,
+On 4/14/20 11:08 PM, Daniel Lezcano wrote:
+> The cpuidle driver can be used as a cooling device by injecting idle
+> cycles. The DT binding for the idle state added an optional
+> 
+> When the property is set, register the cpuidle driver with the idle
+> state node pointer as a cooling device. The thermal framework will do
+> the association automatically with the thermal zone via the
+> cooling-device defined in the device tree cooling-maps section.
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
+>   drivers/cpuidle/cpuidle-arm.c  | 5 +++++
+>   drivers/cpuidle/cpuidle-psci.c | 5 +++++
+>   2 files changed, 10 insertions(+)
+> 
+> diff --git a/drivers/cpuidle/cpuidle-arm.c b/drivers/cpuidle/cpuidle-arm.c
+> index 9e5156d39627..2406ac0ae134 100644
+> --- a/drivers/cpuidle/cpuidle-arm.c
+> +++ b/drivers/cpuidle/cpuidle-arm.c
+> @@ -8,6 +8,7 @@
+>   
+>   #define pr_fmt(fmt) "CPUidle arm: " fmt
+>   
+> +#include <linux/cpu_cooling.h>
+>   #include <linux/cpuidle.h>
+>   #include <linux/cpumask.h>
+>   #include <linux/cpu_pm.h>
+> @@ -124,6 +125,10 @@ static int __init arm_idle_init_cpu(int cpu)
+>   	if (ret)
+>   		goto out_kfree_drv;
+>   
+> +	ret = cpuidle_cooling_register(drv);
+> +	if (ret)
+> +		pr_err("Failed to register the idle cooling device: %d\n", ret);
 
-                        Geert
+This and similar from cpuidle-psci.c might produce a lot of error log
+entries. The 'return 0' below does not take into account that we failed
+to register cpuidle cooling. Thus, I would rather ignore the return from 
+cpuidle_cooling_register and move this print into
+cpuidle_cooling_register function, changing it also to debug level.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> +
+>   	return 0;
+>   
+>   out_kfree_drv:
+> diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
+> index edd7a54ef0d3..8e805bff646f 100644
+> --- a/drivers/cpuidle/cpuidle-psci.c
+> +++ b/drivers/cpuidle/cpuidle-psci.c
+> @@ -9,6 +9,7 @@
+>   #define pr_fmt(fmt) "CPUidle PSCI: " fmt
+>   
+>   #include <linux/cpuhotplug.h>
+> +#include <linux/cpu_cooling.h>
+>   #include <linux/cpuidle.h>
+>   #include <linux/cpumask.h>
+>   #include <linux/cpu_pm.h>
+> @@ -305,6 +306,10 @@ static int __init psci_idle_init_cpu(int cpu)
+>   	if (ret)
+>   		goto out_kfree_drv;
+>   
+> +	ret = cpuidle_cooling_register(drv);
+> +	if (ret)
+> +		pr_err("Failed to register the idle cooling device: %d\n", ret);
+> +
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+The same here. I would change it into one line:
++	cpuidle_cooling_register(drv);
+
+>   	return 0;
+>   
+>   out_kfree_drv:
+> 
+
+Regards,
+Lukasz
