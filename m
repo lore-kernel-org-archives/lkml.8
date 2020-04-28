@@ -2,175 +2,161 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62214C83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 845D9C83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 409CF206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61844205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:50:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="avd/pmgW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbgD1Ptb (ORCPT
+        id S1728472AbgD1PuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:49:31 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:44736 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728297AbgD1Pta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:49:30 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1AA1C20002A;
-        Tue, 28 Apr 2020 17:49:28 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0CEF9200019;
-        Tue, 28 Apr 2020 17:49:28 +0200 (CEST)
-Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 240892030C;
-        Tue, 28 Apr 2020 17:49:27 +0200 (CEST)
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Ripard <mripard@kernel.org>
-Cc:     Aymen Sghaier <aymen.sghaier@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>
-Subject: [PATCH v6 3/3] crypto: engine - support for batch requests
-Date:   Tue, 28 Apr 2020 18:49:05 +0300
-Message-Id: <1588088945-9067-4-git-send-email-iuliana.prodan@nxp.com>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1588088945-9067-1-git-send-email-iuliana.prodan@nxp.com>
-References: <1588088945-9067-1-git-send-email-iuliana.prodan@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 28 Apr 2020 11:50:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46884 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728213AbgD1PuG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:50:06 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E72CEC03C1AB
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 08:50:04 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id i10so25224886wrv.10
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 08:50:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yT8C9Z0cwFWg9VQuzJhxHhG3ta75UnZwwwKuAE5M5tY=;
+        b=avd/pmgWdLY1y8mQnSn0uB5ryWhU4mq8HAgoi7O/LPXfvHM9YVRyfiHaEF3eGtLHjo
+         O2ubgIYBklniO3y6CuHwYELYbiKcaVmUSWntQbfaIK0CWhz66VXE9BlcdodN25zoASiS
+         eAEvRHd3r1neXiHvCqN9XvQiuP9f3GZCRp2wvkHqQdy492cKSu0T8kGqzUmARV2JgDNW
+         GHrv0i6AB1g9feyJR6CTpggjwMtw93bPmuWbLjwSZQjHYI7byREOTg8gbyIfm2/jrcRi
+         kpmbYeqwuhKZT9h6zq7Zu9394OB0Pc3QYZtQ9a7HKRxAztXNrlgdvMQsnuzOKajqAJhl
+         +GRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yT8C9Z0cwFWg9VQuzJhxHhG3ta75UnZwwwKuAE5M5tY=;
+        b=JsbigphpWkRQMlCz7qJmTYDLPWIouoBx6iPyUkR2q6mMFUKdnPPynKpjrS8zXijd5C
+         2p20dBariqagewPBJU5iLFFCqWeW0MWZgReMjmKHbXNn9ppt+/UObMflhWhuxDcgu28h
+         HSr3atZwi7C/66wN05VGyZN/J8E1F/mOUhugoQzqPPPqLf1b1blKHyIPo+IdOOSKzAnX
+         YoteECf+CODg8N84z0GErENhH5QumZpjmkoOqu3hcwlwhahRkkV8OI8NHn3+2uXlFWxy
+         JhTSPvfT1AY31JhOWpev3QuDSsZ0j8GecTy8p+aYP2MKElcp+pLdKKDvYVnmGoeXJOIh
+         HYeg==
+X-Gm-Message-State: AGi0Pubk6aMKJBl4hmCvcnNt8632bGw3FhMFqgEAHequEVLJh3mpOZWi
+        F1AcXzk10N+Lianp9xiLlAMvQC7g37E=
+X-Google-Smtp-Source: APiQypLuvf33xbU0o5nhAgBeuDXi+K0R0nlCHYf0M7ztjlUX/f2ATSV9hbXz0meRY4EtRyh3ktZ3Lg==
+X-Received: by 2002:adf:c3ca:: with SMTP id d10mr35642201wrg.64.1588089002660;
+        Tue, 28 Apr 2020 08:50:02 -0700 (PDT)
+Received: from [192.168.0.136] ([87.120.218.65])
+        by smtp.googlemail.com with ESMTPSA id f2sm27297345wro.59.2020.04.28.08.50.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 Apr 2020 08:50:01 -0700 (PDT)
+Subject: Re: [PATCH] interconnect: Add helpers for enabling/disabling a path
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-pm@vger.kernel.org, evgreen@chromium.org,
+        bjorn.andersson@linaro.org, akashast@codeaurora.org,
+        linux-kernel@vger.kernel.org
+References: <20200428091650.27669-1-georgi.djakov@linaro.org>
+ <20200428152842.GG4525@google.com>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ mQINBFjTuRcBEACyAOVzghvyN19Sa/Nit4LPBWkICi5W20p6bwiZvdjhtuh50H5q4ktyxJtp
+ 1+s8dMSa/j58hAWhrc2SNL3fttOCo+MM1bQWwe8uMBQJP4swgXf5ZUYkSssQlXxGKqBSbWLB
+ uFHOOBTzaQBaNgsdXo+mQ1h8UCgM0zQOmbs2ort8aHnH2i65oLs5/Xgv/Qivde/FcFtvEFaL
+ 0TZ7odM67u+M32VetH5nBVPESmnEDjRBPw/DOPhFBPXtal53ZFiiRr6Bm1qKVu3dOEYXHHDt
+ nF13gB+vBZ6x5pjl02NUEucSHQiuCc2Aaavo6xnuBc3lnd4z/xk6GLBqFP3P/eJ56eJv4d0B
+ 0LLgQ7c1T3fU4/5NDRRCnyk6HJ5+HSxD4KVuluj0jnXW4CKzFkKaTxOp7jE6ZD/9Sh74DM8v
+ etN8uwDjtYsM07I3Szlh/I+iThxe/4zVtUQsvgXjwuoOOBWWc4m4KKg+W4zm8bSCqrd1DUgL
+ f67WiEZgvN7tPXEzi84zT1PiUOM98dOnmREIamSpKOKFereIrKX2IcnZn8jyycE12zMkk+Sc
+ ASMfXhfywB0tXRNmzsywdxQFcJ6jblPNxscnGMh2VlY2rezmqJdcK4G4Lprkc0jOHotV/6oJ
+ mj9h95Ouvbq5TDHx+ERn8uytPygDBR67kNHs18LkvrEex/Z1cQARAQABtChHZW9yZ2kgRGph
+ a292IDxnZW9yZ2kuZGpha292QGxpbmFyby5vcmc+iQI+BBMBAgAoBQJY07kXAhsDBQkHhM4A
+ BgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRCyi/eZcnWWUuvsD/4miikUeAO6fU2Xy3fT
+ l7RUCeb2Uuh1/nxYoE1vtXcow6SyAvIVTD32kHXucJJfYy2zFzptWpvD6Sa0Sc58qe4iLY4j
+ M54ugOYK7XeRKkQHFqqR2T3g/toVG1BOLS2atooXEU+8OFbpLkBXbIdItqJ1M1SEw8YgKmmr
+ JlLAaKMq3hMb5bDQx9erq7PqEKOB/Va0nNu17IL58q+Q5Om7S1x54Oj6LiG/9kNOxQTklOQZ
+ t61oW1Ewjbl325fW0/Lk0QzmfLCrmGXXiedFEMRLCJbVImXVKdIt/Ubk6SAAUrA5dFVNBzm2
+ L8r+HxJcfDeEpdOZJzuwRyFnH96u1Xz+7X2V26zMU6Wl2+lhvr2Tj7spxjppR+nuFiybQq7k
+ MIwyEF0mb75RLhW33sdGStCZ/nBsXIGAUS7OBj+a5fm47vQKv6ekg60oRTHWysFSJm1mlRyq
+ exhI6GwUo5GM/vE36rIPSJFRRgkt6nynoba/1c4VXxfhok2rkP0x3CApJ5RimbvITTnINY0o
+ CU6f1ng1I0A1UTi2YcLjFq/gmCdOHExT4huywfu1DDf0p1xDyPA1FJaii/gJ32bBP3zK53hM
+ dj5S7miqN7F6ZpvGSGXgahQzkGyYpBR5pda0m0k8drV2IQn+0W8Qwh4XZ6/YdfI81+xyFlXc
+ CJjljqsMCJW6PdgEH7kCDQRY07kXARAAvupGd4Jdd8zRRiF+jMpv6ZGz8L55Di1fl1YRth6m
+ lIxYTLwGf0/p0oDLIRldKswena3fbWh5bbTMkJmRiOQ/hffhPSNSyyh+WQeLY2kzl6geiHxD
+ zbw37e2hd3rWAEfVFEXOLnmenaUeJFyhA3Wd8OLdRMuoV+RaLhNfeHctiEn1YGy2gLCq4VNb
+ 4Wj5hEzABGO7+LZ14hdw3hJIEGKtQC65Jh/vTayGD+qdwedhINnIqslk9tCQ33a+jPrCjXLW
+ X29rcgqigzsLHH7iVHWA9R5Aq7pCy5hSFsl4NBn1uV6UHlyOBUuiHBDVwTIAUnZ4S8EQiwgv
+ WQxEkXEWLM850V+G6R593yZndTr3yydPgYv0xEDACd6GcNLR/x8mawmHKzNmnRJoOh6Rkfw2
+ fSiVGesGo83+iYq0NZASrXHAjWgtZXO1YwjW9gCQ2jYu9RGuQM8zIPY1VDpQ6wJtjO/KaOLm
+ NehSR2R6tgBJK7XD9it79LdbPKDKoFSqxaAvXwWgXBj0Oz+Y0BqfClnAbxx3kYlSwfPHDFYc
+ R/ppSgnbR5j0Rjz/N6Lua3S42MDhQGoTlVkgAi1btbdV3qpFE6jglJsJUDlqnEnwf03EgjdJ
+ 6KEh0z57lyVcy5F/EUKfTAMZweBnkPo+BF2LBYn3Qd+CS6haZAWaG7vzVJu4W/mPQzsAEQEA
+ AYkCJQQYAQIADwUCWNO5FwIbDAUJB4TOAAAKCRCyi/eZcnWWUhlHD/0VE/2x6lKh2FGP+QHH
+ UTKmiiwtMurYKJsSJlQx0T+j/1f+zYkY3MDX+gXa0d0xb4eFv8WNlEjkcpSPFr+pQ7CiAI33
+ 99kAVMQEip/MwoTYvM9NXSMTpyRJ/asnLeqa0WU6l6Z9mQ41lLzPFBAJ21/ddT4xeBDv0dxM
+ GqaH2C6bSnJkhSfSja9OxBe+F6LIAZgCFzlogbmSWmUdLBg+sh3K6aiBDAdZPUMvGHzHK3fj
+ gHK4GqGCFK76bFrHQYgiBOrcR4GDklj4Gk9osIfdXIAkBvRGw8zg1zzUYwMYk+A6v40gBn00
+ OOB13qJe9zyKpReWMAhg7BYPBKIm/qSr82aIQc4+FlDX2Ot6T/4tGUDr9MAHaBKFtVyIqXBO
+ xOf0vQEokkUGRKWBE0uA3zFVRfLiT6NUjDQ0vdphTnsdA7h01MliZLQ2lLL2Mt5lsqU+6sup
+ Tfql1omgEpjnFsPsyFebzcKGbdEr6vySGa3Cof+miX06hQXKe99a5+eHNhtZJcMAIO89wZmj
+ 7ayYJIXFqjl/X0KBcCbiAl4vbdBw1bqFnO4zd1lMXKVoa29UHqby4MPbQhjWNVv9kqp8A39+
+ E9xw890l1xdERkjVKX6IEJu2hf7X3MMl9tOjBK6MvdOUxvh1bNNmXh7OlBL1MpJYY/ydIm3B
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <e6d9cae4-6674-9426-183d-d9d810c6335b@linaro.org>
+Date:   Tue, 28 Apr 2020 18:50:00 +0300
+MIME-Version: 1.0
+In-Reply-To: <20200428152842.GG4525@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added support for batch requests, per crypto engine.
-A new callback is added, do_batch_requests, which executes a
-batch of requests. This has the crypto_engine structure as argument
-(for cases when more than one crypto-engine is used).
-The crypto_engine_alloc_init_and_set function, initializes
-crypto-engine, but also, sets the do_batch_requests callback.
-On crypto_pump_requests, if do_batch_requests callback is
-implemented in a driver, this will be executed. The link between
-the requests will be done in driver, if possible.
-do_batch_requests is available only if the hardware has support
-for multiple request.
+Hi Matthias,
 
-Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
----
- crypto/crypto_engine.c  | 27 ++++++++++++++++++++++++++-
- include/crypto/engine.h |  5 +++++
- 2 files changed, 31 insertions(+), 1 deletion(-)
+On 4/28/20 18:28, Matthias Kaehlcke wrote:
+> Hi Georgi,
+> 
+> On Tue, Apr 28, 2020 at 12:16:50PM +0300, Georgi Djakov wrote:
+>> There is a repeated pattern in multiple drivers where they want to switch
+>> the bandwidth between zero and some other value. This is happening often
+>> in the suspend/resume callbacks. Let's add helper functions to enable and
+>> disable the path, so that callers don't have to take care of remembering
+>> the bandwidth values and handle this in the framework instead.
+>>
+>> With this patch the users can call icc_disable() and icc_enable() to lower
+>> their bandwidth request to zero and then restore it back to it's previous
+>> value.
+>>
+>> Suggested-by: Evan Green <evgreen@chromium.org>
+>> Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 
-diff --git a/crypto/crypto_engine.c b/crypto/crypto_engine.c
-index ee19273..412149e 100644
---- a/crypto/crypto_engine.c
-+++ b/crypto/crypto_engine.c
-@@ -227,6 +227,18 @@ static void crypto_pump_requests(struct crypto_engine *engine,
- 
- out:
- 	spin_unlock_irqrestore(&engine->queue_lock, flags);
-+
-+	/*
-+	 * Batch requests is possible only if
-+	 * hardware can enqueue multiple requests
-+	 */
-+	if (engine->do_batch_requests) {
-+		ret = engine->do_batch_requests(engine);
-+		if (ret)
-+			dev_err(engine->dev, "failed to do batch requests: %d\n",
-+				ret);
-+	}
-+
- 	return;
- }
- 
-@@ -456,6 +468,12 @@ EXPORT_SYMBOL_GPL(crypto_engine_stop);
-  * crypto-engine queue.
-  * @dev: the device attached with one hardware engine
-  * @retry_support: whether hardware has support for retry mechanism
-+ * @cbk_do_batch: pointer to a callback function to be invoked when executing a
-+ *                a batch of requests.
-+ *                This has the form:
-+ *                callback(struct crypto_engine *engine)
-+ *                where:
-+ *                @engine: the crypto engine structure.
-  * @rt: whether this queue is set to run as a realtime task
-  * @qlen: maximum size of the crypto-engine queue
-  *
-@@ -464,6 +482,7 @@ EXPORT_SYMBOL_GPL(crypto_engine_stop);
-  */
- struct crypto_engine *crypto_engine_alloc_init_and_set(struct device *dev,
- 						       bool retry_support,
-+						       int (*cbk_do_batch)(struct crypto_engine *engine),
- 						       bool rt, int qlen)
- {
- 	struct sched_param param = { .sched_priority = MAX_RT_PRIO / 2 };
-@@ -483,6 +502,12 @@ struct crypto_engine *crypto_engine_alloc_init_and_set(struct device *dev,
- 	engine->idling = false;
- 	engine->retry_support = retry_support;
- 	engine->priv_data = dev;
-+	/*
-+	 * Batch requests is possible only if
-+	 * hardware has support for retry mechanism.
-+	 */
-+	engine->do_batch_requests = retry_support ? cbk_do_batch : NULL;
-+
- 	snprintf(engine->name, sizeof(engine->name),
- 		 "%s-engine", dev_name(dev));
- 
-@@ -516,7 +541,7 @@ EXPORT_SYMBOL_GPL(crypto_engine_alloc_init_and_set);
-  */
- struct crypto_engine *crypto_engine_alloc_init(struct device *dev, bool rt)
- {
--	return crypto_engine_alloc_init_and_set(dev, false, rt,
-+	return crypto_engine_alloc_init_and_set(dev, false, NULL, rt,
- 						CRYPTO_ENGINE_MAX_QLEN);
- }
- EXPORT_SYMBOL_GPL(crypto_engine_alloc_init);
-diff --git a/include/crypto/engine.h b/include/crypto/engine.h
-index b92d7ff..3f06e40 100644
---- a/include/crypto/engine.h
-+++ b/include/crypto/engine.h
-@@ -37,6 +37,8 @@
-  * @unprepare_crypt_hardware: there are currently no more requests on the
-  * queue so the subsystem notifies the driver that it may relax the
-  * hardware by issuing this call
-+ * @do_batch_requests: execute a batch of requests. Depends on multiple
-+ * requests support.
-  * @kworker: kthread worker struct for request pump
-  * @pump_requests: work struct for scheduling work to the request pump
-  * @priv_data: the engine private data
-@@ -59,6 +61,8 @@ struct crypto_engine {
- 
- 	int (*prepare_crypt_hardware)(struct crypto_engine *engine);
- 	int (*unprepare_crypt_hardware)(struct crypto_engine *engine);
-+	int (*do_batch_requests)(struct crypto_engine *engine);
-+
- 
- 	struct kthread_worker           *kworker;
- 	struct kthread_work             pump_requests;
-@@ -107,6 +111,7 @@ int crypto_engine_stop(struct crypto_engine *engine);
- struct crypto_engine *crypto_engine_alloc_init(struct device *dev, bool rt);
- struct crypto_engine *crypto_engine_alloc_init_and_set(struct device *dev,
- 						       bool retry_support,
-+						       int (*cbk_do_batch)(struct crypto_engine *engine),
- 						       bool rt, int qlen);
- int crypto_engine_exit(struct crypto_engine *engine);
- 
--- 
-2.1.0
+[..]
 
+>> +
+>> +	return icc_set_bw(path, path->reqs[0].avg_bw,
+>> +			  path->reqs[0].peak_bw);
+>> +}
+> 
+> The two functions are identical except for the assignment of the 'enabled'
+> flags. You could add a helper _icc_enable(struct icc_path *path, bool enable)
+> and call it from icc_enable/disable().
+> 
+
+Yes, indeed! Will send a v2. Thank you!
+
+BR,
+Georgi
