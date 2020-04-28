@@ -2,138 +2,155 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D34EBC83008
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8203C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B99E2205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A74C7206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:49:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TRA87ZpC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgD1PtP (ORCPT
+        id S1728260AbgD1PtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:49:15 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:46564 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727860AbgD1PtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:49:15 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 198831A0041;
-        Tue, 28 Apr 2020 17:49:13 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F239E1A002E;
-        Tue, 28 Apr 2020 17:49:12 +0200 (CEST)
-Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id E774A2030C;
-        Tue, 28 Apr 2020 17:49:11 +0200 (CEST)
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Ripard <mripard@kernel.org>
-Cc:     Aymen Sghaier <aymen.sghaier@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>
-Subject: [PATCH v6 0/3] crypto: engine - support for parallel and batch requests
-Date:   Tue, 28 Apr 2020 18:49:02 +0300
-Message-Id: <1588088945-9067-1-git-send-email-iuliana.prodan@nxp.com>
-X-Mailer: git-send-email 2.1.0
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 28 Apr 2020 11:49:19 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26477 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727860AbgD1PtR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:49:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588088956;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=v2/K5uPFOC3xkb96FgK9bRPm2O5D0n0FhbGzP2S0ozQ=;
+        b=TRA87ZpCeQsey3moCnl/ziy5LVqrBhNGsUeMn7mzzzeNcM0LuIXvWmg1dki0t9n/KYejyC
+        VAoy78mim3UZiIIMwgbjPvAJI58EYnYMH15Rhhe26MtJpfavMzIF8o64Em0jOJG7bKObD8
+        oaJCOK4JqZyxtjjEOjpc9xwv0UIx7cs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-165-fEAv9dx4M3eIBZgtKgb0eA-1; Tue, 28 Apr 2020 11:49:13 -0400
+X-MC-Unique: fEAv9dx4M3eIBZgtKgb0eA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3C4C7108BD1B;
+        Tue, 28 Apr 2020 15:49:12 +0000 (UTC)
+Received: from treble (ovpn-112-209.rdu2.redhat.com [10.10.112.209])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1AB4019C4F;
+        Tue, 28 Apr 2020 15:49:11 +0000 (UTC)
+Date:   Tue, 28 Apr 2020 10:49:09 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Jann Horn <jannh@google.com>, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        alexandre.chartre@oracle.com
+Subject: Re: x86 entry perf unwinding failure (missing IRET_REGS annotation
+ on stack switch?)
+Message-ID: <20200428154909.4cjwetyyb2zhnq5i@treble>
+References: <CAG48ez1rkN0YU-ieBaUZDKFYG5XFnd7dhDjSDdRmVfWyQzsA5g@mail.gmail.com>
+ <20200302151829.brlkedossh7qs47s@treble>
+ <20200302155239.7ww7jfeu4yeevpkb@treble>
+ <20200428070450.w5l5ey54dtmqy5ph@treble>
+ <20200428124627.GC13558@hirez.programming.kicks-ass.net>
+ <20200428141614.GA13616@hirez.programming.kicks-ass.net>
+ <20200428143157.nxxrgfpo3leia2kr@treble>
+ <20200428152552.GD13592@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200428152552.GD13592@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added support for executing multiple, independent or not, requests
-for crypto engine based on a retry mechanism. If hardware was unable
-to execute a backlog request, enqueue it back in front of crypto-engine
-queue, to keep the order of requests.
+On Tue, Apr 28, 2020 at 05:25:52PM +0200, Peter Zijlstra wrote:
+> On Tue, Apr 28, 2020 at 09:31:57AM -0500, Josh Poimboeuf wrote:
+> > That's quite the monstrosity, and I still don't see the point.  I
+> > thought we decided to just disallow CFI changes in alternatives anyway?
+> > That can be done much simpler.
+> 
+> Something like so then ?
+> 
+> ---
+> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> index 8443ec690051..d14d83e6edb0 100644
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -940,6 +940,7 @@ static int handle_group_alt(struct objtool_file *file,
+>  
+>  		last_new_insn = insn;
+>  
+> +		insn->alt_group = true;
+>  		insn->ignore = orig_insn->ignore_alts;
+>  		insn->func = orig_insn->func;
+>  
+> @@ -2242,6 +2243,11 @@ static int handle_insn_ops(struct instruction *insn, struct insn_state *state)
+>  	list_for_each_entry(op, &insn->stack_ops, list) {
+>  		int res;
+>  
+> +		if (insn->alt_group) {
+> +			WARN_FUNC("alternative has CFI", insn->sec, insn->offset);
+> +			return 1;
+> +		}
+> +
 
-Now do_one_request() returns:
->= 0: hardware executed the request successfully;
-< 0: this is the old error path. If hardware has support for retry
-mechanism, the backlog request is put back in front of crypto-engine
-queue. For backwards compatibility, if the retry support is not available,
-the crypto-engine will work as before.
-If hardware queue is full (-ENOSPC), requeue request regardless
-of MAY_BACKLOG flag.
-If hardware throws any other error code (like -EIO, -EINVAL,
--ENOMEM, etc.) only MAY_BACKLOG requests are enqueued back into
-crypto-engine's queue, since the others can be dropped.
+ACK (separate patch)
 
-If hardware supports batch requests, crypto-engine can handle this use-case
-through do_batch_requests callback.
+>  		res = update_cfi_state(insn, &state->cfi, op);
+>  		if (res)
+>  			return res;
+> @@ -2439,12 +2445,6 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+>  
+>  	sec = insn->sec;
+>  
+> -	if (insn->alt_group && list_empty(&insn->alts)) {
+> -		WARN_FUNC("don't know how to handle branch to middle of alternative instruction group",
+> -			  sec, insn->offset);
+> -		return 1;
+> -	}
+> -
 
-Since, these new features, cannot be supported by all hardware,
-the crypto-engine framework is backward compatible:
-- by using the crypto_engine_alloc_init function, to initialize
-crypto-engine, the new callback is NULL and retry mechanism is
-disabled, so crypto-engine will work as before these changes;
-- to support multiple requests, in parallel, retry_support variable
-must be set on true, in driver. 
-- to support batch requests, do_batch_requests callback must be
-implemented in driver, to execute a batch of requests. The link
-between the requests, is expected to be done in driver, in
-do_one_request(). 
+ACK (separate patch)
 
----
-Changes since V5:
-- updated, in algapi, the crypto_enqueue_request_head function to
-enqueue requests regardless of backlog flag;
-- requeue request based on the error code returned by do_one_request().
+>  	while (1) {
+>  		next_insn = next_insn_same_sec(file, insn);
+>  
+> @@ -2494,8 +2494,16 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+>  				}
+>  			}
+>  
+> -			if (skip_orig)
+> +			if (skip_orig) {
+> +				struct instruction *prev_insn = insn;
+> +				sec_for_each_insn_continue(file, insn) {
+> +					if (!insn->alt_group)
+> +						break;
+> +					if (!insn->visited)
+> +						insn->cfi = prev_insn->cfi;
+> +				}
+>  				return 0;
+> +			}
 
-Changes since V4:
-- added, in algapi a function to add a request in front of queue;
-- added a retry mechanism: if hardware is unable to execute
-a backlog request, enqueue it back in front of crypto-engine
-queue, to keep the order of requests.
+NACK :-)
 
-Changes since V3:
-- removed can_enqueue_hardware callback and added a start-stop
-mechanism based on the on the return value of do_one_request().
+What happens if you have two alternatives adjacent to each other (which
+can definitely happen in this scenario)?
 
-Changes since V2:
-- readded cur_req in crypto-engine, to keep, the exact behavior as before
-these changes, if can_enqueue_more is not implemented: send requests
-to hardware, _one-by-one_, on crypto_pump_requests, and complete it,
-on crypto_finalize_request, and so on.
-- do_batch_requests is available only with can_enqueue_more.
-
-Changes since V1:
-- changed the name of can_enqueue_hardware callback to can_enqueue_more, and
-the argument of this callback to crypto_engine structure (for cases when more
-than ore crypto-engine is used).
-- added a new patch with support for batch requests.
-
-Changes since V0 (RFC):
-- removed max_no_req and no_req, as the number of request that can be
-processed in parallel;
-- added a new callback, can_enqueue_more, to check whether the hardware
-can process a new request.
-
-
-Iuliana Prodan (3):
-  crypto: algapi - create function to add request in front of queue
-  crypto: engine - support for parallel requests based on retry
-    mechanism
-  crypto: engine - support for batch requests
-
- crypto/algapi.c         |   8 +++
- crypto/crypto_engine.c  | 171 +++++++++++++++++++++++++++++++++++++++---------
- include/crypto/algapi.h |   2 +
- include/crypto/engine.h |  15 ++++-
- 4 files changed, 164 insertions(+), 32 deletions(-)
+I still like my patch, at least the hack is done before the validate
+code, so validate_branch() itself is simpler.
 
 -- 
-2.1.0
+Josh
 
