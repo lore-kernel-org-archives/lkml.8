@@ -2,243 +2,134 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46143C83009
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEADBC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC8C2072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC564206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:23:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WreZFJha"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JmW/RRFy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgD1NVe (ORCPT
+        id S1726942AbgD1NXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:21:34 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:59411 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbgD1NU0 (ORCPT
+        Tue, 28 Apr 2020 09:23:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28319 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726798AbgD1NXK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:20:26 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200428132022euoutp022468358072840b33fc7f3bb9dc2a0986~J-l3rokau2985029850euoutp02I
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:20:22 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200428132022euoutp022468358072840b33fc7f3bb9dc2a0986~J-l3rokau2985029850euoutp02I
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1588080023;
-        bh=M+a2IJHYb0toPVb1vAnuWVCTaP9GKRurjtQwh8AYvLw=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=WreZFJhaefNRO8ShblU/Rs/qaRcxBDU3rdHWegMVruA5im4lIh/s84Gd7u6Gcwp9P
-         GsqAAQqv69PE1al5vWRIMhU/12N354OMT4gF0Fe70hkeVy33jPqJYfFD9Z5iEjnsDh
-         hcG/LQvJn8+62eKbIZSoWQ8NVixhdqoInu4E2f+k=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200428132022eucas1p197a0e0088bb95f4bbe04e9e58b9ec827~J-l3P0VJS1366113661eucas1p1C;
-        Tue, 28 Apr 2020 13:20:22 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id CE.16.60698.69D28AE5; Tue, 28
-        Apr 2020 14:20:22 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200428132022eucas1p2aa4716cbaca61c432ee8028be15fef7a~J-l2zrH2Z2655426554eucas1p2J;
-        Tue, 28 Apr 2020 13:20:22 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200428132022eusmtrp180c18efbf17c909e49ded70dd6d7a26d~J-l2y51qv1743317433eusmtrp1s;
-        Tue, 28 Apr 2020 13:20:22 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-6e-5ea82d96013d
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 67.D3.07950.59D28AE5; Tue, 28
-        Apr 2020 14:20:21 +0100 (BST)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200428132021eusmtip254bc6d36e65ea6888afab346da0ccde0~J-l2NHB3X1062310623eusmtip2h;
-        Tue, 28 Apr 2020 13:20:21 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        intel-gfx@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        amd-gfx@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [RFC 00/17] DRM: fix struct sg_table nents vs. orig_nents misuse
-Date:   Tue, 28 Apr 2020 15:19:48 +0200
-Message-Id: <20200428132005.21424-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSWUwTURSGc2emM8NSHKcI17qmiSSSsAWIExGiBM3gg+HJByLVCiOLtJCW
-        RfBBQBQsS1AiIBJTkX0rAlYERahAESISQECWsMYEApGEVUNQhgF9+85//nP+k5tLonSdSEqG
-        qqI4tUoRLsPNMUPnr68OOQ5lcufkXCmT0fsZYYr1iQTzOk8vYpKM3Tjzx/AYZQbXfuJMeWUH
-        wjzPqkcY3UcPZnVwGmHqZodEzEBTAc5Ut08QTNvynIjpnlghzh9gq15UAfbDug5jx4fe4+zb
-        9SkRO5lmQtj6onvs2PYsymaPlAK2+XsCzmY2VAB2pe64n4W/+bkgLjw0hlM7ed0wDykq7EEi
-        k13uDBXOYgmgyE4LzEhIucGx/BVMC8xJmioD0PhoFhWKVQCHsox7xQqAqYvfsP2RjvVJlGea
-        KgUwbeGQwDsTZVoLnnHKBWqXtDjP1tQDALsyLPlFKGVA4VxpO6EFJCmhfGGrPp73YNQpmF77
-        cnenmPKErz5t4kLWCVhZ27p7BKRaCFi1mYgIDR+o69bumSRwwdRACHwU9mSnY8LAfQCne6sJ
-        oUgHcCApDwguDzje+xvnr0Cp01Df5CTIF2BOQS3Gy5CygiNLB3kZ3cEnhlxUkMUw9SEtuO1g
-        vqnmX2xbXz8qMAufjS4TwpsEwOnBEiILHM//n6UDoALYctEaZTCncVVxsY4ahVITrQp2DIxQ
-        1oGdn9SzbVprBC1bN42AIoHMUlxrWSanRYoYTZzSCCCJyqzFMyElclocpIiL59QR19XR4ZzG
-        CI6QmMxW7Fo4H0BTwYoo7jbHRXLq/S5CmkkTQIh4o4S2Kj0sc8+9eKbHOXu+3vdppn/K0pbS
-        cbJ4Tu1ZEPbGxn7LK7B907lruKV1uDPli6vU52SjW4mNt859yl3S94472xzWu2RdnuZ3q1ke
-        TM94XzGz4DInG9hjFRvXoMSrryY+1q8x7cfiaMp4R//VhEvyZWlozl1baaXDZb0M04QoXOxR
-        tUbxF8W9urRFAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupikeLIzCtJLcpLzFFi42I5/e/4Pd2puiviDLZPtrboPXeSyWLp+kZ2
-        i40z1rNaNB06xWbxf9tEZosrX9+zWaxcfZTJYvaEzUwWC/ZbW3y58pDJYtPja6wWl3fNYbNY
-        e+Quu8XBD09YLU7d/czuwO+xZt4aRo+93xaweNy5tofNY/u3B6we97uPM3lsXlLvcfvfY2aP
-        yTeWM3rsvtnA5tG3ZRWjx+dNcgHcUXo2RfmlJakKGfnFJbZK0YYWRnqGlhZ6RiaWeobG5rFW
-        RqZK+nY2Kak5mWWpRfp2CXoZSxadZipoMay4tugxSwPjErUuRk4OCQETiaPf7jN3MXJxCAks
-        ZZQ4MGU5E0RCRuLktAZWCFtY4s+1LjaIok+MErsPvmQHSbAJGEp0vYVIiAh0MkpM6/7IDuIw
-        Cxxglug+fxJoFAeHsICnxIH1VSANLAKqEj0bFjKD2LwCthKLD/9gg9ggL7F6wwHmCYw8CxgZ
-        VjGKpJYW56bnFhvpFSfmFpfmpesl5+duYgTGw7ZjP7fsYOx6F3yIUYCDUYmHdwPPijgh1sSy
-        4srcQ4wSHMxKIryPMpbFCfGmJFZWpRblxxeV5qQWH2I0BVo+kVlKNDkfGKt5JfGGpobmFpaG
-        5sbmxmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6mDg4pRoYhXk/zvWJKDx1vkLkWfHZ818iX3NW
-        ZKbWSza8WzYh/4KNtC+z/4bQzU9msTd9msDdGH70I4vtD82ZP/fYT5ptVexQyRVSK9l54VrY
-        VJGpzts6z9zh6l3cuU1XX7N3vqn6jJb9C1k/vuJ3kHsjsnUO27OTMjtsW2784ngufm3TxguO
-        0y/ZWP5hVWIpzkg01GIuKk4EAF3VAt+dAgAA
-X-CMS-MailID: 20200428132022eucas1p2aa4716cbaca61c432ee8028be15fef7a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200428132022eucas1p2aa4716cbaca61c432ee8028be15fef7a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200428132022eucas1p2aa4716cbaca61c432ee8028be15fef7a
-References: <CGME20200428132022eucas1p2aa4716cbaca61c432ee8028be15fef7a@eucas1p2.samsung.com>
+        Tue, 28 Apr 2020 09:23:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588080186;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QeTe1VZqdF2mNKJQkDt1Swo6+XvFwxRuyivMd/xg+yI=;
+        b=JmW/RRFy2RlWABXjylI5O4ahUJgpzUHrcE0Lsa6O0DfVKxaF4ZanTlOMlWKOUK7jCGuJbI
+        a1zq6MlCGSYnfNSX1W9ArUgy/OEQIB2kOkkIn/GUBeezkqDR111QZCnPV7vLl8HFV819n7
+        peba7IFzr9lYIUY625ns1fFy6fxPc7M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-278-Nhx-R-eIMdGe82_y6PvUQw-1; Tue, 28 Apr 2020 09:23:04 -0400
+X-MC-Unique: Nhx-R-eIMdGe82_y6PvUQw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A871107ACCA;
+        Tue, 28 Apr 2020 13:23:02 +0000 (UTC)
+Received: from krava (unknown [10.40.196.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 691C85D750;
+        Tue, 28 Apr 2020 13:22:59 +0000 (UTC)
+Date:   Tue, 28 Apr 2020 15:22:57 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Wang Nan <wangnan0@huawei.com>
+Subject: Re: [PATCH 7/7] perf record: Introduce --switch-output-event
+Message-ID: <20200428132257.GH1476763@krava>
+References: <20200427211935.25789-1-acme@kernel.org>
+ <20200427211935.25789-8-acme@kernel.org>
+ <20200428094839.GD1476763@krava>
+ <20200428121601.GB2245@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428121601.GB2245@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear All,
+On Tue, Apr 28, 2020 at 09:16:01AM -0300, Arnaldo Carvalho de Melo wrote:
 
-During the Exynos DRM GEM rework and fixing the issues in the 
-drm_prime_sg_to_page_addr_arrays() function [1] I've noticed that most
-drivers in DRM framework incorrectly use nents and orig_nents entries of
-the struct sg_table.
+SNIP
 
-In case of the most DMA-mapping implementations exchanging those two
-entries or using nents for all loops on the scatterlist is harmless,
-because they both have the same value. There exists however a DMA-mapping
-implementations, for which such incorrect usage breaks things. The nents
-returned by dma_map_sg() might be lower than the nents passed as its
-parameter and this is perfectly fine. DMA framework or IOMMU is allowed
-to join consecutive chunks while mapping if such operation is supported
-by the underlying HW (bus, bridge, IOMMU, etc). Example of the case
-where dma_map_sg() might return 1 'DMA' chunk for the 4 'physical' pages
-is described here [2]
+> > > +				pr_err("Couldn't create side band evlist.\n.");
+> > > +				goto out_child;
+> > > +			}
+> > >  		}
+> > >  
+> > >  		if (evlist__add_bpf_sb_event(rec->sb_evlist, &session->header.env)) {
+> > 
+> > it's getting bigger, I wonder we should put all the sb_* setup in
+> > separated functions like sb_start/sb_stop
+> 
+> Well, the rec->thread_id = pthread_self(); part is just for reusing a
+> 'perf record' specific mechanism, what to do when the event appears in
+> the side band thread ring buffer, the evlist__set_cb() also is related
+> to that, moving thread_id to evlist seems too much at this time.
 
-The DMA-mapping framework documentation [3] states that dma_map_sg()
-returns the numer of the created entries in the DMA address space.
-However the subsequent calls to dma_sync_sg_for_{device,cpu} and
-dma_unmap_sg must be called with the original number of entries passed to
-dma_map_sg. The common pattern in DRM drivers were to assign the
-dma_map_sg() return value to sg_table->nents and use that value for
-the subsequent calls to dma_sync_sg_* or dma_unmap_sg functions. Also
-the code iterated over nents times to access the pages stored in the
-processed scatterlist, while it should use orig_nents as the numer of
-the page entries.
+hum, I meant record specific static functions sb_start/sb_stop,
+not inside evlist.. just to have it separated
 
-I've tried to identify all such incorrect usage of sg_table->nents in the
-DRM subsystem and this is a result of my research. It looks that the
-incorrect pattern has been copied over the many drivers. Too bad in most
-cases it even worked correctly if the system used simple, linear
-DMA-mapping implementation, for which swapping nents and orig_nents
-doesn't make any difference.
+> 
+> > > @@ -2179,10 +2199,19 @@ static int switch_output_setup(struct record *rec)
+> > >  	};
+> > >  	unsigned long val;
+> > >  
+> > > +	/*
+> > > +	 * If we're using --switch-output-events, then we imply its 
+> > > +	 * --switch-output=signal, as we'll send a SIGUSR2 from the side band
+> > > +	 *  thread to its parent.
+> > > +	 */
+> > > +	if (rec->sb_evlist != NULL)
+> > > +		goto do_signal;
+> > > +
+> > >  	if (!s->set)
+> > >  		return 0;
+>  
+> > hum, it looks like this jump is not necessay and can be avoided
+> > by some bool checks.. could we add some bool when --switch-output-event
+> > is used, so we don't depend on wether rec->sb_evlist was allocated for
+> > whatever reason?
+> 
+> If rec->sb_evlist is NULL, then there was no --switch-output-event
+> passed... The only advantage in adding the complexity below would be if
+> we had rec->switch_output_event_set which would clarify that sb_evlist
+> is not used only for --switch-output-event, to make things clearer.
+> 
+> And this still leaves us with the jump, otherwise we would have to test
+> it twice, right?
 
-I wonder what to do to avoid such misuse in the future, as this case
-clearly shows that the current sg_table structure is a bit hard to
-understand. I have the following ideas and I would like to know your
-opinion before I prepare more patches and check sg_table usage all over
-the kernel:
+still I like the idea of checking bool twice then adding jumps
 
-1. introduce a dma_{map,sync,unmap}_sgtable() wrappers, which will use
-   a proper sg_table entries and call respective DMA-mapping functions
-   and adapt current code to it
+> 
+> I think I'll separate the patch adding OPT_CALLBACK_SET(), then fold the
+> switch_output_event_set addition to builtin-record, ok?
 
-2. rename nents and orig_nents to nr_pages, nr_dmas to clearly state
-   which one refers to which part of the scatterlist; I'm open for
-   other names for those entries
+ok, or set the bool directly in the callback, both works for me ;-)
 
-I will appreciate your comments.
-
-Patches are based on top of Linux next-20200428. I've reduced the
-recipients list mainly to mailing lists, the next version I will try to
-send to the maintainers of the respective drivers.
-
-Best regards,
-Marek Szyprowski
-
-
-References:
-
-[1] https://lkml.org/lkml/2020/3/27/555 
-[2] https://lkml.org/lkml/2020/3/29/65
-[3] Documentation/DMA-API-HOWTO.txt
-
-
-Patch summary:
-
-Marek Szyprowski (17):
-  drm: core: fix sg_table nents vs. orig_nents usage
-  drm: amdgpu: fix sg_table nents vs. orig_nents usage
-  drm: armada: fix sg_table nents vs. orig_nents usage
-  drm: etnaviv: fix sg_table nents vs. orig_nents usage
-  drm: exynos: fix sg_table nents vs. orig_nents usage
-  drm: i915: fix sg_table nents vs. orig_nents usage
-  drm: lima: fix sg_table nents vs. orig_nents usage
-  drm: msm: fix sg_table nents vs. orig_nents usage
-  drm: panfrost: fix sg_table nents vs. orig_nents usage
-  drm: radeon: fix sg_table nents vs. orig_nents usage
-  drm: rockchip: fix sg_table nents vs. orig_nents usage
-  drm: tegra: fix sg_table nents vs. orig_nents usage
-  drm: virtio: fix sg_table nents vs. orig_nents usage
-  drm: vmwgfx: fix sg_table nents vs. orig_nents usage
-  drm: xen: fix sg_table nents vs. orig_nents usage
-  drm: host1x: fix sg_table nents vs. orig_nents usage
-  dmabuf: fix sg_table nents vs. orig_nents usage
-
- drivers/dma-buf/heaps/heap-helpers.c             |  7 ++++---
- drivers/dma-buf/udmabuf.c                        |  5 +++--
- drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c      |  7 ++++---
- drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c          |  8 ++++----
- drivers/gpu/drm/armada/armada_gem.c              | 14 ++++++++-----
- drivers/gpu/drm/drm_cache.c                      |  2 +-
- drivers/gpu/drm/drm_gem_shmem_helper.c           |  7 ++++---
- drivers/gpu/drm/drm_prime.c                      |  9 +++++----
- drivers/gpu/drm/etnaviv/etnaviv_gem.c            | 10 ++++++----
- drivers/gpu/drm/exynos/exynos_drm_g2d.c          |  7 ++++---
- drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c       | 13 ++++++------
- drivers/gpu/drm/i915/gem/i915_gem_internal.c     |  4 ++--
- drivers/gpu/drm/i915/gem/i915_gem_region.c       |  4 ++--
- drivers/gpu/drm/i915/gem/i915_gem_shmem.c        |  5 +++--
- drivers/gpu/drm/i915/gem/selftests/huge_pages.c  | 10 +++++-----
- drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c |  5 +++--
- drivers/gpu/drm/i915/gt/intel_ggtt.c             | 12 ++++++------
- drivers/gpu/drm/i915/i915_gem_gtt.c              | 12 +++++++-----
- drivers/gpu/drm/i915/i915_scatterlist.c          |  4 ++--
- drivers/gpu/drm/i915/selftests/scatterlist.c     |  8 ++++----
- drivers/gpu/drm/lima/lima_gem.c                  |  4 ++--
- drivers/gpu/drm/msm/msm_gem.c                    |  8 ++++----
- drivers/gpu/drm/msm/msm_iommu.c                  |  3 ++-
- drivers/gpu/drm/panfrost/panfrost_gem.c          |  3 ++-
- drivers/gpu/drm/panfrost/panfrost_mmu.c          |  4 +++-
- drivers/gpu/drm/radeon/radeon_ttm.c              | 10 +++++-----
- drivers/gpu/drm/rockchip/rockchip_drm_gem.c      | 15 +++++++-------
- drivers/gpu/drm/tegra/gem.c                      | 25 ++++++++++++------------
- drivers/gpu/drm/tegra/plane.c                    | 13 ++++++------
- drivers/gpu/drm/virtio/virtgpu_object.c          | 11 ++++++-----
- drivers/gpu/drm/virtio/virtgpu_vq.c              |  8 ++++----
- drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c       |  6 +++---
- drivers/gpu/drm/xen/xen_drm_front_gem.c          |  2 +-
- drivers/gpu/host1x/job.c                         | 17 ++++++++--------
- 34 files changed, 154 insertions(+), 128 deletions(-)
-
--- 
-1.9.1
+thanks,
+jirka
 
