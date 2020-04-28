@@ -2,96 +2,125 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1D0C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60530C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE03C206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3516C206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:01:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588100502;
+	bh=xb3clEcraXNK9Wyslkxot44BRE3EY7gzX0hft+tPgbM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Sq4ih4P5hjsLqJ2pQjC+ZM4s4U7eJIXN8dQEj0AgmnP18FGrhqTpFKdaZoQ4BrWKu
+	 Y2DmaZXd0nFd/5GVcJJ3FCITsulwaReEyNc/bomfg/Jwnt+a5sKq3g4YTspntbOnJ5
+	 TpFUfTzKMy8hoPDFBxOJqUpQIbUl0yMH7GmlzVEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbgD1TBe (ORCPT
+        id S1729454AbgD1TBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 15:01:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48574 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728625AbgD1TBb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 15:01:31 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F8DDC03C1AB;
-        Tue, 28 Apr 2020 12:01:31 -0700 (PDT)
-Received: from lwn.net (localhost [127.0.0.1])
+        Tue, 28 Apr 2020 15:01:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37456 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728652AbgD1S0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:26:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 9121944A;
-        Tue, 28 Apr 2020 19:01:29 +0000 (UTC)
-Date:   Tue, 28 Apr 2020 13:01:28 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-cachefs@redhat.com,
-        codalist@coda.cs.cmu.edu, linux-fsdevel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH v3 00/29] Convert files to ReST - part 2
-Message-ID: <20200428130128.22c4b973@lwn.net>
-In-Reply-To: <cover.1588021877.git.mchehab+huawei@kernel.org>
-References: <cover.1588021877.git.mchehab+huawei@kernel.org>
-Organization: LWN.net
+        by mail.kernel.org (Postfix) with ESMTPSA id 221352085B;
+        Tue, 28 Apr 2020 18:26:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588098368;
+        bh=xb3clEcraXNK9Wyslkxot44BRE3EY7gzX0hft+tPgbM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2RFJ/TSjVYAMRD/GwYDvuayw2V3dUBKualubBgBE6G+dw1q6rl71WCEzcgg2+04oT
+         FeiZ2V013c9vm78IR8k8y3x1IDIRWvMYbAZFg953pIQ9EuuJAESs2Rc9FArp9p2QZ1
+         VTg8uOspFLq0iFzfCp/5NlblYFq5vrGHqlV7FiVw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 012/167] pwm: rcar: Fix late Runtime PM enablement
+Date:   Tue, 28 Apr 2020 20:23:08 +0200
+Message-Id: <20200428182226.762089564@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Apr 2020 23:16:52 +0200
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> This is the second part of a series I wrote sometime ago where I manually
-> convert lots of files to be properly parsed by Sphinx as ReST files.
-> 
-> As it touches on lot of stuff, this series is based on today's linux-next, 
-> at tag next-20190617.
-> 
-> The first version of this series had 57 patches. The first part with 28 patches
-> were already merged. Right now, there are still ~76  patches pending applying
-> (including this series), and that's because I opted to do ~1 patch per converted
->  directory.
-> 
-> That sounds too much to be send on a single round. So, I'm opting to split
-> it on 3 parts for the conversion, plus a final patch adding orphaned books
-> to existing ones. 
-> 
-> Those patches should probably be good to be merged either by subsystem
-> maintainers or via the docs tree.
+[ Upstream commit 1451a3eed24b5fd6a604683f0b6995e0e7e16c79 ]
 
-So I'm happy to merge this set, but there is one thing that worries me a
-bit... 
+Runtime PM should be enabled before calling pwmchip_add(), as PWM users
+can appear immediately after the PWM chip has been added.
+Likewise, Runtime PM should be disabled after the removal of the PWM
+chip.
 
->  fs/cachefiles/Kconfig                         |    4 +-
->  fs/coda/Kconfig                               |    2 +-
->  fs/configfs/inode.c                           |    2 +-
->  fs/configfs/item.c                            |    2 +-
->  fs/fscache/Kconfig                            |    8 +-
->  fs/fscache/cache.c                            |    8 +-
->  fs/fscache/cookie.c                           |    2 +-
->  fs/fscache/object.c                           |    4 +-
->  fs/fscache/operation.c                        |    2 +-
->  fs/locks.c                                    |    2 +-
->  include/linux/configfs.h                      |    2 +-
->  include/linux/fs_context.h                    |    2 +-
->  include/linux/fscache-cache.h                 |    4 +-
->  include/linux/fscache.h                       |   42 +-
->  include/linux/lsm_hooks.h                     |    2 +-
+Fixes: ed6c1476bf7f16d5 ("pwm: Add support for R-Car PWM Timer")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pwm/pwm-rcar.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-I'd feel a bit better if I could get an ack or two from filesystem folks
-before I venture that far out of my own yard...what say you all?
+diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
+index 2685577b6dd45..7ab9eb6616d95 100644
+--- a/drivers/pwm/pwm-rcar.c
++++ b/drivers/pwm/pwm-rcar.c
+@@ -229,24 +229,28 @@ static int rcar_pwm_probe(struct platform_device *pdev)
+ 	rcar_pwm->chip.base = -1;
+ 	rcar_pwm->chip.npwm = 1;
+ 
++	pm_runtime_enable(&pdev->dev);
++
+ 	ret = pwmchip_add(&rcar_pwm->chip);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "failed to register PWM chip: %d\n", ret);
++		pm_runtime_disable(&pdev->dev);
+ 		return ret;
+ 	}
+ 
+-	pm_runtime_enable(&pdev->dev);
+-
+ 	return 0;
+ }
+ 
+ static int rcar_pwm_remove(struct platform_device *pdev)
+ {
+ 	struct rcar_pwm_chip *rcar_pwm = platform_get_drvdata(pdev);
++	int ret;
++
++	ret = pwmchip_remove(&rcar_pwm->chip);
+ 
+ 	pm_runtime_disable(&pdev->dev);
+ 
+-	return pwmchip_remove(&rcar_pwm->chip);
++	return ret;
+ }
+ 
+ static const struct of_device_id rcar_pwm_of_table[] = {
+-- 
+2.20.1
 
-Thanks,
 
-jon
+
