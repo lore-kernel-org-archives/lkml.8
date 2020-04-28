@@ -2,474 +2,141 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2C1C83001
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53AA4C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4B420663
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23DB7206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 16:15:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ivp65CKT"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="MVgTvgZv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgD1QPb (ORCPT
+        id S1728420AbgD1QPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:15:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728130AbgD1QPa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:15:30 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B305BC03C1AB;
-        Tue, 28 Apr 2020 09:15:30 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id s30so17762615qth.2;
-        Tue, 28 Apr 2020 09:15:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=BEcuVm2SzBjCISC8JXUjBIT/R4xc2pJWAlgeliaDaYw=;
-        b=Ivp65CKTGuHRrV09zROidTphgVLBqbPS4N9Z8cOCBvfH2pvQdxP+Q64+q+TvV51yPF
-         uYd0xZ1do8cOBr094wttPH7OinhSZcsrB+B5fOoiZ0aGhXXxnLLMzoMNUoKvAK36KbBL
-         zxHXljhc06HVG55F2MGkP6V1TNdAmy3jz6AZ7gJfj6J6rCQRcL16/AspMxZhp4cOakXd
-         XyWT+w9P9VOqoyq8+ZVD5DwSwX0emTVfUUgeTGHxSh9mp8AkSjBTAOKV3CQClIFtBdzE
-         BNIrmH3C3TNSyzW7zLVPOzVYgKKBnVUgc5J6x8HJkw4CSGuBPc67i0yxXs/RSp/CCBmx
-         8rGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BEcuVm2SzBjCISC8JXUjBIT/R4xc2pJWAlgeliaDaYw=;
-        b=TunSwmxe6V0jcsc9qyJUb/cFDX1wFdpUK8B7FzZYjncq2UFlgFGV/akLoy91WQk1m1
-         1vOZgUX/KHBO4e7RsQ8vLwiYgNeUilMOslWlLT2ARqScugh+EJGFCsZEkhRpxXmWyepp
-         6+80mT0bwTibRYB6e1eesR2w3lGEkHduaO98ZCE4L7O+1YyW247StqBFCT4Oc2RWeufU
-         qwf0ZWy3tk5W1enY7OyMiFNO/Jz3uOEe8tUAMCO9PS9FTCk/PuIlDjV3blR+J3gu9QVS
-         CxlILzEs9JHu4oMekW5qjzTsF9I2QSOhjFtxyFiWsc4uvC/x31L590B59SK1n8N1dpPk
-         elgg==
-X-Gm-Message-State: AGi0Pual12g5WSFXJPY8m1AiRmp7njLU+blYm0TplwhPcT6nTey/NX+k
-        tUQiHvdnLI7IqCIaVqmjnJ4=
-X-Google-Smtp-Source: APiQypIZ5qPNvWyAeEAi4LCEv72yKaNRqOSvO9G+oEQKKI80KrX2+dx0P1tuS/4Bu0fNLhjpMsuwjQ==
-X-Received: by 2002:ac8:7581:: with SMTP id s1mr28990063qtq.260.1588090529680;
-        Tue, 28 Apr 2020 09:15:29 -0700 (PDT)
-Received: from dschatzberg-fedora-PC0Y6AEN.thefacebook.com ([2620:10d:c091:480::1:3e4a])
-        by smtp.gmail.com with ESMTPSA id z2sm14087421qkc.28.2020.04.28.09.15.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 09:15:28 -0700 (PDT)
-From:   Dan Schatzberg <schatzberg.dan@gmail.com>
-Cc:     Dan Schatzberg <schatzberg.dan@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        linux-block@vger.kernel.org (open list:BLOCK LAYER),
-        linux-kernel@vger.kernel.org (open list),
-        linux-fsdevel@vger.kernel.org (open list:FILESYSTEMS (VFS and
-        infrastructure)),
-        cgroups@vger.kernel.org (open list:CONTROL GROUP (CGROUP)),
-        linux-mm@kvack.org (open list:CONTROL GROUP - MEMORY RESOURCE
-        CONTROLLER (MEMCG))
-Subject: [PATCH v5 1/4] loop: Use worker per cgroup instead of kworker
-Date:   Tue, 28 Apr 2020 12:13:47 -0400
-Message-Id: <20200428161355.6377-2-schatzberg.dan@gmail.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200428161355.6377-1-schatzberg.dan@gmail.com>
-References: <20200428161355.6377-1-schatzberg.dan@gmail.com>
+        Tue, 28 Apr 2020 12:15:43 -0400
+Received: from mout.web.de ([212.227.15.3]:48103 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728130AbgD1QPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 12:15:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588090527;
+        bh=8xAdLHi22Afye50tIMhbKEqj7g/+TQevJSFjaSxYdqg=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=MVgTvgZvgNJuS+z2cPeCyp5fB56haCGx4xZoItRrxErQakN6XkP00lcqHyIcseqZ2
+         jvxkvf66X1tjgYXATOu6MciNW2j07T1PmbAc5xI4dWD89I4ZZIUDDt0G7h7Tog4ZFx
+         FtyOXr7LhUEj3yBd5cswCu9zTWXTUwyOuw6sV8OU=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.179.255]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0M8iK4-1jJbX92qE8-00C713; Tue, 28
+ Apr 2020 18:15:27 +0200
+To:     Wei Yongjun <weiyongjun1@huawei.com>,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] drm/mcde: dsi: Fix a return value check in
+ mcde_dsi_bind()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <1900157b-39fe-e6fe-6fe7-26053a32f507@web.de>
+Date:   Tue, 28 Apr 2020 18:15:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:5FSzJc0UFp6D0EjhmLJsAt414KiTEdB8XeMKnL+B1QqzWX01Sci
+ ALM2gq3tuJCroG6vhkBs953+cNGmvtbyjGzY6lMjmMba0WrY5YRpy+B5Y8yUhvfXUwgFAVn
+ H2FlIq24bqqvqmsULR9DreYsjFKUd8FkxRQwLRcN5I2fIHDicn+xOiONqPGCCO7GRuEDPoP
+ VCKJkTAF2xfDVC+3uf7zg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+05hwj3gRN0=:5sVYyphrgIkiZWH8cDYeFI
+ NxnXgdTF2OnOPFAJlZqQyI8yQYlOhPzVKivirIqk9z3HNgWVPJem+KvCzMO4Wislw8go1Q+Rm
+ jYPITCQEC+Hoh0zbCJaiZFdv6XefO/QszCFBBX/JwHT5KFohpbcw5VYKEihMMlngxQFVsvrLW
+ 1QpIwyFwt7atXXy3tYMEcC53xHg/emSsex+CTmk9FgZDx5obsXCE04D8+4UkVVco0LD+nThv/
+ l+ZmYvJiLt0ACqjcniZkrBFzCDPtm0+p5PLwBjO2DSxlyoPNYGncQPjMy80g+hv3CxTMbskPX
+ ZKcMZUgE+jX8TCBf84FBWqRk80c+d19/AUp/K1unWzzwFwuPpwg9vbOoP3sw8arMJMXIvLW+P
+ vS3qh9KfFtjz8DMzI0FS32JnIFW8TaO/t1p9Wb1Ewz2Aru/rreLr6oyLdjBworEKJuXHD8Y1c
+ P1XIbzQfeL5P8rb+eO78LEM3W4nUu5BEhpduBF+JGwYbJxa4RqXmLl3YO7TPwW5RHaBMXas2m
+ Psfiq+wNxV9nmhAT2IUWDDjYboVmyCqtHTCrWzEbGOoqluvnRWjfNEjOpAf9CIaCHGtBEEGUF
+ IvI/V5cI9/I64trOtaUP+BHzSdAfdfkPhWH4+vfGPiICXy1Nb7rsYOPchha2twovQZ5kr0vkx
+ 9dMlQPLHgHYSYJqR0yKY5GRWWIhJ66frD+X5uLlyoLQdkSm7vdXpPzeRE7uj18jsgUnOTlU+Q
+ uP0kyx4n71mviLkPuo4HkDt70YLzw2DQ3LGY/yaYnMWlmlj1FHJpBlQNcWP6CjHU7Ty2Otd1g
+ sxw0EP28F8/YyIs6GMZu1OfW1hsbFU6iizys0kNDSnE1UZT2QwmR0n+dxyjvAWxaXWtB7lmXM
+ ay3CR/mgxR3chr78pwQyaZXmRgyu/e6ccCOVX4P+0bFhETSdvit+gUUYSF6PIdnW/EGuOhjMQ
+ kCYBCghN+3I3/T3MiF5KCiRQAz01PSMPnTPYe+hHVeSOuRiNHCLMjjeJKKzAw+4Xd09Sna50p
+ BxxknXklaCAuAOf3E4vBdCnir89KiH6CoVGuB6iz3WHZGFz91iwLI1MVffFNG5/GJmQeTejBm
+ szo0Q0W2vc4xQRAu4jPLBArDdvV2YkdL8o9WCMQGV3R6Mp5sNWhncrP0ZSNfHYEGT5+sK5Z1d
+ mrolh92At5emAhNUcb1PF03O4KJQ6EV6nCjnSRTTuLBI9JxjrQdJ+yqPKEnInSdvIHmT/UlTF
+ T3WNGQrptvhKroaHL
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Existing uses of loop device may have multiple cgroups reading/writing
-to the same device. Simply charging resources for I/O to the backing
-file could result in priority inversion where one cgroup gets
-synchronously blocked, holding up all other I/O to the loop device.
+> In case of error, the function of_drm_find_bridge() returns NULL pointer
+> not ERR_PTR().
 
-In order to avoid this priority inversion, we use a single workqueue
-where each work item is a "struct loop_worker" which contains a queue of
-struct loop_cmds to issue. The loop device maintains a tree mapping blk
-css_id -> loop_worker. This allows each cgroup to independently make
-forward progress issuing I/O to the backing file.
+Such information is helpful.
 
-There is also a single queue for I/O associated with the rootcg which
-can be used in cases of extreme memory shortage where we cannot allocate
-a loop_worker.
 
-The locking for the tree and queues is fairly heavy handed - we acquire
-the per-loop-device spinlock any time either is accessed. The existing
-implementation serializes all I/O through a single thread anyways, so I
-don't believe this is any worse.
+> The IS_ERR() test in the return value check should be
+> replaced with NULL test.
 
-Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
----
- drivers/block/loop.c | 207 ++++++++++++++++++++++++++++++++++++-------
- drivers/block/loop.h |  11 ++-
- 2 files changed, 180 insertions(+), 38 deletions(-)
+* Would you like to convert this description into an imperative wording?
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index da693e6a834e..49d7d1f62d88 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -70,7 +70,6 @@
- #include <linux/writeback.h>
- #include <linux/completion.h>
- #include <linux/highmem.h>
--#include <linux/kthread.h>
- #include <linux/splice.h>
- #include <linux/sysfs.h>
- #include <linux/miscdevice.h>
-@@ -83,6 +82,8 @@
- 
- #include <linux/uaccess.h>
- 
-+#define LOOP_IDLE_WORKER_TIMEOUT (60 * HZ)
-+
- static DEFINE_IDR(loop_index_idr);
- static DEFINE_MUTEX(loop_ctl_mutex);
- 
-@@ -778,12 +779,18 @@ static ssize_t loop_attr_backing_file_show(struct loop_device *lo, char *buf)
- {
- 	ssize_t ret;
- 	char *p = NULL;
-+	struct file *filp = NULL;
- 
- 	spin_lock_irq(&lo->lo_lock);
- 	if (lo->lo_backing_file)
--		p = file_path(lo->lo_backing_file, buf, PAGE_SIZE - 1);
-+		filp = get_file(lo->lo_backing_file);
- 	spin_unlock_irq(&lo->lo_lock);
- 
-+	if (filp) {
-+		p = file_path(filp, buf, PAGE_SIZE - 1);
-+		fput(filp);
-+	}
-+
- 	if (IS_ERR_OR_NULL(p))
- 		ret = PTR_ERR(p);
- 	else {
-@@ -911,27 +918,83 @@ static void loop_config_discard(struct loop_device *lo)
- 		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
- }
- 
--static void loop_unprepare_queue(struct loop_device *lo)
--{
--	kthread_flush_worker(&lo->worker);
--	kthread_stop(lo->worker_task);
--}
-+struct loop_worker {
-+	struct rb_node rb_node;
-+	struct work_struct work;
-+	struct list_head cmd_list;
-+	struct list_head idle_list;
-+	struct loop_device *lo;
-+	struct cgroup_subsys_state *css;
-+	unsigned long last_ran_at;
-+};
- 
--static int loop_kthread_worker_fn(void *worker_ptr)
--{
--	current->flags |= PF_LESS_THROTTLE | PF_MEMALLOC_NOIO;
--	return kthread_worker_fn(worker_ptr);
--}
-+static void loop_workfn(struct work_struct *work);
-+static void loop_rootcg_workfn(struct work_struct *work);
-+static void loop_free_idle_workers(struct timer_list *timer);
- 
--static int loop_prepare_queue(struct loop_device *lo)
-+static void loop_queue_work(struct loop_device *lo, struct loop_cmd *cmd)
- {
--	kthread_init_worker(&lo->worker);
--	lo->worker_task = kthread_run(loop_kthread_worker_fn,
--			&lo->worker, "loop%d", lo->lo_number);
--	if (IS_ERR(lo->worker_task))
--		return -ENOMEM;
--	set_user_nice(lo->worker_task, MIN_NICE);
--	return 0;
-+	struct rb_node **node = &(lo->worker_tree.rb_node), *parent = NULL;
-+	struct loop_worker *cur_worker, *worker = NULL;
-+	struct work_struct *work;
-+	struct list_head *cmd_list;
-+
-+	spin_lock_irq(&lo->lo_lock);
-+
-+	if (!cmd->css)
-+		goto queue_work;
-+
-+	node = &lo->worker_tree.rb_node;
-+
-+	while (*node) {
-+		parent = *node;
-+		cur_worker = container_of(*node, struct loop_worker, rb_node);
-+		if (cur_worker->css == cmd->css) {
-+			worker = cur_worker;
-+			break;
-+		} else if ((long)cur_worker->css < (long)cmd->css) {
-+			node = &(*node)->rb_left;
-+		} else {
-+			node = &(*node)->rb_right;
-+		}
-+	}
-+	if (worker)
-+		goto queue_work;
-+
-+	worker = kzalloc(sizeof(struct loop_worker), GFP_NOWAIT | __GFP_NOWARN);
-+	/*
-+	 * In the event we cannot allocate a worker, just queue on the
-+	 * rootcg worker
-+	 */
-+	if (!worker)
-+		goto queue_work;
-+
-+	worker->css = cmd->css;
-+	css_get(worker->css);
-+	INIT_WORK(&worker->work, loop_workfn);
-+	INIT_LIST_HEAD(&worker->cmd_list);
-+	INIT_LIST_HEAD(&worker->idle_list);
-+	worker->lo = lo;
-+	rb_link_node(&worker->rb_node, parent, node);
-+	rb_insert_color(&worker->rb_node, &lo->worker_tree);
-+queue_work:
-+	if (worker) {
-+		/*
-+		 * We need to remove from the idle list here while
-+		 * holding the lock so that the idle timer doesn't
-+		 * free the worker
-+		 */
-+		if (!list_empty(&worker->idle_list))
-+			list_del_init(&worker->idle_list);
-+		work = &worker->work;
-+		cmd_list = &worker->cmd_list;
-+	} else {
-+		work = &lo->rootcg_work;
-+		cmd_list = &lo->rootcg_cmd_list;
-+	}
-+	list_add_tail(&cmd->list_entry, cmd_list);
-+	queue_work(lo->workqueue, work);
-+	spin_unlock_irq(&lo->lo_lock);
- }
- 
- static void loop_update_rotational(struct loop_device *lo)
-@@ -1007,14 +1070,25 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
- 	size = get_loop_size(lo, file);
- 	if ((loff_t)(sector_t)size != size)
- 		goto out_unlock;
--	error = loop_prepare_queue(lo);
--	if (error)
-+	lo->workqueue = alloc_workqueue("loop%d",
-+					WQ_UNBOUND | WQ_FREEZABLE |
-+					WQ_MEM_RECLAIM,
-+					lo->lo_number);
-+	if (!lo->workqueue) {
-+		error = -ENOMEM;
- 		goto out_unlock;
-+	}
- 
- 	error = 0;
- 
- 	set_device_ro(bdev, (lo_flags & LO_FLAGS_READ_ONLY) != 0);
- 
-+	INIT_WORK(&lo->rootcg_work, loop_rootcg_workfn);
-+	INIT_LIST_HEAD(&lo->rootcg_cmd_list);
-+	INIT_LIST_HEAD(&lo->idle_worker_list);
-+	lo->worker_tree = RB_ROOT;
-+	timer_setup(&lo->timer, loop_free_idle_workers,
-+		TIMER_DEFERRABLE);
- 	lo->use_dio = false;
- 	lo->lo_device = bdev;
- 	lo->lo_flags = lo_flags;
-@@ -1123,6 +1197,7 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 	int err = 0;
- 	bool partscan = false;
- 	int lo_number;
-+	struct loop_worker *pos, *worker;
- 
- 	mutex_lock(&loop_ctl_mutex);
- 	if (WARN_ON_ONCE(lo->lo_state != Lo_rundown)) {
-@@ -1139,9 +1214,18 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 	/* freeze request queue during the transition */
- 	blk_mq_freeze_queue(lo->lo_queue);
- 
-+	destroy_workqueue(lo->workqueue);
- 	spin_lock_irq(&lo->lo_lock);
- 	lo->lo_backing_file = NULL;
-+	list_for_each_entry_safe(worker, pos, &lo->idle_worker_list,
-+				idle_list) {
-+		list_del(&worker->idle_list);
-+		rb_erase(&worker->rb_node, &lo->worker_tree);
-+		css_put(worker->css);
-+		kfree(worker);
-+	}
- 	spin_unlock_irq(&lo->lo_lock);
-+	del_timer_sync(&lo->timer);
- 
- 	loop_release_xfer(lo);
- 	lo->transfer = NULL;
-@@ -1176,7 +1260,6 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 
- 	partscan = lo->lo_flags & LO_FLAGS_PARTSCAN && bdev;
- 	lo_number = lo->lo_number;
--	loop_unprepare_queue(lo);
- out_unlock:
- 	mutex_unlock(&loop_ctl_mutex);
- 	if (partscan) {
-@@ -1954,7 +2037,7 @@ static blk_status_t loop_queue_rq(struct blk_mq_hw_ctx *hctx,
- 	} else
- #endif
- 		cmd->css = NULL;
--	kthread_queue_work(&lo->worker, &cmd->work);
-+	loop_queue_work(lo, cmd);
- 
- 	return BLK_STS_OK;
- }
-@@ -1983,26 +2066,82 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
- 	}
- }
- 
--static void loop_queue_work(struct kthread_work *work)
-+static void loop_set_timer(struct loop_device *lo)
-+{
-+	timer_reduce(&lo->timer, jiffies + LOOP_IDLE_WORKER_TIMEOUT);
-+}
-+
-+static void loop_process_work(struct loop_worker *worker,
-+			struct list_head *cmd_list, struct loop_device *lo)
- {
--	struct loop_cmd *cmd =
--		container_of(work, struct loop_cmd, work);
-+	int orig_flags = current->flags;
-+	struct loop_cmd *cmd;
- 
--	loop_handle_cmd(cmd);
-+	current->flags |= PF_LESS_THROTTLE | PF_MEMALLOC_NOIO;
-+	spin_lock_irq(&lo->lo_lock);
-+	while (!list_empty(cmd_list)) {
-+		cmd = container_of(
-+			cmd_list->next, struct loop_cmd, list_entry);
-+		list_del(cmd_list->next);
-+		spin_unlock_irq(&lo->lo_lock);
-+
-+		loop_handle_cmd(cmd);
-+		cond_resched();
-+
-+		spin_lock_irq(&lo->lo_lock);
-+	}
-+
-+	/*
-+	 * We only add to the idle list if there are no pending cmds
-+	 * *and* the worker will not run again which ensures that it
-+	 * is safe to free any worker on the idle list
-+	 */
-+	if (worker && !work_pending(&worker->work)) {
-+		worker->last_ran_at = jiffies;
-+		list_add_tail(&worker->idle_list, &lo->idle_worker_list);
-+		loop_set_timer(lo);
-+	}
-+	spin_unlock_irq(&lo->lo_lock);
-+	current->flags = orig_flags;
- }
- 
--static int loop_init_request(struct blk_mq_tag_set *set, struct request *rq,
--		unsigned int hctx_idx, unsigned int numa_node)
-+static void loop_workfn(struct work_struct *work)
- {
--	struct loop_cmd *cmd = blk_mq_rq_to_pdu(rq);
-+	struct loop_worker *worker =
-+		container_of(work, struct loop_worker, work);
-+	loop_process_work(worker, &worker->cmd_list, worker->lo);
-+}
- 
--	kthread_init_work(&cmd->work, loop_queue_work);
--	return 0;
-+static void loop_rootcg_workfn(struct work_struct *work)
-+{
-+	struct loop_device *lo =
-+		container_of(work, struct loop_device, rootcg_work);
-+	loop_process_work(NULL, &lo->rootcg_cmd_list, lo);
-+}
-+
-+static void loop_free_idle_workers(struct timer_list *timer)
-+{
-+	struct loop_device *lo = container_of(timer, struct loop_device, timer);
-+	struct loop_worker *pos, *worker;
-+
-+	spin_lock_irq(&lo->lo_lock);
-+	list_for_each_entry_safe(worker, pos, &lo->idle_worker_list,
-+				idle_list) {
-+		if (time_is_after_jiffies(worker->last_ran_at +
-+						LOOP_IDLE_WORKER_TIMEOUT))
-+			break;
-+		list_del(&worker->idle_list);
-+		rb_erase(&worker->rb_node, &lo->worker_tree);
-+		css_put(worker->css);
-+		kfree(worker);
-+	}
-+	if (!list_empty(&lo->idle_worker_list))
-+		loop_set_timer(lo);
-+	spin_unlock_irq(&lo->lo_lock);
- }
- 
- static const struct blk_mq_ops loop_mq_ops = {
- 	.queue_rq       = loop_queue_rq,
--	.init_request	= loop_init_request,
- 	.complete	= lo_complete_rq,
- };
- 
-diff --git a/drivers/block/loop.h b/drivers/block/loop.h
-index af75a5ee4094..87fd0e372227 100644
---- a/drivers/block/loop.h
-+++ b/drivers/block/loop.h
-@@ -14,7 +14,6 @@
- #include <linux/blk-mq.h>
- #include <linux/spinlock.h>
- #include <linux/mutex.h>
--#include <linux/kthread.h>
- #include <uapi/linux/loop.h>
- 
- /* Possible states of device */
-@@ -54,8 +53,12 @@ struct loop_device {
- 
- 	spinlock_t		lo_lock;
- 	int			lo_state;
--	struct kthread_worker	worker;
--	struct task_struct	*worker_task;
-+	struct workqueue_struct *workqueue;
-+	struct work_struct      rootcg_work;
-+	struct list_head        rootcg_cmd_list;
-+	struct list_head        idle_worker_list;
-+	struct rb_root          worker_tree;
-+	struct timer_list       timer;
- 	bool			use_dio;
- 	bool			sysfs_inited;
- 
-@@ -65,7 +68,7 @@ struct loop_device {
- };
- 
- struct loop_cmd {
--	struct kthread_work work;
-+	struct list_head list_entry;
- 	bool use_aio; /* use AIO interface to handle I/O */
- 	atomic_t ref; /* only for aio */
- 	long ret;
--- 
-2.24.1
+* Please fix the patch subject according to a function name.
 
+* How do you think about to add the tag =E2=80=9CFixes=E2=80=9D to the com=
+mit message
+  because of an adjustment for the error detection?
+
+Regards,
+Markus
