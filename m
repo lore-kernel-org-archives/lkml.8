@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293B4C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C47C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05AB8206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F376F20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099521;
-	bh=p1mEFL7GZrCu3Wlff4cQ8A8VxqTd/adu9gpNmAseRug=;
+	s=default; t=1588099527;
+	bh=7M2egqOpzwZBZnVa5gk84ESrgvK37xCyxbhFHMCqQuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yeD7feAodSqSrRcYuUk0d1g8sS+2Blbgae3rhm890ciUhMAJ1C/R1Jeadp5STlHiV
-	 hNai7Lba/F57yrPTNiqNCgy3WIbp9xbBkWL/AteeBxEmohWtpQXHTFKKENU+/EghZG
-	 /tpBOeYC2c2i/xEToT2WSAkM12ypXnFU++dfuOfo=
+	b=eWNhxuBc8u5oNymAeqO3vvmjAUIcuL9yMUdFbWDkv4aS2v1kHrmN/OG/TfrHWcw83
+	 MxVAPChwS9BtJQOXlWGPujSVuEopjSdFvKVT0+haLv2EzAx3tlbuHqv5p1OQmRVXL2
+	 jNBOVBu71WEiUMSUkWj8Sv7t71d30igg0h2hAIog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731029AbgD1SpT (ORCPT
+        id S1731526AbgD1Sof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:45:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37814 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:44:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731472AbgD1Soo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:44:44 -0400
+        id S1731510AbgD1So2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:44:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C1D3206D6;
-        Tue, 28 Apr 2020 18:44:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 700BA20575;
+        Tue, 28 Apr 2020 18:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099483;
-        bh=p1mEFL7GZrCu3Wlff4cQ8A8VxqTd/adu9gpNmAseRug=;
+        s=default; t=1588099466;
+        bh=7M2egqOpzwZBZnVa5gk84ESrgvK37xCyxbhFHMCqQuM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AFDi/IQhF3k2tCPq3RyXJS+tMLFgTJhQzVXGFaX4wSE5RoLrIRbS9RPX1Y7TDyPAU
-         U6CXD7TeUYTdKSAa2cRU0JJeLVbvQDfHxoG3J8Ku+jAW2uWsMxtAGVomIYNzzYohD+
-         jC6dtUqkDxDr6Y4ZVfglqMcxRMerS/dL1A9m6Mms=
+        b=cBNYRH9/MuuXzRX2G9cBl31uFYjbmAWcs3emjo5inxWs1LsIOnEQHdyXFrdLGWkup
+         kaOdTi2teECq8p3f2V5TlW9Ql/U1C2LXGVywA8Dp7amfMzHxqeEBSq3IR898xm6sIw
+         oPpwiPFqtkYbPvq4KMklGoBCAG3r80FXR+9EdSx8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 5.4 168/168] s390/mm: fix page table upgrade vs 2ndary address mode accesses
-Date:   Tue, 28 Apr 2020 20:25:42 +0200
-Message-Id: <20200428182251.805577126@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH 5.4 162/168] Revert "serial: uartps: Change uart ID port allocation"
+Date:   Tue, 28 Apr 2020 20:25:36 +0200
+Message-Id: <20200428182251.386594465@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -60,128 +59,188 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: Michal Simek <michal.simek@xilinx.com>
 
-commit 316ec154810960052d4586b634156c54d0778f74 upstream.
+commit 72d68197281e2ad313960504d10b0c41ff87fd55 upstream.
 
-A page table upgrade in a kernel section that uses secondary address
-mode will mess up the kernel instructions as follows:
+This reverts commit ae1cca3fa3478be92948dbbcd722390272032ade.
 
-Consider the following scenario: two threads are sharing memory.
-On CPU1 thread 1 does e.g. strnlen_user().  That gets to
-        old_fs = enable_sacf_uaccess();
-        len = strnlen_user_srst(src, size);
-and
-                "   la    %2,0(%1)\n"
-                "   la    %3,0(%0,%1)\n"
-                "   slgr  %0,%0\n"
-                "   sacf  256\n"
-                "0: srst  %3,%2\n"
-in strnlen_user_srst().  At that point we are in secondary space mode,
-control register 1 points to kernel page table and instruction fetching
-happens via c1, rather than usual c13.  Interrupts are not disabled, for
-obvious reasons.
+With setting up NR_PORTS to 16 to be able to use serial2 and higher
+aliases and don't loose functionality which was intended by these changes.
 
-On CPU2 thread 2 does MAP_FIXED mmap(), forcing the upgrade of page table
-from 3-level to e.g. 4-level one.  We'd allocated new top-level table,
-set it up and now we hit this:
-                notify = 1;
-                spin_unlock_bh(&mm->page_table_lock);
-        }
-        if (notify)
-                on_each_cpu(__crst_table_upgrade, mm, 0);
-OK, we need to actually change over to use of new page table and we
-need that to happen in all threads that are currently running.  Which
-happens to include the thread 1.  IPI is delivered and we have
-static void __crst_table_upgrade(void *arg)
-{
-        struct mm_struct *mm = arg;
+As Johan says, this driver needs a lot more work and these changes are
+only going in the wrong direction:
+  https://lkml.kernel.org/r/20190523091839.GC568@localhost
 
-        if (current->active_mm == mm)
-                set_user_asce(mm);
-        __tlb_flush_local();
-}
-run on CPU1.  That does
-static inline void set_user_asce(struct mm_struct *mm)
-{
-        S390_lowcore.user_asce = mm->context.asce;
-OK, user page table address updated...
-        __ctl_load(S390_lowcore.user_asce, 1, 1);
-... and control register 1 set to it.
-        clear_cpu_flag(CIF_ASCE_PRIMARY);
-}
-
-IPI is run in home space mode, so it's fine - insns are fetched
-using c13, which always points to kernel page table.  But as soon
-as we return from the interrupt, previous PSW is restored, putting
-CPU1 back into secondary space mode, at which point we no longer
-get the kernel instructions from the kernel mapping.
-
-The fix is to only fixup the control registers that are currently in use
-for user processes during the page table update.  We must also disable
-interrupts in enable_sacf_uaccess to synchronize the cr and
-thread.mm_segment updates against the on_each-cpu.
-
-Fixes: 0aaba41b58bc ("s390: remove all code using the access register mode")
-Cc: stable@vger.kernel.org # 4.15+
-Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-Reviewed-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Reported-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/a94931b65ce0089f76fb1fe6b446a08731bff754.1585905873.git.michal.simek@xilinx.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/lib/uaccess.c |    4 ++++
- arch/s390/mm/pgalloc.c  |   16 ++++++++++++++--
- 2 files changed, 18 insertions(+), 2 deletions(-)
+ drivers/tty/serial/xilinx_uartps.c |  111 ++++---------------------------------
+ 1 file changed, 13 insertions(+), 98 deletions(-)
 
---- a/arch/s390/lib/uaccess.c
-+++ b/arch/s390/lib/uaccess.c
-@@ -64,10 +64,13 @@ mm_segment_t enable_sacf_uaccess(void)
- {
- 	mm_segment_t old_fs;
- 	unsigned long asce, cr;
-+	unsigned long flags;
+--- a/drivers/tty/serial/xilinx_uartps.c
++++ b/drivers/tty/serial/xilinx_uartps.c
+@@ -31,6 +31,7 @@
+ #define CDNS_UART_TTY_NAME	"ttyPS"
+ #define CDNS_UART_NAME		"xuartps"
+ #define CDNS_UART_MAJOR		0	/* use dynamic node allocation */
++#define CDNS_UART_NR_PORTS	16
+ #define CDNS_UART_FIFO_SIZE	64	/* FIFO size */
+ #define CDNS_UART_REGISTER_SPACE	0x1000
+ #define TX_TIMEOUT		500000
+@@ -1389,90 +1390,6 @@ static const struct of_device_id cdns_ua
+ };
+ MODULE_DEVICE_TABLE(of, cdns_uart_of_match);
  
- 	old_fs = current->thread.mm_segment;
- 	if (old_fs & 1)
- 		return old_fs;
-+	/* protect against a concurrent page table upgrade */
-+	local_irq_save(flags);
- 	current->thread.mm_segment |= 1;
- 	asce = S390_lowcore.kernel_asce;
- 	if (likely(old_fs == USER_DS)) {
-@@ -83,6 +86,7 @@ mm_segment_t enable_sacf_uaccess(void)
- 		__ctl_load(asce, 7, 7);
- 		set_cpu_flag(CIF_ASCE_SECONDARY);
- 	}
-+	local_irq_restore(flags);
- 	return old_fs;
- }
- EXPORT_SYMBOL(enable_sacf_uaccess);
---- a/arch/s390/mm/pgalloc.c
-+++ b/arch/s390/mm/pgalloc.c
-@@ -70,8 +70,20 @@ static void __crst_table_upgrade(void *a
- {
- 	struct mm_struct *mm = arg;
+-/*
+- * Maximum number of instances without alias IDs but if there is alias
+- * which target "< MAX_UART_INSTANCES" range this ID can't be used.
+- */
+-#define MAX_UART_INSTANCES	32
+-
+-/* Stores static aliases list */
+-static DECLARE_BITMAP(alias_bitmap, MAX_UART_INSTANCES);
+-static int alias_bitmap_initialized;
+-
+-/* Stores actual bitmap of allocated IDs with alias IDs together */
+-static DECLARE_BITMAP(bitmap, MAX_UART_INSTANCES);
+-/* Protect bitmap operations to have unique IDs */
+-static DEFINE_MUTEX(bitmap_lock);
+-
+-static int cdns_get_id(struct platform_device *pdev)
+-{
+-	int id, ret;
+-
+-	mutex_lock(&bitmap_lock);
+-
+-	/* Alias list is stable that's why get alias bitmap only once */
+-	if (!alias_bitmap_initialized) {
+-		ret = of_alias_get_alias_list(cdns_uart_of_match, "serial",
+-					      alias_bitmap, MAX_UART_INSTANCES);
+-		if (ret && ret != -EOVERFLOW) {
+-			mutex_unlock(&bitmap_lock);
+-			return ret;
+-		}
+-
+-		alias_bitmap_initialized++;
+-	}
+-
+-	/* Make sure that alias ID is not taken by instance without alias */
+-	bitmap_or(bitmap, bitmap, alias_bitmap, MAX_UART_INSTANCES);
+-
+-	dev_dbg(&pdev->dev, "Alias bitmap: %*pb\n",
+-		MAX_UART_INSTANCES, bitmap);
+-
+-	/* Look for a serialN alias */
+-	id = of_alias_get_id(pdev->dev.of_node, "serial");
+-	if (id < 0) {
+-		dev_warn(&pdev->dev,
+-			 "No serial alias passed. Using the first free id\n");
+-
+-		/*
+-		 * Start with id 0 and check if there is no serial0 alias
+-		 * which points to device which is compatible with this driver.
+-		 * If alias exists then try next free position.
+-		 */
+-		id = 0;
+-
+-		for (;;) {
+-			dev_info(&pdev->dev, "Checking id %d\n", id);
+-			id = find_next_zero_bit(bitmap, MAX_UART_INSTANCES, id);
+-
+-			/* No free empty instance */
+-			if (id == MAX_UART_INSTANCES) {
+-				dev_err(&pdev->dev, "No free ID\n");
+-				mutex_unlock(&bitmap_lock);
+-				return -EINVAL;
+-			}
+-
+-			dev_dbg(&pdev->dev, "The empty id is %d\n", id);
+-			/* Check if ID is empty */
+-			if (!test_and_set_bit(id, bitmap)) {
+-				/* Break the loop if bit is taken */
+-				dev_dbg(&pdev->dev,
+-					"Selected ID %d allocation passed\n",
+-					id);
+-				break;
+-			}
+-			dev_dbg(&pdev->dev,
+-				"Selected ID %d allocation failed\n", id);
+-			/* if taking bit fails then try next one */
+-			id++;
+-		}
+-	}
+-
+-	mutex_unlock(&bitmap_lock);
+-
+-	return id;
+-}
+-
+ /**
+  * cdns_uart_probe - Platform driver probe
+  * @pdev: Pointer to the platform device structure
+@@ -1506,17 +1423,21 @@ static int cdns_uart_probe(struct platfo
+ 	if (!cdns_uart_uart_driver)
+ 		return -ENOMEM;
  
--	if (current->active_mm == mm)
--		set_user_asce(mm);
-+	/* we must change all active ASCEs to avoid the creation of new TLBs */
-+	if (current->active_mm == mm) {
-+		S390_lowcore.user_asce = mm->context.asce;
-+		if (current->thread.mm_segment == USER_DS) {
-+			__ctl_load(S390_lowcore.user_asce, 1, 1);
-+			/* Mark user-ASCE present in CR1 */
-+			clear_cpu_flag(CIF_ASCE_PRIMARY);
-+		}
-+		if (current->thread.mm_segment == USER_DS_SACF) {
-+			__ctl_load(S390_lowcore.user_asce, 7, 7);
-+			/* enable_sacf_uaccess does all or nothing */
-+			WARN_ON(!test_cpu_flag(CIF_ASCE_SECONDARY));
-+		}
+-	cdns_uart_data->id = cdns_get_id(pdev);
++	/* Look for a serialN alias */
++	cdns_uart_data->id = of_alias_get_id(pdev->dev.of_node, "serial");
+ 	if (cdns_uart_data->id < 0)
+-		return cdns_uart_data->id;
++		cdns_uart_data->id = 0;
++
++	if (cdns_uart_data->id >= CDNS_UART_NR_PORTS) {
++		dev_err(&pdev->dev, "Cannot get uart_port structure\n");
++		return -ENODEV;
 +	}
- 	__tlb_flush_local();
+ 
+ 	/* There is a need to use unique driver name */
+ 	driver_name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%s%d",
+ 				     CDNS_UART_NAME, cdns_uart_data->id);
+-	if (!driver_name) {
+-		rc = -ENOMEM;
+-		goto err_out_id;
+-	}
++	if (!driver_name)
++		return -ENOMEM;
+ 
+ 	cdns_uart_uart_driver->owner = THIS_MODULE;
+ 	cdns_uart_uart_driver->driver_name = driver_name;
+@@ -1545,7 +1466,7 @@ static int cdns_uart_probe(struct platfo
+ 	rc = uart_register_driver(cdns_uart_uart_driver);
+ 	if (rc < 0) {
+ 		dev_err(&pdev->dev, "Failed to register driver\n");
+-		goto err_out_id;
++		return rc;
+ 	}
+ 
+ 	cdns_uart_data->cdns_uart_driver = cdns_uart_uart_driver;
+@@ -1695,10 +1616,7 @@ err_out_clk_dis_pclk:
+ 	clk_disable_unprepare(cdns_uart_data->pclk);
+ err_out_unregister_driver:
+ 	uart_unregister_driver(cdns_uart_data->cdns_uart_driver);
+-err_out_id:
+-	mutex_lock(&bitmap_lock);
+-	clear_bit(cdns_uart_data->id, bitmap);
+-	mutex_unlock(&bitmap_lock);
++
+ 	return rc;
  }
  
+@@ -1721,9 +1639,6 @@ static int cdns_uart_remove(struct platf
+ #endif
+ 	rc = uart_remove_one_port(cdns_uart_data->cdns_uart_driver, port);
+ 	port->mapbase = 0;
+-	mutex_lock(&bitmap_lock);
+-	clear_bit(cdns_uart_data->id, bitmap);
+-	mutex_unlock(&bitmap_lock);
+ 	clk_disable_unprepare(cdns_uart_data->uartclk);
+ 	clk_disable_unprepare(cdns_uart_data->pclk);
+ 	pm_runtime_disable(&pdev->dev);
 
 
