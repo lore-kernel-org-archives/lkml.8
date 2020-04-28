@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5863DC83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D192BC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24A6120575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB01820575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099132;
-	bh=N9fLE8WPqz0ak1VerItYB8/cQix+u1BTEwz3RRgs7ts=;
+	s=default; t=1588099135;
+	bh=YqMhhaim/jzNbsVKd4Bfn1CEZ7m28Z+4VfMAyZgXLZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RXw7eL1aMg+YWwKRjUCbgB50tcQXGnKGryJDD/19yY3tg+eUG8q8yMYmsSBywDTil
-	 1Yq9WA9IZy0Hn1WsQfuolJc2GJKdGmUkNKHnoOrs3Yd/ZL1Ei/elyS1m9sBrS4DTe8
-	 TH2+3NiH4/BIuiD6CgLS6MlNCRPIuWzoSF3/xcus=
+	b=bX/K0eLVlxC07oYRV37Yj6YEfBzzApiMozs5dte30zsTmgNTtZ71ep1rOitp04rPn
+	 CBuoBS8WHlFEEBllN7NijdgnTFphJgz7nB/Q8j2Fgn9x9WZAji7v6hw1eaeGWbU5GX
+	 svohvFLksjQM7hTlM2R5w9a3fWiBsBM+kthMNaBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730680AbgD1Siv (ORCPT
+        id S1728965AbgD1Siy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:38:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57382 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:38:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730295AbgD1Siq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:38:46 -0400
+        id S1730681AbgD1Siv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:38:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1271320575;
-        Tue, 28 Apr 2020 18:38:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E827B208E0;
+        Tue, 28 Apr 2020 18:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099126;
-        bh=N9fLE8WPqz0ak1VerItYB8/cQix+u1BTEwz3RRgs7ts=;
+        s=default; t=1588099131;
+        bh=YqMhhaim/jzNbsVKd4Bfn1CEZ7m28Z+4VfMAyZgXLZ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YH6bWyAFSxWFiwNBdM93CENaWzqNM2VJOXJmrcgHTXdNnRfsH+jAY4FZlEv3xG1mG
-         srmo93ykI5aexHd4VE6K29iAVZ0yEv3Vm/v1hNqSsCDmHe7+E6DACyR6c09OxcNItl
-         C0VNUkfFOxZ/EbCphDovQn5pxdv64WPWJ68J2PLs=
+        b=DA0ScyKcG8GZcsWu57rC4dUR4QLhUWfSOdlHGVldn1FhR7L967VeiQ4lJRan7Llvo
+         6AtRc1iKjJMu2gxwIcq2bH5NmC9NljtR6VmxV6UKndCPr2x3FtAgWkVywmJfyM+8Aw
+         xGsrStFFLxfcD/p9pNt+dfo66dApFh/7sByJHCGY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 5.6 158/167] Revert "serial: uartps: Use the same dynamic major number for all ports"
-Date:   Tue, 28 Apr 2020 20:25:34 +0200
-Message-Id: <20200428182245.579205039@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 060/168] macsec: avoid to set wrong mtu
+Date:   Tue, 28 Apr 2020 20:23:54 +0200
+Message-Id: <20200428182239.519146479@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,59 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Simek <michal.simek@xilinx.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-commit 8da1a3940da4b0e82848ec29b835486890bc9232 upstream.
+[ Upstream commit 7f327080364abccf923fa5a5b24e038eb0ba1407 ]
 
-This reverts commit ab262666018de6f4e206b021386b93ed0c164316.
+When a macsec interface is created, the mtu is calculated with the lower
+interface's mtu value.
+If the mtu of lower interface is lower than the length, which is needed
+by macsec interface, macsec's mtu value will be overflowed.
+So, if the lower interface's mtu is too low, macsec interface's mtu
+should be set to 0.
 
-As Johan says, this driver needs a lot more work and these changes are
-only going in the wrong direction:
-  https://lkml.kernel.org/r/20190523091839.GC568@localhost
+Test commands:
+    ip link add dummy0 mtu 10 type dummy
+    ip link add macsec0 link dummy0 type macsec
+    ip link show macsec0
 
-Reported-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/14a565fc1e14a5ec6cc6a6710deb878ae8305f22.1585905873.git.michal.simek@xilinx.com
+Before:
+    11: macsec0@dummy0: <BROADCAST,MULTICAST,M-DOWN> mtu 4294967274
+After:
+    11: macsec0@dummy0: <BROADCAST,MULTICAST,M-DOWN> mtu 0
+
+Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/tty/serial/xilinx_uartps.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/net/macsec.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -26,13 +26,13 @@
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -3226,11 +3226,11 @@ static int macsec_newlink(struct net *ne
+ 			  struct netlink_ext_ack *extack)
+ {
+ 	struct macsec_dev *macsec = macsec_priv(dev);
++	rx_handler_func_t *rx_handler;
++	u8 icv_len = DEFAULT_ICV_LEN;
+ 	struct net_device *real_dev;
+-	int err;
++	int err, mtu;
+ 	sci_t sci;
+-	u8 icv_len = DEFAULT_ICV_LEN;
+-	rx_handler_func_t *rx_handler;
  
- #define CDNS_UART_TTY_NAME	"ttyPS"
- #define CDNS_UART_NAME		"xuartps"
-+#define CDNS_UART_MAJOR		0	/* use dynamic node allocation */
- #define CDNS_UART_FIFO_SIZE	64	/* FIFO size */
- #define CDNS_UART_REGISTER_SPACE	0x1000
- #define TX_TIMEOUT		500000
+ 	if (!tb[IFLA_LINK])
+ 		return -EINVAL;
+@@ -3246,7 +3246,11 @@ static int macsec_newlink(struct net *ne
  
- /* Rx Trigger level */
- static int rx_trigger_level = 56;
--static int uartps_major;
- module_param(rx_trigger_level, uint, 0444);
- MODULE_PARM_DESC(rx_trigger_level, "Rx trigger level, 1-63 bytes");
+ 	if (data && data[IFLA_MACSEC_ICV_LEN])
+ 		icv_len = nla_get_u8(data[IFLA_MACSEC_ICV_LEN]);
+-	dev->mtu = real_dev->mtu - icv_len - macsec_extra_len(true);
++	mtu = real_dev->mtu - icv_len - macsec_extra_len(true);
++	if (mtu < 0)
++		dev->mtu = 0;
++	else
++		dev->mtu = mtu;
  
-@@ -1547,7 +1547,7 @@ static int cdns_uart_probe(struct platfo
- 	cdns_uart_uart_driver->owner = THIS_MODULE;
- 	cdns_uart_uart_driver->driver_name = driver_name;
- 	cdns_uart_uart_driver->dev_name	= CDNS_UART_TTY_NAME;
--	cdns_uart_uart_driver->major = uartps_major;
-+	cdns_uart_uart_driver->major = CDNS_UART_MAJOR;
- 	cdns_uart_uart_driver->minor = cdns_uart_data->id;
- 	cdns_uart_uart_driver->nr = 1;
- 
-@@ -1576,7 +1576,6 @@ static int cdns_uart_probe(struct platfo
- 		goto err_out_id;
- 	}
- 
--	uartps_major = cdns_uart_uart_driver->tty_driver->major;
- 	cdns_uart_data->cdns_uart_driver = cdns_uart_uart_driver;
- 
- 	/*
+ 	rx_handler = rtnl_dereference(real_dev->rx_handler);
+ 	if (rx_handler && rx_handler != macsec_handle_frame)
 
 
