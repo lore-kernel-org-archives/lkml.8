@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E830C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EA4C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6351B20730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E43F920730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 19:20:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WL1rMNkU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iGk7+i0i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbgD1TTz (ORCPT
+        id S1729030AbgD1TTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 15:19:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51404 "EHLO
+        Tue, 28 Apr 2020 15:19:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728963AbgD1TTu (ORCPT
+        by vger.kernel.org with ESMTP id S1728956AbgD1TTu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Apr 2020 15:19:50 -0400
 Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4111BC03C1AC
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 413B9C03C1AD
         for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 12:19:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=57u+e2eFeEcAxZVEVzqwcWwsYUdxidMG9GSuCzHKIXg=; b=WL1rMNkUCpZZiYTaDmBFER3AbE
-        sNIDghGy7bW52DEQ2lmBhPTviN7qZxFs1oHtCdpEP67q81wDCwA2IGrOpuCDWWRhXdJEYwWfn15TN
-        +YAQns5MaU8U7omlVKPkaDQSC0XetVRwgxVpHMuZxJ3DYa8GOypRrxh8L2iMQLPnUIqodPIsO3Aee
-        DCOge7dKKJLxOHyeQt+UKOOubQvbyLl3yN4kOhh5wInLwIrMfuZHN606XHaT4lKk04pnIrZOt3R+/
-        8p6jbm5DgPVKaKqRZBqOIbo0lxNAK8zAeOC8Rx+zDu7MWLLrA+2fjuWe51ekaohpH0u/MEW8iWF1a
-        GwO8OivQ==;
+        bh=5ZRP2prB3+4lkffpS1QqktaqknTbNafSKFsaH4UcQQ4=; b=iGk7+i0iQoW+1UqJb2JYN+zafy
+        sXngHyPQav1rnMjZYqSILWwNrLpui4uiMGt/UMsix3WlIR1jB4uQZAHrXdpHJ36sUoxZaDQvFXfbQ
+        TTga4nPbELLWe0YmxYLZrN49abCFFyvYul7qi+lCSDFKdgKBGqNZwafs14Vhs7j/CIxD4DKB+Vc1R
+        J7Z2b5qxHB56COcy/547/Pi/QhJbS9ZHPmcMbW4GmlAAXIvsQ4mp4cVwWMtQL9Wd0aD2e8KLan1L8
+        AiFetYahkb2ytkbypdwJ+Lj39NMM7sthZt9rCGPO/Lo7cI1xLd9PdH/HiorbycRGf7T/62kToz3yq
+        DOueq7bg==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTVlR-0007kx-Ig; Tue, 28 Apr 2020 19:19:29 +0000
+        id 1jTVlR-0007l0-M6; Tue, 28 Apr 2020 19:19:30 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B11B93076E9;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BDB9330793E;
         Tue, 28 Apr 2020 21:19:26 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 8CC9725D01315; Tue, 28 Apr 2020 21:19:26 +0200 (CEST)
-Message-Id: <20200428191659.736151601@infradead.org>
+        id 9A55E25D01319; Tue, 28 Apr 2020 21:19:26 +0200 (CEST)
+Message-Id: <20200428191659.972514813@infradead.org>
 User-Agent: quilt/0.65
-Date:   Tue, 28 Apr 2020 21:11:07 +0200
+Date:   Tue, 28 Apr 2020 21:11:11 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     jpoimboe@redhat.com, alexandre.chartre@oracle.com
 Cc:     linux-kernel@vger.kernel.org, jthierry@redhat.com,
         tglx@linutronix.de, x86@kernel.org, mbenes@suse.cz,
         peterz@infradead.org
-Subject: [PATCH v2 06/14] objtool: Rework allocating stack_ops on decode
+Subject: [PATCH v2 10/14] objtool: Add support for intra-function calls
 References: <20200428191101.886208539@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,456 +62,195 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wrap each stack_op in a macro that allocates and adds it to the list.
-This simplifies trying to figure out what to do with the pre-allocated
-stack_op at the end.
+From: Alexandre Chartre <alexandre.chartre@oracle.com>
 
+Change objtool to support intra-function calls. On x86, an intra-function
+call is represented in objtool as a push onto the stack (of the return
+address), and a jump to the destination address. That way the stack
+information is correctly updated and the call flow is still accurate.
+
+Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+Link: https://lkml.kernel.org/r/20200414103618.12657-4-alexandre.chartre@oracle.com
 ---
- tools/objtool/arch/x86/decode.c |  251 +++++++++++++++++++++++-----------------
- 1 file changed, 147 insertions(+), 104 deletions(-)
+ include/linux/frame.h                            |   11 +++
+ tools/objtool/Documentation/stack-validation.txt |    8 ++
+ tools/objtool/arch/x86/decode.c                  |    8 ++
+ tools/objtool/check.c                            |   79 +++++++++++++++++++++--
+ 4 files changed, 102 insertions(+), 4 deletions(-)
 
+--- a/include/linux/frame.h
++++ b/include/linux/frame.h
+@@ -15,9 +15,20 @@
+ 	static void __used __section(.discard.func_stack_frame_non_standard) \
+ 		*__func_stack_frame_non_standard_##func = func
+ 
++/*
++ * This macro indicates that the following intra-function call is valid.
++ * Any non-annotated intra-function call will cause objtool to issue a warning.
++ */
++#define ANNOTATE_INTRA_FUNCTION_CALL				\
++	999:							\
++	.pushsection .discard.intra_function_calls;		\
++	.long 999b;						\
++	.popsection;
++
+ #else /* !CONFIG_STACK_VALIDATION */
+ 
+ #define STACK_FRAME_NON_STANDARD(func)
++#define ANNOTATE_INTRA_FUNCTION_CALL
+ 
+ #endif /* CONFIG_STACK_VALIDATION */
+ 
+--- a/tools/objtool/Documentation/stack-validation.txt
++++ b/tools/objtool/Documentation/stack-validation.txt
+@@ -323,6 +323,14 @@ they mean, and suggestions for how to fi
+     The easiest way to enforce this is to ensure alternative do not contain
+     any ORC entries, which in turn implies the above constraint.
+ 
++11. file.o: warning: unannotated intra-function call
++
++   This warning means that a direct call is done to a destination which
++   is not at the beginning of a function. If this is a legit call, you
++   can remove this warning by putting the ANNOTATE_INTRA_FUNCTION_CALL
++   directive right before the call.
++
++
+ If the error doesn't seem to make sense, it could be a bug in objtool.
+ Feel free to ask the objtool maintainer for help.
+ 
 --- a/tools/objtool/arch/x86/decode.c
 +++ b/tools/objtool/arch/x86/decode.c
-@@ -77,6 +77,11 @@ unsigned long arch_jump_destination(stru
- 	return insn->offset + insn->len + insn->immediate;
- }
+@@ -496,6 +496,14 @@ int arch_decode_instruction(const struct
  
-+#define ADD_OP(op) \
-+	if (!(op = calloc(1, sizeof(*op)))) \
-+		return -1; \
-+	else for (list_add_tail(&op->list, ops_list); op; op = NULL)
-+
- int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 			    unsigned long offset, unsigned int maxlen,
- 			    unsigned int *len, enum insn_type *type,
-@@ -88,7 +93,7 @@ int arch_decode_instruction(const struct
- 	unsigned char op1, op2, rex = 0, rex_b = 0, rex_r = 0, rex_w = 0,
- 		      rex_x = 0, modrm = 0, modrm_mod = 0, modrm_rm = 0,
- 		      modrm_reg = 0, sib = 0;
--	struct stack_op *op;
-+	struct stack_op *op = NULL;
- 
- 	x86_64 = is_x86_64(elf);
- 	if (x86_64 == -1)
-@@ -129,10 +134,6 @@ int arch_decode_instruction(const struct
- 	if (insn.sib.nbytes)
- 		sib = insn.sib.bytes[0];
- 
--	op = calloc(1, sizeof(*op));
--	if (!op)
--		return -1;
--
- 	switch (op1) {
- 
- 	case 0x1:
-@@ -141,10 +142,12 @@ int arch_decode_instruction(const struct
- 
- 			/* add/sub reg, %rsp */
- 			*type = INSN_STACK;
--			op->src.type = OP_SRC_ADD;
--			op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
--			op->dest.type = OP_DEST_REG;
--			op->dest.reg = CFI_SP;
-+			ADD_OP(op) {
-+				op->src.type = OP_SRC_ADD;
-+				op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
-+				op->dest.type = OP_DEST_REG;
-+				op->dest.reg = CFI_SP;
-+			}
- 		}
- 		break;
- 
-@@ -152,9 +155,11 @@ int arch_decode_instruction(const struct
- 
- 		/* push reg */
- 		*type = INSN_STACK;
--		op->src.type = OP_SRC_REG;
--		op->src.reg = op_to_cfi_reg[op1 & 0x7][rex_b];
--		op->dest.type = OP_DEST_PUSH;
-+		ADD_OP(op) {
-+			op->src.type = OP_SRC_REG;
-+			op->src.reg = op_to_cfi_reg[op1 & 0x7][rex_b];
-+			op->dest.type = OP_DEST_PUSH;
-+		}
- 
- 		break;
- 
-@@ -162,9 +167,11 @@ int arch_decode_instruction(const struct
- 
- 		/* pop reg */
- 		*type = INSN_STACK;
--		op->src.type = OP_SRC_POP;
--		op->dest.type = OP_DEST_REG;
--		op->dest.reg = op_to_cfi_reg[op1 & 0x7][rex_b];
-+		ADD_OP(op) {
-+			op->src.type = OP_SRC_POP;
-+			op->dest.type = OP_DEST_REG;
-+			op->dest.reg = op_to_cfi_reg[op1 & 0x7][rex_b];
-+		}
- 
- 		break;
- 
-@@ -172,8 +179,10 @@ int arch_decode_instruction(const struct
- 	case 0x6a:
- 		/* push immediate */
- 		*type = INSN_STACK;
--		op->src.type = OP_SRC_CONST;
--		op->dest.type = OP_DEST_PUSH;
+ 	case 0xe8:
+ 		*type = INSN_CALL;
++		/*
++		 * For the impact on the stack, a CALL behaves like
++		 * a PUSH of an immediate value (the return address).
++		 */
 +		ADD_OP(op) {
 +			op->src.type = OP_SRC_CONST;
 +			op->dest.type = OP_DEST_PUSH;
 +		}
  		break;
  
- 	case 0x70 ... 0x7f:
-@@ -188,11 +197,13 @@ int arch_decode_instruction(const struct
- 		if (modrm == 0xe4) {
- 			/* and imm, %rsp */
- 			*type = INSN_STACK;
--			op->src.type = OP_SRC_AND;
--			op->src.reg = CFI_SP;
--			op->src.offset = insn.immediate.value;
--			op->dest.type = OP_DEST_REG;
--			op->dest.reg = CFI_SP;
-+			ADD_OP(op) {
-+				op->src.type = OP_SRC_AND;
-+				op->src.reg = CFI_SP;
-+				op->src.offset = insn.immediate.value;
-+				op->dest.type = OP_DEST_REG;
-+				op->dest.reg = CFI_SP;
-+			}
- 			break;
- 		}
- 
-@@ -205,11 +216,13 @@ int arch_decode_instruction(const struct
- 
- 		/* add/sub imm, %rsp */
- 		*type = INSN_STACK;
--		op->src.type = OP_SRC_ADD;
--		op->src.reg = CFI_SP;
--		op->src.offset = insn.immediate.value * sign;
--		op->dest.type = OP_DEST_REG;
--		op->dest.reg = CFI_SP;
-+		ADD_OP(op) {
-+			op->src.type = OP_SRC_ADD;
-+			op->src.reg = CFI_SP;
-+			op->src.offset = insn.immediate.value * sign;
-+			op->dest.type = OP_DEST_REG;
-+			op->dest.reg = CFI_SP;
-+		}
- 		break;
- 
- 	case 0x89:
-@@ -217,10 +230,12 @@ int arch_decode_instruction(const struct
- 
- 			/* mov %rsp, reg */
- 			*type = INSN_STACK;
--			op->src.type = OP_SRC_REG;
--			op->src.reg = CFI_SP;
--			op->dest.type = OP_DEST_REG;
--			op->dest.reg = op_to_cfi_reg[modrm_rm][rex_b];
-+			ADD_OP(op) {
-+				op->src.type = OP_SRC_REG;
-+				op->src.reg = CFI_SP;
-+				op->dest.type = OP_DEST_REG;
-+				op->dest.reg = op_to_cfi_reg[modrm_rm][rex_b];
-+			}
- 			break;
- 		}
- 
-@@ -228,10 +243,12 @@ int arch_decode_instruction(const struct
- 
- 			/* mov reg, %rsp */
- 			*type = INSN_STACK;
--			op->src.type = OP_SRC_REG;
--			op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
--			op->dest.type = OP_DEST_REG;
--			op->dest.reg = CFI_SP;
-+			ADD_OP(op) {
-+				op->src.type = OP_SRC_REG;
-+				op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
-+				op->dest.type = OP_DEST_REG;
-+				op->dest.reg = CFI_SP;
-+			}
- 			break;
- 		}
- 
-@@ -242,21 +259,25 @@ int arch_decode_instruction(const struct
- 
- 			/* mov reg, disp(%rbp) */
- 			*type = INSN_STACK;
--			op->src.type = OP_SRC_REG;
--			op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
--			op->dest.type = OP_DEST_REG_INDIRECT;
--			op->dest.reg = CFI_BP;
--			op->dest.offset = insn.displacement.value;
-+			ADD_OP(op) {
-+				op->src.type = OP_SRC_REG;
-+				op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
-+				op->dest.type = OP_DEST_REG_INDIRECT;
-+				op->dest.reg = CFI_BP;
-+				op->dest.offset = insn.displacement.value;
-+			}
- 
- 		} else if (rex_w && !rex_b && modrm_rm == 4 && sib == 0x24) {
- 
- 			/* mov reg, disp(%rsp) */
- 			*type = INSN_STACK;
--			op->src.type = OP_SRC_REG;
--			op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
--			op->dest.type = OP_DEST_REG_INDIRECT;
--			op->dest.reg = CFI_SP;
--			op->dest.offset = insn.displacement.value;
-+			ADD_OP(op) {
-+				op->src.type = OP_SRC_REG;
-+				op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
-+				op->dest.type = OP_DEST_REG_INDIRECT;
-+				op->dest.reg = CFI_SP;
-+				op->dest.offset = insn.displacement.value;
-+			}
- 		}
- 
- 		break;
-@@ -266,22 +287,26 @@ int arch_decode_instruction(const struct
- 
- 			/* mov disp(%rbp), reg */
- 			*type = INSN_STACK;
--			op->src.type = OP_SRC_REG_INDIRECT;
--			op->src.reg = CFI_BP;
--			op->src.offset = insn.displacement.value;
--			op->dest.type = OP_DEST_REG;
--			op->dest.reg = op_to_cfi_reg[modrm_reg][rex_r];
-+			ADD_OP(op) {
-+				op->src.type = OP_SRC_REG_INDIRECT;
-+				op->src.reg = CFI_BP;
-+				op->src.offset = insn.displacement.value;
-+				op->dest.type = OP_DEST_REG;
-+				op->dest.reg = op_to_cfi_reg[modrm_reg][rex_r];
-+			}
- 
- 		} else if (rex_w && !rex_b && sib == 0x24 &&
- 			   modrm_mod != 3 && modrm_rm == 4) {
- 
- 			/* mov disp(%rsp), reg */
- 			*type = INSN_STACK;
--			op->src.type = OP_SRC_REG_INDIRECT;
--			op->src.reg = CFI_SP;
--			op->src.offset = insn.displacement.value;
--			op->dest.type = OP_DEST_REG;
--			op->dest.reg = op_to_cfi_reg[modrm_reg][rex_r];
-+			ADD_OP(op) {
-+				op->src.type = OP_SRC_REG_INDIRECT;
-+				op->src.reg = CFI_SP;
-+				op->src.offset = insn.displacement.value;
-+				op->dest.type = OP_DEST_REG;
-+				op->dest.reg = op_to_cfi_reg[modrm_reg][rex_r];
-+			}
- 		}
- 
- 		break;
-@@ -290,27 +315,31 @@ int arch_decode_instruction(const struct
- 		if (sib == 0x24 && rex_w && !rex_b && !rex_x) {
- 
- 			*type = INSN_STACK;
--			if (!insn.displacement.value) {
--				/* lea (%rsp), reg */
--				op->src.type = OP_SRC_REG;
--			} else {
--				/* lea disp(%rsp), reg */
--				op->src.type = OP_SRC_ADD;
--				op->src.offset = insn.displacement.value;
-+			ADD_OP(op) {
-+				if (!insn.displacement.value) {
-+					/* lea (%rsp), reg */
-+					op->src.type = OP_SRC_REG;
-+				} else {
-+					/* lea disp(%rsp), reg */
-+					op->src.type = OP_SRC_ADD;
-+					op->src.offset = insn.displacement.value;
-+				}
-+				op->src.reg = CFI_SP;
-+				op->dest.type = OP_DEST_REG;
-+				op->dest.reg = op_to_cfi_reg[modrm_reg][rex_r];
- 			}
--			op->src.reg = CFI_SP;
--			op->dest.type = OP_DEST_REG;
--			op->dest.reg = op_to_cfi_reg[modrm_reg][rex_r];
- 
- 		} else if (rex == 0x48 && modrm == 0x65) {
- 
- 			/* lea disp(%rbp), %rsp */
- 			*type = INSN_STACK;
--			op->src.type = OP_SRC_ADD;
--			op->src.reg = CFI_BP;
--			op->src.offset = insn.displacement.value;
--			op->dest.type = OP_DEST_REG;
--			op->dest.reg = CFI_SP;
-+			ADD_OP(op) {
-+				op->src.type = OP_SRC_ADD;
-+				op->src.reg = CFI_BP;
-+				op->src.offset = insn.displacement.value;
-+				op->dest.type = OP_DEST_REG;
-+				op->dest.reg = CFI_SP;
-+			}
- 
- 		} else if (rex == 0x49 && modrm == 0x62 &&
- 			   insn.displacement.value == -8) {
-@@ -322,11 +351,13 @@ int arch_decode_instruction(const struct
- 			 * stack realignment.
- 			 */
- 			*type = INSN_STACK;
--			op->src.type = OP_SRC_ADD;
--			op->src.reg = CFI_R10;
--			op->src.offset = -8;
--			op->dest.type = OP_DEST_REG;
--			op->dest.reg = CFI_SP;
-+			ADD_OP(op) {
-+				op->src.type = OP_SRC_ADD;
-+				op->src.reg = CFI_R10;
-+				op->src.offset = -8;
-+				op->dest.type = OP_DEST_REG;
-+				op->dest.reg = CFI_SP;
-+			}
- 
- 		} else if (rex == 0x49 && modrm == 0x65 &&
- 			   insn.displacement.value == -16) {
-@@ -338,11 +369,13 @@ int arch_decode_instruction(const struct
- 			 * stack realignment.
- 			 */
- 			*type = INSN_STACK;
--			op->src.type = OP_SRC_ADD;
--			op->src.reg = CFI_R13;
--			op->src.offset = -16;
--			op->dest.type = OP_DEST_REG;
--			op->dest.reg = CFI_SP;
-+			ADD_OP(op) {
-+				op->src.type = OP_SRC_ADD;
-+				op->src.reg = CFI_R13;
-+				op->src.offset = -16;
-+				op->dest.type = OP_DEST_REG;
-+				op->dest.reg = CFI_SP;
-+			}
- 		}
- 
- 		break;
-@@ -350,8 +383,10 @@ int arch_decode_instruction(const struct
- 	case 0x8f:
- 		/* pop to mem */
- 		*type = INSN_STACK;
--		op->src.type = OP_SRC_POP;
--		op->dest.type = OP_DEST_MEM;
-+		ADD_OP(op) {
-+			op->src.type = OP_SRC_POP;
-+			op->dest.type = OP_DEST_MEM;
-+		}
- 		break;
- 
- 	case 0x90:
-@@ -361,15 +396,19 @@ int arch_decode_instruction(const struct
- 	case 0x9c:
- 		/* pushf */
- 		*type = INSN_STACK;
--		op->src.type = OP_SRC_CONST;
--		op->dest.type = OP_DEST_PUSHF;
-+		ADD_OP(op) {
-+			op->src.type = OP_SRC_CONST;
-+			op->dest.type = OP_DEST_PUSHF;
-+		}
- 		break;
- 
- 	case 0x9d:
- 		/* popf */
- 		*type = INSN_STACK;
--		op->src.type = OP_SRC_POPF;
--		op->dest.type = OP_DEST_MEM;
-+		ADD_OP(op) {
-+			op->src.type = OP_SRC_POPF;
-+			op->dest.type = OP_DEST_MEM;
-+		}
- 		break;
- 
- 	case 0x0f:
-@@ -405,15 +444,19 @@ int arch_decode_instruction(const struct
- 
- 			/* push fs/gs */
- 			*type = INSN_STACK;
--			op->src.type = OP_SRC_CONST;
--			op->dest.type = OP_DEST_PUSH;
-+			ADD_OP(op) {
-+				op->src.type = OP_SRC_CONST;
-+				op->dest.type = OP_DEST_PUSH;
-+			}
- 
- 		} else if (op2 == 0xa1 || op2 == 0xa9) {
- 
- 			/* pop fs/gs */
- 			*type = INSN_STACK;
--			op->src.type = OP_SRC_POP;
--			op->dest.type = OP_DEST_MEM;
-+			ADD_OP(op) {
-+				op->src.type = OP_SRC_POP;
-+				op->dest.type = OP_DEST_MEM;
-+			}
- 		}
- 
- 		break;
-@@ -427,7 +470,8 @@ int arch_decode_instruction(const struct
- 		 * pop bp
- 		 */
- 		*type = INSN_STACK;
--		op->dest.type = OP_DEST_LEAVE;
-+		ADD_OP(op)
-+			op->dest.type = OP_DEST_LEAVE;
- 
- 		break;
- 
-@@ -449,12 +493,14 @@ int arch_decode_instruction(const struct
- 	case 0xcf: /* iret */
- 		*type = INSN_EXCEPTION_RETURN;
- 
--		/* add $40, %rsp */
--		op->src.type = OP_SRC_ADD;
--		op->src.reg = CFI_SP;
--		op->src.offset = 5*8;
--		op->dest.type = OP_DEST_REG;
--		op->dest.reg = CFI_SP;
-+		ADD_OP(op) {
-+			/* add $40, %rsp */
-+			op->src.type = OP_SRC_ADD;
-+			op->src.reg = CFI_SP;
-+			op->src.offset = 5*8;
-+			op->dest.type = OP_DEST_REG;
-+			op->dest.reg = CFI_SP;
-+		}
- 		break;
- 
- 	case 0xca: /* retf */
-@@ -492,8 +538,10 @@ int arch_decode_instruction(const struct
- 
- 			/* push from mem */
- 			*type = INSN_STACK;
--			op->src.type = OP_SRC_CONST;
--			op->dest.type = OP_DEST_PUSH;
-+			ADD_OP(op) {
-+				op->src.type = OP_SRC_CONST;
-+				op->dest.type = OP_DEST_PUSH;
-+			}
- 		}
- 
- 		break;
-@@ -504,11 +552,6 @@ int arch_decode_instruction(const struct
- 
- 	*immediate = insn.immediate.nbytes ? insn.immediate.value : 0;
- 
--	if (*type == INSN_STACK || *type == INSN_EXCEPTION_RETURN)
--		list_add_tail(&op->list, ops_list);
--	else
--		free(op);
--
+ 	case 0xfc:
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -692,6 +692,16 @@ static int add_jump_destinations(struct
  	return 0;
  }
  
++static void remove_insn_ops(struct instruction *insn)
++{
++	struct stack_op *op, *tmp;
++
++	list_for_each_entry_safe(op, tmp, &insn->stack_ops, list) {
++		list_del(&op->list);
++		free(op);
++	}
++}
++
+ /*
+  * Find the destination instructions for all calls.
+  */
+@@ -717,10 +727,7 @@ static int add_call_destinations(struct
+ 				continue;
+ 
+ 			if (!insn->call_dest) {
+-				WARN_FUNC("unsupported intra-function call",
+-					  insn->sec, insn->offset);
+-				if (retpoline)
+-					WARN("If this is a retpoline, please patch it in with alternatives and annotate it with ANNOTATE_NOSPEC_ALTERNATIVE.");
++				WARN_FUNC("unannotated intra-function call", insn->sec, insn->offset);
+ 				return -1;
+ 			}
+ 
+@@ -743,6 +750,15 @@ static int add_call_destinations(struct
+ 			}
+ 		} else
+ 			insn->call_dest = rela->sym;
++
++		/*
++		 * Whatever stack impact regular CALLs have, should be undone
++		 * by the RETURN of the called function.
++		 *
++		 * Annotated intra-function calls retain the stack_ops but
++		 * are converted to JUMP, see read_intra_function_calls().
++		 */
++		remove_insn_ops(insn);
+ 	}
+ 
+ 	return 0;
+@@ -1422,6 +1438,57 @@ static int read_instr_hints(struct objto
+ 	return 0;
+ }
+ 
++static int read_intra_function_calls(struct objtool_file *file)
++{
++	struct instruction *insn;
++	struct section *sec;
++	struct rela *rela;
++
++	sec = find_section_by_name(file->elf, ".rela.discard.intra_function_calls");
++	if (!sec)
++		return 0;
++
++	list_for_each_entry(rela, &sec->rela_list, list) {
++		unsigned long dest_off;
++
++		if (rela->sym->type != STT_SECTION) {
++			WARN("unexpected relocation symbol type in %s",
++			     sec->name);
++			return -1;
++		}
++
++		insn = find_insn(file, rela->sym->sec, rela->addend);
++		if (!insn) {
++			WARN("bad .discard.intra_function_call entry");
++			return -1;
++		}
++
++		if (insn->type != INSN_CALL) {
++			WARN_FUNC("intra_function_call not a direct call",
++				  insn->sec, insn->offset);
++			return -1;
++		}
++
++		/*
++		 * Treat intra-function CALLs as JMPs, but with a stack_op.
++		 * See add_call_destinations(), which strips stack_ops from
++		 * normal CALLs.
++		 */
++		insn->type = INSN_JUMP_UNCONDITIONAL;
++
++		dest_off = insn->offset + insn->len + insn->immediate;
++		insn->jump_dest = find_insn(file, insn->sec, dest_off);
++		if (!insn->jump_dest) {
++			WARN_FUNC("can't find call dest at %s+0x%lx",
++				  insn->sec, insn->offset,
++				  insn->sec->name, dest_off);
++			return -1;
++		}
++	}
++
++	return 0;
++}
++
+ static void mark_rodata(struct objtool_file *file)
+ {
+ 	struct section *sec;
+@@ -1477,6 +1544,10 @@ static int decode_sections(struct objtoo
+ 	if (ret)
+ 		return ret;
+ 
++	ret = read_intra_function_calls(file);
++	if (ret)
++		return ret;
++
+ 	ret = add_call_destinations(file);
+ 	if (ret)
+ 		return ret;
 
 
