@@ -2,192 +2,147 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38272C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BA4C8300A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA01206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:14:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5494720787
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:14:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Hr1YK70d"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jBJu27+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgD1VOR (ORCPT
+        id S1726788AbgD1VOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:14:17 -0400
-Received: from mail-eopbgr700043.outbound.protection.outlook.com ([40.107.70.43]:6721
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726279AbgD1VOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:14:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iTtBXRGtw6wB44IkzZwlHse3MDOh6xOW7kZQoN87GKLxZG2aCUdktfErIt8OAe3prZJZSvka5cfbINcU6UPfHthzuC9me4pQvB7lWsQ0p/KzuTWkmQFuAxH4tHyqghELuPg7M+PlX8L+SXhbhIUR1WjqPN+2Jvqlh4OTYqH6fBBMZ27MajA7gWIkSRio+M4apiWwnjVMQ0U1Rx2XtJ1qLfWxTmE5O+EbxZMXDFmWcn2cASIeJ1N+f/7+/cTYs/v3zN05LjqVJNL2uSouaopDqps4fmIaBT7pLdCEnhuR6ygVIw8CS32mUQaq5xSJcOT2Bw6Liyn7Xcem9x9EaPtavw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H8JRHBLnCrTe0yoD3p7g3tQHmQu6ep73fVpa8sdCEqk=;
- b=kcTynlgw/Tvm5SgzxAegCdH3MYxjrtujCSFEULg3BaP/TJKot+G0ZnOtv+zdCj/qMFFYuwcZ/tcWv8MJA5uPFs3zrPv5moH7hsfRYJbJN0MZkFt+Zj8Vpi0xAO36mXEzwbNTdxclYZozytpvbIAxZ/fkG3ag/UytyTY8hmGpRdOPU6WCFliIYCAgm+/GibdZb8t3+0v2xn4RieIXyP9kW/OSW0l1Wj0jNu71F+bRI1TTFdPaH7zna1PNdVGH+utvROEhwEcszrOIEb8YJNUCzDOPJ7xy/D5GjW3lGkMmCrD9WMZsdG6++NjXvZFkpLBrMctWKXPRWMKa37OFpnK3Rw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Tue, 28 Apr 2020 17:14:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41078 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726688AbgD1VOU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 17:14:20 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7E9BC035494
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 14:14:19 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id s20so759483plp.6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 14:14:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H8JRHBLnCrTe0yoD3p7g3tQHmQu6ep73fVpa8sdCEqk=;
- b=Hr1YK70duSazGvEgZoeAx2pORj6esAX0Jq+EtoO7cHjGm6ASUoRT/d96gMs3x3u4GJt3CsvWFD0lMwApKakF0u/u3SPBcI6zHlpeARxt09Z8lekV8gHUzBOAXSNVXKT+oeb+mPzbgsUxuvPuI/hjwMmXsNSE+kwW3iTYOvNHCCM=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB3420.namprd12.prod.outlook.com (2603:10b6:5:3a::27) by
- DM6PR12MB4532.namprd12.prod.outlook.com (2603:10b6:5:2af::24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.22; Tue, 28 Apr 2020 21:14:13 +0000
-Received: from DM6PR12MB3420.namprd12.prod.outlook.com
- ([fe80::7545:386:8328:18a0]) by DM6PR12MB3420.namprd12.prod.outlook.com
- ([fe80::7545:386:8328:18a0%6]) with mapi id 15.20.2958.019; Tue, 28 Apr 2020
- 21:14:13 +0000
-From:   Sanjay R Mehta <Sanju.Mehta@amd.com>
-To:     vkoul@kernel.org
-Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
-        Thomas.Lendacky@amd.com, Shyam-sundar.S-k@amd.com,
-        Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        Sanjay R Mehta <sanju.mehta@amd.com>
-Subject: [PATCH v4 0/3] Add support for AMD PTDMA controller driver
-Date:   Tue, 28 Apr 2020 16:13:33 -0500
-Message-Id: <1588108416-49050-1-git-send-email-Sanju.Mehta@amd.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA1PR0101CA0034.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:22::20) To DM6PR12MB3420.namprd12.prod.outlook.com
- (2603:10b6:5:3a::27)
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=krkKzlTv0evl7XtOBkWytpIaTxy+LxvUFfaqcuSVgrw=;
+        b=jBJu27+X8D4yb2SJa0NENEq+yawHvCLl+udLKszJlfSZ5PVvIKoPqAvpvqME6MW9Mj
+         qtD10jrVnoJisHmxdd2orvAtNEb08FdDeHufUZ6AIp0gEc/tKDo9VwzsZGvXCXUpkg1M
+         G5IqiMT138ZbVoT57BPyqAsumzgYR5TeUCKng=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=krkKzlTv0evl7XtOBkWytpIaTxy+LxvUFfaqcuSVgrw=;
+        b=ote+OJmJiFJc7tW+KcgJ5A7HQfZxsZQ2CqHEx27HNuxpw9MbRNSa1N3yySWw08+x2S
+         tZJAElSiUXnYc8/4g5KBx2cJ4tWCAazu9kkxgRkGW9LWRxI6JuJo9Wf9+6LoPcJiA2CC
+         Ke58BkxpDoINEZZKbBwQgxyOVgXivJ3wSvcbuVD8gmqoqIMuU19sjMx0BfjBbAF7nC+h
+         ayXRG1bOaKFA5Kvv7gsZ9W1yTZFXcM30p5rem/kYkEeUzxRKR3eGJB1nimxyayOszbpN
+         Rfa7GOrF7lBGLgbiQGIZLRE64QAygmvtlpnRdo4VDwv2F+BxnOijUyNHGyD6pYKymhRq
+         CJqQ==
+X-Gm-Message-State: AGi0PuaXkCG13xSI9qEiZZoxpzab/IJz/TIww9V/VAcWrFmWW/jwdNAQ
+        cI3tr9L6Pbrwh/yBXdyXK5HeAw==
+X-Google-Smtp-Source: APiQypJr4LN15nTjffPKEvXDknvrivQ2C51b5dr29r1bWEMRSzhey9PsKy/AkanMbmobrgXqkvk/qQ==
+X-Received: by 2002:a17:902:8f90:: with SMTP id z16mr14622246plo.216.1588108459461;
+        Tue, 28 Apr 2020 14:14:19 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id 18sm2988202pjf.30.2020.04.28.14.14.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 14:14:19 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     jason.wessel@windriver.com, daniel.thompson@linaro.org,
+        gregkh@linuxfoundation.org
+Cc:     agross@kernel.org, kgdb-bugreport@lists.sourceforge.net,
+        catalin.marinas@arm.com, linux-serial@vger.kernel.org,
+        sumit.garg@linaro.org, corbet@lwn.net, mingo@redhat.com,
+        will@kernel.org, hpa@zytor.com, tglx@linutronix.de,
+        frowand.list@gmail.com, bp@alien8.de, bjorn.andersson@linaro.org,
+        jslaby@suse.com, Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 01/11] kgdb: Disable WARN_CONSOLE_UNLOCKED for all kgdb
+Date:   Tue, 28 Apr 2020 14:13:41 -0700
+Message-Id: <20200428141218.v3.1.Ied2b058357152ebcc8bf68edd6f20a11d98d7d4e@changeid>
+X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
+In-Reply-To: <20200428211351.85055-1-dianders@chromium.org>
+References: <20200428211351.85055-1-dianders@chromium.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from sanjuamdntb2.amd.com (165.204.156.251) by MA1PR0101CA0034.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:22::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2958.19 via Frontend Transport; Tue, 28 Apr 2020 21:14:09 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 74a30a49-9e76-4d74-ace0-08d7ebb919e7
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4532:|DM6PR12MB4532:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB4532CB05A3FB6CFF1C56A2E7E5AC0@DM6PR12MB4532.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0387D64A71
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3420.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(366004)(346002)(136003)(376002)(186003)(4326008)(16526019)(6916009)(36756003)(26005)(52116002)(7696005)(2906002)(8936002)(6666004)(5660300002)(66946007)(956004)(66476007)(2616005)(6486002)(966005)(66556008)(478600001)(86362001)(316002)(8676002);DIR:OUT;SFP:1101;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7b5GX7r2EQMyAumVzny1TDTc3wGTjEpvg5N/MTvx48SP5XjuyBG1uE/BkaM7ypul7zDmdRCoJidhC4PppEY6tgoTetQLkYDeJB4CSRUThydrF16Jj0TRXXaLwI+wUwE/CMUeTcc/XjmKvKthAJPyXWKJkm35/c0HBQ2psLyE1ZQIBbScf252o3H/rhLnkB6AVMkUsbRxNGwa/ZW2eru2QrY/czlRRnpYKBGEO9VnOKkDD48DWrhzPVWN9pbXp2dz8uCsSzAsRjP2rbWZ0OiPIWQBxVXsTC4vU+MJewpyYfFLf0ZGCQzaHOEw8TqG4UChV8NcMWveH3TZH+CSax/rbqdl4pPDNBYYx+pVexChKhudo44Mm4yfdx0+89C/Y1TZ1Rd1UWNkKKc98eZjbkBIwztF76jFw2fJP6Aep3gyviVR1DMfKCw/VAa62xv3w05H6BvQ+TgDTVWrTHN+VonCAW/Bc/PyE/gxZ8ZK+JCOpbfa6oRQPl5GZTuybsNtRqioE8cV21w3BHiHTUCfZPrYoA==
-X-MS-Exchange-AntiSpam-MessageData: QYCnPxLPpAmOubDIrJXZ2XC7mjc33/9sdNa33ty0KHnCj7O+9cT1D+gQ76GOU3w9J/GnprMWh2s3nKET/AsEfuNIUYTHcH2jPvfxfnTL8nI9dpulFpJg9BR9VGMU04Krjh6wDU6EUPf8ZdG+XjfeuxCQNWbEa/yD8T60OPk/gE6sJ8cNp339L+M0bMWQUE3rtOk4l2h5IxFEChohgzgQy+KUJhp+s3qT4Ob63F6p1L0DDGgcjNo1xSxqF98baVapk5wZML4yAijV6jKEhCrCWZDYhTjWahtuwMJC8ZM8LtZPN67Z4l6v41Gc0/XPTOoFgBf+HvXONuqhyR57vnpOCx9Yrf1kRz/b1W7qAcx2RyWszuQtd5mqfY5FNOg7qvMGjw39MG1hltnZTUy7k6JCBW7Puate2KMEFgiTMOvoIlUIhc+UpJf1pHhKpF/V06jqhPx2nNS7ig7MpqB/1lwFL80rgC+pztfIA/T9g6CuieKdpEVJufmR74ZWs1Ftglo3DMtm47xOtwUZZg1TL19q1bgCx/VIVEokCZLmciw6PmXg13QiPKzv2uL10K3A9mFebFaFTF7/3RLDGxLHivrlGr+dF4gx1XL+w/sxMnfwpUpHrqZj3N7fk7q8cfopW2IGvrCiyoEE/CDHOawpE8sW6U7O/5lZGnwngmMN056xonkIHcPt9xbHxP8lXia14DmNEUAx7PnsLWuRJ3PMrjXvVRxeXI0nWhDxBXMKTBsbI70sji0/Q30TSvBl4vvKEz1nYJ7iXTiZ/vV5j6Z1WSAmeD3pmnbbckSI8dvmuIuktnsSfexmwa72zf4yW7s9eEQ4
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 74a30a49-9e76-4d74-ace0-08d7ebb919e7
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2020 21:14:13.6352
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EvKKeVJqqDK0Phj2qa8YmK3g+T9ogHKiCAZakoP702/7wHvLrYzNZHs0assNhkeGPzeD2xcZDPG78uGOGTLvcg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4532
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanjay R Mehta <sanju.mehta@amd.com>
+In commit 81eaadcae81b ("kgdboc: disable the console lock when in
+kgdb") we avoided the WARN_CONSOLE_UNLOCKED() yell when we were in
+kgdboc.  That still works fine, but it turns out that we get a similar
+yell when using other I/O drivers.  One example is the "I/O driver"
+for the kgdb test suite (kgdbts).  When I enabled that I again got the
+same yells.
 
-This patch series adds support for AMD PTDMA controller which
-performs high bandwidth memory-to-memory and IO copy operation and
-performs DMA transfer through queue based descriptor management.
+Even though "kgdbts" doesn't actually interact with the user over the
+console, using it still causes kgdb to print to the consoles.  That
+trips the same warning:
+  con_is_visible+0x60/0x68
+  con_scroll+0x110/0x1b8
+  lf+0x4c/0xc8
+  vt_console_print+0x1b8/0x348
+  vkdb_printf+0x320/0x89c
+  kdb_printf+0x68/0x90
+  kdb_main_loop+0x190/0x860
+  kdb_stub+0x2cc/0x3ec
+  kgdb_cpu_enter+0x268/0x744
+  kgdb_handle_exception+0x1a4/0x200
+  kgdb_compiled_brk_fn+0x34/0x44
+  brk_handler+0x7c/0xb8
+  do_debug_exception+0x1b4/0x228
 
-AMD Processor has multiple ptdma device instances and each controller
-has single queue. The driver also adds support for for multiple PTDMA
-instances, each device will get an unique identifier and uniquely
-named resources.
+Let's increment/decrement the "ignore_console_lock_warning" variable
+all the time when we enter the debugger.
 
-v4:
-	- modified DMA channel and descriptor management using virt-dma layer
-	  instead of list based management.
-	- return only status of the cookie from pt_tx_status
-	- copyright year changed from 2019 to 2020
-	- removed dummy code for suspend & resume
-	- used bitmask and genmask
+This will allow us to later revert commit 81eaadcae81b ("kgdboc:
+disable the console lock when in kgdb").
 
-v3:
-        - Fixed the sparse warnings.
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+---
 
-v2:
-        - Added controller description in cover letter
-        - Removed "default m" from Kconfig
-        - Replaced low_address() and high_address() functions with kernel
-          API's lower_32_bits & upper_32_bits().
-        - Removed the BH handler function pt_core_irq_bh() and instead
-          handling transaction in irq handler itself.
-        - Moved presetting of command queue registers into new function
-          "init_cmdq_regs()"
-        - Removed the kernel thread dependency to submit transaction.
-        - Increased the hardware command queue size to 32 and adding it
-          as a module parameter.
-        - Removed backlog command queue handling mechanism.
-        - Removed software command queue handling and instead submitting
-          transaction command directly to
-          hardware command queue.
-        - Added tasklet structure variable in "struct pt_device".
-          This is used to invoke pt_do_cmd_complete() upon receiving interrupt
-          for command completion.
-        - pt_core_perform_passthru() function parameters are modified and it is
-          now used to submit command directly to hardware from dmaengine framew
-        - Removed below structures, enums, macros and functions, as these value
-          constants. Making command submission simple,
-           - Removed "union pt_function"  and several macros like PT_VERSION,
-             PT_BYTESWAP, PT_CMD_* etc..
-           - enum pt_passthru_bitwise, enum pt_passthru_byteswap, enum pt_memty
-             struct pt_dma_info, struct pt_data, struct pt_mem, struct pt_passt
-             struct pt_op,
+Changes in v3: None
+Changes in v2:
+- ("kgdb: Disable WARN_CONSOLE_UNLOCKED for all kgdb") new for v2.
 
-Links of the review comments for v4:
-1. https://lkml.org/lkml/2020/1/24/12
-2. https://lkml.org/lkml/2020/1/24/17
+ kernel/debug/debug_core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Links of the review comments for v2:
-1. https://lkml.org/lkml/2019/12/27/630
-2. https://lkml.org/lkml/2020/1/3/23
-3. https://lkml.org/lkml/2020/1/3/314
-4. https://lkml.org/lkml/2020/1/10/100
-
-Links of the review comments for v1:
-1. https://lkml.org/lkml/2019/9/24/490
-2. https://lkml.org/lkml/2019/9/24/399
-3. https://lkml.org/lkml/2019/9/24/862
-4. https://lkml.org/lkml/2019/9/24/122
-
-Sanjay R Mehta (3):
-  dmaengine: ptdma: Initial driver for the AMD PTDMA controller
-  dmaengine: ptdma: register PTDMA controller as a DMA resource
-  dmaengine: ptdma: Add debugfs entries for PTDMA information
-
- MAINTAINERS                         |   6 +
- drivers/dma/Kconfig                 |   2 +
- drivers/dma/Makefile                |   1 +
- drivers/dma/ptdma/Kconfig           |  13 +
- drivers/dma/ptdma/Makefile          |  12 +
- drivers/dma/ptdma/ptdma-debugfs.c   | 237 ++++++++++++++
- drivers/dma/ptdma/ptdma-dev.c       | 460 +++++++++++++++++++++++++++
- drivers/dma/ptdma/ptdma-dmaengine.c | 597 ++++++++++++++++++++++++++++++++++++
- drivers/dma/ptdma/ptdma-pci.c       | 253 +++++++++++++++
- drivers/dma/ptdma/ptdma.h           | 375 ++++++++++++++++++++++
- 10 files changed, 1956 insertions(+)
- create mode 100644 drivers/dma/ptdma/Kconfig
- create mode 100644 drivers/dma/ptdma/Makefile
- create mode 100644 drivers/dma/ptdma/ptdma-debugfs.c
- create mode 100644 drivers/dma/ptdma/ptdma-dev.c
- create mode 100644 drivers/dma/ptdma/ptdma-dmaengine.c
- create mode 100644 drivers/dma/ptdma/ptdma-pci.c
- create mode 100644 drivers/dma/ptdma/ptdma.h
-
+diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+index 2b7c9b67931d..950dc667c823 100644
+--- a/kernel/debug/debug_core.c
++++ b/kernel/debug/debug_core.c
+@@ -668,6 +668,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
+ 	if (kgdb_skipexception(ks->ex_vector, ks->linux_regs))
+ 		goto kgdb_restore;
+ 
++	atomic_inc(&ignore_console_lock_warning);
++
+ 	/* Call the I/O driver's pre_exception routine */
+ 	if (dbg_io_ops->pre_exception)
+ 		dbg_io_ops->pre_exception();
+@@ -740,6 +742,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
+ 	if (dbg_io_ops->post_exception)
+ 		dbg_io_ops->post_exception();
+ 
++	atomic_dec(&ignore_console_lock_warning);
++
+ 	if (!kgdb_single_step) {
+ 		raw_spin_unlock(&dbg_slave_lock);
+ 		/* Wait till all the CPUs have quit from the debugger. */
 -- 
-2.7.4
+2.26.2.303.gf8c07b1a785-goog
 
