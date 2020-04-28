@@ -2,134 +2,75 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A731C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E882BC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBB3B208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:27:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098462;
-	bh=/AT+BPEtbgPhVXoYP8gxORxx9FEIM787m91UbGqpI24=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dtU+UbhC5nFY3QZhrE8+IG3UtBk64ARkvczje/aV2f/VIY0Uhrr/Dumy7LimDPzo4
-	 bL15aTkh2+yJ8tF53oHzxTMsqQAkjpWlTZrTXzEHLkFVyQP4LyCEtZGx9YmPvMBtOS
-	 gBDcPd+/IU2SjXtiOa49Ri5ZvEMSsSPOR7DX69D8=
+	by mail.kernel.org (Postfix) with ESMTP id D2A6D2085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:27:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729046AbgD1S1m (ORCPT
+        id S1729057AbgD1S1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:27:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39754 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729004AbgD1S1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:27:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Tue, 28 Apr 2020 14:27:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43230 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729012AbgD1S1h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:27:37 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5016C03C1AB;
+        Tue, 28 Apr 2020 11:27:37 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 386F2208E0;
-        Tue, 28 Apr 2020 18:27:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098451;
-        bh=/AT+BPEtbgPhVXoYP8gxORxx9FEIM787m91UbGqpI24=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yf3fobAAQPdSuyI2jB6c8/oW6LbjDsL9ajGiiA4ezhNMon4fSY/2pXQyYyTIV/Kbi
-         UB9CmxU1VakV/MZ34C6qgTOFNSNFHAPKvFfZKJ3cITNYyWVwhSw1PSDssIJDGALK5Z
-         SwbGtuF+ILlzZooEVH/JGOa3l3Ot294e8UayuyDs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Manoj Malviya <manojmalviya@chelsio.com>,
-        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 046/167] cxgb4: fix large delays in PTP synchronization
-Date:   Tue, 28 Apr 2020 20:23:42 +0200
-Message-Id: <20200428182230.896691289@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by ms.lwn.net (Postfix) with ESMTPSA id 1D61B4B7;
+        Tue, 28 Apr 2020 18:27:37 +0000 (UTC)
+Date:   Tue, 28 Apr 2020 12:27:36 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Flavio Suligoi <f.suligoi@asem.it>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Changbin Du <changbin.du@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH] Documentation: x86: fix space instead of tab in uefi
+ doc
+Message-ID: <20200428122736.219e21ba@lwn.net>
+In-Reply-To: <1588080745-21999-1-git-send-email-f.suligoi@asem.it>
+References: <1588080745-21999-1-git-send-email-f.suligoi@asem.it>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+On Tue, 28 Apr 2020 15:32:25 +0200
+Flavio Suligoi <f.suligoi@asem.it> wrote:
 
-[ Upstream commit bd019427bf3623ee3c7d2845cf921bbf4c14846c ]
+> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+> ---
+>  Documentation/x86/x86_64/uefi.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/x86/x86_64/uefi.rst b/Documentation/x86/x86_64/uefi.rst
+> index 88c3ba3..3b89410 100644
+> --- a/Documentation/x86/x86_64/uefi.rst
+> +++ b/Documentation/x86/x86_64/uefi.rst
+> @@ -36,7 +36,7 @@ Mechanics
+>  
+>  	elilo bootloader with x86_64 support, elilo configuration file,
+>  	kernel image built in first step and corresponding
+> -	initrd. Instructions on building elilo	and its dependencies
+> +	initrd. Instructions on building elilo and its dependencies
+>  	can be found in the elilo sourceforge project.
 
-Fetching PTP sync information from mailbox is slow and can take
-up to 10 milliseconds. Reduce this unnecessary delay by directly
-reading the information from the corresponding registers.
+Applied, thanks.
 
-Fixes: 9c33e4208bce ("cxgb4: Add PTP Hardware Clock (PHC) support")
-Signed-off-by: Manoj Malviya <manojmalviya@chelsio.com>
-Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c |   27 +++++--------------------
- drivers/net/ethernet/chelsio/cxgb4/t4_regs.h   |    3 ++
- 2 files changed, 9 insertions(+), 21 deletions(-)
-
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
-@@ -311,32 +311,17 @@ static int cxgb4_ptp_adjtime(struct ptp_
-  */
- static int cxgb4_ptp_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
- {
--	struct adapter *adapter = (struct adapter *)container_of(ptp,
--				   struct adapter, ptp_clock_info);
--	struct fw_ptp_cmd c;
-+	struct adapter *adapter = container_of(ptp, struct adapter,
-+					       ptp_clock_info);
- 	u64 ns;
--	int err;
- 
--	memset(&c, 0, sizeof(c));
--	c.op_to_portid = cpu_to_be32(FW_CMD_OP_V(FW_PTP_CMD) |
--				     FW_CMD_REQUEST_F |
--				     FW_CMD_READ_F |
--				     FW_PTP_CMD_PORTID_V(0));
--	c.retval_len16 = cpu_to_be32(FW_CMD_LEN16_V(sizeof(c) / 16));
--	c.u.ts.sc = FW_PTP_SC_GET_TIME;
--
--	err = t4_wr_mbox(adapter, adapter->mbox, &c, sizeof(c), &c);
--	if (err < 0) {
--		dev_err(adapter->pdev_dev,
--			"PTP: %s error %d\n", __func__, -err);
--		return err;
--	}
-+	ns = t4_read_reg(adapter, T5_PORT_REG(0, MAC_PORT_PTP_SUM_LO_A));
-+	ns |= (u64)t4_read_reg(adapter,
-+			       T5_PORT_REG(0, MAC_PORT_PTP_SUM_HI_A)) << 32;
- 
- 	/* convert to timespec*/
--	ns = be64_to_cpu(c.u.ts.tm);
- 	*ts = ns_to_timespec64(ns);
--
--	return err;
-+	return 0;
- }
- 
- /**
---- a/drivers/net/ethernet/chelsio/cxgb4/t4_regs.h
-+++ b/drivers/net/ethernet/chelsio/cxgb4/t4_regs.h
-@@ -1900,6 +1900,9 @@
- 
- #define MAC_PORT_CFG2_A 0x818
- 
-+#define MAC_PORT_PTP_SUM_LO_A 0x990
-+#define MAC_PORT_PTP_SUM_HI_A 0x994
-+
- #define MPS_CMN_CTL_A	0x9000
- 
- #define COUNTPAUSEMCRX_S    5
-
-
+jon
