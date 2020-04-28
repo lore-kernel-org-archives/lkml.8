@@ -2,55 +2,45 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089C1C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A5EC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7D33206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100018;
-	bh=9Um0vAykLhr43EzMSP1g/LNXoL1Lkg+VbMjwiFsQ5WI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0s6SxrZFW7qaDeeLKahMGqjhnoCIlJlhdPrAJkAQ2pL0YT3qjUkvJsiZIU3TpGhqd
-	 ZuRl4u5sXLwFJUKbja2zIFxkntKHi5HcLnfR2N72w9SyT54Qhev8K5gxPb7yd13/ri
-	 jNfJfxaCRAnKnTGmGWih6XzE1AIa+B0ovRAU/iMk=
+	by mail.kernel.org (Postfix) with ESMTP id 1E9D6206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:53:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731090AbgD1Sxi (ORCPT
+        id S1731148AbgD1Sxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:53:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730174AbgD1Se4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:53:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44374 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730175AbgD1Se4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Apr 2020 14:34:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4566DC03C1AB;
+        Tue, 28 Apr 2020 11:34:56 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DDA120B80;
+        by ms.lwn.net (Postfix) with ESMTPSA id E139C44A;
         Tue, 28 Apr 2020 18:34:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098895;
-        bh=9Um0vAykLhr43EzMSP1g/LNXoL1Lkg+VbMjwiFsQ5WI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2eWyc2tHMWa1oZ04wRUcejhtDqaxVeS0zLQl7Z1N4Sz/Q1MlcU3oa2Idc/uO/LtuU
-         bdlGWpmv9yfDwZlK+wz++plrmf/1EjegYvXWxUQj4+43jHC4t/xSYUDU8QGI0kya34
-         QLvWLKVvUpe2dy6aQWztJBSBmpimiWccy8MIyCWk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 070/131] xfrm: Always set XFRM_TRANSFORMED in xfrm{4,6}_output_finish
-Date:   Tue, 28 Apr 2020 20:24:42 +0200
-Message-Id: <20200428182233.732402940@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
-User-Agent: quilt/0.66
+Date:   Tue, 28 Apr 2020 12:34:54 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-doc@vger.kernel.org, Harry Wei <harryxiyou@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC] Documentation: zh_CN: convert to use
+ i2c_new_client_device()
+Message-ID: <20200428123454.4ccbaf6c@lwn.net>
+In-Reply-To: <cb2d1373-5bb3-93c2-f5af-40a04b21651b@linux.alibaba.com>
+References: <20200425100616.3363-1-wsa+renesas@sang-engineering.com>
+        <cb2d1373-5bb3-93c2-f5af-40a04b21651b@linux.alibaba.com>
+Organization: LWN.net
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,47 +49,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+On Sat, 25 Apr 2020 22:26:57 +0800
+Alex Shi <alex.shi@linux.alibaba.com> wrote:
 
-[ Upstream commit 0c922a4850eba2e668f73a3f1153196e09abb251 ]
+> 在 2020/4/25 下午6:06, Wolfram Sang 写道:
+> > Move away from the deprecated API and advertise the new one.
+> > 
+> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > ---
+> > 
+> > I can't read Chinese. But given the context, I think just updating to
+> > the new function name is enough. Please let me know if not. Thanks!  
+> 
+> It looks good. Thanks!
+> 
+> Reviewed-by: Alex Shi <alex.shi@linux.alibaba.com>
 
-IPSKB_XFRM_TRANSFORMED and IP6SKB_XFRM_TRANSFORMED are skb flags set by
-xfrm code to tell other skb handlers that the packet has been passed
-through the xfrm output functions. Simplify the code and just always
-set them rather than conditionally based on netfilter enabled thus
-making the flag available for other users.
+Applied, thanks.
 
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/xfrm4_output.c |    2 --
- net/ipv6/xfrm6_output.c |    2 --
- 2 files changed, 4 deletions(-)
-
---- a/net/ipv4/xfrm4_output.c
-+++ b/net/ipv4/xfrm4_output.c
-@@ -77,9 +77,7 @@ int xfrm4_output_finish(struct sock *sk,
- {
- 	memset(IPCB(skb), 0, sizeof(*IPCB(skb)));
- 
--#ifdef CONFIG_NETFILTER
- 	IPCB(skb)->flags |= IPSKB_XFRM_TRANSFORMED;
--#endif
- 
- 	return xfrm_output(sk, skb);
- }
---- a/net/ipv6/xfrm6_output.c
-+++ b/net/ipv6/xfrm6_output.c
-@@ -130,9 +130,7 @@ int xfrm6_output_finish(struct sock *sk,
- {
- 	memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
- 
--#ifdef CONFIG_NETFILTER
- 	IP6CB(skb)->flags |= IP6SKB_XFRM_TRANSFORMED;
--#endif
- 
- 	return xfrm_output(sk, skb);
- }
-
-
+jon
