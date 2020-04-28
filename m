@@ -2,56 +2,54 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3648FC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE86BC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD3B20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD2F206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100326;
-	bh=e3Ix0CKQnO2vFrhw8s5qjaLhbJuDinvzEZLMlqEOCsc=;
+	s=default; t=1588100328;
+	bh=ayzYA0u5RAjjS3HbPzakz8kLWk20mbV2cvoevGZM7x0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qy4bW0S/QBmnVQBh0Ja7P9+ISHMM+35MXm/YiBaObLBiuoIdZvglZQS44M+adDa9F
-	 brI5DBi8/yNdFJySrZe93EpOcpTfTHxpvKvQg5fvaScJ+1MFVMtzUIjVVwBQJtCRvQ
-	 eSE5QMK1jAqsy7nyGtJzpwEpPXw827tK+fRO3cfc=
+	b=HMjmnauoWGiCb5LBSdR/1JExU+DWBjco6FvAvYz0ULQWOoLf41qm7lf7vaLccOQiu
+	 r23V8lgvccbdVnotD7CigNWjklwnH3YF39ZQIoXPnXllbPwMaVqGBMAFdpUyuGku5E
+	 hXLMknaNq7DdnBV4JfpWKYKxu8lQtflsb7T6+mmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730149AbgD1S6p (ORCPT
+        id S1729872AbgD1S6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:58:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42458 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:58:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729294AbgD1S3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:29:04 -0400
+        id S1729287AbgD1S3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:29:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DFAB20730;
-        Tue, 28 Apr 2020 18:29:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B732820730;
+        Tue, 28 Apr 2020 18:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098543;
-        bh=e3Ix0CKQnO2vFrhw8s5qjaLhbJuDinvzEZLMlqEOCsc=;
+        s=default; t=1588098541;
+        bh=ayzYA0u5RAjjS3HbPzakz8kLWk20mbV2cvoevGZM7x0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ak4nOytHKWYQyUfIygc+xSZ5r+RTxULAW7Tv1zRjktzLiii9qKvhmFNGXo9/K85VQ
-         2kThyHmNhh0pprbZcj0OyjxY6c98dKsQr8SuXm4628wYOi8rBdu/p2m03QrKpU8BnZ
-         9L83P1CF3oB8dTdWeVO8W5DYrmUMSAw051fD8MAA=
+        b=xHHdbgC0hEAfjw9+v2lzXzz8S5K7jW8wqxhzSLKxWc0tLoLoABBq9hQD+XX/KlZB3
+         OmQfh1zBidIMz6VSINPuOTWU/EZ4L7rjqHcW434/2vCB7hxSK5CelpKIGwasDJBTup
+         KtkC46JWHiVvGqU0+lVLQmuzgfibJxougSWOBlKU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 011/131] watchdog: reset last_hw_keepalive time at start
-Date:   Tue, 28 Apr 2020 20:23:43 +0200
-Message-Id: <20200428182226.602808871@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 069/167] net: dsa: b53: b53_arl_rw_op() needs to select IVL or SVL
+Date:   Tue, 28 Apr 2020 20:24:05 +0200
+Message-Id: <20200428182233.698317777@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,42 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 982bb70517aef2225bad1d802887b733db492cc0 ]
+[ Upstream commit 64fec9493f7dc9bdd7233bcfe98985c45bd0e3c1 ]
 
-Currently the watchdog core does not initialize the last_hw_keepalive
-time during watchdog startup. This will cause the watchdog to be pinged
-immediately if enough time has passed from the system boot-up time, and
-some types of watchdogs like K3 RTI does not like this.
+Flip the IVL_SVL_SELECT bit correctly based on the VLAN enable status,
+the default is to perform Shared VLAN learning instead of Individual
+learning.
 
-To avoid the issue, setup the last_hw_keepalive time during watchdog
-startup.
-
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20200302200426.6492-3-t-kristo@ti.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/watchdog/watchdog_dev.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/dsa/b53/b53_common.c |    4 ++++
+ drivers/net/dsa/b53/b53_regs.h   |    1 +
+ 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-index e64aa88e99dab..10b2090f3e5e7 100644
---- a/drivers/watchdog/watchdog_dev.c
-+++ b/drivers/watchdog/watchdog_dev.c
-@@ -264,6 +264,7 @@ static int watchdog_start(struct watchdog_device *wdd)
- 	if (err == 0) {
- 		set_bit(WDOG_ACTIVE, &wdd->status);
- 		wd_data->last_keepalive = started_at;
-+		wd_data->last_hw_keepalive = started_at;
- 		watchdog_update_worker(wdd);
- 	}
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -1454,6 +1454,10 @@ static int b53_arl_rw_op(struct b53_devi
+ 		reg |= ARLTBL_RW;
+ 	else
+ 		reg &= ~ARLTBL_RW;
++	if (dev->vlan_enabled)
++		reg &= ~ARLTBL_IVL_SVL_SELECT;
++	else
++		reg |= ARLTBL_IVL_SVL_SELECT;
+ 	b53_write8(dev, B53_ARLIO_PAGE, B53_ARLTBL_RW_CTRL, reg);
  
--- 
-2.20.1
-
+ 	return b53_arl_op_wait(dev);
+--- a/drivers/net/dsa/b53/b53_regs.h
++++ b/drivers/net/dsa/b53/b53_regs.h
+@@ -292,6 +292,7 @@
+ /* ARL Table Read/Write Register (8 bit) */
+ #define B53_ARLTBL_RW_CTRL		0x00
+ #define    ARLTBL_RW			BIT(0)
++#define    ARLTBL_IVL_SVL_SELECT	BIT(6)
+ #define    ARLTBL_START_DONE		BIT(7)
+ 
+ /* MAC Address Index Register (48 bit) */
 
 
