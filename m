@@ -2,101 +2,123 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BFFC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 302ACC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A53A5206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588056928;
-	bh=ujTtylA/phrBZ8ch8RBwoXgLGoWz0Wx/496DeKxbNQk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FN+rHNQ/uqatAWUrI7SzvUtqSm8BwPateF2+wxFKPjrutvVHroWOf+sSMeocRUHXF
-	 wDifu3baO5+w6wo91d0afrm7nAG1WCe6vwCjRjhLBPjvcJ/U0ZloFo++n7nOOkwhYy
-	 2Ub71np9ZC73wvgkHxIYjwj5SRgGetCVLdH3LOiA=
+	by mail.kernel.org (Postfix) with ESMTP id 0BE88206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:55:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UgNAI6Ad"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgD1Gz1 (ORCPT
+        id S1726402AbgD1Gzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 02:55:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54982 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 02:55:33 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47945 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725867AbgD1Gz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 02:55:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725867AbgD1Gzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 02:55:33 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 717A7206B8;
-        Tue, 28 Apr 2020 06:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588056927;
-        bh=ujTtylA/phrBZ8ch8RBwoXgLGoWz0Wx/496DeKxbNQk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l/4fnZb1+F7QykUyFuMsrc0ivfseA8LbsIokFGWuuzpv3bTYI5bO4iyzxWYPOInyo
-         mWEEwULk0N1YXlS0jxzzAK2xsq0CFq/CHpD3HITKqthF69dtXCg8tnrlG3Rdn4WjMF
-         Eh4AjMGZyxSlGlmJtNGBzebcNG69mmPgsG46iGCs=
-Date:   Tue, 28 Apr 2020 08:55:24 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
-        slawomir.blauciak@intel.com, mengdong.lin@intel.com
-Subject: Re: [RFC 1/5] soundwire: bus_type: add sdw_master_device support
-Message-ID: <20200428065524.GA992087@kroah.com>
-References: <20200416205524.2043-1-yung-chuan.liao@linux.intel.com>
- <20200416205524.2043-2-yung-chuan.liao@linux.intel.com>
- <20200420072631.GW72691@vkoul-mobl>
- <20200423142451.GA4181720@kroah.com>
- <20200428043144.GU56386@vkoul-mobl.Dlink>
- <20200428063736.GB990431@kroah.com>
- <20200428064951.GA56386@vkoul-mobl.Dlink>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49BC8H6DNXz9sSG;
+        Tue, 28 Apr 2020 16:55:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588056931;
+        bh=6eiIFrHk1wWxVd8A8Z8Z5Fdd6GKLAXFKycz/ivOwzDA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=UgNAI6Adsh7CNRp6fa+3asPpwdKRSaxfoYa8DiaxQkbrk9TTfi2mDihi5QdUmYmND
+         A6BdRzNSMOKbP2UZknoJz/nhHfRZuYvPP3zuFqzLteNkEGXAq6tB7O5g8Ms28wmXk4
+         /JZA3TKTh1DOThDeZ9slqiolhDG3UnsvaQxHc4a3HfsVrb2QvdZPTRUTZf+6yI60Wc
+         ITt8w6ERAWnkmhpxF1JI0I3MWUeWtcjrwV/aiGdITTbAUVumy/JK3acouIXwwAcQSj
+         RSCT8PUE2Cday5SMW5okhE1vcEiaya1ABxB2I36VTLqAfDIK4CNfrbGN+opVcDDRvy
+         FQ/foocSRQRcw==
+Date:   Tue, 28 Apr 2020 16:55:25 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul@pwsan.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Zong Li <zong.li@sifive.com>,
+        Vincent Chen <vincent.chen@sifive.com>
+Subject: linux-next: manual merge of the akpm-current tree with the risc-v
+ tree
+Message-ID: <20200428165525.6e7c2f7a@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428064951.GA56386@vkoul-mobl.Dlink>
+Content-Type: multipart/signed; boundary="Sig_/oOtCp/bk25KN/dVmacqCv7d";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 12:19:51PM +0530, Vinod Koul wrote:
-> On 28-04-20, 08:37, Greg KH wrote:
-> > On Tue, Apr 28, 2020 at 10:01:44AM +0530, Vinod Koul wrote:
-> > > > > That is not true for everyone, it is only true for Intel, pls call that
-> > > > > out as well...
-> > > > 
-> > > > Why is it not true for everyone?  How else do you get the pm stuff back
-> > > > to your hardware?
-> > > 
-> > > The rest of the world would do using the real controller device. For
-> > > example the soundwire controller on Qualcomm devices is enumerated as a
-> > > DT device and is using these...
-> > > 
-> > > If Intel had a standalone controller or enumerated as individual
-> > > functions, it would have been a PCI device and would manage as such
-> > 
-> > If it is not a standalone controller, what exactly is it?  I thought it
-> > was an acpi device, am I mistaken?
-> > 
-> > What is the device that the proper soundwire controller driver binds to
-> > on an Intel-based system?
-> 
-> The HDA controller which is a PCI device. The device represent HDA
-> function, DSP and Soundwire controller instances (yes it is typically
-> more than one instance)
+--Sig_/oOtCp/bk25KN/dVmacqCv7d
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Then those "instances" should be split up into individual devices that a
-driver can bind to.  See the work happening on the "virtual" bus for
-examples of how that can be done.
+Hi all,
 
-A platform device better not be being used here, I'm afraid to look at
-the code now...
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-greg k-h
+  arch/riscv/Kconfig
+
+between commits:
+
+  d3c263cda1a5 ("riscv: Add KGDB support")
+  ce66581cb6e9 ("riscv: Use the XML target descriptions to report 3 system =
+registers")
+
+from the risc-v tree and commit:
+
+  bbb6dc9ac443 ("riscv: support DEBUG_WX")
+
+from the akpm-current tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/riscv/Kconfig
+index 39f7a70cbd72,8576cc027b76..000000000000
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@@ -68,8 -67,7 +67,9 @@@ config RISC
+  	select ARCH_HAS_GCOV_PROFILE_ALL
+  	select HAVE_COPY_THREAD_TLS
+  	select HAVE_ARCH_KASAN if MMU && 64BIT
+ +	select HAVE_ARCH_KGDB
+ +	select HAVE_ARCH_KGDB_QXFER_PKT
++ 	select ARCH_HAS_DEBUG_WX
+ =20
+  config ARCH_MMAP_RND_BITS_MIN
+  	default 18 if 64BIT
+
+--Sig_/oOtCp/bk25KN/dVmacqCv7d
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6n014ACgkQAVBC80lX
+0Gy9pgf+K+gRGhUD1wMp4hRaanXCmlHA1aqKXkXW4HcnEOzG9swpSdvl7uMN+Alc
+/5bPmmwrtkyKp/2dQjeT/tu9TSQOnvaNe4uwpgP2zUksx+r0v6kgW4kUQb0OniKu
+jTPhwKKY4jkuUDaL6UzsjoPJ/txI8myBIAYe7gVzXHW1yCkvmdqBnqosaabbTPyw
+tF4h3WBZhWTFLXobNJ9Ja9WHLaESgaqG6Npo/+W5YruOB3wZ9w714mGNP2jtHgfl
+YcjTgax4l0v0m9IQ09HMcGAsNuVp2J7q376/9GRr0Se5yQXGa91h0yM+B7ZP5+g0
+OqWdMZIrSjdGEVFO2gqg36ySv5XUFw==
+=0gmd
+-----END PGP SIGNATURE-----
+
+--Sig_/oOtCp/bk25KN/dVmacqCv7d--
