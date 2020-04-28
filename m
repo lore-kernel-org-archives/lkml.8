@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CD3C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 293B4C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 830D2206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05AB8206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:45:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099517;
-	bh=ExIeKVIBCllYZPlgW/gNTszh5U04l/ufvIf5CDobjKc=;
+	s=default; t=1588099521;
+	bh=p1mEFL7GZrCu3Wlff4cQ8A8VxqTd/adu9gpNmAseRug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mMl8zFsiNf0RvgUqRV0CaJOgfbfCr/9ah6emwseaah8WNlx43mf9nfQnS8QfVph9w
-	 1BFmduZQWGWZ/J3bLnAEVNpsmhnwUhGHVYsfdil+u0U7KJarMTeYgVxjuduLzB8yTW
-	 iO+uZhkdjoEeFn/FTLmFP8DJxpx5qZT6dQlhuNZE=
+	b=yeD7feAodSqSrRcYuUk0d1g8sS+2Blbgae3rhm890ciUhMAJ1C/R1Jeadp5STlHiV
+	 hNai7Lba/F57yrPTNiqNCgy3WIbp9xbBkWL/AteeBxEmohWtpQXHTFKKENU+/EghZG
+	 /tpBOeYC2c2i/xEToT2WSAkM12ypXnFU++dfuOfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731097AbgD1Sop (ORCPT
+        id S1731029AbgD1SpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:44:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37678 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:45:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731450AbgD1Soj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:44:39 -0400
+        id S1731472AbgD1Soo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:44:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A034D20575;
-        Tue, 28 Apr 2020 18:44:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C1D3206D6;
+        Tue, 28 Apr 2020 18:44:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099479;
-        bh=ExIeKVIBCllYZPlgW/gNTszh5U04l/ufvIf5CDobjKc=;
+        s=default; t=1588099483;
+        bh=p1mEFL7GZrCu3Wlff4cQ8A8VxqTd/adu9gpNmAseRug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qejpZDH7wDt/BFdFEIo1ilTU3iFfw0yhwfN3y63JcsNTaowsYESAkY12hxf9RBwHM
-         Lgw/VePrqgJV+SC1DRuiPrScMeOuU9Eg8u0xS6HBPCiU8mViEW83SQbWFtxFBOIvor
-         s3FDzJ8w4CT8N1nfJzAmlTqkp6uf5SeFiHLUF7R0=
+        b=AFDi/IQhF3k2tCPq3RyXJS+tMLFgTJhQzVXGFaX4wSE5RoLrIRbS9RPX1Y7TDyPAU
+         U6CXD7TeUYTdKSAa2cRU0JJeLVbvQDfHxoG3J8Ku+jAW2uWsMxtAGVomIYNzzYohD+
+         jC6dtUqkDxDr6Y4ZVfglqMcxRMerS/dL1A9m6Mms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 5.4 140/168] staging: vt6656: Dont set RCR_MULTICAST or RCR_BROADCAST by default.
-Date:   Tue, 28 Apr 2020 20:25:14 +0200
-Message-Id: <20200428182249.480721869@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH 5.4 168/168] s390/mm: fix page table upgrade vs 2ndary address mode accesses
+Date:   Tue, 28 Apr 2020 20:25:42 +0200
+Message-Id: <20200428182251.805577126@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -58,45 +60,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Christian Borntraeger <borntraeger@de.ibm.com>
 
-commit 0f8240bfc070033a4823b19883efd3d38c7735cc upstream.
+commit 316ec154810960052d4586b634156c54d0778f74 upstream.
 
-mac80211/users control whether multicast is on or off don't enable it by default.
+A page table upgrade in a kernel section that uses secondary address
+mode will mess up the kernel instructions as follows:
 
-Fixes an issue when multicast/broadcast is always on allowing other beacons through
-in power save.
+Consider the following scenario: two threads are sharing memory.
+On CPU1 thread 1 does e.g. strnlen_user().  That gets to
+        old_fs = enable_sacf_uaccess();
+        len = strnlen_user_srst(src, size);
+and
+                "   la    %2,0(%1)\n"
+                "   la    %3,0(%0,%1)\n"
+                "   slgr  %0,%0\n"
+                "   sacf  256\n"
+                "0: srst  %3,%2\n"
+in strnlen_user_srst().  At that point we are in secondary space mode,
+control register 1 points to kernel page table and instruction fetching
+happens via c1, rather than usual c13.  Interrupts are not disabled, for
+obvious reasons.
 
-Fixes: db8f37fa3355 ("staging: vt6656: mac80211 conversion: main_usb add functions...")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/2c24c33d-68c4-f343-bd62-105422418eac@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On CPU2 thread 2 does MAP_FIXED mmap(), forcing the upgrade of page table
+from 3-level to e.g. 4-level one.  We'd allocated new top-level table,
+set it up and now we hit this:
+                notify = 1;
+                spin_unlock_bh(&mm->page_table_lock);
+        }
+        if (notify)
+                on_each_cpu(__crst_table_upgrade, mm, 0);
+OK, we need to actually change over to use of new page table and we
+need that to happen in all threads that are currently running.  Which
+happens to include the thread 1.  IPI is delivered and we have
+static void __crst_table_upgrade(void *arg)
+{
+        struct mm_struct *mm = arg;
+
+        if (current->active_mm == mm)
+                set_user_asce(mm);
+        __tlb_flush_local();
+}
+run on CPU1.  That does
+static inline void set_user_asce(struct mm_struct *mm)
+{
+        S390_lowcore.user_asce = mm->context.asce;
+OK, user page table address updated...
+        __ctl_load(S390_lowcore.user_asce, 1, 1);
+... and control register 1 set to it.
+        clear_cpu_flag(CIF_ASCE_PRIMARY);
+}
+
+IPI is run in home space mode, so it's fine - insns are fetched
+using c13, which always points to kernel page table.  But as soon
+as we return from the interrupt, previous PSW is restored, putting
+CPU1 back into secondary space mode, at which point we no longer
+get the kernel instructions from the kernel mapping.
+
+The fix is to only fixup the control registers that are currently in use
+for user processes during the page table update.  We must also disable
+interrupts in enable_sacf_uaccess to synchronize the cr and
+thread.mm_segment updates against the on_each-cpu.
+
+Fixes: 0aaba41b58bc ("s390: remove all code using the access register mode")
+Cc: stable@vger.kernel.org # 4.15+
+Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+Reviewed-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6656/main_usb.c |    8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ arch/s390/lib/uaccess.c |    4 ++++
+ arch/s390/mm/pgalloc.c  |   16 ++++++++++++++--
+ 2 files changed, 18 insertions(+), 2 deletions(-)
 
---- a/drivers/staging/vt6656/main_usb.c
-+++ b/drivers/staging/vt6656/main_usb.c
-@@ -818,15 +818,11 @@ static void vnt_configure(struct ieee802
+--- a/arch/s390/lib/uaccess.c
++++ b/arch/s390/lib/uaccess.c
+@@ -64,10 +64,13 @@ mm_segment_t enable_sacf_uaccess(void)
  {
- 	struct vnt_private *priv = hw->priv;
- 	u8 rx_mode = 0;
--	int rc;
+ 	mm_segment_t old_fs;
+ 	unsigned long asce, cr;
++	unsigned long flags;
  
- 	*total_flags &= FIF_ALLMULTI | FIF_OTHER_BSS | FIF_BCN_PRBRESP_PROMISC;
+ 	old_fs = current->thread.mm_segment;
+ 	if (old_fs & 1)
+ 		return old_fs;
++	/* protect against a concurrent page table upgrade */
++	local_irq_save(flags);
+ 	current->thread.mm_segment |= 1;
+ 	asce = S390_lowcore.kernel_asce;
+ 	if (likely(old_fs == USER_DS)) {
+@@ -83,6 +86,7 @@ mm_segment_t enable_sacf_uaccess(void)
+ 		__ctl_load(asce, 7, 7);
+ 		set_cpu_flag(CIF_ASCE_SECONDARY);
+ 	}
++	local_irq_restore(flags);
+ 	return old_fs;
+ }
+ EXPORT_SYMBOL(enable_sacf_uaccess);
+--- a/arch/s390/mm/pgalloc.c
++++ b/arch/s390/mm/pgalloc.c
+@@ -70,8 +70,20 @@ static void __crst_table_upgrade(void *a
+ {
+ 	struct mm_struct *mm = arg;
  
--	rc = vnt_control_in(priv, MESSAGE_TYPE_READ, MAC_REG_RCR,
--			    MESSAGE_REQUEST_MACREG, sizeof(u8), &rx_mode);
--
--	if (!rc)
--		rx_mode = RCR_MULTICAST | RCR_BROADCAST;
-+	vnt_control_in(priv, MESSAGE_TYPE_READ, MAC_REG_RCR,
-+		       MESSAGE_REQUEST_MACREG, sizeof(u8), &rx_mode);
- 
- 	dev_dbg(&priv->usb->dev, "rx mode in = %x\n", rx_mode);
+-	if (current->active_mm == mm)
+-		set_user_asce(mm);
++	/* we must change all active ASCEs to avoid the creation of new TLBs */
++	if (current->active_mm == mm) {
++		S390_lowcore.user_asce = mm->context.asce;
++		if (current->thread.mm_segment == USER_DS) {
++			__ctl_load(S390_lowcore.user_asce, 1, 1);
++			/* Mark user-ASCE present in CR1 */
++			clear_cpu_flag(CIF_ASCE_PRIMARY);
++		}
++		if (current->thread.mm_segment == USER_DS_SACF) {
++			__ctl_load(S390_lowcore.user_asce, 7, 7);
++			/* enable_sacf_uaccess does all or nothing */
++			WARN_ON(!test_cpu_flag(CIF_ASCE_SECONDARY));
++		}
++	}
+ 	__tlb_flush_local();
+ }
  
 
 
