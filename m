@@ -2,85 +2,82 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 352C4C83009
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 903A8C83001
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC3B206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:02:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49177206F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 14:02:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gKRvwPTf"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="cIkZhSIR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgD1OCq (ORCPT
+        id S1727889AbgD1OCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 28 Apr 2020 10:02:48 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:8459 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726868AbgD1OCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Apr 2020 10:02:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58136 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727085AbgD1OCp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:02:45 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88DB3C03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 07:02:45 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id u10so16976707lfo.8
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 07:02:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jE1ry3/WH39fvkitlEImOc9VA+8Es26FANSqOuJc04E=;
-        b=gKRvwPTf1AvgqGtJF+/FWCwKJY0q95FhYY5JScuWdpMP00paUsHcpU/fjv1hAk55r6
-         Jl5fmzws4VNaXL2yAhSpQQszWnHHFbzhEUPa/Y4v48vDg0kbPDMSKabG27po61hR/aXq
-         vu6pds4YpVzMlDJxQVebXZkDTCaZpbWf/FSkrRATp2ING17+GqmKftnjbOCGa8/oTchm
-         XSw1ceWIBF9nM8my4ojkw96invyr0LWcGXIJV4S9THUjC2bTs7yFx8uZzA9KpVVnIDld
-         3Lf1AD4KpBIDY25xy9EX9h/ggg/yxqsKIN/lmmMJIxt08GiaJ7d4xi1WQowSIOMibw9A
-         ZgSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jE1ry3/WH39fvkitlEImOc9VA+8Es26FANSqOuJc04E=;
-        b=cIMUHoAkb27OH8Ks6Z+CEghKYL9smg09FwvWgCkvQpHeV4gN9jIKf75fkwW95hY9GP
-         6VWu8Sb3uVcGGxqfq4iNh3nQawkJ7efv6JopNc6O8WIQYcuaF3k5yGMTc14CNPi5wgka
-         E/sUVMjiesB5iVn32k6+79WguzSUw98GxzWkqQp4N5Nqk+fOhWcyf2UsNoeXg98siVO+
-         R84IuEhieloNiffoolQY1iL5aRpMqWiSB7XeLg//nOQ99trD0T0doXKTI3+GlbXLeHbk
-         DwxLjClLAmF/0PlVt4437akSUnOqk9Ahir4kSTuMD/6vtOFFZ/ZdqNKHR9FYow5YW/Kj
-         8pYQ==
-X-Gm-Message-State: AGi0PuZ74hXmoSlDuqLKephvrD8ZkqtmpF/uyxzSphqfIdp5c8IQgHxp
-        VgfeF0oCyD+G8npy3ZW1gyoVJXyDp65FPs9JkFyIuw2M
-X-Google-Smtp-Source: APiQypJbBQG+lZGnEgJPVGO7k2y8d3LYISivUTbhjYNTeX3f5ZWBtN9OGNiQwGYtCNT0qnO4WCiwZG8ZYp8xJeFGyA4=
-X-Received: by 2002:a19:700b:: with SMTP id h11mr19393584lfc.89.1588082563613;
- Tue, 28 Apr 2020 07:02:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200426094250.23995-1-yanaijie@huawei.com>
-In-Reply-To: <20200426094250.23995-1-yanaijie@huawei.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Apr 2020 16:02:31 +0200
-Message-ID: <CACRpkdYwu3LnN9KGfbjhnJu75hmKBKgnSWnDCWmdnGWGGGYPTw@mail.gmail.com>
-Subject: Re: [PATCH] power: supply: ab8500_fg: remove comparison to bool
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 49BNdJ16nBz2n;
+        Tue, 28 Apr 2020 16:02:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1588082564; bh=n//SKULcxb1e0RY+J56W0LUuXIEeG4+PReRi4CmtC28=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cIkZhSIRkushRUYLrgwl1KRM4IQrJK85w1nTAg9hB/JvZ/2euvy+SYeO+s/oGPC8o
+         YM0+D5FrKHdPUuOOekNqZ4a96FjycmFi0b/IMnf+ZMTCvwE2FfjHNVwifagShFEwSl
+         yIu86/7qmMg/Wm8lNuXTUYmigITqsarYJjqFdVpJK4WNyoSLT/j4j6i1aJcGiVs7j1
+         qT488HK0Fe/YDvVPAW3BlC42XdCYzLcOzExdvb3f8EqMOCCxvFlh6BnArlyNmKXICT
+         WoUiIbxzbhlJ6dJJJmp2PLmI3ybx96g4cqobJ2EFT0GMdZuBr4cbvw20Lyz7ZjAWME
+         DitVzT78CPT1A==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Tue, 28 Apr 2020 16:02:41 +0200
+From:   =?iso-8859-2?B?TWljaGGzoE1pcm9zs2F3?= <mirq-linux@rere.qmqm.pl>
 To:     Jason Yan <yanaijie@huawei.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Peter.Chen@nxp.com, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: chipidea: usb2: remove unneeded semicolon
+Message-ID: <20200428140241.GA2762@qmqm.qmqm.pl>
+References: <20200428063359.16433-1-yanaijie@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200428063359.16433-1-yanaijie@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 11:43 AM Jason Yan <yanaijie@huawei.com> wrote:
-
+On Tue, Apr 28, 2020 at 02:33:59PM +0800, Jason Yan wrote:
 > Fix the following coccicheck warning:
->
-> drivers/power/supply/ab8500_fg.c:2402:5-24: WARNING: Comparison to bool
->
+> 
+> drivers/usb/chipidea/ci_hdrc_usb2.c:75:28-29: Unneeded semicolon
+> 
 > Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> ---
+>  drivers/usb/chipidea/ci_hdrc_usb2.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/chipidea/ci_hdrc_usb2.c b/drivers/usb/chipidea/ci_hdrc_usb2.c
+> index 93c864759135..89e1d82d739b 100644
+> --- a/drivers/usb/chipidea/ci_hdrc_usb2.c
+> +++ b/drivers/usb/chipidea/ci_hdrc_usb2.c
+> @@ -72,7 +72,7 @@ static int ci_hdrc_usb2_probe(struct platform_device *pdev)
+>  
+>  	priv->clk = devm_clk_get_optional(dev, NULL);
+>  	if (IS_ERR(priv->clk))
+> -		return PTR_ERR(priv->clk);;
+> +		return PTR_ERR(priv->clk);
+>  
+>  	ret = clk_prepare_enable(priv->clk);
+>  	if (ret) {
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+Fixes: c2de37b31f17 ("usb: chipidea: usb2: make clock optional")
+Reviewed-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
