@@ -2,102 +2,133 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B24FC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF885C83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7722064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:21:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="YyCEijth"
+	by mail.kernel.org (Postfix) with ESMTP id A7F5F206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:21:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbgD1IVP (ORCPT
+        id S1726857AbgD1IVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 04:21:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726621AbgD1IVO (ORCPT
+        Tue, 28 Apr 2020 04:21:52 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34708 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbgD1IVv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 04:21:14 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B606C03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 01:21:13 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id pg17so16522049ejb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 01:21:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Beulz3eYiXK9znAwwrzxGHeGgQMNh0d9KO0tZVeerX0=;
-        b=YyCEijthLzJZij4FLuBKEi61PR7+UjBRJUNcyg0wveaxpD8Oy97R7wgwiswXEE8ia1
-         fN5LofI4unGwslLYIZkU7Ttq6FjzFORAQYor/X6kg8vojtUt4w36+Zo26NKcImelM/9S
-         btjww7Ng3YfaJfvOjrXl7g7eAmJThl2tM7MIk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Beulz3eYiXK9znAwwrzxGHeGgQMNh0d9KO0tZVeerX0=;
-        b=ajCsMEVwbcUdD3vjAxjY/NF67/qcg3Xhl/yZMV7gkQXjeNJdzVd/A6Kv9NphZ2zDOv
-         UX7Xx2wSXMPkNipflpmUrLJhJ6gO0hMyc4EeQRwURtEr+DvK3jw3MR13xNCIBwfm4Z1Z
-         +GZei42oW4XeAVWncFym4IqBxTDJ9Rzul5oZxi9v8GsE13VNSSKmVPLylKWLO0g7ZN4w
-         EjN9fp5SuEVW50eSNPeMyHSLAE3dpA9oAcxROY4u+JXnpA8dFMfOYGqkDW05a81Xp2cw
-         urj5I5J0x+4LngSLkw8R9OdOVP1HqtfgtbkZYw2e6ZfO9P6UlCHYHx+IRUQL3d3zxpmW
-         dVXg==
-X-Gm-Message-State: AGi0PuYhfgX46SU5VoAKJ1uzSN2eUtZwr4dlhXj40BzJR2BRJJBZcycG
-        wNxEt5PzzN3hTguzOx3Zbr6jDo52q58FOwyHoqLgnA==
-X-Google-Smtp-Source: APiQypKS4m63MMNLMCzgc5Bn4XQvr4p1Bar3QttoueFGAN8X/bLOQmYRG4AMwQn5fZ30hczEAu6wGEgHC93FQnOiMlw=
-X-Received: by 2002:a17:906:8549:: with SMTP id h9mr22753079ejy.145.1588062072243;
- Tue, 28 Apr 2020 01:21:12 -0700 (PDT)
+        Tue, 28 Apr 2020 04:21:51 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jTLUl-0004Ab-MP; Tue, 28 Apr 2020 08:21:35 +0000
+Date:   Tue, 28 Apr 2020 10:21:33 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Hagen Paul Pfeifer <hagen@jauu.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Jann Horn <jannh@google.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Brian Gerst <brgerst@gmail.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC v2] ptrace, pidfd: add pidfd_ptrace syscall
+Message-ID: <20200428082133.kusyjofgg7w2lchg@wittgenstein>
+References: <CAHk-=wga3O=BoKZXR27-CDnAFareWcMxXhpWerwtCffdaH6_ow@mail.gmail.com>
+ <B7A115CB-0C8C-4719-B97B-74D94231CD1E@amacapital.net>
+ <CAHk-=whQzOsh9O2uhUO2VETD+hrzjKMpEJpzoUby5QHMcvgPKg@mail.gmail.com>
 MIME-Version: 1.0
-References: <1585733475-5222-1-git-send-email-chakragithub@gmail.com>
- <CAJfpegtk=pbLgBzM92tRq8UMUh+vxcDcwLL77iAcv=Mxw3r4Lw@mail.gmail.com>
- <CAH7=fosGV3AOcU9tG0AK3EJ2yTXZL3KGfsuVUA5gMBjC4Nn-WQ@mail.gmail.com> <CAH7=fosz9KDSBN86+7OxYTLJWUSdUSkeLZR5Y0YyM6=GE0BdOw@mail.gmail.com>
-In-Reply-To: <CAH7=fosz9KDSBN86+7OxYTLJWUSdUSkeLZR5Y0YyM6=GE0BdOw@mail.gmail.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 28 Apr 2020 10:21:01 +0200
-Message-ID: <CAJfpegvWBHootLiE_zsw35G6Ee387V=Da_wCzaV9NhZQVDKYGg@mail.gmail.com>
-Subject: Re: [PATCH] fuse:rely on fuse_perm for exec when no mode bits set
-To:     Chakra Divi <chakragithub@gmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=whQzOsh9O2uhUO2VETD+hrzjKMpEJpzoUby5QHMcvgPKg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 3:46 PM Chakra Divi <chakragithub@gmail.com> wrote:
->
-> On Tue, Apr 21, 2020 at 4:21 PM Chakra Divi <chakragithub@gmail.com> wrote:
+On Mon, Apr 27, 2020 at 09:28:14PM -0700, Linus Torvalds wrote:
+> On Mon, Apr 27, 2020 at 9:17 PM Andy Lutomirski <luto@amacapital.net> wrote:
 > >
-> > On Mon, Apr 20, 2020 at 4:55 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
-> > >
-> > > On Wed, Apr 1, 2020 at 11:31 AM Chakra Divi <chakragithub@gmail.com> wrote:
-> > > >
-> > > > In current code, for exec we are checking mode bits
-> > > > for x bit set even though the fuse_perm_getattr returns
-> > > > success. Changes in this patch avoids mode bit explicit
-> > > > check, leaves the exec checking to fuse file system
-> > > > in uspace.
-> > >
-> > > Why is this needed?
-> >
-> > Thanks for responding Miklos. We have an use case with our remote file
-> > system mounted on fuse , where permissions checks will happen remotely
-> > without the need of mode bits. In case of read, write it worked
-> > without issues. But for executable files, we found that fuse kernel is
-> > explicitly checking 'x' mode bit set on the file. We want this
-> > checking also to be pushed to remote instead of kernel doing it - so
-> > modified the kernel code to send getattr op to usespace in exec case
-> > too.
->
-> Any help on this Miklos....
+> > I hate to say this, but I’m not convinced that asking the gdb folks is
+> > the right approach. GDB has an ancient architecture and is
+> > *incredibly* buggy. I’m sure ptrace is somewhere on the pain point
+> > list, but I suspect it’s utterly dwarfed by everything else.
+> 
+> You may be right. However, if gdbn isn't going to use it, then I
+> seriously don't think it's worth changing much.
+> 
+> It might be worth looking at people who don't use ptrace() for
+> debugging, but for "incidental" reasons. IOW sandboxing, tracing,
+> things like that.
+> 
+> Maybe those people want things that are simpler and don't actually
+> need the kinds of hard serialization that ptrace() wants.
+> 
+> I'd rather add a few really simple things that might not be a full
+> complement of operations for a debugger, but exactly because they
+> aren't a full debugger, maybe they are things that we can tell are
+> obviously secure and simple?
 
-I still don't understand what you are requesting.  What your patch
-does is unconditionally allow execution, even without any 'x' bits in
-the mode.  What does that achieve?
+I think the biggest non-anecdotal user of ptrace() besides debuggers
+is actually criu (and strace of course). They use it to inject parasite
+code (their phrasing not mine) into another task to handle restoring the
+parts of a task that can't be restored from the outside. Looking through
+their repo they make quite a bit of use of ptrace functionality including
+some arch specific bits:
+PTRACE_GETREGSET
+PTRACE_GETFPREGS
+PTRACE_PEEKUSER
+PTRACE_POKEUSER
+PTRACE_CONT
+PTRACE_SETREGSET
+PTRACE_GETVFPREGS /* arm/arm64 */
+PTRACE_GETVRREGS /* powerpc */
+PTRACE_GETVSRREGS /* powerpc */
+PTRACE_EVENT_STOP
+PTRACE_GETSIGMASK
+PTRACE_INTERRUPT
+PTRACE_DETACH
+PTRACE_GETSIGINFO
+PTRACE_SEIZE
+PTRACE_SETSIGMASK
+PTRACE_SI_EVENT
+PTRACE_SYSCALL
+PTRACE_SETOPTIONS
+PTRACE_ATTACH
+PTRACE_O_SUSPEND_SECCOMP
+PTRACE_PEEKSIGINFO
+PTRACE_SECCOMP_GET_FILTER
+PTRACE_SECCOMP_GET_METADATA
 
-Thanks,
-Miklos
+So I guess strace and criu would be the ones to go and ask and if they
+don't care enough we already need to start squinting for other larg-ish
+users. proot comes to mind
+https://github.com/proot-me/proot
+
+(From personal experience, most of the time when ptrace is used in a
+ non-debugger codebase it's either to plug a security hole exploitable
+ through ptracing the task and the fix is ptracing that very task to
+ prevent the attacker from ptracing it (where non-dumpability alone
+ doesn't cut it) or the idea is dropped immediately to not lose the
+ ability to use a debugger on the program.)
+
+Christian
