@@ -2,140 +2,229 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0FAC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF2EC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF0B206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76117206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:05:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f41vADlU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hbbo3XzL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728623AbgD1SE1 (ORCPT
+        id S1728628AbgD1SFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:04:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39628 "EHLO
+        Tue, 28 Apr 2020 14:05:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728333AbgD1SE1 (ORCPT
+        with ESMTP id S1728313AbgD1SFY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:04:27 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91F5AC03C1AB
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:04:26 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id g129so6129823vkh.9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 11:04:26 -0700 (PDT)
+        Tue, 28 Apr 2020 14:05:24 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31F73C03C1AB;
+        Tue, 28 Apr 2020 11:05:24 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id fb4so10847744qvb.7;
+        Tue, 28 Apr 2020 11:05:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=odj07kwkBntYPq0VIt2IDXrySYiIYjRiu847Smhep58=;
-        b=f41vADlUDP9iAJMu9Oee3QN3JqwKwcrLU6w43uWgQefuPA4TWORP3q0k+6Awu0Iqz/
-         6IcrZFSlPx9bsUCuPkcZ+0n44T6H3GHbvobOhWqWn45dGUd2/fIg7ZFewNyECub86vFx
-         d/l01f7L5gYOVjNFK4cZzxq5hBNfhdxGJVgZKuyKQktdeqzWJYEKZwfTN2krZWzjIYDn
-         umpC2l2JNJUhi+NFf9rytQykxw8D1EEDNUrawMrtTYCsl6LWEtbRgunTOmC3SghH76lt
-         eO8RGEQ2XQTjQ63SOt/a8K+9QupxNPvStb+FO5hL1C5UUhVzDAZ5jUiKAXc9AIWgbQ7J
-         LGMw==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tzoFlkrR/l1xCBMtThKt5cZ8Qt23wbNMT2mP4+yp+Bg=;
+        b=Hbbo3XzLGb1h0Despxw961JiHLQIzEnDYiWMw0BmTrqGe8WMBXhXpAm2DeMM3A4aaO
+         eaHuyBvgiM/644W5DbnT24Pd3gh94EdRZV0hnef7BKtTh0gujG8OOrpS3rvDqndqOYsy
+         FYZ28vHnLvmjwnQt4CSNrTQVvHxVxvQ64YPuOVOLOVuDU8wi6kUyIbcK6PZIZSfnc368
+         fs+ayUjMfQ30ivz+g7r1+6f6rhQpzbSS9whCdoc+J/67A5Hr6HlV/OK6eOyvoqEJlCoY
+         slMIT6NGnt/sk2I0kfr4988GLjnDwkPW8L2RDuU3GCrEKzvVKbGLDNLJVsM6FgzQ70XL
+         8UAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=odj07kwkBntYPq0VIt2IDXrySYiIYjRiu847Smhep58=;
-        b=UgZUrXT4fYwEjASc8uHl2EsttNnuDb6TMGmsrQ+KRSkVWcITzUs8ZCuZCjXgCgczz8
-         kLOoANxv8OTulfpZA+obY7si9sdqOBbRmwBuMDwp3JzxmP1NAnQtIQF69N+ZzzdcnRdm
-         HDlHm014PAjR1LyduldMNT7xxGhX2omNndkRLAQdNlWOu5kBm0V3yWmn8+kRDaUpzXN6
-         +bDmT9oh/XWVBzlgGOUbPQIAUdS4AT/8Mwr0Ufse6bOw6yAyW8TQKs0LIXcgrSY2BPsc
-         9XOenjVNDEuBKQ+zFs9AK5vhst9mRQ0UNpyHT4pOSyDLlgR2Ws4BOj5H/Rh/ggkcZyVn
-         wCKQ==
-X-Gm-Message-State: AGi0PuZtMlFKlIEEtnhcGwjEdbq1wxImXx2k5SAI9yYshaJfHnK7QaZ9
-        bIFMlYXNny8t2mxqW5TSJU5Rs2SLxtWGGMEY8RW6AA==
-X-Google-Smtp-Source: APiQypIgCErFqRpAn63IN1MrD4ot8YhzPcP7NAkFt3QGqihC7F+ytGq4AcjLJrLT2+7uJxihTOFrW+KO6tzYo8W9pdQ=
-X-Received: by 2002:a1f:a844:: with SMTP id r65mr21684218vke.56.1588097065304;
- Tue, 28 Apr 2020 11:04:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200427184358.191624-1-surenb@google.com> <20200428163125.GC16910@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200428163125.GC16910@hirez.programming.kicks-ass.net>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Tue, 28 Apr 2020 11:04:14 -0700
-Message-ID: <CAJuCfpGsRwJGwyny0X0APa2yCjyBttyMtTOPr3K5NqcWehtzxw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] kthread: break dependency between worker->lock and task_struct->pi_lock
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, will@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tzoFlkrR/l1xCBMtThKt5cZ8Qt23wbNMT2mP4+yp+Bg=;
+        b=RTl4HnMdNPB72MK8TH7d0E+nQDaap6O9adNzjc2uB9RKkdQvtz+CUt1wWtNBG+AN1V
+         pLd0SGUdIfGqs+RJOlm3jevbfkhMyFkKWu23tAiv0dUDsaowKT/eDkPoPH9pIkEeR3Br
+         O7XaP8O48FDzIhmI5kvzFAvtlzP1OG2unCpnECXfXkpB4OAlSATUJQ3EFso7Gd5Igp5l
+         RtV+I85BkalhYEd7JkDFGeFoX+NdlsBH1kJg38Ly09OJZAJY4nhP3S9P3SjV61VIhog0
+         wEq2xhytMA0SIRmDHGRKX91L5ufBYPdTIcS2B/zubQEESD6PEbtyD7eVXHGwE3xr4EFk
+         L4IA==
+X-Gm-Message-State: AGi0PuaBffm0J4NQMQ4rKHCcjSnRqYfM0lJqeFVqppOAXU3EAkjTRa07
+        5lAQutCLs3wq3GJZeQHCvnk=
+X-Google-Smtp-Source: APiQypKjGkTUb0O1/KI0xE3naF3CD2bOSN66RQDRR6+iq1I3+vc8bug/PW+WWXnqel21G90z/Mz4Rw==
+X-Received: by 2002:ad4:49d3:: with SMTP id j19mr28093810qvy.78.1588097122620;
+        Tue, 28 Apr 2020 11:05:22 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id n92sm13936615qtd.68.2020.04.28.11.05.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 11:05:21 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id DF93D409A3; Tue, 28 Apr 2020 15:05:18 -0300 (-03)
+Date:   Tue, 28 Apr 2020 15:05:18 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        ben.dooks@codethink.co.uk, cl@rock-chips.com, ke.wang@unisoc.com,
-        Shakeel Butt <shakeelb@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Wang Nan <wangnan0@huawei.com>
+Subject: Re: [PATCH 7/7] perf record: Introduce --switch-output-event
+Message-ID: <20200428180518.GF5460@kernel.org>
+References: <20200427211935.25789-1-acme@kernel.org>
+ <20200427211935.25789-8-acme@kernel.org>
+ <20200428094839.GD1476763@krava>
+ <20200428121601.GB2245@kernel.org>
+ <20200428132257.GH1476763@krava>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428132257.GH1476763@krava>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 9:31 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Mon, Apr 27, 2020 at 11:43:58AM -0700, Suren Baghdasaryan wrote:
-> > A number of kthread-related functions indirectly take task_struct->pi_lock
-> > while holding worker->lock in the call chain like this:
-> >     spin_lock(&worker->lock)
-> >     kthread_insert_work
-> >     wake_up_process
-> >     try_to_wake_up
-> >     raw_spin_lock_irqsave(&p->pi_lock, flags)
-> >
-> > This lock dependency exists whenever kthread_insert_work is called either
-> > directly or indirectly via __kthread_queue_delayed_work in the following
-> > functions:
-> >     kthread_queue_work
-> >     kthread_delayed_work_timer_fn
-> >     kthread_queue_delayed_work
-> >     kthread_flush_work
-> >     kthread_mod_delayed_work
-> >
-> > This creates possibilities for circular dependencies like the one reported
-> > at: https://lkml.org/lkml/2020/4/24/954
->
-> Please, do not use lkml.org links.
+Em Tue, Apr 28, 2020 at 03:22:57PM +0200, Jiri Olsa escreveu:
+> On Tue, Apr 28, 2020 at 09:16:01AM -0300, Arnaldo Carvalho de Melo wrote:
+> 
+> SNIP
+> 
+> > > > +				pr_err("Couldn't create side band evlist.\n.");
+> > > > +				goto out_child;
+> > > > +			}
+> > > >  		}
 
-Thanks for the review! Would
-https://lore.kernel.org/lkml/CAJuCfpG4NkhpQvZjgXZ_3gm6Hf1QgN_eUOQ8iX9Cv1k9whLwSQ@mail.gmail.com
-be better or should I just add the body of that report here? Or do not
-mention it at all?
+> > > >  		if (evlist__add_bpf_sb_event(rec->sb_evlist, &session->header.env)) {
 
->
-> Also, ideally, we'd pull that kthread_queue_delayed_work() out from
-> under rq->lock.
+> > > it's getting bigger, I wonder we should put all the sb_* setup in
+> > > separated functions like sb_start/sb_stop
 
-I understand but I don't see an easy way to do that. We need to start
-PSI polling whenever a monitored PSI state changes:
-https://elixir.bootlin.com/linux/v5.6.7/source/kernel/sched/psi.c#L783.
-This is happening under rq->lock because PSI accounting is done from
-inside enqueue_task/dequeue_task - the call chain is:
+> > Well, the rec->thread_id = pthread_self(); part is just for reusing a
+> > 'perf record' specific mechanism, what to do when the event appears in
+> > the side band thread ring buffer, the evlist__set_cb() also is related
+> > to that, moving thread_id to evlist seems too much at this time.
 
-enqueue_task > psi_enqueue > psi_task_change > psi_group_change >
-psi_schedule_poll_work > psi_task_change
+> hum, I meant record specific static functions sb_start/sb_stop,
+> not inside evlist.. just to have it separated
 
-IIUC enqueue_task/dequeue_task are called with rq->lock taken, so
-moving kthread_queue_delayed_work out is not trivial.
+Ok, so I have the patch below on top of that series, and its all
+available in my perf/switch-output-event, that is on top of more patches
+collected today, all going well, this perf/switch-output-event will turn
+into perf/core ang go upstream soon, then I have to loo at Adrian's
+kernel+tooling patchkit,
 
->
-> In fact, looking at it, WTH is the delayed branch of
-> kthread_queue_delayed_work() under that lock? That whole
-> delayed_work_list thing smells like bong-hits.
+- Arnaldo
 
-I have the poll_scheduled atomic specifically to ensure that
-kthread_queue_delayed_work does not block as commented here:
-https://elixir.bootlin.com/linux/v5.7-rc3/source/kernel/sched/psi.c#L551.
-I understand this is not ideal. If there is a better way to schedule
-that kworker while ensuring it does not block I would be happy to
-rework this. Any suggestions?
+commit a25516b4db23ba8f956b990d37ec6728e5221718
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Tue Apr 28 14:58:29 2020 -0300
 
->
-> --
-> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
->
+    perf record: Move side band evlist setup to separate routine
+    
+    It is quite big by now, move that code to a separate
+    record__setup_sb_evlist() routine.
+    
+    Suggested-by: Jiri Olsa <jolsa@redhat.com>
+    Cc: Adrian Hunter <adrian.hunter@intel.com>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Cc: Song Liu <songliubraving@fb.com>
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 7a6a89972691..bb3d30616bf3 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1445,6 +1445,44 @@ static int record__process_signal_event(union perf_event *event __maybe_unused,
+ 	return 0;
+ }
+ 
++static int record__setup_sb_evlist(struct record *rec)
++{
++	struct record_opts *opts = &rec->opts;
++
++	if (rec->sb_evlist != NULL) {
++		/*
++		 * We get here if --switch-output-event populated the
++		 * sb_evlist, so associate a callback that will send a SIGUSR2
++		 * to the main thread.
++		 */
++		evlist__set_cb(rec->sb_evlist, record__process_signal_event, rec);
++		rec->thread_id = pthread_self();
++	}
++
++	if (!opts->no_bpf_event) {
++		if (rec->sb_evlist == NULL) {
++			rec->sb_evlist = evlist__new();
++
++			if (rec->sb_evlist == NULL) {
++				pr_err("Couldn't create side band evlist.\n.");
++				return -1;
++			}
++		}
++
++		if (evlist__add_bpf_sb_event(rec->sb_evlist, &rec->session->header.env)) {
++			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
++			return -1;
++		}
++	}
++
++	if (perf_evlist__start_sb_thread(rec->sb_evlist, &rec->opts.target)) {
++		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
++		opts->no_bpf_event = true;
++	}
++
++	return 0;
++}
++
+ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ {
+ 	int err;
+@@ -1589,36 +1627,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		goto out_child;
+ 	}
+ 
+-	if (rec->sb_evlist != NULL) {
+-		/*
+-		 * We get here if --switch-output-event populated the
+-		 * sb_evlist, so associate a callback that will send a SIGUSR2
+-		 * to the main thread.
+-		 */
+-		evlist__set_cb(rec->sb_evlist, record__process_signal_event, rec);
+-		rec->thread_id = pthread_self();
+-	}
+-
+-	if (!opts->no_bpf_event) {
+-		if (rec->sb_evlist == NULL) {
+-			rec->sb_evlist = evlist__new();
+-
+-			if (rec->sb_evlist == NULL) {
+-				pr_err("Couldn't create side band evlist.\n.");
+-				goto out_child;
+-			}
+-		}
+-
+-		if (evlist__add_bpf_sb_event(rec->sb_evlist, &session->header.env)) {
+-			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
+-			goto out_child;
+-		}
+-	}
+-
+-	if (perf_evlist__start_sb_thread(rec->sb_evlist, &rec->opts.target)) {
+-		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
+-		opts->no_bpf_event = true;
+-	}
++	err = record__setup_sb_evlist(rec);
++	if (err)
++		goto out_child;
+ 
+ 	err = record__synthesize(rec, false);
+ 	if (err < 0)
