@@ -2,220 +2,80 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4904CC83009
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D76CC83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21295206F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:39:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ongDPW1w"
+	by mail.kernel.org (Postfix) with ESMTP id 3D7B8206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 13:39:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgD1NjL (ORCPT
+        id S1727933AbgD1NjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:39:11 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:52388 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727823AbgD1NjK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:39:10 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588081149; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=pPJvnA6dYbYd5jjnGYTz8FPL2asvlvhulCagKLHtD7s=; b=ongDPW1wAvgx63RHhBvHYvb+mFkMLxKdvVPbq1hxk/fGNaspiaSfrg1SAqMkc2Ehxy2fbdn+
- 2/sNn86xqQrw7THOXJlhlkZbCaY670kVWMsZZtS/oDhlC5KeiQkstl2/JMSTHiYqVgI4s4gD
- +Wo7jbo4uBDmozgbvbLgiPP2gvU=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea831fa.7f9daf237e68-smtp-out-n02;
- Tue, 28 Apr 2020 13:39:06 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A774BC00448; Tue, 28 Apr 2020 13:39:02 +0000 (UTC)
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 04CA4C433CB;
-        Tue, 28 Apr 2020 13:38:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 04CA4C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH v3 06/17] drm/msm: dsi: Use OPP API to set clk/perf state
-Date:   Tue, 28 Apr 2020 19:02:54 +0530
-Message-Id: <1588080785-6812-7-git-send-email-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
-References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
+        Tue, 28 Apr 2020 09:39:17 -0400
+Received: from mga07.intel.com ([134.134.136.100]:52757 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727823AbgD1NjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 09:39:16 -0400
+IronPort-SDR: ekGBMTww8ZRmfOlk49gepsTc+L15t84rxS9haT6VPFsBjVb44y9Eto8ekB0vIDJwt1cgU+d8S2
+ 6v+oSN5/npHA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 06:39:15 -0700
+IronPort-SDR: xKFpk/LY3rt43qQlURN33PtK48Ij6dtPcHD6+OEkjS5NgVRS7+hp1aeP0K3yC3KsXc5G97+Gcc
+ xyaE0EbSTzsQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,327,1583222400"; 
+   d="scan'208";a="302710365"
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by FMSMGA003.fm.intel.com with ESMTP; 28 Apr 2020 06:39:12 -0700
+Date:   Tue, 28 Apr 2020 21:41:07 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com,
+        jmattson@google.com, yu.c.zhang@linux.intel.com
+Subject: Re: [PATCH v11 7/9] KVM: X86: Add userspace access interface for CET
+ MSRs
+Message-ID: <20200428134107.GA23937@local-michael-cet-test>
+References: <20200326081847.5870-1-weijiang.yang@intel.com>
+ <20200326081847.5870-8-weijiang.yang@intel.com>
+ <08457f11-f0ac-ff4b-80b7-e5380624eca0@redhat.com>
+ <20200426152355.GB29493@local-michael-cet-test.sh.intel.com>
+ <f6f8cedf-26ce-70b4-2906-02806698d81b@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f6f8cedf-26ce-70b4-2906-02806698d81b@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On SDM845 DSI needs to express a perforamnce state
-requirement on a power domain depending on the clock rates.
-Use OPP table from DT to register with OPP framework and use
-dev_pm_opp_set_rate() to set the clk/perf state.
+On Mon, Apr 27, 2020 at 04:04:28PM +0200, Paolo Bonzini wrote:
+> On 26/04/20 17:23, Yang Weijiang wrote:
+> > What's the purpose of the selftest? Is it just for Shadow Stack SSP
+> > state transitions in various cases? e.g., L0 SSP<--->L3 SSP,
+> > L0 SSP1<--->L0 SSP2?
+> 
+> No, it checks that the whole state can be extracted and restored from a
+> running VM.  For example, it would have caught immediately that the
+> current SSP could not be saved and restored.
+> 
+> > We now have the KVM unit-test for CET functionalities,
+> > i.e., Shadow Stack and Indirect Branch Tracking for user-mode, I can put the
+> > state test app into the todo list as current patchset is mainly for user-mode
+> > protection, the supervisor-mode CET protection is the next step.
+> 
+> What are the limitations?  Or are you referring to the unit test?
+>
+I'm referring to the unit test, I enabled basic CET function test to verify
+if SHSTK/IBT is supported with current platform and KVM, but didn't cover
+what you mentioned above. OK, I put the state
+self-test to my todo list. Thank you for the reminder.
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: Rob Clark <robdclark@gmail.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: dri-devel@lists.freedesktop.org
----
- drivers/gpu/drm/msm/dsi/dsi.h      |  2 ++
- drivers/gpu/drm/msm/dsi/dsi_cfg.c  |  4 +--
- drivers/gpu/drm/msm/dsi/dsi_host.c | 58 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 62 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/dsi/dsi.h b/drivers/gpu/drm/msm/dsi/dsi.h
-index 4de771d..ba7583c 100644
---- a/drivers/gpu/drm/msm/dsi/dsi.h
-+++ b/drivers/gpu/drm/msm/dsi/dsi.h
-@@ -180,10 +180,12 @@ int msm_dsi_runtime_suspend(struct device *dev);
- int msm_dsi_runtime_resume(struct device *dev);
- int dsi_link_clk_set_rate_6g(struct msm_dsi_host *msm_host);
- int dsi_link_clk_set_rate_v2(struct msm_dsi_host *msm_host);
-+int dsi_link_clk_set_rate_6g_v2(struct msm_dsi_host *msm_host);
- int dsi_link_clk_enable_6g(struct msm_dsi_host *msm_host);
- int dsi_link_clk_enable_v2(struct msm_dsi_host *msm_host);
- void dsi_link_clk_disable_6g(struct msm_dsi_host *msm_host);
- void dsi_link_clk_disable_v2(struct msm_dsi_host *msm_host);
-+void dsi_link_clk_disable_6g_v2(struct msm_dsi_host *msm_host);
- int dsi_tx_buf_alloc_6g(struct msm_dsi_host *msm_host, int size);
- int dsi_tx_buf_alloc_v2(struct msm_dsi_host *msm_host, int size);
- void *dsi_tx_buf_get_6g(struct msm_dsi_host *msm_host);
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-index 813d69d..773c4fe 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-@@ -210,9 +210,9 @@ static const struct msm_dsi_host_cfg_ops msm_dsi_6g_host_ops = {
- };
- 
- static const struct msm_dsi_host_cfg_ops msm_dsi_6g_v2_host_ops = {
--	.link_clk_set_rate = dsi_link_clk_set_rate_6g,
-+	.link_clk_set_rate = dsi_link_clk_set_rate_6g_v2,
- 	.link_clk_enable = dsi_link_clk_enable_6g,
--	.link_clk_disable = dsi_link_clk_disable_6g,
-+	.link_clk_disable = dsi_link_clk_disable_6g_v2,
- 	.clk_init_ver = dsi_clk_init_6g_v2,
- 	.tx_buf_alloc = dsi_tx_buf_alloc_6g,
- 	.tx_buf_get = dsi_tx_buf_get_6g,
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-index 11ae5b8..3844fdc 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-@@ -14,6 +14,7 @@
- #include <linux/of_graph.h>
- #include <linux/of_irq.h>
- #include <linux/pinctrl/consumer.h>
-+#include <linux/pm_opp.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- #include <linux/spinlock.h>
-@@ -111,6 +112,9 @@ struct msm_dsi_host {
- 	struct clk *pixel_clk_src;
- 	struct clk *byte_intf_clk;
- 
-+	struct opp_table *opp_table;
-+	bool has_opp_table;
-+
- 	u32 byte_clk_rate;
- 	u32 pixel_clk_rate;
- 	u32 esc_clk_rate;
-@@ -537,6 +541,38 @@ int dsi_link_clk_set_rate_6g(struct msm_dsi_host *msm_host)
- 	return 0;
- }
- 
-+int dsi_link_clk_set_rate_6g_v2(struct msm_dsi_host *msm_host)
-+{
-+	int ret;
-+	struct device *dev = &msm_host->pdev->dev;
-+
-+	DBG("Set clk rates: pclk=%d, byteclk=%d",
-+		msm_host->mode->clock, msm_host->byte_clk_rate);
-+
-+	ret = dev_pm_opp_set_rate(dev, msm_host->byte_clk_rate);
-+	if (ret) {
-+		pr_err("%s: dev_pm_opp_set_rate failed %d\n", __func__, ret);
-+		return ret;
-+	}
-+
-+	ret = clk_set_rate(msm_host->pixel_clk, msm_host->pixel_clk_rate);
-+	if (ret) {
-+		pr_err("%s: Failed to set rate pixel clk, %d\n", __func__, ret);
-+		return ret;
-+	}
-+
-+	if (msm_host->byte_intf_clk) {
-+		ret = clk_set_rate(msm_host->byte_intf_clk,
-+				   msm_host->byte_clk_rate / 2);
-+		if (ret) {
-+			pr_err("%s: Failed to set rate byte intf clk, %d\n",
-+			       __func__, ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
- 
- int dsi_link_clk_enable_6g(struct msm_dsi_host *msm_host)
- {
-@@ -665,6 +701,13 @@ void dsi_link_clk_disable_6g(struct msm_dsi_host *msm_host)
- 	clk_disable_unprepare(msm_host->byte_clk);
- }
- 
-+void dsi_link_clk_disable_6g_v2(struct msm_dsi_host *msm_host)
-+{
-+	/* Drop the performance state vote */
-+	dev_pm_opp_set_rate(&msm_host->pdev->dev, 0);
-+	dsi_link_clk_disable_6g(msm_host);
-+}
-+
- void dsi_link_clk_disable_v2(struct msm_dsi_host *msm_host)
- {
- 	clk_disable_unprepare(msm_host->pixel_clk);
-@@ -1879,6 +1922,18 @@ int msm_dsi_host_init(struct msm_dsi *msm_dsi)
- 		goto fail;
- 	}
- 
-+	msm_host->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "byte");
-+	if (IS_ERR(msm_host->opp_table))
-+		return PTR_ERR(msm_host->opp_table);
-+	/* OPP table is optional */
-+	ret = dev_pm_opp_of_add_table(&pdev->dev);
-+	if (!ret) {
-+		msm_host->has_opp_table = true;
-+	} else if (ret != -ENODEV) {
-+		dev_err(&pdev->dev, "Invalid OPP table in Device tree\n");
-+		return ret;
-+	}
-+
- 	init_completion(&msm_host->dma_comp);
- 	init_completion(&msm_host->video_comp);
- 	mutex_init(&msm_host->dev_mutex);
-@@ -1904,6 +1959,9 @@ void msm_dsi_host_destroy(struct mipi_dsi_host *host)
- 	struct msm_dsi_host *msm_host = to_msm_dsi_host(host);
- 
- 	DBG("");
-+	if (msm_host->has_opp_table)
-+		dev_pm_opp_of_remove_table(&msm_host->pdev->dev);
-+	dev_pm_opp_put_clkname(msm_host->opp_table);
- 	dsi_tx_buf_free(msm_host);
- 	if (msm_host->workqueue) {
- 		flush_workqueue(msm_host->workqueue);
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+> Paolo
