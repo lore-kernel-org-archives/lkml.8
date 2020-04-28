@@ -2,106 +2,108 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED86AC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3010CC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A54EC206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B8AC206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 10:37:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f6wfaq6d"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FXE7jWkX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbgD1Kgm (ORCPT
+        id S1726477AbgD1KhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 06:36:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53940 "EHLO
+        Tue, 28 Apr 2020 06:37:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726328AbgD1Kgm (ORCPT
+        by vger.kernel.org with ESMTP id S1726328AbgD1KhF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 06:36:42 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0A83C03C1A9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 03:36:41 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k1so24068120wrx.4
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 03:36:41 -0700 (PDT)
+        Tue, 28 Apr 2020 06:37:05 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7906AC03C1A9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 03:37:05 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g12so2270835wmh.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 03:37:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=BHqjt1t2DhfWJ1/1kKGvSeNrwY7VYPAdj03G60NkxGk=;
-        b=f6wfaq6dWOosZttEbWFUigERrQKtyelJdzMu3KaOhe+0LwI9pFLOjTiSMzZuuUnqdQ
-         x3MOI9EKRfhZWLSjWNdNwE1uXVk1ZZOXgpeWYol8IAO6IhLCK3cmADCySsZO1Vx3EQPu
-         W5xirJ5ip6/i/LLqEBJiLl9A5owHAGqXmdPPP83hbkWagVeIrFkoh2FYhvpx70/X3+nT
-         gIF4PEdmE3qZgUwSJ0WUjx7xXVvQPrmPzTcJq8qMhFtq7ku4PvdhRLC03ZZjpH5rRdyw
-         WXRdo3u5N1qgX3HeyBU/AN+B0CoMFe6YLszKgHajxzLP+PYti+wzgzks93/Vv0W+GgzR
-         dnUg==
+        bh=D8psmyYEtN8Z2pq4q8A6sTe4dHln0Jw+fnsaaC8uTYk=;
+        b=FXE7jWkXt/8YDgD5af9Adko3ZoKRvikJM9bS23w8DI+jgkRjz18xtRrogbbmjbNYiG
+         1KSB4F6mLsF4rybsW4R+Z/JUPtDyt8Gra9jHJiMp+376YAv/1QL36xbbzf8h5RwcQMEG
+         nGqfgX7GbV1Sjn2StNzrUC1hi+2W6K+ka2/GxW6ZRuvcqcwYe/xZ0wFw65vC3dOC8FmK
+         xha3sP6foA3+kbLp9cHY/2CTlwOgEFGYtPXCb8Gleiy3F/MeVwslCCkdzxOQr7HsL7iW
+         eNQa3BRuh7u3Omz5BcX0JH92/Xq0kzh2GmsHa/zr/Met8ZlQHkqkrdGGsIPpMbH0CvXc
+         8/Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=BHqjt1t2DhfWJ1/1kKGvSeNrwY7VYPAdj03G60NkxGk=;
-        b=cjbuZyM7TNXM4v3wmbI0pHGkKooWGqzsAUorPEgrbSGhz4B/Nx20vE9whUn1hgsA95
-         NAj0Ay3cYNOINj19W4HMArXZdP/LmgpwWciaYGlTKXanSOCfVRMRd8d/M+rWItXRlXva
-         yyp47jItt3xUzSZWl08ajdgoxjybeO8iY5UvU5KTbLhD18XzkG4o1yMpzTP1yaLc0tcY
-         UR0ZY+7HkoSDH33ODCyxjyQC1XdAiYpyB6PzNUd6l0t3afr57Zl9upXykxGx5G1HPeQs
-         vmeHv1RLIxJMRK+ssUYnW57aX5T3UxaTh+cndpY2NkfqVXQAdafzVcIEMzIuDraXDMv9
-         LjBA==
-X-Gm-Message-State: AGi0PuYRWE8Kh/on+JI7M7O6suQgyOtwC73FGHGRnbf21iyK2GQ4rS8f
-        829Ui6kdHdQjpYlm1Doftij/Xu+BG1U=
-X-Google-Smtp-Source: APiQypIhwr4oWY9O/EQP4CeY2gIrC2pk0Lyc62kILtt31clrfdbBJtYE6pA/gmyXol5Tg21gBih4OA==
-X-Received: by 2002:adf:ce0a:: with SMTP id p10mr31423829wrn.89.1588070200647;
-        Tue, 28 Apr 2020 03:36:40 -0700 (PDT)
+        bh=D8psmyYEtN8Z2pq4q8A6sTe4dHln0Jw+fnsaaC8uTYk=;
+        b=hSd6Ol/cD1O3WpAn75TC0eu/aXosa1Y8l2sPjSayShHUqMwuiAFS0s+Db1+oQcW4eO
+         AzUUfDegQ18kbDZXWMbUwOv/56ha4HMTcoEJ+9BgMUeU9+pyAORBhaJvDtrUa4zp9iGj
+         C24UohK14BbUFY7L7W9USi4oB4za8gQ2ytobcw1GAt24c9uuCRCwbWcxHnMxfcPbYsT1
+         3sWZgj97cTvTFl5MP1Gjc7hJOQycN2SxdvXDmczetZltUlae0d1ppP2jNHfn9Tgj9/Wg
+         7N9fV2d3phh22kWOqQ57B2lXbDxxL/+iNrvXOJ1YWoRTTMmYkpBuRoDGCd1TFRHRxe4P
+         4QQA==
+X-Gm-Message-State: AGi0Puam9O+VjPEsyWH3OkzJaHWBI8MxuGspXrAon54pvtIjW3QtU+Qr
+        kdACSNyh0ahnYZvGfQ7MbZrWyg==
+X-Google-Smtp-Source: APiQypK8X1fXoKcP9x6DDd/rjoa5KhpafxYy9uVPe4QqZ8y7ujJuURQ6h3E5Fy/v6bbENVt1m3CqAA==
+X-Received: by 2002:a1c:5683:: with SMTP id k125mr3743532wmb.17.1588070224229;
+        Tue, 28 Apr 2020 03:37:04 -0700 (PDT)
 Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id q17sm2632337wmj.45.2020.04.28.03.36.39
+        by smtp.gmail.com with ESMTPSA id h5sm25593874wrp.97.2020.04.28.03.37.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 03:36:39 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 11:36:38 +0100
+        Tue, 28 Apr 2020 03:37:03 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 11:37:02 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org,
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         Sylwester Nawrocki <s.nawrocki@samsung.com>,
         Charles Keepax <ckeepax@opensource.cirrus.com>,
         Liam Girdwood <lgirdwood@gmail.com>
-Subject: Re: [PATCH 4/4] ASoC: wm8994: Silence warnings during deferred probe
-Message-ID: <20200428103638.GP3559@dell>
+Subject: Re: [PATCH 1/4] mfd: wm8994: Fix driver operation if loaded as
+ modules
+Message-ID: <20200428103702.GQ3559@dell>
 References: <20200427074832.22134-1-m.szyprowski@samsung.com>
- <CGME20200427074843eucas1p1a3a265df0c7f14b0aaec25eb65daf606@eucas1p1.samsung.com>
- <20200427074832.22134-5-m.szyprowski@samsung.com>
- <20200427112202.GB4272@sirena.org.uk>
+ <CGME20200427074842eucas1p1abfb9af74f0d898ba381700f37820318@eucas1p1.samsung.com>
+ <20200427074832.22134-2-m.szyprowski@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200427112202.GB4272@sirena.org.uk>
+In-Reply-To: <20200427074832.22134-2-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Apr 2020, Mark Brown wrote:
+On Mon, 27 Apr 2020, Marek Szyprowski wrote:
 
-> On Mon, Apr 27, 2020 at 09:48:32AM +0200, Marek Szyprowski wrote:
-> > Don't confuse user with meaningless warning about the failure in getting
-> > clocks in case of deferred probe.
+> WM8994 chip has built-in regulators, which might be used for chip
+> operation. They are controlled by a separate wm8994-regulator driver,
+> which should be loaded before this driver calls regulator_get(), because
+> that driver also provides consumer-supply mapping for the them. If that
+> driver is not yet loaded, regulator core substitute them with dummy
+> regulator, what breaks chip operation, because the built-in regulators are
+> never enabled. Fix this by annotating this driver with MODULE_SOFTDEP()
+> "pre" dependency to "wm8994_regulator" module.
 > 
-> >  	if (ret < 0) {
-> > -		dev_err(&pdev->dev, "Failed to get clocks: %d\n", ret);
-> > +		if (ret != -EPROBE_DEFER)
-> > +			dev_err(&pdev->dev, "Failed to get clocks: %d\n", ret);
-> 
-> This completely eliminates the diagnostics which means that if the clock
-> isn't there the user is a bit stuck trying to work out what's missing.
-> There should still be a diagnostic.
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+>  drivers/mfd/wm8994-core.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-The driver won't defer forever though.  The final pass should fail
-with a different error.  At which point the error will be released to
-the system log, no?
+For my own reference (apply this as-is to your sign-off block):
+
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
 -- 
 Lee Jones [李琼斯]
