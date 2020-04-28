@@ -2,193 +2,98 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A87EEC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4931CC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2DC20730
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFCF620730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 21:39:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o2z8EurV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726348AbgD1VjZ (ORCPT
+        id S1726688AbgD1Vjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:39:25 -0400
-Received: from mail-bn8nam11olkn2066.outbound.protection.outlook.com ([40.92.20.66]:52125
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726256AbgD1VjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:39:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fPx7g9ao5an1V3FvVMpMRbg0SI7mbUxSLYUuZKO6DBmmEKCdlIkkZOzl2WOSCs++1QdJ5EI6E14f9GkiGlQ8XIR8kBBc3wF/QpHSQ6sC1bg6ZGdE4cBQvtR481JYSNL1J25A7GSzA5OcjshtSd/2BjONqSxvwgyu7x0s2sPdP27c32vX3gPVzVSUjrnwJnfeYSE7xU79vnn/zWVYoNUTzVuLC8seon9ktI9dKPhqCbYJA3oc+GxzC6GAXdYMYQo/c/Qt9/qjuZdeaYUXFwFgk0H7uqPs1+gVnr+DdlsXGtZupk5UwqRPeUvQGzFqORfLyOpJqmJ+n93wKt107ms9KQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zt+11Ldtf3glce+SciMw/wPMLwOlV8OmZlM/x7y8ADs=;
- b=jZEBnxT0vTa0dvROqUXqsmKYQbcFKCd2vx0lBPxIcyQpbpnaF/ris1AHlFh4nrv1XaYjpFDk1Q3AsppTmCn0kTD/FycEeXH/AZARmKdHiBPjxl4PbH8soDcmAzioazND+g7W8CBEU7Rs4C1G34XpzzPKiyTRZM4Qu3Q/WcHW++0HPaRSlszKFXQ3KLDn5vi1VHkInkm8NvQWLPvOM2j3gBcJkQ6WuYgoMI6HmovurXEAA+m6miVdN2u3yysL9/wax981495950VUN9tLEDr62ajTEQes65dqcn8cuPqRmWuYOwPWbjN7DC4HPXMdeuMA0tx5tzPz45HmcmqYhGrouQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
- header.d=live.ca; arc=none
-Received: from DM6NAM11FT033.eop-nam11.prod.protection.outlook.com
- (2a01:111:e400:fc4d::46) by
- DM6NAM11HT249.eop-nam11.prod.protection.outlook.com (2a01:111:e400:fc4d::212)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.15; Tue, 28 Apr
- 2020 21:39:20 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:fc4d::4e) by DM6NAM11FT033.mail.protection.outlook.com
- (2a01:111:e400:fc4d::221) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend
- Transport; Tue, 28 Apr 2020 21:39:20 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:28F5F02185C5E04051ED80926CB782C29EE4DB171420ABC2B053968DABB39086;UpperCasedChecksum:279D0200178AC5B999032F9459168FADA96122720AA5FE5D30D8AA4363ACA612;SizeAsReceived:10027;Count:50
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2937.023; Tue, 28 Apr 2020
- 21:39:20 +0000
-Subject: Re: [PATCH v7 08/12] arm: dts: s5pv210: Add node for SGX 540
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-References: <cover.1587760454.git.hns@goldelico.com>
- <3fd18c747426e15fd1f3500b9c4adce2db9ddd0c.1587760454.git.hns@goldelico.com>
- <NYBE9Q.YH08US7A7DC3@crapouillou.net>
- <BN6PR04MB0660A180D2069848E5C03D7EA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
- <20200427154617.GA1798@pi3>
-From:   Jonathan Bakker <xc-racer2@live.ca>
-Message-ID: <BN6PR04MB06605F014024061C894AFBA4A3AC0@BN6PR04MB0660.namprd04.prod.outlook.com>
-Date:   Tue, 28 Apr 2020 14:39:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-In-Reply-To: <20200427154617.GA1798@pi3>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MWHPR20CA0038.namprd20.prod.outlook.com
- (2603:10b6:300:ed::24) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <7bf2cb45-d9a1-7c3f-9efc-8dd0e8d7939a@live.ca>
+        Tue, 28 Apr 2020 17:39:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45108 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726256AbgD1Vjo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 17:39:44 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 941BBC03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 14:39:44 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id f3so25055693ioj.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 14:39:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ul4JdnqYIuUZ+XRuxCZf3WpJHQHQUt+RKURin2OvTJE=;
+        b=o2z8EurVpT/nTBtFhpV3btr1ad2aGZqWHCjoLb+NSKVxUolYCI2pV/P7JsCPKcFWer
+         cA/JKLDr1YnNYBkindhrydkNLhaLmnVkdmXlvcopD8PYFkfBWOBN6FhqXTjQwvZ8TvUD
+         cLlXiGnb0VlxyQPqDpU0VyaCjV9zyYBEOZTRrjwGXw65UalAr3fn4OBD04jObMVnbxMH
+         ndppohSLJ9Iln0cDOKrtTY24X9LTp7/CyG0YP/fhRFXj24PhpDCn2PcUpsUD+SdVinjT
+         tzAJbACUxDWlH/CZIPjCd4f7pNUeeHvv4xd6UGBMLvAlBkzyhHCp6PaS5LLW4pI6mEHj
+         3u1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ul4JdnqYIuUZ+XRuxCZf3WpJHQHQUt+RKURin2OvTJE=;
+        b=VtuarTLxvpS047ivh3z+V6Lah32iMGNGyjxyJU/vy90xu55LwgSwCSsVMLqDPs7NeH
+         IsDHU8xHTiy3N5JH1bqSY34X9AumwIOkJ7DfpT7xKcPkCqUgwJkJ5njRHAPa3q3NzG5c
+         puTIdZKSaPWghzHvDZlzOOB8crW4v75Egsq6/Daog6KpIAmAyzI9xk0dEUmoNjj7DVYC
+         sR/c64qa9HTLNOHgN6ddNVJyZLx18eTTkBLszUWisOG3vjxvnyA6MuLoF9Cl4mhBOqca
+         BcApOMAjpY7+AibN2uVsdDM4jFUb/JK1jpBYXMw697vdiJwtWuDeCxZqjMcR4UvvQYss
+         c8ow==
+X-Gm-Message-State: AGi0PuYjrSP3qkt6dYGzba6VNHkHFVNIhSwaTlPSM7D6tmASl76ewtWO
+        DhlIP5v35DtBAtHsHZPR90cpm9e3p27OUABSo6ghtw==
+X-Google-Smtp-Source: APiQypJL8jn5sxcb7rjtcHlX2CtaRnYDq2q/Zfa8onXyOd2w3CHlsb24FCCAaPa1UV1HR2IQxmlqXF7TDuggkkxkXT0=
+X-Received: by 2002:a6b:c910:: with SMTP id z16mr27919357iof.164.1588109983668;
+ Tue, 28 Apr 2020 14:39:43 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2001:569:fb67:7300:9f89:4b96:de0b:cd14] (2001:569:fb67:7300:9f89:4b96:de0b:cd14) by MWHPR20CA0038.namprd20.prod.outlook.com (2603:10b6:300:ed::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Tue, 28 Apr 2020 21:39:17 +0000
-X-Microsoft-Original-Message-ID: <7bf2cb45-d9a1-7c3f-9efc-8dd0e8d7939a@live.ca>
-X-TMN:  [XQ4bYy16QTd757uucX8/ZshxJB4VRIHnZHfMejwEPlAMFVFR72l3yAYYxtSchIi7]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: dabcd893-72f5-4de7-f4ef-08d7ebbc9be1
-X-MS-TrafficTypeDiagnostic: DM6NAM11HT249:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8kNBP7qn0kIsRMXv3mgH2CWAkzQVGL1asywzAwJmrIt7xgR7xunct+WroNd3uT34UTfSFySXiN3LP6DWyfoDC//QlNMs+Iy0J9E+/xPlgCm+LWm/jx9nW+OrxPJdXPzPrb+Rp7jQF+0BAAM97mCzrodYt2VrLKYOqCKZZpg0hMvimvN1JGdV+ZnIm7g5DSLMN2KRU5ZSw9+KaBNIpnLu3w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: 5X16aCAa4cWHX0E0zbWBl0Xt+Xq1kyp0gZPcIQV3xtpSF5JqYgEfymJM1Bg2C4Az+tQYt1BT38WYBan9AeZQ+iWh0rfSPGeb10MipmTV14n5HIDqvPJQd7TUNR656DNWP0syTJ2elTIRCXFbG2oVkjaAW83Gp1jZE17IghT1uEVsCAA0jejdW3AyHJnHpM4/MMVG7O56z+1/bz/yHIJlWg==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dabcd893-72f5-4de7-f4ef-08d7ebbc9be1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2020 21:39:20.3378
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6NAM11HT249
+References: <20200423022550.15113-1-sean.j.christopherson@intel.com> <20200423022550.15113-3-sean.j.christopherson@intel.com>
+In-Reply-To: <20200423022550.15113-3-sean.j.christopherson@intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Tue, 28 Apr 2020 14:39:32 -0700
+Message-ID: <CALMp9eTnOs=MMVThBf032XVydj1F40P0Kui7VFAn9F=idLAFPw@mail.gmail.com>
+Subject: Re: [PATCH 02/13] KVM: nVMX: Open a window for pending nested VMX
+ preemption timer
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Oliver Upton <oupton@google.com>,
+        Peter Shier <pshier@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
-
-On 2020-04-27 8:46 a.m., Krzysztof Kozlowski wrote:
-> On Sun, Apr 26, 2020 at 07:57:12AM -0700, Jonathan Bakker wrote:
->> Hi Paul,
->>
->> On 2020-04-26 5:56 a.m., Paul Cercueil wrote:
->>>
->>>
->>> Le ven. 24 avril 2020 à 22:34, H. Nikolaus Schaller <hns@goldelico.com> a écrit :
->>>> From: Jonathan Bakker <xc-racer2@live.ca>
->>>>
->>>> All s5pv210 devices have a PowerVR SGX 540 (revision 120) attached.
->>>>
->>>> There is no external regulator for it so it can be enabled by default.
->>>>
->>>> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
->>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->>>> ---
->>>>  arch/arm/boot/dts/s5pv210.dtsi | 13 +++++++++++++
->>>>  1 file changed, 13 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
->>>> index 2ad642f51fd9..abbdda205c1b 100644
->>>> --- a/arch/arm/boot/dts/s5pv210.dtsi
->>>> +++ b/arch/arm/boot/dts/s5pv210.dtsi
->>>> @@ -512,6 +512,19 @@ vic3: interrupt-controller@f2300000 {
->>>>              #interrupt-cells = <1>;
->>>>          };
->>>>
->>>> +        gpu: gpu@f3000000 {
->>>> +            compatible = "samsung,s5pv210-sgx540-120";
-> 
-> This should not pass the bindings check because you missed last
-> compatibles.
-> 
-
-Thanks for pointing that out, I'll add it and make sure it passes the bindings check.
-
->>>> +            reg = <0xf3000000 0x10000>;
->>>> +            interrupt-parent = <&vic2>;
->>>> +            interrupts = <10>;
->>>> +            clock-names = "core";
->>>> +            clocks = <&clocks CLK_G3D>;
->>>> +
->>>> +            assigned-clocks = <&clocks MOUT_G3D>, <&clocks DOUT_G3D>;
->>>> +            assigned-clock-rates = <0>, <66700000>;
->>>> +            assigned-clock-parents = <&clocks MOUT_MPLL>;
->>>
->>> What are these clocks for, and why are they reparented / reclocked?
->>>
->>> Shouldn't they be passed to 'clocks' as well?
->>>
->>> -Paul
->>>
->>
->> The G3D clock system can have multiple parents, and for stable operation
->> it's recommended to use the MPLL clock as the parent (which in turn
->> is actually a mux as well).  MOUT_G3D is simply the mux for CLK_G3D
->> (SGX core clock), DOUT_G3D is the divider.  DOUT_G3D could equally be CLK_G3D
->> (and probably should be, for readability) as CLK_G3D is simply the gate and
->> DOUT_G3D is the divider for it.
-> 
-> Good point, it should be CLK_G3D instead of DOUT.  Can you fix this as
-> well?
-
-Yep, will do.  Nikolaus, I'll send you an updated patch to include.
-
-> 
-> Best regards,
-> Krzysztof
-> 
-
-Thanks,
-Jonathan
+On Wed, Apr 22, 2020 at 7:26 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> Add a kvm_x86_ops hook to detect a nested pending "hypervisor timer" and
+> use it to effectively open a window for servicing the expired timer.
+> Like pending SMIs on VMX, opening a window simply means requesting an
+> immediate exit.
+>
+> This fixes a bug where an expired VMX preemption timer (for L2) will be
+> delayed and/or lost if a pending exception is injected into L2.  The
+> pending exception is rightly prioritized by vmx_check_nested_events()
+> and injected into L2, with the preemption timer left pending.  Because
+> no window opened, L2 is free to run uninterrupted.
+>
+> Fixes: f4124500c2c13 ("KVM: nVMX: Fully emulate preemption timer")
+> Reported-by: Jim Mattson <jmattson@google.com>
+> Cc: Oliver Upton <oupton@google.com>
+> Cc: Peter Shier <pshier@google.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
