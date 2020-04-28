@@ -2,109 +2,126 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC82DC83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0832FC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0185206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C79206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:22:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f++UMzw5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgD1UUG (ORCPT
+        id S1726447AbgD1UWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:20:06 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:50309 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbgD1UUF (ORCPT
+        Tue, 28 Apr 2020 16:22:36 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54203 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726284AbgD1UWf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:20:05 -0400
-Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M9W78-1jZ2U33HnA-005amh for <linux-kernel@vger.kernel.org>; Tue, 28 Apr
- 2020 22:20:03 +0200
-Received: by mail-qk1-f176.google.com with SMTP id o135so10774131qke.6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:20:03 -0700 (PDT)
-X-Gm-Message-State: AGi0PubKgcYCGZPTlcNXDC5FD3z7xFmdxIjENtynmQ8XSZuA7Y3XBobC
-        Waz3nFEU/sQzt6HwxZsk+b99L1HJ4K5Ucmw9JqY=
-X-Google-Smtp-Source: APiQypK7QLahmWkvMcrJNx933CG5RbP5aw9XWv8As8rK7Pv5GXGKoN3E2TLZueHbBgo06RXBr1L+3zcz7OOllKVEfZU=
-X-Received: by 2002:a37:851:: with SMTP id 78mr30349558qki.352.1588105202639;
- Tue, 28 Apr 2020 13:20:02 -0700 (PDT)
+        Tue, 28 Apr 2020 16:22:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588105354;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=voGLyeD1WxfVMgEf4Mai58JZB/u+WPmTGh+LxkJS5LU=;
+        b=f++UMzw5p5A+zZhSYzvxyBZbXs9d/reeXczk6fU8XZZ5pmlGBS27A7lhQi6wbHdteHc06F
+        Mwz/PD6qLvUWPv/FCN79A/qI+iWSNBvm7KXT8ALj5KHueXmNKIzQhwbOV8SweS33B8C3qF
+        ViegAgm+18AdIuhRVafkuiz5OLqjKOI=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-34-QsdrZyw3NquT1tLO2ARKcQ-1; Tue, 28 Apr 2020 16:22:32 -0400
+X-MC-Unique: QsdrZyw3NquT1tLO2ARKcQ-1
+Received: by mail-qt1-f200.google.com with SMTP id n22so25940215qtp.15
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:22:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=voGLyeD1WxfVMgEf4Mai58JZB/u+WPmTGh+LxkJS5LU=;
+        b=FGrN74JigIcTPXTepd9OUEo7DfQNG2xVEZzmz0VzXm2Y57rYtjhJCp8CJL0JbuwY9p
+         YzsaQ29a1Fb/3fVwhIh+EwizDijHFdzPjyrpmVPKPY3NkS7+xvLyHWBfHZgMtsju+x7W
+         fMHwJP5rmXBJ0orNBtbp+1fX2gB5OgMM9c6rFgqvOlAWl+1cukVvBtN4UFbRyybzVP/E
+         4HfCqjHDRHfwuTTvsHZXRVjERmhcqMfPsyCB/BMcPWmApfAxNhGwa7J1T2gq4mu+yccO
+         rM2pBII3EBNE6THzqBg8r8AbnRRSvQgVhvqcKyM2APJ3XkO1t2F7iQzddnmhV3+ScVSp
+         nDOQ==
+X-Gm-Message-State: AGi0PubXiFxlgXJe8IhBsP0sNdYF+3nPGn3Dm18wZF0fCkfNIAp2vc6/
+        gNRaq7Qv7O/WDQrLXMpvnxJQEHa6/WBSBzNvPKtE4VkHYwKwt7VcqrPYDinbirZ5r3vIFW33gWw
+        f4cqn/QX/vM5F0492RZ81luqJ
+X-Received: by 2002:a37:66d8:: with SMTP id a207mr28461418qkc.127.1588105351220;
+        Tue, 28 Apr 2020 13:22:31 -0700 (PDT)
+X-Google-Smtp-Source: APiQypK+LsYsK4GPD3bREyTNhokuLO2gi/E05ejK2hXFbJea8Bo086oicUgNv17RFKAAPIkQ+byHkg==
+X-Received: by 2002:a37:66d8:: with SMTP id a207mr28461388qkc.127.1588105350974;
+        Tue, 28 Apr 2020 13:22:30 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id x24sm14925754qth.80.2020.04.28.13.22.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 13:22:30 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 16:22:28 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Kevin Tian <kevin.tian@intel.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v8 03/14] KVM: X86: Don't track dirty for
+ KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
+Message-ID: <20200428202228.GB4280@xz-x1>
+References: <20200331190000.659614-1-peterx@redhat.com>
+ <20200331190000.659614-4-peterx@redhat.com>
+ <20200423203944.GS17824@linux.intel.com>
+ <20200424152151.GB41816@xz-x1>
+ <20200427181054.GL14870@linux.intel.com>
 MIME-Version: 1.0
-References: <CAK8P3a2qLJkokMGt48JRky=WUeAbJRuNmoD1oqfWdrGSC6y1LA@mail.gmail.com>
- <20200428161044.caamvx67t2z4t6vd@treble>
-In-Reply-To: <20200428161044.caamvx67t2z4t6vd@treble>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 28 Apr 2020 22:19:46 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0X4kMW1BQU6x9A2oo6i3-CMxi1h=0PhQgEbBtYWbJa9A@mail.gmail.com>
-Message-ID: <CAK8P3a0X4kMW1BQU6x9A2oo6i3-CMxi1h=0PhQgEbBtYWbJa9A@mail.gmail.com>
-Subject: Re: Remaining randconfig objtool warnings, linux-next-20200428
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:M9bglFZb+K6kjAzvIp0DTzz0ZI+jPfA3kZ/9EXjCk8gmUoZSO96
- qym1S3NjYSTF4rnIF94t2VCf+pRiwx+gYxH2FKqC9pxALjfLSd971KPFF6EVtMKD88Xs7kL
- brRpn1QwDslZuu9hJ6M1pogOEBVhR+DMIE47ybJxxIGKwJKX2q9zBlmyM6QyNfLREQLDFGj
- gEp1+yyDbyiV6aZ9fpVtg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9p/VePi+Xg8=:f1lD2KPpHOPuf1+Yc523WU
- /TZxdR/6KHad3WP8AWJo/34IQRT4ISPg+G3q42M/QarTBhXjaA+RG0/SOgKrK5rk21eXEzyTh
- Lporl3AhUMxaEAnmkWf0RVYHRbs4rHRQmMUmr9+KcBTd58aL0I5dPLIPEQpgCZzfZni/EAS96
- 6HXMH0thqZi5MRgC1fU9qgs2+4dLERtMxgacbr0GiUnZdxrSe+T+FIYUSeDXbO0pK7HkuE5DQ
- C0EssWbq/O118u7Yzv5fz4iwukxF03iMmlGW7C7HgHilP/LKfoa8NyULCz9o70eIDkAqENEBJ
- 13l7bSmrsAnLKWmCquX74ObqQuKy2MlzIRtZE4TcmQ3E3WyphgQPCCKYNZNRwgZVqkEJWY8KL
- 83KVnbWpY+fvJ/4x+RDrRkZ8fhjcIW6nnFFSUgPS0tSLpDPh8xY+rkbHthjkvDCO6kqeHrd3C
- dmVW3YwDQUaJ3T3UqdK7kyDSMfc6qhrV66mbGepuFn7xHgs2kvrFhI2aKZ+dSu/NfHrYznsfO
- ahE0K7k3R129SIjXBMfG/28u2FSyUA7Acpyw2A721TUOqONSCUPNtWyJas1mMBenKb7H4VjSA
- lIXj1GmOqzJ7RAksQAK/zz7sdGxFed59HPnMGjvA46pnyDeBZrKyGYlpYdQvJY4PSRgFPcsIh
- PmLKLEschymgsH3Nto8mHZQCFe55veIolJonx7yYCGE/0jYjRzU6x2wynrGuTYc9Q+EfT5uNn
- rM2uir2x57wbN4dEdcxCd6KzQV+RvWx2mMxPb2AaYz6D2e0QSpMcaXbpPIkcoy9Ny4dRwWPxS
- NIfmUqSKMCyOZZnyhEnwvn233C8JKKLmZsMpCFG2vgx/QphLyE=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200427181054.GL14870@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 6:10 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> On Tue, Apr 28, 2020 at 04:49:15PM +0200, Arnd Bergmann wrote:
-> > ==> build/x86/0xFD7B7323_defconfig/log <==
-> > arch/x86/entry/entry_64.o: warning: objtool: .entry.text+0x991: unreachable instruction
->
-> This warning looks correct, did you make a change to entry_64.S?
+On Mon, Apr 27, 2020 at 11:10:54AM -0700, Sean Christopherson wrote:
 
-I bisected my local patches and found that I had a local hack that turned
-off CONFIG_RETPOLINE for testing something unrelated. I can reproduce
-it on linux-next with this patch:
+[...]
 
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -447,8 +447,7 @@ config GOLDFISH
-        depends on X86_GOLDFISH
+> > It will "return (0xdeadull << 48)" as you proposed in abbed4fa94f6? :-)
+> > 
+> > Frankly speaking I always preferred zero but that's just not true any more
+> > after above change.  This also reminded me that maybe we should also return the
+> > same thing at [1] below.
+> 
+> Ah, I was looking at this code:
+> 
+> 	if (!slot || !slot->npages)
+> 		return 0;
+> 
+> That means deletion returns different success values for "deletion was a
+> nop" and "deletion was successful".  The nop path should probably return
+> (or fill in) "(unsigned long)(0xdeadull << 48)" as well.
 
- config RETPOLINE
--       bool "Avoid speculative indirect branches in kernel"
--       default y
-+       def_bool n
-        select STACK_VALIDATION if HAVE_STACK_VALIDATION
-        help
-          Compile kernel with the retpoline compiler options to guard against
+Yep.  Since I touched the line here after all, I'll directly squash this small
+fix into this patch too when I repost.  Thanks,
 
-> > ==> build/x86/0xE0F2ACFF_defconfig/log <==
-> > kernel/time/posix-stubs.o: warning: objtool: __x64_sys_timer_create()+0x23: sibling call from callable instruction with modified stack frame
-> >
-> > ==> build/x86/0x2EA4CE4F_defconfig/log <==
-> > kernel/kcov.o: warning: objtool: write_comp_data()+0x1b: call to check_kcov_mode() with UACCESS enabled
-> > kernel/kcov.o: warning: objtool: __sanitizer_cov_trace_pc()+0x15: call to check_kcov_mode() with UACCESS enabled
-> >
-> > ==> build/x86/0x500B1B82_defconfig/log <==
-> > kernel/bpf/core.o: warning: objtool: ___bpf_prog_run()+0x1269: call
-> > without frame pointer save/setup
->
-> I'll look into these.
+[...]
 
-Thanks!
+> > > 
+> > > >  	} else {
+> > > >  		if (!slot || !slot->npages)
+> > > > -			return 0;
+> > > > +			return ERR_PTR_USR(0);
+> > 
+> > [1]
 
-    Arnd
+-- 
+Peter Xu
+
