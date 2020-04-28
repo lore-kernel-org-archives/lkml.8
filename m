@@ -2,94 +2,275 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A126C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D7BC8300A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A46620757
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:52:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sst10ryG"
+	by mail.kernel.org (Postfix) with ESMTP id 1C869208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 17:52:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbgD1RwA (ORCPT
+        id S1728649AbgD1Rvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 13:52:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728645AbgD1Rvy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Apr 2020 13:51:54 -0400
-Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9B39C03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 10:51:53 -0700 (PDT)
-Received: by mail-qk1-x72d.google.com with SMTP id t3so22744401qkg.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 10:51:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=flDFVuexqKoyIqkmAWtBDr+M8tCMbLOHhMvcareArt8=;
-        b=Sst10ryGsYNx9uSgpIPgN5eKD6112WZEwMK3FVoPrZxMBm+yVd54Ezt9p4QkdA5WTq
-         pjqAZDhOdlwepcC952DBl1bOO61iNKkxMnwvv0HIh8PJNNrIgdHOwZlWWsFNKknE71t2
-         V004LRFArnHZ9sZQEjx1vRSj/ra3S5IsAtdcBWYUATVlUeVMR+7z+rqrJE7XsbWCqWEn
-         XAMyfs+DbxSZdjnnPVe2Wr1hEbuxkSOFvE8VKDDUIkVCcX4em5uXJOao/nlXTB7FaJCO
-         1GgEr5AI/ysU7vzHNUAO+3Y6lkTv4co1WOjPzUSRGO/VSFV8NvuahG06P7ZfVq1U2mMZ
-         dS5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=flDFVuexqKoyIqkmAWtBDr+M8tCMbLOHhMvcareArt8=;
-        b=FR8IStFul4tzKPtgqKIbrkwD6i5o9iVArAndMzfb3ua80KJjzu8O6AeCX1kRqQhnNw
-         RYtzBExPBTE7m1caN7PXEN6D2BLYBCxB5A7CBlNOnQNr/w4zxQK6GoZTeAS2H5Pax0q1
-         5PrDBMkFw2FyQFpebhZKiHwtHi1iYndfPmokdh05qTCTBze3ciGXTh7RLM2nzWeJ5iky
-         IYitguFtqYrcKMmjHBuL6bMyO7iyPikamzxy2cY3ufVgqVeXrLpAGwMeA/N+ZQzQ/9QG
-         fDod+mM79XiiNQjn9ezvfqaDqjXYrKK4Y4LzAeoDsZ6q/vx3U8rxVFZ06Txut6aoLGKp
-         UJyA==
-X-Gm-Message-State: AGi0Pub/Gy6Ww8nZbG5Igp+3/4o2M8vjlemuLbmCQWa0ZEmdmWe2F2o5
-        gjge03CION16YnhLrjMcS0U=
-X-Google-Smtp-Source: APiQypJVTFmK3Q1h8uVbuLnnE8k6c+ojs/8anEXhpDX4oUm4rLN2JjDrbG0r0N0AL7L6xe7EhYRRmQ==
-X-Received: by 2002:a37:387:: with SMTP id 129mr28891382qkd.147.1588096312867;
-        Tue, 28 Apr 2020 10:51:52 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id v2sm14906214qth.66.2020.04.28.10.51.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 10:51:51 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E7B99409A3; Tue, 28 Apr 2020 14:51:49 -0300 (-03)
-Date:   Tue, 28 Apr 2020 14:51:49 -0300
-To:     Zou Wei <zou_wei@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] perf report: fix warning Comparison of 0/1 to bool
- variable
-Message-ID: <20200428175149.GE5460@kernel.org>
-References: <1587904683-3510-1-git-send-email-zou_wei@huawei.com>
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37646 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728626AbgD1Rvu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 13:51:50 -0400
+Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [IPv6:2001:1600:3:17::190f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14FB9C03C1AE
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 10:51:50 -0700 (PDT)
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49BTjc4C21zlhGW9;
+        Tue, 28 Apr 2020 19:51:48 +0200 (CEST)
+Received: from localhost (unknown [94.23.54.103])
+        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 49BTjW491bzm6dy1;
+        Tue, 28 Apr 2020 19:51:43 +0200 (CEST)
+From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?q?Philippe=20Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH v3 3/5] fs: Enable to enforce noexec mounts or file exec through RESOLVE_MAYEXEC
+Date:   Tue, 28 Apr 2020 19:51:27 +0200
+Message-Id: <20200428175129.634352-4-mic@digikod.net>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428175129.634352-1-mic@digikod.net>
+References: <20200428175129.634352-1-mic@digikod.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587904683-3510-1-git-send-email-zou_wei@huawei.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sun, Apr 26, 2020 at 08:38:03PM +0800, Zou Wei escreveu:
-> Fixes coccicheck warning:
-> 
-> tools/perf/builtin-report.c:1403:2-34: WARNING: Assignment of 0/1 to bool variable
+Enable to either propagate the mount options from the underlying VFS
+mount to prevent execution, or to propagate the file execute permission.
+This may allow a script interpreter to check execution permissions
+before reading commands from a file.
 
+The main goal is to be able to protect the kernel by restricting
+arbitrary syscalls that an attacker could perform with a crafted binary
+or certain script languages.  It also improves multilevel isolation
+by reducing the ability of an attacker to use side channels with
+specific code.  These restrictions can natively be enforced for ELF
+binaries (with the noexec mount option) but require this kernel
+extension to properly handle scripts (e.g., Python, Perl).
 
-Fixed the subject line to have "assignment", not "comparison",
+Add a new sysctl fs.open_mayexec_enforce to control this behavior.
+Indeed, because of compatibility with installed systems, only the system
+administrator is able to check that this new enforcement is in line with
+the system mount points and file permissions.  A following patch adds
+documentation.
 
-Thanks, applied,
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Reviewed-by: Philippe Trébuchet <philippe.trebuchet@ssi.gouv.fr>
+Reviewed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+Cc: Aleksa Sarai <cyphar@cyphar.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Kees Cook <keescook@chromium.org>
+---
 
-- Arnaldo
+Changes since v2:
+* Cosmetic changes.
+
+Changes since v1:
+* Move code from Yama to the FS subsystem (suggested by Kees Cook).
+* Make omayexec_inode_permission() static (suggested by Jann Horn).
+* Use mode 0600 for the sysctl.
+* Only match regular files (not directories nor other types), which
+  follows the same semantic as commit 73601ea5b7b1 ("fs/open.c: allow
+  opening only regular files during execve()").
+---
+ fs/namei.c         | 72 +++++++++++++++++++++++++++++++++++++++++++++-
+ include/linux/fs.h |  3 ++
+ kernel/sysctl.c    |  7 +++++
+ 3 files changed, 81 insertions(+), 1 deletion(-)
+
+diff --git a/fs/namei.c b/fs/namei.c
+index 33b6d372e74a..dbf56de1fbe8 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -39,6 +39,7 @@
+ #include <linux/bitops.h>
+ #include <linux/init_task.h>
+ #include <linux/uaccess.h>
++#include <linux/sysctl.h>
+ 
+ #include "internal.h"
+ #include "mount.h"
+@@ -411,10 +412,40 @@ static int sb_permission(struct super_block *sb, struct inode *inode, int mask)
+ 	return 0;
+ }
+ 
++#define OMAYEXEC_ENFORCE_NONE	0
++#define OMAYEXEC_ENFORCE_MOUNT	(1 << 0)
++#define OMAYEXEC_ENFORCE_FILE	(1 << 1)
++#define _OMAYEXEC_LAST		OMAYEXEC_ENFORCE_FILE
++#define _OMAYEXEC_MASK		((_OMAYEXEC_LAST << 1) - 1)
++
++/**
++ * omayexec_inode_permission - Check RESOLVE_MAYEXEC before accessing an inode
++ *
++ * @inode: Inode to check permission on
++ * @mask: Right to check for (%MAY_OPENEXEC, %MAY_EXECMOUNT, %MAY_EXEC)
++ *
++ * Returns 0 if access is permitted, -EACCES otherwise.
++ */
++static inline int omayexec_inode_permission(struct inode *inode, int mask)
++{
++	if (!(mask & MAY_OPENEXEC))
++		return 0;
++
++	if ((sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_MOUNT) &&
++			!(mask & MAY_EXECMOUNT))
++		return -EACCES;
++
++	if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_FILE)
++		return generic_permission(inode, MAY_EXEC);
++
++	return 0;
++}
++
+ /**
+  * inode_permission - Check for access rights to a given inode
+  * @inode: Inode to check permission on
+- * @mask: Right to check for (%MAY_READ, %MAY_WRITE, %MAY_EXEC)
++ * @mask: Right to check for (%MAY_READ, %MAY_WRITE, %MAY_EXEC, %MAY_OPENEXEC,
++ *        %MAY_EXECMOUNT)
+  *
+  * Check for read/write/execute permissions on an inode.  We use fs[ug]id for
+  * this, letting us set arbitrary permissions for filesystem access without
+@@ -454,10 +485,48 @@ int inode_permission(struct inode *inode, int mask)
+ 	if (retval)
+ 		return retval;
+ 
++	retval = omayexec_inode_permission(inode, mask);
++	if (retval)
++		return retval;
++
+ 	return security_inode_permission(inode, mask);
+ }
+ EXPORT_SYMBOL(inode_permission);
+ 
++/*
++ * Handle open_mayexec_enforce sysctl
++ */
++#ifdef CONFIG_SYSCTL
++int proc_omayexec(struct ctl_table *table, int write, void __user *buffer,
++		size_t *lenp, loff_t *ppos)
++{
++	int error;
++
++	if (write) {
++		struct ctl_table table_copy;
++		int tmp_mayexec_enforce;
++
++		if (!capable(CAP_MAC_ADMIN))
++			return -EPERM;
++		tmp_mayexec_enforce = *((int *)table->data);
++		table_copy = *table;
++		/* Do not erase sysctl_omayexec_enforce. */
++		table_copy.data = &tmp_mayexec_enforce;
++		error = proc_dointvec(&table_copy, write, buffer, lenp, ppos);
++		if (error)
++			return error;
++		if ((tmp_mayexec_enforce | _OMAYEXEC_MASK) != _OMAYEXEC_MASK)
++			return -EINVAL;
++		*((int *)table->data) = tmp_mayexec_enforce;
++	} else {
++		error = proc_dointvec(table, write, buffer, lenp, ppos);
++		if (error)
++			return error;
++	}
++	return 0;
++}
++#endif
++
+ /**
+  * path_get - get a reference to a path
+  * @path: path to get the reference to
+@@ -922,6 +991,7 @@ int sysctl_protected_symlinks __read_mostly = 0;
+ int sysctl_protected_hardlinks __read_mostly = 0;
+ int sysctl_protected_fifos __read_mostly;
+ int sysctl_protected_regular __read_mostly;
++int sysctl_omayexec_enforce __read_mostly = OMAYEXEC_ENFORCE_NONE;
+ 
+ /**
+  * may_follow_link - Check symlink following for unsafe situations
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 9213147d8636..850c98276b6e 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -83,6 +83,7 @@ extern int sysctl_protected_symlinks;
+ extern int sysctl_protected_hardlinks;
+ extern int sysctl_protected_fifos;
+ extern int sysctl_protected_regular;
++extern int sysctl_omayexec_enforce;
+ 
+ typedef __kernel_rwf_t rwf_t;
+ 
+@@ -3545,6 +3546,8 @@ int proc_nr_dentry(struct ctl_table *table, int write,
+ 		  void __user *buffer, size_t *lenp, loff_t *ppos);
+ int proc_nr_inodes(struct ctl_table *table, int write,
+ 		   void __user *buffer, size_t *lenp, loff_t *ppos);
++int proc_omayexec(struct ctl_table *table, int write, void __user *buffer,
++		size_t *lenp, loff_t *ppos);
+ int __init get_filesystem_list(char *buf);
+ 
+ #define __FMODE_EXEC		((__force int) FMODE_EXEC)
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 8a176d8727a3..911afa69f84c 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -1892,6 +1892,13 @@ static struct ctl_table fs_table[] = {
+ 		.extra1		= SYSCTL_ZERO,
+ 		.extra2		= &two,
+ 	},
++	{
++		.procname       = "open_mayexec_enforce",
++		.data           = &sysctl_omayexec_enforce,
++		.maxlen         = sizeof(int),
++		.mode           = 0600,
++		.proc_handler   = proc_omayexec,
++	},
+ #if defined(CONFIG_BINFMT_MISC) || defined(CONFIG_BINFMT_MISC_MODULE)
+ 	{
+ 		.procname	= "binfmt_misc",
+-- 
+2.26.2
+
