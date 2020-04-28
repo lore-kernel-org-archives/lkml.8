@@ -2,124 +2,158 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1BEC83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CECEC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A87B208FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:34:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="g7o6v59i"
+	by mail.kernel.org (Postfix) with ESMTP id 703E82085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 20:36:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588106165;
+	bh=UVE90FLb+v1JZ+kaJjy37UArYOWhNaf9Mgfd2fQjcM8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZLx5Os+afVt9nlidMVENTmUTmqK4UCeNVltooN6b2kyGdQM/7Ptlnb9/K8JWP7pQA
+	 BlOdRrrZMFCc4qxk48vwkAYVCOrOvti74pyuzw+4akC6pcZAMdqiIrZlnM3Uu35bXu
+	 +G+GZcwopG8yrTUv/tlvGBz73HCzwlQQiLT7xRMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgD1UeK (ORCPT
+        id S1726435AbgD1UgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:34:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34778 "EHLO
+        Tue, 28 Apr 2020 16:36:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726286AbgD1UeK (ORCPT
+        by vger.kernel.org with ESMTP id S1726286AbgD1UgD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:34:10 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D37DC03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:34:10 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id t8so22873231uap.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:34:09 -0700 (PDT)
+        Tue, 28 Apr 2020 16:36:03 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81C4CC03C1AB
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:36:02 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id g4so181332ljl.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:36:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=z97Q8zIF1xZ1WiB5BLHXUrpSO7gV7Uk5iXCchLoct18=;
-        b=g7o6v59iRNgpmNU22S7QAHVZZ5eMbcXUaro17i5cvT7gtb4rYzeT5iF82Z8QbSyLos
-         3oyXlsKo3ccwL58lV4OcDoj5R2Qn/eYUWn62IGSYp5gV3DSeSCJGMksU4PPxXsclN2ui
-         cMs1F8RG0iuGsY27CHKe0pK4E5FR+YPotvQ9G+LHh4pczxrc2Gx32+ufbE+9ZLYobY9F
-         8bK3rpag9kjCRt4x6AbU1oaoQiyG9svN3c/8pGjp5mRAdBUfTeFHVYSfWap8vG6SWE8j
-         A8wHuddtQs6fvQyFQTm0sMt8ovIPXHXjC6ORldqbOU9C8r9F/dRR+sU23tqz6vk9FmKF
-         jXiw==
+        bh=WJax72ocdUnWPlq8DrAb6dWOUZzRYQd9t53hZiwnCc0=;
+        b=fbg1bShRq6hvO38s7qQoBGECyDFmZa6HZKorx1W8TBj+86IXrlmKzbuJ0Vpe+J5IXu
+         zgnpt4bOvv25nyaNigWvLJY3vioX69iQVYkUUx27rIW2Av4fgkIE0T9batznvahnEeNa
+         PwBPTUOQZV1SVeIupxvfgreco0pGH9sp6WEZA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=z97Q8zIF1xZ1WiB5BLHXUrpSO7gV7Uk5iXCchLoct18=;
-        b=ntU9yiDlUiHfHmZUw1qcHxHoUGfYueFoPpTEhtm+yENG+vP9yzzQVN91wqX20QwE3M
-         4Meva/+kimE7+erhk/9uL/GOsznwsyKJfK+nPY+BFFWOL/DILLGyX931ooS+7/ozqqE4
-         QOCnvuCbFTEQaxu3QVou/COHhH1QIKjT0pgP93hMcVzX0E0psrYftgyZZwSSdiA3I92W
-         TYlCpjzbCLKA06dEOPYPXG8TCa6fxeRuWe/ExzL9kZfthVl26NMoQu1bt7c2rl6fkVbH
-         qf/vXRYrCSuyGb9XmO033egokoxeWpj6JdRRGufbCzhJlz+6SvXf7zqPmO1Ef9denb7F
-         Uapg==
-X-Gm-Message-State: AGi0PuaUoj+HJjKybMw9DJX8krY3OvYXshwpMn4aaE0Xf/vNtxIwtc5c
-        rptK1pANQY3S5QKlwpX4bt8wrc+qiwKsdf1lCJO9HA==
-X-Google-Smtp-Source: APiQypIreH+1VhDbJwXHZbOxs7FxoAr4YVLrwqIHB4Ov/kDaB/n1zXGWYYQvnW5yvPxXNWy4O5Ee+qC4VU8WGKGBUKU=
-X-Received: by 2002:a67:e9d9:: with SMTP id q25mr22060001vso.27.1588106049108;
- Tue, 28 Apr 2020 13:34:09 -0700 (PDT)
+        bh=WJax72ocdUnWPlq8DrAb6dWOUZzRYQd9t53hZiwnCc0=;
+        b=btQO3txEuRaPxOk6fA+yJNAXt3q5il/2o0OhDQU1uBAuFJtIHhfcd2JS9Nbo1yxfXZ
+         GuoiWwhNhAKgXmTd6k77XR1fOl5dwGk52ohU+Gt9z7HV9LKdNlRvPNTCtQ5hjefkigx9
+         npRhL72lXJu+fuOyoXRC8ZCf7ExdogGdYR6OJpyfiABns8wM3beMWdXK9MwKukRoZObJ
+         Z2CFkZB3HLNgadRUyB0QJcMSMiV1aK3HeFsPMg1UNsPJXVMbdt4S2MJ8oIdYr++GIq+X
+         3H2vsZ0XmoL3GLp+7fQ4MW2f7VOKl2ErHngQaA21aC7Qjq04nYHy2u+8PFL1L4hGcVUe
+         mIrQ==
+X-Gm-Message-State: AGi0PuZ7w+JfoFWwmxikF8tKfiuvmxbHL+xk/PMPvsQgAtq4MGaOsnEQ
+        nBtoUTghIuNf5HT+hkWyiqDVufDeocc=
+X-Google-Smtp-Source: APiQypJj84KauXR+YTX03Sdx/EtBOmyPZJKyDwIuZwm2TxpKFrSv9yHAS4ft72fiqePauUfakt2LUw==
+X-Received: by 2002:a2e:87d9:: with SMTP id v25mr18343408ljj.241.1588106160287;
+        Tue, 28 Apr 2020 13:36:00 -0700 (PDT)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id k22sm235542ljj.85.2020.04.28.13.35.58
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Apr 2020 13:35:58 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id e25so163867ljg.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 13:35:58 -0700 (PDT)
+X-Received: by 2002:a2e:9a54:: with SMTP id k20mr17484898ljj.265.1588106157681;
+ Tue, 28 Apr 2020 13:35:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200424161944.6044-1-sudipm.mukherjee@gmail.com>
-In-Reply-To: <20200424161944.6044-1-sudipm.mukherjee@gmail.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Wed, 29 Apr 2020 02:03:33 +0530
-Message-ID: <CAHLCerPm=FssMWhccXbJiCaxakDb-Trz_uOpCAmtwEyaQkeqxQ@mail.gmail.com>
-Subject: Re: [PATCH v2] thermal: ti-soc-thermal: avoid dereferencing ERR_PTR
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc:     Eduardo Valentin <edubezval@gmail.com>, Keerthy <j-keerthy@ti.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-omap@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com>
+ <87imi8nzlw.fsf@x220.int.ebiederm.org> <CAHk-=wgh4zts+3hdkGzHLJ6pBGumcJ=23gRbMfubDrLstis2Bg@mail.gmail.com>
+ <CAHk-=whKHpERyVv2-C+kxq9KV_mJPW3hkGDpn6f4yOvs+au8SA@mail.gmail.com>
+ <20200411182043.GA3136@redhat.com> <CAHk-=wgwXpKepChGi4ZhQVxZxD0ic8s2CDXvUmqBTMaKGz-fjg@mail.gmail.com>
+ <20200412195049.GA23824@redhat.com> <CAHk-=wiDwR+6ugYaKEGHfYteLF+NH5xu=T7uuUTkK9y-hr6zow@mail.gmail.com>
+ <AM6PR03MB51708CF53D8A02086427DAC2E4AC0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wi_zr9dwX3UBYvgkmm6eVQfRP50orryJ6ZVAxuFqdSG5A@mail.gmail.com> <20200428190836.GC29960@redhat.com>
+In-Reply-To: <20200428190836.GC29960@redhat.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 28 Apr 2020 13:35:41 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi03QRcUR1DfbEr+Pw-DAMENzY-FuRcGawtj9p597=p2w@mail.gmail.com>
+Message-ID: <CAHk-=wi03QRcUR1DfbEr+Pw-DAMENzY-FuRcGawtj9p597=p2w@mail.gmail.com>
+Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Jann Horn <jannh@google.com>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Waiman Long <longman@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>
+Content-Type: multipart/mixed; boundary="0000000000006586b205a45fc75c"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 9:49 PM Sudip Mukherjee
-<sudipm.mukherjee@gmail.com> wrote:
->
-> On error the function ti_bandgap_get_sensor_data() returns the error
-> code in ERR_PTR() but we only checked if the return value is NULL or
-> not. And, so we can dereference an error code inside ERR_PTR.
-> While at it, convert a check to IS_ERR_OR_NULL.
->
-> Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+--0000000000006586b205a45fc75c
+Content-Type: text/plain; charset="UTF-8"
 
-> ---
->  drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+On Tue, Apr 28, 2020 at 12:08 PM Oleg Nesterov <oleg@redhat.com> wrote:
 >
-> diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-> index d3e959d01606..85776db4bf34 100644
-> --- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-> +++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-> @@ -169,7 +169,7 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
->
->         data = ti_bandgap_get_sensor_data(bgp, id);
->
-> -       if (!data || IS_ERR(data))
-> +       if (!IS_ERR_OR_NULL(data))
->                 data = ti_thermal_build_data(bgp, id);
->
->         if (!data)
-> @@ -196,7 +196,7 @@ int ti_thermal_remove_sensor(struct ti_bandgap *bgp, int id)
->
->         data = ti_bandgap_get_sensor_data(bgp, id);
->
-> -       if (data && data->ti_thermal) {
-> +       if (!IS_ERR_OR_NULL(data) && data->ti_thermal) {
->                 if (data->our_zone)
->                         thermal_zone_device_unregister(data->ti_thermal);
->         }
-> @@ -262,7 +262,7 @@ int ti_thermal_unregister_cpu_cooling(struct ti_bandgap *bgp, int id)
->
->         data = ti_bandgap_get_sensor_data(bgp, id);
->
-> -       if (data) {
-> +       if (!IS_ERR_OR_NULL(data)) {
->                 cpufreq_cooling_unregister(data->cool_dev);
->                 if (data->policy)
->                         cpufreq_cpu_put(data->policy);
-> --
-> 2.11.0
->
+> Oops. I can update that old patch but somehow I thought there is a better
+> plan which I don't yet understand...
+
+I don't think any plan survived reality.
+
+Unless we want to do something *really* hacky.. The attached patch is
+not meant to be serious.
+
+> And, IIRC, Jan had some ideas how to rework the new creds calculation in
+> execve paths to avoid the cred_guard_mutex deadlock?
+
+I'm not sure how you'd do that.
+
+Execve() fundamentally needs to serialize with PTRACE_ATTACH somehow,
+since the whole point is that "tsk->ptrace" changes how the
+credentials are interpreted.
+
+So PTRACE_ATTACH doesn't really _change_ the credentials, but it very
+much changes what execve() will do with them.
+
+But I guess we could do a "if somebody attached to us while we did the
+execve(), just repeat the whole thing"
+
+Jann, what was your clever idea? Maybe it got lost in the long thread..
+
+               Linus
+
+--0000000000006586b205a45fc75c
+Content-Type: application/octet-stream; name=patch
+Content-Disposition: attachment; filename=patch
+Content-Transfer-Encoding: base64
+Content-ID: <f_k9kdajpw0>
+X-Attachment-Id: f_k9kdajpw0
+
+IGtlcm5lbC9wdHJhY2UuYyB8IDIxICsrKysrKysrKysrKysrKysrKy0tLQogMSBmaWxlIGNoYW5n
+ZWQsIDE4IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEva2VybmVs
+L3B0cmFjZS5jIGIva2VybmVsL3B0cmFjZS5jCmluZGV4IDQzZDYxNzk1MDhkNi4uZWJiYzk4NzY5
+MTRiIDEwMDY0NAotLS0gYS9rZXJuZWwvcHRyYWNlLmMKKysrIGIva2VybmVsL3B0cmFjZS5jCkBA
+IC0zMSw2ICszMSw3IEBACiAjaW5jbHVkZSA8bGludXgvY25fcHJvYy5oPgogI2luY2x1ZGUgPGxp
+bnV4L2NvbXBhdC5oPgogI2luY2x1ZGUgPGxpbnV4L3NjaGVkL3NpZ25hbC5oPgorI2luY2x1ZGUg
+PGxpbnV4L2RlbGF5Lmg+CiAKICNpbmNsdWRlIDxhc20vc3lzY2FsbC5oPgkvKiBmb3Igc3lzY2Fs
+bF9nZXRfKiAqLwogCkBAIC0zOTAsMTAgKzM5MSwyNCBAQCBzdGF0aWMgaW50IHB0cmFjZV9hdHRh
+Y2goc3RydWN0IHRhc2tfc3RydWN0ICp0YXNrLCBsb25nIHJlcXVlc3QsCiAJICogUHJvdGVjdCBl
+eGVjJ3MgY3JlZGVudGlhbCBjYWxjdWxhdGlvbnMgYWdhaW5zdCBvdXIgaW50ZXJmZXJlbmNlOwog
+CSAqIFNVSUQsIFNHSUQgYW5kIExTTSBjcmVkcyBnZXQgZGV0ZXJtaW5lZCBkaWZmZXJlbnRseQog
+CSAqIHVuZGVyIHB0cmFjZS4KKwkgKgorCSAqIERvbid0IHdhaXQgZm9yZXZlciBvbiB0aGUgY3Jl
+ZGVudGlhbCBsb2NrIGlmIHRoZSB0YXJnZXQgaXMKKwkgKiBnb2luZyB0aHJvdWdoIGFuIGV4ZWN2
+ZS4KKwkgKgorCSAqIFdoYXRldmVyLiBXZSBkb24ndCBoYXZlICJtdXRleF9sb2NrX2ludGVycnVw
+dGlibGVfdGltZW91dCgpIi4KKwkgKiBCdXQgdGhpcyB3b3VsZCBiZSBhIGRpc2d1c3RpbmcgaGFj
+ayBldmVuIHdpdGggaXQuCiAJICovCi0JcmV0dmFsID0gLUVSRVNUQVJUTk9JTlRSOwotCWlmICht
+dXRleF9sb2NrX2ludGVycnVwdGlibGUoJnRhc2stPnNpZ25hbC0+Y3JlZF9ndWFyZF9tdXRleCkp
+Ci0JCWdvdG8gb3V0OworCWZvciAoOzspIHsKKwkJaWYgKG11dGV4X3RyeWxvY2soJnRhc2stPnNp
+Z25hbC0+Y3JlZF9ndWFyZF9tdXRleCkpCisJCQlicmVhazsKKwkJcmV0dmFsID0gLUVSRVNUQVJU
+Tk9JTlRSOworCQlpZiAoc2lnbmFsX3BlbmRpbmcoY3VycmVudCkpCisJCQlnb3RvIG91dDsKKwkJ
+cmV0dmFsID0gLUVBR0FJTjsKKwkJaWYgKHRhc2stPmluX2V4ZWN2ZSkKKwkJCWdvdG8gb3V0Owor
+CQltc2xlZXBfaW50ZXJydXB0aWJsZSgxMDApOworCX0KIAogCXRhc2tfbG9jayh0YXNrKTsKIAly
+ZXR2YWwgPSBfX3B0cmFjZV9tYXlfYWNjZXNzKHRhc2ssIFBUUkFDRV9NT0RFX0FUVEFDSF9SRUFM
+Q1JFRFMpOwo=
+--0000000000006586b205a45fc75c--
