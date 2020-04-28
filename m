@@ -4,257 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F353C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C7BC83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECA5F206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51558206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 06:31:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbgD1Gb3 (ORCPT
+        id S1726430AbgD1Gbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 02:31:29 -0400
-Received: from mx.socionext.com ([202.248.49.38]:22277 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726361AbgD1Gb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 02:31:27 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 28 Apr 2020 15:31:25 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id C9C4060057;
-        Tue, 28 Apr 2020 15:31:25 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 28 Apr 2020 15:31:25 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 8D37D1A01BB;
-        Tue, 28 Apr 2020 15:31:25 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH net] dt-bindings: net: Convert UniPhier AVE4 controller to json-schema
-Date:   Tue, 28 Apr 2020 15:31:22 +0900
-Message-Id: <1588055482-13012-1-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 28 Apr 2020 02:31:47 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48782 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726337AbgD1Gbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 02:31:47 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id EFF1AB7B043C4871D755;
+        Tue, 28 Apr 2020 14:31:44 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Tue, 28 Apr 2020
+ 14:31:35 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <harry.wentland@amd.com>, <sunpeng.li@amd.com>,
+        <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
+        <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <Anthony.Koo@amd.com>, <amd-gfx@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>
+Subject: [PATCH] drm/amd/display: remove duplicate assignment of dcn21_funcs members
+Date:   Tue, 28 Apr 2020 14:31:01 +0800
+Message-ID: <20200428063101.25556-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.21.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the UniPhier AVE4 controller binding to DT schema format.
-This changes phy-handle property to required.
+Fix the following coccicheck warning:
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+drivers/gpu/drm/amd/display/dc/dcn21/dcn21_init.c:31:51-52:
+exit_optimized_pwr_state: first occurrence line 86, second occurrence
+line 92
+drivers/gpu/drm/amd/display/dc/dcn21/dcn21_init.c:31:51-52:
+optimize_pwr_state: first occurrence line 85, second occurrence line 91
+drivers/gpu/drm/amd/display/dc/dcn21/dcn21_init.c:31:51-52:
+set_cursor_attribute: first occurrence line 71, second occurrence line
+89
+drivers/gpu/drm/amd/display/dc/dcn21/dcn21_init.c:31:51-52:
+set_cursor_position: first occurrence line 70, second occurrence line 88
+drivers/gpu/drm/amd/display/dc/dcn21/dcn21_init.c:31:51-52:
+set_cursor_sdr_white_level: first occurrence line 72, second occurrence
+line 90
+
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- .../bindings/net/socionext,uniphier-ave4.txt       |  64 ------------
- .../bindings/net/socionext,uniphier-ave4.yaml      | 109 +++++++++++++++++++++
- MAINTAINERS                                        |   2 +-
- 3 files changed, 110 insertions(+), 65 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
- create mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml
+ drivers/gpu/drm/amd/display/dc/dcn21/dcn21_init.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-deleted file mode 100644
-index 4e85fc4..0000000
---- a/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-+++ /dev/null
-@@ -1,64 +0,0 @@
--* Socionext AVE ethernet controller
--
--This describes the devicetree bindings for AVE ethernet controller
--implemented on Socionext UniPhier SoCs.
--
--Required properties:
-- - compatible: Should be
--	- "socionext,uniphier-pro4-ave4" : for Pro4 SoC
--	- "socionext,uniphier-pxs2-ave4" : for PXs2 SoC
--	- "socionext,uniphier-ld11-ave4" : for LD11 SoC
--	- "socionext,uniphier-ld20-ave4" : for LD20 SoC
--	- "socionext,uniphier-pxs3-ave4" : for PXs3 SoC
-- - reg: Address where registers are mapped and size of region.
-- - interrupts: Should contain the MAC interrupt.
-- - phy-mode: See ethernet.txt in the same directory. Allow to choose
--	"rgmii", "rmii", "mii", or "internal" according to the PHY.
--	The acceptable mode is SoC-dependent.
-- - phy-handle: Should point to the external phy device.
--	See ethernet.txt file in the same directory.
-- - clocks: A phandle to the clock for the MAC.
--	For Pro4 SoC, that is "socionext,uniphier-pro4-ave4",
--	another MAC clock, GIO bus clock and PHY clock are also required.
-- - clock-names: Should contain
--	- "ether", "ether-gb", "gio", "ether-phy" for Pro4 SoC
--	- "ether" for others
-- - resets: A phandle to the reset control for the MAC. For Pro4 SoC,
--	GIO bus reset is also required.
-- - reset-names: Should contain
--	- "ether", "gio" for Pro4 SoC
--	- "ether" for others
-- - socionext,syscon-phy-mode: A phandle to syscon with one argument
--	that configures phy mode. The argument is the ID of MAC instance.
--
--The MAC address will be determined using the optional properties
--defined in ethernet.txt.
--
--Required subnode:
-- - mdio: A container for child nodes representing phy nodes.
--         See phy.txt in the same directory.
--
--Example:
--
--	ether: ethernet@65000000 {
--		compatible = "socionext,uniphier-ld20-ave4";
--		reg = <0x65000000 0x8500>;
--		interrupts = <0 66 4>;
--		phy-mode = "rgmii";
--		phy-handle = <&ethphy>;
--		clock-names = "ether";
--		clocks = <&sys_clk 6>;
--		reset-names = "ether";
--		resets = <&sys_rst 6>;
--		socionext,syscon-phy-mode = <&soc_glue 0>;
--		local-mac-address = [00 00 00 00 00 00];
--
--		mdio {
--			#address-cells = <1>;
--			#size-cells = <0>;
--
--			ethphy: ethphy@1 {
--				reg = <1>;
--			};
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml
-new file mode 100644
-index 0000000..fd31e87
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml
-@@ -0,0 +1,109 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/socionext,uniphier-ave4.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Socionext AVE ethernet controller
-+
-+maintainers:
-+  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-+
-+description: |
-+  This describes the devicetree bindings for AVE ethernet controller
-+  implemented on Socionext UniPhier SoCs.
-+
-+allOf:
-+  - $ref: ethernet-controller.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - socionext,uniphier-pro4-ave4
-+      - socionext,uniphier-pxs2-ave4
-+      - socionext,uniphier-ld11-ave4
-+      - socionext,uniphier-ld20-ave4
-+      - socionext,uniphier-pxs3-ave4
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  phy-mode:
-+    $ref: ethernet-controller.yaml#/properties/phy-mode
-+
-+  phy-handle:
-+    $ref: ethernet-controller.yaml#/properties/phy-handle
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 4
-+
-+  clock-names:
-+    oneOf:
-+      - items:          # for Pro4
-+        - const: gio
-+        - const: ether
-+        - const: ether-gb
-+        - const: ether-phy
-+      - const: ether    # for others
-+
-+  resets:
-+    minItems: 1
-+    maxItems: 2
-+
-+  reset-names:
-+    oneOf:
-+      - items:          # for Pro4
-+        - const: gio
-+        - const: ether
-+      - const: ether    # for others
-+
-+  socionext,syscon-phy-mode:
-+    $ref: /schemas/types.yaml#definitions/phandle-array
-+    description:
-+      A phandle to syscon with one argument that configures phy mode.
-+      The argument is the ID of MAC instance.
-+
-+  mdio:
-+    $ref: mdio.yaml#
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - phy-mode
-+  - phy-handle
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - mdio
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    ether: ethernet@65000000 {
-+        compatible = "socionext,uniphier-ld20-ave4";
-+                reg = <0x65000000 0x8500>;
-+                interrupts = <0 66 4>;
-+                phy-mode = "rgmii";
-+                phy-handle = <&ethphy>;
-+                clock-names = "ether";
-+                clocks = <&sys_clk 6>;
-+                reset-names = "ether";
-+                resets = <&sys_rst 6>;
-+                socionext,syscon-phy-mode = <&soc_glue 0>;
-+
-+                mdio {
-+                        #address-cells = <1>;
-+                        #size-cells = <0>;
-+
-+                        ethphy: ethernet-phy@1 {
-+                                reg = <1>;
-+                        };
-+                };
-+        };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a1558eb..0ee65e2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15590,7 +15590,7 @@ SOCIONEXT (SNI) AVE NETWORK DRIVER
- M:	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
- L:	netdev@vger.kernel.org
- S:	Maintained
--F:	Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-+F:	Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml
- F:	drivers/net/ethernet/socionext/sni_ave.c
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_init.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_init.c
+index 8410a6305a9a..fe64bcb49456 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_init.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_init.c
+@@ -85,11 +85,6 @@ static const struct hw_sequencer_funcs dcn21_funcs = {
+ 	.optimize_pwr_state = dcn21_optimize_pwr_state,
+ 	.exit_optimized_pwr_state = dcn21_exit_optimized_pwr_state,
+ 	.get_vupdate_offset_from_vsync = dcn10_get_vupdate_offset_from_vsync,
+-	.set_cursor_position = dcn10_set_cursor_position,
+-	.set_cursor_attribute = dcn10_set_cursor_attribute,
+-	.set_cursor_sdr_white_level = dcn10_set_cursor_sdr_white_level,
+-	.optimize_pwr_state = dcn21_optimize_pwr_state,
+-	.exit_optimized_pwr_state = dcn21_exit_optimized_pwr_state,
+ 	.power_down = dce110_power_down,
+ };
  
- SOCIONEXT (SNI) NETSEC NETWORK DRIVER
 -- 
-2.7.4
+2.21.1
 
