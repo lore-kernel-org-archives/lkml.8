@@ -2,55 +2,58 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26171C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D74C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F29FC20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECEC9206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099825;
-	bh=7Ofi7fjLnXYzHMbB+bAtAVJF9p2r9+fBkpA8tCONgWs=;
+	s=default; t=1588099829;
+	bh=7Ui6ieL8UndMe7wdLp5Q7fxB6CMGCFtvQzYTT7O0X9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2SWOXNilyh8fQD0uO4aiomlFicNLCUich1zRrPEDfUHJh6MMcEM88XzU26Bq3Mdwr
-	 4ALKVigP7zqzsE50EIYBIkkYQy8SmDA8inaKEXmpRmkM+gDkbRTHUEnYxPV1kK0rgA
-	 ccnADI83+YXYjPCLfxRsbu1c4B4a/xRbEdjhC4fs=
+	b=zg5XRl7yDvIajo13yv2pzJW3VQmgh3aD7G7YCGPFqtH3OkPtYPnv3+6x2pj9amVfn
+	 mTu0x+AWNOxlat1SgnWIwVdFhBrnUHCOJkohVX7nPC1lSLkTQ6nEvW7fRhZb4BNqWT
+	 t+KIY5aX0TGDOR6HHt+VXkoTAmLHAnrCtt11WJqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731001AbgD1SuW (ORCPT
+        id S1730155AbgD1SiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:50:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57026 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:38:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730629AbgD1Sic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:38:32 -0400
+        id S1729731AbgD1SiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:38:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B6CD208E0;
-        Tue, 28 Apr 2020 18:38:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D03FF20730;
+        Tue, 28 Apr 2020 18:38:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099111;
-        bh=7Ofi7fjLnXYzHMbB+bAtAVJF9p2r9+fBkpA8tCONgWs=;
+        s=default; t=1588099097;
+        bh=7Ui6ieL8UndMe7wdLp5Q7fxB6CMGCFtvQzYTT7O0X9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mfuM1Pj1Mq5+es6W59pBPwcOjNHYUQqWrV8c9Q7JUQny01LugqBYQLleWhpjM5JWz
-         0H1vDxTDYIO9/6SdBFsePfUEO3LJHGhR8jb0O3tS1co5CxT/tlkece40ZHw445QfpS
-         PXDd/KE9X11WP2ND5SxPF9am3gk/35IioydrQ6ts=
+        b=pWGkkPrWwytuKjYHexzHmTk3y/7UMWqyXt/zUeCOahqApPJPANa2fzVIDtx3CQkA+
+         MRuoT2ceaMge8Np+U+AFwr8a45G3e1Mo7Cn1NwQSgoE5xLvIDg1+V/23vOPDgSBu62
+         FKIUPocMU1LFZhXzlzDh3wAmpn5GDKfWmAGzFFR8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Skobkin <skobkin-ru@ya.ru>,
-        Alexander Tsoy <alexander@tsoy.me>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 098/131] ALSA: usb-audio: Filter out unsupported sample rates on Focusrite devices
-Date:   Tue, 28 Apr 2020 20:25:10 +0200
-Message-Id: <20200428182237.428683988@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Aric Cyr <Aric.Cyr@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 038/168] drm/amd/display: Calculate scaling ratios on every medium/full update
+Date:   Tue, 28 Apr 2020 20:23:32 +0200
+Message-Id: <20200428182236.541152957@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,105 +63,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Tsoy <alexander@tsoy.me>
+From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
 
-commit 1c826792586f526a5a5cd21d55aad388f5bb0b23 upstream.
+[ Upstream commit 3bae20137cae6c03f58f96c0bc9f3d46f0bc17d4 ]
 
-Many Focusrite devices supports a limited set of sample rates per
-altsetting. These includes audio interfaces with ADAT ports:
- - Scarlett 18i6, 18i8 1st gen, 18i20 1st gen;
- - Scarlett 18i8 2nd gen, 18i20 2nd gen;
- - Scarlett 18i8 3rd gen, 18i20 3rd gen;
- - Clarett 2Pre USB, 4Pre USB, 8Pre USB.
+[Why]
+If a plane isn't being actively enabled or disabled then DC won't
+always recalculate scaling rects and ratios for the primary plane.
 
-Maximum rate is exposed in the last 4 bytes of Format Type descriptor
-which has a non-standard bLength = 10.
+This results in only a partial or corrupted rect being displayed on
+the screen instead of scaling to fit the screen.
 
-Tested-by: Alexey Skobkin <skobkin-ru@ya.ru>
-Signed-off-by: Alexander Tsoy <alexander@tsoy.me>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200418175815.12211-1-alexander@tsoy.me
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[How]
+Add back the logic to recalculate the scaling rects into
+dc_commit_updates_for_stream since this is the expected place to
+do it in DC.
 
+This was previously removed a few years ago to fix an underscan issue
+but underscan is still functional now with this change - and it should
+be, since this is only updating to the latest plane state getting passed
+in.
+
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/format.c |   52 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
---- a/sound/usb/format.c
-+++ b/sound/usb/format.c
-@@ -238,6 +238,52 @@ static int parse_audio_format_rates_v1(s
- }
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index 89bd0ba3db1df..71c574d1e8be2 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -2154,7 +2154,7 @@ void dc_commit_updates_for_stream(struct dc *dc,
+ 	enum surface_update_type update_type;
+ 	struct dc_state *context;
+ 	struct dc_context *dc_ctx = dc->ctx;
+-	int i;
++	int i, j;
  
- /*
-+ * Many Focusrite devices supports a limited set of sampling rates per
-+ * altsetting. Maximum rate is exposed in the last 4 bytes of Format Type
-+ * descriptor which has a non-standard bLength = 10.
-+ */
-+static bool focusrite_valid_sample_rate(struct snd_usb_audio *chip,
-+					struct audioformat *fp,
-+					unsigned int rate)
-+{
-+	struct usb_interface *iface;
-+	struct usb_host_interface *alts;
-+	unsigned char *fmt;
-+	unsigned int max_rate;
+ 	stream_status = dc_stream_get_status(stream);
+ 	context = dc->current_state;
+@@ -2192,6 +2192,17 @@ void dc_commit_updates_for_stream(struct dc *dc,
+ 
+ 		copy_surface_update_to_plane(surface, &srf_updates[i]);
+ 
++		if (update_type >= UPDATE_TYPE_MED) {
++			for (j = 0; j < dc->res_pool->pipe_count; j++) {
++				struct pipe_ctx *pipe_ctx =
++					&context->res_ctx.pipe_ctx[j];
 +
-+	iface = usb_ifnum_to_if(chip->dev, fp->iface);
-+	if (!iface)
-+		return true;
++				if (pipe_ctx->plane_state != surface)
++					continue;
 +
-+	alts = &iface->altsetting[fp->altset_idx];
-+	fmt = snd_usb_find_csint_desc(alts->extra, alts->extralen,
-+				      NULL, UAC_FORMAT_TYPE);
-+	if (!fmt)
-+		return true;
-+
-+	if (fmt[0] == 10) { /* bLength */
-+		max_rate = combine_quad(&fmt[6]);
-+
-+		/* Validate max rate */
-+		if (max_rate != 48000 &&
-+		    max_rate != 96000 &&
-+		    max_rate != 192000 &&
-+		    max_rate != 384000) {
-+
-+			usb_audio_info(chip,
-+				"%u:%d : unexpected max rate: %u\n",
-+				fp->iface, fp->altsetting, max_rate);
-+
-+			return true;
++				resource_build_scaling_params(pipe_ctx);
++			}
 +		}
-+
-+		return rate <= max_rate;
-+	}
-+
-+	return true;
-+}
-+
-+/*
-  * Helper function to walk the array of sample rate triplets reported by
-  * the device. The problem is that we need to parse whole array first to
-  * get to know how many sample rates we have to expect.
-@@ -273,6 +319,11 @@ static int parse_uac2_sample_rate_range(
- 		}
+ 	}
  
- 		for (rate = min; rate <= max; rate += res) {
-+			/* Filter out invalid rates on Focusrite devices */
-+			if (USB_ID_VENDOR(chip->usb_id) == 0x1235 &&
-+			    !focusrite_valid_sample_rate(chip, fp, rate))
-+				goto skip_rate;
-+
- 			if (fp->rate_table)
- 				fp->rate_table[nr_rates] = rate;
- 			if (!fp->rate_min || rate < fp->rate_min)
-@@ -287,6 +338,7 @@ static int parse_uac2_sample_rate_range(
- 				break;
- 			}
- 
-+skip_rate:
- 			/* avoid endless loop */
- 			if (res == 0)
- 				break;
+ 	copy_stream_update_to_stream(dc, context, stream, stream_update);
+-- 
+2.20.1
+
 
 
