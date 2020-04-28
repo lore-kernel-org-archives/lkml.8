@@ -2,54 +2,56 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55458C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C70C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2824E20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7860208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099055;
-	bh=JHaBNosCj1zG89vJZojwMlcYslKrzJGKsmuORnY+RAk=;
+	s=default; t=1588099060;
+	bh=dyQ/jAoog3/afvIT8/E4Yzhzrzavmt+MBeOOR32Pl3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L6LNRiqWLvpWWDwtfCV5oGmt2XqwMlEAsuRK3j8zTAzw82EhcTk5kTeqalhM0ie6T
-	 OKdi6Sul6KcvrPHHBD9nllkRl8GQX5BMd1wFa3EXzmExgTslhKKDFg5JDPxdqA+ijJ
-	 zC+jIJ4uq2n0VGYQkv0CZfLh8tIyKW/djgAtXiIs=
+	b=X/wUH/rTpn8hIivKGZtAiQRcKG+gw9IkRZpsMfZkE8H6vAj1iRp+q10uhYBd6NqmN
+	 C+Gs3pj7ecXP0+oELYzKRzVzOYCXujfc/aIrLCUfGSVJtD5CObl/L4gQYvvwglqhFU
+	 i1J4yF1ZPmyBflQKGkfxPb05B56YjkVjq9pzoYns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbgD1Shd (ORCPT
+        id S1729922AbgD1Shk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:37:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55486 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:37:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730483AbgD1Sh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:37:26 -0400
+        id S1730047AbgD1Shb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:37:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41F2520575;
-        Tue, 28 Apr 2020 18:37:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31A91208E0;
+        Tue, 28 Apr 2020 18:37:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099045;
-        bh=JHaBNosCj1zG89vJZojwMlcYslKrzJGKsmuORnY+RAk=;
+        s=default; t=1588099050;
+        bh=dyQ/jAoog3/afvIT8/E4Yzhzrzavmt+MBeOOR32Pl3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dqoJplVVfYvsO9zTY2X/BMAzTST2Szpuymo0Z8BRfbL+wjcCO/y9Wo7lS4tgiTI9L
-         NxFWXdzHac6++B2tnMpS4/ltDg6p7aiMs+wKW2HDylRDjfSie7LxEafNMVWNw5YkbX
-         5jqocjxKmZZHj0sCfgc1SDgyK/zVAb5rUATD3xTs=
+        b=NN+A8Iw8lBQJfyzXHcYlwIExsZ+WARCX0ZT4FBdXtF1/rTmeLsF+Hp6FBmnyCeWCv
+         E5DRENml4Kqwwc0121Gl6f6PMiVjdr4lb5/OYABGZzKmhcQ0c2yCpA1izyv9hAyDO+
+         TWLq+2C0GJZKnCN0dEtyipSwx5ehW+xslojdEPNw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xu Yilun <yilun.xu@intel.com>,
-        Wu Hao <hao.wu@intel.com>, Moritz Fischer <mdf@kernel.org>
-Subject: [PATCH 5.6 148/167] fpga: dfl: pci: fix return value of cci_pci_sriov_configure
-Date:   Tue, 28 Apr 2020 20:25:24 +0200
-Message-Id: <20200428182244.291758805@linuxfoundation.org>
+        stable@vger.kernel.org, Halil Pasic <pasic@linux.ibm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 050/168] virtio-blk: improve virtqueue error to BLK_STS
+Date:   Tue, 28 Apr 2020 20:23:44 +0200
+Message-Id: <20200428182238.212252103@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-References: <20200428182225.451225420@linuxfoundation.org>
+In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
+References: <20200428182231.704304409@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,46 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xu Yilun <yilun.xu@intel.com>
+From: Halil Pasic <pasic@linux.ibm.com>
 
-commit 3c2760b78f90db874401d97e3c17829e2e36f400 upstream.
+[ Upstream commit 3d973b2e9a625996ee997c7303cd793b9d197c65 ]
 
-pci_driver.sriov_configure should return negative value on error and
-number of enabled VFs on success. But now the driver returns 0 on
-success. The sriov configure still works but will cause a warning
-message:
+Let's change the mapping between virtqueue_add errors to BLK_STS
+statuses, so that -ENOSPC, which indicates virtqueue full is still
+mapped to BLK_STS_DEV_RESOURCE, but -ENOMEM which indicates non-device
+specific resource outage is mapped to BLK_STS_RESOURCE.
 
-  XX VFs requested; only 0 enabled
-
-This patch changes the return value accordingly.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-Signed-off-by: Wu Hao <hao.wu@intel.com>
-Signed-off-by: Moritz Fischer <mdf@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+Link: https://lore.kernel.org/r/20200213123728.61216-3-pasic@linux.ibm.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/fpga/dfl-pci.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/block/virtio_blk.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/drivers/fpga/dfl-pci.c
-+++ b/drivers/fpga/dfl-pci.c
-@@ -248,11 +248,13 @@ static int cci_pci_sriov_configure(struc
- 			return ret;
- 
- 		ret = pci_enable_sriov(pcidev, num_vfs);
--		if (ret)
-+		if (ret) {
- 			dfl_fpga_cdev_config_ports_pf(cdev);
-+			return ret;
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index c2ed3e9128e3a..a55383b139df9 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -345,9 +345,14 @@ static blk_status_t virtio_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 		if (err == -ENOSPC)
+ 			blk_mq_stop_hw_queue(hctx);
+ 		spin_unlock_irqrestore(&vblk->vqs[qid].lock, flags);
+-		if (err == -ENOMEM || err == -ENOSPC)
++		switch (err) {
++		case -ENOSPC:
+ 			return BLK_STS_DEV_RESOURCE;
+-		return BLK_STS_IOERR;
++		case -ENOMEM:
++			return BLK_STS_RESOURCE;
++		default:
++			return BLK_STS_IOERR;
 +		}
  	}
  
--	return ret;
-+	return num_vfs;
- }
- 
- static void cci_pci_remove(struct pci_dev *pcidev)
+ 	if (bd->last && virtqueue_kick_prepare(vblk->vqs[qid].vq))
+-- 
+2.20.1
+
 
 
