@@ -2,136 +2,133 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA94C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6951C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07685206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:52:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588089146;
-	bh=FonZhAd2nSb7LZznv2tDxTHOgq8CE0zbDHFkB+PUCfk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KrncpzGy6YKh2/j6FNxK/wudxZqt/CPZz8xBht6On6un0PzEY+eHGTmhJP0OBkQnW
-	 Urm+qmtSn4tWFiXqoNP9GUBZCRtx/Nwwgs0DLl5ARMrEr8FfJeVB7M+8PAVcZUWCR5
-	 ZW0cVK60+PFRfSI3nDM1GgcmYsOJs6mxxp06thL0=
+	by mail.kernel.org (Postfix) with ESMTP id 9F2BC206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:53:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fr2F0Coj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728161AbgD1PwZ (ORCPT
+        id S1728253AbgD1Pw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:52:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727920AbgD1PwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:52:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8738205C9;
-        Tue, 28 Apr 2020 15:52:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588089144;
-        bh=FonZhAd2nSb7LZznv2tDxTHOgq8CE0zbDHFkB+PUCfk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jzWr8KxeGp2asEx+F0kxIMPvQdqUnh9aRN3j2eX9rHqvHiXKyYtE/6Szw6mXToE20
-         p7MEdcYXt1xJkK1isFf/JJMWkCop1Un9xv7O0kM6p3O+CM7NUBW1hTKxXyb1ZjJeiG
-         yj3Q2aR9k7afQGdc4It3xaPCYu7WJxddfQFJLb/w=
-Date:   Tue, 28 Apr 2020 17:52:22 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] driver core: Fix handling of fw_devlink=permissive
-Message-ID: <20200428155222.GA1584194@kroah.com>
-References: <CGME20200331022842eucas1p29e52dc93c4bd0b6e470c41aef19c9a86@eucas1p2.samsung.com>
- <20200331022832.209618-1-saravanak@google.com>
- <781eefdc-c926-7566-5305-bb9633e6fac0@samsung.com>
- <CAGETcx8aW-EY+bGEPr+20bZUF-=ghZDPyQ8AdU7eYYd-wOvekA@mail.gmail.com>
- <20200331072910.GC854501@kroah.com>
- <CAGETcx9r_t0AWVaTt5hk9s6Tti0UcNAersjXCJ_A04yJKNPtDA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGETcx9r_t0AWVaTt5hk9s6Tti0UcNAersjXCJ_A04yJKNPtDA@mail.gmail.com>
+        Tue, 28 Apr 2020 11:52:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47336 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727920AbgD1Pw7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:52:59 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72448C03C1AB;
+        Tue, 28 Apr 2020 08:52:59 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id y25so10860111pfn.5;
+        Tue, 28 Apr 2020 08:52:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=2c6uCE675m96/FbxOp/+YpjzTr8Ax/d5qUPMW5Gsuec=;
+        b=fr2F0CojibBY6glD0TM6oVEEfkQR6dQ6Xta08+rELpBa63RJXHlQ2mjr8SnXIaQlFy
+         9RQMGLd8lLgdOc1MTp+Wi0GWvc8S3nW8SVXeYeY/0/LC0PPafhRG+4JF7ffkYgvIhxDV
+         7maE/trbhJ6Ios0CzPbWJTvYGUwsvrflXuGW/+tYnfQG4M7EFqyKKflPqIITL47MKb/Z
+         d7VUKbgKbZywljxEDdeQCIfdJ1rAql+/0UW4r3avCnc46Ccf6GpzeSV35ZCihxt4DCZR
+         5kD8b0tsu/Fno/T+Ax8w+h8OjNbveBrMTs3Xg8R6+CEP4e6Uzp08FvHSxdaco3GMQ2Zy
+         Uqkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2c6uCE675m96/FbxOp/+YpjzTr8Ax/d5qUPMW5Gsuec=;
+        b=ozBNndw+QmJnkzo509sjglolW9f6rV4aa+oe1/OYrVNv+5bo2ZgyZX1w3EIHwk01R6
+         NWMTtwdlpyXSDB7Yz4B1GDquQBPyq4mGFQitofLX0sDn7Vq2N3LXJOq9LOwg2T+JQ4dW
+         i+4x4P19kHW8LffX9ljctvC5JruEGVFI+Uq2i1dtu4e0obDuBft8vdIWwr5vMMdVb8K/
+         vlIrAw1CZlvhB9TJnvIvVUyIZ6tAGOxynyb+F4SVPJ+qk4TiUXfY1xPv4LKSYxRiIP3s
+         Smd/e4HRSe6DEFtoiJTf4KIK6rs7AlDE+LTHxOXkBeXsXMAyKKau2KA3kKebCarsQcLU
+         IvJA==
+X-Gm-Message-State: AGi0PuZd0ggDjbLCO+W+M4v/Cml+AXy0P7rLXsJG9bABHWvuOc8TPPh2
+        TdoV7flxbgt+BZt72H2HMQ==
+X-Google-Smtp-Source: APiQypLkMPf9eFxnHsSePauRQebG54rsN5Dm5KoC2usbs2Crxz6EJNZG48I0Ks+vIHv3SzRpf3pkAg==
+X-Received: by 2002:a63:2403:: with SMTP id k3mr28091220pgk.295.1588089179049;
+        Tue, 28 Apr 2020 08:52:59 -0700 (PDT)
+Received: from localhost.localdomain ([2402:3a80:d33:c58:9c84:8ece:9d0f:426b])
+        by smtp.gmail.com with ESMTPSA id mn1sm2410814pjb.24.2020.04.28.08.52.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 08:52:58 -0700 (PDT)
+From:   madhuparnabhowmik10@gmail.com
+To:     sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, tglx@linutronix.de, bp@alien8.de,
+        mingo@redhat.com
+Cc:     cai@lca.pw, paulmck@kernel.org, joel@joelfernandes.org,
+        frextrite@gmail.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH] kvm: Fix false positive RCU usage warning
+Date:   Tue, 28 Apr 2020 21:22:49 +0530
+Message-Id: <20200428155249.19990-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 11:25:47AM -0700, Saravana Kannan wrote:
-> On Tue, Mar 31, 2020 at 12:29 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Mon, Mar 30, 2020 at 11:18:01PM -0700, Saravana Kannan wrote:
-> > > On Mon, Mar 30, 2020 at 10:43 PM Marek Szyprowski
-> > > <m.szyprowski@samsung.com> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > On 2020-03-31 04:28, Saravana Kannan wrote:
-> > > > > When commit 8375e74f2bca ("driver core: Add fw_devlink kernel
-> > > > > commandline option") added fw_devlink, it didn't implement "permissive"
-> > > > > mode correctly.
-> > > > >
-> > > > > That commit got the device links flags correct to make sure unprobed
-> > > > > suppliers don't block the probing of a consumer. However, if a consumer
-> > > > > is waiting for mandatory suppliers to register, that could still block a
-> > > > > consumer from probing.
-> > > > >
-> > > > > This commit fixes that by making sure in permissive mode, all suppliers
-> > > > > to a consumer are treated as a optional suppliers. So, even if a
-> > > > > consumer is waiting for suppliers to register and link itself (using the
-> > > > > DL_FLAG_SYNC_STATE_ONLY flag) to the supplier, the consumer is never
-> > > > > blocked from probing.
-> > > > >
-> > > > > Fixes: 8375e74f2bca ("driver core: Add fw_devlink kernel commandline option")
-> > > > > Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > > > ---
-> > > > > Hi Marek,
-> > > > >
-> > > > > If you pull in this patch and then add back in my patch that created the
-> > > > > boot problem for you, can you see if that fixes the boot issue for you?
-> > > >
-> > > > Indeed, this fixes booting on my Raspberry Pi3/4 boards with linux
-> > > > next-20200327. Thanks! :)
-> > >
-> > > Hi Marek,
-> > >
-> > > Thanks for testing, but I'm not able to find the tag next-20200327. I
-> > > can only find next-20200326 and next-20200330. I was just trying to
-> > > make sure that next-20200327 doesn't have the revert Greg did. I'm
-> > > guessing you meant next-20200326?
-> > >
-> > > > Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > >
-> > > Thanks!
-> > >
-> > > Greg,
-> > >
-> > > Can you pull in my fix and then revert the revert?
-> >
-> > After 5.7-rc1 is out I will, thanks.
-> 
-> Hi Greg,
-> 
-> Just to clarify, this patch is a bug fix and I think this patch should
-> go into all the stable branches that support fw_devlink.
-> 
-> The only risky change that you needed to wait on for 5.7-rc1 is the
-> patch [1] that sets fw_devlink=permissive by default. Well, a revert
-> of the revert of [1].
-> 
-> [1] - https://lore.kernel.org/lkml/20200321210305.28937-1-saravanak@google.com/
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-I don't understand, what kernels should this go back to?  Your "Fixes:"
-line just shows for a 5.7-rc1 patch, nothing older.
+Fix the following false positive warnings:
 
-thanks,
+[ 9403.765413][T61744] =============================
+[ 9403.786541][T61744] WARNING: suspicious RCU usage
+[ 9403.807865][T61744] 5.7.0-rc1-next-20200417 #4 Tainted: G             L
+[ 9403.838945][T61744] -----------------------------
+[ 9403.860099][T61744] arch/x86/kvm/mmu/page_track.c:257 RCU-list traversed in non-reader section!!
 
-greg k-h
+and
+
+[ 9405.859252][T61751] =============================
+[ 9405.859258][T61751] WARNING: suspicious RCU usage
+[ 9405.880867][T61755] -----------------------------
+[ 9405.911936][T61751] 5.7.0-rc1-next-20200417 #4 Tainted: G             L
+[ 9405.911942][T61751] -----------------------------
+[ 9405.911950][T61751] arch/x86/kvm/mmu/page_track.c:232 RCU-list traversed in non-reader section!!
+
+Since srcu read lock is held, these are false positive warnings.
+Therefore, pass condition srcu_read_lock_held() to
+list_for_each_entry_rcu().
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+---
+ arch/x86/kvm/mmu/page_track.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kvm/mmu/page_track.c b/arch/x86/kvm/mmu/page_track.c
+index ddc1ec3bdacd..1ad79c7aa05b 100644
+--- a/arch/x86/kvm/mmu/page_track.c
++++ b/arch/x86/kvm/mmu/page_track.c
+@@ -229,7 +229,8 @@ void kvm_page_track_write(struct kvm_vcpu *vcpu, gpa_t gpa, const u8 *new,
+ 		return;
+ 
+ 	idx = srcu_read_lock(&head->track_srcu);
+-	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node)
++	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node,
++				srcu_read_lock_held(&head->track_srcu))
+ 		if (n->track_write)
+ 			n->track_write(vcpu, gpa, new, bytes, n);
+ 	srcu_read_unlock(&head->track_srcu, idx);
+@@ -254,7 +255,8 @@ void kvm_page_track_flush_slot(struct kvm *kvm, struct kvm_memory_slot *slot)
+ 		return;
+ 
+ 	idx = srcu_read_lock(&head->track_srcu);
+-	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node)
++	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node,
++				srcu_read_lock_held(&head->track_srcu))
+ 		if (n->track_flush_slot)
+ 			n->track_flush_slot(kvm, slot, n);
+ 	srcu_read_unlock(&head->track_srcu, idx);
+-- 
+2.17.1
+
