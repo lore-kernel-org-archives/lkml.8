@@ -3,175 +3,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3F0C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20771C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29592206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F31E1206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:54:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgD1IyW (ORCPT
+        id S1726912AbgD1Iyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 04:54:22 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:44813 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbgD1IyW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 04:54:22 -0400
-X-Originating-IP: 42.109.192.12
-Received: from localhost (unknown [42.109.192.12])
-        (Authenticated sender: me@yadavpratyush.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id C66A41C002A;
-        Tue, 28 Apr 2020 08:54:15 +0000 (UTC)
-Date:   Tue, 28 Apr 2020 14:24:01 +0530
-From:   Pratyush Yadav <me@yadavpratyush.com>
-To:     masonccyang@mxic.com.tw
-Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        broonie@kernel.org, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-spi@vger.kernel.org, miquel.raynal@bootlin.com,
-        Pratyush Yadav <p.yadav@ti.com>, richard@nod.at,
-        tudor.ambarus@microchip.com, vigneshr@ti.com
-Subject: Re: [PATCH v2 0/5] mtd: spi-nor: Add support for Octal 8D-8D-8D mode
-Message-ID: <20200428085401.574wmo6qddmumd7q@yadavpratyush.com>
-References: <1587451187-6889-1-git-send-email-masonccyang@mxic.com.tw>
- <20200421092328.129308f6@collabora.com>
- <20200427175536.2mmei2fy6f7bg6jm@yadavpratyush.com>
- <OF18214CA5.6A9B2B30-ON48258558.001D894C-48258558.002249E0@mxic.com.tw>
+        Tue, 28 Apr 2020 04:54:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:47924 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726271AbgD1Iyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 04:54:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBD6D30E;
+        Tue, 28 Apr 2020 01:54:44 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A07733F305;
+        Tue, 28 Apr 2020 01:54:43 -0700 (PDT)
+References: <20200423220056.29450-1-john.stultz@linaro.org> <jhj1rodyeu1.mognet@arm.com> <CALAqxLW+CBMxj_5gCF5yLcX8dhM7Fg6oOL-zot0ZZT6PW6R04g@mail.gmail.com> <jhj1ro9bzhg.mognet@arm.com> <CAHp75VeE_J-GE9o6QVxBk6RJ2fjSwATfR1etaT0CXCgAiidjPQ@mail.gmail.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "open list\:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [RFC][PATCH] serial: amba-pl011: Make sure we initialize the port.lock spinlock
+In-reply-to: <CAHp75VeE_J-GE9o6QVxBk6RJ2fjSwATfR1etaT0CXCgAiidjPQ@mail.gmail.com>
+Date:   Tue, 28 Apr 2020 09:54:38 +0100
+Message-ID: <jhjimhkrnw1.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <OF18214CA5.6A9B2B30-ON48258558.001D894C-48258558.002249E0@mxic.com.tw>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mason,
 
-On 28/04/20 02:14PM, masonccyang@mxic.com.tw wrote:
-> 
-> Hi Pratyush,
-> 
-> > > On Tue, 21 Apr 2020 14:39:42 +0800
-> > > Mason Yang <masonccyang@mxic.com.tw> wrote:
-> > > 
-> > > > Hello,
-> > > > 
-> > > > This is repost of patchset from Boris Brezillon's
-> > > > [RFC,00/18] mtd: spi-nor: Proposal for 8-8-8 mode support [1].
-> > > 
-> > > I only quickly went through the patches you sent and saying it's a
-> > > repost of the RFC is a bit of a lie. You completely ignored the state
-> > > tracking I was trying to do to avoid leaving the flash in 8D mode when
-> > > suspending/resetting the board, and I think that part is crucial. If I
-> > > remember correctly, we already had this discussion so I must say I'm a
-> > > bit disappointed.
-> > > 
-> > > Can you sync with Pratyush? I think his series [1] is better in that 
-> it
-> > > tries to restore the flash in single-SPI mode before suspend (it's
-> > > missing the shutdown case, but that can be easily added I think). Of
-> > > course that'd be even better to have proper state tracking at the SPI
-> > > NOR level.
-> > 
-> > Hi Mason,
-> > 
-> > I posted a re-roll of my series here [0]. Could you please base your 
-> > changes on top of it? Let me know if the series is missing something you 
-> 
-> > need.
-> > 
-> > [0]  
-> https://lore.kernel.org/linux-mtd/20200424184410.8578-1-p.yadav@ti.com/
-> 
-> 
-> Our mx25uw51245g supports BFPT DWORD-18,19 and 20 data and xSPI profile 
-> 1.0,
-> and it comply with BFPT DWORD-19, octal mode enable sequences by write CFG 
-> Reg2 
-> with instruction 0x72. Therefore, I can't apply your patches.
+On 27/04/20 10:02, Andy Shevchenko wrote:
+>> I did a tiny bit of git spelunking; I found a commit that changed
+>> uart_console_enabled() into uart_console() within
+>> uart_port_spin_lock_init():
+>>
+>>   a3cb39d258ef ("serial: core: Allow detach and attach serial device for console")
+>>
+>> Reverting just that one change in uart_port_spin_lock_init() seems to go
+>> fine on both Juno & HiKey960, but I think that doesn't play well with the
+>> rest of the aforementioned commit. I think that this initial (index, line)
+>> tuple is to blame, though I've added Andy in Cc just in case.
+>
+> The above mentioned commit reveals the issue in the code which doesn't
+> register console properly.
+>
+> See what I put in 0f87aa66e8c31 ("serial: sunhv: Initialize lock for
+> non-registered console").
 
-I didn't mean apply my patches directly. I meant more along the lines of 
-edit your patches to work on top of my series. It should be as easy as 
-adding your flash's fixup hooks and its octal DTR enable hook, but if my 
-series is missing something you need (like complete Profile 1.0 parsing, 
-which I left out because I wanted to be conservative and didn't see any 
-immediate use-case for us), let me know, and we can work together to 
-address it.
- 
-> I quickly went through your patches but can't reply them in each your 
-> patches.
-> 
-> i.e,.
-> 1) [v4,03/16] spi: spi-mem: allow specifying a command's extension
-> 
-> -                                u8 opcode;
-> +                                u16 opcode;
-> 
-> big/little Endian issue, right? 
-> why not just u8 ext_opcode;
-> No any impact for exist code and actually only xSPI device use extension 
-> command.
-
-Boris already explained the reasoning behind it.
- 
-> 2) [v4,08/16] mtd: spi-nor: parse xSPI Profile 1.0 table
-> 
-> need extract more data from xSPI profile 1.0 table and no other specific 
-> setting. 
-
-Not sure what you mean by "no other specific setting".
- 
-> 3) [v4,11/16] mtd: spi-nor: enable octal DTR mode when possible
-> 
-> +static int spi_nor_octal_dtr_enable(struct spi_nor *nor, bool enable)
-> +{
-> +                int ret;
-> +
-> +                if (!nor->params->octal_dtr_enable)
-> +                                return 0;
-> +
-> +                if (!(spi_nor_get_protocol_width(nor->read_proto) == 8 ||
-> +                      spi_nor_get_protocol_width(nor->write_proto) == 8))
-> +                                return 0;
-> +
-> +                ret = nor->params->octal_dtr_enable(nor, enable);
-> +                if (ret)
-> +                                return ret;
-> +
-> +                if (enable)
-> +                                nor->reg_proto = SNOR_PROTO_8_8_8_DTR;
-> +                else
-> +                                nor->reg_proto = SNOR_PROTO_1_1_1;
-> +
-> +                return 0;
-> +}
-> +
-> 
-> it seems you enable device in Octal mode after SPI-NOR Framework is 
-> already
-> in Octal protocol.
-> Driver should set device by SPI 1-1-1 mode to enter Octal mode and then 
-> setup
-> Read/PP command and protocol by spi_nor_set_read/pp_setting() for Octal 
-> mode,
-> right ?
-
-No. We need to setup Read and PP settings first. The overall flow is 
-that we first run spi_nor_setup(). This will perform a "negotiation" 
-between the controller and the flash to find out a common protocol they 
-both support, and then change to that protocol in spi_nor_init(). Even 
-if the flash supports octal DTR protocol, we can't use if if the 
-controller doesn't. That is why we want to first select the protocol in 
-the framework, and only then change the flash to that protocol.
-
-In case the controller doesn't support 8D-8D-8D protocol, we would want 
-to use 1S-1S-1S protocol so the flash is at least usable. Changing to 8D 
-mode before finding this out would make the flash unusable.
-
--- 
-Regards,
-Pratyush Yadav
+Thanks for the pointer. I'm still a puzzled as to why it goes fine on one
+board and not on another, but at this point I don't have any better
+suggestion than the unconditional init.
