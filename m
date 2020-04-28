@@ -2,103 +2,138 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A67C83002
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0AFC83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 037892070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5A97206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 01:54:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="mtPP7ztM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbgD1BtY (ORCPT
+        id S1726315AbgD1ByL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 21:49:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:44470 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbgD1BtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 21:49:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D80230E;
-        Mon, 27 Apr 2020 18:49:22 -0700 (PDT)
-Received: from [10.163.70.197] (unknown [10.163.70.197])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A02363F305;
-        Mon, 27 Apr 2020 18:49:14 -0700 (PDT)
-Subject: Re: [mm/debug] fa6726c1e7: kernel_BUG_at_include/linux/mm.h
-To:     kernel test robot <lkp@intel.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Qian Cai <cai@lca.pw>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-References: <20200427140706.GC5770@shao2-debian>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <51dcbcbf-6020-6672-05b0-5bb10c6292b5@arm.com>
-Date:   Tue, 28 Apr 2020 07:18:46 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 27 Apr 2020 21:54:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726251AbgD1ByL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 21:54:11 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD95DC03C1A8
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 18:54:10 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id k8so15870647ejv.3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 18:54:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q5tYdGjSsZlu5Ne+dsC8P4f1ZDRmzcjVVvV9xH9KECg=;
+        b=mtPP7ztM8aHi21wYH8FHLeYnqI6H4zToRQjs46GgQDe0r3XY70D438jCjjf8kovPvE
+         d24Bd6f9zUDF6ucZTLQNM4FXghTJB85YvfXwleSdI9xBIrV9fyezSxqtgzw6IrSAg/6g
+         w/2xxHpV6y/40Kh3b2CwHgkWr7VxcJXKHlHyB51J2DWkK+MFlr9xkcFGlVKITCItQ75Y
+         x35BwPT/7jNT2fOJVjUN/9dRmSnFmAsoeNNxFxke7Xibs1WHyutb4WzQWRRU15jYCNk5
+         YgC/+Bl5PEUfskXms5dSe5gtVx14hIo5c5zZx8uH9gCtaCZ41i8b/iCMF7O8RINkF5if
+         Xo4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q5tYdGjSsZlu5Ne+dsC8P4f1ZDRmzcjVVvV9xH9KECg=;
+        b=QWG/6cUzwC6KYNyIrlbJTC5pMUdtOkqaugcY/K+ckJQgzSGST+aSh5XGlPMFjqf8wy
+         /3/S3NWrsxKfPo+Hp0QmKCGJp9nb2RsIWihMpP/dNejp5E3mo2EWl7DDFJ5kF3uMybMK
+         nL1LPaxNfdB5kss1HW+vtU1c+tSSBFiMXl2FTr0P+e30Q3Lt9NC2T8yY2xVw7lgi9AON
+         FY32P0k1/7M5B8vSUwVzKaL3CxnN35uS4CEaGgz2G1W2GWEev74w+i0xpEVIXnHo4oeP
+         uKjMTOLbuKl3Q89IGIOb19navRcBNsKxvW+COUl0jSnFKTYTj8kzaolnuI4tjpfjNZ0k
+         avfA==
+X-Gm-Message-State: AGi0PuZlOK59+0UqCNvFAHqt97qH5I/QXQNUsUzZkGmiNxi49MD0Pw3F
+        krymUkH8Ayu/eUFoB9lRypwg/PYwJ4eEdwfRbPUm
+X-Google-Smtp-Source: APiQypKo+7RBQ8YXfiTLN9hjP7+5SV5BdEn0N9W2Mh9Ys+ZswbMHotR74NT4i1pnxP61KnKPrrcWQZJyUzimj1vKfuk=
+X-Received: by 2002:a17:906:f106:: with SMTP id gv6mr23076033ejb.271.1588038849206;
+ Mon, 27 Apr 2020 18:54:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200427140706.GC5770@shao2-debian>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CACT4Y+YTi4JCFRqOB9rgA22S+6xxTo87X41hj6Tdfro8K3ef7g@mail.gmail.com>
+ <CAHC9VhQs6eJpX4oMrhBiDap-HhEsBBgmYWEou=ZH60YiA__T7w@mail.gmail.com>
+ <CACT4Y+b8HiV6KFuAPysZD=5hmyO4QisgxCKi4DHU3CfMPSP=yg@mail.gmail.com>
+ <171b1244748.27df.85c95baa4474aabc7814e68940a78392@paul-moore.com> <CACT4Y+b43uGr-44TVT9eTu_Lh=8CkKXJdSxz6tB9+BjRe9WF1A@mail.gmail.com>
+In-Reply-To: <CACT4Y+b43uGr-44TVT9eTu_Lh=8CkKXJdSxz6tB9+BjRe9WF1A@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 27 Apr 2020 21:53:57 -0400
+Message-ID: <CAHC9VhR9CN5RzuUonhhFs+L07jt7DWJbDYicf6NEu0z05MpA4g@mail.gmail.com>
+Subject: Re: selinux_netlink_send changes program behavior
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     David Miller <davem@davemloft.net>, kuba@kernel.org,
+        netdev <netdev@vger.kernel.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>,
+        Willem de Bruijn <willemb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Apr 25, 2020 at 8:01 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> On Sat, Apr 25, 2020 at 1:42 PM Paul Moore <paul@paul-moore.com> wrote:
+> > >> On Fri, Apr 24, 2020 at 4:27 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > >>> Hi SELinux maintainers,
+> > >>>
+> > >>> We've hit a case where a developer wasn't able to reproduce a kernel
+> > >>> bug, it turned out to be a difference in behavior between SELinux and
+> > >>> non-SELinux kernels.
+> > >>> Condensed version: a program does sendmmsg on netlink socket with 2
+> > >>> mmsghdr's, first is completely empty/zeros, second contains some
+> > >>> actual payload. Without SELinux the first mmsghdr is treated as no-op
+> > >>> and the kernel processes the second one (triggers bug). However the
+> > >>> SELinux hook does:
+> > >>>
+> > >>> static int selinux_netlink_send(struct sock *sk, struct sk_buff *skb)
+> > >>> {
+> > >>> if (skb->len < NLMSG_HDRLEN) {
+> > >>>  err = -EINVAL;
+> > >>>  goto out;
+> > >>> }
+> > >>>
+> > >>> and fails processing on the first empty mmsghdr (does not happen
+> > >>> without SELinux).
+> > >>>
+> > >>> Is this difference in behavior intentional/acceptable/should be fixed?
+> > >>
+> > >> From a practical perspective, SELinux is always going to need to do a
+> > >> length check as it needs to peek into the netlink message header for
+> > >> the message type so it can map that to the associated SELinux
+> > >> permissions.  So in that sense, the behavior is intentional and
+> > >> desired; however from a bug-for-bug compatibility perspective ... not
+> > >> so much.
+> > >>
+> > >> Ultimately, my it's-Friday-and-it's-been-a-long-week-ending-in-a-long-day
+> > >> thought is that this was a buggy operation to begin with and the bug
+> > >> was just caught in different parts of the kernel, depending on how it
+> > >> was configured.  It may not be ideal, but I can think of worse things
+> > >> (and arguably SELinux is doing the Right Thing).
+> > >
+> > > +netlink maintainers for intended semantics of empty netlink messages
+> > >
+> > > If it's a bug, or intended behavior depends on the intended
+> > > behavior... which I assume is not documented anywhere officially.
+> >
+> > Your original email gave the impression that there was a big in the non-SELinux case; if that is not the case my response changes.
+>
+>
+> There is no bug... Well, there is a crash, but it is somewhere in the
+> routing subsystem and is caused by the contents of the second netlink
+> message. This is totally unrelated to this SELinux check and that
+> crash is totally reproducible with SELinux as well if we just don't
+> send the first empty message.
+> The crux is really a difference in behavior in SELinux and non-SELinux cases.
 
+We're taking a closer look from the SELinux side of things.
 
-On 04/27/2020 07:37 PM, kernel test robot wrote:
-> 
-> [   10.263354] kernel BUG at include/linux/mm.h:699!
-> [   10.264320] invalid opcode: 0000 [#1] SMP
-> [   10.264872] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc2-00230-gfa6726c1e7f01 #2
-> [   10.265928] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-> [   10.267074] EIP: __free_pages+0x4f/0x62
-> [   10.267615] Code: 85 ff 74 0e 89 fa 89 f0 e8 83 ed ff ff 5b 5e 5f 5d c3 89 f0 e8 57 ff ff ff 5b 5e 5f 5d c3 ba fc 86 fc c1 89 f0 e8 ff 2e fe ff <0f> 0b 0f b6 cb ba ff ff ff ff 89 f0 e8 07 8f 01 00 eb bf 55 89 e5
-> [   10.270098] EAX: 0000003e EBX: ee800000 ECX: 00000000 EDX: c0068000
-> [   10.270925] ESI: eece0640 EDI: c016d020 EBP: c0071f10 ESP: c0071f04
-> [   10.271786] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00010286
-> [   10.272724] CR0: 80050033 CR2: b7d6467d CR3: 023d0000 CR4: 000006b0
-> [   10.273572] Call Trace:
-> [   10.273912]  free_pages+0x3d/0x43
-> [   10.274367]  pgd_free+0xea/0x11b
-> [   10.274807]  __mmdrop+0x3c/0xc7
-> [   10.275237]  ? __free_pages+0x3e/0x62
-> [   10.275761]  debug_vm_pgtable+0x411/0x419
-> [   10.276305]  ? rest_init+0x23c/0x23c
-> [   10.276767]  kernel_init+0x15/0xf4
-> [   10.277208]  ? schedule_tail_wrapper+0x9/0xc
-> [   10.277756]  ret_from_fork+0x2e/0x38
-> [   10.278217] Modules linked in: stm_p_basic
-> [   10.278776] ---[ end trace b838f89424113a3a ]---
-This is an unsupported (enabled via CONFIG_EXPERT) X86 platform (CONFIG_X86_PAE)
-and is known to fail. The latest (V17) patch had moved the test invocation into
-a late_initcall() per Linus thus pushing down any possible failures (like this)
-after early boot. Please ignore this report.
-
-Apart from this X86_PAE based config, no other platform failures have reported
-so far. Assuming that this test robot does have a good platform coverage, the
-CONFIG_EXPERT method of enabling CONFIG_DEBUG_VM_PGTABLE should help in getting
-more platform coverage for this test.
-
-- Anshuman
+-- 
+paul moore
+www.paul-moore.com
