@@ -4,51 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF708C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DE6C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A3A02085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B972B20730
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588100258;
-	bh=S5579T0/eEWJ0+afvsFWAkNck1Ara5B0uHZdI68kixg=;
+	s=default; t=1588100260;
+	bh=qEjxKOBFnf4u0leOG6IvyiKBbBguatnRg9OSjBm9Lxc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=glHQc9z6OsZj5ZJBFSbHLsWUtXg72QNMaPMp8mp4ap8NvCSli4UBQnYjfVcE6+JUx
-	 0fm6XLgXGBximDLApzXN797nitCQEzl3bDCI4nNrytIM62khFx0MB+5r5YjHXLjV3H
-	 +YqXVI+kuIsPX80xl1VFDbUHKGaqBANlxM4dMWXM=
+	b=rtgv5GufwPMA2dL+W0taaa7EcXHlrfhFJJ+902exJOil7uFkf6d3LTaf+k18yjXnW
+	 Tsw3jYlHftE0fmTOztoE3OxgraqneAjyfVwTYJxpyLft64jarNhO2PZknM8ZH+nOnR
+	 BMZOGbkEleIy2fdv1C+ssvhamYCTKWPJ1HPPHOZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729480AbgD1SaS (ORCPT
+        id S1729648AbgD1S5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:30:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44610 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:57:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729464AbgD1SaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:30:10 -0400
+        id S1728961AbgD1SaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:30:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 609462137B;
-        Tue, 28 Apr 2020 18:30:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F01A620B80;
+        Tue, 28 Apr 2020 18:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098609;
-        bh=S5579T0/eEWJ0+afvsFWAkNck1Ara5B0uHZdI68kixg=;
+        s=default; t=1588098619;
+        bh=qEjxKOBFnf4u0leOG6IvyiKBbBguatnRg9OSjBm9Lxc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uyIiab80qjhP/D9z94B5zcsOzRxhlIt1S6Za3qq4IdxJQ1HFLHSdAFYKd9AXUwrD/
-         5aKmK6t7HD2Pv+tEmNS3bZV++gCT0qWBe3MkiYWKZeCcx3pKhZpBQEUuz0XjHYZd3i
-         cyjpDqgLIJOI2MJgN9BW1uNGwr1VecIv1c0NWn28=
+        b=gpZ8jO2zf46Y/nsHove99kQ5XmM4OAYaow18qbPBs9P7oSzYHJ9pR1JsazAADeMnr
+         6l99/O9FFMF2S7G+JUeK64svan/4YNqdCZjD+Fo/x7lw0oyZ88vVGMp+ZK29ZOe/HQ
+         i6uYQIylQ842RpyM4BdS0+rY9IppFz29sa8ljmGo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        NeilBrown <neilb@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Waiman Long <longman@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 027/131] pwm: renesas-tpu: Fix late Runtime PM enablement
-Date:   Tue, 28 Apr 2020 20:23:59 +0200
-Message-Id: <20200428182228.532438041@linuxfoundation.org>
+Subject: [PATCH 4.19 020/131] kernel/gcov/fs.c: gcov_seq_next() should increase position index
+Date:   Tue, 28 Apr 2020 20:23:52 +0200
+Message-Id: <20200428182227.651335936@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
 References: <20200428182224.822179290@linuxfoundation.org>
@@ -61,61 +68,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit d5a3c7a4536e1329a758e14340efd0e65252bd3d ]
+[ Upstream commit f4d74ef6220c1eda0875da30457bef5c7111ab06 ]
 
-Runtime PM should be enabled before calling pwmchip_add(), as PWM users
-can appear immediately after the PWM chip has been added.
-Likewise, Runtime PM should always be disabled after the removal of the
-PWM chip, even if the latter failed.
+If seq_file .next function does not change position index, read after
+some lseek can generate unexpected output.
 
-Fixes: 99b82abb0a35b073 ("pwm: Add Renesas TPU PWM driver")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Manfred Spraul <manfred@colorfullife.com>
+Cc: NeilBrown <neilb@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Waiman Long <longman@redhat.com>
+Link: http://lkml.kernel.org/r/f65c6ee7-bd00-f910-2f8a-37cc67e4ff88@virtuozzo.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-renesas-tpu.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ kernel/gcov/fs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-renesas-tpu.c b/drivers/pwm/pwm-renesas-tpu.c
-index 29267d12fb4c9..9c7962f2f0aa4 100644
---- a/drivers/pwm/pwm-renesas-tpu.c
-+++ b/drivers/pwm/pwm-renesas-tpu.c
-@@ -423,16 +423,17 @@ static int tpu_probe(struct platform_device *pdev)
- 	tpu->chip.base = -1;
- 	tpu->chip.npwm = TPU_CHANNEL_MAX;
+diff --git a/kernel/gcov/fs.c b/kernel/gcov/fs.c
+index 6e40ff6be083d..291e0797125b6 100644
+--- a/kernel/gcov/fs.c
++++ b/kernel/gcov/fs.c
+@@ -109,9 +109,9 @@ static void *gcov_seq_next(struct seq_file *seq, void *data, loff_t *pos)
+ {
+ 	struct gcov_iterator *iter = data;
  
-+	pm_runtime_enable(&pdev->dev);
++	(*pos)++;
+ 	if (gcov_iter_next(iter))
+ 		return NULL;
+-	(*pos)++;
+ 
+ 	return iter;
+ }
+-- 
+2.20.1
+
+
+
+ sizeof(kctl->id.name));
 +
- 	ret = pwmchip_add(&tpu->chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to register PWM chip\n");
-+		pm_runtime_disable(&pdev->dev);
- 		return ret;
++	if (check_mapped_name(map, kctl->id.name, sizeof(kctl->id.name)))
++		strlcat(kctl->id.name, " Jack", sizeof(kctl->id.name));
++	else
++		get_connector_control_name(mixer, term, is_input, kctl->id.name,
++					   sizeof(kctl->id.name));
+ 	kctl->private_free = snd_usb_mixer_elem_free;
+ 	snd_usb_mixer_add_control(&cval->head, kctl);
+ }
+diff --git a/sound/usb/mixer_maps.c b/sound/usb/mixer_maps.c
+index b4e77000f441e..fb2c4a992951b 100644
+--- a/sound/usb/mixer_maps.c
++++ b/sound/usb/mixer_maps.c
+@@ -369,6 +369,24 @@ static const struct usbmix_name_map asus_rog_map[] = {
+ 	{}
+ };
+ 
++/* TRX40 mobos with Realtek ALC1220-VB */
++static const struct usbmix_name_map trx40_mobo_map[] = {
++	{ 18, NULL }, /* OT, IEC958 - broken response, disabled */
++	{ 19, NULL, 12 }, /* FU, Input Gain Pad - broken response, disabled */
++	{ 16, "Speaker" },		/* OT */
++	{ 22, "Speaker Playback" },	/* FU */
++	{ 7, "Line" },			/* IT */
++	{ 19, "Line Capture" },		/* FU */
++	{ 17, "Front Headphone" },	/* OT */
++	{ 23, "Front Headphone Playback" },	/* FU */
++	{ 8, "Mic" },			/* IT */
++	{ 20, "Mic Capture" },		/* FU */
++	{ 9, "Front Mic" },		/* IT */
++	{ 21, "Front Mic Capture" },	/* FU */
++	{ 24, "IEC958 Playback" },	/* FU */
++	{}
++};
++
+ /*
+  * Control map entries
+  */
+@@ -500,7 +518,7 @@ static const struct usbmix_ctl_map usbmix_ctl_maps[] = {
+ 	},
+ 	{	/* Gigabyte TRX40 Aorus Pro WiFi */
+ 		.id = USB_ID(0x0414, 0xa002),
+-		.map = asus_rog_map,
++		.map = trx40_mobo_map,
+ 	},
+ 	{	/* ASUS ROG Zenith II */
+ 		.id = USB_ID(0x0b05, 0x1916),
+@@ -512,11 +530,11 @@ static const struct usbmix_ctl_map usbmix_ctl_maps[] = {
+ 	},
+ 	{	/* MSI TRX40 Creator */
+ 		.id = USB_ID(0x0db0, 0x0d64),
+-		.map = asus_rog_map,
++		.map = trx40_mobo_map,
+ 	},
+ 	{	/* MSI TRX40 */
+ 		.id = USB_ID(0x0db0, 0x543d),
+-		.map = asus_rog_map,
++		.map = trx40_mobo_map,
+ 	},
+ 	{ 0 } /* terminator */
+ };
+diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
+index dcaf9eed9a415..8c2f5c23e1b43 100644
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -3635,4 +3635,18 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge", "HVR-950Q"),
  	}
+ },
  
- 	dev_info(&pdev->dev, "TPU PWM %d registered\n", tpu->pdev->id);
- 
--	pm_runtime_enable(&pdev->dev);
--
- 	return 0;
- }
- 
-@@ -442,12 +443,10 @@ static int tpu_remove(struct platform_device *pdev)
- 	int ret;
- 
- 	ret = pwmchip_remove(&tpu->chip);
--	if (ret)
--		return ret;
- 
- 	pm_runtime_disable(&pdev->dev);
- 
--	return 0;
-+	return ret;
- }
- 
- #ifdef CONFIG_OF
++#define ALC1220_VB_DESKTOP(vend, prod) { \
++	USB_DEVICE(vend, prod),	\
++	.driver_info = (unsigned long) & (const struct snd_usb_audio_quirk) { \
++		.vendor_name = "Realtek", \
++		.product_name = "ALC1220-VB-DT", \
++		.profile_name = "Realtek-ALC1220-VB-Desktop", \
++		.ifnum = QUIRK_NO_INTERFACE \
++	} \
++}
++ALC1220_VB_DESKTOP(0x0414, 0xa002), /* Gigabyte TRX40 Aorus Pro WiFi */
++ALC1220_VB_DESKTOP(0x0db0, 0x0d64), /* MSI TRX40 Creator */
++ALC1220_VB_DESKTOP(0x0db0, 0x543d), /* MSI TRX40 */
++#undef ALC1220_VB_DESKTOP
++
+ #undef USB_DEVICE_VENDOR_SPEC
 -- 
 2.20.1
 
