@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6F2C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E67C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C05420B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B07A20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099350;
-	bh=UcH5qtw59qTuXTBw6ECJdi8TpzL+afl6G6oGjx9V0XA=;
+	s=default; t=1588099353;
+	bh=ORWh+ng3YBmP//sXxpn+8+rv7EIHwrU2GNBrBcPU4SE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1sX+1hXx+WZ7rGZ6JsnN76QOTpn3WRb/CtzNfjJ9S5s4IVp81/XU5CKDDJsTXRJXx
-	 DPyRtWVk14XbAdgfFxTjvkjzJhdp8/cYM4RYoDOzjIhQOPaNT0dwzfSclXabobit2i
-	 LnFI6CqnmXbEGR3Dga03lz8OkNv4aCTGcB0AjyPE=
+	b=oHST3bCB39DvgDats79czU58BBK+oPMfyqkpx4cQ6EUjxXphgTS3QIDirIfrAEwSy
+	 YAnI44X4bwuj55hZfEdI47N0W/lPDLoBnMKmYAT5JZH6/AyFSvsdZKp0d3sDfOXImh
+	 LxZvCurZuCogjbMnlujLZYr8z+F0HGqY3r/W7ZAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731113AbgD1Sm2 (ORCPT
+        id S1731119AbgD1Smc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:42:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34368 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:42:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731102AbgD1SmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:42:24 -0400
+        id S1730920AbgD1Sm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:42:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB93220B1F;
-        Tue, 28 Apr 2020 18:42:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8D20208E0;
+        Tue, 28 Apr 2020 18:42:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099344;
-        bh=UcH5qtw59qTuXTBw6ECJdi8TpzL+afl6G6oGjx9V0XA=;
+        s=default; t=1588099349;
+        bh=ORWh+ng3YBmP//sXxpn+8+rv7EIHwrU2GNBrBcPU4SE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VcdsAQTadtWktnmjVyOjdUwFTBew5KB/+SWB+i1HzIYicXM6SMEEVvV98rUi8/Ioh
-         NG92KC8LC0ihKviCue+Coxkl8GeQuvLTnJ6ihWVqyPT/xA8e6xU7B3Z2Gqd8uBwq8b
-         WMF44Qo427L2sT7BWKP09hZZ9xC5IQj3bygz8ZJ4=
+        b=wZhOynaJJGkfhJPH6Ofcn9lUnLRjmN8bCJtpyf5xw7vCiNJ+m7bi+CZcTeQBi5Swa
+         pvWmaoATDFnhzhkCVdan1e8s7DdtQmn9+XRD0NWFFCZMnIj9kp3lcaY3p6VsK+XzHo
+         n5gn17GZbXN3J5589pYtC4y3L6gxTQcVCa274XbU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 112/168] ALSA: usb-audio: Fix usb audio refcnt leak when getting spdif
-Date:   Tue, 28 Apr 2020 20:24:46 +0200
-Message-Id: <20200428182246.689747900@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH 5.4 114/168] tpm/tpm_tis: Free IRQ if probing fails
+Date:   Tue, 28 Apr 2020 20:24:48 +0200
+Message-Id: <20200428182246.951677289@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -59,58 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-commit 59e1947ca09ebd1cae147c08c7c41f3141233c84 upstream.
+commit b160c94be5d2816b62c8ac338605668304242959 upstream.
 
-snd_microii_spdif_default_get() invokes snd_usb_lock_shutdown(), which
-increases the refcount of the snd_usb_audio object "chip".
+Call disable_interrupts() if we have to revert to polling in order not to
+unnecessarily reserve the IRQ for the life-cycle of the driver.
 
-When snd_microii_spdif_default_get() returns, local variable "chip"
-becomes invalid, so the refcount should be decreased to keep refcount
-balanced.
-
-The reference counting issue happens in several exception handling paths
-of snd_microii_spdif_default_get(). When those error scenarios occur
-such as usb_ifnum_to_if() returns NULL, the function forgets to decrease
-the refcnt increased by snd_usb_lock_shutdown(), causing a refcnt leak.
-
-Fix this issue by jumping to "end" label when those error scenarios
-occur.
-
-Fixes: 447d6275f0c2 ("ALSA: usb-audio: Add sanity checks for endpoint accesses")
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1587617711-13200-1-git-send-email-xiyuyang19@fudan.edu.cn
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: stable@vger.kernel.org # 4.5.x
+Reported-by: Hans de Goede <hdegoede@redhat.com>
+Fixes: e3837e74a06d ("tpm_tis: Refactor the interrupt setup")
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/mixer_quirks.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/char/tpm/tpm_tis_core.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/sound/usb/mixer_quirks.c
-+++ b/sound/usb/mixer_quirks.c
-@@ -1508,11 +1508,15 @@ static int snd_microii_spdif_default_get
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -433,6 +433,9 @@ static void disable_interrupts(struct tp
+ 	u32 intmask;
+ 	int rc;
  
- 	/* use known values for that card: interface#1 altsetting#1 */
- 	iface = usb_ifnum_to_if(chip->dev, 1);
--	if (!iface || iface->num_altsetting < 2)
--		return -EINVAL;
-+	if (!iface || iface->num_altsetting < 2) {
-+		err = -EINVAL;
-+		goto end;
-+	}
- 	alts = &iface->altsetting[1];
--	if (get_iface_desc(alts)->bNumEndpoints < 1)
--		return -EINVAL;
-+	if (get_iface_desc(alts)->bNumEndpoints < 1) {
-+		err = -EINVAL;
-+		goto end;
-+	}
- 	ep = get_endpoint(alts, 0)->bEndpointAddress;
- 
- 	err = snd_usb_ctl_msg(chip->dev,
++	if (priv->irq == 0)
++		return;
++
+ 	rc = tpm_tis_read32(priv, TPM_INT_ENABLE(priv->locality), &intmask);
+ 	if (rc < 0)
+ 		intmask = 0;
+@@ -983,9 +986,12 @@ int tpm_tis_core_init(struct device *dev
+ 		if (irq) {
+ 			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
+ 						 irq);
+-			if (!(chip->flags & TPM_CHIP_FLAG_IRQ))
++			if (!(chip->flags & TPM_CHIP_FLAG_IRQ)) {
+ 				dev_err(&chip->dev, FW_BUG
+ 					"TPM interrupt not working, polling instead\n");
++
++				disable_interrupts(chip);
++			}
+ 		} else {
+ 			tpm_tis_probe_irq(chip, intmask);
+ 		}
 
 
