@@ -2,56 +2,54 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB78C83004
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2103BC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73D86208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF0E8208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:36:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098959;
-	bh=LMsaOo9mRFbjfLpoPUOLE7kvZ5gAJmCjWdyVBdLhh10=;
+	s=default; t=1588098961;
+	bh=Lyfl/MOteIG0m0E5CqO/jTwVMM3cqUchcghye7D9lCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oA5uZYhC0ypehfIsmg3z5YlOeP8z4WWRjmopxpPfNjJyUPlAeIz6ZYYUg4pjChkGB
-	 awU9vwH2DCwA6wrZxujuW9yA9VMh0AXR0AceehMzAnUMUv1uHTfgc8tSyqmQKx7vXQ
-	 YX9jHF5am7xfCLYVB890UwHL6SGBIZXEZtAxCLVs=
+	b=IJrvo7iUa7Oj7RWu8uOVH3SSBoEMiuMHL7EzfBVDh16+UY43dVP2XQyxoUKDwseL9
+	 wcDt7mVmOr0QjxmqIlsRhNK9r9nUz4Wk6w9VMpmK8gum1579PKY/Z0dJ2agfkgwoxZ
+	 0aZeCw6/Wuogm42D80cLbckEMTnha2mF2cjXusdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730320AbgD1Sf6 (ORCPT
+        id S1730328AbgD1Sf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:35:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53228 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:35:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730308AbgD1Sfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:35:55 -0400
+        id S1730313AbgD1Sf5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:35:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 129E2208E0;
-        Tue, 28 Apr 2020 18:35:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7655B208E0;
+        Tue, 28 Apr 2020 18:35:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098954;
-        bh=LMsaOo9mRFbjfLpoPUOLE7kvZ5gAJmCjWdyVBdLhh10=;
+        s=default; t=1588098956;
+        bh=Lyfl/MOteIG0m0E5CqO/jTwVMM3cqUchcghye7D9lCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=05UJdZkyfUTZBRrZ9K87vpg0gpyaaSj+g7sKHa5Tv0ART1jY768ww35YNhZkexQOU
-         +vqPUZquEdgMU0WCsac7tyOVLXldYwSyMM4L9w4XNvwVguRwVsg2fladyROSVjzU8c
-         AZpWx6IHbq/H7gZfuNUoSdfpZRM7MPvZeQDC2LBs=
+        b=jQsGWtxZwIxG2ja9jK4Fvr3DXP5ox2JrpLVoy0AIxYdOMDg5dJK9RJcErIL/U6EdK
+         NZ32L46omcGxluXffS589yGqKal0Pfpzy9rTOkZfjNC3LviWs9DanJo0TtPp0Q9yki
+         xqiUhCK+6/d+WwNJd9sG9jkocVvuLg0BMPGVONqg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 012/168] scsi: lpfc: Fix crash in target side cable pulls hitting WAIT_FOR_UNREG
-Date:   Tue, 28 Apr 2020 20:23:06 +0200
-Message-Id: <20200428182233.248508681@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH 5.6 109/167] tpm/tpm_tis: Free IRQ if probing fails
+Date:   Tue, 28 Apr 2020 20:24:45 +0200
+Message-Id: <20200428182238.950853009@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
-References: <20200428182231.704304409@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,75 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-[ Upstream commit 807e7353d8a7105ce884d22b0dbc034993c6679c ]
+commit b160c94be5d2816b62c8ac338605668304242959 upstream.
 
-Kernel is crashing with the following stacktrace:
+Call disable_interrupts() if we have to revert to polling in order not to
+unnecessarily reserve the IRQ for the life-cycle of the driver.
 
-  BUG: unable to handle kernel NULL pointer dereference at
-    00000000000005bc
-  IP: lpfc_nvme_register_port+0x1a8/0x3a0 [lpfc]
-  ...
-  Call Trace:
-  lpfc_nlp_state_cleanup+0x2b2/0x500 [lpfc]
-  lpfc_nlp_set_state+0xd7/0x1a0 [lpfc]
-  lpfc_cmpl_prli_prli_issue+0x1f7/0x450 [lpfc]
-  lpfc_disc_state_machine+0x7a/0x1e0 [lpfc]
-  lpfc_cmpl_els_prli+0x16f/0x1e0 [lpfc]
-  lpfc_sli_sp_handle_rspiocb+0x5b2/0x690 [lpfc]
-  lpfc_sli_handle_slow_ring_event_s4+0x182/0x230 [lpfc]
-  lpfc_do_work+0x87f/0x1570 [lpfc]
-  kthread+0x10d/0x130
-  ret_from_fork+0x35/0x40
+Cc: stable@vger.kernel.org # 4.5.x
+Reported-by: Hans de Goede <hdegoede@redhat.com>
+Fixes: e3837e74a06d ("tpm_tis: Refactor the interrupt setup")
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-During target side fault injections, it is possible to hit the
-NLP_WAIT_FOR_UNREG case in lpfc_nvme_remoteport_delete. A prior commit
-fixed a rebind and delete race condition, but called lpfc_nlp_put
-unconditionally. This triggered a deletion and the crash.
-
-Fix by movng nlp_put to inside the NLP_WAIT_FOR_UNREG case, where the nlp
-will be being unregistered/removed. Leave the reference if the flag isn't
-set.
-
-Link: https://lore.kernel.org/r/20200322181304.37655-8-jsmart2021@gmail.com
-Fixes: b15bd3e6212e ("scsi: lpfc: Fix nvme remoteport registration race conditions")
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_nvme.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/char/tpm/tpm_tis_core.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
-index a227e36cbdc2b..5a86a1ee0de3b 100644
---- a/drivers/scsi/lpfc/lpfc_nvme.c
-+++ b/drivers/scsi/lpfc/lpfc_nvme.c
-@@ -342,13 +342,15 @@ lpfc_nvme_remoteport_delete(struct nvme_fc_remote_port *remoteport)
- 	if (ndlp->upcall_flags & NLP_WAIT_FOR_UNREG) {
- 		ndlp->nrport = NULL;
- 		ndlp->upcall_flags &= ~NLP_WAIT_FOR_UNREG;
--	}
--	spin_unlock_irq(&vport->phba->hbalock);
-+		spin_unlock_irq(&vport->phba->hbalock);
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -433,6 +433,9 @@ static void disable_interrupts(struct tp
+ 	u32 intmask;
+ 	int rc;
  
--	/* Remove original register reference. The host transport
--	 * won't reference this rport/remoteport any further.
--	 */
--	lpfc_nlp_put(ndlp);
-+		/* Remove original register reference. The host transport
-+		 * won't reference this rport/remoteport any further.
-+		 */
-+		lpfc_nlp_put(ndlp);
-+	} else {
-+		spin_unlock_irq(&vport->phba->hbalock);
-+	}
- 
-  rport_err:
- 	return;
--- 
-2.20.1
-
++	if (priv->irq == 0)
++		return;
++
+ 	rc = tpm_tis_read32(priv, TPM_INT_ENABLE(priv->locality), &intmask);
+ 	if (rc < 0)
+ 		intmask = 0;
+@@ -1062,9 +1065,12 @@ int tpm_tis_core_init(struct device *dev
+ 		if (irq) {
+ 			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
+ 						 irq);
+-			if (!(chip->flags & TPM_CHIP_FLAG_IRQ))
++			if (!(chip->flags & TPM_CHIP_FLAG_IRQ)) {
+ 				dev_err(&chip->dev, FW_BUG
+ 					"TPM interrupt not working, polling instead\n");
++
++				disable_interrupts(chip);
++			}
+ 		} else {
+ 			tpm_tis_probe_irq(chip, intmask);
+ 		}
 
 
