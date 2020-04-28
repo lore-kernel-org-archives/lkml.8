@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B998C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1D1C83004
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00EC520575
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E716520B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588099360;
-	bh=ghupO339lD3K+xHxFoqtrtWMaXlH4At1OwY6QqOhB0Q=;
+	s=default; t=1588099364;
+	bh=+ccdu+tJ5axG2Gl2Ph/IWpjOqYm3KQqbdCwYjChYxlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=suhbMmshIMAi9BIkCbyMS3v2w/gqqocpRkabvhjy/kNyKt5F/wT5X4sHHTEaGg+yD
-	 GItzkiDCVSXOZjsV6POGrrFCyI5nZyZWsX7JNd+RUoXxCRvHqLwjXhI7btUZbr//3P
-	 I5WRh05EcCkNi/ZUiCNjLFG9UtpfsmpvkxX3nhgg=
+	b=nK5iIwcuMEQx0wrnyLFN0kOXk0NA30JaLk4geJnqohK5W2CxHkR88BMNBxOTFFfJM
+	 rYHiI2pfjSGLusSIdly+g+SSJpyxsYM816Sq57meDH+7M27wWCCCC/UqWKDFsmur7k
+	 bUFmEDiOuP5Wuaf4v1/1siwdMG5u9gXoErNezMU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731137AbgD1Smj (ORCPT
+        id S1731143AbgD1Smm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:42:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34700 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:42:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731126AbgD1Smh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:42:37 -0400
+        id S1728859AbgD1Smj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:42:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4608F20575;
-        Tue, 28 Apr 2020 18:42:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A984A2085B;
+        Tue, 28 Apr 2020 18:42:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588099356;
-        bh=ghupO339lD3K+xHxFoqtrtWMaXlH4At1OwY6QqOhB0Q=;
+        s=default; t=1588099359;
+        bh=+ccdu+tJ5axG2Gl2Ph/IWpjOqYm3KQqbdCwYjChYxlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JDLJCdGupxP3gRCNOSgZikjHfcMXj6NBAukmJMvOJsVnC/N/ibu0/EZ4kJlwVIaxB
-         68WFZ02e+eYJ22gXOPcW6uvhOT1Av3tYpJ0ZNmjCwj2fe5nfTyDrhcq93aV/8ol8vz
-         t+1Wk2Ke0k6BT5J09eAFwEKgTGhmKxjT6PRyZmZY=
+        b=2hhMOtHO6eY6YI48pE2baLeoaTEkIoDqgf3Tw2Nig2v4D8ZYsA1KDmcC48FUgquIn
+         spST2tQGZuUlokQVIqJbXJHiF4hoF/aBGgHLW4R+AymurYZgc8DZ1NZHPtCORWJ+39
+         a8FtWfkR1EJ0Q/QpEa17Jj6E8RQ/XdjQYrILA1wA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
+        syzbot+d889b59b2bb87d4047a2@syzkaller.appspotmail.com,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Cornelia Huck <cohuck@redhat.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 117/168] KVM: s390: Return last valid slot if approx index is out-of-bounds
-Date:   Tue, 28 Apr 2020 20:24:51 +0200
-Message-Id: <20200428182247.288255691@linuxfoundation.org>
+Subject: [PATCH 5.4 118/168] KVM: Check validity of resolved slot when searching memslots
+Date:   Tue, 28 Apr 2020 20:24:52 +0200
+Message-Id: <20200428182247.420344060@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200428182231.704304409@linuxfoundation.org>
 References: <20200428182231.704304409@linuxfoundation.org>
@@ -63,40 +64,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 97daa028f3f621adff2c4f7b15fe0874e5b5bd6c upstream.
+commit b6467ab142b708dd076f6186ca274f14af379c72 upstream.
 
-Return the index of the last valid slot from gfn_to_memslot_approx() if
-its binary search loop yielded an out-of-bounds index.  The index can
-be out-of-bounds if the specified gfn is less than the base of the
-lowest memslot (which is also the last valid memslot).
+Check that the resolved slot (somewhat confusingly named 'start') is a
+valid/allocated slot before doing the final comparison to see if the
+specified gfn resides in the associated slot.  The resolved slot can be
+invalid if the binary search loop terminated because the search index
+was incremented beyond the number of used slots.
 
-Note, the sole caller, kvm_s390_get_cmma(), ensures used_slots is
-non-zero.
+This bug has existed since the binary search algorithm was introduced,
+but went unnoticed because KVM statically allocated memory for the max
+number of slots, i.e. the access would only be truly out-of-bounds if
+all possible slots were allocated and the specified gfn was less than
+the base of the lowest memslot.  Commit 36947254e5f98 ("KVM: Dynamically
+size memslot array based on number of used slots") eliminated the "all
+possible slots allocated" condition and made the bug embarrasingly easy
+to hit.
 
-Fixes: afdad61615cc3 ("KVM: s390: Fix storage attributes migration with memory slots")
-Cc: stable@vger.kernel.org # 4.19.x: 0774a964ef56: KVM: Fix out of range accesses to memslots
-Cc: stable@vger.kernel.org # 4.19.x
+Fixes: 9c1a5d38780e6 ("kvm: optimize GFN to memslot lookup with large slots amount")
+Reported-by: syzbot+d889b59b2bb87d4047a2@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Message-Id: <20200408064059.8957-3-sean.j.christopherson@intel.com>
+Message-Id: <20200408064059.8957-2-sean.j.christopherson@intel.com>
 Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kvm/kvm-s390.c |    3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/kvm_host.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -1932,6 +1932,9 @@ static int gfn_to_memslot_approx(struct
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1027,7 +1027,7 @@ search_memslots(struct kvm_memslots *slo
  			start = slot + 1;
  	}
  
-+	if (start >= slots->used_slots)
-+		return slots->used_slots - 1;
-+
- 	if (gfn >= memslots[start].base_gfn &&
+-	if (gfn >= memslots[start].base_gfn &&
++	if (start < slots->used_slots && gfn >= memslots[start].base_gfn &&
  	    gfn < memslots[start].base_gfn + memslots[start].npages) {
  		atomic_set(&slots->lru_slot, start);
+ 		return &memslots[start];
 
 
