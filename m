@@ -2,231 +2,129 @@ Return-Path: <SRS0=r24B=6M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6997C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 371C9C83000
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF192073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 158CB20746
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 08:13:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dkwAysvb"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OCWnPWOj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgD1INp (ORCPT
+        id S1726878AbgD1INu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 04:13:45 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30127 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726562AbgD1INp (ORCPT
+        Tue, 28 Apr 2020 04:13:50 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:50690 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbgD1INr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 04:13:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588061623;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YyRKuzpWR77tocYAqun+YTjfRtHpPA8xvoTqR86LZ0M=;
-        b=dkwAysvbq2ugtlt4/sjnG72UDIeBNBmAjxrSIjauy/B2oDyWPCq+fC1mjmunBRKzIlBldX
-        CjddTmBay10qdRQ46wQM1Dj2XdHdVSQpHiOBy0CKcOPk2cWv/p9l4Y9vFzCwpfplvzrel+
-        nQ0R1KqWIimzXUQAXYgpJ+CmOzmKmAA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-412-zbElCxm3MAqo-lGPyHfa2Q-1; Tue, 28 Apr 2020 04:13:35 -0400
-X-MC-Unique: zbElCxm3MAqo-lGPyHfa2Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A758A107B7C5;
-        Tue, 28 Apr 2020 08:13:33 +0000 (UTC)
-Received: from [10.72.13.181] (ovpn-13-181.pek2.redhat.com [10.72.13.181])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3C9F860D53;
-        Tue, 28 Apr 2020 08:13:23 +0000 (UTC)
-Subject: Re: [PATCH net-next 0/3] vsock: support network namespace
-To:     Stefano Garzarella <sgarzare@redhat.com>, davem@davemloft.net,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Jorgen Hansen <jhansen@vmware.com>,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        linux-hyperv@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        netdev@vger.kernel.org
-References: <20200116172428.311437-1-sgarzare@redhat.com>
- <20200427142518.uwssa6dtasrp3bfc@steredhat>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <224cdc10-1532-7ddc-f113-676d43d8f322@redhat.com>
-Date:   Tue, 28 Apr 2020 16:13:22 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 28 Apr 2020 04:13:47 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03S8CpPF056069;
+        Tue, 28 Apr 2020 03:12:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588061571;
+        bh=3xjMu9onpulA2kur4sqLpTmL4sNgAay/v4viJL4Tx4s=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=OCWnPWOjttsHUNxX57fKwHivjGFuY6igEVvRBP9h0uMk5SZ7A2DIAKtt7daZZMD84
+         gYBXiLNm/jfB1i7aRprHnHrSlG2YHkDba0v01kEX7kv4ZaBIzB3nmTZLrNJffmKCYD
+         wXgFQRc8Mrk4Aa+68GcFX5Os7fWolGr0IXcU3PlE=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03S8CoG7009430;
+        Tue, 28 Apr 2020 03:12:50 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
+ Apr 2020 03:12:49 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 28 Apr 2020 03:12:49 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03S8Cljp056226;
+        Tue, 28 Apr 2020 03:12:48 -0500
+Subject: Re: [PATCH] ASoC: davinci-mcasp: Fix dma_chan refcnt leak when
+ getting dma type
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <yuanxzhang@fudan.edu.cn>, <kjlu@umn.edu>,
+        Xin Tan <tanxin.ctf@gmail.com>
+References: <1587818916-38730-1-git-send-email-xiyuyang19@fudan.edu.cn>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <a64cfa62-c377-b516-7386-23340e532285@ti.com>
+Date:   Tue, 28 Apr 2020 11:13:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200427142518.uwssa6dtasrp3bfc@steredhat>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1587818916-38730-1-git-send-email-xiyuyang19@fudan.edu.cn>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2020/4/27 =E4=B8=8B=E5=8D=8810:25, Stefano Garzarella wrote:
-> Hi David, Michael, Stefan,
-> I'm restarting to work on this topic since Kata guys are interested to
-> have that, especially on the guest side.
->
-> While working on the v2 I had few doubts, and I'd like to have your
-> suggestions:
->
->   1. netns assigned to the device inside the guest
->
->     Currently I assigned this device to 'init_net'. Maybe it is better
->     if we allow the user to decide which netns assign to the device
->     or to disable this new feature to have the same behavior as before
->     (host reachable from any netns).
->     I think we can handle this in the vsock core and not in the single
->     transports.
->
->     The simplest way that I found, is to add a new
->     IOCTL_VM_SOCKETS_ASSIGN_G2H_NETNS to /dev/vsock to enable the featu=
-re
->     and assign the device to the same netns of the process that do the
->     ioctl(), but I'm not sure it is clean enough.
->
->     Maybe it is better to add new rtnetlink messages, but I'm not sure =
-if
->     it is feasible since we don't have a netdev device.
->
->     What do you suggest?
 
+On 25/04/2020 15.48, Xiyu Yang wrote:
+> davinci_mcasp_get_dma_type() invokes dma_request_chan(), which returns a
+> reference of the specified dma_chan object to "chan" with increased
+> refcnt.
+> 
+> When davinci_mcasp_get_dma_type() returns, local variable "chan" becomes
+> invalid, so the refcount should be decreased to keep refcount balanced.
+> 
+> The reference counting issue happens in one exception handling path of
+> davinci_mcasp_get_dma_type(). When chan device is NULL, the function
+> forgets to decrease the refcnt increased by dma_request_chan(), causing
+> a refcnt leak.
+> 
+> Fix this issue by calling dma_release_channel() when chan device is
+> NULL.
+> 
+> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+> ---
+>  sound/soc/ti/davinci-mcasp.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
+> index 734ffe925c4d..7a7db743dc5b 100644
+> --- a/sound/soc/ti/davinci-mcasp.c
+> +++ b/sound/soc/ti/davinci-mcasp.c
+> @@ -1896,8 +1896,10 @@ static int davinci_mcasp_get_dma_type(struct davinci_mcasp *mcasp)
+>  				PTR_ERR(chan));
+>  		return PTR_ERR(chan);
+>  	}
+> -	if (WARN_ON(!chan->device || !chan->device->dev))
+> +	if (WARN_ON(!chan->device || !chan->device->dev)) {
+> +		dma_release_channel(chan);
+>  		return -EINVAL;
+> +	}
 
-As we've discussed, it should be a netdev probably in either guest or=20
-host side. And it would be much simpler if we want do implement=20
-namespace then. No new API is needed.
+If we get a channel then chan->device and chan->device->dev never NULL,
+it can not be.
+I think the reason why this is here is that static checkers tends to
+scream at us.
 
-Thanks
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
+>  
+>  	if (chan->device->dev->of_node)
+>  		ret = of_property_read_string(chan->device->dev->of_node,
+> 
 
->
->
->   2. netns assigned in the host
->
->      As Michael suggested, I added a new /dev/vhost-vsock-netns to allo=
-w
->      userspace application to use this new feature, leaving to
->      /dev/vhost-vsock the previous behavior (guest reachable from any
->      netns).
->
->      I like this approach, but I had these doubts:
->
->      - I need to allocate a new minor for that device (e.g.
->        VHOST_VSOCK_NETNS_MINOR) or is there an alternative way that I c=
-an
->        use?
->
->      - It is vhost-vsock specific, should we provide something handled =
-in
->        the vsock core, maybe centralizing the CID allocation and adding=
- a
->        new IOCTL or rtnetlink message like for the guest side?
->        (maybe it could be a second step, and for now we can continue wi=
-th
->        the new device)
->
->
-> Thanks for the help,
-> Stefano
->
->
-> On Thu, Jan 16, 2020 at 06:24:25PM +0100, Stefano Garzarella wrote:
->> RFC -> v1:
->>   * added 'netns' module param to vsock.ko to enable the
->>     network namespace support (disabled by default)
->>   * added 'vsock_net_eq()' to check the "net" assigned to a socket
->>     only when 'netns' support is enabled
->>
->> RFC: https://patchwork.ozlabs.org/cover/1202235/
->>
->> Now that we have multi-transport upstream, I started to take a look to
->> support network namespace in vsock.
->>
->> As we partially discussed in the multi-transport proposal [1], it coul=
-d
->> be nice to support network namespace in vsock to reach the following
->> goals:
->> - isolate host applications from guest applications using the same por=
-ts
->>    with CID_ANY
->> - assign the same CID of VMs running in different network namespaces
->> - partition VMs between VMMs or at finer granularity
->>
->> This new feature is disabled by default, because it changes vsock's
->> behavior with network namespaces and could break existing applications=
-.
->> It can be enabled with the new 'netns' module parameter of vsock.ko.
->>
->> This implementation provides the following behavior:
->> - packets received from the host (received by G2H transports) are
->>    assigned to the default netns (init_net)
->> - packets received from the guest (received by H2G - vhost-vsock) are
->>    assigned to the netns of the process that opens /dev/vhost-vsock
->>    (usually the VMM, qemu in my tests, opens the /dev/vhost-vsock)
->>      - for vmci I need some suggestions, because I don't know how to d=
-o
->>        and test the same in the vmci driver, for now vmci uses the
->>        init_net
->> - loopback packets are exchanged only in the same netns
->>
->> I tested the series in this way:
->> l0_host$ qemu-system-x86_64 -m 4G -M accel=3Dkvm -smp 4 \
->>              -drive file=3D/tmp/vsockvm0.img,if=3Dvirtio --nographic \
->>              -device vhost-vsock-pci,guest-cid=3D3
->>
->> l1_vm$ echo 1 > /sys/module/vsock/parameters/netns
->>
->> l1_vm$ ip netns add ns1
->> l1_vm$ ip netns add ns2
->>   # same CID on different netns
->> l1_vm$ ip netns exec ns1 qemu-system-x86_64 -m 1G -M accel=3Dkvm -smp =
-2 \
->>              -drive file=3D/tmp/vsockvm1.img,if=3Dvirtio --nographic \
->>              -device vhost-vsock-pci,guest-cid=3D4
->> l1_vm$ ip netns exec ns2 qemu-system-x86_64 -m 1G -M accel=3Dkvm -smp =
-2 \
->>              -drive file=3D/tmp/vsockvm2.img,if=3Dvirtio --nographic \
->>              -device vhost-vsock-pci,guest-cid=3D4
->>
->>   # all iperf3 listen on CID_ANY and port 5201, but in different netns
->> l1_vm$ ./iperf3 --vsock -s # connection from l0 or guests started
->>                             # on default netns (init_net)
->> l1_vm$ ip netns exec ns1 ./iperf3 --vsock -s
->> l1_vm$ ip netns exec ns1 ./iperf3 --vsock -s
->>
->> l0_host$ ./iperf3 --vsock -c 3
->> l2_vm1$ ./iperf3 --vsock -c 2
->> l2_vm2$ ./iperf3 --vsock -c 2
->>
->> [1] https://www.spinics.net/lists/netdev/msg575792.html
->>
->> Stefano Garzarella (3):
->>    vsock: add network namespace support
->>    vsock/virtio_transport_common: handle netns of received packets
->>    vhost/vsock: use netns of process that opens the vhost-vsock device
->>
->>   drivers/vhost/vsock.c                   | 29 ++++++++++++-----
->>   include/linux/virtio_vsock.h            |  2 ++
->>   include/net/af_vsock.h                  |  7 +++--
->>   net/vmw_vsock/af_vsock.c                | 41 +++++++++++++++++++----=
---
->>   net/vmw_vsock/hyperv_transport.c        |  5 +--
->>   net/vmw_vsock/virtio_transport.c        |  2 ++
->>   net/vmw_vsock/virtio_transport_common.c | 12 ++++++--
->>   net/vmw_vsock/vmci_transport.c          |  5 +--
->>   8 files changed, 78 insertions(+), 25 deletions(-)
->>
->> --=20
->> 2.24.1
->>
+- Péter
 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
