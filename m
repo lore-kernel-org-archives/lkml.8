@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5D1C83007
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC7FC83007
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7056214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EE90214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 18:28:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588098518;
-	bh=9RzJxy4Upa/s9eKqiIKMjlPo8dJwUDtbafz0tltfjg4=;
+	s=default; t=1588098522;
+	bh=vQ8mnsbIeQGU8T6YGyNGLmDK4xoJW8U7rXdjDlh5rUg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LzI89X/o93F4Tn9AowtKEgcucnRUmB/6kCvJEOGS1zZrS//CDj1Xe090EZaucPvNW
-	 G3MQzWQPlAiz6aEUuho4PGATV/pR7BBwc6sbMC7MxiQzuWQNCgNQ1rSlfGYMl0n6C3
-	 6iyjsArbBtjqJvIU1iqPJDeY21d11ait8Q4qOedo=
+	b=ozAb1H0xszWZ/JDMajPBg9A0dgCRFtRA+WPtkUr9eVHZC2xS+4+b+At24wagdRger
+	 dqSswJmlDmOPkm7BdS2mABmaYkanMc4QR5p1L4GqchF4yaU/5a9RTxM8NZHh1Vp7vt
+	 HNhMlzMFmzN9f9LY5ALMFGfsI3giqJDYy6EdpZeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbgD1S2h (ORCPT
+        id S1729231AbgD1S2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:28:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41334 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 14:28:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729192AbgD1S21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 14:28:27 -0400
+        id S1729197AbgD1S2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:28:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC69B2085B;
-        Tue, 28 Apr 2020 18:28:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18A23208E0;
+        Tue, 28 Apr 2020 18:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588098507;
-        bh=9RzJxy4Upa/s9eKqiIKMjlPo8dJwUDtbafz0tltfjg4=;
+        s=default; t=1588098509;
+        bh=vQ8mnsbIeQGU8T6YGyNGLmDK4xoJW8U7rXdjDlh5rUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=umbcx7PdMr6emy1hkFlMB5NkJ5kXsQl5iLUUP+u+FhlQ0YrKQ1o0UgyWYJPCGgjrY
-         NTUJWvnnWMq2C42mDEYSwMprgR23fl6eYb8EQsTmPazxPOn9DpyadLWsHrCpUmgBYo
-         WzlCRL6PQJZxFVUgswhUyeAltVvXRsiwuhV2yOH8=
+        b=0u7zjgOwIcs4LEGQm7X0w1NrjbQYHPfAmlV3Q68tqnUVooQPHRQPPxsgD+Np48r5N
+         cykrylxv0qeqLZAsqLSAtyx41pHwjnAZUIfJU1/+Au5sH7HzcaYo9aWn3m0JIdG+Fg
+         H9aYmB3LWySqmXZirhHGcx+DgM6/Pj+lJO0reGd8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.19 004/131] crypto: mxs-dcp - make symbols sha1_null_hash and sha256_null_hash static
-Date:   Tue, 28 Apr 2020 20:23:36 +0200
-Message-Id: <20200428182225.921213644@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 063/167] tipc: Fix potential tipc_node refcnt leak in tipc_rcv
+Date:   Tue, 28 Apr 2020 20:23:59 +0200
+Message-Id: <20200428182232.923942002@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
+References: <20200428182225.451225420@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,42 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-commit ce4e45842de3eb54b8dd6e081765d741f5b92b56 upstream.
+[ Upstream commit de058420767df21e2b6b0f3bb36d1616fb962032 ]
 
-Fixes the following sparse warnings:
+tipc_rcv() invokes tipc_node_find() twice, which returns a reference of
+the specified tipc_node object to "n" with increased refcnt.
 
-drivers/crypto/mxs-dcp.c:39:15: warning:
- symbol 'sha1_null_hash' was not declared. Should it be static?
-drivers/crypto/mxs-dcp.c:43:15: warning:
- symbol 'sha256_null_hash' was not declared. Should it be static?
+When tipc_rcv() returns or a new object is assigned to "n", the original
+local reference of "n" becomes invalid, so the refcount should be
+decreased to keep refcount balanced.
 
-Fixes: c709eebaf5c5 ("crypto: mxs-dcp - Fix SHA null hashes and output length")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Guenter Roeck <linux@roeck-us.net>
+The issue happens in some paths of tipc_rcv(), which forget to decrease
+the refcnt increased by tipc_node_find() and will cause a refcnt leak.
+
+Fix this issue by calling tipc_node_put() before the original object
+pointed by "n" becomes invalid.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/crypto/mxs-dcp.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/tipc/node.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/crypto/mxs-dcp.c
-+++ b/drivers/crypto/mxs-dcp.c
-@@ -37,11 +37,11 @@
-  * Null hashes to align with hw behavior on imx6sl and ull
-  * these are flipped for consistency with hw output
-  */
--const uint8_t sha1_null_hash[] =
-+static const uint8_t sha1_null_hash[] =
- 	"\x09\x07\xd8\xaf\x90\x18\x60\x95\xef\xbf"
- 	"\x55\x32\x0d\x4b\x6b\x5e\xee\xa3\x39\xda";
+--- a/net/tipc/node.c
++++ b/net/tipc/node.c
+@@ -2037,6 +2037,7 @@ void tipc_rcv(struct net *net, struct sk
+ 		n = tipc_node_find_by_id(net, ehdr->id);
+ 	}
+ 	tipc_crypto_rcv(net, (n) ? n->crypto_rx : NULL, &skb, b);
++	tipc_node_put(n);
+ 	if (!skb)
+ 		return;
  
--const uint8_t sha256_null_hash[] =
-+static const uint8_t sha256_null_hash[] =
- 	"\x55\xb8\x52\x78\x1b\x99\x95\xa4"
- 	"\x4c\x93\x9b\x64\xe4\x41\xae\x27"
- 	"\x24\xb9\x6f\x99\xc8\xf4\xfb\x9a"
+@@ -2089,7 +2090,7 @@ rcv:
+ 	/* Check/update node state before receiving */
+ 	if (unlikely(skb)) {
+ 		if (unlikely(skb_linearize(skb)))
+-			goto discard;
++			goto out_node_put;
+ 		tipc_node_write_lock(n);
+ 		if (tipc_node_check_state(n, skb, bearer_id, &xmitq)) {
+ 			if (le->link) {
+@@ -2118,6 +2119,7 @@ rcv:
+ 	if (!skb_queue_empty(&xmitq))
+ 		tipc_bearer_xmit(net, bearer_id, &xmitq, &le->maddr, n);
+ 
++out_node_put:
+ 	tipc_node_put(n);
+ discard:
+ 	kfree_skb(skb);
 
 
