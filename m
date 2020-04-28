@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CC1C83000
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B47C83008
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1E1121D94
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFF4D2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Apr 2020 15:18:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728527AbgD1PSb (ORCPT
+        id S1728537AbgD1PSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:18:31 -0400
-Received: from 8bytes.org ([81.169.241.247]:37910 "EHLO theia.8bytes.org"
+        Tue, 28 Apr 2020 11:18:33 -0400
+Received: from 8bytes.org ([81.169.241.247]:37428 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728374AbgD1PSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:18:14 -0400
+        id S1728393AbgD1PSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:18:15 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 19419F34; Tue, 28 Apr 2020 17:17:52 +0200 (CEST)
+        id BA371F33; Tue, 28 Apr 2020 17:17:52 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -40,9 +40,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 52/75] x86/sev-es: Handle MMIO String Instructions
-Date:   Tue, 28 Apr 2020 17:17:02 +0200
-Message-Id: <20200428151725.31091-53-joro@8bytes.org>
+Subject: [PATCH v3 55/75] x86/sev-es: Handle WBINVD Events
+Date:   Tue, 28 Apr 2020 17:17:05 +0200
+Message-Id: <20200428151725.31091-56-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200428151725.31091-1-joro@8bytes.org>
 References: <20200428151725.31091-1-joro@8bytes.org>
@@ -51,112 +51,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-Add handling for emulation the MOVS instruction on MMIO regions, as done
-by the memcpy_toio() and memcpy_fromio() functions.
+Implement a handler for #VC exceptions caused by WBINVD instructions.
 
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+[ jroedel@suse.de: Adapt to #VC handling framework ]
+Co-developed-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/sev-es.c | 78 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
+ arch/x86/kernel/sev-es.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index e3662723ed76..84958a82f8e0 100644
+index 6100f8ac61d4..a8c0d865ca22 100644
 --- a/arch/x86/kernel/sev-es.c
 +++ b/arch/x86/kernel/sev-es.c
-@@ -552,6 +552,74 @@ static enum es_result vc_handle_mmio_twobyte_ops(struct ghcb *ghcb,
- 	return ret;
+@@ -799,6 +799,12 @@ static enum es_result vc_handle_dr7_read(struct ghcb *ghcb,
+ 	return ES_OK;
  }
  
-+/*
-+ * The MOVS instruction has two memory operands, which raises the
-+ * problem that it is not known whether the access to the source or the
-+ * destination caused the #VC exception (and hence whether an MMIO read
-+ * or write operation needs to be emulated).
-+ *
-+ * Instead of playing games with walking page-tables and trying to guess
-+ * whether the source or destination is an MMIO range, this code splits
-+ * the move into two operations, a read and a write with only one
-+ * memory operand. This will cause a nested #VC exception on the MMIO
-+ * address which can then be handled.
-+ *
-+ * This implementation has the benefit that it also supports MOVS where
-+ * source _and_ destination are MMIO regions.
-+ *
-+ * It will slow MOVS on MMIO down a lot, but in SEV-ES guests it is a
-+ * rare operation. If it turns out to be a performance problem the split
-+ * operations can be moved to memcpy_fromio() and memcpy_toio().
-+ */
-+static enum es_result vc_handle_mmio_movs(struct es_em_ctxt *ctxt,
-+					  unsigned int bytes)
++static enum es_result vc_handle_wbinvd(struct ghcb *ghcb,
++				       struct es_em_ctxt *ctxt)
 +{
-+	unsigned long ds_base, es_base;
-+	unsigned char *src, *dst;
-+	unsigned char buffer[8];
-+	enum es_result ret;
-+	bool rep;
-+	int off;
-+
-+	ds_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_DS);
-+	es_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_ES);
-+
-+	if (ds_base == -1L || es_base == -1L) {
-+		ctxt->fi.vector = X86_TRAP_GP;
-+		ctxt->fi.error_code = 0;
-+		return ES_EXCEPTION;
-+	}
-+
-+	src = ds_base + (unsigned char *)ctxt->regs->si;
-+	dst = es_base + (unsigned char *)ctxt->regs->di;
-+
-+	ret = vc_read_mem(ctxt, src, buffer, bytes);
-+	if (ret != ES_OK)
-+		return ret;
-+
-+	ret = vc_write_mem(ctxt, dst, buffer, bytes);
-+	if (ret != ES_OK)
-+		return ret;
-+
-+	if (ctxt->regs->flags & X86_EFLAGS_DF)
-+		off = -bytes;
-+	else
-+		off =  bytes;
-+
-+	ctxt->regs->si += off;
-+	ctxt->regs->di += off;
-+
-+	rep = insn_has_rep_prefix(&ctxt->insn);
-+
-+	if (rep)
-+		ctxt->regs->cx -= 1;
-+
-+	if (!rep || ctxt->regs->cx == 0)
-+		return ES_OK;
-+	else
-+		return ES_RETRY;
++	return sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_WBINVD, 0, 0);
 +}
 +
- static enum es_result vc_handle_mmio(struct ghcb *ghcb,
- 				     struct es_em_ctxt *ctxt)
- {
-@@ -606,6 +674,16 @@ static enum es_result vc_handle_mmio(struct ghcb *ghcb,
- 		memcpy(reg_data, ghcb->shared_buffer, bytes);
+ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 					 struct ghcb *ghcb,
+ 					 unsigned long exit_code)
+@@ -821,6 +827,9 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 	case SVM_EXIT_MSR:
+ 		result = vc_handle_msr(ghcb, ctxt);
  		break;
- 
-+		/* MOVS instruction */
-+	case 0xa4:
-+		bytes = 1;
-+		/* Fallthrough */
-+	case 0xa5:
-+		if (!bytes)
-+			bytes = insn->opnd_bytes;
-+
-+		ret = vc_handle_mmio_movs(ctxt, bytes);
++	case SVM_EXIT_WBINVD:
++		result = vc_handle_wbinvd(ghcb, ctxt);
 +		break;
- 		/* Two-Byte Opcodes */
- 	case 0x0f:
- 		ret = vc_handle_mmio_twobyte_ops(ghcb, ctxt);
+ 	case SVM_EXIT_NPF:
+ 		result = vc_handle_mmio(ghcb, ctxt);
+ 		break;
 -- 
 2.17.1
 
