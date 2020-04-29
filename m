@@ -2,76 +2,188 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D999DC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 780D5C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3C76206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 591CE206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgD2PlE (ORCPT
+        id S1726691AbgD2Pni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:41:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:41282 "EHLO foss.arm.com"
+        Wed, 29 Apr 2020 11:43:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55138 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726519AbgD2PlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:41:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82FFF1045;
-        Wed, 29 Apr 2020 08:41:02 -0700 (PDT)
-Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3649F3F68F;
-        Wed, 29 Apr 2020 08:41:00 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 16:40:57 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] sched/uclamp: Add a new sysctl to control RT
- default boost value
-Message-ID: <20200429154056.bznhs6wc2iyxzevy@e107158-lin>
-References: <20200428164134.5588-1-qais.yousef@arm.com>
- <20200429113255.GA19464@codeaurora.org>
- <20200429123056.otyedhljlugyf5we@e107158-lin>
- <20200429152106.GB19464@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200429152106.GB19464@codeaurora.org>
-User-Agent: NeoMutt/20171215
+        id S1726423AbgD2Pni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 11:43:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 497D3AF21;
+        Wed, 29 Apr 2020 15:43:35 +0000 (UTC)
+Date:   Wed, 29 Apr 2020 17:43:35 +0200
+Message-ID: <s5h4kt2jo0o.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     Alex Deucher <alexdeucher@gmail.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        Takashi Iwai <tiwai@suse.com>, Lukas Wunner <lukas@wunner.de>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Subject: Re: [PATCH 0/1] Fiji GPU audio register timeout when in BACO state
+In-Reply-To: <PSXP216MB043822350CDE9E7EEA37730880AD0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+References: <PSXP216MB0438D2AF96CE0D4F83F48C4D80AE0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <MN2PR12MB4488E4909C1488FB507E0BF5F7AF0@MN2PR12MB4488.namprd12.prod.outlook.com>
+        <s5ho8rdnems.wl-tiwai@suse.de>
+        <PSXP216MB04387BF6B5F8DA84749E5D6F80AF0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <CADnq5_M=QEqxuCKjb_qZvFSvwM5eLEFfsepxYYXoouFoe5bn7A@mail.gmail.com>
+        <s5h4kt4ojrf.wl-tiwai@suse.de>
+        <CADnq5_MMQ5_MjEg=bkJJGMJP53RjB3yxvOW0nUDeWxzg3Q0pVQ@mail.gmail.com>
+        <s5hv9lkm49n.wl-tiwai@suse.de>
+        <PSXP216MB043899DC52E6C6BF728D77CD80AC0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <s5ha72ulp2y.wl-tiwai@suse.de>
+        <PSXP216MB043822350CDE9E7EEA37730880AD0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/29/20 20:51, Pavan Kondeti wrote:
-> As we are copying the sysctl_sched_uclamp_util_min_rt_default value into
-> p->uclamp_req[UCLAMP_MIN], user gets it when sched_getattr() is called though
-> sched_setattr() was not called before. I guess that is expected behavior with
-> your definition of this new tunable. Thanks for answering the question in
-> detail.
+On Wed, 29 Apr 2020 17:27:17 +0200,
+Nicholas Johnson wrote:
+> 
+> On Wed, Apr 29, 2020 at 09:37:41AM +0200, Takashi Iwai wrote:
+> > On Tue, 28 Apr 2020 16:48:45 +0200,
+> > Nicholas Johnson wrote:
+> > > 
+> > > > > > >
+> > > > > > > FWIW, I have a fiji board in a desktop system and it worked fine when
+> > > > > > > this code was enabled.
+> > > > > >
+> > > > > > Is the new DC code used for Fiji boards?  IIRC, the audio component
+> > > > > > binding from amdgpu is enabled only for DC, and without the audio
+> > > > > > component binding the runtime PM won't be linked up, hence you can't
+> > > > > > power up GPU from the audio side access automatically.
+> > > > > >
+> > > > > 
+> > > > > Yes, DC is enabled by default for all cards with runtime pm enabled.
+> > > > 
+> > > > OK, thanks, I found that amdgpu got bound via component in the dmesg
+> > > > output, too:
+> > > > 
+> > > > [   21.294927] snd_hda_intel 0000:08:00.1: bound 0000:08:00.0 (ops amdgpu_dm_audio_component_bind_ops [amdgpu])
+> > > > 
+> > > > This is the place soon after amdgpu driver gets initialized.
+> > > > Then we see later another initialization phase:
+> > > > 
+> > > > [   26.904127] rfkill: input handler enabled
+> > > > [   37.264152] [drm] PCIE GART of 1024M enabled (table at 0x000000F400000000).
+> > > > 
+> > > > here shows 10 seconds between them.  Then, it complained something:
+> > > > 
+> > > > 
+> > > > [   37.363287] [drm] UVD initialized successfully.
+> > > > [   37.473340] [drm] VCE initialized successfully.
+> > > > [   37.477942] amdgpu 0000:08:00.0: [drm] Cannot find any crtc or sizes
+> > > 
+> > > The above would be me hitting WindowsKey+P to change screens, but with 
+> > > no DisplayPort attached to Fiji, hence it unable to find crtc.
+> > > 
+> > > > 
+> > > > ... and go further, and hitting HD-audio error:
+> > > > 
+> > > That would be me having attached the DisplayPort and done WindowsKey+P 
+> > > again.
+> > > 
+> > > > [   38.936624] [drm] fb mappable at 0x4B0696000
+> > > > [   38.936626] [drm] vram apper at 0x4B0000000
+> > > > [   38.936626] [drm] size 33177600
+> > > > [   38.936627] [drm] fb depth is 24
+> > > > [   38.936627] [drm]    pitch is 15360
+> > > > [   38.936673] amdgpu 0000:08:00.0: fb1: amdgpudrmfb frame buffer device
+> > > > [   40.092223] snd_hda_intel 0000:08:00.1: azx_get_response timeout, switching to polling mode: last cmd=0x00170500
+> > > > 
+> > > > After this point, HD-audio communication was screwed up.
+> > > > 
+> > > > This lastcmd in the above message is AC_SET_POWER_STATE verb for the
+> > > > root node to D0, so the very first command to power up the codec. 
+> > > > The rest commands are also about the power up of each node, so the
+> > > > whole error indicate that the power up at runtime resume failed.
+> > > > 
+> > > > So, this looks to me as if the device gets runtime-resumed at the bad
+> > > > moment?
+> > > It does. However, this is not going to be easy to pin down.
+> > > 
+> > > I moved from Arch to Ubuntu, and it behaves differently. I cannot 
+> > > trigger the bug in Ubuntu. Plus, it puts the GPUs asleep, even if 
+> > > attached at boot, unlike Arch. I will continue to try to trigger it. But 
+> > > even if this is a problem with the Linux distribution, it should not be 
+> > > able to trigger a kernel mode bug, so we should persist with finding it.
+> > 
+> > Sure, that's a bug to be fixed.
+> > 
+> > This made me thinking what happens if we load the HD-audio driver very
+> > late.  Could you try to blacklist snd-hda-intel module, then load it
+> > manually after plugging the DP monitor and activating it?
+> Attached dmesg-blacklist-*
+> 
+> It is interesting. If I enable the monitor with the module unloaded, and 
+> then load the module, I cannot trigger the bug, even if disabling the 
+> monitor, waiting for GPU to sleep, and then waking again.
+> 
+> Even if I wake monitor up, put to sleep again, and then insmod when 
+> sleeping, it does not cause bug when waking again.
 
-Yes. That's the original design without this patch actually. Though before it
-was always set to 1024.
+Thanks, that's a good news, at least.
 
-Thanks for having a look!
+> Is there anything special about the first time the monitor is used?
 
---
-Qais Yousef
+My wild guess is that the audio controller got powered up too early
+before the graphics side became ready.  Basically HD-audio PCI
+controller for HDMI audio is a shadow component of the graphics chip,
+so it can't work before GPU is set up properly.
+
+
+> > Also, could you track who called the problematic power-up sequence,
+> > e.g. by adding WARN_ON_ONCE()?
+> Attached dmesg-warning
+
+This showed that it's triggered by the runtime PM resume from opening
+the PCM device.  That said, a desktop application (most likely
+PulseAudio) tried to open the stream because it detected something.
+
+This implies a doubt that PA received a false-positive notification
+about the HDMI audio connection, so...
+
+> > Last but not least, please check /proc/asound/card1/eld#* files (there
+> > are both card0 and card1 or such that contain eld#* files, and one is
+> > for i915 and another for amdgpu) before and after plugging.  This
+> > shows whether the audio connection was recognized or not.
+> Before plugging: card not yet attached, so the sysfs for that card not 
+> yet created
+> 
+> After plugging (and insmod snd-hda-intel.ko):
+> codec#0  codec#2  eld#2.0  eld#2.1  eld#2.2  eld#2.3  eld#2.4  eld#2.5  eld#2.6  eld#2.7  eld#2.8  id  pcm0c  pcm0p  pcm10p  pcm3p  pcm7p  pcm8p  pcm9p
+
+... here comes the question again.  What's interesting here is the
+contents of eld#* proc files.  If, at the moment the problem appears,
+any of eld#* files shows the state as connected wrongly, it may
+confuse the user-space to trigger the opening of PCM stream.
+
+Note that you should have multiple /proc/asound/card[0-9]* directories
+and one of them is for i915 and another for amdgpu.  The interesting
+information is only about the latter.
+
+
+thanks,
+
+Takashi
