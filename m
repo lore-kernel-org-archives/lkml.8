@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AACB4C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4CBC83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85F4F21973
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F81E2137B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:46:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=plaes.org header.i=@plaes.org header.b="IQhJtA3O"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=plaes.org header.i=@plaes.org header.b="muALmyfm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgD2UqY (ORCPT
+        id S1727096AbgD2Uq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 16:46:24 -0400
-Received: from plaes.org ([188.166.43.21]:34960 "EHLO plaes.org"
+        Wed, 29 Apr 2020 16:46:28 -0400
+Received: from plaes.org ([188.166.43.21]:34982 "EHLO plaes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726456AbgD2UqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 16:46:23 -0400
+        id S1727049AbgD2Uq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 16:46:26 -0400
 Received: from localhost (unknown [IPv6:2001:1530:1000:d397:940e:6b9e:3deb:3])
-        by plaes.org (Postfix) with ESMTPSA id 92F91406D2;
-        Wed, 29 Apr 2020 20:46:20 +0000 (UTC)
+        by plaes.org (Postfix) with ESMTPSA id C509740A4A;
+        Wed, 29 Apr 2020 20:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=plaes.org; s=mail;
-        t=1588193180; bh=oXxncios4NGf2aktHiZX8FnCvunPuUkRAB5eO78zbrg=;
+        t=1588193184; bh=vozgkxdGukZkw97VZxaA46SLq3vMd9Wmn6ITkjlRwzM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IQhJtA3O6U6JCR32OoY0yGZk+wkoR+mazjBOT2uiJTHCusppZ2YPufw/sgfbmANCu
-         UDqRAeOOmk8wz4ILHVCOJkGEH6SEsUfzdkPSadRR/GLi/ataECoiQx7PoN568Zx4nO
-         qFsPMesW6/IxRbvUMYm0cAW83f+vIjQh26akHkO17W31aaLyBgEFdk+gJwacuNMmYO
-         oAh2spSY91Fz6L7j7oENLHG56F3M+Dfp4dhOxE2+tbzQgLvWORrYsbd/DecsKwjBUy
-         5dYJe+HQQ7ZTEtx80OjzkiXYYqZsgcbCvJ3gAp4PN62a/deQhNVdx0kCUIyomm2yBd
-         frsWFybK4wQNQ==
+        b=muALmyfmKI5x02+uA4+LCgaYszU/T90rPKS7f7FgI4pIQlHoNk7s5FwLpp4xM67Na
+         jJEHh26IsedVkgQUJCl97efrVgZ7RVu5bpO70jDVACHPg+LAJ479am0pxeSV98vGgC
+         sY5Fi02A24DqBoH0mNLyVQ+06ZQfGIh3smIr/IXVQbbHCW8FFMG330IPYs3oyHmVNk
+         iuU5yBW+CUIDi3KRTWXBZSyPey/ZW47CGomzkHtWQIlz4eNpwmVqAA258nRSZuGi6f
+         gUa1Zs62dB4pSgSl8i7j57zVL/suFmKeNOgNohkF1Hefkld6NjUk8fmEJQj0JJGxd0
+         +t8DGmoFk2jgQ==
 From:   Priit Laes <plaes@plaes.org>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         devicetree@vger.kernel.org, linux-sunxi@googlegroups.com
 Cc:     Priit Laes <plaes@plaes.org>
-Subject: [PATCH v2 1/6] clk: sunxi-ng: a20: Register regmap for sun7i CCU
-Date:   Wed, 29 Apr 2020 23:46:07 +0300
-Message-Id: <20200429204612.31883-2-plaes@plaes.org>
+Subject: [PATCH v2 3/6] net: stmmac: dwmac-sunxi: Implement syscon-based clock handling
+Date:   Wed, 29 Apr 2020 23:46:09 +0300
+Message-Id: <20200429204612.31883-4-plaes@plaes.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200429204612.31883-1-plaes@plaes.org>
 References: <20200429204612.31883-1-plaes@plaes.org>
@@ -53,95 +53,214 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On sun7i, the gmac clock is handled by the dwmac-sunxi driver, but
-its configuration register is located in the CCU register range,
-requiring proper regmap setup.
+Convert the sun7i-gmac driver to use a regmap-based driver,
+instead of relying on the custom clock implementation.
 
-In order to do that, we use CLK_OF_DECLARE_DRIVER to initialize
-sun7i ccu, which clears the OF_POPULATED flag, allowing the
-platform device to probe the same resource with proper device node.
+This allows to get rid of the last custom clock in the sun7i
+device tree making the sun7i fully CCU-compatible.
+
+Compatibility with existing devicetrees is retained.
 
 Signed-off-by: Priit Laes <plaes@plaes.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun4i-a10.c | 60 +++++++++++++++++++++++++++-
- 1 file changed, 59 insertions(+), 1 deletion(-)
+ .../net/ethernet/stmicro/stmmac/dwmac-sunxi.c | 130 ++++++++++++++++--
+ 1 file changed, 122 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
-index f32366d9336e..fbdf9ecf21b8 100644
---- a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
-@@ -8,6 +8,8 @@
- #include <linux/clk-provider.h>
- #include <linux/io.h>
- #include <linux/of_address.h>
-+#include <linux/platform_device.h>
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
+index 0e1ca2cba3c7..206398f7a2af 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
+@@ -12,8 +12,11 @@
+ #include <linux/module.h>
+ #include <linux/phy.h>
+ #include <linux/platform_device.h>
++#include <linux/of_device.h>
+ #include <linux/of_net.h>
+ #include <linux/regulator/consumer.h>
 +#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
  
- #include "ccu_common.h"
- #include "ccu_reset.h"
-@@ -1478,5 +1480,61 @@ static void __init sun7i_a20_ccu_setup(struct device_node *node)
+ #include "stmmac_platform.h"
+ 
+@@ -22,11 +25,23 @@ struct sunxi_priv_data {
+ 	int clk_enabled;
+ 	struct clk *tx_clk;
+ 	struct regulator *regulator;
++	struct regmap_field *regmap_field;
++};
++
++/* EMAC clock register @ 0x164 in the CCU address range */
++static const struct reg_field ccu_reg_field = {
++	.reg = 0x164,
++	.lsb = 0,
++	.msb = 31,
+ };
+ 
+ #define SUN7I_GMAC_GMII_RGMII_RATE	125000000
+ #define SUN7I_GMAC_MII_RATE		25000000
+ 
++#define SUN7I_A20_CLK_MASK		GENMASK(2, 0)
++#define SUN7I_A20_RGMII_CLK		(BIT(2) | BIT(1))
++#define SUN7I_A20_MII_CLK		0
++
+ static int sun7i_gmac_init(struct platform_device *pdev, void *priv)
  {
- 	sun4i_ccu_init(node, &sun7i_a20_ccu_desc);
+ 	struct sunxi_priv_data *gmac = priv;
+@@ -38,7 +53,20 @@ static int sun7i_gmac_init(struct platform_device *pdev, void *priv)
+ 			return ret;
+ 	}
+ 
+-	/* Set GMAC interface port mode
++	if (gmac->regmap_field) {
++		if (phy_interface_mode_is_rgmii(gmac->interface)) {
++			regmap_field_update_bits(gmac->regmap_field,
++						 SUN7I_A20_CLK_MASK,
++						 SUN7I_A20_RGMII_CLK);
++			return clk_prepare_enable(gmac->tx_clk);
++		}
++		regmap_field_update_bits(gmac->regmap_field,
++					 SUN7I_A20_CLK_MASK,
++					 SUN7I_A20_MII_CLK);
++		return clk_enable(gmac->tx_clk);
++	}
++
++	/* Legacy devicetree clock (allwinner,sun7i-a20-gmac-clk) support:
+ 	 *
+ 	 * The GMAC TX clock lines are configured by setting the clock
+ 	 * rate, which then uses the auto-reparenting feature of the
+@@ -62,9 +90,16 @@ static void sun7i_gmac_exit(struct platform_device *pdev, void *priv)
+ {
+ 	struct sunxi_priv_data *gmac = priv;
+ 
+-	if (gmac->clk_enabled) {
++	if (gmac->regmap_field) {
++		regmap_field_update_bits(gmac->regmap_field,
++					 SUN7I_A20_CLK_MASK, 0);
+ 		clk_disable(gmac->tx_clk);
+-		gmac->clk_enabled = 0;
++	} else {
++		/* Handle legacy devicetree clock (sun7i-a20-gmac-clk) */
++		if (gmac->clk_enabled) {
++			clk_disable(gmac->tx_clk);
++			gmac->clk_enabled = 0;
++		}
+ 	}
+ 	clk_unprepare(gmac->tx_clk);
+ 
+@@ -72,10 +107,55 @@ static void sun7i_gmac_exit(struct platform_device *pdev, void *priv)
+ 		regulator_disable(gmac->regulator);
  }
--CLK_OF_DECLARE(sun7i_a20_ccu, "allwinner,sun7i-a20-ccu",
-+CLK_OF_DECLARE_DRIVER(sun7i_a20_ccu, "allwinner,sun7i-a20-ccu",
- 	       sun7i_a20_ccu_setup);
-+
-+/*
-+ * Regmap for the GMAC driver (dwmac-sunxi) to allow access to
-+ * GMAC configuration register.
-+ */
-+#define SUN7I_A20_GMAC_CFG_REG 0x164
-+static bool sun7i_a20_ccu_regmap_accessible_reg(struct device *dev,
-+						unsigned int reg)
+ 
++static struct regmap *sun7i_gmac_get_syscon_from_dev(struct device_node *node)
 +{
-+	if (reg == SUN7I_A20_GMAC_CFG_REG)
-+		return true;
-+	return false;
++	struct device_node *syscon_node;
++	struct platform_device *syscon_pdev;
++	struct regmap *regmap = NULL;
++
++	syscon_node = of_parse_phandle(node, "syscon", 0);
++	if (!syscon_node)
++		return ERR_PTR(-ENODEV);
++
++	syscon_pdev = of_find_device_by_node(syscon_node);
++	if (!syscon_pdev) {
++		/* platform device might not be probed yet */
++		regmap = ERR_PTR(-EPROBE_DEFER);
++		goto out_put_node;
++	}
++
++	/* If no regmap is found then the other device driver is at fault */
++	regmap = dev_get_regmap(&syscon_pdev->dev, NULL);
++	if (!regmap)
++		regmap = ERR_PTR(-EINVAL);
++
++	platform_device_put(syscon_pdev);
++out_put_node:
++	of_node_put(syscon_node);
++	return regmap;
 +}
 +
-+static struct regmap_config sun7i_a20_ccu_regmap_config = {
-+	.reg_bits	= 32,
-+	.val_bits	= 32,
-+	.reg_stride	= 4,
-+	.max_register	= 0x1f4, /* clk_out_b */
+ static void sun7i_fix_speed(void *priv, unsigned int speed)
+ {
+ 	struct sunxi_priv_data *gmac = priv;
+ 
++	if (gmac->regmap_field) {
++		clk_disable(gmac->tx_clk);
++		clk_unprepare(gmac->tx_clk);
++		if (speed == 1000)
++			regmap_field_update_bits(gmac->regmap_field,
++						 SUN7I_A20_CLK_MASK,
++						 SUN7I_A20_RGMII_CLK);
++		else
++			regmap_field_update_bits(gmac->regmap_field,
++						 SUN7I_A20_CLK_MASK,
++						 SUN7I_A20_MII_CLK);
++		clk_prepare_enable(gmac->tx_clk);
++		return;
++	}
 +
-+	.readable_reg	= sun7i_a20_ccu_regmap_accessible_reg,
-+	.writeable_reg	= sun7i_a20_ccu_regmap_accessible_reg,
-+};
++	/* Handle legacy devicetree clock (sun7i-a20-gmac-clk) */
 +
-+static int sun7i_a20_ccu_probe_regmap(struct platform_device *pdev)
-+{
-+	void __iomem *reg;
-+	struct resource *res;
-+	struct regmap *regmap;
+ 	/* only GMII mode requires us to reconfigure the clock lines */
+ 	if (gmac->interface != PHY_INTERFACE_MODE_GMII)
+ 		return;
+@@ -102,6 +182,8 @@ static int sun7i_gmac_probe(struct platform_device *pdev)
+ 	struct stmmac_resources stmmac_res;
+ 	struct sunxi_priv_data *gmac;
+ 	struct device *dev = &pdev->dev;
++	struct device_node *syscon_node;
++	struct regmap *regmap = NULL;
+ 	int ret;
+ 
+ 	ret = stmmac_get_platform_resources(pdev, &stmmac_res);
+@@ -124,11 +206,43 @@ static int sun7i_gmac_probe(struct platform_device *pdev)
+ 		goto err_remove_config_dt;
+ 	}
+ 
+-	gmac->tx_clk = devm_clk_get(dev, "allwinner_gmac_tx");
+-	if (IS_ERR(gmac->tx_clk)) {
+-		dev_err(dev, "could not get tx clock\n");
+-		ret = PTR_ERR(gmac->tx_clk);
+-		goto err_remove_config_dt;
++	/* Attempt to fetch syscon node... */
++	syscon_node = of_parse_phandle(dev->of_node, "syscon", 0);
++	if (syscon_node) {
++		gmac->tx_clk = devm_clk_get(dev, "stmmaceth");
++		if (IS_ERR(gmac->tx_clk)) {
++			dev_err(dev, "Could not get TX clock\n");
++			ret = PTR_ERR(gmac->tx_clk);
++			goto err_remove_config_dt;
++		}
 +
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	reg = devm_ioremap(&pdev->dev, res->start, resource_size(res));
-+	if (IS_ERR(reg))
-+		return PTR_ERR(reg);
++		regmap = sun7i_gmac_get_syscon_from_dev(pdev->dev.of_node);
++		if (IS_ERR(regmap))
++			regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
++								 "syscon");
++		if (IS_ERR(regmap)) {
++			ret = PTR_ERR(regmap);
++			dev_err(&pdev->dev, "Unable to map syscon: %d\n", ret);
++			goto err_remove_config_dt;
++		}
 +
-+	regmap = devm_regmap_init_mmio(&pdev->dev, reg,
-+				       &sun7i_a20_ccu_regmap_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
++		gmac->regmap_field = devm_regmap_field_alloc(dev, regmap,
++							     ccu_reg_field);
 +
-+	return 0;
-+}
-+
-+static const struct of_device_id sun7i_a20_ccu_ids[] = {
-+	{ .compatible = "allwinner,sun7i-a20-ccu"},
-+	{ }
-+};
-+
-+static struct platform_driver sun7i_a20_ccu_driver = {
-+	.probe = sun7i_a20_ccu_probe_regmap,
-+	.driver = {
-+		.name = "sun7i-a20-ccu",
-+		.of_match_table = sun7i_a20_ccu_ids,
-+	},
-+};
-+builtin_platform_driver(sun7i_a20_ccu_driver);
++		if (IS_ERR(gmac->regmap_field)) {
++			ret = PTR_ERR(gmac->regmap_field);
++			dev_err(dev, "Unable to map syscon register: %d\n", ret);
++			goto err_remove_config_dt;
++		}
++	/* ...or fall back to legacy clock setup */
++	} else {
++		gmac->tx_clk = devm_clk_get(dev, "allwinner_gmac_tx");
++		if (IS_ERR(gmac->tx_clk)) {
++			dev_err(dev, "could not get tx clock\n");
++			ret = PTR_ERR(gmac->tx_clk);
++			goto err_remove_config_dt;
++		}
++		dev_info(dev, "allwinner_gmac_tx support is deprecated!\n");
+ 	}
+ 
+ 	/* Optional regulator for PHY */
 -- 
 2.26.2
 
