@@ -2,102 +2,110 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F88AC8300B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FECC8300B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01C5B2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1A272073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:21:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cm9wtE++"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KcCq3sCl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgD2EQm (ORCPT
+        id S1726739AbgD2EVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 00:16:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50448 "EHLO
+        Wed, 29 Apr 2020 00:21:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725497AbgD2EQl (ORCPT
+        by vger.kernel.org with ESMTP id S1726451AbgD2EVo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 00:16:41 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 701E6C03C1AC;
-        Tue, 28 Apr 2020 21:16:40 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 145so467374pfw.13;
-        Tue, 28 Apr 2020 21:16:40 -0700 (PDT)
+        Wed, 29 Apr 2020 00:21:44 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7CC6C03C1AC;
+        Tue, 28 Apr 2020 21:21:42 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id x18so820206wrq.2;
+        Tue, 28 Apr 2020 21:21:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=33KWTafxGeio2mE7vQkUPBKD+vnrQN9Vu13t8D5iy9Q=;
-        b=cm9wtE++qMb+UN8PPrekmIPAzWDkf4AOXQcxm2owZW0UrdNRYDeaLzSNyo+vKU/Lgh
-         Jk0wmX7iN6xD28TZtGczjPpqx0ory7iTLtV7pzXZc3Yj5GHABfLJzReyfU+gsheQk6d2
-         x/h5H9SwU7lHOE8sduT7GGzxdwpPkvmWmCWk7REqghN7jY3O8mFIdrhwEivG7WQIkD/z
-         B/3CC8f1sR9J/xxjDkojO5JYGjGlW9h7Q9XBCVuHi6eHb/uQflNHcIguHGvfEX45n3Q5
-         Ss5CzZQTfOFaBPJ8uPuJoA9BVDF6wC6VpRzGjrssDRLninW0dWXR9q/oz0oT5DK9SffE
-         MDAg==
+        h=from:to:cc:subject:date:message-id;
+        bh=mCtLbL6Zr88D4dLaHGj83fov+fdvmqInAbjfmiya5zo=;
+        b=KcCq3sClZpqJ+2xt78xBXZ2HjIAMNDO9niYhUn/bcXUsDen5XtDase8Ia/KrNMEauM
+         s7/M9EiQBCHZmekYkS6aMFhwUA59/7+vV2Eu57BotW9DRWB/4dnvhDQ2FrnNlqj7wz4z
+         n3X15y2VRcuo0NXNM044Q2+KSEl94m5XamGtRFzpzcq3XlfKBGxhAsJ+BUzSAtKMDQaz
+         QHtM+sNfE0ggxsEaamQmf+YmMBCK9j9cbz2T0QxduqEGJXxG7xZwVbEU5L0edwPIF4sz
+         CS1xhppM3/KnbXJxBemdcHj0Jv+B4TiXpCjPvIyJZzqYZStoOVsJ0BMG85Sr3NHOLpk7
+         FTWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=33KWTafxGeio2mE7vQkUPBKD+vnrQN9Vu13t8D5iy9Q=;
-        b=d8cNPOHtU6d13TMOtAwOHkoyS3/Gf9kSvrZ982RHEAMYBLAR7wz8T6YBzBqAoXZxKb
-         CPQhQ8PE4JC2i/ORYSv2ROF62BF7yZ8Lxn8Wpp/RykROwYTuf29cQHEKIcxNUA+ahM7x
-         OHsYykYWZsdcz/JVcMNa7wBvZluTyQkVLX69D19aad9FmOLpNRzUenuSUmq7NDdpOnUz
-         uoP+W/z8RqSXiwRq0twzQiheMSxEGYsY47sYRpc+Mq7wqohRBADMt26sfBL4ZlOBbuio
-         E7yl7nMqKX5fG6pS2ZIMFcdXmxgDhKsp7xCXg5Lfr9hDyOQmLsMg2fAwnhBhRomkatyp
-         mAUQ==
-X-Gm-Message-State: AGi0PuZBqTLAFUWnDWVLo1btRqxKr1j6kVhOUjrnKrGBLqIXcddlvfWT
-        sQLoHevIzPPPw7tWla2moH5WALes
-X-Google-Smtp-Source: APiQypISyFo533B80OwtY+0HHq25LVfsLJk5M1W9XXaGiZHAYeeXeqy0SHTiUc+H8x2I2a+L67ewBw==
-X-Received: by 2002:a65:58c4:: with SMTP id e4mr32549273pgu.61.1588133799894;
-        Tue, 28 Apr 2020 21:16:39 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id u5sm14961666pfu.198.2020.04.28.21.16.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 21:16:38 -0700 (PDT)
-Subject: Re: [PATCH net-next v2 4/4] net: phy: bcm54140: add second PHY ID
-To:     Michael Walle <michael@walle.cc>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>
-References: <20200428230659.7754-1-michael@walle.cc>
- <20200428230659.7754-4-michael@walle.cc>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <40b41061-ab48-ab23-9b66-4ad14b000f5d@gmail.com>
-Date:   Tue, 28 Apr 2020 21:16:38 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200428230659.7754-4-michael@walle.cc>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=mCtLbL6Zr88D4dLaHGj83fov+fdvmqInAbjfmiya5zo=;
+        b=Hm2vtrDclal0pL99Bu9RUqtw6v22V4WmM4HLVr5pC9MIxeNRn9N7BA8ErZt070p5mH
+         Glva7GNl/Am1dLtI7UBNTc4+I1Cd9uOwSymNmBTxxc88cN5Z5dYij4lsPrqX9EwgdgyP
+         ZJ5pJps5NpQOHqpgVPYS4F/SqSpgzAC0uJC724nGrFs5pinVyr9NRcrXv6Yd5zaiGuiC
+         Mj19l9hGPhQAo459QZIxrkftDg1lCgwrrzJ3QQYuy9xzcxONIN2hZbngWnjFGsK/YaTd
+         3CFbQq2Vcf8GTdTYwVU9YJM4cGRCCTbm4JqkgwsSvd8d1BRnPWqcII9BI/JFC04zjwGi
+         hm0w==
+X-Gm-Message-State: AGi0PuZdO91er4T1drKUkfl7Kg00dQs+F6dv7bgT6N5JdFZACaJGAe0Q
+        zgpRwzRIFr1FyRtVM4Dj6Sc=
+X-Google-Smtp-Source: APiQypIsyheNKE+yUYPn7h7Lh02qj284R2B2KtXNfFSBoHmveI6gKwv0q4UjlWp33+buDZ1Wr5yXuA==
+X-Received: by 2002:adf:f604:: with SMTP id t4mr37208925wrp.399.1588134101564;
+        Tue, 28 Apr 2020 21:21:41 -0700 (PDT)
+Received: from felia.fritz.box ([2001:16b8:2d97:3d00:e147:2f5e:e04:2e01])
+        by smtp.gmail.com with ESMTPSA id z1sm5958897wmf.15.2020.04.28.21.21.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 21:21:40 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, Joe Perches <joe@perches.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH RESEND] MAINTAINERS: remove entry after hp100 driver removal
+Date:   Wed, 29 Apr 2020 06:21:16 +0200
+Message-Id: <20200429042116.29126-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit a10079c66290 ("staging: remove hp100 driver") removed all files
+from ./drivers/staging/hp/, but missed to adjust MAINTAINERS.
 
+Since then, ./scripts/get_maintainer.pl --self-test=patterns complains:
 
-On 4/28/2020 4:06 PM, Michael Walle wrote:
-> This PHY has two PHY IDs depending on its mode. Adjust the mask so that
-> it includes both IDs.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+  warning: no file matches F: drivers/staging/hp/hp100.*
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+So, drop HP100 Driver entry in MAINTAINERS now.
 
-For future submissions to netdev, if you have a patch count > 1, please
-include a cover letter:
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+Greg, here is a minor non-urgent patch for staging.
 
-Thanks!
+applies cleanly on v5.7-rc3, current master and next-20200428
+
+ MAINTAINERS | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 26f281d9f32a..41e2b577488f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7746,11 +7746,6 @@ L:	platform-driver-x86@vger.kernel.org
+ S:	Orphan
+ F:	drivers/platform/x86/tc1100-wmi.c
+ 
+-HP100:	Driver for HP 10/100 Mbit/s Voice Grade Network Adapter Series
+-M:	Jaroslav Kysela <perex@perex.cz>
+-S:	Obsolete
+-F:	drivers/staging/hp/hp100.*
+-
+ HPET:	High Precision Event Timers driver
+ M:	Clemens Ladisch <clemens@ladisch.de>
+ S:	Maintained
 -- 
-Florian
+2.17.1
+
