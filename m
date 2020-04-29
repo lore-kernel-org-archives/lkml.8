@@ -5,74 +5,71 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1373DC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADA3C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E090A2137B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 694442082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:07:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SKJd4TTw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oPjxlQW7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgD2KG4 (ORCPT
+        id S1726869AbgD2KGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 06:06:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48352 "EHLO
+        Wed, 29 Apr 2020 06:06:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgD2KGu (ORCPT
+        with ESMTP id S1726765AbgD2KGr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 06:06:50 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A315C03C1AD;
-        Wed, 29 Apr 2020 03:06:50 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id d15so1795779wrx.3;
-        Wed, 29 Apr 2020 03:06:49 -0700 (PDT)
+        Wed, 29 Apr 2020 06:06:47 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83131C035493;
+        Wed, 29 Apr 2020 03:06:47 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id x18so1793397wrq.2;
+        Wed, 29 Apr 2020 03:06:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hiVRqIqWp82b6MTssb1AB8jneuevgT3OTDW/kBeOt0I=;
-        b=SKJd4TTwE7XbjN/pvdpafc4kMmTuwVVmXWyB2OfwJkqeQvErPCR1Dlw0biozxaoAV7
-         L1VJSuUofn36L9umUizkUkyW+o2dDLzCpKGC/t6msVENR6x+612HFXHUsN3Ew9pnul8s
-         STMxaVPJpY2ZVcXszTki1iMKQ9P+DXQ5ySW4XluKTRwn5NR7eKrqEkQwmop0SuZCc0Dg
-         ZDdp+H7zuV5ru91jWxypd5kZiUpW0vJPUIl3h0sMaqB7UJKHMc2sgs5QkaZrj+Tai+yw
-         0zSdk5Ji+yw2DunNurRLz8v7gPZPgpjfcxZMKJclAHYYSzITrx5c7zBxXVnTxvOKC/Bn
-         QGLg==
+        bh=c/UH3Lz8UpllzExG3i9isFfsDyna9aZhQQaKA33NG2U=;
+        b=oPjxlQW77C9agVidyEJWF8dsdIZ1WaFCRAecF8V/z1nEUZTODgmjOlbYt01DNFhJZY
+         Yp1JgAvJjJH7eDCEyIMLeOAPK+bUurZKaTS6IOSq8bYdsF0ngcFr+QQMSH53VfJmPa1D
+         00rT6TnmzQVdmVxh+kGqRqtWOJT/oLNOpYqAyRXgsFCZ3gVHp4U4EGBukli3cPfJkhru
+         TL6eAqrmxPC9eKiPhN/LgAjQSzrsMzjHYwoYzmsOHPtshJXj+YgbQfWXhSXFbt86IW0/
+         Gi4LH2SxpKGm7N7FtPDRIbYyG8yRdWI1iBoJ5YTJMfonPlY5U6sVDCfx5C5B35mm7Ihm
+         eT7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hiVRqIqWp82b6MTssb1AB8jneuevgT3OTDW/kBeOt0I=;
-        b=aio2n/pYbLh0Quj6ulEzomK0Oeetzu6ypEN79KlKcZK1cfOcoaYsGJ5b7fBH8sDgBi
-         Ko6vejEY1x600uBNOpn3ObxyfvpNd3ZrEvo3nDB33YizLt/Sbjol6HuOI2jpJOSPCzah
-         NxFGEGpYU3+dh9Fr5cJiKqlrYzbvfr1N76zBa3ki9F2jbg6pLH1tJSkpf5EIlhKNIEt9
-         95rwrriRBB1OfKHdYl+8YUHTnoNbKG90A8usJCRbAugxd5GRu6IlTw7umxre4nLDnEM0
-         M0p/qI9BnTfDH0aO+NymLKkjGCiZis200Ew76+Jb38NIyUAXNIdelBmt5MaQZin2RxGg
-         BYfg==
-X-Gm-Message-State: AGi0PuZoNrNZdyBHyUjnhrmS0fg7oJZGtLoBoNidSXjo2pqeRDiiJIGt
-        McVFsnbvUA2XgElWfTgDQLO6vWeUznGA
-X-Google-Smtp-Source: APiQypJqiZPEPK7K5FK4ZJwgGP1FPoIZh2+iRsAWJUUR7ERDAuAoyfbGQHMYIDwbmn6xnQ3RqTq2UQ==
-X-Received: by 2002:adf:97de:: with SMTP id t30mr39832469wrb.135.1588154808257;
-        Wed, 29 Apr 2020 03:06:48 -0700 (PDT)
+        bh=c/UH3Lz8UpllzExG3i9isFfsDyna9aZhQQaKA33NG2U=;
+        b=ozDns+OFUnmEPZZAIBcwAOVm91vL600TqrXnAbnYd4Oy2rkgYMHNXqFoXy6LXLzpYr
+         +hXnPZ8t3mVOnYd3c0eE8/su0Ny1w02Jsu3Yc4bY5av6MZoQvxQ/F+54oO+Jz1BAxt9T
+         EhZhNhJA7Q2noC7A9N8nOFOu3rkR51UhNEk4+5kZeTyn2pX0FlyTpQghKGqaJ2JLbOX9
+         m3oj2gtbLrL8iLKvwsTETgJYlRy6+C/9tEh3Ct2E8i6Mqm6TMZ3mXcjClQV26lwWEvZa
+         IsiBkDN4wf+VprsAHa/cniWFHeDA9wdPYtRJ5m5zU+5Kc7greWZrKjS8Hj04vMow9ony
+         Hong==
+X-Gm-Message-State: AGi0PuaPuTWZUOMQpxSws9wxmS3o0V9MVgp6xdAbNyp7iUzt63bvslq6
+        ICc3gnDUmccB+ev04cNX0UPcdJN3XP2d
+X-Google-Smtp-Source: APiQypLnHEW1H/Bu0qDCls5xveEV42f1LSnrbuTZrbDrpzmjXBVu7Ygy4Yq32CN0bQ2nJefR80KWzg==
+X-Received: by 2002:adf:b310:: with SMTP id j16mr40764270wrd.95.1588154805951;
+        Wed, 29 Apr 2020 03:06:45 -0700 (PDT)
 Received: from ninjahost.lan (host-2-102-14-195.as13285.net. [2.102.14.195])
-        by smtp.gmail.com with ESMTPSA id 1sm7205478wmi.0.2020.04.29.03.06.47
+        by smtp.gmail.com with ESMTPSA id 1sm7205478wmi.0.2020.04.29.03.06.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 03:06:47 -0700 (PDT)
+        Wed, 29 Apr 2020 03:06:45 -0700 (PDT)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
         Jakub Kicinski <kuba@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        netdev@vger.kernel.org (open list:NETWORKING [GENERAL])
-Subject: [PATCH 4/6] net: atm: Add missing annotation for lec_seq_stop()
-Date:   Wed, 29 Apr 2020 11:05:26 +0100
-Message-Id: <20200429100529.19645-5-jbi.octave@gmail.com>
+        netdev@vger.kernel.org (open list:NETWORKING [IPv4/IPv6])
+Subject: [PATCH 3/6] udp: Add annotations for udp_rmem_release()
+Date:   Wed, 29 Apr 2020 11:05:25 +0100
+Message-Id: <20200429100529.19645-4-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.25.3
 In-Reply-To: <20200429100529.19645-1-jbi.octave@gmail.com>
 References: <0/6>
@@ -84,44 +81,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at lec_seq_stop()
-warning: context imbalance in lec_seq_stop() - unexpected unlock
+Sparse reports a warning
 
-The root cause is the missing annotation at lec_seq_stop()
-The __release() annotation inside lec_seq_stop()
-tells only Sparse to shutdown the warning
+ warning: context imbalance in udp_rmem_release() - unexpected unlock
 
-Add the missing __releases(&state->locked->lec_arp_lock)
-Add   __release(&state->locked->lec_arp_lock) annotation
+To fix this,
+__acquire(&sk_queue->lock) and __release(&sk_queue->lock) annotations
+are added in case the condition is not met.
+
+This add basically tell Sparse and not GCC to shutdown the warning
+
+Add __acquire(&sk_queue->lock) annotation
+Add the __release(&sk_queue->lock) annotation
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- net/atm/lec.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ net/ipv4/udp.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/net/atm/lec.c b/net/atm/lec.c
-index 25fa3a7b72bd..22415bc11878 100644
---- a/net/atm/lec.c
-+++ b/net/atm/lec.c
-@@ -940,6 +940,7 @@ static void *lec_seq_start(struct seq_file *seq, loff_t *pos)
- }
- 
- static void lec_seq_stop(struct seq_file *seq, void *v)
-+	__releases(&state->locked->lec_arp_lock)
- {
- 	struct lec_state *state = seq->private;
- 
-@@ -947,7 +948,9 @@ static void lec_seq_stop(struct seq_file *seq, void *v)
- 		spin_unlock_irqrestore(&state->locked->lec_arp_lock,
- 				       state->flags);
- 		dev_put(state->dev);
--	}
-+	} else
+diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
+index 5ca12a945ac3..175bd14bfac8 100644
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -1382,6 +1382,9 @@ static void udp_rmem_release(struct sock *sk, int size, int partial,
+ 	sk_queue = &sk->sk_receive_queue;
+ 	if (!rx_queue_lock_held)
+ 		spin_lock(&sk_queue->lock);
++	else
 +		/* annotation for sparse */
-+		__release(&state->locked->lec_arp_lock);
++		__acquire(&sk_queue->lock);
+ 
+ 
+ 	sk->sk_forward_alloc += size;
+@@ -1398,6 +1401,9 @@ static void udp_rmem_release(struct sock *sk, int size, int partial,
+ 
+ 	if (!rx_queue_lock_held)
+ 		spin_unlock(&sk_queue->lock);
++	else
++		/* annotation for sparse */
++		__release(&sk_queue->lock);
  }
  
- static void *lec_seq_next(struct seq_file *seq, void *v, loff_t *pos)
+ /* Note: called with reader_queue.lock held.
 -- 
 2.25.3
 
