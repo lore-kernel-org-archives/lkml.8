@@ -2,73 +2,222 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A72C8300B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17913C8300B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6349920575
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5E4720575
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:38:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgD2Eey (ORCPT
+        id S1726775AbgD2EiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 00:34:54 -0400
-Received: from smtp13.smtpout.orange.fr ([80.12.242.135]:25803 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726634AbgD2Eey (ORCPT
+        Wed, 29 Apr 2020 00:38:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53778 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726682AbgD2EiV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 00:34:54 -0400
-Received: from localhost.localdomain ([92.148.159.11])
-        by mwinf5d72 with ME
-        id YUak220030F2omL03UalTv; Wed, 29 Apr 2020 06:34:51 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 29 Apr 2020 06:34:51 +0200
-X-ME-IP: 92.148.159.11
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     b.zolnierkie@samsung.com, gregkh@linuxfoundation.org,
-        mpe@ellerman.id.au, zhenzhong.duan@gmail.com, arnd@arndb.de,
-        tglx@linutronix.de, eric.y.miao@gmail.com, daniel@caiaq.de
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] video: fbdev: pxa3xx_gcu: Fix some resource leak in an error handling path in 'pxa3xx_gcu_probe()'
-Date:   Wed, 29 Apr 2020 06:34:38 +0200
-Message-Id: <20200429043438.96212-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Wed, 29 Apr 2020 00:38:21 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 766E3C03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 21:38:21 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jTeU9-00035I-0Q; Wed, 29 Apr 2020 06:38:13 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jTeU4-0006hD-J6; Wed, 29 Apr 2020 06:38:08 +0200
+Date:   Wed, 29 Apr 2020 06:38:08 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, Marek Vasut <marex@denx.de>,
+        David Jander <david@protonic.nl>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add support for NXP TJA11xx
+Message-ID: <20200429043808.jdlhoeuujfxdifh7@pengutronix.de>
+References: <20200313052252.25389-1-o.rempel@pengutronix.de>
+ <20200313052252.25389-2-o.rempel@pengutronix.de>
+ <CAL_JsqJgwKjWnTETB1pDc+aXVYp0c-cYOE6gz_KYOn5byQOKpA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="u5ojtjypdq5icgiq"
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJgwKjWnTETB1pDc+aXVYp0c-cYOE6gz_KYOn5byQOKpA@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 06:35:27 up 165 days, 19:54, 163 users,  load average: 0.08, 0.07,
+ 0.07
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If an error occurs in the loop where we call 'pxa3xx_gcu_add_buffer()',
-any resource already allocated should be freed.
 
-In order to fix it, add a call to 'pxa3xx_gcu_free_buffers()' in the error
-handling path, as already done in the remove function.
+--u5ojtjypdq5icgiq
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 364dbdf3b6c3 ("video: add driver for PXA3xx 2D graphics accelerator")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/video/fbdev/pxa3xx-gcu.c | 1 +
- 1 file changed, 1 insertion(+)
+@Rob, thank you for the review.
 
-diff --git a/drivers/video/fbdev/pxa3xx-gcu.c b/drivers/video/fbdev/pxa3xx-gcu.c
-index 4279e13a3b58..68d9c7a681d4 100644
---- a/drivers/video/fbdev/pxa3xx-gcu.c
-+++ b/drivers/video/fbdev/pxa3xx-gcu.c
-@@ -675,6 +675,7 @@ static int pxa3xx_gcu_probe(struct platform_device *pdev)
- 
- err_disable_clk:
- 	clk_disable_unprepare(priv->clk);
-+	pxa3xx_gcu_free_buffers(dev, priv);
- 
- 	return ret;
- }
--- 
-2.25.1
+@David, should I send fixes or reworked initial patches?
 
+On Tue, Apr 28, 2020 at 12:30:06PM -0500, Rob Herring wrote:
+> On Fri, Mar 13, 2020 at 12:23 AM Oleksij Rempel <o.rempel@pengutronix.de>=
+ wrote:
+> >
+> > Document the NXP TJA11xx PHY bindings.
+>=20
+> Given the discussion, I'd marked this one as "changes requested"
+> expecting a new version to review the schema. And gmail decided to
+> make a new thread due to the extra 'RE:'. So it fell off my radar.
+>=20
+> This schema is fundamentally broken as there's no way to match for
+> when to apply this schema. How do we find a NXP TJA11xx PHY? I suppose
+> we can look for 'ethernet-phy' with a child node 'ethernet-phy', but
+> then that would apply to any phy like this one. This needs a
+> compatible string IMO given it is non-standard.
+>=20
+> >
+> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > ---
+> >  .../devicetree/bindings/net/nxp,tja11xx.yaml  | 61 +++++++++++++++++++
+> >  1 file changed, 61 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/net/nxp,tja11xx.y=
+aml
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml b/D=
+ocumentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> > new file mode 100644
+> > index 000000000000..42be0255512b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> > @@ -0,0 +1,61 @@
+> > +# SPDX-License-Identifier: GPL-2.0+
+>=20
+> Dual license new bindings:
+>=20
+> (GPL-2.0-only OR BSD-2-Clause)
+>=20
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: NXP TJA11xx PHY
+> > +
+> > +maintainers:
+> > +  - Andrew Lunn <andrew@lunn.ch>
+> > +  - Florian Fainelli <f.fainelli@gmail.com>
+> > +  - Heiner Kallweit <hkallweit1@gmail.com>
+> > +
+> > +description:
+> > +  Bindings for NXP TJA11xx automotive PHYs
+>=20
+> Perhaps some information about how this phy is special.
+>=20
+> > +
+> > +allOf:
+> > +  - $ref: ethernet-phy.yaml#
+>=20
+> Not needed here as ethernet-phy.yaml already has a 'select' condition to =
+apply.
+>=20
+> > +
+> > +patternProperties:
+> > +  "^ethernet-phy@[0-9a-f]+$":
+> > +    type: object
+> > +    description: |
+> > +      Some packages have multiple PHYs. Secondary PHY should be define=
+s as
+> > +      subnode of the first (parent) PHY.
+> > +
+> > +    properties:
+> > +      reg:
+> > +        minimum: 0
+> > +        maximum: 31
+> > +        description:
+> > +          The ID number for the child PHY. Should be +1 of parent PHY.
+> > +
+> > +    required:
+> > +      - reg
+> > +
+> > +examples:
+> > +  - |
+> > +    mdio {
+> > +        #address-cells =3D <1>;
+> > +        #size-cells =3D <0>;
+> > +
+> > +        tja1101_phy0: ethernet-phy@4 {
+> > +            reg =3D <0x4>;
+> > +        };
+> > +    };
+> > +  - |
+> > +    mdio {
+> > +        #address-cells =3D <1>;
+> > +        #size-cells =3D <0>;
+> > +
+> > +        tja1102_phy0: ethernet-phy@4 {
+> > +            reg =3D <0x4>;
+>=20
+> > +            #address-cells =3D <1>;
+> > +            #size-cells =3D <0>;
+>=20
+> These aren't documented.
+>=20
+> > +
+> > +            tja1102_phy1: ethernet-phy@5 {
+> > +                reg =3D <0x5>;
+> > +            };
+> > +        };
+> > +    };
+> > --
+> > 2.25.1
+> >
+>=20
+
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--u5ojtjypdq5icgiq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6pBKgACgkQ4omh9DUa
+UbPdpxAAn2f/bOVYYyPeoJH51X6j3vw6VzICAMmpJEFUQapwQK9TLVY81n5d+OZm
+mkHvdK/0cpuDEpJBahmPlU38IDk7uAfgauz5JE4rVmTnqJnaMjK4tpxKtgGqaRoA
+T0ghABC89U+V1groHAPxNwTxRR3nz5sQRjWUCx6hZ5KqP7gRoOWyyNPI3Hh088d3
+0YcJVFLxMoUNxRGUcmtPCNlp5UZ/mRZYhENAXQQ+c+jEttmQKfB52C730ogZfaIZ
+E8SkpCrVzHFMu1b/aR0FBE0VkRR8NoG0nnxAUXLVfk2bEBkoIjOEn/+4XbN2Dmha
+z270yAzDJeJux9Lx34EzXhFkA6bc+1V/yAHVc3ZmDXTp/GGFiDdLBnId+Q9LmXf1
+97MNlkKxK17V8pc7exGy+5f5lX0uiwOMuRzUZGMqPdMXVHuzAnJeu1PUxAGI4B8F
+Y0cJkZtVI9a/rTUHMgvTJZUtiPV+x9ZVn0XX3nnM9T9RWzF8fpE5VZP0Odl1n5ls
+hVTQX5XZSCVsflrgaRAxTrN3taNe5sPs5tBVLhw+Uamit62bI+jiBczlg+I4MilC
+lJoMLGNUqNENcVUuUUkJ5CWw0/7E3NfkhXxFx0H+8n/a2NbMSc/ywYx4aoe3MqXD
+p/KU6QtUbHvi8Eg9vh3NlhYppQQj2U+b894d3K/LYd8A4bbMdSA=
+=JVGP
+-----END PGP SIGNATURE-----
+
+--u5ojtjypdq5icgiq--
