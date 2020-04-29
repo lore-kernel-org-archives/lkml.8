@@ -2,236 +2,128 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 086F5C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC69C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D37A420757
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D04020757
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:21:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Z/PwLy3o"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iSYywjiP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgD2WTA (ORCPT
+        id S1727068AbgD2WVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 18:19:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50634 "EHLO
+        Wed, 29 Apr 2020 18:21:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726481AbgD2WS7 (ORCPT
+        by vger.kernel.org with ESMTP id S1726481AbgD2WVB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 18:18:59 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29877C03C1AE;
-        Wed, 29 Apr 2020 15:18:59 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id CC72422F54;
-        Thu, 30 Apr 2020 00:18:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1588198733;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OmNmiJrBqjSomX4a3GYQTKJyBa1w0mCqW3xG6X4r7JU=;
-        b=Z/PwLy3ofPJI0xZH8IT5HibD+o80mve3lOqDxmcoLl5fAWYxiphkS3L+FlMZ3hwjqkPVXe
-        FWyxmaG79Gwm3M+Y76olNlSWLCYjY+suQcs/NAmXlgNRFpGqjE3p9qgeG7IWOdSSjMV0EB
-        tuVu73gv8gmi36GFiF4+cMEP6WC8huQ=
+        Wed, 29 Apr 2020 18:21:01 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34C73C03C1AE;
+        Wed, 29 Apr 2020 15:21:01 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id i68so3374993qtb.5;
+        Wed, 29 Apr 2020 15:21:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QlkVaiVcBOHNkB5ExNKJRxqXIe1PfFKILjvlG5hRlg0=;
+        b=iSYywjiPEaoZgqGWHWsYQtRoLNwu6veFylWlF6ZsYH4D2pE652/y3b0TG5vv7uPuS1
+         ssnE4Vw3meDDMdj62qMuqDD+V9w950rvXy8hPdN1Q8+/aeJ6nuJtIQzCB/y6PU27eucr
+         /nq4mT6lrPmHzOq9Y4Lv+nicLSAFI5zMDDMNhmG730hYmsEcamMSKV91Syf1IpACDDVW
+         yNY+t4469MPznK0HcvgR/Ry8Ayt2eFl3mWzVv/rdjbkmy9Utd8f50swv37v6kKrxxXBR
+         tncPDIdPoz5LC0ouj7mZ7Q4hzvODcgMfQ3cSRggPKlDnhT8Tl4F8QqdhAB/zcVxu3Cbx
+         ogJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=QlkVaiVcBOHNkB5ExNKJRxqXIe1PfFKILjvlG5hRlg0=;
+        b=YBVB1VeDSpOt1jJwb8nMAjbHdiFm38TT4dShVdP7tm8vwSbWsEbMiadwTXowBxn7rc
+         mqn+51LtSSJnu29J/K1yo5gSEY5ZdW5NsZGZUQDUif4S4FVkvnL6chE/C993qWCme4mT
+         p3rLv9zOI5q7thkOdmlHs7qxCoz4YKgH0bTtnrIMbUA/QPHlAH4TUK05qEn20BPvnusJ
+         VmZvMZyeTxci8hOFPRFkdBAFNfx8PZ//Vuhbi69z6brl+TrFpdahVikHuwDGcYCJr6pn
+         D73cSx4lTOFYpYtoWh8okFw4qWz2HJmyaXhDSu0G9Qd3MRDHl5ZVYlq0hrRzwV20INl8
+         Q9Hg==
+X-Gm-Message-State: AGi0Pub+UXdA6uatuisETw28Omkpqd9l4/xLLfpxr0AgDB+29zFiyfV6
+        VsSmG3YLFbZLMNEbQLxNdi5015JTCgU=
+X-Google-Smtp-Source: APiQypJtRbZMrEQXh43TsjlPJyH0lrH1FMh1wR7ThB/RYDQVccxT8lyADglxmV+Y2U5rD3wOrhTx3Q==
+X-Received: by 2002:ac8:4e45:: with SMTP id e5mr548115qtw.101.1588198860273;
+        Wed, 29 Apr 2020 15:21:00 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id y17sm359287qky.33.2020.04.29.15.20.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 15:20:59 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 29 Apr 2020 18:20:57 -0400
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Joe Perches <joe@perches.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 03/10] efi/x86: Use pr_efi_err for error messages
+Message-ID: <20200429222057.GA1645040@rani.riverdale.lan>
+References: <20200429174120.1497212-1-nivedita@alum.mit.edu>
+ <20200429174120.1497212-5-nivedita@alum.mit.edu>
+ <f74fe4ad56c0471f863ce550869391c8811f9893.camel@perches.com>
+ <CAMj1kXGn70BmapKe=6sA17gMCcWRLCebQJFnyObwRbAefOcEng@mail.gmail.com>
+ <20200429214332.GC1621173@rani.riverdale.lan>
+ <31b23951ee2b8e2391f3208b60a7132df18be74e.camel@perches.com>
+ <CAMj1kXFJfK=tspytknqdABRfYMhA23FWOs8QoasX1jZ6z=F3Gg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 30 Apr 2020 00:18:48 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
- reg property
-In-Reply-To: <20200423174543.17161-4-michael@walle.cc>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-4-michael@walle.cc>
-Message-ID: <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: CC72422F54
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[24];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[linux.intel.com,linaro.org,baylibre.com,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org,vger.kernel.org,lists.infradead.org];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXFJfK=tspytknqdABRfYMhA23FWOs8QoasX1jZ6z=F3Gg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee,
+On Wed, Apr 29, 2020 at 11:55:04PM +0200, Ard Biesheuvel wrote:
+> On Wed, 29 Apr 2020 at 23:53, Joe Perches <joe@perches.com> wrote:
+> >
+> > On Wed, 2020-04-29 at 17:43 -0400, Arvind Sankar wrote:
+> > > On Wed, Apr 29, 2020 at 08:49:21PM +0200, Ard Biesheuvel wrote:
+> > > > On Wed, 29 Apr 2020 at 20:47, Joe Perches <joe@perches.com> wrote:
+> > > > > On Wed, 2020-04-29 at 13:41 -0400, Arvind Sankar wrote:
+> > > > > > Use pr_efi_err instead of bare efi_printk for error messages.
+> > > > >
+> > > > > Perhaps it'd be better to rename pr_efi_err to eri_err
+> > > > > so it's clearer it's a typical efi_ logging function.
+> > > > >
+> > > > > $ git grep -w --name-only pr_efi_err | \
+> > > > >   xargs sed -i 's/\bpr_efi_err\b/efi_err/g'
+> > > > >
+> > > >
+> > > > Yeah, pr_efi_err() is probably not the best name
+> > >
+> > > Should I rename pr_efi/pr_efi_err to, say, efi_pr_info/efi_pr_error?
+> >
+> > Perhaps not use pr_ in the name at all.
+> >
+> > I suggest:
+> >
+> > pr_efi          -> efi_info (or efi_debug or efi_dbg)
+> >                    (it is guarded by an efi_quiet flag, default: on)
+> > pr_efi_err      -> efi_err
+> >
+> 
+> Agreed. Shorter is better if there is no risk of confusion..
 
-Am 2020-04-23 19:45, schrieb Michael Walle:
-> There might be multiple children with the device tree compatible, for
-> example if a MFD has multiple instances of the same function. In this
-> case only the first is matched and the other children get a wrong
-> of_node reference.
-> Add a new option to match also against the unit address of the child
-> node. Additonally, a new helper OF_MFD_CELL_REG is added.
+Ok, I'll use efi_info/efi_err. We could add debugging output as
+efi_debug later, enabled if efi=debug is specified.
 
+While we're here: most of the existing cases of pr_efi look like notice
+or info level, except maybe these two, which probably should be at least
+warnings?
 
-Do you think this is feasible? I guess this is the biggest uncertainty
-for me at the moment in this patch series.
+drivers/firmware/efi/libstub/arm64-stub.c
+62: pr_efi("EFI_RNG_PROTOCOL unavailable, no randomness supplied\n");
 
--michael
-
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  drivers/mfd/mfd-core.c   | 29 ++++++++++++++++++++---------
->  include/linux/mfd/core.h | 26 ++++++++++++++++++++------
->  2 files changed, 40 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> index e735565969b3..4ecb376338f7 100644
-> --- a/drivers/mfd/mfd-core.c
-> +++ b/drivers/mfd/mfd-core.c
-> @@ -117,6 +117,7 @@ static int mfd_add_device(struct device *parent, 
-> int id,
->  	struct device_node *np = NULL;
->  	int ret = -ENOMEM;
->  	int platform_id;
-> +	u32 of_reg;
->  	int r;
-> 
->  	if (id == PLATFORM_DEVID_AUTO)
-> @@ -151,16 +152,26 @@ static int mfd_add_device(struct device *parent, 
-> int id,
-> 
->  	if (parent->of_node && cell->of_compatible) {
->  		for_each_child_of_node(parent->of_node, np) {
-> -			if (of_device_is_compatible(np, cell->of_compatible)) {
-> -				if (!of_device_is_available(np)) {
-> -					/* Ignore disabled devices error free */
-> -					ret = 0;
-> -					goto fail_alias;
-> -				}
-> -				pdev->dev.of_node = np;
-> -				pdev->dev.fwnode = &np->fwnode;
-> -				break;
-> +			if (!of_device_is_compatible(np, cell->of_compatible))
-> +				continue;
-> +
-> +			/* also match the unit address if set */
-> +			if (cell->of_reg & MFD_OF_REG_VALID) {
-> +				if (of_property_read_u32(np, "reg", &of_reg))
-> +					continue;
-> +				if ((cell->of_reg & MFD_OF_REG_MASK) != of_reg)
-> +					continue;
->  			}
-> +
-> +			if (!of_device_is_available(np)) {
-> +				/* Ignore disabled devices error free */
-> +				ret = 0;
-> +				goto fail_alias;
-> +			}
-> +
-> +			pdev->dev.of_node = np;
-> +			pdev->dev.fwnode = &np->fwnode;
-> +			break;
->  		}
->  	}
-> 
-> diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-> index d01d1299e49d..c2c0ad6b14f3 100644
-> --- a/include/linux/mfd/core.h
-> +++ b/include/linux/mfd/core.h
-> @@ -13,8 +13,11 @@
->  #include <linux/platform_device.h>
-> 
->  #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
-> +#define MFD_OF_REG_VALID	BIT(31)
-> +#define MFD_OF_REG_MASK		GENMASK(30, 0)
-> 
-> -#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, 
-> _match)\
-> +#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
-> +		     _of_reg, _match)					\
->  	{								\
->  		.name = (_name),					\
->  		.resources = (_res),					\
-> @@ -22,24 +25,32 @@
->  		.platform_data = (_pdata),				\
->  		.pdata_size = (_pdsize),				\
->  		.of_compatible = (_compat),				\
-> +		.of_reg = (_of_reg),					\
->  		.acpi_match = (_match),					\
->  		.id = (_id),						\
->  	}
-> 
-> +#define OF_MFD_CELL_REG(_name, _res, _pdata, _pdsize, _id, _compat,	\
-> +			_of_reg)					\
-> +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
-> +		     ((_of_reg) | MFD_OF_REG_VALID), NULL)		\
-> +
->  #define OF_MFD_CELL(_name, _res, _pdata, _pdsize,_id, _compat)		\
-> -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, NULL)	\
-> +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
-> +		     0, NULL)						\
-> 
->  #define ACPI_MFD_CELL(_name, _res, _pdata, _pdsize, _id, _match)	\
-> -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, _match)	\
-> +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0,	\
-> +		     _match)						\
-> 
->  #define MFD_CELL_BASIC(_name, _res, _pdata, _pdsize, _id)		\
-> -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, NULL)	\
-> +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0, NULL) \
-> 
->  #define MFD_CELL_RES(_name, _res)					\
-> -	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, NULL)		\
-> +	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, 0, NULL)		\
-> 
->  #define MFD_CELL_NAME(_name)						\
-> -	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, NULL)		\
-> +	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, 0, NULL)		\
-> 
->  struct irq_domain;
->  struct property_entry;
-> @@ -78,6 +89,9 @@ struct mfd_cell {
->  	 */
->  	const char		*of_compatible;
-> 
-> +	/* matching the reg property if set */
-> +	unsigned int		of_reg;
-> +
->  	/* Matches ACPI */
->  	const struct mfd_cell_acpi_match	*acpi_match;
+drivers/firmware/efi/libstub/efi-stub.c
+254: pr_efi("Ignoring DTB from command line.\n");
