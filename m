@@ -5,68 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31166C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F263DC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA5A208E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC730214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:02:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q3tvhdUR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kASBbSG2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgD2UCg (ORCPT
+        id S1727855AbgD2UCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 16:02:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57320 "EHLO
+        Wed, 29 Apr 2020 16:02:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbgD2UCQ (ORCPT
+        with ESMTP id S1727049AbgD2UCN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 16:02:16 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56210C03C1AE;
-        Wed, 29 Apr 2020 13:02:16 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id o185so1535460pgo.3;
-        Wed, 29 Apr 2020 13:02:16 -0700 (PDT)
+        Wed, 29 Apr 2020 16:02:13 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7307EC03C1AE;
+        Wed, 29 Apr 2020 13:02:13 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id f7so1587277pfa.9;
+        Wed, 29 Apr 2020 13:02:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=IC8rInsRsfxQQkeZ96jiqZI2NB9+ZDmlgZxQ89+Ot80=;
-        b=Q3tvhdURxNnI8eipt1UAAyDjRNDvN3MOcBNT/modDn4FhNs/nXY29BN63vDWNfwymx
-         yOfBHJDQPmQT47fEVquMDbtT5pqnXVCS5QJ/AZ/mrL6/DaZprbDCt0/VU0kBqh4zniVV
-         XNEnZXluePl5kVGSGOGttZ+Jqct5kpfKSZigh++PvWGJQTHdyDdLLulMiACzcAHHZs1Q
-         B4c4w6Iwk6xFGPx1pFDo3hIxNzBw7SMlTIpPh0lRQ20O6f3PKTfOk3nnROlRBrehUtdm
-         hew0i+G/hAp+KTKjyrbcaKhS9w0o57Ki0YnCl4fc9WVlVVPcBp/5fIlcPD8lgusynfYm
-         uJ/w==
+        bh=SYWum3ZnYsfLSG0jDSyn5h0VUobSFoO/qhOlaCswZZY=;
+        b=kASBbSG2Y+m0qJObDTSTlmTSkZyk0AhBnwpoKMvM1AO3HtMws3K+EBeAANoqC+Wr95
+         eRvbfwJTjDHFsPEfvVx2ZTJgEufX7iSaO+48GOeAl1+fPTvxBVUKXDKdoFkrxuXWl9mC
+         XZHivxeGvDC2slGQGIQKk9b6oSDwm/NqanBRq42bKf1fJ3YTl734Ldu/4nmLQxnAjvC6
+         Lgif7O9E8JKZpEOZ9ESqtCP2cJ4d4DN/jj9OcWQ73qsP12y5kl2FcMoJrto5N8xf3Yam
+         lwa5jxeLYaeG7KTvNfarmtUfbfTsrLsCKnxg1mToMWmSC8u3Y6XEgmIDvK2WI/5GTiNo
+         2/ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=IC8rInsRsfxQQkeZ96jiqZI2NB9+ZDmlgZxQ89+Ot80=;
-        b=iJNBYsCIiDkMzpbnPpPKq6ceLnYkYBErAmwaVw5dsxp/ncil2VGTVM0AhwV8Yjns/U
-         a5kHM3IbGYWMtac+sVoveCynsPrd1s3g+LKWZKIwn6AUyyvQRXj5+xPKKep4oTV/cNHq
-         fD0qjj2S/IMhADNOIEXP7TW/4j+HdOZzb+bwfxivSDnsxghrZmRi/bO3PbBz5SPaMjlx
-         ebCiNiPaCLGobzEhejoAGU2g/NWHc/4VM8Lko5qMsQp+6Ow5nahURpvLhnfKs7LbtVYI
-         VvPjWieJ19xys2LLbIqGKf8GIjhlVrKNVEMm7202ssKg8R3sXY4dDfqnC1/M+5dN32a1
-         b7LQ==
-X-Gm-Message-State: AGi0PuYc9qraZULP+ElLXa9a60n08O1kXLYw7X+gpK+9Hh1j7S85T65b
-        Iuam0um0d2eoX/hwCxPBDXE=
-X-Google-Smtp-Source: APiQypLcivI2c+n9PIkReQk7m+dnLg8JBlSifrz4L3rmjTEVTW+cwfWf5Q6OxQrSMZo+1M3YJdY7tQ==
-X-Received: by 2002:a63:5704:: with SMTP id l4mr9729669pgb.85.1588190535828;
-        Wed, 29 Apr 2020 13:02:15 -0700 (PDT)
+        bh=SYWum3ZnYsfLSG0jDSyn5h0VUobSFoO/qhOlaCswZZY=;
+        b=j+wAgXPX27Yn9kkWIPRLg564X0WNrSNnexFir10G1YYiThSMeGOMQ4Tx44z1+QMuHq
+         msUmYCUPJhVllAEHuMOLXZoxF9wGTmT+XNkKJER8lcu3KkJHHdQ7pYU5SneWV4Nd7bYb
+         uP2HhTe1C2f7NKgOfUDLPXGCLaG/ECOOjSCuUxzLoxJ3tOJz0C1/xu49lZ5Ga50CJU7R
+         mntmZulD+u8MYqCuUGA8WrnioY603H8Q5bA7Qe7Ko42wjLaPGQco972cj34nXaSEPx2q
+         vSuu08MhWwGkQx2A2kjp0uV0z8diFni2MkdnMaayj1gVIfldnDviQS2D9qjHwKB1s3oK
+         xbSw==
+X-Gm-Message-State: AGi0PuZlKgmsZZZ13vvdQgtZ3DppT7apNV4acZRGOLqffRLUS3PA8Wmu
+        kOojAxt8kleK/INxJrm+ThY=
+X-Google-Smtp-Source: APiQypJP3S9G2ZKqVVgcQlJkrH+KBcIg8Ek96iKCoB8qUyX9E4lyvZnHqhtRiIzaIPRdDm0v5H1+bQ==
+X-Received: by 2002:a63:1e5a:: with SMTP id p26mr34551434pgm.233.1588190532963;
+        Wed, 29 Apr 2020 13:02:12 -0700 (PDT)
 Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id r128sm1705817pfc.141.2020.04.29.13.02.14
+        by smtp.gmail.com with ESMTPSA id r128sm1705817pfc.141.2020.04.29.13.02.11
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Apr 2020 13:02:15 -0700 (PDT)
+        Wed, 29 Apr 2020 13:02:12 -0700 (PDT)
 From:   Doug Berger <opendmb@gmail.com>
 To:     Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
 Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net-next v2 4/7] Revert "net: bcmgenet: remove unused function in bcmgenet.c"
-Date:   Wed, 29 Apr 2020 13:02:03 -0700
-Message-Id: <1588190526-2082-5-git-send-email-opendmb@gmail.com>
+Subject: [PATCH net-next v2 2/7] net: bcmgenet: Fix WoL with password after deep sleep
+Date:   Wed, 29 Apr 2020 13:02:01 -0700
+Message-Id: <1588190526-2082-3-git-send-email-opendmb@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1588190526-2082-1-git-send-email-opendmb@gmail.com>
 References: <1588190526-2082-1-git-send-email-opendmb@gmail.com>
@@ -75,149 +75,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit e2072600a24161b7ddcfb26814f69f5fbc8ef85a.
+Broadcom STB chips support a deep sleep mode where all register contents
+are lost. Because we were stashing the MagicPacket password into some of
+these registers a suspend into that deep sleep then a resumption would
+not lead to being able to wake-up from MagicPacket with password again.
 
-This commit restores the previous implementation of Hardware Filter
-Block functions to the file for use in subsequent commits.
+Fix this by keeping a software copy of the password and program it
+during suspend.
 
+Fixes: c51de7f3976b ("net: bcmgenet: add Wake-on-LAN support code")
+Suggested-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Doug Berger <opendmb@gmail.com>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 122 +++++++++++++++++++++++++
- 1 file changed, 122 insertions(+)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.h     |  2 ++
+ drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c | 39 ++++++++++------------
+ 2 files changed, 20 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 57b8608feae1..b37ef05c5083 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -2759,6 +2759,128 @@ static void bcmgenet_enable_dma(struct bcmgenet_priv *priv, u32 dma_ctrl)
- 	bcmgenet_tdma_writel(priv, reg, DMA_CTRL);
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
+index daf8fb2c39b6..c3bfe97f2e5c 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
+@@ -14,6 +14,7 @@
+ #include <linux/if_vlan.h>
+ #include <linux/phy.h>
+ #include <linux/dim.h>
++#include <linux/ethtool.h>
+ 
+ /* total number of Buffer Descriptors, same for Rx/Tx */
+ #define TOTAL_DESC				256
+@@ -676,6 +677,7 @@ struct bcmgenet_priv {
+ 	/* WOL */
+ 	struct clk *clk_wol;
+ 	u32 wolopts;
++	u8 sopass[SOPASS_MAX];
+ 
+ 	struct bcmgenet_mib_counters mib;
+ 
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
+index c9a43695b182..597c0498689a 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
+@@ -41,18 +41,13 @@
+ void bcmgenet_get_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
+ {
+ 	struct bcmgenet_priv *priv = netdev_priv(dev);
+-	u32 reg;
+ 
+ 	wol->supported = WAKE_MAGIC | WAKE_MAGICSECURE;
+ 	wol->wolopts = priv->wolopts;
+ 	memset(wol->sopass, 0, sizeof(wol->sopass));
+ 
+-	if (wol->wolopts & WAKE_MAGICSECURE) {
+-		reg = bcmgenet_umac_readl(priv, UMAC_MPD_PW_MS);
+-		put_unaligned_be16(reg, &wol->sopass[0]);
+-		reg = bcmgenet_umac_readl(priv, UMAC_MPD_PW_LS);
+-		put_unaligned_be32(reg, &wol->sopass[2]);
+-	}
++	if (wol->wolopts & WAKE_MAGICSECURE)
++		memcpy(wol->sopass, priv->sopass, sizeof(priv->sopass));
  }
  
-+static bool bcmgenet_hfb_is_filter_enabled(struct bcmgenet_priv *priv,
-+					   u32 f_index)
+ /* ethtool function - set WOL (Wake on LAN) settings.
+@@ -62,7 +57,6 @@ int bcmgenet_set_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
+ {
+ 	struct bcmgenet_priv *priv = netdev_priv(dev);
+ 	struct device *kdev = &priv->pdev->dev;
+-	u32 reg;
+ 
+ 	if (!device_can_wakeup(kdev))
+ 		return -ENOTSUPP;
+@@ -70,17 +64,8 @@ int bcmgenet_set_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
+ 	if (wol->wolopts & ~(WAKE_MAGIC | WAKE_MAGICSECURE))
+ 		return -EINVAL;
+ 
+-	reg = bcmgenet_umac_readl(priv, UMAC_MPD_CTRL);
+-	if (wol->wolopts & WAKE_MAGICSECURE) {
+-		bcmgenet_umac_writel(priv, get_unaligned_be16(&wol->sopass[0]),
+-				     UMAC_MPD_PW_MS);
+-		bcmgenet_umac_writel(priv, get_unaligned_be32(&wol->sopass[2]),
+-				     UMAC_MPD_PW_LS);
+-		reg |= MPD_PW_EN;
+-	} else {
+-		reg &= ~MPD_PW_EN;
+-	}
+-	bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
++	if (wol->wolopts & WAKE_MAGICSECURE)
++		memcpy(priv->sopass, wol->sopass, sizeof(priv->sopass));
+ 
+ 	/* Flag the device and relevant IRQ as wakeup capable */
+ 	if (wol->wolopts) {
+@@ -120,6 +105,14 @@ static int bcmgenet_poll_wol_status(struct bcmgenet_priv *priv)
+ 	return retries;
+ }
+ 
++static void bcmgenet_set_mpd_password(struct bcmgenet_priv *priv)
 +{
-+	u32 offset;
-+	u32 reg;
-+
-+	offset = HFB_FLT_ENABLE_V3PLUS + (f_index < 32) * sizeof(u32);
-+	reg = bcmgenet_hfb_reg_readl(priv, offset);
-+	return !!(reg & (1 << (f_index % 32)));
++	bcmgenet_umac_writel(priv, get_unaligned_be16(&priv->sopass[0]),
++			     UMAC_MPD_PW_MS);
++	bcmgenet_umac_writel(priv, get_unaligned_be32(&priv->sopass[2]),
++			     UMAC_MPD_PW_LS);
 +}
 +
-+static void bcmgenet_hfb_enable_filter(struct bcmgenet_priv *priv, u32 f_index)
-+{
-+	u32 offset;
-+	u32 reg;
-+
-+	offset = HFB_FLT_ENABLE_V3PLUS + (f_index < 32) * sizeof(u32);
-+	reg = bcmgenet_hfb_reg_readl(priv, offset);
-+	reg |= (1 << (f_index % 32));
-+	bcmgenet_hfb_reg_writel(priv, reg, offset);
-+}
-+
-+static void bcmgenet_hfb_set_filter_rx_queue_mapping(struct bcmgenet_priv *priv,
-+						     u32 f_index, u32 rx_queue)
-+{
-+	u32 offset;
-+	u32 reg;
-+
-+	offset = f_index / 8;
-+	reg = bcmgenet_rdma_readl(priv, DMA_INDEX2RING_0 + offset);
-+	reg &= ~(0xF << (4 * (f_index % 8)));
-+	reg |= ((rx_queue & 0xF) << (4 * (f_index % 8)));
-+	bcmgenet_rdma_writel(priv, reg, DMA_INDEX2RING_0 + offset);
-+}
-+
-+static void bcmgenet_hfb_set_filter_length(struct bcmgenet_priv *priv,
-+					   u32 f_index, u32 f_length)
-+{
-+	u32 offset;
-+	u32 reg;
-+
-+	offset = HFB_FLT_LEN_V3PLUS +
-+		 ((priv->hw_params->hfb_filter_cnt - 1 - f_index) / 4) *
-+		 sizeof(u32);
-+	reg = bcmgenet_hfb_reg_readl(priv, offset);
-+	reg &= ~(0xFF << (8 * (f_index % 4)));
-+	reg |= ((f_length & 0xFF) << (8 * (f_index % 4)));
-+	bcmgenet_hfb_reg_writel(priv, reg, offset);
-+}
-+
-+static int bcmgenet_hfb_find_unused_filter(struct bcmgenet_priv *priv)
-+{
-+	u32 f_index;
-+
-+	for (f_index = 0; f_index < priv->hw_params->hfb_filter_cnt; f_index++)
-+		if (!bcmgenet_hfb_is_filter_enabled(priv, f_index))
-+			return f_index;
-+
-+	return -ENOMEM;
-+}
-+
-+/* bcmgenet_hfb_add_filter
-+ *
-+ * Add new filter to Hardware Filter Block to match and direct Rx traffic to
-+ * desired Rx queue.
-+ *
-+ * f_data is an array of unsigned 32-bit integers where each 32-bit integer
-+ * provides filter data for 2 bytes (4 nibbles) of Rx frame:
-+ *
-+ * bits 31:20 - unused
-+ * bit  19    - nibble 0 match enable
-+ * bit  18    - nibble 1 match enable
-+ * bit  17    - nibble 2 match enable
-+ * bit  16    - nibble 3 match enable
-+ * bits 15:12 - nibble 0 data
-+ * bits 11:8  - nibble 1 data
-+ * bits 7:4   - nibble 2 data
-+ * bits 3:0   - nibble 3 data
-+ *
-+ * Example:
-+ * In order to match:
-+ * - Ethernet frame type = 0x0800 (IP)
-+ * - IP version field = 4
-+ * - IP protocol field = 0x11 (UDP)
-+ *
-+ * The following filter is needed:
-+ * u32 hfb_filter_ipv4_udp[] = {
-+ *   Rx frame offset 0x00: 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-+ *   Rx frame offset 0x08: 0x00000000, 0x00000000, 0x000F0800, 0x00084000,
-+ *   Rx frame offset 0x10: 0x00000000, 0x00000000, 0x00000000, 0x00030011,
-+ * };
-+ *
-+ * To add the filter to HFB and direct the traffic to Rx queue 0, call:
-+ * bcmgenet_hfb_add_filter(priv, hfb_filter_ipv4_udp,
-+ *                         ARRAY_SIZE(hfb_filter_ipv4_udp), 0);
-+ */
-+int bcmgenet_hfb_add_filter(struct bcmgenet_priv *priv, u32 *f_data,
-+			    u32 f_length, u32 rx_queue)
-+{
-+	int f_index;
-+	u32 i;
-+
-+	f_index = bcmgenet_hfb_find_unused_filter(priv);
-+	if (f_index < 0)
-+		return -ENOMEM;
-+
-+	if (f_length > priv->hw_params->hfb_filter_size)
-+		return -EINVAL;
-+
-+	for (i = 0; i < f_length; i++)
-+		bcmgenet_hfb_writel(priv, f_data[i],
-+			(f_index * priv->hw_params->hfb_filter_size + i) *
-+			sizeof(u32));
-+
-+	bcmgenet_hfb_set_filter_length(priv, f_index, 2 * f_length);
-+	bcmgenet_hfb_set_filter_rx_queue_mapping(priv, f_index, rx_queue);
-+	bcmgenet_hfb_enable_filter(priv, f_index);
-+	bcmgenet_hfb_reg_writel(priv, 0x1, HFB_CTRL);
-+
-+	return 0;
-+}
-+
- /* bcmgenet_hfb_clear
-  *
-  * Clear Hardware Filter Block and disable all filtering.
+ int bcmgenet_wol_power_down_cfg(struct bcmgenet_priv *priv,
+ 				enum bcmgenet_power_mode mode)
+ {
+@@ -144,13 +137,17 @@ int bcmgenet_wol_power_down_cfg(struct bcmgenet_priv *priv,
+ 
+ 	reg = bcmgenet_umac_readl(priv, UMAC_MPD_CTRL);
+ 	reg |= MPD_EN;
++	if (priv->wolopts & WAKE_MAGICSECURE) {
++		bcmgenet_set_mpd_password(priv);
++		reg |= MPD_PW_EN;
++	}
+ 	bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
+ 
+ 	/* Do not leave UniMAC in MPD mode only */
+ 	retries = bcmgenet_poll_wol_status(priv);
+ 	if (retries < 0) {
+ 		reg = bcmgenet_umac_readl(priv, UMAC_MPD_CTRL);
+-		reg &= ~MPD_EN;
++		reg &= ~(MPD_EN | MPD_PW_EN);
+ 		bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
+ 		return retries;
+ 	}
+@@ -189,7 +186,7 @@ void bcmgenet_wol_power_up_cfg(struct bcmgenet_priv *priv,
+ 	reg = bcmgenet_umac_readl(priv, UMAC_MPD_CTRL);
+ 	if (!(reg & MPD_EN))
+ 		return;	/* already powered up so skip the rest */
+-	reg &= ~MPD_EN;
++	reg &= ~(MPD_EN | MPD_PW_EN);
+ 	bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
+ 
+ 	/* Disable CRC Forward */
 -- 
 2.7.4
 
