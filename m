@@ -2,194 +2,127 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE5EC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCD3C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCB2E2085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:47:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PvC8aAgT"
+	by mail.kernel.org (Postfix) with ESMTP id 1A8122085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:48:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgD2Lrq (ORCPT
+        id S1726852AbgD2LsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 07:47:46 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:61770 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726676AbgD2Lrp (ORCPT
+        Wed, 29 Apr 2020 07:48:02 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:48367 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726457AbgD2LsC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 07:47:45 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588160863; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=79lO4foXlw6J8ugqTXZwErfGUb0sv/L3QrDS4q0L9l4=;
- b=PvC8aAgTP3AnsbebwH7erjYWtkZJFM6NBD96kO4IJi+toqD7DLZalh3xvK/1IYmcXKZyhxDH
- mEK1Od+1VIgqd/X/xNs7viGlPtveM7hlqMHTzhMDFCX2karSMK0eB20jgjqcXauCUQrOpV+J
- RccKNaCHGjw+5fBi7tQp8IUN/20=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea9695d.7fcd15441618-smtp-out-n03;
- Wed, 29 Apr 2020 11:47:41 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BC29DC44788; Wed, 29 Apr 2020 11:47:41 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 16C3BC433D2;
-        Wed, 29 Apr 2020 11:47:41 +0000 (UTC)
+        Wed, 29 Apr 2020 07:48:02 -0400
+X-IronPort-AV: E=Sophos;i="5.73,331,1583164800"; 
+   d="scan'208";a="90776462"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 29 Apr 2020 19:47:58 +0800
+Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
+        by cn.fujitsu.com (Postfix) with ESMTP id 6CC7E50A996E;
+        Wed, 29 Apr 2020 19:47:58 +0800 (CST)
+Received: from [10.167.220.69] (10.167.220.69) by
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Wed, 29 Apr 2020 19:47:59 +0800
+Message-ID: <5EA9696D.9020505@cn.fujitsu.com>
+Date:   Wed, 29 Apr 2020 19:47:57 +0800
+From:   Xiao Yang <yangx.jy@cn.fujitsu.com>
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.2; zh-CN; rv:1.9.2.18) Gecko/20110616 Thunderbird/3.1.11
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 29 Apr 2020 17:17:41 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>, mike.leach@linaro.org
-Cc:     mathieu.poirier@linaro.org, swboyd@chromium.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple
- connections
-In-Reply-To: <668ea1283a6dd6b34e701972f6f71034@codeaurora.org>
-References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
- <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com>
- <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
- <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com>
- <668ea1283a6dd6b34e701972f6f71034@codeaurora.org>
-Message-ID: <5b0f5d77c4eec22d8048bb0ffa078345@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+To:     Joel Fernandes <joel@joelfernandes.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH] kernel/trace: Stop and wait for kthread on preempt irq
+ module unload
+References: <20200424223630.224895-1-joel@joelfernandes.org> <5EA80319.7080005@cn.fujitsu.com> <20200428141505.GA141102@google.com>
+In-Reply-To: <20200428141505.GA141102@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.167.220.69]
+X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206)
+X-yoursite-MailScanner-ID: 6CC7E50A996E.ABEDC
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: yangx.jy@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-28 17:53, Sai Prakash Ranjan wrote:
-> On 2020-04-27 19:23, Suzuki K Poulose wrote:
->> On 04/27/2020 10:45 AM, Mike Leach wrote:
-> [...]
->>>> 
->>>> This is not sufficient. You must prevent another session trying to
->>>> enable the other port of the replicator as this could silently fail
->>>> the "on-going" session. Not ideal. Fail the attempt to enable a port
->>>> if the other port is active. You could track this in software and
->>>> fail early.
->>>> 
->>>> Suzuki
->>> 
->>> While I have no issue in principle with not enabling a path to a sink
->>> that is not in use - indeed in some cases attaching to unused sinks
->>> can cause back-pressure that slows throughput (cf TPIU) - I am
->>> concerned that this modification is masking an underlying issue with
->>> the platform in question.
->>> 
->>> Should we decide to enable the diversion of different IDs to 
->>> different
->>> sinks or allow different sessions go to different sinks, then this 
->>> has
->>> potential to fail on the SC7180 SoC - and it will be difficult in
->>> future to associate a problem with this discussion.
->> 
->> Mike,
->> 
->> I think thats a good point.
->> Sai, please could we narrow down this to the real problem and may be
->> work around it for the "device" ? Do we know which sink is causing the
->> back pressure ? We could then push the "work around" to the replicator
->> it is connected to.
->> 
->> Suzuki
-> 
-> Hi Suzuki, Mike,
-> 
-> To add some more to the information provided earlier,
-> swao_replicator(6b06000) and etf are
-> in AOSS (Always-On-SubSystem) group. Also TPIU(connected to
-> qdss_replicator) and EUD(connected
-> to swao_replicator) sinks are unused.
-> 
-> Please ignore the id filter values provided earlier.
-> Here are ID filter values after boot and before enabling replicator. As 
-> per
-> these idfilter values, we should not try to enable replicator if its 
-> already
-> enabled (in this case for swao_replicator) right?
-> 
-> localhost ~ # cat
-> /sys/bus/amba/devices/6b06000.replicator/replicator1/mgmt/idfilter0
-> 0x0
-> localhost ~ # cat
-> /sys/bus/amba/devices/6b06000.replicator/replicator1/mgmt/idfilter1
-> 0x0
-> 
-> localhost ~ # cat
-> /sys/bus/amba/devices/6046000.replicator/replicator0/mgmt/idfilter0
-> 0xff
-> localhost ~ # cat
-> /sys/bus/amba/devices/6046000.replicator/replicator0/mgmt/idfilter1
-> 0xff
-> 
+On 2020/4/28 22:15, Joel Fernandes wrote:
+> I am wondering if it is because in your test, the kthread exits too quickly.
+> We have these comments in kthread_stop():
+>   * If threadfn() may call do_exit() itself, the caller must ensure
+>   * task_struct can't go away.
+>
+> Does the below diff on top of the previous patch help?
+>
+> ---8<-----------------------
+>
+> diff --git a/kernel/trace/preemptirq_delay_test.c b/kernel/trace/preemptirq_delay_test.c
+> index 1c28ca20e30b6..8051946a18989 100644
+> --- a/kernel/trace/preemptirq_delay_test.c
+> +++ b/kernel/trace/preemptirq_delay_test.c
+> @@ -152,6 +152,8 @@ static int __init preemptirq_delay_init(void)
+>   	int retval;
+>
+>   	test_task = preemptirq_start_test();
+> +	get_task_struct(test_task);
+> +
+>   	retval = PTR_ERR_OR_ZERO(test_task);
+>   	if (retval != 0)
+>   		return retval;
+> @@ -172,8 +174,10 @@ static void __exit preemptirq_delay_exit(void)
+>   {
+>   	kobject_put(preemptirq_delay_kobj);
+>
+> -	if (test_task)
+> +	if (test_task) {
+>   		kthread_stop(test_task);
+> +		put_task_struct(test_task);
+> +	}
+>   }
 
-Looking more into replicator1(swao_replicator) values as 0x0 even after 
-replicator_reset()
-in replicator probe, I added dynamic_replicator_reset in 
-dynamic_replicator_enable()
-and am not seeing any hardlockup. Also I added some prints to check the 
-idfilter
-values before and after reset and found that its not set to 0xff even 
-after replicator_reset()
-in replicator probe, I don't see any other path setting it to 0x0.
+Hi Joel,
 
-After probe:
+Thanks for your additional patch.
 
-[    8.477669] func replicator_probe before reset replicator replicator1 
-REPLICATOR_IDFILTER0=0x0 REPLICATOR_IDFILTER1=0x0
-[    8.489470] func replicator_probe after reset replicator replicator1 
-REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
-[    8.502738] func replicator_probe before reset replicator replicator0 
-REPLICATOR_IDFILTER0=0x0 REPLICATOR_IDFILTER1=0x0
-[    8.515214] func replicator_probe after reset replicator replicator0 
-REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
-localhost ~ #
-localhost ~ #
-localhost ~ # echo 1 > /sys/bus/coresight/devices/tmc_etr0/enable_sink
-localhost ~ #
-localhost ~ # echo 1 > /sys/bus/coresight/devices/etm0/enable_source
-[   58.490485] func dynamic_replicator_enable before reset replicator 
-replicator0 REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
-[   58.503246] func dynamic_replicator_enable after reset replicator 
-replicator0 REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
-[   58.520902] func dynamic_replicator_enable before reset replicator 
-replicator1 REPLICATOR_IDFILTER0=0x0 REPLICATOR_IDFILTER1=0x0
-[   58.533500] func dynamic_replicator_enable after reset replicator 
-replicator1 REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
-localhost ~ #
+First, We have to avoid kbuild error by including <linux/sched/task.h>
+---------------------------------------
+kernel/trace/preemptirq_delay_test.c: In function ‘preemptirq_delay_init’:
+kernel/trace/preemptirq_delay_test.c:155:2: error: implicit declaration 
+of function ‘get_task_struct’; did you mean ‘set_task_cpu’? 
+[-Werror=implicit-function-declaration]
+   get_task_struct(test_task);
+   ^~~~~~~~~~~~~~~
+   set_task_cpu
+kernel/trace/preemptirq_delay_test.c: In function ‘preemptirq_delay_exit’:
+kernel/trace/preemptirq_delay_test.c:179:3: error: implicit declaration 
+of function ‘put_task_struct’; did you mean ‘set_task_cpu’? 
+[-Werror=implicit-function-declaration]
+    put_task_struct(test_task);
+    ^~~~~~~~~~~~~~~
+    set_task_cpu
+cc1: some warnings being treated as errors
+---------------------------------------
 
-Can we have a replicator_reset in dynamic_replicator_enable?
-
-diff --git a/drivers/hwtracing/coresight/coresight-replicator.c 
-b/drivers/hwtracing/coresight/coresight-replicator.c
-index e7dc1c31d20d..794f8e4c049f 100644
---- a/drivers/hwtracing/coresight/coresight-replicator.c
-+++ b/drivers/hwtracing/coresight/coresight-replicator.c
-@@ -68,6 +68,8 @@ static int dynamic_replicator_enable(struct 
-replicator_drvdata *drvdata,
-         int rc = 0;
-         u32 reg;
-
-+       dynamic_replicator_reset(drvdata);
-+
-         switch (outport) {
-         case 0:
-                 reg = REPLICATOR_IDFILTER0;
+Second, I used the following steps to do test and didn't get any 
+warning/panic after applying your additional patch：
+---------------------------------------
+for i in $(seq 1 100); do modprobe preemptirq_delay_test test_mode=irq 
+delay=500000; rmmod preemptirq_delay_test; done
+for i in $(seq 1 100); do modprobe preemptirq_delay_test 
+test_mode=preempt delay=500000; rmmod preemptirq_delay_test; done
+---------------------------------------
 
 Thanks,
-Sai
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Xiao Yang
+
+
