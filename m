@@ -2,127 +2,113 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA78C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C21C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2876420787
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:56:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XDfkkNuU"
+	by mail.kernel.org (Postfix) with ESMTP id 765982076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:57:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgD2H4m (ORCPT
+        id S1726682AbgD2H5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 03:56:42 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54284 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbgD2H4l (ORCPT
+        Wed, 29 Apr 2020 03:57:06 -0400
+Received: from mx-relay78-hz1.antispameurope.com ([94.100.133.239]:37890 "EHLO
+        mx-relay78-hz1.antispameurope.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726381AbgD2H5G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 03:56:41 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03T7uN8w007867;
-        Wed, 29 Apr 2020 02:56:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588146983;
-        bh=n4pmfRipX17yviyXCDK8at/AM0pg14P8PWeY9w6wQmA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=XDfkkNuUPYbFAV2lKtYm2z5y+m4/7Qo7STPFfnkln0JgNbc19/pUDC16TTyYK5sXU
-         nucf2/Vc057I3eFohiLDCxffAjvn4V7jzRRwHQMobraXzKpC5x7rTcq6jFO4loa1TL
-         0HeWsLMASeQNvQ4qgAkJK0RYBVKc6/W/G/SaptDo=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03T7uNgE116017
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 29 Apr 2020 02:56:23 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 29
- Apr 2020 02:56:22 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 29 Apr 2020 02:56:22 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03T7uJJV074144;
-        Wed, 29 Apr 2020 02:56:20 -0500
-Subject: Re: [PATCH] drm/bridge: fix stack usage warning on old gcc
-To:     Arnd Bergmann <arnd@arndb.de>, Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-CC:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20200428215408.4111675-1-arnd@arndb.de>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <22ee464b-f59a-69a3-b669-f821d567fbf5@ti.com>
-Date:   Wed, 29 Apr 2020 10:56:19 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200428215408.4111675-1-arnd@arndb.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Wed, 29 Apr 2020 03:57:06 -0400
+X-Greylist: delayed 351 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 Apr 2020 03:57:03 EDT
+Received: from mailgw1.iis.fraunhofer.de ([153.96.172.4]) by mx-relay78-hz1.antispameurope.com;
+ Wed, 29 Apr 2020 09:51:10 +0200
+Received: from mail.iis.fraunhofer.de (mail01.iis.fhg.de [153.96.171.211])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailgw1.iis.fraunhofer.de (Postfix) with ESMTPS id A532B2400082;
+        Wed, 29 Apr 2020 09:51:02 +0200 (CEST)
+Received: from mail01.iis.fhg.de (2001:638:a0a:1111:fd91:8c2a:e4a5:e74e) by
+ mail01.iis.fhg.de (2001:638:a0a:1111:fd91:8c2a:e4a5:e74e) with Microsoft SMTP
+ Server (TLS) id 15.0.1395.4; Wed, 29 Apr 2020 09:51:02 +0200
+Received: from mail01.iis.fhg.de ([fe80::fd91:8c2a:e4a5:e74e]) by
+ mail01.iis.fhg.de ([fe80::fd91:8c2a:e4a5:e74e%12]) with mapi id
+ 15.00.1395.000; Wed, 29 Apr 2020 09:51:02 +0200
+From:   "Stahl, Manuel" <manuel.stahl@iis-extern.fraunhofer.de>
+To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "Stahl, Manuel" <manuel.stahl@iis-extern.fraunhofer.de>,
+        "sojkam1@fel.cvut.cz" <sojkam1@fel.cvut.cz>
+Subject: Re: [PATCH v4] Add new uio device for PCI with dynamic memory
+ allocation
+Thread-Topic: [PATCH v4] Add new uio device for PCI with dynamic memory
+ allocation
+Thread-Index: AQHWFA15mQXQpLHKR0emWdXVXY2Gm6iOf4GAgAEst4A=
+Date:   Wed, 29 Apr 2020 07:51:01 +0000
+Message-ID: <eb405ab3782844e379629a655a3dcaf38dd2552d.camel@iis-extern.fraunhofer.de>
+References: <1507296707.2915.14.camel@iis-extern.fraunhofer.de>
+         <20200416163830.30623-1-manuel.stahl@iis-extern.fraunhofer.de>
+         <20200428135443.GA1437053@kroah.com>
+In-Reply-To: <20200428135443.GA1437053@kroah.com>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [153.96.171.210]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DB6D30FED112BA498DF5E122F00C71C2@iis.fhg.de>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-cloud-security-sender: manuel.stahl@iis-extern.fraunhofer.de
+X-cloud-security-recipient: linux-kernel@vger.kernel.org
+X-cloud-security-crypt: load encryption module
+X-cloud-security-Virusscan: CLEAN
+X-cloud-security-disclaimer: This E-Mail was scanned by E-Mailservice on mx-relay78-hz1.antispameurope.com with F356414813EE
+X-cloud-security-connect: mailgw1.iis.fraunhofer.de[153.96.172.4], TLS=1, IP=153.96.172.4
+X-cloud-security: scantime:.2600
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/2020 00:53, Arnd Bergmann wrote:
-> Some older versions of gcc badly optimize code that passes
-> an inline function argument into another function by reference,
-> causing huge stack usage:
-> 
-> drivers/gpu/drm/bridge/tc358768.c: In function 'tc358768_bridge_pre_enable':
-> drivers/gpu/drm/bridge/tc358768.c:840:1: error: the frame size of 2256 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
-> 
-> Use a temporary variable as a workaround and add a comment pointing
-> to the gcc bug.
-> 
-> Fixes: ff1ca6397b1d ("drm/bridge: Add tc358768 driver")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->   drivers/gpu/drm/bridge/tc358768.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/tc358768.c b/drivers/gpu/drm/bridge/tc358768.c
-> index 1b39e8d37834..6650fe4cfc20 100644
-> --- a/drivers/gpu/drm/bridge/tc358768.c
-> +++ b/drivers/gpu/drm/bridge/tc358768.c
-> @@ -178,6 +178,8 @@ static int tc358768_clear_error(struct tc358768_priv *priv)
->   
->   static void tc358768_write(struct tc358768_priv *priv, u32 reg, u32 val)
->   {
-> +	/* work around https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81715 */
-> +	int tmpval = val;
->   	size_t count = 2;
->   
->   	if (priv->error)
-> @@ -187,7 +189,7 @@ static void tc358768_write(struct tc358768_priv *priv, u32 reg, u32 val)
->   	if (reg < 0x100 || reg >= 0x600)
->   		count = 1;
->   
-> -	priv->error = regmap_bulk_write(priv->regmap, reg, &val, count);
-> +	priv->error = regmap_bulk_write(priv->regmap, reg, &tmpval, count);
->   }
->   
->   static void tc358768_read(struct tc358768_priv *priv, u32 reg, u32 *val)
-> 
-
-tc358768_write is not inline. What is the inline function here? Or is tc358768_write optimized to 
-inline by the compiler?
-
-  Tomi
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+T24gRGksIDIwMjAtMDQtMjggYXQgMTU6NTQgKzAyMDAsIGdyZWdraCBAIGxpbnV4Zm91bmRhdGlv
+biAuIG9yZyB3cm90ZToNCj4gT24gVGh1LCBBcHIgMTYsIDIwMjAgYXQgMDY6Mzg6MzBQTSArMDIw
+MCwgTWFudWVsIFN0YWhsIHdyb3RlOg0KPiA+IA0KPiA+ICsgKg0KPiA+ICsgKiBTaW5jZSB0aGUg
+ZHJpdmVyIGRvZXMgbm90IGRlY2xhcmUgYW55IGRldmljZSBpZHMsIHlvdSBtdXN0IGFsbG9jYXRl
+DQo+ID4gKyAqIGlkIGFuZCBiaW5kIHRoZSBkZXZpY2UgdG8gdGhlIGRyaXZlciB5b3Vyc2VsZi4g
+IEZvciBleGFtcGxlOg0KPiA+ICsgKg0KPiA+ICsgKiAjIGVjaG8gIjgwODYgMTBmNSIgPiAvc3lz
+L2J1cy9wY2kvZHJpdmVycy91aW9fcGNpX2RtZW1fZ2VuaXJxL25ld19pZA0KPiA+ICsgKiAjIGVj
+aG8gLW4gMDAwMDowMDoxOS4wID4gL3N5cy9idXMvcGNpL2RyaXZlcnMvZTEwMDBlL3VuYmluZA0K
+PiA+ICsgKiAjIGVjaG8gLW4gMDAwMDowMDoxOS4wID4gL3N5cy9idXMvcGNpL2RyaXZlcnMvdWlv
+X3BjaV9kbWVtX2dlbmlycS9iaW5kDQo+ID4gKyAqICMgbHMgLWwgL3N5cy9idXMvcGNpL2Rldmlj
+ZXMvMDAwMDowMDoxOS4wL2RyaXZlcg0KPiA+ICsgKiAuLi4vMDAwMDowMDoxOS4wL2RyaXZlciAt
+PiAuLi8uLi8uLi9idXMvcGNpL2RyaXZlcnMvdWlvX3BjaV9kbWVtX2dlbmlycQ0KPiA+ICsgKg0K
+PiA+ICsgKiBPciB1c2UgYSBtb2Rwcm9iZSBhbGlhczoNCj4gPiArICogIyBhbGlhcyBwY2k6djAw
+MDAxMEVFZDAwMDAxMDAwc3Yqc2Qqc2MqaSogdWlvX3BjaV9kbWVtX2dlbmlycQ0KPiA+ICsgKg0K
+PiA+ICsgKiBEcml2ZXIgd29uJ3QgYmluZCB0byBkZXZpY2VzIHdoaWNoIGRvIG5vdCBzdXBwb3J0
+IHRoZSBJbnRlcnJ1cHQgRGlzYWJsZSBCaXQNCj4gPiArICogaW4gdGhlIGNvbW1hbmQgcmVnaXN0
+ZXIuIEFsbCBkZXZpY2VzIGNvbXBsaWFudCB0byBQQ0kgMi4zIChjaXJjYSAyMDAyKSBhbmQNCj4g
+PiArICogYWxsIGNvbXBsaWFudCBQQ0kgRXhwcmVzcyBkZXZpY2VzIHNob3VsZCBzdXBwb3J0IHRo
+aXMgYml0Lg0KPiA+ICsgKg0KPiA+ICsgKiBUaGUgRE1BIG1hc2sgYml0cyBhbmQgc2l6ZXMgb2Yg
+ZHluYW1pYyByZWdpb25zIGFyZSBkZXJpdmVkIGZyb20gbW9kdWxlDQo+ID4gKyAqIHBhcmFtZXRl
+cnMuDQo+ID4gKyAqDQo+ID4gKyAqIFRoZSBmb3JtYXQgZm9yIHNwZWNpZnlpbmcgZHluYW1pYyBy
+ZWdpb24gc2l6ZXMgaW4gbW9kdWxlIHBhcmFtZXRlcnMNCj4gPiArICogaXMgYXMgZm9sbG93czoN
+Cj4gPiArICoNCj4gPiArICogdWlvX3BjaV9kbWVtX2dlbmlycS5kbWVtX3NpemVzIDo9IDx1aW9f
+ZG1lbV9zaXplc19kZWY+Wzs8dWlvX2RtZW1fc2l6ZXNfZGVmPl0NCj4gPiArICogPHVpb19kbWVt
+X3NpemVzX2RlZj4gICAgICAgICAgIDo9IDxwY2lfaWQ+OjxzaXplPlssPHNpemU+XQ0KPiA+ICsg
+KiA8cGNpX2lkPiAgICAgICAgICAgICAgICAgICAgICAgOj0gPHZlbmRvcj46PGRldmljZT4NCj4g
+PiArICogPHNpemU+ICAgICAgICAgICAgICAgICAgICAgICAgIDo9IHN0YW5kYXJkIGxpbnV4IG1l
+bXNpemUNCj4gPiArICoNCj4gPiArICogRXhhbXBsZXM6DQo+ID4gKyAqDQo+ID4gKyAqIDEpIFVJ
+TyBkbWVtIGRldmljZSB3aXRoIDMgZHluYW1pYyByZWdpb25zOg0KPiA+ICsgKiB1aW9fcGNpX2Rt
+ZW1fZ2VuaXJxLmRtZW1fc2l6ZXM9ODA4NjoxMGY1OjRLLDE2Syw0TQ0KPiA+ICsgKg0KPiA+ICsg
+KiAyKSBUd28gVUlPIGRtZW0gZGV2aWNlcyB3aXRoIGRpZmZlcmVudCBudW1iZXIgb2YgZHluYW1p
+YyByZWdpb25zOg0KPiA+ICsgKiB1aW9fcGNpX2RtZW1fZ2VuaXJxLmRtZW1fc2l6ZXM9ODA4Njox
+MGY1OjRLLDE2Syw0TTsxMjM0OjAwMDE6OEsNCj4gDQo+IE1vZHVsZSBwYXJhbWV0ZXJzIGFyZSBo
+b3JyaWQsIGFyZSB5b3Ugc3VyZSB0aGVyZSBpcyBubyBvdGhlciB3YXk/DQoNCllvdSdyZSByaWdo
+dCwgc2VlbWVkIHRvIGJlIHRoZSBzaW1wbGVzdCBzb2x1dGlvbiBiYWNrIHdoZW4gd2Ugc3RhcnRl
+ZCBkZXZlbG9waW5nIHRoaXMgZHJpdmVyLiBJIHdpbGwgdHJ5IHRvIGNoYW5nZSBpdCB0byBzeXNm
+cywgc28gdGhhdCBvbmUgY2FuIGFkZCByZWdpb25zIHdoaWxlIHRoZSBtb2R1bGUgaXMgYWxyZWFk
+eSBsb2FkZWQuDQoNClJlZ2FyZHMsDQpNYW51ZWwNCg==
