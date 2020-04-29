@@ -2,226 +2,398 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 376F3C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 23:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF0FC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 23:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DDDF208E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 23:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29BD6206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 23:10:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="CdmBNX7N"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QHvwHdkb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbgD2XEI (ORCPT
+        id S1726481AbgD2XKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 19:04:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57652 "EHLO
+        Wed, 29 Apr 2020 19:10:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727790AbgD2XEH (ORCPT
+        with ESMTP id S1726164AbgD2XKB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 19:04:07 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 831F4C03C1AE
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 16:04:07 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id d17so1780903pgo.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 16:04:07 -0700 (PDT)
+        Wed, 29 Apr 2020 19:10:01 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76D71C03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 16:10:01 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id t11so1784371pgg.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 16:10:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=pTsAs2CDlbVr46p0BUoXzORZ7PJqz3PIVNdyQM5hvA4=;
-        b=CdmBNX7N3jvCxhnclyKjAisrCfjyJw95MD3shTrp1r6CmwGIN7H1/Pe2hnfly4p4PO
-         0fzH1jsEO3VwWjfzTAlMTeXo1sP8SzpQEvZpEEAk7t/sUBLMMCH1yx3D/tl4Xy4G5z72
-         AC7iaQy3XJAbuU0T+mYFO3vRkqx4GL0oQiEQw=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rKFIPHJSMts8H5dLB2psYHHqHp+1fWBU7t1weyeTnQc=;
+        b=QHvwHdkbACT7B7b35//81NENdG+wJAg2tEHk2JaQr0Hag6NeZWTIy7yoj0d0HHPlxx
+         4UaIr56wQARXNcHBMT68f1ZMqx8Fh+ObdSiaB35Uuw+K2pqaMKdDauPa1DjFrW7t0rYy
+         qYs+2rsSC2jKV+lL+LErDY2lUzXu6TORkTH1scKAyFM548QPVP0/WCswjGx480V9CTqr
+         yJ8/O/8OB48pfwiukx8mTy0uJpWRZ5lzDd1GXJjfHFfcf7G8x4CLYun2x3nG4AjTt31q
+         GL2ljKdHrc8Hked/apmayWsrhzcVaVcKmrpdkUkAGGHUvddlNl1wLbBuRblia/7helnR
+         oNwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=pTsAs2CDlbVr46p0BUoXzORZ7PJqz3PIVNdyQM5hvA4=;
-        b=sP+YNBcNtAd08P3keXoUYjqvmemOXKSQKMuAAwb11Arnbe4+FPjnBAyBOztYAjRhq6
-         jY6g+Al+Do3RjyMz9SYb2bxdczh46a6gDasnLAxZxAYdumnhlE9HQe2cabbDxd+nsYQr
-         FAe5xyXYI7UGgjV7mZpR8XmhFg0XyklUkEqy8kUle3p4ejwf8lsijOhtEn9j+38JIhVl
-         jA34CG03ahFWRO9w6UQvlIKSHV0LaWNX2CY9FasiqM5+EO/bifql/aYyeXt508bgyjMp
-         4SSatPqLfATjA/VCmbbcThy8Joa6wHOwoDLEigzaIJTaQGjVUZfh4lsVAgYuM2g1GCs0
-         ZTaw==
-X-Gm-Message-State: AGi0Puadd18BDLqMTz18UytP7HokPEwcOMK3LPkUQZMJ/B+oe/pfdcgT
-        tJ9W1oWmmF2LrMFkytshEp+teQ==
-X-Google-Smtp-Source: APiQypKUxErsH+JxyFE5+lXNYp86SmB717RFqVubaZnyDLfFMUyyoUO8X3/GyvAYk7iDD2eJBJY2tQ==
-X-Received: by 2002:aa7:8042:: with SMTP id y2mr504718pfm.94.1588201446938;
-        Wed, 29 Apr 2020 16:04:06 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id l37sm255572pje.12.2020.04.29.16.04.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 16:04:06 -0700 (PDT)
-Subject: Re: Re: [RESEND PATCH v5 2/5] arm64/crash_core: Export TCR_EL1.T1SZ
- in vmcoreinfo
-To:     Bhupesh Sharma <bhsharma@redhat.com>,
-        Amit Kachhap <amit.kachhap@arm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, x86@kernel.org,
-        Will Deacon <will@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        kexec mailing list <kexec@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kazuhito Hagio <k-hagio@ab.jp.nec.com>,
-        James Morse <james.morse@arm.com>,
-        Dave Anderson <anderson@redhat.com>,
-        bhupesh linux <bhupesh.linux@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Steve Capper <steve.capper@arm.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Bharat Gooty <bharat.gooty@broadcom.com>
-References: <1575057559-25496-1-git-send-email-bhsharma@redhat.com>
- <1575057559-25496-3-git-send-email-bhsharma@redhat.com>
- <63d6e63c-7218-d2dd-8767-4464be83603f@arm.com>
- <af0fd2b0-99db-9d58-bc8d-0dd9d640b1eb@redhat.com>
- <f791e777-781c-86ce-7619-1de3fe3e7b90@arm.com>
- <351975548.1986001.1578682810951.JavaMail.zimbra@redhat.com>
- <04287d60-e99e-631b-c134-d6dc39e6a193@redhat.com>
- <974f3601-25f8-f4e6-43a8-ff4275e9c174@arm.com>
- <CACi5LpOK6Q3ud3M3zakexLJNOtHy9TODHyYSHVwE3JHVakKzqA@mail.gmail.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <d401b003-af3e-c525-ba00-0de48486b7a0@broadcom.com>
-Date:   Wed, 29 Apr 2020 16:04:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rKFIPHJSMts8H5dLB2psYHHqHp+1fWBU7t1weyeTnQc=;
+        b=ppYJ6b3E+WitKFu2VZTeJvILKHVhN/vimlbop7atrha4oftDhB1+y2YiZIBWuD3oBQ
+         lheCLVWGoObcfghjFagLqxc1+vhov9P9uhEwhMuEG6g/8oYB4jaxh9VuV3tdnm2a8qf6
+         +x60Y+P+AHyJELkD6nddTUX6sVReVE/gdWkUt/SkGzRiyO364FR4lYsBIiW0oOjEq2vF
+         XGt2KYoBbVEOBPYucLJPQGfQjx+gjzdlnqSSalrllWHbvSyBnfqYn7XT1qE1xJaQUH24
+         vE2gPL4eyE3dWFX9X/s7A4jmd4IOszpwysJ2xs29CrxcG60+p1byox8Ot5N5BMga/Hrf
+         Uovw==
+X-Gm-Message-State: AGi0PubTi7HI4xv+RzNSIlHNSPPwwwCr8pt2/0XVLvQ9WyZ3lUpR4XvD
+        tdFkLa9Z+LqUO9kUZ/QQVYec6w75dCw=
+X-Google-Smtp-Source: APiQypKCH/lS0ZXbJ2X2hTbRcZL0aAl16HKCrMRIZkbk7gJQUJSHmFm40ttLjiMgOrBxptuf7wwT8A==
+X-Received: by 2002:a62:780b:: with SMTP id t11mr518347pfc.196.1588201800554;
+        Wed, 29 Apr 2020 16:10:00 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id m7sm1941238pfb.48.2020.04.29.16.09.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 16:09:59 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 17:09:57 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bjorn.andersson@linaro.org, ohad@wizery.com, tsoni@codeaurora.org,
+        psodagud@codeaurora.org, sidgup@codeaurora.org
+Subject: Re: [PATCH v3 1/2] remoteproc: Add remoteproc character device
+ interface
+Message-ID: <20200429230957.GA11409@xps15>
+References: <1587492618-15896-1-git-send-email-rishabhb@codeaurora.org>
+ <1587492618-15896-2-git-send-email-rishabhb@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <CACi5LpOK6Q3ud3M3zakexLJNOtHy9TODHyYSHVwE3JHVakKzqA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587492618-15896-2-git-send-email-rishabhb@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bhupesh,
+On Tue, Apr 21, 2020 at 11:10:17AM -0700, Rishabh Bhatnagar wrote:
+> Add the character device interface into remoteproc framework.
+> This interface can be used in order to boot/shutdown remote
+> subsystems and provides a basic ioctl based interface to implement
+> supplementary functionality. An ioctl call is implemented to enable
+> the shutdown on release feature which will allow remote processors to
+> be shutdown when the controlling userpsace application crashes or hangs.
+> 
+> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+> ---
+>  Documentation/userspace-api/ioctl/ioctl-number.rst |   1 +
+>  drivers/remoteproc/Kconfig                         |   9 ++
+>  drivers/remoteproc/Makefile                        |   1 +
+>  drivers/remoteproc/remoteproc_cdev.c               | 143 +++++++++++++++++++++
+>  drivers/remoteproc/remoteproc_internal.h           |  21 +++
+>  include/linux/remoteproc.h                         |   3 +
+>  include/uapi/linux/remoteproc_cdev.h               |  20 +++
+>  7 files changed, 198 insertions(+)
+>  create mode 100644 drivers/remoteproc/remoteproc_cdev.c
+>  create mode 100644 include/uapi/linux/remoteproc_cdev.h
+> 
+> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> index 2e91370..412b2a0 100644
+> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
+> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> @@ -337,6 +337,7 @@ Code  Seq#    Include File                                           Comments
+>  0xB4  00-0F  linux/gpio.h                                            <mailto:linux-gpio@vger.kernel.org>
+>  0xB5  00-0F  uapi/linux/rpmsg.h                                      <mailto:linux-remoteproc@vger.kernel.org>
+>  0xB6  all    linux/fpga-dfl.h
+> +0xB7  all    uapi/linux/remoteproc_cdev.h			     <mailto:linux-remoteproc@vger.kernel.org>
+>  0xC0  00-0F  linux/usb/iowarrior.h
+>  0xCA  00-0F  uapi/misc/cxl.h
+>  0xCA  10-2F  uapi/misc/ocxl.h
+> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> index de3862c..6374b79 100644
+> --- a/drivers/remoteproc/Kconfig
+> +++ b/drivers/remoteproc/Kconfig
+> @@ -14,6 +14,15 @@ config REMOTEPROC
+>  
+>  if REMOTEPROC
+>  
+> +config REMOTEPROC_CDEV
+> +	bool "Remoteproc character device interface"
+> +	help
+> +	  Say y here to have a character device interface for Remoteproc
 
-On 2020-02-23 10:25 p.m., Bhupesh Sharma wrote:
-> Hi Amit,
->
-> On Fri, Feb 21, 2020 at 2:36 PM Amit Kachhap <amit.kachhap@arm.com> wrote:
->> Hi Bhupesh,
->>
->> On 1/13/20 5:44 PM, Bhupesh Sharma wrote:
->>> Hi James,
->>>
->>> On 01/11/2020 12:30 AM, Dave Anderson wrote:
->>>> ----- Original Message -----
->>>>> Hi Bhupesh,
->>>>>
->>>>> On 25/12/2019 19:01, Bhupesh Sharma wrote:
->>>>>> On 12/12/2019 04:02 PM, James Morse wrote:
->>>>>>> On 29/11/2019 19:59, Bhupesh Sharma wrote:
->>>>>>>> vabits_actual variable on arm64 indicates the actual VA space size,
->>>>>>>> and allows a single binary to support both 48-bit and 52-bit VA
->>>>>>>> spaces.
->>>>>>>>
->>>>>>>> If the ARMv8.2-LVA optional feature is present, and we are running
->>>>>>>> with a 64KB page size; then it is possible to use 52-bits of address
->>>>>>>> space for both userspace and kernel addresses. However, any kernel
->>>>>>>> binary that supports 52-bit must also be able to fall back to 48-bit
->>>>>>>> at early boot time if the hardware feature is not present.
->>>>>>>>
->>>>>>>> Since TCR_EL1.T1SZ indicates the size offset of the memory region
->>>>>>>> addressed by TTBR1_EL1 (and hence can be used for determining the
->>>>>>>> vabits_actual value) it makes more sense to export the same in
->>>>>>>> vmcoreinfo rather than vabits_actual variable, as the name of the
->>>>>>>> variable can change in future kernel versions, but the architectural
->>>>>>>> constructs like TCR_EL1.T1SZ can be used better to indicate intended
->>>>>>>> specific fields to user-space.
->>>>>>>>
->>>>>>>> User-space utilities like makedumpfile and crash-utility, need to
->>>>>>>> read/write this value from/to vmcoreinfo
->>>>>>> (write?)
->>>>>> Yes, also write so that the vmcoreinfo from an (crashing) arm64
->>>>>> system can
->>>>>> be used for
->>>>>> analysis of the root-cause of panic/crash on say an x86_64 host using
->>>>>> utilities like
->>>>>> crash-utility/gdb.
->>>>> I read this as as "User-space [...] needs to write to vmcoreinfo".
->>> That's correct. But for writing to vmcore dump in the kdump kernel, we
->>> need to read the symbols from the vmcoreinfo in the primary kernel.
->>>
->>>>>>>> for determining if a virtual address lies in the linear map range.
->>>>>>> I think this is a fragile example. The debugger shouldn't need to know
->>>>>>> this.
->>>>>> Well that the current user-space utility design, so I am not sure we
->>>>>> can
->>>>>> tweak that too much.
->>>>>>
->>>>>>>> The user-space computation for determining whether an address lies in
->>>>>>>> the linear map range is the same as we have in kernel-space:
->>>>>>>>
->>>>>>>>      #define __is_lm_address(addr)    (!(((u64)addr) &
->>>>>>>> BIT(vabits_actual -
->>>>>>>>      1)))
->>>>>>> This was changed with 14c127c957c1 ("arm64: mm: Flip kernel VA
->>>>>>> space"). If
->>>>>>> user-space
->>>>>>> tools rely on 'knowing' the kernel memory layout, they must have to
->>>>>>> constantly be fixed
->>>>>>> and updated. This is a poor argument for adding this to something that
->>>>>>> ends up as ABI.
->>>>>> See above. The user-space has to rely on some ABI/guaranteed
->>>>>> hardware-symbols which can be
->>>>>> used for 'determining' the kernel memory layout.
->>>>> I disagree. Everything and anything in the kernel will change. The
->>>>> ABI rules apply to
->>>>> stuff exposed via syscalls and kernel filesystems. It does not apply
->>>>> to kernel internals,
->>>>> like the memory layout we used yesterday. 14c127c957c1 is a case in
->>>>> point.
->>>>>
->>>>> A debugger trying to rely on this sort of thing would have to play
->>>>> catchup whenever it
->>>>> changes.
->>>> Exactly.  That's the whole point.
->>>>
->>>> The crash utility and makedumpfile are not in the same league as other
->>>> user-space tools.
->>>> They have always had to "play catchup" precisely because they depend
->>>> upon kernel internals,
->>>> which constantly change.
->>> I agree with you and DaveA here. Software user-space debuggers are
->>> dependent on kernel internals (which can change from time-to-time) and
->>> will have to play catch-up (which has been the case since the very start).
->>>
->>> Unfortunately we don't have any clear ABI for software debugging tools -
->>> may be something to look for in future.
->>>
->>> A case in point is gdb/kgdb, which still needs to run with KASLR
->>> turned-off (nokaslr) for debugging, as it confuses gdb which resolve
->>> kernel symbol address from symbol table of vmlinux. But we can
->>> work-around the same in makedumpfile/crash by reading the 'kaslr_offset'
->>> value. And I have several users telling me now they cannot use gdb on
->>> KASLR enabled kernel to debug panics, but can makedumpfile + crash
->>> combination to achieve the same.
->>>
->>> So, we should be looking to fix these utilities which are broken since
->>> the 52-bit changes for arm64. Accordingly, I will try to send the v6
->>> soon while incorporating the comments posted on the v5.
->> Any update on the next v6 version. Since this patch series is fixing the
->> current broken kdump so need this series to add some more fields in
->> vmcoreinfo for Pointer Authentication work.
-> Sorry for the delay. I was caught up in some other urgent arm64
-> user-space issues.
-> I am preparing the v6 now and hopefully will be able to post it out
-> for review later today.
+s/Remoteproc/"the remoteproc"
 
-Did v6 get sent out?
+> +	  framework. Userspace can boot/shutdown remote processors through
+> +	  this interface.
+> +
+> +	  It's safe to say N if you don't want to use this interface.
+> +
+>  config IMX_REMOTEPROC
+>  	tristate "IMX6/7 remoteproc support"
+>  	depends on ARCH_MXC
+> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+> index e30a1b1..b7d4f77 100644
+> --- a/drivers/remoteproc/Makefile
+> +++ b/drivers/remoteproc/Makefile
+> @@ -9,6 +9,7 @@ remoteproc-y				+= remoteproc_debugfs.o
+>  remoteproc-y				+= remoteproc_sysfs.o
+>  remoteproc-y				+= remoteproc_virtio.o
+>  remoteproc-y				+= remoteproc_elf_loader.o
+> +obj-$(CONFIG_REMOTEPROC_CDEV)		+= remoteproc_cdev.o
+>  obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
+>  obj-$(CONFIG_MTK_SCP)			+= mtk_scp.o mtk_scp_ipi.o
+>  obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
+> diff --git a/drivers/remoteproc/remoteproc_cdev.c b/drivers/remoteproc/remoteproc_cdev.c
+> new file mode 100644
+> index 0000000..65142ec
+> --- /dev/null
+> +++ b/drivers/remoteproc/remoteproc_cdev.c
+> @@ -0,0 +1,143 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Character device interface driver for Remoteproc framework.
+> + *
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/cdev.h>
+> +#include <linux/fs.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/remoteproc.h>
+> +#include <uapi/linux/remoteproc_cdev.h>
+> +#include <linux/uaccess.h>
+> +
+> +#include "remoteproc_internal.h"
+> +
+> +#define NUM_RPROC_DEVICES	64
+> +static dev_t rproc_major;
+> +
+> +static ssize_t rproc_cdev_write(struct file *filp, const char __user *buf,
+> +				 size_t len, loff_t *pos)
+> +{
+> +	struct rproc *rproc = container_of(filp->f_inode->i_cdev,
+> +					   struct rproc, char_dev);
+> +	int ret = 0;
+> +	char cmd[10];
+> +
+> +	if (!len || len > sizeof(cmd))
+> +		return -EINVAL;
+> +
+> +	ret = copy_from_user(cmd, buf, sizeof(cmd));
+> +	if (ret)
+> +		return -EFAULT;
+> +
+> +	if (sysfs_streq(cmd, "start")) {
+> +		if (rproc->state == RPROC_RUNNING)
+> +			return -EBUSY;
+> +
+> +		ret = rproc_boot(rproc);
+> +		if (ret)
+> +			dev_err(&rproc->dev, "Boot failed:%d\n", ret);
+> +	} else if (sysfs_streq(cmd, "stop")) {
+> +		if (rproc->state == RPROC_OFFLINE)
+> +			return -ENXIO;
+> +
+> +		rproc_shutdown(rproc);
+> +	} else {
+> +		dev_err(&rproc->dev, "Unrecognized option\n");
+> +		ret = -EINVAL;
+> +	}
+> +
+> +	return ret ? ret : len;
+> +}
+> +
+> +static long rproc_device_ioctl(struct file *filp, unsigned int ioctl,
+> +				unsigned long arg)
+> +{
+> +	struct rproc *rproc = container_of(filp->f_inode->i_cdev,
+> +					   struct rproc, char_dev);
+> +	void __user *argp = (void __user *)arg;
+> +	int ret;
+> +	bool param;
+> +
+> +	switch (ioctl) {
+> +	case RPROC_SET_SHUTDOWN_ON_RELEASE:
+> +		ret = copy_from_user(&param, argp, sizeof(bool));
+> +		if (ret) {
+> +			dev_err(&rproc->dev, "Data copy from userspace failed\n");
+> +			return -EINVAL;
+> +		}
+> +		rproc->cdev_put_on_release = param;
+> +		break;
+> +	case RPROC_GET_SHUTDOWN_ON_RELEASE:
+> +		ret = copy_to_user(argp, &rproc->cdev_put_on_release,
+> +				   sizeof(bool));
+> +		if (ret) {
+> +			dev_err(&rproc->dev, "Data copy to userspace failed\n");
+> +			return -EINVAL;
+> +		}
+> +		break;
+> +	default:
+> +		dev_err(&rproc->dev, "Unsupported ioctl\n");
+> +		return -EINVAL;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int rproc_cdev_release(struct inode *inode, struct file *filp)
+> +{
+> +	struct rproc *rproc = container_of(inode->i_cdev, struct rproc,
+> +					   char_dev);
+> +
+> +	if (rproc->cdev_put_on_release && rproc->state != RPROC_OFFLINE)
+> +		rproc_shutdown(rproc);
+> +
+> +	return 0;
+> +}
+> +
+> +
+> +static const struct file_operations rproc_fops = {
+> +	.write = rproc_cdev_write,
+> +	.unlocked_ioctl = rproc_device_ioctl,
 
->
-> Thanks,
-> Bhupesh
->
->
-Regards,
-Scott
+Because this is available on any kind of system it is probably best to provide
+an compat_ioctl.
+
+> +	.release = rproc_cdev_release,
+> +};
+> +
+> +int rproc_char_device_add(struct rproc *rproc)
+> +{
+> +	int ret;
+> +	dev_t cdevt;
+> +
+> +	cdev_init(&rproc->char_dev, &rproc_fops);
+> +	rproc->char_dev.owner = THIS_MODULE;
+> +
+> +	cdevt = MKDEV(MAJOR(rproc_major), rproc->index);
+> +	ret = cdev_add(&rproc->char_dev, cdevt, 1);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	rproc->dev.devt = cdevt;
+> +out:
+> +	return ret;
+> +}
+> +
+> +void rproc_char_device_remove(struct rproc *rproc)
+> +{
+> +	__unregister_chrdev(MAJOR(rproc->dev.devt), rproc->index, 1, "rproc");
+> +}
+> +
+> +void __init rproc_init_cdev(void)
+> +{
+> +	int ret;
+> +
+> +	ret = alloc_chrdev_region(&rproc_major, 0, NUM_RPROC_DEVICES, "rproc");
+> +	if (ret < 0)
+> +		pr_err("Failed to alloc rproc_cdev region, err %d\n", ret);
+> +}
+> +
+> +void __exit rproc_exit_cdev(void)
+> +{
+> +	unregister_chrdev_region(MKDEV(MAJOR(rproc_major), 0),
+> +				 NUM_RPROC_DEVICES);
+
+Why not simply using rproc_major here?
+
+> +}
+> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
+> index 493ef92..fb9d891 100644
+> --- a/drivers/remoteproc/remoteproc_internal.h
+> +++ b/drivers/remoteproc/remoteproc_internal.h
+> @@ -47,6 +47,27 @@ struct dentry *rproc_create_trace_file(const char *name, struct rproc *rproc,
+>  int rproc_init_sysfs(void);
+>  void rproc_exit_sysfs(void);
+>  
+> +#ifdef CONFIG_REMOTEPROC_CDEV
+> +void rproc_init_cdev(void);
+> +void rproc_exit_cdev(void);
+> +int rproc_char_device_add(struct rproc *rproc);
+> +void rproc_char_device_remove(struct rproc *rproc);
+> +#else
+> +static inline void rproc_init_cdev(void)
+> +{
+> +}
+> +static inline void rproc_exit_cdev(void)
+> +{
+> +}
+> +static inline int rproc_char_device_add(struct rproc *rproc)
+> +{
+> +	return 0;
+
+Add a comment that mentions the support of the character interface is optional
+and as such and error is not generated if not available on the system.
+
+> +}
+> +static inline void  rproc_char_device_remove(struct rproc *rproc)
+> +{
+> +}
+> +#endif
+> +
+>  void rproc_free_vring(struct rproc_vring *rvring);
+>  int rproc_alloc_vring(struct rproc_vdev *rvdev, int i);
+>  
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index 16ad666..9bd2ff5 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -40,6 +40,7 @@
+>  #include <linux/virtio.h>
+>  #include <linux/completion.h>
+>  #include <linux/idr.h>
+> +#include <linux/cdev.h>
+>  #include <linux/of.h>
+>  
+>  /**
+> @@ -514,6 +515,8 @@ struct rproc {
+>  	bool auto_boot;
+>  	struct list_head dump_segments;
+>  	int nb_vdev;
+> +	struct cdev char_dev;
+> +	bool cdev_put_on_release;
+
+Please add documentation for these.  Also note you will have to rebase your work
+on the latest rproc-next.
+
+Thanks,
+Mathieu
+
+>  };
+>  
+>  /**
+> diff --git a/include/uapi/linux/remoteproc_cdev.h b/include/uapi/linux/remoteproc_cdev.h
+> new file mode 100644
+> index 0000000..3975120
+> --- /dev/null
+> +++ b/include/uapi/linux/remoteproc_cdev.h
+> @@ -0,0 +1,20 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
+> +/*
+> + * IOCTLs for Remoteproc's character device interface.
+> + *
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +
+> +#ifndef _UAPI_REMOTEPROC_CDEV_H_
+> +#define _UAPI_REMOTEPROC_CDEV_H_
+> +
+> +#include <linux/ioctl.h>
+> +#include <linux/types.h>
+> +
+> +#define RPROC_MAGIC	0xB7
+> +
+> +#define RPROC_SET_SHUTDOWN_ON_RELEASE _IOW(RPROC_MAGIC, 1, int)
+> +#define RPROC_GET_SHUTDOWN_ON_RELEASE _IOR(RPROC_MAGIC, 2, int)
+> +
+> +#endif
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
