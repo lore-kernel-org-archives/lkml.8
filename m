@@ -2,82 +2,149 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57429C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13083C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 347DD2085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:34:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3CB52072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:35:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mkODMHu7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgD2Mek (ORCPT
+        id S1726853AbgD2MfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:34:40 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:55021 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbgD2Mek (ORCPT
+        Wed, 29 Apr 2020 08:35:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726426AbgD2MfL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:34:40 -0400
-Received: from mail-lf1-f47.google.com ([209.85.167.47]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N17gw-1j1lkl3Gqg-012Vyk; Wed, 29 Apr 2020 14:34:37 +0200
-Received: by mail-lf1-f47.google.com with SMTP id y3so1520037lfy.1;
-        Wed, 29 Apr 2020 05:34:37 -0700 (PDT)
-X-Gm-Message-State: AGi0PubYk73lvsbZtU4/hOtDozH3ED0RXkeJ8fQQ0HMNsD+BiGXViM9Y
-        Ovkvi/0+u2KLaiEkuiXnt9/cfMmKG/MZp+4ZJ10=
-X-Google-Smtp-Source: APiQypJXpncjiHqtF8AXXyPOV1A1AQ0fvHy1iXzeMwNoTg6D5f//C9XrVCZn/K+TfKDZQ9HhN0uOyITz7H5G2DWPENU=
-X-Received: by 2002:a19:3850:: with SMTP id d16mr2697623lfj.161.1588163677296;
- Wed, 29 Apr 2020 05:34:37 -0700 (PDT)
+        Wed, 29 Apr 2020 08:35:11 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A419C03C1AD
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:35:10 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id v4so4817707wme.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:35:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P9voC+7Ag0IZtM5E39FKqVej4Yp+1sY356RInyCMBnw=;
+        b=mkODMHu7QUFmQUE6GLJwwSv9uyrNKmg42KeS1mNJA+HZujxBKmp/6RbBvKRSukcycg
+         aooQLdd+FQYADfUUYSwXv0XLQrl4u4yzjQ/EdDizxMgLsEnbmttxc6mgkkrf0E1+6mcq
+         7Nb1oqp92/bNtPx8YdNQZ6FvCC8pIzBCwzVtU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P9voC+7Ag0IZtM5E39FKqVej4Yp+1sY356RInyCMBnw=;
+        b=JJlZJTCf0RpKzfe1a1lFO6eAT/cvMgBYriZfTPGu771B20AdRfU+83wh5QZkAcyjZQ
+         C9TI+dp3zWwo86q/1jI1KhHznkgfLbroevyHPTdNZrj9bDQFJbksYhSqfKKcdXkoohat
+         oFy1tBqVYNumD6g/3mPqGajM156S9p/nFGDlBaJCZfNzKbydd2O0CpZcB+FH3YvgBeXQ
+         zCP+7gSxNqITnyOpbSYwwkhxuUvmrUpBNpfEV5Ivp4jtjYDCjSKSYK1d/sqwwOJoNalY
+         VleQhsToKpc1d5vZmo19gnmZioxaYS9Fe82GE1p081dirFmQrCxQf2EnNuToZDB+52LG
+         uGKQ==
+X-Gm-Message-State: AGi0PubEAvJB6NXlfpU0z328mWTXsidNRQR16Hxku4s62IuyIAz82E9i
+        RtZLsIThoxPhGn7dfInNx31MO6DImhciAXGCZ2Pfig==
+X-Google-Smtp-Source: APiQypKSCfwmXoEeutwbnB5ktUeTeYnld7bo1PHhugIhXjYAiW1cruH3+hXqlzwQjACjkP/BQXheUt7pbyyMP7RLhaI=
+X-Received: by 2002:a7b:c390:: with SMTP id s16mr2974236wmj.14.1588163708568;
+ Wed, 29 Apr 2020 05:35:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200428074827.GA19846@lst.de> <20200428195645.1365019-1-arnd@arndb.de>
- <20200429115316.GA7886@lst.de>
-In-Reply-To: <20200429115316.GA7886@lst.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 29 Apr 2020 14:34:20 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3sh9cCbdVYPaWVrOZiMuZcnw7-nsa0qgaQWPDBufqsYQ@mail.gmail.com>
-Message-ID: <CAK8P3a3sh9cCbdVYPaWVrOZiMuZcnw7-nsa0qgaQWPDBufqsYQ@mail.gmail.com>
-Subject: Re: [PATCH] fixup! signal: factor copy_siginfo_to_external32 from copy_siginfo_to_user32
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200329004356.27286-1-kpsingh@chromium.org> <0165887d-e9d0-c03e-18b9-72e74a0cbd59@linux.intel.com>
+In-Reply-To: <0165887d-e9d0-c03e-18b9-72e74a0cbd59@linux.intel.com>
+From:   KP Singh <kpsingh@chromium.org>
+Date:   Wed, 29 Apr 2020 14:34:57 +0200
+Message-ID: <CACYkzJ6XyHqr1W=LWV-5Z0txFBtvPCwRY-kczphy+pS7PEitqQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v9 0/8] MAC and Audit policy using eBPF (KRSI)
+To:     Mikko Ylinen <mikko.ylinen@linux.intel.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:3mn4P/An2ydwnHYRAK8xJSekeqcdwwsqEuXznA6Rg2fxoJWc3CV
- VRT+TzYxsKy9KrnjFAcljiJfqgkCabnODDX5B74MwKNJS4m0GAG9sdjrSyJtjFHU3Mp5TFy
- G2wl88NOyPmVCT6HF/0gExLUwfb633YkgWicQ7byWUY9gn31BplCzChXmq50KqcqycjgqSE
- W+YthH7n1FqpB86z5KZJA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Bb2jBtjFOvE=:8tvRQyuM7yBro1nVcX1Qts
- qkrPHFqgVOsrFM3leaU/7mtyZHpwMmhl23h56nGds2IHA+x7bVUBywmtY9+82U1xk3URgu7Pl
- wWbYTYxVu726NKzzozmgoClBnaViYnmlKnGgpn7dHrrZFj8K2iyA8ndwo/E03012Xj8n3O7Dg
- piSueKbCceaPHGNNmnPuI9R8QC2uRadll4CwqzFtvI1XGFUzq777nD1gCktxe/76bMyn4wyA7
- MFKKSyLjpB+eOE8TXGbPi5IbZ+xzIR5HdscnnvNj07vlWjSOPBOI+hVOFxScaj54NdoARrFNB
- Eznpy3iZOKXZ6vfsd+t/1PkyV4Hn68OFhfKFuAMNJjvAQjUtZMH3RAxqm3k2OKN8jVxdbZCCQ
- JdD6jyT76H/MAyfksPkHH3f4X23rm7ifAReTrfNpeusRjpcujQD1XtRv9yw6NicdHaohSZPgZ
- D0E6oPOnw+lWsHhzd05VlZeV74JvqMWgf8g0AlVyaDia6lxt+P+o2BgDw755JXJx0eV8jJtEz
- dVUw6VitUCBgsoNoFfoLEGiknThhJ3QXtpdSHFKEra0oKr9jROJTBXZbGcJuf6UAl2sCC6fTS
- 6DLQQDKV+cJNEPvvopUnQJM6nAxacw1Kpb2YsONIskk8iFa5lcGtiLUZeM1Xoy8DUZooq5XSQ
- +3UfefUuqEtaPTnhkMBWBjaiPm1sSifBeRldlDNkCZDvqVvlDt1K2XcUOvLAXNuWUuVJvcg7O
- e0ixOzCIABT/TgEnHGPoplItIV6IbQ2MZ5Bi5LA0j3JjRnhMOKpM7kTHK5Eg32zVsqT44vRT6
- Yy2tdIa9XIQ2sRDvz7UTJnf9zRE4s7C0RziQi8wmPPwgwmavmE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 1:53 PM Christoph Hellwig <hch@lst.de> wrote:
+Thanks for reporting this! Can you share your Kconfig please?
+
+
+On Wed, Apr 29, 2020 at 2:31 PM Mikko Ylinen
+<mikko.ylinen@linux.intel.com> wrote:
 >
-> I did another pass at this, reducing the overhead of the x32 magic
-> in common code down to renaming copy_siginfo_to_user32 to
-> copy_siginfo_to_user32 and having a conditional #define to give it
-> the old name back:
-
-Nice! I guess this is about as good as it gets, so we can stop
-spending more time on it now ;-)
-
-       Arnd
+> Hi,
+>
+> On 29/03/2020 02:43, KP Singh wrote:
+> > # How does it work?
+> >
+> > The patchset introduces a new eBPF (https://docs.cilium.io/en/v1.6/bpf/)
+> > program type BPF_PROG_TYPE_LSM which can only be attached to LSM hooks.
+> > Loading and attachment of BPF programs requires CAP_SYS_ADMIN.
+> >
+> > The new LSM registers nop functions (bpf_lsm_<hook_name>) as LSM hook
+> > callbacks. Their purpose is to provide a definite point where BPF
+> > programs can be attached as BPF_TRAMP_MODIFY_RETURN trampoline programs
+> > for hooks that return an int, and BPF_TRAMP_FEXIT trampoline programs
+> > for void LSM hooks.
+>
+> I have two systems (a NUC and a qemu VM) that fail to boot if I enable
+> the BPF LSM without enabling SELinux first. Anything I might be missing
+> or are you able to trigger it too?
+>
+> For instance, the following additional cmdline args: "lsm.debug=1
+> lsm="capability,apparmor,bpf" results in:
+>
+> [    1.251889] Call Trace:
+> [    1.252344]  dump_stack+0x57/0x7a
+> [    1.252951]  panic+0xe6/0x2a4
+> [    1.253497]  ? printk+0x43/0x45
+> [    1.254075]  mount_block_root+0x30c/0x31b
+> [    1.254798]  mount_root+0x78/0x7b
+> [    1.255417]  prepare_namespace+0x13a/0x16b
+> [    1.256168]  kernel_init_freeable+0x210/0x222
+> [    1.257021]  ? rest_init+0xa5/0xa5
+> [    1.257639]  kernel_init+0x9/0xfb
+> [    1.258074]  ret_from_fork+0x35/0x40
+> [    1.258885] Kernel Offset: 0x11000000 from 0xffffffff81000000
+> (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+> [    1.264046] ---[ end Kernel panic - not syncing: VFS: Unable to mount
+> root fs on unknown-block(253,3)
+>
+> Taking out "bpf" or adding "selinux" before it boots OK. I've tried
+> with both 5.7-rc2 and -rc3.
+>
+> LSM logs:
+>
+> [    0.267219] LSM: Security Framework initializing
+> [    0.267844] LSM: first ordering: capability (enabled)
+> [    0.267870] LSM: cmdline ignored: capability
+> [    0.268869] LSM: cmdline ordering: apparmor (enabled)
+> [    0.269508] LSM: cmdline ordering: bpf (enabled)
+> [    0.269869] LSM: cmdline disabled: selinux
+> [    0.270377] LSM: cmdline disabled: integrity
+> [    0.270869] LSM: exclusive chosen: apparmor
+> [    0.271869] LSM: cred blob size     = 8
+> [    0.272354] LSM: file blob size     = 24
+> [    0.272869] LSM: inode blob size    = 0
+> [    0.273362] LSM: ipc blob size      = 0
+> [    0.273869] LSM: msg_msg blob size  = 0
+> [    0.274352] LSM: task blob size     = 32
+> [    0.274873] LSM: initializing capability
+> [    0.275381] LSM: initializing apparmor
+> [    0.275880] AppArmor: AppArmor initialized
+> [    0.276437] LSM: initializing bpf
+> [    0.276871] LSM support for eBPF active
+>
+> -- Regards, Mikko
