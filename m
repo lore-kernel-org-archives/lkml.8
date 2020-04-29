@@ -2,128 +2,168 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC69C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9876BC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D04020757
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:21:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iSYywjiP"
+	by mail.kernel.org (Postfix) with ESMTP id 7FC5120757
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:22:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgD2WVC (ORCPT
+        id S1727049AbgD2WWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 18:21:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50946 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726481AbgD2WVB (ORCPT
+        Wed, 29 Apr 2020 18:22:25 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39582 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbgD2WWY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 18:21:01 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34C73C03C1AE;
-        Wed, 29 Apr 2020 15:21:01 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id i68so3374993qtb.5;
-        Wed, 29 Apr 2020 15:21:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QlkVaiVcBOHNkB5ExNKJRxqXIe1PfFKILjvlG5hRlg0=;
-        b=iSYywjiPEaoZgqGWHWsYQtRoLNwu6veFylWlF6ZsYH4D2pE652/y3b0TG5vv7uPuS1
-         ssnE4Vw3meDDMdj62qMuqDD+V9w950rvXy8hPdN1Q8+/aeJ6nuJtIQzCB/y6PU27eucr
-         /nq4mT6lrPmHzOq9Y4Lv+nicLSAFI5zMDDMNhmG730hYmsEcamMSKV91Syf1IpACDDVW
-         yNY+t4469MPznK0HcvgR/Ry8Ayt2eFl3mWzVv/rdjbkmy9Utd8f50swv37v6kKrxxXBR
-         tncPDIdPoz5LC0ouj7mZ7Q4hzvODcgMfQ3cSRggPKlDnhT8Tl4F8QqdhAB/zcVxu3Cbx
-         ogJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=QlkVaiVcBOHNkB5ExNKJRxqXIe1PfFKILjvlG5hRlg0=;
-        b=YBVB1VeDSpOt1jJwb8nMAjbHdiFm38TT4dShVdP7tm8vwSbWsEbMiadwTXowBxn7rc
-         mqn+51LtSSJnu29J/K1yo5gSEY5ZdW5NsZGZUQDUif4S4FVkvnL6chE/C993qWCme4mT
-         p3rLv9zOI5q7thkOdmlHs7qxCoz4YKgH0bTtnrIMbUA/QPHlAH4TUK05qEn20BPvnusJ
-         VmZvMZyeTxci8hOFPRFkdBAFNfx8PZ//Vuhbi69z6brl+TrFpdahVikHuwDGcYCJr6pn
-         D73cSx4lTOFYpYtoWh8okFw4qWz2HJmyaXhDSu0G9Qd3MRDHl5ZVYlq0hrRzwV20INl8
-         Q9Hg==
-X-Gm-Message-State: AGi0Pub+UXdA6uatuisETw28Omkpqd9l4/xLLfpxr0AgDB+29zFiyfV6
-        VsSmG3YLFbZLMNEbQLxNdi5015JTCgU=
-X-Google-Smtp-Source: APiQypJtRbZMrEQXh43TsjlPJyH0lrH1FMh1wR7ThB/RYDQVccxT8lyADglxmV+Y2U5rD3wOrhTx3Q==
-X-Received: by 2002:ac8:4e45:: with SMTP id e5mr548115qtw.101.1588198860273;
-        Wed, 29 Apr 2020 15:21:00 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id y17sm359287qky.33.2020.04.29.15.20.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 15:20:59 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Wed, 29 Apr 2020 18:20:57 -0400
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Joe Perches <joe@perches.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 03/10] efi/x86: Use pr_efi_err for error messages
-Message-ID: <20200429222057.GA1645040@rani.riverdale.lan>
-References: <20200429174120.1497212-1-nivedita@alum.mit.edu>
- <20200429174120.1497212-5-nivedita@alum.mit.edu>
- <f74fe4ad56c0471f863ce550869391c8811f9893.camel@perches.com>
- <CAMj1kXGn70BmapKe=6sA17gMCcWRLCebQJFnyObwRbAefOcEng@mail.gmail.com>
- <20200429214332.GC1621173@rani.riverdale.lan>
- <31b23951ee2b8e2391f3208b60a7132df18be74e.camel@perches.com>
- <CAMj1kXFJfK=tspytknqdABRfYMhA23FWOs8QoasX1jZ6z=F3Gg@mail.gmail.com>
+        Wed, 29 Apr 2020 18:22:24 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 9877F2A0A5D
+Subject: Re: [PATCH 2/2] platform/chrome: typec: Register Type C switches
+To:     Prashant Malani <pmalani@chromium.org>,
+        linux-kernel@vger.kernel.org
+Cc:     heikki.krogerus@linux.intel.com, twawrzynczak@chromium.org,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>
+References: <20200422222242.241699-1-pmalani@chromium.org>
+ <20200422222242.241699-2-pmalani@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <12b56c9e-d8c7-82fa-57c8-7a33236ba188@collabora.com>
+Date:   Thu, 30 Apr 2020 00:22:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200422222242.241699-2-pmalani@chromium.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXFJfK=tspytknqdABRfYMhA23FWOs8QoasX1jZ6z=F3Gg@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 11:55:04PM +0200, Ard Biesheuvel wrote:
-> On Wed, 29 Apr 2020 at 23:53, Joe Perches <joe@perches.com> wrote:
-> >
-> > On Wed, 2020-04-29 at 17:43 -0400, Arvind Sankar wrote:
-> > > On Wed, Apr 29, 2020 at 08:49:21PM +0200, Ard Biesheuvel wrote:
-> > > > On Wed, 29 Apr 2020 at 20:47, Joe Perches <joe@perches.com> wrote:
-> > > > > On Wed, 2020-04-29 at 13:41 -0400, Arvind Sankar wrote:
-> > > > > > Use pr_efi_err instead of bare efi_printk for error messages.
-> > > > >
-> > > > > Perhaps it'd be better to rename pr_efi_err to eri_err
-> > > > > so it's clearer it's a typical efi_ logging function.
-> > > > >
-> > > > > $ git grep -w --name-only pr_efi_err | \
-> > > > >   xargs sed -i 's/\bpr_efi_err\b/efi_err/g'
-> > > > >
-> > > >
-> > > > Yeah, pr_efi_err() is probably not the best name
-> > >
-> > > Should I rename pr_efi/pr_efi_err to, say, efi_pr_info/efi_pr_error?
-> >
-> > Perhaps not use pr_ in the name at all.
-> >
-> > I suggest:
-> >
-> > pr_efi          -> efi_info (or efi_debug or efi_dbg)
-> >                    (it is guarded by an efi_quiet flag, default: on)
-> > pr_efi_err      -> efi_err
-> >
+Hi Prashant,
+
+Thank you for your patch.
+
+On 23/4/20 0:22, Prashant Malani wrote:
+> Register Type C mux and switch handles, when provided via firmware
+> bindings. These will allow the cros-ec-typec driver, and also alternate
+> mode drivers to configure connected Muxes correctly, according to PD
+> information retrieved from the Chrome OS EC.
 > 
-> Agreed. Shorter is better if there is no risk of confusion..
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> ---
+>  drivers/platform/chrome/cros_ec_typec.c | 47 +++++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+> 
+> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+> index eda57db26f8d..324ead297c4d 100644
+> --- a/drivers/platform/chrome/cros_ec_typec.c
+> +++ b/drivers/platform/chrome/cros_ec_typec.c
+> @@ -14,6 +14,8 @@
+>  #include <linux/platform_data/cros_usbpd_notify.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/usb/typec.h>
+> +#include <linux/usb/typec_mux.h>
+> +#include <linux/usb/role.h>
+>  
+>  #define DRV_NAME "cros-ec-typec"
+>  
+> @@ -25,6 +27,9 @@ struct cros_typec_port {
+>  	struct typec_partner *partner;
+>  	/* Port partner PD identity info. */
+>  	struct usb_pd_identity p_identity;
+> +	struct typec_switch *ori_sw;
+> +	struct typec_mux *mux;
+> +	struct usb_role_switch *role_sw;
+>  };
+>  
+>  /* Platform-specific data for the Chrome OS EC Type C controller. */
+> @@ -84,6 +89,40 @@ static int cros_typec_parse_port_props(struct typec_capability *cap,
+>  	return 0;
+>  }
+>  
+> +static int cros_typec_get_switch_handles(struct cros_typec_port *port,
+> +					 struct fwnode_handle *fwnode,
+> +					 struct device *dev)
+> +{
+> +	port->mux = fwnode_typec_mux_get(fwnode, NULL);
+> +	if (IS_ERR(port->mux)) {
 
-Ok, I'll use efi_info/efi_err. We could add debugging output as
-efi_debug later, enabled if efi=debug is specified.
+Should you return an error if NULL is returned (IS_ERR_OR_NULL) ? I think that
+fwnode_typec_mux_get can return NULL too.
 
-While we're here: most of the existing cases of pr_efi look like notice
-or info level, except maybe these two, which probably should be at least
-warnings?
 
-drivers/firmware/efi/libstub/arm64-stub.c
-62: pr_efi("EFI_RNG_PROTOCOL unavailable, no randomness supplied\n");
+> +		dev_info(dev, "Mux handle not found.\n");
+> +		goto mux_err;
+> +	}
+> +
+> +	port->ori_sw = fwnode_typec_switch_get(fwnode);
+> +	if (IS_ERR(port->ori_sw)) {
 
-drivers/firmware/efi/libstub/efi-stub.c
-254: pr_efi("Ignoring DTB from command line.\n");
+ditto
+
+> +		dev_info(dev, "Orientation switch handle not found.\n");
+> +		goto ori_sw_err;
+> +	}
+> +
+> +	port->role_sw = fwnode_usb_role_switch_get(fwnode);
+> +	if (IS_ERR(port->role_sw)) {
+
+ditto
+
+> +		dev_info(dev, "USB role switch handle not found.\n");
+> +		goto role_sw_err;
+> +	}
+> +
+> +	return 0;
+> +
+> +role_sw_err:
+> +	usb_role_switch_put(port->role_sw);
+> +ori_sw_err:
+> +	typec_switch_put(port->ori_sw);
+> +mux_err:
+> +	typec_mux_put(port->mux);
+> +
+> +	return -ENODEV;
+> +}
+> +
+>  static void cros_unregister_ports(struct cros_typec_data *typec)
+>  {
+>  	int i;
+> @@ -91,6 +130,9 @@ static void cros_unregister_ports(struct cros_typec_data *typec)
+>  	for (i = 0; i < typec->num_ports; i++) {
+>  		if (!typec->ports[i])
+>  			continue;
+> +		usb_role_switch_put(typec->ports[i]->role_sw);
+> +		typec_switch_put(typec->ports[i]->ori_sw);
+> +		typec_mux_put(typec->ports[i]->mux);
+>  		typec_unregister_port(typec->ports[i]->port);
+>  	}
+>  }
+> @@ -153,6 +195,11 @@ static int cros_typec_init_ports(struct cros_typec_data *typec)
+>  			ret = PTR_ERR(cros_port->port);
+>  			goto unregister_ports;
+>  		}
+> +
+> +		ret = cros_typec_get_switch_handles(cros_port, fwnode, dev);
+> +		if (ret)
+> +			dev_info(dev, "No switch control for port %d\n",
+> +				 port_num);
+
+When drivers are working, they should not spit out any messages, make
+this dev_dbg() at the most. Be quiet, please.
+
+
+>  	}
+>  
+>  	return 0;
+> 
