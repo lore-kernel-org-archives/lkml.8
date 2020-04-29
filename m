@@ -2,204 +2,103 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A1BC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C62C4C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A69412085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:10:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="t8CDd/Vk"
+	by mail.kernel.org (Postfix) with ESMTP id AF3AC2074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgD2PK7 (ORCPT
+        id S1727054AbgD2PLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:10:59 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:14826 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726516AbgD2PK5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:10:57 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588173057; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Uj1kdH+1z3EYbeBHEefFEkAH70TKfLMeVJuy+wrtzT4=; b=t8CDd/VkOUFgF6WgxHaCZqI+RZ+nNEgPCEpkzZdWaP0nQ963chp2Hlp6pCyErfNKT95T5Mfr
- aaOWKrBQFH3iCZyRwqHsCtfIQIadSplAeR25VerzTOrHCWew9eAifJu5klauWUceEwveOAtE
- 0IwZHo5etp+DPBcUEHxPL8sasPo=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea998f9.7f1b79ee56c0-smtp-out-n04;
- Wed, 29 Apr 2020 15:10:49 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A277DC433BA; Wed, 29 Apr 2020 15:10:48 +0000 (UTC)
-Received: from [10.131.182.194] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F1CE6C433CB;
-        Wed, 29 Apr 2020 15:10:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F1CE6C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v3 12/17] media: venus: core: Add support for opp
- tables/perf voting
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        linux-media@vger.kernel.org
-References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
- <1588080785-6812-13-git-send-email-rnayak@codeaurora.org>
- <b091dc29-d2e8-ed3f-fe1c-ae60e16d5d78@linaro.org>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <425a8828-be17-fe79-99f5-9e20eff51b13@codeaurora.org>
-Date:   Wed, 29 Apr 2020 20:40:42 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 11:11:11 -0400
+Received: from mga09.intel.com ([134.134.136.24]:34434 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726516AbgD2PLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 11:11:10 -0400
+IronPort-SDR: ElUws5vpdG3KgsCcWkiWQMsBBSgaUdJlBN1IViucBAmcpqOeMuxxhF7+M6irM7ijffaBk3Dw/Z
+ zQj17VCE/N4g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 08:11:09 -0700
+IronPort-SDR: djrkxjwSWyZod30Qu1TcOUeLgAzClPtfzriYb4a+RxiOOFVGRXgNirZbBx315VcBzBIryl8t/D
+ PV6a0xbc0xBA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
+   d="scan'208";a="276199069"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga002.jf.intel.com with ESMTP; 29 Apr 2020 08:11:08 -0700
+Date:   Wed, 29 Apr 2020 08:10:57 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] KVM: nVMX: vmcs.SYSENTER optimization and "fix"
+Message-ID: <20200429151057.GB15992@linux.intel.com>
+References: <20200428231025.12766-1-sean.j.christopherson@intel.com>
+ <CALMp9eQLPPAzM+vsrSMO6thOnCRpn6ab+VOh-1UKZug8==ME8g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <b091dc29-d2e8-ed3f-fe1c-ae60e16d5d78@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALMp9eQLPPAzM+vsrSMO6thOnCRpn6ab+VOh-1UKZug8==ME8g@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Stan,
-
-On 4/29/2020 8:06 PM, Stanimir Varbanov wrote:
-> Hi Rajendra,
+On Tue, Apr 28, 2020 at 04:45:25PM -0700, Jim Mattson wrote:
+> On Tue, Apr 28, 2020 at 4:10 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > Patch 1 is a "fix" for handling SYSENTER_EIP/ESP in L2 on a 32-bit vCPU.
+> > The primary motivation is to provide consistent behavior after patch 2.
+> >
+> > Patch 2 is essentially a re-submission of a nested VMX optimization to
+> > avoid redundant VMREADs to the SYSENTER fields in the nested VM-Exit path.
+> >
+> > After patch 2 and without patch 1, KVM would end up with weird behavior
+> > where L1 and L2 would only see 32-bit values for their own SYSENTER_E*P
+> > MSRs, but L1 could see a 64-bit value for L2's MSRs.
+> >
+> > Sean Christopherson (2):
+> >   KVM: nVMX: Truncate writes to vmcs.SYSENTER_EIP/ESP for 32-bit vCPU
+> >   KVM: nVMX: Drop superfluous VMREAD of vmcs02.GUEST_SYSENTER_*
+> >
+> >  arch/x86/kvm/vmx/nested.c |  4 ----
+> >  arch/x86/kvm/vmx/vmx.c    | 18 ++++++++++++++++--
+> >  2 files changed, 16 insertions(+), 6 deletions(-)
 > 
-> Thanks for the patch!
-> 
-[]..
+> It seems like this could be fixed more generally by truncating
+> natural-width fields on 32-bit vCPUs in handle_vmwrite(). However,
+> that also would imply that we can't shadow any natural-width fields on
+> a 32-bit vCPU.
 
->>   #include <linux/pm_runtime.h>
->>   #include <media/videobuf2-v4l2.h>
->>   #include <media/v4l2-mem2mem.h>
->> @@ -214,6 +215,20 @@ static int venus_probe(struct platform_device *pdev)
->>   	if (!core->pm_ops)
->>   		return -ENODEV;
->>   
->> +	core->opp_table = dev_pm_opp_set_clkname(dev, "core");
-> 
-> Should we set opp clkname if opp_of_add_table fails? We have platforms
-> which don't have opp tables in Venus DT node. We have to be backward
-> compatible for them.
+handle_vmwrite() and handle_vmread() already correctly handle truncating
+writes/reads when L1 isn't in 64-bit mode.
 
-so the way its designed, you are expected to call dev_pm_opp_set_clkname()
-*before* adding any OPPs from the OPP table.
-As for backward compatibility its already handled by the OPP core now [1]
-which makes sure dev_pm_opp_set_rate() is equivalent to a clk_set_rate()
-in case of a missing OPP table.
+This path is effectively out-of-band, for lack of a better phrase.  The
+WRMSR is intercepted and the data is stuffed into vmcs02.  Without these
+patches, the effective L2 state depends on the underlying hardware
+capabilities, e.g. L2 gets 64-bit behavior if L0 is a 64-bit CPU, and
+32-bit behavior if L0 is a 32-bit CPU.  It's "wrong", but consistent as the
+value seen by L2 is the same value that is saved into vmcs12.  Of course in
+the 64-bit CPU case, L1 can't actually see the full value via VMREAD as the
+vCPU is 32-bit, but at least the underlying memory/machinery is consistent.
 
->> +	if (IS_ERR(core->opp_table))
->> +		return PTR_ERR(core->opp_table);
->> +
->> +	if (core->res->opp_pmdomain) {
->> +		ret = dev_pm_opp_of_add_table(dev);
->> +		if (!ret) {
->> +			core->has_opp_table = true;
->> +		} else if (ret != -ENODEV) {
-> 
-> Is it possible dev_pm_opp_of_add_table() to return EPROBE_DEFER?
+With just patch 2, the above would still be true for 64-bit L0, but for
+32-bit L0 it would result in L2 seeing a 32-bit value while saving a 64-bit
+value into vmcs12.  Again, L1 wouldn't see the 64-bit value when using
+VMREAD, but the value in memory is still wrong-ish.
 
-Nope, it does not, I had checked.
-
->> +			dev_err(dev, "Invalid OPP table in Device tree\n");
-> 
-> ... if so, please drop dev_err.
-> 
->> +			return ret;
->> +		}
->> +	}
-[]..
-
->> --- a/drivers/media/platform/qcom/venus/pm_helpers.c
->> +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
->> @@ -9,6 +9,7 @@
->>   #include <linux/iopoll.h>
->>   #include <linux/kernel.h>
->>   #include <linux/pm_domain.h>
->> +#include <linux/pm_opp.h>
->>   #include <linux/pm_runtime.h>
->>   #include <linux/types.h>
->>   #include <media/v4l2-mem2mem.h>
->> @@ -66,10 +67,9 @@ static void core_clks_disable(struct venus_core *core)
->>   
->>   static int core_clks_set_rate(struct venus_core *core, unsigned long freq)
->>   {
->> -	struct clk *clk = core->clks[0];
->>   	int ret;
->>   
->> -	ret = clk_set_rate(clk, freq);
->> +	ret = dev_pm_opp_set_rate(core->dev, freq);
-> 
-> Is this will work for legacy platforms without OPP tables?
-
-yes, see [1] which is already merged in mainline.
-
-> 
-> Also what about the other clocks (vicodec0,1) in this function.
-
-We continue to use clk_set_rate() for those. The performance state
-is associated with only the core clk.
-
->>   	if (ret)
->>   		return ret;
->>   
->> @@ -740,13 +740,15 @@ static int venc_power_v4(struct device *dev, int on)
->>   
->>   static int vcodec_domains_get(struct device *dev)
->>   {
->> +	struct opp_table *opp_table;
->> +	struct device **opp_virt_dev;
->>   	struct venus_core *core = dev_get_drvdata(dev);
->>   	const struct venus_resources *res = core->res;
->>   	struct device *pd;
->>   	unsigned int i;
->>   
->>   	if (!res->vcodec_pmdomains_num)
->> -		return -ENODEV;
->> +		goto skip_pmdomains;
->>   
->>   	for (i = 0; i < res->vcodec_pmdomains_num; i++) {
->>   		pd = dev_pm_domain_attach_by_name(dev,
->> @@ -763,6 +765,24 @@ static int vcodec_domains_get(struct device *dev)
->>   	if (!core->pd_dl_venus)
->>   		return -ENODEV;
->>   
->> +skip_pmdomains:
->> +	if (!res->opp_pmdomain || !core->has_opp_table)
->> +		return 0;
->> +
->> +	/* Attach the power domain for setting performance state */
->> +	opp_table = dev_pm_opp_attach_genpd(dev, res->opp_pmdomain, &opp_virt_dev);
->> +	if (IS_ERR(opp_table)) {
->> +		return PTR_ERR(opp_table);
->> +	} else if (opp_virt_dev) {
->> +		core->opp_pmdomain = *opp_virt_dev;
->> +		core->opp_dl_venus = device_link_add(dev, core->opp_pmdomain,
->> +						     DL_FLAG_RPM_ACTIVE |
->> +						     DL_FLAG_PM_RUNTIME |
->> +						     DL_FLAG_STATELESS);
->> +		if (!core->opp_dl_venus)
->> +			return -ENODEV;
-> 
-> I think as you return ENODEV you have to detach opp domain here because
-> vcodec_domains_put() is not called in error path.
-
-Ok, I'll fix that up.
-
-Thanks for the review.
-
-[1] https://lkml.org/lkml/2020/4/8/413
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Truncating the value on WRMSR interception makes the behavior fully
+dependent on the vCPU capabilities, i.e. what L2 sees is the same value
+that's saved into vmcs12, which is the same value seen by VMREAD in L1,
+irrespective of whether L0 is 64-bit or 32-bit.
