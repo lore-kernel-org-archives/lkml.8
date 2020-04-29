@@ -2,126 +2,144 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5751C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CEDC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB97A2085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D072085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:30:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="G7U8FtkB"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="fsdbxE9Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgD2N36 (ORCPT
+        id S1727061AbgD2Naj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:29:58 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:54108 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbgD2N35 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:29:57 -0400
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200429132953epoutp03c817c79ae9a47f8cf68db986b4513698~KTXdao9m71772517725epoutp03Y
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 13:29:53 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200429132953epoutp03c817c79ae9a47f8cf68db986b4513698~KTXdao9m71772517725epoutp03Y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1588166993;
-        bh=bRJD56f6pzR4JP4rnoQPwDkBm83a1p4ix7tEGPLNyh4=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=G7U8FtkB/ZVuGHoXsGuRWOEFoU/53ufkXmN3nD/b47MGBfxWqGTZ/cw2LxvxJlq9L
-         83ChIwW2mZaADWfgzzq55SuDLeBJ8sXXfpgQOzpIoSkifvEAh6j+C0ArCw8jOPrZa2
-         b7CpXdlzkJgFBTKmg7hJimmWV3ISbUzqJoFVqDsg=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20200429132952epcas5p2f2f6139c88baf79b23f33bb700be47c9~KTXciH31m1812418124epcas5p2w;
-        Wed, 29 Apr 2020 13:29:52 +0000 (GMT)
-X-AuditID: b6c32a4b-ae3ff70000001280-ea-5ea9815013b7
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        19.3B.04736.05189AE5; Wed, 29 Apr 2020 22:29:52 +0900 (KST)
-Mime-Version: 1.0
-Subject: RE:(2) [PATCH 1/1] mm/vmscan.c: change prototype for
- shrink_page_list
-Reply-To: v.narang@samsung.com
-From:   Vaneet Narang <v.narang@samsung.com>
-To:     Michal Hocko <mhocko@kernel.org>,
-        Maninder Singh <maninder1.s@samsung.com>
-CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        AMIT SAHRAWAT <a.sahrawat@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <20200429130912.GE28637@dhcp22.suse.cz>
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20200429132940epcms5p81e75e09469b62253ff512222c568556f@epcms5p8>
-Date:   Wed, 29 Apr 2020 18:59:40 +0530
-X-CMS-MailID: 20200429132940epcms5p81e75e09469b62253ff512222c568556f
+        Wed, 29 Apr 2020 09:30:39 -0400
+Received: from mout.web.de ([212.227.17.11]:54393 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726780AbgD2Naj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 09:30:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588167022;
+        bh=/MTQc9gAsJAPP4H8/tzw9TM1Qf8zudFOc4Xfmf7+dYw=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=fsdbxE9Y9QjcpcTNcDW5A6vLho0tdp1NHLllHlKKk9jr3duMgpRDz1MwAwEyZGFbC
+         Cs96J68+R+oAjGMOTeIgy9hjJM8TUQ+9ER2LltZmtxP+aEw624v7hKV6uXR3uWIHVZ
+         OBA5rNeNnFXPYggFnDvAm/R+2LuRb2bES+xQU76U=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.72.72]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MFL2m-1jQXf73GXE-00EJ4M; Wed, 29
+ Apr 2020 15:30:21 +0200
+To:     Bernard Zhao <bernard@vivo.com>, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        opensource.kernel@vivo.com, Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] clk/meson: Complete exception handling in
+ meson8b_clkc_init_common()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <ceba9706-0819-54cf-c3d3-9ceb93d31c5e@web.de>
+Date:   Wed, 29 Apr 2020 15:30:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprGKsWRmVeSWpSXmKPExsWy7bCmpm5A48o4g4n3FS0u7k61mLN+DZvF
-        5V1z2CzurfnPanF4fhuLxetvy5gd2Dw2reoEEp8msXucmPGbxaNvyypGj8+b5AJYo7hsUlJz
-        MstSi/TtErgy9p6dz1xwXrhi07+lrA2MPcJdjJwcEgImElNeNDN2MXJxCAnsZpQ4u62BtYuR
-        g4NXQFDi7w6wGmGBAImfT48zg9hCAnISx2/sZoSI60icmLeGEaScTUBL4mNLOEhYBKj8efM6
-        FpCRzAIXGSXmTF3ADrGLV2JG+1MWCFtaYvvyrWBzOIFueLJtIhtEXFTi5uq37DD2+2PzGSFs
-        EYnWe2eZIWxBiQc/d0PFZSS+f+1nBVkmIdDNKPF5Sx8bhDOFUWL279NMEFXmErs3zGOBeMxX
-        YuEzB5Awi4CqxPbmCVCDXCT6Jh0FW8AsoC2xbOFrZpByZgFNifW79CFKZCWmnlrHBFHCJ9H7
-        +wkTzF875sHYShLnDu6E+kVC4knnTLAxEgIeEremMkOCeTmTxJKXX1knMCrMQoT0LCSLZyEs
-        XsDIvIpRMrWgODc9tdi0wDgvtVyvODG3uDQvXS85P3cTIzi1aHnvYNx0zucQowAHoxIPr0Xq
-        yjgh1sSy4srcQ4wSHMxKIryPMpbFCfGmJFZWpRblxxeV5qQWH2KU5mBREufVYgSqFkhPLEnN
-        Tk0tSC2CyTJxcEo1MPJpX947Z1bF+zW5zk8+KU7/xl32g/dZbzT/tU/amfZGS06ZPK34MO0l
-        o+P99ouG6bmCe672nZVaoHt+Q8rKtZlPhL183/M++LpyzltZYcGHlZ8ftew8tD/wfqbHjnlL
-        X1jLr0q48FFua5TqjO9hwtvzmzTWP2gQebnp5yVXZxXj3bM/q08yT3qixFKckWioxVxUnAgA
-        h9kI6ykDAAA=
-X-CMS-RootMailID: 20200429055946epcas5p2d5faf2b320913d59a4a8380cb017053c
-References: <20200429130912.GE28637@dhcp22.suse.cz>
-        <20200429120951.GC28637@dhcp22.suse.cz>
-        <1588139967-19012-1-git-send-email-maninder1.s@samsung.com>
-        <20200429125323epcms5p67a539511c573cd598d78b726503e3204@epcms5p6>
-        <CGME20200429055946epcas5p2d5faf2b320913d59a4a8380cb017053c@epcms5p8>
+X-Provags-ID: V03:K1:VbtUozrdnS3f3mFsMO90WUGM4iLjjRhtjaQ2tdiDGbLTbeM8kps
+ oeBHZw3l4M5oaDrHpnAZ/tz2cVpUMocce20jjzTJHfDqQgg3QoHS7AQLt8Wfug2chbbxkY9
+ sAsH2sUA+2LKOHNghLioNcBvzcVZq9SEmjalf6ke6Elv4s4hIdn17v3OGEYXSe06mNz1bxw
+ 0PhXOUbwuExEI8rxgOE4A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0WnMMYIuquU=:xwc98jCk5A95enBKww7nVB
+ 41Mb80XNIKMDDVGiYbtQl3csVIr1rP4fi1XSzOqV886C29z9WOeeVO8k8GfD08qeKCiUut/kH
+ k9SUFuVV80TRCrUB8vSfvkxxWz3YqrA2bMEnankibACtpfy/BWvNSmHjQRxhtoyDFUHVjALsS
+ IyClxlWKjMEQE05hzLGPfu2fDWx0NM97kilJvqjC5ciPm9fb7Qk/TX80mrLoBfCt4yE4xq9og
+ 82d4gviF0yc365ZSaMaWAsE5GakAXNoZGSV8xR9Ay2Epz+hbqc/KbYRm6mA5rz/IXgmRSLNIh
+ LEmMfrUZCHzWWobj/ZDT1J0Kor04yHtZovxZTo2YlJzOIhfZLATe/tsM6N9zBqw4yqhCXRFXf
+ Wr9lCj2xgEEu8XaDs0XuaaNBVkdscac6v+4f41cEDYjwJp1ZdEq1S0O5G29/dux+4H6WC/ZYe
+ BJMAFMio9GhIwGChikz1WXrbn+avS7ag93XzsijRMscO5LVUfHkc35jUqP7tQcDIBLGgHd4MM
+ Wqu9tAxSPxyl6DiHSLEPIPDOkn8DjS+pr87pt443ceGTCkCBiZkIA5NQcMGOxJ7E0wTr/Udid
+ pwN7zpIrIr6110Mnj6KVk1kgHSqRIL15VUJ5eC7GyFd8YVE2ggtLcSi0ZUf1zEEY8C3AlISr0
+ 8m0a8Ozn3p5ksDQjbtv7Y584YOe/hUHFRWp48bSsYQm3w5M8VRDI+f6khvHQbjmhvuOhtD+F+
+ FTijKRWaa7Eu1y4PcYEYKuopYWHhDYMSQjlYX4bqcrqX6xXXNjMRiXwaq1Csc8oPNsTiLP8M0
+ KhDIf/BueyMp8ub1ViGAyziIUp0KU+77mM4MQRBotbHjT6HynhO/QsKO2WxWzMBtWSX4wIVQi
+ jJzgF2R/pnVJOk+fZaRwXEQfENk3FGoEsnovr3oNW0vkzoKN10wYtlPWYX9hP9Kp6DgpKx6O2
+ 7axOJlSmZm0YdaNyGMLEszF6KfDOdD3AkjpvGDv44REMrKIweQigIDwV2n2tToEMPyIHNHZKd
+ dnX6/PCYV3ddFcmdWwBqUJxeMlS0eYqDdGOjjabNtos7a+9GfdzsyIZtZYxDXNF0EPDPWsGZJ
+ eWjZwJfx2aEAXFQAmdbhj46pW0FsWHoA6r/QGkTFbo72H8C7twyc3sL5q9/FFDQcXp6J+3+r3
+ MB3373nLxjh+kQBJf3MQK+08N1nn+ZeKHyhaDzwg+4AaXGGSP3TDV18E42dtnU9jpd0nkYhaF
+ ihYRX8HFXjgOYD5ii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michal,=C2=A0=0D=0A=0D=0A>>=C2=A0>=0D=0A>>=C2=A0>Acked-by:=C2=A0Michal=
-=C2=A0Hocko=C2=A0<mhocko=40suse.com>=0D=0A>>=C2=A0>=0D=0A>>=C2=A0>Is=C2=A0t=
-here=C2=A0any=C2=A0reason=C2=A0to=C2=A0move=C2=A0declarations=C2=A0here?=0D=
-=0A>>=C2=A0>=0D=0A>>=C2=A0=0D=0A>>=C2=A0=22unsigned=C2=A0int=C2=A0ret=22=C2=
-=A0was=C2=A0changed=C2=A0mistakenely,=C2=A0sending=C2=A0V2.=0D=0A>>=C2=A0an=
-d=C2=A0=22unsigned=C2=A0int=C2=A0nr_reclaimed=22=C2=A0is=C2=A0changed=C2=A0=
-to=C2=A0remove=C2=A0hole.=0D=0A=C2=A0=0D=0A>Could=C2=A0you=C2=A0be=C2=A0mor=
-e=C2=A0specific?=C2=A0Have=C2=A0you=C2=A0seen=C2=A0a=C2=A0better=C2=A0stack=
-=C2=A0allocation=0D=0A>footprint?=0D=0A=0D=0AWe=20didn't=20check=20stack=20=
-allocation=20footprint,=20we=20did=20changes=20just=20by=20looking=20into=
-=20the=20code.=0D=0Awe=20thought=20changing=20reclaimed=20type=20from=20lon=
-g=20to=20int=20on=2064=20bit=20platform=20will=20add=20=0D=0Ahole=20of=204=
-=20bytes=20between=20two=20stack=20variables=20nr_reclaimed=20&=20nr_taken.=
-=0D=0A=0D=0ASo=20we=20tried=20to=20remove=20that=20hole=20by=20packing=20it=
-=20with=20bool.=0D=0A=0D=0A=20=09unsigned=20long=20nr_scanned;=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20-->=20Size=20and=20alignment=208=20b=
-yte=20for=20long=20=0D=0A-=09unsigned=20long=20nr_reclaimed=20=3D=200;=20=
-=20=20=20=20=20=20=20=20=20=20-->=20Changing=20to=20int=20will=20make=20its=
-=20size=20as=204=20=20=0D=0A=20=09unsigned=20long=20nr_taken;=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20-->=20nr_taken=20needs=20align=
-ment=20of=208=20so=20will=20add=20hole.=0D=0A=20=09struct=20reclaim_stat=20=
-stat;=0D=0A=20=09int=20file=20=3D=20is_file_lru(lru);=0D=0A=20=09enum=20vm_=
-event_item=20item;=0D=0A=20=09struct=20pglist_data=20*pgdat=20=3D=20lruvec_=
-pgdat(lruvec);=0D=0A=20=09struct=20zone_reclaim_stat=20*reclaim_stat=20=3D=
-=20&lruvec->reclaim_stat;=0D=0A+=09unsigned=20int=20nr_reclaimed=20=3D=200;=
-=20=20=20=20=20=20=20=20=20=20=20=20-->=20So=20moving=20to=20this=20place=
-=20to=20pack=20it=20along=20with=20bool=20=0D=0A=20=09bool=20stalled=20=3D=
-=20false;=0D=0A=0D=0A=0D=0AOverall=20stack=20footprint=20might=20not=20chan=
-ge=20as=20compiler=20makes=20function=20stack=20pointer=20as=2016=20byte=20=
-aligned=20but=20we=20did=20this=20=0D=0Aas=20we=20normally=20follow=20this=
-=20coding=20convention=20when=20defining=20structures=20or=20stack=20variab=
-les.=20=0D=0A=0D=0AThanks=20&=20Regards,=0D=0AVaneet=20Narang=0D=0A=C2=A0=
-=0D=0A=C2=A0=0D=0A=0D=0A=C2=A0
+> In common init function, when run into err branch, we didn`t
+> use kfree to release kzmalloc area, this may bring in memleak
+
+* I suggest to improve also this change description.
+
+* Please move the resource release functions to end of
+  the function =E2=80=9Cmeson8b_clkc_init_common=E2=80=9D here.
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
+Documentation/process/coding-style.rst?id=3D96c9a7802af7d500a582d89a8b8645=
+84fe878c1b#n450
+
+* Will the tag =E2=80=9CFixes=E2=80=9D be relevant then for the completed =
+exception handling?
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
+Documentation/process/submitting-patches.rst?id=3D96c9a7802af7d500a582d89a=
+8b864584fe878c1b#n183
+
+Regards,
+Markus
