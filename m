@@ -2,116 +2,176 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCAEC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6187DC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 903ED20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22C2F2072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:04:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="e53jiOwY"
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="eEKrRJry"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgD2P5r (ORCPT
+        id S1726635AbgD2QEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:57:47 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:7758 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726423AbgD2P5r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:57:47 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03TFuuIM025268;
-        Wed, 29 Apr 2020 17:57:23 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=eCkbsHOC25FPIY1TTTZpD48jm9gXnoWIY4Y9Jr6sfic=;
- b=e53jiOwYKO+LkzbBqboM45RGmMiiNkfaPP7dB0FnECk37XNxJDKYXKJMGbOfKFUYwjSE
- 8dP5SR4YDXAyTNwQ4NxhiLrUCZAJF+Zafkjf+cRlDYacMCuo4H+eonM8wdy2r+K550a2
- 3nFsUM0ABpsrSC4gLE9tnea1Xbm7+7dUF43as0cNgn5S7Xi728/+i69xr9UFwX2suOkI
- WPeluJ/H57/IfWNpu8ApMehPvf06gWc96+I9LdK3rupRqwMHzisCxjgqIJXAyKIkLWgo
- hWxeqVIMJtMv8osZYnjXx5lT84OGwDv95LYkAsV05mYwPN18/i2JqFczglp3t7YKtgLm rA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30mhq67a5f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 17:57:23 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 579AF100034;
-        Wed, 29 Apr 2020 17:57:22 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1E9D52AD2DB;
-        Wed, 29 Apr 2020 17:57:22 +0200 (CEST)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Apr
- 2020 17:57:21 +0200
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Wed, 29 Apr 2020 17:57:21 +0200
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-CC:     "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        Hugues FRUCHET <hugues.fruchet@st.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>
-Subject: Re: [RFC 0/3] Introduce cpufreq minimum load QoS
-Thread-Topic: [RFC 0/3] Introduce cpufreq minimum load QoS
-Thread-Index: AQHWGi06wBgeAQBseECYOK/U7Qvw76iQJdAAgAACCYA=
-Date:   Wed, 29 Apr 2020 15:57:21 +0000
-Message-ID: <30cdecf9-703a-eb2b-7c2b-f1e21c805add@st.com>
-References: <20200424114058.21199-1-benjamin.gaignard@st.com>
- <7657495.QyJl4BcWH5@kreacher>
-In-Reply-To: <7657495.QyJl4BcWH5@kreacher>
+        Wed, 29 Apr 2020 12:04:21 -0400
+Received: from mail-bn8nam12on2046.outbound.protection.outlook.com ([40.107.237.46]:6261
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726476AbgD2QEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 12:04:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b7zSrXN5cgVrw1zmLKE4R/R0ks4qXjXV6r3CntICsIDVBZhBsu2LAkVleg3hFpZM1t0XLeFqb4icUZD3lvIF3ftuQVfprS2tylED2pTWgWLuYVK+jzu+YC8h8iYQulngqj6LFiMINIgT0J+F/QRAps0SxXtpdO1BmuzGWrPC/0d7QRcErXBdycJpZmyIqYtOsvSU4sImtrV1IxFp6eBwN0xGsWypSJA/Jkxom23nrNiFx31Q3CIbzQaGe5+FVq6QfWAXLVfN7jgVG1ri3AwIu65+5qFRKpeBosQSM4ThKhRCCe+hzSCA1FZEN6TYdDwVueUraKwjHxYFBe1HHPFkLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=awVt15CK6307gmzu2M1d49T5JfWnzkVqPpxTjk0lgDc=;
+ b=jjUpv0y27txVPnUg50Q94JI4BN2K+4cMBdYkhSG7nQshyE45OQPe6ptrPENSKtnS7ArCTnAc2/hdSWOBnsVJxf4ay8u1C/mGnDafOJ1DDqazeQjSbADjB/8um4yCzn9lCa+Sm85jNvXjmbTJ3WiRfHRF1cWY0HDEJMEwP53pr/ELo9tqB+CuYRUSjGhLSlNgQhSYwdBjv2ot+lItO9KYhEUJlbyKAyTG/1jk3PXoEbDFTUQEgmNoNP+oingqcg2Z+TR9riJ9DSB/1PrAVb/qmZGfCRrg78TExtBSvOQMO8AxgYBADZpsk4d6hLFohDinvoF/qWHOOv4MukQwP+zabg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=awVt15CK6307gmzu2M1d49T5JfWnzkVqPpxTjk0lgDc=;
+ b=eEKrRJryfRhsKozOhb5LgeqMeIi4V9RGx8CMy6QexcMrBBZ5AMF7wttLUHsTwaXs+oek/5USNuICSg/TifqrZbxPP9rMy01HgRIfjK37tVuE/hroyox/hF+DIJHu9bOrRH7PZiO9vbP3SXVJGFu6xM1ER7Q3Jy+NrP4LOKJQJnI=
+Received: from MWHPR11MB1775.namprd11.prod.outlook.com (2603:10b6:300:10e::14)
+ by MWHPR11MB0014.namprd11.prod.outlook.com (2603:10b6:301:64::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Wed, 29 Apr
+ 2020 16:04:17 +0000
+Received: from MWHPR11MB1775.namprd11.prod.outlook.com
+ ([fe80::81d5:b62b:3770:ffbe]) by MWHPR11MB1775.namprd11.prod.outlook.com
+ ([fe80::81d5:b62b:3770:ffbe%10]) with mapi id 15.20.2937.028; Wed, 29 Apr
+ 2020 16:04:17 +0000
+From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jules Irenge <jbi.octave@gmail.com>,
+        =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] staging: wfx: avoid compiler warning on empty array
+Thread-Topic: [PATCH] staging: wfx: avoid compiler warning on empty array
+Thread-Index: AQHWHjF5vlfoO7puXUWgUhn1WHjUDaiQQ0QA
+Date:   Wed, 29 Apr 2020 16:04:16 +0000
+Message-ID: <3943343.tW1xmJHsB6@pc-42>
+References: <20200429142119.1735196-1-arnd@arndb.de>
+In-Reply-To: <20200429142119.1735196-1-arnd@arndb.de>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.51]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C0367D8B3A5F0840A331F12D91CA5561@st.com>
-Content-Transfer-Encoding: base64
+authentication-results: arndb.de; dkim=none (message not signed)
+ header.d=none;arndb.de; dmarc=none action=none header.from=silabs.com;
+x-originating-ip: [82.67.86.106]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5e3ab641-8e68-44f3-c678-08d7ec56f822
+x-ms-traffictypediagnostic: MWHPR11MB0014:
+x-microsoft-antispam-prvs: <MWHPR11MB00146E7F0EC6E63A80D35A5193AD0@MWHPR11MB0014.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3276;
+x-forefront-prvs: 03883BD916
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1775.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(7916004)(376002)(366004)(39850400004)(136003)(346002)(396003)(316002)(186003)(54906003)(2906002)(66574012)(66556008)(66946007)(66446008)(64756008)(76116006)(91956017)(5660300002)(66476007)(71200400001)(26005)(33716001)(478600001)(6506007)(8676002)(4326008)(86362001)(6486002)(9686003)(6512007)(8936002)(6916009)(39026012);DIR:OUT;SFP:1101;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: I8ldv3mmdYEzDyyvyuog+jebCxNqBEnTu8WhJnzlldX6uqItMRcgM0GPCM5F15dd5PaK3XS97icO5QcnD+ePh8qHRYN6AaCiuLGIKtZhXlsyZHFo6grYBmEqlO5DPHRc5xyCD2YqivYVAzqGzldTdFzuX4quR8IBMIbqFeg5kjCbSaAixsvMfGyhKTg6Tv3JHE+m+Iku4cVtzjwHquROxjecRXY0/0FhNgznTSOLJtNSbdKfngcrjOFcgHVTKAkcZGeyzMvxvLR6KglfY2Fz5o3ByJronA9kcP0JRxcvX9eIVsjt/hwD93IPbZE8F+4pFx4OCOIP/b4/Ezj3kbx2V0CeT4LUL32Gq8lROZfai1jYOEzZEf9KUhk1uzxtcV8INfKOLU+YzEaYJ716RpVAuoFooH2Z9wa9RFlWhA6Siw+6qyS0R/XkeYDYHj9e1GyyfmriR3QC7arWZvSbAL2hCoxFk8iXPGnCjxRJFleN5CE9w4ieDHW58JzSBJwX5zmd
+x-ms-exchange-antispam-messagedata: I+lN+zVGK7cPYWT22qsqP1aKdyz0y0gdX8gubpNx+iTNba/vbOKmVr+lsPWjTueiHtHIyLDTYzHHZVq9ltgG1P3oPBmAGEBwbRtT9/4dLTcoEPN1PPvGd5EBkqgRlItBuuW+J309oEKnUd7gG3j8m7z/iiug5ismFQ7xOxC1HNf+6KCl97s3BX8UX6M3+0bJMUjn1O6pzGYKtVxWr9NAuHw5WVazE/nz+8IhyxD+IuU4ZmXXiDYpB+ziARmRbhITJCdN9Ep+a1fFwFl+5NAFiogu8dmaUYXAxCRZGV/RSZ1Qko49sbWXgSI45Nzm3G1Y5zeDaPF9JfcgsiVkmsnLu6Y1KvQ2FQ0O6mjLLS7JC3yRRpQFsH+0J6/nz4jGm+jsQFzQOdctUEDzC8wosqwyXTrx5DhjPLl1VKfcLL6lB6DVJti6tQ8VSHLq2bqsgHiH249d/0MllVM1Anej+WXR2ABOt6nyQ5yZ0sQJz7HPN1zWv3UULBDbTLbSqPDb7Goqh7YpD/Kr2UQ7H2D03lxv38ti1LnksKz4btklmuRHLoCIYG7iE+Sb0TRCpUmO+iwKEDAkV24ShhdMyLZoLwUN1bL1lu0GbmXMFFDezKRJfKPEtWH7In+Jh1fw8qH7Uvwguf55rGChJD7vKWqlJ7bbZKaEoZhiFDtuASbDOPF0H4ikTUExSBW+OCD78PUf7zhMXQNDRgykMQdYX2mETnyd8KFJRwDo3paKaNKlRKBnmklZw8HJGvDgCEs9ddwmoS/Amyt9C2fDUe+8RnrsYxrMYS9WlmJ1zMJL+YGZRLTNdlA=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-2"
+Content-ID: <8DC2BB2508D84F49A627E80CC3308FE3@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-29_08:2020-04-29,2020-04-29 signatures=0
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e3ab641-8e68-44f3-c678-08d7ec56f822
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2020 16:04:16.9266
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tmrOUnZcz9gUkT5BfcotSOJvCF4P8IuSbdA8qO11BWemkK9y2uoL5ObdqqlQZiBai+/RTjmgdKauMxp+zzOoyA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB0014
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDQvMjkvMjAgNTo1MCBQTSwgUmFmYWVsIEouIFd5c29ja2kgd3JvdGU6DQo+IE9uIEZy
-aWRheSwgQXByaWwgMjQsIDIwMjAgMTo0MDo1NSBQTSBDRVNUIEJlbmphbWluIEdhaWduYXJkIHdy
-b3RlOg0KPj4gV2hlbiBzdGFydCBzdHJlYW1pbmcgZnJvbSB0aGUgc2Vuc29yIHRoZSBDUFUgbG9h
-ZCBjb3VsZCByZW1haW4gdmVyeSBsb3cNCj4+IGJlY2F1c2UgYWxtb3N0IGFsbCB0aGUgY2FwdHVy
-ZSBwaXBlbGluZSBpcyBkb25lIGluIGhhcmR3YXJlIChpLmUuIHdpdGhvdXQNCj4+IHVzaW5nIHRo
-ZSBDUFUpIGFuZCBsZXQgYmVsaWV2ZSB0byBjcHVmcmVxIGdvdmVybm9yIHRoYXQgaXQgY291bGQg
-dXNlIGxvd2VyDQo+PiBmcmVxdWVuY2llcy4gSWYgdGhlIGdvdmVybm9yIGRlY2lkZXMgdG8gdXNl
-IGEgdG9vIGxvdyBmcmVxdWVuY3kgdGhhdA0KPj4gYmVjb21lcyBhIHByb2JsZW0gd2hlbiB3ZSBu
-ZWVkIHRvIGFja25vd2xlZGdlIHRoZSBpbnRlcnJ1cHQgZHVyaW5nIHRoZQ0KPj4gYmxhbmtpbmcg
-dGltZS4NCj4+IFRoZSBkZWxheSB0byBhY2sgdGhlIGludGVycnVwdCBhbmQgcGVyZm9ybSBhbGwg
-dGhlIG90aGVyIGFjdGlvbnMgYmVmb3JlDQo+PiB0aGUgbmV4dCBmcmFtZSBpcyB2ZXJ5IHNob3J0
-IGFuZCBkb2Vzbid0IGFsbG93IHRvIHRoZSBjcHVmcmVxIGdvdmVybm9yIHRvDQo+PiBwcm92aWRl
-IHRoZSByZXF1aXJlZCBidXJzdCBvZiBwb3dlci4gVGhhdCBsZWQgdG8gZHJvcCB0aGUgaGFsZiBv
-ZiB0aGUgZnJhbWVzLg0KPj4NCj4+IFRvIGF2b2lkIHRoaXMgcHJvYmxlbSwgRENNSSBkcml2ZXIg
-aW5mb3JtcyB0aGUgY3B1ZnJlcSBnb3Zlcm5vcnMgYnkgYWRkaW5nDQo+PiBhIGNwdWZyZXEgbWlu
-aW11bSBsb2FkIFFvUyByZXNxdWVzdC4NCj4gVGhpcyBzZWVtcyB0byBiZSBhZGRyZXNzaW5nIGEg
-dXNlIGNhc2UgdGhhdCBjYW4gYmUgYWRkcmVzc2VkIHdpdGggdGhlIGhlbHAgb2YNCj4gdXRpbGl6
-YXRpb24gY2xhbXBzIHdpdGggbGVzcyBwb3dlciBvdmVyaGVhZC4NCkRvIG1lYW4gY2xhbXBpbmcg
-dGhlIHBvbGljeSBmcmVxdWVuY2llcyA/IEkgbWF5IGhhdmUgbWlzcyB0aGUgQVBJIHRvIGRvIA0K
-dGhhdC4uLg0KPg0KPiBUaGFua3MhDQo+DQo+DQo+DQo=
+On Wednesday 29 April 2020 16:21:09 CEST Arnd Bergmann wrote:
+>=20
+> When CONFIG_OF is disabled, gcc-9 produces a warning about the
+> wfx_sdio_of_match[] array having a declaration without a dimension:
+>=20
+> drivers/staging/wfx/bus_sdio.c:159:34: error: array 'wfx_sdio_of_match' a=
+ssumed to have one element [-Werror]
+>   159 | static const struct of_device_id wfx_sdio_of_match[];
+>       |                                  ^~~~~~~~~~~~~~~~~
+>=20
+> Move the proper declaration up and out of the #ifdef instead.
+>=20
+> Fixes: a7a91ca5a23d ("staging: wfx: add infrastructure for new driver")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/staging/wfx/bus_sdio.c | 19 ++++++++-----------
+>  1 file changed, 8 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/drivers/staging/wfx/bus_sdio.c b/drivers/staging/wfx/bus_sdi=
+o.c
+> index dedc3ff58d3e..c2e4bd1e3b0a 100644
+> --- a/drivers/staging/wfx/bus_sdio.c
+> +++ b/drivers/staging/wfx/bus_sdio.c
+> @@ -156,7 +156,13 @@ static const struct hwbus_ops wfx_sdio_hwbus_ops =3D=
+ {
+>         .align_size             =3D wfx_sdio_align_size,
+>  };
+>=20
+> -static const struct of_device_id wfx_sdio_of_match[];
+> +static const struct of_device_id wfx_sdio_of_match[] =3D {
+> +       { .compatible =3D "silabs,wfx-sdio" },
+> +       { .compatible =3D "silabs,wf200" },
+> +       { },
+> +};
+> +MODULE_DEVICE_TABLE(of, wfx_sdio_of_match);
+I suggest to keep the '#ifdef CONFIG_OF' around this definition. If
+CONFIG_OF is undefined, of_match_ptr() and of_match_node() will be NULL
+and it should compile.
+
+
+> +
+>  static int wfx_sdio_probe(struct sdio_func *func,
+>                           const struct sdio_device_id *id)
+>  {
+> @@ -248,15 +254,6 @@ static const struct sdio_device_id wfx_sdio_ids[] =
+=3D {
+>  };
+>  MODULE_DEVICE_TABLE(sdio, wfx_sdio_ids);
+>=20
+> -#ifdef CONFIG_OF
+> -static const struct of_device_id wfx_sdio_of_match[] =3D {
+> -       { .compatible =3D "silabs,wfx-sdio" },
+> -       { .compatible =3D "silabs,wf200" },
+> -       { },
+> -};
+> -MODULE_DEVICE_TABLE(of, wfx_sdio_of_match);
+> -#endif
+> -
+>  struct sdio_driver wfx_sdio_driver =3D {
+>         .name =3D "wfx-sdio",
+>         .id_table =3D wfx_sdio_ids,
+> @@ -264,6 +261,6 @@ struct sdio_driver wfx_sdio_driver =3D {
+>         .remove =3D wfx_sdio_remove,
+>         .drv =3D {
+>                 .owner =3D THIS_MODULE,
+> -               .of_match_table =3D of_match_ptr(wfx_sdio_of_match),
+> +               .of_match_table =3D wfx_sdio_of_match,
+
+... and obviously keep of_match_ptr() here.
+
+>         }
+>  };
+
+
+--=20
+J=E9r=F4me Pouiller
+
