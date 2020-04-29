@@ -2,126 +2,82 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B12C83009
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9F5C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4530C2085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BEB9206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:39:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D/NhGevB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgD2Njz (ORCPT
+        id S1727963AbgD2Nhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:39:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53112 "EHLO
+        Wed, 29 Apr 2020 09:37:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727971AbgD2Nhs (ORCPT
+        with ESMTP id S1727087AbgD2NhB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:37:48 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D9BAC03C1AD;
-        Wed, 29 Apr 2020 06:37:47 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id DF2F0E06; Wed, 29 Apr 2020 15:37:37 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     Daniel Drake <drake@endlessm.com>, jonathan.derrick@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v3 14/34] iommu/amd: Remove dev_data->passthrough
-Date:   Wed, 29 Apr 2020 15:36:52 +0200
-Message-Id: <20200429133712.31431-15-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200429133712.31431-1-joro@8bytes.org>
-References: <20200429133712.31431-1-joro@8bytes.org>
+        Wed, 29 Apr 2020 09:37:01 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE717C03C1AE;
+        Wed, 29 Apr 2020 06:36:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=bLegsrf1DhSkc7w1f1NHk29akaQzX/hYK/HqXtMKqBY=; b=D/NhGevB1GCZkpjQ5e/LyIzhLa
+        MiCHOSb2ZqRew0WiSYEp6RelJc/meuYuQ5BKuBvt4AsHoF2mYVMVBVYW9fSVTMN24WRm4ZL707JqM
+        S9juOe2bWgsJ1km49tzmMVdnbOCLbdw0oJSsYZ8wowk6q7syX3+ZRV4UL6Hh/yIjNbCe0H4MAiL1S
+        h3eqQ3ClygNYMAm6rlUqANJD8gOdzEuYhz6LGqut5C4c56wfeJjAN7ILxjitlYyaWc4vHQYoGrljq
+        AJUV0zjZzknj+w64+fKBcMiJoIekzy9zw+cSYQcPoLXKaO1SBzcqPHCZuBo6wfP46o7pbMFsvfCv7
+        O7gxEpHQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTmtX-0005wI-Pq; Wed, 29 Apr 2020 13:36:59 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 19/25] mm: Allow large pages to be removed from the page cache
+Date:   Wed, 29 Apr 2020 06:36:51 -0700
+Message-Id: <20200429133657.22632-20-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200429133657.22632-1-willy@infradead.org>
+References: <20200429133657.22632-1-willy@infradead.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Make use of generic IOMMU infrastructure to gather the same information
-carried in dev_data->passthrough and remove the struct member.
+page_cache_free_page() assumes compound pages are PMD_SIZE; fix
+that assumption.
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- drivers/iommu/amd_iommu.c       | 10 +++++-----
- drivers/iommu/amd_iommu_types.h |  1 -
- 2 files changed, 5 insertions(+), 6 deletions(-)
+ mm/filemap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 3e0d27f7622e..0b4b4faa876d 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2047,8 +2047,8 @@ static int pdev_iommuv2_enable(struct pci_dev *pdev)
- static int attach_device(struct device *dev,
- 			 struct protection_domain *domain)
- {
--	struct pci_dev *pdev;
- 	struct iommu_dev_data *dev_data;
-+	struct pci_dev *pdev;
- 	unsigned long flags;
- 	int ret;
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 842afee3d066..8c174e6064d4 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -248,7 +248,7 @@ static void page_cache_free_page(struct address_space *mapping,
+ 		freepage(page);
  
-@@ -2067,8 +2067,10 @@ static int attach_device(struct device *dev,
- 
- 	pdev = to_pci_dev(dev);
- 	if (domain->flags & PD_IOMMUV2_MASK) {
-+		struct iommu_domain *def_domain = iommu_get_dma_domain(dev);
-+
- 		ret = -EINVAL;
--		if (!dev_data->passthrough)
-+		if (def_domain->type != IOMMU_DOMAIN_IDENTITY)
- 			goto out;
- 
- 		if (dev_data->iommu_v2) {
-@@ -2189,9 +2191,7 @@ static int amd_iommu_add_device(struct device *dev)
- 
- 	/* Domains are initialized for this device - have a look what we ended up with */
- 	domain = iommu_get_domain_for_dev(dev);
--	if (domain->type == IOMMU_DOMAIN_IDENTITY)
--		dev_data->passthrough = true;
--	else if (domain->type == IOMMU_DOMAIN_DMA)
-+	if (domain->type == IOMMU_DOMAIN_DMA)
- 		iommu_setup_dma_ops(dev, IOVA_START_PFN << PAGE_SHIFT, 0);
- 
- out:
-diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
-index ca8c4522045b..d0d7b6a0c3d8 100644
---- a/drivers/iommu/amd_iommu_types.h
-+++ b/drivers/iommu/amd_iommu_types.h
-@@ -640,7 +640,6 @@ struct iommu_dev_data {
- 	struct pci_dev *pdev;
- 	u16 devid;			  /* PCI Device ID */
- 	bool iommu_v2;			  /* Device can make use of IOMMUv2 */
--	bool passthrough;		  /* Device is identity mapped */
- 	struct {
- 		bool enabled;
- 		int qdep;
+ 	if (PageTransHuge(page) && !PageHuge(page)) {
+-		page_ref_sub(page, HPAGE_PMD_NR);
++		page_ref_sub(page, hpage_nr_pages(page));
+ 		VM_BUG_ON_PAGE(page_count(page) <= 0, page);
+ 	} else {
+ 		put_page(page);
 -- 
-2.17.1
+2.26.2
 
