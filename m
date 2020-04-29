@@ -2,164 +2,98 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A82C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EAEC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74DFA21707
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:23:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588170186;
-	bh=G66dtQxbgcy1h44rcbSXdxCegSH9fBKXU5OqSZIxS8g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Vktljeru/Ni9xEgvnCIQuX0alCE6LUfF5EenZGn7f/szDbYsDWCu/jfsEbJcfjt1b
-	 RdKJqNavZR9iJF0jzZWfds0P/YoS/r0yxSC4OIqlqjU4yHe1C/JJgDSNLwMeR2OIpt
-	 qgKTSlLLvwsWUcg+jXnvdLgKPekAlT/gAILFbtok=
+	by mail.kernel.org (Postfix) with ESMTP id 30D1E206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:23:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgD2OXF (ORCPT
+        id S1728034AbgD2OX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:23:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48824 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727865AbgD2OXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:23:05 -0400
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66A3B2186A
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 14:23:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588170184;
-        bh=G66dtQxbgcy1h44rcbSXdxCegSH9fBKXU5OqSZIxS8g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PetStyHLEV2lrSXAVs6D/TdlIhWhS1z8l9Gl+vM/4MNdlQd4o+6yNZktsNtNHZQU6
-         YIHcHaxmLo83AxCXmV1gKViG3iVFBBJBxN8LECtjbSqWDS7oeQIrFEsrWRfIgb3q0s
-         Ur2XeOWeKdtohhLwNWX4xkXhaSx8gpjuNR5Cl7aI=
-Received: by mail-ej1-f45.google.com with SMTP id nv1so1719405ejb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:23:04 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaTfdV8OP0rs7ASMLn1SY0cQ/zUGePyUgJKVqBiYx6BjlgsgWjj
-        mo9DmL4ttG4ZIZO802DQjfDetxzt7JggO/1Alg==
-X-Google-Smtp-Source: APiQypLbNUZaUbxOeAGl/VOSrDJwW0j3YRXLPpsXVC1sG9OeMKULA8AD+Z6wkppmAOEICwk03bQFeR9oFWYM3/4XLAs=
-X-Received: by 2002:a17:906:2ad4:: with SMTP id m20mr2875207eje.324.1588170182786;
- Wed, 29 Apr 2020 07:23:02 -0700 (PDT)
+        Wed, 29 Apr 2020 10:23:27 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:59573 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbgD2OX0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 10:23:26 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N7iOw-1j8KpB09eU-014iMZ; Wed, 29 Apr 2020 16:23:19 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Tiwei Bie <tiwei.bie@intel.com>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] vhost: fix default for vhost_iotlb
+Date:   Wed, 29 Apr 2020 16:23:04 +0200
+Message-Id: <20200429142317.1847441-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-References: <20200427075238.2828-1-bernard@vivo.com>
-In-Reply-To: <20200427075238.2828-1-bernard@vivo.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Wed, 29 Apr 2020 22:22:50 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_86d-UryKQrLy8-zjTbrTRrHL4k3x=bx1KqvWxPL5jj2Q@mail.gmail.com>
-Message-ID: <CAAOTY_86d-UryKQrLy8-zjTbrTRrHL4k3x=bx1KqvWxPL5jj2Q@mail.gmail.com>
-Subject: Re: [PATCH] drm/mediatek: cleanup coding style in mediatek a bit
-To:     Bernard Zhao <bernard@vivo.com>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        opensource.kernel@vivo.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:b3pbp/XZSd+qFAXvZ9I7UjuleCw3GTy1vtyionbvaNjSrD6kYrH
+ y/IBPt43A5XriZwjpg/iVL+DG+MEIGNcDlWlMfkFbLwqZGn3pMma6Xx0viUdy8bDJdYLpx4
+ Lt9B3isKWwO+iGzLngj6QapH5GuypPJSDv//HUUaylj17ZdCqAsqXaqYgEDbLhcGG+xHkJk
+ FAgf2eV+mFETYygqDSJbA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:cHnxtw5s88I=:liybKe0ZyJzauaYbhV1tR4
+ v+detTxqBVhe77qXrhR+LJDZDMNMOV9mkaPORuAXHIO5xefWpUdkz7/jiaLp1rVYj2t2+IZXW
+ gshFy77aTRiWP9IpwdC7VXhAMHccPlBSLN3hOlCaY8AuVBKJbH4zlgAI6RriDPkTOroUsBhQu
+ Bub16qn/gv6uBFl5q8Mv6yfgOGbDoMBT+Iy59/H9BOg6yCTIBNZNaR0kKt55xjXZRFY9nCeIz
+ fprxjDfT8ScG5bD0YZXz8EpefMvdPdPekIcs/ntCx4f5Brr9ND7oq8cpkWPdCpSrI0gLsnpdi
+ oTc1r8Xe87uRzZXf8hQ6sjtoBmS7kj8RaIEsyERkpCXyoES858LWCSlfQHpSxkNVZ6XSAP7OY
+ Ir3zR49Q5LlOIx5i6GpH5DLsCrOpenvCyZ4SeKcBvwrZCMeXvJaMLqfCYo8MsTRSwKbPokI01
+ 1mNrqwi3kWN45VD/6TFDZ5fbTjlzmzwIz2/8aZhVjtSITAgicPam99N3mDGx0k6Vs8TFnhhcp
+ rO1P5mJi5QQhgvmGKXLkBJAIH7DfNPKIuzBL0GWXOQFAzMfM4W0BJbTQcSAhh8cShtglo/RsN
+ lAOvUduj4mF3d/+TzX8M/wA0ciSJd/K37cwbwyrSOXHTHwe9f/cwweHkCPwYBl4snwOFa7lKF
+ S+dQUFMv9GoCpx4RCmGtGm3hnL/EUd+moTge+fJmVdqv79d7rIx+kiZXeTay19bhIB4NWeB4K
+ HSJJK8hYrPtPyRvsAAH4oJnDSlMvq9s2gDZ8OGRC37fKsYgkiDOthoi3KmKJbELyTstVJ0w5c
+ tS93kyVDjAmyLIv1AtkY5kjjiIpVAnOkIKdLzwZcK39cVbgrKg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Bernard:
+During randconfig build testing, I ran into a configuration that has
+CONFIG_VHOST=m, CONFIG_VHOST_IOTLB=m and CONFIG_VHOST_RING=y, which
+makes the iotlb implementation left out from vhost_ring, and in turn
+leads to a link failure of the vdpa_sim module:
 
-Bernard Zhao <bernard@vivo.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=8827=E6=97=
-=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=883:53=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> This code change is to make code bit more readable.
-> Optimise array size align to HDMI macro define.
-> Add check if len is overange.
+ERROR: modpost: "vringh_set_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.ko] undefined!
+ERROR: modpost: "vringh_init_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.ko] undefined!
+ERROR: modpost: "vringh_iov_push_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.ko] undefined!
+ERROR: modpost: "vringh_iov_pull_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.ko] undefined!
+ERROR: modpost: "vringh_complete_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.ko] undefined!
+ERROR: modpost: "vringh_getdesc_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.ko] undefined!
 
-One patch should just do one thing, but this do three things.
-So break this into three patches.
+Work around it by setting the default for VHOST_IOTLB to avoid this
+configuration.
 
-Regards,
-Chun-Kuang.
+Fixes: e6faeaa12841 ("vhost: drop vring dependency on iotlb")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+I fixed this a while ago locally but never got around to sending the
+fix. If the problem has been addressed differently in the meantime,
+please ignore this one.
+---
+ drivers/vhost/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
->
-> Signed-off-by: Bernard Zhao <bernard@vivo.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_hdmi.c | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediat=
-ek/mtk_hdmi.c
-> index ff43a3d80410..40fb5154ed5d 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> @@ -311,15 +311,15 @@ static void mtk_hdmi_hw_send_info_frame(struct mtk_=
-hdmi *hdmi, u8 *buffer,
->         u8 checksum;
->         int ctrl_frame_en =3D 0;
->
-> -       frame_type =3D *buffer;
-> -       buffer +=3D 1;
-> -       frame_ver =3D *buffer;
-> -       buffer +=3D 1;
-> -       frame_len =3D *buffer;
-> -       buffer +=3D 1;
-> -       checksum =3D *buffer;
-> -       buffer +=3D 1;
-> +       frame_type =3D *buffer++;
-> +       frame_ver =3D *buffer++;
-> +       frame_len =3D *buffer++;
-> +       checksum =3D *buffer++;
->         frame_data =3D buffer;
-> +       if ((frame_len + HDMI_INFOFRAME_HEADER_SIZE) > len) {
-> +               dev_err(hdmi->dev, "Wrong frame len: %d\n", frame_len;
-> +               return;
-> +       }
->
->         dev_dbg(hdmi->dev,
->                 "frame_type:0x%x,frame_ver:0x%x,frame_len:0x%x,checksum:0=
-x%x\n",
-> @@ -982,7 +982,7 @@ static int mtk_hdmi_setup_avi_infoframe(struct mtk_hd=
-mi *hdmi,
->                                         struct drm_display_mode *mode)
->  {
->         struct hdmi_avi_infoframe frame;
-> -       u8 buffer[17];
-> +       u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_AVI_INFOFRAME_SIZE];
->         ssize_t err;
->
->         err =3D drm_hdmi_avi_infoframe_from_display_mode(&frame,
-> @@ -1008,7 +1008,7 @@ static int mtk_hdmi_setup_spd_infoframe(struct mtk_=
-hdmi *hdmi,
->                                         const char *product)
->  {
->         struct hdmi_spd_infoframe frame;
-> -       u8 buffer[29];
-> +       u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_SPD_INFOFRAME_SIZE];
->         ssize_t err;
->
->         err =3D hdmi_spd_infoframe_init(&frame, vendor, product);
-> @@ -1031,7 +1031,7 @@ static int mtk_hdmi_setup_spd_infoframe(struct mtk_=
-hdmi *hdmi,
->  static int mtk_hdmi_setup_audio_infoframe(struct mtk_hdmi *hdmi)
->  {
->         struct hdmi_audio_infoframe frame;
-> -       u8 buffer[14];
-> +       u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_AUDIO_INFOFRAME_SIZE]=
-;
->         ssize_t err;
->
->         err =3D hdmi_audio_infoframe_init(&frame);
-> --
-> 2.26.2
->
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
+index 2c75d164b827..ee5f85761024 100644
+--- a/drivers/vhost/Kconfig
++++ b/drivers/vhost/Kconfig
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config VHOST_IOTLB
+ 	tristate
++	default y if VHOST=m && VHOST_RING=y
+ 	help
+ 	  Generic IOTLB implementation for vhost and vringh.
+ 	  This option is selected by any driver which needs to support
+-- 
+2.26.0
+
