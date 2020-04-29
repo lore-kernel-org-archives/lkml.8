@@ -2,199 +2,276 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AC7C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29638C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD61214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F418A214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:03:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ldKvjMxf"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AsAnme1d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgD2NDa (ORCPT
+        id S1727853AbgD2NDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:03:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727803AbgD2NDY (ORCPT
+        Wed, 29 Apr 2020 09:03:33 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36870 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727806AbgD2ND0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:03:24 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 531CFC03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 06:03:24 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id s63so1807701qke.4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 06:03:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tAl7syPo2yQlu/PZKqGcqSBESjyxy3P84yTs4WkPbbI=;
-        b=ldKvjMxfAeMsB1TvRmUleq48K0nxf19ST9h6diloFfJWh3HPYhCMUKRlKzh7FwvNOQ
-         5SYYkIyuSZAkFneigxihGQZaR5NktSzjVkX8Xg8La8z3selDht56kpMa/BZCKSrQWCYC
-         rsHfc9y1lHkJaqeaUCzvaJDN7o+cxGmRcFPq1CxU7mlVia2IhD9tdt62EOO/2o3ty9oa
-         iGex5q2Da3ZOBYquP5sQ7+v0aXrHv8HS43SYIIZ+KVazzJIsQMG2V9bKiHKFnMM8ONgr
-         7xmHDc4HJUZtACuVtWbz/xdr1qXQ08CQSkY2399enuvuFR5s9Zp2CGCfOfoAdd2DmQkB
-         eUZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tAl7syPo2yQlu/PZKqGcqSBESjyxy3P84yTs4WkPbbI=;
-        b=ZmePE5Bp3FIrOxb31oTtv+iGyVIcMLOBLAIVIAlzzpPdeUetZVm31gru/AfVk9qaUI
-         zcToXPuY3YzbhU6w0y+X+iVFxlAMZR20K3herpd9S7WerKUnWu0gScR/z7cINWZhG4SP
-         7U71JgN/pXvpHmrNRrkGhBjCGBNZ02KgxD9P54PiW4d2HCbnXX8ECRMRipFuhuQUkATJ
-         1UWoZMyM6jMNBeVKoS3fgWZuHOwxjS7ZfP4Xq6t9Qt1iO9ORf6VHsALau+py+Z+5WtTB
-         jFFB0anlZV0wi2/RcoVkDKmHXc8OTSNf4iufiIuOb1wxcwmbeuiw7Ufi7Q0JmBTHwj4/
-         Jq6w==
-X-Gm-Message-State: AGi0PuZSKtQFK969wvg9t2PrdDAICyaOW3P7tlLr1Loiy7xi/xGuNVX8
-        FDax7dF5DKoowpCxNDHHU/A=
-X-Google-Smtp-Source: APiQypKD8/dClGE1LyoInBqoNn90Qcp8wHGLsI7jLus/Ar6FJeTFj7vMGtyQm4YvYEzkG5QMzoKhJQ==
-X-Received: by 2002:a05:620a:1222:: with SMTP id v2mr32258356qkj.463.1588165403279;
-        Wed, 29 Apr 2020 06:03:23 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id g6sm16174937qtc.52.2020.04.29.06.03.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 06:03:22 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 326F4409A3; Wed, 29 Apr 2020 10:03:20 -0300 (-03)
-Date:   Wed, 29 Apr 2020 10:03:20 -0300
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-Subject: Re: [PATCH] perf tool: fix detection of active SMT
-Message-ID: <20200429130320.GG5460@kernel.org>
-References: <158815443969.303706.11130341357699244442.stgit@buzz>
+        Wed, 29 Apr 2020 09:03:26 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03TD3NjF009039;
+        Wed, 29 Apr 2020 08:03:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588165403;
+        bh=s+z/rw1kgtXP/E5SyS8zXPh11qyIFAtwhNYV292Fiys=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=AsAnme1dbf91UEq/8+GoFLGoaQxL1mH7CboS885Kdv/S3F+jGda1G7M9B3tWvObst
+         eLX+5A0jWJ8gY+IALC4bgDaU04Hbrf4HLSh7d0ide39pGJZMlK7N7Fpqo8Ggfo1YqP
+         d8R/9gARi1xNwfEOh/YmFfVck5mXpbYKbrkyf66I=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03TD3Nku042899
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 29 Apr 2020 08:03:23 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 29
+ Apr 2020 08:03:23 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 29 Apr 2020 08:03:23 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03TD3NlX102299;
+        Wed, 29 Apr 2020 08:03:23 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v22 10/16] leds: lp55xx: Convert LED class registration to devm_*
+Date:   Wed, 29 Apr 2020 07:56:25 -0500
+Message-ID: <20200429125631.7044-11-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200429125631.7044-1-dmurphy@ti.com>
+References: <20200429125631.7044-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158815443969.303706.11130341357699244442.stgit@buzz>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Apr 29, 2020 at 01:00:39PM +0300, Konstantin Khlebnikov escreveu:
-> SMT now could be disabled via "/sys/devices/system/cpu/smt/control".
-> Status shown in "/sys/devices/system/cpu/smt/active" simply as "0" / "1".
-> 
-> If this knob isn't here fallback to checking topology but fix couple bugs:
+Convert the LED class registration calls to the LED devm_*
+registration calls.
 
-In these cases, please break the patch into two, the first looking at
-this new /sys/devices/system/cpu/smt/active file, then you go and do the
-fix, and if its more than one, please break those fixes also in separate
-patches.
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/leds/leds-lp5521.c        |  9 +++------
+ drivers/leds/leds-lp5523.c        |  9 +++------
+ drivers/leds/leds-lp5562.c        |  9 +++------
+ drivers/leds/leds-lp55xx-common.c | 15 +--------------
+ drivers/leds/leds-lp55xx-common.h |  2 --
+ drivers/leds/leds-lp8501.c        |  9 +++------
+ 6 files changed, 13 insertions(+), 40 deletions(-)
 
-Also you forgot to add all the people that worked on the fixed csets in
-the CC list, so that they could review your work and give their Acked-by
-or Reviewed-by, I'm adding the missing one, Andi Kleen, to this
-response,
-
-Thanks,
-
-- Arnaldo
+diff --git a/drivers/leds/leds-lp5521.c b/drivers/leds/leds-lp5521.c
+index 6f0272249dc8..6d2163c0f625 100644
+--- a/drivers/leds/leds-lp5521.c
++++ b/drivers/leds/leds-lp5521.c
+@@ -541,19 +541,17 @@ static int lp5521_probe(struct i2c_client *client,
  
-> Check access("devices/system/cpu/cpu%d/topology/core_cpus", F_OK) fails,
-> unless current directory is "/sys". Simply try read this file first.
-> 
-> Cpu bitmap is split into 32 bit words. For system with more than 32 cores
-> threads are always in different words thus first word never has two bits:
-> cpu0: "0000,00000100,00000001", cpu 79: "8000,00000080,00000000".
-> 
-> Instead of parsing bitmap read "core_cpus_list" or "thread_siblings_list"
-> and simply check presence of ',' or '-' in it.
-> 
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> Fixes: de5077c4e38f ("perf tools: Add utility function to detect SMT status")
-> Fixes: 0ccdb8407a46 ("perf tools: Apply new CPU topology sysfs attributes")
-> ---
->  tools/perf/util/smt.c |   41 +++++++++++++++++++++--------------------
->  1 file changed, 21 insertions(+), 20 deletions(-)
-> 
-> diff --git a/tools/perf/util/smt.c b/tools/perf/util/smt.c
-> index 3b791ef2cd50..c398528d1006 100644
-> --- a/tools/perf/util/smt.c
-> +++ b/tools/perf/util/smt.c
-> @@ -1,6 +1,7 @@
->  #include <stdio.h>
->  #include <stdlib.h>
->  #include <unistd.h>
-> +#include <string.h>
->  #include <linux/bitops.h>
->  #include "api/fs/fs.h"
->  #include "smt.h"
-> @@ -9,39 +10,39 @@ int smt_on(void)
->  {
->  	static bool cached;
->  	static int cached_result;
-> +	int active;
->  	int cpu;
->  	int ncpu;
-> +	char *str = NULL;
-> +	size_t strlen;
->  
->  	if (cached)
->  		return cached_result;
->  
-> +	if (sysfs__read_int("devices/system/cpu/smt/active", &active) > 0)
-> +		goto done;
-> +
->  	ncpu = sysconf(_SC_NPROCESSORS_CONF);
->  	for (cpu = 0; cpu < ncpu; cpu++) {
-> -		unsigned long long siblings;
-> -		char *str;
-> -		size_t strlen;
->  		char fn[256];
->  
-> -		snprintf(fn, sizeof fn,
-> -			"devices/system/cpu/cpu%d/topology/core_cpus", cpu);
-> -		if (access(fn, F_OK) == -1) {
-> -			snprintf(fn, sizeof fn,
-> -				"devices/system/cpu/cpu%d/topology/thread_siblings",
-> -				cpu);
-> -		}
-> -		if (sysfs__read_str(fn, &str, &strlen) < 0)
-> -			continue;
-> -		/* Entry is hex, but does not have 0x, so need custom parser */
-> -		siblings = strtoull(str, NULL, 16);
-> -		free(str);
-> -		if (hweight64(siblings) > 1) {
-> -			cached_result = 1;
-> -			cached = true;
-> +		snprintf(fn, sizeof(fn), "devices/system/cpu/cpu%d/topology/%s",
-> +			 cpu, "core_cpus_list");
-> +		if (sysfs__read_str(fn, &str, &strlen) > 0)
-> +			break;
-> +
-> +		snprintf(fn, sizeof(fn), "devices/system/cpu/cpu%d/topology/%s",
-> +			 cpu, "thread_siblings_list");
-> +		if (sysfs__read_str(fn, &str, &strlen) > 0)
->  			break;
-> -		}
->  	}
-> +
-> +	active = str && (strchr(str, ',') != NULL || strchr(str, '-') != NULL);
-> +	free(str);
-> +
-> +done:
->  	if (!cached) {
-> -		cached_result = 0;
-> +		cached_result = active;
->  		cached = true;
->  	}
->  	return cached_result;
-> 
-
+ 	ret = lp55xx_register_leds(led, chip);
+ 	if (ret)
+-		goto err_register_leds;
++		goto err_out;
+ 
+ 	ret = lp55xx_register_sysfs(chip);
+ 	if (ret) {
+ 		dev_err(&client->dev, "registering sysfs failed\n");
+-		goto err_register_sysfs;
++		goto err_out;
+ 	}
+ 
+ 	return 0;
+ 
+-err_register_sysfs:
+-	lp55xx_unregister_leds(led, chip);
+-err_register_leds:
++err_out:
+ 	lp55xx_deinit_device(chip);
+ err_init:
+ 	return ret;
+@@ -566,7 +564,6 @@ static int lp5521_remove(struct i2c_client *client)
+ 
+ 	lp5521_stop_all_engines(chip);
+ 	lp55xx_unregister_sysfs(chip);
+-	lp55xx_unregister_leds(led, chip);
+ 	lp55xx_deinit_device(chip);
+ 
+ 	return 0;
+diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
+index d0b931a136b9..15e7051392f5 100644
+--- a/drivers/leds/leds-lp5523.c
++++ b/drivers/leds/leds-lp5523.c
+@@ -908,19 +908,17 @@ static int lp5523_probe(struct i2c_client *client,
+ 
+ 	ret = lp55xx_register_leds(led, chip);
+ 	if (ret)
+-		goto err_register_leds;
++		goto err_out;
+ 
+ 	ret = lp55xx_register_sysfs(chip);
+ 	if (ret) {
+ 		dev_err(&client->dev, "registering sysfs failed\n");
+-		goto err_register_sysfs;
++		goto err_out;
+ 	}
+ 
+ 	return 0;
+ 
+-err_register_sysfs:
+-	lp55xx_unregister_leds(led, chip);
+-err_register_leds:
++err_out:
+ 	lp55xx_deinit_device(chip);
+ err_init:
+ 	return ret;
+@@ -933,7 +931,6 @@ static int lp5523_remove(struct i2c_client *client)
+ 
+ 	lp5523_stop_all_engines(chip);
+ 	lp55xx_unregister_sysfs(chip);
+-	lp55xx_unregister_leds(led, chip);
+ 	lp55xx_deinit_device(chip);
+ 
+ 	return 0;
+diff --git a/drivers/leds/leds-lp5562.c b/drivers/leds/leds-lp5562.c
+index edb57c42e8b1..1c94422408b0 100644
+--- a/drivers/leds/leds-lp5562.c
++++ b/drivers/leds/leds-lp5562.c
+@@ -554,19 +554,17 @@ static int lp5562_probe(struct i2c_client *client,
+ 
+ 	ret = lp55xx_register_leds(led, chip);
+ 	if (ret)
+-		goto err_register_leds;
++		goto err_out;
+ 
+ 	ret = lp55xx_register_sysfs(chip);
+ 	if (ret) {
+ 		dev_err(&client->dev, "registering sysfs failed\n");
+-		goto err_register_sysfs;
++		goto err_out;
+ 	}
+ 
+ 	return 0;
+ 
+-err_register_sysfs:
+-	lp55xx_unregister_leds(led, chip);
+-err_register_leds:
++err_out:
+ 	lp55xx_deinit_device(chip);
+ err_init:
+ 	return ret;
+@@ -580,7 +578,6 @@ static int lp5562_remove(struct i2c_client *client)
+ 	lp5562_stop_engine(chip);
+ 
+ 	lp55xx_unregister_sysfs(chip);
+-	lp55xx_unregister_leds(led, chip);
+ 	lp55xx_deinit_device(chip);
+ 
+ 	return 0;
+diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
+index 44ced02b49f9..882ef39e4965 100644
+--- a/drivers/leds/leds-lp55xx-common.c
++++ b/drivers/leds/leds-lp55xx-common.c
+@@ -181,7 +181,7 @@ static int lp55xx_init_led(struct lp55xx_led *led,
+ 		led->cdev.name = name;
+ 	}
+ 
+-	ret = led_classdev_register(dev, &led->cdev);
++	ret = devm_led_classdev_register(dev, &led->cdev);
+ 	if (ret) {
+ 		dev_err(dev, "led register err: %d\n", ret);
+ 		return ret;
+@@ -490,23 +490,10 @@ int lp55xx_register_leds(struct lp55xx_led *led, struct lp55xx_chip *chip)
+ 	return 0;
+ 
+ err_init_led:
+-	lp55xx_unregister_leds(led, chip);
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(lp55xx_register_leds);
+ 
+-void lp55xx_unregister_leds(struct lp55xx_led *led, struct lp55xx_chip *chip)
+-{
+-	int i;
+-	struct lp55xx_led *each;
+-
+-	for (i = 0; i < chip->num_leds; i++) {
+-		each = led + i;
+-		led_classdev_unregister(&each->cdev);
+-	}
+-}
+-EXPORT_SYMBOL_GPL(lp55xx_unregister_leds);
+-
+ int lp55xx_register_sysfs(struct lp55xx_chip *chip)
+ {
+ 	struct device *dev = &chip->cl->dev;
+diff --git a/drivers/leds/leds-lp55xx-common.h b/drivers/leds/leds-lp55xx-common.h
+index 783ed5103ce5..b9b1041e8143 100644
+--- a/drivers/leds/leds-lp55xx-common.h
++++ b/drivers/leds/leds-lp55xx-common.h
+@@ -189,8 +189,6 @@ extern void lp55xx_deinit_device(struct lp55xx_chip *chip);
+ /* common LED class device functions */
+ extern int lp55xx_register_leds(struct lp55xx_led *led,
+ 				struct lp55xx_chip *chip);
+-extern void lp55xx_unregister_leds(struct lp55xx_led *led,
+-				struct lp55xx_chip *chip);
+ 
+ /* common device attributes functions */
+ extern int lp55xx_register_sysfs(struct lp55xx_chip *chip);
+diff --git a/drivers/leds/leds-lp8501.c b/drivers/leds/leds-lp8501.c
+index 2638dbf0e8ac..a58019cdb8c3 100644
+--- a/drivers/leds/leds-lp8501.c
++++ b/drivers/leds/leds-lp8501.c
+@@ -344,19 +344,17 @@ static int lp8501_probe(struct i2c_client *client,
+ 
+ 	ret = lp55xx_register_leds(led, chip);
+ 	if (ret)
+-		goto err_register_leds;
++		goto err_out;
+ 
+ 	ret = lp55xx_register_sysfs(chip);
+ 	if (ret) {
+ 		dev_err(&client->dev, "registering sysfs failed\n");
+-		goto err_register_sysfs;
++		goto err_out;
+ 	}
+ 
+ 	return 0;
+ 
+-err_register_sysfs:
+-	lp55xx_unregister_leds(led, chip);
+-err_register_leds:
++err_out:
+ 	lp55xx_deinit_device(chip);
+ err_init:
+ 	return ret;
+@@ -369,7 +367,6 @@ static int lp8501_remove(struct i2c_client *client)
+ 
+ 	lp8501_stop_engine(chip);
+ 	lp55xx_unregister_sysfs(chip);
+-	lp55xx_unregister_leds(led, chip);
+ 	lp55xx_deinit_device(chip);
+ 
+ 	return 0;
 -- 
+2.25.1
 
-- Arnaldo
