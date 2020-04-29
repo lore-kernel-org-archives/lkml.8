@@ -2,122 +2,113 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D683BC83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC37C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBF2720787
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E212073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:13:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zHFWQgW4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbgD2INg convert rfc822-to-8bit (ORCPT
+        id S1726530AbgD2INs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:13:36 -0400
-Received: from twspam01.aspeedtech.com ([211.20.114.71]:57593 "EHLO
-        twspam01.aspeedtech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726355AbgD2INg (ORCPT
+        Wed, 29 Apr 2020 04:13:48 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:43412 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726355AbgD2INs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:13:36 -0400
-Received: from mail.aspeedtech.com (twmbx02.aspeed.com [192.168.0.24])
-        by twspam01.aspeedtech.com with ESMTP id 03T82qFe086043;
-        Wed, 29 Apr 2020 16:02:52 +0800 (GMT-8)
-        (envelope-from ryan_chen@aspeedtech.com)
-Received: from TWMBX02.aspeed.com (192.168.0.24) by TWMBX02.aspeed.com
- (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.620.29; Wed, 29 Apr
- 2020 16:12:46 +0800
-Received: from TWMBX02.aspeed.com ([fe80::997d:c0a7:f01f:e1a7]) by
- TWMBX02.aspeed.com ([fe80::997d:c0a7:f01f:e1a7%12]) with mapi id
- 15.00.0620.020; Wed, 29 Apr 2020 16:12:45 +0800
-From:   Ryan Chen <ryan_chen@aspeedtech.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-CC:     Brendan Higgins <brendanhiggins@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        Wed, 29 Apr 2020 04:13:48 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03T8DUwW007493;
+        Wed, 29 Apr 2020 03:13:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588148010;
+        bh=dIrVm1/0QLViLtaRRfuBbJNZneOip17ijlKOVSjVhIE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=zHFWQgW4G0g/o/UPa18cLyEWT6fX8erJvXdQ9shIsSQD3OjN6AHmJrUAPuzYjyGqq
+         Cw4rEacVXvIiKujfXiS3XPO6fwVSZhK78MzlKHqqDqSiTyHwI+d5pjr2EMaL2y5ky5
+         WOKW6l1eMYGIwRIlfpUZqgEHtNrrks6IacCPg9W8=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03T8DUkI011810
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 29 Apr 2020 03:13:30 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 29
+ Apr 2020 03:13:30 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 29 Apr 2020 03:13:29 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03T8DQeH056208;
+        Wed, 29 Apr 2020 03:13:27 -0500
+Subject: Re: [PATCH] drm/bridge: fix stack usage warning on old gcc
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v0 linux master] i2c/busses: Avoid i2c interrupt status
- clear race condition.
-Thread-Topic: [PATCH v0 linux master] i2c/busses: Avoid i2c interrupt status
- clear race condition.
-Thread-Index: AQHWHdeQ1mqTBOPAdE+n+yVhmYVsFKiPNOCAgACLErA=
-Date:   Wed, 29 Apr 2020 08:12:45 +0000
-Message-ID: <56add9c6e6b5410986325a1360466e4b@TWMBX02.aspeed.com>
-References: <20200429033737.2781-1-ryan_chen@aspeedtech.com>
- <20200429075357.GA1957@kunai>
-In-Reply-To: <20200429075357.GA1957@kunai>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [192.168.2.87]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+References: <20200428215408.4111675-1-arnd@arndb.de>
+ <22ee464b-f59a-69a3-b669-f821d567fbf5@ti.com>
+ <CAK8P3a2YAe0KPQYQi_PhFvaYeA_4jHM8Y0qOR8oy-A07y-zeEQ@mail.gmail.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <cd7c03e3-baba-73fd-f432-5ccc640a6f44@ti.com>
+Date:   Wed, 29 Apr 2020 11:13:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-DNSRBL: 
-X-MAIL: twspam01.aspeedtech.com 03T82qFe086043
+In-Reply-To: <CAK8P3a2YAe0KPQYQi_PhFvaYeA_4jHM8Y0qOR8oy-A07y-zeEQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------Original Message-----
-From: Wolfram Sang [mailto:wsa@the-dreams.de] 
-Sent: Wednesday, April 29, 2020 3:54 PM
-To: Ryan Chen <ryan_chen@aspeedtech.com>
-Cc: Brendan Higgins <brendanhiggins@google.com>; Benjamin Herrenschmidt <benh@kernel.crashing.org>; Joel Stanley <joel@jms.id.au>; Andrew Jeffery <andrew@aj.id.au>; linux-i2c@vger.kernel.org; openbmc@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org; linux-aspeed@lists.ozlabs.org; linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v0 linux master] i2c/busses: Avoid i2c interrupt status clear race condition.
-
-On Wed, Apr 29, 2020 at 11:37:37AM +0800, ryan_chen wrote:
-> In AST2600 there have a slow peripheral bus between CPU  and i2c 
-> controller.
-> Therefore GIC i2c interrupt status clear have delay timing, when CPU 
-> issue write clear i2c controller interrupt status.
-> To avoid this issue, the driver need have read after write  clear at 
-> i2c ISR.
+On 29/04/2020 11:02, Arnd Bergmann wrote:
+> On Wed, Apr 29, 2020 at 9:56 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+>>> diff --git a/drivers/gpu/drm/bridge/tc358768.c b/drivers/gpu/drm/bridge/tc358768.c
+>>> index 1b39e8d37834..6650fe4cfc20 100644
+>>> --- a/drivers/gpu/drm/bridge/tc358768.c
+>>> +++ b/drivers/gpu/drm/bridge/tc358768.c
+>>> @@ -178,6 +178,8 @@ static int tc358768_clear_error(struct tc358768_priv *priv)
+>>>
+>>>    static void tc358768_write(struct tc358768_priv *priv, u32 reg, u32 val)
+>>>    {
+>>> +     /* work around https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81715 */
+>>> +     int tmpval = val;
 > 
-> Signed-off-by: ryan_chen <ryan_chen@aspeedtech.com>
-
-v0? is it a prototype?
-[Ryan Chen] It is not prototype it is official patch.
-And is there maybe a Fixes: tag for it?
-[Ryan Chen] Yes it is a fix patch.
-
-> ---
->  drivers/i2c/busses/i2c-aspeed.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> tc358768_write is not inline. What is the inline function here? Or is tc358768_write optimized to
+>> inline by the compiler?
 > 
-> diff --git a/drivers/i2c/busses/i2c-aspeed.c 
-> b/drivers/i2c/busses/i2c-aspeed.c index 07c1993274c5..f51702d86a90 
-> 100644
-> --- a/drivers/i2c/busses/i2c-aspeed.c
-> +++ b/drivers/i2c/busses/i2c-aspeed.c
-> @@ -603,6 +603,7 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void *dev_id)
->  	/* Ack all interrupts except for Rx done */
->  	writel(irq_received & ~ASPEED_I2CD_INTR_RX_DONE,
->  	       bus->base + ASPEED_I2C_INTR_STS_REG);
-> +	readl(bus->base + ASPEED_I2C_INTR_STS_REG);
->  	irq_remaining = irq_received;
->  
->  #if IS_ENABLED(CONFIG_I2C_SLAVE)
-> @@ -645,9 +646,11 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void *dev_id)
->  			irq_received, irq_handled);
->  
->  	/* Ack Rx done */
-> -	if (irq_received & ASPEED_I2CD_INTR_RX_DONE)
-> +	if (irq_received & ASPEED_I2CD_INTR_RX_DONE) {
->  		writel(ASPEED_I2CD_INTR_RX_DONE,
->  		       bus->base + ASPEED_I2C_INTR_STS_REG);
-> +		readl(bus->base + ASPEED_I2C_INTR_STS_REG);
-> +	}
->  	spin_unlock(&bus->lock);
->  	return irq_remaining ? IRQ_NONE : IRQ_HANDLED;  }
-> --
-> 2.17.1
-> 
+> I missed the lack of an explicit inline tag when looking at the bug. gcc
+> usually decides which functions to inline on its own, so there is little
+> difference in practice. Let me know if I should clarify the changelog and
+> resend it.
+
+Ok. I think this is fine.
+
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+
+  Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
