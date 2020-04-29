@@ -2,62 +2,59 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2F9C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4519BC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0260A206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E421206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:56:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qs8twnU4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D49hpp/3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgD2Ozt (ORCPT
+        id S1726815AbgD2O4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:55:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20112 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726456AbgD2Ozs (ORCPT
+        Wed, 29 Apr 2020 10:56:11 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33157 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726519AbgD2O4K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:55:48 -0400
+        Wed, 29 Apr 2020 10:56:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588172146;
+        s=mimecast20190719; t=1588172169;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=cmhYDjx7R1ZKenhsmfOQq46IgFNLN7K7NV7wFRLDEzo=;
-        b=Qs8twnU40a6uGhUNRpuY1Oy6QTcJh5+Uc9NN1yCBoPRJdFKZhoJ17vfNHikTCucaaEws6C
-        LHMlBHu5blkr1u+TUGr+s8Zp1UAxEtmB5/t42ZjZNj4hXcD1fD8cvGp52CabEmoxKjvG9b
-        cyDOs/7Ws4ExsI/VBNkVZoftTc/kDkg=
+        bh=wRbuQq5xPueNb09umHgwf8s+26OBQKDFrqXInNC03OA=;
+        b=D49hpp/3ThUyvP2vL+DQN6EsWj3eNUgE7c3VPVJ5wWi4eiwKn5toP7X7gIw+2hJvfvWo6Z
+        tfUnSIAyUyiBkC1VOoiPfr+swRgvd53NIyQp23ze/fEFuXvwHhPJ59W9WbC2qz1DtO1713
+        niKhaG4w8KhzkADk6WulTphSEahhCOk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-413-OwJjmeQjPQiHe7jQlfbisQ-1; Wed, 29 Apr 2020 10:55:44 -0400
-X-MC-Unique: OwJjmeQjPQiHe7jQlfbisQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-235-6IGzkqu6MCCHIIEfMmLs9g-1; Wed, 29 Apr 2020 10:56:00 -0400
+X-MC-Unique: 6IGzkqu6MCCHIIEfMmLs9g-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6CA921005510;
-        Wed, 29 Apr 2020 14:55:41 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 93BC4100CCC2;
+        Wed, 29 Apr 2020 14:55:58 +0000 (UTC)
 Received: from [10.36.114.55] (ovpn-114-55.ams2.redhat.com [10.36.114.55])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 237A460D3D;
-        Wed, 29 Apr 2020 14:55:38 +0000 (UTC)
-Subject: Re: [PATCH v2] s390: simplify memory notifier for protecting kdump
- crash kernel area
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 83D1E38E;
+        Wed, 29 Apr 2020 14:55:56 +0000 (UTC)
+Subject: Re: [PATCH RFC 0/2] s390/mm: don't set ARCH_KEEP_MEMBLOCK
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, linux-s390@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Kirill Smelkov <kirr@nexedi.com>,
+        Michael Holzheu <holzheu@linux.vnet.ibm.com>,
         Philipp Rudo <prudo@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Michal Hocko <mhocko@kernel.org>
-References: <20200424083904.8587-1-david@redhat.com>
+        Vasily Gorbik <gor@linux.ibm.com>
+References: <20200417150151.17239-1-david@redhat.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -103,106 +100,39 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <1d79310d-8909-73e7-d2dd-90e8b9edf253@redhat.com>
-Date:   Wed, 29 Apr 2020 16:55:38 +0200
+Message-ID: <4444ceef-14c7-0975-673f-6fdeefdc4dc0@redhat.com>
+Date:   Wed, 29 Apr 2020 16:55:55 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200424083904.8587-1-david@redhat.com>
+In-Reply-To: <20200417150151.17239-1-david@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.04.20 10:39, David Hildenbrand wrote:
-> Assume we have a crashkernel area of 256MB reserved:
+On 17.04.20 17:01, David Hildenbrand wrote:
+> Looking into why we still create memblocks for hotplugged memory (via
+> add_memory()), I discovered that we might not need ARCH_KEEP_MEMBLOCK on
+> s390x after all.
 > 
-> root@vm0:~# cat /proc/iomem
-> 00000000-6fffffff : System RAM
->   0f258000-0fcfffff : Kernel code
->   0fd00000-101d10e3 : Kernel data
->   105b3000-1068dfff : Kernel bss
-> 70000000-7fffffff : Crash kernel
+> After [1] we will no longer create memblocks for hotplugged memory in
+> case of !CONFIG_ARCH_KEEP_MEMBLOCK. With this series, the same will apply
+> to standby memory on s390x, added via add_memory().
 > 
-> This exactly corresponds to memory block 7 (memory block size is 256MB).
-> Trying to offline that memory block results in:
+> [1] https://lkml.kernel.org/r/20200416104707.20219-1-david@redhat.com
 > 
-> root@vm0:~# echo "offline" > /sys/devices/system/memory/memory7/state
-> -bash: echo: write error: Device or resource busy
+> David Hildenbrand (2):
+>   s390/zcore: traverse resources instead of memblocks
+>   s390/mm: don't set ARCH_KEEP_MEMBLOCK
 > 
-> [  128.458762] page:000003d081c00000 refcount:1 mapcount:0 mapping:00000000d01cecd4 index:0x0
-> [  128.458773] flags: 0x1ffff00000001000(reserved)
-> [  128.458781] raw: 1ffff00000001000 000003d081c00008 000003d081c00008 0000000000000000
-> [  128.458781] raw: 0000000000000000 0000000000000000 ffffffff00000001 0000000000000000
-> [  128.458783] page dumped because: unmovable page
-> 
-> The craskernel area is marked reserved in the bootmem allocator. This
-> results in the memmap getting initialized (refcount=1, PG_reserved), but
-> the pages are never freed to the page allocator.
-> 
-> So these pages look like allocated pages that are unmovable (esp.
-> PG_reserved), and therefore, memory offlining fails early, when trying to
-> isolate the page range.
-> 
-> We only have to care about the exchange area, make that clear.
-> 
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> Cc: Philipp Rudo <prudo@linux.ibm.com>
-> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-> Cc: Eric W. Biederman <ebiederm@xmission.com>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
-> 
-> Follow up of:
-> - "[PATCH v1] s390: drop memory notifier for protecting kdump crash kernel
->    area"
-> 
-> v1 -> v2:
-> - Keep the notifier, check for exchange area only
-> 
-> ---
->  arch/s390/kernel/setup.c | 13 +++++--------
->  1 file changed, 5 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-> index 0f0b140b5558..c0881f0a3175 100644
-> --- a/arch/s390/kernel/setup.c
-> +++ b/arch/s390/kernel/setup.c
-> @@ -594,9 +594,10 @@ static void __init setup_memory_end(void)
->  #ifdef CONFIG_CRASH_DUMP
->  
->  /*
-> - * When kdump is enabled, we have to ensure that no memory from
-> - * the area [0 - crashkernel memory size] and
-> - * [crashk_res.start - crashk_res.end] is set offline.
-> + * When kdump is enabled, we have to ensure that no memory from the area
-> + * [0 - crashkernel memory size] is set offline - it will be exchanged with
-> + * the crashkernel memory region when kdump is triggered. The crashkernel
-> + * memory region can never get offlined (pages are unmovable).
->   */
->  static int kdump_mem_notifier(struct notifier_block *nb,
->  			      unsigned long action, void *data)
-> @@ -607,11 +608,7 @@ static int kdump_mem_notifier(struct notifier_block *nb,
->  		return NOTIFY_OK;
->  	if (arg->start_pfn < PFN_DOWN(resource_size(&crashk_res)))
->  		return NOTIFY_BAD;
-> -	if (arg->start_pfn > PFN_DOWN(crashk_res.end))
-> -		return NOTIFY_OK;
-> -	if (arg->start_pfn + arg->nr_pages - 1 < PFN_DOWN(crashk_res.start))
-> -		return NOTIFY_OK;
-> -	return NOTIFY_BAD;
-> +	return NOTIFY_OK;
->  }
->  
->  static struct notifier_block kdump_mem_nb = {
+>  arch/s390/Kconfig         |  1 -
+>  drivers/s390/char/zcore.c | 61 ++++++++++++++++++++++++++++++---------
+>  2 files changed, 48 insertions(+), 14 deletions(-)
 > 
 
 Ping.
