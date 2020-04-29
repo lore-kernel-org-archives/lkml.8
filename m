@@ -2,86 +2,107 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 019EEC83009
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C568C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCF732137B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:59:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588165154;
-	bh=OKP5q1kfJMOz1V+mDLpdq/wbCs1bmXk3Ojz8StqzR2U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2HcA/ZZlU8qSxJs79bRySym0F31aSaDTVFL+BKEsB/+f9y1QMb4HvzI4799A0LDys
-	 SHpo7UCsQt5vbnrqDCZaTBh0jxEmKgPwjSGi/mXd8qVfjD0C/VnnaRM9iYL3TuBSkg
-	 79tzhMBMib5Pxu4fg/MrQcF6ZXNYeKc4A4uNP9w4=
+	by mail.kernel.org (Postfix) with ESMTP id 771BD21707
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:59:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="vwXabPs8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgD2M7O (ORCPT
+        id S1726963AbgD2M7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:59:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726776AbgD2M7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:59:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8E62214D8;
-        Wed, 29 Apr 2020 12:59:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588165151;
-        bh=OKP5q1kfJMOz1V+mDLpdq/wbCs1bmXk3Ojz8StqzR2U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AmfIypLl0/vQsEejNzGbUfn67N+qyG7qPxvX6J+KzLILZHuIgCNRCZJbX3YtMUap9
-         +WjLBx/JlHwjMpLCN5YLvfvo0jISKvGFwq+hfhsq9fAmXqVc+/8OUimTYNNKh7aX6G
-         j6T/r6v9658saDBnrdWCBZ5HIsrzp2S2Ady2OEDY=
-Date:   Wed, 29 Apr 2020 14:59:09 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     ashwin-h <ashwinh@vmware.com>
-Cc:     tytso@mit.edu, adilger.kernel@dilger.ca,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@kernel.org, srivatsab@vmware.com, srivatsa@csail.mit.edu,
-        rostedt@goodmis.org, srostedt@vmware.com,
-        ashwin.hiranniah@gmail.com
-Subject: Re: [PATCH 0/5] Backport to 4.9- ext4: protect journal inode's
- blocks using block_validity
-Message-ID: <20200429125909.GA2124190@kroah.com>
-References: <cover.1587713792.git.ashwinh@vmware.com>
+        Wed, 29 Apr 2020 08:59:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbgD2M7n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 08:59:43 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23456C03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:59:43 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id t12so2260781ile.9
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:59:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2Yxo09dVJPBtr3rN/uHT49nTIyQW+DSWfIZukN4aXZw=;
+        b=vwXabPs8YT5zmX7I08aiEU6YxNfudTyc2yD7lMX45G1aFxMiRpykGJKv4ffjcRCLIq
+         JIQayGNer6Hyzg5Kc5RlolmXrRySsefligu8k5AWZCI6FJsJE61o4LfMtKmjq/c9WMcu
+         IjYkjt/9JDFArta3aN9OxWEg6Ies2RjNWZnF5mQ+Q87rG6auNpPTLnQN+fUTNVp3NAxH
+         T0scTOt+tgh660Eh5IX0BcsBUy58bCYWB6PB3G3zVp2gg18fgQFRIlY2l5WpAiZnr3UM
+         YX7wjikHPjxZJprZmyZJufvn1cffI7HKGT4F2FiYWT7Xlm16QSBW+ZCM7QT3WvNgWofL
+         7LeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2Yxo09dVJPBtr3rN/uHT49nTIyQW+DSWfIZukN4aXZw=;
+        b=SiCRFGhAfOHelrbF/o+2GBqSAMbkmHkz73wMqCI5hR+zZ65mYRNDOkqGJ1vhb8bhVn
+         MsEY3gCgOZaHREdmifPzdC1YTacTP/1sy4IyI2sgdEsgcrWFNG1LEDIlMJsyzr0tfXdn
+         TlK+zDsqu1CtNOQVj9+F+xDkWXWdLh/ufQqQ7L9KGc8xRxzPDkwhybSdKWUVgbUM2vPV
+         cwGI0DjqDQHx23CDPnnlDP8cSvPNQchKuFATq2uU2dOGSKWj2HBtA65qrKQ4ktPyrVsm
+         y/ESG7TtWltlVpPlIpIIOCaFRJgYnqc23zAxBn14YoB9TYDZsDas1TRVU8ctH+nfvWzM
+         3+Xw==
+X-Gm-Message-State: AGi0PubTDLRA+84Z54vbZ8osaixVRDRJFI49o3QRhphj6Dv55dbBiMrI
+        w/+tC9qvsrtdzlHu0wt3ATCALSTQDpETDKNZD4C/lw==
+X-Google-Smtp-Source: APiQypJ+wLPj7v940XymAn8ea0zNXoCXn3l3t9ul5ZusFNcHLuU4YPecSJ0vNhXcTwF13kUf7tiPSxCM9fr4V/YzLJ8=
+X-Received: by 2002:a92:dac8:: with SMTP id o8mr29703394ilq.189.1588165182371;
+ Wed, 29 Apr 2020 05:59:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1587713792.git.ashwinh@vmware.com>
+References: <20200419001858.105281-1-hector.bujanda@digi.com>
+ <CAMRc=MeHun_WEApEXP59ZszGa2n+wbU9qq3wU1VO9o590rO-Pw@mail.gmail.com> <CACRpkdaeXFW5K=Npy2ubWsffc7aepEQ5kSJ2HrkrESjaTy_psQ@mail.gmail.com>
+In-Reply-To: <CACRpkdaeXFW5K=Npy2ubWsffc7aepEQ5kSJ2HrkrESjaTy_psQ@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 29 Apr 2020 14:59:31 +0200
+Message-ID: <CAMRc=MdwSpWkgLTHN+6cOdG7aBAWWYFBC4+tfSNtA2HgX6s_3A@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Hector Bujanda <hector.bujanda@digi.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kent Gibson <warthog618@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 12:51:34AM +0530, ashwin-h wrote:
-> [PATCH 1/5] ext4: avoid declaring fs inconsistent due to invalid file
-> handles
-> This patch is backported as functionality in this commit is used by
-> Patch 2 in this patchset.
-> 
-> [PATCH 2/5] ext4: protect journal inode's blocks using block_validity
-> Backport to 4.9
-> 
-> [PATCH 3/5] ext4: don't perform block validity checks on the journal
-> [PATCH 4/5] ext4: fix block validity checks for journal inodes using
-> [PATCH 5/5] ext4: unsigned int compared against zero
-> Fixes issues found in Patch 2 in this patchset.
-> 
-> These patches addresses CVE-2019-19319
+=C5=9Br., 29 kwi 2020 o 14:38 Linus Walleij <linus.walleij@linaro.org> napi=
+sa=C5=82(a):
+>
+> On Wed, Apr 29, 2020 at 2:06 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
+:
+>
+> > I understand the need to set debounce time to make line events
+> > reliable. As I see it: there'll be a couple steps to add this.
+>
+> I think there is a serious user-facing problem here though, because
+> not all GPIO controllers supports debounce, so the call may return
+> "nope" (error code).
+>
+> I think that is unavoidable with things like pull-up/down or drive
+> strength, but for debounce I think we could do better.
 
-I can't take patches for 4.9 that are not also in 4.14, for the obvious
-reason that you never want to upgrade to a newer kernel and get
-regressions.
+For bias we don't return an error if the operation is not supported by
+the driver.
 
-So can you provide a backported series for the 4.14 tree too?  Then I
-can take these.
+> drivers/input/keyboard/gpio_keys.c contains generic
+> debounce code using kernel timers if the GPIO driver
+> cannot provide debouncing, and I have thought for a long
+> time that it would be nice if we could do this generic, so that
+> we always provide debouncing if requested, even for in-kernel
+> consumers but most certainly for userspace consumers,
+> else userspace will just start to reinvent this too.
+>
 
-thanks,
+Thanks for bringing this to my attention. This definitely looks like
+something we could pull into gpiolib for others to use.
 
-greg k-h
+Bart
