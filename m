@@ -2,191 +2,214 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DA5C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD72C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A465920787
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:26:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ay4DoxoI"
+	by mail.kernel.org (Postfix) with ESMTP id 2A5F520731
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:26:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbgD2J0f (ORCPT
+        id S1726741AbgD2J0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 05:26:35 -0400
-Received: from mail-db8eur05on2065.outbound.protection.outlook.com ([40.107.20.65]:11783
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726599AbgD2J0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 05:26:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b/jAyzMGUe4EvUkkeQC8iLS33O+KYoIKCOCYzDl5wno5G9LMpB45lzXWIlRoj3Qoxl4f/0ynQFXa5clF0ieqwdL/IEg+rdn5mwPXQhvN7QBKhMFdQ4U3OWZIwnGmFqzSgGYdkLeFQ6L7sPEsDMEhO6U0q1h8kIOgij1Bn6zpVByH91dwsVfweEkHKYJ3KTw5hkHybjUOfPJtNlmSeoxzAa2rQe5gE5GNY8f8+sb+2v5fSJNiggl4pZdV5fWbwcGl+mjhoyn1JMIpp5ja8RKezVbJrpoYqBV4FM2j7bmYtGuMMXLyqrjrSCBbh+vPPK9thDL7zjDTojQ+qt7IqFcVFw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G0CMnX4vMzPYzS9g30+XGH16lJIrzgO4jK1RlzhTYEw=;
- b=ISVR4pg7fqXCJjYWBeK9FyHSWzT7XzBsSM08Tifj/cdXkDru4PYlJYIcR9xAL8D6IEUaj/B/Pl8J+QmQB4R1/xIIyUDylh9bTvF7wmf9VFnfAGQ3Mwppat+fMyjjuYxKZp+UdSUHQbHNbpSbdVU9GIom0G9SSB2ENKfhCRM5W6FHV1IQ/ZDH71EHVYI+EsULkPThf2hn1mzmtza0+w9A0nqSjOcYg13EXF3kaltMmBndg2o5mASvukfW3+2LTp2cpGcR44qcOOtt2FkrUEiiDY6FyTvH7S8rqwwXXf9CKlxjA9GVjD9anC0qiHdvLR8GzzbKQjHWquxa8Si4N+6/+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G0CMnX4vMzPYzS9g30+XGH16lJIrzgO4jK1RlzhTYEw=;
- b=Ay4DoxoIOaCKLK2wqFc2liW7kfoC501VSX9gEHuEqkd4vNkZzvOM+9ZdlQQCAokskwBRpi6jBMFwtBl1V+lJ9lUI6GoWLcDvr/P2jz8IFagn0FFjeoQF42hY0XrnHDVeDCKrb8uM7+YLVtqjUktQjc1yYXyZYK6KLR+EZMIjeyE=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB6PR0402MB2694.eurprd04.prod.outlook.com (2603:10a6:4:97::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Wed, 29 Apr
- 2020 09:26:30 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.2937.023; Wed, 29 Apr 2020
- 09:26:30 +0000
-From:   peng.fan@nxp.com
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de
-Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        allison@lohutok.net, info@metux.net, Anson.Huang@nxp.com,
-        leonard.crestez@nxp.com, git@andred.net, abel.vesa@nxp.com,
-        ard.biesheuvel@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V2 2/3] ARM: imx: move cpu definitions into a header
-Date:   Wed, 29 Apr 2020 17:17:22 +0800
-Message-Id: <1588151843-2133-3-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588151843-2133-1-git-send-email-peng.fan@nxp.com>
-References: <1588151843-2133-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR01CA0165.apcprd01.prod.exchangelabs.com
- (2603:1096:4:28::21) To DB6PR0402MB2760.eurprd04.prod.outlook.com
- (2603:10a6:4:a1::14)
+        Wed, 29 Apr 2020 05:26:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726345AbgD2J0d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 05:26:33 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59B96C03C1AD
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 02:26:33 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jTiyy-0007rD-OA; Wed, 29 Apr 2020 11:26:20 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jTiyu-00011L-62; Wed, 29 Apr 2020 11:26:16 +0200
+Date:   Wed, 29 Apr 2020 11:26:16 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "sergei.shtylyov@cogentembedded.com" 
+        <sergei.shtylyov@cogentembedded.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "david@protonic.nl" <david@protonic.nl>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
+Subject: Re: [PATCH net-next v3] net: phy: micrel: add phy-mode support for
+ the KSZ9031 PHY
+Message-ID: <20200429092616.7ug4kdgdltxowkcs@pengutronix.de>
+References: <20200422072137.8517-1-o.rempel@pengutronix.de>
+ <CAMuHMdU1ZmSm_tjtWxoFNako2fzmranGVz5qqD2YRNEFRjX0Sw@mail.gmail.com>
+ <20200428154718.GA24923@lunn.ch>
+ <6791722391359fce92b39e3a21eef89495ccf156.camel@toradex.com>
+ <CAMuHMdXm7n6cE5-ZjwxU_yKSrCaZCwqc_tBA+M_Lq53hbH2-jg@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.66) by SG2PR01CA0165.apcprd01.prod.exchangelabs.com (2603:1096:4:28::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2958.19 via Frontend Transport; Wed, 29 Apr 2020 09:26:25 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 291053bd-8a1d-4cae-7115-08d7ec1f663e
-X-MS-TrafficTypeDiagnostic: DB6PR0402MB2694:|DB6PR0402MB2694:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB6PR0402MB26944631F242EC0CD47B8CDD88AD0@DB6PR0402MB2694.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
-X-Forefront-PRVS: 03883BD916
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(376002)(346002)(136003)(39860400002)(956004)(2616005)(6666004)(8676002)(4326008)(86362001)(6506007)(69590400007)(5660300002)(66556008)(16526019)(66476007)(186003)(36756003)(52116002)(66946007)(9686003)(6486002)(6512007)(8936002)(478600001)(316002)(7416002)(2906002)(26005);DIR:OUT;SFP:1101;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: y5B8w7I31HlI+fJoFbS+CDmcCqBIQpfBtus4GFwGwmWEaGeTXKKoKWWwXtER0V1gWsyiTUrVHMBegM/7rWpak6dpmf1FPDeS4c3dLYN8GJACgLQc5LqTXNHRtJDGBMJaM1jI6yT0YlBN5dGm4mtlS+cSeiJnfxJjnRhYxJUn1UpO+dkYQLnAwN6O7j/85iC3K+uTyWoFBYuWIVsJ86QR2YS7LyUBfbGmtEKhmBfleeKKVE/0UlOSXfsgPtyAxHh3PmNUSgxr1KWPW+gHYQZWqXwMgxu7HJA37dhMC5JUbFMN9joEv+NWBgJxyZ69iw5uadBqBtep9Q8FEVyWDYNn6rGrzIdu1JltNb1qlIDzu3SAL8J5LMu2vEWWmL1mE/MLlWdqptw2NoexUbg5CBL2mAwYJXboanjScKnaKryadpyshxYmyU038R+WdzH0HN1jMjd4ndpBpS8ZdZgpDX6oNFL0c6pccQnUnw98qFye+W+fGv14d783s+6ZdLKlfC6q
-X-MS-Exchange-AntiSpam-MessageData: QdnRhlvzMFql97MxSmw5xu/j9ljW1a/7aFWvIoihjZZtysaw1fnhBKirG15xZk7dUKtudwyhv514QfxDscG/Bovrx/qv15/lojRt3oRTuretkHjhMgGb2dAeJNhpoI2C0knYNW9+pTmse0Ju7Rp4R/Wmsqa0N45xLFjGAhHR9+WpbHo5oTGqSqNvbE5U2uE2KavnNoBrdBQsDt8FNqHng7HcC9n8/0t8G/hJvxVcJzYmphubCvDDZePGBjv//E7aRbQzlf+JfXz+XW0Ujo4oPU2aIDgre7QRNDYacK8loFwUd4Q5g4OjW5SkQp7XQQPZpVO8XaTvSheOuDazzMoGVx6bBs26GNjdropYb1/cO0dUOkpA3BEbSR+YdL1MTIWoXGd/sbAWbWQG0lkboOioUOyMlevCjqPVLibcg2vGwvu4AEfHp/a6VnV8ikw9MdSSQAT9v5hpoAqR13WMEt9ybXKq8wJGNwxn7zrDl978mazvbFLqJXk6/4YfpmlcieGOSkevtMcC56ounXdM60uobswzZZHpIKLa+nAoBiiv48UALM95bY8XVi4i7cSTcaryRnstCzOttqRpdmbk4CQ7QEuLkk6XWTVa7+/znBWrj1zDCALSSt4tm0XrhI7520zLIyX+HegIp719k2s7DNXfOkikEzVsHyV05OyNycNE3sUQT8/DXTp12EeXoQH001Z3fXrAP7fKN33ckuWzn0Ht2qnBeBLlVTwVlvKZWPbrtsZzFLgoGsC0FRQH0xqkgaMJvnjt1bAfav7UHE60F5hCOqhvSp8IWIOUqkZU+RCXsPQ=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 291053bd-8a1d-4cae-7115-08d7ec1f663e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2020 09:26:30.1963
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JIQAdCie+ZCAyHtrGUQ1pm5fLe/U4Za7VNFG4mSvkstiGZ1OOV1gnineDXrVYnOmNzGhZiIEOQFXsp0x3nb0mQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2694
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="f37udlmunv3yqdec"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXm7n6cE5-ZjwxU_yKSrCaZCwqc_tBA+M_Lq53hbH2-jg@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:46:27 up 166 days, 5 min, 179 users,  load average: 0.11, 0.06,
+ 0.01
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
 
-The soc device register code will be moved to drivers/soc/imx/,
-the code needs the cpu type definitions. So let's move the cpu
-type definitions to a header.
+--f37udlmunv3yqdec
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- arch/arm/mach-imx/mxc.h | 22 +---------------------
- include/soc/imx/cpu.h   | 30 ++++++++++++++++++++++++++++++
- 2 files changed, 31 insertions(+), 21 deletions(-)
- create mode 100644 include/soc/imx/cpu.h
+Hi Geert,
 
-diff --git a/arch/arm/mach-imx/mxc.h b/arch/arm/mach-imx/mxc.h
-index 2bfd2d59b4a6..fe2d0f5abfcc 100644
---- a/arch/arm/mach-imx/mxc.h
-+++ b/arch/arm/mach-imx/mxc.h
-@@ -8,35 +8,15 @@
- #define __ASM_ARCH_MXC_H__
- 
- #include <linux/types.h>
-+#include <soc/imx/cpu.h>
- 
- #ifndef __ASM_ARCH_MXC_HARDWARE_H__
- #error "Do not include directly."
- #endif
- 
--#define MXC_CPU_MX1		1
--#define MXC_CPU_MX21		21
--#define MXC_CPU_MX25		25
--#define MXC_CPU_MX27		27
--#define MXC_CPU_MX31		31
--#define MXC_CPU_MX35		35
--#define MXC_CPU_MX51		51
--#define MXC_CPU_MX53		53
--#define MXC_CPU_IMX6SL		0x60
--#define MXC_CPU_IMX6DL		0x61
--#define MXC_CPU_IMX6SX		0x62
--#define MXC_CPU_IMX6Q		0x63
--#define MXC_CPU_IMX6UL		0x64
--#define MXC_CPU_IMX6ULL		0x65
--/* virtual cpu id for i.mx6ulz */
--#define MXC_CPU_IMX6ULZ		0x6b
--#define MXC_CPU_IMX6SLL		0x67
--#define MXC_CPU_IMX7D		0x72
--#define MXC_CPU_IMX7ULP		0xff
--
- #define IMX_DDR_TYPE_LPDDR2		1
- 
- #ifndef __ASSEMBLY__
--extern unsigned int __mxc_cpu_type;
- 
- #ifdef CONFIG_SOC_IMX6SL
- static inline bool cpu_is_imx6sl(void)
-diff --git a/include/soc/imx/cpu.h b/include/soc/imx/cpu.h
-new file mode 100644
-index 000000000000..0669fc08a501
---- /dev/null
-+++ b/include/soc/imx/cpu.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+
-+#ifndef __IMX_CPU_H__
-+#define __IMX_CPU_H__
-+
-+#define MXC_CPU_MX1		1
-+#define MXC_CPU_MX21		21
-+#define MXC_CPU_MX25		25
-+#define MXC_CPU_MX27		27
-+#define MXC_CPU_MX31		31
-+#define MXC_CPU_MX35		35
-+#define MXC_CPU_MX51		51
-+#define MXC_CPU_MX53		53
-+#define MXC_CPU_IMX6SL		0x60
-+#define MXC_CPU_IMX6DL		0x61
-+#define MXC_CPU_IMX6SX		0x62
-+#define MXC_CPU_IMX6Q		0x63
-+#define MXC_CPU_IMX6UL		0x64
-+#define MXC_CPU_IMX6ULL		0x65
-+/* virtual cpu id for i.mx6ulz */
-+#define MXC_CPU_IMX6ULZ		0x6b
-+#define MXC_CPU_IMX6SLL		0x67
-+#define MXC_CPU_IMX7D		0x72
-+#define MXC_CPU_IMX7ULP		0xff
-+
-+#ifndef __ASSEMBLY__
-+extern unsigned int __mxc_cpu_type;
-+#endif
-+
-+#endif
--- 
-2.16.4
+On Wed, Apr 29, 2020 at 10:45:35AM +0200, Geert Uytterhoeven wrote:
+> Hi Philippe,
+>=20
+> On Tue, Apr 28, 2020 at 6:16 PM Philippe Schenker
+> <philippe.schenker@toradex.com> wrote:
+> > On Tue, 2020-04-28 at 17:47 +0200, Andrew Lunn wrote:
+> > > On Tue, Apr 28, 2020 at 05:28:30PM +0200, Geert Uytterhoeven wrote:
+> > > > This triggers on Renesas Salvator-X(S):
+> > > >
+> > > >     Micrel KSZ9031 Gigabit PHY e6800000.ethernet-ffffffff:00:
+> > > > *-skew-ps values should be used only with phy-mode =3D "rgmii"
+> > > >
+> > > > which uses:
+> > > >
+> > > >         phy-mode =3D "rgmii-txid";
+> > > >
+> > > > and:
+> > > >
+> > > >         rxc-skew-ps =3D <1500>;
+> > > >
+> > > > If I understand Documentation/devicetree/bindings/net/ethernet-
+> > > > controller.yaml
+> > > > correctly:
+> > >
+> > > Checking for skews which might contradict the PHY-mode is new. I think
+> > > this is the first PHY driver to do it. So i'm not too surprised it has
+> > > triggered a warning, or there is contradictory documentation.
+> > >
+> > > Your use cases is reasonable. Have the normal transmit delay, and a
+> > > bit shorted receive delay. So we should allow it. It just makes the
+> > > validation code more complex :-(
+> >
+> > I reviewed Oleksij's patch that introduced this warning. I just want to
+> > explain our thinking why this is a good thing, but yes maybe we change
+> > that warning a little bit until it lands in mainline.
+> >
+> > The KSZ9031 driver didn't support for proper phy-modes until now as it
+> > don't have dedicated registers to control tx and rx delays. With
+> > Oleksij's patch this delay is now done accordingly in skew registers as
+> > best as possible. If you now also set the rxc-skew-ps registers those
+> > values you previously set with rgmii-txid or rxid get overwritten.
+> >
+> > We chose the warning to occur on phy-modes 'rgmii-id', 'rgmii-rxid' and
+> > 'rgmii-txid' as on those, with the 'rxc-skew-ps' value present,
+> > overwriting skew values could occur and you end up with values you do
+> > not wanted. We thought, that most of the boards have just 'rgmii' set in
+> > phy-mode with specific skew-values present.
+> >
+> > @Geert if you actually want the PHY to apply RXC and TXC delays just
+> > insert 'rgmii-id' in your DT and remove those *-skew-ps values. If you
+>=20
+> That seems to work for me, but of course doesn't take into account PCB
+> routing.
 
+On boards with simple design, the clock lines have nearly same length as da=
+ta
+lines. To provide needed clock delay, you should make clock line ~17
+centimeter longer than data lines. Or configure PHY or MAC side to
+provide needed delay.
+Since "phy-mode =3D "rgmii-txid"" was ignored till my patch. And the
+"rxc-skew-ps =3D <1500>" will add a delay of 0.6 nano seconds. Your
+configuration was:
+TX delay =3D 1.2ns
+RX delay =3D 0.6ns
+
+Is it really reflects the configuration of you PCB?
+
+> > need custom timing due to PCB routing it was thought out to use the phy-
+> > mode 'rgmii' and do the whole required timing with the *-skew-ps values.
+>=20
+> That mean we do have to provide all values again?
+
+No. Using proper phy-mode should be enough. If you using default TX dealy a=
+nd
+configuring RX delay manually, the phy-mode =3D "rgmii-id" is
+the right choice for you.
+
+> Using "rgmii" without any skew values makes DHCP fail on R-Car H3 ES2.0,
+> M3-W (ES1.0), and M3-N (ES1.0). Interestingly, DHCP still works on R-Car
+> H3 ES1.0.
+
+The TX delay affects MAC to PHY path. The RX delay affects PHY to MAC
+path. On my HW, disabling TX delays, didn't affected the communication
+in any measurable way. Even with clock line length is equal to the data
+lines length. So, it may work just on the edge of the spec.
+
+> Note that I'm not too-familiar with the actual skew values needed
+> (CC Mizuguchi-san).
+>=20
+> Related commits:
+>   - 0e45da1c6ea6b186 ("arm64: dts: r8a7795: salvator-x: Fix
+> EthernetAVB PHY timing")
+>   - dda3887907d74338 ("arm64: dts: r8a7795: Use rgmii-txid phy-mode
+> for EthernetAVB")
+>   - 7eda14afb8843a0d ("arm64: dts: renesas: r8a77990: ebisu: Fix
+> EthernetAVB phy mode to rgmii")
+
+Regards,
+Oleksij.
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--f37udlmunv3yqdec
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6pSDQACgkQ4omh9DUa
+UbPJAQ/+LKRfA0dP7eKYb/DDX4v/6S1nJMmwoCCWrjVB2nGeUL5a/T7s4AwotKvp
+D3uzbGzyVgzYo41Sl+OUDqxVA9vJ2/dKG2AooUL641ptkc03zh4ihhQajjhrIb9h
+1ig4lARM60ngONJprFehqGRbDw7MP+QmYWc9zHfh16xEDeHG/jYnvsCs9bUyIMts
+YMcwCngMANU6qDG2xxsYwAgCp+wuUVbXsn4Syh2kaL5LaoM/4sMEE1nyjQ/a/DZP
+rQN92+rX2KPS2Rp3xY2qD2Cz20c4kcuXfMNOnFJRuyBqNggdFmkezxl+QvRhTULe
+VcGMSwH9uOSVh0zze72JdCI2zj3VZd/iS7Bs94wvQpbYhlB27SpG5eq1msJ7RX8c
+tTjIBm98l4fSRRpDne5dXa+A2ThifkOeh1bGnFjJCIyXffQ1UC2PEgLVp8WW2stf
+wQfOgZnv8c8FXbSx+IgBuIcgiZtCkd3f9Nyn+MbFZqVthqRZdt5Dc2o9UiljABQP
+Rg/JMcuCjYZUWWgFNmvFCKi45I4Xh6RRCwk3TTMQUOmOanMJEY77s8/Jymjsx3tA
+PIbqTf8Nmcv+rGGHAgMm3AWmQc+kGNBoydKtdZ64yfNZjY9FzNAaU7ZmIRLz99UH
+SzocUdqZt91pTtN4G33dJLSTyWgOS1WFdpQJsbrAQl9z0u+0hkU=
+=ZopQ
+-----END PGP SIGNATURE-----
+
+--f37udlmunv3yqdec--
