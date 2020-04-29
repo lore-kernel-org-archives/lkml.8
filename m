@@ -2,128 +2,115 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B0DC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBE1C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B90D20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0919E20775
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbgD2I5N (ORCPT
+        id S1726705AbgD2I6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:57:13 -0400
-Received: from mga14.intel.com ([192.55.52.115]:46002 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbgD2I5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:57:12 -0400
-IronPort-SDR: isBu9Z1pGPDlCmRj/kuPdOzWYOyBuDk+1JcX28bxHaC77vSYm987N694nerLyiy/lWSh/WSuJG
- m/7OylOibm8g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 01:57:12 -0700
-IronPort-SDR: G4/d0UbJqdjex9NZ6XaktL1Z/yKFjmRFbM2as3Tz/2G6uUXxKSC069rzY+LenK12JSxhW/Cwv9
- wGjUWjT7kvVg==
-X-IronPort-AV: E=Sophos;i="5.73,331,1583222400"; 
-   d="scan'208";a="432490237"
-Received: from jwerner6-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.46.246])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 01:57:08 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Michal Orzel <michalorzel.eng@gmail.com>,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@linux.ie, daniel@ffwll.ch
-Cc:     intel-gfx@lists.freedesktop.org,
-        Michal Orzel <michalorzel.eng@gmail.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] drm: Replace drm_modeset_lock/unlock_all with DRM_MODESET_LOCK_ALL_* helpers
-In-Reply-To: <1588093804-30446-1-git-send-email-michalorzel.eng@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <1588093804-30446-1-git-send-email-michalorzel.eng@gmail.com>
-Date:   Wed, 29 Apr 2020 11:57:05 +0300
-Message-ID: <875zdiacv2.fsf@intel.com>
+        Wed, 29 Apr 2020 04:58:02 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:39015 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726456AbgD2I6B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 04:58:01 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MiaHf-1j0SBx0QsR-00feuR; Wed, 29 Apr 2020 10:57:54 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Elliot Berman <eberman@codeaurora.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Rob Clark <robdclark@gmail.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] firmware: qcom: avoid struct initialization warning on gcc-4.8
+Date:   Wed, 29 Apr 2020 10:57:33 +0200
+Message-Id: <20200429085753.3277336-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:7KaUn3buwEkNDHPN8X6Z266ISA0Wrs/iXj3zHng2xrxqK76pNcB
+ oEzcgAJc2fjFO/HseLdfFpWpwj4K0d3jxgMOzu9yaJ8QgB7visdfB1c68kc4ngwTg0GKFi6
+ cb+S5UhmOVicrFymvvLq6q864bdrUDIeDDo1Ij8mdpt9LkElYYh2me1H30cUcz7EdWcbg01
+ Qg82NUOXOI4UUvmygxaaQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ishH48B3DYY=:kehiV9oZ6JNSoXRx/i89+q
+ kIAQ/gyXGN7b8ZhY5/kudZWZEYitQBXqNapQ2e2KZX1xXKMEoVr4L4LBzXwnpkVZdopPft9jr
+ mhM+dpHhy0rjpTOyiG0X170s6/uXoKs7HZaV29A17+ZPe2yLuAcNrz0BxzADI4L3LMsanmNeT
+ LiXiQtIos0IVQ+YbRDy/PKiY42r0Srk3WFv3tM3YcDAWm1JMWBEqbPU6LzOT9zVuvV9RF3chi
+ XoQIeDqq2tK5uEECSbGDLh1vE9473QQSJO9/r+GhPS+g1VBB/oMtMWN42uE74bcg8MB40QgrL
+ ohNruHsI7EetCvNbMDt3O9d/TJ3j48GSpS9lhZoZpCwUeLF1gdcMBj6fjU+d/MY3sLZp6OXhF
+ HuzY/8LI1Fkydm3Q1u3m802V3wYOEsId2eEbGScGsIsxRkCoIfPNVc9on/fl2pEA/QTlJy1V/
+ YUaOMSXMONV54ZR9fU/dm26KxY1QiQMp/k6olqk4OwKiDD5LtF5N2nh2WBhclJBct5VVuxtKL
+ Hj272jnwmzSKhVd1MnuYuIRJ8//jKhAVg3piqWoJ4N/YkJ2umaj2wUaLVSZ3oYbdJBJyv0WPF
+ 4SjssakNmPAxMptGGgvL27jYhd5MuGx/fjjKLnQufOaLBa/5iI0MW7iASCBOIEghhhRtFmPh7
+ Wx0RuMfL1X5QnNaKxilxB/O5S8oGvgJ4SXROLvvNjr9RU8u4lKcWV+z1DXFiqObTRempvWYV+
+ gVxrB1pubHv2Hh8D0qcmQO/ZTcvdXtOvOluJOfBI1bLQ91vibp9K1cvOO4C1NS88U+Gh5jBcj
+ A39HVtW+aMXuXmq2R5oMYpi2eIvVKT7tn1P4yc4571urbQtGio=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020, Michal Orzel <michalorzel.eng@gmail.com> wrote:
-> As suggested by the TODO list for the kernel DRM subsystem, replace
-> the deprecated functions that take/drop modeset locks with new helpers.
->
-> Signed-off-by: Michal Orzel <michalorzel.eng@gmail.com>
-> ---
->  drivers/gpu/drm/drm_mode_object.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_mode_object.c b/drivers/gpu/drm/drm_mode_object.c
-> index 35c2719..901b078 100644
-> --- a/drivers/gpu/drm/drm_mode_object.c
-> +++ b/drivers/gpu/drm/drm_mode_object.c
-> @@ -402,12 +402,13 @@ int drm_mode_obj_get_properties_ioctl(struct drm_device *dev, void *data,
->  {
->  	struct drm_mode_obj_get_properties *arg = data;
->  	struct drm_mode_object *obj;
-> +	struct drm_modeset_acquire_ctx ctx;
->  	int ret = 0;
->  
->  	if (!drm_core_check_feature(dev, DRIVER_MODESET))
->  		return -EOPNOTSUPP;
->  
-> -	drm_modeset_lock_all(dev);
-> +	DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, ret);
+When building with old compilers like gcc-4.8, a struct initializer
+can warn about invalid syntax:
 
-I cry a little every time I look at the DRM_MODESET_LOCK_ALL_BEGIN and
-DRM_MODESET_LOCK_ALL_END macros. :(
+drivers/firmware/qcom_scm-smc.c: In function 'scm_smc_call':
+drivers/firmware/qcom_scm-smc.c:94:9: error: missing braces around initializer [-Werror=missing-braces]
+  struct arm_smccc_args smc = {0};
+         ^
+drivers/firmware/qcom_scm-smc.c:94:9: error: (near initialization for 'smc.args') [-Werror=missing-braces]
+cc1: some warnings being treated as errors
+drivers/firmware/qcom_scm-legacy.c: In function 'scm_legacy_call':
+drivers/firmware/qcom_scm-legacy.c:139:9: error: missing braces around initializer [-Werror=missing-braces]
+  struct arm_smccc_args smc = {0};
+         ^
+drivers/firmware/qcom_scm-legacy.c:139:9: error: (near initialization for 'smc.args') [-Werror=missing-braces]
 
-Currently only six users... but there are ~60 calls to
-drm_modeset_lock_all{,_ctx} that I presume are to be replaced. I wonder
-if this will come back and haunt us.
+Change this to use the empty initializer extension that
+works with all compilers.
 
-BR,
-Jani.
+Fixes: 590e92809a58 ("firmware: qcom_scm-32: Move SMCCC register filling to qcom_scm_call")
+Fixes: 3f951ea627da ("firmware: qcom_scm-64: Move SMC register filling to qcom_scm_call_smccc")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/firmware/qcom_scm-legacy.c | 2 +-
+ drivers/firmware/qcom_scm-smc.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-
->  
->  	obj = drm_mode_object_find(dev, file_priv, arg->obj_id, arg->obj_type);
->  	if (!obj) {
-> @@ -427,7 +428,7 @@ int drm_mode_obj_get_properties_ioctl(struct drm_device *dev, void *data,
->  out_unref:
->  	drm_mode_object_put(obj);
->  out:
-> -	drm_modeset_unlock_all(dev);
-> +	DRM_MODESET_LOCK_ALL_END(ctx, ret);
->  	return ret;
->  }
->  
-> @@ -449,12 +450,13 @@ static int set_property_legacy(struct drm_mode_object *obj,
->  {
->  	struct drm_device *dev = prop->dev;
->  	struct drm_mode_object *ref;
-> +	struct drm_modeset_acquire_ctx ctx;
->  	int ret = -EINVAL;
->  
->  	if (!drm_property_change_valid_get(prop, prop_value, &ref))
->  		return -EINVAL;
->  
-> -	drm_modeset_lock_all(dev);
-> +	DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, ret);
->  	switch (obj->type) {
->  	case DRM_MODE_OBJECT_CONNECTOR:
->  		ret = drm_connector_set_obj_prop(obj, prop, prop_value);
-> @@ -468,7 +470,7 @@ static int set_property_legacy(struct drm_mode_object *obj,
->  		break;
->  	}
->  	drm_property_change_valid_put(prop, ref);
-> -	drm_modeset_unlock_all(dev);
-> +	DRM_MODESET_LOCK_ALL_END(ctx, ret);
->  
->  	return ret;
->  }
-
+diff --git a/drivers/firmware/qcom_scm-legacy.c b/drivers/firmware/qcom_scm-legacy.c
+index eba6b60bfb61..5aa15fcf01d9 100644
+--- a/drivers/firmware/qcom_scm-legacy.c
++++ b/drivers/firmware/qcom_scm-legacy.c
+@@ -136,7 +136,7 @@ int scm_legacy_call(struct device *dev, const struct qcom_scm_desc *desc,
+ 	unsigned int i;
+ 	struct scm_legacy_command *cmd;
+ 	struct scm_legacy_response *rsp;
+-	struct arm_smccc_args smc = {0};
++	struct arm_smccc_args smc = { };
+ 	struct arm_smccc_res smc_res;
+ 	const size_t cmd_len = arglen * sizeof(__le32);
+ 	const size_t resp_len = MAX_QCOM_SCM_RETS * sizeof(__le32);
+diff --git a/drivers/firmware/qcom_scm-smc.c b/drivers/firmware/qcom_scm-smc.c
+index 497c13ba98d6..81818ea74824 100644
+--- a/drivers/firmware/qcom_scm-smc.c
++++ b/drivers/firmware/qcom_scm-smc.c
+@@ -91,7 +91,7 @@ int scm_smc_call(struct device *dev, const struct qcom_scm_desc *desc,
+ 			(qcom_scm_convention == SMC_CONVENTION_ARM_32) ?
+ 			ARM_SMCCC_SMC_32 : ARM_SMCCC_SMC_64;
+ 	struct arm_smccc_res smc_res;
+-	struct arm_smccc_args smc = {0};
++	struct arm_smccc_args smc = { };
+ 
+ 	smc.args[0] = ARM_SMCCC_CALL_VAL(
+ 		smccc_call_type,
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.26.0
+
