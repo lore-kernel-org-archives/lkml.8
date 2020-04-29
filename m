@@ -6,30 +6,29 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF30C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4373C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4B9F20B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87EA620B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:01:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgD2RBY (ORCPT
+        id S1727791AbgD2RBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:01:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:42448 "EHLO foss.arm.com"
+        Wed, 29 Apr 2020 13:01:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:42480 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726456AbgD2RBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:01:24 -0400
+        id S1726456AbgD2RBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 13:01:30 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D33E1045;
-        Wed, 29 Apr 2020 10:01:23 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C00F3106F;
+        Wed, 29 Apr 2020 10:01:29 -0700 (PDT)
 Received: from [192.168.0.14] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 03D103F73D;
-        Wed, 29 Apr 2020 10:01:20 -0700 (PDT)
-Subject: Re: [PATCH v9 07/18] arm64: trans_pgd: hibernate: idmap the single
- page that holds the copy page routines
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A5A63F73D;
+        Wed, 29 Apr 2020 10:01:27 -0700 (PDT)
+Subject: Re: [PATCH v9 08/18] arm64: kexec: move relocation function setup
 To:     Pavel Tatashin <pasha.tatashin@soleen.com>
 References: <20200326032420.27220-1-pasha.tatashin@soleen.com>
- <20200326032420.27220-8-pasha.tatashin@soleen.com>
+ <20200326032420.27220-9-pasha.tatashin@soleen.com>
 From:   James Morse <james.morse@arm.com>
 Cc:     jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com,
         kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -39,12 +38,12 @@ Cc:     jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com,
         bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com,
         steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de,
         selindag@gmail.com
-Message-ID: <b79b0b58-5f8e-913b-3913-b95551ef7ce1@arm.com>
-Date:   Wed, 29 Apr 2020 18:01:19 +0100
+Message-ID: <ea2b39d7-d496-d9ac-23c9-c279ec29f5d5@arm.com>
+Date:   Wed, 29 Apr 2020 18:01:26 +0100
 User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200326032420.27220-8-pasha.tatashin@soleen.com>
+In-Reply-To: <20200326032420.27220-9-pasha.tatashin@soleen.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
@@ -56,84 +55,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Hi Pavel,
 
 On 26/03/2020 03:24, Pavel Tatashin wrote:
-> From: James Morse <james.morse@arm.com>
+> Currently, kernel relocation function is configured in machine_kexec()
+> at the time of kexec reboot by using control_code_page.
 > 
-> To resume from hibernate, the contents of memory are restored from
-> the swap image. This may overwrite any page, including the running
-> kernel and its page tables.
-> 
-> Hibernate copies the code it uses to do the restore into a single
-> page that it knows won't be overwritten, and maps it with page tables
-> built from pages that won't be overwritten.
-> 
-> Today the address it uses for this mapping is arbitrary, but to allow
-> kexec to reuse this code, it needs to be idmapped. To idmap the page
-> we must avoid the kernel helpers that have VA_BITS baked in.
-> 
-> Convert create_single_mapping() to take a single PA, and idmap it.
-> The page tables are built in the reverse order to normal using
-> pfn_pte() to stir in any bits between 52:48. T0SZ is always increased
-> to cover 48bits, or 52 if the copy code has bits 52:48 in its PA.
-> 
-> Pasha: The original patch from James
-> inux-arm-kernel/20200115143322.214247-4-james.morse@arm.com
+> This operation, however, is more logical to be done during kexec_load,
+> and thus remove from reboot time. Move, setup of this function to
+> newly added machine_kexec_post_load().
 
--EBROKENLINK
-
-The convention is to use a 'Link:' tag in the signed-off area.
-e.g. 5a3577039cbe
-
-> Adopted it to trans_pgd, so it can be commonly used by both Kexec
-> and Hibernate. Some minor clean-ups.
-
-Please describe your changes just before your SoB. This means each author sign's off on
-the stuff above their SoB, and its obvious who made which changes.
-
-Search for 'Lucky K Maintainer' in process/submitting-patches.rst for an example.
+This would avoid the need to special-case the cache maintenance, so its a good cleanup...
 
 
-> diff --git a/arch/arm64/include/asm/trans_pgd.h b/arch/arm64/include/asm/trans_pgd.h
-> index 97a7ea73b289..4912d3caf0ca 100644
-> --- a/arch/arm64/include/asm/trans_pgd.h
-> +++ b/arch/arm64/include/asm/trans_pgd.h
-> @@ -32,4 +32,7 @@ int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **trans_pgd,
->  int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
->  		       void *page, unsigned long dst_addr, pgprot_t pgprot);
+> Because once MMU is enabled, kexec control page will contain more than
+> relocation kernel, but also vector table, add pointer to the actual
+> function within this page arch.kern_reloc. Currently, it equals to the
+> beginning of page, we will add offsets later, when vector table is
+> added.
 
-This trans_pgd_map_page() used to be create_single_mapping(), which is where the original
-patch made its changes.
-
-You should only need one of these, not both.
+If the vector table always comes second, wouldn't this be extra work to hold the value 0?
+You can control the layout of this relocation code, as it has to be written in assembly.
+I don't get why this would be necessary.
 
 
-> +int trans_pgd_idmap_page(struct trans_pgd_info *info, phys_addr_t *trans_ttbr0,
-> +			 unsigned long *t0sz, void *page);
-> +
->  #endif /* _ASM_TRANS_TABLE_H */
-
-> diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
-> index 37d7d1c60f65..c2517d1af2af 100644
-> --- a/arch/arm64/mm/trans_pgd.c
-> +++ b/arch/arm64/mm/trans_pgd.c
-> @@ -242,3 +242,52 @@ int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
->  
->  	return 0;
+> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> index ae1bad0156cd..ec71a153cc2d 100644
+> --- a/arch/arm64/kernel/machine_kexec.c
+> +++ b/arch/arm64/kernel/machine_kexec.c
+> @@ -58,6 +59,17 @@ void machine_kexec_cleanup(struct kimage *kimage)
+>  	/* Empty routine needed to avoid build errors. */
 >  }
+>  
+> +int machine_kexec_post_load(struct kimage *kimage)
+> +{
+> +	void *reloc_code = page_to_virt(kimage->control_code_page);
 > +
-> +/*
-> + * The page we want to idmap may be outside the range covered by VA_BITS that
-> + * can be built using the kernel's p?d_populate() helpers. As a one off, for a
-> + * single page, we build these page tables bottom up and just assume that will
-> + * need the maximum T0SZ.
-> + *
-> + * Returns 0 on success, and -ENOMEM on failure.
-> + * On success trans_ttbr0 contains page table with idmapped page, t0sz is set to
+> +	memcpy(reloc_code, arm64_relocate_new_kernel,
+> +	       arm64_relocate_new_kernel_size);
+> +	kimage->arch.kern_reloc = __pa(reloc_code);
 
-> + * maxumum T0SZ for this page.
+Could we move the two cache maintenance calls for this area in here too. Keeping it next
+to the modification makes it clearer why it is required.
 
-maxumum
+In this case we can use flush_icache_range() instead of its __variant because this now
+happens much earlier.
 
-> + */
+
+> +	return 0;
+> +}
+
+Regardless,
+Reviewed-by: James Morse <james.morse@arm.com>
 
 
 Thanks,
