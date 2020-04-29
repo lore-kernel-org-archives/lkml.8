@@ -2,87 +2,85 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46783C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C77C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28F1020661
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 814D62072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:49:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588186175;
+	bh=D8dZyCwxk+OumIfZBSmX8/xPo4zJ9/S7K3N6q7Bc/iE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gWh/biGiLPhcP7i+Rp2Ih1fibNKYbkkA/81ls+W3D0KbZUCGoYbVIpRkgt+SswJ5g
+	 0oXPVE/FKD5+PRENCi4fsyb5IZCTP2e2yoTHQh7CN7jEjf4Cb/wfT/QL15UAqeZAT6
+	 D+8fpIT4p99J+KMZoB7++opr/jTi+IUzt2jg6HDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgD2StW (ORCPT
+        id S1727085AbgD2Ste (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 14:49:22 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:45853 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbgD2StW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 14:49:22 -0400
-Received: from localhost ([109.41.192.52]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MAgMY-1jItPe1mtU-00B39G; Wed, 29 Apr 2020 20:48:58 +0200
-Date:   Wed, 29 Apr 2020 20:48:54 +0200
-From:   Andreas Klinger <ak@it-klinger.de>
-To:     jic23@kernel.org
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org,
-        tglx@linutronix.de, allison@lohutok.net, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] iio: bmp280: fix compensation of humidity
-Message-ID: <20200429184852.GA17547@arbad>
+        Wed, 29 Apr 2020 14:49:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726423AbgD2Ste (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 14:49:34 -0400
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03DB82072A;
+        Wed, 29 Apr 2020 18:49:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588186174;
+        bh=D8dZyCwxk+OumIfZBSmX8/xPo4zJ9/S7K3N6q7Bc/iE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=H41zh0sYOVQLUebqwgURIfTDNeLxaYovhxFSQn4nd0V0ZULMj8nIBWllwnsxhYcah
+         Cg1u11QbtiMGGDDolxSS1d+FbsJMtM5+dp7UvUCHxl7q/PiChJTgXvpcNLP/2MU9A9
+         0rtlLU3uJu48tbPvI47Z8dkqFkz1qMluywz1q0Ks=
+Received: by mail-il1-f176.google.com with SMTP id w6so3511532ilg.1;
+        Wed, 29 Apr 2020 11:49:34 -0700 (PDT)
+X-Gm-Message-State: AGi0PubOUMLSxlXpfQyQf5s8Lc+WkNo6xMsQ8lE/s82BEDEzScbxPfEB
+        LSoLtnf3Jz/uDwE/FvdYEJqNVXjsrofP/XV71hA=
+X-Google-Smtp-Source: APiQypKGEHfKz4Lr3zApMTsqN7GnORbAp3JEtx6/QWAhNKlP0cLiHFvxusfjC/tFs1UDUFHwiTrU11jj3FueBln5jMY=
+X-Received: by 2002:a92:3c55:: with SMTP id j82mr33814677ila.258.1588186171917;
+ Wed, 29 Apr 2020 11:49:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:AdbQLe8B4HsYrW02JRaow2+X0OO3gZNqUU2fAlkjX+E5s3Dp9q/
- rkQ4DdHXGAApZKu8JJPKiH1Z3HZJ4F2kxUpLoLKiIgcuh2FsrQ20oCmZRr2593jKE+Y4UHP
- 3y8spH5ReJudrTxi5vsbVPPDqnt7+fjQ44zlZZfh6CRMweIkd/mT9bs2gWqQ80zkrnpLBOZ
- gecZ71znEc1WIoKsAE0tw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:IrgSeIFd9j0=:Z+sIHlvIHx2rwR/qOB+XVF
- W3hZC54vEBO2QtjzQPdHPaV/UmfF0rgHQPkaUwFGG4mTP48G93RCbf3CNHI6o41aH3VjN+/MX
- XSUxBhIkuNeuTiL3sHH6nSneDrhMOhD1SdmzrAI1hBAeY4LkiJzEehTdRAp/s0hvBFkG1u7yZ
- iMU/IpmwbARwKFwI85S1QGuT0NSNE/eVhonMdK603PA3KQY+r7VzdUJC4fYF5W329zEQYUJsB
- YnNiS6/7guP0HAqiI4/hNCg78Jm0IiEkhRcq4KqBAFMKpSRbMKHU/5pxbAMW6RkCn5PlAytNN
- a6PChL+hUCbpKqiJXVCQQuPoeyy7O5wPUnCw/fCWFhsg21Zh3kY5mS+NqsSsSwm4N2h/zMjyU
- pZ6R9AgLovAbvZosgVIAgIk7VeIpP/8OpqKlM97wTN+hm8crnZPdeNP9E0XfzypnCPwZ8af5C
- nCUbTQFLjLY56FtrCfketKlETMivMCvQ+VuU9QyvQgBHGfgjfsgHMNRn/hRKxm5XLh13HvlAV
- /Ji3k2dQcUDd7XtMUkKofZ0iDsBYnv3gXLwhlfuv07umYQugwznbj8qGUJyFri9hd7Z/jZ7JK
- 4BJdK8gU78EI0pBPmxrxdM/XAiZIvJcvzUpPSRTBbHBw4bnYBlvTMI7ReSjZjOptKmyg0wADi
- tWU80C/EW8qvXNof9VmSCHhx50bXIN0WeTLFA1psFYGmpKGsCroZQHHD9YPVv3ANYYQ/S0YbO
- 0JJYWxh8s5a0u+Ryk9kcZ4SnKPwC5y+BkIXu8HiatV8Ott81zbb1wUS+6rglMBUwOXxSSLoq4
- xJI70s9JAEUbBrsfGvAIWkKwYpImzLsB1QBAco42Plk8iOtnN6U23TulG7J3z5hr6iEkdsW
+References: <20200429174120.1497212-1-nivedita@alum.mit.edu>
+ <20200429174120.1497212-5-nivedita@alum.mit.edu> <f74fe4ad56c0471f863ce550869391c8811f9893.camel@perches.com>
+In-Reply-To: <f74fe4ad56c0471f863ce550869391c8811f9893.camel@perches.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 29 Apr 2020 20:49:21 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGn70BmapKe=6sA17gMCcWRLCebQJFnyObwRbAefOcEng@mail.gmail.com>
+Message-ID: <CAMj1kXGn70BmapKe=6sA17gMCcWRLCebQJFnyObwRbAefOcEng@mail.gmail.com>
+Subject: Re: [PATCH 03/10] efi/x86: Use pr_efi_err for error messages
+To:     Joe Perches <joe@perches.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Output of humidity compensation is limited to the range between 0 and
-100 percent. Add this to the compensation formula as described in the
-datasheet chapter 4.2.3.
+On Wed, 29 Apr 2020 at 20:47, Joe Perches <joe@perches.com> wrote:
+>
+> On Wed, 2020-04-29 at 13:41 -0400, Arvind Sankar wrote:
+> > Use pr_efi_err instead of bare efi_printk for error messages.
+>
+> Perhaps it'd be better to rename pr_efi_err to eri_err
+> to it's clearer it's a typical efi_ logging function.
+>
+> $ git grep -w --name-only pr_efi_err | \
+>   xargs sed -i 's/\bpr_efi_err\b/efi_err/g'
+>
 
-Change to v1:
-Thanks to Tomasz for suggesting the easier to use function clamp_val()
-which is now used.
+Yeah, pr_efi_err() is probably not the best name
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
----
- drivers/iio/pressure/bmp280-core.c | 2 ++
- 1 file changed, 2 insertions(+)
+> Looking at code for efi_printk -> efi_char16_printk,
+> it's somewhat difficult to see where the "output_string"
+> function pointer is set.  Any clue?
+>
 
-diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
-index 29c209cc1108..297ee2205bf6 100644
---- a/drivers/iio/pressure/bmp280-core.c
-+++ b/drivers/iio/pressure/bmp280-core.c
-@@ -271,6 +271,8 @@ static u32 bmp280_compensate_humidity(struct bmp280_data *data,
- 		+ (s32)2097152) * calib->H2 + 8192) >> 14);
- 	var -= ((((var >> 15) * (var >> 15)) >> 7) * (s32)calib->H1) >> 4;
- 
-+	var = clamp_val(var, 0, 419430400);
-+
- 	return var >> 12;
- };
- 
--- 
-2.20.1
+It is set by the firmware.
