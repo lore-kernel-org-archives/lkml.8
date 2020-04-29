@@ -2,276 +2,115 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7CBC83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD0EC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05314208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DF8C2087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:40:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b="P6eC2jtW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbgD2NkK (ORCPT
+        id S1728488AbgD2NkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 29 Apr 2020 09:40:14 -0400
+Received: from gproxy4-pub.mail.unifiedlayer.com ([69.89.23.142]:56518 "EHLO
+        gproxy4-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728476AbgD2NkK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Apr 2020 09:40:10 -0400
-Received: from 8bytes.org ([81.169.241.247]:39838 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727921AbgD2Nhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:37:45 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 57C43CC0; Wed, 29 Apr 2020 15:37:37 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     Daniel Drake <drake@endlessm.com>, jonathan.derrick@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v3 11/34] iommu: Split off default domain allocation from group assignment
-Date:   Wed, 29 Apr 2020 15:36:49 +0200
-Message-Id: <20200429133712.31431-12-joro@8bytes.org>
+Received: from cmgw10.unifiedlayer.com (unknown [10.9.0.10])
+        by gproxy4.mail.unifiedlayer.com (Postfix) with ESMTP id 25634177E68
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:40:08 -0600 (MDT)
+Received: from md-in-79.webhostbox.net ([43.225.55.182])
+        by cmsmtp with ESMTP
+        id TmwXjFeYoxgMWTmwZjyUhc; Wed, 29 Apr 2020 07:40:08 -0600
+X-Authority-Reason: nr=8
+X-Authority-Analysis: v=2.3 cv=eJQ9ckh1 c=1 sm=1 tr=0
+ a=LfuyaZh/8e9VOkaVZk0aRw==:117 a=LfuyaZh/8e9VOkaVZk0aRw==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=cl8xLZFz6L8A:10:nop_rcvd_month_year
+ a=oz0wMknONp8A:10:endurance_base64_authed_username_1 a=iGRvdBzYb-_JTU_o6kgA:9
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=linumiz.com
+        ; s=default; h=Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=nWppLDkAaEMdPFqbD1TQDJt+62vsBP06spj0SrS+K2g=; b=P6eC2jtWIjtpYm7+yPVRA0Pse9
+        SlwjZFlIVvyEE3x/yPClPcvwqChNQcXosW0rXw168oVD0GifTT3EpXsreN2Tg+yyrL1ls1wVm428T
+        PH3dnG9kTZbP15wg8dXpimdzQZoKATYXVi30K/Oy2KFxoayKF4mZsbj3OECceLFIloUQWOj+nxwoq
+        Frkh4b00BnzQ8Lmu5Zrr/dtVDwqKu3Fk3Kx8lbc6zCEKDJmZ3glwFdwDTjbQRoZCYHo5neXkNvgEU
+        89e6aiod1tpzZjQ3/EDVUzOHLC3Z3jlTtabjMgct7idr4FUtWxZeC8qARR5WMVGf4EKpkr9Y5AUI4
+        7dXoSp4A==;
+Received: from p5b3f6bb1.dip0.t-ipconnect.de ([91.63.107.177]:33262 helo=localhost.localdomain)
+        by md-in-79.webhostbox.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <saravanan@linumiz.com>)
+        id 1jTmwW-0009y4-0w; Wed, 29 Apr 2020 13:40:04 +0000
+From:   Saravanan Sekar <saravanan@linumiz.com>
+To:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, broonie@kernel.org,
+        lgirdwood@gmail.com, saravanan@linumiz.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Subject: [PATCH v2 0/4] Add driver for wsen-itds accelerometer sensor
+Date:   Wed, 29 Apr 2020 15:39:39 +0200
+Message-Id: <20200429133943.18298-1-saravanan@linumiz.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200429133712.31431-1-joro@8bytes.org>
-References: <20200429133712.31431-1-joro@8bytes.org>
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - md-in-79.webhostbox.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - linumiz.com
+X-BWhitelist: no
+X-Source-IP: 91.63.107.177
+X-Source-L: No
+X-Exim-ID: 1jTmwW-0009y4-0w
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: p5b3f6bb1.dip0.t-ipconnect.de (localhost.localdomain) [91.63.107.177]:33262
+X-Source-Auth: saravanan@linumiz.com
+X-Email-Count: 3
+X-Source-Cap: bGludW1jbWM7aG9zdGdhdG9yO21kLWluLTc5LndlYmhvc3Rib3gubmV0
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+changes in v2:
+ - added ABI document
+ - fixed review comments in v1
+ - removed vendor entry changes (merged in v1)
 
-When a bus is initialized with iommu-ops, all devices on the bus are
-scanned and iommu-groups are allocated for them, and each groups will
-also get a default domain allocated.
+The patch series add support for wurth elektronic wsen-itds 3-axis
+accelerometer. Driver supports the acceleration, temperature data reading and
+supports configuring of output data rate, operating mode and scale.
 
-Until now this happened as soon as the group was created and the first
-device added to it. When other devices with different default domain
-requirements were added to the group later on, the default domain was
-re-allocated, if possible.
+Thanks,
+Saravanan
 
-This resulted in some back and forth and unnecessary allocations, so
-change the flow to defer default domain allocation until all devices
-have been added to their respective IOMMU groups.
+Saravanan Sekar (4):
+  dt-bindings: iio: add document bindings for wsen-itds accel sensor
+  iio: accel: Add driver for wsen-itds accelerometer sensor
+  iio: accel: wsen-itds accel documentation
+  MAINTAINERS: Add entry for wsen-itds accelerometer sensor
 
-The default domains are allocated for newly allocated groups after
-each device on the bus is handled and was probed by the IOMMU driver.
+ .../ABI/testing/sysfs-bus-iio-wsen-itds       |  23 +
+ .../bindings/iio/accel/we,wsen-itds.yaml      |  55 +
+ MAINTAINERS                                   |   7 +
+ drivers/iio/accel/Kconfig                     |  14 +
+ drivers/iio/accel/Makefile                    |   1 +
+ drivers/iio/accel/wsen-itds.c                 | 947 ++++++++++++++++++
+ 6 files changed, 1047 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
+ create mode 100644 Documentation/devicetree/bindings/iio/accel/we,wsen-itds.yaml
+ create mode 100644 drivers/iio/accel/wsen-itds.c
 
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- drivers/iommu/iommu.c | 154 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 151 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 8be047a4808f..7de0e29db333 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -199,7 +199,7 @@ static int __iommu_probe_device(struct device *dev, struct list_head *group_list
- 	dev->iommu->iommu_dev = iommu_dev;
- 
- 	group = iommu_group_get_for_dev(dev);
--	if (!IS_ERR(group)) {
-+	if (IS_ERR(group)) {
- 		ret = PTR_ERR(group);
- 		goto out_release;
- 	}
-@@ -1599,6 +1599,37 @@ static int add_iommu_group(struct device *dev, void *data)
- 	return ret;
- }
- 
-+static int probe_iommu_group(struct device *dev, void *data)
-+{
-+	const struct iommu_ops *ops = dev->bus->iommu_ops;
-+	struct list_head *group_list = data;
-+	int ret;
-+
-+	if (!dev_iommu_get(dev))
-+		return -ENOMEM;
-+
-+	if (!try_module_get(ops->owner)) {
-+		ret = -EINVAL;
-+		goto err_free_dev_iommu;
-+	}
-+
-+	ret = __iommu_probe_device(dev, group_list);
-+	if (ret)
-+		goto err_module_put;
-+
-+	return 0;
-+
-+err_module_put:
-+	module_put(ops->owner);
-+err_free_dev_iommu:
-+	dev_iommu_free(dev);
-+
-+	if (ret == -ENODEV)
-+		ret = 0;
-+
-+	return ret;
-+}
-+
- static int remove_iommu_group(struct device *dev, void *data)
- {
- 	iommu_release_device(dev);
-@@ -1658,10 +1689,127 @@ static int iommu_bus_notifier(struct notifier_block *nb,
- 	return 0;
- }
- 
-+struct __group_domain_type {
-+	struct device *dev;
-+	unsigned int type;
-+};
-+
-+static int probe_get_default_domain_type(struct device *dev, void *data)
-+{
-+	const struct iommu_ops *ops = dev->bus->iommu_ops;
-+	struct __group_domain_type *gtype = data;
-+	unsigned int type = 0;
-+
-+	if (ops->def_domain_type)
-+		type = ops->def_domain_type(dev);
-+
-+	if (type) {
-+		if (gtype->type && gtype->type != type) {
-+			dev_warn(dev, "Device needs domain type %s, but device %s in the same iommu group requires type %s - using default\n",
-+				 iommu_domain_type_str(type),
-+				 dev_name(gtype->dev),
-+				 iommu_domain_type_str(gtype->type));
-+			gtype->type = 0;
-+		}
-+
-+		if (!gtype->dev) {
-+			gtype->dev  = dev;
-+			gtype->type = type;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void probe_alloc_default_domain(struct bus_type *bus,
-+				       struct iommu_group *group)
-+{
-+	struct __group_domain_type gtype;
-+
-+	memset(&gtype, 0, sizeof(gtype));
-+
-+	/* Ask for default domain requirements of all devices in the group */
-+	__iommu_group_for_each_dev(group, &gtype,
-+				   probe_get_default_domain_type);
-+
-+	if (!gtype.type)
-+		gtype.type = iommu_def_domain_type;
-+
-+	iommu_group_alloc_default_domain(bus, group, gtype.type);
-+}
-+
-+static int iommu_group_do_dma_attach(struct device *dev, void *data)
-+{
-+	struct iommu_domain *domain = data;
-+	const struct iommu_ops *ops;
-+	int ret;
-+
-+	ret = __iommu_attach_device(domain, dev);
-+
-+	ops = domain->ops;
-+
-+	if (ret == 0 && ops->probe_finalize)
-+		ops->probe_finalize(dev);
-+
-+	return ret;
-+}
-+
-+static int __iommu_group_dma_attach(struct iommu_group *group)
-+{
-+	return __iommu_group_for_each_dev(group, group->default_domain,
-+					  iommu_group_do_dma_attach);
-+}
-+
-+static int bus_iommu_probe(struct bus_type *bus)
-+{
-+	const struct iommu_ops *ops = bus->iommu_ops;
-+	int ret;
-+
-+	if (ops->probe_device) {
-+		struct iommu_group *group, *next;
-+		LIST_HEAD(group_list);
-+
-+		/*
-+		 * This code-path does not allocate the default domain when
-+		 * creating the iommu group, so do it after the groups are
-+		 * created.
-+		 */
-+		ret = bus_for_each_dev(bus, NULL, &group_list, probe_iommu_group);
-+		if (ret)
-+			return ret;
-+
-+		list_for_each_entry_safe(group, next, &group_list, entry) {
-+			/* Remove item from the list */
-+			list_del_init(&group->entry);
-+
-+			mutex_lock(&group->mutex);
-+
-+			/* Try to allocate default domain */
-+			probe_alloc_default_domain(bus, group);
-+
-+			if (!group->default_domain) {
-+				mutex_unlock(&group->mutex);
-+				continue;
-+			}
-+
-+			ret = __iommu_group_dma_attach(group);
-+
-+			mutex_unlock(&group->mutex);
-+
-+			if (ret)
-+				break;
-+		}
-+	} else {
-+		ret = bus_for_each_dev(bus, NULL, NULL, add_iommu_group);
-+	}
-+
-+	return ret;
-+}
-+
- static int iommu_bus_init(struct bus_type *bus, const struct iommu_ops *ops)
- {
--	int err;
- 	struct notifier_block *nb;
-+	int err;
- 
- 	nb = kzalloc(sizeof(struct notifier_block), GFP_KERNEL);
- 	if (!nb)
-@@ -1673,7 +1821,7 @@ static int iommu_bus_init(struct bus_type *bus, const struct iommu_ops *ops)
- 	if (err)
- 		goto out_free;
- 
--	err = bus_for_each_dev(bus, NULL, NULL, add_iommu_group);
-+	err = bus_iommu_probe(bus);
- 	if (err)
- 		goto out_err;
- 
 -- 
 2.17.1
 
