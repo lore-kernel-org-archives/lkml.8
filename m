@@ -2,191 +2,129 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA88C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C9CC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13DC22173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:01:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588165299;
-	bh=zNBekyFZGFYfMOOOV65o8aytIfG87wwm23IWKpe4Fbc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ootG5ZzyQ3N1pRc6Bqo/78aCju4eTNSaCDMPY4DNlI4I+yKAWwontKsPz5XN377h9
-	 cMPVIqduoPywgUqdc0g9z8cu24VWA39VhhufSq6jo1x3f6bvHMCbGQX2imtGFHVSRj
-	 sUMJUlpYTggs5mj5+4ctCyeuaX/9liXIgSeZ9BlM=
+	by mail.kernel.org (Postfix) with ESMTP id D6170214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:02:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FjespuxX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgD2NBi (ORCPT
+        id S1726961AbgD2NCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:01:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36038 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726516AbgD2NBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:01:37 -0400
-Received: from Mani-XPS-13-9360 (unknown [157.46.25.26])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21E41214D8;
-        Wed, 29 Apr 2020 13:01:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588165297;
-        bh=zNBekyFZGFYfMOOOV65o8aytIfG87wwm23IWKpe4Fbc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UmNAjTgu/r1QUb30T3OHTNekPYdmIwYkZVLrOhrnkrNyeIhUUfozyHjTRTlM7eDxH
-         O6L9CB4CsdJS+K3PfVwTthyrWWYQ8g2d+wJf9585Kd0x44+zwE+bX2XtvoH6jRl2oC
-         ar1wY0UdqMwZ2vHXy7+8mW8hDJBFeqnTKotbzWOs=
-Date:   Wed, 29 Apr 2020 18:31:26 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     johan@kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, patong.mxl@gmail.com
-Subject: Re: [PATCH 1/2] usb: serial: Add MaxLinear/Exar USB to Serial driver
-Message-ID: <20200429130126.GD6443@Mani-XPS-13-9360>
-References: <20200428195651.6793-1-mani@kernel.org>
- <20200428195651.6793-2-mani@kernel.org>
- <20200429072036.GA2045202@kroah.com>
- <20200429074025.GA6443@Mani-XPS-13-9360>
- <20200429092904.GA2079263@kroah.com>
+        Wed, 29 Apr 2020 09:02:35 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:44578 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726516AbgD2NCe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 09:02:34 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03TD2Vx1076720;
+        Wed, 29 Apr 2020 08:02:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588165351;
+        bh=HCwltAknPB+t+/cMwubIh9W2fiumLUfk6umoPrrhN0I=;
+        h=From:To:CC:Subject:Date;
+        b=FjespuxXxLLBBQPkkEgIh5CsRfgRXr3d2WZDvd3XJEUdAvecxLoD2E49VH0Z1VZNb
+         j5ru5eSVzvlT8H88G3Up0oM37Zw3ORYV7a4eEHT0hB04Q2HA8NTtz1ghqejWRop1F6
+         R6FW4TQth1GqaXJ3G5wG+D534zp/Aj22C+JoiYss=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03TD2V1A112558;
+        Wed, 29 Apr 2020 08:02:31 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 29
+ Apr 2020 08:02:30 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 29 Apr 2020 08:02:30 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03TD2USs089168;
+        Wed, 29 Apr 2020 08:02:30 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v22 00/16] Multicolor Framework v22
+Date:   Wed, 29 Apr 2020 07:56:15 -0500
+Message-ID: <20200429125631.7044-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429092904.GA2079263@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 11:29:04AM +0200, Greg KH wrote:
-> On Wed, Apr 29, 2020 at 01:10:26PM +0530, Manivannan Sadhasivam wrote:
-> > Hi Greg,
-> > 
-> > On Wed, Apr 29, 2020 at 09:20:36AM +0200, Greg KH wrote:
-> > > On Wed, Apr 29, 2020 at 01:26:50AM +0530, mani@kernel.org wrote:
-> > > > From: Manivannan Sadhasivam <mani@kernel.org>
-> > > > 
-> > > > Add support for MaxLinear/Exar USB to Serial converters. This driver
-> > > > only supports XR21V141X series but provision has been made to support
-> > > > other series in future.
-> > > > 
-> > > > This driver is inspired from the initial one submitted by Patong Yang:
-> > > > 
-> > > > https://patchwork.kernel.org/patch/10543261/
-> > > > 
-> > > > While the initial driver was a custom tty USB driver exposing whole
-> > > > new serial interface ttyXRUSBn, this version is completely based on USB
-> > > > serial core thus exposing the interfaces as ttyUSBn. This will avoid
-> > > > the overhead of exposing a new USB serial interface which the userspace
-> > > > tools are unaware of.
-> > > 
-> > > Nice work!
-> > > 
-> > > Some comments below:
-> > > 
-> > > > +// SPDX-License-Identifier: GPL-2.0+
-> > > > +/*
-> > > > + * MaxLinear/Exar USB to Serial driver
-> > > > + *
-> > > > + * Based on initial driver written by Patong Yang <patong.mxl@gmail.com>
-> > > > + *
-> > > > + * Copyright (c) 2020 Manivannan Sadhasivam <mani@kernel.org>
-> > > > + */
-> > > > +
-> > > > +#include <linux/kernel.h>
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/slab.h>
-> > > > +#include <linux/tty.h>
-> > > > +#include <linux/usb.h>
-> > > > +#include <linux/usb/serial.h>
-> > > > +
-> > > > +#include "xr_serial.h"
-> > > 
-> > > No need for a .h file for a single .c file.
-> > > 
-> > 
-> > Yeah but since this driver can support multiple series of XR chips (they
-> > might have separate register definitions and such), I thought it is a good
-> > idea to have a header file to keep the driver sane. But can club it to the
-> > source file for now.
-> 
-> Don't worry about future stuff, focus on what you need to do now :)
-> 
+Hello
 
-Alright, will do :)
+This is the multi color LED framework.   This framework presents clustered
+colored LEDs into an array and allows the user space to adjust the brightness
+of the cluster using a single file write.  The individual colored LEDs
+intensities are controlled via a single file that is an array of LEDs
 
-> > > > +static int xr_get_reg(struct usb_serial_port *port, u8 block, u16 reg,
-> > > > +		      u16 *val)
-> > > > +{
-> > > > +	struct usb_serial *serial = port->serial;
-> > > > +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-> > > > +	void *dmabuf;
-> > > > +	int ret = -EINVAL;
-> > > > +
-> > > > +	dmabuf = kmalloc(sizeof(reg), GFP_KERNEL);
-> > > 
-> > > So that is 2 bytes?
-> > > 
-> > 
-> > Explanation below...
-> > 
-> > > > +	if (!dmabuf)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	if (port_priv->idProduct == XR21V141X_ID) {
-> > > > +		/* XR21V141X uses custom command for reading UART registers */
-> > > > +		ret = usb_control_msg(serial->dev,
-> > > > +				      usb_rcvctrlpipe(serial->dev, 0),
-> > > > +				      XR_GET_XR21V141X,
-> > > > +				      USB_DIR_IN | USB_TYPE_VENDOR, 0,
-> > > > +				      reg | (block << 8), dmabuf,
-> > > > +				      port_priv->reg_width,
-> > > > +				      USB_CTRL_SET_TIMEOUT);
-> > > > +	}
-> > > > +
-> > > > +	if (ret == port_priv->reg_width) {
-> > > > +		memcpy(val, dmabuf, port_priv->reg_width);
-> > > 
-> > > But here you copy ->reg_width bytes in?  How do you know val can hold
-> > > that much?  It's only set to be 1, so you copy 1 byte to a 16bit value?
-> > > What part of the 16bits did you just copy those 8 bits to (hint, think
-> > > cpu endian issues...)
-> > > 
-> > > That feels really really odd and a bit broken.
-> > > 
-> > 
-> > Right. The reason is, the other series which can be supported by this driver
-> > have different register widths. For instance XR2280x. I haven't used them
-> > personally but seen this in initial driver. So I just used the max u16 type
-> > to make the reg_{set/get} routines work with those.
-> 
-> Drop the whole "different register width" stuff for now, as the driver
-> does not support it and it adds additional complexity that is hard to
-> review for no good reason.  If you want to add support for new devices
-> later, _then_ we can add support for that.
-> 
-> Don't over-engineer :)
-> 
+Dan
 
-Sure!
+Dan Murphy (16):
+  dt: bindings: Add multicolor class dt bindings documention
+  leds: multicolor: Introduce a multicolor class definition
+  dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+  leds: lp50xx: Add the LP50XX family of the RGB LED driver
+  dt: bindings: lp55xx: Be consistent in the document with LED acronym
+  dt: bindings: lp55xx: Update binding for Multicolor Framework
+  ARM: dts: n900: Add reg property to the LP5523 channel node
+  ARM: dts: imx6dl-yapp4: Add reg property to the lp5562 channel node
+  ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
+  leds: lp55xx: Convert LED class registration to devm_*
+  leds: lp55xx: Add multicolor framework support to lp55xx
+  leds: lp5523: Update the lp5523 code to add multicolor brightness
+    function
+  leds: lp5521: Add multicolor framework multicolor brightness support
+  leds: lp55xx: Fix checkpatch file permissions issues
+  leds: lp5523: Fix checkpatch issues in the code
+  dt: bindings: Update lp55xx binding to recommended LED naming
 
-> > But agree, I should've used le16_to_cpu() cast to avoid endian issues.
-> 
-> You have to, the code is broken as-is right now.
-> 
+ .../ABI/testing/sysfs-class-led-multicolor    |  34 +
+ .../bindings/leds/leds-class-multicolor.yaml  |  34 +
+ .../devicetree/bindings/leds/leds-lp50xx.yaml | 117 +++
+ .../devicetree/bindings/leds/leds-lp55xx.txt  | 163 +++-
+ Documentation/leds/index.rst                  |   1 +
+ Documentation/leds/leds-class-multicolor.rst  |  86 ++
+ MAINTAINERS                                   |   8 +
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi    |  14 +-
+ arch/arm/boot/dts/omap3-n900.dts              |  29 +-
+ arch/arm/boot/dts/ste-href.dtsi               |  22 +-
+ drivers/leds/Kconfig                          |  22 +
+ drivers/leds/Makefile                         |   2 +
+ drivers/leds/led-class-multicolor.c           | 210 +++++
+ drivers/leds/led-core.c                       |   1 +
+ drivers/leds/leds-lp50xx.c                    | 777 ++++++++++++++++++
+ drivers/leds/leds-lp5521.c                    |  43 +-
+ drivers/leds/leds-lp5523.c                    |  62 +-
+ drivers/leds/leds-lp5562.c                    |  22 +-
+ drivers/leds/leds-lp55xx-common.c             | 213 +++--
+ drivers/leds/leds-lp55xx-common.h             |  16 +-
+ drivers/leds/leds-lp8501.c                    |  23 +-
+ include/dt-bindings/leds/common.h             |   3 +-
+ include/linux/led-class-multicolor.h          | 121 +++
+ include/linux/platform_data/leds-lp55xx.h     |   8 +
+ 24 files changed, 1872 insertions(+), 159 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+ create mode 100644 Documentation/leds/leds-class-multicolor.rst
+ create mode 100644 drivers/leds/led-class-multicolor.c
+ create mode 100644 drivers/leds/leds-lp50xx.c
+ create mode 100644 include/linux/led-class-multicolor.h
 
-We don't need the conversion if u8 is used everywhere :)
+-- 
+2.25.1
 
-Thanks,
-Mani
-
-> > If you think this hack is not required now, I can just use u8 and worry about
-> > compatibility later.
-> 
-> Please do so.
-> 
-> thanks,
-> 
-> greg k-h
