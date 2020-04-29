@@ -7,55 +7,53 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06341C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3489EC83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D56D120BED
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 121102137B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:37:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uN9qzVtM"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sX6ISd1o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgD2Uht (ORCPT
+        id S1727781AbgD2UhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 16:37:49 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50562 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbgD2UhI (ORCPT
+        Wed, 29 Apr 2020 16:37:04 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54884 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727103AbgD2UhB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 16:37:08 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03TKb3Hx008732;
-        Wed, 29 Apr 2020 15:37:03 -0500
+        Wed, 29 Apr 2020 16:37:01 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03TKavRf118273;
+        Wed, 29 Apr 2020 15:36:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588192623;
-        bh=cpHOcxwnjho3INKT3sFhD9XlStpAaDQZ/SjiJomkzhM=;
+        s=ti-com-17Q1; t=1588192617;
+        bh=SNYl+9ptm0p0wgOyNWYXXQzH8k/abPl+aH/5HnDHf9U=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=uN9qzVtMoAEYiUL4U22Z+6p5ddy2vLCAVFtIurXb6SsIATUj32Wl3egIVbi/VY/1k
-         cnoUNnWq/JPNcEAneqO6FFP0EXJzSbNFjwUdsIn0nHp/v2KUFxj65WUcUAd8ipem2p
-         +TS1uGIDezrfVFo+ccPEIIDbv0VCiGSEQuApshg0=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03TKb3Aa003935
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 29 Apr 2020 15:37:03 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+        b=sX6ISd1o1LMltGz/f0s7y5KX9JzLZqP+M1K4/t//QFIh566WVoyHagJvgcqMbCB/1
+         GHCtDqimp7rKXKR9YdroyjqaO5vYB4OyMXCJDDR+9jalpnYM7zHqv1u/Dlm6xwmVcb
+         oCQa99WCZGpMkskuly9prKbHGE5TB8pTF0qvFkCM=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03TKav2Z114353;
+        Wed, 29 Apr 2020 15:36:57 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 29
- Apr 2020 15:37:03 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2020 15:36:57 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 29 Apr 2020 15:37:03 -0500
+ Frontend Transport; Wed, 29 Apr 2020 15:36:57 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03TKb2CD081965;
-        Wed, 29 Apr 2020 15:37:03 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03TKaupI081403;
+        Wed, 29 Apr 2020 15:36:56 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v23 09/16] ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
-Date:   Wed, 29 Apr 2020 15:28:09 -0500
-Message-ID: <20200429202816.26501-10-dmurphy@ti.com>
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v23 03/16] dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+Date:   Wed, 29 Apr 2020 15:28:03 -0500
+Message-ID: <20200429202816.26501-4-dmurphy@ti.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200429202816.26501-1-dmurphy@ti.com>
 References: <20200429202816.26501-1-dmurphy@ti.com>
@@ -68,72 +66,209 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the reg property to each channel node.  This update is
-to accomodate the multicolor framework.  In addition to the
-accomodation this allows the LEDs to be placed on any channel
-and allow designs to skip channels as opposed to requiring
-sequential order.
+Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024,
+LP5018, LP5012 and LP5009 RGB LED device driver.  The LP5036/30/24/18/12/9
+can control RGB LEDs individually or as part of a control bank group.
+These devices have the ability to adjust the mixing control for the RGB
+LEDs to obtain different colors independent of the overall brightness of
+the LED grouping.
+
+Datasheet:
+http://www.ti.com/lit/ds/symlink/lp5012.pdf
+http://www.ti.com/lit/ds/symlink/lp5024.pdf
+http://www.ti.com/lit/ds/symlink/lp5036.pdf
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
-CC: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
 ---
- arch/arm/boot/dts/ste-href.dtsi | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/leds/leds-lp50xx.yaml | 179 ++++++++++++++++++
+ 1 file changed, 179 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
 
-diff --git a/arch/arm/boot/dts/ste-href.dtsi b/arch/arm/boot/dts/ste-href.dtsi
-index 33e3b0b3c53d..ff47cbf6ed3b 100644
---- a/arch/arm/boot/dts/ste-href.dtsi
-+++ b/arch/arm/boot/dts/ste-href.dtsi
-@@ -58,16 +58,21 @@ lp5521@33 {
- 				reg = <0x33>;
- 				label = "lp5521_pri";
- 				clock-mode = /bits/ 8 <2>;
--				chan0 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				chan@0 {
-+					reg = <0>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 					linux,default-trigger = "heartbeat";
- 				};
--				chan1 {
-+				chan@1 {
-+					reg = <1>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--				chan2 {
-+				chan@2 {
-+					reg = <2>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
-@@ -77,15 +82,20 @@ lp5521@34 {
- 				reg = <0x34>;
- 				label = "lp5521_sec";
- 				clock-mode = /bits/ 8 <2>;
--				chan0 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				chan@0 {
-+					reg = <0>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--				chan1 {
-+				chan@1 {
-+					reg = <1>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--				chan2 {
-+				chan@2 {
-+					reg = <2>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
+diff --git a/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+new file mode 100644
+index 000000000000..37fadc201097
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+@@ -0,0 +1,179 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/leds/leds-lp50xx.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: LED driver for LP50XX RGB LED from Texas Instruments.
++
++maintainers:
++  - Dan Murphy <dmurphy@ti.com>
++
++description: |
++  The LP50XX is multi-channel, I2C RGB LED Drivers that can group RGB LEDs into
++  a LED group or control them individually.
++
++  The difference in these RGB LED drivers is the number of supported RGB
++  modules.
++
++  For more product information please see the link below:
++  http://www.ti.com/lit/ds/symlink/lp5012.pdf
++  http://www.ti.com/lit/ds/symlink/lp5024.pdf
++  http://www.ti.com/lit/ds/symlink/lp5036.pdf
++
++properties:
++  compatible:
++     oneOf:
++      - const: ti,lp5009
++      - const: ti,lp5012
++      - const: ti,lp5018
++      - const: ti,lp5024
++      - const: ti,lp5030
++      - const: ti,lp5036
++
++  reg:
++    maxItems: 1
++    description:
++      I2C slave address
++      lp5009/12 - 0x14, 0x15, 0x16, 0x17
++      lp5018/24 - 0x28, 0x29, 0x2a, 0x2b
++      lp5030/36 - 0x30, 0x31, 0x32, 0x33
++
++  enable-gpios:
++    description: GPIO pin to enable/disable the device.
++
++  vled-supply:
++    description: LED supply.
++
++  child-node:
++    type: object
++    properties:
++      reg:
++        description: This is the LED module number.
++
++      color:
++        description: Must be LED_COLOR_ID_MULTI
++
++      function:
++        description: see Documentation/devicetree/bindings/leds/common.txt
++
++      ti,led-bank:
++        description:
++          This property denotes the LED module numbers that will be controlled as
++          a single RGB cluster.  Each LED module number will be controlled by a
++          single LED class instance.
++          There can only be one instance of the ti,led-bank
++          property for each device node.  This is a required node is the LED
++          modules are to be backed.
++        $ref: /schemas/types.yaml#definitions/uint32-array
++
++    required:
++      - reg
++      - color
++      - function
++
++  grandchild-node:
++    type: object
++    properties:
++      reg:
++        description:
++          A single entry denoting the LED output that controls the monochrome LED.
++
++      color:
++        description:
++          see Documentation/devicetree/bindings/leds/common.txt
++
++      led-sources:
++        description:
++          see Documentation/devicetree/bindings/leds/common.txt
++          The LED outputs associated with the LED modules are defined in Table 1
++          of the corresponding data sheets.
++          LP5009 - 3 Total RGB cluster LED outputs 0-2
++          LP5012 - 4 Total RGB cluster LED outputs 0-3
++          LP5018 - 6 Total RGB cluster LED outputs 0-5
++          LP5024 - 8 Total RGB cluster LED outputs 0-7
++          LP5030 - 10 Total RGB cluster LED outputs 0-9
++          LP5036 - 12 Total RGB cluster LED outputs 0-11
++
++      label:
++        description: |
++          Optional node - see Documentation/devicetree/bindings/leds/common.txt
++
++      linux,default-trigger:
++        description: |
++          Optional node - see Documentation/devicetree/bindings/leds/common.txt
++
++    required:
++      - reg
++      - color
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/leds/common.h>
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        led-controller@14 {
++          #address-cells = <1>;
++          #size-cells = <0>;
++          compatible = "ti,lp5009";
++          reg = <0x14>;
++          enable-gpios = <&gpio1 16>;
++          multi-led@1 {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            reg = <1>;
++            color = <LED_COLOR_ID_MULTI>;
++            function = LED_FUNCTION_CHARGING;
++
++            led@0 {
++              reg = <0>;
++              color = <LED_COLOR_ID_RED>;
++            };
++
++            led@1 {
++              reg = <1>;
++              color = <LED_COLOR_ID_GREEN>;
++            };
++
++            led@2 {
++              reg = <2>;
++              color = <LED_COLOR_ID_BLUE>;
++            };
++          };
++          multi-led@2 {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            reg = <2>;
++            color = <LED_COLOR_ID_MULTI>;
++            function = LED_FUNCTION_STANDBY;
++            ti,led-bank = <2 3 5>;
++
++            led@6 {
++              reg = <0x6>;
++              color = <LED_COLOR_ID_RED>;
++              led-sources = <6 9 15>;
++            };
++
++            led@7 {
++              reg = <0x7>;
++              color = <LED_COLOR_ID_GREEN>;
++              led-sources = <7 10 16>;
++            };
++
++            led@8 {
++              reg = <0x8>;
++              color = <LED_COLOR_ID_BLUE>;
++              led-sources = <8 11 17>;
++            };
++         };
++       };
++    };
++
++...
 -- 
 2.25.1
 
