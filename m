@@ -2,206 +2,132 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 906FAC83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF50C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BCE92083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A67D421775
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fIb8uPmC"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Fk/JXW1A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbgD2LcT (ORCPT
+        id S1726847AbgD2Lcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 07:32:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33454 "EHLO
+        Wed, 29 Apr 2020 07:32:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726556AbgD2LcS (ORCPT
+        by vger.kernel.org with ESMTP id S1726516AbgD2Lce (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 07:32:18 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30EA3C03C1AD;
-        Wed, 29 Apr 2020 04:32:18 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id k12so1489280qtm.4;
-        Wed, 29 Apr 2020 04:32:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TN8Zd1ovr5Y9BIds5efwwQrWI/OoatX8UM2U2pugr28=;
-        b=fIb8uPmC7LFx407+LbeeHnYbvSHQtjF9vnz94PIwVwVZDJNPzaG/dBejgW3ehEd8w7
-         uUtyVU/3pRfmPXZlCrHRj4rt1Kv+WbluYZXxCJ3kRBUC8I3REHwq6RvSQmyYXGIOGygH
-         AJUp458zCPtLy0h2Zs8xuHGdlcOtC/GcvV83qTEwtf4p26CzLAMlKdT/T/VHFI8xTM+m
-         K29DmIuZvweUUJIRm+u6bJdcDklh9m+gPIUJnPhXETEcl/B6zNLx/0i0WCl4P/ci2yG6
-         j1vIHmtawEOOvFxG0NkwQsalj3bITQKosMRU5kcFFJ7OlEelVGO0Q3b2RThaDy8mcLEV
-         Q3sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TN8Zd1ovr5Y9BIds5efwwQrWI/OoatX8UM2U2pugr28=;
-        b=I/Hsa0aUSXhpzk0fxyTmLto64UPovBlQp9C93TlN3mg58ksKOc+2kZJY0zHDDwo9R9
-         U/4ylf2FZV9NqFkERMTBIgpcyr0ybuYjK6CdVDtLW2hluYwPhJnaPMYasWDF5mDc+6Kp
-         5jW4ki3NEfhi/lUZLJy+Usuqon+hYFyQ+iHqjRqJP/i/IWDDCDpzGMz1CaTpOKwHPSsL
-         4Txnmp1ckI5Mm/CH+IWqKr4g67NL39Oa4pE7fg4x5eNwNTIqOGX8oZ+1XJjqAW25WsSt
-         RqlEz30hTuWx7WpkyJ8czkXi9o/cBXSYlfmuYGWBwDZ3+51MOroS38pv+h1j/hd4l+LK
-         1/cw==
-X-Gm-Message-State: AGi0PubN+FsGEID8udwtM4eEXd1Jtae3lN9zzguA6jLKK0wyji7YVgTq
-        M+j+qTwGGUI3as94VhwnWXE=
-X-Google-Smtp-Source: APiQypKCa4PTP6G9UvwU/CMzNX267N/00FQqAzAdRG+V6IYPHso19QLnZmCbPHdXiRnrp9SI2urHyA==
-X-Received: by 2002:ac8:37e6:: with SMTP id e35mr33836338qtc.19.1588159937031;
-        Wed, 29 Apr 2020 04:32:17 -0700 (PDT)
-Received: from errol.ini.cmu.edu (pool-71-112-157-130.pitbpa.fios.verizon.net. [71.112.157.130])
-        by smtp.gmail.com with ESMTPSA id z26sm15734754qkg.39.2020.04.29.04.32.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 04:32:16 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 07:32:09 -0400
-From:   "Gabriel L. Somlo" <gsomlo@gmail.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Mateusz Holenko <mholenko@antmicro.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@antmicro.com>,
-        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/5] drivers/soc/litex: add LiteX SoC Controller driver
-Message-ID: <20200429113209.GB23743@errol.ini.cmu.edu>
-References: <20200425133939.3508912-0-mholenko@antmicro.com>
- <20200425133939.3508912-3-mholenko@antmicro.com>
- <CAPk366REVxz7qRfJ0dJOVPRey6+01q1JRvqANDNffYV8Lvh73g@mail.gmail.com>
- <55e1e941457cd596c4273e9c55dc2cfc9027c5ba.camel@kernel.crashing.org>
+        Wed, 29 Apr 2020 07:32:34 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37C6CC03C1AD;
+        Wed, 29 Apr 2020 04:32:34 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49BxFX3QbLz9sRY;
+        Wed, 29 Apr 2020 21:32:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1588159952;
+        bh=9WJyl7TzlpUJJ77xgJTGXm5d4bIn+t+37IVcvRQx2Wc=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=Fk/JXW1AknDtIzQlIYpqL0cT4Z11ewUnpCXFx8Pv57jJ0+4Pned5T8leSD8qk6Wgm
+         zpkwT63cjgLakihdmIExgODIgSxT44zz9hCPGUQExcl254PaZ60mIdl4Gn4BE6Ahyh
+         p/gEIaEoujkyFHSsdVUK+e5mC2lR1AlukdDgS5+SN6qr7QSqUJyaD3YHG0KSeBKD+Y
+         r9S0JhL26dlFTG1KzF3Na8JMo8lrDPTQ93tRpaQwilMzYnsgLWDhtpz9oFDdLJwIwk
+         3HG9ZWeZfwy4Ld7gDXX94d0MZpnal5Z0fd78D4siSTUgihZM6ztryJlHOCVwiHEUUY
+         dkgn92FB3zNCw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Kajol Jain <kjain@linux.ibm.com>, acme@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sukadev@linux.vnet.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com,
+        ravi.bangoria@linux.ibm.com, peterz@infradead.org,
+        yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org,
+        kan.liang@linux.intel.com, jmario@redhat.com,
+        alexander.shishkin@linux.intel.com, mingo@kernel.org,
+        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
+        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
+        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
+        tglx@linutronix.de, kjain@linux.ibm.com
+Subject: Re: [PATCH v7 3/5] powerpc/hv-24x7: Add sysfs files inside hv-24x7 device to show processor details
+In-Reply-To: <20200327063642.26175-4-kjain@linux.ibm.com>
+References: <20200327063642.26175-1-kjain@linux.ibm.com> <20200327063642.26175-4-kjain@linux.ibm.com>
+Date:   Wed, 29 Apr 2020 21:32:48 +1000
+Message-ID: <87d07qfrxb.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <55e1e941457cd596c4273e9c55dc2cfc9027c5ba.camel@kernel.crashing.org>
-X-Clacks-Overhead: GNU Terry Pratchett
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ben,
+Kajol Jain <kjain@linux.ibm.com> writes:
+> To expose the system dependent parameter like total number of
+> sockets and numbers of chips per socket, patch adds two sysfs files.
+> "sockets" and "chips" are added to /sys/devices/hv_24x7/interface/
+> of the "hv_24x7" pmu.
+>
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> ---
+>  arch/powerpc/perf/hv-24x7.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
 
-On Wed, Apr 29, 2020 at 01:21:11PM +1000, Benjamin Herrenschmidt wrote:
-> On Mon, 2020-04-27 at 11:13 +0200, Mateusz Holenko wrote:
-> > As Gabriel Somlo <gsomlo@gmail.com> suggested to me, I could still use
-> > readl/writel/ioread/iowrite() standard functions providing memory
-> > barriers *and* have values in CPU native endianness by using the
-> > following constructs:
-> > 
-> > `le32_to_cpu(readl(addr))`
-> > 
-> > and
-> > 
-> > `writel(cpu_to_le32(value), addr)`
-> > 
-> > as le32_to_cpu/cpu_to_le32():
-> > - does nothing on LE CPUs and
-> > - reorders bytes on BE CPUs which in turn reverts swapping made by
-> > readl() resulting in returning the original value.
-> 
-> It's a bit sad... I don't understand why you need this. The HW has a
-> fied endian has you have mentioned earlier (and that is a good design).
-> 
-> The fact that you are trying to shove things into a "smaller pipe" than
-> the actual register shouldn't affect at what address the MSB and LSB
-> reside. And readl/writel (or ioread32/iowrite32) will always be LE as
-> well, so will match the HW layout. Thus I don't see why you need to
-> play swapping games here.
-> 
-> This however would be avoided completely if the HW was a tiny bit
-> smarter and would do the multi-beat access for you which shouldn't be
-> terribly hard to implement.
-> 
-> That said, it would be even clearer if you just open coded the 2 or 3
-> useful cases: 32/8, 32/16 and 32/32. The loop with calculated shifts
-> (and no masks) makes the code hard to understand.
+This should also add documentation under Documentation/ABI.
 
-A "compound" LiteX MMIO register of 32 bits total, starting at address
-0x80000004, containing value 0x12345678, is spread across 4 8-bit
-subregisters aligned at ulong in the MMIO space like this on LE:
+cheers
 
-0x82000000  00 00 00 00 12 00 00 00 34 00 00 00 56 00 00 00  ........4...V...
-                        ^^^^^^^^^^^ ^^^^^^^^^^^ ^^^^^^^^^^^
-0x82000010  78 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  x...............
-            ^^^^^^^^^^^
-
-and like this on BE:
-
-0x82000000  00 00 00 00 00 00 00 12 00 00 00 34 00 00 00 56  ...........4...V
-                        ^^^^^^^^^^^ ^^^^^^^^^^^ ^^^^^^^^^^^
-0x82000010  00 00 00 78 00 00 00 00 00 00 00 00 00 00 00 00  ...x............
-            ^^^^^^^^^^^
-
-LiteX can be optionally built to use larger than 8-bit subregisters,
-here's an example with 16-bit subregisters (also aligned at ulong),
-for the same "compound" register:
-
-on LE:
-0x82000000  00 00 00 00 34 12 00 00 78 56 00 00 00 00 00 00  ....4...xV......
-                        ^^^^^^^^^^^ ^^^^^^^^^^^
-
-and on BE:
-0x82000000  00 00 00 00 00 00 12 34 00 00 56 78 00 00 00 00  .......4..Vx....
-                        ^^^^^^^^^^^ ^^^^^^^^^^^
-
-Essentially (back to the more common 8-bit subregister size), a compound
-register foo = 0x12345678 is stored as
-
-	ulong foo[4] = {0x12, 0x34, 0x56, 0x78};
-
-in the CPU's native endianness, aligned at the CPU's native word width
-(hence "ulong").
-
-With 16-bit subregisters that would then be:
-
-	ulong foo[2] = {0x1234, 0x5678};
-
-Trouble with readl() and writel() is that they convert everything to LE
-internally, which on BE would get us something different *within* each
-subregister (i.e., 0x12000000 instead of 0x12, or 0x34120000 instead of
-0x1234).
-
-The cleanest way (IMHO) to accomplish an endian-agnostic readl() (that
-preserves both barriers AND native endianness) is to undo the internal
-__le32_to_cpu() using:
-
-	cpu_to_le32(readl(addr))
-
-This keeps us away from using any '__' internals directly (e.g.,
-__raw_readl()), or open-coding our own `litex_readl()`, e.g.:
-
-	static inline u32 litex_readl(const volatile void __iomem *addr)
-	{
-		u32 val;
-		__io_br();
-		val = __raw_readl(addr)); /* No le32 byteswap here! */
-		__io_ar(val);
-		return val;
-	}
-
-... which is something that was strongly advised against in earlier
-revisions of this series.
-
-Cheers,
---Gabriel
+> diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
+> index 9ae00f29bd21..a31bd5b88f7a 100644
+> --- a/arch/powerpc/perf/hv-24x7.c
+> +++ b/arch/powerpc/perf/hv-24x7.c
+> @@ -454,6 +454,20 @@ static ssize_t device_show_string(struct device *dev,
+>  	return sprintf(buf, "%s\n", (char *)d->var);
+>  }
+>  
+> +#ifdef CONFIG_PPC_RTAS
+> +static ssize_t sockets_show(struct device *dev,
+> +			    struct device_attribute *attr, char *buf)
+> +{
+> +	return sprintf(buf, "%d\n", physsockets);
+> +}
+> +
+> +static ssize_t chips_show(struct device *dev, struct device_attribute *attr,
+> +			  char *buf)
+> +{
+> +	return sprintf(buf, "%d\n", physchips);
+> +}
+> +#endif
+> +
+>  static struct attribute *device_str_attr_create_(char *name, char *str)
+>  {
+>  	struct dev_ext_attribute *attr = kzalloc(sizeof(*attr), GFP_KERNEL);
+> @@ -1100,6 +1114,10 @@ PAGE_0_ATTR(catalog_len, "%lld\n",
+>  		(unsigned long long)be32_to_cpu(page_0->length) * 4096);
+>  static BIN_ATTR_RO(catalog, 0/* real length varies */);
+>  static DEVICE_ATTR_RO(domains);
+> +#ifdef CONFIG_PPC_RTAS
+> +static DEVICE_ATTR_RO(sockets);
+> +static DEVICE_ATTR_RO(chips);
+> +#endif
+>  
+>  static struct bin_attribute *if_bin_attrs[] = {
+>  	&bin_attr_catalog,
+> @@ -1110,6 +1128,10 @@ static struct attribute *if_attrs[] = {
+>  	&dev_attr_catalog_len.attr,
+>  	&dev_attr_catalog_version.attr,
+>  	&dev_attr_domains.attr,
+> +#ifdef CONFIG_PPC_RTAS
+> +	&dev_attr_sockets.attr,
+> +	&dev_attr_chips.attr,
+> +#endif
+>  	NULL,
+>  };
+>  
+> -- 
+> 2.18.1
