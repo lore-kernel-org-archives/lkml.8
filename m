@@ -4,23 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC01CC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B74C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B39F720B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB86A20B80
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:38:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbgD2NiW (ORCPT
+        id S1728077AbgD2Nhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:38:22 -0400
+        Wed, 29 Apr 2020 09:37:54 -0400
 Received: from 8bytes.org ([81.169.241.247]:39788 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728059AbgD2Nhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:37:55 -0400
+        id S1727944AbgD2Nhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 09:37:47 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id A52A0F14; Wed, 29 Apr 2020 15:37:41 +0200 (CEST)
+        id BBE82BFC; Wed, 29 Apr 2020 15:37:37 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -46,9 +47,9 @@ Cc:     Daniel Drake <drake@endlessm.com>, jonathan.derrick@intel.com,
         linux-tegra@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v3 33/34] iommu: Move more initialization to __iommu_probe_device()
-Date:   Wed, 29 Apr 2020 15:37:11 +0200
-Message-Id: <20200429133712.31431-34-joro@8bytes.org>
+Subject: [PATCH v3 13/34] iommu: Export bus_iommu_probe() and make is safe for re-probing
+Date:   Wed, 29 Apr 2020 15:36:51 +0200
+Message-Id: <20200429133712.31431-14-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200429133712.31431-1-joro@8bytes.org>
 References: <20200429133712.31431-1-joro@8bytes.org>
@@ -59,109 +60,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Move the calls to dev_iommu_get() and try_module_get() into
-__iommu_probe_device(), so that the callers don't have to do it on
-their own.
+Add a check to the bus_iommu_probe() call-path to make sure it ignores
+devices which have already been successfully probed. Then export the
+bus_iommu_probe() function so it can be used by IOMMU drivers.
 
 Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/iommu.c | 47 +++++++++++++++++--------------------------
- 1 file changed, 18 insertions(+), 29 deletions(-)
+ drivers/iommu/iommu.c | 10 +++++++++-
+ include/linux/iommu.h |  1 +
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 7f99e5ae432c..48a95f7d7999 100644
+index 834a45da0ed0..397fd4fd0c32 100644
 --- a/drivers/iommu/iommu.c
 +++ b/drivers/iommu/iommu.c
-@@ -194,9 +194,19 @@ static int __iommu_probe_device(struct device *dev, struct list_head *group_list
- 	struct iommu_group *group;
+@@ -1610,11 +1610,19 @@ static int probe_iommu_group(struct device *dev, void *data)
+ {
+ 	const struct iommu_ops *ops = dev->bus->iommu_ops;
+ 	struct list_head *group_list = data;
++	struct iommu_group *group;
  	int ret;
  
-+	if (!dev_iommu_get(dev))
-+		return -ENOMEM;
-+
-+	if (!try_module_get(ops->owner)) {
-+		ret = -EINVAL;
-+		goto err_free;
+ 	if (!dev_iommu_get(dev))
+ 		return -ENOMEM;
+ 
++	/* Device is probed already if in a group */
++	group = iommu_group_get(dev);
++	if (group) {
++		iommu_group_put(group);
++		return 0;
 +	}
 +
- 	iommu_dev = ops->probe_device(dev);
--	if (IS_ERR(iommu_dev))
--		return PTR_ERR(iommu_dev);
-+	if (IS_ERR(iommu_dev)) {
-+		ret = PTR_ERR(iommu_dev);
-+		goto out_module_put;
-+	}
- 
- 	dev->iommu->iommu_dev = iommu_dev;
- 
-@@ -217,6 +227,12 @@ static int __iommu_probe_device(struct device *dev, struct list_head *group_list
- out_release:
- 	ops->release_device(dev);
- 
-+out_module_put:
-+	module_put(ops->owner);
-+
-+err_free:
-+	dev_iommu_free(dev);
-+
- 	return ret;
+ 	if (!try_module_get(ops->owner)) {
+ 		ret = -EINVAL;
+ 		goto err_free_dev_iommu;
+@@ -1783,7 +1791,7 @@ static int iommu_group_create_direct_mappings(struct iommu_group *group)
+ 					  iommu_do_create_direct_mappings);
  }
  
-@@ -226,14 +242,6 @@ int iommu_probe_device(struct device *dev)
- 	struct iommu_group *group;
- 	int ret;
- 
--	if (!dev_iommu_get(dev))
--		return -ENOMEM;
--
--	if (!try_module_get(ops->owner)) {
--		ret = -EINVAL;
--		goto err_out;
--	}
--
- 	ret = __iommu_probe_device(dev, NULL);
- 	if (ret)
- 		goto err_out;
-@@ -1532,14 +1540,10 @@ struct iommu_domain *iommu_group_default_domain(struct iommu_group *group)
- 
- static int probe_iommu_group(struct device *dev, void *data)
+-static int bus_iommu_probe(struct bus_type *bus)
++int bus_iommu_probe(struct bus_type *bus)
  {
--	const struct iommu_ops *ops = dev->bus->iommu_ops;
- 	struct list_head *group_list = data;
- 	struct iommu_group *group;
+ 	const struct iommu_ops *ops = bus->iommu_ops;
  	int ret;
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 30170d191e5e..fea1622408ad 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -445,6 +445,7 @@ static inline void iommu_iotlb_gather_init(struct iommu_iotlb_gather *gather)
+ #define IOMMU_GROUP_NOTIFY_UNBOUND_DRIVER	6 /* Post Driver unbind */
  
--	if (!dev_iommu_get(dev))
--		return -ENOMEM;
--
- 	/* Device is probed already if in a group */
- 	group = iommu_group_get(dev);
- 	if (group) {
-@@ -1547,22 +1551,7 @@ static int probe_iommu_group(struct device *dev, void *data)
- 		return 0;
- 	}
- 
--	if (!try_module_get(ops->owner)) {
--		ret = -EINVAL;
--		goto err_free_dev_iommu;
--	}
--
- 	ret = __iommu_probe_device(dev, group_list);
--	if (ret)
--		goto err_module_put;
--
--	return 0;
--
--err_module_put:
--	module_put(ops->owner);
--err_free_dev_iommu:
--	dev_iommu_free(dev);
--
- 	if (ret == -ENODEV)
- 		ret = 0;
- 
+ extern int bus_set_iommu(struct bus_type *bus, const struct iommu_ops *ops);
++extern int bus_iommu_probe(struct bus_type *bus);
+ extern bool iommu_present(struct bus_type *bus);
+ extern bool iommu_capable(struct bus_type *bus, enum iommu_cap cap);
+ extern struct iommu_domain *iommu_domain_alloc(struct bus_type *bus);
 -- 
 2.17.1
 
