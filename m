@@ -2,176 +2,128 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF56C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8893C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88100208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C47A02137B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:26:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VXHnq+tF"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mrEkFjIN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgD2MXx (ORCPT
+        id S1726862AbgD2M00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:23:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48771 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726701AbgD2MXw (ORCPT
+        Wed, 29 Apr 2020 08:26:26 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:35168 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbgD2M0Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:23:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588163030;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=P8pgV6uMHzNDOfpWIiJdoKMsBBSJGFZq++Qsl0KZjhI=;
-        b=VXHnq+tFqe+w/qesSKeLfV/regHTBCMF9k8lcthWPDi4TkZm59CV/Q9zzyYN4a/gKI4i9e
-        G3tmdbRyXgfP3ePtACRykRgezZNYQdQOUczYEb5UQQm8F63xJ9LPOTr9/IJ9IYXXeQggvp
-        PhoWGhIgOahXuMhPQCKtBpnCyl1G01c=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-70-L9CLOikzP3SLcvn9LhUxOw-1; Wed, 29 Apr 2020 08:23:47 -0400
-X-MC-Unique: L9CLOikzP3SLcvn9LhUxOw-1
-Received: by mail-wm1-f71.google.com with SMTP id l21so1127127wmh.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:23:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=P8pgV6uMHzNDOfpWIiJdoKMsBBSJGFZq++Qsl0KZjhI=;
-        b=r9KxYy6L6BHNZcs18P7TdPrMUkWqV9Du+PkOLowE5hEmEqZtbXZjJDRcEftsd+hIh0
-         YUkNZVCvu3qNUhaJcg2Bt6F/35hFlGCnY2Cu7eIP/GuoZI9GjpNQCnsWGw0hQpAxALTa
-         9VdasYJ2nBlxSZm/IliwHAJ/jkcGw4x14z4dPKgsj4Cc37WrfYssE3iyh0YxLQHDl2ba
-         5M2FI+KghoDZzs6QEEZJig12lxsEk6kCtDCv7hCI8Ato1NMmhAVJzVogH7OELBsnV04k
-         IBFLCQlVXjP2h7yRsqQiTsABvKoK7k9FlE81uNX5H2Y51CwLrCV8ByubNnYTCOy6rNwL
-         YTrw==
-X-Gm-Message-State: AGi0PuYTlJUXHaeAQVqUZwKw4XUgQ8fIuKsUJO6lp+96tK2/aBWdaOMZ
-        N12fdCg3s5gQHKbsOpezdE7LOwU4iVe52xx3JX9zh2yS8sn8bgFoZY0sPkeRdNLZjyKYqOMw5cm
-        RTc3k2d3em7WOFP70UrjD0ZJ6
-X-Received: by 2002:a1c:8106:: with SMTP id c6mr2999761wmd.88.1588163026201;
-        Wed, 29 Apr 2020 05:23:46 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLEQN/fKbOj2PpKvd2yk8qFu2uTYg65caL+qOuUZqYZNmiqKNZUNV+CX/Wun7VWjygdbXHKLA==
-X-Received: by 2002:a1c:8106:: with SMTP id c6mr2999734wmd.88.1588163025929;
-        Wed, 29 Apr 2020 05:23:45 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id n6sm32160645wrs.81.2020.04.29.05.23.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 05:23:45 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tianjia.zhang@linux.alibaba.com, pbonzini@redhat.com,
-        tsbogend@alpha.franken.de, paulus@ozlabs.org, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        maz@kernel.org, james.morse@arm.com, julien.thierry.kdev@gmail.com,
-        suzuki.poulose@arm.com, christoffer.dall@arm.com,
-        peterx@redhat.com, thuth@redhat.com, chenhuacai@gmail.com
-Subject: Re: [PATCH v4 3/7] KVM: PPC: Remove redundant kvm_run from vcpu_arch
-In-Reply-To: <20200427043514.16144-4-tianjia.zhang@linux.alibaba.com>
-References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com> <20200427043514.16144-4-tianjia.zhang@linux.alibaba.com>
-Date:   Wed, 29 Apr 2020 14:23:42 +0200
-Message-ID: <87lfmeh44x.fsf@vitty.brq.redhat.com>
+        Wed, 29 Apr 2020 08:26:25 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03TCJg04100013;
+        Wed, 29 Apr 2020 12:25:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=G4T1e0Zu5w17lAkgEzo9mQq+TIDEuIlWIBxxTVixN+0=;
+ b=mrEkFjIN2dsubqvlOyU9teA2iauOOA1kWYCl/UD12g5OblLFdVciyoDXOkGZN5ZaWQnV
+ KC80T8wDmrH9jQNU3Lw9Il7BYApSGpdYYqNkO1llGWgAEszEtwNhky4hEZmBT7vKARi+
+ uxpAwvmjwCJFTpoEnv+tcQuhIPCdlDsKxZ1adAs7ha1sgzn4Cn39OKxn5qIXOrpWoIDx
+ HnwSU5WY4NrDVsGYep9Qnn5qFUWyXkYCYC+TgEw9zIB6nxRsJf5NbXqrraz6E/kK9LIO
+ iYiQYyvpW+89DXkkH+6ipAbYG3pixgOMhSX97DaUbgQfAX3IcVlf0Ic2uutg8EI0L1XH Zg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 30p01nuwqc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Apr 2020 12:25:55 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03TCGj3w058297;
+        Wed, 29 Apr 2020 12:25:55 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 30mxpjw1q6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Apr 2020 12:25:54 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03TCPlRN013991;
+        Wed, 29 Apr 2020 12:25:47 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 29 Apr 2020 05:25:47 -0700
+Date:   Wed, 29 Apr 2020 15:25:38 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     b.zolnierkie@samsung.com, gregkh@linuxfoundation.org,
+        mpe@ellerman.id.au, zhenzhong.duan@gmail.com, arnd@arndb.de,
+        tglx@linutronix.de, eric.y.miao@gmail.com, daniel@caiaq.de,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] video: fbdev: pxa3xx_gcu: Fix some resource leak in an
+ error handling path in 'pxa3xx_gcu_probe()'
+Message-ID: <20200429122538.GO2014@kadam>
+References: <20200429043438.96212-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429043438.96212-1-christophe.jaillet@wanadoo.fr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 bulkscore=0 adultscore=0 phishscore=0 suspectscore=2
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004290105
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 clxscore=1011
+ phishscore=0 mlxlogscore=999 adultscore=0 priorityscore=1501 mlxscore=0
+ suspectscore=2 malwarescore=0 lowpriorityscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004290105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tianjia Zhang <tianjia.zhang@linux.alibaba.com> writes:
-
-> The 'kvm_run' field already exists in the 'vcpu' structure, which
-> is the same structure as the 'kvm_run' in the 'vcpu_arch' and
-> should be deleted.
->
-> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+On Wed, Apr 29, 2020 at 06:34:38AM +0200, Christophe JAILLET wrote:
+> If an error occurs in the loop where we call 'pxa3xx_gcu_add_buffer()',
+> any resource already allocated should be freed.
+> 
+> In order to fix it, add a call to 'pxa3xx_gcu_free_buffers()' in the error
+> handling path, as already done in the remove function.
+> 
+> Fixes: 364dbdf3b6c3 ("video: add driver for PXA3xx 2D graphics accelerator")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 > ---
->  arch/powerpc/include/asm/kvm_host.h | 1 -
->  arch/powerpc/kvm/book3s_hv.c        | 6 ++----
->  arch/powerpc/kvm/book3s_hv_nested.c | 3 +--
->  3 files changed, 3 insertions(+), 7 deletions(-)
->
-> diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
-> index 1dc63101ffe1..2745ff8faa01 100644
-> --- a/arch/powerpc/include/asm/kvm_host.h
-> +++ b/arch/powerpc/include/asm/kvm_host.h
-> @@ -795,7 +795,6 @@ struct kvm_vcpu_arch {
->  	struct mmio_hpte_cache_entry *pgfault_cache;
+>  drivers/video/fbdev/pxa3xx-gcu.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/video/fbdev/pxa3xx-gcu.c b/drivers/video/fbdev/pxa3xx-gcu.c
+> index 4279e13a3b58..68d9c7a681d4 100644
+> --- a/drivers/video/fbdev/pxa3xx-gcu.c
+> +++ b/drivers/video/fbdev/pxa3xx-gcu.c
+> @@ -675,6 +675,7 @@ static int pxa3xx_gcu_probe(struct platform_device *pdev)
 >  
->  	struct task_struct *run_task;
-> -	struct kvm_run *kvm_run;
->  
->  	spinlock_t vpa_update_lock;
->  	struct kvmppc_vpa vpa;
-> diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-> index 93493f0cbfe8..413ea2dcb10c 100644
-> --- a/arch/powerpc/kvm/book3s_hv.c
-> +++ b/arch/powerpc/kvm/book3s_hv.c
-> @@ -2934,7 +2934,7 @@ static void post_guest_process(struct kvmppc_vcore *vc, bool is_master)
->  
->  		ret = RESUME_GUEST;
->  		if (vcpu->arch.trap)
-> -			ret = kvmppc_handle_exit_hv(vcpu->arch.kvm_run, vcpu,
-> +			ret = kvmppc_handle_exit_hv(vcpu->run, vcpu,
->  						    vcpu->arch.run_task);
->  
->  		vcpu->arch.ret = ret;
-> @@ -3920,7 +3920,6 @@ static int kvmppc_run_vcpu(struct kvm_run *kvm_run, struct kvm_vcpu *vcpu)
->  	spin_lock(&vc->lock);
->  	vcpu->arch.ceded = 0;
->  	vcpu->arch.run_task = current;
-> -	vcpu->arch.kvm_run = kvm_run;
->  	vcpu->arch.stolen_logged = vcore_stolen_time(vc, mftb());
->  	vcpu->arch.state = KVMPPC_VCPU_RUNNABLE;
->  	vcpu->arch.busy_preempt = TB_NIL;
-> @@ -3973,7 +3972,7 @@ static int kvmppc_run_vcpu(struct kvm_run *kvm_run, struct kvm_vcpu *vcpu)
->  			if (signal_pending(v->arch.run_task)) {
->  				kvmppc_remove_runnable(vc, v);
->  				v->stat.signal_exits++;
-> -				v->arch.kvm_run->exit_reason = KVM_EXIT_INTR;
-> +				v->run->exit_reason = KVM_EXIT_INTR;
->  				v->arch.ret = -EINTR;
->  				wake_up(&v->arch.cpu_run);
->  			}
-> @@ -4049,7 +4048,6 @@ int kvmhv_run_single_vcpu(struct kvm_run *kvm_run,
->  	vc = vcpu->arch.vcore;
->  	vcpu->arch.ceded = 0;
->  	vcpu->arch.run_task = current;
-> -	vcpu->arch.kvm_run = kvm_run;
->  	vcpu->arch.stolen_logged = vcore_stolen_time(vc, mftb());
->  	vcpu->arch.state = KVMPPC_VCPU_RUNNABLE;
->  	vcpu->arch.busy_preempt = TB_NIL;
-> diff --git a/arch/powerpc/kvm/book3s_hv_nested.c b/arch/powerpc/kvm/book3s_hv_nested.c
-> index dc97e5be76f6..5a3987f3ebf3 100644
-> --- a/arch/powerpc/kvm/book3s_hv_nested.c
-> +++ b/arch/powerpc/kvm/book3s_hv_nested.c
-> @@ -290,8 +290,7 @@ long kvmhv_enter_nested_guest(struct kvm_vcpu *vcpu)
->  			r = RESUME_HOST;
->  			break;
->  		}
-> -		r = kvmhv_run_single_vcpu(vcpu->arch.kvm_run, vcpu, hdec_exp,
-> -					  lpcr);
-> +		r = kvmhv_run_single_vcpu(vcpu->run, vcpu, hdec_exp, lpcr);
->  	} while (is_kvmppc_resume_guest(r));
->  
->  	/* save L2 state for return */
+>  err_disable_clk:
+>  	clk_disable_unprepare(priv->clk);
+> +	pxa3xx_gcu_free_buffers(dev, priv);
 
-FWIW,
+The error handling in this function makes no sense and is buggy.  It
+should be that it unwinds in the reverse order from the allocation.  The
+goto should be "goto free_most_recently_allocated_resource;".  Since the
+unwind is done in the wrong order it causes a couple bugs.
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+These buffers are the last thing which we allocated so they should be
+the first thing which we free.  In this case, calling
+pxa3xx_gcu_free_buffers() before the buffers are allocated is confusing
+but harmless.  The clk_disable_unprepare() is done on some paths where
+the clock was not enabled and that will trigger a WARN() so that's a
+bug.  Syzcaller will complain and if you have reboot on WARN then it's
+annoying.
 
--- 
-Vitaly
+The second bug is that we don't deregister the misc device or release
+the DMA memory on failure when we allocate the buffers in the loop.
+
+regards,
+dan carpenter
 
