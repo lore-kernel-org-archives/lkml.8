@@ -2,122 +2,130 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67022C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105D8C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44EED20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D86E020B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:37:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mvj52mA/"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xdi9NQ44"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgD2Uga (ORCPT
+        id S1727100AbgD2UhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 16:36:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34410 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbgD2Ug3 (ORCPT
+        Wed, 29 Apr 2020 16:37:00 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54878 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbgD2Ug7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 16:36:29 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB873C03C1AE;
-        Wed, 29 Apr 2020 13:36:29 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id n143so3491511qkn.8;
-        Wed, 29 Apr 2020 13:36:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wa1e1Y92lYvZrPhLeN+VLU3x02Trx+J7qlyl+rZbDUU=;
-        b=mvj52mA/xDeZyh4CUMZzSUOlhh19TXjFKAujr/Pw2bcSm8jhF4MIsrYlxLBJIDBzQF
-         ECoRb6zvSZCVB8YCU4e3EMg6CmDBAOS2tKiII9yKK/LsUKzqajpRY5VF2hPsi7/vOeML
-         ZFhnWJ49pRJjcT+fn91yKO2K/9/KpFnNnN0+b9PpJYCk+ttzf5+UNyr4vd12VSSCaD6N
-         2erVi5RMOMMhfJRe6n/bSJn2OpxxkNo739fHiC/v8Pjoim5Ga1KNMjBOVNckG2MtxzlB
-         pJq5vuOQuTItE3xdT2BjknUqo9/pftJwNz1vZMAH5U5GF6oy+3PeoK1YZDnFvJAGFt7D
-         UPCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wa1e1Y92lYvZrPhLeN+VLU3x02Trx+J7qlyl+rZbDUU=;
-        b=bgd1bliqVNiWbfuZVyHYOGyJYPJERHwhiYKrudvrfV+Bp7NMW91v9nKsOd6qPt2DqV
-         5Z/zP551kd+/qUFLY+4WmwhNJ76WtW5VQXgD7dbeQpeYjsEc3ox+0YXgcffw8JrtG3T2
-         KyolbeUe4RBBbzZz5yD+fEXrpyIbgmCoDHBDMWN9hgsvIhZxVztA3oAm7DMcgNeby12/
-         QkiojcIGa+Y2HLuYeKgJeInnT93Jveuo9rLrQAbIVC/b8VWWWtp63NV8paiPpbhl+UYI
-         hIuUNBdsVxKKIS0dri5vWIfEmeFRAUpqkoMMeRVxDt8HCkUDAvGTetsptX08WbJaIZZd
-         kysA==
-X-Gm-Message-State: AGi0PubTN+iansZ/kxNO6M6+YzBwmuhhU1QxthCWx3gPivvDM268T0qu
-        euQl28x+IQ7JbAkY9xtsAAYc6wGt7DtYAdJrERU=
-X-Google-Smtp-Source: APiQypK+ScNFRjviccmciq+hSgbQJQz0BvntvfGNdmkmNvKb+9q8VMEfGiSIBuE7+efgCn20i36lQOb2Fo5ytWh9By8=
-X-Received: by 2002:ae9:e854:: with SMTP id a81mr338783qkg.36.1588192588839;
- Wed, 29 Apr 2020 13:36:28 -0700 (PDT)
+        Wed, 29 Apr 2020 16:36:59 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03TKas8T118266;
+        Wed, 29 Apr 2020 15:36:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588192614;
+        bh=6n+4d/+0YDxslFrMhjg9UzNZ0Ew6YLvVvMxgo6mg1u0=;
+        h=From:To:CC:Subject:Date;
+        b=xdi9NQ44jhtI9ASD0Ziq1jlDFRPQGcdYNYfABlUFkQg5OigiyGoGACm+eCPTBeDsq
+         nhV9dS3TnSkFelSq5d3vXdbgexHAUtHFCzX3unp6aCV0mkOKIcFNnMhAJrKqt/wvLG
+         QB9egA9NAvdruADRCvsDCMJwMEyxDkv9YyAehtvE=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03TKasZf003581
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 29 Apr 2020 15:36:54 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 29
+ Apr 2020 15:36:54 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 29 Apr 2020 15:36:54 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03TKarer081378;
+        Wed, 29 Apr 2020 15:36:53 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v23 00/16] Multicolor Framework v23
+Date:   Wed, 29 Apr 2020 15:28:00 -0500
+Message-ID: <20200429202816.26501-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200429132217.1294289-1-arnd@arndb.de>
-In-Reply-To: <20200429132217.1294289-1-arnd@arndb.de>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 29 Apr 2020 13:36:17 -0700
-Message-ID: <CAEf4Bzahz15mGQC21Hr9dfCE6uDrgWvARr2_0f0i592keW3orQ@mail.gmail.com>
-Subject: Re: [PATCH] bpf: fix unused variable warning
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 6:23 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> Hiding the only using of bpf_link_type_strs[] in an #ifdef causes
-> an unused-variable warning:
->
-> kernel/bpf/syscall.c:2280:20: error: 'bpf_link_type_strs' defined but not used [-Werror=unused-variable]
->  2280 | static const char *bpf_link_type_strs[] = {
->
-> Move the definition into the same #ifdef.
->
-> Fixes: f2e10bff16a0 ("bpf: Add support for BPF_OBJ_GET_INFO_BY_FD for bpf_link")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
+Hello
 
-Thanks for the fix, LGTM.
+This is the multi color LED framework.   This framework presents clustered
+colored LEDs into an array and allows the user space to adjust the brightness
+of the cluster using a single file write.  The individual colored LEDs
+intensities are controlled via a single file that is an array of LEDs
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
+Dan
 
->  kernel/bpf/syscall.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> index 3cea7602de78..5e86d8749e6e 100644
-> --- a/kernel/bpf/syscall.c
-> +++ b/kernel/bpf/syscall.c
-> @@ -2274,6 +2274,7 @@ static int bpf_link_release(struct inode *inode, struct file *filp)
->         return 0;
->  }
->
-> +#ifdef CONFIG_PROC_FS
->  #define BPF_PROG_TYPE(_id, _name, prog_ctx_type, kern_ctx_type)
->  #define BPF_MAP_TYPE(_id, _ops)
->  #define BPF_LINK_TYPE(_id, _name) [_id] = #_name,
-> @@ -2285,7 +2286,6 @@ static const char *bpf_link_type_strs[] = {
->  #undef BPF_MAP_TYPE
->  #undef BPF_LINK_TYPE
->
-> -#ifdef CONFIG_PROC_FS
->  static void bpf_link_show_fdinfo(struct seq_file *m, struct file *filp)
->  {
->         const struct bpf_link *link = filp->private_data;
-> --
-> 2.26.0
->
+Dan Murphy (16):
+  dt: bindings: Add multicolor class dt bindings documention
+  leds: multicolor: Introduce a multicolor class definition
+  dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+  leds: lp50xx: Add the LP50XX family of the RGB LED driver
+  dt: bindings: lp55xx: Be consistent in the document with LED acronym
+  dt: bindings: lp55xx: Update binding for Multicolor Framework
+  ARM: dts: n900: Add reg property to the LP5523 channel node
+  ARM: dts: imx6dl-yapp4: Add reg property to the lp5562 channel node
+  ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
+  leds: lp55xx: Convert LED class registration to devm_*
+  leds: lp55xx: Add multicolor framework support to lp55xx
+  leds: lp5523: Update the lp5523 code to add multicolor brightness
+    function
+  leds: lp5521: Add multicolor framework multicolor brightness support
+  leds: lp55xx: Fix checkpatch file permissions issues
+  leds: lp5523: Fix checkpatch issues in the code
+  dt: bindings: Update lp55xx binding to recommended LED naming
+
+ .../ABI/testing/sysfs-class-led-multicolor    |  34 +
+ .../bindings/leds/leds-class-multicolor.yaml  |  70 ++
+ .../devicetree/bindings/leds/leds-lp50xx.yaml | 179 ++++
+ .../devicetree/bindings/leds/leds-lp55xx.txt  | 163 +++-
+ Documentation/leds/index.rst                  |   1 +
+ Documentation/leds/leds-class-multicolor.rst  |  86 ++
+ MAINTAINERS                                   |   8 +
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi    |  14 +-
+ arch/arm/boot/dts/omap3-n900.dts              |  29 +-
+ arch/arm/boot/dts/ste-href.dtsi               |  22 +-
+ drivers/leds/Kconfig                          |  22 +
+ drivers/leds/Makefile                         |   2 +
+ drivers/leds/led-class-multicolor.c           | 210 +++++
+ drivers/leds/led-core.c                       |   1 +
+ drivers/leds/leds-lp50xx.c                    | 777 ++++++++++++++++++
+ drivers/leds/leds-lp5521.c                    |  43 +-
+ drivers/leds/leds-lp5523.c                    |  62 +-
+ drivers/leds/leds-lp5562.c                    |  22 +-
+ drivers/leds/leds-lp55xx-common.c             | 213 +++--
+ drivers/leds/leds-lp55xx-common.h             |  16 +-
+ drivers/leds/leds-lp8501.c                    |  23 +-
+ include/dt-bindings/leds/common.h             |   3 +-
+ include/linux/led-class-multicolor.h          | 121 +++
+ include/linux/platform_data/leds-lp55xx.h     |   8 +
+ 24 files changed, 1970 insertions(+), 159 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+ create mode 100644 Documentation/leds/leds-class-multicolor.rst
+ create mode 100644 drivers/leds/led-class-multicolor.c
+ create mode 100644 drivers/leds/leds-lp50xx.c
+ create mode 100644 include/linux/led-class-multicolor.h
+
+-- 
+2.25.1
+
