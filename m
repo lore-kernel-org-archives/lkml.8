@@ -2,116 +2,198 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68778C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9D3C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39B872083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A3B4208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:03:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="X8wqnXfh";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YiOs9rvy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VNU9le3J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgD2MDM (ORCPT
+        id S1726921AbgD2MD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:03:12 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:46277 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726426AbgD2MDM (ORCPT
+        Wed, 29 Apr 2020 08:03:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60041 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726892AbgD2MD4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:03:12 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 227005C02A7;
-        Wed, 29 Apr 2020 08:03:11 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 29 Apr 2020 08:03:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=nVZXdFyTqU+EhOsehAD10jUm04V
-        bj//It/g0NXiaLkg=; b=X8wqnXfhKyWGkf049IbZs608tmy8mJCmB97oKx3hsz9
-        FaUGK4faP3+9l/IDNK/bZHg1Bl5jExOiq0rRK2TdeUa5fZM4RylgCkpAoldPnyep
-        x5hgoKR6Ik/opWp2oKwc8IvE57b8vLSDSBCotOeIBOJwLD9qy0cemBTLbvOpH6Sp
-        9Nfk5cjYTDo64jpfp/nhBP6mOb3z+H2lxJdjYjPL1Zd8FCoXo8dNN3j1mj06y/aG
-        phOsLFxxQKXp6Wd7qe/ZCgf96Y7lTmtKiRZZTzcjevGmQ90UeCQvy4aWswvcP8mO
-        6E77Wl8fon1D467hK6pLxdGnSElFv4qVKNUNGhfFKkg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=nVZXdF
-        yTqU+EhOsehAD10jUm04Vbj//It/g0NXiaLkg=; b=YiOs9rvySj87qc8DgiPek6
-        o2tiGM1pXPKef5LZsZF4iLCpyIYt2alVyMwaMVhuNe46xPHyTDRk18wJydgTRIit
-        PWP1+kbpXpMcv+9FdP7RDLHtyI2j1HeNZbb0byU+UdHMeNcSUDK0CHJIoZz2fmp1
-        8KU3J1dG9r7/j6RCoFBUA8H4rkWes7gKve3/zmevRZn63G2FTsDAkgGWlafHpcou
-        LohYvzEI1f8QBmKQqeX3CkVSN4V4CQwSM6XejvLPCYRU/JchuQd8B6xsq3EWEPNp
-        exZJ6fxCXh+N0Q72xLj5TlwlHd75tWMSoU2eoxaCzjal7HvL1g9SGoEBH63tOYjA
-        ==
-X-ME-Sender: <xms:_GypXuO9jt2LA5aXfajnxJ90VtPBpDNAiN7o5oCcaPJ-JWyt8VqbaA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieefgdegjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:_GypXg71DSEMhi_VhbzzVZwin2YtY1P4zz7pKUG38S-g-qZ-zjCLqA>
-    <xmx:_GypXuXpNum4U1ejXsUJpiHS6i8M0qKSiK08zERfmJQnj2fzTT8MZA>
-    <xmx:_GypXnPcR5B1K018RCyGma-EKlFFnhq5d6m5hR2CDJcyBdB87jaTUA>
-    <xmx:_2ypXoOkMplzris1jy1zdrZ3tLca1ufOKvoO3I_6yhnYNo65pXJWKw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 65EDF328005E;
-        Wed, 29 Apr 2020 08:03:08 -0400 (EDT)
-Date:   Wed, 29 Apr 2020 14:03:06 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Peter Vasil <peter.vasil@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Chen-Yu Tsai <wens@csie.org>,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, nightwolf@relghuar.net
-Subject: Re: [PATCH v2] pwm: sun4i: direct clock output support for Allwinner
- A64
-Message-ID: <20200429120306.7bqg6d5z2qomt4bj@gilmour.lan>
-References: <20200428164150.366966-1-peter.vasil@gmail.com>
+        Wed, 29 Apr 2020 08:03:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588161834;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PqLyCXunZj5hIFRUBscgO/EQSOL9w9OMkdGXwDOCk6M=;
+        b=VNU9le3J0Fnzu7NyUHsMVo9C80npV4kOpJOAsjsilFZGH5lvXe4f8O6g2FdmJS4+8d9mbp
+        CJFsy8b41E7GP+bsq0RHW6rYECUhtrWx2T1MXVyoJSW2Ho+O3Y7JVomBK4stbe11rayxRY
+        LOIu95UNgm1RzaJGJ7MzZa0FhQst2Fg=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-477-tMgegF2ZPqqe8nZSeMxVwA-1; Wed, 29 Apr 2020 08:03:52 -0400
+X-MC-Unique: tMgegF2ZPqqe8nZSeMxVwA-1
+Received: by mail-wr1-f71.google.com with SMTP id 11so1621935wrc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:03:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=PqLyCXunZj5hIFRUBscgO/EQSOL9w9OMkdGXwDOCk6M=;
+        b=TWp4X93rhYzlAwNc3lzOHmjqdy4MIUvHKqNt84dzttHEwMNez+QcnA3aT7lPYOaxh1
+         PRT7KzLDveFvkjiQnZnqxBY2C3NEKgDTAL4G0y3tGgx3U/uROgz++6giBUGx21poHIuP
+         nI+jrEwpU5qc1otn1gn9lHn2JA3MdZjCk+VM1ZgTomlEu89RqU/qsRia88NSsDjajbWW
+         SKvJCwPv6V1bX/xbHlxV1Brwcfx3kRQUzPaCMgkVuKTvSYbmBkJGyK1N1nDTq4FK0nJZ
+         uiQaoFEwGhXd+1s1FXpNmszTNY7PMBD+hasFgY1cjEdEZnLFcL1uEiOgmqranEaR97nE
+         Uxgg==
+X-Gm-Message-State: AGi0PuZRKXU+yO+1DIUFWoKkknvI2aqfFXH57XkdcqQVE3lmqztPtfok
+        YwJeLPkwLG9CvrmS3xlFVDXhG8cCUiLVJ//oyO90U+i814gq+UshG0ST7TR8KXIalKkpOBAuOsb
+        il+k/6pPsX3F6tSCiAb0RF4nd
+X-Received: by 2002:a5d:470a:: with SMTP id y10mr38056959wrq.63.1588161831812;
+        Wed, 29 Apr 2020 05:03:51 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLf4KZ8Rngx22ZnSSPEeNNoZEwjNixMH7nATd8iA4vBWIWJ++JJzRvFnPP9z8By88bEDzPwkg==
+X-Received: by 2002:a5d:470a:: with SMTP id y10mr38056907wrq.63.1588161831501;
+        Wed, 29 Apr 2020 05:03:51 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id h16sm33279920wrw.36.2020.04.29.05.03.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 05:03:46 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tianjia.zhang@linux.alibaba.com, pbonzini@redhat.com,
+        tsbogend@alpha.franken.de, paulus@ozlabs.org, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        maz@kernel.org, james.morse@arm.com, julien.thierry.kdev@gmail.com,
+        suzuki.poulose@arm.com, christoffer.dall@arm.com,
+        peterx@redhat.com, thuth@redhat.com, chenhuacai@gmail.com
+Subject: Re: [PATCH v4 1/7] KVM: s390: clean up redundant 'kvm_run' parameters
+In-Reply-To: <20200427043514.16144-2-tianjia.zhang@linux.alibaba.com>
+References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com> <20200427043514.16144-2-tianjia.zhang@linux.alibaba.com>
+Date:   Wed, 29 Apr 2020 14:03:41 +0200
+Message-ID: <87r1w6h52a.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vmsinkl72f7e2isg"
-Content-Disposition: inline
-In-Reply-To: <20200428164150.366966-1-peter.vasil@gmail.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Tianjia Zhang <tianjia.zhang@linux.alibaba.com> writes:
 
---vmsinkl72f7e2isg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
+> structure. For historical reasons, many kvm-related function parameters
+> retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time. This
+> patch does a unified cleanup of these remaining redundant parameters.
+>
+> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+> ---
+>  arch/s390/kvm/kvm-s390.c | 23 +++++++++++++++--------
+>  1 file changed, 15 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index e335a7e5ead7..c0d94eaa00d7 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -4176,8 +4176,9 @@ static int __vcpu_run(struct kvm_vcpu *vcpu)
+>  	return rc;
+>  }
+>  
+> -static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+> +static void sync_regs_fmt2(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *kvm_run = vcpu->run;
+>  	struct runtime_instr_cb *riccb;
+>  	struct gs_cb *gscb;
+>  
+> @@ -4243,8 +4244,10 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>  	/* SIE will load etoken directly from SDNX and therefore kvm_run */
+>  }
+>  
+> -static void sync_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+> +static void sync_regs(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *kvm_run = vcpu->run;
+> +
+>  	if (kvm_run->kvm_dirty_regs & KVM_SYNC_PREFIX)
+>  		kvm_s390_set_prefix(vcpu, kvm_run->s.regs.prefix);
+>  	if (kvm_run->kvm_dirty_regs & KVM_SYNC_CRS) {
+> @@ -4273,7 +4276,7 @@ static void sync_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>  
+>  	/* Sync fmt2 only data */
+>  	if (likely(!kvm_s390_pv_cpu_is_protected(vcpu))) {
+> -		sync_regs_fmt2(vcpu, kvm_run);
+> +		sync_regs_fmt2(vcpu);
+>  	} else {
+>  		/*
+>  		 * In several places we have to modify our internal view to
+> @@ -4292,8 +4295,10 @@ static void sync_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>  	kvm_run->kvm_dirty_regs = 0;
+>  }
+>  
+> -static void store_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+> +static void store_regs_fmt2(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *kvm_run = vcpu->run;
+> +
+>  	kvm_run->s.regs.todpr = vcpu->arch.sie_block->todpr;
+>  	kvm_run->s.regs.pp = vcpu->arch.sie_block->pp;
+>  	kvm_run->s.regs.gbea = vcpu->arch.sie_block->gbea;
+> @@ -4313,8 +4318,10 @@ static void store_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>  	/* SIE will save etoken directly into SDNX and therefore kvm_run */
+>  }
+>  
+> -static void store_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+> +static void store_regs(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *kvm_run = vcpu->run;
+> +
+>  	kvm_run->psw_mask = vcpu->arch.sie_block->gpsw.mask;
+>  	kvm_run->psw_addr = vcpu->arch.sie_block->gpsw.addr;
+>  	kvm_run->s.regs.prefix = kvm_s390_get_prefix(vcpu);
+> @@ -4333,7 +4340,7 @@ static void store_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>  	current->thread.fpu.fpc = vcpu->arch.host_fpregs.fpc;
+>  	current->thread.fpu.regs = vcpu->arch.host_fpregs.regs;
+>  	if (likely(!kvm_s390_pv_cpu_is_protected(vcpu)))
+> -		store_regs_fmt2(vcpu, kvm_run);
+> +		store_regs_fmt2(vcpu);
+>  }
+>  
+>  int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+> @@ -4371,7 +4378,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  		goto out;
+>  	}
+>  
+> -	sync_regs(vcpu, kvm_run);
+> +	sync_regs(vcpu);
+>  	enable_cpu_timer_accounting(vcpu);
+>  
+>  	might_fault();
+> @@ -4393,7 +4400,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  	}
+>  
+>  	disable_cpu_timer_accounting(vcpu);
+> -	store_regs(vcpu, kvm_run);
+> +	store_regs(vcpu);
+>  
+>  	kvm_sigset_deactivate(vcpu);
 
-On Tue, Apr 28, 2020 at 06:41:50PM +0200, Peter Vasil wrote:
-> Allwinner A64 is capable of a direct clock output on PWM (see A64
-> User Manual chapter 3.10). Add support for this in the sun4i PWM
-> driver.
->=20
-> Signed-off-by: Peter Vasil <peter.vasil@gmail.com>
+Haven't tried to compile this but the change itself looks obviously
+correct, so
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Thanks!
-Maxime
+-- 
+Vitaly
 
---vmsinkl72f7e2isg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqls+gAKCRDj7w1vZxhR
-xXL4APwJ1frhThTxfINLI8+qwKzaB+xsWZPuoydUkyE2hxzV7wEA2Mq/A36nL3jr
-dEXEVKmCa8o8lDHAr2fo9TOwjIuX+AU=
-=w8vE
------END PGP SIGNATURE-----
-
---vmsinkl72f7e2isg--
