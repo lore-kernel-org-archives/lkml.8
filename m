@@ -2,104 +2,99 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7649DC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6B6C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61417205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07453205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:32:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dI1whMTa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgD2T2w (ORCPT
+        id S1726858AbgD2Tcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 15:28:52 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:51498 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbgD2T2v (ORCPT
+        Wed, 29 Apr 2020 15:32:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726554AbgD2Tcu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 15:28:51 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 8AF0C804D0;
-        Wed, 29 Apr 2020 21:28:46 +0200 (CEST)
-Date:   Wed, 29 Apr 2020 21:28:40 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        kbuild test robot <lkp@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] video: fbdev: controlfb: fix build for COMPILE_TEST=y
- && PPC_PMAC=y && PPC32=n
-Message-ID: <20200429192840.GA1022@ravnborg.org>
-References: <CGME20200429104825eucas1p16bf37b71a3ab3a768d1eff6c48eb61dd@eucas1p1.samsung.com>
- <fe520316-3863-e6c4-9581-5d709f49e906@samsung.com>
+        Wed, 29 Apr 2020 15:32:50 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4BCEC03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:32:50 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id s11so2196042vsm.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:32:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vrgxe9ifjEnyPmXmvPhvUyY/XI0D3egtea2Iq4Vnzx8=;
+        b=dI1whMTatmml5O41FPYCNwjpGiABq/GMGOrZM3DUvNHp7OltmJ9mTgz5r2xW9wlUtW
+         gwYSrlEfK3RKwDSjYkvUcOYZIbLmqZcnCY7wT5UKmT7J44EzyFoBGAfkoqpZoXxVIYnC
+         BvFmsLJDRF0nOnK9yACo3R2P8pzqK88vM/vAxx0eeR8tMnGTcpoIKUit129f7zjiatxk
+         IUUz3jqHazCvR+k+CJGxpFzL+uho2N6srSoIzzlEiMlkaCK93VQZP5LtErQHEpuQKGLy
+         QBPgsYpytDwHnDJnkika3fg+74jJoDciriL01Wc/BS0cJ5b8Yv1xiNw9euYmmY5ZlF7+
+         Fs9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vrgxe9ifjEnyPmXmvPhvUyY/XI0D3egtea2Iq4Vnzx8=;
+        b=lkqkiegNJWi/iVSjVdvF+8l32VKd3oGSvCc2T8PsiYgPfFtbFZBnB2WYV54yklO+et
+         caQx0r8q84qY1Q/g1kxn6QM5jahMrHL85mHTwb+Ezzy5EFr6Q21SPhR+n0DIHqID1bD6
+         A7ug2i5osMxuoXBjeTob5nwh9blpiLqecBoyi+7AKQCOTClfAMDJ++v0VqEaJjwPP7b5
+         T+cd5aXyH+NhQpZf0Rmv5EXFPoYp3TE+pjrlxTC8zgna4k10pK8JR5QL0J7TGu/zX0QY
+         m85cT/d0FlHa7jMm7fddwSAyETWs0OAqKbZXIr6g7FpZNcTFMBCJOxPvRwGFnaKL/jhL
+         lehQ==
+X-Gm-Message-State: AGi0PuYqXluov3g+qrDTVaa4nqpIm2QU9w5nLltcQ2wo6YFzO0NG/n1U
+        rq/8EBmtry8cqgLzD7kKDb2IWGLlAOr8b7byP5y/63L0
+X-Google-Smtp-Source: APiQypKqcWf5YB/ZPuN+OgQKgk1NHPqQn9fq4ey82QS8PyvF94UlRXjbXQP1hapdO1DVfU+2JoAXZh1t/I6lCsPLq8M=
+X-Received: by 2002:a67:ffcf:: with SMTP id w15mr4867058vsq.213.1588188769592;
+ Wed, 29 Apr 2020 12:32:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fe520316-3863-e6c4-9581-5d709f49e906@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=rOUgymgbAAAA:8 a=QyXUC8HyAAAA:8 a=7gkXJVJtAAAA:8
-        a=hD80L64hAAAA:8 a=r0KyO4OkOOGdkHu8Tb4A:9 a=CjuIK1q_8ugA:10
-        a=MP9ZtiD8KjrkvI0BhSjB:22 a=E9Po1WZjFZOl8hwRPBS3:22
+References: <20200418231908.152212-1-eranian@google.com> <20200428024744.GA703870@tassilo.jf.intel.com>
+In-Reply-To: <20200428024744.GA703870@tassilo.jf.intel.com>
+From:   Stephane Eranian <eranian@google.com>
+Date:   Wed, 29 Apr 2020 12:32:38 -0700
+Message-ID: <CABPqkBQkmPOM7xRkXFbtAtcLVdoJ=XY6uG3k3FoEAWABJaSCQA@mail.gmail.com>
+Subject: Re: [PATCH] perf/script: remove extraneous newline in perf_sample__fprintf_regs()
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, mingo@elte.hu,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
+        "Liang, Kan" <kan.liang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bartlomiej
+On Mon, Apr 27, 2020 at 7:47 PM Andi Kleen <ak@linux.intel.com> wrote:
+>
+> On Sat, Apr 18, 2020 at 04:19:08PM -0700, Stephane Eranian wrote:
+> > When printing iregs, there was a double newline printed because
+> > perf_sample__fprintf_regs() was printing its own and then at the
+> > end of all fields, perf script was adding one.
+> > This was causing blank line in the output:
+>
+> I don't think the patch is quite correct because there could be
+> other fields after it, and they need to be separated by a
+> new line too.
+>
+> e.g. i suspect if someone prints iregs,uregs or iregs,brstack
+> or something else that is printed in process_event after *regs
+> you would get garbled output.
+>
+I was under the impression that perf script was generating one line
+per sample. Otherwise, seems hard to parse.
+Could you give me the cmdline options of perf script that justify the newline.
+ Thanks.
 
-On Wed, Apr 29, 2020 at 12:48:24PM +0200, Bartlomiej Zolnierkiewicz wrote:
-> 
-> powerpc allyesconfig fails like this:
-> 
-> drivers/video/fbdev/controlfb.c: In function 'controlfb_mmap':
-> drivers/video/fbdev/controlfb.c:756:23: error: implicit declaration of function 'pgprot_cached_wthru'; did you mean 'pgprot_cached'? [-Werror=implicit-function-declaration]
->   756 |   vma->vm_page_prot = pgprot_cached_wthru(vma->vm_page_prot);
->       |                       ^~~~~~~~~~~~~~~~~~~
->       |                       pgprot_cached
-> drivers/video/fbdev/controlfb.c:756:23: error: incompatible types when assigning to type 'pgprot_t' {aka 'struct <anonymous>'} from type 'int'
-> 
-> Fix it by adding missing PPC32 dependency.
-> 
-> Fixes: a07a63b0e24d ("video: fbdev: controlfb: add COMPILE_TEST support")
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-
-I've updated my build script to include a few popwerpc 32 bit configs.
-Patch looked correct, and my builds was OK.
-So applied to drm-misc-next and pushed out.
-
-If my prodding of Christoph will result in anything only time will tell.
-
-	Sam
-
-> ---
-> v2: fix implicit btext_update_display() function declaration error
-> 
->  drivers/video/fbdev/controlfb.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Index: b/drivers/video/fbdev/controlfb.c
-> ===================================================================
-> --- a/drivers/video/fbdev/controlfb.c
-> +++ b/drivers/video/fbdev/controlfb.c
-> @@ -55,7 +55,7 @@
->  #include "macmodes.h"
->  #include "controlfb.h"
->  
-> -#ifndef CONFIG_PPC_PMAC
-> +#if !defined(CONFIG_PPC_PMAC) || !defined(CONFIG_PPC32)
->  #define invalid_vram_cache(addr)
->  #undef in_8
->  #undef out_8
+> So you have to track if the newline is needed or not.
+>
+> -Andi
