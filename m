@@ -2,153 +2,235 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6363EC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF13C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F769205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:05:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="obcXkXxf"
+	by mail.kernel.org (Postfix) with ESMTP id 299E5205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:06:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588187165;
+	bh=WuJYQ53ZkuOkwgAjoJ5v5zI5lMg0jLRl2QUYDwYstGE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=j/q/nfP3Pn5X7qZ65XCBjOs/w9QSTjAz6nHwTkaJZbMdYQCgXZCuLi7sXARm3/reJ
+	 vDmcrO7vgn49TJWMMVuaJjpp7ApH0GWkgn6iSmuIRmi+JfsQDSSe1R+6sPUk19F7CV
+	 U377I5v76np8O9gHxmhCTuYD2SmpTh/i2RaGYX+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgD2TF5 (ORCPT
+        id S1727073AbgD2TGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 15:05:57 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46252 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbgD2TF4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 15:05:56 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03TJ5inn097706;
-        Wed, 29 Apr 2020 14:05:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588187144;
-        bh=bcQKFHevt5M2/efAd2NREwTRy1wo6Zk+3v/nh8BE9EU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=obcXkXxfKwvtsOBG3N9C8+NSR+5n2mPeUeoH8C1IASWv7teT1i321N9WBPpjEFz/5
-         OvLgrRIC3CtR0aXsU0amZUstyzLtzubMQKjxtkKN0/0lRRYKtc6psRSY1NVEz6GvRq
-         BeaCmUr0IImxedlYZwNYE3PlJxhmr++mLreYoH7k=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03TJ5i9N069473
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 29 Apr 2020 14:05:44 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 29
- Apr 2020 14:05:44 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 29 Apr 2020 14:05:44 -0500
-Received: from [10.250.87.22] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03TJ5fbx090604;
-        Wed, 29 Apr 2020 14:05:42 -0500
-Subject: Re: [PATCH] misc: sram: Add dma-heap-export reserved SRAM area type
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Sumit Semwal <sumit.semwal@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200424222740.16259-1-afd@ti.com>
- <CAL_Jsq+4mf6QHX27knoHTXA4vnsC3swuvAH7zK1DpyaV-p_qbw@mail.gmail.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <f46c097a-b2a6-6368-a8a4-e30995a54d17@ti.com>
-Date:   Wed, 29 Apr 2020 15:05:41 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 15:06:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726423AbgD2TGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 15:06:04 -0400
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 697E7205C9;
+        Wed, 29 Apr 2020 19:06:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588187162;
+        bh=WuJYQ53ZkuOkwgAjoJ5v5zI5lMg0jLRl2QUYDwYstGE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QAucFIjryzdTB3MyJ5PH8Cw2+3i0fw2jgIwjXRshQa4NuL1TApobXKBGF+uxTq5qr
+         P9kFV91tKxs3qSHVHy1elOWnyZRFM7VFSTxjlWWnqrkPitUmjtP791Ghd7hSFQm7Zp
+         sJooFnsXX0aLbR+XSN19tbDrDOLRQXmZNqrYxG50=
+Received: by mail-il1-f179.google.com with SMTP id u189so3539193ilc.4;
+        Wed, 29 Apr 2020 12:06:02 -0700 (PDT)
+X-Gm-Message-State: AGi0Pubc0M1wYmaimuQdSb4VSjv+uIZPMRLUKkJMbxQd12G8ANLi6AXH
+        ZQOwNGfTfilsTpkNbA+zmelKoEv61iV0aTo6tVw=
+X-Google-Smtp-Source: APiQypKWF7h0IYUs2F+80QDQY64o1jJn/LQ0m4ZctaBgGd+HchHNkvgxpxJ3zt+7YTF6UM0EZg+KdyYYte00vghL5Q0=
+X-Received: by 2002:a92:39dd:: with SMTP id h90mr4635659ilf.80.1588187161819;
+ Wed, 29 Apr 2020 12:06:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+4mf6QHX27knoHTXA4vnsC3swuvAH7zK1DpyaV-p_qbw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200429174120.1497212-1-nivedita@alum.mit.edu> <20200429174120.1497212-10-nivedita@alum.mit.edu>
+In-Reply-To: <20200429174120.1497212-10-nivedita@alum.mit.edu>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 29 Apr 2020 21:05:51 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFe0eEHnijuB3OGM2moHw0xH5viFvCiQ6Y0cLG7s=iHfg@mail.gmail.com>
+Message-ID: <CAMj1kXFe0eEHnijuB3OGM2moHw0xH5viFvCiQ6Y0cLG7s=iHfg@mail.gmail.com>
+Subject: Re: [PATCH 08/10] efi/x86: Drop soft_limit for x86 initrd loading
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/27/20 11:17 AM, Rob Herring wrote:
-> On Fri, Apr 24, 2020 at 5:27 PM Andrew F. Davis <afd@ti.com> wrote:
->>
->> This new export type exposes to userspace the SRAM area as a DMA-Heap,
->> this allows for allocations as DMA-BUFs that can be consumed by various
->> DMA-BUF supporting devices.
->>
->> Signed-off-by: Andrew F. Davis <afd@ti.com>
->> ---
->>  .../devicetree/bindings/sram/sram.yaml        |   8 +
-> 
-> Separate patch and needs to go to DT list...
-> 
+On Wed, 29 Apr 2020 at 19:41, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> Currently the EFI stub attempts to load initrd(s) specified on the
+> command line below hdr->initrd_addr_max (2G) and if that fails, falls
+> back to allocating at an unrestricted address.
+>
+> The only case when loading at a low address helps is for the 32-bit
+> kernel, where the initrd must be copied by the kernel into lowmem if
+> it's not there already. The limit specified in hdr->initrd_addr_max is
+> insufficient to ensure this in any case, since lowmem by default will
+> extend to about 0.9G rather than 2G, and we don't attempt to load the
+> initrd in lowmem at all for the new device-path based initrd.
+>
+> Simplify the code by dropping this optimization for the command line
+> initrd(s) as well.
+>
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+
+It is not really an optimization, unfortunately. Commit 47226ad4f4cfd
+has the details, but in short, loading above 4 GB broke some
+platforms, so below 4 GB had to remain the default.
+
+This was 6 years ago, and so we might be able to revisit this, but
+characterising it as a mere optimization is inaccurate.
 
 
-Okay, will split for v2.
-
-
->>  drivers/misc/Kconfig                          |   7 +
->>  drivers/misc/Makefile                         |   1 +
->>  drivers/misc/sram-dma-heap.c                  | 243 ++++++++++++++++++
->>  drivers/misc/sram.c                           |  20 +-
->>  drivers/misc/sram.h                           |  17 ++
->>  6 files changed, 292 insertions(+), 4 deletions(-)
->>  create mode 100644 drivers/misc/sram-dma-heap.c
->>
->> diff --git a/Documentation/devicetree/bindings/sram/sram.yaml b/Documentation/devicetree/bindings/sram/sram.yaml
->> index 7b83cc6c9bfa..b8e33c8d205d 100644
->> --- a/Documentation/devicetree/bindings/sram/sram.yaml
->> +++ b/Documentation/devicetree/bindings/sram/sram.yaml
->> @@ -105,6 +105,14 @@ patternProperties:
->>            manipulation of the page attributes.
->>          type: boolean
->>
->> +      dma-heap-export:
->> +        description:
->> +          Similar to 'pool' and 'export' this region will be exported for use
->> +          by drivers, devices, and userspace using the DMA-Heaps framework.
->> +          NOTE: This region must be page aligned on start and end in order to
->> +          properly allow manipulation of the page attributes.
->> +        type: boolean
-> 
-> Though I'm not sure this should be in DT. You have to change your
-> firmware to enable a new kernel feature? We also already have 'export'
-> which sounds like the same function. Or 'pool' though reading the
-> description, I don't really understand it's use.
-> 
-
-
-Maybe I could just re-use 'export', right now that property causes the
-SRAM region to be exported to userspace as a file one can read/write.
-Exporting via dma-heaps/dma-buf allows more flexibility as one can pass
-the exported regions to other devices or mmap them directly in userspace.
-
-It's up to the SRAM driver maintainer if re-purposing that property in
-the driver is acceptable.
-
-'Pool' doesn't make much sense to me either, it creates a gen-pool out
-of the region, but I cant find any users not in combination with the
-other properties.
-
-
-> What combination of all 3 of these options would be valid?
-> 
-
-
-From looking at the SRAM driver, it seems each of the option must be
-used exclusively per region, combining will cause issues. I can update
-the documentation for the same after we settle on a strategy for this
-new property.
-
-Andrew
-
-
-> Rob
-> 
+> ---
+>  drivers/firmware/efi/libstub/efi-stub-helper.c | 14 +++++---------
+>  drivers/firmware/efi/libstub/efi-stub.c        |  3 +--
+>  drivers/firmware/efi/libstub/efistub.h         |  8 +++-----
+>  drivers/firmware/efi/libstub/file.c            | 13 ++-----------
+>  drivers/firmware/efi/libstub/x86-stub.c        |  3 +--
+>  5 files changed, 12 insertions(+), 29 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
+> index 2c0c2c34b4cc..32768fa04b32 100644
+> --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
+> +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
+> @@ -378,8 +378,7 @@ static
+>  efi_status_t efi_load_initrd_cmdline(efi_loaded_image_t *image,
+>                                      unsigned long *load_addr,
+>                                      unsigned long *load_size,
+> -                                    unsigned long soft_limit,
+> -                                    unsigned long hard_limit)
+> +                                    unsigned long max)
+>  {
+>         if (!IS_ENABLED(CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER) ||
+>             (IS_ENABLED(CONFIG_X86) && (!efi_is_native() || image == NULL))) {
+> @@ -388,27 +387,24 @@ efi_status_t efi_load_initrd_cmdline(efi_loaded_image_t *image,
+>         }
+>
+>         return handle_cmdline_files(image, L"initrd=", sizeof(L"initrd=") - 2,
+> -                                   soft_limit, hard_limit,
+> -                                   load_addr, load_size);
+> +                                   max, load_addr, load_size);
+>  }
+>
+>  efi_status_t efi_load_initrd(efi_loaded_image_t *image,
+>                              unsigned long *load_addr,
+>                              unsigned long *load_size,
+> -                            unsigned long soft_limit,
+> -                            unsigned long hard_limit)
+> +                            unsigned long max)
+>  {
+>         efi_status_t status;
+>
+>         if (!load_addr || !load_size)
+>                 return EFI_INVALID_PARAMETER;
+>
+> -       status = efi_load_initrd_dev_path(load_addr, load_size, hard_limit);
+> +       status = efi_load_initrd_dev_path(load_addr, load_size, max);
+>         if (status == EFI_SUCCESS) {
+>                 pr_efi("Loaded initrd from LINUX_EFI_INITRD_MEDIA_GUID device path\n");
+>         } else if (status == EFI_NOT_FOUND) {
+> -               status = efi_load_initrd_cmdline(image, load_addr, load_size,
+> -                                                soft_limit, hard_limit);
+> +               status = efi_load_initrd_cmdline(image, load_addr, load_size, max);
+>                 if (status == EFI_SUCCESS && *load_size > 0)
+>                         pr_efi("Loaded initrd from command line option\n");
+>         }
+> diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
+> index d8f24f5c91bd..930302d9415a 100644
+> --- a/drivers/firmware/efi/libstub/efi-stub.c
+> +++ b/drivers/firmware/efi/libstub/efi-stub.c
+> @@ -265,8 +265,7 @@ efi_status_t efi_entry(efi_handle_t handle, efi_system_table_t *sys_table_arg)
+>
+>         if (!efi_noinitrd) {
+>                 max_addr = efi_get_max_initrd_addr(dram_base, image_addr);
+> -               status = efi_load_initrd(image, &initrd_addr, &initrd_size,
+> -                                        ULONG_MAX, max_addr);
+> +               status = efi_load_initrd(image, &initrd_addr, &initrd_size, max_addr);
+>                 if (status != EFI_SUCCESS)
+>                         pr_efi_err("Failed to load initrd!\n");
+>         }
+> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+> index dfdd7954bf58..1ba0887818d9 100644
+> --- a/drivers/firmware/efi/libstub/efistub.h
+> +++ b/drivers/firmware/efi/libstub/efistub.h
+> @@ -663,8 +663,7 @@ efi_status_t efi_setup_gop(struct screen_info *si, efi_guid_t *proto,
+>  efi_status_t handle_cmdline_files(efi_loaded_image_t *image,
+>                                   const efi_char16_t *optstr,
+>                                   int optstr_size,
+> -                                 unsigned long soft_limit,
+> -                                 unsigned long hard_limit,
+> +                                 unsigned long max,
+>                                   unsigned long *load_addr,
+>                                   unsigned long *load_size);
+>
+> @@ -674,13 +673,12 @@ static inline efi_status_t efi_load_dtb(efi_loaded_image_t *image,
+>                                         unsigned long *load_size)
+>  {
+>         return handle_cmdline_files(image, L"dtb=", sizeof(L"dtb=") - 2,
+> -                                   ULONG_MAX, ULONG_MAX, load_addr, load_size);
+> +                                   ULONG_MAX, load_addr, load_size);
+>  }
+>
+>  efi_status_t efi_load_initrd(efi_loaded_image_t *image,
+>                              unsigned long *load_addr,
+>                              unsigned long *load_size,
+> -                            unsigned long soft_limit,
+> -                            unsigned long hard_limit);
+> +                            unsigned long max);
+>
+>  #endif
+> diff --git a/drivers/firmware/efi/libstub/file.c b/drivers/firmware/efi/libstub/file.c
+> index 50aaf15f9ad5..7dee3c5d81fb 100644
+> --- a/drivers/firmware/efi/libstub/file.c
+> +++ b/drivers/firmware/efi/libstub/file.c
+> @@ -124,8 +124,7 @@ static int find_file_option(const efi_char16_t *cmdline, int cmdline_len,
+>  efi_status_t handle_cmdline_files(efi_loaded_image_t *image,
+>                                   const efi_char16_t *optstr,
+>                                   int optstr_size,
+> -                                 unsigned long soft_limit,
+> -                                 unsigned long hard_limit,
+> +                                 unsigned long max,
+>                                   unsigned long *load_addr,
+>                                   unsigned long *load_size)
+>  {
+> @@ -181,15 +180,7 @@ efi_status_t handle_cmdline_files(efi_loaded_image_t *image,
+>                     round_up(alloc_size, EFI_ALLOC_ALIGN)) {
+>                         unsigned long old_addr = alloc_addr;
+>
+> -                       status = EFI_OUT_OF_RESOURCES;
+> -                       if (soft_limit < hard_limit)
+> -                               status = efi_allocate_pages(alloc_size + size,
+> -                                                           &alloc_addr,
+> -                                                           soft_limit);
+> -                       if (status == EFI_OUT_OF_RESOURCES)
+> -                               status = efi_allocate_pages(alloc_size + size,
+> -                                                           &alloc_addr,
+> -                                                           hard_limit);
+> +                       status = efi_allocate_pages(alloc_size + size, &alloc_addr, max);
+>                         if (status != EFI_SUCCESS) {
+>                                 pr_efi_err("Failed to allocate memory for files\n");
+>                                 goto err_close_file;
+> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+> index 1d3f94f1dafa..85a924fecc87 100644
+> --- a/drivers/firmware/efi/libstub/x86-stub.c
+> +++ b/drivers/firmware/efi/libstub/x86-stub.c
+> @@ -755,8 +755,7 @@ unsigned long efi_main(efi_handle_t handle,
+>         if (!efi_noinitrd) {
+>                 unsigned long addr, size;
+>
+> -               status = efi_load_initrd(image, &addr, &size,
+> -                                        hdr->initrd_addr_max, ULONG_MAX);
+> +               status = efi_load_initrd(image, &addr, &size, ULONG_MAX);
+>
+>                 if (status != EFI_SUCCESS) {
+>                         pr_efi_err("Failed to load initrd!\n");
+> --
+> 2.26.2
+>
