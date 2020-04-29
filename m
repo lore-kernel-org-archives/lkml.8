@@ -2,151 +2,77 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3484DC83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9145C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D00620730
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C51CE20775
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588126568;
+	bh=XPRSra4YU5LgYp0Jl2N2h9TJHKIKMK+z0DfTjvEKq4I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WFNfFvWFyocrHsfYoZwEY/N6+pHjidDkvjnvAYBC8m5LB3rKuMdagsCft/qSyDG1G
+	 Nxn5KKKs+UNs32xqHpxo2MxrDD3LMaymzg1ZjGko73i3AxyLPxQIEU57Uij/MW1OBr
+	 jDCVoWb+aTmC5iZ6aoHgAqcDba2qjUv2Kb9ukZA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgD2COa (ORCPT
+        id S1726559AbgD2CQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 22:14:30 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:39847 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726158AbgD2COa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 22:14:30 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TwzrnyG_1588126423;
-Received: from 30.27.118.60(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TwzrnyG_1588126423)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 29 Apr 2020 10:13:44 +0800
-Subject: Re: [PATCH v3] module: Allow to disable modsign in kernel cmdline
-To:     Jessica Yu <jeyu@kernel.org>, Greg KH <gregkh@linuxfoundation.org>
-Cc:     corbet@lwn.net, rdunlap@infradead.org, mchehab+samsung@kernel.org,
-        tglx@linutronix.de, akpm@linux-foundation.org,
-        pawan.kumar.gupta@linux.intel.com, jgross@suse.com,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20200428060008.50417-1-tianjia.zhang@linux.alibaba.com>
- <20200428063522.GA990431@kroah.com>
- <8a0c0ef3-4881-1b9c-6e42-ab379542bc16@linux.alibaba.com>
- <20200428072944.GA994208@kroah.com> <20200428100222.GA15037@linux-8ccs>
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Message-ID: <65d753c0-20c0-6530-71ff-2c121c478a36@linux.alibaba.com>
-Date:   Wed, 29 Apr 2020 10:13:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 28 Apr 2020 22:16:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55956 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726503AbgD2CQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 22:16:07 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98E7520730;
+        Wed, 29 Apr 2020 02:16:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588126567;
+        bh=XPRSra4YU5LgYp0Jl2N2h9TJHKIKMK+z0DfTjvEKq4I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SHISQqdxwa5G8CAirvaFShcr2ButdFkuOXnCWWMaOkbQcg8W++EwGIT5mxst7gAjo
+         ErOXATSXEwfkR0BeuGYx7ZxCfY3NTmvTEeoLurS/3eYQryxo3yiAPrqMojA4dNOj4q
+         VzZ+hGhBKuLNsnXOvSazC7WENPdQcLUNXLyVH0Ts=
+Date:   Wed, 29 Apr 2020 10:16:00 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Peng Fan <peng.fan@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 08/13] dt-bindings: clocks: imx8mp: Add ids for
+ audiomix clocks
+Message-ID: <20200429020237.GG32592@dragon>
+References: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
+ <1586937773-5836-9-git-send-email-abel.vesa@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200428100222.GA15037@linux-8ccs>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586937773-5836-9-git-send-email-abel.vesa@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 15, 2020 at 11:02:48AM +0300, Abel Vesa wrote:
+> Add all the clock ids for the audiomix clocks.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 
-
-On 2020/4/28 18:02, Jessica Yu wrote:
-> +++ Greg KH [28/04/20 09:29 +0200]:
->> On Tue, Apr 28, 2020 at 03:07:10PM +0800, Tianjia Zhang wrote:
->>>
->>>
->>> On 2020/4/28 14:35, Greg KH wrote:
->>> > On Tue, Apr 28, 2020 at 02:00:08PM +0800, Tianjia Zhang wrote:
->>> > > This option allows to disable modsign completely at the beginning,
->>> > > and turn off by set the kernel cmdline `no_modsig_enforce` when
->>> > > `CONFIG_MODULE_SIG_FORCE` is enabled.
->>> > >
->>> > > Yet another change allows to always show the current status of
->>> > > modsign through `/sys/module/module/parameters/sig_enforce`.
->>> > >
->>> > > Signed-off-by: Jia Zhang <zhang.jia@linux.alibaba.com>
->>> > > Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
->>> > > ---
->>> > >
->>> > > v3 change:
->>> > >    Beautify the document description according to the 
->>> recommendation.
->>> > >
->>> > > v2 change:
->>> > >    document this new option.
->>> > >
->>> > >   Documentation/admin-guide/kernel-parameters.txt | 6 ++++++
->>> > >   kernel/module.c                                 | 8 ++++++++
->>> > >   2 files changed, 14 insertions(+)
->>> > >
->>> > > diff --git a/Documentation/admin-guide/kernel-parameters.txt 
->>> b/Documentation/admin-guide/kernel-parameters.txt
->>> > > index 7bc83f3d9bdf..b30f013fb8c5 100644
->>> > > --- a/Documentation/admin-guide/kernel-parameters.txt
->>> > > +++ b/Documentation/admin-guide/kernel-parameters.txt
->>> > > @@ -3190,6 +3190,12 @@
->>> > >       noirqdebug    [X86-32] Disables the code which attempts to 
->>> detect and
->>> > >               disable unhandled interrupt sources.
->>> > > +    no_modsig_enforce
->>> > > +            [KNL] When CONFIG_MODULE_SIG_FORCE is set, this option
->>> > > +            allows to disable modsign completely at the beginning.
->>> > > +            This means that modules without (valid) signatures will
->>> > > +            be loaded successfully.
->>> > > +
->>> >
->>> > So now we have module.sig_enforce and this one?  That feels really
->>> > confusing, why can't you just use the existing option?
->>> >
->>> > And why would you want to allow the bootloader to override a kernel
->>> > build option like this?  That feels risky.
->>> >
->>> > thanks,
->>> >
->>> > greg k-h
->>> >
->>>
->>> If CONFIG_MODULE_SIG_FORCE is set, `module.sig_enforce` is always 
->>> true and
->>> read-only. There is indeed a risk in doing this, but it will allow the
->>> system to boot normally in some emergency situations, such as 
->>> certificate
->>> expiration.
->>>
->>> On the other hand, would it be a good solution to make 
->>> `module.sig_enforce`
->>> readable and writable?
->>
->> Readable is fine :)
->>
->> And you really can't modify the existing option to change how it works,
->> but my question is, why would you want to override
->> CONFIG_MODULE_SIG_FORCE at all?  I wouldn't want my bootloader to have
->> the ability to change the kernel's protection model, that's a huge
->> security hole you are adding to the kernel that it can not protect
->> itself from at all.
-> 
-> I agree with Greg's reasoning here. We had an almost identical thread
-> about this two years ago:
-> 
->   http://lore.kernel.org/r/20180312132823.dixp7gkjypjlgymt@redbean.localdomain
-> 
-> I generally view module signature enforcement as a one way street. You
-> can go from unenforced to enforced, but not the other way around. If
-> you are anticipating the need to load unsigned modules or undo this
-> protection in general, then why are you building the kernel with
-> CONFIG_MODULE_SIG_FORCE? It seems to defeat the purpose of enabling
-> this option. You could achieve the same behavior by building without
-> it and toggling module.sig_enforce on boot, no?
-> 
-> Thanks,
-> 
-> Jessica
-
-I'm sorry I didn't pay attention to the previous email, your information 
-helped me a lot, I think this scenario can be solved by toggling 
-module.sig_enforce, thank you very much.
-
-Thanks and best,
-Tianjia
+Applied, thanks.
