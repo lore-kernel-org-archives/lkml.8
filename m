@@ -2,155 +2,258 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B6EC83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 06:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C718CC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 06:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EFE52076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 06:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7F932072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 06:26:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgD2GYQ convert rfc822-to-8bit (ORCPT
+        id S1726519AbgD2G0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 02:24:16 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35074 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726274AbgD2GYQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 02:24:16 -0400
-Received: by mail-lj1-f196.google.com with SMTP id g4so1373547ljl.2;
-        Tue, 28 Apr 2020 23:24:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UMvE1bKhgPMPyH5g6riW7cDoy79w0qtcoyNsyUsk4iA=;
-        b=S9uxe+k/16qFQu6hjteo0ACs8fO4KSYU/oHGAoDYcxZv5L52GmXUJWwABHcMZQ3GwZ
-         rHCNVXB7OFY0GlMUPsV5cNTltEedRzihQKxacYXVZ116D1pkhsRCZr9BFWmoTqQpQslg
-         EFydtaOFaxy3g9f0yWiCA+xVglb55HEu0gVo0D7hatSGfcYZFAPmsEllv1/wz9KiE5xu
-         UktyVQVJEdlziB2L+93+5MvyxDrJNdrlyLsweH4WCXxI1Zjth/9wyC7wue3G/niqMbzy
-         oGeqQAZFtS+dDv+S40561wofb6H6SuRQrFM5zxCySdqSsZ4XkhzFeSOa4zugE6T8l4wh
-         lHBA==
-X-Gm-Message-State: AGi0Pub01OKg2xloT7E+gE6f6tH0gysnhpeA9GeVr+sFpmtbgdGKDM2N
-        +YEKu0WhtkN88NEWb9cgfybz5n1BQJEw6A==
-X-Google-Smtp-Source: APiQypIJG7mO46ZOSdxWjrbaacCFmFFl74JNW0V4rpwawaB80OvBciJ2Cr1OKKQyQUHiEtBNYc/Zjg==
-X-Received: by 2002:a2e:8087:: with SMTP id i7mr18344260ljg.99.1588141452868;
-        Tue, 28 Apr 2020 23:24:12 -0700 (PDT)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id u6sm1432926ljd.68.2020.04.28.23.24.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 23:24:11 -0700 (PDT)
-Received: by mail-lf1-f42.google.com with SMTP id t11so657206lfe.4;
-        Tue, 28 Apr 2020 23:24:11 -0700 (PDT)
-X-Received: by 2002:ac2:5238:: with SMTP id i24mr5157585lfl.7.1588141451325;
- Tue, 28 Apr 2020 23:24:11 -0700 (PDT)
+        Wed, 29 Apr 2020 02:26:13 -0400
+Received: from mga02.intel.com ([134.134.136.20]:39044 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726181AbgD2G0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 02:26:13 -0400
+IronPort-SDR: mq/VhAKWoKxb5N2fPGNgcQywoT6hqkuNrKKlNwRyDczBG7xdX3nj46JzwvmJN1vqWCxANKxru+
+ PM1B7S15JYqg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 23:26:12 -0700
+IronPort-SDR: 0QAHYcRc5hlXyb9HgTw4AU/aqyTiu1Cl2V+d9GUjGmxm5lLrm6VQnBcw7HzqsolW1b6A5JhI2I
+ 08SWQeAEWsmg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,330,1583222400"; 
+   d="scan'208";a="293110283"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 28 Apr 2020 23:26:10 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jTgAc-000FTh-36; Wed, 29 Apr 2020 14:26:10 +0800
+Date:   Wed, 29 Apr 2020 14:26:08 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:smp/core] BUILD SUCCESS
+ 182e073f68a080a29920f6dca796ccf4806b0329
+Message-ID: <5ea91e00.U6kjfq9LSr83NcNJ%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20200426120442.11560-1-peron.clem@gmail.com> <20200426120442.11560-5-peron.clem@gmail.com>
- <20200428080020.35qcuylwq2ylmubu@gilmour.lan> <CAJiuCcc2LQ4L36KSfO8iLVFBUO6k+zsZFX+_Ovm_10PoWO4AsA@mail.gmail.com>
- <20200428160417.6q5oab2guaumhhwi@gilmour.lan> <CAJiuCccFFUJJzXwygLQbDK4fGJ61p72Hv7vj3WVP-=z=J1Yj0Q@mail.gmail.com>
- <031ee5d3-8a30-82ee-76db-c0e8a1073046@arm.com>
-In-Reply-To: <031ee5d3-8a30-82ee-76db-c0e8a1073046@arm.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Wed, 29 Apr 2020 14:24:00 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65rRbRpUTdkTF3hd5LnLQQt19YVOyVzM5te5XNVhQQH=A@mail.gmail.com>
-Message-ID: <CAGb2v65rRbRpUTdkTF3hd5LnLQQt19YVOyVzM5te5XNVhQQH=A@mail.gmail.com>
-Subject: Re: [linux-sunxi] Re: Audio sound card name [was [PATCH 4/7] arm64:
- dts: allwinner: a64: Add HDMI audio]
-To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Marcus Cooper <codekipper@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 1:11 AM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 2020-04-28 5:49 pm, Clément Péron wrote:
-> > Hi Mark, Rob,
-> >
-> > On Tue, 28 Apr 2020 at 18:04, Maxime Ripard <maxime@cerno.tech> wrote:
-> >>
-> >> On Tue, Apr 28, 2020 at 10:54:00AM +0200, Clément Péron wrote:
-> >>> Hi Maxime,
-> >>>
-> >>> On Tue, 28 Apr 2020 at 10:00, Maxime Ripard <maxime@cerno.tech> wrote:
-> >>>>
-> >>>> On Sun, Apr 26, 2020 at 02:04:39PM +0200, Clément Péron wrote:
-> >>>>> From: Marcus Cooper <codekipper@gmail.com>
-> >>>>>
-> >>>>> Add a simple-soundcard to link audio between HDMI and I2S.
-> >>>>>
-> >>>>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> >>>>> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> >>>>> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> >>>>> ---
-> >>>>>   arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 21 +++++++++++++++++++
-> >>>>>   1 file changed, 21 insertions(+)
-> >>>>>
-> >>>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >>>>> index e56e1e3d4b73..08ab6b5e72a5 100644
-> >>>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >>>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >>>>> @@ -102,6 +102,25 @@
-> >>>>>                status = "disabled";
-> >>>>>        };
-> >>>>>
-> >>>>> +     hdmi_sound: hdmi-sound {
-> >>>>> +             compatible = "simple-audio-card";
-> >>>>> +             simple-audio-card,format = "i2s";
-> >>>>> +             simple-audio-card,name = "allwinner,hdmi";
-> >>>>
-> >>>> I'm not sure what the usual card name should be like though. I would assume that
-> >>>> this should be something specific enough so that you're able to differentiate
-> >>>> between boards / SoC so that the userspace can choose a different configuration
-> >>>> based on it?
-> >>>
-> >>> I really don't know what we should use here,
-> >>> I just have a look at other SoC:
-> >>> rk3328: "HDMI"
-> >>> rk3399: "hdmi-sound"
-> >>> r8a774c0-cat874: "CAT874 HDMI sound"
-> >>>
-> >>> But maybe it's time to introduce proper name:
-> >>> What about :
-> >>> pat
-> >>> sun50i-h6-hdmi
-> >>
-> >> It's pretty much what we've been using for the other sound cards we have, so it
-> >> makes sense to me.
-> >
-> > I have a question regarding the simple-audio-card,name.
-> > In this patch, I would like to introduce a simple-audio-card for the
-> > Allwinner A64 HDMI.
-> >
-> > What should be the preferred name for this sound card?
-> > "sun50i-a64-hdmi" ? "allwinner, sun50i-a64-hdmi" ?
->
-> I can at least speak for RK3328, and the reasoning there was that as the
-> user looking at what `aplay -l` says, I don't give a hoot about what the
-> SoC may be called, I see two cards and I want to know, with the least
-> amount of uncertainty, which one will make the sound come out of the
-> port that's labelled "HDMI" on the box ;)
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  smp/core
+branch HEAD: 182e073f68a080a29920f6dca796ccf4806b0329  cpu/hotplug: Fix a typo in comment "broadacasted"->"broadcasted"
 
-I agree. The user really doesn't care what SoC the system uses. The only
-real requirement is to be able to tell which output the card is related
-to, i.e. is it onboard or an external DAC, is it analog or HDMI, etc..
+elapsed time: 2021m
 
-ChenYu
+configs tested: 191
+configs skipped: 0
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+sparc                            allyesconfig
+powerpc                          g5_defconfig
+mips                             allmodconfig
+ia64                                defconfig
+mips                              allnoconfig
+powerpc                     mpc512x_defconfig
+mips                      fuloong2e_defconfig
+parisc                generic-64bit_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                        generic_defconfig
+ia64                          tiger_defconfig
+ia64                         bigsur_defconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+m68k                       bvme6000_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+mips                      malta_kvm_defconfig
+mips                            ar7_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                           32r2_defconfig
+mips                malta_kvm_guest_defconfig
+mips                         tb0287_defconfig
+mips                       capcella_defconfig
+mips                           ip32_defconfig
+mips                  decstation_64_defconfig
+mips                      loongson3_defconfig
+mips                          ath79_defconfig
+mips                        bcm63xx_defconfig
+parisc                            allnoconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                      chrp32_defconfig
+powerpc                       holly_defconfig
+powerpc                  mpc866_ads_defconfig
+powerpc                    amigaone_defconfig
+powerpc                    adder875_defconfig
+powerpc                     ep8248e_defconfig
+parisc               randconfig-a001-20200427
+alpha                randconfig-a001-20200427
+mips                 randconfig-a001-20200427
+m68k                 randconfig-a001-20200427
+riscv                randconfig-a001-20200427
+nds32                randconfig-a001-20200427
+nios2                randconfig-a001-20200428
+h8300                randconfig-a001-20200428
+c6x                  randconfig-a001-20200428
+sparc64              randconfig-a001-20200428
+microblaze           randconfig-a001-20200428
+nios2                randconfig-a001-20200427
+c6x                  randconfig-a001-20200427
+h8300                randconfig-a001-20200427
+sparc64              randconfig-a001-20200427
+microblaze           randconfig-a001-20200427
+sh                   randconfig-a001-20200427
+csky                 randconfig-a001-20200427
+xtensa               randconfig-a001-20200427
+openrisc             randconfig-a001-20200427
+i386                 randconfig-b002-20200427
+x86_64               randconfig-b001-20200427
+i386                 randconfig-b001-20200427
+i386                 randconfig-b003-20200427
+x86_64               randconfig-b002-20200427
+x86_64               randconfig-b003-20200427
+i386                 randconfig-c002-20200427
+i386                 randconfig-c001-20200427
+x86_64               randconfig-c002-20200427
+x86_64               randconfig-c001-20200427
+i386                 randconfig-c003-20200427
+x86_64               randconfig-c003-20200427
+i386                 randconfig-a003-20200427
+i386                 randconfig-a001-20200427
+i386                 randconfig-a002-20200427
+x86_64               randconfig-a002-20200427
+x86_64               randconfig-d001-20200427
+x86_64               randconfig-d002-20200427
+i386                 randconfig-d002-20200427
+i386                 randconfig-d001-20200427
+x86_64               randconfig-d003-20200427
+i386                 randconfig-d003-20200427
+i386                 randconfig-e003-20200427
+x86_64               randconfig-e002-20200427
+x86_64               randconfig-e003-20200427
+i386                 randconfig-e002-20200427
+i386                 randconfig-e001-20200427
+x86_64               randconfig-e001-20200427
+i386                 randconfig-g003-20200427
+i386                 randconfig-g001-20200427
+x86_64               randconfig-g001-20200427
+i386                 randconfig-g002-20200427
+x86_64               randconfig-g003-20200427
+i386                 randconfig-g003-20200428
+x86_64               randconfig-g001-20200428
+i386                 randconfig-g001-20200428
+x86_64               randconfig-g002-20200428
+i386                 randconfig-g002-20200428
+x86_64               randconfig-g003-20200428
+i386                 randconfig-h003-20200427
+x86_64               randconfig-h002-20200427
+i386                 randconfig-h002-20200427
+i386                 randconfig-h001-20200427
+sparc                randconfig-a001-20200428
+ia64                 randconfig-a001-20200428
+powerpc              randconfig-a001-20200428
+arm64                randconfig-a001-20200428
+arc                  randconfig-a001-20200428
+sparc                randconfig-a001-20200427
+ia64                 randconfig-a001-20200427
+arm                  randconfig-a001-20200427
+arm64                randconfig-a001-20200427
+arc                  randconfig-a001-20200427
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                          debug_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
