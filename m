@@ -2,186 +2,113 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFF6C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D149C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6D92073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:26:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588155987;
-	bh=CUtGxsArQanQwON+6LaDG7zI4D5FvGfnQkLD3FxockQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Vf+H8rX8Q/w0+WNgqE8WhE1TqiahzarStwJX2WoxU+HKZ/NOp2dvXzDG+pG05nNfS
-	 Zs+ljCMjDLVoRnWmZGGToNFmXudMa3y1kK0lXj34LcrTrrBrPHVUNEF8zXYTd+P1V7
-	 Bppy34r+sP2AneHnfbcsHhpkQ2tHvzQySBwNgO2Y=
+	by mail.kernel.org (Postfix) with ESMTP id 2B4042073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:26:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Lay7I5hE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgD2K00 (ORCPT
+        id S1726864AbgD2K05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 06:26:26 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46400 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726355AbgD2K00 (ORCPT
+        Wed, 29 Apr 2020 06:26:57 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:37054 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726808AbgD2K0v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 06:26:26 -0400
-Received: by mail-ot1-f68.google.com with SMTP id z25so1199844otq.13;
-        Wed, 29 Apr 2020 03:26:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mvIHWhU04g3v6LjKSsky5pEk63GBz533E/sobmoo7Wc=;
-        b=f3Nkvak66UjmGA9qsFMGjnOQsHTxX7S/iX5P4MRLEb2ZD7LUsHMkfaeeMZBN2dhf5I
-         yMav5dxFky3KGtmstKdvClOyOAOj6QNjEp8ZKv2p4X0bbhyTpCSV4eDYfUvJDqkCyV8l
-         aKuTF4yjCgvOA1bygw0cuYpKL6XMNQHXYxtpES/YN/FR1dJ1+WX1AF6BhXFpeEjrKJLd
-         OUDlBrAlNb0922P9R1vV8XDmXXh6gqsuK5NDcryBtJIoIOA7PWNqQdunBBdfV5EBvlU5
-         oo469ys7e1i2Kti0+5wOIWJmxOyDVHAIkcMfTIwVQBdmiqeNE5pGTgOgm15tNYrULjUV
-         nqjg==
-X-Gm-Message-State: AGi0PuYkJcfbc9hr6VSyJAX6wxFbnMcIkwRUosuZ0530+uVcj0T0WXtA
-        ldPT6x+wE9P5+nCagBOODKdetDwviEu3xPZJcvw=
-X-Google-Smtp-Source: APiQypJnyzo4VqldDo304UGZQtLY+7AXB7jFtaFmqclX/7CuNEy43JujxFtdEqaZN6afWwi2LXcTKDkxwr3nMu1panQ=
-X-Received: by 2002:a9d:6ac8:: with SMTP id m8mr26003040otq.262.1588155984780;
- Wed, 29 Apr 2020 03:26:24 -0700 (PDT)
+        Wed, 29 Apr 2020 06:26:51 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03TAIPhm031773;
+        Wed, 29 Apr 2020 12:26:29 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=KfrwcIEAAxzZTZPX1fo//g25aXA6YdvAOUL28w3PuTE=;
+ b=Lay7I5hExdMtnFVTkpr+NIhd2XgmCPQPOzT27AEFV99+bVAqiBZeiUB2Joj3M3RjD/xs
+ Jy5QZWjLgUavyRTcgyeWCs8MLApjdeKbDWfpXV8/GRXeGKgWEB+LKgl4K9ssk3PfEWe5
+ Di141+m41OY8nri1Hk0XZSVbHYbIT9tKBehSUNqbwLXyrDpNFOHem4N7nngpN4GxCsWO
+ obcIPKI6Q3XfDkYvGbRslEO6zM8XRrO8X6KyyWJf+BPcVRT1NI/fEJF6LJiYpkbeOFLc
+ fLgsmYw/hPbaoTnJYxjzIIlZK67iaFk1i4ui3Ze39c4Qt4Nz1/6fZXMgFteDXo2PrNu6 8Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30mhjwwrfg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 12:26:29 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B3BA0100034;
+        Wed, 29 Apr 2020 12:26:28 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A44F820C7A6;
+        Wed, 29 Apr 2020 12:26:28 +0200 (CEST)
+Received: from localhost (10.75.127.47) by SFHDAG6NODE3.st.com (10.75.127.18)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Apr 2020 12:26:28
+ +0200
+From:   <patrice.chotard@st.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+CC:     <mcoquelin.stm32@gmail.com>, <linux-spi@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Patrice Chotard <patrice.chotard@st.com>
+Subject: spi: stm32-qspi: Fix unbalanced pm_runtime_enable issue
+Date:   Wed, 29 Apr 2020 12:26:25 +0200
+Message-ID: <20200429102625.25974-1-patrice.chotard@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200427132409.23664-1-calvin.johnson@oss.nxp.com>
- <20200427135820.GH25745@shell.armlinux.org.uk> <20200427143238.GA26436@lsv03152.swis.in-blr01.nxp.com>
- <20200427144806.GI25745@shell.armlinux.org.uk> <20200429053753.GA12533@lsv03152.swis.in-blr01.nxp.com>
-In-Reply-To: <20200429053753.GA12533@lsv03152.swis.in-blr01.nxp.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 29 Apr 2020 12:26:12 +0200
-Message-ID: <CAJZ5v0g4oaDGGk1Jg5rihaG1kj1BYHpZpwTFrXX4Jo4tettbgg@mail.gmail.com>
-Subject: Re: [net-next PATCH v2 0/3] Introduce new APIs to support phylink and
- phy layers
-To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux.cj@gmail.com,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        netdev <netdev@vger.kernel.org>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Marcin Wojtas <mw@semihalf.com>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG6NODE3.st.com
+ (10.75.127.18)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-29_03:2020-04-29,2020-04-29 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 7:38 AM Calvin Johnson
-<calvin.johnson@oss.nxp.com> wrote:
->
-> On Mon, Apr 27, 2020 at 03:48:07PM +0100, Russell King - ARM Linux admin wrote:
-> > On Mon, Apr 27, 2020 at 08:02:38PM +0530, Calvin Johnson wrote:
-> > > On Mon, Apr 27, 2020 at 02:58:20PM +0100, Russell King - ARM Linux admin wrote:
-> > > > On Mon, Apr 27, 2020 at 06:54:06PM +0530, Calvin Johnson wrote:
-> > > > > Following functions are defined:
-> > > > >   phylink_fwnode_phy_connect()
-> > > > >   phylink_device_phy_connect()
-> > > > >   fwnode_phy_find_device()
-> > > > >   device_phy_find_device()
-> > > > >   fwnode_get_phy_node()
-> > > > >
-> > > > > First two help in connecting phy to phylink instance.
-> > > > > Next two help in finding a phy on a mdiobus.
-> > > > > Last one helps in getting phy_node from a fwnode.
-> > > > >
-> > > > > Changes in v2:
-> > > > >   move phy code from base/property.c to net/phy/phy_device.c
-> > > > >   replace acpi & of code to get phy-handle with fwnode_find_reference
-> > > > >   replace of_ and acpi_ code with generic fwnode to get phy-handle.
-> > > > >
-> > > > > Calvin Johnson (3):
-> > > > >   device property: Introduce phy related fwnode functions
-> > > > >   net: phy: alphabetically sort header includes
-> > > > >   phylink: Introduce phylink_fwnode_phy_connect()
-> > > >
-> > > > Thanks for this, but there's more work that needs to be done here.  I
-> > > > also think that we must have an ack from ACPI people before this can be
-> > > > accepted - you are in effect proposing a new way for representing PHYs
-> > > > in ACPI.
-> > >
-> > > Thanks for your review.
-> > >
-> > > Agree that we need an ack from ACPI people.
-> > > However, I don't think it is a completely new way as similar acpi approach to
-> > > get phy-handle is already in place.
-> > > Please see this:
-> > > https://elixir.bootlin.com/linux/v5.7-rc3/source/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c#L832
-> >
-> > That was added by:
-> >
-> > commit 8089a96f601bdfe3e1b41d14bb703aafaf1b8f34
-> > Author: Iyappan Subramanian <isubramanian@apm.com>
-> > Date:   Mon Jul 25 17:12:41 2016 -0700
-> >
-> >     drivers: net: xgene: Add backward compatibility
-> >
-> >     This patch adds xgene_enet_check_phy_hanlde() function that checks whether
-> >     MDIO driver is probed successfully and sets pdata->mdio_driver to true.
-> >     If MDIO driver is not probed, ethernet driver falls back to backward
-> >     compatibility mode.
-> >
-> >     Since enum xgene_enet_cmd is used by MDIO driver, removing this from
-> >     ethernet driver.
-> >
-> >     Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
-> >     Tested-by: Fushen Chen <fchen@apm.com>
-> >     Tested-by: Toan Le <toanle@apm.com>
-> >     Signed-off-by: David S. Miller <davem@davemloft.net>
-> >
-> > The commit message says nothing about adding ACPI stuff, and searching
-> > the 'net for the posting of this patch seems to suggest that it wasn't
-> > obviously copied to any ACPI people:
-> >
-> >     https://lists.openwall.net/netdev/2016/07/26/11
-> >
-> > Annoyingly, searching for:
-> >
-> >     "drivers: net: xgene: Add backward compatibility" site:lore.kernel.org
-> >
-> > doesn't find it on lore, so can't get the full headers and therefore
-> > addresses.
-> >
-> > So, yes, there's another driver using it, but the ACPI folk probably
-> > never got a look-in on that instance.  Even if they had been copied,
-> > the patch description is probably sufficiently poor that they wouldn't
-> > have read the patch.
-> >
-> > I'd say there's questions over whether ACPI people will find this an
-> > acceptable approach.
-> >
-> > Given that your patch moves this from one driver to a subsystem thing,
-> > it needs to be ratified by ACPI people, because it's effectively
-> > becoming a standardised way to represent a PHY in ACPI.
->
-> How can we get attention/response from ACPI people?
+From: Patrice Chotard <patrice.chotard@st.com>
 
-This is in my queue, but the processing of this has been slow for a
-while, sorry about that.
+Issue detected by unbinding/binding the stm32 qspi driver as following:
 
-If you have a new version of the series, please submit it, otherwise
-ping me in a couple of days if I don't respond to the patches in the
-meantime.
+root@stm32mp2:~# echo 40430000.spi > /sys/bus/platform/drivers/stm32-qspi/404300
+00.spi/driver/unbind
+root@stm32mp2:~# echo 40430000.spi > /sys/bus/platform/drivers/stm32-qspi/bind
+[  969.864021] stm32-qspi 40430000.spi: Unbalanced pm_runtime_enable!
+[  970.225161] spi-nor spi0.0: mx66u51235f (65536 Kbytes)
+[  970.935721] spi-nor spi0.1: mx66u51235f (65536 Kbytes)
 
-Thanks!
+Fixes: 9d282c17b023 ("spi: stm32-qspi: Add pm_runtime support")
+
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+---
+ drivers/spi/spi-stm32-qspi.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/spi/spi-stm32-qspi.c b/drivers/spi/spi-stm32-qspi.c
+index 2f2ea2c42d6e..3c44bb2fd9b1 100644
+--- a/drivers/spi/spi-stm32-qspi.c
++++ b/drivers/spi/spi-stm32-qspi.c
+@@ -555,10 +555,15 @@ static const struct spi_controller_mem_ops stm32_qspi_mem_ops = {
+ 
+ static void stm32_qspi_release(struct stm32_qspi *qspi)
+ {
++	pm_runtime_get_sync(qspi->dev);
+ 	/* disable qspi */
+ 	writel_relaxed(0, qspi->io_base + QSPI_CR);
+ 	stm32_qspi_dma_free(qspi);
+ 	mutex_destroy(&qspi->lock);
++	pm_runtime_put_noidle(qspi->dev);
++	pm_runtime_disable(qspi->dev);
++	pm_runtime_set_suspended(qspi->dev);
++	pm_runtime_dont_use_autosuspend(qspi->dev);
+ 	clk_disable_unprepare(qspi->clk);
+ }
+ 
+-- 
+2.17.1
+
