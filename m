@@ -2,144 +2,103 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06294C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0756C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDB4A206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A84F720775
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:36:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KbYqDwbe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgD2Pew (ORCPT
+        id S1726901AbgD2PgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:34:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43380 "EHLO
+        Wed, 29 Apr 2020 11:36:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726519AbgD2Pev (ORCPT
+        with ESMTP id S1726484AbgD2PgH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:34:51 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A53F3C03C1AD;
-        Wed, 29 Apr 2020 08:34:51 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id BE9912A03C9;
-        Wed, 29 Apr 2020 16:34:48 +0100 (BST)
-Date:   Wed, 29 Apr 2020 17:34:46 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
-        brendanhiggins@google.com, tglx@linutronix.de,
-        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
-        robh+dt@kernel.org, linux-mips@vger.kernel.org,
-        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
-        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
-Subject: Re: [PATCH v4 1/2] dt-bindings: mtd: Add YAML for Nand Flash
- Controller support
-Message-ID: <20200429173446.6682dfb8@collabora.com>
-In-Reply-To: <20200429104205.18780-2-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200429104205.18780-2-vadivel.muruganx.ramuthevar@linux.intel.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 29 Apr 2020 11:36:07 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADDF8C03C1AD
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:36:07 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id x26so1169313pgc.10
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:36:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TJNMR4oboW7WFcnPibORXRu4vpOcald9BO/lcSdsbJU=;
+        b=KbYqDwbe+5X2nV8lcrIde+ORFQeQ3rrbblUybL+zsc2dj8sGqWcFfvo39qh+lAI4oJ
+         VdbNlNrsY53rPimDsbKp88S8EZty1oNEqB/jbnsypAH6oezvvyGw8TImxfPIF7FNzB/t
+         0X4d9EzhWgVFzM61F1G/Lysa9eDK30EsCR7Zu2O92SVY5CsPOaw7QU0taQ/9GdVemUYk
+         gM5YoXIyRiO+98yvLLVXRPpL2yI99XAB72IypjVXubKwncZtvnx6iwDEh4iH91RB5KCd
+         cukyO6mDVHCqrum+Lo7fNhtfITpRmCEQYdzwtE1/VF2FwojqoTUD2FnJpUmA/1M5mhl5
+         NOag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TJNMR4oboW7WFcnPibORXRu4vpOcald9BO/lcSdsbJU=;
+        b=MZbceYqfoYh5RwyS5eMgGB8oIkactTDLibUpq3zj/x4oUgd8h1aqm+Ahj3RKoyqei/
+         MuMrckXWcFnU8furBK9JPi7zmz0vtGLs/N9eg7BXm/A7IV6irvca0BfgUrwNDw/28I6t
+         Gk9/np/NzYYOKKgg0RNtjjKZaLmCkUrkxCgGkb6BPYd5qXoq5+GgKuyfmFlklker36Xx
+         4+55bbFlUM0bzBq636BP0KKvm7Gk3v48y/cZHwfKbL1utAXYQze6SqSLElLK4d9lYRkk
+         t+EsiIQZO3lCkez1DnenpjU+F8kKEWLhVbTL983CGUNk6cU83rYMgFzf/5IXMfDJRFoy
+         eOjw==
+X-Gm-Message-State: AGi0PuaGttHztQB90Wbs3DYQR6AUm49NHnIzhGcB2WBtqITIIj2vitE0
+        otoUUKRdVaFl7flG/aI04Z4=
+X-Google-Smtp-Source: APiQypIljJQgPqTe8smMDubFOAi16dTLZaugpCJiNx+uWdfsu5l1tiz7Y3oSKdpcSrNdtXqmb+p5xA==
+X-Received: by 2002:a62:144c:: with SMTP id 73mr36548770pfu.37.1588174567209;
+        Wed, 29 Apr 2020 08:36:07 -0700 (PDT)
+Received: from localhost ([89.208.244.169])
+        by smtp.gmail.com with ESMTPSA id y7sm1367321pfq.21.2020.04.29.08.36.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 Apr 2020 08:36:06 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     mark.rutland@arm.com, maz@kernel.org, daniel.lezcano@linaro.org,
+        tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH v1] drivers/clocksource/arm_arch_timer: remove duplicate error message
+Date:   Wed, 29 Apr 2020 23:35:59 +0800
+Message-Id: <20200429153559.21189-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 18:42:04 +0800
-"Ramuthevar,Vadivel MuruganX"
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+it will print an error message by itself when acpi_gtdt_init()
+goes wrong. so remove the duplicate error message.
 
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> Add YAML file for dt-bindings to support NAND Flash Controller
-> on Intel's Lightning Mountain SoC.
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> ---
->  .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 61 ++++++++++++++++++++++
->  1 file changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
-> new file mode 100644
-> index 000000000000..6dd899d367b4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
-> @@ -0,0 +1,61 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mtd/intel,lgm-nand.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Intel LGM SoC NAND Controller Device Tree Bindings
-> +
-> +allOf:
-> +  - $ref: "nand-controller.yaml"
-> +
-> +maintainers:
-> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: intel,lgm-nand-controller
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  dmas:
-> +    maxItems: 2
-> +
-> +  dma-names:
-> +    enum:
-> +      - rx
-> +      - tx
-> +
-> +  pinctrl-names: true
-> +
-> +patternProperties:
-> +  "^pinctrl-[0-9]+$": true
-> +
-> +  "^nand@[a-f0-9]+$":
-> +    type: object
-> +    properties:
-> +      reg:
-> +        minimum: 0
-> +        maximum: 7
-> +
-> +      nand-ecc-mode: true
-> +
-> +      nand-ecc-algo:
-> +        const: hw
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - dmas
-> +
-> +additionalProperties: false
-> +
-> +...
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+ drivers/clocksource/arm_arch_timer.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Can you provide an example? I'd like to make sure the binding looks
-good.
+diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+index 2204a444e801..ecf7b7db2d05 100644
+--- a/drivers/clocksource/arm_arch_timer.c
++++ b/drivers/clocksource/arm_arch_timer.c
+@@ -1588,10 +1588,8 @@ static int __init arch_timer_acpi_init(struct acpi_table_header *table)
+ 	arch_timers_present |= ARCH_TIMER_TYPE_CP15;
+ 
+ 	ret = acpi_gtdt_init(table, &platform_timer_count);
+-	if (ret) {
+-		pr_err("Failed to init GTDT table.\n");
++	if (ret)
+ 		return ret;
+-	}
+ 
+ 	arch_timer_ppi[ARCH_TIMER_PHYS_NONSECURE_PPI] =
+ 		acpi_gtdt_map_ppi(ARCH_TIMER_PHYS_NONSECURE_PPI);
+-- 
+2.25.0
+
