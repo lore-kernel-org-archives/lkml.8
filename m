@@ -2,104 +2,132 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F017C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97254C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4022083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77DD1208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:13:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RpVFm4cg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dq/v240y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgD2OMw (ORCPT
+        id S1726915AbgD2ONe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:12:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46126 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726811AbgD2OMw (ORCPT
+        Wed, 29 Apr 2020 10:13:34 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52113 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726871AbgD2ONe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:12:52 -0400
+        Wed, 29 Apr 2020 10:13:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588169571;
+        s=mimecast20190719; t=1588169613;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=k/c2OUq86MJcfNlBcO0fpqAK43s5QsWMF0jpIrxBr1s=;
-        b=RpVFm4cggJLNZSkalq4Ma/PMjVePRn6zewCOou43nyMf5O47b9fVXRPzD5uoSMexnEkilg
-        ipgKR0Dzd7LJeEhzH7xHCZfIyKwUWfPYVJxaeCI/tV/TUvyKaFv07eNl1KATQCPV+xGuDU
-        pXssaDM3rZM13bR2c+3wCsdVDSTGMp0=
+        bh=z5KJj0/IEeIDfSeMUgMfCAULVkkEU1Ysj/D3ASB/G5k=;
+        b=dq/v240yzSKPeAyKfp9Aw1V1Dtkc+THcrCAO3Z44JbndB6kugv3o8mdR4Rs+TOJEBIAQUj
+        a6ALh0pjmsg5rrTq0AJAdUxRqInecTJ0r2ukvSYW3XFTNs+HCTeiI/iKyYSvrFTrs4N1hR
+        XVi0/GE/VGwlfuB2CkOFL6yTeCnQn3s=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-468-6dKzlqqnNaCDSQnyz49PXg-1; Wed, 29 Apr 2020 10:12:46 -0400
-X-MC-Unique: 6dKzlqqnNaCDSQnyz49PXg-1
+ us-mta-300-eJjW36AfMLWIeaVqCQ_XUQ-1; Wed, 29 Apr 2020 10:13:23 -0400
+X-MC-Unique: eJjW36AfMLWIeaVqCQ_XUQ-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5E880106BF98;
-        Wed, 29 Apr 2020 14:12:44 +0000 (UTC)
-Received: from T590 (ovpn-8-27.pek2.redhat.com [10.72.8.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 33DDF5D9C9;
-        Wed, 29 Apr 2020 14:12:33 +0000 (UTC)
-Date:   Wed, 29 Apr 2020 22:12:29 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Martijn Coenen <maco@android.com>
-Cc:     axboe@kernel.dk, hch@lst.de, narayan@google.com,
-        zezeozue@google.com, kernel-team@android.com, maco@google.com,
-        bvanassche@acm.org, Chaitanya.Kulkarni@wdc.com, jaegeuk@kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 01/10] loop: Factor out loop size validation
-Message-ID: <20200429141229.GE700644@T590>
-References: <20200429140341.13294-1-maco@android.com>
- <20200429140341.13294-2-maco@android.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C31EF108BD0F;
+        Wed, 29 Apr 2020 14:13:19 +0000 (UTC)
+Received: from [10.10.116.80] (ovpn-116-80.rdu2.redhat.com [10.10.116.80])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 998945D9E5;
+        Wed, 29 Apr 2020 14:13:02 +0000 (UTC)
+Subject: Re: [PATCH v5 0/4] introduction of migration_version attribute for
+ VFIO live migration
+To:     Yan Zhao <yan.y.zhao@intel.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
+        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eauger@redhat.com" <eauger@redhat.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "Yang, Ziye" <ziye.yang@intel.com>,
+        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "aik@ozlabs.ru" <aik@ozlabs.ru>,
+        "felipe@nutanix.com" <felipe@nutanix.com>,
+        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Zeng, Xin" <xin.zeng@intel.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Liu, Changpeng" <changpeng.liu@intel.com>,
+        "berrange@redhat.com" <berrange@redhat.com>,
+        "eskultet@redhat.com" <eskultet@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "dinechin@redhat.com" <dinechin@redhat.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>
+References: <20200421023718.GA12111@joy-OptiPlex-7040>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D86DF06@SHSMSX104.ccr.corp.intel.com>
+ <20200422073628.GA12879@joy-OptiPlex-7040> <20200424191049.GU3106@work-vm>
+ <20200426013628.GC12879@joy-OptiPlex-7040> <20200427153743.GK2923@work-vm>
+ <20200428005429.GJ12879@joy-OptiPlex-7040> <20200428141437.GG2794@work-vm>
+ <20200429072616.GL12879@joy-OptiPlex-7040> <20200429082201.GA2834@work-vm>
+ <20200429093555.GM12879@joy-OptiPlex-7040>
+From:   Eric Blake <eblake@redhat.com>
+Organization: Red Hat, Inc.
+Message-ID: <94cd58d2-0580-53cd-6ca2-2c33146e0f2c@redhat.com>
+Date:   Wed, 29 Apr 2020 09:13:01 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429140341.13294-2-maco@android.com>
+In-Reply-To: <20200429093555.GM12879@joy-OptiPlex-7040>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 04:03:32PM +0200, Martijn Coenen wrote:
-> Ensuring we don't truncate loff_t when casting to sector_t is done in
-> multiple places; factor it out.
-> 
-> Signed-off-by: Martijn Coenen <maco@android.com>
-> ---
->  drivers/block/loop.c | 25 ++++++++++++++++++++-----
->  1 file changed, 20 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> index f1754262fc94..396b8bd4d75c 100644
-> --- a/drivers/block/loop.c
-> +++ b/drivers/block/loop.c
-> @@ -228,15 +228,30 @@ static void __loop_update_dio(struct loop_device *lo, bool dio)
->  		blk_mq_unfreeze_queue(lo->lo_queue);
->  }
->  
-> +/**
-> + * loop_validate_size() - validates that the passed in size fits in a sector_t
-> + * @size: size to validate
-> + */
-> +static int
-> +loop_validate_size(loff_t size)
-> +{
-> +	if ((loff_t)(sector_t)size != size)
-> +		return -EFBIG;
-> +
-> +	return 0;
-> +}
-> +
+[meta-comment]
 
-Now sector_t has been switched to u64 unconditionally, do we still need such
-validation?
+On 4/29/20 4:35 AM, Yan Zhao wrote:
+> On Wed, Apr 29, 2020 at 04:22:01PM +0800, Dr. David Alan Gilbert wrote:
+[...]
+>>>>>>>>>>>>>>>>> This patchset introduces a migration_version attribute under sysfs
+>>>>>>>>>>> of VFIO
+>>>>>>>>>>>>>>>>> Mediated devices.
 
+Hmm, several pages with up to 16 levels of quoting, with editors making 
+the lines ragged, all before I get to the real meat of the email. 
+Remember, it's okay to trim content,...
 
-Thanks, 
-Ming
+>> So why don't we split the difference; lets say that it should start with
+>> the hex PCI Vendor ID.
+>>
+> The problem is for mdev devices, if the parent devices are not PCI devices,
+> they don't have PCI vendor IDs.
+
+...to just what you are replying to.
+
+-- 
+Eric Blake, Principal Software Engineer
+Red Hat, Inc.           +1-919-301-3226
+Virtualization:  qemu.org | libvirt.org
 
