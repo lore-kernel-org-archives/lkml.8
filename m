@@ -2,170 +2,202 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF286C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EF6C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFCCE221EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:28:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588170536;
-	bh=YzU6Ng+159DDfZWYTV68QlK6v9DUyq5R+ZQDcZUiUx8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vcLzkqDy3dhtNTx4xMZ6o/yhEccjyPUMBKrgbDYHbT3DTIwiyju1HXzY/E5z0wcOD
-	 mPokLzLDZhdyllYDBenRcsEuE6abhx3+GDxb6aEY261DQcrxfWC+UOW3I0pC/onUpu
-	 cRqtZ0spzc55zVIZ6LnYwzCuKTqR88pFFszHIXF4=
+	by mail.kernel.org (Postfix) with ESMTP id 1CDD92074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:32:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fV1eMUSP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgD2O24 (ORCPT
+        id S1726689AbgD2OcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:28:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbgD2O2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:28:55 -0400
-Received: from localhost (unknown [106.201.124.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EFF321D93;
-        Wed, 29 Apr 2020 14:28:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588170534;
-        bh=YzU6Ng+159DDfZWYTV68QlK6v9DUyq5R+ZQDcZUiUx8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=izUMkjWzLlNiVXHcZbJejiKpzerolTqTNI8BJ67TfQhqalNs7xHuufbr6ihu5hpaF
-         g2PTjTFggGuBz0s6m8Sa+e5SkeJK6V+cUSH1xzsqUArXSaUxceBIWi07uabQtOJgoY
-         SXKlK4GA8piz+MAvfnz1bTS2ompffGDsqWA/AVf8=
-Date:   Wed, 29 Apr 2020 19:58:50 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 3/5] usb: xhci: Add support for Renesas controller
- with memory
-Message-ID: <20200429142850.GM56386@vkoul-mobl.Dlink>
-References: <20200424101410.2364219-1-vkoul@kernel.org>
- <20200424101410.2364219-4-vkoul@kernel.org>
- <79023293-8ad8-751c-b4ca-8393cdbbf4a2@linux.intel.com>
+        Wed, 29 Apr 2020 10:32:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33508 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726355AbgD2OcO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 10:32:14 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9E21C03C1AD;
+        Wed, 29 Apr 2020 07:32:13 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id w4so2405309ioc.6;
+        Wed, 29 Apr 2020 07:32:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xwZv2tGhyRNcbpoTYz3BarWgQMfUTUmgH/Cz54NgutI=;
+        b=fV1eMUSPwHpaTEFpDcL3+K2X2LZeKTUW9u5HgAp9C+ljusvJNY6t/9t2cdOC3/vItm
+         1dFnM+xeSPmwvEasyj3XMyENiPJzTPPuvBNo4+T6d/pXzFxwAMfKahpXsQfrrMt6mbI1
+         9y4zKRCnnKMOy2JDcNecEI+9CFKGjRSd3kGD8FvwczeOKIa6646PZ11FiTO/tMjoa9oK
+         V5DFVUqAfz/TFLkJvQKv9ky2R8dP2i4i4IVfhU7P1uJnmnqw0/HgZ90QISo5KO4QP7g8
+         adQQrrL1xv9T7TRFTIgnDTAkZlhbjRREzaDmIc6HA4FHOmnUxmTDAqi/NoInhZxizx04
+         muHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xwZv2tGhyRNcbpoTYz3BarWgQMfUTUmgH/Cz54NgutI=;
+        b=lqHAkHMGp+lzc5yzJoeIO+U0oRcR9dIEWMB96FOn9SsbS25J0qRxrTGe20MIChs8TH
+         lMUP9LD0AuIWiiWyQUvx0WIR4hICaECK9d6OHnqAgb1oGUzjAZrQ7tNnki1uAqbYg43L
+         WW97yAo92fgOrNg0DXTr75LPtN9OmhTzAfifsek8gN+zl1anujPNys1QLn3l8eW+22PN
+         VZ6U1xuLKU6smVQ0ejxIjcPlRsBv76iGyi2RU5X643qp34IQnpvlQ4ie+d96/eg1nnnp
+         byM3G+KYunjeI/PfTcXIagbcHXfa9c6344be1gc05TEelIRY9eOE7DUiFABjWwZETvyG
+         zZMA==
+X-Gm-Message-State: AGi0PubnRMQ4aQLjaMNOsYQEnYBIXmGxdi6l3WQwZ5Lt/jFV1rQNKnUo
+        JjZxep/u6tpx4Jd510pjts28wrHsjmkk8jdBEVg=
+X-Google-Smtp-Source: APiQypKE9HEwb0ulhC2XV7s9DubqZrHnzU6X6Jk/kvGHZmH0qt8El/V1YceVGKz90SouHWwKBIu+cI1fz7pOIpQLyfs=
+X-Received: by 2002:a02:5184:: with SMTP id s126mr19808251jaa.81.1588170731692;
+ Wed, 29 Apr 2020 07:32:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <79023293-8ad8-751c-b4ca-8393cdbbf4a2@linux.intel.com>
+References: <cover.1588092152.git.chris@chrisdown.name> <d454fca5d6b38b74d8dc35141e8519b02089a698.1588092152.git.chris@chrisdown.name>
+ <20200429101510.GA28637@dhcp22.suse.cz> <20200429140330.GA5054@cmpxchg.org>
+ <CALOAHbCC-oT+CwzyokNfomEMf0GdzpipBeZJjnnE8RrPPZ_Maw@mail.gmail.com> <20200429142707.GC5054@cmpxchg.org>
+In-Reply-To: <20200429142707.GC5054@cmpxchg.org>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Wed, 29 Apr 2020 22:31:35 +0800
+Message-ID: <CALOAHbCbyUUMCBaNOaXFaW0+3-j40L1KcZ564wvbrqvsik7ebA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm, memcg: Avoid stale protection values when cgroup
+ is above protection
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Chris Down <chris@chrisdown.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29-04-20, 16:53, Mathias Nyman wrote:
-> On 24.4.2020 13.14, Vinod Koul wrote:
-> > Some rensas controller like uPD720201 and uPD720202 need firmware to be
-> > loaded. Add these devices in table and invoke renesas firmware loader
-> > functions to check and load the firmware into device memory when
-> > required.
-> > 
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > ---
-> >  drivers/usb/host/xhci-pci.c | 28 ++++++++++++++++++++++++++++
-> >  drivers/usb/host/xhci.h     |  1 +
-> >  2 files changed, 29 insertions(+)
-> > 
-> > diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> > index b6c2f5c530e3..f26cf072836d 100644
-> > --- a/drivers/usb/host/xhci-pci.c
-> > +++ b/drivers/usb/host/xhci-pci.c
-> > @@ -15,6 +15,7 @@
-> >  
-> >  #include "xhci.h"
-> >  #include "xhci-trace.h"
-> > +#include "xhci-pci.h"
-> >  
-> >  #define SSIC_PORT_NUM		2
-> >  #define SSIC_PORT_CFG2		0x880c
-> > @@ -319,6 +320,8 @@ static int xhci_pci_setup(struct usb_hcd *hcd)
-> >  	return xhci_pci_reinit(xhci, pdev);
-> >  }
-> >  
-> > +static bool renesas_device;
-> 
-> hmm, we shouldn't need this
-> 
-> > +
-> >  /*
-> >   * We need to register our own PCI probe function (instead of the USB core's
-> >   * function) in order to create a second roothub under xHCI.
-> > @@ -328,6 +331,16 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
-> >  	int retval;
-> >  	struct xhci_hcd *xhci;
-> >  	struct usb_hcd *hcd;
-> > +	struct xhci_driver_data *driver_data;
-> > +
-> > +	renesas_device = false;
-> > +	driver_data = (struct xhci_driver_data *)id->driver_data;
-> > +	if (driver_data && driver_data->quirks & XHCI_RENESAS_FW_QUIRK) {
-> > +		retval = renesas_xhci_check_request_fw(dev, id);
-> > +		if (retval)
-> > +			return retval;
-> > +		renesas_device = true;
-> > +	}
-> >  
-> >  	/* Prevent runtime suspending between USB-2 and USB-3 initialization */
-> >  	pm_runtime_get_noresume(&dev->dev);
-> > @@ -388,6 +401,9 @@ static void xhci_pci_remove(struct pci_dev *dev)
-> >  {
-> >  	struct xhci_hcd *xhci;
-> >  
-> > +	if (renesas_device)
-> > +		renesas_xhci_pci_exit(dev);
-> > +
-> 
-> Ah, I see, what we really should do is make sure the quirks in the driver data get
-> added to xhci->quirks, and then just check for the correct quirk in xhci_pci_remove.
+On Wed, Apr 29, 2020 at 10:27 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+>
+> On Wed, Apr 29, 2020 at 10:17:21PM +0800, Yafang Shao wrote:
+> > On Wed, Apr 29, 2020 at 10:03 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> > >
+> > > On Wed, Apr 29, 2020 at 12:15:10PM +0200, Michal Hocko wrote:
+> > > > On Tue 28-04-20 19:26:47, Chris Down wrote:
+> > > > > From: Yafang Shao <laoar.shao@gmail.com>
+> > > > >
+> > > > > A cgroup can have both memory protection and a memory limit to isolate
+> > > > > it from its siblings in both directions - for example, to prevent it
+> > > > > from being shrunk below 2G under high pressure from outside, but also
+> > > > > from growing beyond 4G under low pressure.
+> > > > >
+> > > > > Commit 9783aa9917f8 ("mm, memcg: proportional memory.{low,min} reclaim")
+> > > > > implemented proportional scan pressure so that multiple siblings in
+> > > > > excess of their protection settings don't get reclaimed equally but
+> > > > > instead in accordance to their unprotected portion.
+> > > > >
+> > > > > During limit reclaim, this proportionality shouldn't apply of course:
+> > > > > there is no competition, all pressure is from within the cgroup and
+> > > > > should be applied as such. Reclaim should operate at full efficiency.
+> > > > >
+> > > > > However, mem_cgroup_protected() never expected anybody to look at the
+> > > > > effective protection values when it indicated that the cgroup is above
+> > > > > its protection. As a result, a query during limit reclaim may return
+> > > > > stale protection values that were calculated by a previous reclaim cycle
+> > > > > in which the cgroup did have siblings.
+> > > > >
+> > > > > When this happens, reclaim is unnecessarily hesitant and potentially
+> > > > > slow to meet the desired limit. In theory this could lead to premature
+> > > > > OOM kills, although it's not obvious this has occurred in practice.
+> > > >
+> > > > Thanks this describes the underlying problem. I would be also explicit
+> > > > that the issue should be visible only on tail memcgs which have both
+> > > > max/high and protection configured and the effect depends on the
+> > > > difference between the two (the smaller it is the largrger the effect).
+> > > >
+> > > > There is no mention about the fix. The patch resets effective values for
+> > > > the reclaim root and I've had some concerns about that
+> > > > http://lkml.kernel.org/r/20200424162103.GK11591@dhcp22.suse.cz.
+> > > > Johannes has argued that other races are possible and I didn't get to
+> > > > think about it thoroughly. But this patch is introducing a new
+> > > > possibility of breaking protection. If we want to have a quick and
+> > > > simple fix that would be easier to backport to older kernels then I
+> > > > would feel much better if we simply workedaround the problem as
+> > > > suggested earlier http://lkml.kernel.org/r/20200423061629.24185-1-laoar.shao@gmail.com
+> > > > We can rework the effective values calculation to be more robust against
+> > > > races on top of that because this is likely a more tricky thing to do.
+> > >
+> > > Well, can you please *do* think more thoroughly about what I wrote,
+> > > instead of pushing for an alternative patch on gut feeling alone?
+> > >
+> > > Especially when you imply that this should be a stable patch.
+> > >
+> > > Not only does your alternative patch not protect against the race you
+> > > are worried about, the race itself doesn't matter. Racing reclaimers
+> > > will write their competing views of the world into the shared state on
+> > > all other levels anyway.
+> > >
+> > > And that's okay. If the configuration and memory usage is such that
+> > > there is at least one reclaimer that scans without any protection
+> > > (like a limit reclaimer), it's not a problem when a second reclaimer
+> > > that meant to do protected global reclaim will also do one iteration
+> > > without protection. It's no different than if a second thread had
+> > > entered limit reclaim through another internal allocation.
+> > >
+> > > There is no semantical violation with the race in your patch or the
+> > > race in this patch. Any effective protection that becomes visible is
+> > > 1) permitted by the configuration, but 2) also triggered *right now*
+> > > by an acute need to reclaim memory with these parameters.
+> > >
+> > > The *right now* part is important. That's what's broken before either
+> > > patch, and that's what we're fixing: to see really, really *old* stale
+> > > that might not be representative of the config semantics anymore.
+> > >
+> > > Since you haven't linked to my email, here is my counter argument to
+> > > the alternative patch "fixing" this race somehow.
+> > >
+> > > A reclaim:
+> > >
+> > >   root
+> > >      `- A (low=2G, max=3G -> elow=0)
+> > >         `- A1 (low=0G -> elow=0)
+> > >
+> > > Global reclaim:
+> > >
+> > >   root
+> > >      `- A (low=2G, max=3G -> elow=2G)
+> > >         `- A1 (low=0G -> elow=2G)
+> > >
+> > > During global reclaim, A1 is supposed to have 2G effective low
+> > > protection. If A limit reclaim races, it can set A1's elow to
+> > > 0.
+> >
+> > Before the commit  8a931f801340c2be ("mm: memcontrol: recursive
+> > memory.low protection"), the A1's elow should be 0, while after this
+> > commit A1's elow is 2G.
+> > That is a behavior change.
+>
+> Yes, that was an intentional change around the inheritance rules.
+>
+> And your alternative patch doesn't fix the race you are (wrongly)
+> worried about under these rules.
+>
+> What's your point, exactly?
+>
 
-Ah sure that does sound better, I will update this as well and send an
-update with these changes
+No point, really.
 
-> 
-> if (xhci->quirks & XHCI_RENESAS_FW_QUIRK)
-> 	renesas_xhci_pci_exit(dev);
->  
-> 
-> Heikki Krogerus did some work on this a long time ago, below code is based on his
-> work. It needs to be added:
-> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> index f26cf072836d..5ae4fc10fc31 100644
-> --- a/drivers/usb/host/xhci-pci.c
-> +++ b/drivers/usb/host/xhci-pci.c
-> @@ -88,8 +88,16 @@ static int xhci_pci_reinit(struct xhci_hcd *xhci, struct pci_dev *pdev)
->  
->  static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
->  {
-> -	struct pci_dev		*pdev = to_pci_dev(dev);
-> +	struct pci_dev			*pdev = to_pci_dev(dev);
-> +	struct xhci_driver_data		*driver_data;
-> +	const struct pci_device_id	*id;
->  
-> +	id = pci_match_id(pdev->driver->id_table, pdev);
-> +
-> +	if (id && id->driver_data) {
-> +		driver_data = (struct xhci_driver_data *)id->driver_data;
-> +		xhci->quirks |= driver_data->quirks;
-> +	}
->  	/* Look for vendor-specific quirks */
->  	if (pdev->vendor == PCI_VENDOR_ID_FRESCO_LOGIC &&
->  			(pdev->device == PCI_DEVICE_ID_FRESCO_LOGIC_PDK ||
-> 
-> 
-> -Mathias
+> > Then this case gives us another example why accessing emin and elow in
+> > the very deap reclaiming code (get_scan_count) is the root of ALL
+> > EVIL.
+>
+> You must be confusing this software engineering list with a witch
+> doctor conference.
+
+No, I didn't consider you as a witch doctor.
+
 
 -- 
-~Vinod
+Thanks
+Yafang
