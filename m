@@ -2,175 +2,144 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7374DC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E68FCC83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35EDE208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3FE2208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:03:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Z29GhzAs"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="i0G80BZP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgD2ODe (ORCPT
+        id S1727985AbgD2ODs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:03:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57194 "EHLO
+        Wed, 29 Apr 2020 10:03:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726923AbgD2ODe (ORCPT
+        by vger.kernel.org with ESMTP id S1726885AbgD2ODr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:03:34 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAD59C03C1AE
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:03:33 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id y19so1167539qvv.4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:03:33 -0700 (PDT)
+        Wed, 29 Apr 2020 10:03:47 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAAB9C03C1AD
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:03:46 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id u127so2174617wmg.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:03:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3AIdfHtqoNsFBzshUFCQLbur342SiMxvBTxBWk02TNs=;
-        b=Z29GhzAshaBzwKo0DDBUn+TJtaUBjsuW0107/RWcL4BRG19OLBEyxAdycULUE+WSKj
-         cBaOxrI9tgM4HLh4Oap3ItOhRh6fOO8ghJ5gBawufm1ciYNynW0iSO3Hojo2mnCLaylF
-         YEwECLyVFEiKYavaRD/vtGTKNyJIIP6DtfEnTNDKrCj5cndhve6ozi8Yq1Gymk7qKzkh
-         9nCRNm0q5RFhvgVCbRfVwM9EmcIMYYD90xCU7ObMq59Lxx2JBz4EH3Tjno0hxptvKui7
-         SDCZE2HvLnOd61BAFSR0x4m/UaXIlcc5dFs0ow+NXWUAkHs/jxVwux4H/L1zjDSWJ1sN
-         w+wA==
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/N1h32tUQUjUvbbVh9Sx0ldWuhfL7NViXIQbgOtPfHU=;
+        b=i0G80BZPAm1av9kXUevS62676qW5KOO6kLiBwdV+1UWaQThQ90GQpKI0ph1mvO4BVu
+         jiNxY/PNluCXb1YA19LsvSwYN4H84/FQa/FgQOHxB/zk/grBc4TOo+ct2ThdUv4lGOYC
+         XYDvpJr4oy31138O+l6/L25Rw19V8HgwqzH/mruMC3gSnvsk/qJF2LRZGKYvw0oG3PCN
+         jegxRxSVqRk6QlL117n9HGP86LqIyW5IpjmyrJaY7TFy74U8k8TWAmS4RaPSnNnVSX83
+         +NTOdHFd1z9NEnkFMlOsPHjiXruY2OiiTaPurfWtDhy2E9NArtqZ6j3tCXsBfk/bQkE2
+         v/vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3AIdfHtqoNsFBzshUFCQLbur342SiMxvBTxBWk02TNs=;
-        b=PSGOzMPQlIVCR4JQsR2ZtRIPwzNQYa0yvoiv6d5wiPi3cOhcwFzhAhZNddSVvQUxkU
-         94NtcnhrkuksHkMSzpbx87N12hucqsbLlAx+DCYSStJ6zMmU0YU40iBoyUZkD8wRApjs
-         5pQIclHXwSVVaM5m31FzcFr5LLSB2FhpXe/AtnGofRlVonbRpoM+7csQyZS3a8Zu38l1
-         LaPw2R4wMnDp+F8zwXu2oTXGbzdXJqeKPQhY109/hvw/pkMEu3e/DLOvstN3wTWTJduc
-         EAHGICJqm4xQRrksgJTOzMGlw/H5voQO2eXUycPSnRYcpl+RBePmIsKqEruLSNDcqVSa
-         InRg==
-X-Gm-Message-State: AGi0PuaZr+6As2UyAbYxfDs61vfEB4lgU3dpp86un7mZYQfcVvoQHVLi
-        7fQzNhqh4QB3ioQICOdltoTe6g==
-X-Google-Smtp-Source: APiQypKIOK7TwOIDU3P3paLnhDob8aiAysD4JgM9FFj9WqckQNqOh6Omw6e6OnHvCun/RfQQUaRfag==
-X-Received: by 2002:a0c:c28b:: with SMTP id b11mr32350633qvi.112.1588169012888;
-        Wed, 29 Apr 2020 07:03:32 -0700 (PDT)
-Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
-        by smtp.gmail.com with ESMTPSA id x8sm15933232qti.51.2020.04.29.07.03.31
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/N1h32tUQUjUvbbVh9Sx0ldWuhfL7NViXIQbgOtPfHU=;
+        b=DyRdk8nfQ3ATvEusZn3xkxSc5V4bMwGhk9z8CmKKK1OPu6XcmtDx6LvtkZZjCxKnxh
+         sCe39n8WfezWp+g7oBPOk0wgcsFxL2YuXraFvMBa0qkcUmVzAOm/u6lHoNDX1SzXTLzw
+         tWCaCPdtgrE6dtKNzveg8DMTF0Fhz/Umz4S/6UoCGmXSvVB39OzWtxivEm5gC7nQ7ZNL
+         ku8tyeBaGql0695WTahsWQgkS/YmFkepjkk1LuiK8d22g0vwIXfy/0soyE1PLj1ouCdd
+         idDvmCthHhATT5UNPWYzLEdz4rydQ80XvYJGJGGB8IkA+uEWoENPhwJW/U2vKWSMeJ5I
+         SgZA==
+X-Gm-Message-State: AGi0PuYsoN8swHsYUd2ZJ44A3pKRrtggfr/9XotNzG99Kc96nk/fbmtd
+        Z3VNTO3V37zMnTrKcxC9HpyS9g==
+X-Google-Smtp-Source: APiQypKhVVvWGVwyHnc7ndDVd3MQfcksp1Ah1aPBYv179+YC7X76d3YUcZsmi83MJ3DjOOhWMmkMhg==
+X-Received: by 2002:a1c:8084:: with SMTP id b126mr3345914wmd.135.1588169025309;
+        Wed, 29 Apr 2020 07:03:45 -0700 (PDT)
+Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
+        by smtp.gmail.com with ESMTPSA id d133sm8887008wmc.27.2020.04.29.07.03.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 07:03:32 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 10:03:30 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Chris Down <chris@chrisdown.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Yafang Shao <laoar.shao@gmail.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm, memcg: Avoid stale protection values when cgroup
- is above protection
-Message-ID: <20200429140330.GA5054@cmpxchg.org>
-References: <cover.1588092152.git.chris@chrisdown.name>
- <d454fca5d6b38b74d8dc35141e8519b02089a698.1588092152.git.chris@chrisdown.name>
- <20200429101510.GA28637@dhcp22.suse.cz>
+        Wed, 29 Apr 2020 07:03:44 -0700 (PDT)
+From:   Martijn Coenen <maco@android.com>
+To:     axboe@kernel.dk, hch@lst.de, ming.lei@redhat.com
+Cc:     narayan@google.com, zezeozue@google.com, kernel-team@android.com,
+        maco@google.com, bvanassche@acm.org, Chaitanya.Kulkarni@wdc.com,
+        jaegeuk@kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Martijn Coenen <maco@android.com>
+Subject: [PATCH v4 00/10] Add a new LOOP_CONFIGURE ioctl
+Date:   Wed, 29 Apr 2020 16:03:31 +0200
+Message-Id: <20200429140341.13294-1-maco@android.com>
+X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429101510.GA28637@dhcp22.suse.cz>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 12:15:10PM +0200, Michal Hocko wrote:
-> On Tue 28-04-20 19:26:47, Chris Down wrote:
-> > From: Yafang Shao <laoar.shao@gmail.com>
-> > 
-> > A cgroup can have both memory protection and a memory limit to isolate
-> > it from its siblings in both directions - for example, to prevent it
-> > from being shrunk below 2G under high pressure from outside, but also
-> > from growing beyond 4G under low pressure.
-> > 
-> > Commit 9783aa9917f8 ("mm, memcg: proportional memory.{low,min} reclaim")
-> > implemented proportional scan pressure so that multiple siblings in
-> > excess of their protection settings don't get reclaimed equally but
-> > instead in accordance to their unprotected portion.
-> > 
-> > During limit reclaim, this proportionality shouldn't apply of course:
-> > there is no competition, all pressure is from within the cgroup and
-> > should be applied as such. Reclaim should operate at full efficiency.
-> > 
-> > However, mem_cgroup_protected() never expected anybody to look at the
-> > effective protection values when it indicated that the cgroup is above
-> > its protection. As a result, a query during limit reclaim may return
-> > stale protection values that were calculated by a previous reclaim cycle
-> > in which the cgroup did have siblings.
-> > 
-> > When this happens, reclaim is unnecessarily hesitant and potentially
-> > slow to meet the desired limit. In theory this could lead to premature
-> > OOM kills, although it's not obvious this has occurred in practice.
-> 
-> Thanks this describes the underlying problem. I would be also explicit
-> that the issue should be visible only on tail memcgs which have both
-> max/high and protection configured and the effect depends on the
-> difference between the two (the smaller it is the largrger the effect).
-> 
-> There is no mention about the fix. The patch resets effective values for
-> the reclaim root and I've had some concerns about that
-> http://lkml.kernel.org/r/20200424162103.GK11591@dhcp22.suse.cz.
-> Johannes has argued that other races are possible and I didn't get to
-> think about it thoroughly. But this patch is introducing a new
-> possibility of breaking protection. If we want to have a quick and
-> simple fix that would be easier to backport to older kernels then I
-> would feel much better if we simply workedaround the problem as
-> suggested earlier http://lkml.kernel.org/r/20200423061629.24185-1-laoar.shao@gmail.com
-> We can rework the effective values calculation to be more robust against
-> races on top of that because this is likely a more tricky thing to do.
+This series introduces a new ioctl that makes it possible to atomically
+configure a loop device. Previously, if you wanted to set parameters
+such as the offset on a loop device, this required calling LOOP_SET_FD
+to set the backing file, and then LOOP_SET_STATUS to set the offset.
+However, in between these two calls, the loop device is available and
+would accept requests, which is generally not desirable. Similar issues
+exist around setting the block size (LOOP_SET_BLOCK_SIZE) and requesting
+direct I/O mode (LOOP_SET_DIRECT_IO).
 
-Well, can you please *do* think more thoroughly about what I wrote,
-instead of pushing for an alternative patch on gut feeling alone?
+There are also performance benefits with combining these ioctls into
+one, which are described in more detail in the last change in the
+series.
 
-Especially when you imply that this should be a stable patch.
+Note that this series depends on
+"loop: Call loop_config_discard() only after new config is applied."
+[0], which I sent as a separate patch as it fixes an unrelated bug.
 
-Not only does your alternative patch not protect against the race you
-are worried about, the race itself doesn't matter. Racing reclaimers
-will write their competing views of the world into the shared state on
-all other levels anyway.
+[0]: https://lkml.org/lkml/2020/3/31/755
 
-And that's okay. If the configuration and memory usage is such that
-there is at least one reclaimer that scans without any protection
-(like a limit reclaimer), it's not a problem when a second reclaimer
-that meant to do protected global reclaim will also do one iteration
-without protection. It's no different than if a second thread had
-entered limit reclaim through another internal allocation.
+---
+v4:
+  - Addressed review comments from Christoph Hellwig:
+    -- Minor code cleanups
+    -- Clarified what lo_flags LOOP_SET_STATUS can set and clear, and
+       made that more explicit in the code (see [9/10])
+    -- LOOP_CONFIGURE can now also be used to configure the block size
+       and to explicitly request Direct I/O and read-only mode.
+    -- Explicitly reject lo_flags we don't know about in LOOP_CONFIGURE
+    -- Renamed LOOP_SET_FD_AND_STATUS to LOOP_CONFIGURE, since the ioctl
+       can now do things LOOP_SET_STATUS couldn't do.
+v3:
+  - Addressed review comments from Christoph Hellwig:
+    -- Factored out loop_validate_size()
+    -- Split up the largish first patch in a few smaller ones
+    -- Use set_capacity_revalidate_and_notify()
+  - Fixed a variable wrongly using size_t instead of loff_t
+v2:
+  - Addressed review comments from Bart van Assche:
+    -- Use SECTOR_SHIFT constant
+    -- Renamed loop_set_from_status() to loop_set_status_from_info()
+    -- Added kerneldoc for loop_set_status_from_info()
+    -- Removed dots in patch subject lines
+  - Addressed review comments from Christoph Hellwig:
+    -- Added missing padding in struct loop_fd_and_status
+    -- Cleaned up some __user pointer handling in lo_ioctl
+    -- Pass in a stack-initialized loop_info64 for the legacy
+       LOOP_SET_FD case
 
-There is no semantical violation with the race in your patch or the
-race in this patch. Any effective protection that becomes visible is
-1) permitted by the configuration, but 2) also triggered *right now*
-by an acute need to reclaim memory with these parameters.
+Martijn Coenen (10):
+  loop: Factor out loop size validation
+  loop: Factor out setting loop device size
+  loop: Switch to set_capacity_revalidate_and_notify()
+  loop: Refactor loop_set_status() size calculation
+  loop: Remove figure_loop_size()
+  loop: Factor out configuring loop from status
+  loop: Move loop_set_status_from_info() and friends up
+  loop: Rework lo_ioctl() __user argument casting
+  loop: Clean up LOOP_SET_STATUS lo_flags handling.
+  loop: Add LOOP_CONFIGURE ioctl
 
-The *right now* part is important. That's what's broken before either
-patch, and that's what we're fixing: to see really, really *old* stale
-that might not be representative of the config semantics anymore.
+ drivers/block/loop.c      | 407 +++++++++++++++++++++++---------------
+ include/uapi/linux/loop.h |  31 ++-
+ 2 files changed, 281 insertions(+), 157 deletions(-)
 
-Since you haven't linked to my email, here is my counter argument to
-the alternative patch "fixing" this race somehow.
+-- 
+2.26.2.303.gf8c07b1a785-goog
 
-A reclaim:
-
-  root
-     `- A (low=2G, max=3G -> elow=0)
-        `- A1 (low=0G -> elow=0)
-
-Global reclaim:
-
-  root
-     `- A (low=2G, max=3G -> elow=2G)
-        `- A1 (low=0G -> elow=2G)
-
-During global reclaim, A1 is supposed to have 2G effective low
-protection. If A limit reclaim races, it can set A1's elow to
-0. Global reclaim will now query mem_cgroup_protection(root, A1), the
-root == memcg check you insist we add will fail and it'll reclaim A1
-without protection.
-
-The alternative patch is nothing except slightly worse code.
