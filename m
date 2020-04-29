@@ -2,73 +2,69 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26159C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F0EC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0291F2085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D022083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588177577;
-	bh=33oKVqnVVSWcPuaIyCjKz2vV+qGee0QU5lzC5qxpjZ0=;
+	s=default; t=1588177582;
+	bh=ZxG00pU6mh+bsa3od1jPgbNbeOCwD7dTA7vu7VZxcds=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=yIFoDECBRGGmZPwkS5zZhQGQErSOthMF7rVIhvZSj+mdWU6EkGVT4xrepQZxJTvKm
-	 fGR9XNeM3JGkf5sDknwt/cJU4G15uIKjQTqlOO/AC86JAyGWuCiiohZdWeuLMKc0OF
-	 ARlrcbyBvphQIENI+BzqraKbLkLG2hinkdyJi0wM=
+	b=XRuT6y8fidAtCCgc78hKUIWLXjgL8sZV5Q6gjauUv+/akBjhB7WnLG7c+QHvN/Deq
+	 /IIq5Py2lDm3G/k8iBsk4FaYvjgzUCrhmyncWv1fEWJ0N/+Kg5TA/s2vwWl7cDIINB
+	 JVcybxbGeu05Lis5jqtPgKPZZJSjwIgO4PNDLUbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbgD2Q0Q (ORCPT
+        id S1726961AbgD2Q0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 12:26:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42166 "EHLO mail.kernel.org"
+        Wed, 29 Apr 2020 12:26:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbgD2Q0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 12:26:15 -0400
+        id S1726481AbgD2Q0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 12:26:21 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 992892076B;
-        Wed, 29 Apr 2020 16:26:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 699DD208E0;
+        Wed, 29 Apr 2020 16:26:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588177575;
-        bh=33oKVqnVVSWcPuaIyCjKz2vV+qGee0QU5lzC5qxpjZ0=;
+        s=default; t=1588177581;
+        bh=ZxG00pU6mh+bsa3od1jPgbNbeOCwD7dTA7vu7VZxcds=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=sCVPwvP0tWgHHy/E27fudChYtQK4UQQxo9v1bQYKiAgPGsOHKXUWRpwM6CJO59Kdk
-         16QPw4Vi5mL13byrj32MHTVDjSq16dmvs+AAZ2OKZpKL3a4q9tlvz/vyW0VCaAbDog
-         vjcozreqTCK2o0RkTC8u/UYzi8l2ADJJlohaPxNM=
-Date:   Wed, 29 Apr 2020 17:26:12 +0100
+        b=BIiFzqNu5iPwGOBNXDpDBcob5SyW973d/kLZVuKjlbT/FfPFk7AhvVXaBtHd+IN8z
+         zz7sXxBd9dC76ogdj2LICsR6t/mZV0bwK2HV0fANXCvrZndi8LhmxVlsGP96t1V/7Y
+         M078OF279W+7Cls7Q7UdZiNdmngc2M/DYut3PoFg=
+Date:   Wed, 29 Apr 2020 17:26:18 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Timur Tabi <timur@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>
-Cc:     Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org,
-        Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>,
-        Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>
-In-Reply-To: <20200428212847.2926376-1-arnd@arndb.de>
-References: <20200428212847.2926376-1-arnd@arndb.de>
-Subject: Re: [PATCH] ASoC: fsl_easrc: mark PM functions __maybe_unused
-Message-Id: <158817756638.27768.13822948104457299760.b4-ty@kernel.org>
+To:     tiwai@suse.com, s.hauer@pengutronix.de, lgirdwood@gmail.com,
+        shawnguo@kernel.org, perex@perex.cz,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20200429093823.1372-1-tangbin@cmss.chinamobile.com>
+References: <20200429093823.1372-1-tangbin@cmss.chinamobile.com>
+Subject: Re: [PATCH] ASoC: mxs-saif: Fix unused assignment
+Message-Id: <158817756638.27768.4592113861894397863.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 23:28:08 +0200, Arnd Bergmann wrote:
-> ifdefs are hard, and in this driver the suspend/resume functions are
-> the only callers of some other helpers that trigger a harmless warning
-> when CONFIG_PM is disabled:
+On Wed, 29 Apr 2020 17:38:23 +0800, Tang Bin wrote:
+> Delete unused initialized value, because 'ret' will be assigined
+> by the function of_alias_get_id().
 > 
-> sound/soc/fsl/fsl_easrc.c:1807:12: warning: 'fsl_easrc_get_firmware' defined but not used [-Wunused-function]
->  1807 | static int fsl_easrc_get_firmware(struct fsl_asrc *easrc)
->       |            ^~~~~~~~~~~~~~~~~~~~~~
-> sound/soc/fsl/fsl_easrc.c:303:12: warning: 'fsl_easrc_resampler_config' defined but not used [-Wunused-function]
->   303 | static int fsl_easrc_resampler_config(struct fsl_asrc *easrc)
->       |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
+> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+> ---
+>  sound/soc/mxs/mxs-saif.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > [...]
 
@@ -78,8 +74,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: fsl_easrc: mark PM functions __maybe_unused
-      commit: 087e3900a060cfc8516e02ea83fe6122da490d23
+[1/1] ASoC: mxs-saif: Fix unused assignment
+      commit: da33574f7f1c110ec58ea43251a9a85801d6e015
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
