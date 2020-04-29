@@ -2,277 +2,112 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 840E5C83009
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 01:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 855CFC83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 01:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57C5B20784
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 01:34:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C+KAavMa"
+	by mail.kernel.org (Postfix) with ESMTP id 6011C20784
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 01:36:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgD2Bei (ORCPT
+        id S1726495AbgD2BgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 21:34:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbgD2Bei (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 21:34:38 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 062BBC03C1AC;
-        Tue, 28 Apr 2020 18:34:37 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id 190so64430ooa.12;
-        Tue, 28 Apr 2020 18:34:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2fcSC/LHC4fYnEVz8IdNzqvcRy6p0Wiju/xAClcl1xo=;
-        b=C+KAavMa0dsC9Osk+RoEcUvz8QUsaAeBaSYourMNcz97EGFSca3iqoFmQ3AcP/OOpE
-         RbYJUMD2KeJqxfgfYiSvqihuPlgFdtKMx8+35Derf9zBkpkEW65ggInph5HAVxZsvLvV
-         ezK7QX+uRzJgOex7d/fOTZV6jgpap+LiUodGg+WWtw3LVZoGk71g7ua51FLJRccTnp2u
-         sfCaz7SKnymok8pWmOR+jhVzC/BDQpJqNyfKcLlWY9RTDUleFU4cm6DQZPJRxgoDO+QX
-         miv0+cUDw4GHXhUmJpojVA81IMMY08pcjMh0bP526bSEQX7WGkRHC65I23OCrlX6vSHx
-         HsGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2fcSC/LHC4fYnEVz8IdNzqvcRy6p0Wiju/xAClcl1xo=;
-        b=gOrHddzH1oxKbX3NbuHRPP6h72Jzp+SSt/9xntaePI0taule8uVI/a+aWKoyUaefnw
-         9wU8Fea7NC3pffl3SreR8yxxES/D3PpDlXIiC/6xoFZl1ZJWMQY/d4ZPJSVBDYoYP6VL
-         2utMMpuUBsuSTCC/ucqWhc8TSKPTDt3VCPH0ySESnyP98hZrFLUoPPfwqjbdSKOlRbTm
-         Dc04v617KvNFpJEryc72PXWy7J9GQIMQrgX+qegzxsHDAgf/0tLrcRgZ6LewMDtEa1NG
-         +GbqD2V4jV2RS15qXJDEFGOAuM/+Pm1rzC8a16cT8/gxT5XUoiGF2+mhSo0Fji2AVP5q
-         wJqQ==
-X-Gm-Message-State: AGi0PuY6CziGiYmj2tpa0F9PM8hvJRWGAJvm6X6ccpRVCMeB68oEY/Iv
-        IedJerelc/UaQDgFVDf5whF3rwSW
-X-Google-Smtp-Source: APiQypJT5cWvtneiHBxLSxZim4EdISuNrr/L6jmXMo2yRNSM5tnGEDUygcavH/Y0ZOu8TU7G0diD0A==
-X-Received: by 2002:a4a:3445:: with SMTP id n5mr11089978oof.91.1588124077144;
-        Tue, 28 Apr 2020 18:34:37 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id m12sm5382319oov.41.2020.04.28.18.34.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 18:34:36 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 18:34:35 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org
-Subject: Re: linux-next: Tree for Apr 28
-Message-ID: <20200429013435.GA1133928@ubuntu-s3-xlarge-x86>
-References: <20200428181006.06b4e3bc@canb.auug.org.au>
- <20200428190459.GA2299615@ubuntu-s3-xlarge-x86>
- <20200429012421.GA132200@google.com>
+        Tue, 28 Apr 2020 21:36:09 -0400
+Received: from mga17.intel.com ([192.55.52.151]:16886 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726181AbgD2BgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 21:36:08 -0400
+IronPort-SDR: DKyDf+C7UwHMVrdLb0dCXUoHZNCAfbOgUMmksH9LMEIq/F/l3j0HwAHMfc0Ey0kOcFebO38NPw
+ +NuIuYirRt1w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 18:36:08 -0700
+IronPort-SDR: Z9Ddv9+AOeUO8ugYlktzn19TYxlgniMZg2nWzHfJPzpxAnkXMQYG3kNcroPUzEzodp4kFtRU6K
+ rlh8jJBLw+Cg==
+X-IronPort-AV: E=Sophos;i="5.73,329,1583222400"; 
+   d="scan'208";a="302867262"
+Received: from spandruv-mobl.amr.corp.intel.com ([10.251.128.143])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 18:36:07 -0700
+Message-ID: <2f526edc870a80ae87a824a1593507306eb05aeb.camel@linux.intel.com>
+Subject: Re: [PATCH] hid: intel-ish-hid: avoid bogus uninitialized-variable
+ warning
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Arnd Bergmann <arnd@arndb.de>, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Nick Crews <ncrews@chromium.org>,
+        Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
+Cc:     Jiri Kosina <jkosina@suse.cz>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 28 Apr 2020 18:36:07 -0700
+In-Reply-To: <20200428215337.4094575-1-arnd@arndb.de>
+References: <20200428215337.4094575-1-arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429012421.GA132200@google.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 06:24:21PM -0700, Minchan Kim wrote:
-> Hello,
+On Tue, 2020-04-28 at 23:53 +0200, Arnd Bergmann wrote:
+> Older compilers like gcc-4.8 don't see that the variable is
+> initialized when it is used:
 > 
-> On Tue, Apr 28, 2020 at 12:04:59PM -0700, Nathan Chancellor wrote:
-> > On Tue, Apr 28, 2020 at 06:10:06PM +1000, Stephen Rothwell wrote:
-> > > Hi all,
-> > > 
-> > > Changes since 20200424:
-> > > 
-> > > The qcom tree still had its build failure for which I reverted a commit.
-> > > 
-> > > The hwmon-staging tree gained a build failure for which I reverted
-> > > a commit.
-> > > 
-> > > The mac80211-next tree gained a build failure so I used the version
-> > > from next-20200424.
-> > > 
-> > > The drm-misc tree still had its build failure for which I disabled a
-> > > COMPILE_TEST setting.
-> > > 
-> > > The akpm-current tree gained a conflict against the risc-v tree.
-> > > 
-> > > The akpm tree lost a patch that turned up elsewhere.
-> > > 
-> > > Non-merge commits (relative to Linus' tree): 4451
-> > >  5474 files changed, 151275 insertions(+), 63274 deletions(-)
-> > 
-> > I am seeing the following build error on s390 defconfig, caused by
-> > commit 743f242d65ec ("mm: support compat_sys_process_madvise").
-> > Apologies if it has already been reported, I did a search of lore and
-> > found nothing.
-> > 
-> > Cheers,
-> > Nathan
-> > 
-> > $ make -j$(nproc) -s ARCH=s390 CROSS_COMPILE=s390x-linux- defconfig all
-> > ...
-> > mm/madvise.c: In function '__se_compat_sys_process_madvise':
-> > ./include/linux/compiler.h:394:38: error: call to '__compiletime_assert_162' declared with attribute error: BUILD_BUG_ON failed: sizeof(unsigned long) > 4 && !__TYPE_IS_PTR(unsigned long)
-> >   394 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-> >       |                                      ^
-> > ./include/linux/compiler.h:375:4: note: in definition of macro '__compiletime_assert'
-> >   375 |    prefix ## suffix();    \
-> >       |    ^~~~~~
-> > ./include/linux/compiler.h:394:2: note: in expansion of macro '_compiletime_assert'
-> >   394 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-> >       |  ^~~~~~~~~~~~~~~~~~~
-> > ./include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
-> >    39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-> >       |                                     ^~~~~~~~~~~~~~~~~~
-> > ./include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-> >    50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-> >       |  ^~~~~~~~~~~~~~~~
-> > ./arch/s390/include/asm/compat.h:18:2: note: in expansion of macro 'BUILD_BUG_ON'
-> >    18 |  BUILD_BUG_ON(sizeof(t) > 4 && !__TYPE_IS_PTR(t)); \
-> >       |  ^~~~~~~~~~~~
-> > ./include/linux/syscalls.h:110:27: note: in expansion of macro '__SC_DELOUSE'
-> >   110 | #define __MAP3(m,t,a,...) m(t,a), __MAP2(m,__VA_ARGS__)
-> >       |                           ^
-> > ./include/linux/syscalls.h:111:35: note: in expansion of macro '__MAP3'
-> >   111 | #define __MAP4(m,t,a,...) m(t,a), __MAP3(m,__VA_ARGS__)
-> >       |                                   ^~~~~~
-> > ./include/linux/syscalls.h:112:35: note: in expansion of macro '__MAP4'
-> >   112 | #define __MAP5(m,t,a,...) m(t,a), __MAP4(m,__VA_ARGS__)
-> >       |                                   ^~~~~~
-> > ./include/linux/syscalls.h:113:35: note: in expansion of macro '__MAP5'
-> >   113 | #define __MAP6(m,t,a,...) m(t,a), __MAP5(m,__VA_ARGS__)
-> >       |                                   ^~~~~~
-> > ./include/linux/syscalls.h:114:22: note: in expansion of macro '__MAP6'
-> >   114 | #define __MAP(n,...) __MAP##n(__VA_ARGS__)
-> >       |                      ^~~~~
-> > ./arch/s390/include/asm/syscall_wrapper.h:80:36: note: in expansion of macro '__MAP'
-> >    80 |   long ret = __do_compat_sys##name(__MAP(x,__SC_DELOUSE,__VA_ARGS__));\
-> >       |                                    ^~~~~
-> > ./include/linux/compat.h:66:2: note: in expansion of macro 'COMPAT_SYSCALL_DEFINEx'
-> >    66 |  COMPAT_SYSCALL_DEFINEx(6, _##name, __VA_ARGS__)
-> >       |  ^~~~~~~~~~~~~~~~~~~~~~
-> > mm/madvise.c:1314:1: note: in expansion of macro 'COMPAT_SYSCALL_DEFINE6'
-> >  1314 | COMPAT_SYSCALL_DEFINE6(process_madvise, int, which, compat_pid_t, upid,
-> >       | ^~~~~~~~~~~~~~~~~~~~~~
-> > ./include/linux/compiler.h:394:38: error: call to '__compiletime_assert_164' declared with attribute error: BUILD_BUG_ON failed: sizeof(unsigned long) > 4 && !__TYPE_IS_PTR(unsigned long)
-> >   394 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-> >       |                                      ^
-> > ./include/linux/compiler.h:375:4: note: in definition of macro '__compiletime_assert'
-> >   375 |    prefix ## suffix();    \
-> >       |    ^~~~~~
-> > ./include/linux/compiler.h:394:2: note: in expansion of macro '_compiletime_assert'
-> >   394 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-> >       |  ^~~~~~~~~~~~~~~~~~~
-> > ./include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
-> >    39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-> >       |                                     ^~~~~~~~~~~~~~~~~~
-> > ./include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-> >    50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-> >       |  ^~~~~~~~~~~~~~~~
-> > ./arch/s390/include/asm/compat.h:18:2: note: in expansion of macro 'BUILD_BUG_ON'
-> >    18 |  BUILD_BUG_ON(sizeof(t) > 4 && !__TYPE_IS_PTR(t)); \
-> >       |  ^~~~~~~~~~~~
-> > ./include/linux/syscalls.h:108:27: note: in expansion of macro '__SC_DELOUSE'
-> >   108 | #define __MAP1(m,t,a,...) m(t,a)
-> >       |                           ^
-> > ./include/linux/syscalls.h:109:35: note: in expansion of macro '__MAP1'
-> >   109 | #define __MAP2(m,t,a,...) m(t,a), __MAP1(m,__VA_ARGS__)
-> >       |                                   ^~~~~~
-> > ./include/linux/syscalls.h:110:35: note: in expansion of macro '__MAP2'
-> >   110 | #define __MAP3(m,t,a,...) m(t,a), __MAP2(m,__VA_ARGS__)
-> >       |                                   ^~~~~~
-> > ./include/linux/syscalls.h:111:35: note: in expansion of macro '__MAP3'
-> >   111 | #define __MAP4(m,t,a,...) m(t,a), __MAP3(m,__VA_ARGS__)
-> >       |                                   ^~~~~~
-> > ./include/linux/syscalls.h:112:35: note: in expansion of macro '__MAP4'
-> >   112 | #define __MAP5(m,t,a,...) m(t,a), __MAP4(m,__VA_ARGS__)
-> >       |                                   ^~~~~~
-> > ./include/linux/syscalls.h:113:35: note: in expansion of macro '__MAP5'
-> >   113 | #define __MAP6(m,t,a,...) m(t,a), __MAP5(m,__VA_ARGS__)
-> >       |                                   ^~~~~~
-> > ./include/linux/syscalls.h:114:22: note: in expansion of macro '__MAP6'
-> >   114 | #define __MAP(n,...) __MAP##n(__VA_ARGS__)
-> >       |                      ^~~~~
-> > ./arch/s390/include/asm/syscall_wrapper.h:80:36: note: in expansion of macro '__MAP'
-> >    80 |   long ret = __do_compat_sys##name(__MAP(x,__SC_DELOUSE,__VA_ARGS__));\
-> >       |                                    ^~~~~
-> > ./include/linux/compat.h:66:2: note: in expansion of macro 'COMPAT_SYSCALL_DEFINEx'
-> >    66 |  COMPAT_SYSCALL_DEFINEx(6, _##name, __VA_ARGS__)
-> >       |  ^~~~~~~~~~~~~~~~~~~~~~
-> > mm/madvise.c:1314:1: note: in expansion of macro 'COMPAT_SYSCALL_DEFINE6'
-> >  1314 | COMPAT_SYSCALL_DEFINE6(process_madvise, int, which, compat_pid_t, upid,
-> >       | ^~~~~~~~~~~~~~~~~~~~~~
-> > make[2]: *** [scripts/Makefile.build:266: mm/madvise.o] Error 1
-> > make[2]: *** Waiting for unfinished jobs....
-> > make[1]: *** [Makefile:1723: mm] Error 2
-> > make[1]: *** Waiting for unfinished jobs....
-> > ...
+> In file included from include/linux/compiler_types.h:68:0,
+>                  from <command-line>:0:
+> drivers/hid/intel-ish-hid/ishtp-fw-loader.c: In function
+> 'load_fw_from_host':
+> include/linux/compiler-gcc.h:75:45: warning:
+> 'fw_info.ldr_capability.max_dma_buf_size' may be used uninitialized
+> in this function [-Wmaybe-uninitialized]
+>  #define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix),
+> __COUNTER__)
+>                                              ^
+> drivers/hid/intel-ish-hid/ishtp-fw-loader.c:770:22: note:
+> 'fw_info.ldr_capability.max_dma_buf_size' was declared here
+>   struct shim_fw_info fw_info;
+>                       ^
 > 
-> Could you try this patch? I think it should fix it.
+> Make sure to initialize it before returning an error from
+> ish_query_loader_prop().
 > 
-> From 3f993353c310a027f138d822a79ce49770fe6e50 Mon Sep 17 00:00:00 2001
-> From: Minchan Kim <minchan@kernel.org>
-> Date: Tue, 28 Apr 2020 18:20:24 -0700
-> Subject: [PATCH] mm: fix s390 compat build error
-> 
-> Nathan reported build error with sys_compat_process_madvise.
-> This patch should fix it.
-> 
-> Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-> Signed-off-by: Minchan Kim <minchan@kernel.org>
+> Fixes: 91b228107da3 ("HID: intel-ish-hid: ISH firmware loader client
+> driver")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-Tested-by: Nathan Chancellor <natechancellor@gmail.com> # build
 
 > ---
->  include/linux/compat.h | 5 +++--
->  mm/madvise.c           | 9 ++++++---
->  2 files changed, 9 insertions(+), 5 deletions(-)
+>  drivers/hid/intel-ish-hid/ishtp-fw-loader.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/include/linux/compat.h b/include/linux/compat.h
-> index 1134ba3e61d0..19c524513cbb 100644
-> --- a/include/linux/compat.h
-> +++ b/include/linux/compat.h
-> @@ -820,9 +820,10 @@ asmlinkage long compat_sys_pwritev64v2(unsigned long fd,
->  		unsigned long vlen, loff_t pos, rwf_t flags);
->  #endif
+> diff --git a/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
+> b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
+> index aa2dbed30fc3..6cf59fd26ad7 100644
+> --- a/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
+> +++ b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
+> @@ -480,6 +480,7 @@ static int ish_query_loader_prop(struct
+> ishtp_cl_data *client_data,
+>  			    sizeof(ldr_xfer_query_resp));
+>  	if (rv < 0) {
+>  		client_data->flag_retry = true;
+> +		*fw_info = (struct shim_fw_info){};
+>  		return rv;
+>  	}
 >  
-> -asmlinkage ssize_t compat_sys_process_madvise(int which,
-> +asmlinkage ssize_t compat_sys_process_madvise(compat_int_t which,
->  		compat_pid_t upid, const struct compat_iovec __user *vec,
-> -		unsigned long vlen, int behavior, unsigned long flags);
-> +		compat_ulong_t vlen, compat_int_t behavior,
-> +		compat_ulong_t flags);
+> @@ -489,6 +490,7 @@ static int ish_query_loader_prop(struct
+> ishtp_cl_data *client_data,
+>  			"data size %d is not equal to size of
+> loader_xfer_query_response %zu\n",
+>  			rv, sizeof(struct loader_xfer_query_response));
+>  		client_data->flag_retry = true;
+> +		*fw_info = (struct shim_fw_info){};
+>  		return -EMSGSIZE;
+>  	}
 >  
->  /*
->   * Deprecated system calls which are still defined in
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index 8fec261457a6..99c06d5f0785 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -1311,9 +1311,12 @@ SYSCALL_DEFINE6(process_madvise, int, which, pid_t, upid,
->  }
->  
->  #ifdef CONFIG_COMPAT
-> -COMPAT_SYSCALL_DEFINE6(process_madvise, int, which, compat_pid_t, upid,
-> -		const struct compat_iovec __user *, vec, unsigned long, vlen,
-> -		int, behavior, unsigned long, flags)
-> +COMPAT_SYSCALL_DEFINE6(process_madvise, compat_int_t, which,
-> +			compat_pid_t, upid,
-> +			const struct compat_iovec __user *, vec,
-> +			compat_ulong_t, vlen,
-> +			compat_int_t, behavior,
-> +			compat_ulong_t, flags)
->  
->  {
->  	ssize_t ret;
-> -- 
-> 2.26.2.303.gf8c07b1a785-goog
-> 
-> 
+
