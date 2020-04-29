@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E0EC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0547C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5FBC2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 999982082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:03:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="SlWtdLeY"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="LE9BhdJ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgD2OD4 (ORCPT
+        id S1728133AbgD2OD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:03:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57266 "EHLO
+        Wed, 29 Apr 2020 10:03:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728081AbgD2ODx (ORCPT
+        by vger.kernel.org with ESMTP id S1728097AbgD2OD4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:03:53 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F33BC03C1AE
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:03:53 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id b11so2679838wrs.6
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:03:53 -0700 (PDT)
+        Wed, 29 Apr 2020 10:03:56 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1E33C035493
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:03:55 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u127so2175242wmg.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:03:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=android.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=TIeVXquln7tlIswAu85f97R17dJ4bzbZ9XV/+MshL8g=;
-        b=SlWtdLeYzYPtXagrnKtjgKGpFduQsopIMSr3rFtGr5NKZQnx6pvIqJ1bzghFJinboF
-         d9mc05RTxXBRZrTDUFfr5cJmb6DM7qhDviLAXWGUdR30Un0HTiJIw398GNmtcrNIHWzC
-         5E7qrwv2trXInl3YWdhWJvPYAtWUgC2vQ+p61aOxPJBSZhe53Q5hgZS7+PdKVEYj/pE1
-         6oQrISeDHDRVIO0QdQmk7HJUjbcxYEXNMhq+mNuaMcXzdh3F0tLFt50fK8IAjJCCdxl/
-         K0t4ZK/YBANLr9llB9W1a5GEW+tshtgWOqyh0F5XjXz8jrMuMtOZv5gegVmVeMlIG8Fb
-         SP9w==
+        bh=hmU3PBXf6dhWHFQlW8YZGbPLjN065hLB6uprJoU2IF0=;
+        b=LE9BhdJ0/TmpLlVMtxtt6RToML+PfaNi4fMHhei9MClgSqIW9ok01yn4G2P9d1gvE0
+         kI0+x/hdrPCUp3rf5B6dgOhPlyFuGzDtHA0ibLtShdxyvTsmbrsiZgvUKfgW4P4yrEfC
+         793mnY4YMGpcvwbtpTeIYY1XNja31PeA7X3GQzt9dSuSNInJ29YqYN/gzNUl+DPzXtrK
+         xqtZxXTYFtbiA8QhcuUss1wB6O/rIhiey5euIx6P5Zfmnywn9kCJ3I0u5mwOcGWNEvym
+         BYwNZTlp5o8S8IYbaGEkpMbxu/mgp14r4rR8JpSpOP4pnhWtAcILpxM9T3gvWBfyaVuB
+         t3VA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=TIeVXquln7tlIswAu85f97R17dJ4bzbZ9XV/+MshL8g=;
-        b=K0KXU48R4dX0yibavIeFaBiWU/vHy7EnCJFprRq9kVa4IHPZExBjcobYTrIYAiT1aT
-         N7LtsaiWVnTDMInwnm3S0MKIWkoOrUA/wFYGX2sgQiXu/SFL+wx/JugsCbve+AS7gY6/
-         7Ypvhh9oXDyskf9upwSY682l2Xmbg8++8xCHnhLekCp2iWhEPkfer+TkIDsiiIBogHI4
-         oqgBzS7auP6RW6qu09LjeKcdUEZEAPl9URv6O+aArQkqR4in5LjyFgT9Z3IzSXvhBjgf
-         a9n+2YD4317B7BxUcLdDYHNpgbFcJBCQ8e3QiTaE0W/dh2FqBxdAwyjvURlRQURaiKN+
-         V2ew==
-X-Gm-Message-State: AGi0PuZIz9t6wsosTHChMsKECDrSiRuC14O40fKp8OQ21IEbt1jccNc3
-        0PjmuoBFT+cx0vdP9vQs/qpAHw==
-X-Google-Smtp-Source: APiQypJzPpeiQf7KPXZBFO4DRN+xbvSitwNF/2b2JhPozw2wP25rWwFUGnyFMDbuGAGQ6oHAJ5rUow==
-X-Received: by 2002:a5d:51c6:: with SMTP id n6mr39219978wrv.314.1588169031853;
-        Wed, 29 Apr 2020 07:03:51 -0700 (PDT)
+        bh=hmU3PBXf6dhWHFQlW8YZGbPLjN065hLB6uprJoU2IF0=;
+        b=GVy1J7OTb0+NC/qB/xyGzrjwyou3IS0woYSs42vjG3PkKNwKtKeoXSb1Ull+3zRDBb
+         7/kJKti1CDrtSmbjFMKbXgKCGeRG8P72Vh0rrdv/RA2dQiWd208fIw7SKzzuzli52ce8
+         8hxbK9R9iKVftgLel8TXOI9vRrqdk8cqI8IO44i+ddzcR4ewdB/OTSBTSgERJRTxL0xj
+         Vaa/UwQ1KMdSrT6W/frTdzbNTCQqIkKZ9ZWvjOziYATOR293oee64H6eZyNZEA0mbHRp
+         23CMJmAbht759CGWDqKdSZGCv3JLmL2DV6nbpF80N7FTxH4FhamOzOneUHPe6on6h3eB
+         AGQw==
+X-Gm-Message-State: AGi0PuZoDkmOiIyrys9esVrGMQ5QRoeOK3q8AY8+tv2cAgJsaGLe2K0p
+        uUZhIDkgFQRZYubgFk3ub+s22Q==
+X-Google-Smtp-Source: APiQypJKTvAtLG7slROxyNfQknjkesDM9yKf/JC72SKZhVuC+bDDogyptbmnCLXSBW+dKWmD/6S7mQ==
+X-Received: by 2002:a1c:48c:: with SMTP id 134mr3236527wme.47.1588169034570;
+        Wed, 29 Apr 2020 07:03:54 -0700 (PDT)
 Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
-        by smtp.gmail.com with ESMTPSA id d133sm8887008wmc.27.2020.04.29.07.03.50
+        by smtp.gmail.com with ESMTPSA id d133sm8887008wmc.27.2020.04.29.07.03.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 07:03:51 -0700 (PDT)
+        Wed, 29 Apr 2020 07:03:53 -0700 (PDT)
 From:   Martijn Coenen <maco@android.com>
 To:     axboe@kernel.dk, hch@lst.de, ming.lei@redhat.com
 Cc:     narayan@google.com, zezeozue@google.com, kernel-team@android.com,
         maco@google.com, bvanassche@acm.org, Chaitanya.Kulkarni@wdc.com,
         jaegeuk@kernel.org, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org, Martijn Coenen <maco@android.com>
-Subject: [PATCH v4 05/10] loop: Remove figure_loop_size()
-Date:   Wed, 29 Apr 2020 16:03:36 +0200
-Message-Id: <20200429140341.13294-6-maco@android.com>
+Subject: [PATCH v4 07/10] loop: Move loop_set_status_from_info() and friends up
+Date:   Wed, 29 Apr 2020 16:03:38 +0200
+Message-Id: <20200429140341.13294-8-maco@android.com>
 X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
 In-Reply-To: <20200429140341.13294-1-maco@android.com>
 References: <20200429140341.13294-1-maco@android.com>
@@ -78,63 +78,246 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function was now only used by loop_set_capacity(). Just open code
-the remaining code in the caller instead.
+So we can use it without forward declaration. This is a separate commit
+to make it easier to verify that this is just a move, without functional
+modifications.
 
 Signed-off-by: Martijn Coenen <maco@android.com>
 ---
- drivers/block/loop.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ drivers/block/loop.c | 206 +++++++++++++++++++++----------------------
+ 1 file changed, 103 insertions(+), 103 deletions(-)
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 9f5913879921..32755e874326 100644
+index 4a36a3f47503..60ba1ed95d77 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -258,21 +258,6 @@ static void loop_set_size(struct loop_device *lo, loff_t size)
- 	set_capacity_revalidate_and_notify(lo->lo_disk, size, false);
+@@ -962,6 +962,109 @@ static void loop_update_rotational(struct loop_device *lo)
+ 		blk_queue_flag_clear(QUEUE_FLAG_NONROT, q);
+ }
+ 
++static int
++loop_release_xfer(struct loop_device *lo)
++{
++	int err = 0;
++	struct loop_func_table *xfer = lo->lo_encryption;
++
++	if (xfer) {
++		if (xfer->release)
++			err = xfer->release(lo);
++		lo->transfer = NULL;
++		lo->lo_encryption = NULL;
++		module_put(xfer->owner);
++	}
++	return err;
++}
++
++static int
++loop_init_xfer(struct loop_device *lo, struct loop_func_table *xfer,
++	       const struct loop_info64 *i)
++{
++	int err = 0;
++
++	if (xfer) {
++		struct module *owner = xfer->owner;
++
++		if (!try_module_get(owner))
++			return -EINVAL;
++		if (xfer->init)
++			err = xfer->init(lo, i);
++		if (err)
++			module_put(owner);
++		else
++			lo->lo_encryption = xfer;
++	}
++	return err;
++}
++
++/**
++ * loop_set_status_from_info - configure device from loop_info
++ * @lo: struct loop_device to configure
++ * @info: struct loop_info64 to configure the device with
++ *
++ * Configures the loop device parameters according to the passed
++ * in loop_info64 configuration.
++ */
++static int
++loop_set_status_from_info(struct loop_device *lo,
++			  const struct loop_info64 *info)
++{
++	int err;
++	struct loop_func_table *xfer;
++	kuid_t uid = current_uid();
++
++	if ((unsigned int) info->lo_encrypt_key_size > LO_KEY_SIZE)
++		return -EINVAL;
++
++	err = loop_release_xfer(lo);
++	if (err)
++		return err;
++
++	if (info->lo_encrypt_type) {
++		unsigned int type = info->lo_encrypt_type;
++
++		if (type >= MAX_LO_CRYPT)
++			return -EINVAL;
++		xfer = xfer_funcs[type];
++		if (xfer == NULL)
++			return -EINVAL;
++	} else
++		xfer = NULL;
++
++	err = loop_init_xfer(lo, xfer, info);
++	if (err)
++		return err;
++
++	lo->lo_offset = info->lo_offset;
++	lo->lo_sizelimit = info->lo_sizelimit;
++	memcpy(lo->lo_file_name, info->lo_file_name, LO_NAME_SIZE);
++	memcpy(lo->lo_crypt_name, info->lo_crypt_name, LO_NAME_SIZE);
++	lo->lo_file_name[LO_NAME_SIZE-1] = 0;
++	lo->lo_crypt_name[LO_NAME_SIZE-1] = 0;
++
++	if (!xfer)
++		xfer = &none_funcs;
++	lo->transfer = xfer->transfer;
++	lo->ioctl = xfer->ioctl;
++
++	if ((lo->lo_flags & LO_FLAGS_AUTOCLEAR) !=
++	     (info->lo_flags & LO_FLAGS_AUTOCLEAR))
++		lo->lo_flags ^= LO_FLAGS_AUTOCLEAR;
++
++	lo->lo_encrypt_key_size = info->lo_encrypt_key_size;
++	lo->lo_init[0] = info->lo_init[0];
++	lo->lo_init[1] = info->lo_init[1];
++	if (info->lo_encrypt_key_size) {
++		memcpy(lo->lo_encrypt_key, info->lo_encrypt_key,
++		       info->lo_encrypt_key_size);
++		lo->lo_key_owner = uid;
++	}
++
++	return 0;
++}
++
+ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+ 		       struct block_device *bdev, unsigned int arg)
+ {
+@@ -1085,43 +1188,6 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+ 	return error;
  }
  
 -static int
--figure_loop_size(struct loop_device *lo, loff_t offset, loff_t sizelimit)
+-loop_release_xfer(struct loop_device *lo)
+-{
+-	int err = 0;
+-	struct loop_func_table *xfer = lo->lo_encryption;
+-
+-	if (xfer) {
+-		if (xfer->release)
+-			err = xfer->release(lo);
+-		lo->transfer = NULL;
+-		lo->lo_encryption = NULL;
+-		module_put(xfer->owner);
+-	}
+-	return err;
+-}
+-
+-static int
+-loop_init_xfer(struct loop_device *lo, struct loop_func_table *xfer,
+-	       const struct loop_info64 *i)
+-{
+-	int err = 0;
+-
+-	if (xfer) {
+-		struct module *owner = xfer->owner;
+-
+-		if (!try_module_get(owner))
+-			return -EINVAL;
+-		if (xfer->init)
+-			err = xfer->init(lo, i);
+-		if (err)
+-			module_put(owner);
+-		else
+-			lo->lo_encryption = xfer;
+-	}
+-	return err;
+-}
+-
+ static int __loop_clr_fd(struct loop_device *lo, bool release)
+ {
+ 	struct file *filp = NULL;
+@@ -1266,72 +1332,6 @@ static int loop_clr_fd(struct loop_device *lo)
+ 	return __loop_clr_fd(lo, false);
+ }
+ 
+-/**
+- * loop_set_status_from_info - configure device from loop_info
+- * @lo: struct loop_device to configure
+- * @info: struct loop_info64 to configure the device with
+- *
+- * Configures the loop device parameters according to the passed
+- * in loop_info64 configuration.
+- */
+-static int
+-loop_set_status_from_info(struct loop_device *lo,
+-			  const struct loop_info64 *info)
 -{
 -	int err;
--	loff_t size = get_size(offset, sizelimit, lo->lo_backing_file);
+-	struct loop_func_table *xfer;
+-	kuid_t uid = current_uid();
 -
--	err = loop_validate_size(size);
+-	if ((unsigned int) info->lo_encrypt_key_size > LO_KEY_SIZE)
+-		return -EINVAL;
+-
+-	err = loop_release_xfer(lo);
 -	if (err)
 -		return err;
 -
--	loop_set_size(lo, size);
+-	if (info->lo_encrypt_type) {
+-		unsigned int type = info->lo_encrypt_type;
+-
+-		if (type >= MAX_LO_CRYPT)
+-			return -EINVAL;
+-		xfer = xfer_funcs[type];
+-		if (xfer == NULL)
+-			return -EINVAL;
+-	} else
+-		xfer = NULL;
+-
+-	err = loop_init_xfer(lo, xfer, info);
+-	if (err)
+-		return err;
+-
+-	lo->lo_offset = info->lo_offset;
+-	lo->lo_sizelimit = info->lo_sizelimit;
+-	memcpy(lo->lo_file_name, info->lo_file_name, LO_NAME_SIZE);
+-	memcpy(lo->lo_crypt_name, info->lo_crypt_name, LO_NAME_SIZE);
+-	lo->lo_file_name[LO_NAME_SIZE-1] = 0;
+-	lo->lo_crypt_name[LO_NAME_SIZE-1] = 0;
+-
+-	if (!xfer)
+-		xfer = &none_funcs;
+-	lo->transfer = xfer->transfer;
+-	lo->ioctl = xfer->ioctl;
+-
+-	if ((lo->lo_flags & LO_FLAGS_AUTOCLEAR) !=
+-	     (info->lo_flags & LO_FLAGS_AUTOCLEAR))
+-		lo->lo_flags ^= LO_FLAGS_AUTOCLEAR;
+-
+-	lo->lo_encrypt_key_size = info->lo_encrypt_key_size;
+-	lo->lo_init[0] = info->lo_init[0];
+-	lo->lo_init[1] = info->lo_init[1];
+-	if (info->lo_encrypt_key_size) {
+-		memcpy(lo->lo_encrypt_key, info->lo_encrypt_key,
+-		       info->lo_encrypt_key_size);
+-		lo->lo_key_owner = uid;
+-	}
 -
 -	return 0;
 -}
 -
- static inline int
- lo_do_transfer(struct loop_device *lo, int cmd,
- 	       struct page *rpage, unsigned roffs,
-@@ -1560,10 +1545,21 @@ loop_get_status64(struct loop_device *lo, struct loop_info64 __user *arg) {
- 
- static int loop_set_capacity(struct loop_device *lo)
+ static int
+ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
  {
-+	int err;
-+	loff_t size;
-+
- 	if (unlikely(lo->lo_state != Lo_bound))
- 		return -ENXIO;
- 
--	return figure_loop_size(lo, lo->lo_offset, lo->lo_sizelimit);
-+	size = get_loop_size(lo, lo->lo_backing_file);
-+
-+	err = loop_validate_size(size);
-+	if (err)
-+		return err;
-+
-+	loop_set_size(lo, size);
-+
-+	return 0;
- }
- 
- static int loop_set_dio(struct loop_device *lo, unsigned long arg)
 -- 
 2.26.2.303.gf8c07b1a785-goog
 
