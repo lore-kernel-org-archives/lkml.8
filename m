@@ -2,70 +2,77 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABC7C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1925BC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FDB420775
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:50:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GsDbKg9d"
+	by mail.kernel.org (Postfix) with ESMTP id F3FA920775
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:50:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbgD2IuK (ORCPT
+        id S1726692AbgD2IuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:50:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726345AbgD2IuI (ORCPT
+        Wed, 29 Apr 2020 04:50:25 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:60898 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726556AbgD2IuZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:50:08 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51DCCC03C1AD;
-        Wed, 29 Apr 2020 01:50:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=McfirHER2yliCK9xpcEcEd1SIT40pFKzGHso+arjjzQ=; b=GsDbKg9d6S9lAVnn/+3nwAs5Jr
-        q/RY4ejijZl5Hev7SoOJXQUu4GC1BmGEyq3fFYqi89zNIncP4btsgI6B0zF4VMLjwQBQyGiaML8M1
-        oylzCAhztdbxb/56fnPxFpwqQ73nzJDW655pbk9oIAwnym+Og6vmAiL84RoV+98HWTi+IDxGhxHup
-        YmJcb84Q3e0q8CvCL6aRoxPmCtQdbhKRLGeG+BfRinzeHwoR8xVdlTi/+jB5rcgb1UmPXj00WEwTk
-        82YEzKxEBz5kk1KdQfPhQBUG4BMXkrhUwjDSuC1etJ4E+/zZmRWhIuPVHYmA6n5W8usbmhKsRljNz
-        OnyY+2Xg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTiPP-0007O2-Ip; Wed, 29 Apr 2020 08:49:35 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 52A18303F45;
-        Wed, 29 Apr 2020 10:49:33 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3E2C820BD8FF8; Wed, 29 Apr 2020 10:49:33 +0200 (CEST)
-Date:   Wed, 29 Apr 2020 10:49:33 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Huaixin Chang <changhuaixin@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        bp@alien8.de, hpa@zytor.com, jpoimboe@redhat.com,
-        luto@amacapital.net, michal.lkml@markovi.net, mingo@redhat.com,
-        tglx@linutronix.de, x86@kernel.org, yamada.masahiro@socionext.com
-Subject: Re: [PATCH 0/2] Build ORC fast lookup table in scripts/sorttable tool
-Message-ID: <20200429084933.GF13592@hirez.programming.kicks-ass.net>
-References: <20200429064626.16389-1-changhuaixin@linux.alibaba.com>
+        Wed, 29 Apr 2020 04:50:25 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-250-ruH5aaJPOy-ZH7BMxoXelQ-1; Wed, 29 Apr 2020 09:50:21 +0100
+X-MC-Unique: ruH5aaJPOy-ZH7BMxoXelQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 29 Apr 2020 09:50:21 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 29 Apr 2020 09:50:21 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Jim Mattson' <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        "Sean Christopherson" <sean.j.christopherson@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "everdox@gmail.com" <everdox@gmail.com>
+Subject: RE: [PATCH] KVM: x86: handle wrap around 32-bit address space
+Thread-Topic: [PATCH] KVM: x86: handle wrap around 32-bit address space
+Thread-Index: AQHWHPQJ/975q5rp/UiOQx/+1A4bJqiPy+vw
+Date:   Wed, 29 Apr 2020 08:50:21 +0000
+Message-ID: <c3ac5f4c9e3a412cb57ea02df19dd2d2@AcuMS.aculab.com>
+References: <20200427165917.31799-1-pbonzini@redhat.com>
+ <CALMp9eTBs=deSYu1=CMLwZcO8HTpGM2JsgDxvFR1Y220tdUQ3w@mail.gmail.com>
+In-Reply-To: <CALMp9eTBs=deSYu1=CMLwZcO8HTpGM2JsgDxvFR1Y220tdUQ3w@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429064626.16389-1-changhuaixin@linux.alibaba.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 02:46:24PM +0800, Huaixin Chang wrote:
-> Move building of fast lookup table from boot to sorttable tool. This saves us
-> 6380us boot time on Intel(R) Xeon(R) CPU E5-2682 v4 @ 2.50GHz with cores.
+RnJvbTogSmltIE1hdHRzb24NCj4gU2VudDogMjggQXByaWwgMjAyMCAwMToyOQ0KPiBPbiBNb24s
+IEFwciAyNywgMjAyMCBhdCA5OjU5IEFNIFBhb2xvIEJvbnppbmkgPHBib256aW5pQHJlZGhhdC5j
+b20+IHdyb3RlOg0KPiA+DQo+ID4gS1ZNIGlzIG5vdCBoYW5kbGluZyB0aGUgY2FzZSB3aGVyZSBF
+SVAgd3JhcHMgYXJvdW5kIHRoZSAzMi1iaXQgYWRkcmVzcw0KPiA+IHNwYWNlICh0aGF0IGlzLCBv
+dXRzaWRlIGxvbmcgbW9kZSkuICBUaGlzIGlzIG5lZWRlZCBib3RoIGluIHZteC5jDQo+ID4gYW5k
+IGluIGVtdWxhdGUuYy4gIFNWTSB3aXRoIE5SSVBTIGlzIG9rYXksIGJ1dCBpdCBjYW4gc3RpbGwg
+cHJpbnQNCj4gPiBhbiBlcnJvciB0byBkbWVzZyBkdWUgdG8gaW50ZWdlciBvdmVyZmxvdy4NCi4u
+Lg0KPiA+ICsgICAgICAgICAgICAgICBpZiAodW5saWtlbHkoKChyaXAgXiBvcmlnX3JpcCkgPj4g
+MzEpID09IDMpICYmICFpc182NF9iaXRfbW9kZSh2Y3B1KSkNCg0KSXNuJ3QgdGhlIG1vcmUgb2J2
+aW91czoNCglpZiAoKChyaXAgXiBvcmlnX3JpcCkgJiAxdWxsIDw8IDMyKSAuLi4NCmVxdWl2YWxl
+bnQ/DQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkg
+Um9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlv
+biBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
-And what does it add to the build time?
