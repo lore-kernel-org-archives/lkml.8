@@ -2,103 +2,104 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDD8C83001
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E88C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E584020730
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF4212076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:22:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgD2DO1 (ORCPT
+        id S1726677AbgD2DWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 23:14:27 -0400
-Received: from mail-m17613.qiye.163.com ([59.111.176.13]:27962 "EHLO
-        mail-m17613.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgD2DO0 (ORCPT
+        Tue, 28 Apr 2020 23:22:22 -0400
+Received: from kernel.crashing.org ([76.164.61.194]:49566 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726560AbgD2DWW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 23:14:26 -0400
-Received: from ubuntu.localdomain (unknown [157.0.31.122])
-        by mail-m17613.qiye.163.com (Hmail) with ESMTPA id 52F79481854;
-        Wed, 29 Apr 2020 11:14:23 +0800 (CST)
-From:   Bernard Zhao <bernard@vivo.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     opensource.kernel@vivo.com, Bernard Zhao <bernard@vivo.com>
-Subject: [PATCH] clk/meson: fixes memleak issue in init err branch
-Date:   Tue, 28 Apr 2020 20:14:15 -0700
-Message-Id: <20200429031416.3900-1-bernard@vivo.com>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VPTkpLS0tJSkhNSUhLTllXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MC46Lyo5DTg*ME5WDTA0OSwr
-        SRAaCzNVSlVKTkNDSkhLS01ITk1NVTMWGhIXVRkeCRUaCR87DRINFFUYFBZFWVdZEgtZQVlKTkxV
-        S1VISlVKSUlZV1kIAVlBSUxCQjcG
-X-HM-Tid: 0a71c3eda48f93bakuws52f79481854
+        Tue, 28 Apr 2020 23:22:22 -0400
+X-Greylist: delayed 532 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 Apr 2020 23:22:21 EDT
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 03T3LD4u008600
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 28 Apr 2020 22:21:16 -0500
+Message-ID: <55e1e941457cd596c4273e9c55dc2cfc9027c5ba.camel@kernel.crashing.org>
+Subject: Re: [PATCH v5 3/5] drivers/soc/litex: add LiteX SoC Controller
+ driver
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Mateusz Holenko <mholenko@antmicro.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Cc:     Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org, "Gabriel L. Somlo" <gsomlo@gmail.com>
+Date:   Wed, 29 Apr 2020 13:21:11 +1000
+In-Reply-To: <CAPk366REVxz7qRfJ0dJOVPRey6+01q1JRvqANDNffYV8Lvh73g@mail.gmail.com>
+References: <20200425133939.3508912-0-mholenko@antmicro.com>
+         <20200425133939.3508912-3-mholenko@antmicro.com>
+         <CAPk366REVxz7qRfJ0dJOVPRey6+01q1JRvqANDNffYV8Lvh73g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In common init function, when run into err branch, we didn`t
-use kfree to release kzmalloc area, this may bring in memleak
+On Mon, 2020-04-27 at 11:13 +0200, Mateusz Holenko wrote:
+> As Gabriel Somlo <gsomlo@gmail.com> suggested to me, I could still use
+> readl/writel/ioread/iowrite() standard functions providing memory
+> barriers *and* have values in CPU native endianness by using the
+> following constructs:
+> 
+> `le32_to_cpu(readl(addr))`
+> 
+> and
+> 
+> `writel(cpu_to_le32(value), addr)`
+> 
+> as le32_to_cpu/cpu_to_le32():
+> - does nothing on LE CPUs and
+> - reorders bytes on BE CPUs which in turn reverts swapping made by
+> readl() resulting in returning the original value.
 
-Signed-off-by: Bernard Zhao <bernard@vivo.com>
----
- drivers/clk/meson/meson8b.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+It's a bit sad... I don't understand why you need this. The HW has a
+fied endian has you have mentioned earlier (and that is a good design).
 
-diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
-index 34a70c4b4899..0f07d5a4cd16 100644
---- a/drivers/clk/meson/meson8b.c
-+++ b/drivers/clk/meson/meson8b.c
-@@ -3687,6 +3687,7 @@ static void __init meson8b_clkc_init_common(struct device_node *np,
- 	if (ret) {
- 		pr_err("%s: Failed to register clkc reset controller: %d\n",
- 		       __func__, ret);
-+		kfree(rstc);
- 		return;
- 	}
- 
-@@ -3710,8 +3711,10 @@ static void __init meson8b_clkc_init_common(struct device_node *np,
- 			continue;
- 
- 		ret = of_clk_hw_register(np, clk_hw_onecell_data->hws[i]);
--		if (ret)
-+		if (ret) {
-+			kfree(rstc);
- 			return;
-+		}
- 	}
- 
- 	meson8b_cpu_nb_data.cpu_clk = clk_hw_onecell_data->hws[CLKID_CPUCLK];
-@@ -3727,13 +3730,16 @@ static void __init meson8b_clkc_init_common(struct device_node *np,
- 	if (ret) {
- 		pr_err("%s: failed to register the CPU clock notifier\n",
- 		       __func__);
-+		kfree(rstc);
- 		return;
- 	}
- 
- 	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get,
- 				     clk_hw_onecell_data);
--	if (ret)
-+	if (ret) {
- 		pr_err("%s: failed to register clock provider\n", __func__);
-+		kfree(rstc);
-+	}
- }
- 
- static void __init meson8_clkc_init(struct device_node *np)
--- 
-2.26.2
+The fact that you are trying to shove things into a "smaller pipe" than
+the actual register shouldn't affect at what address the MSB and LSB
+reside. And readl/writel (or ioread32/iowrite32) will always be LE as
+well, so will match the HW layout. Thus I don't see why you need to
+play swapping games here.
+
+This however would be avoided completely if the HW was a tiny bit
+smarter and would do the multi-beat access for you which shouldn't be
+terribly hard to implement.
+
+That said, it would be even clearer if you just open coded the 2 or 3
+useful cases: 32/8, 32/16 and 32/32. The loop with calculated shifts
+(and no masks) makes the code hard to understand.
+
+Cheers,
+Ben.
 
