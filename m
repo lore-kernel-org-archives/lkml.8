@@ -2,72 +2,78 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCD0C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5862DC83009
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D93D620737
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:46:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588128414;
-	bh=i/beAvLFST2zpd8Kzs30/5TtRc3y6I9BsrZ9LT5jD3Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gNt6Wm4958l9ac6RjlD3EJCZk5INNkN3oHO0LuJAMAR/6W9ogc9iQKxfMj8rZRlk2
-	 wD7Ax7dLgtLgHNubX5QXgVOQTV7p+HhhMqiA3bGi2FL6JjCHBjtVngK3CGyJ2yt9pH
-	 BJ0FhpuVj+sv9TEC0BsktWHE9XS3rIwm6EJZrRo4=
+	by mail.kernel.org (Postfix) with ESMTP id 4002E2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:46:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgD2Cqy (ORCPT
+        id S1726785AbgD2Cq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 22:46:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34354 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726498AbgD2Cqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 22:46:51 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF90920737;
-        Wed, 29 Apr 2020 02:46:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588128411;
-        bh=i/beAvLFST2zpd8Kzs30/5TtRc3y6I9BsrZ9LT5jD3Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oE44iFbDA8l5+pIUkhCjvjYqB3CdLOo/xE3SJ8scLw3NEE072VFMwIBKna8Zp83Lb
-         C8ShYMGnDpmHXZu1b7J0dLvuNylBH8rUoVEbochDChE5OMu4jmzu8lUaAgsQEr70pd
-         Zosytjw13rZFSlK5kcODISxdnWNTzC9zIFD9nl38=
-Date:   Wed, 29 Apr 2020 10:46:45 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Matt Porter <mporter@konsulko.com>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: imx8mm: specify #sound-dai-cells for SAI
- nodes
-Message-ID: <20200429024644.GL32592@dragon>
-References: <20200415185941.13956-1-mporter@konsulko.com>
+        Tue, 28 Apr 2020 22:46:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36464 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726498AbgD2Cq4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 22:46:56 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7003EC03C1AC;
+        Tue, 28 Apr 2020 19:46:56 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTckK-00DwIZ-FV; Wed, 29 Apr 2020 02:46:48 +0000
+Date:   Wed, 29 Apr 2020 03:46:48 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Jann Horn <jannh@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        NeilBrown <neilb@suse.de>, "Rafael J . Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCH] epoll: Fix UAF dentry name access in wakeup source setup
+Message-ID: <20200429024648.GA23230@ZenIV.linux.org.uk>
+References: <20200429023104.131925-1-jannh@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415185941.13956-1-mporter@konsulko.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200429023104.131925-1-jannh@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 02:59:41PM -0400, Matt Porter wrote:
-> Add #sound-dai-cells properties to SAI nodes.
-> 
-> Signed-off-by: Matt Porter <mporter@konsulko.com>
+On Wed, Apr 29, 2020 at 04:31:04AM +0200, Jann Horn wrote:
 
-Applied, thanks.
+> I'm guessing this will go through akpm's tree?
+> 
+>  fs/eventpoll.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+> index 8c596641a72b0..5052a41670479 100644
+> --- a/fs/eventpoll.c
+> +++ b/fs/eventpoll.c
+> @@ -1450,7 +1450,7 @@ static int reverse_path_check(void)
+>  
+>  static int ep_create_wakeup_source(struct epitem *epi)
+>  {
+> -	const char *name;
+> +	struct name_snapshot name;
+>  	struct wakeup_source *ws;
+>  
+>  	if (!epi->ep->ws) {
+> @@ -1459,8 +1459,9 @@ static int ep_create_wakeup_source(struct epitem *epi)
+>  			return -ENOMEM;
+>  	}
+>  
+> -	name = epi->ffd.file->f_path.dentry->d_name.name;
+> -	ws = wakeup_source_register(NULL, name);
+> +	take_dentry_name_snapshot(&name, epi->ffd.file->f_path.dentry);
+> +	ws = wakeup_source_register(NULL, name.name.name);
+> +	release_dentry_name_snapshot(&name);
+
+I'm not sure I like it.  Sure, it won't get freed under you that way; it still
+can go absolutely stale by the time you return from wakeup_source_register().
+What is it being used for?
