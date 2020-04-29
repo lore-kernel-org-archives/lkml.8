@@ -2,92 +2,193 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 692B7C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8877DC83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42C092072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63DAA2072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:58:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XG2QdsAY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbgD2K41 (ORCPT
+        id S1726789AbgD2K6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 06:56:27 -0400
-Received: from david.siemens.de ([192.35.17.14]:49909 "EHLO david.siemens.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726556AbgD2K41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 06:56:27 -0400
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by david.siemens.de (8.15.2/8.15.2) with ESMTPS id 03TAtvj5019413
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Apr 2020 12:55:57 +0200
-Received: from [167.87.241.229] ([167.87.241.229])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 03TAtuRB023743;
-        Wed, 29 Apr 2020 12:55:56 +0200
-Subject: Re: [virtio-dev] Re: [PATCH 5/5] virtio: Add bounce DMA ops
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Srivatsa Vaddagiri <vatsa@codeaurora.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>, tsoni@codeaurora.org,
-        virtio-dev@lists.oasis-open.org, konrad.wilk@oracle.com,
-        jasowang@redhat.com, christoffer.dall@arm.com,
-        virtualization@lists.linux-foundation.org, alex.bennee@linaro.org,
-        iommu@lists.linux-foundation.org, stefano.stabellini@xilinx.com,
-        will@kernel.org, linux-kernel@vger.kernel.org,
-        pratikp@codeaurora.org
-References: <20200428163448-mutt-send-email-mst@kernel.org>
- <275eba4b-dd35-aa95-b2e3-9c5cbf7c6d71@linux.intel.com>
- <20200429004531-mutt-send-email-mst@kernel.org>
- <b676430c-65b3-096e-ca48-ceebf10f4b28@linux.intel.com>
- <20200429023842-mutt-send-email-mst@kernel.org>
- <20200429094410.GD5097@quicinc.com>
- <20200429055125-mutt-send-email-mst@kernel.org>
- <20200429100953.GE5097@quicinc.com>
- <20200429061621-mutt-send-email-mst@kernel.org>
- <f52556e2-253e-2dbc-cb7a-a7991e3bcfde@siemens.com>
- <20200429064458-mutt-send-email-mst@kernel.org>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <303ace66-950c-955d-d750-74de5054788a@siemens.com>
-Date:   Wed, 29 Apr 2020 12:55:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 06:58:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726558AbgD2K6O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 06:58:14 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2949CC03C1AD
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 03:58:14 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id u6so2107309ljl.6
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 03:58:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3MQTEzz/bgUGqn27HLWx05JdvUwv0M9LPIujeg8+b5w=;
+        b=XG2QdsAYz9E7hY9503tkL1sFJprfMBUwQSKtdzpkylC0jxzM5jc9xUMTYi/hg5KaZy
+         OPAzpsVJBv8yjM3g4WpbE51LEkOZUyqIrJtpzljk/JdmUHqvqzyfpCsRoc0i+AO58I20
+         o9Knw7Qtp7UOQyohP0flDwSX/KSOABYKd72SarHzD6qsog9kcRs4VrC+0lKm7SnV/aKL
+         +kHxwsQEQNocOT4nwctpZ0QMxRdSlymVBWTJxR9fcAG3nVbB0ZMQEu1mJgy3lC63lMGi
+         Yk+igqB/9+AzAAOen8USV+9PpBnG6vEY+D5eExz0gM+uVpB6YksAPvAaNs6Cah7aCeMU
+         y2ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3MQTEzz/bgUGqn27HLWx05JdvUwv0M9LPIujeg8+b5w=;
+        b=Bb2TYJGuEUZCoH6sJAViN7cCHxQvOdtoBpZbMKc25fwgVLUdcQpfkzTfLH3Cy92WIS
+         HL5+nN4QxpCLu3RL0rO4Xp9W/vZrGOW8VPxOpnw5/hYl/iXD1P6rWR4wPBvemYx98GyB
+         7WoEsnsGBuEOCdVRgdExAS2h4oarlvY/XEur4P3Njzt9NUfjXsf5B898qUUjm3XffZDc
+         FnVjICVCXaJn3liIDd0DNK/z66OQrSaHZVisBa4tCWUGoSRFfm9MCXGK5Xq/XqwOpvTa
+         GbgYSotLwRpmBBD5A8gC9qWj52msofAPHUkV58YlIGGw4dLI/IiCfUYkQjhJx3Ie6fYq
+         YI9Q==
+X-Gm-Message-State: AGi0PuZgf4ys50Wj3iRKPAJEfNkFFkm2me/GVSFBrvVmvl+eO8bhGN2B
+        6cGNUIjE1VOaLqFJ2ksxBKKONK2S+aZlFFZQ9KB/nA==
+X-Google-Smtp-Source: APiQypKC6shf0ejaOe03ju3dzacATI5s1zrN2YicbE63hD7OHdvvDXDh0Ho7o0zRZ/SYFeK0XdzXPcUw8Zh9/qtrCH8=
+X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr12036777ljm.165.1588157892313;
+ Wed, 29 Apr 2020 03:58:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200429064458-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200428182224.822179290@linuxfoundation.org>
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 29 Apr 2020 16:28:00 +0530
+Message-ID: <CA+G9fYscqG8jKYYPTH86hgHBB0nkTe21gzpzJfj+pWp1NhPV-A@mail.gmail.com>
+Subject: Re: [PATCH 4.19 000/131] 4.19.119-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.04.20 12:45, Michael S. Tsirkin wrote:
-> On Wed, Apr 29, 2020 at 12:26:43PM +0200, Jan Kiszka wrote:
->> On 29.04.20 12:20, Michael S. Tsirkin wrote:
->>> On Wed, Apr 29, 2020 at 03:39:53PM +0530, Srivatsa Vaddagiri wrote:
->>>> That would still not work I think where swiotlb is used for pass-thr devices
->>>> (when private memory is fine) as well as virtio devices (when shared memory is
->>>> required).
->>>
->>> So that is a separate question. When there are multiple untrusted
->>> devices, at the moment it looks like a single bounce buffer is used.
->>>
->>> Which to me seems like a security problem, I think we should protect
->>> untrusted devices from each other.
->>>
->>
->> Definitely. That's the model we have for ivshmem-virtio as well.
->>
->> Jan
-> 
-> Want to try implementing that?
-> 
+On Wed, 29 Apr 2020 at 00:01, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.119 release.
+> There are 131 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 30 Apr 2020 18:20:45 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.119-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-The desire is definitely there, currently "just" not the time.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Jan
+Summary
+------------------------------------------------------------------------
 
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+kernel: 4.19.119-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 3fc812d65db6b5ad19f0ef548492a25ba2a276bc
+git describe: v4.19.118-132-g3fc812d65db6b
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.118-132-g3fc812d65db6b
+
+
+No regressions (compared to build v4.19.118)
+
+No fixes (compared to build v4.19.118)
+
+Ran 32114 total tests in the following environments and test suites.
+
+Environmnts
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* libgpiod
+* linux-log-parser
+* perf
+* network-basic-tests
+* kselftest/net
+* kselftest/networking
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-native/networking
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+* kselftest-vsyscall-mode-none/networking
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
