@@ -2,154 +2,131 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B498C8300D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CD0C8300B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 067B420731
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB7AA2072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:57:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rylan.coffee header.i=@rylan.coffee header.b="NquLEErk";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HP/TZYcC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bzpsXmcN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgD2EzU (ORCPT
+        id S1726787AbgD2E5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 00:55:20 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:51847 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726619AbgD2EzT (ORCPT
+        Wed, 29 Apr 2020 00:57:52 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:60016 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725497AbgD2E5w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 00:55:19 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 818D35C03A3;
-        Wed, 29 Apr 2020 00:55:18 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Wed, 29 Apr 2020 00:55:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rylan.coffee; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=/qkEJFxQQnd+DohDVJwiAH2Q88T
-        56mCRQ/dGzRWSAe0=; b=NquLEErkc+H3mfU66c2KdmdeMbGYLKw8iHHObVYhCx1
-        L1FeY0fhdsWfuPUERh5Y/MHfM0QsB2l5Wi4maeLXWwogeCU2q8H8CxzcUldzCNFQ
-        ZnFYzdTYxIKEIkNSgln2Qi/IS1FFf0b1FmXbdU1E3oPl4DGh2Euut5LEyC8Ro8SU
-        SK8AWX10XObr59hLZ0SHZSO35AJiX60+eaauKJmofi4CAfOnGPqgLl1AXj9R21y7
-        24Ono03VnXXNZ0cZ3UZgX5PwuOQZrdLbrVuHVPfPdkQxQH3LCPcypDeEz8WZ0F1o
-        Lc6ROSMGhIqK1q+HAng0nbxXdT7cqcM6euBDJk6llFQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=/qkEJF
-        xQQnd+DohDVJwiAH2Q88T56mCRQ/dGzRWSAe0=; b=HP/TZYcChIkCuJFrXQnDtr
-        lpV55mIILTGUQI1glACIz4aeCfSe5TlNzhE++8PnKcfg5YncJVxoSY78i35W84Ga
-        71kFJS63X78JlcWu3LC0kfBQjMvVDvq1FpBY20Aq3ZESjjqPxfx9QKfxGMF9sgTM
-        MWJcEo9QdblAMoudhGFMor4sIcIUsB6cnIcOQcQFRUsxxhq3JEImGqdTWj3BX9Zp
-        qWsF5wohZPSIxQw7UwESKGeB5WvAJgdREkZcqMDmi3G5do4VFK1uYRjuaPJYavTi
-        EmuS9UD0r4o/cDlaDLxnz3cm+OM5hrejtkcH7hr7k7ox4AmCk1xWv2YKhlR9CJrA
-        ==
-X-ME-Sender: <xms:tQipXg3YSOru4BPTrvz6WauC2-nVZa7MGLj5Usf13U1mbXhVmjob5g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedvgdekiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtjeenucfhrhhomheptfihlhgrnhcu
-    ffhmvghllhhouceomhgrihhlsehrhihlrghnrdgtohhffhgvvgeqnecukfhppedutdekrd
-    egledrudehkedrkeegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrihhlsehrhihlrghnrdgtohhffhgvvg
-X-ME-Proxy: <xmx:tQipXl8TgdFMb0C-6CmjiXZtR0vh-CecGoc_7NLSo-WxF_G0NvpzBg>
-    <xmx:tQipXp15-Na2mv-nXVzB139H2NvbcG9jUQjjnWfPV5grRXrBylLd1g>
-    <xmx:tQipXg00oQJ5b716J1JJ9RQCc3u2gVYbFyZ0og1bHL2QrWbonUc1dA>
-    <xmx:tgipXj699o_t9VAaWyUWLZ-xXj1S1alWTVahOrNjyI5Nu9Jt9Ug4Lw>
-Received: from athena (pool-108-49-158-84.bstnma.fios.verizon.net [108.49.158.84])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A59A83280069;
-        Wed, 29 Apr 2020 00:55:17 -0400 (EDT)
-Date:   Wed, 29 Apr 2020 00:55:16 -0400
-From:   Rylan Dmello <mail@rylan.coffee>
-To:     Joe Perches <joe@perches.com>
-Cc:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] staging: qlge: Remove multi-line dereferences from
- qlge_main.c
-Message-ID: <20200429045516.GA2421@athena>
-References: <aae9feb569c60758ab09c923c09b600295f4cb32.1588132908.git.mail@rylan.coffee>
- <0dcf9712a49968da1935061de130bc3668e63088.camel@perches.com>
+        Wed, 29 Apr 2020 00:57:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588136270;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3nNJuKtjgttr9/75Tz29rm+bXY1XXpiZYQWZLWivAVY=;
+        b=bzpsXmcN7/txQGw++B4c5Q3s4BRmz6ykAaHzuZWWc2cz89BvEZrerX/g4OLNvjV2qDooFr
+        dWXjzpS/uMkWbO7ukBz6OS4hzh7Q3LrFRDKOGL6hgRS63qm22d9wEbVIiiGBXH01TqBYrp
+        WZ2o6hzpNYXoUF2Vo8dpNz0E4qy5TzQ=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-404-HyGrS9prNrSVEEZ7WCIGSg-1; Wed, 29 Apr 2020 00:57:48 -0400
+X-MC-Unique: HyGrS9prNrSVEEZ7WCIGSg-1
+Received: by mail-wr1-f69.google.com with SMTP id f15so1117648wrj.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 21:57:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3nNJuKtjgttr9/75Tz29rm+bXY1XXpiZYQWZLWivAVY=;
+        b=G99sxWeVNk//yg6e9YR7X1HiOxcdbN1XXagpn/0Z6WuUXOTlEbJZttKKbAZgbNrte4
+         vyFCuuW77cGaB9F3+QwKdUt3pikiMyAwLmD/3HD0axz2iOxvO+hM7dmoKLdvm6p5jXnL
+         MyIViUquKIKzmiC4yW6zh837V+Ew6ucf+JmMzEmjvF98bPygueJFr8bAkHuvip0SoNLM
+         HJp7eyOdcLdjQ/DSF0fJH2QuN0uigwdo4SaOj0X6j1K1+30qgbI5p4CsOYRwrBj+ln8B
+         sMO1Vc06rI/wPXalYG8CewANbNy2M4GqrBm+/L6SvaPknsOyQ+WaIijOjjT0PGlRqoyT
+         v9VA==
+X-Gm-Message-State: AGi0PuZW5ub8CxZ4mwPLLTuopJZg3tyE+YWKUjxANk7oxhADkF8mzgk5
+        figS+zOzOVk4fi9fZZSZdZa9auZeEVGFSjzZ3wovKEvd3T9hL2YQFpVZ1w9Tm+/NqBoPk3Rn7jE
+        aKV348JbdBkAI2hwaSF/u71We
+X-Received: by 2002:adf:f884:: with SMTP id u4mr36138567wrp.171.1588136267212;
+        Tue, 28 Apr 2020 21:57:47 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLIkFFOdPPZMhssIAseU7SHZrcOaozQItYfLHySNTFChvxRbYL5g64fDwfcVxKEgSHYYt1vng==
+X-Received: by 2002:adf:f884:: with SMTP id u4mr36138548wrp.171.1588136267003;
+        Tue, 28 Apr 2020 21:57:47 -0700 (PDT)
+Received: from redhat.com (bzq-109-66-7-121.red.bezeqint.net. [109.66.7.121])
+        by smtp.gmail.com with ESMTPSA id h17sm5885719wmm.6.2020.04.28.21.57.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 21:57:46 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 00:57:43 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Srivatsa Vaddagiri <vatsa@codeaurora.org>, tsoni@codeaurora.org,
+        virtio-dev@lists.oasis-open.org, konrad.wilk@oracle.com,
+        jan.kiszka@siemens.com, jasowang@redhat.com,
+        christoffer.dall@arm.com,
+        virtualization@lists.linux-foundation.org, alex.bennee@linaro.org,
+        iommu@lists.linux-foundation.org, stefano.stabellini@xilinx.com,
+        will@kernel.org, linux-kernel@vger.kernel.org,
+        pratikp@codeaurora.org
+Subject: Re: [PATCH 5/5] virtio: Add bounce DMA ops
+Message-ID: <20200429004531-mutt-send-email-mst@kernel.org>
+References: <1588073958-1793-1-git-send-email-vatsa@codeaurora.org>
+ <1588073958-1793-6-git-send-email-vatsa@codeaurora.org>
+ <20200428121232-mutt-send-email-mst@kernel.org>
+ <20200428174952.GA5097@quicinc.com>
+ <20200428163448-mutt-send-email-mst@kernel.org>
+ <275eba4b-dd35-aa95-b2e3-9c5cbf7c6d71@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0dcf9712a49968da1935061de130bc3668e63088.camel@perches.com>
+In-Reply-To: <275eba4b-dd35-aa95-b2e3-9c5cbf7c6d71@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 09:31:10PM -0700, Joe Perches wrote:
-> On Wed, 2020-04-29 at 00:04 -0400, Rylan Dmello wrote:
-> > Fix checkpatch.pl warnings:
+On Wed, Apr 29, 2020 at 10:22:32AM +0800, Lu Baolu wrote:
+> On 2020/4/29 4:41, Michael S. Tsirkin wrote:
+> > On Tue, Apr 28, 2020 at 11:19:52PM +0530, Srivatsa Vaddagiri wrote:
+> > > * Michael S. Tsirkin<mst@redhat.com>  [2020-04-28 12:17:57]:
+> > > 
+> > > > Okay, but how is all this virtio specific?  For example, why not allow
+> > > > separate swiotlbs for any type of device?
+> > > > For example, this might make sense if a given device is from a
+> > > > different, less trusted vendor.
+> > > Is swiotlb commonly used for multiple devices that may be on different trust
+> > > boundaries (and not behind a hardware iommu)?
+> > Even a hardware iommu does not imply a 100% security from malicious
+> > hardware. First lots of people use iommu=pt for performance reasons.
+> > Second even without pt, unmaps are often batched, and sub-page buffers
+> > might be used for DMA, so we are not 100% protected at all times.
 > > 
-> >   WARNING: Avoid multiple line dereference - prefer 'qdev->func'
-> >   WARNING: Avoid multiple line dereference - prefer 'qdev->flags'
 > 
-> Assuming you are doing this for exercise:
-> 
-> It'd be better to unindent all the switch/case
-> blocks for the entire function so more functions
-> fit on single lines
-> 
-> 	switch (foo) {
-> 	case bar:
-> 		{
-> 			...;
-> 
-> should be:
-> 
-> 	switch (foo) {
-> 	case bar: {
-> 		...;
-> 
-> goto exit; might as well be break; and remove
-> the exit label too.
->
+> For untrusted devices, IOMMU is forced on even iommu=pt is used;
 
-Thank you - I noticed that clang-format unindented the switch-case blocks, but
-wasn't sure whether to include that in this patch set or not.
+I think you are talking about untrusted *drivers* like with VFIO.
 
-I will send a V2 patch that unindents these switch-case blocks throughout
-the two functions listed here, and also removes the exit label from this
-function.
+On the other hand, I am talking about things like thunderbolt
+peripherals being less trusted than on-board ones.
 
-> > Signed-off-by: Rylan Dmello <mail@rylan.coffee>
-> > ---
-> >  drivers/staging/qlge/qlge_main.c | 9 ++++-----
-> >  1 file changed, 4 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
-> > index d7e4dfafc1a3..10daae025790 100644
-> > --- a/drivers/staging/qlge/qlge_main.c
-> > +++ b/drivers/staging/qlge/qlge_main.c
-> > @@ -396,8 +396,7 @@ static int ql_set_mac_addr_reg(struct ql_adapter *qdev, u8 *addr, u32 type,
-> >  			 * the route field to NIC core.
-> >  			 */
-> >  			cam_output = (CAM_OUT_ROUTE_NIC |
-> > -				      (qdev->
-> > -				       func << CAM_OUT_FUNC_SHIFT) |
-> > +				      (qdev->func << CAM_OUT_FUNC_SHIFT) |
-> >  					(0 << CAM_OUT_CQ_ID_SHIFT));
-> >  			if (qdev->ndev->features & NETIF_F_HW_VLAN_CTAG_RX)
-> >  				cam_output |= CAM_OUT_RV;
-> > @@ -3432,9 +3431,9 @@ static int ql_request_irq(struct ql_adapter *qdev)
-> >  				     &qdev->rx_ring[0]);
-> >  			status =
-> >  			    request_irq(pdev->irq, qlge_isr,
-> > -					test_bit(QL_MSI_ENABLED,
-> > -						 &qdev->
-> > -						 flags) ? 0 : IRQF_SHARED,
-> > +					test_bit(QL_MSI_ENABLED, &qdev->flags)
-> > +						? 0
-> > +						: IRQF_SHARED,
-> >  					intr_context->name, &qdev->rx_ring[0]);
-> >  			if (status)
-> >  				goto err_irq;
+Or possibly even using swiotlb for specific use-cases where
+speed is less of an issue.
+
+E.g. my wifi is pretty slow anyway, and that card is exposed to
+malicious actors all the time, put just that behind swiotlb
+for security, and leave my graphics card with pt since
+I'm trusting it with secrets anyway.
+
+
+> and
+> iotlb flush is in strict mode (no batched flushes); ATS is also not
+> allowed. Swiotlb is used to protect sub-page buffers since IOMMU can
+> only apply page granularity protection. Swiotlb is now used for devices
+> from different trust zone.
 > 
+> Best regards,
+> baolu
+
