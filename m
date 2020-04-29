@@ -2,314 +2,308 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58649C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB4BC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9812074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C6292087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:47:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="XhtZBScq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PbpiuLZ1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bCzbe2yf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgD2Nq7 (ORCPT
+        id S1727955AbgD2NrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:46:59 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:34537 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726830AbgD2Nq6 (ORCPT
+        Wed, 29 Apr 2020 09:47:06 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24635 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727878AbgD2NrF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:46:58 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 1A9B35C036F;
-        Wed, 29 Apr 2020 09:46:57 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Wed, 29 Apr 2020 09:46:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=DbYv53qk6skeNdmOemkqgjZrTiF
-        wQXjLrVbGiM/2ymY=; b=XhtZBScq8XSLgJ/F2GeiqdyXDOsOys8eq8s4x8pcSj5
-        t3R9YdeSg5Y+hPdjXf+zqpXJ5L6PtgvNEJUuL3vRoDQhUldq74paPNuwTlsb8Wjy
-        SF2mN12ib2XQnvvuXp5Teh4fC9fVAJ0og8o+RIjJPHTOgtUCvnVB9icmeeQhNRZo
-        qf0M7NCIT8WkqUCNrifDPWk7CFdodrwdz6fYhxVwtnsfK3uWSE8LqfzBDofEMW8O
-        SOXefNKuctY3prTuShdpGp7q/M/l5k5h21qg8Wb9GB2R9MWYXuCYF8L45JYn/e6i
-        n/8J8GH5oa/iVfJ/JAeaCoQyBneH3zcV2sOopi0Pg6Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=DbYv53
-        qk6skeNdmOemkqgjZrTiFwQXjLrVbGiM/2ymY=; b=PbpiuLZ1vI/KRZHOL+j2Y0
-        ZonInhU7BhG8hyTJeNitJ0LSzLqJshkgWDxHmWLrKjuq24A3mgLOaB7PDY6EhxCe
-        V922tHGMephzoQCPbYr/2wyVg8acffiGH80RRORmqkL0r6wDf/ecHs6wjuGBiksM
-        ddFeYqlMfS55M05Fb8DOSLKdavfqyNVYFE3McQbPQ5MWDLfiBeWboL6rmvxGO60U
-        akg9mzsvH/14B7O+Uxx9Fzkx0hsrnCNc6gLSco3nZPv5oxRB+llwpRs7W2GMzF9P
-        hc4iEce4NVQ30nFBcdFBsTR/hBRJZZzQHkRDR0Vr/41yqLpaB3fFFyj8KyOpNOUQ
-        ==
-X-ME-Sender: <xms:UIWpXhMsffPccFhInQq5Z0NSWT_7GeCS-6WSVC7g3XBFz4DhPhyq4A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieefgdeijecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjsehttdertd
-    dttddvnecuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeen
-    ucggtffrrghtthgvrhhnpeevueehjefgfffgiedvudekvdektdelleelgefhleejieeuge
-    egveeuuddukedvteenucfkphepkeefrdekiedrkeelrddutdejnecuvehluhhsthgvrhfu
-    ihiivgepudenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtoh
-    hm
-X-ME-Proxy: <xmx:UIWpXt_ECFOfdscTa5MkZsBx51jHnn0Nf5lgIKzHuy1SIwC6Y8fqag>
-    <xmx:UIWpXqUrAr67DpBYnYHigjXVLmY365bjzED6epv5iYIRxjeOfvYntQ>
-    <xmx:UIWpXveogEY3tcPcdLGLubSrj9BYq8gVgQYYtmu8QychpvLl5nk6jA>
-    <xmx:UYWpXkgGlgMOSEJQWwgnXpz6_PW4Kx__7p_Qkg6wi6nq2LtfFsgLow>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 764303280064;
-        Wed, 29 Apr 2020 09:46:56 -0400 (EDT)
-Date:   Wed, 29 Apr 2020 15:46:55 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Akira Shimahara <akira215corp@gmail.com>
-Cc:     zbr@ioremap.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] w1_therm: adding sysfs entry to check device power
-Message-ID: <20200429134655.GB2132814@kroah.com>
-References: <20200429133204.140081-1-akira215corp@gmail.com>
+        Wed, 29 Apr 2020 09:47:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588168023;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AsGJp+cGC6yjtmCMeQEpNPJgdJEBu8zfeHN6O5085Ko=;
+        b=bCzbe2yfwiXEPuQ18Tf4MjK5w00qiAqvTOqwLReEQvsp9zGk/iI6imO/mHoL19eLlAz7Ge
+        +/71kjDrcZAkDHgU9r21wqmot9th5urK0GcrGKnop8aKKO1zS7JHhN7u5WUvopmv5PWfPi
+        dnj2Uxpu4TAJ2ciW1XKr+WwaM5WFZAk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-389-tSb6k-j6PfqpeL9-UmO0Vw-1; Wed, 29 Apr 2020 09:46:59 -0400
+X-MC-Unique: tSb6k-j6PfqpeL9-UmO0Vw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C7A5E462;
+        Wed, 29 Apr 2020 13:46:57 +0000 (UTC)
+Received: from [10.36.113.114] (ovpn-113-114.ams2.redhat.com [10.36.113.114])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D1D161001281;
+        Wed, 29 Apr 2020 13:46:48 +0000 (UTC)
+Subject: Re: [PATCH v12 6/8] iommu/vt-d: Add svm/sva invalidate function
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>
+References: <1587495165-80096-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1587495165-80096-7-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <0d014a1a-1acf-89cd-8ae0-22d94ebd7ff5@redhat.com>
+Date:   Wed, 29 Apr 2020 15:46:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429133204.140081-1-akira215corp@gmail.com>
+In-Reply-To: <1587495165-80096-7-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 03:32:04PM +0200, Akira Shimahara wrote:
-> Patch for enhacement of w1_therm module.
-> Adding ext_power sysfs entry (RO). Return the power status of the device:
->  - 0: device parasite powered
->  - 1: device externally powered
->  - xx: xx is kernel error
+Hi Jacob,
+
+On 4/21/20 8:52 PM, Jacob Pan wrote:
+> When Shared Virtual Address (SVA) is enabled for a guest OS via
+> vIOMMU, we need to provide invalidation support at IOMMU API and driver
+> level. This patch adds Intel VT-d specific function to implement
+> iommu passdown invalidate API for shared virtual address.
 > 
-> Creating Documentation/ABI/testing/sysfs-driver-w1_therm for the old 
-> driver sysfs and this new entry.
+> The use case is for supporting caching structure invalidation
+> of assigned SVM capable devices. Emulated IOMMU exposes queue
+> invalidation capability and passes down all descriptors from the guest
+> to the physical IOMMU.
 > 
-> Signed-off-by: Akira Shimahara <akira215corp@gmail.com>
+> The assumption is that guest to host device ID mapping should be
+> resolved prior to calling IOMMU driver. Based on the device handle,
+> host IOMMU driver can replace certain fields before submit to the
+> invalidation queue.
+> 
 > ---
->  .../ABI/testing/sysfs-driver-w1_therm         | 29 ++++++
->  drivers/w1/slaves/w1_therm.c                  | 93 ++++++++++++++++++-
->  drivers/w1/slaves/w1_therm.h                  | 44 ++++++++-
->  3 files changed, 163 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-driver-w1_therm
+> v12	- Use ratelimited prints for all user called APIs.
+> 	- Check for domain nesting attr
+> ---
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+
+Thanks
+
+Eric
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-driver-w1_therm b/Documentation/ABI/testing/sysfs-driver-w1_therm
-> new file mode 100644
-> index 0000000..9aaf625
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-driver-w1_therm
-> @@ -0,0 +1,29 @@
-> +What:		/sys/bus/w1/devices/.../ext_power
-> +Date:		Apr 2020
-> +Contact:	Akira Shimahara <akira215corp@gmail.com>
-> +Description:
-> +		(RO) return the power status by asking the device
-> +			* `0`: device parasite powered
-> +			* `1`: device externally powered
-> +			* `-xx`: xx is kernel error when reading power status
-> +Users:		any user space application which wants to communicate with
-> +		w1_term device
-> +
-> +
-> +What:		/sys/bus/w1/devices/.../w1_slave
-> +Date:		Apr 2020
-> +Contact:	Akira Shimahara <akira215corp@gmail.com>
-> +Description:
-> +		(RW) return the temperature in 1/1000 degC.
-> +		*read*: return 2 lines with the hexa output data sent on the
-> +		bus, return the CRC check and temperature in 1/1000 degC
-
-the w1_slave file returns a temperature???
-
-And sysfs is 1 value-per-file, not multiple lines.
-
-And as this is a temperature, what's wrong with the iio interface that
-handles temperature already?  Don't go making up new userspace apis when
-we already have good ones today :)
-
-> +		*write* :
-> +			* `0` : save the 2 or 3 bytes to the device EEPROM
-> +			(i.e. TH, TL and config register)
-> +			* `9..12` : set the device resolution in RAM
-> +			(if supported)
-
-I don't understand these write values, how do they match up to a
-temperature readin?
-
-> +			* Anything else: do nothing
-> +		refer to Documentation/w1/slaves/w1_therm.rst for detailed
-> +		information.
-> +Users:		any user space application which wants to communicate with
-> +		w1_term device
-> \ No newline at end of file
-> diff --git a/drivers/w1/slaves/w1_therm.c b/drivers/w1/slaves/w1_therm.c
-> index 6245950..a530853 100644
-> --- a/drivers/w1/slaves/w1_therm.c
-> +++ b/drivers/w1/slaves/w1_therm.c
-> @@ -39,12 +39,14 @@ module_param_named(strong_pullup, w1_strong_pullup, int, 0);
->  
->  static struct attribute *w1_therm_attrs[] = {
->  	&dev_attr_w1_slave.attr,
-> +	&dev_attr_ext_power.attr,
->  	NULL,
->  };
->  
->  static struct attribute *w1_ds28ea00_attrs[] = {
->  	&dev_attr_w1_slave.attr,
->  	&dev_attr_w1_seq.attr,
-> +	&dev_attr_ext_power.attr,
->  	NULL,
->  };
->  
-> @@ -294,6 +296,26 @@ static inline int w1_DS18S20_convert_temp(u8 rom[9])
->  	return t;
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  drivers/iommu/intel-iommu.c | 175 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 175 insertions(+)
+> 
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 8862d6b0ef21..24de233faaf5 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -5595,6 +5595,180 @@ static void intel_iommu_aux_detach_device(struct iommu_domain *domain,
+>  	aux_domain_remove_dev(to_dmar_domain(domain), dev);
 >  }
 >  
-> +/*------------------------ Helpers Functions----------------------------*/
+> +/*
+> + * 2D array for converting and sanitizing IOMMU generic TLB granularity to
+> + * VT-d granularity. Invalidation is typically included in the unmap operation
+> + * as a result of DMA or VFIO unmap. However, for assigned devices guest
+> + * owns the first level page tables. Invalidations of translation caches in the
+> + * guest are trapped and passed down to the host.
+> + *
+> + * vIOMMU in the guest will only expose first level page tables, therefore
+> + * we do not support IOTLB granularity for request without PASID (second level).
+> + *
+> + * For example, to find the VT-d granularity encoding for IOTLB
+> + * type and page selective granularity within PASID:
+> + * X: indexed by iommu cache type
+> + * Y: indexed by enum iommu_inv_granularity
+> + * [IOMMU_CACHE_INV_TYPE_IOTLB][IOMMU_INV_GRANU_ADDR]
+> + */
 > +
-> +static inline bool bus_mutex_lock(struct mutex *lock)
+> +const static int
+> +inv_type_granu_table[IOMMU_CACHE_INV_TYPE_NR][IOMMU_INV_GRANU_NR] = {
+> +	/*
+> +	 * PASID based IOTLB invalidation: PASID selective (per PASID),
+> +	 * page selective (address granularity)
+> +	 */
+> +	{-EINVAL, QI_GRAN_NONG_PASID, QI_GRAN_PSI_PASID},
+> +	/* PASID based dev TLBs */
+> +	{-EINVAL, -EINVAL, QI_DEV_IOTLB_GRAN_PASID_SEL},
+> +	/* PASID cache */
+> +	{-EINVAL, -EINVAL, -EINVAL}
+> +};
+> +
+> +static inline int to_vtd_granularity(int type, int granu)
 > +{
-> +	int max_trying = W1_THERM_MAX_TRY;
-> +	/* try to acquire the mutex, if not, sleep retry_delay before retry) */
-
-Please use scripts/checkpatch.pl on your patches, it should have asked
-you to put an empty line after the int definition.
-
-
-
-> +	while (mutex_lock_interruptible(lock) != 0 && max_trying > 0) {
-> +		unsigned long sleep_rem;
-> +
-> +		sleep_rem = msleep_interruptible(W1_THERM_RETRY_DELAY);
-> +		if (!sleep_rem)
-> +			max_trying--;
-> +	}
-> +
-> +	if (!max_trying)
-> +		return false;	/* Didn't acquire the bus mutex */
-> +
-> +	return true;
+> +	return inv_type_granu_table[type][granu];
 > +}
 > +
->  /*-------------------------Interface Functions------------------------------*/
->  static int w1_therm_add_slave(struct w1_slave *sl)
->  {
-> @@ -302,6 +324,16 @@ static int w1_therm_add_slave(struct w1_slave *sl)
->  	if (!sl->family_data)
->  		return -ENOMEM;
->  	atomic_set(THERM_REFCNT(sl->family_data), 1);
-> +
-> +	/* Getting the power mode of the device {external, parasite}*/
-> +	SLAVE_POWERMODE(sl) = read_powermode(sl);
-> +
-> +	if (SLAVE_POWERMODE(sl) < 0) {
-> +		/* no error returned as device has been added */
-> +		dev_warn(&sl->dev,
-> +			"%s: Device has been added, but power_mode may be corrupted. err=%d\n",
-> +			 __func__, SLAVE_POWERMODE(sl));
-> +	}
->  	return 0;
->  }
->  
-> @@ -512,6 +544,43 @@ error:
->  	return ret;
->  }
->  
-> +static int read_powermode(struct w1_slave *sl)
+> +static inline u64 to_vtd_size(u64 granu_size, u64 nr_granules)
 > +{
-> +	struct w1_master *dev_master = sl->master;
-> +	int max_trying = W1_THERM_MAX_TRY;
-> +	int  ret = -ENODEV;
+> +	u64 nr_pages = (granu_size * nr_granules) >> VTD_PAGE_SHIFT;
 > +
-> +	if (!sl->family_data)
-> +		goto error;
+> +	/* VT-d size is encoded as 2^size of 4K pages, 0 for 4k, 9 for 2MB, etc.
+> +	 * IOMMU cache invalidate API passes granu_size in bytes, and number of
+> +	 * granu size in contiguous memory.
+> +	 */
+> +	return order_base_2(nr_pages);
+> +}
 > +
-> +	/* prevent the slave from going away in sleep */
-> +	atomic_inc(THERM_REFCNT(sl->family_data));
+> +#ifdef CONFIG_INTEL_IOMMU_SVM
+> +static int
+> +intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
+> +			   struct iommu_cache_invalidate_info *inv_info)
+> +{
+> +	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
+> +	struct device_domain_info *info;
+> +	struct intel_iommu *iommu;
+> +	unsigned long flags;
+> +	int cache_type;
+> +	u8 bus, devfn;
+> +	u16 did, sid;
+> +	int ret = 0;
+> +	u64 size = 0;
 > +
-> +	if (!bus_mutex_lock(&dev_master->bus_mutex)) {
-> +		ret = -EAGAIN;	// Didn't acquire the mutex
-> +		goto dec_refcnt;
+> +	if (!inv_info || !dmar_domain ||
+> +	    inv_info->version != IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
+> +		return -EINVAL;
+> +
+> +	if (!dev || !dev_is_pci(dev))
+> +		return -ENODEV;
+> +
+> +	iommu = device_to_iommu(dev, &bus, &devfn);
+> +	if (!iommu)
+> +		return -ENODEV;
+> +
+> +	if (!(dmar_domain->flags & DOMAIN_FLAG_NESTING_MODE))
+> +		return -EINVAL;
+> +
+> +	spin_lock_irqsave(&device_domain_lock, flags);
+> +	spin_lock(&iommu->lock);
+> +	info = iommu_support_dev_iotlb(dmar_domain, iommu, bus, devfn);
+> +	if (!info) {
+> +		ret = -EINVAL;
+> +		goto out_unlock;
 > +	}
+> +	did = dmar_domain->iommu_did[iommu->seq_id];
+> +	sid = PCI_DEVID(bus, devfn);
 > +
-> +	while ((max_trying--) && (ret < 0)) {
-> +		/* safe version to select slave */
-> +		if (!reset_select_slave(sl)) {
-> +			w1_write_8(dev_master, W1_READ_PSUPPLY);
-> +			/* Read only one bit,
-> +			 * 1 is externally powered,
-> +			 * 0 is parasite powered
+> +	/* Size is only valid in non-PASID selective invalidation */
+> +	if (inv_info->granularity != IOMMU_INV_GRANU_PASID)
+> +		size = to_vtd_size(inv_info->addr_info.granule_size,
+> +				   inv_info->addr_info.nb_granules);
+> +
+> +	for_each_set_bit(cache_type,
+> +			 (unsigned long *)&inv_info->cache,
+> +			 IOMMU_CACHE_INV_TYPE_NR) {
+> +		int granu = 0;
+> +		u64 pasid = 0;
+> +
+> +		granu = to_vtd_granularity(cache_type, inv_info->granularity);
+> +		if (granu == -EINVAL) {
+> +			pr_err_ratelimited("Invalid cache type and granu combination %d/%d\n",
+> +			       cache_type, inv_info->granularity);
+> +			break;
+> +		}
+> +
+> +		/*
+> +		 * PASID is stored in different locations based on the
+> +		 * granularity.
+> +		 */
+> +		if (inv_info->granularity == IOMMU_INV_GRANU_PASID &&
+> +		    (inv_info->pasid_info.flags & IOMMU_INV_PASID_FLAGS_PASID))
+> +			pasid = inv_info->pasid_info.pasid;
+> +		else if (inv_info->granularity == IOMMU_INV_GRANU_ADDR &&
+> +			 (inv_info->addr_info.flags & IOMMU_INV_ADDR_FLAGS_PASID))
+> +			pasid = inv_info->addr_info.pasid;
+> +
+> +		switch (BIT(cache_type)) {
+> +		case IOMMU_CACHE_INV_TYPE_IOTLB:
+> +			if (inv_info->granularity == IOMMU_INV_GRANU_ADDR &&
+> +			    size &&
+> +			    (inv_info->addr_info.addr & ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
+> +				pr_err_ratelimited("Address out of range, 0x%llx, size order %llu\n",
+> +				       inv_info->addr_info.addr, size);
+> +				ret = -ERANGE;
+> +				goto out_unlock;
+> +			}
+> +
+> +			/*
+> +			 * If granu is PASID-selective, address is ignored.
+> +			 * We use npages = -1 to indicate that.
 > +			 */
-> +			ret = w1_touch_bit(dev_master, 1);
-> +			/* ret should be either 1 either 0 */
+> +			qi_flush_piotlb(iommu, did, pasid,
+> +					mm_to_dma_pfn(inv_info->addr_info.addr),
+> +					(granu == QI_GRAN_NONG_PASID) ? -1 : 1 << size,
+> +					inv_info->addr_info.flags & IOMMU_INV_ADDR_FLAGS_LEAF);
+> +
+> +			/*
+> +			 * Always flush device IOTLB if ATS is enabled. vIOMMU
+> +			 * in the guest may assume IOTLB flush is inclusive,
+> +			 * which is more efficient.
+> +			 */
+> +			if (info->ats_enabled)
+> +				qi_flush_dev_iotlb_pasid(iommu, sid,
+> +						info->pfsid, pasid,
+> +						info->ats_qdep,
+> +						inv_info->addr_info.addr,
+> +						size, granu);
+> +			break;
+> +		case IOMMU_CACHE_INV_TYPE_DEV_IOTLB:
+> +			if (info->ats_enabled)
+> +				qi_flush_dev_iotlb_pasid(iommu, sid,
+> +						info->pfsid, pasid,
+> +						info->ats_qdep,
+> +						inv_info->addr_info.addr,
+> +						size, granu);
+> +			else
+> +				pr_warn_ratelimited("Passdown device IOTLB flush w/o ATS!\n");
+> +			break;
+> +		case IOMMU_CACHE_INV_TYPE_PASID:
+> +			qi_flush_pasid_cache(iommu, did, granu,
+> +					     inv_info->pasid_info.pasid);
+> +			break;
+> +		default:
+> +			dev_err_ratelimited(dev, "Unsupported IOMMU invalidation type %d\n",
+> +					    cache_type);
+> +			ret = -EINVAL;
 > +		}
 > +	}
-> +	mutex_unlock(&dev_master->bus_mutex);
+> +out_unlock:
+> +	spin_unlock(&iommu->lock);
+> +	spin_unlock_irqrestore(&device_domain_lock, flags);
 > +
-> +dec_refcnt:
-> +	atomic_dec(THERM_REFCNT(sl->family_data));
-> +error:
 > +	return ret;
 > +}
+> +#endif
 > +
->  /*------------------------Interface sysfs--------------------------*/
->  
->  static ssize_t w1_slave_show(struct device *device,
-> @@ -565,13 +634,35 @@ static ssize_t w1_slave_store(struct device *device,
->  				ret = w1_therm_families[i].eeprom(device);
->  			else
->  				ret = w1_therm_families[i].precision(device,
-> -								val);
-> +									val);
->  			break;
->  		}
->  	}
->  	return ret ? : size;
->  }
->  
-> +static ssize_t ext_power_show(struct device *device,
-> +	struct device_attribute *attr, char *buf)
-> +{
-> +	struct w1_slave *sl = dev_to_w1_slave(device);
-> +
-> +	if (!sl->family_data) {
-> +		dev_info(device,
-> +			"%s: Device not supported by the driver\n", __func__);
-> +		return 0;  /* No device family */
-> +	}
-> +
-> +	/* Getting the power mode of the device {external, parasite}*/
-> +	SLAVE_POWERMODE(sl) = read_powermode(sl);
-> +
-> +	if (SLAVE_POWERMODE(sl) < 0) {
-> +		dev_dbg(device,
-> +			"%s: Power_mode may be corrupted. err=%d\n",
-> +			__func__, SLAVE_POWERMODE(sl));
-> +	}
-> +	return sprintf(buf, "%d\n", SLAVE_POWERMODE(sl));
-> +}
-> +
->  #if IS_REACHABLE(CONFIG_HWMON)
->  static int w1_read_temp(struct device *device, u32 attr, int channel,
->  			long *val)
-> diff --git a/drivers/w1/slaves/w1_therm.h b/drivers/w1/slaves/w1_therm.h
-> index b73af0b..2f975a4 100644
-> --- a/drivers/w1/slaves/w1_therm.h
-> +++ b/drivers/w1/slaves/w1_therm.h
-> @@ -25,6 +25,12 @@
->  #include <linux/mutex.h>
->  #include <linux/w1.h>
->  
-> +/*----------------------------------Defines---------------------------------*/
+>  static int intel_iommu_map(struct iommu_domain *domain,
+>  			   unsigned long iova, phys_addr_t hpa,
+>  			   size_t size, int iommu_prot, gfp_t gfp)
+> @@ -6180,6 +6354,7 @@ const struct iommu_ops intel_iommu_ops = {
+>  	.is_attach_deferred	= intel_iommu_is_attach_deferred,
+>  	.pgsize_bitmap		= INTEL_IOMMU_PGSIZES,
+>  #ifdef CONFIG_INTEL_IOMMU_SVM
+> +	.cache_invalidate	= intel_iommu_sva_invalidate,
+>  	.sva_bind_gpasid	= intel_svm_bind_gpasid,
+>  	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
+>  #endif
+> 
 
-No real need for this, we can see defines just fine :)
-
-thanks,
-
-greg k-h
