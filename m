@@ -2,115 +2,117 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 185BEC83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01908C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E55002087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:23:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="b0S+K5Ux"
+	by mail.kernel.org (Postfix) with ESMTP id CF7602087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:24:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbgD2NXk (ORCPT
+        id S1726940AbgD2NYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:23:40 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:57666 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgD2NXj (ORCPT
+        Wed, 29 Apr 2020 09:24:04 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:49507 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbgD2NYD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:23:39 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03TDJkxV139543;
-        Wed, 29 Apr 2020 13:22:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=acBigxhjzNMmYCYO6Lh7nzcLOEw+72Zb51xwobkhS9w=;
- b=b0S+K5UxitDKXXfa/O8196lY5INTUguaNGiHSpo3gX/huK6mBOVlj2hXyew9qxzMM3X/
- BucH6m/Xdd2X5b/7EELKGtVotRBCEIcGuyAqbarQun3AppvNMvM4r+6u5Xpsgsp/2SRV
- f1tfNMpx9sY9dWVCZQUGs71Hu2LhjQOMuCmPKIfcIC3ZHtRlcx5yUxYkD5LG5utPAfE0
- PRZnomK9uxkoghRHdGx4gzU7FNVrh9hT+j1Jzgp7f3fVqiI337zIW6SV7rolDJwpZCeg
- 4bYBjMJbRWhqN95Sv0wwsm904PZ+2hrstdnOL6FblcpWjgViRDjRrA+My7baK6UIXO6x Gg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 30p01nv77t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Apr 2020 13:22:55 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03TDM71W171245;
-        Wed, 29 Apr 2020 13:22:54 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 30mxrv3guh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Apr 2020 13:22:54 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03TDMihK020962;
-        Wed, 29 Apr 2020 13:22:44 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 Apr 2020 06:22:44 -0700
-Date:   Wed, 29 Apr 2020 16:22:35 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] rcutorture: Fix error codes in rcu_torture_read_exit_init()
-Message-ID: <20200429132235.GA815283@mwanda>
+        Wed, 29 Apr 2020 09:24:03 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MDv1A-1jM2us3zwy-009zpL; Wed, 29 Apr 2020 15:23:55 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Russell King <linux@armlinux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: [PATCH] [v2] ARM: oabi-compat: fix epoll_ctl build failure
+Date:   Wed, 29 Apr 2020 15:23:24 +0200
+Message-Id: <20200429132349.1294904-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=0
- mlxlogscore=999 malwarescore=0 bulkscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004290113
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 clxscore=1011
- phishscore=0 mlxlogscore=999 adultscore=0 priorityscore=1501 mlxscore=0
- suspectscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004290112
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:YesVeQBh9Q/IA+uNWz/5JCdSN2u4hoTMC5shuvSJ4yxM1Q6iwui
+ wXUQ5wEe7ndWD4fD5QG/iF3Y8iVx9+DoiTgHcTG3Zt64TuTyLiawqer+CYnMad2oEvSXwMI
+ 2/lferA/lpp5qT7D4jF7OFcvNkdsovgGrDcKxXLycrOrO6KrgW7Et+inVFPWiWkeSGciNNC
+ JwsBwNoMFhx1RLcB8D5wA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:oM3nSM6auHQ=:YMn63bge2D4TN2BuE+kKP0
+ JrAZ/FMokb4p0ZyrHUM4qR0NA28gOEyw9/frW6jIeZT9ZFzUTawj2+BG78WMhpuK+40T/RSSi
+ nNPR+JiuYxNF2J4vY+3fAd51EFTWauTu5xMoGWOVySj3WOoLr1TLsr1kfC/bMNNZQVbL2AgJw
+ bx2vYWsjclCyCUq1jqykhL/t9/Cc3GiMiq4qKUpW+1N524zStvlFqfR1yT6S7tiO4viaeK+iW
+ 60LSU6yk/eR2RMtxXOFAwYh6ufSwp1wNRYnXByk/0rzo7Fc4ObZLWMwS31G13se7u66vX1DuD
+ Yc0usPp7QFqq16Tw25wwEc6SD8vmVrxo08WIO/S4qJx4LYMA8u2OH4lZfbpLbsRjyvAXjdopb
+ LtQ3tGT8dmx5BhhIHIyjNLC+CN9eRy7Swp33GF9+A6cq+TpY8nZZdd6Cc/16i6I+NGjVE5YlQ
+ hvOeF8fZr0al6jqNcfZP75cwdEFDINBNT/CsVRIADuORToS0JJRutEoPjf1cBQ8/x9/mfPFCo
+ 75mrVhTY792ttYUO+IpdlAA3CN7npw7CvbxsGwYNdomtrepM7ZyDTeJXyo4LD51gjqSz7yKAP
+ NXUYYaQliD7yVdZMKhk/akMo0fmTLNHvFXpxqMQ5gYKH6VJimNzGDQJRuDK/qZmWCkY9UTOJn
+ W9g1yj2Y3kHglEvm9g18lAN1lgDAfE4uC4XCxEKXSn7kiKtdNvqX4tuIeeFnV1A6P+IZ+6C5/
+ 6T2KeFyMhQ0NuMvcKWmwGzHAuOyOsW7az6PZcsNoNpFFmz1aK9wArASmf6BSOGjuhMGivRGTx
+ wcVEG1X2v99IGprRPFLEIinmJsYOld7tuS1C17jp6XpwTgDyfM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The rcu_torture_read_exit_init() function is supposed to return negative
-error codes which get propagated back down the call tree but the current
-code returns true on failure.
+Two functions are not declared or defined when CONFIG_EPOLL is
+disabled:
 
-Fixes: e02882cd57e3 ("rcutorture: Add races with task-exit processing")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+arch/arm/kernel/sys_oabi-compat.c: In function 'sys_oabi_epoll_ctl':
+arch/arm/kernel/sys_oabi-compat.c:258:6: error: implicit declaration of function 'ep_op_has_event' [-Werror=implicit-function-declaration]
+  258 |  if (ep_op_has_event(op) &&
+      |      ^~~~~~~~~~~~~~~
+arch/arm/kernel/sys_oabi-compat.c:265:9: error: implicit declaration of function 'do_epoll_ctl'; did you mean 'sys_epoll_ctl'? [-Werror=implicit-function-declaration]
+  265 |  return do_epoll_ctl(epfd, op, fd, &kernel, false);
+      |         ^~~~~~~~~~~~
+      |         sys_epoll_ctl
+
+Replace the function with the sys_ni_syscall stub in this case.
+
+Fixes: c281634c8652 ("ARM: compat: remove KERNEL_DS usage in sys_oabi_epoll_ctl()")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- kernel/rcu/rcutorture.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v2: use sys_ni_syscall() instead of removing the function body
+---
+ arch/arm/kernel/sys_oabi-compat.c | 2 ++
+ kernel/sys_ni.c                   | 1 +
+ 2 files changed, 3 insertions(+)
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 269881e51dc6d..5270674128029 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -2434,10 +2434,10 @@ static int rcu_torture_read_exit(void *unused)
- 	return 0;
- }
+diff --git a/arch/arm/kernel/sys_oabi-compat.c b/arch/arm/kernel/sys_oabi-compat.c
+index 85a1e95341d8..2488c69242cf 100644
+--- a/arch/arm/kernel/sys_oabi-compat.c
++++ b/arch/arm/kernel/sys_oabi-compat.c
+@@ -249,6 +249,7 @@ struct oabi_epoll_event {
+ 	__u64 data;
+ } __attribute__ ((packed,aligned(4)));
  
--static bool rcu_torture_read_exit_init(void)
-+static int rcu_torture_read_exit_init(void)
++#ifdef CONFIG_EPOLL
+ asmlinkage long sys_oabi_epoll_ctl(int epfd, int op, int fd,
+ 				   struct oabi_epoll_event __user *event)
  {
- 	if (read_exit <= 0)
--		return true;
-+		return -EINVAL;
- 	init_waitqueue_head(&read_exit_wq);
- 	read_exit_child_stop = false;
- 	read_exit_child_stopped = false;
+@@ -264,6 +265,7 @@ asmlinkage long sys_oabi_epoll_ctl(int epfd, int op, int fd,
+ 
+ 	return do_epoll_ctl(epfd, op, fd, &kernel, false);
+ }
++#endif
+ 
+ asmlinkage long sys_oabi_epoll_wait(int epfd,
+ 				    struct oabi_epoll_event __user *events,
+diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+index 42ce28c460f6..9ee6a46b1795 100644
+--- a/kernel/sys_ni.c
++++ b/kernel/sys_ni.c
+@@ -68,6 +68,7 @@ COND_SYSCALL(epoll_create1);
+ COND_SYSCALL(epoll_ctl);
+ COND_SYSCALL(epoll_pwait);
+ COND_SYSCALL_COMPAT(epoll_pwait);
++COND_SYSCALL(oabi_epoll_ctl); /* ARM OABI specific */
+ 
+ /* fs/fcntl.c */
+ 
 -- 
-2.26.2
+2.26.0
 
