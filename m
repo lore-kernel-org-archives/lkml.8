@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD153C8300A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B93FC83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8281206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80D6A2085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgD2NiE (ORCPT
+        id S1728146AbgD2NiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:38:04 -0400
-Received: from 8bytes.org ([81.169.241.247]:39788 "EHLO theia.8bytes.org"
+        Wed, 29 Apr 2020 09:38:06 -0400
+Received: from 8bytes.org ([81.169.241.247]:40040 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728028AbgD2Nhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:37:52 -0400
+        id S1728057AbgD2Nhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 09:37:54 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 50F30F06; Wed, 29 Apr 2020 15:37:40 +0200 (CEST)
+        id 77A11F10; Wed, 29 Apr 2020 15:37:41 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -46,9 +46,9 @@ Cc:     Daniel Drake <drake@endlessm.com>, jonathan.derrick@intel.com,
         linux-tegra@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v3 26/34] iommu/tegra: Convert to probe/release_device() call-backs
-Date:   Wed, 29 Apr 2020 15:37:04 +0200
-Message-Id: <20200429133712.31431-27-joro@8bytes.org>
+Subject: [PATCH v3 32/34] iommu: Remove add_device()/remove_device() code-paths
+Date:   Wed, 29 Apr 2020 15:37:10 +0200
+Message-Id: <20200429133712.31431-33-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200429133712.31431-1-joro@8bytes.org>
 References: <20200429133712.31431-1-joro@8bytes.org>
@@ -59,149 +59,265 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Convert the Tegra IOMMU drivers to use the probe_device() and
-release_device() call-backs of iommu_ops, so that the iommu core code
-does the group and sysfs setup.
+All drivers are converted to use the probe/release_device()
+call-backs, so the add_device/remove_device() pointers are unused and
+the code using them can be removed.
 
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/tegra-gart.c | 24 ++++++------------------
- drivers/iommu/tegra-smmu.c | 31 ++++++++-----------------------
- 2 files changed, 14 insertions(+), 41 deletions(-)
+ drivers/iommu/iommu.c | 158 ++++++++++--------------------------------
+ include/linux/iommu.h |   4 --
+ 2 files changed, 38 insertions(+), 124 deletions(-)
 
-diff --git a/drivers/iommu/tegra-gart.c b/drivers/iommu/tegra-gart.c
-index db6559e8336f..5fbdff6ff41a 100644
---- a/drivers/iommu/tegra-gart.c
-+++ b/drivers/iommu/tegra-gart.c
-@@ -243,28 +243,16 @@ static bool gart_iommu_capable(enum iommu_cap cap)
- 	return false;
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 397fd4fd0c32..7f99e5ae432c 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -220,12 +220,20 @@ static int __iommu_probe_device(struct device *dev, struct list_head *group_list
+ 	return ret;
  }
  
--static int gart_iommu_add_device(struct device *dev)
-+static struct iommu_device *gart_iommu_probe_device(struct device *dev)
+-static int __iommu_probe_device_helper(struct device *dev)
++int iommu_probe_device(struct device *dev)
  {
--	struct iommu_group *group;
--
- 	if (!dev_iommu_fwspec_get(dev))
--		return -ENODEV;
--
--	group = iommu_group_get_for_dev(dev);
--	if (IS_ERR(group))
--		return PTR_ERR(group);
--
--	iommu_group_put(group);
-+		return ERR_PTR(-ENODEV);
+ 	const struct iommu_ops *ops = dev->bus->iommu_ops;
+ 	struct iommu_group *group;
+ 	int ret;
  
--	iommu_device_link(&gart_handle->iommu, dev);
++	if (!dev_iommu_get(dev))
++		return -ENOMEM;
++
++	if (!try_module_get(ops->owner)) {
++		ret = -EINVAL;
++		goto err_out;
++	}
++
+ 	ret = __iommu_probe_device(dev, NULL);
+ 	if (ret)
+ 		goto err_out;
+@@ -259,75 +267,23 @@ static int __iommu_probe_device_helper(struct device *dev)
+ 
+ err_release:
+ 	iommu_release_device(dev);
++
+ err_out:
+ 	return ret;
+ 
+ }
+ 
+-int iommu_probe_device(struct device *dev)
++void iommu_release_device(struct device *dev)
+ {
+ 	const struct iommu_ops *ops = dev->bus->iommu_ops;
+-	struct iommu_group *group;
+-	int ret;
+-
+-	WARN_ON(dev->iommu_group);
+-
+-	if (!ops)
+-		return -EINVAL;
+-
+-	if (!dev_iommu_get(dev))
+-		return -ENOMEM;
+-
+-	if (!try_module_get(ops->owner)) {
+-		ret = -EINVAL;
+-		goto err_free_dev_param;
+-	}
+-
+-	if (ops->probe_device)
+-		return __iommu_probe_device_helper(dev);
+-
+-	ret = ops->add_device(dev);
+-	if (ret)
+-		goto err_module_put;
+ 
+-	group = iommu_group_get(dev);
+-	iommu_create_device_direct_mappings(group, dev);
+-	iommu_group_put(group);
+-
+-	if (ops->probe_finalize)
+-		ops->probe_finalize(dev);
 -
 -	return 0;
-+	return &gart_handle->iommu;
- }
- 
--static void gart_iommu_remove_device(struct device *dev)
-+static void gart_iommu_release_device(struct device *dev)
- {
--	iommu_group_remove_device(dev);
--	iommu_device_unlink(&gart_handle->iommu, dev);
- }
- 
- static int gart_iommu_of_xlate(struct device *dev,
-@@ -290,8 +278,8 @@ static const struct iommu_ops gart_iommu_ops = {
- 	.domain_free	= gart_iommu_domain_free,
- 	.attach_dev	= gart_iommu_attach_dev,
- 	.detach_dev	= gart_iommu_detach_dev,
--	.add_device	= gart_iommu_add_device,
--	.remove_device	= gart_iommu_remove_device,
-+	.probe_device	= gart_iommu_probe_device,
-+	.release_device	= gart_iommu_release_device,
- 	.device_group	= generic_device_group,
- 	.map		= gart_iommu_map,
- 	.unmap		= gart_iommu_unmap,
-diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-index 63a147b623e6..7426b7666e2b 100644
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -757,11 +757,10 @@ static int tegra_smmu_configure(struct tegra_smmu *smmu, struct device *dev,
- 	return 0;
- }
- 
--static int tegra_smmu_add_device(struct device *dev)
-+static struct iommu_device *tegra_smmu_probe_device(struct device *dev)
- {
- 	struct device_node *np = dev->of_node;
- 	struct tegra_smmu *smmu = NULL;
--	struct iommu_group *group;
- 	struct of_phandle_args args;
- 	unsigned int index = 0;
- 	int err;
-@@ -774,7 +773,7 @@ static int tegra_smmu_add_device(struct device *dev)
- 			of_node_put(args.np);
- 
- 			if (err < 0)
--				return err;
-+				return ERR_PTR(err);
- 
- 			/*
- 			 * Only a single IOMMU master interface is currently
-@@ -783,8 +782,6 @@ static int tegra_smmu_add_device(struct device *dev)
- 			 */
- 			dev->archdata.iommu = smmu;
- 
--			iommu_device_link(&smmu->iommu, dev);
 -
- 			break;
- 		}
+-err_module_put:
+-	module_put(ops->owner);
+-err_free_dev_param:
+-	dev_iommu_free(dev);
+-	return ret;
+-}
+-
+-static void __iommu_release_device(struct device *dev)
+-{
+-	const struct iommu_ops *ops = dev->bus->iommu_ops;
++	if (!dev->iommu)
++		return;
  
-@@ -793,26 +790,14 @@ static int tegra_smmu_add_device(struct device *dev)
+ 	iommu_device_unlink(dev->iommu->iommu_dev, dev);
+-
+ 	iommu_group_remove_device(dev);
+ 
+ 	ops->release_device(dev);
+-}
+-
+-void iommu_release_device(struct device *dev)
+-{
+-	const struct iommu_ops *ops = dev->bus->iommu_ops;
+-
+-	if (!dev->iommu)
+-		return;
+-
+-	if (ops->release_device)
+-		__iommu_release_device(dev);
+-	else if (dev->iommu_group)
+-		ops->remove_device(dev);
+ 
+ 	module_put(ops->owner);
+ 	dev_iommu_free(dev);
+@@ -1560,23 +1516,6 @@ struct iommu_group *iommu_group_get_for_dev(struct device *dev)
+ 	if (ret)
+ 		goto out_put_group;
+ 
+-	/*
+-	 * Try to allocate a default domain - needs support from the
+-	 * IOMMU driver. There are still some drivers which don't support
+-	 * default domains, so the return value is not yet checked. Only
+-	 * allocate the domain here when the driver still has the
+-	 * add_device/remove_device call-backs implemented.
+-	 */
+-	if (!ops->probe_device) {
+-		iommu_alloc_default_domain(dev);
+-
+-		if (group->default_domain)
+-			ret = __iommu_attach_device(group->default_domain, dev);
+-
+-		if (ret)
+-			goto out_put_group;
+-	}
+-
+ 	return group;
+ 
+ out_put_group:
+@@ -1591,21 +1530,6 @@ struct iommu_domain *iommu_group_default_domain(struct iommu_group *group)
+ 	return group->default_domain;
+ }
+ 
+-static int add_iommu_group(struct device *dev, void *data)
+-{
+-	int ret = iommu_probe_device(dev);
+-
+-	/*
+-	 * We ignore -ENODEV errors for now, as they just mean that the
+-	 * device is not translated by an IOMMU. We still care about
+-	 * other errors and fail to initialize when they happen.
+-	 */
+-	if (ret == -ENODEV)
+-		ret = 0;
+-
+-	return ret;
+-}
+-
+ static int probe_iommu_group(struct device *dev, void *data)
+ {
+ 	const struct iommu_ops *ops = dev->bus->iommu_ops;
+@@ -1793,47 +1717,41 @@ static int iommu_group_create_direct_mappings(struct iommu_group *group)
+ 
+ int bus_iommu_probe(struct bus_type *bus)
+ {
+-	const struct iommu_ops *ops = bus->iommu_ops;
++	struct iommu_group *group, *next;
++	LIST_HEAD(group_list);
+ 	int ret;
+ 
+-	if (ops->probe_device) {
+-		struct iommu_group *group, *next;
+-		LIST_HEAD(group_list);
+-
+-		/*
+-		 * This code-path does not allocate the default domain when
+-		 * creating the iommu group, so do it after the groups are
+-		 * created.
+-		 */
+-		ret = bus_for_each_dev(bus, NULL, &group_list, probe_iommu_group);
+-		if (ret)
+-			return ret;
++	/*
++	 * This code-path does not allocate the default domain when
++	 * creating the iommu group, so do it after the groups are
++	 * created.
++	 */
++	ret = bus_for_each_dev(bus, NULL, &group_list, probe_iommu_group);
++	if (ret)
++		return ret;
+ 
+-		list_for_each_entry_safe(group, next, &group_list, entry) {
+-			/* Remove item from the list */
+-			list_del_init(&group->entry);
++	list_for_each_entry_safe(group, next, &group_list, entry) {
++		/* Remove item from the list */
++		list_del_init(&group->entry);
+ 
+-			mutex_lock(&group->mutex);
++		mutex_lock(&group->mutex);
+ 
+-			/* Try to allocate default domain */
+-			probe_alloc_default_domain(bus, group);
++		/* Try to allocate default domain */
++		probe_alloc_default_domain(bus, group);
+ 
+-			if (!group->default_domain) {
+-				mutex_unlock(&group->mutex);
+-				continue;
+-			}
++		if (!group->default_domain) {
++			mutex_unlock(&group->mutex);
++			continue;
++		}
+ 
+-			iommu_group_create_direct_mappings(group);
++		iommu_group_create_direct_mappings(group);
+ 
+-			ret = __iommu_group_dma_attach(group);
++		ret = __iommu_group_dma_attach(group);
+ 
+-			mutex_unlock(&group->mutex);
++		mutex_unlock(&group->mutex);
+ 
+-			if (ret)
+-				break;
+-		}
+-	} else {
+-		ret = bus_for_each_dev(bus, NULL, NULL, add_iommu_group);
++		if (ret)
++			break;
  	}
  
- 	if (!smmu)
--		return -ENODEV;
--
--	group = iommu_group_get_for_dev(dev);
--	if (IS_ERR(group))
--		return PTR_ERR(group);
--
--	iommu_group_put(group);
-+		return ERR_PTR(-ENODEV);
- 
--	return 0;
-+	return &smmu->iommu;
- }
- 
--static void tegra_smmu_remove_device(struct device *dev)
-+static void tegra_smmu_release_device(struct device *dev)
- {
--	struct tegra_smmu *smmu = dev->archdata.iommu;
--
--	if (smmu)
--		iommu_device_unlink(&smmu->iommu, dev);
--
- 	dev->archdata.iommu = NULL;
--	iommu_group_remove_device(dev);
- }
- 
- static const struct tegra_smmu_group_soc *
-@@ -895,8 +880,8 @@ static const struct iommu_ops tegra_smmu_ops = {
- 	.domain_free = tegra_smmu_domain_free,
- 	.attach_dev = tegra_smmu_attach_dev,
- 	.detach_dev = tegra_smmu_detach_dev,
--	.add_device = tegra_smmu_add_device,
--	.remove_device = tegra_smmu_remove_device,
-+	.probe_device = tegra_smmu_probe_device,
-+	.release_device = tegra_smmu_release_device,
- 	.device_group = tegra_smmu_device_group,
- 	.map = tegra_smmu_map,
- 	.unmap = tegra_smmu_unmap,
-@@ -1015,7 +1000,7 @@ struct tegra_smmu *tegra_smmu_probe(struct device *dev,
- 	 * value. However the IOMMU registration process will attempt to add
- 	 * all devices to the IOMMU when bus_set_iommu() is called. In order
- 	 * not to rely on global variables to track the IOMMU instance, we
--	 * set it here so that it can be looked up from the .add_device()
-+	 * set it here so that it can be looked up from the .probe_device()
- 	 * callback via the IOMMU device's .drvdata field.
- 	 */
- 	mc->smmu = smmu;
+ 	return ret;
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index fea1622408ad..dd076366383f 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -223,8 +223,6 @@ struct iommu_iotlb_gather {
+  * @iotlb_sync: Flush all queued ranges from the hardware TLBs and empty flush
+  *            queue
+  * @iova_to_phys: translate iova to physical address
+- * @add_device: add device to iommu grouping
+- * @remove_device: remove device from iommu grouping
+  * @probe_device: Add device to iommu driver handling
+  * @release_device: Remove device from iommu driver handling
+  * @probe_finalize: Do final setup work after the device is added to an IOMMU
+@@ -277,8 +275,6 @@ struct iommu_ops {
+ 	void (*iotlb_sync)(struct iommu_domain *domain,
+ 			   struct iommu_iotlb_gather *iotlb_gather);
+ 	phys_addr_t (*iova_to_phys)(struct iommu_domain *domain, dma_addr_t iova);
+-	int (*add_device)(struct device *dev);
+-	void (*remove_device)(struct device *dev);
+ 	struct iommu_device *(*probe_device)(struct device *dev);
+ 	void (*release_device)(struct device *dev);
+ 	void (*probe_finalize)(struct device *dev);
 -- 
 2.17.1
 
