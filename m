@@ -2,66 +2,100 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC85C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D38C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6362E2076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:55:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588128924;
-	bh=xquNFMLDfLZib8aq7iKWDAq0gBSPuoXgBAhfsarUS3M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rVGnP6fhOpugRZz9Ydg2+g6/CgLeAT4N4mn2sWLekD4CS8D81y1BbvWvRCWwCP7+V
-	 ROl5qEOoV6glsP4wB0QktEMfr6HshGJycS9Y+2lQy/tgaoy43fWq43qp3WMPTle77e
-	 NIU8SYFsPgssOSLn8iDETtXKezQR+NWz+LNkEGYQ=
+	by mail.kernel.org (Postfix) with ESMTP id B96F520737
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:58:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgD2CzX (ORCPT
+        id S1726636AbgD2C61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 22:55:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36166 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 22:58:27 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:32902 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726422AbgD2CzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 22:55:23 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C66BE20737;
-        Wed, 29 Apr 2020 02:55:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588128923;
-        bh=xquNFMLDfLZib8aq7iKWDAq0gBSPuoXgBAhfsarUS3M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XkV0gZPA1BtL5ppuUHd1TwkAiKaTuXY2ImxjnhbZRNNH9A6JRvRh/twyxvGEslq1P
-         riWBPxzljgh3nvpx8GsmcgiDD2vxZyS9qqsjdTmMNn5YhuSwtugpNyOhWwG8ib+sp6
-         qWqkCDT9DHCZhqcuNs/oO580Z5b/wSVZLpjGLevQ=
-Date:   Wed, 29 Apr 2020 10:55:16 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH 1/2] arm64: dts: imx8qxp-mek: Sort labels alphabetically
-Message-ID: <20200429025515.GM32592@dragon>
-References: <1587101946-19495-1-git-send-email-Anson.Huang@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587101946-19495-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1726522AbgD2C60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 22:58:26 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id ECFD31A021F;
+        Wed, 29 Apr 2020 04:58:24 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 616281A01F8;
+        Wed, 29 Apr 2020 04:58:20 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 419B74032C;
+        Wed, 29 Apr 2020 10:58:09 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V3] thermal: imx: Add missing of_node_put()
+Date:   Wed, 29 Apr 2020 10:49:30 +0800
+Message-Id: <1588128570-12917-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 01:39:05PM +0800, Anson Huang wrote:
-> Sort the labels alphabetically for consistency.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+After finishing using cpu node got from of_get_cpu_node(), of_node_put()
+needs to be called, the cpufreq policy also needs to be put unconditionally.
 
-Applied both, thanks.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V2:
+	- call cpufreq_cpu_put() unconditionally after cooling register done.
+---
+ drivers/thermal/imx_thermal.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
+index e761c9b..8764cb5 100644
+--- a/drivers/thermal/imx_thermal.c
++++ b/drivers/thermal/imx_thermal.c
+@@ -649,7 +649,7 @@ MODULE_DEVICE_TABLE(of, of_imx_thermal_match);
+ static int imx_thermal_register_legacy_cooling(struct imx_thermal_data *data)
+ {
+ 	struct device_node *np;
+-	int ret;
++	int ret = 0;
+ 
+ 	data->policy = cpufreq_cpu_get(0);
+ 	if (!data->policy) {
+@@ -661,20 +661,19 @@ static int imx_thermal_register_legacy_cooling(struct imx_thermal_data *data)
+ 
+ 	if (!np || !of_find_property(np, "#cooling-cells", NULL)) {
+ 		data->cdev = cpufreq_cooling_register(data->policy);
+-		if (IS_ERR(data->cdev)) {
++		if (IS_ERR(data->cdev))
+ 			ret = PTR_ERR(data->cdev);
+-			cpufreq_cpu_put(data->policy);
+-			return ret;
+-		}
+ 	}
+ 
+-	return 0;
++	cpufreq_cpu_put(data->policy);
++	of_node_put(np);
++
++	return ret;
+ }
+ 
+ static void imx_thermal_unregister_legacy_cooling(struct imx_thermal_data *data)
+ {
+ 	cpufreq_cooling_unregister(data->cdev);
+-	cpufreq_cpu_put(data->policy);
+ }
+ 
+ #else
+-- 
+2.7.4
+
