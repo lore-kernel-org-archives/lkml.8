@@ -2,144 +2,325 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CD1C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FF9C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18061206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFD5B206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:36:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="CDZaj6HR";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PL4Mc2Ik"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ubyNkFZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgD2OfO (ORCPT
+        id S1727830AbgD2Og2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:35:14 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:40931 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726348AbgD2OfN (ORCPT
+        Wed, 29 Apr 2020 10:36:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726847AbgD2Og1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:35:13 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 628275C0411;
-        Wed, 29 Apr 2020 10:35:12 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 29 Apr 2020 10:35:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=7NflUZehQMCLBE0ifLIpSr1EDnn
-        wo5t9jU2qH5OWXro=; b=CDZaj6HRDXELNSxfD+av0zYYHyXWhNBYgr2hxCGIHpt
-        dT3fzI/ebRdxjUpT/rZlO8aI9bUpZEpvFiOahw7TC9LDqyqLL67DTSc+npHmMQ2g
-        4NZk5cXzCu+jWESM9r+Opz71MVzSl6nNl5HteenD8LSph9D4IYV3szaZJXptCaBc
-        dTyWrrDFaklsBpUH2cdwj3Oh0KYfLXpXZFUhwi+gRQAeMBJPuBBcl2/khSD7VfSH
-        MT6+Duybnw70QV7NGC0CgR0YfkgtJ3HFOByPuLdq6NCilTfKBy1N0inuckSrm8uz
-        qKnpm2bU4dXr3iOo9R5caKDX2KFSlXjASbL/J6g6CKA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=7NflUZ
-        ehQMCLBE0ifLIpSr1EDnnwo5t9jU2qH5OWXro=; b=PL4Mc2IkiUGQRB5/B8oLzy
-        96gRWt25D+zZDgb2x75EApZrGqmVDoI1G5nKAqqwgUZkkw6GLPLAJXGy7ZGFSHDl
-        0kcm00NosuGmYV1byCAXALbHPEcJ29SrJ88mzSCE53sHDaKlcMqXFDummiJ7LpqM
-        kZ6cBLKkIGhdZJCmy5x9Sc2zfEWfYrHo3uGOf4Oao9Buph6DZMTp9km55lxFAw4C
-        0epjRLagKuco3fBK9LuWhkmM7q9V+jXc2SLdWgleS2PxKqT7D9oMVOf0KxKmN7Fy
-        JufLRuaYq4yTG8QOp2rAqAl7Rgq7SDRZV9mEpSRtACguE9QzyuhgnOwuTHmhmdJQ
-        ==
-X-ME-Sender: <xms:n5CpXk2e7JduXD774By5U3JhJuNdc2wzl3cvDlWlAvAF4LjFfnpIOQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieefgdejkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
-    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:n5CpXpxtmh0h0oNuQXuZjYLr9OfXIp95lirN40XuOw6EP0nE_DhmSA>
-    <xmx:n5CpXjiGyrmvqwTSgHK9gO_H8s9i07iAtbZjMN2JEDmLBgiBwJfDSQ>
-    <xmx:n5CpXowRmvipaFG-69S5rOqmg3mMuAwWNlEwdmquXLPEyIXKJ3krxg>
-    <xmx:oJCpXnfDzSC-0y1ghD9wNxK_x5nJwHD3aRMKonqmvWonG-4oknsw8g>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 52C403280065;
-        Wed, 29 Apr 2020 10:35:11 -0400 (EDT)
-Date:   Wed, 29 Apr 2020 16:35:10 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Priit Laes <plaes@plaes.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 1/4] clk: sunxi-ng: a10/a20: rewrite init code to a
- platform driver
-Message-ID: <20200429143510.ksi27lok2udtmfas@gilmour.lan>
-References: <20200417221730.555954-1-plaes@plaes.org>
- <20200417221730.555954-2-plaes@plaes.org>
- <20200420124935.asfbgv7envb2af55@gilmour.lan>
- <20200420203228.GA4734@plaes.org>
+        Wed, 29 Apr 2020 10:36:27 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D4D3C03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:36:26 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id x25so2305810wmc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:36:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5pX5dyKlz3kEclb3vgYdtEy6+QBLRs0/5uSq26swTfQ=;
+        b=ubyNkFZZiNf+IYPn1gLGagDsDg2h9nmmAYtHlhZUsMD8PenhsUWtJ69nRGUNl6oF3m
+         BmJ9aN2bhE2yGEOmLf4+uO9UP016HB+3LNJoadT/r/DMCL95Fe2UaOXQkvBzP8OIZbk4
+         pRoODB0KeGx0+QsbUqgcKwqmJcHbT5wOEuGbrI/u1fFl6/xa4cHw++LIAHH8KfQruAbY
+         ZS7izPPdUG2D+oZ5dykDd7T/TqQeJNb5dQH9RVj5nlWFsBCVOvXC1G1J4l5MqDIf6aoX
+         ru3g/1xPhuhKWF81+UNCOZAoPOHyUEQrF8d8T27ImMlxCEdeuHBYWIICczZjIWEN9ybD
+         Ilkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5pX5dyKlz3kEclb3vgYdtEy6+QBLRs0/5uSq26swTfQ=;
+        b=cS3zmwrDIduRPRubj3U6hpG5hT91Xt8ubff/3Tul2i3YORMSzqgU9g+y6IwxqzpWnQ
+         /gfdUIvwX8y9lQAzEdBsLshUocaHnH/duFHkyNBqisoXuAVgORPpM2ET14B4Bis9fCyc
+         uV0owKdAW9Ozd0Q3csC9CpdhPPI4RmL+3STu0Sxsj2yovErIGOy+rqM8mDf4lYCdTDRr
+         rIxDcavxr936IIWHO8pTDtUP6w7QUvZ6xLHaCyEMHnxShw4fu2uoPQC+f6k0BJamBPoy
+         XvKk1isLcjVA1+0RnB/wlI+SXrp0nyGq9X0mBTu1fl9aypBoiUAGOZI7tBh23QevU7zI
+         oKBg==
+X-Gm-Message-State: AGi0PuaRR2f2fPzQ0pORXdo+baowMt2JFnSb7Jmvouas29rO55JhWA40
+        NM3pkZ2OIJosq9MXCRCNsUCghw==
+X-Google-Smtp-Source: APiQypLxhQ4iHWzR7Ia7VtmPtdtF4C0pbsdqvxnTQ0XmBFW7O/a5/5AxEhx1zMlFaMe4piac7uUHgA==
+X-Received: by 2002:a1c:4ca:: with SMTP id 193mr3651483wme.18.1588170985057;
+        Wed, 29 Apr 2020 07:36:25 -0700 (PDT)
+Received: from [192.168.1.2] (212-5-158-103.ip.btc-net.bg. [212.5.158.103])
+        by smtp.googlemail.com with ESMTPSA id z10sm31325213wrg.69.2020.04.29.07.36.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Apr 2020 07:36:24 -0700 (PDT)
+Subject: Re: [PATCH v3 12/17] media: venus: core: Add support for opp
+ tables/perf voting
+To:     Rajendra Nayak <rnayak@codeaurora.org>, viresh.kumar@linaro.org,
+        sboyd@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        linux-media@vger.kernel.org
+References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
+ <1588080785-6812-13-git-send-email-rnayak@codeaurora.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <b091dc29-d2e8-ed3f-fe1c-ae60e16d5d78@linaro.org>
+Date:   Wed, 29 Apr 2020 17:36:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zjre4utny3hlv3nb"
-Content-Disposition: inline
-In-Reply-To: <20200420203228.GA4734@plaes.org>
+In-Reply-To: <1588080785-6812-13-git-send-email-rnayak@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Rajendra,
 
---zjre4utny3hlv3nb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for the patch!
 
-Hi,
+On 4/28/20 4:33 PM, Rajendra Nayak wrote:
+> Add support to add OPP tables and perf voting on the OPP powerdomain.
+> This is needed so venus votes on the corresponding performance state
+> for the OPP powerdomain along with setting the core clock rate.
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> Cc: linux-media@vger.kernel.org
+> ---
+>  drivers/media/platform/qcom/venus/core.c       | 28 +++++++++++++++++++
+>  drivers/media/platform/qcom/venus/core.h       |  5 ++++
+>  drivers/media/platform/qcom/venus/pm_helpers.c | 37 +++++++++++++++++++++++---
+>  3 files changed, 66 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> index 194b10b9..e98fea92 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+> +#include <linux/pm_opp.h>
+>  #include <linux/pm_runtime.h>
+>  #include <media/videobuf2-v4l2.h>
+>  #include <media/v4l2-mem2mem.h>
+> @@ -214,6 +215,20 @@ static int venus_probe(struct platform_device *pdev)
+>  	if (!core->pm_ops)
+>  		return -ENODEV;
+>  
+> +	core->opp_table = dev_pm_opp_set_clkname(dev, "core");
 
-On Mon, Apr 20, 2020 at 08:32:28PM +0000, Priit Laes wrote:
-> On Mon, Apr 20, 2020 at 02:49:35PM +0200, Maxime Ripard wrote:
-> > On Sat, Apr 18, 2020 at 01:17:27AM +0300, Priit Laes wrote:
-> > > In order to register regmap for sun7i CCU, there needs to be
-> > > a device structure already bound to the CCU device node.
-> > >=20
-> > > Convert the sun4i/sun7i CCU setup to platform driver to use
-> > > it later as platform device.
-> > >=20
-> > > Signed-off-by: Priit Laes <plaes@plaes.org>
-> >=20
-> > You can't relly do that though. We have timers that need those clocks b=
-efore the
-> > device model is initialized.
->=20
-> Ok, I'm somewhat lost now... are these the affected timers on sun7i follo=
-wing:
-> - allwinner,sun4i-a10-timer (timer@1c20c00)
-> - allwinner,sun7i-a20-hstimer (hstimer@1c60000)
+Should we set opp clkname if opp_of_add_table fails? We have platforms
+which don't have opp tables in Venus DT node. We have to be backward
+compatible for them.
 
-Yep
+> +	if (IS_ERR(core->opp_table))
+> +		return PTR_ERR(core->opp_table);
+> +
+> +	if (core->res->opp_pmdomain) {
+> +		ret = dev_pm_opp_of_add_table(dev);
+> +		if (!ret) {
+> +			core->has_opp_table = true;
+> +		} else if (ret != -ENODEV) {
 
-> Any ideas on what approach I could actually use?
+Is it possible dev_pm_opp_of_add_table() to return EPROBE_DEFER?
 
-I guess you could keep the CLK_OF_DECLARE registration, and then have a
-platform_driver probe and register the regmap?
+> +			dev_err(dev, "Invalid OPP table in Device tree\n");
 
-> Also, similar timer dependency would affect then sun6i-a31 and sun9i-a80
-> platforms too...
+... if so, please drop dev_err.
 
-Indeed.
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	if (core->pm_ops->core_get) {
+>  		ret = core->pm_ops->core_get(dev);
+>  		if (ret)
+> @@ -301,6 +316,9 @@ static int venus_probe(struct platform_device *pdev)
+>  err_venus_shutdown:
+>  	venus_shutdown(core);
+>  err_runtime_disable:
+> +	if (core->res->opp_pmdomain && core->has_opp_table)
+> +		dev_pm_opp_of_remove_table(dev);
+> +	dev_pm_opp_put_clkname(core->opp_table);
+>  	pm_runtime_set_suspended(dev);
+>  	pm_runtime_disable(dev);
+>  	hfi_destroy(core);
+> @@ -326,6 +344,10 @@ static int venus_remove(struct platform_device *pdev)
+>  
+>  	venus_firmware_deinit(core);
+>  
+> +	if (core->res->opp_pmdomain && core->has_opp_table)
+> +		dev_pm_opp_of_remove_table(dev);
+> +	dev_pm_opp_put_clkname(core->opp_table);
+> +
+>  	pm_runtime_put_sync(dev);
+>  	pm_runtime_disable(dev);
+>  
+> @@ -350,6 +372,10 @@ static __maybe_unused int venus_runtime_suspend(struct device *dev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	/* Drop the performance state vote */
+> +	if (core->opp_pmdomain)
+> +		dev_pm_opp_set_rate(dev, 0);
+> +
+>  	if (pm_ops->core_power)
+>  		ret = pm_ops->core_power(dev, POWER_OFF);
+>  
+> @@ -511,6 +537,7 @@ static const struct venus_resources sdm845_res_v2 = {
+>  	.vcodec_clks_num = 2,
+>  	.vcodec_pmdomains = { "venus", "vcodec0", "vcodec1" },
+>  	.vcodec_pmdomains_num = 3,
+> +	.opp_pmdomain = (const char *[]) { "opp-pd", NULL },
+>  	.vcodec_num = 2,
+>  	.max_load = 3110400,	/* 4096x2160@90 */
+>  	.hfi_version = HFI_VERSION_4XX,
+> @@ -556,6 +583,7 @@ static const struct venus_resources sc7180_res = {
+>  	.vcodec_clks_num = 2,
+>  	.vcodec_pmdomains = { "venus", "vcodec0" },
+>  	.vcodec_pmdomains_num = 2,
+> +	.opp_pmdomain = (const char *[]) { "opp-pd", NULL },
+>  	.vcodec_num = 1,
+>  	.hfi_version = HFI_VERSION_4XX,
+>  	.vmem_id = VIDC_RESOURCE_NONE,
+> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+> index bd3ac6a..cc1d511 100644
+> --- a/drivers/media/platform/qcom/venus/core.h
+> +++ b/drivers/media/platform/qcom/venus/core.h
+> @@ -62,6 +62,7 @@ struct venus_resources {
+>  	unsigned int vcodec_clks_num;
+>  	const char * const vcodec_pmdomains[VIDC_PMDOMAINS_NUM_MAX];
+>  	unsigned int vcodec_pmdomains_num;
+> +	const char **opp_pmdomain;
+>  	unsigned int vcodec_num;
+>  	enum hfi_version hfi_version;
+>  	u32 max_load;
+> @@ -144,8 +145,12 @@ struct venus_core {
+>  	struct clk *vcodec1_clks[VIDC_VCODEC_CLKS_NUM_MAX];
+>  	struct icc_path *video_path;
+>  	struct icc_path *cpucfg_path;
+> +	struct opp_table *opp_table;
+> +	bool has_opp_table;
+>  	struct device_link *pd_dl_venus;
+>  	struct device *pmdomains[VIDC_PMDOMAINS_NUM_MAX];
+> +	struct device_link *opp_dl_venus;
+> +	struct device *opp_pmdomain;
+>  	struct video_device *vdev_dec;
+>  	struct video_device *vdev_enc;
+>  	struct v4l2_device v4l2_dev;
+> diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
+> index abf9315..bc5bbd2 100644
+> --- a/drivers/media/platform/qcom/venus/pm_helpers.c
+> +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/iopoll.h>
+>  #include <linux/kernel.h>
+>  #include <linux/pm_domain.h>
+> +#include <linux/pm_opp.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/types.h>
+>  #include <media/v4l2-mem2mem.h>
+> @@ -66,10 +67,9 @@ static void core_clks_disable(struct venus_core *core)
+>  
+>  static int core_clks_set_rate(struct venus_core *core, unsigned long freq)
+>  {
+> -	struct clk *clk = core->clks[0];
+>  	int ret;
+>  
+> -	ret = clk_set_rate(clk, freq);
+> +	ret = dev_pm_opp_set_rate(core->dev, freq);
 
-Maxime
+Is this will work for legacy platforms without OPP tables?
 
---zjre4utny3hlv3nb
-Content-Type: application/pgp-signature; name="signature.asc"
+Also what about the other clocks (vicodec0,1) in this function.
 
------BEGIN PGP SIGNATURE-----
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -740,13 +740,15 @@ static int venc_power_v4(struct device *dev, int on)
+>  
+>  static int vcodec_domains_get(struct device *dev)
+>  {
+> +	struct opp_table *opp_table;
+> +	struct device **opp_virt_dev;
+>  	struct venus_core *core = dev_get_drvdata(dev);
+>  	const struct venus_resources *res = core->res;
+>  	struct device *pd;
+>  	unsigned int i;
+>  
+>  	if (!res->vcodec_pmdomains_num)
+> -		return -ENODEV;
+> +		goto skip_pmdomains;
+>  
+>  	for (i = 0; i < res->vcodec_pmdomains_num; i++) {
+>  		pd = dev_pm_domain_attach_by_name(dev,
+> @@ -763,6 +765,24 @@ static int vcodec_domains_get(struct device *dev)
+>  	if (!core->pd_dl_venus)
+>  		return -ENODEV;
+>  
+> +skip_pmdomains:
+> +	if (!res->opp_pmdomain || !core->has_opp_table)
+> +		return 0;
+> +
+> +	/* Attach the power domain for setting performance state */
+> +	opp_table = dev_pm_opp_attach_genpd(dev, res->opp_pmdomain, &opp_virt_dev);
+> +	if (IS_ERR(opp_table)) {
+> +		return PTR_ERR(opp_table);
+> +	} else if (opp_virt_dev) {
+> +		core->opp_pmdomain = *opp_virt_dev;
+> +		core->opp_dl_venus = device_link_add(dev, core->opp_pmdomain,
+> +						     DL_FLAG_RPM_ACTIVE |
+> +						     DL_FLAG_PM_RUNTIME |
+> +						     DL_FLAG_STATELESS);
+> +		if (!core->opp_dl_venus)
+> +			return -ENODEV;
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqmQngAKCRDj7w1vZxhR
-xVUBAPsHWuYy2OQT3UljAEr+aCiI8CLm5ELTsyDmgwGv5k61AgEAvf5uXLGuI8YM
-fCSMZorTWij/bLfDbEfqowLUaGK8dQ8=
-=MvDN
------END PGP SIGNATURE-----
+I think as you return ENODEV you have to detach opp domain here because
+vcodec_domains_put() is not called in error path.
 
---zjre4utny3hlv3nb--
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> @@ -773,7 +793,7 @@ static void vcodec_domains_put(struct device *dev)
+>  	unsigned int i;
+>  
+>  	if (!res->vcodec_pmdomains_num)
+> -		return;
+> +		goto skip_pmdomains;
+>  
+>  	if (core->pd_dl_venus)
+>  		device_link_del(core->pd_dl_venus);
+> @@ -783,6 +803,15 @@ static void vcodec_domains_put(struct device *dev)
+>  			continue;
+>  		dev_pm_domain_detach(core->pmdomains[i], true);
+>  	}
+> +
+> +skip_pmdomains:
+> +	if (!res->opp_pmdomain)
+> +		return;
+> +
+> +	if (core->opp_dl_venus)
+> +		device_link_del(core->opp_dl_venus);
+> +
+> +	dev_pm_domain_detach(core->opp_pmdomain, true);
+>  }
+>  
+>  static int core_get_v4(struct device *dev)
+> 
+
+-- 
+regards,
+Stan
