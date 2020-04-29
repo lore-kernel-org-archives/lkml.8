@@ -2,150 +2,113 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DAEAC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95632C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0970E217D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:15:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588155333;
-	bh=ht/RoPskfTVr50a64BfSKdDc9vFE86ERaFW3HHWbVdA=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=hX4dT7j1q0gcl46ZApoHCJK5V+bXMekCJZSzoSzr4Sh7Op0Z7v3RY3d2BAZTwBKQI
-	 xi0ywMf9LARVU7uRvsRbSUmplFDpXwT4MthLlpfByi9duQQgag8NifxwHg4IUnbJdE
-	 2v2oV3/jw+x+u6Tv7OpzS8ER4282toJ796JjTevI=
+	by mail.kernel.org (Postfix) with ESMTP id 732A721D79
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:16:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cKIMe/Iu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgD2KPb (ORCPT
+        id S1726634AbgD2KQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 06:15:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40746 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726345AbgD2KP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 06:15:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AA352073E;
-        Wed, 29 Apr 2020 10:15:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588155328;
-        bh=ht/RoPskfTVr50a64BfSKdDc9vFE86ERaFW3HHWbVdA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=qjOWnsNWeBaR8nYC/F3eomgVHNfVcaZKrMfLqp3Hwj1U2lw3UBXNJHbzyaRLF6+ru
-         Xm3ZIZEXoU2g3imzWKnY3Efv30demididNCxRwGFhvYtlYDSvJylUYeXptloGDL9MX
-         yeiUUPvuVdpYGQc0y8ZNHu54kLnN6HmeuOYSP/lI=
-Date:   Wed, 29 Apr 2020 12:15:26 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] brcmfmac: no need to check return value of debugfs_create
- functions
-Message-ID: <20200429101526.GA2094124@kroah.com>
+        Wed, 29 Apr 2020 06:16:22 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:6557 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgD2KQV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 06:16:21 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea953e80000>; Wed, 29 Apr 2020 03:16:08 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 29 Apr 2020 03:16:21 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 29 Apr 2020 03:16:21 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Apr
+ 2020 10:16:20 +0000
+Received: from [10.26.73.139] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Apr
+ 2020 10:16:17 +0000
+Subject: Re: [PATCH 4.19 000/131] 4.19.119-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200428182224.822179290@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <98e91507-6a87-5e0b-cb43-0b24a72c14bf@nvidia.com>
+Date:   Wed, 29 Apr 2020 11:16:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588155368; bh=S/JRUvA3ThxveB6oGBFr/vB6m0tBhEewmaFo3DEYRdg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=cKIMe/IuPVklwE3pD3aCSqjK/mmqsDZ2mGpDOLUnaJTbX5//La++HJy5lZWfIVi0K
+         VxjwLn8+f2ilvf211GWM0G8YyIRjkIITgVaLYArnKNnILOhdIKTy8c+NRLRY2QeCwO
+         NrY7jKyhewZ7jDTkhjianpGSyvFZ9dH4jNjDsUKiLimGa7pExJOpdhI+an3G2iD1RT
+         3ujtQkNat3yhjqth7S9i87HvFgfndqx4tdT3QhIwcEFwZVDbiEYqbjf6Oa3OvyhPPC
+         SKTkRqL3xUYml0hH3Axh9Rjs4S2reL2oV/5RJAeS5XopuvHIv3GhHjLUsnxN9z0HN2
+         r03XH58xgvUVA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When calling debugfs functions, there is no need to ever check the
-return value.  The function can work or not, but the code logic should
-never do something different based on this.
 
-In doing this, make brcmf_debugfs_add_entry() return void as no one was
-even paying attention to the return value.
+On 28/04/2020 19:23, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.119 release.
+> There are 131 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 30 Apr 2020 18:20:45 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.119-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+>
+> greg k-h
 
-Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
-Cc: Franky Lin <franky.lin@broadcom.com>
-Cc: Hante Meuleman <hante.meuleman@broadcom.com>
-Cc: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
-Cc: Wright Feng <wright.feng@cypress.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafał Miłecki" <rafal@milecki.pl>
-Cc: linux-wireless@vger.kernel.org
-Cc: brcm80211-dev-list.pdl@broadcom.com
-Cc: brcm80211-dev-list@cypress.com
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- .../net/wireless/broadcom/brcm80211/brcmfmac/debug.c |  9 +++------
- .../net/wireless/broadcom/brcm80211/brcmfmac/debug.h | 12 +++++-------
- 2 files changed, 8 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/debug.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/debug.c
-index 120515fe8250..eecf8a38d94a 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/debug.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/debug.c
-@@ -47,13 +47,10 @@ struct dentry *brcmf_debugfs_get_devdir(struct brcmf_pub *drvr)
- 	return drvr->wiphy->debugfsdir;
- }
- 
--int brcmf_debugfs_add_entry(struct brcmf_pub *drvr, const char *fn,
-+void brcmf_debugfs_add_entry(struct brcmf_pub *drvr, const char *fn,
- 			    int (*read_fn)(struct seq_file *seq, void *data))
- {
--	struct dentry *e;
--
- 	WARN(!drvr->wiphy->debugfsdir, "wiphy not (yet) registered\n");
--	e = debugfs_create_devm_seqfile(drvr->bus_if->dev, fn,
--					drvr->wiphy->debugfsdir, read_fn);
--	return PTR_ERR_OR_ZERO(e);
-+	debugfs_create_devm_seqfile(drvr->bus_if->dev, fn,
-+				    drvr->wiphy->debugfsdir, read_fn);
- }
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/debug.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/debug.h
-index 9b221b509ade..4146faeed344 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/debug.h
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/debug.h
-@@ -116,8 +116,8 @@ struct brcmf_bus;
- struct brcmf_pub;
- #ifdef DEBUG
- struct dentry *brcmf_debugfs_get_devdir(struct brcmf_pub *drvr);
--int brcmf_debugfs_add_entry(struct brcmf_pub *drvr, const char *fn,
--			    int (*read_fn)(struct seq_file *seq, void *data));
-+void brcmf_debugfs_add_entry(struct brcmf_pub *drvr, const char *fn,
-+			     int (*read_fn)(struct seq_file *seq, void *data));
- int brcmf_debug_create_memdump(struct brcmf_bus *bus, const void *data,
- 			       size_t len);
- #else
-@@ -126,11 +126,9 @@ static inline struct dentry *brcmf_debugfs_get_devdir(struct brcmf_pub *drvr)
- 	return ERR_PTR(-ENOENT);
- }
- static inline
--int brcmf_debugfs_add_entry(struct brcmf_pub *drvr, const char *fn,
--			    int (*read_fn)(struct seq_file *seq, void *data))
--{
--	return 0;
--}
-+void brcmf_debugfs_add_entry(struct brcmf_pub *drvr, const char *fn,
-+			     int (*read_fn)(struct seq_file *seq, void *data))
-+{ }
- static inline
- int brcmf_debug_create_memdump(struct brcmf_bus *bus, const void *data,
- 			       size_t len)
+All tests are passing for Tegra ...
+
+Test results for stable-v4.19:
+    11 builds:	11 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    32 tests:	32 pass, 0 fail
+
+Linux version:	4.19.119-rc1-g3fc812d65db6
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
+
+Cheers
+Jon
+
 -- 
-2.26.2
-
+nvpublic
