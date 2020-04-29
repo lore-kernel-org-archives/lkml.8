@@ -2,187 +2,317 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EACDC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A83C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66D93206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCFD42073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:13:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgD2LIG (ORCPT
+        id S1726677AbgD2LNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 07:08:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:37328 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726677AbgD2LIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 07:08:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CBABE1042;
-        Wed, 29 Apr 2020 04:08:01 -0700 (PDT)
-Received: from [10.57.33.170] (unknown [10.57.33.170])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E52D3F73D;
-        Wed, 29 Apr 2020 04:07:59 -0700 (PDT)
-Subject: Re: [linux-sunxi] Re: Audio sound card name [was [PATCH 4/7] arm64:
- dts: allwinner: a64: Add HDMI audio]
-To:     =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@siol.net>,
-        Maxime Ripard <maxime@cerno.tech>, Chen-Yu Tsai <wens@csie.org>
-Cc:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+        Wed, 29 Apr 2020 07:13:13 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:44332 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726345AbgD2LNM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 07:13:12 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 80288634C8F;
+        Wed, 29 Apr 2020 14:13:07 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jTkeJ-0000JO-AB; Wed, 29 Apr 2020 14:13:07 +0300
+Date:   Wed, 29 Apr 2020 14:13:07 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Maxime Ripard <maxime@cerno.tech>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Marcus Cooper <codekipper@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-References: <20200426120442.11560-1-peron.clem@gmail.com>
- <20200429081729.qa3gqtl5sof2jhem@gilmour.lan>
- <f9b701d9-0c4e-6e41-1ce8-52adf0f59a2a@arm.com>
- <2545943.S5iK65abk1@jernej-laptop>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <8a6b9707-d6c0-04ea-97a6-27cbbe468631@arm.com>
-Date:   Wed, 29 Apr 2020 12:07:56 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v5 v5 2/3] media: ov8856: Add devicetree support
+Message-ID: <20200429111307.GA867@valkosipuli.retiisi.org.uk>
+References: <20200428180718.1609826-1-robert.foss@linaro.org>
+ <20200428180718.1609826-2-robert.foss@linaro.org>
+ <20200429090012.vhhwatojkncjquwd@gilmour.lan>
+ <CAG3jFyvcgqi_rm-Enf3gTyHowbgX6iBe3coDPu91p9EBTxS2XA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <2545943.S5iK65abk1@jernej-laptop>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG3jFyvcgqi_rm-Enf3gTyHowbgX6iBe3coDPu91p9EBTxS2XA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-29 11:53 am, Jernej Škrabec wrote:
-> Dne sreda, 29. april 2020 ob 12:43:06 CEST je Robin Murphy napisal(a):
->> On 2020-04-29 9:17 am, Maxime Ripard wrote:
->>> On Wed, Apr 29, 2020 at 02:24:00PM +0800, Chen-Yu Tsai wrote:
->>>> On Wed, Apr 29, 2020 at 1:11 AM Robin Murphy <robin.murphy@arm.com>
-> wrote:
->>>>> On 2020-04-28 5:49 pm, Clément Péron wrote:
->>>>>> Hi Mark, Rob,
->>>>>>
->>>>>> On Tue, 28 Apr 2020 at 18:04, Maxime Ripard <maxime@cerno.tech> wrote:
->>>>>>> On Tue, Apr 28, 2020 at 10:54:00AM +0200, Clément Péron wrote:
->>>>>>>> Hi Maxime,
->>>>>>>>
->>>>>>>> On Tue, 28 Apr 2020 at 10:00, Maxime Ripard <maxime@cerno.tech>
-> wrote:
->>>>>>>>> On Sun, Apr 26, 2020 at 02:04:39PM +0200, Clément Péron wrote:
->>>>>>>>>> From: Marcus Cooper <codekipper@gmail.com>
->>>>>>>>>>
->>>>>>>>>> Add a simple-soundcard to link audio between HDMI and I2S.
->>>>>>>>>>
->>>>>>>>>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
->>>>>>>>>> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
->>>>>>>>>> Signed-off-by: Clément Péron <peron.clem@gmail.com>
->>>>>>>>>> ---
->>>>>>>>>>
->>>>>>>>>>     arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 21
->>>>>>>>>>     +++++++++++++++++++
->>>>>>>>>>     1 file changed, 21 insertions(+)
->>>>>>>>>>
->>>>>>>>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->>>>>>>>>> b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi index
->>>>>>>>>> e56e1e3d4b73..08ab6b5e72a5 100644
->>>>>>>>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->>>>>>>>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->>>>>>>>>> @@ -102,6 +102,25 @@
->>>>>>>>>>
->>>>>>>>>>                  status = "disabled";
->>>>>>>>>>          
->>>>>>>>>>          };
->>>>>>>>>>
->>>>>>>>>> +     hdmi_sound: hdmi-sound {
->>>>>>>>>> +             compatible = "simple-audio-card";
->>>>>>>>>> +             simple-audio-card,format = "i2s";
->>>>>>>>>> +             simple-audio-card,name = "allwinner,hdmi";
->>>>>>>>>
->>>>>>>>> I'm not sure what the usual card name should be like though. I would
->>>>>>>>> assume that this should be something specific enough so that you're
->>>>>>>>> able to differentiate between boards / SoC so that the userspace
->>>>>>>>> can choose a different configuration based on it?
->>>>>>>>
->>>>>>>> I really don't know what we should use here,
->>>>>>>> I just have a look at other SoC:
->>>>>>>> rk3328: "HDMI"
->>>>>>>> rk3399: "hdmi-sound"
->>>>>>>> r8a774c0-cat874: "CAT874 HDMI sound"
->>>>>>>>
->>>>>>>> But maybe it's time to introduce proper name:
->>>>>>>> What about :
->>>>>>>> pat
->>>>>>>> sun50i-h6-hdmi
->>>>>>>
->>>>>>> It's pretty much what we've been using for the other sound cards we
->>>>>>> have, so it makes sense to me.
->>>>>>
->>>>>> I have a question regarding the simple-audio-card,name.
->>>>>> In this patch, I would like to introduce a simple-audio-card for the
->>>>>> Allwinner A64 HDMI.
->>>>>>
->>>>>> What should be the preferred name for this sound card?
->>>>>> "sun50i-a64-hdmi" ? "allwinner, sun50i-a64-hdmi" ?
->>>>>
->>>>> I can at least speak for RK3328, and the reasoning there was that as the
->>>>> user looking at what `aplay -l` says, I don't give a hoot about what the
->>>>> SoC may be called, I see two cards and I want to know, with the least
->>>>> amount of uncertainty, which one will make the sound come out of the
->>>>> port that's labelled "HDMI" on the box ;)
->>>>
->>>> I agree. The user really doesn't care what SoC the system uses. The only
->>>> real requirement is to be able to tell which output the card is related
->>>> to, i.e. is it onboard or an external DAC, is it analog or HDMI, etc..
->>>
->>> Yeah, but it's exactly the point.
->>>
->>> If we also end up with "HDMI" as our card name, then the userspace has no
->>> way to tell anymore if it's running from an rk3328 or an allwinner SoC,
->>> or something else entirely. And therefore it cannot really configure
->>> anything to work out of the box anymore.
->>
->> OK, you're a userspace audio application - enlighten me as to what exact
->> chip you're running on here, and why you need to know:
->>
->> card 0: HDMI [HDA ATI HDMI]
->>
->> or how about here?
->>
->> card 0: Intel [HDA Intel]
->>
->>
->> Furthermore, your argument works both ways - if the equivalent (or in
->> common cases like DesignWare IP blocks, exact same) thing across 3
->> different SoCs has 3 different names, then it's that much harder for
->> userspace that wants to present a consistent behaviour. I don't know
->> exactly why LibreELEC have downstream patches that standardise all the
->> Rockchip ones to "HDMI", but I can't help noting that they do.
->>
->> With simple-audio-card we're talking about trivial interfaces that often
->> don't expose any controls at all, so there's unlikely to be much
->> 'configuration' for userspace to do beyond choosing which card to output to.
+Hi Robert, Maxime,
+
+On Wed, Apr 29, 2020 at 12:19:38PM +0200, Robert Foss wrote:
+> On Wed, 29 Apr 2020 at 11:00, Maxime Ripard <maxime@cerno.tech> wrote:
+> >
+> > Hi,
+> >
+> > On Tue, Apr 28, 2020 at 08:07:17PM +0200, Robert Foss wrote:
+> > > Add match table, enable ov8856_probe() to support
+> > > both ACPI and DT modes.
+> > >
+> > > ACPI and DT modes are primarily distinguished from
+> > > each other by relying on devm_XXX_get_optional()
+> > > will return NULL instead of a reference for the
+> > > desired managed resource.
+> > >
+> > > Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> > > ---
+> > >
+> > > - Changes since v4:
+> > >   * Maxime & Sakari: Switch to clock-frequency
+> > >
+> > > - Changes since v3:
+> > >   * Remove redundant {}-brackets
+> > >   * Compare xvclk_rate to 5% tolerance
+> > >   * Andy: Use dev_fwnode()
+> > >   * Andy: Use %pe instead of %ld + PTR_ERR()
+> > >   * Andy: Invert reset_gpio logic
+> > >   * Andy: Remove dev_dbg() from failing reset_gpio setup
+> > >   * Andy: Use dev_err for logging for failures
+> > >   * Andy: Remove dev_warn from EDEFER/regulator error path
+> > >   * Andy & Sakari: Replaced GPIOD_OUT_XXX with 0/1
+> > >   * Maxime & Sakari: Verify clock frequency from DT
+> > >   * Sakari: Verify the 'xvclk_rate' is set correctly for ACPI/DT devices
+> > >   * Sakari: Remove duplicate ov8856->dev assignment
+> > >
+> > > - Changes since v2:
+> > >   * Added "struct device *dev" member to struct ov8856
+> > >   * Andy: Switch to optional version of devm_gpiod_get
+> > >   * Andy: Switch to optional version of devm_clk_get
+> > >   * Fabio: Add reset sleep period
+> > >   * Sakari: Unify defines for 19.2Mhz
+> > >   * Sakari: Remove 24Mhz clock, since it isn't needed for supported modes
+> > >   * Sakari: Replace dev_info() with dev_dbg()
+> > >   * Sakari: Switch induction variable type to unsigned
+> > >   * Sakari: Don't wait for reset_gpio when in ACPI mode
+> > >   * Sakari: Pull reset GPIO high on power on failure
+> > >   * Sakari: Add power on/off to resume/suspend
+> > >   * Sakari: Fix indentation
+> > >   * Sakari: Power off during ov8856_remove()
+> > >   * Sakari: Don't sleep during power-on in ACPI mode
+> > >   * Sakari: Switch to getting xvclk from clk_get_rate
+> > >
+> > > - Changes since v1:
+> > >   * Andy & Sakari: Make XVCLK optional since to not break ACPI
+> > >   * Fabio: Change n_shutdown_gpio name to reset_gpio
+> > >   * Fabio: Invert reset_gpio due to GPIO_ACTIVE_HIGH -> GPIO_ACTIVE_LOW change
+> > >   * Fabio: Remove empty line
+> > >   * Fabio: Remove real error from devm_gpiod_get() failures
+> > >   * Sakari: ARRAY_SIZE() directly instead of through OV8856_NUM_SUPPLIES
+> > >   * Sakari: Use XVCLK rate as provided by DT
+> > >
+> > >  drivers/media/i2c/ov8856.c | 139 +++++++++++++++++++++++++++++++++----
+> > >  1 file changed, 126 insertions(+), 13 deletions(-)
+> > >
+> > > diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
+> > > index 8655842af275..48b02b8d205f 100644
+> > > --- a/drivers/media/i2c/ov8856.c
+> > > +++ b/drivers/media/i2c/ov8856.c
+> > > @@ -3,10 +3,13 @@
+> > >
+> > >  #include <asm/unaligned.h>
+> > >  #include <linux/acpi.h>
+> > > +#include <linux/clk.h>
+> > >  #include <linux/delay.h>
+> > > +#include <linux/gpio/consumer.h>
+> > >  #include <linux/i2c.h>
+> > >  #include <linux/module.h>
+> > >  #include <linux/pm_runtime.h>
+> > > +#include <linux/regulator/consumer.h>
+> > >  #include <media/v4l2-ctrls.h>
+> > >  #include <media/v4l2-device.h>
+> > >  #include <media/v4l2-fwnode.h>
+> > > @@ -18,7 +21,7 @@
+> > >  #define OV8856_LINK_FREQ_360MHZ              360000000ULL
+> > >  #define OV8856_LINK_FREQ_180MHZ              180000000ULL
+> > >  #define OV8856_SCLK                  144000000ULL
+> > > -#define OV8856_MCLK                  19200000
+> > > +#define OV8856_XVCLK_19_2            19200000
+> > >  #define OV8856_DATA_LANES            4
+> > >  #define OV8856_RGB_DEPTH             10
+> > >
+> > > @@ -64,6 +67,12 @@
+> > >
+> > >  #define to_ov8856(_sd)                       container_of(_sd, struct ov8856, sd)
+> > >
+> > > +static const char * const ov8856_supply_names[] = {
+> > > +     "dovdd",        /* Digital I/O power */
+> > > +     "avdd",         /* Analog power */
+> > > +     "dvdd",         /* Digital core power */
+> > > +};
+> > > +
+> > >  enum {
+> > >       OV8856_LINK_FREQ_720MBPS,
+> > >       OV8856_LINK_FREQ_360MBPS,
+> > > @@ -566,6 +575,11 @@ struct ov8856 {
+> > >       struct media_pad pad;
+> > >       struct v4l2_ctrl_handler ctrl_handler;
+> > >
+> > > +     struct device           *dev;
+> > > +     struct clk              *xvclk;
+> > > +     struct gpio_desc        *reset_gpio;
+> > > +     struct regulator_bulk_data supplies[ARRAY_SIZE(ov8856_supply_names)];
+> > > +
+> > >       /* V4L2 Controls */
+> > >       struct v4l2_ctrl *link_freq;
+> > >       struct v4l2_ctrl *pixel_rate;
+> > > @@ -908,6 +922,52 @@ static int ov8856_set_stream(struct v4l2_subdev *sd, int enable)
+> > >       return ret;
+> > >  }
+> > >
+> > > +static int __ov8856_power_on(struct ov8856 *ov8856)
+> > > +{
+> > > +     struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
+> > > +     int ret;
+> > > +
+> > > +     ret = clk_prepare_enable(ov8856->xvclk);
+> > > +     if (ret < 0) {
+> > > +             dev_err(&client->dev, "failed to enable xvclk\n");
+> > > +             return ret;
+> > > +     }
+> > > +
+> > > +     if (is_acpi_node(dev_fwnode(ov8856->dev)))
+> > > +             return 0;
+> > > +
+> > > +     if (ov8856->reset_gpio) {
+> > > +             gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
+> > > +             usleep_range(1000, 2000);
+> > > +     }
+> > > +
+> > > +     ret = regulator_bulk_enable(ARRAY_SIZE(ov8856_supply_names),
+> > > +                                 ov8856->supplies);
+> > > +     if (ret < 0) {
+> > > +             dev_err(&client->dev, "failed to enable regulators\n");
+> > > +             goto disable_clk;
+> > > +     }
+> > > +
+> > > +     gpiod_set_value_cansleep(ov8856->reset_gpio, 0);
+> > > +     usleep_range(1500, 1800);
+> > > +
+> > > +     return 0;
+> > > +
+> > > +disable_clk:
+> > > +     gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
+> > > +     clk_disable_unprepare(ov8856->xvclk);
+> > > +
+> > > +     return ret;
+> > > +}
+> > > +
+> > > +static void __ov8856_power_off(struct ov8856 *ov8856)
+> > > +{
+> > > +     gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
+> > > +     regulator_bulk_disable(ARRAY_SIZE(ov8856_supply_names),
+> > > +                            ov8856->supplies);
+> > > +     clk_disable_unprepare(ov8856->xvclk);
+> > > +}
+> > > +
+> > >  static int __maybe_unused ov8856_suspend(struct device *dev)
+> > >  {
+> > >       struct i2c_client *client = to_i2c_client(dev);
+> > > @@ -918,6 +978,7 @@ static int __maybe_unused ov8856_suspend(struct device *dev)
+> > >       if (ov8856->streaming)
+> > >               ov8856_stop_streaming(ov8856);
+> > >
+> > > +     __ov8856_power_off(ov8856);
+> > >       mutex_unlock(&ov8856->mutex);
+> > >
+> > >       return 0;
+> > > @@ -931,6 +992,8 @@ static int __maybe_unused ov8856_resume(struct device *dev)
+> > >       int ret;
+> > >
+> > >       mutex_lock(&ov8856->mutex);
+> > > +
+> > > +     __ov8856_power_on(ov8856);
+> > >       if (ov8856->streaming) {
+> > >               ret = ov8856_start_streaming(ov8856);
+> > >               if (ret) {
+> > > @@ -1092,29 +1155,58 @@ static int ov8856_identify_module(struct ov8856 *ov8856)
+> > >       return 0;
+> > >  }
+> > >
+> > > -static int ov8856_check_hwcfg(struct device *dev)
+> > > +static int ov8856_get_hwcfg(struct ov8856 *ov8856)
+> > >  {
+> > > +     struct device *dev = ov8856->dev;
+> > >       struct fwnode_handle *ep;
+> > >       struct fwnode_handle *fwnode = dev_fwnode(dev);
+> > >       struct v4l2_fwnode_endpoint bus_cfg = {
+> > >               .bus_type = V4L2_MBUS_CSI2_DPHY
+> > >       };
+> > > -     u32 mclk;
+> > > +     u32 xvclk_rate;
+> > >       int ret;
+> > >       unsigned int i, j;
+> > >
+> > >       if (!fwnode)
+> > >               return -ENXIO;
+> > >
+> > > -     ret = fwnode_property_read_u32(fwnode, "clock-frequency", &mclk);
+> > > +     ret = fwnode_property_read_u32(fwnode, "clock-frequency",
+> > > +             &xvclk_rate);
+> > >       if (ret)
+> > >               return ret;
+> > >
+> > > -     if (mclk != OV8856_MCLK) {
+> > > -             dev_err(dev, "external clock %d is not supported", mclk);
+> > > +     if (!is_acpi_node(fwnode)) {
+> > > +             ov8856->xvclk = devm_clk_get(dev, "xvclk");
+> > > +             if (IS_ERR(ov8856->xvclk)) {
+> > > +                     dev_err(dev, "could not get xvclk clock (%pe)\n",
+> > > +                                     ov8856->xvclk);
+> > > +                     return PTR_ERR(ov8856->xvclk);
+> > > +             }
+> > > +
+> > > +             clk_set_rate(ov8856->xvclk, xvclk_rate);
+> > > +             xvclk_rate = clk_get_rate(ov8856->xvclk);
+> > > +     }
+> > > +
+> > > +     /* external clock must be 19.2MHz, allow 5% tolerance */
+> >
+> > Where is that 5% tolerance coming from? Experimentations, datasheets, something
+> > that looks good enough? Either way, this should be in the comment.
 > 
-> This combination (DesignWare HDMI controller + I2S) is same as on Rockchip.
-> Only difference is slightly different version of HDMI controller and different
-> I2S core. Not sure what kind of configuration do you have in mind, but all
-> these controllers support 2-8 channels, different sample sizes, even
-> passthrough mode can be set (but it's not implemented yet). I would say that
-> this audio output supports quiet a few possible configurations.
+> I don't have access to the full datasheet unfortunately. A 24Mhz rate
+> is as far as I understand it supported and required for higher
+> bandwidth count modes.
+> It was suggested to me that adding a tolerance is the best practice,
+> the ov5645 driver uses a 1% tolerance, which may be more appropriate.
 
-Right, what I'm getting at is that the stuff that matters is all regular 
-audio capabilities exposed via the appropriate APIs, and any choices are 
-going to be mostly based on the audio being played and what the receiver 
-on the other end of the link supports. I'm genuinely curious as to what 
-actual configuration decision could be made purely based on the SoC 
-name, regardless of the board, receiver, or the capabilities advertised 
-by the interface itself.
+The frequency should really be exact. Sometimes what happens is, however,
+that a register list based driver does not have the register lists for a
+frequency that is available on a given system. That's why some drivers have
+allowed some difference to the intended frequency.
 
-Thanks,
-Robin.
+That 5 % seems like a random value, just like any other number that differs
+from the exact frequency would be.
+
+I'd issue a warning if the frequency differs from what was intended, but
+still proceed with probe. This way we can make sure the difference is noted
+while boards that cannot provide the exact frequency supported by the
+driver can still function.
+
+-- 
+Regards,
+
+Sakari Ailus
