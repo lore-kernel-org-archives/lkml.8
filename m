@@ -4,27 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F1DC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF41C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F33042085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29BA6206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbgD2Nk4 (ORCPT
+        id S1728577AbgD2NlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:40:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53080 "EHLO
+        Wed, 29 Apr 2020 09:41:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727879AbgD2Nhk (ORCPT
+        with ESMTP id S1727878AbgD2Nhj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:37:40 -0400
+        Wed, 29 Apr 2020 09:37:39 -0400
 Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3F83C03C1AE;
-        Wed, 29 Apr 2020 06:37:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C60BC03C1AD;
+        Wed, 29 Apr 2020 06:37:38 -0700 (PDT)
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id B843B6BB; Wed, 29 Apr 2020 15:37:35 +0200 (CEST)
+        id 545071AF; Wed, 29 Apr 2020 15:37:35 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -50,9 +51,9 @@ Cc:     Daniel Drake <drake@endlessm.com>, jonathan.derrick@intel.com,
         linux-tegra@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v3 03/34] iommu/amd: Implement iommu_ops->def_domain_type call-back
-Date:   Wed, 29 Apr 2020 15:36:41 +0200
-Message-Id: <20200429133712.31431-4-joro@8bytes.org>
+Subject: [PATCH v3 01/34] iommu: Move default domain allocation to separate function
+Date:   Wed, 29 Apr 2020 15:36:39 +0200
+Message-Id: <20200429133712.31431-2-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200429133712.31431-1-joro@8bytes.org>
 References: <20200429133712.31431-1-joro@8bytes.org>
@@ -63,46 +64,113 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Implement the new def_domain_type call-back for the AMD IOMMU driver.
+Move the code out of iommu_group_get_for_dev() into a separate
+function.
 
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/amd_iommu.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/iommu/iommu.c | 74 ++++++++++++++++++++++++++-----------------
+ 1 file changed, 45 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 20cce366e951..73b4f84cf449 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2661,6 +2661,20 @@ static void amd_iommu_iotlb_sync(struct iommu_domain *domain,
- 	amd_iommu_flush_iotlb_all(domain);
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 2b471419e26c..bfe011760ed1 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -1361,6 +1361,41 @@ struct iommu_group *fsl_mc_device_group(struct device *dev)
  }
+ EXPORT_SYMBOL_GPL(fsl_mc_device_group);
  
-+static int amd_iommu_def_domain_type(struct device *dev)
++static int iommu_alloc_default_domain(struct device *dev,
++				      struct iommu_group *group)
 +{
-+	struct iommu_dev_data *dev_data;
++	struct iommu_domain *dom;
 +
-+	dev_data = get_dev_data(dev);
-+	if (!dev_data)
++	if (group->default_domain)
 +		return 0;
 +
-+	if (dev_data->iommu_v2)
-+		return IOMMU_DOMAIN_IDENTITY;
++	dom = __iommu_domain_alloc(dev->bus, iommu_def_domain_type);
++	if (!dom && iommu_def_domain_type != IOMMU_DOMAIN_DMA) {
++		dom = __iommu_domain_alloc(dev->bus, IOMMU_DOMAIN_DMA);
++		if (dom) {
++			dev_warn(dev,
++				 "failed to allocate default IOMMU domain of type %u; falling back to IOMMU_DOMAIN_DMA",
++				 iommu_def_domain_type);
++		}
++	}
++
++	if (!dom)
++		return -ENOMEM;
++
++	group->default_domain = dom;
++	if (!group->domain)
++		group->domain = dom;
++
++	if (!iommu_dma_strict) {
++		int attr = 1;
++		iommu_domain_set_attr(dom,
++				      DOMAIN_ATTR_DMA_USE_FLUSH_QUEUE,
++				      &attr);
++	}
 +
 +	return 0;
 +}
 +
- const struct iommu_ops amd_iommu_ops = {
- 	.capable = amd_iommu_capable,
- 	.domain_alloc = amd_iommu_domain_alloc,
-@@ -2680,6 +2694,7 @@ const struct iommu_ops amd_iommu_ops = {
- 	.pgsize_bitmap	= AMD_IOMMU_PGSIZES,
- 	.flush_iotlb_all = amd_iommu_flush_iotlb_all,
- 	.iotlb_sync = amd_iommu_iotlb_sync,
-+	.def_domain_type = amd_iommu_def_domain_type,
- };
+ /**
+  * iommu_group_get_for_dev - Find or create the IOMMU group for a device
+  * @dev: target device
+@@ -1393,40 +1428,21 @@ struct iommu_group *iommu_group_get_for_dev(struct device *dev)
  
- /*****************************************************************************
+ 	/*
+ 	 * Try to allocate a default domain - needs support from the
+-	 * IOMMU driver.
++	 * IOMMU driver. There are still some drivers which don't support
++	 * default domains, so the return value is not yet checked.
+ 	 */
+-	if (!group->default_domain) {
+-		struct iommu_domain *dom;
+-
+-		dom = __iommu_domain_alloc(dev->bus, iommu_def_domain_type);
+-		if (!dom && iommu_def_domain_type != IOMMU_DOMAIN_DMA) {
+-			dom = __iommu_domain_alloc(dev->bus, IOMMU_DOMAIN_DMA);
+-			if (dom) {
+-				dev_warn(dev,
+-					 "failed to allocate default IOMMU domain of type %u; falling back to IOMMU_DOMAIN_DMA",
+-					 iommu_def_domain_type);
+-			}
+-		}
+-
+-		group->default_domain = dom;
+-		if (!group->domain)
+-			group->domain = dom;
+-
+-		if (dom && !iommu_dma_strict) {
+-			int attr = 1;
+-			iommu_domain_set_attr(dom,
+-					      DOMAIN_ATTR_DMA_USE_FLUSH_QUEUE,
+-					      &attr);
+-		}
+-	}
++	iommu_alloc_default_domain(dev, group);
+ 
+ 	ret = iommu_group_add_device(group, dev);
+-	if (ret) {
+-		iommu_group_put(group);
+-		return ERR_PTR(ret);
+-	}
++	if (ret)
++		goto out_put_group;
+ 
+ 	return group;
++
++out_put_group:
++	iommu_group_put(group);
++
++	return ERR_PTR(ret);
+ }
+ EXPORT_SYMBOL(iommu_group_get_for_dev);
+ 
 -- 
 2.17.1
 
