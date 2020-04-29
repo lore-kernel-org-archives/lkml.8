@@ -2,121 +2,102 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABC1C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8ED5C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAA05214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEE5F2076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:06:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgD2UCs (ORCPT
+        id S1726891AbgD2UGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 16:02:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:44232 "EHLO foss.arm.com"
+        Wed, 29 Apr 2020 16:06:31 -0400
+Received: from mga18.intel.com ([134.134.136.126]:37019 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbgD2UCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 16:02:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 47A581063;
-        Wed, 29 Apr 2020 13:02:41 -0700 (PDT)
-Received: from [10.37.12.43] (unknown [10.37.12.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 330973F68F;
-        Wed, 29 Apr 2020 13:02:39 -0700 (PDT)
-Subject: Re: [PATCH v4 4/4] thermal: cpuidle: Register cpuidle cooling device
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rui.zhang@intel.com
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "open list:CPU IDLE TIME MANAGEMENT FRAMEWORK" 
-        <linux-pm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:CPUIDLE DRIVER - ARM PSCI" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200429103644.5492-1-daniel.lezcano@linaro.org>
- <20200429103644.5492-4-daniel.lezcano@linaro.org>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <99b3bc79-f48a-3d51-a8ae-8b9ca4856d36@arm.com>
-Date:   Wed, 29 Apr 2020 21:02:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726456AbgD2UGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 16:06:30 -0400
+IronPort-SDR: OqmVG6wuJxhpQbu6OPYgekd/oHCyHWVmDMqvwFDKln8Zn+sye7UbKRFnWS1qSI98GSJTiPgXoM
+ aHI/PfKTRHlg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 13:06:30 -0700
+IronPort-SDR: m0hwcU/Pm2d+wtnIowylzWCVRuCjU8EwMkKdW30+nKlBoOHV3ncQiMMWzW2at5i/VsEZUZBqrr
+ cmL1GXMTa68g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
+   d="scan'208";a="459315579"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga005.fm.intel.com with ESMTP; 29 Apr 2020 13:06:29 -0700
+Date:   Wed, 29 Apr 2020 13:06:29 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Oliver Upton <oupton@google.com>,
+        Peter Shier <pshier@google.com>
+Subject: Re: [PATCH 09/13] KVM: nVMX: Prioritize SMI over nested IRQ/NMI
+Message-ID: <20200429200629.GH15992@linux.intel.com>
+References: <20200423022550.15113-1-sean.j.christopherson@intel.com>
+ <20200423022550.15113-10-sean.j.christopherson@intel.com>
+ <CALMp9eSuYqeVmWhb6q7T5DAW_Npbuin_N1+sbWjvcu0zTqiwsQ@mail.gmail.com>
+ <20200428225949.GP12735@linux.intel.com>
+ <CALMp9eRFfEB1avbQv0O0V=EGrJdSNTxg8Z-BONmQ--dV66CuAg@mail.gmail.com>
+ <20200429145040.GA15992@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200429103644.5492-4-daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200429145040.GA15992@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/29/20 11:36 AM, Daniel Lezcano wrote:
-> The cpuidle driver can be used as a cooling device by injecting idle
-> cycles. The DT binding for the idle state added an optional
+On Wed, Apr 29, 2020 at 07:50:40AM -0700, Sean Christopherson wrote:
+> On Tue, Apr 28, 2020 at 04:16:16PM -0700, Jim Mattson wrote:
+> > On Tue, Apr 28, 2020 at 3:59 PM Sean Christopherson
+> > <sean.j.christopherson@intel.com> wrote:
+> > >
+> > > On Tue, Apr 28, 2020 at 03:04:02PM -0700, Jim Mattson wrote:
+> > > > From the SDM, volume 3:
+> > > >
+> > > > • System-management interrupts (SMIs), INIT signals, and higher
+> > > > priority events take priority over MTF VM exits.
+> > > >
+> > > > I think this block needs to be moved up.
+> > >
+> > > Hrm.  It definitely needs to be moved above the preemption timer, though I
+> > > can't find any public documentation about the preemption timer's priority.
+> > > Preemption timer is lower priority than MTF, ergo it's not in the same
+> > > class as SMI.
+> > >
+> > > Regarding SMI vs. MTF and #DB trap, to actually prioritize SMIs above MTF
+> > > and #DBs, we'd need to save/restore MTF and pending #DBs via SMRAM.  I
+> > > think it makes sense to take the easy road and keep SMI after the traps,
+> > > with a comment to say it's technically wrong but not worth fixing.
+> > 
+> > Pending debug exceptions should just go in the pending debug
+> > exceptions field. End of story and end of complications. I don't
+> > understand why kvm is so averse to using this field the way it was
+> > intended.
 > 
-> When the property is set, register the cpuidle driver with the idle
-> state node pointer as a cooling device. The thermal framework will do
-> the association automatically with the thermal zone via the
-> cooling-device defined in the device tree cooling-maps section.
-> 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->   - V4:
->     - Do not check the return value as the function does no longer return one
-> ---
->   drivers/cpuidle/cpuidle-arm.c  | 3 +++
->   drivers/cpuidle/cpuidle-psci.c | 3 +++
->   2 files changed, 6 insertions(+)
-> 
-> diff --git a/drivers/cpuidle/cpuidle-arm.c b/drivers/cpuidle/cpuidle-arm.c
-> index 9e5156d39627..8c758920d699 100644
-> --- a/drivers/cpuidle/cpuidle-arm.c
-> +++ b/drivers/cpuidle/cpuidle-arm.c
-> @@ -8,6 +8,7 @@
->   
->   #define pr_fmt(fmt) "CPUidle arm: " fmt
->   
-> +#include <linux/cpu_cooling.h>
->   #include <linux/cpuidle.h>
->   #include <linux/cpumask.h>
->   #include <linux/cpu_pm.h>
-> @@ -124,6 +125,8 @@ static int __init arm_idle_init_cpu(int cpu)
->   	if (ret)
->   		goto out_kfree_drv;
->   
-> +	cpuidle_cooling_register(drv);
-> +
->   	return 0;
->   
->   out_kfree_drv:
-> diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
-> index bae9140a65a5..1f38e0dfc9b2 100644
-> --- a/drivers/cpuidle/cpuidle-psci.c
-> +++ b/drivers/cpuidle/cpuidle-psci.c
-> @@ -9,6 +9,7 @@
->   #define pr_fmt(fmt) "CPUidle PSCI: " fmt
->   
->   #include <linux/cpuhotplug.h>
-> +#include <linux/cpu_cooling.h>
->   #include <linux/cpuidle.h>
->   #include <linux/cpumask.h>
->   #include <linux/cpu_pm.h>
-> @@ -313,6 +314,8 @@ static int __init psci_idle_init_cpu(int cpu)
->   	if (ret)
->   		goto out_kfree_drv;
->   
-> +	cpuidle_cooling_register(drv);
-> +
->   	return 0;
->   
->   out_kfree_drv:
-> 
+> Ah, it took my brain a bit to catch on.  I assume you're suggesting calling
+> nested_vmx_updated_pending_dbg() so that the pending #DB naturally gets
+> propagated to/from vmcs12 on SMI/RSM?  I think that should work.
 
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+This works for L2, but not L1 :-(  And L2 can't be fixed without first
+fixing L1 because inject_pending_event() also incorrectly prioritizes #DB
+over SMI.  For L1, utilizing SMRAM to save/restore the pending #DB is
+likely the easiest solution as it avoids having to add new state for
+migration.
 
-Regards,
-Lukasz
+I have everything coded up but it'll probably take a few weeks to test and
+get it sent out, need to focus on other stuff for a while.
