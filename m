@@ -2,248 +2,314 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FE2C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58649C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2AC02074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9812074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:47:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZkAWiLQh"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="XhtZBScq";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PbpiuLZ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgD2NqK (ORCPT
+        id S1727872AbgD2Nq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:46:10 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:34381 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbgD2NqI (ORCPT
+        Wed, 29 Apr 2020 09:46:59 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:34537 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726830AbgD2Nq6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:46:08 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200429134606euoutp016735875f903d101d65f3e212a6a606b4~KTlnp3pG10217802178euoutp01l
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 13:46:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200429134606euoutp016735875f903d101d65f3e212a6a606b4~KTlnp3pG10217802178euoutp01l
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1588167966;
-        bh=Iyco25skS+A3h6ng3DI6hlhHVx9kpvQeKmuPfKWu37g=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=ZkAWiLQhlRgOrcf2V4tPAY18tuujz7jKvS17wCcrzd84Oy/itLeoWMZx/B2tUYfWg
-         cioi5BrT6MizQAxWBNX7yR/PmITZIkVj1QQUK+tPJK3jJ1j5eFgzzgxMkaA0zxlHvN
-         yh3atvex4TZsjyTtUGVD6yRURQT9+v8h/81rlzZI=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200429134606eucas1p24180fbfd8776b6122330b148962defc2~KTlnL1UHq2629526295eucas1p2m;
-        Wed, 29 Apr 2020 13:46:06 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 2F.E8.60698.E1589AE5; Wed, 29
-        Apr 2020 14:46:06 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200429134605eucas1p2bd601082e7a6b8c8fdbe79c83972e2e3~KTlmwvxog3187231872eucas1p2R;
-        Wed, 29 Apr 2020 13:46:05 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200429134605eusmtrp1c165f577e5c9259ed853dbf82fccb3fa~KTlmv2G5v2400824008eusmtrp1a;
-        Wed, 29 Apr 2020 13:46:05 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-f3-5ea9851e4daa
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id BB.50.07950.D1589AE5; Wed, 29
-        Apr 2020 14:46:05 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200429134604eusmtip23ead9bd52f9ed1b14da857e90b79928d~KTllgCQvv0786307863eusmtip2J;
-        Wed, 29 Apr 2020 13:46:04 +0000 (GMT)
-Subject: Re: [PATCH v3 1/3] driver core: Revert default
- driver_deferred_probe_timeout value to 0
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Basil Eljuse <Basil.Eljuse@arm.com>,
-        Ferry Toth <fntoth@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        netdev <netdev@vger.kernel.org>, linux-pm@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        'Linux Samsung SOC' <linux-samsung-soc@vger.kernel.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <9e0501b5-c8c8-bc44-51e7-4bde2844b912@samsung.com>
-Date:   Wed, 29 Apr 2020 15:46:04 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.7.0
+        Wed, 29 Apr 2020 09:46:58 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 1A9B35C036F;
+        Wed, 29 Apr 2020 09:46:57 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Wed, 29 Apr 2020 09:46:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=DbYv53qk6skeNdmOemkqgjZrTiF
+        wQXjLrVbGiM/2ymY=; b=XhtZBScq8XSLgJ/F2GeiqdyXDOsOys8eq8s4x8pcSj5
+        t3R9YdeSg5Y+hPdjXf+zqpXJ5L6PtgvNEJUuL3vRoDQhUldq74paPNuwTlsb8Wjy
+        SF2mN12ib2XQnvvuXp5Teh4fC9fVAJ0og8o+RIjJPHTOgtUCvnVB9icmeeQhNRZo
+        qf0M7NCIT8WkqUCNrifDPWk7CFdodrwdz6fYhxVwtnsfK3uWSE8LqfzBDofEMW8O
+        SOXefNKuctY3prTuShdpGp7q/M/l5k5h21qg8Wb9GB2R9MWYXuCYF8L45JYn/e6i
+        n/8J8GH5oa/iVfJ/JAeaCoQyBneH3zcV2sOopi0Pg6Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=DbYv53
+        qk6skeNdmOemkqgjZrTiFwQXjLrVbGiM/2ymY=; b=PbpiuLZ1vI/KRZHOL+j2Y0
+        ZonInhU7BhG8hyTJeNitJ0LSzLqJshkgWDxHmWLrKjuq24A3mgLOaB7PDY6EhxCe
+        V922tHGMephzoQCPbYr/2wyVg8acffiGH80RRORmqkL0r6wDf/ecHs6wjuGBiksM
+        ddFeYqlMfS55M05Fb8DOSLKdavfqyNVYFE3McQbPQ5MWDLfiBeWboL6rmvxGO60U
+        akg9mzsvH/14B7O+Uxx9Fzkx0hsrnCNc6gLSco3nZPv5oxRB+llwpRs7W2GMzF9P
+        hc4iEce4NVQ30nFBcdFBsTR/hBRJZZzQHkRDR0Vr/41yqLpaB3fFFyj8KyOpNOUQ
+        ==
+X-ME-Sender: <xms:UIWpXhMsffPccFhInQq5Z0NSWT_7GeCS-6WSVC7g3XBFz4DhPhyq4A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieefgdeijecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjsehttdertd
+    dttddvnecuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeen
+    ucggtffrrghtthgvrhhnpeevueehjefgfffgiedvudekvdektdelleelgefhleejieeuge
+    egveeuuddukedvteenucfkphepkeefrdekiedrkeelrddutdejnecuvehluhhsthgvrhfu
+    ihiivgepudenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtoh
+    hm
+X-ME-Proxy: <xmx:UIWpXt_ECFOfdscTa5MkZsBx51jHnn0Nf5lgIKzHuy1SIwC6Y8fqag>
+    <xmx:UIWpXqUrAr67DpBYnYHigjXVLmY365bjzED6epv5iYIRxjeOfvYntQ>
+    <xmx:UIWpXveogEY3tcPcdLGLubSrj9BYq8gVgQYYtmu8QychpvLl5nk6jA>
+    <xmx:UYWpXkgGlgMOSEJQWwgnXpz6_PW4Kx__7p_Qkg6wi6nq2LtfFsgLow>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 764303280064;
+        Wed, 29 Apr 2020 09:46:56 -0400 (EDT)
+Date:   Wed, 29 Apr 2020 15:46:55 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Akira Shimahara <akira215corp@gmail.com>
+Cc:     zbr@ioremap.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] w1_therm: adding sysfs entry to check device power
+Message-ID: <20200429134655.GB2132814@kroah.com>
+References: <20200429133204.140081-1-akira215corp@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200422203245.83244-2-john.stultz@linaro.org>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0xbZRjH8547xOJZQXmEDWOZRImMEfzwJrKLiZITDZGh2QeToUVOuJem
-        5SIaEaHDcQIIRQM0rNwUhHBJoKFAuEgxVGjpcERUhMQRhkLAC8iwVN12djbHlze///P8n/yf
-        J3k5Ut3NhHAZujzRoNNmaxh/amjG64kKu9yVfPo3E4WXP/URuKq0nsCbNdMI/2ueYXHZ4uc0
-        /uzGOoObrt21/G2dZvDG8jiBy9r7Gez2ReGFoWoaL5Rv0XhxtInBe1VfI9xwbYLAy7uP4pmW
-        x7HbdZ3Gt8eGWTz1xzqNO+eGKbw/LsnPHnMehB5rDxJ8h2Yk2Lp+JIQRyyorDHRXMMLK0hgj
-        lC91E4Jj+goSrLMXhMmrPaxg8x0wwi13LSXYvvuYEvYGwhID3vSPSxWzMwpEQ/TZt/3Tq9sk
-        Vl8S/m6ltIFKUMkJCflxwD8Pk6ZmJCF/Ts1/iWBzsINVxF8IOg4/uS/2EOx/U088GLGZnYzS
-        6ETQ6F28L35HcPWrUlJ2BfIp4PS6aJmD+Neg9mCGlk0kb2aht1NpMHwMSDsSI7OKPwvbB9Z7
-        ERT/NPTPfUtJiOMe4y9B/dIbiuUYzDauUzL78XGwIrUimUn+SbDvNJEKB8PyejMhZwH/Kwcu
-        60eUsvZLMGpqoBUOhC2njVX4OLjqKilloAzBDU8vq4hKBIulDUhxvQArnkNG3ojkn4X+0Wil
-        /CIMLuwiuQx8APywc0xZIgDMQ/WkUlbBlXK14o4Ai7Pv/9iphetkDdJYjpxmOXKO5cg5loe5
-        LYjqRsFivjEnTTTG6sTCU0ZtjjFfl3bqndycAXT3B7v+c+4Po4l/UhyI55DmEVVNWleymtYW
-        GItyHAg4UhOkWkvvSFarUrVF74mG3LcM+dmi0YFCOUoTrIpt27yk5tO0eWKWKOpFw4MuwfmF
-        lCB9e7rXux15IvPcrCdhPmv1dPTFILve3t5X59N3JVarbjlOnmkufuqXCyOJWWdKX+n1uf8M
-        DZx/vSq0yL1y2G5X6RI8P1dkDrblPfPch++vfhHSsZYdQ0/sR6zZ538qMhlujsbmLr36sml3
-        4/vwD4rz4pm41puBSQOFT+iT4ssbg3MLNJQxXRsTSRqM2jt3ZGKZvQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFKsWRmVeSWpSXmKPExsVy+t/xe7qyrSvjDO51q1ncmvKbyaK3aTqT
-        xcsJhxkt/k46xm7RfHkJq8XUh0/YLOacb2Gx+DHvMJvFs1t7mSyaF69nszjzW9fiwrY+VosL
-        ba9YLS7vmsNm8bn3CKPFjPP7mCxufeK3OLZAzOLM6UusFv/37GC3OPjhCavF8lM7WCy+7u0C
-        EZ/ZHCQ81sxbw+jx+9ckRo8tK28yeeycdZfdY9OqTjaPO9f2sHm0XVvF5HHocAejx7yTgR77
-        565h99jy+zubx7czE1k8tlxtZ/H4vEkugC9Kz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP
-        0Ng81srIVEnfziYlNSezLLVI3y5BL6NvURd7QYNyRU/XM8YGxgbZLkZODgkBE4ktk46zdTFy
-        cQgJLGWUmHjgOjtEQkbi5LQGVghbWOLPtS6ooreMErf/r2UESQgLJEkc/3kaqIiDQ0TAV2Lz
-        TyeQGmaBGewSs/+8YAOpERLIlWj6OY0FxGYTMJToetsFFucVsJN4830eE4jNIqAqsf7URRaQ
-        OaICsRItFzUhSgQlTs58AtbKKWAjcadrIdhaZgEziXmbHzJD2PIS29/OgbLFJW49mc80gVFo
-        FpL2WUhaZiFpmYWkZQEjyypGkdTS4tz03GIjveLE3OLSvHS95PzcTYzAdLPt2M8tOxi73gUf
-        YhTgYFTi4Z2QvjJOiDWxrLgy9xCjBAezkgjvo4xlcUK8KYmVValF+fFFpTmpxYcYTYF+m8gs
-        JZqcD0yFeSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4OKUaGGu4Nv4/
-        e7N6vcTiiD2c8XvKPFy+5ybfnNfaoq1yfyn7U5nf7SkrjxzhLVqm9KVPSUWA+8PBT5ns+VIM
-        jxVbVfdNXTM/6ZiQQIPo5fuxrzZMOKBboxXVmVGQ3WWs5FNh3WDLd27qm36nqGPrSw6mi+6t
-        03ZaYlarNGHuSa9mCes1fC3SK4KfKrEUZyQaajEXFScCAGmkurZNAwAA
-X-CMS-MailID: 20200429134605eucas1p2bd601082e7a6b8c8fdbe79c83972e2e3
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200429134605eucas1p2bd601082e7a6b8c8fdbe79c83972e2e3
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200429134605eucas1p2bd601082e7a6b8c8fdbe79c83972e2e3
-References: <20200422203245.83244-1-john.stultz@linaro.org>
-        <20200422203245.83244-2-john.stultz@linaro.org>
-        <CGME20200429134605eucas1p2bd601082e7a6b8c8fdbe79c83972e2e3@eucas1p2.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429133204.140081-1-akira215corp@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
-
-On 22.04.2020 22:32, John Stultz wrote:
-> This patch addresses a regression in 5.7-rc1+
->
-> In commit c8c43cee29f6 ("driver core: Fix
-> driver_deferred_probe_check_state() logic"), we both cleaned up
-> the logic and also set the default driver_deferred_probe_timeout
-> value to 30 seconds to allow for drivers that are missing
-> dependencies to have some time so that the dependency may be
-> loaded from userland after initcalls_done is set.
->
-> However, Yoshihiro Shimoda reported that on his device that
-> expects to have unmet dependencies (due to "optional links" in
-> its devicetree), was failing to mount the NFS root.
->
-> In digging further, it seemed the problem was that while the
-> device properly probes after waiting 30 seconds for any missing
-> modules to load, the ip_auto_config() had already failed,
-> resulting in NFS to fail. This was due to ip_auto_config()
-> calling wait_for_device_probe() which doesn't wait for the
-> driver_deferred_probe_timeout to fire.
->
-> Fixing that issue is possible, but could also introduce 30
-> second delays in bootups for users who don't have any
-> missing dependencies, which is not ideal.
->
-> So I think the best solution to avoid any regressions is to
-> revert back to a default timeout value of zero, and allow
-> systems that need to utilize the timeout in order for userland
-> to load any modules that supply misisng dependencies in the dts
-> to specify the timeout length via the exiting documented boot
-> argument.
->
-> Thanks to Geert for chasing down that ip_auto_config was why NFS
-> was failing in this case!
->
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
-> Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Cc: Basil Eljuse <Basil.Eljuse@arm.com>
-> Cc: Ferry Toth <fntoth@gmail.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Anders Roxell <anders.roxell@linaro.org>
-> Cc: netdev <netdev@vger.kernel.org>
-> Cc: linux-pm@vger.kernel.org
-> Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Fixes: c8c43cee29f6 ("driver core: Fix driver_deferred_probe_check_state() logic")
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-
-Please also revert dca0b44957e5 "regulator: Use 
-driver_deferred_probe_timeout for regulator_init_complete_work" then, 
-because now with the default 0 timeout some regulators gets disabled 
-during boot, before their supplies gets instantiated.
-
-This patch broke booting of Samsung Exynos5800-based Peach-Pi Chromeboot 
-with the default multi_v7_defconfig.
-
+On Wed, Apr 29, 2020 at 03:32:04PM +0200, Akira Shimahara wrote:
+> Patch for enhacement of w1_therm module.
+> Adding ext_power sysfs entry (RO). Return the power status of the device:
+>  - 0: device parasite powered
+>  - 1: device externally powered
+>  - xx: xx is kernel error
+> 
+> Creating Documentation/ABI/testing/sysfs-driver-w1_therm for the old 
+> driver sysfs and this new entry.
+> 
+> Signed-off-by: Akira Shimahara <akira215corp@gmail.com>
 > ---
->   drivers/base/dd.c | 13 ++-----------
->   1 file changed, 2 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index 06ec0e851fa1..908ae4d7805e 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -224,16 +224,7 @@ static int deferred_devs_show(struct seq_file *s, void *data)
->   }
->   DEFINE_SHOW_ATTRIBUTE(deferred_devs);
->   
-> -#ifdef CONFIG_MODULES
-> -/*
-> - * In the case of modules, set the default probe timeout to
-> - * 30 seconds to give userland some time to load needed modules
-> - */
-> -int driver_deferred_probe_timeout = 30;
-> -#else
-> -/* In the case of !modules, no probe timeout needed */
-> -int driver_deferred_probe_timeout = -1;
-> -#endif
-> +int driver_deferred_probe_timeout;
->   EXPORT_SYMBOL_GPL(driver_deferred_probe_timeout);
->   
->   static int __init deferred_probe_timeout_setup(char *str)
-> @@ -266,7 +257,7 @@ int driver_deferred_probe_check_state(struct device *dev)
->   		return -ENODEV;
->   	}
->   
-> -	if (!driver_deferred_probe_timeout) {
-> +	if (!driver_deferred_probe_timeout && initcalls_done) {
->   		dev_WARN(dev, "deferred probe timeout, ignoring dependency");
->   		return -ETIMEDOUT;
->   	}
+>  .../ABI/testing/sysfs-driver-w1_therm         | 29 ++++++
+>  drivers/w1/slaves/w1_therm.c                  | 93 ++++++++++++++++++-
+>  drivers/w1/slaves/w1_therm.h                  | 44 ++++++++-
+>  3 files changed, 163 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-driver-w1_therm
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-driver-w1_therm b/Documentation/ABI/testing/sysfs-driver-w1_therm
+> new file mode 100644
+> index 0000000..9aaf625
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-driver-w1_therm
+> @@ -0,0 +1,29 @@
+> +What:		/sys/bus/w1/devices/.../ext_power
+> +Date:		Apr 2020
+> +Contact:	Akira Shimahara <akira215corp@gmail.com>
+> +Description:
+> +		(RO) return the power status by asking the device
+> +			* `0`: device parasite powered
+> +			* `1`: device externally powered
+> +			* `-xx`: xx is kernel error when reading power status
+> +Users:		any user space application which wants to communicate with
+> +		w1_term device
+> +
+> +
+> +What:		/sys/bus/w1/devices/.../w1_slave
+> +Date:		Apr 2020
+> +Contact:	Akira Shimahara <akira215corp@gmail.com>
+> +Description:
+> +		(RW) return the temperature in 1/1000 degC.
+> +		*read*: return 2 lines with the hexa output data sent on the
+> +		bus, return the CRC check and temperature in 1/1000 degC
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+the w1_slave file returns a temperature???
 
+And sysfs is 1 value-per-file, not multiple lines.
+
+And as this is a temperature, what's wrong with the iio interface that
+handles temperature already?  Don't go making up new userspace apis when
+we already have good ones today :)
+
+> +		*write* :
+> +			* `0` : save the 2 or 3 bytes to the device EEPROM
+> +			(i.e. TH, TL and config register)
+> +			* `9..12` : set the device resolution in RAM
+> +			(if supported)
+
+I don't understand these write values, how do they match up to a
+temperature readin?
+
+> +			* Anything else: do nothing
+> +		refer to Documentation/w1/slaves/w1_therm.rst for detailed
+> +		information.
+> +Users:		any user space application which wants to communicate with
+> +		w1_term device
+> \ No newline at end of file
+> diff --git a/drivers/w1/slaves/w1_therm.c b/drivers/w1/slaves/w1_therm.c
+> index 6245950..a530853 100644
+> --- a/drivers/w1/slaves/w1_therm.c
+> +++ b/drivers/w1/slaves/w1_therm.c
+> @@ -39,12 +39,14 @@ module_param_named(strong_pullup, w1_strong_pullup, int, 0);
+>  
+>  static struct attribute *w1_therm_attrs[] = {
+>  	&dev_attr_w1_slave.attr,
+> +	&dev_attr_ext_power.attr,
+>  	NULL,
+>  };
+>  
+>  static struct attribute *w1_ds28ea00_attrs[] = {
+>  	&dev_attr_w1_slave.attr,
+>  	&dev_attr_w1_seq.attr,
+> +	&dev_attr_ext_power.attr,
+>  	NULL,
+>  };
+>  
+> @@ -294,6 +296,26 @@ static inline int w1_DS18S20_convert_temp(u8 rom[9])
+>  	return t;
+>  }
+>  
+> +/*------------------------ Helpers Functions----------------------------*/
+> +
+> +static inline bool bus_mutex_lock(struct mutex *lock)
+> +{
+> +	int max_trying = W1_THERM_MAX_TRY;
+> +	/* try to acquire the mutex, if not, sleep retry_delay before retry) */
+
+Please use scripts/checkpatch.pl on your patches, it should have asked
+you to put an empty line after the int definition.
+
+
+
+> +	while (mutex_lock_interruptible(lock) != 0 && max_trying > 0) {
+> +		unsigned long sleep_rem;
+> +
+> +		sleep_rem = msleep_interruptible(W1_THERM_RETRY_DELAY);
+> +		if (!sleep_rem)
+> +			max_trying--;
+> +	}
+> +
+> +	if (!max_trying)
+> +		return false;	/* Didn't acquire the bus mutex */
+> +
+> +	return true;
+> +}
+> +
+>  /*-------------------------Interface Functions------------------------------*/
+>  static int w1_therm_add_slave(struct w1_slave *sl)
+>  {
+> @@ -302,6 +324,16 @@ static int w1_therm_add_slave(struct w1_slave *sl)
+>  	if (!sl->family_data)
+>  		return -ENOMEM;
+>  	atomic_set(THERM_REFCNT(sl->family_data), 1);
+> +
+> +	/* Getting the power mode of the device {external, parasite}*/
+> +	SLAVE_POWERMODE(sl) = read_powermode(sl);
+> +
+> +	if (SLAVE_POWERMODE(sl) < 0) {
+> +		/* no error returned as device has been added */
+> +		dev_warn(&sl->dev,
+> +			"%s: Device has been added, but power_mode may be corrupted. err=%d\n",
+> +			 __func__, SLAVE_POWERMODE(sl));
+> +	}
+>  	return 0;
+>  }
+>  
+> @@ -512,6 +544,43 @@ error:
+>  	return ret;
+>  }
+>  
+> +static int read_powermode(struct w1_slave *sl)
+> +{
+> +	struct w1_master *dev_master = sl->master;
+> +	int max_trying = W1_THERM_MAX_TRY;
+> +	int  ret = -ENODEV;
+> +
+> +	if (!sl->family_data)
+> +		goto error;
+> +
+> +	/* prevent the slave from going away in sleep */
+> +	atomic_inc(THERM_REFCNT(sl->family_data));
+> +
+> +	if (!bus_mutex_lock(&dev_master->bus_mutex)) {
+> +		ret = -EAGAIN;	// Didn't acquire the mutex
+> +		goto dec_refcnt;
+> +	}
+> +
+> +	while ((max_trying--) && (ret < 0)) {
+> +		/* safe version to select slave */
+> +		if (!reset_select_slave(sl)) {
+> +			w1_write_8(dev_master, W1_READ_PSUPPLY);
+> +			/* Read only one bit,
+> +			 * 1 is externally powered,
+> +			 * 0 is parasite powered
+> +			 */
+> +			ret = w1_touch_bit(dev_master, 1);
+> +			/* ret should be either 1 either 0 */
+> +		}
+> +	}
+> +	mutex_unlock(&dev_master->bus_mutex);
+> +
+> +dec_refcnt:
+> +	atomic_dec(THERM_REFCNT(sl->family_data));
+> +error:
+> +	return ret;
+> +}
+> +
+>  /*------------------------Interface sysfs--------------------------*/
+>  
+>  static ssize_t w1_slave_show(struct device *device,
+> @@ -565,13 +634,35 @@ static ssize_t w1_slave_store(struct device *device,
+>  				ret = w1_therm_families[i].eeprom(device);
+>  			else
+>  				ret = w1_therm_families[i].precision(device,
+> -								val);
+> +									val);
+>  			break;
+>  		}
+>  	}
+>  	return ret ? : size;
+>  }
+>  
+> +static ssize_t ext_power_show(struct device *device,
+> +	struct device_attribute *attr, char *buf)
+> +{
+> +	struct w1_slave *sl = dev_to_w1_slave(device);
+> +
+> +	if (!sl->family_data) {
+> +		dev_info(device,
+> +			"%s: Device not supported by the driver\n", __func__);
+> +		return 0;  /* No device family */
+> +	}
+> +
+> +	/* Getting the power mode of the device {external, parasite}*/
+> +	SLAVE_POWERMODE(sl) = read_powermode(sl);
+> +
+> +	if (SLAVE_POWERMODE(sl) < 0) {
+> +		dev_dbg(device,
+> +			"%s: Power_mode may be corrupted. err=%d\n",
+> +			__func__, SLAVE_POWERMODE(sl));
+> +	}
+> +	return sprintf(buf, "%d\n", SLAVE_POWERMODE(sl));
+> +}
+> +
+>  #if IS_REACHABLE(CONFIG_HWMON)
+>  static int w1_read_temp(struct device *device, u32 attr, int channel,
+>  			long *val)
+> diff --git a/drivers/w1/slaves/w1_therm.h b/drivers/w1/slaves/w1_therm.h
+> index b73af0b..2f975a4 100644
+> --- a/drivers/w1/slaves/w1_therm.h
+> +++ b/drivers/w1/slaves/w1_therm.h
+> @@ -25,6 +25,12 @@
+>  #include <linux/mutex.h>
+>  #include <linux/w1.h>
+>  
+> +/*----------------------------------Defines---------------------------------*/
+
+No real need for this, we can see defines just fine :)
+
+thanks,
+
+greg k-h
