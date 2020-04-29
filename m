@@ -7,120 +7,139 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8832C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1843C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C72F821707
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AC902087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:20:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RrrZXR8w"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iHHFUAkL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbgD2NTV (ORCPT
+        id S1726822AbgD2NUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:19:21 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24068 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726617AbgD2NTU (ORCPT
+        Wed, 29 Apr 2020 09:20:08 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59107 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726765AbgD2NUI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:19:20 -0400
+        Wed, 29 Apr 2020 09:20:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588166359;
+        s=mimecast20190719; t=1588166406;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=FMUg5MJ5HqN8GWTN2ovWwUAWTwS0eJhOjZ8gpBfrDns=;
-        b=RrrZXR8wZ1cHGYdT0jNezHGRyAljVUlTPoDetJovr+6Xpa7YcQD6eJRWx7/ggXyW61hssK
-        Xt4noYrU4JiW63arr6nrXfEhCFLGBGXuHeJb0wHKhOmmZxTtV3Rq1VwImfoe3WQGvmXcuI
-        oGe5VfY1mpx83BoyyVNBOjKRIYOgcf8=
+        bh=n1dpe2R+BaXjYKU81tW2AJJKUbU2yVflRAds1OeIUQA=;
+        b=iHHFUAkLq5QB2yfKJQkqRgitGRPq3wiJ+jPr+OnuDQNJKn8P5Hpp2B1U5Qj0Rw7q6ZjsjZ
+        M5Byum0GiDjJ848USIO8bmH/eyKT9W2yDgk6JgeHlKqMRHBYP4WipVSj/UN2B1BodGsWOx
+        OzoqqnW63oI5Xz70zn/UU3smN4NIOUA=
 Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
  [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-45-t0WgFUO6PEurMGVb6jEgcg-1; Wed, 29 Apr 2020 09:19:17 -0400
-X-MC-Unique: t0WgFUO6PEurMGVb6jEgcg-1
-Received: by mail-wm1-f72.google.com with SMTP id d134so2611002wmd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 06:19:17 -0700 (PDT)
+ us-mta-355-t_G2QUbCP4St_-gQsXLiFQ-1; Wed, 29 Apr 2020 09:20:03 -0400
+X-MC-Unique: t_G2QUbCP4St_-gQsXLiFQ-1
+Received: by mail-wm1-f72.google.com with SMTP id f81so948441wmf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 06:20:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=FMUg5MJ5HqN8GWTN2ovWwUAWTwS0eJhOjZ8gpBfrDns=;
-        b=PQppF6N3tUx3Z7a2FG2ZEunjOV8xbt8P/b3Vm61IoN9Jf0va/FbSh/N8b105a5DgWf
-         F01+UjaxQQ/UzZCaZlmYrwTRbpSBXdUsbnTllEKC52bxHdwZIU0hrBdmCErbmYZ5LpsW
-         KPc20XpoJPi0RY1b9SDhz/u/SvuOWwO7/5/SV7KpOYth65ulm07Uh1I0MJ9l/A2Rlh84
-         gygFN/239uXwwssvJBfIBHluKvWVLLR77Ff8MFlNg6U7uRa0OdJ6Hz/YgLBPqoEPunos
-         yDdxoNeExAmKY1HF8FVmBRTn2Z7CqVdR9gLDG6lU+6ICZSD43SQW6W53gRrqavcGKI06
-         dH1Q==
-X-Gm-Message-State: AGi0PuaOqA8WpkzkGNcQFKDtXZjMPkZO3flKKgG39GntI1biM8B9gWb5
-        Jt9dXRaU+7zzqI/0eGXJUviX6zvQpXweHhOCXLEdACWdcKXMujLbf4mlChYzXjX+p1zjmr6mSf8
-        Cy2EnX8dlE11LOGBZNWQDf9U6
-X-Received: by 2002:adf:f508:: with SMTP id q8mr42083748wro.117.1588166356415;
-        Wed, 29 Apr 2020 06:19:16 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIVI9BskJLOYHDtLBpbqq6zGNziM2FPZCXQ+TipPyQlqk+qNl4/NDGod3hfECoQdadSu7g7fw==
-X-Received: by 2002:adf:f508:: with SMTP id q8mr42083717wro.117.1588166356187;
-        Wed, 29 Apr 2020 06:19:16 -0700 (PDT)
+        bh=n1dpe2R+BaXjYKU81tW2AJJKUbU2yVflRAds1OeIUQA=;
+        b=e2mhB0267FAXU9N8Q49bhRdXl5yQvpO5o4TeO/tB4D0cgjHweRdzZ6DuvsuToq4jmg
+         xEG2814eVVy/70UXOe85ox43UrDcveFoOBejtEJwafNcLGZ0SHTlV2RFydHiO+dNODEq
+         u6RGbLKvLFE7Hod5//SQsyssMqXQkEEThgLdQUKwNP4vapDEBikvcHGIJQkQfXCkZhqf
+         eiWe/5U1sgPfa4Ktopm2Zy9s4In2F1PppYBgOHXiwgPobwsmf22dpTbeXUwnHe7X7GWf
+         x1TfZbj0TeyugGguLYdQXNdKbkdNYJUXexApAwKkJ4CncXYqNbhAqZC2/pm0WMMDqjca
+         iXRQ==
+X-Gm-Message-State: AGi0PuYHd7aXX9Ev5P8xQR35H3kUyc+opoyWplOc/jx+gEgXgn5Npaxc
+        enIhWeqZ9K8xu3uztQB8laNYhJsGDelbDYyOgOcO90lHwwS+jhliwPR0EVrxVSEfW99hrAfGC7z
+        JL59SAH+HWF6A9ctcgfCM5HxS
+X-Received: by 2002:a5d:650b:: with SMTP id x11mr38608010wru.405.1588166402525;
+        Wed, 29 Apr 2020 06:20:02 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLLm8qn1Tw91phFnLxp2Md4CBWIVFhkVC0MYgra0vAWcDzU06OmfmNuwnFvZRprLFRjLESqcA==
+X-Received: by 2002:a5d:650b:: with SMTP id x11mr38607988wru.405.1588166402233;
+        Wed, 29 Apr 2020 06:20:02 -0700 (PDT)
 Received: from [192.168.10.150] ([93.56.170.5])
-        by smtp.gmail.com with ESMTPSA id i74sm12241193wri.49.2020.04.29.06.19.14
+        by smtp.gmail.com with ESMTPSA id s14sm8221183wme.33.2020.04.29.06.20.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 06:19:15 -0700 (PDT)
-Subject: Re: [PATCH RFC 6/6] KVM: x86: Switch KVM guest to using interrupts
- for page ready APF delivery
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, x86@kernel.org,
-        kvm@vger.kernel.org
-References: <20200429093634.1514902-1-vkuznets@redhat.com>
- <20200429093634.1514902-7-vkuznets@redhat.com>
- <ee587bd6-a06f-8a38-9182-94218f7d08bb@redhat.com>
- <87blnah36e.fsf@vitty.brq.redhat.com>
+        Wed, 29 Apr 2020 06:20:01 -0700 (PDT)
+Subject: Re: [PATCH v1 00/15] Add support for Nitro Enclaves
+To:     Alexander Graf <graf@amazon.com>,
+        "Paraschiv, Andra-Irina" <andraprs@amazon.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@amazon.com>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>, Balbir Singh <sblbir@amazon.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
+        ne-devel-upstream@amazon.com
+References: <20200421184150.68011-1-andraprs@amazon.com>
+ <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
+ <ff65b1ed-a980-9ddc-ebae-996869e87308@amazon.com>
+ <2a4a15c5-7adb-c574-d558-7540b95e2139@redhat.com>
+ <1ee5958d-e13e-5175-faf7-a1074bd9846d@amazon.com>
+ <f560aed3-a241-acbd-6d3b-d0c831234235@redhat.com>
+ <80489572-72a1-dbe7-5306-60799711dae0@amazon.com>
+ <0467ce02-92f3-8456-2727-c4905c98c307@redhat.com>
+ <5f8de7da-9d5c-0115-04b5-9f08be0b34b0@amazon.com>
+ <095e3e9d-c9e5-61d0-cdfc-2bb099f02932@redhat.com>
+ <602565db-d9a6-149a-0e1a-fe9c14a90ce7@amazon.com>
+ <fb0bfd95-4732-f3c6-4a59-7227cf50356c@redhat.com>
+ <0a4c7a95-af86-270f-6770-0a283cec30df@amazon.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <465678b2-4009-f85b-65ec-6c2c7bbc4fa0@redhat.com>
-Date:   Wed, 29 Apr 2020 15:19:15 +0200
+Message-ID: <ad01ef35-9ee5-cf94-640c-4c26184946fa@redhat.com>
+Date:   Wed, 29 Apr 2020 15:20:01 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <87blnah36e.fsf@vitty.brq.redhat.com>
+In-Reply-To: <0a4c7a95-af86-270f-6770-0a283cec30df@amazon.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/20 14:44, Vitaly Kuznetsov wrote:
->>> +			token = __this_cpu_read(apf_reason.token);
->>> +			/*
->>> +			 * Make sure we read 'token' before we reset
->>> +			 * 'reason' or it can get lost.
->>> +			 */
->>> +			mb();
->>> +			__this_cpu_write(apf_reason.reason, 0);
->>> +			kvm_async_pf_task_wake(token);
->>> +		}
->> If tokens cannot be zero, could we avoid using reason for the page ready
->> interrupt (and ultimately retire "reason" completely)?
-> Yes, we can switch to using 'token' exclusively but personally I'm not
-> sure it is worth it. We'll still have to have a hole and reason + token
-> is only u64. Keeping 'reason' in place allows us to easily come up with
-> any other type of notification through this mecanism (if the reson is
-> ... then 'token' means ...).
+On 28/04/20 17:07, Alexander Graf wrote:
+>> So why not just start running the enclave at 0xfffffff0 in real mode?
+>> Yes everybody hates it, but that's what OSes are written against.  In
+>> the simplest example, the parent enclave can load bzImage and initrd at
+>> 0x10000 and place firmware tables (MPTable and DMI) somewhere at
+>> 0xf0000; the firmware would just be a few movs to segment registers
+>> followed by a long jmp.
+> 
+> There is a bit of initial attestation flow in the enclave, so that
+> you can be sure that the code that is running is actually what you wanted to
+> run.
 
-If we need a "reason" field I'd rather make it separate from the page
-not ready reason, because as we differentiate the delivery mechanism it
-is cleaner to keep them separate.
+Can you explain this, since it's not documented?
 
-For example, if the reason is present but separate, the memory barrier
-is not necessary anymore, because apf_reason.token cannot be written
-before the ack MSR is written.  And with #VE there will be already a
-hardware-provided mechanism to avoid reentrancy.
+>   vm = ne_create(vcpus = 4)
+>   ne_set_memory(vm, hva, len)
+>   ne_load_image(vm, addr, len)
+>   ne_start(vm)
+> 
+> That way we would get the EIF loading into kernel space. "LOAD_IMAGE"
+> would only be available in the time window between set_memory and start.
+> It basically implements a memcpy(), but it would completely hide the
+> hidden semantics of where an EIF has to go, so future device versions
+> (or even other enclave implementers) could change the logic.
+> 
+> I think it also makes sense to just allocate those 4 ioctls from
+> scratch. Paolo, would you still want to "donate" KVM ioctl space in that
+> case?
 
-Thanks,
+Sure, that's not a problem.
 
 Paolo
+
+> Overall, the above should address most of the concerns you raised in
+> this mail, right? It still requires copying, but at least we don't have
+> to keep the copy in kernel space.
 
