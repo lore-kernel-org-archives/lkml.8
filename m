@@ -2,158 +2,110 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E92DC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFB0C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF3C206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8670820B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:46:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="NfXC63zz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V5Rsj6og"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgD2Tiw (ORCPT
+        id S1726869AbgD2Tqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 15:38:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53656 "EHLO
+        Wed, 29 Apr 2020 15:46:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726775AbgD2Tiw (ORCPT
+        by vger.kernel.org with ESMTP id S1726456AbgD2Tqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 15:38:52 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7351C035493
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:38:51 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id s30so2984497qth.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:38:51 -0700 (PDT)
+        Wed, 29 Apr 2020 15:46:35 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B768C03C1AE;
+        Wed, 29 Apr 2020 12:46:35 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 18so1575109pfx.6;
+        Wed, 29 Apr 2020 12:46:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wSYESb9Z3lobUMcKhRgLVx/Jnc91KqPEgi7fezuq0cw=;
-        b=NfXC63zzpf/8TqXiV12LVXGiDGkba+94lBawHeUu83K8kLO8LRDgkxz43bWbbguQFH
-         aCgsfAqUHnw9A7jIE+4yQDpSBQ9ejSEwi62fbLyNgrZQF6E45SKOlcrZpp3ZA+x+T81t
-         05c9+uMkRiw5dJ58ysX0oVJvqft33g+XCuCp2l8cUvJI6iP1S8Vujxgbk5X6fDpsk2TX
-         Vd6i5AIIK/Oyu4Q/ttB0qTWO+51Joo3U4fWF4Lkf2S6hLdFNWplzSuZgTs6i+e6rfv//
-         X3HxIzTHtwQ7e5jBUgRqMi3T5DsoKatOu2U5HWkn6PujV760l328OCDPIQi8nYsNU/Lp
-         pAyg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Jasr6jlZgCzqBOuA5EUCTCY8i3t2aut5HXZlE2l+ixA=;
+        b=V5Rsj6ogWUsnxpcbrNBduosMFpgn/mqOzZyU41YO7+hJjMaILBQDYl8/3W+pwQBVLW
+         mF1kFlWOaA1lB28nvhuA6RCyhaJb7EYyBEEG7cqnb8LR3yL6ND8ieRjn/Zl/BnWvIFzE
+         tKkEqq70tzoGYRLKjD7EVBCIHQYQgcR6KKwtzuFEGMFNjwzDWVp4uvrEVC8STfCq5l5h
+         dxBzCbQEyAeZ2NCGMMZPhu7gATryqlmkI0monwxKI8mqjHSESR6Par1Rx5gEJ/K/8U7k
+         /mVA/Qirfx9zVaJuJkeCG+BdmBM9zsPEaPV/wojTeyGDn5LDdgDxttaSayGncSVeC6Q9
+         0oRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wSYESb9Z3lobUMcKhRgLVx/Jnc91KqPEgi7fezuq0cw=;
-        b=a++S1N2wa1DLLcqby2Vzn33ip440VdhQ9nFEzeN5dsrW98Z/K8bmYNs2jmmoeoY7Fq
-         3MKRHEUEPqCcsDtyZVhLlyAUoapiI2XBboazzYvaBYN0RQka3TQmoAnDLtz3M7GCnM+f
-         lyKpUkwB8IUlqoG89pfRFZNfCSFJ+taN5MGDye1dvpoJgHudxAm9d6viUInMrHW7H2PU
-         kNVqJ+7llSGIGJwjz6TmyAoTrrAL9hLqpwGOsrxoFSRo4KB0eaLaLxhJVQlR05EgASZ7
-         R1Bo2s/dIL6W+TiLL3N8z8WqgpJZKHf449TWEyJNuaixpUFgq7bFn+tjaKFD0XfHSp9A
-         15IA==
-X-Gm-Message-State: AGi0PuYk+5fSkA5LvSTF8/67/YDqbaF2bzQUn6qr3SAUYtK5hlBeMAM2
-        LMC75jjF7+YpE2PBIqqHqT8O3A==
-X-Google-Smtp-Source: APiQypKXiOYH85US8Z7h6G2+cqWcYKpnBdMFUGM9XeOFtVhWzW/P0ELjxN2G8888g6EU3/+MJwFu8g==
-X-Received: by 2002:ac8:3a83:: with SMTP id x3mr24832605qte.44.1588189131135;
-        Wed, 29 Apr 2020 12:38:51 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id m12sm92419qki.75.2020.04.29.12.38.49
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Apr 2020 12:38:50 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jTsXh-0005C7-Ba; Wed, 29 Apr 2020 16:38:49 -0300
-Date:   Wed, 29 Apr 2020 16:38:49 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-mm@kvack.org, Ralph Campbell <rcampbell@nvidia.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        amd-gfx@lists.freedesktop.org, Ben Skeggs <bskeggs@redhat.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        dri-devel@lists.freedesktop.org,
-        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
-        intel-gfx@lists.freedesktop.org,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        linux-kernel@vger.kernel.org,
-        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
-        nouveau@lists.freedesktop.org
-Subject: Re: [PATCH hmm 2/5] mm/hmm: make hmm_range_fault return 0 or -1
-Message-ID: <20200429193849.GA3824@ziepe.ca>
-References: <0-v1-4eb72686de3c+5062-hmm_no_flags_jgg@mellanox.com>
- <2-v1-4eb72686de3c+5062-hmm_no_flags_jgg@mellanox.com>
- <20200422055229.GB22366@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422055229.GB22366@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Jasr6jlZgCzqBOuA5EUCTCY8i3t2aut5HXZlE2l+ixA=;
+        b=gjdkM0hgImXWGmBBLNXiGUkaGVyi0t9jRyjZqHlBycKCN0pusD1M+14S3/qWWqpjEN
+         nnLBxmzoboM6Y2oylg6g3WBWeyFpNGcOpbZKgOn50OtdG4e25PRRupsWcl+EaUH1CRTq
+         3yVlXyo9/sMvp1LMCmRpLIIXpQl3jMjj9kJ/ZxxwTM2fo1Gy/DWj0ORQjvhS9dcP/HDd
+         Jd8V0T6/Eh+1fCCHNWYEZ/q/NEZFPkqCKwP2V6vXW4uL/cXByGa/BXG+XbP+dQdHAHR/
+         mOwQDQB2UDSpYocf4fY07xuCfxQHUuvW5C/odwOlUc40s4dRL94ne4H+/pCyGj3vTps0
+         8+0Q==
+X-Gm-Message-State: AGi0PuYgdvM29/ZVGyZZ/QAGZFr2+N2pw6LVBpH/0DfFZ9eubJLk+QDZ
+        c8CnPZbSxHo201jS9AYayAI=
+X-Google-Smtp-Source: APiQypLNPyaOVHptLXLwofZRhTyh5Co3/5V4oGBIpBOmhMKLW9FtjbmEsf+iMFy9tGKjI1iWiBdT2Q==
+X-Received: by 2002:a62:35c3:: with SMTP id c186mr13328125pfa.261.1588189594608;
+        Wed, 29 Apr 2020 12:46:34 -0700 (PDT)
+Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id z15sm87956pjt.20.2020.04.29.12.46.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 Apr 2020 12:46:33 -0700 (PDT)
+From:   Doug Berger <opendmb@gmail.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
+Subject: [PATCH net-next 0/7] net: bcmgenet: add support for Wake on Filter
+Date:   Wed, 29 Apr 2020 12:45:45 -0700
+Message-Id: <1588189552-899-1-git-send-email-opendmb@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 07:52:29AM +0200, Christoph Hellwig wrote:
-> On Tue, Apr 21, 2020 at 09:21:43PM -0300, Jason Gunthorpe wrote:
-> > From: Jason Gunthorpe <jgg@mellanox.com>
-> > 
-> > hmm_vma_walk->last is supposed to be updated after every write to the
-> > pfns, so that it can be returned by hmm_range_fault(). However, this is
-> > not done consistently. Fortunately nothing checks the return code of
-> > hmm_range_fault() for anything other than error.
-> > 
-> > More importantly last must be set before returning -EBUSY as it is used to
-> > prevent reading an output pfn as an input flags when the loop restarts.
-> > 
-> > For clarity and simplicity make hmm_range_fault() return 0 or -ERRNO. Only
-> > set last when returning -EBUSY.
-> > 
-> > Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-> >  Documentation/vm/hmm.rst                |  2 +-
-> >  drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c |  4 ++--
-> >  drivers/gpu/drm/nouveau/nouveau_svm.c   |  6 +++---
-> >  include/linux/hmm.h                     |  2 +-
-> >  mm/hmm.c                                | 25 +++++++++----------------
-> >  5 files changed, 16 insertions(+), 23 deletions(-)
-> > 
-> > diff --git a/Documentation/vm/hmm.rst b/Documentation/vm/hmm.rst
-> > index 4e3e9362afeb10..9924f2caa0184c 100644
-> > +++ b/Documentation/vm/hmm.rst
-> > @@ -161,7 +161,7 @@ device must complete the update before the driver callback returns.
-> >  When the device driver wants to populate a range of virtual addresses, it can
-> >  use::
-> >  
-> > -  long hmm_range_fault(struct hmm_range *range);
-> > +  int hmm_range_fault(struct hmm_range *range);
-> >  
-> >  It will trigger a page fault on missing or read-only entries if write access is
-> >  requested (see below). Page faults use the generic mm page fault code path just
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-> > index 6309ff72bd7876..efc1329a019127 100644
-> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-> > @@ -852,12 +852,12 @@ int amdgpu_ttm_tt_get_user_pages(struct amdgpu_bo *bo, struct page **pages)
-> >  	down_read(&mm->mmap_sem);
-> >  	r = hmm_range_fault(range);
-> >  	up_read(&mm->mmap_sem);
-> > -	if (unlikely(r <= 0)) {
-> > +	if (unlikely(r)) {
-> >  		/*
-> >  		 * FIXME: This timeout should encompass the retry from
-> >  		 * mmu_interval_read_retry() as well.
-> >  		 */
-> > -		if ((r == 0 || r == -EBUSY) && !time_after(jiffies, timeout))
-> > +		if ((r == -EBUSY) && !time_after(jiffies, timeout))
-> 
-> Please also kill the superflous inner braces here.
-> 
-> > + * Return: 0 or -ERRNO with one of the following status codes:
-> 
-> Maybe say something like:
-> 
->     * Returns 0 on success or one of the following error codes:
-> 
-> Otherwise this looks good:
+This commit set adds support for waking from 'standby' using a
+Rx Network Flow Classification filter specified with ethtool.
 
-Got it, thanks
+The first two commits are bug fixes that should be applied to the
+stable branches, but are included in this patch set to reduce merge
+conflicts that might occur if not applied before the other commits
+in this set.
 
-Jason
+The next commit consolidates WoL clock managment as a part of the
+overall WoL configuration.
+
+The next commit restores a set of functions that were removed from
+the driver just prior to the 4.9 kernel release.
+
+The following commit relocates the functions in the file to prevent
+the need for additional forward declarations.
+
+Next, support for the Rx Network Flow Classification interface of
+ethtool is added.
+
+Finally, support for the WAKE_FILTER wol method is added.
+
+Doug Berger (7):
+  net: bcmgenet: set Rx mode before starting netif
+  net: bcmgenet: Fix WoL with password after deep sleep
+  net: bcmgenet: move clk_wol management to bcmgenet_wol
+  Revert "net: bcmgenet: remove unused function in bcmgenet.c"
+  net: bcmgenet: code movement
+  net: bcmgenet: add support for ethtool rxnfc flows
+  net: bcmgenet: add WAKE_FILTER support
+
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c     | 673 +++++++++++++++++++--
+ drivers/net/ethernet/broadcom/genet/bcmgenet.h     |  21 +-
+ drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c |  90 ++-
+ 3 files changed, 708 insertions(+), 76 deletions(-)
+
+-- 
+2.7.4
