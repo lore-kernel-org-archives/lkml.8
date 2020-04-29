@@ -2,182 +2,115 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9128DC83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 185BEC83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A85D2087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E55002087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:23:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sJNdDpyk"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="b0S+K5Ux"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgD2NWx (ORCPT
+        id S1726911AbgD2NXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:22:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50736 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbgD2NWx (ORCPT
+        Wed, 29 Apr 2020 09:23:40 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:57666 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbgD2NXj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:22:53 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00B87C03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 06:22:53 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id h69so1007474pgc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 06:22:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=s693fQ+pEhcw75d9miqzRLRmbxwYH2lCZ/LTdUZaWj0=;
-        b=sJNdDpyktRNw47bxpfLtkY9Et/4ZKTb+JLeg+drVntVgN7dSOkQrfGmJlLPzIScKq7
-         plSwcufg3/lrM5wEx0SYwtcSie8T2GOWofxVxRxxxkrqRccybMCtOhgDW7TqRp6D5fag
-         c3x18EHN0ALI714YdESqwazdHpgafcSRP7MWqXUu6tdMc4JqB90/m+ZuITxcIcfdHe9l
-         NEJhflDYl9xYEWufeTeYfARZG0Ur5YFHAo2Fhu4sX7uyXHU1J5zoOIIJP8/YHa3207pZ
-         nuRz+L1h9Off/1CABvRD223xFWh2/yoS+mPERWScTM+7jouR/anNNMo9ccg216tZ4aIX
-         jI3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=s693fQ+pEhcw75d9miqzRLRmbxwYH2lCZ/LTdUZaWj0=;
-        b=JyQIpBGKMeP8v1FSrjQlBRM9AwUR4T18507fU2SAjoALefg3+0VRLrm5YntCPYOiwU
-         KMv9PghQUfYeSSlTl3tWCysYmm01j1HGV2hfU5hV1gnHWoalJMNaCUbG/SKlnBmBCqT8
-         2s2WBHAgWaQx+3mIBIsjMf/re2b8yh2GnqHZzfNFDf1e2vnqIWXneArTtU6Gpnkp0Kz2
-         XXviOFcYbMVBFm1qg/fCyvSIGFDYrX76cGTdcf0q7tVmJYN5cw6dMxA0DNC6KJxjN5px
-         +RF1vCWmQ3E4QqPnhPzFjGu2ojhy6gVI1KZzL8ibhIi9q6XOoApoCQ+rCenJFaaANTJp
-         cvzQ==
-X-Gm-Message-State: AGi0PuYFaNcNK5VYRmyUAEjzZWiB/eNw7tPqYIYdrC8v2BTfEp25oGFb
-        bedm5a9uNCTP+GACbaHI28o9
-X-Google-Smtp-Source: APiQypJ9ziGSv9fU2yas0f4ThlVIZQiRlRHltCoLAuIF7GVcKTuKVxh+kbT/FSQOdxZzlEIX5CNFKg==
-X-Received: by 2002:a63:1705:: with SMTP id x5mr33600590pgl.12.1588166572335;
-        Wed, 29 Apr 2020 06:22:52 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6114:a3cc:cde9:1262:3f57:5dd])
-        by smtp.gmail.com with ESMTPSA id g6sm4606286pjx.48.2020.04.29.06.22.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Apr 2020 06:22:51 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 18:52:44 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-actions@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] dma: actions: Fix lockdep splat for owl-dma
-Message-ID: <20200429132244.GE6443@Mani-XPS-13-9360>
-References: <1d77970a82cf9b7cdf9f4731439b1e58c37ca3fb.1588156137.git.cristian.ciocaltea@gmail.com>
+        Wed, 29 Apr 2020 09:23:39 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03TDJkxV139543;
+        Wed, 29 Apr 2020 13:22:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=acBigxhjzNMmYCYO6Lh7nzcLOEw+72Zb51xwobkhS9w=;
+ b=b0S+K5UxitDKXXfa/O8196lY5INTUguaNGiHSpo3gX/huK6mBOVlj2hXyew9qxzMM3X/
+ BucH6m/Xdd2X5b/7EELKGtVotRBCEIcGuyAqbarQun3AppvNMvM4r+6u5Xpsgsp/2SRV
+ f1tfNMpx9sY9dWVCZQUGs71Hu2LhjQOMuCmPKIfcIC3ZHtRlcx5yUxYkD5LG5utPAfE0
+ PRZnomK9uxkoghRHdGx4gzU7FNVrh9hT+j1Jzgp7f3fVqiI337zIW6SV7rolDJwpZCeg
+ 4bYBjMJbRWhqN95Sv0wwsm904PZ+2hrstdnOL6FblcpWjgViRDjRrA+My7baK6UIXO6x Gg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 30p01nv77t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Apr 2020 13:22:55 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03TDM71W171245;
+        Wed, 29 Apr 2020 13:22:54 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 30mxrv3guh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Apr 2020 13:22:54 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03TDMihK020962;
+        Wed, 29 Apr 2020 13:22:44 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 29 Apr 2020 06:22:44 -0700
+Date:   Wed, 29 Apr 2020 16:22:35 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] rcutorture: Fix error codes in rcu_torture_read_exit_init()
+Message-ID: <20200429132235.GA815283@mwanda>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1d77970a82cf9b7cdf9f4731439b1e58c37ca3fb.1588156137.git.cristian.ciocaltea@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=0
+ mlxlogscore=999 malwarescore=0 bulkscore=0 spamscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004290113
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 clxscore=1011
+ phishscore=0 mlxlogscore=999 adultscore=0 priorityscore=1501 mlxscore=0
+ suspectscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004290112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 02:01:54PM +0300, Cristian Ciocaltea wrote:
-> When the kernel is built with lockdep support and the owl-dma driver is
-> used, the following message is shown:
-> 
-> [    2.496939] INFO: trying to register non-static key.
-> [    2.501889] the code is fine but needs lockdep annotation.
-> [    2.507357] turning off the locking correctness validator.
-> [    2.512834] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.3+ #15
-> [    2.519084] Hardware name: Generic DT based system
-> [    2.523878] Workqueue: events_freezable mmc_rescan
-> [    2.528681] [<801127f0>] (unwind_backtrace) from [<8010da58>] (show_stack+0x10/0x14)
-> [    2.536420] [<8010da58>] (show_stack) from [<8080fbe8>] (dump_stack+0xb4/0xe0)
-> [    2.543645] [<8080fbe8>] (dump_stack) from [<8017efa4>] (register_lock_class+0x6f0/0x718)
-> [    2.551816] [<8017efa4>] (register_lock_class) from [<8017b7d0>] (__lock_acquire+0x78/0x25f0)
-> [    2.560330] [<8017b7d0>] (__lock_acquire) from [<8017e5e4>] (lock_acquire+0xd8/0x1f4)
-> [    2.568159] [<8017e5e4>] (lock_acquire) from [<80831fb0>] (_raw_spin_lock_irqsave+0x3c/0x50)
-> [    2.576589] [<80831fb0>] (_raw_spin_lock_irqsave) from [<8051b5fc>] (owl_dma_issue_pending+0xbc/0x120)
-> [    2.585884] [<8051b5fc>] (owl_dma_issue_pending) from [<80668cbc>] (owl_mmc_request+0x1b0/0x390)
-> [    2.594655] [<80668cbc>] (owl_mmc_request) from [<80650ce0>] (mmc_start_request+0x94/0xbc)
-> [    2.602906] [<80650ce0>] (mmc_start_request) from [<80650ec0>] (mmc_wait_for_req+0x64/0xd0)
-> [    2.611245] [<80650ec0>] (mmc_wait_for_req) from [<8065aa10>] (mmc_app_send_scr+0x10c/0x144)
-> [    2.619669] [<8065aa10>] (mmc_app_send_scr) from [<80659b3c>] (mmc_sd_setup_card+0x4c/0x318)
-> [    2.628092] [<80659b3c>] (mmc_sd_setup_card) from [<80659f0c>] (mmc_sd_init_card+0x104/0x430)
-> [    2.636601] [<80659f0c>] (mmc_sd_init_card) from [<8065a3e0>] (mmc_attach_sd+0xcc/0x16c)
-> [    2.644678] [<8065a3e0>] (mmc_attach_sd) from [<8065301c>] (mmc_rescan+0x3ac/0x40c)
-> [    2.652332] [<8065301c>] (mmc_rescan) from [<80143244>] (process_one_work+0x2d8/0x780)
-> [    2.660239] [<80143244>] (process_one_work) from [<80143730>] (worker_thread+0x44/0x598)
-> [    2.668323] [<80143730>] (worker_thread) from [<8014b5f8>] (kthread+0x148/0x150)
-> [    2.675708] [<8014b5f8>] (kthread) from [<801010b4>] (ret_from_fork+0x14/0x20)
-> [    2.682912] Exception stack(0xee8fdfb0 to 0xee8fdff8)
-> [    2.687954] dfa0:                                     00000000 00000000 00000000 00000000
-> [    2.696118] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [    2.704277] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> 
-> The obvious fix would be to use 'spin_lock_init()' on 'pchan->lock'
-> before attempting to call 'spin_lock_irqsave()' in 'owl_dma_get_pchan()'.
-> 
-> However, according to Manivannan Sadhasivam, 'pchan->lock' was supposed
-> to only protect 'pchan->vchan' while 'od->lock' does a similar job in
-> 'owl_dma_terminate_pchan'.
-> 
-> Therefore, this patch will simply substitute 'pchan->lock' with 'od->lock'
-> and removes the 'lock' attribute in 'owl_dma_pchan' struct.
-> 
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+The rcu_torture_read_exit_init() function is supposed to return negative
+error codes which get propagated back down the call tree but the current
+code returns true on failure.
 
-Just one minor thing below, other than that,
+Fixes: e02882cd57e3 ("rcutorture: Add races with task-exit processing")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ kernel/rcu/rcutorture.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index 269881e51dc6d..5270674128029 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -2434,10 +2434,10 @@ static int rcu_torture_read_exit(void *unused)
+ 	return 0;
+ }
+ 
+-static bool rcu_torture_read_exit_init(void)
++static int rcu_torture_read_exit_init(void)
+ {
+ 	if (read_exit <= 0)
+-		return true;
++		return -EINVAL;
+ 	init_waitqueue_head(&read_exit_wq);
+ 	read_exit_child_stop = false;
+ 	read_exit_child_stopped = false;
+-- 
+2.26.2
 
-Thanks for doing this!
-
-> ---
-> Changes in v2:
-> * Improve the fix as suggested by Manivannan Sadhasivam: substitute 
->   'pchan->lock' with 'od->lock' and get rid of the 'lock' attribute in
->   'owl_dma_pchan' struct
-> * Update the commit message to reflect the changes
-> 
->  drivers/dma/owl-dma.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
-> index c683051257fd..5b1c715a56c8 100644
-> --- a/drivers/dma/owl-dma.c
-> +++ b/drivers/dma/owl-dma.c
-> @@ -181,7 +181,6 @@ struct owl_dma_pchan {
->  	u32			id;
->  	void __iomem		*base;
->  	struct owl_dma_vchan	*vchan;
-> -	spinlock_t		lock;
-
-You should also remove the kerneldoc comment for this lock.
-
-Regards,
-Mani
-
->  };
->  
->  /**
-> @@ -437,14 +436,14 @@ static struct owl_dma_pchan *owl_dma_get_pchan(struct owl_dma *od,
->  	for (i = 0; i < od->nr_pchans; i++) {
->  		pchan = &od->pchans[i];
->  
-> -		spin_lock_irqsave(&pchan->lock, flags);
-> +		spin_lock_irqsave(&od->lock, flags);
->  		if (!pchan->vchan) {
->  			pchan->vchan = vchan;
-> -			spin_unlock_irqrestore(&pchan->lock, flags);
-> +			spin_unlock_irqrestore(&od->lock, flags);
->  			break;
->  		}
->  
-> -		spin_unlock_irqrestore(&pchan->lock, flags);
-> +		spin_unlock_irqrestore(&od->lock, flags);
->  	}
->  
->  	return pchan;
-> -- 
-> 2.26.2
-> 
