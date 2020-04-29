@@ -2,156 +2,141 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A044C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7F4C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5152F2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BDAD2074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:30:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588159831;
+	bh=75gzaDRNPp/zEslpydJPxXfqRCz7ox9duCIptsCmW7Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=so1bLBabKBbAAboi1unidf1Vdd06jZ1wAI7pmahCBDu9sv+TfUFhwhH69nU9Fa7mO
+	 tC6SHMlGOAovBHRczjLjUmhOtttOckj8fEYSbmIU474VleBTIn46QpMrnXGyYEg8hg
+	 SHRzm8wA/e54xSptn28TJGcrQydhYfxME+0vhNNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgD2L3o (ORCPT
+        id S1726817AbgD2Laa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 07:29:44 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:32553 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726743AbgD2L3o (ORCPT
+        Wed, 29 Apr 2020 07:30:30 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45398 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbgD2Laa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 07:29:44 -0400
-X-IronPort-AV: E=Sophos;i="5.73,331,1583164800"; 
-   d="scan'208";a="90776150"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 29 Apr 2020 19:29:39 +0800
-Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
-        by cn.fujitsu.com (Postfix) with ESMTP id 3E3D14BCC883;
-        Wed, 29 Apr 2020 19:29:38 +0800 (CST)
-Received: from [10.167.220.69] (10.167.220.69) by
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Wed, 29 Apr 2020 19:29:38 +0800
-Message-ID: <5EA96520.3070200@cn.fujitsu.com>
-Date:   Wed, 29 Apr 2020 19:29:36 +0800
-From:   Xiao Yang <yangx.jy@cn.fujitsu.com>
-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.2; zh-CN; rv:1.9.2.18) Gecko/20110616 Thunderbird/3.1.11
+        Wed, 29 Apr 2020 07:30:30 -0400
+Received: by mail-ot1-f67.google.com with SMTP id e20so1333337otk.12;
+        Wed, 29 Apr 2020 04:30:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mJLQaIat2tDbEwACly2x5coQW2dyQ71GmCW1Pk/+Pe0=;
+        b=lu6Wh/M+LRHLWNg4cR8b9fCM0GIKOZfVDKacY39nnCoWwOXTDcSFwjzMg82RfQGPuo
+         1aZHs/P9FeaBec98E/HlbzSpXaiJw94wb84edCPlyNzPKvjADGPopsxP/Jdu9OIu3WJP
+         Ak5eZTj1iLyYJYSMpbX3tPuqinUsaiS/j+L34DqBNd8PJFVGtY5f/o5T0A/gBYiyYIb4
+         OKL8jT3mViTzzC23hhqnVog6UtgAYmF1POo68rYyS1XYrCZx8cBvHbzQXB/x2VIg8i5x
+         NGXorNi14ZheGKkrjQW2qZQTq0Aie9WIWZ66kfQ3IL4LhLgd+THo5Vs5uEAwg4CxW+8N
+         Dgfw==
+X-Gm-Message-State: AGi0PuanipB5Cmh8tlI0wrQTE44UC9QC6vGOC6JKEnII5ycA6wOboLT0
+        QtDfpOPNVdvesaENYeHcMN980M0FrC4Z86TTUj8=
+X-Google-Smtp-Source: APiQypIxdnHfH8fsytx0SXUL7Yzk0wRF6oZwhYIlSygbrTH5FgtTjQI6UbJwZ6dhKKE3HNiTqMY6ekE7V/Zic4Xznmc=
+X-Received: by 2002:a9d:1d07:: with SMTP id m7mr25072932otm.167.1588159829033;
+ Wed, 29 Apr 2020 04:30:29 -0700 (PDT)
 MIME-Version: 1.0
-To:     Po-Hsu Lin <po-hsu.lin@canonical.com>
-CC:     <linux-kselftest@vger.kernel.org>, <rostedt@goodmis.org>,
-        <mingo@redhat.com>, <shuah@kernel.org>, <colin.king@canonical.com>,
-        <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] selftests/ftrace: treat module requirement unmet situation
- as unsupported
-References: <20200429095044.24625-1-po-hsu.lin@canonical.com>
-In-Reply-To: <20200429095044.24625-1-po-hsu.lin@canonical.com>
-Content-Type: text/plain; charset="GB2312"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.167.220.69]
-X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206)
-X-yoursite-MailScanner-ID: 3E3D14BCC883.AE6E6
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: yangx.jy@cn.fujitsu.com
+References: <20200428132450.24901-1-ggherdovich@suse.cz> <20200428132450.24901-2-ggherdovich@suse.cz>
+In-Reply-To: <20200428132450.24901-2-ggherdovich@suse.cz>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 29 Apr 2020 13:30:17 +0200
+Message-ID: <CAJZ5v0jitYE=a25rFd0Tb6QYeWeSJBE4p_yg29bq_e0Q5Pecbw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] x86, sched: Prevent divisions by zero in frequency
+ invariant accounting
+To:     Giovanni Gherdovich <ggherdovich@suse.cz>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@suse.de>, Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lin,
+On Tue, Apr 28, 2020 at 3:25 PM Giovanni Gherdovich <ggherdovich@suse.cz> wrote:
+>
+> The product mcnt * arch_max_freq_ratio could be zero if it overflows u64.
+>
+> For context, a large value for arch_max_freq_ratio would be 5000,
+> corresponding to a turbo_freq/base_freq ratio of 5 (normally it's more like
+> 1500-2000). A large increment frequency for the MPERF counter would be 5GHz
+> (the base clock of all CPUs on the market today is less than that). With
+> these figures, a CPU would need to go without a scheduler tick for around 8
+> days for the u64 overflow to happen. It is unlikely, but the check is
+> warranted.
+>
+> In that case it's also appropriate to disable frequency invariant
+> accounting: the feature relies on measures of the clock frequency done at
+> every scheduler tick, which need to be "fresh" to be at all meaningful.
+>
+> Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
+> Fixes: 1567c3e3467c ("x86, sched: Add support for frequency invariance")
 
-It looks fine to me.
-Reviewed-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Thanks,
-Xiao Yang
-On 2020/4/29 17:50, Po-Hsu Lin wrote:
-> When the required module for the test does not exist, use
-> exit_unsupported instead of exit_unresolved to indicate this test is
-> not supported.
-> 
-> By doing this we can make test behaviour in sync with the
-> irqsoff_tracer.tc test in preemptirq, which is also treating module
-> existence in this way. Moreover, the test won't exit with a non-zero
-> return value if the module does not exist.
-> 
-> Fixes: 646f01ccdd59 ("ftrace/selftest: Add tests to test register_ftrace_direct()")
-> Fixes: 4d23e9b4fd2e ("selftests/ftrace: Add trace_printk sample module test")
-> Fixes: 7bc026d6c032 ("selftests/ftrace: Add function filter on module testcase")
-> Fixes: af2a0750f374 ("selftests/ftrace: Improve kprobe on module testcase to load/unload module")
-> Signed-off-by: Po-Hsu Lin<po-hsu.lin@canonical.com>
 > ---
->   tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc  | 2 +-
->   tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc  | 2 +-
->   tools/testing/selftests/ftrace/test.d/event/trace_printk.tc    | 2 +-
->   tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc | 2 +-
->   tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc  | 2 +-
->   5 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
-> index d75a869..3d6189e 100644
-> --- a/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
-> @@ -5,7 +5,7 @@
->   rmmod ftrace-direct ||:
->   if ! modprobe ftrace-direct ; then
->     echo "No ftrace-direct sample module - please make CONFIG_SAMPLE_FTRACE_DIRECT=m"
-> -  exit_unresolved;
-> +  exit_unsupported;
->   fi
-> 
->   echo "Let the module run a little"
-> diff --git a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
-> index 801ecb6..3d0e3ca 100644
-> --- a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
-> @@ -5,7 +5,7 @@
->   rmmod ftrace-direct ||:
->   if ! modprobe ftrace-direct ; then
->     echo "No ftrace-direct sample module - please build with CONFIG_SAMPLE_FTRACE_DIRECT=m"
-> -  exit_unresolved;
-> +  exit_unsupported;
->   fi
-> 
->   if [ ! -f kprobe_events ]; then
-> diff --git a/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc b/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
-> index b02550b..dd8b10d 100644
-> --- a/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
-> @@ -5,7 +5,7 @@
->   rmmod trace-printk ||:
->   if ! modprobe trace-printk ; then
->     echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=m"
-> -  exit_unresolved;
-> +  exit_unsupported;
->   fi
-> 
->   echo "Waiting for irq work"
-> diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
-> index 1a4b4a4..26dc06a 100644
-> --- a/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
-> @@ -13,7 +13,7 @@ echo '*:mod:trace_printk'>  set_ftrace_filter
->   if ! modprobe trace-printk ; then
->     echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=
->   m"
-> -  exit_unresolved;
-> +  exit_unsupported;
->   fi
-> 
->   : "Wildcard should be resolved after loading module"
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
-> index d861bd7..4e07c69 100644
-> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
-> @@ -8,7 +8,7 @@ rmmod trace-printk ||:
->   if ! modprobe trace-printk ; then
->     echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=
->   m"
-> -  exit_unresolved;
-> +  exit_unsupported;
->   fi
-> 
->   MOD=trace_printk
-
-
-
+>  arch/x86/kernel/smpboot.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+> index 8c89e4d9ad28..4718f29a3065 100644
+> --- a/arch/x86/kernel/smpboot.c
+> +++ b/arch/x86/kernel/smpboot.c
+> @@ -2039,6 +2039,14 @@ static void init_freq_invariance(bool secondary)
+>         }
+>  }
+>
+> +static void disable_freq_invariance_workfn(struct work_struct *work)
+> +{
+> +       static_branch_disable(&arch_scale_freq_key);
+> +}
+> +
+> +static DECLARE_WORK(disable_freq_invariance_work,
+> +                   disable_freq_invariance_workfn);
+> +
+>  DEFINE_PER_CPU(unsigned long, arch_freq_scale) = SCHED_CAPACITY_SCALE;
+>
+>  void arch_scale_freq_tick(void)
+> @@ -2055,14 +2063,18 @@ void arch_scale_freq_tick(void)
+>
+>         acnt = aperf - this_cpu_read(arch_prev_aperf);
+>         mcnt = mperf - this_cpu_read(arch_prev_mperf);
+> -       if (!mcnt)
+> -               return;
+>
+>         this_cpu_write(arch_prev_aperf, aperf);
+>         this_cpu_write(arch_prev_mperf, mperf);
+>
+>         acnt <<= 2*SCHED_CAPACITY_SHIFT;
+>         mcnt *= arch_max_freq_ratio;
+> +       if (!mcnt) {
+> +               pr_warn("Scheduler tick missing for long time, disabling scale-invariant accounting.\n");
+> +               /* static_branch_disable() acquires a lock and may sleep */
+> +               schedule_work(&disable_freq_invariance_work);
+> +               return;
+> +       }
+>
+>         freq_scale = div64_u64(acnt, mcnt);
+>
+> --
+> 2.16.4
+>
