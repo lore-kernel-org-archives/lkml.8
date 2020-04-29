@@ -2,157 +2,100 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AD4C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56613C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B164720737
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:27:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LO+jJ7eo"
+	by mail.kernel.org (Postfix) with ESMTP id 3EC8E20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgD2A1J (ORCPT
+        id S1726546AbgD2A2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 20:27:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726364AbgD2A1I (ORCPT
+        Tue, 28 Apr 2020 20:28:08 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60454 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726509AbgD2A2I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 20:27:08 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE665C03C1AE
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 17:27:07 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id h11so149997plr.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 17:27:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8iXe5UNOtvxoBr1fCjKy4YdMeYzknNiZCyX4mZulCO4=;
-        b=LO+jJ7eoH0QlVMnqSphJrRi6uT641MdDBa+ezZ3djwjt/ANTKHuDmNTGrJoKvMsFaI
-         VOyMQfVfm/7bPIVOcJM4ubLmRM6kXo85a3du+bxSRMFPCkk2KozSvLeRlGtoXs76xdN5
-         9h7Uo0QzrfbE6vovnuOGlmuNdqpcnBNQoYIaw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8iXe5UNOtvxoBr1fCjKy4YdMeYzknNiZCyX4mZulCO4=;
-        b=UqspVSWpgCOHMWbgR3UCkPjaq/PdO8KodZD633Me8IndLNdNJEIgyfnyHwT1uM2NIr
-         UW2Ny9p+SCd+6mbjXIhKBc2lBpK+nDrciEzd9mI/aeDinHJp/R+yL7CArXoB9cL808x+
-         m9Bpm+MEsbGF1Gw773hDEIryAGAozcJabBjPD4oNu+OaUN+/oL1/BYh8QsQ8Vz3++hRs
-         vETobOxsL7sFeGQDT//aU5VGipZNdzBJblbv9Wzgn18drOZmElNqGcjzFtNagy+qCng5
-         Wr27228baevYJ734TNtSxxXwGwi8azTClDHxMb9kknM2lpz28u1ZpUqj3678d0k3eefG
-         PF2A==
-X-Gm-Message-State: AGi0PubC66yD6QAoQtOucJrrs61uRf4Qak5v7K4nV3Y9tqDiPFK4TlkX
-        /6EkilRy4KbfCLSGePdhJUmktg==
-X-Google-Smtp-Source: APiQypI+6a5SfLti8h4EiDEynoeN0alrnr64lZsu+93RPaV4oHN2xZFKTrFZ1ItPdNhHeP3XmM18hQ==
-X-Received: by 2002:a17:902:8487:: with SMTP id c7mr28388208plo.251.1588120027129;
-        Tue, 28 Apr 2020 17:27:07 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id g22sm3089515pju.21.2020.04.28.17.27.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 17:27:06 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 17:27:05 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 07/17] arm64: dts: sdm845: Add DSI and MDP OPP tables
- and power-domains
-Message-ID: <20200429002705.GM4525@google.com>
-References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
- <1588080785-6812-8-git-send-email-rnayak@codeaurora.org>
+        Tue, 28 Apr 2020 20:28:08 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03T04j9K134445;
+        Tue, 28 Apr 2020 20:28:00 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhq8yc27-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 20:28:00 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03T0GHjc032388;
+        Wed, 29 Apr 2020 00:28:00 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma04dal.us.ibm.com with ESMTP id 30mcu6rg59-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 00:28:00 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03T0RxjJ32375146
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Apr 2020 00:27:59 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2F7A628064;
+        Wed, 29 Apr 2020 00:27:59 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3A4D12805C;
+        Wed, 29 Apr 2020 00:27:58 +0000 (GMT)
+Received: from oc6857751186.ibm.com (unknown [9.160.64.115])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 29 Apr 2020 00:27:58 +0000 (GMT)
+Subject: Re: linux-next: build warning after merge of the scsi-fixes tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200429092154.35958687@canb.auug.org.au>
+From:   Tyrel Datwyler <tyreld@linux.ibm.com>
+Message-ID: <ba29c840-e327-6f0b-b760-188aec566c6c@linux.ibm.com>
+Date:   Tue, 28 Apr 2020 17:27:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1588080785-6812-8-git-send-email-rnayak@codeaurora.org>
+In-Reply-To: <20200429092154.35958687@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-28_15:2020-04-28,2020-04-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 phishscore=0 clxscore=1011 adultscore=0 suspectscore=0
+ spamscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0
+ mlxlogscore=884 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280181
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 07:02:55PM +0530, Rajendra Nayak wrote:
-> Add the OPP tables for DSI and MDP based on the perf state/clk
-> requirements, and add the power-domains property to specify the
-> scalable power domain.
+On 4/28/20 4:21 PM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 59 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
+> After merging the scsi-fixes tree, today's linux-next build (powerpc
+> ppc64_defconfig) produced this warning:
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 36b9fb1..7a625ad 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -3309,6 +3309,59 @@
->  			#reset-cells = <1>;
->  		};
->  
-> +		mdp_opp_table: mdp-opp-table {
-> +			compatible = "operating-points-v2";
-> +
-> +			opp-19200000 {
-> +				opp-hz = /bits/ 64 <19200000>;
-> +				required-opps = <&rpmhpd_opp_min_svs>;
-> +			};
-> +
-> +			opp-171428571 {
-> +				opp-hz = /bits/ 64 <171428571>;
-> +				required-opps = <&rpmhpd_opp_low_svs>;
-> +			};
-> +
-> +			opp-344000000 {
-> +				opp-hz = /bits/ 64 <344000000>;
-> +				required-opps = <&rpmhpd_opp_svs_l1>;
-> +			};
-> +
-> +			opp-430000000 {
-> +				opp-hz = /bits/ 64 <430000000>;
-> +				required-opps = <&rpmhpd_opp_nom>;
-> +			};
-> +		};
+> drivers/scsi/ibmvscsi/ibmvscsi.c: In function 'ibmvscsi_remove':
+> drivers/scsi/ibmvscsi/ibmvscsi.c:2323:16: warning: unused variable 'flags' [-Wunused-variable]
+>  2323 |  unsigned long flags;
+>       |                ^~~~~
+> 
+> Introduced by commit
+> 
+>   5b77d181bee1 ("scsi: ibmvscsi: Fix WARN_ON during event pool release")
+> 
 
-as commented on "[v3,03/17] arm64: dts: sdm845: Add OPP table for all qup
-devices" (https://patchwork.kernel.org/patch/11514693/) this table should
-probably be inside the 'mdp' node.
+Crud, artifact from removing the spinlock.
 
-> +
-> +		dsi_opp_table: dsi-opp-table {
-> +			compatible = "operating-points-v2";
-> +
-> +			opp-19200000 {
-> +				opp-hz = /bits/ 64 <19200000>;
-> +				required-opps = <&rpmhpd_opp_min_svs>;
-> +			};
-> +
-> +			opp-180000000 {
-> +				opp-hz = /bits/ 64 <180000000>;
-> +				required-opps = <&rpmhpd_opp_low_svs>;
-> +			};
-> +
-> +			opp-275000000 {
-> +				opp-hz = /bits/ 64 <275000000>;
-> +				required-opps = <&rpmhpd_opp_svs>;
-> +			};
-> +
-> +			opp-328580000 {
-> +				opp-hz = /bits/ 64 <328580000>;
-> +				required-opps = <&rpmhpd_opp_svs_l1>;
-> +			};
-> +
-> +			opp-358000000 {
-> +				opp-hz = /bits/ 64 <358000000>;
-> +				required-opps = <&rpmhpd_opp_nom>;
-> +			};
-> +		};
-> +
+Martin,
 
-depending on the outcome of the discussion mentioned above this might have
-to move into the 'dsi0' node.
+Do you want me to resend, or can you fixup your tree?
+
+-Tyrel
