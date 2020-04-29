@@ -2,96 +2,185 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCFCC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2F9C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79D84208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E32FE2072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:54:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AYXh370S"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bm60YqTV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgD2Qx0 (ORCPT
+        id S1726950AbgD2QyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 12:53:26 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:49553 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726836AbgD2Qx0 (ORCPT
+        Wed, 29 Apr 2020 12:54:00 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:44401 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726580AbgD2Qx7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 12:53:26 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588179205; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=xhYN2QWZK+xOvZ83m2HJKcXlXIC6qwCWYYV5qQiwaZg=; b=AYXh370SCUTKre/ZEhlmwng9jPjPGDUo2SsRllMjTdar7PAHLm7snF88xbeyu3ANHMexqqpM
- mAujGqMjbttJXQCRlHC7Ea3ogGwEfX2IDlbrormGnrku7IHu/7MmMXbB5gL0eVbcBgwvRakH
- tnBVWnrI6F3ZEv3NRD+LJVpZ+cM=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea9b0f0.7fe0ab509f10-smtp-out-n04;
- Wed, 29 Apr 2020 16:53:04 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 14586C433CB; Wed, 29 Apr 2020 16:53:04 +0000 (UTC)
-Received: from [192.168.0.102] (unknown [183.83.143.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 29 Apr 2020 12:53:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588179237;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=vR6D5Sy6Y+Qdh6ooPREikO8gglly9sa+GW1h2fScSRk=;
+        b=bm60YqTVU3/ZjtGi4krmouk9iLNfGWj+0+s4Y05ulfPMe1mqjjulo5VSTlQvDApk5TKFAp
+        7MeyvstW2USdVnrw3d4Pw0emHh3T8mxWfHipkOJtv3FTJFNEHJzq8sqlLXwpqr+fq+460Q
+        kXgLmpLdsdRGZC1gqdxo+bkzn1rasH0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-367-ok4IGtwWP-GJITZDUTF0Yg-1; Wed, 29 Apr 2020 12:53:54 -0400
+X-MC-Unique: ok4IGtwWP-GJITZDUTF0Yg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sayalil)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8EAB0C433D2;
-        Wed, 29 Apr 2020 16:53:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8EAB0C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sayalil@codeaurora.org
-Subject: Re: [f2fs-dev] [PATCH V2] f2fs: Avoid double lock for cp_rwsem during
- checkpoint
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Markus Elfring <Markus.Elfring@web.de>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <07a820a2-b3b3-32ca-75ce-ceaca106d2c6@web.de>
- <433d4ad5-22e5-fd2b-cab3-9752ed0c66fb@codeaurora.org>
- <20200429124402.GP2014@kadam>
-From:   Sayali Lokhande <sayalil@codeaurora.org>
-Message-ID: <71c37cbb-03cd-134f-8b68-cf06bfa05317@codeaurora.org>
-Date:   Wed, 29 Apr 2020 22:22:58 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01DF8800C78;
+        Wed, 29 Apr 2020 16:53:53 +0000 (UTC)
+Received: from localhost (ovpn-114-2.ams2.redhat.com [10.36.114.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CFAB85D785;
+        Wed, 29 Apr 2020 16:53:46 +0000 (UTC)
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     virtualization@lists.linux-foundation.org
+Cc:     Stefano Garzarella <sgarzare@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-block@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, cohuck@redhat.com,
+        Jason Wang <jasowang@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Lance Digby <ldigby@redhat.com>
+Subject: [PATCH v3] virtio-blk: handle block_device_operations callbacks after hot unplug
+Date:   Wed, 29 Apr 2020 17:53:45 +0100
+Message-Id: <20200429165345.144702-1-stefanha@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200429124402.GP2014@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Transfer-Encoding: base64
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+QSB1c2Vyc3BhY2UgcHJvY2VzcyBob2xkaW5nIGEgZmlsZSBkZXNjcmlwdG9yIHRvIGEgdmlydGlv
+X2JsayBkZXZpY2UgY2FuCnN0aWxsIGludm9rZSBibG9ja19kZXZpY2Vfb3BlcmF0aW9ucyBhZnRl
+ciBob3QgdW5wbHVnLiAgVGhpcyBsZWFkcyB0byBhCnVzZS1hZnRlci1mcmVlIGFjY2Vzc2luZyB2
+YmxrLT52ZGV2IGluIHZpcnRibGtfZ2V0Z2VvKCkgd2hlbgppb2N0bChIRElPX0dFVEdFTykgaXMg
+aW52b2tlZDoKCiAgQlVHOiB1bmFibGUgdG8gaGFuZGxlIGtlcm5lbCBOVUxMIHBvaW50ZXIgZGVy
+ZWZlcmVuY2UgYXQgMDAwMDAwMDAwMDAwMDA5MAogIElQOiBbPGZmZmZmZmZmYzAwZTU0NTA+XSB2
+aXJ0aW9fY2hlY2tfZHJpdmVyX29mZmVyZWRfZmVhdHVyZSsweDEwLzB4OTAgW3ZpcnRpb10KICBQ
+R0QgODAwMDAwMDAzYTkyZjA2NyBQVUQgM2E5MzAwNjcgUE1EIDAKICBPb3BzOiAwMDAwIFsjMV0g
+U01QCiAgQ1BVOiAwIFBJRDogMTMxMCBDb21tOiBoZGlvLWdldGdlbyBUYWludGVkOiBHICAgICAg
+ICAgICBPRSAgLS0tLS0tLS0tLS0tICAgMy4xMC4wLTEwNjIuZWw3Lng4Nl82NCAjMQogIEhhcmR3
+YXJlIG5hbWU6IFFFTVUgU3RhbmRhcmQgUEMgKGk0NDBGWCArIFBJSVgsIDE5OTYpLCBCSU9TIHJl
+bC0xLjEzLjAtMC1nZjIxYjVhNGFlYjAyLXByZWJ1aWx0LnFlbXUub3JnIDA0LzAxLzIwMTQKICB0
+YXNrOiBmZmZmOWJlNWZiZmI4MDAwIHRpOiBmZmZmOWJlNWZhODkwMDAwIHRhc2sudGk6IGZmZmY5
+YmU1ZmE4OTAwMDAKICBSSVA6IDAwMTA6WzxmZmZmZmZmZmMwMGU1NDUwPl0gIFs8ZmZmZmZmZmZj
+MDBlNTQ1MD5dIHZpcnRpb19jaGVja19kcml2ZXJfb2ZmZXJlZF9mZWF0dXJlKzB4MTAvMHg5MCBb
+dmlydGlvXQogIFJTUDogMDAxODpmZmZmOWJlNWZhODkzZGM4ICBFRkxBR1M6IDAwMDEwMjQ2CiAg
+UkFYOiBmZmZmOWJlNWZjM2YzNDAwIFJCWDogZmZmZjliZTVmYTg5M2UzMCBSQ1g6IDAwMDAwMDAw
+MDAwMDAwMDAKICBSRFg6IDAwMDAwMDAwMDAwMDAwMDAgUlNJOiAwMDAwMDAwMDAwMDAwMDA0IFJE
+STogZmZmZjliZTVmYmMxMGI0MAogIFJCUDogZmZmZjliZTVmYTg5M2RjOCBSMDg6IDAwMDAwMDAw
+MDAwMDAzMDEgUjA5OiAwMDAwMDAwMDAwMDAwMzAxCiAgUjEwOiAwMDAwMDAwMDAwMDAwMDAwIFIx
+MTogMDAwMDAwMDAwMDAwMDAwMCBSMTI6IGZmZmY5YmU1ZmRjMjQ2ODAKICBSMTM6IGZmZmY5YmU1
+ZmJjMTBiNDAgUjE0OiBmZmZmOWJlNWZiYzEwNDgwIFIxNTogMDAwMDAwMDAwMDAwMDAwMAogIEZT
+OiAgMDAwMDdmMWJmYjk2ODc0MCgwMDAwKSBHUzpmZmZmOWJlNWZmYzAwMDAwKDAwMDApIGtubEdT
+OjAwMDAwMDAwMDAwMDAwMDAKICBDUzogIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAw
+MDAwMDgwMDUwMDMzCiAgQ1IyOiAwMDAwMDAwMDAwMDAwMDkwIENSMzogMDAwMDAwMDAzYTg5NDAw
+MCBDUjQ6IDAwMDAwMDAwMDAzNjBmZjAKICBEUjA6IDAwMDAwMDAwMDAwMDAwMDAgRFIxOiAwMDAw
+MDAwMDAwMDAwMDAwIERSMjogMDAwMDAwMDAwMDAwMDAwMAogIERSMzogMDAwMDAwMDAwMDAwMDAw
+MCBEUjY6IDAwMDAwMDAwZmZmZTBmZjAgRFI3OiAwMDAwMDAwMDAwMDAwNDAwCiAgQ2FsbCBUcmFj
+ZToKICAgWzxmZmZmZmZmZmMwMTZhYzM3Pl0gdmlydGJsa19nZXRnZW8rMHg0Ny8weDExMCBbdmly
+dGlvX2Jsa10KICAgWzxmZmZmZmZmZjhkM2YyMDBkPl0gPyBoYW5kbGVfbW1fZmF1bHQrMHgzOWQv
+MHg5YjAKICAgWzxmZmZmZmZmZjhkNTYxMjY1Pl0gYmxrZGV2X2lvY3RsKzB4MWY1LzB4YTIwCiAg
+IFs8ZmZmZmZmZmY4ZDQ4ODc3MT5dIGJsb2NrX2lvY3RsKzB4NDEvMHg1MAogICBbPGZmZmZmZmZm
+OGQ0NWQ5ZTA+XSBkb192ZnNfaW9jdGwrMHgzYTAvMHg1YTAKICAgWzxmZmZmZmZmZjhkNDVkYzgx
+Pl0gU3lTX2lvY3RsKzB4YTEvMHhjMAoKQSByZWxhdGVkIHByb2JsZW0gaXMgdGhhdCB2aXJ0Ymxr
+X3JlbW92ZSgpIGxlYWtzIHRoZSB2ZF9pbmRleF9pZGEgaW5kZXgKd2hlbiBzb21ldGhpbmcgc3Rp
+bGwgaG9sZHMgYSByZWZlcmVuY2UgdG8gdmJsay0+ZGlzayBkdXJpbmcgaG90IHVucGx1Zy4KVGhp
+cyBjYXVzZXMgdmlydGlvLWJsayBkZXZpY2UgbmFtZXMgdG8gYmUgbG9zdCAodmRhLCB2ZGIsIGV0
+YykuCgpGaXggdGhlc2UgaXNzdWVzIGJ5IHByb3RlY3RpbmcgdmJsay0+dmRldiB3aXRoIGEgbXV0
+ZXggYW5kIHJlZmVyZW5jZQpjb3VudGluZyB2YmxrIHNvIHRoZSB2ZF9pbmRleF9pZGEgaW5kZXgg
+Y2FuIGJlIHJlbW92ZWQgaW4gYWxsIGNhc2VzLgoKRml4ZXM6IDQ4ZTQwNDNkNDUyOTUyM2NiYzdm
+YThkZDc0NWJkOGUyYzQ1Y2UxZDMKICAgICAgICgidmlydGlvOiBhZGQgdmlydGlvIGRpc2sgZ2Vv
+bWV0cnkgZmVhdHVyZSIpClJlcG9ydGVkLWJ5OiBMYW5jZSBEaWdieSA8bGRpZ2J5QHJlZGhhdC5j
+b20+ClNpZ25lZC1vZmYtYnk6IFN0ZWZhbiBIYWpub2N6aSA8c3RlZmFuaGFAcmVkaGF0LmNvbT4K
+LS0tCiBkcml2ZXJzL2Jsb2NrL3ZpcnRpb19ibGsuYyB8IDg3ICsrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKystLS0tCiAxIGZpbGUgY2hhbmdlZCwgNzkgaW5zZXJ0aW9ucygrKSwgOCBk
+ZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2Jsb2NrL3ZpcnRpb19ibGsuYyBiL2Ry
+aXZlcnMvYmxvY2svdmlydGlvX2Jsay5jCmluZGV4IDkzNDY4YjdjNjcwMS4uNmY3ZjI3NzQ5NWY0
+IDEwMDY0NAotLS0gYS9kcml2ZXJzL2Jsb2NrL3ZpcnRpb19ibGsuYworKysgYi9kcml2ZXJzL2Js
+b2NrL3ZpcnRpb19ibGsuYwpAQCAtMzMsNiArMzMsMTYgQEAgc3RydWN0IHZpcnRpb19ibGtfdnEg
+ewogfSBfX19fY2FjaGVsaW5lX2FsaWduZWRfaW5fc21wOwogCiBzdHJ1Y3QgdmlydGlvX2JsayB7
+CisJLyoKKwkgKiB2ZGV2IG1heSBiZSBhY2Nlc3NlZCB3aXRob3V0IHRha2luZyB0aGlzIG11dGV4
+IGluIGJsay1tcSBhbmQKKwkgKiB2aXJ0cXVldWUgY29kZSBwYXRocyBiZWNhdXNlIHZpcnRibGtf
+cmVtb3ZlKCkgc3RvcHMgdGhlbSBiZWZvcmUgdmRldgorCSAqIGlzIGZyZWVkLgorCSAqCisJICog
+RXZlcnl0aGluZyBlbHNlIG11c3QgaG9sZCB0aGlzIG11dGV4IHdoZW4gYWNjZXNzaW5nIHZkZXYg
+YW5kIG11c3QKKwkgKiBoYW5kbGUgdGhlIGNhc2Ugd2hlcmUgdmRldiBpcyBOVUxMIGFmdGVyIHZp
+cnRibGtfcmVtb3ZlKCkgaGFzIGJlZW4KKwkgKiBjYWxsZWQuCisJICovCisJc3RydWN0IG11dGV4
+IHZkZXZfbXV0ZXg7CiAJc3RydWN0IHZpcnRpb19kZXZpY2UgKnZkZXY7CiAKIAkvKiBUaGUgZGlz
+ayBzdHJ1Y3R1cmUgZm9yIHRoZSBrZXJuZWwuICovCkBAIC00NCw2ICs1NCwxMyBAQCBzdHJ1Y3Qg
+dmlydGlvX2JsayB7CiAJLyogUHJvY2VzcyBjb250ZXh0IGZvciBjb25maWcgc3BhY2UgdXBkYXRl
+cyAqLwogCXN0cnVjdCB3b3JrX3N0cnVjdCBjb25maWdfd29yazsKIAorCS8qCisJICogVHJhY2tz
+IHJlZmVyZW5jZXMgZnJvbSBibG9ja19kZXZpY2Vfb3BlcmF0aW9ucyBvcGVuL3JlbGVhc2UgYW5k
+CisJICogdmlydGlvX2RyaXZlciBwcm9iZS9yZW1vdmUgc28gdGhpcyBvYmplY3QgY2FuIGJlIGZy
+ZWVkIG9uY2Ugbm8KKwkgKiBsb25nZXIgaW4gdXNlLgorCSAqLworCXJlZmNvdW50X3QgcmVmczsK
+KwogCS8qIFdoYXQgaG9zdCB0ZWxscyB1cywgcGx1cyAyIGZvciBoZWFkZXIgJiB0YWlsZXIuICov
+CiAJdW5zaWduZWQgaW50IHNnX2VsZW1zOwogCkBAIC0yOTUsMTAgKzMxMiw1NSBAQCBzdGF0aWMg
+aW50IHZpcnRibGtfZ2V0X2lkKHN0cnVjdCBnZW5kaXNrICpkaXNrLCBjaGFyICppZF9zdHIpCiAJ
+cmV0dXJuIGVycjsKIH0KIAorc3RhdGljIHZvaWQgdmlydGJsa19nZXQoc3RydWN0IHZpcnRpb19i
+bGsgKnZibGspCit7CisJcmVmY291bnRfaW5jKCZ2YmxrLT5yZWZzKTsKK30KKworc3RhdGljIHZv
+aWQgdmlydGJsa19wdXQoc3RydWN0IHZpcnRpb19ibGsgKnZibGspCit7CisJaWYgKHJlZmNvdW50
+X2RlY19hbmRfdGVzdCgmdmJsay0+cmVmcykpIHsKKwkJaWRhX3NpbXBsZV9yZW1vdmUoJnZkX2lu
+ZGV4X2lkYSwgdmJsay0+aW5kZXgpOworCQltdXRleF9kZXN0cm95KCZ2YmxrLT52ZGV2X211dGV4
+KTsKKwkJa2ZyZWUodmJsayk7CisJfQorfQorCitzdGF0aWMgaW50IHZpcnRibGtfb3BlbihzdHJ1
+Y3QgYmxvY2tfZGV2aWNlICpiZCwgZm1vZGVfdCBtb2RlKQoreworCXN0cnVjdCB2aXJ0aW9fYmxr
+ICp2YmxrID0gYmQtPmJkX2Rpc2stPnByaXZhdGVfZGF0YTsKKwlpbnQgcmV0ID0gMDsKKworCW11
+dGV4X2xvY2soJnZibGstPnZkZXZfbXV0ZXgpOworCisJaWYgKHZibGstPnZkZXYpCisJCXZpcnRi
+bGtfZ2V0KHZibGspOworCWVsc2UKKwkJcmV0ID0gLUVOWElPOworCisJbXV0ZXhfdW5sb2NrKCZ2
+YmxrLT52ZGV2X211dGV4KTsKKwlyZXR1cm4gcmV0OworfQorCitzdGF0aWMgdm9pZCB2aXJ0Ymxr
+X3JlbGVhc2Uoc3RydWN0IGdlbmRpc2sgKmRpc2ssIGZtb2RlX3QgbW9kZSkKK3sKKwlzdHJ1Y3Qg
+dmlydGlvX2JsayAqdmJsayA9IGRpc2stPnByaXZhdGVfZGF0YTsKKworCXZpcnRibGtfcHV0KHZi
+bGspOworfQorCiAvKiBXZSBwcm92aWRlIGdldGdlbyBvbmx5IHRvIHBsZWFzZSBzb21lIG9sZCBi
+b290bG9hZGVyL3BhcnRpdGlvbmluZyB0b29scyAqLwogc3RhdGljIGludCB2aXJ0YmxrX2dldGdl
+byhzdHJ1Y3QgYmxvY2tfZGV2aWNlICpiZCwgc3RydWN0IGhkX2dlb21ldHJ5ICpnZW8pCiB7CiAJ
+c3RydWN0IHZpcnRpb19ibGsgKnZibGsgPSBiZC0+YmRfZGlzay0+cHJpdmF0ZV9kYXRhOworCWlu
+dCByZXQgPSAwOworCisJbXV0ZXhfbG9jaygmdmJsay0+dmRldl9tdXRleCk7CisKKwlpZiAoIXZi
+bGstPnZkZXYpIHsKKwkJcmV0ID0gLUVOWElPOworCQlnb3RvIG91dDsKKwl9CiAKIAkvKiBzZWUg
+aWYgdGhlIGhvc3QgcGFzc2VkIGluIGdlb21ldHJ5IGNvbmZpZyAqLwogCWlmICh2aXJ0aW9faGFz
+X2ZlYXR1cmUodmJsay0+dmRldiwgVklSVElPX0JMS19GX0dFT01FVFJZKSkgewpAQCAtMzE0LDEx
+ICszNzYsMTUgQEAgc3RhdGljIGludCB2aXJ0YmxrX2dldGdlbyhzdHJ1Y3QgYmxvY2tfZGV2aWNl
+ICpiZCwgc3RydWN0IGhkX2dlb21ldHJ5ICpnZW8pCiAJCWdlby0+c2VjdG9ycyA9IDEgPDwgNTsK
+IAkJZ2VvLT5jeWxpbmRlcnMgPSBnZXRfY2FwYWNpdHkoYmQtPmJkX2Rpc2spID4+IDExOwogCX0K
+LQlyZXR1cm4gMDsKK291dDoKKwltdXRleF91bmxvY2soJnZibGstPnZkZXZfbXV0ZXgpOworCXJl
+dHVybiByZXQ7CiB9CiAKIHN0YXRpYyBjb25zdCBzdHJ1Y3QgYmxvY2tfZGV2aWNlX29wZXJhdGlv
+bnMgdmlydGJsa19mb3BzID0gewogCS5vd25lciAgPSBUSElTX01PRFVMRSwKKwkub3BlbiA9IHZp
+cnRibGtfb3BlbiwKKwkucmVsZWFzZSA9IHZpcnRibGtfcmVsZWFzZSwKIAkuZ2V0Z2VvID0gdmly
+dGJsa19nZXRnZW8sCiB9OwogCkBAIC02NTUsNiArNzIxLDEwIEBAIHN0YXRpYyBpbnQgdmlydGJs
+a19wcm9iZShzdHJ1Y3QgdmlydGlvX2RldmljZSAqdmRldikKIAkJZ290byBvdXRfZnJlZV9pbmRl
+eDsKIAl9CiAKKwkvKiBUaGlzIHJlZmVyZW5jZSBpcyBkcm9wcGVkIGluIHZpcnRibGtfcmVtb3Zl
+KCkuICovCisJcmVmY291bnRfc2V0KCZ2YmxrLT5yZWZzLCAxKTsKKwltdXRleF9pbml0KCZ2Ymxr
+LT52ZGV2X211dGV4KTsKKwogCXZibGstPnZkZXYgPSB2ZGV2OwogCXZibGstPnNnX2VsZW1zID0g
+c2dfZWxlbXM7CiAKQEAgLTgyMCw4ICs4OTAsNiBAQCBzdGF0aWMgaW50IHZpcnRibGtfcHJvYmUo
+c3RydWN0IHZpcnRpb19kZXZpY2UgKnZkZXYpCiBzdGF0aWMgdm9pZCB2aXJ0YmxrX3JlbW92ZShz
+dHJ1Y3QgdmlydGlvX2RldmljZSAqdmRldikKIHsKIAlzdHJ1Y3QgdmlydGlvX2JsayAqdmJsayA9
+IHZkZXYtPnByaXY7Ci0JaW50IGluZGV4ID0gdmJsay0+aW5kZXg7Ci0JaW50IHJlZmM7CiAKIAkv
+KiBNYWtlIHN1cmUgbm8gd29yayBoYW5kbGVyIGlzIGFjY2Vzc2luZyB0aGUgZGV2aWNlLiAqLwog
+CWZsdXNoX3dvcmsoJnZibGstPmNvbmZpZ193b3JrKTsKQEAgLTgzMSwxOCArODk5LDIxIEBAIHN0
+YXRpYyB2b2lkIHZpcnRibGtfcmVtb3ZlKHN0cnVjdCB2aXJ0aW9fZGV2aWNlICp2ZGV2KQogCiAJ
+YmxrX21xX2ZyZWVfdGFnX3NldCgmdmJsay0+dGFnX3NldCk7CiAKKwltdXRleF9sb2NrKCZ2Ymxr
+LT52ZGV2X211dGV4KTsKKwogCS8qIFN0b3AgYWxsIHRoZSB2aXJ0cXVldWVzLiAqLwogCXZkZXYt
+PmNvbmZpZy0+cmVzZXQodmRldik7CiAKLQlyZWZjID0ga3JlZl9yZWFkKCZkaXNrX3RvX2Rldih2
+YmxrLT5kaXNrKS0+a29iai5rcmVmKTsKKwkvKiBWaXJ0cXVldWVzIGFyZSBzdG9wcGVkLCBub3Ro
+aW5nIGNhbiB1c2UgdmJsay0+dmRldiBhbnltb3JlLiAqLworCXZibGstPnZkZXYgPSBOVUxMOwor
+CiAJcHV0X2Rpc2sodmJsay0+ZGlzayk7CiAJdmRldi0+Y29uZmlnLT5kZWxfdnFzKHZkZXYpOwog
+CWtmcmVlKHZibGstPnZxcyk7Ci0Ja2ZyZWUodmJsayk7CiAKLQkvKiBPbmx5IGZyZWUgZGV2aWNl
+IGlkIGlmIHdlIGRvbid0IGhhdmUgYW55IHVzZXJzICovCi0JaWYgKHJlZmMgPT0gMSkKLQkJaWRh
+X3NpbXBsZV9yZW1vdmUoJnZkX2luZGV4X2lkYSwgaW5kZXgpOworCW11dGV4X3VubG9jaygmdmJs
+ay0+dmRldl9tdXRleCk7CisKKwl2aXJ0YmxrX3B1dCh2YmxrKTsKIH0KIAogI2lmZGVmIENPTkZJ
+R19QTV9TTEVFUAotLSAKMi4yNS4zCgo=
 
-On 4/29/2020 6:14 PM, Dan Carpenter wrote:
-> On Wed, Apr 29, 2020 at 10:28:36AM +0530, Sayali Lokhande wrote:
->> Hi Markus
->>
->> On 4/27/2020 4:08 PM, Markus Elfring wrote:
->>>> … This results in deadlock as
->>>> iput() tries to hold cp_rwsem, which is already held at the
->>>> beginning by checkpoint->block_operations().
->>> Will another imperative wording become helpful besides the provided information
->>> for this change description?
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=6a8b55ed4056ea5559ebe4f6a4b247f627870d4c#n151
->>>
->>> Would you like to add the tag “Fixes” because of adjustments
->>> for the data synchronisation?
->> I couldn't find any past commit which suits to be added under "Fixes" here.
->> Let me know if you have any other comment.
-> This looks really old.  Maybe commit 399368372ed9 ("f2fs: introduce a
-> new global lock scheme")?
-Yes. Let me update it in Fixes tag in V3 and post it. Thanks for 
-pointing it.
->
-> regards,
-> dan carpenter
->
