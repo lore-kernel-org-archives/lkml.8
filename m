@@ -2,216 +2,158 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7C1C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 505D2C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C26F62074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 291002074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:19:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="heZazT2s"
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="V6Bl6Mg8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgD2KTl (ORCPT
+        id S1726838AbgD2KTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 06:19:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50258 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbgD2KTK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 06:19:10 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB1CEC035493
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 03:19:08 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b11so1821257wrs.6
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 03:19:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2wu/gy1tHoWVzLeL4pUGCtzvsoDpfDGzq7gpcYUF8tA=;
-        b=heZazT2s9kPfyv6NTu8eImJ1nH2p3ed4yDakzZzC7FnVlRzH1gCJG1NnnURFgRzK3q
-         RuBBWjVYeTG/cPgj+txQ0EtlgfghyyTWT89izOlRYzwaH4UaM5s3xyqy7k2kKZYZ4ykt
-         w76IXMNamSswR1+80emM3I6YbwLXYZaMA9/WMNfUJqRv2v84SBaDkxIbUTG1vMP5MHMr
-         MylxeQWHOZhVjPk38iw4Nrz2DE8psD7D6rd1rJ7lgolnAkcJQs4UDEhmMYTpnh56g5iZ
-         rnOVwROUSxFUCd28VPqX1PaC0fl99MudLhdWeKFstobGWRY5WOvuHfSjctM/kg34xtgf
-         rkYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2wu/gy1tHoWVzLeL4pUGCtzvsoDpfDGzq7gpcYUF8tA=;
-        b=jnAlbpjGPFAG7AcQ7gnI1ntK0GH1GRjWJmKo6QKsYn3bC9o+xNksi9pOixhm2nrlHB
-         iz2D1ILs+26zVIVdga9erbGtHid04mtHT3XzwrWXP5KjWLdD5Pbrt1KdI+lsflXGD3Rz
-         D08jtxKLcooPkqSbuesn15qGphyjepQxaUk7C9zF02li8k0iYZQWivNTzApHwOEg3Kmc
-         +qselXOvGUiRVN/hvwRrIsyX2i0z/L4kEbKQIcxV8ZVqSjGrqhXSWBgUn98hdhVwn+Vz
-         UGrwad762FL1RplEPJqqunSEg0P1PP3tb5G7q0gL5JpdlORFN1DycX4g8xuGJv59iLWy
-         EQbg==
-X-Gm-Message-State: AGi0Pua/JbwVOErf42GLNwpsbVIorlr82z9K0HPOnSbbXYRR/YZ3qLM5
-        Fmq5WHRhEVJApItQ9y3ni3RGjYj0Fck=
-X-Google-Smtp-Source: APiQypKX51nZ88wriy0wpsyb6PmJdRjnyn5ipdyt18ZbnclL4eiPGgTcPj6kgXejx8si5pSpE/0g2Q==
-X-Received: by 2002:adf:ead2:: with SMTP id o18mr22591202wrn.333.1588155547393;
-        Wed, 29 Apr 2020 03:19:07 -0700 (PDT)
-Received: from localhost.localdomain ([87.120.218.65])
-        by smtp.googlemail.com with ESMTPSA id c20sm7504873wmd.36.2020.04.29.03.19.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Apr 2020 03:19:06 -0700 (PDT)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        georgi.djakov@linaro.org, ChenTao <chentao107@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH 1/1] interconnect: qcom: Move the static keyword to the front of declaration
-Date:   Wed, 29 Apr 2020 13:19:04 +0300
-Message-Id: <20200429101904.5771-2-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200429101904.5771-1-georgi.djakov@linaro.org>
-References: <20200429101904.5771-1-georgi.djakov@linaro.org>
+        Wed, 29 Apr 2020 06:19:45 -0400
+Received: from mail-eopbgr690056.outbound.protection.outlook.com ([40.107.69.56]:55394
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726625AbgD2KTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 06:19:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i2br6Dy6CljlW2VRorth7yEsx5OyCR8Vomi3VnY8DRhKkR4DzxIum+E/bzJPYOr0L3dJHYUYyxmQxFGd1mQ60UmGUVHaEY/zsw4Vb2aGn/f1vfqXA1CybK+VJmypIyCvJnWxV1DwCCViE6cLrZaHgHQHUuvYKuxDwYoA2eRXxiruh/8Xdx6JWMv0eKwSQVaDuzJILVr0ZI6DqniN6RnetH7Siicuu4ZgLJAhOYwVSMGgcJ5HuX11I6XjkwuM37CxJYeGehYoF+5nZeIUxJYJpcYQH6Nri+0ZkgAtZKVHYRTA6dwwJfvuY0NLk/j890zbVXqKw2RUTNsP51gI+8JvXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3hrjxsBHiSrJukurep1+xddXg60vu3XEDZmrQeLfhw0=;
+ b=U7KLTeAJZUJy1PIxuXLkt7hk2uAHU/aSFkB3NnRItIbxaPrZfnu+Iv0/xSxnYzjKi9cK9RHnp4ZOqYjrEkn5Hv9uBR2Gomi+qi46foI1t5zIBcS8NjnAKE6XNQ6NLXvZKggpVmVfvG6q7N7lXIUk82lbtp9V5hKqGIgE6dWCZvHNZ3L5LhTttAqBPTKYrDFM5AqrGlMya4t3G5jNntO2GISDezhvaiDABs/ctIL9ibFjQNZsOO02kyMgNCIOrCCc/tCIxOweYf9FXWqXEkWxaeJ8wOtqhy+USpvVUOuacET5hvgxeQcNEa6nbzC+rxdiwWgVxmpuS9hFtu+4wcabtA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
+ dkim=pass header.d=micron.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3hrjxsBHiSrJukurep1+xddXg60vu3XEDZmrQeLfhw0=;
+ b=V6Bl6Mg8HBJBUihJgYyatp860tEZvf7dPnUSM8eSKjEvps5FLxQYM23OGdqO0AYz27a+AAcj14OOqECs4Cpff9F87h/F+BVgMFhcA/RY0d4WJOk9S1ygpso57n9+0rsUtQ/oiLyJUXGgeQSnqSKWzSNI1lhDZWRwuEO5TJ32mKA=
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com (2603:10b6:408:35::23)
+ by BN7PR08MB4210.namprd08.prod.outlook.com (2603:10b6:406:fb::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Wed, 29 Apr
+ 2020 10:19:13 +0000
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::9ca2:4625:2b46:e45c]) by BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::9ca2:4625:2b46:e45c%4]) with mapi id 15.20.2958.020; Wed, 29 Apr 2020
+ 10:19:13 +0000
+From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
+To:     Stanley Chu <stanley.chu@mediatek.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>
+CC:     "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
+Subject: RE: [EXT] [PATCH v1 4/4] scsi: ufs-mediatek: enable WriteBooster
+ capability
+Thread-Topic: [EXT] [PATCH v1 4/4] scsi: ufs-mediatek: enable WriteBooster
+ capability
+Thread-Index: AQHWHU4ihpQ3MTM+9UKTJOebA4liOaiP5HcQ
+Date:   Wed, 29 Apr 2020 10:19:13 +0000
+Message-ID: <BN7PR08MB56845966D744DA36404FF054DBAD0@BN7PR08MB5684.namprd08.prod.outlook.com>
+References: <20200428111355.1776-1-stanley.chu@mediatek.com>
+ <20200428111355.1776-5-stanley.chu@mediatek.com>
+In-Reply-To: <20200428111355.1776-5-stanley.chu@mediatek.com>
+Accept-Language: en-150, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLWRjZTQ3OTJiLThhMDItMTFlYS04YjkzLWRjNzE5NjFmOWRkM1xhbWUtdGVzdFxkY2U0NzkyZC04YTAyLTExZWEtOGI5My1kYzcxOTYxZjlkZDNib2R5LnR4dCIgc3o9IjE2NTYiIHQ9IjEzMjMyNjI5MTQ5ODk5MjQ5MyIgaD0iNHV5VFd1S2hPcVdHYUJGNmpEZDB6Sm9VKzVzPSIgaWQ9IiIgYmw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBSEFBQUFCdEF6NmZEeDdXQWNSVUhzWG5iZ1Q2eEZRZXhlZHVCUG9BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQkFBQUFmM09FS1FBQUFBQUFBQUFBQUFBQUFBPT0iLz48L21ldGE+
+x-dg-rorf: true
+authentication-results: mediatek.com; dkim=none (message not signed)
+ header.d=none;mediatek.com; dmarc=none action=none header.from=micron.com;
+x-originating-ip: [165.225.81.119]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b9b0a53e-0dd7-43ca-842a-08d7ec26c3fe
+x-ms-traffictypediagnostic: BN7PR08MB4210:|BN7PR08MB4210:|BN7PR08MB4210:
+x-microsoft-antispam-prvs: <BN7PR08MB4210A9F9230DCBED625D5F7DDBAD0@BN7PR08MB4210.namprd08.prod.outlook.com>
+x-ms-exchange-transport-forked: True
+x-ms-oob-tlc-oobclassifiers: OLM:972;
+x-forefront-prvs: 03883BD916
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /nYFDACwLFqDb17xxsAfjRlg90OBCysEP144xSW1f/vEVqKL8hF6K8F+vy/4HBDq1BNnuQGWPsdYOGmWs6sC0oPtJRmmRsblQaPZ8GC4168qSh2Mchtk6yKazT4jIlqcuWl8+R0vsMNj9hasY5ImKCCBUlxeKw83gQ9xHOmXyx3Utw+60wDegLJdEE+ZkTO6ZJzxpLQO+RSca23MR/VKXZBep8tKSq40cEFYy098pZ+lMA++72DBtpDouQLbKbC9vFjxnSxSx+kTSdQs4OdnwDVaqjDP77OkLn5oiBmvgosVjP7I50qVnBfbjQmibGDRk//7wiZ5VcseJ6aEKl0QrUjsPSXoWxtNoFngh+v2lt9I/h91C9zfoYoJHxbsAXUi6hdVVAH3f+T57BQf0/TbrSI2X/D90r1LuX2j9lfx9TASycFE/VdIWxNN9n/G7N97
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR08MB5684.namprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(366004)(39860400002)(376002)(396003)(5660300002)(71200400001)(54906003)(8936002)(86362001)(316002)(55016002)(66946007)(9686003)(76116006)(7696005)(110136005)(8676002)(64756008)(33656002)(66556008)(66476007)(478600001)(66446008)(52536014)(7416002)(186003)(55236004)(26005)(4326008)(6506007)(53546011)(2906002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 1TRRHh2QrQllKaiwsWyyZV3Xgjhw0C24sE4nf3wITHm7gNQ2KhFB41FHS1EUjdHZCXafAbVJfxX/PSVdlfe98CqrHpKSVPj+ImWX7fB4ljtCyygLVPngQ5TA41fO3r5+1MtPSZJOx5yFHBxYkdm5pOcandFaad01kBFQksIU3ESl7HcoVAPYIKSxDuqrcMDfIEbbiBo6uG9QhsEMbMaTFG32KL5at8nkFbrV0PAxiIxaCK76P6OL7P6tURwe6nCOTQw7mZ6+yV7EncmwHpzLKRhROtDRjWGiIxDN6rXopPR58vHgU3zc0+eBhbBtFjEKKKzeRQkhPOaRwME3xCq0haaTT1od0/nl7OWydqEpRPvFS/IQB5JAAT/AoXgNryk1ebBh9Vua8ZssXdotfn0D6LDWDxNvfTcemaiVE+vF+0tWYeIIy1uqWBYTQ3qiiA28hSkmYFVgyN5fX+M9adMm+QGqULnsukVdPHPVJnleS9iwePnDpYLWmqEbQFzML7hW9zexRH4eAhIhvnWgeSxQUnbJk1mGJ/ZUaAP0JIEMU0/SdFUD5Yx5UdoCtvD1A8w50SEsz8N31DG8RW4YnH5CT9QBTpafR/UmNmg85jOxzLuevepkyaYvqXJKE+vn6aRA6QGqp5P5REkI+ufg3A3ruZk5Jv6ZUwF3pJ/lLXzlO/9cBZQ+AA0r4u6YXwqvCr2PeHNtS9l/02VVwJvbZlIMi3jqTrO/zk08p2uSNdvVOONglRQbiNI3/Yao2t2xGnRgO0T/tzjcLRzb6FH9g83iD31YW/sHxeE0P16cMw2/Lj0=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9b0a53e-0dd7-43ca-842a-08d7ec26c3fe
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2020 10:19:13.5934
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uvqyrgC/1tcWyb9MRA1v5eHqsXiUM8A6i3AzOb3ePCKSjYKdBr7AD5y378+1TEmZ7Hy9WT8h1t22q+k6WVVqbg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB4210
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ChenTao <chentao107@huawei.com>
+> -----Original Message-----
+> From: Stanley Chu <stanley.chu@mediatek.com>
+> Sent: Tuesday, April 28, 2020 1:14 PM
+> To: linux-scsi@vger.kernel.org; martin.petersen@oracle.com;
+> avri.altman@wdc.com; alim.akhtar@samsung.com; jejb@linux.ibm.com;
+> asutoshd@codeaurora.org
+> Cc: Bean Huo (beanhuo) <beanhuo@micron.com>; cang@codeaurora.org;
+> matthias.bgg@gmail.com; bvanassche@acm.org; linux-
+> mediatek@lists.infradead.org; linux-arm-kernel@lists.infradead.org; linux=
+-
+> kernel@vger.kernel.org; kuohong.wang@mediatek.com;
+> peter.wang@mediatek.com; chun-hung.wu@mediatek.com;
+> andy.teng@mediatek.com; Stanley Chu <stanley.chu@mediatek.com>
+> Subject: [EXT] [PATCH v1 4/4] scsi: ufs-mediatek: enable WriteBooster cap=
+ability
+>=20
+> Enable WriteBooster capability on MediaTek UFS platforms.
+>=20
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> ---
+>  drivers/scsi/ufs/ufs-mediatek.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>=20
+> diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-media=
+tek.c
+> index 673c16596fb2..15b9c420a3a5 100644
+> --- a/drivers/scsi/ufs/ufs-mediatek.c
+> +++ b/drivers/scsi/ufs/ufs-mediatek.c
+> @@ -263,6 +263,9 @@ static int ufs_mtk_init(struct ufs_hba *hba)
+>  	/* Enable clock-gating */
+>  	hba->caps |=3D UFSHCD_CAP_CLK_GATING;
+>=20
+> +	/* Enable WriteBooster */
+> +	hba->caps |=3D UFSHCD_CAP_WB_EN;
+> +
+>  	/*
+>  	 * ufshcd_vops_init() is invoked after
+>  	 * ufshcd_setup_clock(true) in ufshcd_hba_init() thus
+> --
+> 2.18.0
 
-Fix the following warning:
-
-Move the static keyword to the front of declaration of sdm845_icc_osm_l3
-sdm845_aggre1_noc sc7180_icc_osm_l3 sdm845_aggre2_noc sdm845_config_noc
-sdm845_dc_noc sdm845_gladiator_noc sdm845_mem_noc sdm845_mmss_noc and
-sdm845_system_noc, resolve the following compiler warning that can be
-when building with warnings enabled (W=1):
-
-drivers/interconnect/qcom/osm-l3.c:81:1: warning:
- const static struct qcom_icc_desc sdm845_icc_osm_l3 = {
-drivers/interconnect/qcom/osm-l3.c:94:1: warning:
- const static struct qcom_icc_desc sc7180_icc_osm_l3 = {
-drivers/interconnect/qcom/sdm845.c:195:1: warning:
- const static struct qcom_icc_desc sdm845_aggre1_noc = {
-drivers/interconnect/qcom/sdm845.c:223:1: warning:
- const static struct qcom_icc_desc sdm845_aggre2_noc = {
-drivers/interconnect/qcom/sdm845.c:284:1: warning:
- const static struct qcom_icc_desc sdm845_config_noc = {
-drivers/interconnect/qcom/sdm845.c:300:1: warning:
- const static struct qcom_icc_desc sdm845_dc_noc = {
-drivers/interconnect/qcom/sdm845.c:318:1: warning:
- const static struct qcom_icc_desc sdm845_gladiator_noc = {
-drivers/interconnect/qcom/sdm845.c:353:1: warning:
- const static struct qcom_icc_desc sdm845_mem_noc = {
-drivers/interconnect/qcom/sdm845.c:387:1: warning:
- const static struct qcom_icc_desc sdm845_mmss_noc = {
-drivers/interconnect/qcom/sdm845.c:433:1: warning:
- const static struct qcom_icc_desc sdm845_system_noc = {
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: ChenTao <chentao107@huawei.com>
-Link: https://lore.kernel.org/r/20200423132142.45174-1-chentao107@huawei.com
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- drivers/interconnect/qcom/osm-l3.c |  4 ++--
- drivers/interconnect/qcom/sdm845.c | 16 ++++++++--------
- 2 files changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
-index a03c6d6833df..96fb9ff5ff2e 100644
---- a/drivers/interconnect/qcom/osm-l3.c
-+++ b/drivers/interconnect/qcom/osm-l3.c
-@@ -78,7 +78,7 @@ static struct qcom_icc_node *sdm845_osm_l3_nodes[] = {
- 	[SLAVE_OSM_L3] = &sdm845_osm_l3,
- };
- 
--const static struct qcom_icc_desc sdm845_icc_osm_l3 = {
-+static const struct qcom_icc_desc sdm845_icc_osm_l3 = {
- 	.nodes = sdm845_osm_l3_nodes,
- 	.num_nodes = ARRAY_SIZE(sdm845_osm_l3_nodes),
- };
-@@ -91,7 +91,7 @@ static struct qcom_icc_node *sc7180_osm_l3_nodes[] = {
- 	[SLAVE_OSM_L3] = &sc7180_osm_l3,
- };
- 
--const static struct qcom_icc_desc sc7180_icc_osm_l3 = {
-+static const struct qcom_icc_desc sc7180_icc_osm_l3 = {
- 	.nodes = sc7180_osm_l3_nodes,
- 	.num_nodes = ARRAY_SIZE(sc7180_osm_l3_nodes),
- };
-diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
-index b013b80caa45..f6c7b969520d 100644
---- a/drivers/interconnect/qcom/sdm845.c
-+++ b/drivers/interconnect/qcom/sdm845.c
-@@ -192,7 +192,7 @@ static struct qcom_icc_node *aggre1_noc_nodes[] = {
- 	[SLAVE_ANOC_PCIE_A1NOC_SNOC] = &qns_pcie_a1noc_snoc,
- };
- 
--const static struct qcom_icc_desc sdm845_aggre1_noc = {
-+static const struct qcom_icc_desc sdm845_aggre1_noc = {
- 	.nodes = aggre1_noc_nodes,
- 	.num_nodes = ARRAY_SIZE(aggre1_noc_nodes),
- 	.bcms = aggre1_noc_bcms,
-@@ -220,7 +220,7 @@ static struct qcom_icc_node *aggre2_noc_nodes[] = {
- 	[SLAVE_SERVICE_A2NOC] = &srvc_aggre2_noc,
- };
- 
--const static struct qcom_icc_desc sdm845_aggre2_noc = {
-+static const struct qcom_icc_desc sdm845_aggre2_noc = {
- 	.nodes = aggre2_noc_nodes,
- 	.num_nodes = ARRAY_SIZE(aggre2_noc_nodes),
- 	.bcms = aggre2_noc_bcms,
-@@ -281,7 +281,7 @@ static struct qcom_icc_node *config_noc_nodes[] = {
- 	[SLAVE_SERVICE_CNOC] = &srvc_cnoc,
- };
- 
--const static struct qcom_icc_desc sdm845_config_noc = {
-+static const struct qcom_icc_desc sdm845_config_noc = {
- 	.nodes = config_noc_nodes,
- 	.num_nodes = ARRAY_SIZE(config_noc_nodes),
- 	.bcms = config_noc_bcms,
-@@ -297,7 +297,7 @@ static struct qcom_icc_node *dc_noc_nodes[] = {
- 	[SLAVE_MEM_NOC_CFG] = &qhs_memnoc,
- };
- 
--const static struct qcom_icc_desc sdm845_dc_noc = {
-+static const struct qcom_icc_desc sdm845_dc_noc = {
- 	.nodes = dc_noc_nodes,
- 	.num_nodes = ARRAY_SIZE(dc_noc_nodes),
- 	.bcms = dc_noc_bcms,
-@@ -315,7 +315,7 @@ static struct qcom_icc_node *gladiator_noc_nodes[] = {
- 	[SLAVE_SERVICE_GNOC] = &srvc_gnoc,
- };
- 
--const static struct qcom_icc_desc sdm845_gladiator_noc = {
-+static const struct qcom_icc_desc sdm845_gladiator_noc = {
- 	.nodes = gladiator_noc_nodes,
- 	.num_nodes = ARRAY_SIZE(gladiator_noc_nodes),
- 	.bcms = gladiator_noc_bcms,
-@@ -350,7 +350,7 @@ static struct qcom_icc_node *mem_noc_nodes[] = {
- 	[SLAVE_EBI1] = &ebi,
- };
- 
--const static struct qcom_icc_desc sdm845_mem_noc = {
-+static const struct qcom_icc_desc sdm845_mem_noc = {
- 	.nodes = mem_noc_nodes,
- 	.num_nodes = ARRAY_SIZE(mem_noc_nodes),
- 	.bcms = mem_noc_bcms,
-@@ -384,7 +384,7 @@ static struct qcom_icc_node *mmss_noc_nodes[] = {
- 	[SLAVE_CAMNOC_UNCOMP] = &qns_camnoc_uncomp,
- };
- 
--const static struct qcom_icc_desc sdm845_mmss_noc = {
-+static const struct qcom_icc_desc sdm845_mmss_noc = {
- 	.nodes = mmss_noc_nodes,
- 	.num_nodes = ARRAY_SIZE(mmss_noc_nodes),
- 	.bcms = mmss_noc_bcms,
-@@ -430,7 +430,7 @@ static struct qcom_icc_node *system_noc_nodes[] = {
- 	[SLAVE_TCU] = &xs_sys_tcu_cfg,
- };
- 
--const static struct qcom_icc_desc sdm845_system_noc = {
-+static const struct qcom_icc_desc sdm845_system_noc = {
- 	.nodes = system_noc_nodes,
- 	.num_nodes = ARRAY_SIZE(system_noc_nodes),
- 	.bcms = system_noc_bcms,
+Reviewed-by: Bean Huo <beanhuo@micron.com>
