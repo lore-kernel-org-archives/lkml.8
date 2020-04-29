@@ -4,35 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE96C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5C3C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55545208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA9420B80
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:10:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbgD2OKW (ORCPT
+        id S1728195AbgD2OK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:10:22 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:36840 "EHLO huawei.com"
+        Wed, 29 Apr 2020 10:10:29 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3383 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726691AbgD2OKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:10:21 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 4038964235C1C3E36776;
-        Wed, 29 Apr 2020 22:10:18 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Wed, 29 Apr 2020
- 22:10:09 +0800
+        id S1726691AbgD2OK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 10:10:27 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id EF597D0A7553792897A7;
+        Wed, 29 Apr 2020 22:10:24 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Wed, 29 Apr 2020
+ 22:10:16 +0800
 From:   Jason Yan <yanaijie@huawei.com>
-To:     <tsbogend@alpha.franken.de>, <pbonzini@redhat.com>,
-        <sean.j.christopherson@intel.com>, <linux-mips@vger.kernel.org>,
-        <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+To:     <b.zolnierkie@samsung.com>, <dri-devel@lists.freedesktop.org>,
+        <linux-fbdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH] KVM: MIPS: use true,false for bool variable
-Date:   Wed, 29 Apr 2020 22:09:35 +0800
-Message-ID: <20200429140935.7993-1-yanaijie@huawei.com>
+Subject: [PATCH] video: fbdev: valkyriefb.c: fix warning comparing pointer to 0
+Date:   Wed, 29 Apr 2020 22:09:42 +0800
+Message-ID: <20200429140942.8137-1-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -46,36 +45,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fix the following coccicheck warning:
 
-arch/mips/kvm/mips.c:82:1-28: WARNING: Assignment of 0/1 to bool
-variable
-arch/mips/kvm/mips.c:88:1-28: WARNING: Assignment of 0/1 to bool
-variable
+drivers/video/fbdev/valkyriefb.c:348:10-11: WARNING comparing pointer to
+0, suggest !E
+drivers/video/fbdev/valkyriefb.c:334:12-13: WARNING comparing pointer to
+0
+drivers/video/fbdev/valkyriefb.c:348:10-11: WARNING comparing pointer to
+0
 
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- arch/mips/kvm/mips.c | 4 ++--
+ drivers/video/fbdev/valkyriefb.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
-index 9f50ceef9978..44eb36b1dbd8 100644
---- a/arch/mips/kvm/mips.c
-+++ b/arch/mips/kvm/mips.c
-@@ -79,13 +79,13 @@ bool kvm_trace_guest_mode_change;
+diff --git a/drivers/video/fbdev/valkyriefb.c b/drivers/video/fbdev/valkyriefb.c
+index 4d20c4603e5a..8425afe37d7c 100644
+--- a/drivers/video/fbdev/valkyriefb.c
++++ b/drivers/video/fbdev/valkyriefb.c
+@@ -331,7 +331,7 @@ int __init valkyriefb_init(void)
+ 		struct resource r;
  
- int kvm_guest_mode_change_trace_reg(void)
- {
--	kvm_trace_guest_mode_change = 1;
-+	kvm_trace_guest_mode_change = true;
- 	return 0;
- }
+ 		dp = of_find_node_by_name(NULL, "valkyrie");
+-		if (dp == 0)
++		if (!dp)
+ 			return 0;
  
- void kvm_guest_mode_change_trace_unreg(void)
- {
--	kvm_trace_guest_mode_change = 0;
-+	kvm_trace_guest_mode_change = false;
- }
+ 		if (of_address_to_resource(dp, 0, &r)) {
+@@ -345,7 +345,7 @@ int __init valkyriefb_init(void)
+ #endif /* ppc (!CONFIG_MAC) */
  
- /*
+ 	p = kzalloc(sizeof(*p), GFP_ATOMIC);
+-	if (p == 0)
++	if (!p)
+ 		return -ENOMEM;
+ 
+ 	/* Map in frame buffer and registers */
 -- 
 2.21.1
 
