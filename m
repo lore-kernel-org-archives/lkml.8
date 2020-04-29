@@ -2,149 +2,127 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13083C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FDAC83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3CB52072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54AFD2072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:35:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mkODMHu7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MRiAm3TF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgD2MfM (ORCPT
+        id S1726898AbgD2Mfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:35:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43300 "EHLO
+        Wed, 29 Apr 2020 08:35:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726426AbgD2MfL (ORCPT
+        by vger.kernel.org with ESMTP id S1726426AbgD2Mfa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:35:11 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A419C03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:35:10 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id v4so4817707wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:35:09 -0700 (PDT)
+        Wed, 29 Apr 2020 08:35:30 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C63E1C03C1AD;
+        Wed, 29 Apr 2020 05:35:29 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id f11so2445742ljp.1;
+        Wed, 29 Apr 2020 05:35:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P9voC+7Ag0IZtM5E39FKqVej4Yp+1sY356RInyCMBnw=;
-        b=mkODMHu7QUFmQUE6GLJwwSv9uyrNKmg42KeS1mNJA+HZujxBKmp/6RbBvKRSukcycg
-         aooQLdd+FQYADfUUYSwXv0XLQrl4u4yzjQ/EdDizxMgLsEnbmttxc6mgkkrf0E1+6mcq
-         7Nb1oqp92/bNtPx8YdNQZ6FvCC8pIzBCwzVtU=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NUoe38klOCQtxasI+t9o8qMGW2IzeduoGzN0/atKrts=;
+        b=MRiAm3TFoo3RKDwRuwyjSpfg0hBAboJFu4Rg82H4SpneSimPkxNpnFDp4x0JH/adU3
+         ULl1pjCoQXNHiox1BNXexlIyVXL10N9pJKSBmqe1TnKZCce24DbwlAmyL63O5x+949Bl
+         m4EH3xn7pki+DkNj6lpzgURhqw1xD77/1wDLPOm/PiY3qHHd88hRM+fy4T1k8o6polkT
+         tX+zpbdFCxHrJ33BGkYSHqqgojH8XgOwwKrbZ1053jD1oVgNMwjDJyi/9kMuVoLAotMw
+         80BOgbaBS8y39odMfidpUpClcBcAIPS+XTgGI1MdidQcto0jv6GVyJRpTbc2HtQWv4xO
+         x1Ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P9voC+7Ag0IZtM5E39FKqVej4Yp+1sY356RInyCMBnw=;
-        b=JJlZJTCf0RpKzfe1a1lFO6eAT/cvMgBYriZfTPGu771B20AdRfU+83wh5QZkAcyjZQ
-         C9TI+dp3zWwo86q/1jI1KhHznkgfLbroevyHPTdNZrj9bDQFJbksYhSqfKKcdXkoohat
-         oFy1tBqVYNumD6g/3mPqGajM156S9p/nFGDlBaJCZfNzKbydd2O0CpZcB+FH3YvgBeXQ
-         zCP+7gSxNqITnyOpbSYwwkhxuUvmrUpBNpfEV5Ivp4jtjYDCjSKSYK1d/sqwwOJoNalY
-         VleQhsToKpc1d5vZmo19gnmZioxaYS9Fe82GE1p081dirFmQrCxQf2EnNuToZDB+52LG
-         uGKQ==
-X-Gm-Message-State: AGi0PubEAvJB6NXlfpU0z328mWTXsidNRQR16Hxku4s62IuyIAz82E9i
-        RtZLsIThoxPhGn7dfInNx31MO6DImhciAXGCZ2Pfig==
-X-Google-Smtp-Source: APiQypKSCfwmXoEeutwbnB5ktUeTeYnld7bo1PHhugIhXjYAiW1cruH3+hXqlzwQjACjkP/BQXheUt7pbyyMP7RLhaI=
-X-Received: by 2002:a7b:c390:: with SMTP id s16mr2974236wmj.14.1588163708568;
- Wed, 29 Apr 2020 05:35:08 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NUoe38klOCQtxasI+t9o8qMGW2IzeduoGzN0/atKrts=;
+        b=NOWcLswioiGn7BY9QmlLKNCqadibVyQjO61ttkd00WGsqnedWjBdaf/R8j0hfEN6AU
+         gRGET9qtF66GCMduZ5JYiwhM8x26oErg7QFnQ1MppHbCCSVUjtg4PodqPMzxhJF84otK
+         rlBficTje2pBP+jTX4BLCSk8jYP3+4ouIXpv5qP9kVkY93get0mBueBniurO5GGibvXD
+         qm5p+LXLdt5/U0QfSJWR5SrZ21Ga4d6woNwQuPteV9b6oVhhx6ec1Fti32sCtx1M+Jaj
+         Rb8RtYd+yAomSqVAhi8eUG4NllQL2jgJwPdib5R1MNs3C/am4V35vXZ36DX3r7E2txWs
+         ZlFA==
+X-Gm-Message-State: AGi0Pua8oVpHy0mfJ/WRLr74opjGzkPh/9fPpqxqBHTEwaKrCeDdgkMx
+        4KFkvz8ijEGgmDzjcHm1kbg8MEmN
+X-Google-Smtp-Source: APiQypI6czpfoNYYXqi1LKDgN8gs6cesq80NGh3Mlp6b3MgVjn1J8FfLxftkDbxG90dgaZk8ibUFYw==
+X-Received: by 2002:a2e:700b:: with SMTP id l11mr17063691ljc.255.1588163727943;
+        Wed, 29 Apr 2020 05:35:27 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id k18sm3007442lfg.81.2020.04.29.05.35.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Apr 2020 05:35:27 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
+ <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
+ <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
+ <20200427074837.GC3451400@ulmo>
+ <c1190858-eaea-8e94-b4d1-1cf28076c330@gmail.com>
+ <20200427110033.GC3464906@ulmo>
+ <3a06811c-02dc-ce72-ebef-78c3fc3f4f7c@gmail.com>
+ <20200427151234.GE3464906@ulmo>
+ <1ab276cf-c2b0-e085-49d8-b8ce3dba8fbe@gmail.com>
+ <20200429081448.GA2345465@ulmo> <20200429085502.GB2345465@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <9e36c4ec-ca02-bd15-d765-15635f09db4b@gmail.com>
+Date:   Wed, 29 Apr 2020 15:35:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200329004356.27286-1-kpsingh@chromium.org> <0165887d-e9d0-c03e-18b9-72e74a0cbd59@linux.intel.com>
-In-Reply-To: <0165887d-e9d0-c03e-18b9-72e74a0cbd59@linux.intel.com>
-From:   KP Singh <kpsingh@chromium.org>
-Date:   Wed, 29 Apr 2020 14:34:57 +0200
-Message-ID: <CACYkzJ6XyHqr1W=LWV-5Z0txFBtvPCwRY-kczphy+pS7PEitqQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v9 0/8] MAC and Audit policy using eBPF (KRSI)
-To:     Mikko Ylinen <mikko.ylinen@linux.intel.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200429085502.GB2345465@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for reporting this! Can you share your Kconfig please?
+29.04.2020 11:55, Thierry Reding пишет:
+...
+>>> It's not "papering over an issue". The bug can't be fixed properly
+>>> without introducing I2C atomic transfers support for a late suspend
+>>> phase, I don't see any other solutions for now. Stable kernels do not
+>>> support atomic transfers at all, that proper solution won't be backportable.
+>>
+>> Hm... on a hunch I tried something and, lo and behold, it worked. I can
+>> get Cardhu to properly suspend/resume on top of v5.7-rc3 with the
+>> following sequence:
+>>
+>> 	revert 9f42de8d4ec2 i2c: tegra: Fix suspending in active runtime PM state
+>> 	apply http://patchwork.ozlabs.org/project/linux-tegra/patch/20191213134417.222720-1-thierry.reding@gmail.com/
+>>
+>> I also ran that through our test farm and I don't see any other issues.
+>> At the time I was already skeptical about pm_runtime_force_suspend() and
+>> pm_runtime_force_resume() and while I'm not fully certain why exactly it
+>> doesn't work, the above on top of v5.7-rc3 seems like a good option.
+>>
+>> I'll try to do some digging if I can find out why exactly force suspend
+>> and resume doesn't work.
+> 
+> Ah... so it looks like pm_runtime_force_resume() never actually does
+> anything in this case and then disable_depth remains at 1 and the first
+> tegra_i2c_xfer() will then fail to runtime resume the controller.
 
+That's the exactly expected behaviour of the RPM force suspend/resume.
+The only unexpected part for me is that the tegra_i2c_xfer() runtime
+resume then fails in the NOIRQ phase.
 
-On Wed, Apr 29, 2020 at 2:31 PM Mikko Ylinen
-<mikko.ylinen@linux.intel.com> wrote:
->
-> Hi,
->
-> On 29/03/2020 02:43, KP Singh wrote:
-> > # How does it work?
-> >
-> > The patchset introduces a new eBPF (https://docs.cilium.io/en/v1.6/bpf/)
-> > program type BPF_PROG_TYPE_LSM which can only be attached to LSM hooks.
-> > Loading and attachment of BPF programs requires CAP_SYS_ADMIN.
-> >
-> > The new LSM registers nop functions (bpf_lsm_<hook_name>) as LSM hook
-> > callbacks. Their purpose is to provide a definite point where BPF
-> > programs can be attached as BPF_TRAMP_MODIFY_RETURN trampoline programs
-> > for hooks that return an int, and BPF_TRAMP_FEXIT trampoline programs
-> > for void LSM hooks.
->
-> I have two systems (a NUC and a qemu VM) that fail to boot if I enable
-> the BPF LSM without enabling SELinux first. Anything I might be missing
-> or are you able to trigger it too?
->
-> For instance, the following additional cmdline args: "lsm.debug=1
-> lsm="capability,apparmor,bpf" results in:
->
-> [    1.251889] Call Trace:
-> [    1.252344]  dump_stack+0x57/0x7a
-> [    1.252951]  panic+0xe6/0x2a4
-> [    1.253497]  ? printk+0x43/0x45
-> [    1.254075]  mount_block_root+0x30c/0x31b
-> [    1.254798]  mount_root+0x78/0x7b
-> [    1.255417]  prepare_namespace+0x13a/0x16b
-> [    1.256168]  kernel_init_freeable+0x210/0x222
-> [    1.257021]  ? rest_init+0xa5/0xa5
-> [    1.257639]  kernel_init+0x9/0xfb
-> [    1.258074]  ret_from_fork+0x35/0x40
-> [    1.258885] Kernel Offset: 0x11000000 from 0xffffffff81000000
-> (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-> [    1.264046] ---[ end Kernel panic - not syncing: VFS: Unable to mount
-> root fs on unknown-block(253,3)
->
-> Taking out "bpf" or adding "selinux" before it boots OK. I've tried
-> with both 5.7-rc2 and -rc3.
->
-> LSM logs:
->
-> [    0.267219] LSM: Security Framework initializing
-> [    0.267844] LSM: first ordering: capability (enabled)
-> [    0.267870] LSM: cmdline ignored: capability
-> [    0.268869] LSM: cmdline ordering: apparmor (enabled)
-> [    0.269508] LSM: cmdline ordering: bpf (enabled)
-> [    0.269869] LSM: cmdline disabled: selinux
-> [    0.270377] LSM: cmdline disabled: integrity
-> [    0.270869] LSM: exclusive chosen: apparmor
-> [    0.271869] LSM: cred blob size     = 8
-> [    0.272354] LSM: file blob size     = 24
-> [    0.272869] LSM: inode blob size    = 0
-> [    0.273362] LSM: ipc blob size      = 0
-> [    0.273869] LSM: msg_msg blob size  = 0
-> [    0.274352] LSM: task blob size     = 32
-> [    0.274873] LSM: initializing capability
-> [    0.275381] LSM: initializing apparmor
-> [    0.275880] AppArmor: AppArmor initialized
-> [    0.276437] LSM: initializing bpf
-> [    0.276871] LSM support for eBPF active
->
-> -- Regards, Mikko
+Anyways, again, today it's wrong to use I2C in the NOIRQ phase becasue
+I2C interrupt is disabled. It's the PCIe driver that should be fixed.
