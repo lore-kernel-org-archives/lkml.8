@@ -2,132 +2,131 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 291FBC83009
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5667EC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 092912083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355132083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:02:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pU7IuFhp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BK/QhIP5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgD2RBq (ORCPT
+        id S1727846AbgD2RCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:01:46 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:52393 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726456AbgD2RBo (ORCPT
+        Wed, 29 Apr 2020 13:02:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57150 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726456AbgD2RCU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:01:44 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588179703; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=QSQIZIE1UkRMlEWP8K7XFOlZNS3rxvCKF1UPsNcLMS0=; b=pU7IuFhpaU8FNBnOpGxCRdUenoESVsvBn7Zce8XJ3/GCfryl0nTLa4H/4YH4Y69rVK90M9U8
- nOo6ftOr6JyGsXW2z1wah3zmlmGDYh6giyJTSzGRkk1omFFT7SLF8wETUDu1cEBBfMw+gAk0
- XWm4RZSn2JrrzL9YjAfP990AS9A=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea9b2bd.7fc83cd46618-smtp-out-n03;
- Wed, 29 Apr 2020 17:00:45 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 079C8C43636; Wed, 29 Apr 2020 17:00:45 +0000 (UTC)
-Received: from sayalil-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sayalil)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 08338C433CB;
-        Wed, 29 Apr 2020 17:00:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 08338C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sayalil@codeaurora.org
-From:   Sayali Lokhande <sayalil@codeaurora.org>
-To:     jaegeuk@kernel.org, yuchao0@huawei.com,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     stummala@codeaurora.org, linux-kernel@vger.kernel.org,
-        Sayali Lokhande <sayalil@codeaurora.org>
-Subject: [PATCH V3] f2fs: Avoid double lock for cp_rwsem during checkpoint
-Date:   Wed, 29 Apr 2020 22:30:30 +0530
-Message-Id: <1588179630-22819-1-git-send-email-sayalil@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Wed, 29 Apr 2020 13:02:20 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4E68C03C1AE;
+        Wed, 29 Apr 2020 10:02:20 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id g14so2301814otg.10;
+        Wed, 29 Apr 2020 10:02:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B985L7L6vo4SZsi3kVQu81cacr5257tGI7VdWzNQtbc=;
+        b=BK/QhIP5IW+bddXjrA1pREKlRUiMK9Wa2V3gAEYOxqPdactgZ62/420pj3wtm6eJ9C
+         HPR7JOusQPaUNxfJLn76e/Ez4DJlPvUL96k7/WY6gVuonnIGWjETrUj0454zoCzL1fN7
+         abqxu2Yc4vSx0bHI6Z/xT/1O1JmkgxrfkJDA24awcq1rNzegC4eF5okwaRi6KTNIV3i7
+         ocvUXxtnOm7HQSvRRk9zX0o1Exq1do2ynwyZfuts3czTqYt7LnPZ4X7Nz6O0658Dd/Mb
+         C5UEr1euzAXRhYIyHUtpUqMikhKiok+A5kBcQ6yiBANBIz0k0sGDoHwAW7Bo/L4Hv/9s
+         ws/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B985L7L6vo4SZsi3kVQu81cacr5257tGI7VdWzNQtbc=;
+        b=inkfy7OCPiaGIpc9R938d+upfNLf+w6wemAPzOxZ6kJgJgBHs2Rdl7wkQd0x/kdIzu
+         Dfi1thccd13q7rcx5K0KVIyuvmlYSHznKJhf3SW2zbY3iUNG923KwTVf/7rQ97bxTTkE
+         C/MccqmJ1hZVfdtUOEVoZQnOQrJ+0Nz8T3g3i95yxgGBSHFGfipV2Pyv0GXYpnsfkuc9
+         k0R45ZiV0WMMnFwSVnTVtBckNLwgqM94TWgbKyMpEB3yZ3Uv1anxv7gLvpqVAcEcNQDL
+         iBwKW8iILk3ENIR5tPHi7KQY4O642FjnvzZfztmLqkoLOq3uIMxEl5DBW3aBb5oTyw3i
+         EQtA==
+X-Gm-Message-State: AGi0PuYsHpktyjm+3Mia+NmSojV0bRCass/Bt7troYxAaOaugw3H6q99
+        0UfAA/AgtxIw3XIKbnuVKkwrLOLjwCxQHwreRGzWfSQGkHY=
+X-Google-Smtp-Source: APiQypJbvSlRX+/S2xFHVro3TSK+FAqAJJ9oku9MV9UO98xDHJFqypFdsLNNoZoZ/3TEZBNx8jYUQ6xYULRbhs1VLEc=
+X-Received: by 2002:a9d:2aa9:: with SMTP id e38mr13649191otb.162.1588179740168;
+ Wed, 29 Apr 2020 10:02:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200326200634.222009-1-dancol@google.com> <20200401213903.182112-1-dancol@google.com>
+ <CAKOZueuu=bGt4O0xjiV=9_PC_8Ey8pa3NjtJ7+O-nHCcYbLnEg@mail.gmail.com>
+ <alpine.LRH.2.21.2004230253530.12318@namei.org> <6fcc0093-f154-493e-dc11-359b44ed57ce@schaufler-ca.com>
+ <3ffd699d-c2e7-2bc3-eecc-b28457929da9@schaufler-ca.com> <8bef5acd-471e-0288-ad85-72601c3a2234@schaufler-ca.com>
+ <CAEjxPJ66ZZKfAUPnUjQiraNJO0h=T3OTY2qTVPuXrWG9va1-2g@mail.gmail.com>
+In-Reply-To: <CAEjxPJ66ZZKfAUPnUjQiraNJO0h=T3OTY2qTVPuXrWG9va1-2g@mail.gmail.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Wed, 29 Apr 2020 13:02:09 -0400
+Message-ID: <CAEjxPJ4iquFSBfEj+UEFLUFHPsezuQ-Bzv09n+WgOWk38Nyw3w@mail.gmail.com>
+Subject: Re: [PATCH v5 0/3] SELinux support for anonymous inodes and UFFD
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Daniel Colascione <dancol@google.com>,
+        James Morris <jmorris@namei.org>,
+        Tim Murray <timmurray@google.com>,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Paul Moore <paul@paul-moore.com>,
+        Nick Kralevich <nnk@google.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        John Johansen <john.johansen@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There could be a scenario where f2fs_sync_node_pages gets
-called during checkpoint, which in turn tries to flush
-inline data and calls iput(). This results in deadlock as
-iput() tries to hold cp_rwsem, which is already held at the
-beginning by checkpoint->block_operations().
+On Mon, Apr 27, 2020 at 12:48 PM Stephen Smalley
+<stephen.smalley.work@gmail.com> wrote:
+>
+> On Mon, Apr 27, 2020 at 12:19 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+> >
+> > On 4/23/2020 3:24 PM, Casey Schaufler wrote:
+> > > On 4/22/2020 10:12 AM, Casey Schaufler wrote:
+> > >> On 4/22/2020 9:55 AM, James Morris wrote:
+> > >>> On Mon, 13 Apr 2020, Daniel Colascione wrote:
+> > >>>
+> > >>>> On Wed, Apr 1, 2020 at 2:39 PM Daniel Colascione <dancol@google.com> wrote:
+> > >>>>> Changes from the fourth version of the patch:
+> > >>>> Is there anything else that needs to be done before merging this patch series?
+> > > Do you have a test case that exercises this feature?
+> >
+> > I haven't heard anything back. What would cause this code to be executed?
+>
+> See https://lore.kernel.org/selinux/513f6230-1fb3-dbb5-5f75-53cd02b91b28@tycho.nsa.gov/
+> for example.
 
-Call stack :
+NB The example cited above needs to be tweaked for changes in the
+logic from the original RFC patch on which the example was
+based.  In particular, the userfaultfd CIL policy needs to be updated
+to define and use the new anon_inode class and to allow create
+permission as follows.
 
-Thread A		Thread B
-f2fs_write_checkpoint()
-- block_operations(sbi)
- - f2fs_lock_all(sbi);
-  - down_write(&sbi->cp_rwsem);
-
-                        - open()
-                         - igrab()
-                        - write() write inline data
-                        - unlink()
-- f2fs_sync_node_pages()
- - if (is_inline_node(page))
-  - flush_inline_data()
-   - ilookup()
-     page = f2fs_pagecache_get_page()
-     if (!page)
-      goto iput_out;
-     iput_out:
-			-close()
-			-iput()
-       iput(inode);
-       - f2fs_evict_inode()
-        - f2fs_truncate_blocks()
-         - f2fs_lock_op()
-           - down_read(&sbi->cp_rwsem);
-
-Fixes: 399368372ed9 ("f2fs: introduce a new global lock scheme")
-Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
----
- fs/f2fs/checkpoint.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index 5ba649e..97b6378 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -1219,21 +1219,19 @@ static int block_operations(struct f2fs_sb_info *sbi)
- 		goto retry_flush_quotas;
- 	}
- 
--retry_flush_nodes:
- 	down_write(&sbi->node_write);
- 
- 	if (get_pages(sbi, F2FS_DIRTY_NODES)) {
- 		up_write(&sbi->node_write);
-+		up_write(&sbi->node_change);
-+		f2fs_unlock_all(sbi);
- 		atomic_inc(&sbi->wb_sync_req[NODE]);
- 		err = f2fs_sync_node_pages(sbi, &wbc, false, FS_CP_NODE_IO);
- 		atomic_dec(&sbi->wb_sync_req[NODE]);
--		if (err) {
--			up_write(&sbi->node_change);
--			f2fs_unlock_all(sbi);
-+		if (err)
- 			goto out;
--		}
- 		cond_resched();
--		goto retry_flush_nodes;
-+		goto retry_flush_quotas;
- 	}
- 
- 	/*
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+$ cat userfaultfd.cil
+(class anon_inode ())
+(classcommon anon_inode file)
+(classorder (unordered anon_inode))
+(type uffd_t)
+; Label the UFFD with uffd_t; this can be specialized per domain
+(typetransition unconfined_t unconfined_t anon_inode "[userfaultfd]"   uffd_t)
+(allow unconfined_t uffd_t (anon_inode (create)))
+; Permit read() and ioctl() on the UFFD.
+; Comment out if you want to test read or basic ioctl enforcement.
+(allow unconfined_t uffd_t (anon_inode (read)))
+(allow unconfined_t uffd_t (anon_inode (ioctl)))
+; Uncomment one of the allowx lines below to test ioctl whitelisting.
+; Currently the 1st one is uncommented; comment that out if trying another.
+; None
+(allowx unconfined_t uffd_t (ioctl anon_inode ((0x00))))
+; UFFDIO_API
+;(allowx unconfined_t uffd_t (ioctl anon_inode ((0xaa3f))))
