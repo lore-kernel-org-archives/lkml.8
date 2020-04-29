@@ -6,80 +6,87 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DCCC83009
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E9AC83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46D2A2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 006E32073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:30:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbgD2P3g (ORCPT
+        id S1726869AbgD2PaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:29:36 -0400
-Received: from mga05.intel.com ([192.55.52.43]:51969 "EHLO mga05.intel.com"
+        Wed, 29 Apr 2020 11:30:06 -0400
+Received: from mga04.intel.com ([192.55.52.120]:53437 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbgD2P3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:29:36 -0400
-IronPort-SDR: ZbHsZ18bGBlN0FU7L68dy+01UZi695KSWoDdpV/tyVtdLTRHUddhYxEWYJ+DgpxtZ5xnuRpwA7
- o3w5WM+9kOWg==
+        id S1726481AbgD2PaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 11:30:05 -0400
+IronPort-SDR: glru2NjHAqeLb9eMFKK5uSxfskdQU5n//BnA/v5vG/YxRC58ax38nqC75wLbpux/g120Jq5xd+
+ gIre5RnCqTCw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 08:29:35 -0700
-IronPort-SDR: wHf8dhSjYq1ovl6/KJN6kiRcTLDiQ66kPnQ15/b7VAWrefT12q7R2zmrmTVy6hxv4qabvPobuF
- ghmfu4hGXVAw==
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 08:30:05 -0700
+IronPort-SDR: IsOo2m5hKDJWvB8cLxXv2tSJTgbWHqTSHwVmntgbu4ZJeYgSkqhJZFzNg96HRz/pCPc/2/jOMh
+ iee/vjZ65KWg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
-   d="scan'208";a="432595853"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 29 Apr 2020 08:29:35 -0700
-Received: from [10.255.166.42] (vramuthx-mobl1.gar.corp.intel.com [10.255.166.42])
-        by linux.intel.com (Postfix) with ESMTP id B2A905802C8;
-        Wed, 29 Apr 2020 08:29:30 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>,
-        qi-ming.wu@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        hauke.mehrtens@intel.com, anders.roxell@linaro.org,
-        vigneshr@ti.com, arnd@arndb.de, richard@nod.at,
-        brendanhiggins@google.com, linux-mips@vger.kernel.org,
-        robh+dt@kernel.org, miquel.raynal@bootlin.com, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200429162249.55d38ee8@collabora.com>
- <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
- <20200429164832.6800fc70@collabora.com>
- <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
-Message-ID: <f5961645-fe35-7ef5-05ff-c1529c5699a1@linux.intel.com>
-Date:   Wed, 29 Apr 2020 23:29:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+   d="scan'208";a="257994210"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga003.jf.intel.com with ESMTP; 29 Apr 2020 08:30:05 -0700
+Date:   Wed, 29 Apr 2020 08:30:04 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Dr. Greg" <greg@enjellic.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-sgx@vger.kernel.org,
+        akpm@linux-foundation.org, dave.hansen@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com
+Subject: Re: [PATCH v29 00/20] Intel SGX foundations
+Message-ID: <20200429153004.GD15992@linux.intel.com>
+References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
+ <20200426165753.GA11046@wind.enjellic.com>
 MIME-Version: 1.0
-In-Reply-To: <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200426165753.GA11046@wind.enjellic.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
+On Sun, Apr 26, 2020 at 11:57:53AM -0500, Dr. Greg wrote:
+> In closing, it is important to note that the proposed SGX driver is
+> not available as a module.  This effectively excludes any alternative
+> implementations of the driver without replacement of the kernel at
+> large.
 
-On 29/4/2020 11:18 pm, Ramuthevar, Vadivel MuruganX wrote:
-> +    writel(lower_32_bits(ebu_host->cs[ebu_host->cs_num].nand_pa) |
-> +           EBU_ADDR_SEL_REGEN | EBU_ADDR_MASK,
-> +           ebu_host->ebu + EBU_ADDR_SEL(reg));
-> +
-> +    writel(EBU_MEM_BASE_CS_0 | EBU_ADDR_MASK | EBU_ADDR_SEL_REGEN,
-> +           ebu_host->ebu + EBU_ADDR_SEL(0));
+No it doesn't.  The SGX subsytem won't allocate EPC pages unless userspace
+creates an enclave, i.e. preventing unprivileged userspace from accessing
+/dev/sgx/enclave will allow loading an alternative out-of-tree SGX module.
+Yes, SGX sanitizes the EPC on boot, but that's arguably a good thing for
+out-of-tree modules.
 
-Good catch!, one will be removed , Thanks !
+And if you want to get crafty and squash in-kernel SGX altogether, boot
+with "clearcpuid=<SGX_LC>" and/or "clearcpuid=<SGX>" to disable in-kernel
+support entirely.  SGX won't be correctly enumerated in /proc/cpuinfo
+relative to the existence of an out-of-tree module, but that seems like a
+very minor issue if you're running with a completely different SGX driver.
 
-Regards
-Vadivel
+> It also means that any platform, with SGX hardware support,
+> running a kernel with this driver, has the potential for the
+> security/privacy issues noted above.
+
+Unless I'm mistaken, /dev/sgx is root-only by default.  There are far
+scarier mechanisms available to root for hosing the system.
+
+> If key based policy management is not allowed, then the driver needs
+> to be re-architected to have modular support so that alternative
+> implementations or the absence of any driver support are at least
+> tenable.
+
+As above, using an alternative implementation is teneble, albeit a bit
+kludgy.
