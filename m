@@ -2,121 +2,110 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2333C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB09C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90D1420731
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87A872070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:04:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OMXJknaU"
+	dkim=pass (2048-bit key) header.d=rylan.coffee header.i=@rylan.coffee header.b="sutUTfGm";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PJL9cRdR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgD2EEV (ORCPT
+        id S1726850AbgD2EEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 00:04:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726669AbgD2EEU (ORCPT
+        Wed, 29 Apr 2020 00:04:33 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:49545 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726669AbgD2EEd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 00:04:20 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1ED3C03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 21:04:20 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id r4so411101pgg.4
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 21:04:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=N+HyAPL9cDPoNwkcJep2JsuLSlmzp1VJiq0Za7OP/Lo=;
-        b=OMXJknaUvTlSXDqH0WAp2063IWMkOc08eK4KaFP3n3aXebilFIkSj4Zw/uQvRU5sNj
-         1wjSQ7B0LAfDkkv+bpqUMwsM5cv/CBUGFHUSwlPbW30qQz3G5QB6CChFOAw1zKd8vdhv
-         jtSZA7EBvBE9JotG5+nArIvXZ+ycb8Hm1MCXrvEWcTYHN1t0wJMmhbPcRp5q5Ea+TDbU
-         m0FpaoJ9kxoDDFTLvBK3RIIO0PWQn3AZFCQn2qRVjnlNrQ6sesy4VGwurJgYxg5G3fr1
-         LaHlMBTBvDs1NwpxHYJQyPOvlJkQLZtQinJJXCeaPukF/N9uuNYgAEuA0uHYdKicRJ9b
-         40TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=N+HyAPL9cDPoNwkcJep2JsuLSlmzp1VJiq0Za7OP/Lo=;
-        b=TUsSh8KZAq4EOAkHGrlOSlOqHBC4xoe9/H2pzTvDwzOx6bE09b0e7ZDfMebX5XlBpB
-         YN66yR7ShxfMn8/KGVFUA/Jlp3nNkkKJdpEWxWGRDOzB8ZB/11cvIcmrWlTU7JsF/mmQ
-         NdDAQ0p+OV7WVcGvbDsoGZxYPdfPX/7Cm+awXi2/MfFFHkIJjCC/SxCuTZuE2KUpLPTI
-         /LIKS9H/sO7oL1xvo4tySfFYOOtuidUVObaEQbjSepHKMuc1GgZmMGr6E3NLOjjva46B
-         Kf4UvSgxhb5KaYnN/lSpqv37VDWwmQ26Xz2/o+ADKtgHmIzXH2Y+S5kY3xf+MHItFaSx
-         Ho7g==
-X-Gm-Message-State: AGi0PuakfhpXzfG6nEiuywPnZ7a+koMnEKvzVv6QlpzZXibcDeUldXf6
-        4Ed8KmfVZ3PvlDp9uKn++SY=
-X-Google-Smtp-Source: APiQypKxqccun1mvVNIZeFsqz3c/mXBYS1+QrqtW5LKbJb0DRvRwlDS9fWvQJ4V1azBbW7dXrUkAcw==
-X-Received: by 2002:a63:bd42:: with SMTP id d2mr11590630pgp.214.1588133060127;
-        Tue, 28 Apr 2020 21:04:20 -0700 (PDT)
-Received: from localhost ([159.203.232.101])
-        by smtp.gmail.com with ESMTPSA id t103sm3366621pjb.46.2020.04.28.21.04.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Apr 2020 21:04:19 -0700 (PDT)
-From:   Sean Fu <fxinrong@gmail.com>
-To:     tj@kernel.org
-Cc:     jiangshanlai@gmail.com, linux-kernel@vger.kernel.org,
-        Sean Fu <fxinrong@gmail.com>
-Subject: [PATCH v2] workqueue: Use IS_ERR and PTR_ERR instead of PTR_ERR_OR_ZERO.
-Date:   Wed, 29 Apr 2020 12:04:13 +0800
-Message-Id: <20200429040413.13942-1-fxinrong@gmail.com>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20200429021905.10639-1-fxinrong@gmail.com>
-References: <20200429021905.10639-1-fxinrong@gmail.com>
+        Wed, 29 Apr 2020 00:04:33 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id EF0225C0392;
+        Wed, 29 Apr 2020 00:04:31 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Wed, 29 Apr 2020 00:04:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rylan.coffee; h=
+        date:from:to:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=kHapGOq7KW9N0TnNYVQtbnV2HjZ
+        ViclYwhrcnJjGpMI=; b=sutUTfGmDne65YZdufylKbT2c227tir34T9o7CYcVv4
+        LpOIfWRVb+AKWaHupdBrwT7etOVqI3e5VKFMloBva1u+mv1T21gGs1iLFWWSSgBg
+        b50C6vewk8ITYLWn/OfVP3u+oEb/53qjEO878G9H/x+s60LxQb8rbthqN1l7U92k
+        uf7ue/OxvUN4PKFSFzDcMDvMd5CNXvvX+yspXexbybrWJaree3DhTV+Am3J4s810
+        uGRnwh+FGubotj6B8IvmGpEGbRMFAzM28p/KcEtiLraCSh1M5M2eKMCltDyF/wXB
+        BXv9dWyVHHc8RlGtaiTE9z/Mhtja1DxI0lNNPFZ9owQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=kHapGO
+        q7KW9N0TnNYVQtbnV2HjZViclYwhrcnJjGpMI=; b=PJL9cRdRAbs0EtJuJEMIBR
+        zBMtwIjdCf6ATsPA8IYlDLufn80ApaB9WoLe68z0SrrGnD0Z5SIcgd725kFYnqGL
+        e6Ic4iLslGgAprLUp5N7kW6Kpcjub3JNijWpnSCOp8lAsDrRW54Yu+PR60dFTxLD
+        hO5veoquEujwsI0clIl/SO/wb+G//oLPj57nxDqEGA6c4XDse0B8e7sALy0Uh9ly
+        RZkzVIQvXUG+INp8pbHfX5u7LssnRcjGsdm5nnyNcSgWjUgrbYPOTz5jVlqO2HvI
+        x5yd4iFm3e2n27psxuYl1MRpBwBJFhT5sZPF4v5O80Z1B8Wlsnr+vEv6nKKqCxoA
+        ==
+X-ME-Sender: <xms:z_yoXjnaYOXgBVdRN1zmXOgsplegzSEQFnbQK0Fpln0nGXMbH0BY6w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedvgdejjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtjeenucfhrhhomheptfihlhgrnhcu
+    ffhmvghllhhouceomhgrihhlsehrhihlrghnrdgtohhffhgvvgeqnecukfhppedutdekrd
+    egledrudehkedrkeegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrihhlsehrhihlrghnrdgtohhffhgvvg
+X-ME-Proxy: <xmx:z_yoXvcequtGXlXDDlFQNa22qccYJZo_tEnfUbr62i0OtA1KP34uPA>
+    <xmx:z_yoXuHuNgfne2PE1fMsIdaUDgQP4bJRRBRlyFiE71mZqLVGiMR08w>
+    <xmx:z_yoXvEGPVcc7UGHTqcwhhAL6Ca6Aq8mS1jnUb5YqZYdJ4gFxcsFjw>
+    <xmx:z_yoXpSm3SczGgIgXFz5NRcbk1sIys5lFE5kAfhEkpIzPrmJAKV0sg>
+Received: from athena (pool-108-49-158-84.bstnma.fios.verizon.net [108.49.158.84])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8DB603065EDF;
+        Wed, 29 Apr 2020 00:04:31 -0400 (EDT)
+Date:   Wed, 29 Apr 2020 00:04:30 -0400
+From:   Rylan Dmello <mail@rylan.coffee>
+To:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] staging: qlge: Fix suspect indentation warning in
+ qlge_main.c
+Message-ID: <eafcda7509c7904fc1624833c69cca349156d555.1588132908.git.mail@rylan.coffee>
+References: <aae9feb569c60758ab09c923c09b600295f4cb32.1588132908.git.mail@rylan.coffee>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aae9feb569c60758ab09c923c09b600295f4cb32.1588132908.git.mail@rylan.coffee>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace inline function PTR_ERR_OR_ZERO with IS_ERR and PTR_ERR to
-remove redundant parameter definitions and checks.
-Reduce code size.
-Before:
-   text	   data	    bss	    dec	    hex	filename
-  47510	   5979	    840	  54329	   d439	kernel/workqueue.o
-After:
-   text	   data	    bss	    dec	    hex	filename
-  47474	   5979	    840	  54293	   d415	kernel/workqueue.o
+Fix checkpatch.pl warning:
 
-Signed-off-by: Sean Fu <fxinrong@gmail.com>
+  WARNING: suspect code indent for conditional statements (16, 23)
+
+Signed-off-by: Rylan Dmello <mail@rylan.coffee>
 ---
-Changes in v2:
-    - make commit message more clear.
+ drivers/staging/qlge/qlge_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- kernel/workqueue.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 891ccad5f271..ddf0537dce14 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -4197,7 +4197,6 @@ static int wq_clamp_max_active(int max_active, unsigned int flags,
- static int init_rescuer(struct workqueue_struct *wq)
- {
- 	struct worker *rescuer;
--	int ret;
-
- 	if (!(wq->flags & WQ_MEM_RECLAIM))
- 		return 0;
-@@ -4208,10 +4207,9 @@ static int init_rescuer(struct workqueue_struct *wq)
-
- 	rescuer->rescue_wq = wq;
- 	rescuer->task = kthread_create(rescuer_thread, rescuer, "%s", wq->name);
--	ret = PTR_ERR_OR_ZERO(rescuer->task);
--	if (ret) {
-+	if (IS_ERR(rescuer->task)) {
- 		kfree(rescuer);
--		return ret;
-+		return PTR_ERR(rescuer->task);
+diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
+index 10daae025790..0edeea525fef 100644
+--- a/drivers/staging/qlge/qlge_main.c
++++ b/drivers/staging/qlge/qlge_main.c
+@@ -4436,7 +4436,8 @@ static int ql_init_device(struct pci_dev *pdev, struct net_device *ndev,
+ 	} else {
+ 		err = dma_set_mask(&pdev->dev, DMA_BIT_MASK(32));
+ 		if (!err)
+-		       err = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
++			err = dma_set_coherent_mask(&pdev->dev,
++						    DMA_BIT_MASK(32));
  	}
-
- 	wq->rescuer = rescuer;
---
-2.16.4
+ 
+ 	if (err) {
+-- 
+2.26.2
 
