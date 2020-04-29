@@ -2,129 +2,190 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 606A2C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F34B6C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 365BC206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:30:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=daemons-net.20150623.gappssmtp.com header.i=@daemons-net.20150623.gappssmtp.com header.b="hddACICW"
+	by mail.kernel.org (Postfix) with ESMTP id DD7D3206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:30:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgD2HaK (ORCPT
+        id S1726636AbgD2Hab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 03:30:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbgD2HaJ (ORCPT
+        Wed, 29 Apr 2020 03:30:31 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39587 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbgD2Haa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 03:30:09 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB56FC03C1AE
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 00:30:09 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id z6so523237plk.10
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 00:30:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daemons-net.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UO/fhO+poDmbn1JfFxZG+nR2c8Gsi+KbKEykhiLRZHg=;
-        b=hddACICWxJ59STwMM1rsyRUzZgmDjyGAmjxzezwzmaxkrCeZhzCFLVyVbKx6IrDK13
-         fkt1DH7OglubfpXhuFIJW+Zn0nAplRHeouXUS+tcOMlfPzN/k6rdtizw+T+BJYF1eRQ/
-         djdD8KwBSoawvbnXVu1bU/8RreVwL40dyeHLg1GeyxbjoOqDwNpR8HBLXpf+gWWZxFz/
-         5Tk/2BdWDuKhW6NT9JJ0LHJnzXmN26di28uF0my6ouVYmsIWPPhEPUuXLb25R2TEeat5
-         WlrIzI8xaFz1wgmlYEako+fqdFNMtl5Hi58876NcVXq9KfQCvpts9ql9xNUBV500C7D4
-         JxWA==
+        Wed, 29 Apr 2020 03:30:30 -0400
+Received: by mail-io1-f68.google.com with SMTP id w4so1133761ioc.6;
+        Wed, 29 Apr 2020 00:30:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UO/fhO+poDmbn1JfFxZG+nR2c8Gsi+KbKEykhiLRZHg=;
-        b=LquAW0yGBAYr6WA3LJiNSq2aGaK7Ux8G5k8MJNjbOu8K+kYJDqHSNasRltVXnEOLXB
-         r0faEcQTCzJ1DdteKFmwfJXb/a7I89ZZYB2kmJ8H523YgnMBwzoTEIuDcRL0Umo0leHY
-         0+ChuBwkBc3gJvU7pTspsuN4cUrIc4pMo/0HB6F8kxtP8yz/GeVkAfroj0Bpm18Qzbgs
-         R5yyAkLt1tydRxhzT/qayRXGHlleIThrVExfXKEkwbBrg7uDDOQN/xQLuOWAfylnYtIK
-         cZzenYHwFCveiDv9ZAfkAp1HfDxrO7OSnKpW8CxZK6XTHhni9znfZdDTCt0hK6DzNgwV
-         7sZg==
-X-Gm-Message-State: AGi0PuaCazTwAlirGRZ8JRpKnHWTn0RXxsWmJzJ4LbvwK7tnVXbxBVJy
-        byEs09ccLJJjiwC80gsyYWeQ
-X-Google-Smtp-Source: APiQypJF+/ToLVaFL7/2/pa+Jv0MNE2iJlyxoZVkzQn+f9OFQgbktjyflwVKpIX3BitoNBRAgvVKFg==
-X-Received: by 2002:a17:902:9a8a:: with SMTP id w10mr34010442plp.259.1588145409130;
-        Wed, 29 Apr 2020 00:30:09 -0700 (PDT)
-Received: from arctic-shiba-lx ([47.156.151.166])
-        by smtp.gmail.com with ESMTPSA id 189sm390149pfd.55.2020.04.29.00.30.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 00:30:08 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 00:29:59 -0700
-From:   Clay McClure <clay@daemons.net>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Nicolas Pitre <nicolas.pitre@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Mao Wenan <maowenan@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Edward Cree <ecree@solarflare.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: Select PTP_1588_CLOCK in PTP-specific drivers
-Message-ID: <20200429072959.GA10194@arctic-shiba-lx>
-References: <20200428090749.31983-1-clay@daemons.net>
- <CAMuHMdXhVcp3j4Sq_4fsqavw1eH_DksN-yjajqC_8pRKnjM0zA@mail.gmail.com>
- <CAK8P3a2rG-A6_qhU9vrcadZqq2r1FdCDFMVPhSzPEAO83WrA9A@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dZHTcsvd+3N0oInRnY4DjkFuABRDZ8hC5QyzW4Fndpw=;
+        b=TetJLiZPw6ChEh/JCuL44cexQY5WkpSd0UwYbPCSF07RKtB6rl4zlPjtgA9qhsNUcm
+         RY331mi+u67yhgxSlCGyTCgiA1R4kB0PLQu3rSrRjeQlNmXDO7+jo4byfaWMcl64uDnC
+         g5jzIMav8lH7bU2n3Jk/C+VWRqK4eIpf12wXkfdnThJmJ/LWHY+RNyh+55jX1/dgbTK1
+         MpDcUoeNFxkWCLO0DRXTZucSRBKBh3lnLlaqepnSqSjouds8L6kFtkTQGf85EQK5HMfI
+         zN/cmvkNbu/gldmdroVXYwRmX6fkIyq1qtEEKCX7dXzImr0erYVtowXcjMe0+Jr/dblN
+         fqbQ==
+X-Gm-Message-State: AGi0PubdiMi9IWuBqvyJ6eaVoiUBiEqjunuxQuETiyNFDs+zXiPSSlwu
+        sYtACUhOMHLHVmxGrGgGQkDeKX4FeMI3aJLKIfg=
+X-Google-Smtp-Source: APiQypJVWPuYy7vf+TXR8F6vp7ZkZTtUEZL+3Ecw2/FSpOFVbzuOM17akv3bF+vwpip+kTcDxviWpnQ/PJfWO7N+NWw=
+X-Received: by 2002:a02:415:: with SMTP id 21mr29604089jab.126.1588145429339;
+ Wed, 29 Apr 2020 00:30:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2rG-A6_qhU9vrcadZqq2r1FdCDFMVPhSzPEAO83WrA9A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1588143611-6815-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1588143611-6815-1-git-send-email-yangtiezhu@loongson.cn>
+From:   Huacai Chen <chenhc@lemote.com>
+Date:   Wed, 29 Apr 2020 15:38:00 +0800
+Message-ID: <CAAhV-H7uhPo_ZCTyt8eh9LSXXW7Unbr0SEXwG55GWLTksiNBWQ@mail.gmail.com>
+Subject: Re: [PATCH v5] MIPS: Loongson: Add DMA support for LS7A
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 06:07:45PM +0200, Arnd Bergmann wrote:
-> On Tue, Apr 28, 2020 at 11:21 AM Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
-> > On Tue, Apr 28, 2020 at 11:14 AM Clay McClure <clay@daemons.net> wrote:
-> > > Change these drivers back [2] to `select PTP_1588_CLOCK`. Note that this
-> > > requires also selecting POSIX_TIMERS, a transitive dependency of
-> > > PTP_1588_CLOCK.
-> >
-> > If these drivers have a hard dependency on PTP_1588_CLOCK, IMHO they
-> > should depend on PTP_1588_CLOCK, not select PTP_1588_CLOCK.
-> 
-> Agreed.
+Hi, Tiezhu,
 
-Thanks for reviewing the patch. I'll post v2 using `depends on` shortly.
+On Wed, Apr 29, 2020 at 3:00 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>
+> In the current market, the most used bridge chip on the Loongson
+> platform are RS780E and LS7A, the RS780E bridge chip is already
+> supported by the mainline kernel.
+>
+> In order to use the default implementation of __phys_to_dma() and
+> __dma_to_phys() in dma-direct.h, remove CONFIG_ARCH_HAS_PHYS_TO_DMA
+> and then set the bus's DMA limit to 36 bit for RS780E to maintain
+> downward compatibility.
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>
+> Hi Christoph and Jiaxun,
+>
+> Thank you very much for your suggestions.
+>
+> v5:
+>   - use the default implementation of __phys_to_dma()
+>     and __dma_to_phys() in dma-direct.h
+>
+>  arch/mips/Kconfig                                  |  1 -
+>  arch/mips/include/asm/mach-loongson64/boot_param.h |  5 +++++
+>  arch/mips/loongson64/dma.c                         | 22 +++++++++++-----------
+>  arch/mips/loongson64/env.c                         |  2 ++
+>  4 files changed, 18 insertions(+), 12 deletions(-)
+>
+> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+> index 9f15539..12b6bdb 100644
+> --- a/arch/mips/Kconfig
+> +++ b/arch/mips/Kconfig
+> @@ -1454,7 +1454,6 @@ choice
+>  config CPU_LOONGSON64
+>         bool "Loongson 64-bit CPU"
+>         depends on SYS_HAS_CPU_LOONGSON64
+> -       select ARCH_HAS_PHYS_TO_DMA
+>         select CPU_MIPSR2
+>         select CPU_HAS_PREFETCH
+>         select CPU_SUPPORTS_64BIT_KERNEL
+> diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h b/arch/mips/include/asm/mach-loongson64/boot_param.h
+> index fc9f14b..cccf4cb 100644
+> --- a/arch/mips/include/asm/mach-loongson64/boot_param.h
+> +++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
+> @@ -197,6 +197,7 @@ enum loongson_bridge_type {
+>         LS7A = 2
+>  };
+>
+> +struct pci_dev;
+>  struct loongson_system_configuration {
+>         u32 nr_cpus;
+>         u32 nr_nodes;
+> @@ -221,9 +222,13 @@ struct loongson_system_configuration {
+>         u32 nr_sensors;
+>         struct sensor_device sensors[MAX_SENSORS];
+>         u64 workarounds;
+> +       void (*dma_config)(struct pci_dev *pdev);
+>  };
+>
+>  extern struct efi_memory_map_loongson *loongson_memmap;
+>  extern struct loongson_system_configuration loongson_sysconf;
+>
+> +extern void rs780e_dma_config(struct pci_dev *pdev);
+> +extern void ls7a_dma_config(struct pci_dev *pdev);
+Please use alpha-betical order here, which means put ls7a things
+before rs780 things.
 
-> Note that for drivers that only optionally use the PTP_1588_CLOCK
-> support, we probably want 'depends on PTP_1588_CLOCK ||
-> !PTP_1588_CLOCK' (or the syntax replacing it eventually), to avoid the
-> case where a built-in driver fails to use a modular ptp implementation.
+> +
+>  #endif
+> diff --git a/arch/mips/loongson64/dma.c b/arch/mips/loongson64/dma.c
+> index 5e86635..6878bcc 100644
+> --- a/arch/mips/loongson64/dma.c
+> +++ b/arch/mips/loongson64/dma.c
+> @@ -1,24 +1,24 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#include <linux/dma-direct.h>
+> +#include <linux/pci.h>
+>  #include <linux/init.h>
+>  #include <linux/swiotlb.h>
+>
+> -dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
+> +void rs780e_dma_config(struct pci_dev *pdev)
+>  {
+> -       /* We extract 2bit node id (bit 44~47, only bit 44~45 used now) from
+> -        * Loongson-3's 48bit address space and embed it into 40bit */
+> -       long nid = (paddr >> 44) & 0x3;
+> -       return ((nid << 44) ^ paddr) | (nid << 37);
+> +       pdev->dev.bus_dma_limit = DMA_BIT_MASK(36);
+>  }
+>
+> -phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t daddr)
+> +void ls7a_dma_config(struct pci_dev *pdev)
+>  {
+> -       /* We extract 2bit node id (bit 44~47, only bit 44~45 used now) from
+> -        * Loongson-3's 48bit address space and embed it into 40bit */
+> -       long nid = (daddr >> 37) & 0x3;
+> -       return ((nid << 37) ^ daddr) | (nid << 44);
+>  }
+Why use a hardcoded 37? LS7A's node-id bits are configurable in BIOS.
 
-I see some drivers are starting to do just that, e.g.:
-
-commit 96c34151d157 ("net/mlx5: Kconfig: convert imply usage to weak dependency")
-
-I can post a patch this weekend converting the rest of the drivers.
-
--- 
-Clay
+>
+> +void loongson_dma_config(struct pci_dev *pdev)
+> +{
+> +       loongson_sysconf.dma_config(pdev);
+> +}
+> +
+> +DECLARE_PCI_FIXUP_EARLY(PCI_ANY_ID, PCI_ANY_ID, loongson_dma_config);
+> +
+>  void __init plat_swiotlb_setup(void)
+>  {
+>         swiotlb_init(1);
+> diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
+> index 71f4aaf..496f401 100644
+> --- a/arch/mips/loongson64/env.c
+> +++ b/arch/mips/loongson64/env.c
+> @@ -192,8 +192,10 @@ void __init prom_init_env(void)
+>         if (vendor == PCI_VENDOR_ID_LOONGSON && device == 0x7a00) {
+>                 pr_info("The bridge chip is LS7A\n");
+>                 loongson_sysconf.bridgetype = LS7A;
+> +               loongson_sysconf.dma_config = ls7a_dma_config;
+>         } else {
+>                 pr_info("The bridge chip is RS780E or SR5690\n");
+>                 loongson_sysconf.bridgetype = RS780E;
+> +               loongson_sysconf.dma_config = rs780e_dma_config;
+>         }
+>  }
+> --
+> 2.1.0
+>
