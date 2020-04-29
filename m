@@ -2,96 +2,106 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DC7C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C67C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D39122074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 195662083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:49:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="KcORmTwB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="glTvmjbh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akJhlQ7m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgD2Nrc (ORCPT
+        id S1728006AbgD2NtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:47:32 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:56939 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727097AbgD2Nrb (ORCPT
+        Wed, 29 Apr 2020 09:49:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54936 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726948AbgD2NtB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:47:31 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 4BB505C0362;
-        Wed, 29 Apr 2020 09:47:30 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Wed, 29 Apr 2020 09:47:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=ZtmyBzh7bLCldw/wlH0J/tpDJSm
-        05VenlMtaCxkWbDY=; b=KcORmTwBygMOezk0wTZoraVHmCMIDRZuIfZgQCN2l84
-        3c15BFoNpgTv4Sl2sx9exjhfNL/VVjOl7Z7aVPljDmWr84APlOZWJRnWg8gRXE9e
-        obVBDC1mckRPXBG2PThHelQbnvpa5N8FiOkN+4tJyHh43je5zFH1PPVZJTyVGUXD
-        Yd5cmAaOkUsqw+ECJbY2n+80x78GgglX8pK07P+KXDho8mdv9/6gi9Cbq3KiKzgf
-        Odh6Msn7EhEk8C+S3E6CqzIyNgTLD5BmHCiGYvRAt3pZqV3guRFVRCbqNg5r3OO2
-        v9GmNe6cmXitAc01zZMJ/hQN4XEfY5MtmJhjqCOoQcQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=ZtmyBz
-        h7bLCldw/wlH0J/tpDJSm05VenlMtaCxkWbDY=; b=glTvmjbhYSz2TuEcQUMSLo
-        GNtV6+K1nJp9LdCyKMWpmgxrakXqz5cd1xYADonx9YYSx3R2RY1mPoRgvJLjP/R5
-        V+QWg99izGrb8V6nJIancrPQyo6Ps9sgp5vezXU2fAYrH0cE+tKhTp1bKIf2f1Gt
-        5z5o8KyPbw7VTm2mgtgPteqttzy+BUMO4aTa7mUcyCQ3qVxN6jg7kP98BlApMP9U
-        i3P8BGNsZFlOb4FQhhBER3F8g1auvRjVpzomgWisgzojRrAFNoZK5jJgPMH0jGmd
-        aCvwyHmzSH7ZsNLzFKrzyyeM7DlQBgkazFnfxQHvKy2NTho0psv3wyePq9RGY64w
-        ==
-X-ME-Sender: <xms:cYWpXtSDNRYQkfeQuLvW3ydx_eAudWCT8CcTVjIk69NhEAhEeNs6PA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieefgdeijecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjsehttdertd
-    dttddvnecuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeen
-    ucggtffrrghtthgvrhhnpeevueehjefgfffgiedvudekvdektdelleelgefhleejieeuge
-    egveeuuddukedvteenucfkphepkeefrdekiedrkeelrddutdejnecuvehluhhsthgvrhfu
-    ihiivgepvdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtoh
-    hm
-X-ME-Proxy: <xmx:cYWpXvgvJ8dxWfIUVFYWwqY64Zr05v_DcRVRyYBtpiY8p2OSgo7VGA>
-    <xmx:cYWpXoQ9s7jgbau7OlskkbKttOtcRvBgbX4LyjLnobeb1EYyFKO0-w>
-    <xmx:cYWpXotRLve3jfGv_zHHVjCo3hZcY9zYAlZBpqZs8bL0AhZMX3Cnlg>
-    <xmx:coWpXsRvG9AA4YfYGgD90uAzmGgeQ8ogYJ-AaswW6J9gF0priU_fdg>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 889BE3280064;
-        Wed, 29 Apr 2020 09:47:29 -0400 (EDT)
-Date:   Wed, 29 Apr 2020 15:47:28 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Akira Shimahara <akira215corp@gmail.com>
+        Wed, 29 Apr 2020 09:49:01 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BB81C03C1AD
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 06:49:01 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id s10so2651096wrr.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 06:49:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=n8lKxmUxsiGv6ubji6UvJYO03/2kibipeNIU1RQEYHM=;
+        b=akJhlQ7mjQ67Wg3NFdDQOGeq2A65ZjWUZXnWU33XJQOZKCzSbYJOKgacOnAdUuXkEl
+         gzUdFzdXzSLpite/j+7TAZ8ZVwOAICPBuZGR6e8/eOguuuPnMF9VJwzw81djSH9K39ij
+         FXqahMMuwILuJj/J5MQvN1OTKREVsspCbxYfzxs8SExmPl476iHmZjwj0VI7EIafA/8M
+         5rVhfp5HukqKUirTB7QX3Udt487tv02O3kegEeQ/MtxmMCyTXtGgDSDSH5XN5OIjHZPO
+         tTga/uEhWONfX7BhihkwaN0TpULz2XicKgLgV6UU7cKe/UJ/CF5emnz81nTniTUg5rbT
+         bJcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=n8lKxmUxsiGv6ubji6UvJYO03/2kibipeNIU1RQEYHM=;
+        b=AS4DHBUdf7KVWj7i9CkTBL2Q9yp5nP/+HINUeZ7utl+KzKSQVFwXcs6cc3ntjV9sFa
+         ukNt1wsABSLN78yJNuwiqzmqLvnDK7/ZLnkuOmpeOYhof9Ucc0s+z1PCvf4GFIJ0ayz6
+         5+sRvKeWKbiAQW6whYeMpHJk9iXPPvbgDZjPrb8hNWBAY86M9/5pybtscGSZcLtxaRnw
+         UgoKz44wiEwBZFdAMuMdh02eIJgZBnmwyD6eXxWHGDBo/NnsE/3KMWpg+OPIeorP+8uj
+         CP7hXQM9Hc/KfMbFyDREy/7XoxxOUyuQNG28NTBpeeximxbBlMl+4ssQAPVQCt2O6sfD
+         0NGA==
+X-Gm-Message-State: AGi0PuYLeWqBcXiFp9Kq6UvTqbuTw51En1h7kgszzIgPozt2SIUPHWIP
+        kOoHiQH436IbTSgmqESfeiM=
+X-Google-Smtp-Source: APiQypJ0+TOSoM2vbXjlLHYkNjaRTwB7y1C1KVBK8TA2tSkihKoCH9RjaUWhvVRQXcieKrx/tYd7+g==
+X-Received: by 2002:a5d:51c6:: with SMTP id n6mr39149084wrv.314.1588168139993;
+        Wed, 29 Apr 2020 06:48:59 -0700 (PDT)
+Received: from akira-laptop.home ([2a01:cb19:8b28:7600:a0b9:1c6f:cfba:2b21])
+        by smtp.gmail.com with ESMTPSA id d5sm30566939wrp.44.2020.04.29.06.48.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 06:48:59 -0700 (PDT)
+Message-ID: <f9e72d79a0e4739313a954de8325ea338d6bfc7e.camel@gmail.com>
+Subject: Re: [PATCH v3 1/5] w1_therm: fix reset_select_slave. Creating
+ w1_therm.h
+From:   Akira shimahara <akira215corp@gmail.com>
+To:     Greg KH <greg@kroah.com>
 Cc:     zbr@ioremap.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] w1_therm: Optimizing read timing by checking
- device resolution. Updating documentation
-Message-ID: <20200429134728.GC2132814@kroah.com>
-References: <20200429133320.140458-1-akira215corp@gmail.com>
+Date:   Wed, 29 Apr 2020 15:48:58 +0200
+In-Reply-To: <20200429134357.GA2132814@kroah.com>
+References: <20200429133048.139402-1-akira215corp@gmail.com>
+         <20200429134357.GA2132814@kroah.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429133320.140458-1-akira215corp@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 03:33:20PM +0200, Akira Shimahara wrote:
-> Patch for enhacement of w1_therm module. Added features :
->  - Optimized conversion time regarding to device resolution
->  - Dedicated sysfs entry for, resolution set/get, eeprom save/restore,
-> 	and additionnal temperature entry to ease user data collect.
->  - Code optimization to mitigate bus traffic
+Le mercredi 29 avril 2020 à 15:43 +0200, Greg KH a écrit :
+> On Wed, Apr 29, 2020 at 03:30:48PM +0200, Akira Shimahara wrote:
+> > Patch for enhancement of w1_therm module.
+> >  - Creating a w1_therm.h file to clean up the code and documenting
+> > it.
+> >  - fix reset_select_slave function: w1_reset_select_slave() from
+> > w1_io.c
+> > 	could not be used here because a SKIP ROM command is sent if
+> > only
+> > 	one device is on the line. At the beginning of the search
+> > process,
+> > 	sl->master->slave_count is 1 even if more devices are on the
+> > line,
+> > 	causing data collision in the bus.
+> 
+> This should be three different patches, one to create the file by
+> moving
+> the code, one to document it, and the last to do the fix.
+> 
+> thanks,
+> 
+> greg k-h
 
-When you have to list different things you did in a single patch, that's
-a huge sign it needs to be multiple patches.  Please break this up into
-one-logical-change-per-patch.
+Ok, I will do
 
-thanks,
+Akira Shimahara
 
-greg k-h
