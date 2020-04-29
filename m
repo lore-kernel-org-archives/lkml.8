@@ -2,183 +2,189 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EAAC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A13C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1F512085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E198121775
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:33:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="DZ8uNnwI"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ABiQRIwn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbgD2Nc6 (ORCPT
+        id S1727049AbgD2Nd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:32:58 -0400
-Received: from mout.gmx.net ([212.227.15.18]:36001 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbgD2Nc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:32:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1588167152;
-        bh=aHsnW+3gzO8pCxyORwBO+Ihsp+HtkeIuWsCjVlZWnI8=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=DZ8uNnwI5rDdQnvNCKbdQoNsCK55xaFj+8TAPHlwWV707sR8shiGMzxv+Qrzb45Gw
-         w1UhBLRxIj3xwQ+iPsUHJp3TOuycOAkRFx7DdYqLVGSAStoTS9Tls4pHjfMd3OUy8M
-         bTgXYNJ+JU9Z40Wt8fnokn38OuZz1fzHatmOiuiY=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [0.0.0.0] ([149.28.201.231]) by mail.gmx.com (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MPGRz-1joVXO2I8r-00Pfqu; Wed, 29
- Apr 2020 15:32:32 +0200
-Subject: Re: [PATCH] btrfs: fix gcc-4.8 build warning
-To:     Arnd Bergmann <arnd@arndb.de>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        ethanwu <ethanwu@synology.com>
-Cc:     Qu Wenruo <wqu@suse.com>, Filipe Manana <fdmanana@suse.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200429132743.1295615-1-arnd@arndb.de>
-From:   Qu Wenruo <quwenruo.btrfs@gmx.com>
-Autocrypt: addr=quwenruo.btrfs@gmx.com; prefer-encrypt=mutual; keydata=
- mQENBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAG0IlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT6JAU4EEwEIADgCGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCXZw1oQAKCRDC
- PZHzoSX+qCY6CACd+mWu3okGwRKXju6bou+7VkqCaHTdyXwWFTsr+/0ly5nUdDtT3yEVggPJ
- 3VP70wjlrxUjNjFb6iIvGYxiPOrop1NGwGYvQktgRhaIhALG6rPoSSAhGNjwGVRw0km0PlIN
- D29BTj/lYEk+jVM1YL0QLgAE1AI3krihg/lp/fQT53wLhR8YZIF8ETXbClQG1vJ0cllPuEEv
- efKxRyiTSjB+PsozSvYWhXsPeJ+KKjFen7ebE5reQTPFzSHctCdPnoR/4jSPlnTlnEvLeqcD
- ZTuKfQe1gWrPeevQzgCtgBF/WjIOeJs41klnYzC3DymuQlmFubss0jShLOW8eSOOWhLRuQEN
- BFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcgaCbPEwhLj
- 1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj/IrRUUka
- 68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fNGSsRb+pK
- EKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0q1eW4Jrv
- 0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEvABEBAAGJ
- ATwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCXZw1rgUJCWpOfwAKCRDCPZHz
- oSX+qFcEB/95cs8cM1OQdE/GgOfCGxwgckMeWyzOR7bkAWW0lDVp2hpgJuxBW/gyfmtBnUai
- fnggx3EE3ev8HTysZU9q0h+TJwwJKGv6sUc8qcTGFDtavnnl+r6xDUY7A6GvXEsSoCEEynby
- 72byGeSovfq/4AWGNPBG1L61Exl+gbqfvbECP3ziXnob009+z9I4qXodHSYINfAkZkA523JG
- ap12LndJeLk3gfWNZfXEWyGnuciRGbqESkhIRav8ootsCIops/SqXm0/k+Kcl4gGUO/iD/T5
- oagaDh0QtOd8RWSMwLxwn8uIhpH84Q4X1LadJ5NCgGa6xPP5qqRuiC+9gZqbq4Nj
-Message-ID: <fb79edfb-5fce-30f5-40af-cf06316c61e9@gmx.com>
-Date:   Wed, 29 Apr 2020 21:32:23 +0800
+        Wed, 29 Apr 2020 09:33:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726669AbgD2Nd1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 09:33:27 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFBC9C03C1AD
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 06:33:25 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id j2so2535466wrs.9
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 06:33:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=57KpVyxFiIynSOtLWM5S1qu9oG0E8FFGMRYGzL0PtQs=;
+        b=ABiQRIwnnGgnP7DXwh5VSPW3qFWj2FcDVAgkYap4Sep2VKflFx4N/3UKNVOrNvHK5f
+         XttYZI0S7MqVMonv8SzdRLVL+QgpFNksG1Ov1gH0sBsnm5ZwXkWWcglAUcDoecIgVDKv
+         TA0d/5OOhCjf3aeu0+ukRzQme0Pof1jHr0s9VmSqQOJvxLkVzvgmNqXBhnQsf82RuGh5
+         nGSfyDjdej/n9WKXpFKfkTK6vAHyrSmyZq5RjjElWNgoasSIQINoQRnst/8pUz0RBefl
+         wxUHuhRndYMqGu/IE9TR5h6FOdCU4eI/gcjp+NLfWE4HjmePW2eoEhj4KASneqM8iCPE
+         U6nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=57KpVyxFiIynSOtLWM5S1qu9oG0E8FFGMRYGzL0PtQs=;
+        b=jqwLFjUwzh5OUm09gyqOOiy8saMnYEhZc+EW8EpKtpFA39unNBfHhrNWMIcwmltKv8
+         gb0CF+k8OcmmDc3s0fwfIWPZXaGd6wg7T11Y4vTcHWmrGg+yclbKpvyUXdVoRYpjNwp1
+         a1V4VocQEfoXIJixgJU/BDQuNkeLbyHoZglx1bnh02TdjTatThvTsVe7jlOqar2mLUkf
+         YHn9tNMsEANkh4lS+bMsTIORKNAQfs/Z8EwvjQl0dTX6favDXJ4qBj/m/mSSm6hDHwMi
+         h1CuqQYsLCp3/B6MjHxg/FXCF82l6vAZar3BNoMr3jkgZLdod40MPEPEsUlNsN27Sre1
+         jrbQ==
+X-Gm-Message-State: AGi0PuaDodc5kvB9vSsoIWodIaN27KCMzdX+8mWr8nUdrPOLuVjkafaq
+        bSOOvmX8oXF24TYBEXEBHatcAHJ2yYOEPw==
+X-Google-Smtp-Source: APiQypLeL8JXb5wg6K5NkhgJTycyIPyVnsKkihsopNfL2tb7HT1xgcWccOBeuwpneP2REnFZ67aTSw==
+X-Received: by 2002:a5d:4e02:: with SMTP id p2mr42130290wrt.302.1588167203674;
+        Wed, 29 Apr 2020 06:33:23 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:4460:3fd3:382:4a71? ([2a01:e35:2ec0:82b0:4460:3fd3:382:4a71])
+        by smtp.gmail.com with ESMTPSA id s17sm7644244wmc.48.2020.04.29.06.33.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Apr 2020 06:33:22 -0700 (PDT)
+Subject: Re: [PATCH v2] drm/meson: add mode selection limits against specific
+ SoC revisions
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200428092147.13698-1-narmstrong@baylibre.com>
+ <CAFBinCBb=FTH6aken5K9zoedBPYBJUCSj0eA+_Eghv+mnU_3vg@mail.gmail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <f7aadb74-4351-3c55-7d99-afabc34b0712@baylibre.com>
+Date:   Wed, 29 Apr 2020 15:33:21 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200429132743.1295615-1-arnd@arndb.de>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="hGiVpMqgzQBpw32GEM0P8G7xiVUYVMVde"
-X-Provags-ID: V03:K1:6Q3p/I25aT/DaKPoGA/+zWyOb+WMYiqs5U6uPmtlr7dj76bZ7+D
- BfFY+R6zKubIYMZcj2QgyVYivIUpVWn2oPIFjb3Tl2NOvJK/OoumCHgTTrm2piSN0v11TmA
- 3pD7m8ZzzQWPxueevowiK5QEfWzIBDXB5GXbF2ou9R8HNfRZvQwu1Br+IhNIxLqIgriKBHx
- eB9yUtQqOPTlEISDfCRyw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:k0PmqAXVh58=:MqZtzvLdYH8EJ8jP4uG/Uf
- U2HL3/MRlYn1s7jQZXjD1X+clDip5ANN515TUNvFo13QOTU4Uf6Xl6JC2Y2uJdZ9xSec3t7af
- m/1XcLq22K7TBei4aufh2g3nAkBmV0nClvdF30MlCz5GV6opVDsROQA8qGvdcYS5gwbpZjMRg
- xhX9JOa02pHMGADsGcWY4T8e5tccB0W4b39ZEARjhzAyOY4FY4x1WSLra4211Fp6GoZeQqjwd
- APfirAE4XpVey+YFErUV0cp8cwU+qaKywOztFUEuN9Mt4vY6JENUsGykMIboDzcqhT2rOUaqF
- l0wnWISnAx1Y7hYwyLxI0HZnuTJX29f2/puDpIHBXMDh+IuG+3uvCWWf9aTkK8OdhIywVnUXy
- xocnELtrJnsa4QQrPJtz8dsTsEryJ7kvfzW7CNKlv67PoOjqPx+qhdNTGzhEUuQOkleGOOFXw
- Qtkvm/bIpipqxRb5A4XlF9RNAHvQbQ4PRZBiwRMDHaH1RYRVDZbca90H37vATVAc+Ts04D2M9
- 9LQ4GwAZ18EA+dR2HgxrQgU7ij6COHkCEyDz78DA5Kvn4ZEVM8BjLouYEIe4ILPKFNJGSaLxC
- cOmZGybblXpFHAKuhINtP9ZyDPzaoL6awEcMbZZ+60n6nIOywI6ympRGsWAxm5KMnFu0ywwkH
- bbW4W9cHOt84zIJ53GVN3emGuTP/MvQoIar9+qOlFsbOeWjBkLhohIW6e3fC18fiEc3et3ToD
- ZRKjt3QyeFZoyR5egBFNMRcFRAuskjtrs0fdk4IepzOtj+ZWwggL3heP+OJMl34RCTNvAT+e4
- t17ZiDRNCo65W+GhXQ9+M9jxmSqVnRtd4rHPH42PaRI+R469G2slqV3Kjl7UXrjjV7SKop7Jl
- 1XX9E/Tsn96TpxcFBxGctDKtVv/iaf/tLor+iYTMGu4fCx13UlyjXYWQsSMOeEfRN868dkaV+
- arc2prIL2Cuci7CwZcYQVNUMYf8WJDtkU/Vj2+DknXR2+BDvXoz6qxpr02DuLW6Y0r18AAbwL
- jRrQl1IgmHEDz28aXJIf33kBPQnx0myazBeVt7Un4YxmSrqWwX7WxPPcmLrdUuo59uhTuQ0Xc
- sH2OEahzHtzd30JVlMF1p5nL2FOpmrZSNyOvgNeQrOr/ZYG5+/T3PsRD1p8EC+hoDXDoy7FDR
- nPEdwljWz5G63Tm0yPZxeEgBLICZIhbRuBmN5jibGRgayKDZm+mAXGRT7fYEFMiNtjl0nmvtF
- iQQeuUJ6uL/tJqL3P
+In-Reply-To: <CAFBinCBb=FTH6aken5K9zoedBPYBJUCSj0eA+_Eghv+mnU_3vg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---hGiVpMqgzQBpw32GEM0P8G7xiVUYVMVde
-Content-Type: multipart/mixed; boundary="7Tnk2qS8xsife5TvIYPkRuMZifPQXojKQ"
+Hi,
 
---7Tnk2qS8xsife5TvIYPkRuMZifPQXojKQ
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+On 29/04/2020 00:03, Martin Blumenstingl wrote:
+> Hi Neil,
+> 
+> On Tue, Apr 28, 2020 at 11:21 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> The Amlogic S805X/Y uses the same die as the S905X, but with more
+>> limited graphics capabilities.
+>>
+>> This adds a soc version detection adding specific limitations on the HDMI
+>> mode selections.
+>>
+>> Here, we limit to HDMI 1.3a max HDMI PHY clock frequency.
+> for my own education: 1.65GHz from the PLL will be divided down to 165MHz
+> isn't this more like the limit of HDMI 1.2a?
 
+indeed from [1] :
+```
+HDMI 1.3 / 1.3a:
+- Higher speed: HDMI 1.3 increases its single-link bandwidth to 340 MHz (10.2 Gbps) to support the
+demands of future HD display devices, such as higher resolutions, Deep Color and high frame rates.
+In addition, built into the HDMI 1.3 specification is the technical foundations that will let future
+versions of HDMI reach significantly higher speeds.
+```
 
+So yes, it must be HDMI 1.2a, I'll fixup while applying.
 
-On 2020/4/29 =E4=B8=8B=E5=8D=889:27, Arnd Bergmann wrote:
-> Some older compilers like gcc-4.8 warn about mismatched curly
-> braces in a initializer:
->=20
-> fs/btrfs/backref.c: In function 'is_shared_data_backref':
-> fs/btrfs/backref.c:394:9: error: missing braces around
-> initializer [-Werror=3Dmissing-braces]
->   struct prelim_ref target =3D {0};
->          ^
-> fs/btrfs/backref.c:394:9: error: (near initialization for
-> 'target.rbnode') [-Werror=3Dmissing-braces]
->=20
-> Use the GNU empty initializer extension to avoid this.
->=20
-> Fixes: ed58f2e66e84 ("btrfs: backref, don't add refs from shared block =
-when resolving normal backref")
+> 
+>> Changes sinces v1:
+>> - Moved frequency check in the vclk code, and also checks DMT modes
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> 
+> This looks good to me based on the current limitations of meson_vclk.c
+> If we switch to CCF based VPU clock rate changes then we should do
+> this in the clock driver by calling clk_hw_set_rate_range(hdmi_pll, 0,
+> 1.65GHz)
+> 
+> The good thing is: we can re-use struct meson_drm_soc_limits even
+> after switching to CCF.
+> We will just need to set the max PHY freq using
+> clk_round_rate(hdmi_pll, ULONG_MAX)
 
-OK, at least this fix is mentioning it's older gcc causing problem, and
-the fix using GNU extension is also clear.
+Exact !
 
-Reviewed-by: Qu Wenruo <wqu@suse.com>
+Neil
 
-Thanks,
-Qu
+> 
+> 
+> Martin
+> 
 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  fs/btrfs/backref.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/fs/btrfs/backref.c b/fs/btrfs/backref.c
-> index 60a69f7c0b36..ac3c34f47b56 100644
-> --- a/fs/btrfs/backref.c
-> +++ b/fs/btrfs/backref.c
-> @@ -392,7 +392,7 @@ static int is_shared_data_backref(struct preftrees =
-*preftrees, u64 bytenr)
->  	struct rb_node **p =3D &preftrees->direct.root.rb_root.rb_node;
->  	struct rb_node *parent =3D NULL;
->  	struct prelim_ref *ref =3D NULL;
-> -	struct prelim_ref target =3D {0};
-> +	struct prelim_ref target =3D {};
->  	int result;
-> =20
->  	target.parent =3D bytenr;
->=20
-
-
---7Tnk2qS8xsife5TvIYPkRuMZifPQXojKQ--
-
---hGiVpMqgzQBpw32GEM0P8G7xiVUYVMVde
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEELd9y5aWlW6idqkLhwj2R86El/qgFAl6pgecACgkQwj2R86El
-/qh83Af+Mi6sxc8pKMdHYx0GySA15pJkfgTmRYbEsqBSoFhbBiowh1ahHS0oM2tY
-Zk27iTPEz/Q5506fJnW+i7r/ctHmPF7JQE+xIzTS6TIWtiSuYyDs1vYXmUfC5W8m
-saz/VulS5un9H08KzVzl/GrsJIW4OTTDMpQXEjJz9+DWDOuA1Lob7I/ew2RSrNHY
-HDEd28yah/ryDK93cMFElZCH84aqaIxHlminqHgsYYd4etPYSMfCYPcg/wCPGlLp
-tBKOHWPA22nIML8VE6rrYUS78anvW7c8Ec0uXdFyKBUFaScWfhyn0/CljP8qVIZ4
-PI8OF0HuiaaETOce/6YY1QLZQWme1g==
-=r/5k
------END PGP SIGNATURE-----
-
---hGiVpMqgzQBpw32GEM0P8G7xiVUYVMVde--
+[1] https://denon.custhelp.com/app/answers/detail/a_id/192/~/differences-between-hdmi-versions-1.1%2C-1.2%2C-1.3a%2C-1.4-and-2.0%3F
