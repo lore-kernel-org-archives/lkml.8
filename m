@@ -2,108 +2,125 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568C5C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2A2C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 304472083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 171C320BED
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:34:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="se6XABJR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="KSj5SecT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgD2Vd4 (ORCPT
+        id S1727096AbgD2VeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 17:33:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43544 "EHLO
+        Wed, 29 Apr 2020 17:34:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726511AbgD2Vdz (ORCPT
+        by vger.kernel.org with ESMTP id S1726511AbgD2VeP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 17:33:55 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0EF9C03C1AE;
-        Wed, 29 Apr 2020 14:33:54 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id w18so1976097qvs.3;
-        Wed, 29 Apr 2020 14:33:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wY8xzcZXiZde7TJl9Xy1dRAvvuucPAiZm9ruZU0s2jU=;
-        b=se6XABJRF04/CCxY7HXjp6MyXJAF9PPqHIYHcAA1nThgrpn9/7axKm+tFMc3vDTjzU
-         mNZaU6XAy54XUj7LIjr8PUQ1/1k2W6ZZ5gbxHn8S+O42+bMa9g5dXiLBM784Yav83sB+
-         dy5Q3eeX/NakEDD2SmF7Rd01V1GTSjcMcBnLS3xyS0UgYTKSuNTTLyMr2P1FjsUyYhjs
-         /VfcUk7IhYREQ4UAoOu6i9lT7UAMhNxWlDcl9cE+p+spn1zCXebfxQ23BXytvA1eV7hU
-         qTEORwssr3hHKyZGcn74K1aLdTgfXTV3qhh1MkqvaRb6Ssmm4+l0M9oSD0eOePKBCK/t
-         cUDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=wY8xzcZXiZde7TJl9Xy1dRAvvuucPAiZm9ruZU0s2jU=;
-        b=brthcojd6lLR+3yxDMiobJenWsw5fydz8DQux/vIWmbGDj3/kbsnuKn2Uy9cPPkiom
-         NumOVxtOZzCj+85xv3WMWQHrMN9dUcg6OV9cqcNz6DGJ9Qf4zEknb3MFN1TtzfvVdK40
-         mMKWWF6AmaBhsoGnG8afCYTPX1QbTNoZ4G7NVg7i2bCKCY0QwbjPKEIOd7613QA2HMJ0
-         FKSdQRbir30n1ynuAhnM/O7+nMHoRsu7ASnk59GtHyZD8YiOsnsS+YlFfWsTXl66paV1
-         WqXfefR6nNEvguo3caTEGSqSRCgVk5JPBfxhelq++eLgPnRws6He/iETIh5C/OkAmnY7
-         EJ2w==
-X-Gm-Message-State: AGi0PuaQSbUJRHiUWlpQb4qa/ZvV20O5oI0ywYabK8bTTIrcSFOKdnvN
-        tT3ur5+Hy2LCX/uxwRlIzgjkWT9wKUE=
-X-Google-Smtp-Source: APiQypIVn3vPjTC9rjCBjc8tdaapVgCBM7xpsOd6SxMlPgLxpAKfHkY7+se3/KmotI9DCJIVBnuWSQ==
-X-Received: by 2002:a0c:f791:: with SMTP id s17mr34986045qvn.36.1588196033633;
-        Wed, 29 Apr 2020 14:33:53 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id t1sm349746qtd.65.2020.04.29.14.33.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 14:33:52 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Wed, 29 Apr 2020 17:33:51 -0400
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 08/10] efi/x86: Drop soft_limit for x86 initrd loading
-Message-ID: <20200429213351.GA1621173@rani.riverdale.lan>
-References: <20200429174120.1497212-1-nivedita@alum.mit.edu>
- <20200429174120.1497212-10-nivedita@alum.mit.edu>
- <CAMj1kXFe0eEHnijuB3OGM2moHw0xH5viFvCiQ6Y0cLG7s=iHfg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXFe0eEHnijuB3OGM2moHw0xH5viFvCiQ6Y0cLG7s=iHfg@mail.gmail.com>
+        Wed, 29 Apr 2020 17:34:15 -0400
+Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D46E6C03C1AE;
+        Wed, 29 Apr 2020 14:34:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1588196052;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=APYsrPKLpxWrEqgNU863cTg+ycwDHFE8CKynHgQnywo=;
+        b=KSj5SecTJLl+K4JgUgvaqKUC0QzrdzGyTV9i10tWK5DfV0YbIRki8KPas2S6dUBGR+
+        71iVcviOdJAkHhVpuC09LhDiWeEH+HuwUafTkInwCEMvSJKowqAMgUT26a/Nu4ePHKrn
+        Od3GckUmSC9hcfoZ+7Y1EDkBl5JbeyuHoozfUU/8LnVsowoBYSycMSdJ+bSABhK2+cwY
+        7ruhUpBKRqcPwqEeJpARdWNpOPRb4fzmuEBG2jI1SEiMS1LuHeKrUQcaok4Ejs8CTISh
+        ZlE7CU+J4uR4F1djqs6y1fhalMmrJJVgRG7rPHqXquG8T3TzGtmMTkXeOj/D+ILtsrCX
+        T3Gw==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGHPrvwDWuZw=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
+        with ESMTPSA id R0acebw3TLY1W3U
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Wed, 29 Apr 2020 23:34:01 +0200 (CEST)
+Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime autosuspend
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <E8575FE4-4BC2-41B7-B574-339C58D9CB5E@goldelico.com>
+Date:   Wed, 29 Apr 2020 23:34:00 +0200
+Cc:     Evgeniy Polyakov <zbr@ioremap.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <891CBD28-3F91-493D-AD80-6575608846A4@goldelico.com>
+References: <3197C3F0-DEB9-4221-AFBD-4F2A08C84C4C@goldelico.com> <20200417164340.3d9043d1@aktux> <6430AF54-849E-456B-8DB0-B4478BBDB78D@goldelico.com> <20200417150721.GL37466@atomide.com> <8E062482-5D5D-4837-9980-D6C708DD24D4@goldelico.com> <20200420150802.GR37466@atomide.com> <D1A77603-11FB-407F-B480-82C57E742C51@goldelico.com> <20200421085336.32cf8ffe@aktux> <20200421180220.GB37466@atomide.com> <70F19A6E-7B36-4873-9364-F284A14EE3A0@goldelico.com> <20200421182017.GC37466@atomide.com> <D3E40A6A-39B8-4F3F-9ABC-28EAE8D623A6@goldelico.com> <20200422120418.49a40c75@aktux> <6E3A50D9-0F15-4A56-8C5E-7CDC63E8AF9F@goldelico.com> <A2AC3E81-49B2-4CF2-A7CF-6075AEB1B72D@goldelico.com> <44AD9673-AE02-498F-A5CC-48499DF226E3@goldelico.com> <E8575FE4-4BC2-41B7-B574-339C58D9CB5E@goldelico.com>
+To:     Andreas Kemnade <andreas@kemnade.info>,
+        Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 09:05:51PM +0200, Ard Biesheuvel wrote:
-> On Wed, 29 Apr 2020 at 19:41, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > Currently the EFI stub attempts to load initrd(s) specified on the
-> > command line below hdr->initrd_addr_max (2G) and if that fails, falls
-> > back to allocating at an unrestricted address.
-> >
-> > The only case when loading at a low address helps is for the 32-bit
-> > kernel, where the initrd must be copied by the kernel into lowmem if
-> > it's not there already. The limit specified in hdr->initrd_addr_max is
-> > insufficient to ensure this in any case, since lowmem by default will
-> > extend to about 0.9G rather than 2G, and we don't attempt to load the
-> > initrd in lowmem at all for the new device-path based initrd.
-> >
-> > Simplify the code by dropping this optimization for the command line
-> > initrd(s) as well.
-> >
-> > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> 
-> It is not really an optimization, unfortunately. Commit 47226ad4f4cfd
-> has the details, but in short, loading above 4 GB broke some
-> platforms, so below 4 GB had to remain the default.
-> 
-> This was 6 years ago, and so we might be able to revisit this, but
-> characterising it as a mere optimization is inaccurate.
-> 
+Hi,
 
-Drat. Ok so I guess this patch has to be dropped then.
+> Am 25.04.2020 um 12:37 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
+> 
+> 
+>> Am 25.04.2020 um 12:29 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
+>> 
+>> H
+>> The things start to get "fixed" when the hdq_isr
+>> jumps to 6 indicating
+>> 
+>> OMAP_HDQ_INT_STATUS_RXCOMPLETE | OMAP_HDQ_INT_STATUS_TXCOMPLETE
+>> 
+>> So I am getting more inclined to believe that it is
+>> not a power management issue but some piggybacked
+>> change to how interrupts are handled.
+>> Especially hdq_reset_irqstatus.
+>> 
+>> So I will add a printk to hdq_reset_irqstatus
+>> to see what value it had before being reset.
+> 
+> I now did check the log during boot and there is the
+> reverse situation. Initially it works but suddenly
+> hdq_isr becomes 6 and then trouble starts.
+> 
+> So the key problem is that both, the RX and the TX
+> interrupts may be set and then, the code resets
+> everything to 0 and looses either one.
+> 
+> I wonder if that is an issue by two processes reading
+> hdq in parallel.
+> 
+> Another question is how independent command-writes + result-reads
+> are properly serialized and locked so that they don't overlap?
+
+I have reworked the way the spinlocks, setting and resetting
+of the hdq_irqstatus bits are done and now it works right from
+start of boot. Without any timeouts or delays.
+
+I am not exactly sure what went wrong, but it seems as if
+the read is already done when the write interrupt status
+bit is processed. Then, the old logic did wipe out both
+bits by hdq_reset_irqstatus() and the read code did timeout
+because it did not notice that the data had already been
+available. This may depend on other system activities so
+that it can explain why other tests didn't reveal it.
+
+omap_hdq_runtime_resume() and omap_hdq_runtime_suspend()
+also behave fine.
+
+Before I can post something I need to clean up my hacks
+and add similar fixes to omap_hdq_break() and omap_w1_triplet()
+where I hope that I don't break those...
+
+BR and thanks,
+Nikolaus
+
