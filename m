@@ -2,124 +2,110 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B54C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 05:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B656C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 05:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C77FA2072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 05:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79F5D206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 05:44:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZFl1+Jgu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbgD2FmX (ORCPT
+        id S1726495AbgD2Fov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 01:42:23 -0400
-Received: from mga04.intel.com ([192.55.52.120]:16451 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbgD2FmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 01:42:21 -0400
-IronPort-SDR: rOF89x8Gpn8wmQyncf9T3gtTlwhYQWQqySWipcuSiKPjPgz4GIesihmUmV8UuEsatzwyCipNUM
- PuH7dFQ1yvAw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 22:42:20 -0700
-IronPort-SDR: M3YsKHaDWz7UDbX8ZjfR5lNn57yOKCtKJGxNvx0P6bF/G4LQXMY+brLeZaZvU9OmE76njqtSIJ
- FJ4I9ZUu56qg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,330,1583222400"; 
-   d="scan'208";a="404933646"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.210.254]) ([10.254.210.254])
-  by orsmga004.jf.intel.com with ESMTP; 28 Apr 2020 22:42:14 -0700
-Cc:     baolu.lu@linux.intel.com,
-        Srivatsa Vaddagiri <vatsa@codeaurora.org>,
-        tsoni@codeaurora.org, virtio-dev@lists.oasis-open.org,
-        konrad.wilk@oracle.com, jan.kiszka@siemens.com,
-        jasowang@redhat.com, christoffer.dall@arm.com,
-        virtualization@lists.linux-foundation.org, alex.bennee@linaro.org,
-        iommu@lists.linux-foundation.org, stefano.stabellini@xilinx.com,
-        will@kernel.org, linux-kernel@vger.kernel.org,
-        pratikp@codeaurora.org
-Subject: Re: [PATCH 5/5] virtio: Add bounce DMA ops
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-References: <1588073958-1793-1-git-send-email-vatsa@codeaurora.org>
- <1588073958-1793-6-git-send-email-vatsa@codeaurora.org>
- <20200428121232-mutt-send-email-mst@kernel.org>
- <20200428174952.GA5097@quicinc.com>
- <20200428163448-mutt-send-email-mst@kernel.org>
- <275eba4b-dd35-aa95-b2e3-9c5cbf7c6d71@linux.intel.com>
- <20200429004531-mutt-send-email-mst@kernel.org>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <b676430c-65b3-096e-ca48-ceebf10f4b28@linux.intel.com>
-Date:   Wed, 29 Apr 2020 13:42:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 01:44:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbgD2Fov (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 01:44:51 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0512AC03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 22:44:51 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id c21so447976plz.4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 22:44:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NDFxg++eD1+RNatg0LEkYVk+fTXxx1+fMgnRzfGeuOc=;
+        b=ZFl1+JgulcKUI4Z0turXxsq7c5UiKjHXVoMW4gqGdqvgC5/w/9mW4JfWjmr6/sTvkK
+         ALmTcejusRpPD0UDoLgCrO97Fqh3ZZC9WKdgm1zH4uJO9Od1pbqbXBzYrJKUEEay3m9P
+         B5iLs4A9nyz/fj+th00q+bnVie+LKBIUMYPZg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NDFxg++eD1+RNatg0LEkYVk+fTXxx1+fMgnRzfGeuOc=;
+        b=oN/FAEjxiL+5A773wJcoLFvl/ODf/T0tFrHTN8FIa+mrHex2LNZZa8cFGgs2qd7XvE
+         c550HKWPH6OUIfGF0Y4AMs79K5R0FVIylfWzvBVdEr2kMzxJB6qJoNZRYo7XmBPFZqsb
+         XyMjapGX5GDMm9lqEoiikbAONYwuITg8/w20QhLWHrFvXbJZALhYhnoXwm2McDE2t8JZ
+         R6Au66Ks86YU6U2do5sErrgbD/T1e52gSnEK2i+jfok8RHwBNIA5gn+1S8qBGyHGFLWI
+         PKMUJ/O7eMwhM10YaC3boBA+DuXvUBDKSZ4gm8tm+rpayTk7KGencw2TFg+5zDA1yOQv
+         j2mA==
+X-Gm-Message-State: AGi0Pub7u2WA6TwPHz4URjZx8oh/xlDhM+QUOVrDuMsIjhXcFPOD4jSk
+        3Q27a+AzRVhR7mVozizi0xAeb4Oygsc=
+X-Google-Smtp-Source: APiQypL/MIbg/9tjxnw8dIUHOPEjuIZxgqb1N0yLpBKAcO7Cau6XF3Y87vR/NySCkF2shkCbsPnlqw==
+X-Received: by 2002:a17:90a:e38c:: with SMTP id b12mr1158873pjz.102.1588139090096;
+        Tue, 28 Apr 2020 22:44:50 -0700 (PDT)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
+        by smtp.gmail.com with ESMTPSA id 141sm79944pfz.171.2020.04.28.22.44.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 22:44:49 -0700 (PDT)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     heikki.krogerus@linux.intel.com, bleung@chromium.org,
+        Prashant Malani <pmalani@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org (open list:USB TYPEC CLASS)
+Subject: [PATCH v2] usb: typec: mux: intel: Handle alt mode HPD_HIGH
+Date:   Tue, 28 Apr 2020 22:44:28 -0700
+Message-Id: <20200429054432.134178-1-pmalani@chromium.org>
+X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
 MIME-Version: 1.0
-In-Reply-To: <20200429004531-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/29 12:57, Michael S. Tsirkin wrote:
-> On Wed, Apr 29, 2020 at 10:22:32AM +0800, Lu Baolu wrote:
->> On 2020/4/29 4:41, Michael S. Tsirkin wrote:
->>> On Tue, Apr 28, 2020 at 11:19:52PM +0530, Srivatsa Vaddagiri wrote:
->>>> * Michael S. Tsirkin<mst@redhat.com>  [2020-04-28 12:17:57]:
->>>>
->>>>> Okay, but how is all this virtio specific?  For example, why not allow
->>>>> separate swiotlbs for any type of device?
->>>>> For example, this might make sense if a given device is from a
->>>>> different, less trusted vendor.
->>>> Is swiotlb commonly used for multiple devices that may be on different trust
->>>> boundaries (and not behind a hardware iommu)?
->>> Even a hardware iommu does not imply a 100% security from malicious
->>> hardware. First lots of people use iommu=pt for performance reasons.
->>> Second even without pt, unmaps are often batched, and sub-page buffers
->>> might be used for DMA, so we are not 100% protected at all times.
->>>
->>
->> For untrusted devices, IOMMU is forced on even iommu=pt is used;
-> 
-> I think you are talking about untrusted *drivers* like with VFIO.
+According to the PMC Type C Subsystem (TCSS) Mux programming guide rev
+0.6, when a device is transitioning to DP Alternate Mode state, if the
+HPD_STATE (bit 7) field in the status update command VDO is set to
+HPD_HIGH, the HPD_HIGH field in the Alternate Mode request “mode_data”
+field (bit 14) should also be set. Ensure the bit is correctly handled
+while issuing the Alternate Mode request.
 
-No. I am talking about untrusted devices like thunderbolt peripherals.
-We always trust drivers hosted in kernel and the DMA APIs are designed
-for them, right?
+Signed-off-by: Prashant Malani <pmalani@chromium.org>
+Fixes: 6701adfa9693 ("usb: typec: driver for Intel PMC mux control")
+---
 
-Please refer to this series.
+Changes in v2:
+- Clarified the commit message to mention the proper field names.
 
-https://lkml.org/lkml/2019/9/6/39
+ drivers/usb/typec/mux/intel_pmc_mux.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Best regards,
-baolu
+diff --git a/drivers/usb/typec/mux/intel_pmc_mux.c b/drivers/usb/typec/mux/intel_pmc_mux.c
+index f5c5e0aef66f..c599112559e7 100644
+--- a/drivers/usb/typec/mux/intel_pmc_mux.c
++++ b/drivers/usb/typec/mux/intel_pmc_mux.c
+@@ -157,6 +157,10 @@ pmc_usb_mux_dp(struct pmc_usb_port *port, struct typec_mux_state *state)
+ 	req.mode_data |= (state->mode - TYPEC_STATE_MODAL) <<
+ 			 PMC_USB_ALTMODE_DP_MODE_SHIFT;
+ 
++	if (data->status & DP_STATUS_HPD_STATE)
++		req.mode_data |= PMC_USB_DP_HPD_LVL <<
++				 PMC_USB_ALTMODE_DP_MODE_SHIFT;
++
+ 	return pmc_usb_command(port, (void *)&req, sizeof(req));
+ }
+ 
+-- 
+2.26.2.303.gf8c07b1a785-goog
 
-> 
-> On the other hand, I am talking about things like thunderbolt
-> peripherals being less trusted than on-board ones.
-
-
-
-> 
-> Or possibly even using swiotlb for specific use-cases where
-> speed is less of an issue.
-> 
-> E.g. my wifi is pretty slow anyway, and that card is exposed to
-> malicious actors all the time, put just that behind swiotlb
-> for security, and leave my graphics card with pt since
-> I'm trusting it with secrets anyway.
-> 
-> 
->> and
->> iotlb flush is in strict mode (no batched flushes); ATS is also not
->> allowed. Swiotlb is used to protect sub-page buffers since IOMMU can
->> only apply page granularity protection. Swiotlb is now used for devices
->> from different trust zone.
->>
->> Best regards,
->> baolu
-> 
