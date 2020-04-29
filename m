@@ -2,137 +2,116 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BBDC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1702C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69F84208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB441206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:30:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="K6geIgU7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LgIeyeiv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgD2R3s (ORCPT
+        id S1726937AbgD2Ram (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:29:48 -0400
-Received: from mail.efficios.com ([167.114.26.124]:38294 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726580AbgD2R3r (ORCPT
+        Wed, 29 Apr 2020 13:30:42 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:10491 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726755AbgD2Ral (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:29:47 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 9AA19294F4F;
-        Wed, 29 Apr 2020 13:29:46 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id wV5krUHBi7wo; Wed, 29 Apr 2020 13:29:46 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 40FDA294F4E;
-        Wed, 29 Apr 2020 13:29:46 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 40FDA294F4E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1588181386;
-        bh=D1YIauERmx7u1Xcu9eVlzjzTdRrs1DrzoctdbB6KdM0=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=K6geIgU71fgZlYvhOJM7l6fYqsCXHDru8cfCuvKK1PiXigLG4tKAB8U+cYaoJsXBT
-         ywB9PVBmR4M264nW3U8T90sqpqGR7Hria3Nw8Y+Uw+ISr0s+BxrQKZcNSFaJABTOOD
-         zldAHt6pKag764XmA9wJu+fNJ4Romd2XNDr0ntnk2r+TNn3lzczmiYXkvpDcsNfueY
-         RXzs5Uy2ib1Z7WT2ogoWpi3N1vul76XCN2zcz3XX+ifNUimJDUTfiorBBIPff4I/xf
-         N7eYKzfUn7hyoWzq/nQHkh1cRjrkx2m9nQPFjtXrrnf9uJyQv5wI7A4v5tFNXgYjo6
-         AqivUff9WIlIA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id wM9fp5kTRvk8; Wed, 29 Apr 2020 13:29:46 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 2D22A29528E;
-        Wed, 29 Apr 2020 13:29:46 -0400 (EDT)
-Date:   Wed, 29 Apr 2020 13:29:46 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     rostedt <rostedt@goodmis.org>
-Cc:     Joerg Roedel <jroedel@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
-Message-ID: <951556503.76104.1588181386082.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200429125245.5a804f62@gandalf.local.home>
-References: <20200429054857.66e8e333@oasis.local.home> <20200429105941.GQ30814@suse.de> <20200429082854.6e1796b5@oasis.local.home> <20200429100731.201312a9@gandalf.local.home> <20200429161747.GS30814@suse.de> <20200429162026.GT30814@suse.de> <20200429125245.5a804f62@gandalf.local.home>
-Subject: Re: [RFC][PATCH] x86/mm: Sync all vmalloc mappings before
- text_poke()
+        Wed, 29 Apr 2020 13:30:41 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588181441; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=k1LxYJkImQ30ypmeQ6MNMFerbkjFb8uValw6syMj8iM=; b=LgIeyeivtZhbTNovuZF2pjIhXuCuBjEFcNuuSX07zYb1eCD7Yb3FBtTo/h6riJf+NcGkWDMw
+ ij9U4pDngv9Xz/3R3hbKbg3OG6rQnopASyJpXmCKAgxKhoPzwsicOYaRmpYd+qKtSrbv7qVo
+ 0Q+JUm0aDv4hzvX4dx56XC/ZrY8=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea9b9ad.7fa23d9e4340-smtp-out-n03;
+ Wed, 29 Apr 2020 17:30:21 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B3407C433F2; Wed, 29 Apr 2020 17:30:21 +0000 (UTC)
+Received: from [10.46.162.249] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: hemantk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E2E9DC433CB;
+        Wed, 29 Apr 2020 17:30:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E2E9DC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
+Subject: Re: [PATCH v2 3/8] bus: mhi: core: Read transfer length from an event
+ properly
+To:     Jeffrey Hugo <jhugo@codeaurora.org>,
+        Bhaumik Bhatt <bbhatt@codeaurora.org>, mani@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1588042766-17496-1-git-send-email-bbhatt@codeaurora.org>
+ <1588042766-17496-4-git-send-email-bbhatt@codeaurora.org>
+ <cbd0698d-52ca-fad6-a658-e6e0009bde66@codeaurora.org>
+From:   Hemant Kumar <hemantk@codeaurora.org>
+Message-ID: <967ee378-bac9-32ba-0110-162dfdb71c1a@codeaurora.org>
+Date:   Wed, 29 Apr 2020 10:30:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF75 (Linux)/8.8.15_GA_3895)
-Thread-Topic: x86/mm: Sync all vmalloc mappings before text_poke()
-Thread-Index: jcBEkkna6hZ/plK+1lnYOdJw4aPR+g==
+In-Reply-To: <cbd0698d-52ca-fad6-a658-e6e0009bde66@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 29, 2020, at 12:52 PM, rostedt rostedt@goodmis.org wrote:
+Hi Jeff
 
-> On Wed, 29 Apr 2020 18:20:26 +0200
-> Joerg Roedel <jroedel@suse.de> wrote:
+On 4/28/20 7:50 AM, Jeffrey Hugo wrote:
+> On 4/27/2020 8:59 PM, Bhaumik Bhatt wrote:
+>> From: Hemant Kumar <hemantk@codeaurora.org>
+>>
+>> When MHI Driver receives an EOT event, it reads xfer_len from the
+>> event in the last TRE. The value is under control of the MHI device
+>> and never validated by Host MHI driver. The value should never be
+>> larger than the real size of the buffer but a malicious device can
+>> set the value 0xFFFF as maximum. This causes device to memory
 > 
->> On Wed, Apr 29, 2020 at 06:17:47PM +0200, Joerg Roedel wrote:
->> > On Wed, Apr 29, 2020 at 10:07:31AM -0400, Steven Rostedt wrote:
->> > > Talking with Mathieu about this on IRC, he pointed out that my code does
->> > > have a vzalloc() that is called:
->> > > 
->> > > in trace_pid_write()
->> > > 
->> > > 	pid_list->pids = vzalloc((pid_list->pid_max + 7) >> 3);
->> > > 
->> > > This is done when -P1,2 is on the trace-cmd command line.
->> > 
->> > And that buffer is written to at any function entry?
->> 
->> What I meant to say, is it possible that the page-fault handler does not
->> complete because at its beginning it calls into trace-code and faults
->> again on the same address?
->> 
+> The device will overflow, or the driver?
+Done.
 > 
-> It should be read only at sched_switch.
+>> overflow (both read or write). Fix this issue by reading minimum of
+>> transfer length from event and the buffer length provided.
+>>
+>> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
+>> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+>> ---
+>>   drivers/bus/mhi/core/main.c | 5 ++++-
+>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+>> index 1ccd4cc..3d468d9 100644
+>> --- a/drivers/bus/mhi/core/main.c
+>> +++ b/drivers/bus/mhi/core/main.c
+>> @@ -521,7 +521,10 @@ static int parse_xfer_event(struct mhi_controller 
+>> *mhi_cntrl,
+>>                   mhi_cntrl->unmap_single(mhi_cntrl, buf_info);
+>>               result.buf_addr = buf_info->cb_buf;
+>> -            result.bytes_xferd = xfer_len;
+>> +
+>> +            /* truncate to buf len if xfer_len is larger */
+>> +            result.bytes_xferd =
+>> +                min_t(u16, xfer_len, buf_info->len);
+>>               mhi_del_ring_element(mhi_cntrl, buf_ring);
+>>               mhi_del_ring_element(mhi_cntrl, tre_ring);
+>>               local_rp = tre_ring->rp;
+>>
 > 
-> Basically, it's a big bitmask, where each bit represents a possible process
-> id (can be 2 gigs if we allow all positive ints!).
-
-I think you mean 2 giga-bit, for 256MB worth of memory, right ?
-
-And AFAIU the PID_MAX_LIMIT is at a maximum of 4 million PIDs in
-include/linux/threads.h, which means 512MB worth of memory for a
-bitmask.
-
-> Then, it is only written when setting it up. Bits 1 and 2 are set here
-> (-P1,2). At context switch, next->pid is checked against this bitmask, and
-> if it is set, it means we should allow this process to be traced.
 > 
-> This mask should only be accessed at sched_switch time, not at other times.
-> And it may read any possible page in that mask depending on the process id
-> of the next task to be scheduled in.
-
-Not sure how relevant it is, but I notice that it is also touched from IPI
-context, see:
-
-on_each_cpu(ignore_task_cpu, tr, 1);
-
-Thanks,
-
-Mathieu
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
