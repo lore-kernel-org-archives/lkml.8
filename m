@@ -2,124 +2,96 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0E8C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E36C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E26582085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEE502085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:32:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgD2Mb4 (ORCPT
+        id S1727099AbgD2McI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:31:56 -0400
-Received: from mga11.intel.com ([192.55.52.93]:18882 "EHLO mga11.intel.com"
+        Wed, 29 Apr 2020 08:32:08 -0400
+Received: from mga05.intel.com ([192.55.52.43]:38142 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbgD2Mb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:31:56 -0400
-IronPort-SDR: Kz2jzlWPxz2lbMCaGF0nA28a24ZVaMVnNLbMduRYuLkA9//9Encjz7l8uvuL7wGpqZ3at8gTbA
- /o6o7cb/TFFg==
+        id S1726554AbgD2McI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 08:32:08 -0400
+IronPort-SDR: MY+iQx1UMuaEkzUiRJfhW0alux81eKnIzFT8Ej/cHiHkpj/4mhB/eb0Dxu6bbpbXl3mb5v8+d2
+ k8Rqn7QOkJ/Q==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 05:31:55 -0700
-IronPort-SDR: wgubizt0x69lH+ZvDFBUTwZpoXVYu6G8bufARnTlZJNrgBmYDO2uhPNPh0A12xREoB/ZT1aOlr
- qqKGELXf9eCQ==
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 05:32:08 -0700
+IronPort-SDR: uECXpProGKoGxHCxtdC7mRXgmn8QiFkNwiIVooF1jMmXrUo4sB3j5Gqj0oYP8ZbWiS7Csftvy+
+ fvlpwCV0FABA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
-   d="scan'208";a="405026231"
-Received: from amasrati-mobl1.ger.corp.intel.com (HELO [10.214.197.183]) ([10.214.197.183])
-  by orsmga004.jf.intel.com with ESMTP; 29 Apr 2020 05:31:48 -0700
-Subject: Re: [PATCH bpf-next v9 0/8] MAC and Audit policy using eBPF (KRSI)
-To:     KP Singh <kpsingh@chromium.org>, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, linux-security-module@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20200329004356.27286-1-kpsingh@chromium.org>
-From:   Mikko Ylinen <mikko.ylinen@linux.intel.com>
-Message-ID: <0165887d-e9d0-c03e-18b9-72e74a0cbd59@linux.intel.com>
-Date:   Wed, 29 Apr 2020 15:31:47 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+   d="scan'208";a="367792649"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 29 Apr 2020 05:32:04 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 29 Apr 2020 15:32:03 +0300
+Date:   Wed, 29 Apr 2020 15:32:03 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, bleung@chromium.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:USB TYPEC CLASS" <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH v2] usb: typec: mux: intel: Handle alt mode HPD_HIGH
+Message-ID: <20200429123203.GB2738754@kuha.fi.intel.com>
+References: <20200429054432.134178-1-pmalani@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20200329004356.27286-1-kpsingh@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200429054432.134178-1-pmalani@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 29/03/2020 02:43, KP Singh wrote:
-> # How does it work?
+On Tue, Apr 28, 2020 at 10:44:28PM -0700, Prashant Malani wrote:
+> According to the PMC Type C Subsystem (TCSS) Mux programming guide rev
+> 0.6, when a device is transitioning to DP Alternate Mode state, if the
+> HPD_STATE (bit 7) field in the status update command VDO is set to
+> HPD_HIGH, the HPD_HIGH field in the Alternate Mode request “mode_data”
+> field (bit 14) should also be set. Ensure the bit is correctly handled
+> while issuing the Alternate Mode request.
 > 
-> The patchset introduces a new eBPF (https://docs.cilium.io/en/v1.6/bpf/)
-> program type BPF_PROG_TYPE_LSM which can only be attached to LSM hooks.
-> Loading and attachment of BPF programs requires CAP_SYS_ADMIN.
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> Fixes: 6701adfa9693 ("usb: typec: driver for Intel PMC mux control")
+
+Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+
+> ---
 > 
-> The new LSM registers nop functions (bpf_lsm_<hook_name>) as LSM hook
-> callbacks. Their purpose is to provide a definite point where BPF
-> programs can be attached as BPF_TRAMP_MODIFY_RETURN trampoline programs
-> for hooks that return an int, and BPF_TRAMP_FEXIT trampoline programs
-> for void LSM hooks.
+> Changes in v2:
+> - Clarified the commit message to mention the proper field names.
+> 
+>  drivers/usb/typec/mux/intel_pmc_mux.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/usb/typec/mux/intel_pmc_mux.c b/drivers/usb/typec/mux/intel_pmc_mux.c
+> index f5c5e0aef66f..c599112559e7 100644
+> --- a/drivers/usb/typec/mux/intel_pmc_mux.c
+> +++ b/drivers/usb/typec/mux/intel_pmc_mux.c
+> @@ -157,6 +157,10 @@ pmc_usb_mux_dp(struct pmc_usb_port *port, struct typec_mux_state *state)
+>  	req.mode_data |= (state->mode - TYPEC_STATE_MODAL) <<
+>  			 PMC_USB_ALTMODE_DP_MODE_SHIFT;
+>  
+> +	if (data->status & DP_STATUS_HPD_STATE)
+> +		req.mode_data |= PMC_USB_DP_HPD_LVL <<
+> +				 PMC_USB_ALTMODE_DP_MODE_SHIFT;
+> +
+>  	return pmc_usb_command(port, (void *)&req, sizeof(req));
+>  }
+>  
+> -- 
+> 2.26.2.303.gf8c07b1a785-goog
 
-I have two systems (a NUC and a qemu VM) that fail to boot if I enable
-the BPF LSM without enabling SELinux first. Anything I might be missing
-or are you able to trigger it too?
+thanks,
 
-For instance, the following additional cmdline args: "lsm.debug=1
-lsm="capability,apparmor,bpf" results in:
-
-[    1.251889] Call Trace:
-[    1.252344]  dump_stack+0x57/0x7a
-[    1.252951]  panic+0xe6/0x2a4
-[    1.253497]  ? printk+0x43/0x45
-[    1.254075]  mount_block_root+0x30c/0x31b
-[    1.254798]  mount_root+0x78/0x7b
-[    1.255417]  prepare_namespace+0x13a/0x16b
-[    1.256168]  kernel_init_freeable+0x210/0x222
-[    1.257021]  ? rest_init+0xa5/0xa5
-[    1.257639]  kernel_init+0x9/0xfb
-[    1.258074]  ret_from_fork+0x35/0x40
-[    1.258885] Kernel Offset: 0x11000000 from 0xffffffff81000000 
-(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-[    1.264046] ---[ end Kernel panic - not syncing: VFS: Unable to mount 
-root fs on unknown-block(253,3)
-
-Taking out "bpf" or adding "selinux" before it boots OK. I've tried
-with both 5.7-rc2 and -rc3.
-
-LSM logs:
-
-[    0.267219] LSM: Security Framework initializing
-[    0.267844] LSM: first ordering: capability (enabled)
-[    0.267870] LSM: cmdline ignored: capability
-[    0.268869] LSM: cmdline ordering: apparmor (enabled)
-[    0.269508] LSM: cmdline ordering: bpf (enabled)
-[    0.269869] LSM: cmdline disabled: selinux
-[    0.270377] LSM: cmdline disabled: integrity
-[    0.270869] LSM: exclusive chosen: apparmor
-[    0.271869] LSM: cred blob size     = 8
-[    0.272354] LSM: file blob size     = 24
-[    0.272869] LSM: inode blob size    = 0
-[    0.273362] LSM: ipc blob size      = 0
-[    0.273869] LSM: msg_msg blob size  = 0
-[    0.274352] LSM: task blob size     = 32
-[    0.274873] LSM: initializing capability
-[    0.275381] LSM: initializing apparmor
-[    0.275880] AppArmor: AppArmor initialized
-[    0.276437] LSM: initializing bpf
-[    0.276871] LSM support for eBPF active
-
--- Regards, Mikko
+-- 
+heikki
