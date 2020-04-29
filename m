@@ -2,170 +2,131 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C84CC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18835C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1846E2184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:11:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588165907;
-	bh=stuUOuISV3CkSo5BnYCB/B2TBItvawvwtYrGJ0F5Wc4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gBj5lQRkaviW/0U5D44uFWyimRLxTVkp1GQfGuKp4jtMkIFzPQT2+0vaS+HX9dhqI
-	 q9NqjYnRB1OjXF/ZICvZAz26o5VSF0LqKlvsNcuTTbbfFDr/tfanZcUGBoocmXvVja
-	 YZq6y3PveFYN1pqfsuYWHACoPf4fcVBNIuXNBkjQ=
+	by mail.kernel.org (Postfix) with ESMTP id 000012072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:14:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgD2NLq (ORCPT
+        id S1726838AbgD2NOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:11:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48806 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726910AbgD2NLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:11:37 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7949F22244;
-        Wed, 29 Apr 2020 13:11:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588165897;
-        bh=stuUOuISV3CkSo5BnYCB/B2TBItvawvwtYrGJ0F5Wc4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CTrcMGBdaLAIWb+LFzdS6vs2ukeEqyR3u84Ib+tgYUJY+2WZcD6tW1ub6JDM4BwfZ
-         P0uc+7UUFtkYLoj5akTgYG8ShG/2rRdBD7bl6InnFEfJx54BDoKwS/S5ukR77mDVFQ
-         UKFvumVuur6MB+AgNaHnyekmXYXbzHcOTS3Ssu70=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 8/8] perf record: Move side band evlist setup to separate routine
-Date:   Wed, 29 Apr 2020 10:11:06 -0300
-Message-Id: <20200429131106.27974-9-acme@kernel.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200429131106.27974-1-acme@kernel.org>
-References: <20200429131106.27974-1-acme@kernel.org>
+        Wed, 29 Apr 2020 09:14:09 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:38659 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbgD2NOI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 09:14:08 -0400
+X-Originating-IP: 93.29.109.196
+Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id F36E26000C;
+        Wed, 29 Apr 2020 13:13:59 +0000 (UTC)
+Date:   Wed, 29 Apr 2020 15:13:59 +0200
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sun6i: dsi: fix gcc-4.8
+Message-ID: <20200429131359.GJ610776@aptenodytes>
+References: <20200428215105.3928459-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yr/DzoowOgTDcSCF"
+Content-Disposition: inline
+In-Reply-To: <20200428215105.3928459-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-It is quite big by now, move that code to a separate
-record__setup_sb_evlist() routine.
+--yr/DzoowOgTDcSCF
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Suggested-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Link: http://lore.kernel.org/lkml/20200428180518.GF5460@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-record.c | 71 +++++++++++++++++++++----------------
- 1 file changed, 41 insertions(+), 30 deletions(-)
+Hi,
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 7a6a89972691..bb3d30616bf3 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1445,6 +1445,44 @@ static int record__process_signal_event(union perf_event *event __maybe_unused,
- 	return 0;
- }
- 
-+static int record__setup_sb_evlist(struct record *rec)
-+{
-+	struct record_opts *opts = &rec->opts;
-+
-+	if (rec->sb_evlist != NULL) {
-+		/*
-+		 * We get here if --switch-output-event populated the
-+		 * sb_evlist, so associate a callback that will send a SIGUSR2
-+		 * to the main thread.
-+		 */
-+		evlist__set_cb(rec->sb_evlist, record__process_signal_event, rec);
-+		rec->thread_id = pthread_self();
-+	}
-+
-+	if (!opts->no_bpf_event) {
-+		if (rec->sb_evlist == NULL) {
-+			rec->sb_evlist = evlist__new();
-+
-+			if (rec->sb_evlist == NULL) {
-+				pr_err("Couldn't create side band evlist.\n.");
-+				return -1;
-+			}
-+		}
-+
-+		if (evlist__add_bpf_sb_event(rec->sb_evlist, &rec->session->header.env)) {
-+			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
-+			return -1;
-+		}
-+	}
-+
-+	if (perf_evlist__start_sb_thread(rec->sb_evlist, &rec->opts.target)) {
-+		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
-+		opts->no_bpf_event = true;
-+	}
-+
-+	return 0;
-+}
-+
- static int __cmd_record(struct record *rec, int argc, const char **argv)
- {
- 	int err;
-@@ -1589,36 +1627,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		goto out_child;
- 	}
- 
--	if (rec->sb_evlist != NULL) {
--		/*
--		 * We get here if --switch-output-event populated the
--		 * sb_evlist, so associate a callback that will send a SIGUSR2
--		 * to the main thread.
--		 */
--		evlist__set_cb(rec->sb_evlist, record__process_signal_event, rec);
--		rec->thread_id = pthread_self();
--	}
--
--	if (!opts->no_bpf_event) {
--		if (rec->sb_evlist == NULL) {
--			rec->sb_evlist = evlist__new();
--
--			if (rec->sb_evlist == NULL) {
--				pr_err("Couldn't create side band evlist.\n.");
--				goto out_child;
--			}
--		}
--
--		if (evlist__add_bpf_sb_event(rec->sb_evlist, &session->header.env)) {
--			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
--			goto out_child;
--		}
--	}
--
--	if (perf_evlist__start_sb_thread(rec->sb_evlist, &rec->opts.target)) {
--		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
--		opts->no_bpf_event = true;
--	}
-+	err = record__setup_sb_evlist(rec);
-+	if (err)
-+		goto out_child;
- 
- 	err = record__synthesize(rec, false);
- 	if (err < 0)
--- 
-2.21.1
+On Tue 28 Apr 20, 23:50, Arnd Bergmann wrote:
+> Older compilers warn about initializers with incorrect curly
+> braces:
+>=20
+> drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c: In function 'sun6i_dsi_encoder_en=
+able':
+> drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c:720:8: error: missing braces aroun=
+d initializer [-Werror=3Dmissing-braces]
+>   union phy_configure_opts opts =3D { 0 };
+>         ^
+> drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c:720:8: error: (near initialization=
+ for 'opts.mipi_dphy') [-Werror=3Dmissing-braces]
+>=20
+> Use the GNU empty initializer extension to avoid this.
 
+Looks good to me:
+Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+
+But maybe use the drm/sun4i: dsi: prefix instead (granted, it wasn't used in
+the commit being fixed).
+
+Cheers,
+
+Paul
+
+> Fixes: bb3b6fcb6849 ("sun6i: dsi: Convert to generic phy handling")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun=
+4i/sun6i_mipi_dsi.c
+> index f6c67dd87a05..aa67cb037e9d 100644
+> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> @@ -718,7 +718,7 @@ static void sun6i_dsi_encoder_enable(struct drm_encod=
+er *encoder)
+>  	struct drm_display_mode *mode =3D &encoder->crtc->state->adjusted_mode;
+>  	struct sun6i_dsi *dsi =3D encoder_to_sun6i_dsi(encoder);
+>  	struct mipi_dsi_device *device =3D dsi->device;
+> -	union phy_configure_opts opts =3D { 0 };
+> +	union phy_configure_opts opts =3D { };
+>  	struct phy_configure_opts_mipi_dphy *cfg =3D &opts.mipi_dphy;
+>  	u16 delay;
+>  	int err;
+> --=20
+> 2.26.0
+>=20
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--yr/DzoowOgTDcSCF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl6pfZcACgkQ3cLmz3+f
+v9EZuwf/c+11FwGVP8LmF3ZNopR32d3cDoA0mLr1vizGfseJVldesiJUy/VuZI7I
+ppIjTfjte/iBHuyGcv8oAc0GQfkJaCvLFlcSkDUGgH5UfPEqxCTGvPLvV0doT77g
+MAUZw1EnVM2zHZ9IvjLmmes2/nvRMs/knC4qf8H8VW2LcFbDqUt+P9SioDHMEOzz
+ZpKNqa7C6Ll/KK7RljKfhk/i1bzakwyEw5Mv31bMBjJ5QeiP+OnLBDBD6ltBfjM7
+f4ODxc85UpxYB9uoRfgQoE2Dk2aN2h2OMTGt7USnEA3HesH1oxRpP7xWpefwHGfY
+oHhO7JHJ8TOwoWS/iIN+wsbHxbDpWw==
+=QQXf
+-----END PGP SIGNATURE-----
+
+--yr/DzoowOgTDcSCF--
