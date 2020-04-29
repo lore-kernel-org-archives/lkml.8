@@ -2,244 +2,337 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BD8C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF56C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44B782070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:58:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="xJr62jWL"
+	by mail.kernel.org (Postfix) with ESMTP id B10A920737
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbgD2A6R (ORCPT
+        id S1726539AbgD2A7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 20:58:17 -0400
-Received: from mga12.intel.com ([192.55.52.136]:6494 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726274AbgD2A6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 20:58:16 -0400
-IronPort-SDR: jys6npQ5W+Cyj8oEJ6xRc5tPhr3n7BI6CZ8mpWRp9DATfSoPXPdYTV/wcybBKge+rH0DwgPnCZ
- KWszfXpztueQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 17:58:16 -0700
-IronPort-SDR: LN4ceVhZ7x8N8342ELfvWV+/WkK2d7WeR1O3PRCrx8YC2+mz2RnD4dgme7sGjRwbR/VfyamLEy
- VVz5RcDeVoTQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,329,1583222400"; 
-   d="scan'208";a="247859891"
-Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
-  by fmsmga007.fm.intel.com with ESMTP; 28 Apr 2020 17:58:16 -0700
-Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
- ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 28 Apr 2020 17:58:15 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.36.54) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Tue, 28 Apr 2020 17:58:15 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eodDZHUZx9NyK/LMFcgXtCYolCbPChzpXpB8gYDK5kSmYKcCX1e76sP0DMxPz/yQM7BFfTL+LU0SV/hkUwVGu1WE4krvQrc8nUDWyy5HXaB5GXqt5qCnM9VpoYe7dvjyURGJZuP08fjCge3HuV97FRDMdqqf1Ix+yCC3ft0HCTurYZK8j1+wY3DAwZQflZsscTxE19T52M16McAe5uyatbGCC0Za0xEeKUl05C3X2ErwamXR2kc6La6I4ZVdBmAgL0uAAugXUBGqnqWnWBJDDoF8wDot/Voxs5XsaLV3Po7dKRaGhPbYlBtw5/BfcuCJ/1xH2a/dNYVyLpFK7JpErw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+OpW1qzZgxNb+1kzNQvuJ3KyVfS/Bp1DIQMlDiX2CjA=;
- b=F4SxVa1FxLsd1ui2uoTJHRgJUVtrfbXTIECN/BlMC0LXYPR9mLJkfEVd7cfZusBS5yf7cy0cpHuLpy22JZq32j66GSQUfHkFbDqJh7LdsrqY0cR4g4c+4lwaf6t3tDBvjC0QnuvFwBkBczyXTd79GGq3H4QwVMoBYZxPQK9PkN+6IvsbkAkNgsTaMaBhX4XRJ8ItY3fpNrGppVsVPeWZ/J5tL7TP6mh8eF74L8BPzhD//4NIqeNL55mwxGnZFmMrsp3hTLlp/PslKYZL7HgD0yjvfabhgiiLuhfljLZNap9568aoVu5kTjRmYFEGiSNRKAOER449Yb0odvX2cMOmMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+OpW1qzZgxNb+1kzNQvuJ3KyVfS/Bp1DIQMlDiX2CjA=;
- b=xJr62jWLDrHBMzzn43ONoJ/tn/3m0zerKwZW1/kprS0bzem3UI45MZYWFKtw1axkJkMnx/HilvKPrKhwCCHosVBWJCeRY5kPYyEW1jbz71yvTGSwtJ2Xt//oVn/6jTF3bC0zH6wRFHi/K9PEGvkFWeSwZkkZ6Yx1ePnsi/XObug=
-Received: from DM6PR11MB3721.namprd11.prod.outlook.com (2603:10b6:5:142::10)
- by DM6PR11MB3610.namprd11.prod.outlook.com (2603:10b6:5:139::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Wed, 29 Apr
- 2020 00:58:14 +0000
-Received: from DM6PR11MB3721.namprd11.prod.outlook.com
- ([fe80::c99e:2207:35b8:6fa5]) by DM6PR11MB3721.namprd11.prod.outlook.com
- ([fe80::c99e:2207:35b8:6fa5%7]) with mapi id 15.20.2937.023; Wed, 29 Apr 2020
- 00:58:14 +0000
-From:   "Wan Mohamad, Wan Ahmad Zainie" 
-        <wan.ahmad.zainie.wan.mohamad@intel.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "kishon@ti.com" <kishon@ti.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH 1/2] dt-bindings: phy: intel: Add documentation for Keem
- Bay eMMC PHY
-Thread-Topic: [PATCH 1/2] dt-bindings: phy: intel: Add documentation for Keem
- Bay eMMC PHY
-Thread-Index: AQHV+38Ct5ErQ2mOFESCzgducVHEHqhhqx6AgC3fF6A=
-Date:   Wed, 29 Apr 2020 00:58:14 +0000
-Message-ID: <DM6PR11MB3721F4B7281CDD101E37A9ABDDAD0@DM6PR11MB3721.namprd11.prod.outlook.com>
-References: <20200316103726.16339-1-wan.ahmad.zainie.wan.mohamad@intel.com>
- <20200316103726.16339-2-wan.ahmad.zainie.wan.mohamad@intel.com>
- <20200330202321.GA9386@bogus>
-In-Reply-To: <20200330202321.GA9386@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.221]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5793077f-b375-4bb8-baa8-08d7ebd865a2
-x-ms-traffictypediagnostic: DM6PR11MB3610:
-x-microsoft-antispam-prvs: <DM6PR11MB3610E2875743E8057C6DC469DDAD0@DM6PR11MB3610.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2043;
-x-forefront-prvs: 03883BD916
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3721.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(346002)(376002)(39850400004)(136003)(396003)(6916009)(26005)(316002)(8676002)(186003)(478600001)(86362001)(52536014)(8936002)(7696005)(4326008)(9686003)(6506007)(55016002)(5660300002)(2906002)(66946007)(66446008)(71200400001)(76116006)(66556008)(64756008)(54906003)(53546011)(33656002)(66476007);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KkBfRnVlw0NUWEuVRNgPtoWT+KOhl5KqzHtYBrQQHhKT0JHhDnmf9CcFBcaWohNM2trmcQAzNoc98pcXmstX9wprcbGpXUEn+U0rCofni4MRZoo7jCSdzwTgVAiaTyRxJTfuuxQHprTxHKEBuJPEfAVgmjuSrlda1s1j9bHJLF/Fyw9j2xfVKpEfgFJSMTIv15GOTJbTQ1cWA8WbZuadV+xrMH4BewyEcqcmAWUboGI43NVblsIw08geqqma+/lIvazvWtn7KyX/Um8MuwJ244ZeBOBy81lOt+eT1VJiweWQEM3gkQTnJ/hgUPBoKVrWIg++sdqenKiSSYeIaItt88yH9fJjJnqbXtwodQ0hxneDMYHFfOdcAaGteLVxKRiOZ+RNoEvp5W379SqAdFJdkQwJmHhBeuGsBuBfhGAsM5YJUC36XrJ6zJtYnInIdotQIZU+FwtdMk1CIQQLPBebinsuJnIlyo1nOcTJyslo4sgg5bxVgA0BHqR0KvOzoHKJx9K6hf+xYl8zecu5DXFt3w==
-x-ms-exchange-antispam-messagedata: LNVqzE/7j22pHhSEGHdg0A2mVQs/RUCE8z977htjlHwt9GhIvYvms62FdayTIfYBe02rVEv7k90Msy3dUOvP9mKLzlJ+LjNxTWw5T8rmZBTwujmbrBl/yq7102nWvAW5lNAFxZPXPGymRdN+qBjRVsqubEicTXeMS5oQotAKRUTMrbUzop89SjOUsGlmIgF6EyF7iP4FQqww3rC+/XSThMZPcVLe3EK7suqIndGN/YS2KHZcIYQwl0+QG1MN204bUriqFejlnSUuAO7iVja6PAmh8Xk2y16CLCARAouNOYCmRjXCFYzRE9WsA8TpgWiyEpABu7DoRzR2QyEK0zk8iyArko88JxeuFVQ7xfdAqWTUSAUULSwcvCPvwNUTHSLGWUDcKMr9SodmAeV1wbywrayi9gNxJde+1/R1rAeNc6/cDFDgo1/jw81Ul/sB2MO+kHdgRz4a3AMoPGrbCSqQ2uI9CbugguK5hgiFa35D49iVmclfelzuduWya/E1SZpg2D/0sRd78/K+mqp6eH/PUru7y0cNMottDd80nk18wKAsgrW2gAi8eunhe8S4wdq/SoWdlD6gnT+qSzbQ8jIiLczTcvqyPJ8vGZISmI7GwQstjJgrLUYSnyBl6a8ApveyoiA8T194O0BBll6yd+g2nxlZtAqtKJAS+k3Q569+ntILzr/jFYY6OVHBBZh7v5j2ozdFBnvR8k1kSJ/Vdmhp+uOuKI68UJk20Q5CKmHe1Y2TklxWgRqATtpAHR0s8n2JZBt7FezC+GI9HmGNpcqcWm4ccDzgyXeKiKbCe5dEObNR4TkafiW4UcF2iBsV1WS4
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 28 Apr 2020 20:59:16 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:46267 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726274AbgD2A7Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 20:59:16 -0400
+Received: by mail-il1-f197.google.com with SMTP id g17so772032iln.13
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 17:59:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=alzlnHvzElgkFCcj9uAJH09B1mPJhI3S0t6xX3E/1RQ=;
+        b=AwghxgZdXO7FAUXf9BupGiXSrHkGUAyXpI98goIOkELCTN2O75eU1nZCeZGcIXKIHY
+         WJjeGeiDTAPktGVk7ABd8lMvFCcq5Er1cWtTvsVb9DGW+JH/MMFySzfN6kJh+lRzAI35
+         rwQ+nKUti8GYh+csCGSDgpXaKsg98r5kgEY1TZ1NZUsPLaAGHZgbkdxXYpoyMHSbaLnY
+         6hO5iwS5Rt8YYOFrK5hBxK2lsOz702KeMcfDhLfiqgO+i2GYOzvYqXqdMm58VMbvTx4Z
+         JfeuhWFig/bZYtSAy1jz2V27DzkBqORjOSb1P0Bl2q8a/slZatN1vsGBLi3W4GubvSN0
+         1YEQ==
+X-Gm-Message-State: AGi0Pua/zZoq3Y3hTeCFEqwyn0SIoEHO0aGOqTNxbDbwjkV2HWy2iA/y
+        0F9hQGzBH8G6uCxaVnciRQAyU+gfwEGmNBeuxkKmNX97najw
+X-Google-Smtp-Source: APiQypLGe/+0Cj2mey0OG0f0/zV3JhbTyVZrmB4JcWybFiNeQI7OHje5oxbKCJnGHX9UaSqJG8j5No8nK+yYYXRMZRNFZvFWNDmy
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5793077f-b375-4bb8-baa8-08d7ebd865a2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2020 00:58:14.5611
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zGl7A8s/IIDTfpBbGn7enRarEbPn327pEHhIu0ttuzZdF914QKKsEF/CI/moxdLn3k5ZaIGePQ8wgdLvRlwfi9/Ek52LqL/64azmbC2JRgr4ghbhGf/kWfiC5WZx9a0o
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3610
-X-OriginatorOrg: intel.com
+X-Received: by 2002:a05:6638:3d2:: with SMTP id r18mr28949634jaq.6.1588121954311;
+ Tue, 28 Apr 2020 17:59:14 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 17:59:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f2771905a46374fe@google.com>
+Subject: possible deadlock in sch_direct_xmit (2)
+From:   syzbot <syzbot+e18ac85757292b7baf96@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    3f2eaebb bpf, riscv: Fix tail call count off by one in RV3..
+git tree:       bpf-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=120d1808100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3b755b963c64ac09
+dashboard link: https://syzkaller.appspot.com/bug?extid=e18ac85757292b7baf96
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e18ac85757292b7baf96@syzkaller.appspotmail.com
+
+======================================================
+WARNING: possible circular locking dependency detected
+5.7.0-rc1-syzkaller #0 Not tainted
+------------------------------------------------------
+syz-executor.4/13161 is trying to acquire lock:
+ffff8880978ed498 (&dev->qdisc_xmit_lock_key#292){+.-.}-{2:2}, at: spin_lock include/linux/spinlock.h:353 [inline]
+ffff8880978ed498 (&dev->qdisc_xmit_lock_key#292){+.-.}-{2:2}, at: __netif_tx_lock include/linux/netdevice.h:4055 [inline]
+ffff8880978ed498 (&dev->qdisc_xmit_lock_key#292){+.-.}-{2:2}, at: sch_direct_xmit+0x2be/0xc20 net/sched/sch_generic.c:311
+
+but task is already holding lock:
+ffff888099bcc898 (&dev->qdisc_xmit_lock_key#303){+.-.}-{2:2}, at: spin_lock include/linux/spinlock.h:353 [inline]
+ffff888099bcc898 (&dev->qdisc_xmit_lock_key#303){+.-.}-{2:2}, at: __netif_tx_lock include/linux/netdevice.h:4055 [inline]
+ffff888099bcc898 (&dev->qdisc_xmit_lock_key#303){+.-.}-{2:2}, at: __dev_queue_xmit+0x26ba/0x30a0 net/core/dev.c:4048
+
+which lock already depends on the new lock.
 
 
-> -----Original Message-----
-> From: Rob Herring <robh@kernel.org>
-> Sent: Tuesday, March 31, 2020 4:23 AM
-> To: Wan Mohamad, Wan Ahmad Zainie
-> <wan.ahmad.zainie.wan.mohamad@intel.com>
-> Cc: kishon@ti.com; mark.rutland@arm.com; linux-kernel@vger.kernel.org;
-> devicetree@vger.kernel.org
-> Subject: Re: [PATCH 1/2] dt-bindings: phy: intel: Add documentation for
-> Keem Bay eMMC PHY
->=20
-> On Mon, Mar 16, 2020 at 06:37:25PM +0800, Wan Ahmad Zainie wrote:
-> > Document Intel Keem Bay eMMC PHY DT bindings.
-> >
-> > Signed-off-by: Wan Ahmad Zainie
-> <wan.ahmad.zainie.wan.mohamad@intel.com>
-> > ---
-> >  .../bindings/phy/intel,keembay-emmc-phy.yaml  | 57
-> +++++++++++++++++++
-> >  1 file changed, 57 insertions(+)
-> >  create mode 100644
-> Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/phy/intel,keembay-
-> emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,keembay-
-> emmc-phy.yaml
-> > new file mode 100644
-> > index 000000000000..af1d62fc8323
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/intel,keembay-emmc-
-> phy.yaml
-> > @@ -0,0 +1,57 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
->=20
-> Dual license new bindings:
->=20
-> (GPL-2.0-only OR BSD-2-Clause)
+the existing dependency chain (in reverse order) is:
 
-Will change in v2.
+-> #1 (&dev->qdisc_xmit_lock_key#303){+.-.}-{2:2}:
+       __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+       _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
+       spin_lock include/linux/spinlock.h:353 [inline]
+       __netif_tx_lock include/linux/netdevice.h:4055 [inline]
+       __dev_queue_xmit+0x26ba/0x30a0 net/core/dev.c:4048
+       neigh_output include/net/neighbour.h:510 [inline]
+       ip6_finish_output2+0x1091/0x25b0 net/ipv6/ip6_output.c:117
+       __ip6_finish_output+0x442/0xab0 net/ipv6/ip6_output.c:143
+       ip6_finish_output+0x34/0x1f0 net/ipv6/ip6_output.c:153
+       NF_HOOK_COND include/linux/netfilter.h:296 [inline]
+       ip6_output+0x239/0x810 net/ipv6/ip6_output.c:176
+       dst_output include/net/dst.h:435 [inline]
+       ip6_local_out+0xaf/0x1a0 net/ipv6/output_core.c:179
+       ip6_send_skb+0xb4/0x340 net/ipv6/ip6_output.c:1865
+       ip6_push_pending_frames+0xbd/0xe0 net/ipv6/ip6_output.c:1885
+       icmpv6_push_pending_frames+0x33a/0x530 net/ipv6/icmp.c:304
+       icmp6_send+0x1b0b/0x23b0 net/ipv6/icmp.c:617
+       icmpv6_send+0xde/0x210 net/ipv6/ip6_icmp.c:43
+       ip6_link_failure+0x26/0x520 net/ipv6/route.c:2640
+       dst_link_failure include/net/dst.h:418 [inline]
+       ip_tunnel_xmit+0x15fc/0x2a65 net/ipv4/ip_tunnel.c:820
+       erspan_xmit+0x90d/0x2910 net/ipv4/ip_gre.c:683
+       __netdev_start_xmit include/linux/netdevice.h:4574 [inline]
+       netdev_start_xmit include/linux/netdevice.h:4588 [inline]
+       xmit_one net/core/dev.c:3477 [inline]
+       dev_hard_start_xmit+0x1a4/0x9b0 net/core/dev.c:3493
+       sch_direct_xmit+0x345/0xc20 net/sched/sch_generic.c:313
+       qdisc_restart net/sched/sch_generic.c:376 [inline]
+       __qdisc_run+0x4d1/0x17b0 net/sched/sch_generic.c:384
+       qdisc_run include/net/pkt_sched.h:134 [inline]
+       qdisc_run include/net/pkt_sched.h:126 [inline]
+       __dev_xmit_skb net/core/dev.c:3668 [inline]
+       __dev_queue_xmit+0x2115/0x30a0 net/core/dev.c:4021
+       neigh_resolve_output net/core/neighbour.c:1489 [inline]
+       neigh_resolve_output+0x566/0x930 net/core/neighbour.c:1469
+       neigh_output include/net/neighbour.h:510 [inline]
+       ip6_finish_output2+0x1091/0x25b0 net/ipv6/ip6_output.c:117
+       __ip6_finish_output+0x442/0xab0 net/ipv6/ip6_output.c:143
+       ip6_finish_output+0x34/0x1f0 net/ipv6/ip6_output.c:153
+       NF_HOOK_COND include/linux/netfilter.h:296 [inline]
+       ip6_output+0x239/0x810 net/ipv6/ip6_output.c:176
+       dst_output include/net/dst.h:435 [inline]
+       NF_HOOK include/linux/netfilter.h:307 [inline]
+       rawv6_send_hdrinc net/ipv6/raw.c:687 [inline]
+       rawv6_sendmsg+0x20f6/0x3900 net/ipv6/raw.c:944
+       inet_sendmsg+0x99/0xe0 net/ipv4/af_inet.c:807
+       sock_sendmsg_nosec net/socket.c:652 [inline]
+       sock_sendmsg+0xcf/0x120 net/socket.c:672
+       ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
+       ___sys_sendmsg+0x100/0x170 net/socket.c:2416
+       __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
+       do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+       entry_SYSCALL_64_after_hwframe+0x49/0xb3
 
->=20
-> > +# Copyright 2020 Intel Corporation
-> > +%YAML 1.2
-> > +---
-> > +$id: "http://devicetree.org/schemas/phy/intel,keembay-emmc-
-> phy.yaml#"
-> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> > +
-> > +title: Intel Keem Bay eMMC PHY
-> > +
-> > +maintainers:
-> > +  - Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - intel,keembay-emmc-phy
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: emmcclk
-> > +
-> > +  intel,syscon:
-> > +    $ref: '/schemas/types.yaml#/definitions/phandle'
->=20
-> Make this binding  a child of the syscon and get rid of this.
->=20
-> > +    description:
-> > +      A phandle to a syscon device used to access core/phy configurati=
-on
-> > +      registers.
-> > +
-> > +  "#phy-cells":
-> > +    const: 0
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - intel,syscon
-> > +  - "#phy-cells"
-> > +
-> > +examples:
-> > +  - |
-> > +    mmc_phy_syscon: syscon@20290000 {
-> > +          compatible =3D "simple-mfd", "syscon";
-> > +          reg =3D <0x0 0x20290000 0x0 0x54>;
-> > +    };
-> > +
-> > +    emmc_phy: mmc_phy@20290000 {
->=20
-> phy@...
+-> #0 (&dev->qdisc_xmit_lock_key#292){+.-.}-{2:2}:
+       check_prev_add kernel/locking/lockdep.c:2515 [inline]
+       check_prevs_add kernel/locking/lockdep.c:2620 [inline]
+       validate_chain kernel/locking/lockdep.c:3237 [inline]
+       __lock_acquire+0x2ab1/0x4c50 kernel/locking/lockdep.c:4355
+       lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4934
+       __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+       _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
+       spin_lock include/linux/spinlock.h:353 [inline]
+       __netif_tx_lock include/linux/netdevice.h:4055 [inline]
+       sch_direct_xmit+0x2be/0xc20 net/sched/sch_generic.c:311
+       qdisc_restart net/sched/sch_generic.c:376 [inline]
+       __qdisc_run+0x4d1/0x17b0 net/sched/sch_generic.c:384
+       qdisc_run include/net/pkt_sched.h:134 [inline]
+       qdisc_run include/net/pkt_sched.h:126 [inline]
+       __dev_xmit_skb net/core/dev.c:3668 [inline]
+       __dev_queue_xmit+0x2115/0x30a0 net/core/dev.c:4021
+       neigh_resolve_output net/core/neighbour.c:1489 [inline]
+       neigh_resolve_output+0x566/0x930 net/core/neighbour.c:1469
+       neigh_output include/net/neighbour.h:510 [inline]
+       ip6_finish_output2+0x1091/0x25b0 net/ipv6/ip6_output.c:117
+       __ip6_finish_output+0x442/0xab0 net/ipv6/ip6_output.c:143
+       ip6_finish_output+0x34/0x1f0 net/ipv6/ip6_output.c:153
+       NF_HOOK_COND include/linux/netfilter.h:296 [inline]
+       ip6_output+0x239/0x810 net/ipv6/ip6_output.c:176
+       dst_output include/net/dst.h:435 [inline]
+       NF_HOOK include/linux/netfilter.h:307 [inline]
+       ndisc_send_skb+0xf40/0x14b0 net/ipv6/ndisc.c:506
+       ndisc_send_ns+0x3b0/0x860 net/ipv6/ndisc.c:648
+       ndisc_solicit+0x2ed/0x470 net/ipv6/ndisc.c:740
+       neigh_probe+0xcc/0x110 net/core/neighbour.c:1009
+       __neigh_event_send+0x3d4/0x16d0 net/core/neighbour.c:1170
+       neigh_event_send include/net/neighbour.h:444 [inline]
+       neigh_resolve_output+0x590/0x930 net/core/neighbour.c:1473
+       neigh_output include/net/neighbour.h:510 [inline]
+       ip6_finish_output2+0x1091/0x25b0 net/ipv6/ip6_output.c:117
+       __ip6_finish_output+0x442/0xab0 net/ipv6/ip6_output.c:143
+       ip6_finish_output+0x34/0x1f0 net/ipv6/ip6_output.c:153
+       NF_HOOK_COND include/linux/netfilter.h:296 [inline]
+       ip6_output+0x239/0x810 net/ipv6/ip6_output.c:176
+       dst_output include/net/dst.h:435 [inline]
+       ip6_local_out+0xaf/0x1a0 net/ipv6/output_core.c:179
+       ip6_send_skb+0xb4/0x340 net/ipv6/ip6_output.c:1865
+       ip6_push_pending_frames+0xbd/0xe0 net/ipv6/ip6_output.c:1885
+       icmpv6_push_pending_frames+0x33a/0x530 net/ipv6/icmp.c:304
+       icmp6_send+0x1b0b/0x23b0 net/ipv6/icmp.c:617
+       icmpv6_send+0xde/0x210 net/ipv6/ip6_icmp.c:43
+       ip6_link_failure+0x26/0x520 net/ipv6/route.c:2640
+       dst_link_failure include/net/dst.h:418 [inline]
+       vti6_xmit net/ipv6/ip6_vti.c:537 [inline]
+       vti6_tnl_xmit+0xfd4/0x1d30 net/ipv6/ip6_vti.c:576
+       __netdev_start_xmit include/linux/netdevice.h:4574 [inline]
+       netdev_start_xmit include/linux/netdevice.h:4588 [inline]
+       xmit_one net/core/dev.c:3477 [inline]
+       dev_hard_start_xmit+0x1a4/0x9b0 net/core/dev.c:3493
+       __dev_queue_xmit+0x25e1/0x30a0 net/core/dev.c:4052
+       packet_snd net/packet/af_packet.c:2979 [inline]
+       packet_sendmsg+0x23cc/0x5ce0 net/packet/af_packet.c:3004
+       sock_sendmsg_nosec net/socket.c:652 [inline]
+       sock_sendmsg+0xcf/0x120 net/socket.c:672
+       ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
+       ___sys_sendmsg+0x100/0x170 net/socket.c:2416
+       __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
+       do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+       entry_SYSCALL_64_after_hwframe+0x49/0xb3
 
-Will change in v2.
+other info that might help us debug this:
 
->=20
-> > +          compatible =3D "intel,keembay-emmc-phy";
-> > +          reg =3D <0x0 0x20290000 0x0 0x54>;
->=20
-> Here you have overlapping register regions. Don't do that.
->=20
-> Given they are the same size, why do you need the syscon at all?
+ Possible unsafe locking scenario:
 
-In v2, the driver will use regmap_mmio. With that, can remove
-intel,syscon. I will send out once reviewed internally.
+       CPU0                    CPU1
+       ----                    ----
+  lock(&dev->qdisc_xmit_lock_key#303);
+                               lock(&dev->qdisc_xmit_lock_key#292);
+                               lock(&dev->qdisc_xmit_lock_key#303);
+  lock(&dev->qdisc_xmit_lock_key#292);
 
->=20
-> > +          clocks =3D <&mmc>;
-> > +          clock-names =3D "emmcclk";
-> > +          intel,syscon =3D <&mmc_phy_syscon>;
-> > +          #phy-cells =3D <0>;
-> > +    };
-> > --
-> > 2.17.1
-> >
+ *** DEADLOCK ***
+
+11 locks held by syz-executor.4/13161:
+ #0: ffffffff899beca0 (rcu_read_lock_bh){....}-{1:2}, at: __dev_queue_xmit+0x214/0x30a0 net/core/dev.c:3987
+ #1: ffff888099bcc898 (&dev->qdisc_xmit_lock_key#303){+.-.}-{2:2}, at: spin_lock include/linux/spinlock.h:353 [inline]
+ #1: ffff888099bcc898 (&dev->qdisc_xmit_lock_key#303){+.-.}-{2:2}, at: __netif_tx_lock include/linux/netdevice.h:4055 [inline]
+ #1: ffff888099bcc898 (&dev->qdisc_xmit_lock_key#303){+.-.}-{2:2}, at: __dev_queue_xmit+0x26ba/0x30a0 net/core/dev.c:4048
+ #2: ffffffff899bed00 (rcu_read_lock){....}-{1:2}, at: icmpv6_send+0x0/0x210 net/ipv6/ip6_icmp.c:31
+ #3: ffff888087823260 (k-slock-AF_INET6){+.-.}-{2:2}, at: spin_trylock include/linux/spinlock.h:363 [inline]
+ #3: ffff888087823260 (k-slock-AF_INET6){+.-.}-{2:2}, at: icmpv6_xmit_lock net/ipv6/icmp.c:117 [inline]
+ #3: ffff888087823260 (k-slock-AF_INET6){+.-.}-{2:2}, at: icmp6_send+0xde8/0x23b0 net/ipv6/icmp.c:538
+ #4: ffffffff899bed00 (rcu_read_lock){....}-{1:2}, at: icmp6_send+0x13cd/0x23b0 net/ipv6/icmp.c:598
+ #5: ffffffff899beca0 (rcu_read_lock_bh){....}-{1:2}, at: lwtunnel_xmit_redirect include/net/lwtunnel.h:92 [inline]
+ #5: ffffffff899beca0 (rcu_read_lock_bh){....}-{1:2}, at: ip6_finish_output2+0x215/0x25b0 net/ipv6/ip6_output.c:103
+ #6: ffffffff899bed00 (rcu_read_lock){....}-{1:2}, at: ip6_nd_hdr net/ipv6/ndisc.c:464 [inline]
+ #6: ffffffff899bed00 (rcu_read_lock){....}-{1:2}, at: ndisc_send_skb+0x80a/0x14b0 net/ipv6/ndisc.c:500
+ #7: ffffffff899beca0 (rcu_read_lock_bh){....}-{1:2}, at: lwtunnel_xmit_redirect include/net/lwtunnel.h:92 [inline]
+ #7: ffffffff899beca0 (rcu_read_lock_bh){....}-{1:2}, at: ip6_finish_output2+0x215/0x25b0 net/ipv6/ip6_output.c:103
+ #8: ffffffff899beca0 (rcu_read_lock_bh){....}-{1:2}, at: __dev_queue_xmit+0x214/0x30a0 net/core/dev.c:3987
+ #9: ffff8880a208d258 (&dev->qdisc_tx_busylock_key#45){+...}-{2:2}, at: spin_trylock include/linux/spinlock.h:363 [inline]
+ #9: ffff8880a208d258 (&dev->qdisc_tx_busylock_key#45){+...}-{2:2}, at: qdisc_run_begin include/net/sch_generic.h:159 [inline]
+ #9: ffff8880a208d258 (&dev->qdisc_tx_busylock_key#45){+...}-{2:2}, at: qdisc_run include/net/pkt_sched.h:128 [inline]
+ #9: ffff8880a208d258 (&dev->qdisc_tx_busylock_key#45){+...}-{2:2}, at: __dev_xmit_skb net/core/dev.c:3668 [inline]
+ #9: ffff8880a208d258 (&dev->qdisc_tx_busylock_key#45){+...}-{2:2}, at: __dev_queue_xmit+0x27d6/0x30a0 net/core/dev.c:4021
+ #10: ffff8880a208d148 (&dev->qdisc_running_key#168){+...}-{0:0}, at: neigh_resolve_output net/core/neighbour.c:1489 [inline]
+ #10: ffff8880a208d148 (&dev->qdisc_running_key#168){+...}-{0:0}, at: neigh_resolve_output+0x566/0x930 net/core/neighbour.c:1469
+
+stack backtrace:
+CPU: 1 PID: 13161 Comm: syz-executor.4 Not tainted 5.7.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1846
+ check_prev_add kernel/locking/lockdep.c:2515 [inline]
+ check_prevs_add kernel/locking/lockdep.c:2620 [inline]
+ validate_chain kernel/locking/lockdep.c:3237 [inline]
+ __lock_acquire+0x2ab1/0x4c50 kernel/locking/lockdep.c:4355
+ lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4934
+ __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+ _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
+ spin_lock include/linux/spinlock.h:353 [inline]
+ __netif_tx_lock include/linux/netdevice.h:4055 [inline]
+ sch_direct_xmit+0x2be/0xc20 net/sched/sch_generic.c:311
+ qdisc_restart net/sched/sch_generic.c:376 [inline]
+ __qdisc_run+0x4d1/0x17b0 net/sched/sch_generic.c:384
+ qdisc_run include/net/pkt_sched.h:134 [inline]
+ qdisc_run include/net/pkt_sched.h:126 [inline]
+ __dev_xmit_skb net/core/dev.c:3668 [inline]
+ __dev_queue_xmit+0x2115/0x30a0 net/core/dev.c:4021
+ neigh_resolve_output net/core/neighbour.c:1489 [inline]
+ neigh_resolve_output+0x566/0x930 net/core/neighbour.c:1469
+ neigh_output include/net/neighbour.h:510 [inline]
+ ip6_finish_output2+0x1091/0x25b0 net/ipv6/ip6_output.c:117
+ __ip6_finish_output+0x442/0xab0 net/ipv6/ip6_output.c:143
+ ip6_finish_output+0x34/0x1f0 net/ipv6/ip6_output.c:153
+ NF_HOOK_COND include/linux/netfilter.h:296 [inline]
+ ip6_output+0x239/0x810 net/ipv6/ip6_output.c:176
+ dst_output include/net/dst.h:435 [inline]
+ NF_HOOK include/linux/netfilter.h:307 [inline]
+ ndisc_send_skb+0xf40/0x14b0 net/ipv6/ndisc.c:506
+ ndisc_send_ns+0x3b0/0x860 net/ipv6/ndisc.c:648
+ ndisc_solicit+0x2ed/0x470 net/ipv6/ndisc.c:740
+ neigh_probe+0xcc/0x110 net/core/neighbour.c:1009
+ __neigh_event_send+0x3d4/0x16d0 net/core/neighbour.c:1170
+ neigh_event_send include/net/neighbour.h:444 [inline]
+ neigh_resolve_output+0x590/0x930 net/core/neighbour.c:1473
+ neigh_output include/net/neighbour.h:510 [inline]
+ ip6_finish_output2+0x1091/0x25b0 net/ipv6/ip6_output.c:117
+ __ip6_finish_output+0x442/0xab0 net/ipv6/ip6_output.c:143
+ ip6_finish_output+0x34/0x1f0 net/ipv6/ip6_output.c:153
+ NF_HOOK_COND include/linux/netfilter.h:296 [inline]
+ ip6_output+0x239/0x810 net/ipv6/ip6_output.c:176
+ dst_output include/net/dst.h:435 [inline]
+ ip6_local_out+0xaf/0x1a0 net/ipv6/output_core.c:179
+ ip6_send_skb+0xb4/0x340 net/ipv6/ip6_output.c:1865
+ ip6_push_pending_frames+0xbd/0xe0 net/ipv6/ip6_output.c:1885
+ icmpv6_push_pending_frames+0x33a/0x530 net/ipv6/icmp.c:304
+ icmp6_send+0x1b0b/0x23b0 net/ipv6/icmp.c:617
+ icmpv6_send+0xde/0x210 net/ipv6/ip6_icmp.c:43
+ ip6_link_failure+0x26/0x520 net/ipv6/route.c:2640
+ dst_link_failure include/net/dst.h:418 [inline]
+ vti6_xmit net/ipv6/ip6_vti.c:537 [inline]
+ vti6_tnl_xmit+0xfd4/0x1d30 net/ipv6/ip6_vti.c:576
+ __netdev_start_xmit include/linux/netdevice.h:4574 [inline]
+ netdev_start_xmit include/linux/netdevice.h:4588 [inline]
+ xmit_one net/core/dev.c:3477 [inline]
+ dev_hard_start_xmit+0x1a4/0x9b0 net/core/dev.c:3493
+ __dev_queue_xmit+0x25e1/0x30a0 net/core/dev.c:4052
+ packet_snd net/packet/af_packet.c:2979 [inline]
+ packet_sendmsg+0x23cc/0x5ce0 net/packet/af_packet.c:3004
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2416
+ __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45c829
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ff9339b0c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000500880 RCX: 000000000045c829
+RDX: 0000000000000000 RSI: 0000000020000100 RDI: 0000000000000004
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 00000000000009f7 R14: 00000000004ccae4 R15: 00007ff9339b16d4
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
