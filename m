@@ -2,117 +2,135 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 704C4C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96ACDC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57A1C20B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D102073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:52:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GJ8Rr26H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgD2Oum (ORCPT
+        id S1726743AbgD2OwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:50:42 -0400
-Received: from mga05.intel.com ([192.55.52.43]:48625 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbgD2Oum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:50:42 -0400
-IronPort-SDR: UDWzAqqCjLLyHarYtbpjNt1UQRI9PghqyabRKJpto5QAlJuwwWQpOxXOqCQM6HUWEl6E7LfBZk
- qZHkor+kzSQg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 07:50:41 -0700
-IronPort-SDR: /CUW6veITOGaL328946rO9ZoBt7dZGCUr4lv91D0xopfsMKl10QH5StxrIJokqk5mc25775ZKn
- 1K4JckKKJzuA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
-   d="scan'208";a="459603004"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga006.fm.intel.com with ESMTP; 29 Apr 2020 07:50:41 -0700
-Date:   Wed, 29 Apr 2020 07:50:40 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Oliver Upton <oupton@google.com>,
-        Peter Shier <pshier@google.com>
-Subject: Re: [PATCH 09/13] KVM: nVMX: Prioritize SMI over nested IRQ/NMI
-Message-ID: <20200429145040.GA15992@linux.intel.com>
-References: <20200423022550.15113-1-sean.j.christopherson@intel.com>
- <20200423022550.15113-10-sean.j.christopherson@intel.com>
- <CALMp9eSuYqeVmWhb6q7T5DAW_Npbuin_N1+sbWjvcu0zTqiwsQ@mail.gmail.com>
- <20200428225949.GP12735@linux.intel.com>
- <CALMp9eRFfEB1avbQv0O0V=EGrJdSNTxg8Z-BONmQ--dV66CuAg@mail.gmail.com>
+        Wed, 29 Apr 2020 10:52:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36728 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726484AbgD2OwF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 10:52:05 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 513B2C03C1AD
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:52:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=tJbIYTsv5ydRIeAGA1IAN4ifc0SDWuh5ts8+JIK7AgI=; b=GJ8Rr26H0QFQAfm6VPf7syyx3x
+        uqo1UkUd7+VFvFJNrrQM3UiJfUpMUPMzl8uBoTrLfo4Mwq0nBBhRgf9W48wZ1N98qizS6246R0rOf
+        ZOrcqJ+Dp5tY8eQQToHUVRGVJf4LF9EBMnS/F169EN6h94/LP/ZfjZZ+Vl3AG9xNS6udlAPxjtGrk
+        x7Rqi/Xn1TOnmTIBz6MIyWQCulkndHnUJH49rBGkGehwdOFD9brWmiwisEiaiwuuuSolD6gV7G2fT
+        20DjXShTOdeSUmXnyqr35rZPqwU0MIrCQs0tK8mucbOSUOCqpwZYTnHuWjZ51VeFpQeqksCOhageJ
+        NLsmoVGg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTo4A-0006Ji-PV; Wed, 29 Apr 2020 14:52:02 +0000
+Subject: Re: [dm-devel] [PATCH -next] md: dm-ebs-target: fix build errors &
+ Kconfig entry
+To:     Heinz Mauelshagen <heinzm@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, dm-devel@redhat.com
+Cc:     Mike Snitzer <snitzer@redhat.com>, Alasdair Kergon <agk@redhat.com>
+References: <d33b3bfb-c38d-9770-e6a6-929519dc21d4@infradead.org>
+ <980b6b95-6e18-40ff-f71c-058917c5b6ee@redhat.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <f78d654d-3f98-151d-bc16-bf31a6547a66@infradead.org>
+Date:   Wed, 29 Apr 2020 07:52:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <980b6b95-6e18-40ff-f71c-058917c5b6ee@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALMp9eRFfEB1avbQv0O0V=EGrJdSNTxg8Z-BONmQ--dV66CuAg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 04:16:16PM -0700, Jim Mattson wrote:
-> On Tue, Apr 28, 2020 at 3:59 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > On Tue, Apr 28, 2020 at 03:04:02PM -0700, Jim Mattson wrote:
-> > > From the SDM, volume 3:
-> > >
-> > > • System-management interrupts (SMIs), INIT signals, and higher
-> > > priority events take priority over MTF VM exits.
-> > >
-> > > I think this block needs to be moved up.
-> >
-> > Hrm.  It definitely needs to be moved above the preemption timer, though I
-> > can't find any public documentation about the preemption timer's priority.
-> > Preemption timer is lower priority than MTF, ergo it's not in the same
-> > class as SMI.
-> >
-> > Regarding SMI vs. MTF and #DB trap, to actually prioritize SMIs above MTF
-> > and #DBs, we'd need to save/restore MTF and pending #DBs via SMRAM.  I
-> > think it makes sense to take the easy road and keep SMI after the traps,
-> > with a comment to say it's technically wrong but not worth fixing.
+On 4/29/20 5:23 AM, Heinz Mauelshagen wrote:
+> On 4/28/20 5:03 PM, Randy Dunlap wrote:
+>> From: Randy Dunlap <rdunlap@infradead.org>
+>>
+>> Fix build errors by selecting DM_BUFIO.
+>>
+>> Fix Kconfig entry formatting by using tabs instead of spaces,
+>> using "help" instead of "---help---", and
+>> indenting help text with one additional space.
+>>
+>> Fixes these build errors:
+>>
+>> ld: drivers/md/dm-ebs-target.o: in function `__ebs_forget_bio':
+>> dm-ebs-target.c:(.text+0x1bc): undefined reference to `dm_bufio_forget'
+>> ld: drivers/md/dm-ebs-target.o: in function `ebs_dtr':
+>> dm-ebs-target.c:(.text+0x2fe): undefined reference to `dm_bufio_client_destroy'
+>> ld: drivers/md/dm-ebs-target.o: in function `__ebs_rw_bio':
+>> dm-ebs-target.c:(.text+0x4c4): undefined reference to `dm_bufio_get_block_size'
+>> ld: dm-ebs-target.c:(.text+0x4f1): undefined reference to `dm_bufio_read'
+>> ld: dm-ebs-target.c:(.text+0x504): undefined reference to `dm_bufio_get_block_size'
+>> ld: dm-ebs-target.c:(.text+0x519): undefined reference to `dm_bufio_new'
+>> ld: dm-ebs-target.c:(.text+0x567): undefined reference to `dm_bufio_mark_partial_buffer_dirty'
+>> ld: dm-ebs-target.c:(.text+0x56f): undefined reference to `dm_bufio_release'
+>> ld: drivers/md/dm-ebs-target.o: in function `__ebs_process_bios':
+>> dm-ebs-target.c:(.text+0x6bf): undefined reference to `dm_bufio_prefetch'
+>> ld: dm-ebs-target.c:(.text+0x72d): undefined reference to `dm_bufio_prefetch'
+>> ld: dm-ebs-target.c:(.text+0x783): undefined reference to `dm_bufio_prefetch'
+>> ld: dm-ebs-target.c:(.text+0x7fe): undefined reference to `dm_bufio_write_dirty_buffers'
+>> ld: drivers/md/dm-ebs-target.o: in function `ebs_ctr':
+>> dm-ebs-target.c:(.text+0xa82): undefined reference to `dm_bufio_client_create'
+>>
+>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>> Cc: Heinz Mauelshagen <dm-devel@redhat.com>
+>> Cc: Alasdair Kergon <agk@redhat.com>
+>> Cc: Mike Snitzer <snitzer@redhat.com>
+>> Cc: dm-devel@redhat.com
+>> ---
+>>   drivers/md/Kconfig |   12 ++++++------
+>>   1 file changed, 6 insertions(+), 6 deletions(-)
+>>
+>> --- linux-next-20200428.orig/drivers/md/Kconfig
+>> +++ linux-next-20200428/drivers/md/Kconfig
+>> @@ -338,12 +338,12 @@ config DM_WRITECACHE
+>>          to be cached in standard RAM.
+>>     config DM_EBS
+>> -       tristate "Emulated block size target (EXPERIMENTAL)"
+>> -       depends on BLK_DEV_DM
+>> -       default n
+>> -       ---help---
+>> -     dm-ebs emulates smaller logical block size on backing devices
+>> -     with larger ones (e.g. 512 byte sectors on 4K native disks).
+>> +    tristate "Emulated block size target (EXPERIMENTAL)"
+>> +    depends on BLK_DEV_DM
+>> +    select DM_BUFIO
+>> +    help
+>> +      dm-ebs emulates smaller logical block size on backing devices
+>> +      with larger ones (e.g. 512 byte sectors on 4K native disks).
+>>     config DM_ERA
+>>          tristate "Era target (EXPERIMENTAL)"
 > 
-> Pending debug exceptions should just go in the pending debug
-> exceptions field. End of story and end of complications. I don't
-> understand why kvm is so averse to using this field the way it was
-> intended.
-
-Ah, it took my brain a bit to catch on.  I assume you're suggesting calling
-nested_vmx_updated_pending_dbg() so that the pending #DB naturally gets
-propagated to/from vmcs12 on SMI/RSM?  I think that should work.
-
-> As for the MTF, section 34.14.1 of the SDM, volume 3, clearly states:
 > 
-> The pseudocode above makes reference to the saving of VMX-critical
-> state. This state consists of the following:
-> (1) SS.DPL (the current privilege level); (2) RFLAGS.VM; (3) the state
-> of blocking by STI and by MOV SS (see
-> Table 24-3 in Section 24.4.2); (4) the state of virtual-NMI blocking
-> (only if the processor is in VMX non-root oper-
-> ation and the “virtual NMIs” VM-execution control is 1); and (5) an
-> indication of whether an MTF VM exit is pending
-> (see Section 25.5.2). These data may be saved internal to the
-> processor or in the VMCS region of the current
-> VMCS. Processors that do not support SMI recognition while there is
-> blocking by STI or by MOV SS need not save
-> the state of such blocking.
+> Thanks, fine with me for the most part.
 > 
-> I haven't really looked at kvm's implementation of SMM (because Google
-> doesn't support it), but it seems that the "MTF VM exit is pending"
-> bit should be trivial to deal with. I assume we save the other
-> VMX-critical state somewhere!
+> We mainly use '---help---' for dm/md though, so lets's keep it. Mike?
+> 
+> Heinz
 
-True, I spaced on the extistence of vmx_pre_{enter,leave}_smm().
+Sure, you can keep it for now, but it is being phased out.
 
-I'll send a patch, the delta to what's in kvm/queue should actually be
-quite small.
+thanks.
+-- 
+~Randy
+
