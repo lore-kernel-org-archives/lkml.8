@@ -2,187 +2,892 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD9AC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69741C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD9A2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B22E2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:49:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dHn67Cvh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGXdeXbc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgD2Oss (ORCPT
+        id S1726914AbgD2OtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:48:48 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:13608 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726348AbgD2Oss (ORCPT
+        Wed, 29 Apr 2020 10:49:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36272 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726519AbgD2OtQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:48:48 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588171726; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=cBvwW5avddGOz4+VMKe7nngaLFyj5X3264YJy7F3MiY=;
- b=dHn67CvhZQetVaXTbuLjDUJYyLhAk7VvtugauE8MRIf4CqVHnX2m0jPmHNJDSaxrJ3svbIu4
- JVhsAEyhjCA/cSxlnQt/gTmPi8nwZ6JwDHRKxayVHZAj4SJbQqrBg3IgZd+r1PbckggQZ+2a
- AaNP9HYdQ2qAQAFLlKvWRrolE3g=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea993c7.7fd1c86a4ca8-smtp-out-n05;
- Wed, 29 Apr 2020 14:48:39 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 254D4C433D2; Wed, 29 Apr 2020 14:48:38 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B7F75C433CB;
-        Wed, 29 Apr 2020 14:48:37 +0000 (UTC)
+        Wed, 29 Apr 2020 10:49:16 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33377C03C1AD;
+        Wed, 29 Apr 2020 07:49:16 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id 23so2235797qkf.0;
+        Wed, 29 Apr 2020 07:49:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Yp9/GyTz0YO66l7mqPNXT6i6bhFfdGimaLWbtZ2aHSE=;
+        b=aGXdeXbcv9OHvOflastN6/e6OBxqKIwTt954uV9HOE0wmM2Smbl5v+j8zRQlGgiYdh
+         CCJkDtjaNmXbkroBdq8ICD0RsyzDXi7ifKuN/HwDnpQB/Jc7tkikCs8eXo+sFEDqcA+V
+         NNt3jBeVmVy4Xo4VA+T+KHI+llO8Y90nk0FNIdc1UGUaH6JZhX35dbUEqWb2oFYCE2Wa
+         UrT6ZlysFvMznUKO013YHDkRNakZuYHZyeOubcGGU+2Ms07ivp25bp439df3O3Cd2J6M
+         uas5mHTEIc/FAU8r6ezUACPkXUtj9nSBzG718cz8Kctd59zWgiO6whEtP8DFlGXFqzUC
+         OWIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Yp9/GyTz0YO66l7mqPNXT6i6bhFfdGimaLWbtZ2aHSE=;
+        b=d6MAyA2sgw5miIwoh6qSu0ivXH+kSfXAko5h/1K7lDBfKmMWn1Vex/nuaCG5SysoOM
+         HiF2ZsnAXZk3c+K7jTMSnKO5Q1DDjvwBKlRcaoyBOTDKVF8OB1m76K6AprlPu0WZ1I4b
+         nDQaUpGh6r7fa+Wc7l/1Te3sv6kl6OojnMqPf9qO/ydjItc0ZjyQZhEY3gVbtIIwfsWT
+         YINiudv2lQil8CkOBdogd1rCN7tHREoX87BjkyQd34AY5+Kwdme5g6IlROhdUJn93KE5
+         t00JmMn/4TQ09sxAw8FnnqRxvurwRfivNaBpdlbG2nrRHSp6QOMOshLCfVB6T4PwlKwH
+         tCpg==
+X-Gm-Message-State: AGi0PuYzowRctxVR4ScY86TXO9PU2B7PWJvx/E+3We0f3TZilBkZw+nM
+        26XW/PI05JtosYQbKUDaWcg=
+X-Google-Smtp-Source: APiQypJ+hs3/goWYK1qI/u+jJCzmHNxRruIWqrfH79XAvsptIY8aN8VOTSMB6fuHQi/M3rQzx64ipA==
+X-Received: by 2002:a37:546:: with SMTP id 67mr32694489qkf.487.1588171755063;
+        Wed, 29 Apr 2020 07:49:15 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id p22sm13798879qtb.91.2020.04.29.07.49.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 07:49:14 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 49D75409A3; Wed, 29 Apr 2020 11:49:12 -0300 (-03)
+Date:   Wed, 29 Apr 2020 11:49:12 -0300
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v6] perf tools: add support for libpfm4
+Message-ID: <20200429144912.GB30487@kernel.org>
+References: <20200401184913.63446-1-irogers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 29 Apr 2020 20:18:37 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple
- connections
-In-Reply-To: <CAJ9a7VgEiX19ukjwakNHBHDeZJ05f5Z7pAYG9iEnpXCuuDfBqg@mail.gmail.com>
-References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
- <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com>
- <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
- <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com>
- <668ea1283a6dd6b34e701972f6f71034@codeaurora.org>
- <5b0f5d77c4eec22d8048bb0ffa078345@codeaurora.org>
- <759d47de-2101-39cf-2f1c-cfefebebd548@arm.com>
- <7d343e96cf0701d91152fd14c2fdec42@codeaurora.org>
- <CAJ9a7VgEiX19ukjwakNHBHDeZJ05f5Z7pAYG9iEnpXCuuDfBqg@mail.gmail.com>
-Message-ID: <a4bba03d41a2b0145b3c6c19d48698eb@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200401184913.63446-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
-
-On 2020-04-29 19:57, Mike Leach wrote:
-> Hi,
+Em Wed, Apr 01, 2020 at 11:49:13AM -0700, Ian Rogers escreveu:
+> From: Stephane Eranian <eranian@google.com>
 > 
+> This patch links perf with the libpfm4 library if it is available and
+> NO_LIBPFM4 isn't passed to the build. The libpfm4 library contains hardware
 
-[...]
+Can we make this a explicit decision instead, i.e. for it to be linked
+we would need to have its development files installed and -DLIBPFM4,
+like we have for CORESIGHT?
 
->> >> Looking more into replicator1(swao_replicator) values as 0x0 even
->> >> after replicator_reset()
->> >> in replicator probe, I added dynamic_replicator_reset in
->> >> dynamic_replicator_enable()
->> >> and am not seeing any hardlockup. Also I added some prints to check
->> >> the idfilter
->> >> values before and after reset and found that its not set to 0xff even
->> >> after replicator_reset()
->> >> in replicator probe, I don't see any other path setting it to 0x0.
->> >>
->> >> After probe:
->> >>
->> >> [    8.477669] func replicator_probe before reset replicator
->> >> replicator1 REPLICATOR_IDFILTER0=0x0 REPLICATOR_IDFILTER1=0x0
->> >> [    8.489470] func replicator_probe after reset replicator
->> >> replicator1 REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
->> >
->> > AFAICS, after the reset both of them are set to 0xff.
->> 
->> Yes I see this too as we call replicator_reset() in probe. What I 
->> wanted
->> to highlight was the below part where it is set to 0x0 before enabling
->> dynamic replicator.
->> 
->> >
->> >> [    8.502738] func replicator_probe before reset replicator
->> >> replicator0 REPLICATOR_IDFILTER0=0x0 REPLICATOR_IDFILTER1=0x0
->> >> [    8.515214] func replicator_probe after reset replicator
->> >> replicator0 REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
->> >
->> >
->> >
->> >> localhost ~ #
->> >> localhost ~ #
->> >> localhost ~ # echo 1 > /sys/bus/coresight/devices/tmc_etr0/enable_sink
->> >> localhost ~ #
->> >> localhost ~ # echo 1 > /sys/bus/coresight/devices/etm0/enable_source
->> >> [   58.490485] func dynamic_replicator_enable before reset replicator
->> >> replicator0 REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
->> >> [   58.503246] func dynamic_replicator_enable after reset replicator
->> >> replicator0 REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
->> >> [   58.520902] func dynamic_replicator_enable before reset replicator
->> >> replicator1 REPLICATOR_IDFILTER0=0x0 REPLICATOR_IDFILTER1=0x0
->> >
->> > You need to find what is resetting the IDFILTERs to 0 for replicator1.
->> >
->> 
->> That is right.
->> 
+  $ grep CORESIGHT tools/perf/Makefile.perf
+  # Define CORESIGHT if you DO WANT support for CoreSight trace decoding.
+  $
+
+- Arnaldo
+
+> event tables for all processors supported by perf_events. It is a helper
+> library that helps convert from a symbolic event name to the event
+> encoding required by the underlying kernel interface. This
+> library is open-source and available from: http://perfmon2.sf.net.
 > 
-> By default all replicators have the IDFILTER registers set to 0 out of
-> hardware reset. This ensures that programmable replicators behave in
-> the same way as non-programmable replicators out of reset.
+> With this patch, it is possible to specify full hardware events
+> by name. Hardware filters are also supported. Events must be
+> specified via the --pfm-events and not -e option. Both options
+> are active at the same time and it is possible to mix and match:
 > 
-> The  dynamic_replicator_reset() is of course a driver state reset -
-> which filters out all trace on the output ports. The trace is then
-> enabled when we set the trace path from source to sink.
+> $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
 > 
-
-Thanks for these explanations.
-
-> It seems to me that you have 2 problems that need solving here:
+> v6 is a rebase.
+> v5 is a rebase.
+> v4 is a rebase on git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
+>    branch perf/core and re-adds the tools/build/feature/test-libpfm4.c
+>    missed in v3.
+> v3 is against acme/perf/core and removes a diagnostic warning.
+> v2 of this patch makes the --pfm-events man page documentation
+> conditional on libpfm4 behing configured. It tidies some of the
+> documentation and adds the feature test missed in the v1 patch.
 > 
-> 1) Why does the reset_replicator() called from probe() _not_ work
-> correctly on replicator 1? It seems to work later if you introduce a
-> reset after more of the system has powered and booted. This is
-> startiing to look a little like a PM / clocking issue.
-
-reset_replicator() does work in probe correctly for both replicators, 
-below logs is collected before and after reset in probe. It is later 
-that it's set back to 0x0 and hence the suggestion to look at firmware 
-using this replicator1.
-
-[    8.477669] func replicator_probe before reset replicator replicator1 
-REPLICATOR_IDFILTER0=0x0 REPLICATOR_IDFILTER1=0x0
-[    8.489470] func replicator_probe after reset replicator replicator1 
-REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
-
+> Reviewed-By:Ian Rogers <irogers@google.com>
+> ---
+>  tools/build/Makefile.feature             |   6 +-
+>  tools/build/feature/Makefile             |   7 +-
+>  tools/build/feature/test-libpfm4.c       |   8 +
+>  tools/perf/Documentation/Makefile        |   4 +-
+>  tools/perf/Documentation/perf-record.txt |  11 +
+>  tools/perf/Documentation/perf-stat.txt   |  10 +
+>  tools/perf/Documentation/perf-top.txt    |  11 +
+>  tools/perf/Makefile.config               |  12 ++
+>  tools/perf/Makefile.perf                 |   6 +-
+>  tools/perf/builtin-list.c                |  16 ++
+>  tools/perf/builtin-record.c              |  20 ++
+>  tools/perf/builtin-stat.c                |  21 ++
+>  tools/perf/builtin-top.c                 |  20 ++
+>  tools/perf/util/evsel.c                  |   2 +-
+>  tools/perf/util/evsel.h                  |   1 +
+>  tools/perf/util/parse-events.c           | 246 +++++++++++++++++++++++
+>  tools/perf/util/parse-events.h           |   5 +
+>  tools/perf/util/pmu.c                    |  11 +
+>  tools/perf/util/pmu.h                    |   1 +
+>  19 files changed, 410 insertions(+), 8 deletions(-)
+>  create mode 100644 tools/build/feature/test-libpfm4.c
 > 
-> This failure is causing the state when we are trying to set an output
-> port that both branches of this replicator are enabled for output.
-> In effect for this replicator, setting the output port has no effect
-> as it is already enabled.
+> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+> index 574c2e0b9d20..08c6fe5aee2d 100644
+> --- a/tools/build/Makefile.feature
+> +++ b/tools/build/Makefile.feature
+> @@ -72,7 +72,8 @@ FEATURE_TESTS_BASIC :=                  \
+>          setns				\
+>          libaio				\
+>          libzstd				\
+> -        disassembler-four-args
+> +        disassembler-four-args		\
+> +        libpfm4
+>  
+>  # FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA is the complete list
+>  # of all feature tests
+> @@ -127,7 +128,8 @@ FEATURE_DISPLAY ?=              \
+>           bpf			\
+>           libaio			\
+>           libzstd		\
+> -         disassembler-four-args
+> +         disassembler-four-args	\
+> +         libpfm4
+>  
+>  # Set FEATURE_CHECK_(C|LD)FLAGS-all for all FEATURE_TESTS features.
+>  # If in the future we need per-feature checks/flags for features not
+> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> index 7ac0d8088565..573072d32545 100644
+> --- a/tools/build/feature/Makefile
+> +++ b/tools/build/feature/Makefile
+> @@ -67,7 +67,9 @@ FILES=                                          \
+>           test-llvm.bin				\
+>           test-llvm-version.bin			\
+>           test-libaio.bin			\
+> -         test-libzstd.bin
+> +         test-libzstd.bin			\
+> +         test-libpfm4.bin
+> +
+>  
+>  FILES := $(addprefix $(OUTPUT),$(FILES))
+>  
+> @@ -321,6 +323,9 @@ $(OUTPUT)test-libaio.bin:
+>  $(OUTPUT)test-libzstd.bin:
+>  	$(BUILD) -lzstd
+>  
+> +$(OUTPUT)test-libpfm4.bin:
+> +	$(BUILD) -lpfm
+> +
+>  ###############################
+>  
+>  clean:
+> diff --git a/tools/build/feature/test-libpfm4.c b/tools/build/feature/test-libpfm4.c
+> new file mode 100644
+> index 000000000000..7f24df86cf09
+> --- /dev/null
+> +++ b/tools/build/feature/test-libpfm4.c
+> @@ -0,0 +1,8 @@
+> +#include <sys/types.h>
+> +#include <perfmon/pfmlib.h>
+> +
+> +int main(void)
+> +{
+> +        pfm_initialize();
+> +        return 0;
+> +}
+> diff --git a/tools/perf/Documentation/Makefile b/tools/perf/Documentation/Makefile
+> index 31824d5269cc..6e54979c2124 100644
+> --- a/tools/perf/Documentation/Makefile
+> +++ b/tools/perf/Documentation/Makefile
+> @@ -48,7 +48,7 @@ man5dir=$(mandir)/man5
+>  man7dir=$(mandir)/man7
+>  
+>  ASCIIDOC=asciidoc
+> -ASCIIDOC_EXTRA = --unsafe -f asciidoc.conf
+> +ASCIIDOC_EXTRA += --unsafe -f asciidoc.conf
+>  ASCIIDOC_HTML = xhtml11
+>  MANPAGE_XSL = manpage-normal.xsl
+>  XMLTO_EXTRA =
+> @@ -59,7 +59,7 @@ HTML_REF = origin/html
+>  
+>  ifdef USE_ASCIIDOCTOR
+>  ASCIIDOC = asciidoctor
+> -ASCIIDOC_EXTRA = -a compat-mode
+> +ASCIIDOC_EXTRA += -a compat-mode
+>  ASCIIDOC_EXTRA += -I. -rasciidoctor-extensions
+>  ASCIIDOC_EXTRA += -a mansource="perf" -a manmanual="perf Manual"
+>  ASCIIDOC_HTML = xhtml5
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index b3f3b3f1c161..ad2c41f595c2 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -596,6 +596,17 @@ Make a copy of /proc/kcore and place it into a directory with the perf data file
+>  Limit the sample data max size, <size> is expected to be a number with
+>  appended unit character - B/K/M/G
+>  
+> +ifdef::HAVE_LIBPFM[]
+> +--pfm-events events::
+> +Select a PMU event using libpfm4 syntax (see http://perfmon2.sf.net)
+> +including support for event filters. For example '--pfm-events
+> +inst_retired:any_p:u:c=1:i'. More than one event can be passed to the
+> +option using the comma separator. Hardware events and generic hardware
+> +events cannot be mixed together. The latter must be used with the -e
+> +option. The -e option and this one can be mixed and matched.  Events
+> +can be grouped using the {} notation.
+> +endif::HAVE_LIBPFM[]
+> +
+>  SEE ALSO
+>  --------
+>  linkperf:perf-stat[1], linkperf:perf-list[1], linkperf:perf-intel-pt[1]
+> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+> index 4d56586b2fb9..536952ad592c 100644
+> --- a/tools/perf/Documentation/perf-stat.txt
+> +++ b/tools/perf/Documentation/perf-stat.txt
+> @@ -71,6 +71,16 @@ report::
+>  --tid=<tid>::
+>          stat events on existing thread id (comma separated list)
+>  
+> +ifdef::HAVE_LIBPFM[]
+> +--pfm-events events::
+> +Select a PMU event using libpfm4 syntax (see http://perfmon2.sf.net)
+> +including support for event filters. For example '--pfm-events
+> +inst_retired:any_p:u:c=1:i'. More than one event can be passed to the
+> +option using the comma separator. Hardware events and generic hardware
+> +events cannot be mixed together. The latter must be used with the -e
+> +option. The -e option and this one can be mixed and matched.  Events
+> +can be grouped using the {} notation.
+> +endif::HAVE_LIBPFM[]
+>  
+>  -a::
+>  --all-cpus::
+> diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+> index 487737a725e9..9858e3640b0c 100644
+> --- a/tools/perf/Documentation/perf-top.txt
+> +++ b/tools/perf/Documentation/perf-top.txt
+> @@ -319,6 +319,17 @@ Default is to monitor all CPUS.
+>  	go straight to the histogram browser, just like 'perf top' with no events
+>  	explicitely specified does.
+>  
+> +ifdef::HAVE_LIBPFM[]
+> +--pfm-events events::
+> +Select a PMU event using libpfm4 syntax (see http://perfmon2.sf.net)
+> +including support for event filters. For example '--pfm-events
+> +inst_retired:any_p:u:c=1:i'. More than one event can be passed to the
+> +option using the comma separator. Hardware events and generic hardware
+> +events cannot be mixed together. The latter must be used with the -e
+> +option. The -e option and this one can be mixed and matched.  Events
+> +can be grouped using the {} notation.
+> +endif::HAVE_LIBPFM[]
+> +
+>  
+>  INTERACTIVE PROMPTING KEYS
+>  --------------------------
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 80e55e796be9..571aa6b1af40 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -999,6 +999,18 @@ ifdef LIBCLANGLLVM
+>    endif
+>  endif
+>  
+> +ifndef NO_LIBPFM4
+> +  ifeq ($(feature-libpfm4), 1)
+> +    CFLAGS += -DHAVE_LIBPFM
+> +    EXTLIBS += -lpfm
+> +    ASCIIDOC_EXTRA = -aHAVE_LIBPFM=1
+> +    $(call detected,CONFIG_LIBPFM4)
+> +  else
+> +    msg := $(warning libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev);
+> +    NO_LIBPFM4 := 1
+> +  endif
+> +endif
+> +
+>  # Among the variables below, these:
+>  #   perfexecdir
+>  #   perf_include_dir
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index d15a311408f1..9787eb3ca0a9 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -118,6 +118,8 @@ include ../scripts/utilities.mak
+>  #
+>  # Define LIBBPF_DYNAMIC to enable libbpf dynamic linking.
+>  #
+> +# Define NO_LIBPFM4 to disable libpfm4 extension.
+> +#
+>  
+>  # As per kernel Makefile, avoid funny character set dependencies
+>  unexport LC_ALL
+> @@ -188,7 +190,7 @@ AWK     = awk
+>  # non-config cases
+>  config := 1
+>  
+> -NON_CONFIG_TARGETS := clean python-clean TAGS tags cscope help install-doc install-man install-html install-info install-pdf doc man html info pdf
+> +NON_CONFIG_TARGETS := clean python-clean TAGS tags cscope help
+>  
+>  ifdef MAKECMDGOALS
+>  ifeq ($(filter-out $(NON_CONFIG_TARGETS),$(MAKECMDGOALS)),)
+> @@ -832,7 +834,7 @@ INSTALL_DOC_TARGETS += quick-install-doc quick-install-man quick-install-html
+>  
+>  # 'make doc' should call 'make -C Documentation all'
+>  $(DOC_TARGETS):
+> -	$(Q)$(MAKE) -C $(DOC_DIR) O=$(OUTPUT) $(@:doc=all)
+> +	$(Q)$(MAKE) -C $(DOC_DIR) O=$(OUTPUT) $(@:doc=all) ASCIIDOC_EXTRA=$(ASCIIDOC_EXTRA)
+>  
+>  TAG_FOLDERS= . ../lib ../include
+>  TAG_FILES= ../../include/uapi/linux/perf_event.h
+> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+> index 965ef017496f..5edeb428168a 100644
+> --- a/tools/perf/builtin-list.c
+> +++ b/tools/perf/builtin-list.c
+> @@ -18,6 +18,10 @@
+>  #include <subcmd/parse-options.h>
+>  #include <stdio.h>
+>  
+> +#ifdef HAVE_LIBPFM
+> +#include <perfmon/pfmlib.h>
+> +#endif
+> +
+>  static bool desc_flag = true;
+>  static bool details_flag;
+>  
+> @@ -56,6 +60,18 @@ int cmd_list(int argc, const char **argv)
+>  	if (!raw_dump && pager_in_use())
+>  		printf("\nList of pre-defined events (to be used in -e):\n\n");
+>  
+> +#ifdef HAVE_LIBPFM
+> +	{
+> +		int ret;
+> +		ret = pfm_initialize();
+> +		if (ret != PFM_SUCCESS) {
+> +			fprintf(stderr,
+> +				"warning libpfm failed to initialize: %s\n",
+> +				pfm_strerror(ret));
+> +		}
+> +	}
+> +#endif
+> +
+>  	if (argc == 0) {
+>  		print_events(NULL, raw_dump, !desc_flag, long_desc_flag,
+>  				details_flag, deprecated);
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 7d7912e121d6..7d2737f33c2e 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -64,6 +64,10 @@
+>  #include <linux/zalloc.h>
+>  #include <linux/bitmap.h>
+>  
+> +#ifdef HAVE_LIBPFM
+> +#include <perfmon/pfmlib.h>
+> +#endif
+> +
+>  struct switch_output {
+>  	bool		 enabled;
+>  	bool		 signal;
+> @@ -2415,6 +2419,11 @@ static struct option __record_options[] = {
+>  #endif
+>  	OPT_CALLBACK(0, "max-size", &record.output_max_size,
+>  		     "size", "Limit the maximum size of the output file", parse_output_max_size),
+> +#ifdef HAVE_LIBPFM
+> +	OPT_CALLBACK(0, "pfm-events", &record.evlist, "event",
+> +		"libpfm4 event selector. use 'perf list' to list available events",
+> +		parse_libpfm_events_option),
+> +#endif
+>  	OPT_END()
+>  };
+>  
+> @@ -2455,6 +2464,17 @@ int cmd_record(int argc, const char **argv)
+>  	if (rec->evlist == NULL)
+>  		return -ENOMEM;
+>  
+> +#ifdef HAVE_LIBPFM
+> +	{
+> +		int ret;
+> +		ret = pfm_initialize();
+> +		if (ret != PFM_SUCCESS) {
+> +			ui__warning("warning libpfm failed to initialize: %s\n",
+> +				pfm_strerror(ret));
+> +		}
+> +	}
+> +#endif
+> +
+>  	err = perf_config(perf_record_config, rec);
+>  	if (err)
+>  		return err;
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index ec053dc1e35c..c47eaf238f0c 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -89,6 +89,10 @@
+>  #include <linux/ctype.h>
+>  #include <perf/evlist.h>
+>  
+> +#ifdef HAVE_LIBPFM
+> +#include <perfmon/pfmlib.h>
+> +#endif
+> +
+>  #define DEFAULT_SEPARATOR	" "
+>  #define FREEZE_ON_SMI_PATH	"devices/cpu/freeze_on_smi"
+>  
+> @@ -933,6 +937,11 @@ static struct option stat_options[] = {
+>  		    "Use with 'percore' event qualifier to show the event "
+>  		    "counts of one hardware thread by sum up total hardware "
+>  		    "threads of same physical core"),
+> +#ifdef HAVE_LIBPFM
+> +	OPT_CALLBACK(0, "pfm-events", &evsel_list, "event",
+> +		"libpfm4 event selector. use 'perf list' to list available events",
+> +		parse_libpfm_events_option),
+> +#endif
+>  	OPT_END()
+>  };
+>  
+> @@ -1871,6 +1880,18 @@ int cmd_stat(int argc, const char **argv)
+>  	unsigned int interval, timeout;
+>  	const char * const stat_subcommands[] = { "record", "report" };
+>  
+> +#ifdef HAVE_LIBPFM
+> +	{
+> +		int ret;
+> +		ret = pfm_initialize();
+> +		if (ret != PFM_SUCCESS) {
+> +			fprintf(stderr,
+> +				"warning libpfm failed to initialize: %s\n",
+> +				pfm_strerror(ret));
+> +		}
+> +	}
+> +#endif
+> +
+>  	setlocale(LC_ALL, "");
+>  
+>  	evsel_list = evlist__new();
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> index 6684d94b1398..afec285f9877 100644
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+> @@ -84,6 +84,10 @@
+>  #include <linux/ctype.h>
+>  #include <perf/mmap.h>
+>  
+> +#ifdef HAVE_LIBPFM
+> +#include <perfmon/pfmlib.h>
+> +#endif
+> +
+>  static volatile int done;
+>  static volatile int resize;
+>  
+> @@ -1565,6 +1569,11 @@ int cmd_top(int argc, const char **argv)
+>  		    "Sort the output by the event at the index n in group. "
+>  		    "If n is invalid, sort by the first event. "
+>  		    "WARNING: should be used on grouped events."),
+> +#ifdef HAVE_LIBPFM
+> +	OPT_CALLBACK(0, "pfm-events", &top.evlist, "event",
+> +		"libpfm4 event selector. use 'perf list' to list available events",
+> +		parse_libpfm_events_option),
+> +#endif
+>  	OPTS_EVSWITCH(&top.evswitch),
+>  	OPT_END()
+>  	};
+> @@ -1578,6 +1587,17 @@ int cmd_top(int argc, const char **argv)
+>  	if (status < 0)
+>  		return status;
+>  
+> +#ifdef HAVE_LIBPFM
+> +	{
+> +		int ret;
+> +		ret = pfm_initialize();
+> +		if (ret != PFM_SUCCESS) {
+> +			ui__warning("warning libpfm failed to initialize: %s\n",
+> +				pfm_strerror(ret));
+> +		}
+> +	}
+> +#endif
+> +
+>  	top.annotation_opts.min_pcnt = 5;
+>  	top.annotation_opts.context  = 4;
+>  
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index eb880efbce16..ca1b9cbf3355 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -2448,7 +2448,7 @@ bool perf_evsel__fallback(struct evsel *evsel, int err,
+>  
+>  		/* Is there already the separator in the name. */
+>  		if (strchr(name, '/') ||
+> -		    strchr(name, ':'))
+> +		    (strchr(name, ':') && !evsel->is_libpfm_event))
+>  			sep = "";
+>  
+>  		if (asprintf(&new_name, "%s%su", name, sep) < 0)
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index 53187c501ee8..0b6eec714e6f 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -76,6 +76,7 @@ struct evsel {
+>  	bool			ignore_missing_thread;
+>  	bool			forced_leader;
+>  	bool			use_uncore_alias;
+> +	bool			is_libpfm_event;
+>  	/* parse modifier helper */
+>  	int			exclude_GH;
+>  	int			sample_read;
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 10107747b361..31ed184566c8 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -37,6 +37,11 @@
+>  #include "util/evsel_config.h"
+>  #include "util/event.h"
+>  
+> +#ifdef HAVE_LIBPFM
+> +#include <perfmon/pfmlib_perf_event.h>
+> +static void print_libpfm_events(bool name_only);
+> +#endif
+> +
+>  #define MAX_NAME_LEN 100
+>  
+>  #ifdef PARSER_DEBUG
+> @@ -2794,6 +2799,10 @@ void print_events(const char *event_glob, bool name_only, bool quiet_flag,
+>  	print_sdt_events(NULL, NULL, name_only);
+>  
+>  	metricgroup__print(true, true, NULL, name_only, details_flag);
+> +
+> +#ifdef HAVE_LIBPFM
+> +	print_libpfm_events(name_only);
+> +#endif
+>  }
+>  
+>  int parse_events__is_hardcoded_term(struct parse_events_term *term)
+> @@ -3042,3 +3051,240 @@ char *parse_events_formats_error_string(char *additional_terms)
+>  fail:
+>  	return NULL;
+>  }
+> +
+> +#ifdef HAVE_LIBPFM
+> +static int
+> +parse_libpfm_event(char *strp, struct perf_event_attr *attr)
+> +{
+> +	int ret;
+> +
+> +	ret = pfm_get_perf_event_encoding(strp, PFM_PLM0|PFM_PLM3,
+> +					attr, NULL, NULL);
+> +	return ret;
+> +}
+> +
+> +int parse_libpfm_events_option(const struct option *opt, const char *str,
+> +			int unset __maybe_unused)
+> +{
+> +	struct evlist *evlist = *(struct evlist **)opt->value;
+> +	struct perf_event_attr attr;
+> +	struct perf_pmu *pmu;
+> +	struct evsel *evsel, *grp_leader = NULL;
+> +	char *p, *q, *p_orig;
+> +	const char *sep;
+> +	int grp_evt = -1;
+> +	int ret;
+> +
+> +	p_orig = p = strdup(str);
+> +	if (!p)
+> +		return -1;
+> +	/*
+> +	 * force loading of the PMU list
+> +	 */
+> +	perf_pmu__scan(NULL);
+> +
+> +	for (q = p; strsep(&p, ",{}"); q = p) {
+> +		sep = p ? str + (p - p_orig - 1) : "";
+> +		if (*sep == '{') {
+> +			if (grp_evt > -1) {
+> +				fprintf(stderr, "nested event groups not supported\n");
+> +				goto error;
+> +			}
+> +			grp_evt++;
+> +		}
+> +
+> +		/* no event */
+> +		if (*q == '\0')
+> +			continue;
+> +
+> +		memset(&attr, 0, sizeof(attr));
+> +		event_attr_init(&attr);
+> +
+> +		ret = parse_libpfm_event(q, &attr);
+> +		if (ret != PFM_SUCCESS) {
+> +			fprintf(stderr, "failed to parse event %s : %s\n", str, pfm_strerror(ret));
+> +			goto error;
+> +		}
+> +
+> +		evsel = perf_evsel__new_idx(&attr, evlist->core.nr_entries);
+> +		if (evsel == NULL)
+> +			goto error;
+> +
+> +		evsel->name = strdup(q);
+> +		if (!evsel->name) {
+> +			evsel__delete(evsel);
+> +			goto error;
+> +		}
+> +		evsel->is_libpfm_event = true;
+> +
+> +		pmu = perf_pmu__find_by_type((unsigned)attr.type);
+> +		if (pmu)
+> +			evsel->core.own_cpus = perf_cpu_map__get(pmu->cpus);
+> +
+> +		evlist__add(evlist, evsel);
+> +
+> +		if (grp_evt == 0)
+> +			grp_leader = evsel;
+> +
+> +		if (grp_evt > -1) {
+> +			evsel->leader = grp_leader;
+> +			grp_leader->core.nr_members++;
+> +			grp_evt++;
+> +		}
+> +
+> +		if (*sep == '}') {
+> +			if (grp_evt < 0) {
+> +				fprintf(stderr, "cannot close a non-existing event group\n");
+> +				goto error;
+> +			}
+> +			evlist->nr_groups++;
+> +			grp_leader = NULL;
+> +			grp_evt = -1;
+> +		}
+> +	}
+> +	return 0;
+> +error:
+> +	free(p_orig);
+> +	return -1;
+> +}
+> +
+> +static const char *srcs[PFM_ATTR_CTRL_MAX]={
+> +	[PFM_ATTR_CTRL_UNKNOWN] = "???",
+> +	[PFM_ATTR_CTRL_PMU] = "PMU",
+> +	[PFM_ATTR_CTRL_PERF_EVENT] = "perf_event",
+> +};
+> +
+> +static void
+> +print_attr_flags(pfm_event_attr_info_t *info)
+> +{
+> +	int n = 0;
+> +
+> +	if (info->is_dfl) {
+> +		printf("[default] ");
+> +		n++;
+> +	}
+> +
+> +	if (info->is_precise) {
+> +		printf("[precise] ");
+> +		n++;
+> +	}
+> +
+> +	if (!n)
+> +		printf("- ");
+> +}
+> +
+> +static void
+> +print_libpfm_detailed_events(pfm_pmu_info_t *pinfo, pfm_event_info_t *info)
+> +{
+> +	pfm_event_attr_info_t ainfo;
+> +	const char *src;
+> +	int j, ret;
+> +
+> +	ainfo.size = sizeof(ainfo);
+> +
+> +	printf("\nName  : %s\n", info->name);
+> +	printf("PMU   : %s\n", pinfo->name);
+> +	printf("Desc  : %s\n", info->desc);
+> +	printf("Equiv : %s\n", info->equiv ? info->equiv : "None");
+> +	printf("Code  : 0x%"PRIx64"\n", info->code);
+> +
+> +	pfm_for_each_event_attr(j, info) {
+> +		ret = pfm_get_event_attr_info(info->idx, j, PFM_OS_PERF_EVENT_EXT, &ainfo);
+> +		if (ret != PFM_SUCCESS)
+> +			continue;
+> +
+> +		if (ainfo.ctrl >= PFM_ATTR_CTRL_MAX)
+> +			ainfo.ctrl = PFM_ATTR_CTRL_UNKNOWN;
+> +
+> +		src = srcs[ainfo.ctrl];
+> +		switch(ainfo.type) {
+> +		case PFM_ATTR_UMASK:
+> +			printf("Umask : 0x%02"PRIx64" : %s: [%s] : ", ainfo.code, src, ainfo.name);
+> +			print_attr_flags(&ainfo);
+> +			printf(": %s\n", ainfo.desc);
+> +			break;
+> +		case PFM_ATTR_MOD_BOOL:
+> +			printf("Modif : %s: [%s] : %s (boolean)\n", src, ainfo.name, ainfo.desc);
+> +			break;
+> +		case PFM_ATTR_MOD_INTEGER:
+> +			printf("Modif : %s: [%s] : %s (integer)\n", src, ainfo.name, ainfo.desc);
+> +			break;
+> +		case PFM_ATTR_NONE:
+> +		case PFM_ATTR_RAW_UMASK:
+> +		case PFM_ATTR_MAX:
+> +		default:
+> +			printf("Attr  : %s: [%s] : %s\n", src, ainfo.name, ainfo.desc);
+> +		}
+> +	}
+> +}
+> +
+> +/*
+> + * list all pmu::event:umask, pmu::event
+> + * printed events may not be all valid combinations of umask for an event
+> + */
+> +static void
+> +print_libpfm_simplified_events(pfm_pmu_info_t *pinfo, pfm_event_info_t *info)
+> +{
+> +	pfm_event_attr_info_t ainfo;
+> +	int j, ret;
+> +	int um = 0;
+> +
+> +	ainfo.size = sizeof(ainfo);
+> +
+> +	pfm_for_each_event_attr(j, info) {
+> +		ret = pfm_get_event_attr_info(info->idx, j, PFM_OS_PERF_EVENT_EXT, &ainfo);
+> +		if (ret != PFM_SUCCESS)
+> +			continue;
+> +
+> +		if (ainfo.type != PFM_ATTR_UMASK)
+> +			continue;
+> +
+> +		printf("%s::%s:%s\n", pinfo->name, info->name, ainfo.name);
+> +		um++;
+> +	}
+> +	if (um == 0)
+> +		printf("%s::%s\n", pinfo->name, info->name);
+> +}
+> +
+> +static void
+> +print_libpfm_events(bool name_only)
+> +{
+> +	pfm_event_info_t info;
+> +	pfm_pmu_info_t pinfo;
+> +	pfm_event_attr_info_t ainfo;
+> +	int i, p, ret;
+> +
+> +	/* initialize to zero to indicate ABI version */
+> +	info.size  = sizeof(info);
+> +	pinfo.size = sizeof(pinfo);
+> +	ainfo.size = sizeof(ainfo);
+> +
+> +	putchar('\n');
+> +
+> +	pfm_for_all_pmus(p) {
+> +		ret = pfm_get_pmu_info(p, &pinfo);
+> +		if (ret != PFM_SUCCESS)
+> +			continue;
+> +
+> +		/* ony print events that are supported by host HW */
+> +		if (!pinfo.is_present)
+> +			continue;
+> +
+> +		/* handled by perf directly */
+> +		if (pinfo.pmu == PFM_PMU_PERF_EVENT)
+> +			continue;
+> +
+> +		for (i = pinfo.first_event; i != -1; i = pfm_get_event_next(i)) {
+> +
+> +			ret = pfm_get_event_info(i, PFM_OS_PERF_EVENT_EXT, &info);
+> +			if (ret != PFM_SUCCESS)
+> +				continue;
+> +
+> +			if (!name_only)
+> +				print_libpfm_detailed_events(&pinfo, &info);
+> +			else
+> +				print_libpfm_simplified_events(&pinfo, &info);
+> +		}
+> +	}
+> +}
+> +#endif
+> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+> index 27596cbd0ba0..84d4799c9a31 100644
+> --- a/tools/perf/util/parse-events.h
+> +++ b/tools/perf/util/parse-events.h
+> @@ -37,6 +37,11 @@ int parse_events_terms(struct list_head *terms, const char *str);
+>  int parse_filter(const struct option *opt, const char *str, int unset);
+>  int exclude_perf(const struct option *opt, const char *arg, int unset);
+>  
+> +#ifdef HAVE_LIBPFM
+> +extern int parse_libpfm_events_option(const struct option *opt, const char *str,
+> +				int unset);
+> +#endif
+> +
+>  #define EVENTS_HELP_MAX (128*1024)
+>  
+>  enum perf_pmu_event_symbol_type {
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index ef6a63f3d386..5e918ca740c6 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -869,6 +869,17 @@ static struct perf_pmu *pmu_find(const char *name)
+>  	return NULL;
+>  }
+>  
+> +struct perf_pmu *perf_pmu__find_by_type(unsigned int type)
+> +{
+> +	struct perf_pmu *pmu;
+> +
+> +	list_for_each_entry(pmu, &pmus, list)
+> +		if (pmu->type == type)
+> +			return pmu;
+> +
+> +	return NULL;
+> +}
+> +
+>  struct perf_pmu *perf_pmu__scan(struct perf_pmu *pmu)
+>  {
+>  	/*
+> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> index 5fb3f16828df..de3b868d912c 100644
+> --- a/tools/perf/util/pmu.h
+> +++ b/tools/perf/util/pmu.h
+> @@ -65,6 +65,7 @@ struct perf_pmu_alias {
+>  };
+>  
+>  struct perf_pmu *perf_pmu__find(const char *name);
+> +struct perf_pmu *perf_pmu__find_by_type(unsigned int type);
+>  int perf_pmu__config(struct perf_pmu *pmu, struct perf_event_attr *attr,
+>  		     struct list_head *head_terms,
+>  		     struct parse_events_error *error);
+> -- 
+> 2.26.0.rc2.310.g2932bb562d-goog
 > 
-> 2) Why does having both ports of this repilicator enabled cause a hard
-> lockup? This is a separate hardware  / system issue.
-> 
-> The worst that should happen if both branches of a replicator are
-> enabled is that you get undesirable back pressure. (e.g. there is a
-> system we have seen - I think it is Juno - where there is a static
-> replicator feeding the TPIU and ETR - we need to disable the TPIU to
-> prevent undesired back pressure).
-> 
-
-Ok so hardlockup is not expected because of this backpressure.
-
-Thanks,
-Sai
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+
+- Arnaldo
