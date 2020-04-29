@@ -2,261 +2,124 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACC3C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0E8C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E04B82085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E26582085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:31:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgD2MbE (ORCPT
+        id S1727028AbgD2Mb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:31:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:38248 "EHLO foss.arm.com"
+        Wed, 29 Apr 2020 08:31:56 -0400
+Received: from mga11.intel.com ([192.55.52.93]:18882 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbgD2MbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:31:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F8441063;
-        Wed, 29 Apr 2020 05:31:02 -0700 (PDT)
-Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5136F3F73D;
-        Wed, 29 Apr 2020 05:31:00 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 13:30:57 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
+        id S1726554AbgD2Mb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 08:31:56 -0400
+IronPort-SDR: Kz2jzlWPxz2lbMCaGF0nA28a24ZVaMVnNLbMduRYuLkA9//9Encjz7l8uvuL7wGpqZ3at8gTbA
+ /o6o7cb/TFFg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 05:31:55 -0700
+IronPort-SDR: wgubizt0x69lH+ZvDFBUTwZpoXVYu6G8bufARnTlZJNrgBmYDO2uhPNPh0A12xREoB/ZT1aOlr
+ qqKGELXf9eCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
+   d="scan'208";a="405026231"
+Received: from amasrati-mobl1.ger.corp.intel.com (HELO [10.214.197.183]) ([10.214.197.183])
+  by orsmga004.jf.intel.com with ESMTP; 29 Apr 2020 05:31:48 -0700
+Subject: Re: [PATCH bpf-next v9 0/8] MAC and Audit policy using eBPF (KRSI)
+To:     KP Singh <kpsingh@chromium.org>, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, linux-security-module@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
         Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] sched/uclamp: Add a new sysctl to control RT
- default boost value
-Message-ID: <20200429123056.otyedhljlugyf5we@e107158-lin>
-References: <20200428164134.5588-1-qais.yousef@arm.com>
- <20200429113255.GA19464@codeaurora.org>
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20200329004356.27286-1-kpsingh@chromium.org>
+From:   Mikko Ylinen <mikko.ylinen@linux.intel.com>
+Message-ID: <0165887d-e9d0-c03e-18b9-72e74a0cbd59@linux.intel.com>
+Date:   Wed, 29 Apr 2020 15:31:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200429113255.GA19464@codeaurora.org>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200329004356.27286-1-kpsingh@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavan
+Hi,
 
-On 04/29/20 17:02, Pavan Kondeti wrote:
-> Hi Qais,
+On 29/03/2020 02:43, KP Singh wrote:
+> # How does it work?
 > 
-> On Tue, Apr 28, 2020 at 05:41:33PM +0100, Qais Yousef wrote:
+> The patchset introduces a new eBPF (https://docs.cilium.io/en/v1.6/bpf/)
+> program type BPF_PROG_TYPE_LSM which can only be attached to LSM hooks.
+> Loading and attachment of BPF programs requires CAP_SYS_ADMIN.
 > 
-> [...]
-> 
-> >  
-> > +static void uclamp_sync_util_min_rt_default(struct task_struct *p)
-> > +{
-> > +	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
-> > +
-> > +	if (unlikely(rt_task(p)) && !uc_se->user_defined)
-> > +		uclamp_se_set(uc_se, sysctl_sched_uclamp_util_min_rt_default, false);
-> > +}
-> 
-> Unlike system default clamp values, RT default value is written to
-> p->uclamp_req[UCLAMP_MIN]. A user may not be able to set the uclamp.max to a
-> lower value than sysctl_sched_uclamp_util_min_rt_default. This is not a
-> big deal. Just sharing my observation. Is this how you expected it to work?
+> The new LSM registers nop functions (bpf_lsm_<hook_name>) as LSM hook
+> callbacks. Their purpose is to provide a definite point where BPF
+> programs can be attached as BPF_TRAMP_MODIFY_RETURN trampoline programs
+> for hooks that return an int, and BPF_TRAMP_FEXIT trampoline programs
+> for void LSM hooks.
 
-This is how I expect it to work yes.
+I have two systems (a NUC and a qemu VM) that fail to boot if I enable
+the BPF LSM without enabling SELinux first. Anything I might be missing
+or are you able to trigger it too?
 
-Note that the sysctl_sched_uclamp_util_{min,max}, or 'system default clamp
-values' as you called them, are constraints. They define the range any task is
-_allowed to_ *request*.
+For instance, the following additional cmdline args: "lsm.debug=1
+lsm="capability,apparmor,bpf" results in:
 
-The new sysctl_sched_uclamp_util_min_rt_default is setting the default
-*request* for RT tasks. And this was done since historically RT tasks has
-always run at the highest performance point in Linux.
+[    1.251889] Call Trace:
+[    1.252344]  dump_stack+0x57/0x7a
+[    1.252951]  panic+0xe6/0x2a4
+[    1.253497]  ? printk+0x43/0x45
+[    1.254075]  mount_block_root+0x30c/0x31b
+[    1.254798]  mount_root+0x78/0x7b
+[    1.255417]  prepare_namespace+0x13a/0x16b
+[    1.256168]  kernel_init_freeable+0x210/0x222
+[    1.257021]  ? rest_init+0xa5/0xa5
+[    1.257639]  kernel_init+0x9/0xfb
+[    1.258074]  ret_from_fork+0x35/0x40
+[    1.258885] Kernel Offset: 0x11000000 from 0xffffffff81000000 
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[    1.264046] ---[ end Kernel panic - not syncing: VFS: Unable to mount 
+root fs on unknown-block(253,3)
 
-Can you think of a scenario where setting the default *request* of uclamp.max
-for all RT tasks helps?
+Taking out "bpf" or adding "selinux" before it boots OK. I've tried
+with both 5.7-rc2 and -rc3.
 
-I'm thinking, the global constrain of sysctl_sched_uclamp_util_max should
-suffice. Or one can use cgroup to selectively cap some tasks.
+LSM logs:
 
-For example if you don't want any task in the system to be boosted to anything
-higher than 800, just do
+[    0.267219] LSM: Security Framework initializing
+[    0.267844] LSM: first ordering: capability (enabled)
+[    0.267870] LSM: cmdline ignored: capability
+[    0.268869] LSM: cmdline ordering: apparmor (enabled)
+[    0.269508] LSM: cmdline ordering: bpf (enabled)
+[    0.269869] LSM: cmdline disabled: selinux
+[    0.270377] LSM: cmdline disabled: integrity
+[    0.270869] LSM: exclusive chosen: apparmor
+[    0.271869] LSM: cred blob size     = 8
+[    0.272354] LSM: file blob size     = 24
+[    0.272869] LSM: inode blob size    = 0
+[    0.273362] LSM: ipc blob size      = 0
+[    0.273869] LSM: msg_msg blob size  = 0
+[    0.274352] LSM: task blob size     = 32
+[    0.274873] LSM: initializing capability
+[    0.275381] LSM: initializing apparmor
+[    0.275880] AppArmor: AppArmor initialized
+[    0.276437] LSM: initializing bpf
+[    0.276871] LSM support for eBPF active
 
-	sysctl_sched_uclamp_util_max = 800
-
-Or if you want to be selective, the same thing can be achieved by creating
-a cgroup cpu controller that has uclamp.max = 0.8 and attaching tasks to it.
-
-> 
-> > +
-> >  static inline struct uclamp_se
-> >  uclamp_tg_restrict(struct task_struct *p, enum uclamp_id clamp_id)
-> >  {
-> > @@ -907,8 +935,15 @@ uclamp_tg_restrict(struct task_struct *p, enum uclamp_id clamp_id)
-> >  static inline struct uclamp_se
-> >  uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
-> >  {
-> > -	struct uclamp_se uc_req = uclamp_tg_restrict(p, clamp_id);
-> > -	struct uclamp_se uc_max = uclamp_default[clamp_id];
-> > +	struct uclamp_se uc_req, uc_max;
-> > +
-> > +	/*
-> > +	 * Sync up any change to sysctl_sched_uclamp_util_min_rt_default value.
-> > +	 */
-> > +	uclamp_sync_util_min_rt_default(p);
-> > +
-> > +	uc_req = uclamp_tg_restrict(p, clamp_id);
-> > +	uc_max = uclamp_default[clamp_id];
-> 
-> We are calling uclamp_sync_util_min_rt_default() unnecessarily for
-> clamp_id == UCLAMP_MAX case. Would it be better to have a separate
-
-It was actually intentional to make sure we update the value ASAP. I didn't
-think it's a lot of overhead. I can further protect with a check to verify
-whether the value has changed if it seems heavy handed.
-
-> uclamp_default for RT like uclamp_default_rt and select uc_max based
-> on task policy? Since all tunables are handled in sysctl_sched_uclamp_handler
-> we can cover the case of uclamp_util_min < uclamp_util_min_rt.
-
-Hmm I'm not sure I got you.
-
-uclamp_default[] is setting the constraints. I.e. what's the range it's allowed
-to take.
-
-What's added here is simply setting the requested uclamp.min value, which if
-the constraints allow it will be applied.
-
-For example. If
-
-	sysctl_sched_uclamp_util_min = 0
-	sysctl_sched_uclamp_util_min_rt_default = 400
-
-uclamp_eff_get() will return 0 as effective uclamp.min value for the task. So
-while the task still requests to be boosted to 1024, but the system constraint
-prevents it from getting it. But as soon as the system constraint has changed,
-the task might be able to get what it wants.
-
-For example, if at runtime sysctl_sched_uclamp_util_min was modified to 1024
-
-	sysctl_sched_uclamp_util_min = 1024
-	sysctl_sched_uclamp_util_min_rt_default = 400
-
-uclamp_eff_get() return 400 for the task now, as requested.
-
-Did this help answering your questions?
-
-Thanks
-
---
-Qais Yousef
-
-> 
-> >  
-> >  	/* System default restrictions always apply */
-> >  	if (unlikely(uc_req.value > uc_max.value))
-> > @@ -1114,12 +1149,13 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
-> >  				loff_t *ppos)
-> >  {
-> >  	bool update_root_tg = false;
-> > -	int old_min, old_max;
-> > +	int old_min, old_max, old_min_rt;
-> >  	int result;
-> >  
-> >  	mutex_lock(&uclamp_mutex);
-> >  	old_min = sysctl_sched_uclamp_util_min;
-> >  	old_max = sysctl_sched_uclamp_util_max;
-> > +	old_min_rt = sysctl_sched_uclamp_util_min_rt_default;
-> >  
-> >  	result = proc_dointvec(table, write, buffer, lenp, ppos);
-> >  	if (result)
-> > @@ -1133,6 +1169,18 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
-> >  		goto undo;
-> >  	}
-> >  
-> > +	/*
-> > +	 * The new value will be applied to RT tasks the next time the
-> > +	 * scheduler needs to calculate the effective uclamp.min for that task,
-> > +	 * assuming the task is using the system default and not a user
-> > +	 * specified value. In the latter we shall leave the value as the user
-> > +	 * requested.
-> > +	 */
-> > +	if (sysctl_sched_uclamp_util_min_rt_default > SCHED_CAPACITY_SCALE) {
-> > +		result = -EINVAL;
-> > +		goto undo;
-> > +	}
-> > +
-> >  	if (old_min != sysctl_sched_uclamp_util_min) {
-> >  		uclamp_se_set(&uclamp_default[UCLAMP_MIN],
-> >  			      sysctl_sched_uclamp_util_min, false);
-> > @@ -1158,6 +1206,7 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
-> >  undo:
-> >  	sysctl_sched_uclamp_util_min = old_min;
-> >  	sysctl_sched_uclamp_util_max = old_max;
-> > +	sysctl_sched_uclamp_util_min_rt_default = old_min_rt;
-> >  done:
-> >  	mutex_unlock(&uclamp_mutex);
-> >  
-> > @@ -1200,9 +1249,13 @@ static void __setscheduler_uclamp(struct task_struct *p,
-> >  		if (uc_se->user_defined)
-> >  			continue;
-> >  
-> > -		/* By default, RT tasks always get 100% boost */
-> > +		/*
-> > +		 * By default, RT tasks always get 100% boost, which the admins
-> > +		 * are allowed to change via
-> > +		 * sysctl_sched_uclamp_util_min_rt_default knob.
-> > +		 */
-> >  		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
-> > -			clamp_value = uclamp_none(UCLAMP_MAX);
-> > +			clamp_value = sysctl_sched_uclamp_util_min_rt_default;
-> >  
-> >  		uclamp_se_set(uc_se, clamp_value, false);
-> >  	}
-> > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> > index 8a176d8727a3..64117363c502 100644
-> > --- a/kernel/sysctl.c
-> > +++ b/kernel/sysctl.c
-> > @@ -453,6 +453,13 @@ static struct ctl_table kern_table[] = {
-> >  		.mode		= 0644,
-> >  		.proc_handler	= sysctl_sched_uclamp_handler,
-> >  	},
-> > +	{
-> > +		.procname	= "sched_util_clamp_min_rt_default",
-> > +		.data		= &sysctl_sched_uclamp_util_min_rt_default,
-> > +		.maxlen		= sizeof(unsigned int),
-> > +		.mode		= 0644,
-> > +		.proc_handler	= sysctl_sched_uclamp_handler,
-> > +	},
-> >  #endif
-> >  #ifdef CONFIG_SCHED_AUTOGROUP
-> >  	{
-> > -- 
-> > 2.17.1
-> > 
-> 
-> Thanks,
-> Pavan
-> 
-> -- 
-> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+-- Regards, Mikko
