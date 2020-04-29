@@ -2,124 +2,165 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEFAC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D22EC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C54412073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:44:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="m8aseD4B"
+	by mail.kernel.org (Postfix) with ESMTP id EEB722085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:45:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588160748;
+	bh=/OM4FK/RwUkxK+NS5G7ECE8Ouj2U/8Ru45/j3n7D8+A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sDdlc9hIC/+WyU0nYx1WeZEF5WhCa02Izm5wy1VLQx7DhWxtdZXWCj7aSqFxpwj/o
+	 jLW8y9VXzRCwU7fcsswyGf1SYvO7ByRcNLqXe49FyekTBzMVjK+BcpJreEPBfHGuZQ
+	 9Btlz6xNpeUxvX92Dsqu8ZFsm4QzFN87NrmbdXSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbgD2Lo5 (ORCPT
+        id S1726755AbgD2Lpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 07:44:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726345AbgD2Lo4 (ORCPT
+        Wed, 29 Apr 2020 07:45:47 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41336 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbgD2Lpq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 07:44:56 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC275C03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 04:44:54 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id j2so2111242wrs.9
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 04:44:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=ycL/xol5LXc1oCnHf2lKepLV8YI7R5oU0gAskKNmHEg=;
-        b=m8aseD4BGSL2eeyIyCCtWjiVzInZjA9AOhfIWWHODJqtsZn3u8IiZm78LhL6xbNLXZ
-         egBMXWzyS5tpOXxLihcfxqD+Lb2ikPScf8qTirnKlsO3Iw4So/70aOvCDL9XG3pDLZTD
-         MFyA6G+W+2lloNKnkwXdiIl78GUA8HPcqZgVV6JmrVySRDyfhw/Oe1KUPW2mVSo671o2
-         l6HNwZkudieQaqswTiPD0p3wq/2WHsKUqLgcnLjh5W7gLr1QAfVXaBUGD/iSvK7doL33
-         o3T/OEEmwDHnVzQKZod20K0v7oHIk64Ihl2XPtOQ7zkmzeHlpneKKQu2dNVhRie6qCsd
-         0rCg==
+        Wed, 29 Apr 2020 07:45:46 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d24so746467pll.8;
+        Wed, 29 Apr 2020 04:45:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=ycL/xol5LXc1oCnHf2lKepLV8YI7R5oU0gAskKNmHEg=;
-        b=kt/C4I8gzwGdqbOmbTfyIHtr6ZxsybhqwH4bFJJLxoXjF1uMnH7WJW+qI2nngUC16x
-         0rRxashMQkDfW0G2s5mbBcxuvq+LJp8UAJ+qE387YvAukHIM8rPYfLX/+1s9XxJQVYX3
-         5U3XzX4zjhhsqlwOwvipTiXgX69LPLy0xpPuVIeOPIkd6BBVcEQ2NzldAFdqxOe86Kdy
-         OaS/yHX45BzleBFdx8g1jvlLsqGHoww4IUhL2deV65j9cYx7F+PicRIkU9fl6XzW2fKo
-         xwFfoMHa+E8Ur8k7MrHxp/WVRiSvGzU9L4XKpo5VoPfqlItRGVZQbL1PceqQToUD9LHs
-         m18w==
-X-Gm-Message-State: AGi0PuYyuI2BRGmQ87oryOA9tId4psQJizzHAw0Hs5h2hHmsWbm+6/Zz
-        Zqwl/z6gWm+oPa6MLYC/ofb4nQ==
-X-Google-Smtp-Source: APiQypJh67PJZJCKLabOQpyBwAm1TEQoQ/CjhAvqt2E5lBGcLL5HQluaH1NaN2U1R8Ksxp+nn0C5Xg==
-X-Received: by 2002:adf:f1c5:: with SMTP id z5mr38733111wro.100.1588160693203;
-        Wed, 29 Apr 2020 04:44:53 -0700 (PDT)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id z8sm28289847wrr.40.2020.04.29.04.44.52
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mT5Z8qNqQ+AcBEqStzPHJNFT7xvT58WmUFXj+uz8ENw=;
+        b=PQY+SYMlY1rPDbYAFRv/+Ziv8QN8sUr8Jp7RmQnyXY/weHGE2VEquH3wxkw3tNOzG7
+         N1Zg/N37xVdHgodkEnbhoFUElnatz2lEyHwYJHPtjtx8lQk6ES7BLrZyq9V2I+m2F8vo
+         52nvKTUktQnEcS8F48pGxLyEWL3/+sOrfJY1RHpWE8xvUbSaQXeZL5Uu+MlCFPJ9OHOH
+         omYc6k1qWHp3oeerwG5CEOHfFMyyR1zY88GtVgbJGZVVq2JEFaAhb/v7w8+D8OwQ05qP
+         BlASzmc3gqr71NAG2Zwc5tmxnwczhPnpD15haDqZ5Dl+R13qw315j4XTBvao+r1eH0uw
+         hcHA==
+X-Gm-Message-State: AGi0PuYuHDTJ6EJMqkczPmVxk/sO8VruKaX7hKkQHPXfkALDrhiiRNeG
+        iV1yptB5p541/1WJ2c0xg6Q=
+X-Google-Smtp-Source: APiQypIOvFFBsXlgaoYDJnpshsiDSFtn+ydVciDyw+1/YHZGH/+uxaJ5/jJ6qSPm43haEY/HT4nkoA==
+X-Received: by 2002:a17:90a:ead6:: with SMTP id ev22mr2749372pjb.94.1588160744731;
+        Wed, 29 Apr 2020 04:45:44 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id h193sm1001007pfe.30.2020.04.29.04.45.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 04:44:52 -0700 (PDT)
-References: <20200417184127.1319871-1-martin.blumenstingl@googlemail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org
-Cc:     narmstrong@baylibre.com, mturquette@baylibre.com, sboyd@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] clk: meson8b: updates for video clocks / resets
-In-reply-to: <20200417184127.1319871-1-martin.blumenstingl@googlemail.com>
-Date:   Wed, 29 Apr 2020 13:44:51 +0200
-Message-ID: <1jr1w6iki4.fsf@starbuckisacylon.baylibre.com>
+        Wed, 29 Apr 2020 04:45:43 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id A8F8E403AB; Wed, 29 Apr 2020 11:45:42 +0000 (UTC)
+Date:   Wed, 29 Apr 2020 11:45:42 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Subject: Re: [PATCH v3 4/6] blktrace: fix debugfs use after free
+Message-ID: <20200429114542.GJ11244@42.do-not-panic.com>
+References: <20200429074627.5955-1-mcgrof@kernel.org>
+ <20200429074627.5955-5-mcgrof@kernel.org>
+ <20200429112637.GD21892@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429112637.GD21892@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 29, 2020 at 04:26:37AM -0700, Christoph Hellwig wrote:
+> I can't say I'm a fan of all these long backtraces in commit logs..
+> 
+> > +static struct dentry *blk_debugfs_dir_register(const char *name)
+> > +{
+> > +	return debugfs_create_dir(name, blk_debugfs_root);
+> > +}
+> 
+> I don't think we really need this helper.
 
-On Fri 17 Apr 2020 at 20:41, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+We don't export blk_debugfs_root, didn't think we'd want to, and
+since only a few scew funky drivers would use the struct gendisk
+and also support BLKTRACE, I didn't think we'd want to export it
+now.
 
-> This is the first batch of fixes and updates for the Meson8/8b/8m2
-> clock controller driver.
->
-> The first patch fixes the video clock hierarchy. Special thanks to
-> Neil for providing a lot of details about the video clock tree!
->
-> The second and third came up while testing video output on my EC-100
-> (Endless Mini). This board is special because u-boot does not enable
-> the video outputs like most other u-boot versions do. However, this
-> is very useful for development because it shows (the hard way ;))
-> where the existing code is buggy.
->
-> The last patch is a small improvement for the VPU clock so we
-> utilize the glitch-free mux (on SoCs which support it) and avoid
-> problems by changing the "live" clock tree at runtime (with the mali
-> clock this resulted in system hangs/freezes).
->
-> In my opinion all of these patches - including the fixes - can go to
-> "next" because the relevant clock trees are still read-only.
->
->
-> Changes since v1 at [0]:
-> - updated the description in patch #1 to clarify that (it seems that)
->   there is no fixed pre-multiplier for the HDMI PLL (like on GXL for
->   example). Spotted by Jerome - thanks!
-> - simplified the logic for the active_low resets in patch #2 by
->   shortening the if ... else. Thanks to Jerome for the suggestion.
->
->
-> [0] https://patchwork.kernel.org/cover/11489079/
->
->
-> Martin Blumenstingl (4):
->   clk: meson: meson8b: Fix the first parent of vid_pll_in_sel
->   clk: meson: meson8b: Fix the polarity of the RESET_N lines
->   clk: meson: meson8b: Fix the vclk_div{1,2,4,6,12}_en gate bits
->   clk: meson: meson8b: Make the CCF use the glitch-free VPU mux
+A new block private symbol namespace alright?
 
-Applied, Thx
+> > +void blk_part_debugfs_unregister(struct hd_struct *p)
+> > +{
+> > +	debugfs_remove_recursive(p->debugfs_dir);
+> > +	p->debugfs_dir = NULL;
+> > +}
+> 
+> Why do we need to clear the pointer here?
 
+True, not needed for partition.
+
+> > +#ifdef CONFIG_DEBUG_FS
+> > +	/* Currently only used by kernel/trace/blktrace.c */
+> > +	struct dentry *debugfs_dir;
+> > +#endif
+> 
+> Does that comment really add value?
+
+I'll nuke it.
+
+> > +static struct dentry *blk_trace_debugfs_dir(struct block_device *bdev,
+> > +					    struct request_queue *q)
+> >  {
+> > +	struct hd_struct *p = NULL;
+> >  
+> > +	 * Some drivers like scsi-generic use a NULL block device. For
+> > +	 * other drivers when bdev != bdev->bd_contain we are doing a blktrace
+> > +	 * on a parition, otherwise we know we are working on the whole
+> > +	 * disk, and for that the request_queue already has its own debugfs_dir.
+> > +	 * which we have been using for other things other than blktrace.
+> > +	 */
+> > +	if (bdev && bdev != bdev->bd_contains)
+> > +		p = bdev->bd_part;
+> >  
+> > +	if (p)
+> > +		return p->debugfs_dir;
+> > +
+> > +	return q->debugfs_dir;
+> 
+> This could be simplified down to:
+> 
+> 	if (bdev && bdev != bdev->bd_contains)
+> 		return bdev->bd_part->debugfs_dir;
+> 	return q->debugfs_dir;
 >
->  drivers/clk/meson/meson8b.c | 105 +++++++++++++++++++++++++-----------
->  1 file changed, 73 insertions(+), 32 deletions(-)
+> Given that bd_part is in __blkdev_get very near bd_contains.
 
+Ah neat.
+
+> Also given that this patch completely rewrites blk_trace_debugfs_dir is
+> there any point in the previous patch?
+
+Still think it helps with making this patch easier to read, but I don't
+care, lemme know if I should just fold it.
+
+> > @@ -491,6 +500,7 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+> >  	struct dentry *dir = NULL;
+> >  	int ret;
+> >  
+> > +
+> >  	if (!buts->buf_size || !buts->buf_nr)
+> >  		return -EINVAL;
+> >  
+> 
+> Spurious whitespace change.
+
+Will nuke.
+
+  Luis
