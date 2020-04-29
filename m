@@ -2,86 +2,102 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB5EC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE56C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EBDF208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E117208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:55:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rR8i7Yuh"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CVK5NnCM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726854AbgD2Mxp (ORCPT
+        id S1726815AbgD2Mzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:53:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46218 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726554AbgD2Mxo (ORCPT
+        Wed, 29 Apr 2020 08:55:52 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:43668 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726516AbgD2Mzw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:53:44 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00DBAC03C1AD;
-        Wed, 29 Apr 2020 05:53:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=uNki6MLM9DcEC3Z6w0/BdO3E8oDPkiulVgaVGz6CEjA=; b=rR8i7Yuho3v8Xo9oVTGli9rVu9
-        Jz34o2MyuO9n3Y7GQP9UTU/qq2SvL3vXOAKUiLRv8a4GAvaovtN4A022s0iNsME3XwtZaYMp33E+9
-        gumxm8EdWWYbFcacSyNuZVPeJTTX1MJBeqA7UwqgIInWyt7QRXedZk/sDJENU4ZQJ1gAy888djzl5
-        Jh9E5hYF6YCh5zEPhXv6fuROU+5Dd5ACbWOIesC9snKyCPZpNOo5v9SG3WNUXVSMDDkpr8ANu9uGg
-        7H0EIj6Es5jQrhs3tVJrjMfiAnBAxzK4rHlkJVBz06+D9wgq5WQpWmwpuYO7942aWU4uXZqcm+H0F
-        BbI5RfQA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTmDc-000427-9q; Wed, 29 Apr 2020 12:53:40 +0000
-Date:   Wed, 29 Apr 2020 05:53:40 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
-Subject: Re: [PATCH 2/7] mm: Move pt_mm within struct page
-Message-ID: <20200429125340.GR29705@bombadil.infradead.org>
-References: <20200428194449.22615-1-willy@infradead.org>
- <20200428194449.22615-3-willy@infradead.org>
- <CAMuHMdUw38VD8WJe5Zbaudnee74ZgLwbfhRwU8Pi9ALitre+_Q@mail.gmail.com>
+        Wed, 29 Apr 2020 08:55:52 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03TCtltE074490;
+        Wed, 29 Apr 2020 07:55:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588164947;
+        bh=+/D/YE4iaDfh77kDeL/eqDeYukrWzpHHleyItETnDQw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=CVK5NnCMdxn5RUvsbPrUj5m+I1T/a6YCsm5BNlXl+3d4BMvHXcL3KKJhzHplgUlt7
+         SxF7x9Mov6hSfdbntYJr6iNaTHI/i2rfbQGwv870y9BNgeYor5DIi3PGtUkC/TTfAL
+         YgwUC6Ng57+1MnoffzFKg/1kevE1Y7kgdCg7gYrA=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03TCtlIB104920
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 29 Apr 2020 07:55:47 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 29
+ Apr 2020 07:55:47 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 29 Apr 2020 07:55:47 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03TCtkFf077209;
+        Wed, 29 Apr 2020 07:55:47 -0500
+Subject: Re: [PATCH v21 11/16] leds: lp55xx: Add multicolor framework support
+ to lp55xx
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200428160338.2793-1-dmurphy@ti.com>
+ <20200428160338.2793-12-dmurphy@ti.com>
+ <5225c7bf-1e0d-5465-132e-54a3071cf518@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <9738553f-06a9-a57b-0c99-172b80dcb4f6@ti.com>
+Date:   Wed, 29 Apr 2020 07:49:53 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUw38VD8WJe5Zbaudnee74ZgLwbfhRwU8Pi9ALitre+_Q@mail.gmail.com>
+In-Reply-To: <5225c7bf-1e0d-5465-132e-54a3071cf518@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 09:34:02AM +0200, Geert Uytterhoeven wrote:
-> > +++ b/include/linux/mm_types.h
-> > @@ -149,11 +149,8 @@ struct page {
-> >                                         pgtable_t pmd_huge_pte;
-> >                                 };
-> >                         };
-> > -                       unsigned long _pt_pad_2;        /* mapping */
-> > -                       union {
-> > -                               struct mm_struct *pt_mm; /* x86 pgds only */
-> > -                               atomic_t pt_frag_refcount; /* powerpc */
-> > -                       };
-> > +                       struct mm_struct *pt_mm;
-> > +                       atomic_t pt_frag_refcount; /* powerpc */
-> 
-> So here is now an implicit hole on 64-bit platforms, right?
-> Do we have any where alignof(long) != 8?
+Jacek
 
-There's an implicit hole if someone's turned on spinlock debugging and
-has split pagetable locks.  Without the need to allocate the spinlock
-separately, the ptl will actually move from the same word as 'private'
-to the same word as 'index', freeing up 'private' entirely.  I don't
-intend to depend on that, but it's not quite as critical to line up the
-various members of struct page as it used to be.
+On 4/28/20 3:59 PM, Jacek Anaszewski wrote:
+> Dan,
+>
+> On 4/28/20 6:03 PM, Dan Murphy wrote:
+>> Add multicolor framework support for the lp55xx family.
+>>
+>> Acked-by: Pavel Machek <pavel@ucw.cz>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   drivers/leds/Kconfig                      |   1 +
+>>   drivers/leds/leds-lp5521.c                |  14 +-
+>>   drivers/leds/leds-lp5523.c                |  14 +-
+>>   drivers/leds/leds-lp5562.c                |  13 +-
+>>   drivers/leds/leds-lp55xx-common.c         | 178 +++++++++++++++++++---
+>>   drivers/leds/leds-lp55xx-common.h         |  14 +-
+>>   drivers/leds/leds-lp8501.c                |  14 +-
+>>   include/linux/platform_data/leds-lp55xx.h |   8 +
+>>   8 files changed, 209 insertions(+), 47 deletions(-)
+>>
+>
+> For patches 10/16 - 16/16:
+>
+> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>
+Ack and added
+
+Dan
 
