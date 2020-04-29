@@ -1,236 +1,121 @@
 Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	TVD_SUBJ_WIPE_DEBT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17021C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB834C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5CF02073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8453321D7B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:42:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Q3cXQ8bV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s5fCj4BQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgD2OjF (ORCPT
+        id S1726891AbgD2Omt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:39:05 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:50379 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726451AbgD2OjE (ORCPT
+        Wed, 29 Apr 2020 10:42:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35226 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726780AbgD2Omt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:39:04 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03TEcUx7020853;
-        Wed, 29 Apr 2020 16:38:57 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : from : to : cc
- : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=EYGBSDm1wv06sHxoVMD8B6GSZnWRBOWdfk0lRWRXmPU=;
- b=Q3cXQ8bVyNKrHQy/+NQw8/d4OHm1jnHAJMe7H+BuH2WkxcjWcD+b7b1495MqG//c9Jib
- LwnNGzPTdv98EPQYrUpKjGK1TBmpcJYMGUwrFnOI8j8bWNyqL7YiBlW49l3XwrjLYXmQ
- eweMF+Fkli/LzmJHtK2zWRiopY9lvTuE2+qvAbwOzhNLN6wx1cxuPSe36nkyX9cX9XN4
- FcghqJpH5sNYllnm5zArZvfgkJIx7uKXv1pB9VkrmszQ7XdFLeMkelS2cO/dng7fbXIt
- Og/GVY76QJfVX6hQHxxHFUElgT/nc4W6NMPHbCXooWIvwK92mAhr+A6b2sAricxKNv8d GQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30mhcc6xak-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 16:38:57 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AE4D810002A;
-        Wed, 29 Apr 2020 16:38:56 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 97ABF222CEF;
-        Wed, 29 Apr 2020 16:38:56 +0200 (CEST)
-Received: from lmecxl0889.tpe.st.com (10.75.127.44) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Apr
- 2020 16:38:55 +0200
-Subject: Re: [PATCH v3 12/14] remoteproc: Introducing function
- rproc_set_state_machine()
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        <bjorn.andersson@linaro.org>, <ohad@wizery.com>
-CC:     <loic.pallardy@st.com>, <s-anna@ti.com>,
-        <linux-remoteproc@vger.kernel.org>, <corbet@lwn.net>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200424200135.28825-1-mathieu.poirier@linaro.org>
- <20200424200135.28825-13-mathieu.poirier@linaro.org>
- <d297aeab-4f7e-95e0-04c0-266e0f08b2d0@st.com>
-Message-ID: <1438e3f6-3d8a-7edd-f552-b01f84316ec7@st.com>
-Date:   Wed, 29 Apr 2020 16:38:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 10:42:49 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13542C03C1AD;
+        Wed, 29 Apr 2020 07:42:49 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id c18so2646272ile.5;
+        Wed, 29 Apr 2020 07:42:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xqWtuuKGyccZnCAMErVogWBfiRD+U5fCxE5xiaJTzfo=;
+        b=s5fCj4BQKrHN0Zovvg3Dr25wInQgTYs0QpmECbgHHuMzwOfZPpWBo5kbvDtkQXXTSO
+         iXDdXHTqmTd7tdHb5K3vCr+nZ6G7qiXnMz078lmJjWeTAqZF5MjEb44MxQVO0aX+ljfQ
+         /0c6q3bgMT7t0XSvGyJsfR0dnidb17q2HiJ7X5F/WbSn6W3ukIcAoSbUaOZYtqlc3dQH
+         YmlE4eHfQ9RXtB4WmPRDsuiST3FZ4SuBpxQiy5IQK+wmr2PaJGMR1X1a2Nw1TqTFZmGH
+         pHRm1Xf+CnOprzL8LoiY181dWiUMUTOuUF3P3A/0xGL0kIAw9FnTMlbxZxtEGza3Eq18
+         Dh4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xqWtuuKGyccZnCAMErVogWBfiRD+U5fCxE5xiaJTzfo=;
+        b=bBd5WPe/QloBcvOE6tHaZ6MOKoJ9kz/p/y40hmGGnGmXbW1VsWiq/3BIU2I7/VnU3h
+         SpYMRlFW4+VCtcLQYOaC7BwdkXbpNBAgdtEDysrUdfw5bqZMH0kkni9rz3L868G37U3s
+         jSDPMiDOLX7VKDvCd/AVeSrfiJTTcepuGwixHXld4ME63v60jNnoLj43RcYBEzaYTtgf
+         Y8APIYJkyink4crTME5s41roKuTrqGG0sxTgX96W7HdZltjhDgShBVpLKe36rbXDB3Q5
+         fDPoYyrukoLDHWq9xeKZPuceOQzy4oE5nwLUGTntXKto2ZI4lPXX8xvVRLgr6STDtUhA
+         r03w==
+X-Gm-Message-State: AGi0PuZWpI6COLbL+JwjXnpb6DlJw9mDTzkEfO9cvs6pEkxzKbVx6xSY
+        C0wZ+9QyVPOuvWPaXFxjcImYpHlUkJN09PhE0RU=
+X-Google-Smtp-Source: APiQypJ7U9Prko6Vi5K48lXkGdf0yeTY8OK5a8KU1GkGRlP47cvtBGWMdJwRF+dEj65ASvEvOa24knaqwchBPTLuB7o=
+X-Received: by 2002:a92:cac7:: with SMTP id m7mr32641141ilq.6.1588171368312;
+ Wed, 29 Apr 2020 07:42:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d297aeab-4f7e-95e0-04c0-266e0f08b2d0@st.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-29_07:2020-04-29,2020-04-29 signatures=0
+References: <20200428144314.24533-2-vaibhavgupta40@gmail.com>
+ <20200428171928.GA170516@google.com> <CAPBsFfDjVSRHjf36WcAgteH9XocrmrNYTPW4fD2Rwi0neJF6ww@mail.gmail.com>
+In-Reply-To: <CAPBsFfDjVSRHjf36WcAgteH9XocrmrNYTPW4fD2Rwi0neJF6ww@mail.gmail.com>
+From:   Vaibhav Gupta <vaibhav.varodek@gmail.com>
+Date:   Wed, 29 Apr 2020 20:11:45 +0530
+Message-ID: <CAPBsFfBtr12m1e9njtVct_V1RPSVYksuAdMjhgqUQ1WqFRLYsg@mail.gmail.com>
+Subject: Re: [Linux-kernel-mentees] [PATCH v2 1/2] realtek/8139too: Remove
+ Legacy Power Management
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        Shannon Nelson <snelson@pensando.io>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Martin Habets <mhabets@solarflare.com>, netdev@vger.kernel.org,
+        bjorn@helgaas.com, linux-kernel-mentees@lists.linuxfoundation.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        skhan@linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> >
+> > Uncapitalize "legacy power management" in subject.  I'd say "convert",
+> > not "remove", to make it clear that the driver will still do power
+> > management afterwards.
+Sure!
+> >
+> > I think your to: and cc: list came from the get_maintainer.pl script,
+yeah.
+> > but you can trim it a bit by omitting people who have just made
+> > occasional random fixups.  These drivers are really unmaintained, so
+> > Dave M, netdev, Rafael, linux-pm, linux-pci, and maybe LKML are
+> > probably enough.
+I will keep this in mind next time.
+> >
+> > On Tue, Apr 28, 2020 at 08:13:13PM +0530, Vaibhav Gupta wrote:
+> > > Upgrade power management from legacy to generic using dev_pm_ops.
+> >
+> > Instead of the paragraphs below, which cover the stuff that's fairly
+> > obvious, I think it would be more useful to include hints about where
+> > the things you removed will be done now.  That helps reviewers verify
+> > that this doesn't break anything.  E.g.,
+> >
+> >   In the legacy PM model, drivers save and restore PCI state and set
+> >   the device power state directly.  In the generic model, this is all
+> >   done by the PCI core in .suspend_noirq() (pci_pm_suspend_noirq())
+> >   and .resume_noirq() (pci_pm_resume_noirq()).
+> >
+> > This sort of thing could go in each commit log.  The cover letter
+> > doesn't normally go in the commit log, so you have to assume it will
+> > be lost.
+ Okay. I will send v3 patch-series with changes. Thanks for
+acknowledging :)
 
-
-On 4/29/20 11:22 AM, Arnaud POULIQUEN wrote:
-> 
-> 
-> On 4/24/20 10:01 PM, Mathieu Poirier wrote:
->> Introducting function rproc_set_state_machine() to add
->> operations and a set of flags to use when synchronising with
->> a remote processor.
->>
->> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->> ---
->>  drivers/remoteproc/remoteproc_core.c     | 54 ++++++++++++++++++++++++
->>  drivers/remoteproc/remoteproc_internal.h |  6 +++
->>  include/linux/remoteproc.h               |  3 ++
->>  3 files changed, 63 insertions(+)
->>
->> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
->> index 48afa1f80a8f..5c48714e8702 100644
->> --- a/drivers/remoteproc/remoteproc_core.c
->> +++ b/drivers/remoteproc/remoteproc_core.c
->> @@ -2065,6 +2065,59 @@ int devm_rproc_add(struct device *dev, struct rproc *rproc)
->>  }
->>  EXPORT_SYMBOL(devm_rproc_add);
->>  
->> +/**
->> + * rproc_set_state_machine() - Set a synchronisation ops and set of flags
->> + *			       to use with a remote processor
->> + * @rproc:	The remote processor to work with
->> + * @sync_ops:	The operations to use when synchronising with a remote
->> + *		processor
->> + * @sync_flags:	The flags to use when deciding if the remoteproc core
->> + *		should be synchronising with a remote processor
->> + *
->> + * Returns 0 on success, an error code otherwise.
->> + */
->> +int rproc_set_state_machine(struct rproc *rproc,
->> +			    const struct rproc_ops *sync_ops,
->> +			    struct rproc_sync_flags sync_flags)
-> 
-> So this API should be called by platform driver only in case of synchronization
-> support, right?
-> In this case i would rename it as there is also a state machine in "normal" boot
-> proposal: rproc_set_sync_machine or rproc_set_sync_state_machine
-> 
-
-Reviewing the stm32 series, i wonder if sync_flags should be a pointer to a const structure
-as the platform driver should not update it during the rproc live cycle.
-Then IMO, using a pointer to the structure instead of the structure seems more 
-in line with the rest of the remoteproc API.
-
->> +{
->> +	if (!rproc || !sync_ops)
->> +		return -EINVAL;
->> +
->> +	/*
->> +	 * No point in going further if we never have to synchronise with
->> +	 * the remote processor.
->> +	 */
->> +	if (!sync_flags.on_init &&
->> +	    !sync_flags.after_stop && !sync_flags.after_crash)
->> +		return 0;
->> +
->> +	/*
->> +	 * Refuse to go further if remoteproc operations have been allocated
->> +	 * but they will never be used.
->> +	 */
->> +	if (rproc->ops && sync_flags.on_init &&
->> +	    sync_flags.after_stop && sync_flags.after_crash)
->> +		return -EINVAL;
->> +
->> +	/*
->> +	 * Don't allow users to set this more than once to avoid situations
->> +	 * where the remote processor can't be recovered.
->> +	 */
->> +	if (rproc->sync_ops)
->> +		return -EINVAL;
->> +
->> +	rproc->sync_ops = kmemdup(sync_ops, sizeof(*sync_ops), GFP_KERNEL);
->> +	if (!rproc->sync_ops)
->> +		return -ENOMEM;
->> +
->> +	rproc->sync_flags = sync_flags;
->> +	/* Tell the core what to do when initialising */
->> +	rproc_set_sync_flag(rproc, RPROC_SYNC_STATE_INIT);
-> 
-> Is there a use case where sync_flags.on_init is false and other flags are true?
-> 
-> Look like on_init is useless and should not be exposed to the platform driver.
-> Or comments are missing to explain the usage of it vs the other flags.
-> 
-> Regards,
-> Arnaud
->  
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL(rproc_set_state_machine);
->> +
->>  /**
->>   * rproc_type_release() - release a remote processor instance
->>   * @dev: the rproc's device
->> @@ -2088,6 +2141,7 @@ static void rproc_type_release(struct device *dev)
->>  	kfree_const(rproc->firmware);
->>  	kfree_const(rproc->name);
->>  	kfree(rproc->ops);
->> +	kfree(rproc->sync_ops);
->>  	kfree(rproc);
->>  }
->>  
->> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
->> index 7dcc0a26892b..c1a293a37c78 100644
->> --- a/drivers/remoteproc/remoteproc_internal.h
->> +++ b/drivers/remoteproc/remoteproc_internal.h
->> @@ -27,6 +27,8 @@ struct rproc_debug_trace {
->>  /*
->>   * enum rproc_sync_states - remote processsor sync states
->>   *
->> + * @RPROC_SYNC_STATE_INIT	state to use when the remoteproc core
->> + *				is initialising.
->>   * @RPROC_SYNC_STATE_SHUTDOWN	state to use after the remoteproc core
->>   *				has shutdown (rproc_shutdown()) the
->>   *				remote processor.
->> @@ -39,6 +41,7 @@ struct rproc_debug_trace {
->>   * operation to use.
->>   */
->>  enum rproc_sync_states {
->> +	RPROC_SYNC_STATE_INIT,
->>  	RPROC_SYNC_STATE_SHUTDOWN,
->>  	RPROC_SYNC_STATE_CRASHED,
->>  };
->> @@ -47,6 +50,9 @@ static inline void rproc_set_sync_flag(struct rproc *rproc,
->>  				       enum rproc_sync_states state)
->>  {
->>  	switch (state) {
->> +	case RPROC_SYNC_STATE_INIT:
->> +		rproc->sync_with_rproc = rproc->sync_flags.on_init;
->> +		break;
->>  	case RPROC_SYNC_STATE_SHUTDOWN:
->>  		rproc->sync_with_rproc = rproc->sync_flags.after_stop;
->>  		break;
->> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
->> index ceb3b2bba824..a75ed92b3de6 100644
->> --- a/include/linux/remoteproc.h
->> +++ b/include/linux/remoteproc.h
->> @@ -619,6 +619,9 @@ struct rproc *rproc_get_by_child(struct device *dev);
->>  struct rproc *rproc_alloc(struct device *dev, const char *name,
->>  			  const struct rproc_ops *ops,
->>  			  const char *firmware, int len);
->> +int rproc_set_state_machine(struct rproc *rproc,
->> +			    const struct rproc_ops *sync_ops,
->> +			    struct rproc_sync_flags sync_flags);
->>  void rproc_put(struct rproc *rproc);
->>  int rproc_add(struct rproc *rproc);
->>  int rproc_del(struct rproc *rproc);
->>
+--Vaibhav Gupta
+> >
+> > > Remove "struct pci_driver.suspend" and "struct pci_driver.resume"
+> > > bindings, and add "struct pci_driver.driver.pm" .
+> > >
