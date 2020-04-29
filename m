@@ -6,193 +6,132 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6694C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E88C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB9492085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F9E2085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:39:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgD2NjQ (ORCPT
+        id S1728369AbgD2NjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:39:16 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60740 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727996AbgD2NjD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:39:03 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03TDYTlb066645;
-        Wed, 29 Apr 2020 09:38:59 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30q9bc312p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 09:38:59 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03TDa02Y068913;
-        Wed, 29 Apr 2020 09:38:58 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30q9bc311g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 09:38:58 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03TDUR1C029371;
-        Wed, 29 Apr 2020 13:38:56 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 30mcu5rgk5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 13:38:56 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03TDcsHv58655108
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Apr 2020 13:38:54 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 51ADFAE055;
-        Wed, 29 Apr 2020 13:38:54 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5EE2BAE04D;
-        Wed, 29 Apr 2020 13:38:53 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.162.91])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 29 Apr 2020 13:38:53 +0000 (GMT)
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     Mimi Zohar <zohar@linux.ibm.com>, Mickael Salaun <mic@digikod.net>,
-        Steve Grubb <sgrubb@redhat.com>, Jann Horn <jannh@google.com>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] ima: add policy support for identifying file execute mode bit
-Date:   Wed, 29 Apr 2020 09:38:42 -0400
-Message-Id: <1588167523-7866-2-git-send-email-zohar@linux.ibm.com>
-X-Mailer: git-send-email 2.7.5
-In-Reply-To: <1588167523-7866-1-git-send-email-zohar@linux.ibm.com>
-References: <1588167523-7866-1-git-send-email-zohar@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-29_05:2020-04-29,2020-04-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 adultscore=0 phishscore=0 bulkscore=0 clxscore=1011
- impostorscore=0 mlxlogscore=999 suspectscore=1 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004290110
+        Wed, 29 Apr 2020 09:39:22 -0400
+Received: from 8bytes.org ([81.169.241.247]:40068 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728008AbgD2Nhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 09:37:51 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id DAA2CF02; Wed, 29 Apr 2020 15:37:39 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     Daniel Drake <drake@endlessm.com>, jonathan.derrick@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH v3 24/34] iommu/qcom: Convert to probe/release_device() call-backs
+Date:   Wed, 29 Apr 2020 15:37:02 +0200
+Message-Id: <20200429133712.31431-25-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200429133712.31431-1-joro@8bytes.org>
+References: <20200429133712.31431-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend the IMA policy language with "mode=IXUGO" to identify files with
-the execute mode bit enabled.
+From: Joerg Roedel <jroedel@suse.de>
 
-Examples:
-measure func=FILE_CHECK mode=IXUGO
-appraise func=FILE_CHECK appraise_type=imasig mode=IXUGO
+Convert the QCOM IOMMU driver to use the probe_device() and
+release_device() call-backs of iommu_ops, so that the iommu core code
+does the group and sysfs setup.
 
-Suggested-by: Steve Grubb <sgrubb@redhat.com> (based on execute mode bit)
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- Documentation/ABI/testing/ima_policy |  5 +++--
- security/integrity/ima/ima_policy.c  | 18 ++++++++++++++++--
- 2 files changed, 19 insertions(+), 4 deletions(-)
+ drivers/iommu/qcom_iommu.c | 24 +++++++-----------------
+ 1 file changed, 7 insertions(+), 17 deletions(-)
 
-diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
-index cd572912c593..a12e784cee31 100644
---- a/Documentation/ABI/testing/ima_policy
-+++ b/Documentation/ABI/testing/ima_policy
-@@ -20,8 +20,8 @@ Description:
- 		action: measure | dont_measure | appraise | dont_appraise |
- 			audit | hash | dont_hash
- 		condition:= base | lsm  [option]
--			base:	[[func=] [mask=] [fsmagic=] [fsuuid=] [uid=]
--				[euid=] [fowner=] [fsname=]]
-+			base:	[[func=] [mask=] [mode=] [fsmagic=] [fsuuid=]
-+				[uid=] [euid=] [fowner=] [fsname=]]
- 			lsm:	[[subj_user=] [subj_role=] [subj_type=]
- 				 [obj_user=] [obj_role=] [obj_type=]]
- 			option:	[[appraise_type=]] [template=] [permit_directio]
-@@ -32,6 +32,7 @@ Description:
- 				[KEXEC_CMDLINE] [KEY_CHECK]
- 			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
- 			       [[^]MAY_EXEC]
-+			mode:= [IXUGO]
- 			fsmagic:= hex value
- 			fsuuid:= file system UUID (e.g 8bcbe394-4f13-4144-be8e-5aa9ea2ce2f6)
- 			uid:= decimal value
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index ef7f68cc935e..28b68e076638 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -33,6 +33,7 @@
- #define IMA_PCR		0x0100
- #define IMA_FSNAME	0x0200
- #define IMA_KEYRINGS	0x0400
-+#define IMA_IXUGO	0x0800
+diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
+index 0e2a96467767..054e476ebd49 100644
+--- a/drivers/iommu/qcom_iommu.c
++++ b/drivers/iommu/qcom_iommu.c
+@@ -524,14 +524,13 @@ static bool qcom_iommu_capable(enum iommu_cap cap)
+ 	}
+ }
  
- #define UNKNOWN		0
- #define MEASURE		0x0001	/* same as IMA_MEASURE */
-@@ -435,6 +436,8 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
- 	if ((rule->flags & IMA_INMASK) &&
- 	    (!(rule->mask & mask) && func != POST_SETATTR))
- 		return false;
-+	if ((rule->flags & IMA_IXUGO) && !(inode->i_mode & S_IXUGO))
-+		return false;
- 	if ((rule->flags & IMA_FSMAGIC)
- 	    && rule->fsmagic != inode->i_sb->s_magic)
- 		return false;
-@@ -459,6 +462,7 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
- 	if ((rule->flags & IMA_FOWNER) &&
- 	    !rule->fowner_op(inode->i_uid, rule->fowner))
- 		return false;
-+
- 	for (i = 0; i < MAX_LSM_RULES; i++) {
- 		int rc = 0;
- 		u32 osid;
-@@ -822,7 +826,7 @@ enum {
- 	Opt_audit, Opt_hash, Opt_dont_hash,
- 	Opt_obj_user, Opt_obj_role, Opt_obj_type,
- 	Opt_subj_user, Opt_subj_role, Opt_subj_type,
--	Opt_func, Opt_mask, Opt_fsmagic, Opt_fsname,
-+	Opt_func, Opt_mask, Opt_mode, Opt_fsmagic, Opt_fsname,
- 	Opt_fsuuid, Opt_uid_eq, Opt_euid_eq, Opt_fowner_eq,
- 	Opt_uid_gt, Opt_euid_gt, Opt_fowner_gt,
- 	Opt_uid_lt, Opt_euid_lt, Opt_fowner_lt,
-@@ -847,6 +851,7 @@ static const match_table_t policy_tokens = {
- 	{Opt_subj_type, "subj_type=%s"},
- 	{Opt_func, "func=%s"},
- 	{Opt_mask, "mask=%s"},
-+	{Opt_mode, "mode=%s"},
- 	{Opt_fsmagic, "fsmagic=%s"},
- 	{Opt_fsname, "fsname=%s"},
- 	{Opt_fsuuid, "fsuuid=%s"},
-@@ -1098,6 +1103,13 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 				entry->flags |= (*args[0].from == '^')
- 				     ? IMA_INMASK : IMA_MASK;
- 			break;
-+		case Opt_mode:
-+			ima_log_string(ab, "mode", args[0].from);
-+			if ((strcmp(args[0].from, "IXUGO")) == 0)
-+				entry->flags |= IMA_IXUGO;
-+			else
-+				result = -EINVAL;
-+			break;
- 		case Opt_fsmagic:
- 			ima_log_string(ab, "fsmagic", args[0].from);
+-static int qcom_iommu_add_device(struct device *dev)
++static struct iommu_device *qcom_iommu_probe_device(struct device *dev)
+ {
+ 	struct qcom_iommu_dev *qcom_iommu = to_iommu(dev);
+-	struct iommu_group *group;
+ 	struct device_link *link;
  
-@@ -1185,7 +1197,6 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 			uid_token = (token == Opt_uid_eq) ||
- 				    (token == Opt_uid_gt) ||
- 				    (token == Opt_uid_lt);
--
- 			ima_log_string_op(ab, uid_token ? "uid" : "euid",
- 					  args[0].from, entry->uid_op);
+ 	if (!qcom_iommu)
+-		return -ENODEV;
++		return ERR_PTR(-ENODEV);
  
-@@ -1522,6 +1533,9 @@ int ima_policy_show(struct seq_file *m, void *v)
- 		seq_puts(m, " ");
+ 	/*
+ 	 * Establish the link between iommu and master, so that the
+@@ -542,28 +541,19 @@ static int qcom_iommu_add_device(struct device *dev)
+ 	if (!link) {
+ 		dev_err(qcom_iommu->dev, "Unable to create device link between %s and %s\n",
+ 			dev_name(qcom_iommu->dev), dev_name(dev));
+-		return -ENODEV;
++		return ERR_PTR(-ENODEV);
  	}
  
-+	if (entry->flags & IMA_IXUGO)
-+		seq_puts(m, "mode=IXUGO ");
-+
- 	if (entry->flags & IMA_FSMAGIC) {
- 		snprintf(tbuf, sizeof(tbuf), "0x%lx", entry->fsmagic);
- 		seq_printf(m, pt(Opt_fsmagic), tbuf);
+-	group = iommu_group_get_for_dev(dev);
+-	if (IS_ERR(group))
+-		return PTR_ERR(group);
+-
+-	iommu_group_put(group);
+-	iommu_device_link(&qcom_iommu->iommu, dev);
+-
+-	return 0;
++	return &qcom_iommu->iommu;
+ }
+ 
+-static void qcom_iommu_remove_device(struct device *dev)
++static void qcom_iommu_release_device(struct device *dev)
+ {
+ 	struct qcom_iommu_dev *qcom_iommu = to_iommu(dev);
+ 
+ 	if (!qcom_iommu)
+ 		return;
+ 
+-	iommu_device_unlink(&qcom_iommu->iommu, dev);
+-	iommu_group_remove_device(dev);
+ 	iommu_fwspec_free(dev);
+ }
+ 
+@@ -619,8 +609,8 @@ static const struct iommu_ops qcom_iommu_ops = {
+ 	.flush_iotlb_all = qcom_iommu_flush_iotlb_all,
+ 	.iotlb_sync	= qcom_iommu_iotlb_sync,
+ 	.iova_to_phys	= qcom_iommu_iova_to_phys,
+-	.add_device	= qcom_iommu_add_device,
+-	.remove_device	= qcom_iommu_remove_device,
++	.probe_device	= qcom_iommu_probe_device,
++	.release_device	= qcom_iommu_release_device,
+ 	.device_group	= generic_device_group,
+ 	.of_xlate	= qcom_iommu_of_xlate,
+ 	.pgsize_bitmap	= SZ_4K | SZ_64K | SZ_1M | SZ_16M,
 -- 
-2.7.5
+2.17.1
 
