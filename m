@@ -2,187 +2,233 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF65C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDE8C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C75D2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F332620787
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:00:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="b+raAYYT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=daemons-net.20150623.gappssmtp.com header.i=@daemons-net.20150623.gappssmtp.com header.b="qSVAH55O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbgD2IAe (ORCPT
+        id S1726669AbgD2IAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:00:34 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1182 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        Wed, 29 Apr 2020 04:00:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
         by vger.kernel.org with ESMTP id S1726345AbgD2IAe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Apr 2020 04:00:34 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03T7wQu5000766;
-        Wed, 29 Apr 2020 10:00:05 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=nIR58CYrNLsb2w9tyqqa8vIr3YlHzztP1gjkUKLHO+U=;
- b=b+raAYYTY8B9rAHlM/yEdUKo7u+1kx8pRk2Pq9FHcYJjuylhjEvgysi/D8kaO1I0HORG
- CXSyxRPCy5X1zYvH35HR7Wkzhen8gUh63Kdnxl+MGBSq5prjDKGoFVewQ9de3W7uSJj9
- MsqRQxpGg2+TJJ2tz+w7o4VQrOfvU2mc39cqUHeEy+eu4Odi8EyDUUBh6xXQ5+ptb2TG
- Mjvr1qyruNVHYUOQEe0a2wfnGdOiNYKwPxBtM0gMKTi+oxvLFyCo5jdi0kITPmpq6s6F
- ydzySknr1m5/5fWk0rpKsRJuJI2/vAoqWETHChe1uJJ4L3nSdcETKXPym9sKOF06TGiS 8g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30mhq64uq4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 10:00:05 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A564110002A;
-        Wed, 29 Apr 2020 10:00:04 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 84FD920663E;
-        Wed, 29 Apr 2020 10:00:04 +0200 (CEST)
-Received: from [10.211.9.35] (10.75.127.44) by SFHDAG6NODE2.st.com
- (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 29 Apr
- 2020 10:00:03 +0200
-Subject: Re: [PATCH v2 04/12] mtd: rawnand: stm32_fmc2: manage all errors
- cases at probe time
-To:     Marek Vasut <marex@denx.de>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-CC:     <richard@nod.at>, <vigneshr@ti.com>, <lee.jones@linaro.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <tony@atomide.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>
-References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
- <1586966256-29548-5-git-send-email-christophe.kerello@st.com>
- <20200427194747.224a2402@xps13>
- <40a9bac7-9ed4-b781-f2c2-2d90b4e82749@denx.de>
- <20200427200848.722f4c56@xps13>
- <3527f3b8-225d-6e5a-dd8a-0421d475f70b@denx.de>
- <20200427220806.13741ec0@xps13>
- <456b04f5-4ed7-6f3f-b0e6-9276bea09b50@denx.de>
-From:   Christophe Kerello <christophe.kerello@st.com>
-Message-ID: <506961d9-4852-c926-3446-f5e8b27e5c2e@st.com>
-Date:   Wed, 29 Apr 2020 10:00:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49925C03C1AD
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 01:00:33 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id n11so651780pgl.9
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 01:00:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=daemons-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ws5RoUs9BriDfSRkNG63+mR2vT5tvodj3Q9+M/gLZPE=;
+        b=qSVAH55OAgDQsOQRCHZPWMz7fCVAjTpWBjYMm7LXCQTnMOyZ7Elx+iKUddqvqYhE1P
+         5lSnX2vvXhjb5t1uKWKpuLCXLC0Kq7hM7gQMlurrUmJpYJWK9vRicI8sgsa5LpB1ZnYc
+         w9ExbnqozKqsAhWbrZrBPQ3Lq613RtugMgi7PsciMGvEbqK7COPy6cJr88Gba9HyS8Ro
+         ot89vTYW0jh2ceXk9VYqTOomvnVgZXATVX0ijnXrEraTaQBjgBb7nFpuSXSDnV30ripJ
+         DJBLmAjW3CScH64lkaTG+zDfx8rZxhqf+86t1sbOrCj2EmF6gKk0llrPrB2W6cQ2t+5/
+         ncWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ws5RoUs9BriDfSRkNG63+mR2vT5tvodj3Q9+M/gLZPE=;
+        b=GKPHfNpoSmFz6LQ5468OOfh/1NPTCod78vxZBtiBD0DDFyGre3hdyNx6ElIDiPttOE
+         EZDECahUt8ZS3SHSgCZ7VZh7bCKmKaVSc/EZC/IIrebpNAGfK5JpnUdPqRiZrSGjFsIX
+         SNbiTrijoP0Zv7K+WdPizr00lpZwBqOYJ6PnxJjIFlxCwLkzfyecKCG1i+mAjjpWej/T
+         FD69j/W1PaIP+iI19ESEiwqlswzy4K9y599DKWeawpKRH2z/sqno7b/xZZuPMelgfcta
+         TBRrTywPshpbqMtxfLo8nuaXUCqzmvtVMnBizLJCX3EvL4gfnDIYmITlJ58UzEQT1h0k
+         M6Ug==
+X-Gm-Message-State: AGi0Pubmf2jyzHek9mPUQmgtNuCsAE95QlbpK/FpplyDQzYtsmbEynk9
+        rFAoPFZr2/ZOYUB/jvq3M5Qy
+X-Google-Smtp-Source: APiQypLJqpMAR4GU8Qdqt8+I9LRgFDuTqS0ubKbugPWxkmIZhA0qw3JVE9AjraFvZWusHh33uaY4+A==
+X-Received: by 2002:a62:ed14:: with SMTP id u20mr34503722pfh.69.1588147232557;
+        Wed, 29 Apr 2020 01:00:32 -0700 (PDT)
+Received: from localhost.localdomain ([47.156.151.166])
+        by smtp.googlemail.com with ESMTPSA id b3sm429253pga.48.2020.04.29.01.00.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 01:00:31 -0700 (PDT)
+From:   Clay McClure <clay@daemons.net>
+Cc:     Clay McClure <clay@daemons.net>, Arnd Bergmann <arnd@arndb.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mao Wenan <maowenan@huawei.com>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Edward Cree <ecree@solarflare.com>,
+        Josh Triplett <josh@joshtriplett.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] net: Make PTP-specific drivers depend on PTP_1588_CLOCK
+Date:   Wed, 29 Apr 2020 00:59:00 -0700
+Message-Id: <20200429075903.19788-1-clay@daemons.net>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200429072959.GA10194@arctic-shiba-lx>
+References: <20200429072959.GA10194@arctic-shiba-lx>
 MIME-Version: 1.0
-In-Reply-To: <456b04f5-4ed7-6f3f-b0e6-9276bea09b50@denx.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-29_02:2020-04-28,2020-04-29 signatures=0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit d1cbfd771ce8 ("ptp_clock: Allow for it to be optional") changed
+all PTP-capable Ethernet drivers from `select PTP_1588_CLOCK` to `imply
+PTP_1588_CLOCK`, "in order to break the hard dependency between the PTP
+clock subsystem and ethernet drivers capable of being clock providers."
+As a result it is possible to build PTP-capable Ethernet drivers without
+the PTP subsystem by deselecting PTP_1588_CLOCK. Drivers are required to
+handle the missing dependency gracefully.
 
+Some PTP-capable Ethernet drivers (e.g., TI_CPSW) factor their PTP code
+out into separate drivers (e.g., TI_CPTS_MOD). The above commit also
+changed these PTP-specific drivers to `imply PTP_1588_CLOCK`, making it
+possible to build them without the PTP subsystem. But as Grygorii
+Strashko noted in [1]:
 
-On 4/27/20 10:10 PM, Marek Vasut wrote:
-> On 4/27/20 10:08 PM, Miquel Raynal wrote:
->> Hi Marek,
->>
->> Marek Vasut <marex@denx.de> wrote on Mon, 27 Apr 2020 21:46:44 +0200:
->>
->>> On 4/27/20 8:08 PM, Miquel Raynal wrote:
->>> [...]
->>>>>>>   	/* FMC2 init routine */
->>>>>>>   	stm32_fmc2_init(fmc2);
->>>>>>> @@ -1997,7 +2001,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
->>>>>>>   	/* Scan to find existence of the device */
->>>>>>>   	ret = nand_scan(chip, nand->ncs);
->>>>>>>   	if (ret)
->>>>>>> -		goto err_scan;
->>>>>>> +		goto err_dma_setup;
->>>>>>>   
->>>>>>>   	ret = mtd_device_register(mtd, NULL, 0);
->>>>>>>   	if (ret)
->>>>>>> @@ -2010,7 +2014,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
->>>>>>>   err_device_register:
->>>>>>>   	nand_cleanup(chip);
->>>>>>>   
->>>>>>> -err_scan:
->>>>>>> +err_dma_setup:
->>>>>>>   	if (fmc2->dma_ecc_ch)
->>>>>>>   		dma_release_channel(fmc2->dma_ecc_ch);
->>>>>>>   	if (fmc2->dma_tx_ch)
->>>>>>> @@ -2021,6 +2025,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
->>>>>>>   	sg_free_table(&fmc2->dma_data_sg);
->>>>>>>   	sg_free_table(&fmc2->dma_ecc_sg);
->>>>>>>   
->>>>>>> +err_clk_disable:
->>>>>>>   	clk_disable_unprepare(fmc2->clk);
->>>>>>>   
->>>>>>>   	return ret;
->>>>>>
->>>>>> I didn't spot it during my earlier reviews but I really prefer using
->>>>>> labels explaining what you do than having the same name of the function
->>>>>> which failed. This way you don't have to rework the error path when
->>>>>> you handle an additional error.
->>>>>>
->>>>>> So, would you mind doing this in two steps:
->>>>>>
->>>>>> 1/
->>>>>> Replace
->>>>>>
->>>>>>      err_scan:
->>>>>>
->>>>>> with, eg.
->>>>>>
->>>>>>      release_dma_objs:
->>>>>
->>>>> The ^err_ prefix in failpath labels is useful, since it's easily
->>>>> possible to match on it with regexes ; not so much on arbitrary label name.
->>>>
->>>> I guess so, but is it actually useful to catch labels in a regex? (real
->>>> question)
->>>
->>> I find it useful to have a unified way to find those labels, e.g.
->>> err_because_foo:
->>> err_because_bar:
->>> err_last_one:
->>> is much nicer than:
->>> foo_failed:
->>> bar_also_failed:
->>> its_total_randomness:
->>
->> My point being, Christophe, you can use err_ as a prefix but I think
->> it's better to use:
->>
->>      err_do_this_cleanup
->>
->> than
->>
->>     err_this_failed
-> 
-> That's fine either way.
+On Wed, Apr 22, 2020 at 02:16:11PM +0300, Grygorii Strashko wrote:
 
-Hi Miquel,
+> Another question is that CPTS completely nonfunctional in this case and
+> it was never expected that somebody will even try to use/run such
+> configuration (except for random build purposes).
 
-I will rename the label in v3:
-  - err_device_register => err_nand_cleanup
-  - err_dma_setup => err_release_dma
-  - err_clk_disable => will keep this one
+In my view, enabling a PTP-specific driver without the PTP subsystem is
+a configuration error made possible by the above commit. Kconfig should
+not allow users to create a configuration with missing dependencies that
+results in "completely nonfunctional" drivers.
 
-Regards,
-Christophe Kerello.
+I audited all network drivers that call ptp_clock_register() but merely
+`imply PTP_1588_CLOCK` and found five PTP-specific drivers that are
+likely nonfunctional without PTP_1588_CLOCK:
 
-> 
->>>> Any way I suppose catching ":\n" is already a good approximation to
->>>> find labels?
->>>
->>> Not very practical with git grep (^err.*: works nicely though)
->>
->> I suppose ^.*:$ would work the same ;)
-> 
-> Try and see how much other irrelevant stuff that sucks in ;-)
-> 
+    NET_DSA_MV88E6XXX_PTP
+    NET_DSA_SJA1105_PTP
+    MACB_USE_HWSTAMP
+    CAVIUM_PTP
+    TI_CPTS_MOD
+
+Note how these symbols all reference PTP or timestamping in their name;
+this is a clue that they depend on PTP_1588_CLOCK.
+
+Change them from `imply PTP_1588_CLOCK` [2] to `depends on PTP_1588_CLOCK`.
+I'm not using `select PTP_1588_CLOCK` here because PTP_1588_CLOCK has
+its own dependencies, which `select` would not transitively apply.
+
+Additionally, remove the `select NET_PTP_CLASSIFY` from CPTS_TI_MOD;
+PTP_1588_CLOCK already selects that.
+
+[1]: https://lore.kernel.org/lkml/c04458ed-29ee-1797-3a11-7f3f560553e6@ti.com/
+
+[2]: NET_DSA_SJA1105_PTP had never declared any type of dependency on
+PTP_1588_CLOCK (`imply` or otherwise); adding a `depends on PTP_1588_CLOCK`
+here seems appropriate.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Richard Cochran <richardcochran@gmail.com>
+Cc: Nicolas Pitre <nico@fluxnic.net>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Fixes: d1cbfd771ce8 ("ptp_clock: Allow for it to be optional")
+Signed-off-by: Clay McClure <clay@daemons.net>
+---
+ drivers/net/dsa/mv88e6xxx/Kconfig    | 2 +-
+ drivers/net/dsa/sja1105/Kconfig      | 1 +
+ drivers/net/ethernet/cadence/Kconfig | 2 +-
+ drivers/net/ethernet/cavium/Kconfig  | 2 +-
+ drivers/net/ethernet/ti/Kconfig      | 3 +--
+ 5 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/dsa/mv88e6xxx/Kconfig b/drivers/net/dsa/mv88e6xxx/Kconfig
+index 6435020d690d..51185e4d7d15 100644
+--- a/drivers/net/dsa/mv88e6xxx/Kconfig
++++ b/drivers/net/dsa/mv88e6xxx/Kconfig
+@@ -24,8 +24,8 @@ config NET_DSA_MV88E6XXX_PTP
+ 	bool "PTP support for Marvell 88E6xxx"
+ 	default n
+ 	depends on NET_DSA_MV88E6XXX_GLOBAL2
++	depends on PTP_1588_CLOCK
+ 	imply NETWORK_PHY_TIMESTAMPING
+-	imply PTP_1588_CLOCK
+ 	help
+ 	  Say Y to enable PTP hardware timestamping on Marvell 88E6xxx switch
+ 	  chips that support it.
+diff --git a/drivers/net/dsa/sja1105/Kconfig b/drivers/net/dsa/sja1105/Kconfig
+index 0fe1ae173aa1..68c3086af9af 100644
+--- a/drivers/net/dsa/sja1105/Kconfig
++++ b/drivers/net/dsa/sja1105/Kconfig
+@@ -20,6 +20,7 @@ tristate "NXP SJA1105 Ethernet switch family support"
+ config NET_DSA_SJA1105_PTP
+ 	bool "Support for the PTP clock on the NXP SJA1105 Ethernet switch"
+ 	depends on NET_DSA_SJA1105
++	depends on PTP_1588_CLOCK
+ 	help
+ 	  This enables support for timestamping and PTP clock manipulations in
+ 	  the SJA1105 DSA driver.
+diff --git a/drivers/net/ethernet/cadence/Kconfig b/drivers/net/ethernet/cadence/Kconfig
+index 53b50c24d9c9..2c4c12b03502 100644
+--- a/drivers/net/ethernet/cadence/Kconfig
++++ b/drivers/net/ethernet/cadence/Kconfig
+@@ -35,8 +35,8 @@ config MACB
+ config MACB_USE_HWSTAMP
+ 	bool "Use IEEE 1588 hwstamp"
+ 	depends on MACB
++	depends on PTP_1588_CLOCK
+ 	default y
+-	imply PTP_1588_CLOCK
+ 	---help---
+ 	  Enable IEEE 1588 Precision Time Protocol (PTP) support for MACB.
+ 
+diff --git a/drivers/net/ethernet/cavium/Kconfig b/drivers/net/ethernet/cavium/Kconfig
+index 6a700d34019e..4520e7ee00fe 100644
+--- a/drivers/net/ethernet/cavium/Kconfig
++++ b/drivers/net/ethernet/cavium/Kconfig
+@@ -54,7 +54,7 @@ config	THUNDER_NIC_RGX
+ config CAVIUM_PTP
+ 	tristate "Cavium PTP coprocessor as PTP clock"
+ 	depends on 64BIT && PCI
+-	imply PTP_1588_CLOCK
++	depends on PTP_1588_CLOCK
+ 	---help---
+ 	  This driver adds support for the Precision Time Protocol Clocks and
+ 	  Timestamping coprocessor (PTP) found on Cavium processors.
+diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+index 89cec778cf2d..8e348780efb6 100644
+--- a/drivers/net/ethernet/ti/Kconfig
++++ b/drivers/net/ethernet/ti/Kconfig
+@@ -90,9 +90,8 @@ config TI_CPTS
+ config TI_CPTS_MOD
+ 	tristate
+ 	depends on TI_CPTS
++	depends on PTP_1588_CLOCK
+ 	default y if TI_CPSW=y || TI_KEYSTONE_NETCP=y || TI_CPSW_SWITCHDEV=y
+-	select NET_PTP_CLASSIFY
+-	imply PTP_1588_CLOCK
+ 	default m
+ 
+ config TI_K3_AM65_CPSW_NUSS
+-- 
+2.20.1
+
