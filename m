@@ -2,165 +2,211 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC80C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B35C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11A1320757
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:07:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3D79jb7"
+	by mail.kernel.org (Postfix) with ESMTP id 4F9012137B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:08:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727824AbgD2WHH (ORCPT
+        id S1727093AbgD2WIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 18:07:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48778 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726481AbgD2WHG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 18:07:06 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88A2BC03C1AE;
-        Wed, 29 Apr 2020 15:07:06 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id f7so1757551pfa.9;
-        Wed, 29 Apr 2020 15:07:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9ndRoPlpZBec4FKvvdG47QpHsR6Nba+z0J+SwIthjZk=;
-        b=C3D79jb7ilSAHTz9OU68LGMkmtVmvRhXcs9QnnUJuHYFVMI+CyP81stbxFpj4e+3lD
-         39eycotiG0E5RgJcWixUQuNFX4w5U5MR277EwljiB2PREOVxE+n9Kn4iFbb1tgpXAZSM
-         LntQvfLh1YvODX/pj7IW1w+rRaOh3vzFjFCTN1JrpG4ljUThPreehFIOq/MQXJ+kXsYS
-         G1QSh70hqoGxgxFr0kx80tITYSOQVDRxyDisc2056uUwF/eNvKsuMXKHcMQgLUAiX1WG
-         6QjNuiOA7g+qNd/Gqyy9cn91IdpZjxk0TEe7uLeoqWM1n1hCPSWdP09wPKS6ep5EwHlA
-         XZcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=9ndRoPlpZBec4FKvvdG47QpHsR6Nba+z0J+SwIthjZk=;
-        b=XPgVQP5nYoX321vHhPN6393FzjAZwqHQRM/AwgAe/YOo8uC9jyaL6AUwywloskDQLH
-         DTrowdJeE9ParFeNddD4Vz/qWUYhNWg6ljcPXG6OQDkZY6JK75RvROoKiO4HXcA+/zm/
-         bGWwOKpx5wqru+ni3jfwZRgqmcwiUXDGRySRZC7buDQoSv90Zxyeql7+3VCIXYkKR7U9
-         maL/7QmBB6SmLKOlg9Fnt5aQW9nqD41XWJKK5VI6Bh00kP9DY/sYkqPA/CiXk0FS3bjg
-         vCLp3YwMv1CtOtceJd4mjBcFkycn9M/kBoxEvRVRJpYZ1SaelKCgRUBqLXyogwiRVIDd
-         ID/Q==
-X-Gm-Message-State: AGi0PuZz4dqLMDeBAn7vByky6R5AWKsGUhnI8MyE86Woy20thnhhVTQt
-        60N2hMtDXX9mrePkoIWu3BUlSf5+
-X-Google-Smtp-Source: APiQypKr4XUJ7pjYbZmWvhtvPgRnCnwI49jHaohI3baAgQHs8YfpLCYz3duP8JmElF6h3RbRYXfK4g==
-X-Received: by 2002:a63:7c4:: with SMTP id 187mr317426pgh.59.1588198025793;
-        Wed, 29 Apr 2020 15:07:05 -0700 (PDT)
-Received: from [10.67.49.112] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 82sm1825658pfv.214.2020.04.29.15.07.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 15:07:05 -0700 (PDT)
-Subject: Re: [PATCH net-next v2 0/7] net: bcmgenet: add support for Wake on
- Filter
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1588190526-2082-1-git-send-email-opendmb@gmail.com>
-From:   Doug Berger <opendmb@gmail.com>
-Autocrypt: addr=opendmb@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- rQQYjNSD8+NSdOsIpGNCZ9xhWw==
-Message-ID: <8ebd11c0-97f5-dfd4-d194-009d4df99aa6@gmail.com>
-Date:   Wed, 29 Apr 2020 15:07:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 18:08:39 -0400
+Received: from mga09.intel.com ([134.134.136.24]:61292 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726481AbgD2WIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 18:08:39 -0400
+IronPort-SDR: nYmsTfa/6Y2tGmvXKBBiw9JR/OqxNTO4KeBT1/b7bOEzM9uinrHxoAje5m1wLuHKxEHdn9Eu7x
+ SYpzcihYAMhA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 15:08:38 -0700
+IronPort-SDR: FX4plVa4G4mfPix4PKHCYpqINVobk2F9X81qSj53z0RN2TSqObuUAJUF173i7h0NryIq96S4Ds
+ cNfnzsOKFGTQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
+   d="scan'208";a="276308832"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by orsmga002.jf.intel.com with ESMTP; 29 Apr 2020 15:08:37 -0700
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: [PATCH v10 00/26] Control-flow Enforcement: Shadow Stack
+Date:   Wed, 29 Apr 2020 15:07:06 -0700
+Message-Id: <20200429220732.31602-1-yu-cheng.yu@intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <1588190526-2082-1-git-send-email-opendmb@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/29/20 1:01 PM, Doug Berger wrote:
-> Changes in v2:
-> 	Corrected Signed-off-by for commit 3/7.
-> 
-> This commit set adds support for waking from 'standby' using a
-> Rx Network Flow Classification filter specified with ethtool.
-> 
-> The first two commits are bug fixes that should be applied to the
-> stable branches, but are included in this patch set to reduce merge
-> conflicts that might occur if not applied before the other commits
-> in this set.
-> 
-> The next commit consolidates WoL clock managment as a part of the
-> overall WoL configuration.
-> 
-> The next commit restores a set of functions that were removed from
-> the driver just prior to the 4.9 kernel release.
-> 
-> The following commit relocates the functions in the file to prevent
-> the need for additional forward declarations.
-> 
-> Next, support for the Rx Network Flow Classification interface of
-> ethtool is added.
-> 
-> Finally, support for the WAKE_FILTER wol method is added.
-> 
-> Doug Berger (7):
->   net: bcmgenet: set Rx mode before starting netif
->   net: bcmgenet: Fix WoL with password after deep sleep
->   net: bcmgenet: move clk_wol management to bcmgenet_wol
->   Revert "net: bcmgenet: remove unused function in bcmgenet.c"
->   net: bcmgenet: code movement
->   net: bcmgenet: add support for ethtool rxnfc flows
->   net: bcmgenet: add WAKE_FILTER support
-> 
->  drivers/net/ethernet/broadcom/genet/bcmgenet.c     | 673 +++++++++++++++++++--
->  drivers/net/ethernet/broadcom/genet/bcmgenet.h     |  21 +-
->  drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c |  90 ++-
->  3 files changed, 708 insertions(+), 76 deletions(-)
-> 
-Please holdoff on this version as there is a bug here that I'd like to
-patch first.
+Control-flow Enforcement (CET) is a new Intel processor feature that blocks
+return/jump-oriented programming attacks.  Details can be found in "Intel
+64 and IA-32 Architectures Software Developer's Manual" [1].
 
-Thanks,
-    Doug
+This series depends on the XSAVES supervisor state series that was split
+out and submitted earlier [2].
+
+I have gone through previous comments, and hope all concerns have been
+resolved now.  Please inform me if anything is overlooked.
+
+Changes in v10:
+
+- A shadow stack PTE is (!_PAGE_RW and _PAGE_DIRTY_HW).  In handling page
+  faults, previous versions of this series use helpers such as arch_copy_
+  pte_mapping() and arch_set_vma_features() to manage the _PAGE_DIRTY_HW
+  bit for the copy-on-write logic.  This has been simplified by treating
+  shadow stack as logically writable, and shadow stack faults are handled
+  similarly as for normal writable data pages.  Functions pte_write(),
+  pte_mkwrite(), pte_wrprotect(), maybe_mkwrite() etc. are updated
+  accordingly.
+
+- Signal return code is updated according to the XSAVES supervisor state
+  changes.
+
+- Other smaller changes are noted in each patch's log.
+
+[1] Intel 64 and IA-32 Architectures Software Developer's Manual:
+
+    https://software.intel.com/en-us/download/intel-64-and-ia-32-
+    architectures-sdm-combined-volumes-1-2a-2b-2c-2d-3a-3b-3c-3d-and-4
+
+[2] XSAVES supervisor states patches:
+    https://lkml.kernel.org/r/20200328164307.17497-1-yu-cheng.yu@intel.com/
+
+[3] CET Shadow Stack patches v9:
+
+    https://lkml.kernel.org/r/20200205181935.3712-1-yu-cheng.yu@intel.com/
+
+Dave Martin (1):
+  ELF: Add ELF program property parsing support
+
+Yu-cheng Yu (25):
+  Documentation/x86: Add CET description
+  x86/cpufeatures: Add CET CPU feature flags for Control-flow
+    Enforcement Technology (CET)
+  x86/fpu/xstate: Introduce CET MSR XSAVES supervisor states
+  x86/cet: Add control-protection fault handler
+  x86/cet/shstk: Add Kconfig option for user-mode Shadow Stack
+  x86/mm: Change _PAGE_DIRTY to _PAGE_DIRTY_HW
+  x86/mm: Remove _PAGE_DIRTY_HW from kernel RO pages
+  x86/mm: Introduce _PAGE_COW
+  drm/i915/gvt: Change _PAGE_DIRTY to _PAGE_DIRTY_BITS
+  x86/mm: Update pte_modify for _PAGE_COW
+  x86/mm: Update ptep_set_wrprotect() and pmdp_set_wrprotect() for
+    transition from _PAGE_DIRTY_HW to _PAGE_COW
+  mm: Introduce VM_SHSTK for shadow stack memory
+  x86/mm: Shadow Stack page fault error checking
+  x86/mm: Update maybe_mkwrite() for shadow stack
+  mm: Fixup places that call pte_mkwrite() directly
+  mm: Add guard pages around a shadow stack.
+  mm/mmap: Add shadow stack pages to memory accounting
+  mm: Update can_follow_write_pte() for shadow stack
+  x86/cet/shstk: User-mode shadow stack support
+  x86/cet/shstk: Handle signals for shadow stack
+  ELF: UAPI and Kconfig additions for ELF program properties
+  ELF: Introduce arch_setup_elf_property()
+  x86/cet/shstk: ELF header parsing for shadow stack
+  x86/cet/shstk: Handle thread shadow stack
+  x86/cet/shstk: Add arch_prctl functions for shadow stack
+
+ .../admin-guide/kernel-parameters.txt         |   6 +
+ Documentation/x86/index.rst                   |   1 +
+ Documentation/x86/intel_cet.rst               | 129 +++++++
+ arch/x86/Kconfig                              |  36 ++
+ arch/x86/entry/entry_64.S                     |   2 +-
+ arch/x86/ia32/ia32_signal.c                   |  17 +
+ arch/x86/include/asm/cet.h                    |  40 ++
+ arch/x86/include/asm/cpufeatures.h            |   2 +
+ arch/x86/include/asm/disabled-features.h      |   8 +-
+ arch/x86/include/asm/elf.h                    |  13 +
+ arch/x86/include/asm/fpu/internal.h           |  10 +
+ arch/x86/include/asm/fpu/types.h              |  22 ++
+ arch/x86/include/asm/fpu/xstate.h             |   5 +-
+ arch/x86/include/asm/mmu_context.h            |   3 +
+ arch/x86/include/asm/msr-index.h              |  18 +
+ arch/x86/include/asm/pgtable.h                | 209 +++++++++-
+ arch/x86/include/asm/pgtable_types.h          |  58 ++-
+ arch/x86/include/asm/processor.h              |  15 +
+ arch/x86/include/asm/special_insns.h          |  32 ++
+ arch/x86/include/asm/traps.h                  |   7 +
+ arch/x86/include/uapi/asm/prctl.h             |   5 +
+ arch/x86/include/uapi/asm/processor-flags.h   |   2 +
+ arch/x86/include/uapi/asm/sigcontext.h        |   9 +
+ arch/x86/kernel/Makefile                      |   2 +
+ arch/x86/kernel/cet.c                         | 356 ++++++++++++++++++
+ arch/x86/kernel/cet_prctl.c                   |  87 +++++
+ arch/x86/kernel/cpu/common.c                  |  28 ++
+ arch/x86/kernel/cpu/cpuid-deps.c              |   2 +
+ arch/x86/kernel/fpu/signal.c                  | 101 +++++
+ arch/x86/kernel/fpu/xstate.c                  |  25 +-
+ arch/x86/kernel/idt.c                         |   4 +
+ arch/x86/kernel/process.c                     |  12 +-
+ arch/x86/kernel/process_64.c                  |  29 ++
+ arch/x86/kernel/relocate_kernel_64.S          |   2 +-
+ arch/x86/kernel/signal.c                      |  10 +
+ arch/x86/kernel/signal_compat.c               |   2 +-
+ arch/x86/kernel/traps.c                       |  59 +++
+ arch/x86/kvm/vmx/vmx.c                        |   2 +-
+ arch/x86/mm/fault.c                           |  19 +
+ arch/x86/mm/mmap.c                            |   2 +
+ arch/x86/mm/pat/set_memory.c                  |   2 +-
+ arch/x86/mm/pgtable.c                         |  25 ++
+ drivers/gpu/drm/i915/gvt/gtt.c                |   2 +-
+ fs/Kconfig.binfmt                             |   3 +
+ fs/binfmt_elf.c                               | 131 +++++++
+ fs/compat_binfmt_elf.c                        |   4 +
+ fs/proc/task_mmu.c                            |   3 +
+ include/asm-generic/pgtable.h                 |  35 ++
+ include/linux/elf.h                           |  33 ++
+ include/linux/mm.h                            |  34 +-
+ include/uapi/asm-generic/siginfo.h            |   3 +-
+ include/uapi/linux/elf.h                      |  12 +
+ mm/gup.c                                      |   8 +-
+ mm/huge_memory.c                              |  10 +-
+ mm/memory.c                                   |   5 +-
+ mm/migrate.c                                  |   3 +-
+ mm/mmap.c                                     |   5 +
+ mm/mprotect.c                                 |   2 +-
+ scripts/as-x86_64-has-shadow-stack.sh         |   4 +
+ .../arch/x86/include/asm/disabled-features.h  |   8 +-
+ 60 files changed, 1670 insertions(+), 53 deletions(-)
+ create mode 100644 Documentation/x86/intel_cet.rst
+ create mode 100644 arch/x86/include/asm/cet.h
+ create mode 100644 arch/x86/kernel/cet.c
+ create mode 100644 arch/x86/kernel/cet_prctl.c
+ create mode 100755 scripts/as-x86_64-has-shadow-stack.sh
+
+-- 
+2.21.0
+
