@@ -2,163 +2,225 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14728C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4000BC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5C7020787
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:49:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588146551;
-	bh=N12cB1T0tW1/D8uYYvNBt+N6bWu69JrTpvZIdNYw7dk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=frdXL2UMlzGQ9sOnOlXirwTNrsqI1HsQF92MJx4LZJfLcZ4uHjQvr8FKNBXf7+KtZ
-	 dc/wk/x/2MvSc3nbu0sVPyTVrMHtfxHousQElC6vUnr2O8gRk+1V9HlFSIh4b20U2A
-	 ob8Qs7dtB/35fTb68o9w+5VUI4e04uzzrRSB1ITY=
+	by mail.kernel.org (Postfix) with ESMTP id 1F68320787
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:50:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q8hFA/yZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgD2Hst (ORCPT
+        id S1726655AbgD2HuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 03:48:49 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38377 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbgD2Hss (ORCPT
+        Wed, 29 Apr 2020 03:50:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55348 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726355AbgD2HuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 03:48:48 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y25so710266pfn.5;
-        Wed, 29 Apr 2020 00:48:48 -0700 (PDT)
+        Wed, 29 Apr 2020 03:50:15 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A3D5C035493
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 00:50:15 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id x18so1289468wrq.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 00:50:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=zK0JgSazAWJ2DYzIpBrk5SuXGsVgafJjJrHjjjF4QEI=;
+        b=q8hFA/yZXii6r1TMX0TgCgORl7m1G8odWD97j7WJHg+WZga+OmVbxDM3y4VZAQNEZA
+         wfY9AqyYrsmt3fxW531SYmzJijAbLfW5WXcX5e+UAVSWtljgwWUjVFVlfGIAXUQh02RP
+         FjKuW1LNfl0fJ/QpL7Jfe3CxGVJHJaV9pQ20mr8nDfjVCq5vrQOGye2XUwFWbWKqCqrU
+         7btV9uhmQ0h7QDmHVWXcF8qVaJRXeKZp2aLPEqRhT2JgjWya6glR404kfjD447gBpEMO
+         3OUL0jLvRDTctKhknf/TnsAc/KoEKLEG6lfQrLRfowjQcPdLxOWQOIp0G7e2FEEQUntw
+         NWVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5Mprrx+N/1IG0lpOsMC6pFihehpTtLFM4Po0pnJv2xU=;
-        b=UwaRbLLkpgTigexrRgSOt0cpXoDxAirn1VRXH+hIKiioYa2WuSIW9HHXW96AemRLj3
-         oIkzU5FmKEX3bWdR3ORiu+Jw+rHbqRsIyX2Fn+WS6O1vC4igUcARQEEygMmDjm2FqGP/
-         oyNPjZ4vNYj3joriLsdQ38tv6Wqpkh3XHa9l065ytXqFl96wYcu1ByJ9MBNJaK1VTwBT
-         mAaI+4F2aCT3w8N1XtoYlqYN8j9TFuOObhZ2y71O75m45JER8RW3O8BzMqGyBqvwJ9hu
-         5w0IXubowJVK4WRfGWA4KCUYc2lkWsd/Y/3wa31i3I/wCAXlhEY7t+GUDDd8mUwDi5lt
-         jRuA==
-X-Gm-Message-State: AGi0Pua6UqkbosMBEgmCN6xfhc5PMcj0v5SMs+6Psymr9dYxQP1hQj9v
-        yUQGHUPz3ON3mNsU4ZFaYnSZ5hTSWzk=
-X-Google-Smtp-Source: APiQypI7ngW2h14GNvjybk2+5wFMX/mrJjPeSOgs5TfeYAxwwwe7wA+6l1nxeOK2MadAl5dUdWVMbA==
-X-Received: by 2002:a62:c1c1:: with SMTP id i184mr35127925pfg.18.1588146527969;
-        Wed, 29 Apr 2020 00:48:47 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 127sm419071pfz.128.2020.04.29.00.48.46
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=zK0JgSazAWJ2DYzIpBrk5SuXGsVgafJjJrHjjjF4QEI=;
+        b=AJVCdTI/DVM3We7HT0Q6HJ3L2KiVht7NgqGiR4tSt4NogJWgij7RxhQUCDsb8E0toK
+         73UQ8pHsQvpNk/SGa6y2qcy7NHoGbuAf/nQnR68pNQJz/RvmvtF45O6TAO6DTrZJwKKh
+         G9+egd4LbPPrYQsYbGjHzPd2gasNoxMyrF6dkvUfcHZVTrwpZP022RIP4BzJeW5STEZb
+         dezSmjQS1dHWbsw+tSJ5w1bAGBrECBUOKDGy3ZuYBgD1mzHP5Qio3xwiXWU6hAGXU6/y
+         U8IzqbeZ2kW9UIVQtK02gDVk3f3HAkbyHlx2mXGopHnusRVoLFukw42UnDq/NpYupPju
+         FSyA==
+X-Gm-Message-State: AGi0PuYdAtoJPf9fHK/4j3JJJWVpTxBxn5eyoGeImI2SiM3mjzgV52lq
+        i0+m6ZZfKI0cMPUqE9kPXW6NhQ==
+X-Google-Smtp-Source: APiQypLM3lN3rGdfSMrJGzuhpRRPiDBdyd3CgLxNoIeBVXjlM1CuGYLMJlf+uDFnYw5bbKjL1Kjhog==
+X-Received: by 2002:a5d:480b:: with SMTP id l11mr40964935wrq.25.1588146613874;
+        Wed, 29 Apr 2020 00:50:13 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id u188sm6727365wmg.37.2020.04.29.00.50.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 00:48:46 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id A483940045; Wed, 29 Apr 2020 07:48:45 +0000 (UTC)
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     axboe@kernel.dk, bvanassche@acm.org, ming.lei@redhat.com
-Cc:     yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [RFC v1 1/6] block: refcount the request_queue early in __device_add_disk()
-Date:   Wed, 29 Apr 2020 07:48:39 +0000
-Message-Id: <20200429074844.6241-2-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20200429074844.6241-1-mcgrof@kernel.org>
-References: <20200429074844.6241-1-mcgrof@kernel.org>
+        Wed, 29 Apr 2020 00:50:12 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 08:50:10 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     devicetree@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] mfd: Introduce QTI I2C PMIC controller
+Message-ID: <20200429075010.GX3559@dell>
+References: <cover.1588115326.git.gurus@codeaurora.org>
+ <5644dea146f8b49a5b827c56392ff916bfb343e9.1588115326.git.gurus@codeaurora.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <5644dea146f8b49a5b827c56392ff916bfb343e9.1588115326.git.gurus@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We refcount the request_queue right now towards the end of the
-__device_add_disk(), however when we add error handling on this
-function we'll want to refcount the request_queue first, to help
-make less complicated changes on drivers on their error paths.
+On Tue, 28 Apr 2020, Guru Das Srinagesh wrote:
 
-For instance, today a driver may call add_disk without error handling
-but still handle other errors:
+> The Qualcomm Technologies, Inc. I2C PMIC Controller is used by
+> multi-function PMIC devices which communicate over the I2C bus.  The
+> controller enumerates all child nodes as platform devices, and
+> instantiates a regmap interface for them to communicate over the I2C
+> bus.
+> 
+> The controller also controls interrupts for all of the children platform
+> devices.  The controller handles the summary interrupt by deciphering
+> which peripheral triggered the interrupt, and which of the peripheral
+> interrupts were triggered.  Finally, it calls the interrupt handlers for
+> each of the virtual interrupts that were registered.
+> 
+> Nicholas Troast is the original author of this driver.
+> 
+> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> ---
+>  drivers/mfd/Kconfig         |  11 +
+>  drivers/mfd/Makefile        |   1 +
+>  drivers/mfd/qcom-i2c-pmic.c | 737 ++++++++++++++++++++++++++++++++++++++++++++
 
-int foo_block_add(...)
-{
-	...
-	queue = blk_mq_init_queue(...);
-	...
-	disk->queue = queue;
-	disk = alloc_disk(...);
-	if (!disk)
-		goto out_free_queue;
-	...
-        add_disk(disk);
-	...
-        return 0;
+The vast majority of this driver deals with IRQ handling.  Why can't
+this be split out into its own IRQ Chip driver and moved to
+drivers/irqchip?
 
-out_free_queue:
-        blk_cleanup_queue(queue);
-	/* Note: we never call put_disk() as add_disk() never failed */
-	...
-}
+>  3 files changed, 749 insertions(+)
+>  create mode 100644 drivers/mfd/qcom-i2c-pmic.c
 
-We want drivers to cleanup with put_disk() on the error path if
-add_disk() fails. However, calling blk_cleanup_queue() will already
-put the queue, and so the last put_disk() on the error path will
-be extra. This can be simplified later if once error handling is
-added to __device_add_disk(), if refcounting the request_queue
-fails right away on __device_add_disk() we just return early and
-set disk->NULL for the driver. That would ensure driver error
-paths chug on with their error paths, and all they'd need to
-expand with is the missing put_disk().
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 54b6aa4..bf112eb 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1002,6 +1002,17 @@ config MFD_PM8XXX
+>  	  Say M here if you want to include support for PM8xxx chips as a
+>  	  module. This will build a module called "pm8xxx-core".
+>  
+> +config MFD_I2C_PMIC
 
-The collateral evolution for adding error paths for add_disk() becomes
-larger with the alternative of replacing the blk_cleanup_queue() with
-a put_disk(). We'd still need to sprinkle then some blk_cleanup_queue()
-calls on the driver paths up above prior to add_disk(). And how would
-we know we reached a part of add_disk() which did refcount then?
+Too generic.  This should identify the vendor too.
 
-A related commit is 5a0ec388ef0f ("pktcdvd: Fix pkt_setup_dev() error
-path") which *had* to take the approach of removing the blk_cleanup_queue()
-because otherwise the driver crashes.
+> +	tristate "QTI I2C PMIC support"
 
-Moving this to the top ensure our future error path can easily just
-handle this itself. For instance, if it was not able to refcount the
-request_queue it can disk->queue to NULL, that way allowing a
-blk_cleanup_queue() call followed but a put_disk(). And if the
-refcount was incremented, we'd still be able to keep the same error
-path of blk_cleanup_queue() followed by put_disk().
+Why aren't you using QCOM?
 
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- block/genhd.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Actually, this should be expanded here anyway.
 
-diff --git a/block/genhd.c b/block/genhd.c
-index a933cffbee2e..5f7faaf9cc83 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -803,6 +803,12 @@ static void __device_add_disk(struct device *parent, struct gendisk *disk,
- 	dev_t devt;
- 	int retval;
- 
-+	/*
-+	 * Take an extra ref on queue which will be put on disk_release()
-+	 * so that it sticks around as long as @disk is there.
-+	 */
-+	WARN_ON_ONCE(!blk_get_queue(disk->queue));
-+
- 	/*
- 	 * The disk queue should now be all set with enough information about
- 	 * the device for the elevator code to pick an adequate default
-@@ -854,12 +860,6 @@ static void __device_add_disk(struct device *parent, struct gendisk *disk,
- 	if (register_queue)
- 		blk_register_queue(disk);
- 
--	/*
--	 * Take an extra ref on queue which will be put on disk_release()
--	 * so that it sticks around as long as @disk is there.
--	 */
--	WARN_ON_ONCE(!blk_get_queue(disk->queue));
--
- 	disk_add_events(disk);
- 	blk_integrity_add(disk);
- }
+> +	depends on I2C && OF
+> +	select IRQ_DOMAIN
+> +	select REGMAP_I2C
+> +	help
+> +	  This enables support for controlling Qualcomm Technologies, Inc.
+> +	  PMICs over I2C. The driver controls interrupts, and provides register
+> +	  access for all of the device's peripherals.  Some QTI PMIC chips
+> +	  support communication over both I2C and SPMI.
+> +
+>  config MFD_QCOM_RPM
+>  	tristate "Qualcomm Resource Power Manager (RPM)"
+>  	depends on ARCH_QCOM && OF
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 7761f84..26f0b80 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -199,6 +199,7 @@ obj-$(CONFIG_MFD_SI476X_CORE)	+= si476x-core.o
+>  obj-$(CONFIG_MFD_CS5535)	+= cs5535-mfd.o
+>  obj-$(CONFIG_MFD_OMAP_USB_HOST)	+= omap-usb-host.o omap-usb-tll.o
+>  obj-$(CONFIG_MFD_PM8XXX) 	+= qcom-pm8xxx.o ssbi.o
+> +obj-$(CONFIG_MFD_I2C_PMIC)     += qcom-i2c-pmic.o
+>  obj-$(CONFIG_MFD_QCOM_RPM)	+= qcom_rpm.o
+>  obj-$(CONFIG_MFD_SPMI_PMIC)	+= qcom-spmi-pmic.o
+>  obj-$(CONFIG_TPS65911_COMPARATOR)	+= tps65911-comparator.o
+> diff --git a/drivers/mfd/qcom-i2c-pmic.c b/drivers/mfd/qcom-i2c-pmic.c
+> new file mode 100644
+> index 0000000..d0f600a
+> --- /dev/null
+> +++ b/drivers/mfd/qcom-i2c-pmic.c
+> @@ -0,0 +1,737 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+
+This is very out of date.
+
+> + */
+> +
+> +#define pr_fmt(fmt) "I2C PMIC: %s: " fmt, __func__
+
+Please don't role your own debug helpers.
+
+The ones the kernel provides are suitably proficient.
+
+> +#include <linux/bitops.h>
+> +#include <linux/i2c.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/pinctrl/consumer.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +
+> +#define I2C_INTR_STATUS_BASE	0x0550
+> +#define INT_RT_STS_OFFSET	0x10
+> +#define INT_SET_TYPE_OFFSET	0x11
+> +#define INT_POL_HIGH_OFFSET	0x12
+> +#define INT_POL_LOW_OFFSET	0x13
+> +#define INT_LATCHED_CLR_OFFSET	0x14
+> +#define INT_EN_SET_OFFSET	0x15
+> +#define INT_EN_CLR_OFFSET	0x16
+> +#define INT_LATCHED_STS_OFFSET	0x18
+> +#define INT_PENDING_STS_OFFSET	0x19
+> +#define INT_MID_SEL_OFFSET	0x1A
+> +#define INT_MID_SEL_MASK	GENMASK(1, 0)
+> +#define INT_PRIORITY_OFFSET	0x1B
+> +#define INT_PRIORITY_BIT	BIT(0)
+> +
+> +enum {
+> +	IRQ_SET_TYPE = 0,
+> +	IRQ_POL_HIGH,
+> +	IRQ_POL_LOW,
+> +	IRQ_LATCHED_CLR, /* not needed but makes life easy */
+
+"Not"
+
+It doesn't matter if the value is not used.
+
+I think you can drop the comment.
+
+> +	IRQ_EN_SET,
+> +	IRQ_MAX_REGS,
+> +};
+
+Going to stop here for a second, as the vast majority of the remainder
+of the driver appears to surround IRQ management.
+
 -- 
-2.25.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
