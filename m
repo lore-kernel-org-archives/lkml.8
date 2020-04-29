@@ -2,120 +2,91 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A27BC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B03C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2595C2076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28EE72085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588146418;
-	bh=mEncwTlPQ/QwNpZrdXPAXFRaRHDlumsKGBnaQpNcAaM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oArKIcO9X6QzzX8yqKnvNW/xvdfZ74/OoLmUeoOwQdqajPefb82HsarLReF977GVe
-	 dxH1zkH+qnN842Zdo9lK+j0nSvBNvOAg9NLd6tlptzeF4fDFKT1muIxzqnZRdOg0/L
-	 IZZE+MBA488H/QiRvK1WP8EqaxKkwb2nKmsIXLc8=
+	s=default; t=1588146437;
+	bh=jvpm32KYqadCq9EEE4zcmVzzPq1eo9+YysP3iBvNrQc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cgy1aHs718SsjxWE7CzoS5Gpd5bIFownKY5Le1KCPMQrgeqdHSnXzkRvk/GGbvRZ8
+	 63cglwiJL/RBb3cLMFhIWPBMhcYHjON1PbpBJBLbPVHOwcpGwzhfE3bUFdxs+UTtxq
+	 ra/RfitqoiZl3iN+83VG4xbRgF3NGZ/d4SVd//dU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgD2Hq5 (ORCPT
+        id S1726838AbgD2HrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 03:46:57 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44106 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbgD2Hqf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 03:46:35 -0400
-Received: by mail-pl1-f193.google.com with SMTP id h11so535768plr.11;
-        Wed, 29 Apr 2020 00:46:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=M3p9eZkDL4rEHA+mf+DziMPxePr/ZoUmDl5szec5+p8=;
-        b=SQV9umeKoYqs/LvpvjbPzVTZmvd9T7nZE09+WXrOJK0A6uBYHfpYE8SQWR1s7iMQ5I
-         Fcp2PPmm1n8Pi3SLVZ/SWMCT5rs+zYzbBF5C54gDtcBetoohMwVfCWmJ7vXwNnSWmFhS
-         F2FQWta4t2wNEJKaVnr7loOcoHcAdGlb6sqJt3axmbihHo25r077K7iGAUNiFGyKYXgJ
-         v6nnAXnBWxpd62nrBReZsLeHcdTnrFIFzgScDHpL0MRMh824SOETJZHJ4kUFIhIpjBGx
-         wtgMISok+P0VkRjqYeCt1e2hXPphooxu32rWu25NvnG1XQ5MYnJOG5OVwp6Fv4/0xoBU
-         /bFg==
-X-Gm-Message-State: AGi0PuYc7/oRufAu6gOncbkr7r/KHpSdAZMZ5sddMROYtJ6S4Ks8Fgo2
-        0evT8jXrZvJZYyB3Yncm9o8=
-X-Google-Smtp-Source: APiQypIepM7UkpDZsnPZzlZJGdqb5bC+BXdvy5fR4OB7A7AnaI0/jrmsFgVoflR1BJYu333zB+xnmQ==
-X-Received: by 2002:a17:90a:fa8d:: with SMTP id cu13mr1631966pjb.27.1588146394821;
-        Wed, 29 Apr 2020 00:46:34 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id r31sm387473pgl.86.2020.04.29.00.46.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 00:46:30 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id E693841C23; Wed, 29 Apr 2020 07:46:29 +0000 (UTC)
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org
-Cc:     mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v3 3/6] blktrace: move blktrace debugfs creation to helper function
-Date:   Wed, 29 Apr 2020 07:46:24 +0000
-Message-Id: <20200429074627.5955-4-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20200429074627.5955-1-mcgrof@kernel.org>
-References: <20200429074627.5955-1-mcgrof@kernel.org>
+        Wed, 29 Apr 2020 03:47:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726420AbgD2HrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 03:47:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3979320787;
+        Wed, 29 Apr 2020 07:47:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588146435;
+        bh=jvpm32KYqadCq9EEE4zcmVzzPq1eo9+YysP3iBvNrQc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Eavxv+ikLybmX6KTIMyzwrk78pooqsrD+xKWhJcvw9TqeRYQO9DnmbyxM3YopwjIP
+         zW01nhJp3MtiODkb7CPFC2hVYEgk5z6hH+S20pyItQeYX899IhoqWaXJSDRJzdJmIY
+         LHx6YVn8CZJXpLnCgAqp5HDlIs2Pwo9r3LCZgYZE=
+Date:   Wed, 29 Apr 2020 09:47:13 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] drivers: base: Fix NULL pointer exception in
+ __platform_driver_probe()
+Message-ID: <20200429074713.GA2073394@kroah.com>
+References: <20200408214003.3356-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20200428190337.GA1719585@kroah.com>
+ <2c0c2e54-a385-c4ce-da29-0f84454cce55@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2c0c2e54-a385-c4ce-da29-0f84454cce55@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the work to create the debugfs directory used into a helper.
-It will make further checks easier to read. This commit introduces
-no functional changes.
+On Tue, Apr 28, 2020 at 12:24:05PM -0700, Kuppuswamy, Sathyanarayanan wrote:
+> Hi Greg,
+> 
+> On 4/28/20 12:03 PM, Greg KH wrote:
+> > On Wed, Apr 08, 2020 at 02:40:03PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > 
+> > > If platform bus driver registration is failed then,
+> > 
+> > How is your platform driver registration failing?  What caused that, is
+> > it an in-kernel problem with something?  How can it be triggered?
+> In my case I triggered it intentionally. For one of our internal
+> project we want to strictly control the number of drivers/devices
+> allowed in kernel. To verify the feasibility of adding above support,
+> I intentionally failed few bus drivers and checked the behavior. In
+> one of those tests I hence came across the mentioned issue.
+> 
+> In any case, platform bus driver registration failure is a valid case
+> right ? Any issue we notice when this happens needs to be handled right?
 
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- kernel/trace/blktrace.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+That's fine, I just need to know if this is something that someone can
+actually trigger today, and needs to be fixed up, or if this is just a
+"hardening for when a driver author does something foolish" type of a
+case.
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index ca39dc3230cb..2c6e6c386ace 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -468,6 +468,18 @@ static void blk_trace_setup_lba(struct blk_trace *bt,
- 	}
- }
- 
-+static struct dentry *blk_trace_debugfs_dir(struct blk_user_trace_setup *buts,
-+					    struct blk_trace *bt)
-+{
-+	struct dentry *dir = NULL;
-+
-+	dir = debugfs_lookup(buts->name, blk_debugfs_root);
-+	if (!dir)
-+		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
-+
-+	return dir;
-+}
-+
- /*
-  * Setup everything required to start tracing
-  */
-@@ -509,9 +521,7 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- 
- 	ret = -ENOENT;
- 
--	dir = debugfs_lookup(buts->name, blk_debugfs_root);
--	if (!dir)
--		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
-+	dir = blk_trace_debugfs_dir(buts, bt);
- 
- 	bt->dev = dev;
- 	atomic_set(&bt->dropped, 0);
--- 
-2.25.1
+It seems to be the "don't do foolish things" to me, so it's a much lower
+priority as we can always fix foolish drivers because we have the source
+to them :)
 
+thanks,
+
+greg k-h
