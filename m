@@ -2,124 +2,136 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD8EC83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC18C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A19AE2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D76C62076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:29:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MhhOE0vW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgD2S2d (ORCPT
+        id S1726905AbgD2S3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 14:28:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42522 "EHLO
+        Wed, 29 Apr 2020 14:29:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726456AbgD2S2c (ORCPT
+        by vger.kernel.org with ESMTP id S1726456AbgD2S33 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 14:28:32 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A5CAC03C1AE;
-        Wed, 29 Apr 2020 11:28:32 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id DECFE2A223C
-Received: by earth.universe (Postfix, from userid 1000)
-        id 3D4783C08C6; Wed, 29 Apr 2020 20:28:28 +0200 (CEST)
-Date:   Wed, 29 Apr 2020 20:28:28 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Geordan Neukum <gneukum1@gmail.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] power: supply: max17042_battery: Add support for the
- TTE_NOW prop
-Message-ID: <20200429182828.xgqltubijz7y6wei@earth.universe>
-References: <20200330053352.GA28178@localhost.localdomain>
+        Wed, 29 Apr 2020 14:29:29 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52D75C03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 11:29:29 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id t8so1657239qvw.5
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 11:29:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=sXFt0EZMvpiF8YvWRIbxBeZ3EWG6fYd2jc4e9y7grkU=;
+        b=MhhOE0vWN+/14cKGsqZSyuPvclNoNVF4GWVTix4OzoiJHzBI55540T1AnuF+BsgPFM
+         UgXuUs/eTfXJGve5J8kXAfdfwup+19seib3FEZkHChojA6l41N6ycHGkkm+kqDOPTnzl
+         HX5/wbnBTDppaOU6cvDOxq+GKrhMy5bzo12RXG9EsPDoJmblp17YLM07wqhmGeRaXKul
+         wVG0fPT4P90gS05agLoulalj8uFQkYzrY1KAuOQBcdXjbadDcrBS9j1AKHTGBaSi6eqO
+         JWD1zMKi+tg8atMNJlfX7ccdyMpZBie3mDIAPAUv6DL4CzmrwjCIKnQit+19qtoMaYg7
+         /t1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sXFt0EZMvpiF8YvWRIbxBeZ3EWG6fYd2jc4e9y7grkU=;
+        b=A6J2tTUBlLmQQvl+k1F2rHUuZIFHhHgmprm1HYacrs6d7syOrTfJWjBguvoouNHnOO
+         bROgEcBZ0OELAE2ZkS0HPLieIPKhNMuAW+OikjW663ugyuic4xn/UhjZkExI7YKqSEvq
+         5PMI3JVlYyFM1AjQX9UfVD+BnguB13ShVaqteWeikh/Ki/KSJ4y5QtGT2bkQ70L5Llcv
+         fBZeORQ9ynN2cTDn1qlaxo95JgA9ksO0zXUnrzHn8XSXOLN7BbGeg8awgakOpAQjYEMB
+         jIs7PUWq6uB4kkh9+Y9tI3MqeVfZ3tfrzfst8RX7T2naZ56a2xff6ouyvGuwRw1F4qQ2
+         nssg==
+X-Gm-Message-State: AGi0PuZWO6xXFNz0QMxugA6fikscVn3Q+meK3C7Pw225CgZxycHJReDF
+        VPvHbnIYirp0CKfEoPUKRLuxTfz/D0YCTA==
+X-Google-Smtp-Source: APiQypJAgvM6Q87vV9TL/44rlOMPxSITQ1zUd/dku9xR8KhF8JEn44/tRWCWBNbKiU7p+H2vWDPLmA==
+X-Received: by 2002:a0c:e305:: with SMTP id s5mr35247944qvl.234.1588184968443;
+        Wed, 29 Apr 2020 11:29:28 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id o27sm16284659qko.71.2020.04.29.11.29.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 11:29:27 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 665FE409A3; Wed, 29 Apr 2020 15:29:25 -0300 (-03)
+Date:   Wed, 29 Apr 2020 15:29:25 -0300
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/9] perf intel-pt: Add support for synthesizing branch
+ stacks for regular events
+Message-ID: <20200429182925.GH30487@kernel.org>
+References: <20200429150751.12570-1-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="t2ax7cucttldjspz"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200330053352.GA28178@localhost.localdomain>
+In-Reply-To: <20200429150751.12570-1-adrian.hunter@intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Wed, Apr 29, 2020 at 06:07:42PM +0300, Adrian Hunter escreveu:
+> Hi
+> 
+> This patchset adds Intel PT support for synthesizing branch stacks for
+> regular events.  This follows on from the patchset that did the same thing
+> for call chains.
+> 
+> The first 3 patches convert Intel PT to using thread-stack to record branch
+> stacks, which allows branch stacks to be accumulated separately for each
+> thread.
+> 
+> The next 3 patches add support for synthesizing branch stacks for regular
+> events.
+> 
+> The final 2 patches update some documentation.
 
---t2ax7cucttldjspz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks, applied.
 
-Hi,
+- Arnaldo
+ 
+> 
+> Adrian Hunter (9):
+>       perf thread-stack: Add branch stack support
+>       perf intel-pt: Consolidate thread-stack use condition
+>       perf intel-pt: Change branch stack support to use thread-stacks
+>       perf auxtrace: Add option to synthesize branch stack for regular events
+>       perf evsel: Add support for synthesized branch stack sample type
+>       perf thread-stack: Add thread_stack__br_sample_late()
+>       perf intel-pt: Add support for synthesizing branch stacks for regular events
+>       perf intel-pt: Update documentation about itrace G and L options
+>       perf intel-pt: Update documentation about using /proc/kcore
+> 
+>  tools/perf/Documentation/itrace.txt        |   5 +
+>  tools/perf/Documentation/perf-intel-pt.txt |  53 +++++--
+>  tools/perf/builtin-inject.c                |   3 +-
+>  tools/perf/builtin-report.c                |   5 +-
+>  tools/perf/util/auxtrace.c                 |   6 +-
+>  tools/perf/util/auxtrace.h                 |   2 +
+>  tools/perf/util/evsel.h                    |  10 ++
+>  tools/perf/util/intel-bts.c                |   2 +-
+>  tools/perf/util/intel-pt.c                 | 210 ++++++++++++++--------------
+>  tools/perf/util/s390-cpumsf.c              |   3 +-
+>  tools/perf/util/session.c                  |   2 +-
+>  tools/perf/util/thread-stack.c             | 217 +++++++++++++++++++++++++++--
+>  tools/perf/util/thread-stack.h             |   8 +-
+>  13 files changed, 393 insertions(+), 133 deletions(-)
+> 
+> 
+> Regards
+> Adrian
 
-On Mon, Mar 30, 2020 at 01:33:55AM -0400, Geordan Neukum wrote:
-> The max170{42,47,50,55} family of fuel gauges all provide time-to-empty
-> estimation. As such, let's export this as a property.
->=20
-> Signed-off-by: Geordan Neukum <gneukum1@gmail.com>
-> ---
+-- 
 
-Thanks, queued.
-
--- Sebastian
-
->  drivers/power/supply/max17042_battery.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/drivers/power/supply/max17042_battery.c b/drivers/power/supp=
-ly/max17042_battery.c
-> index 69ec4295d55d..f284547913d6 100644
-> --- a/drivers/power/supply/max17042_battery.c
-> +++ b/drivers/power/supply/max17042_battery.c
-> @@ -87,6 +87,7 @@ static enum power_supply_property max17042_battery_prop=
-s[] =3D {
->  	POWER_SUPPLY_PROP_SCOPE,
->  	POWER_SUPPLY_PROP_CURRENT_NOW,
->  	POWER_SUPPLY_PROP_CURRENT_AVG,
-> +	POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW,
->  };
->=20
->  static int max17042_get_temperature(struct max17042_chip *chip, int *tem=
-p)
-> @@ -411,6 +412,13 @@ static int max17042_get_property(struct power_supply=
- *psy,
->  			return -EINVAL;
->  		}
->  		break;
-> +	case POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW:
-> +		ret =3D regmap_read(map, MAX17042_TTE, &data);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		val->intval =3D data * 5625 / 1000;
-> +		break;
->  	default:
->  		return -EINVAL;
->  	}
-> --
-> 2.18.1
->=20
-
---t2ax7cucttldjspz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6px0cACgkQ2O7X88g7
-+poMqw/9Esv66ea/NvgO4QzIQAsMYGE/irM6QqbHQrmAOPWacir96tsG1Hq4XxXS
-1hoGb3LxtYTBUBws6I+UdLHM4RpuYVEw4pstk97WHpBddNZRRCWjvdzR+8YnFVjR
-bgdkXjYBaE3zE+fV5HogTOFR7l1YR8JSXLjIep+U9bSMoCUWoZvoVrZvpuNkVcMI
-kxBWyZj1lmE0HF7K66eW+ydaDRHbzkBnbWxPsfeWcbxKQmi8+DeTTLSN02P8o3r6
-mlgMEOA/MoQP8OI7VRTnfSDbsagF8njkkvZOXJCU1Vm67tGvbOgfpAaH9Wclixlg
-ODe1fWGnChDzbhHECrTazj73TmsNCCxRMAcQspOWm4akRqNK2bCX3oUWGcAeAaeX
-BOZZ/ai4Hy8iULmnsRQwVJOBi1dfdK78IwU8u1kF4/TPzVo6vBeB5h/z7C00mte6
-bHDBbeM59Adg//KNlutkuFghIDj+rKdFQY8bd0MV25fTXOAowRm3r1VkGaNM4ptm
-zBm1nmorWlUNzbsz/PTXXFRNcfPlgbFuYJMpZCIncQe4DRpR/LVOc8rxlBErKE/0
-L9R1wK6YViWsnO6Q7yCaFd2jQssSudah6nd+5IZ3MZTZE5iSxEe81Bwv1tQWewzb
-LMMXDjS6LsDO74t5X/vvZbob19ZZPpXp40yIVXQ0S1rraT0Azi4=
-=nyOD
------END PGP SIGNATURE-----
-
---t2ax7cucttldjspz--
+- Arnaldo
