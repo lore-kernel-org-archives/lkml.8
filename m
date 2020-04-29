@@ -2,152 +2,215 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B37C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F08C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 632A820775
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F5E420775
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:55:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="nGDnVU34"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kdeetTkk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgD2Ix5 (ORCPT
+        id S1726560AbgD2IzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:53:57 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:23544 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726345AbgD2Ix5 (ORCPT
+        Wed, 29 Apr 2020 04:55:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37170 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726345AbgD2IzI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:53:57 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03T8qTRP032348;
-        Wed, 29 Apr 2020 10:52:51 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=BEwhmA5i7vXM6Du+soyBhv27RZwVEwPtgYeu2uOQAdY=;
- b=nGDnVU34/IVp7EvLTZ6q+pMXYpiSeBs/bEwmp7/GwPzwKKQIjFv0bKkzG7H5v4P9BYFU
- 4wrhPRSq5lc8H2/O0CzKjo9QTv97JgHp5plUO5zFWmFBoMREur0t5qwuJwULGrRkz4QE
- dico+50yZXFrBt0jj5a7DWAe3FdKyMiiWp3jSirKVdPP7gFoREX5krRR2q5wYEiYLrwH
- OpP7UlsgJoxzlJ3bhskmYmg35cClgWEner/dVqaApS7fajbuRQvRSUehd16guTQSnXwu
- 9HO4gCn4+Qgk9ZW8zgB38mygMl1CM3uevJewHrDPuUTuuBR8HRb/ROIGo+86Pr+A8k4X Cw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30mhq655yq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 10:52:51 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7AF8A100034;
-        Wed, 29 Apr 2020 10:52:50 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 642582073F6;
-        Wed, 29 Apr 2020 10:52:50 +0200 (CEST)
-Received: from lmecxl0889.tpe.st.com (10.75.127.51) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Apr
- 2020 10:52:49 +0200
-Subject: Re: [PATCH v3 11/14] remoteproc: Deal with synchronisation when
- changing FW image
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        <bjorn.andersson@linaro.org>, <ohad@wizery.com>
-CC:     <loic.pallardy@st.com>, <s-anna@ti.com>,
-        <linux-remoteproc@vger.kernel.org>, <corbet@lwn.net>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200424200135.28825-1-mathieu.poirier@linaro.org>
- <20200424200135.28825-12-mathieu.poirier@linaro.org>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <4ab6d7ac-905b-494e-cce7-cb8a697decb7@st.com>
-Date:   Wed, 29 Apr 2020 10:52:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 04:55:08 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF860C03C1AD;
+        Wed, 29 Apr 2020 01:55:07 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id d17so1468778wrg.11;
+        Wed, 29 Apr 2020 01:55:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pN+/RsoJOwfLtXLlFOf9eThv+fbK95dYJM/V7QXaQ/Q=;
+        b=kdeetTkkKu4seCme1mTrxKMrQ0Cw7A1McEvtF3jxdIA9U/CYQMr34ZFCuhxbPWiSu7
+         5z5DaKnb7VledNwXV0fYtkO8nBKAWEXtoEGT/28HXURkbUroDyS8Oktouf1KspFnbT4A
+         d2eJtBc6qb/BJ7F/pGfFYZET+mYp+sqW1yRWa40ua0zyQ4pq5YnFOajOrpxJ986FFup5
+         hmWME6/GFpIXoOVAOwkZjXyo9tcVK8+SVlncRSDKTf3DHwig9xfQoANjm6kB1oq8TiNr
+         TlJQQ/o1nMlMSQ7gwB5aa/9ANdTgJGtEC9SXoZ6zRpbUko//iNdyetKxUyf1Ei3lEweb
+         h8rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pN+/RsoJOwfLtXLlFOf9eThv+fbK95dYJM/V7QXaQ/Q=;
+        b=V3aOosne+dStAAGnvo1DK2s9LiUwe5rDDjMhQG3ad0rO7gLGxxCvixCrV5hNJNVHuX
+         tWtteqDMMM8t1UVNnWvX07/IAoJdrt/JEhK9ttEJ9wD2bQZs48rwz55xRhHaF+xwZ+88
+         eUrHLO7CDxZPDjRVo1bxL3aoaOWQTjTNlByB3hY405CTDjX2lg+hgtxrqbFYOUUPxVYh
+         trY1X7AKghI/gQCA8nEheHU/y9MFsof3TUkuOguX3R+XT1HJZMxNyIMKmsQ/jhHkTYpq
+         lNc6lNiqNxwIPQ9/icAiuzRGCBNJ0O0ND91hJSBMzjSwnfsMQilU/i8MmByLGTwuh77B
+         HSJg==
+X-Gm-Message-State: AGi0PuaOfkxrN2rUkMJcGGyQeaZcJX4YutUWEttOwpXjNCSF+6vP/bLp
+        I3VEx0hIVawF3V4yarD2o97HEU+h
+X-Google-Smtp-Source: APiQypJCgmDuRtTM7AtvNKb0zsppf4WCTPA7V1jPYf/V7cmDen0W+cBNcYja4h7IztodgF+2B3zCcQ==
+X-Received: by 2002:adf:f343:: with SMTP id e3mr36765270wrp.51.1588150506334;
+        Wed, 29 Apr 2020 01:55:06 -0700 (PDT)
+Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
+        by smtp.gmail.com with ESMTPSA id h6sm6610577wmf.31.2020.04.29.01.55.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 01:55:04 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 10:55:02 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+Message-ID: <20200429085502.GB2345465@ulmo>
+References: <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
+ <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
+ <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
+ <20200427074837.GC3451400@ulmo>
+ <c1190858-eaea-8e94-b4d1-1cf28076c330@gmail.com>
+ <20200427110033.GC3464906@ulmo>
+ <3a06811c-02dc-ce72-ebef-78c3fc3f4f7c@gmail.com>
+ <20200427151234.GE3464906@ulmo>
+ <1ab276cf-c2b0-e085-49d8-b8ce3dba8fbe@gmail.com>
+ <20200429081448.GA2345465@ulmo>
 MIME-Version: 1.0
-In-Reply-To: <20200424200135.28825-12-mathieu.poirier@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-29_03:2020-04-28,2020-04-29 signatures=0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wq9mPyueHGvFACwf"
+Content-Disposition: inline
+In-Reply-To: <20200429081448.GA2345465@ulmo>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--wq9mPyueHGvFACwf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 4/24/20 10:01 PM, Mathieu Poirier wrote:
-> This patch prevents the firmware image from being displayed or changed
-> when the remoteproc core is synchronising with a remote processor. This
-> is needed since there is no guarantee about the nature of the firmware
-> image that is loaded by the external entity.
-> 
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> ---
->  drivers/remoteproc/remoteproc_sysfs.c | 24 +++++++++++++++++++++++-
->  1 file changed, 23 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
-> index 7f8536b73295..cdd322a6ecfa 100644
-> --- a/drivers/remoteproc/remoteproc_sysfs.c
-> +++ b/drivers/remoteproc/remoteproc_sysfs.c
-> @@ -13,9 +13,20 @@
->  static ssize_t firmware_show(struct device *dev, struct device_attribute *attr,
->  			  char *buf)
->  {
-> +	ssize_t ret;
->  	struct rproc *rproc = to_rproc(dev);
->  
-> -	return sprintf(buf, "%s\n", rproc->firmware);
-> +	/*
-> +	 * In most instances there is no guarantee about the firmware
-> +	 * that was loaded by the external entity.  As such simply don't
-> +	 * print anything.
-> +	 */
-> +	if (rproc_needs_syncing(rproc))
-> +		ret = sprintf(buf, "\n");
+On Wed, Apr 29, 2020 at 10:14:48AM +0200, Thierry Reding wrote:
+> On Mon, Apr 27, 2020 at 06:18:34PM +0300, Dmitry Osipenko wrote:
+> > 27.04.2020 18:12, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > > On Mon, Apr 27, 2020 at 05:21:30PM +0300, Dmitry Osipenko wrote:
+> > >> 27.04.2020 14:00, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > >>> On Mon, Apr 27, 2020 at 12:52:10PM +0300, Dmitry Osipenko wrote:
+> > >>>> 27.04.2020 10:48, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > >>>> ...
+> > >>>>>> Maybe but all these other problems appear to have existed for so=
+metime
+> > >>>>>> now. We need to fix all, but for the moment we need to figure ou=
+t what's
+> > >>>>>> best for v5.7.
+> > >>>>>
+> > >>>>> To me it doesn't sound like we have a good handle on what exactly=
+ is
+> > >>>>> going on here and we're mostly just poking around.
+> > >>>>>
+> > >>>>> And even if things weren't working quite properly before, it soun=
+ds to
+> > >>>>> me like this patch actually made things worse.
+> > >>>>
+> > >>>> There is a plenty of time to work on the proper fix now. To me it =
+sounds
+> > >>>> like you're giving up on fixing the root of the problem, sorry.
+> > >>>
+> > >>> We're at -rc3 now and I haven't seen any promising progress in the =
+last
+> > >>> week. All the while suspend/resume is now broken on at least one bo=
+ard
+> > >>> and that may end up hiding any other issues that could creep in in =
+the
+> > >>> meantime.
+> > >>>
+> > >>> Furthermore we seem to have a preexisting issue that may very well
+> > >>> interfere with this patch, so I think the cautious thing is to reve=
+rt
+> > >>> for now and then fix the original issue first. We can always come b=
+ack
+> > >>> to this once everything is back to normal.
+> > >>>
+> > >>> Also, people are now looking at backporting this to v5.6. Unless we
+> > >>> revert this from v5.7 it may get picked up for backports to other
+> > >>> kernels and then I have to notify stable kernel maintainers that th=
+ey
+> > >>> shouldn't and they have to back things out again. That's going to c=
+ause
+> > >>> a lot of wasted time for a lot of people.
+> > >>>
+> > >>> So, sorry, I disagree. I don't think we have "plenty of time".
+> > >>
+> > >> There is about a month now before the 5.7 release. It's a bit too ea=
+rly
+> > >> to start the panic, IMO :)
+> > >=20
+> > > There's no panic. A patch got merged and it broken something, so we
+> > > revert it and try again. It's very much standard procedure.
+> > >=20
+> > >> Jon already proposed a reasonable simple solution: to keep PCIe
+> > >> regulators always-ON. In a longer run we may want to have I2C atomic
+> > >> transfers supported for a late suspend phase.
+> > >=20
+> > > That's not really a solution, though, is it? It's just papering over
+> > > an issue that this patch introduced or uncovered. I'm much more in
+> > > favour of fixing problems at the root rather than keep papering over
+> > > until we loose track of what the actual problems are.
+> >=20
+> > It's not "papering over an issue". The bug can't be fixed properly
+> > without introducing I2C atomic transfers support for a late suspend
+> > phase, I don't see any other solutions for now. Stable kernels do not
+> > support atomic transfers at all, that proper solution won't be backport=
+able.
+>=20
+> Hm... on a hunch I tried something and, lo and behold, it worked. I can
+> get Cardhu to properly suspend/resume on top of v5.7-rc3 with the
+> following sequence:
+>=20
+> 	revert 9f42de8d4ec2 i2c: tegra: Fix suspending in active runtime PM state
+> 	apply http://patchwork.ozlabs.org/project/linux-tegra/patch/201912131344=
+17.222720-1-thierry.reding@gmail.com/
+>=20
+> I also ran that through our test farm and I don't see any other issues.
+> At the time I was already skeptical about pm_runtime_force_suspend() and
+> pm_runtime_force_resume() and while I'm not fully certain why exactly it
+> doesn't work, the above on top of v5.7-rc3 seems like a good option.
+>=20
+> I'll try to do some digging if I can find out why exactly force suspend
+> and resume doesn't work.
 
-A default name is provided in sysfs if no firmware is started/synchronised on boot.
+Ah... so it looks like pm_runtime_force_resume() never actually does
+anything in this case and then disable_depth remains at 1 and the first
+tegra_i2c_xfer() will then fail to runtime resume the controller.
 
-IMO providing an empty name here could be confusing.
-Perhaps a refactoring of this sysfs entry would be nice:
- - Normal boot (no firmware loaded) : empty name instead of a default name
- - auto_boot: name provided by the platform driver or default name ( current implementation)
- - synchronization: a predefined name such as Default, unknown, External, None,...   
+Thierry
 
-> +	else
-> +		ret = sprintf(buf, "%s\n", rproc->firmware);
-> +
-> +	return ret;
->  }
->  
->  /* Change firmware name via sysfs */
-> @@ -39,6 +50,17 @@ static ssize_t firmware_store(struct device *dev,
->  		goto out;
->  	}
->  
-> +	/*
-> +	 * There is no point in trying to change the firmware if loading the
-> +	 * image of the remote processor is done by another entity.
-> +	 */
-> +	if (rproc_needs_syncing(rproc)) {
-> +		dev_err(dev,
-> +			"can't change firmware while synchronising with MCU\n");
+--wq9mPyueHGvFACwf
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I don't know if you decide to keep "MCU" or not. If not the case
-you have also some other instances in your patch 9/14.
+-----BEGIN PGP SIGNATURE-----
 
-Regards
-Arnaud
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6pQOIACgkQ3SOs138+
+s6FJOBAAmZaix3RlDPH0u6y8aYqOfVJOMEH8nOzhEvyZzUxGAzSFBXHed9P2Qhos
+RXorSpce3RXWX/ak1jUvXrJontZr8KfYvkz0j4A6UwzRdXUOPlpQSmOFPNys5D92
+c6BcRmsqqhw0ZdJv3VX+xHUMDPcAjwYQOEVDNKSK8zLyUgpBAxuAaeQjHoBLaoLn
+WDwN3rXmN1pX4VwYf8w3SFc3fwCFeByGDWHpY3CYCTGMeRZA/+21DQYGtdkCXoXM
+umRhw7uLsE8YtzYfIy+2aIbfVYltzO4o0jKmxGv1z3G+zN1+2+i3lIEphDS4M2j4
+n6+wImva0/TD2is7Khi1saFE7wHT3ghUq3OtRxx9gFagQYnwP1fVzrCW1Pmg142f
+F0PJjoAAAJP92GhHs1wtSHryGkzaRpvg10KeZLDGmnHUpr5lsrByH3vmqevMqNfb
++CqBWBvqGuUnUtRK/opKUkKEJHTmm/P3JhyGeeTLe8azqNu1JQs3bKL3Oec/wxuT
+goBP0SLbKeJw93nGsl0tKBN7pL0csXj98ToHjKXATu5AJ8vpqC+hanPcDIw/FPTz
+1CUHkpjS4wdw1XVPTJklzLI5ogYUF4w9U/eaY927zOe0il+r/xYxYdH4VB0pNxJU
+Z/fzWX0vqDUk0bJGji9IeYKpk2FOpIUUMPUCgqSFS15we3jxRN4=
+=e/xK
+-----END PGP SIGNATURE-----
 
-> +		err = -EBUSY;
-> +		goto out;
-> +	}
-> +
->  	len = strcspn(buf, "\n");
->  	if (!len) {
->  		dev_err(dev, "can't provide a NULL firmware\n");
-> 
+--wq9mPyueHGvFACwf--
