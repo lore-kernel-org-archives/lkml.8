@@ -2,103 +2,120 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAD7C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A58CC83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDFAD206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:43:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588185813;
-	bh=uEtgYlERQwqAmdzsvUwtxwArJftqcHvrYovUv0U11AU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=THULWy1HxONRrixBbic4Gz++reAgxkWIrv09a1sVBbZr+DyLOMqXSZ5/CumUT0rLo
-	 GyKaJcDubX25X7kK9TynVC+izItY8xUtvEl0XCXcJ8qyX4ln1rDSg/HS5G+sdBiihs
-	 gfS5cuZGkAa84dS1bb4GFJKyG6LsSbuS50x/oVtk=
+	by mail.kernel.org (Postfix) with ESMTP id 0AB562064C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:46:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="v8RjEYW2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbgD2Snc (ORCPT
+        id S1726858AbgD2Sql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 14:43:32 -0400
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:34104 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbgD2Sna (ORCPT
+        Wed, 29 Apr 2020 14:46:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45396 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726554AbgD2Sqk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 14:43:30 -0400
-Received: by mail-oo1-f67.google.com with SMTP id q204so671008ooq.1;
-        Wed, 29 Apr 2020 11:43:28 -0700 (PDT)
+        Wed, 29 Apr 2020 14:46:40 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7829BC03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 11:46:40 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id v8so5636466wma.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 11:46:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:in-reply-to:references:date:message-id:mime-version;
+        bh=V3qZVHwLaLK/I0b0rJ63jIE3SQ22bSXyi7PMzS7GVwc=;
+        b=v8RjEYW2XwlnNxy17CGhj1lG7soRDm2FdRbHVvt07M7BPpiZupWPv5xqJsnSj6KoLA
+         dT9Cr8hP8fI35N+Q14QOEu6k1jbn4fMl82QE+K0xgmvNVRMoVc8292y7H8ByWjjFSE7a
+         PdbGY8EE7mNL29zhFBZ0bITzNJ1JSUCby2sDsYTwnaIlxN/lwf6pZgwsQvgo1zIP9RQv
+         Qq2Fh/ztGRrUxpFSqjhVDt/ey9aa8li4ufifTG+lN0dB9PU2hxbGUHi2k9DZnUBRoCFI
+         iEp12Az23yfAo4hTW1jDEaXzPTQYHVa6JTT+GTErAiK+w+i5TMEjybytvo6Bzyp1jSBX
+         zOuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yGhK3HaqbTPZiDc01w13tznQrtyKagfsL0YGpSLp9V4=;
-        b=qQS1TnGkPBE0qnsrbWzX8vMQYMpRZs8ciWUughlZSecsMBmbmT2sVt3zQAmDh/fZS6
-         uAcDCnYk1cHgJU+RLvGaeUfi5sZnDMsQQNLIsqSB7dq7tNTjeN49k9SbRABYRt53tDXk
-         AmRaURe5czs4aTuyH9TIbHiSsNYiQiOSApLeqk1D2CnJLkXjRn48+dinKnhjIbHy6lzJ
-         K5XYAx+r0iDI3bYCSm5Q/ZEYNk2bNGPmP0IH9H7RdhWI/L1nggz7XXCG7uh+aoGvSjOt
-         0MySE+2S0CgIDVZyDDml577qToO0VnvfuQFTS6w9wsoJFX9OSkdHdW+a9G6X/w27Cjlm
-         3M4g==
-X-Gm-Message-State: AGi0PuYtn+/CJHfgBKYBLIxuTOk4EfY62HTw/pFcFgSHA6cnYLL3qt6+
-        Sxid5U7/D/TMArIHgyJA7w==
-X-Google-Smtp-Source: APiQypKdzbHafmOU5qNFDG4p8xvLwoSybYIgvKvM6RuUy3zuV5g1H8Ui3VJ5dMoccojZ7oRFV1ueAQ==
-X-Received: by 2002:a4a:d0d6:: with SMTP id u22mr26838776oor.63.1588185807787;
-        Wed, 29 Apr 2020 11:43:27 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c13sm627194oos.14.2020.04.29.11.43.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 11:43:27 -0700 (PDT)
-Received: (nullmailer pid 14812 invoked by uid 1000);
-        Wed, 29 Apr 2020 18:43:25 -0000
-Date:   Wed, 29 Apr 2020 13:43:25 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/5] PCI: Add Loongson PCI Controller support
-Message-ID: <20200429184325.64eyiubr3badd7uc@bogus>
-References: <20200428011429.1852081-1-jiaxun.yang@flygoat.com>
- <20200428011429.1852081-3-jiaxun.yang@flygoat.com>
+        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=V3qZVHwLaLK/I0b0rJ63jIE3SQ22bSXyi7PMzS7GVwc=;
+        b=kf5vhOa+BZ+qS0DR3a3cc4fhkb6l3DreTVqp0Ljy+uMOHf1TTrC/rCMDkp0OunL7W9
+         xtd7zM5OkphfKx9hunaOjZba9A8SFchv8DDeEIuxF1zHM7Pdvzn5ucMITeTLBIw/LA5k
+         yyWLm9fwlMYiRkorbnZEmtRHZXnz7VGNhuTDl4782Jvv6i98E94ojEdpbGrS25r8TYjU
+         rD2YYegUIZkoSpeahmFE7aeSzKvPSA6dk5ZGwKItfY20v5pAo7r/TLjsGP9Xcpbm95ii
+         mgZZVB+wiv2RQHwWD74ACO2nu+PngMWV97sh0Rn2JoXTUNp0/qjRNuXxRdJ49DfxxPat
+         4+yw==
+X-Gm-Message-State: AGi0PuYWX5xmj5vI+bJAPqHS7Udb8sCBFArMcUFMjrMRGX9NFluvmxxA
+        8HTeTlECTKUDYCumqEZ+JeXGFg==
+X-Google-Smtp-Source: APiQypJdmpXOVXDmvkIQZMAsdMpd1NkWe/42oxJwKXczVw0SkYct2NGkjK3LGFf2yreraYRKmtXSIw==
+X-Received: by 2002:a1c:3dd6:: with SMTP id k205mr4774219wma.138.1588185998986;
+        Wed, 29 Apr 2020 11:46:38 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id o6sm145378wrw.63.2020.04.29.11.46.37
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 Apr 2020 11:46:38 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: meson-g12b-khadas-vim3: fix missing frddr_a node
+In-Reply-To: <AA7AFC1F-AB6E-438D-8510-BC472552C554@gmail.com>
+References: <20200415095927.3780-1-christianshewitt@gmail.com> <AA7AFC1F-AB6E-438D-8510-BC472552C554@gmail.com>
+Date:   Wed, 29 Apr 2020 11:46:35 -0700
+Message-ID: <7hftcmku44.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428011429.1852081-3-jiaxun.yang@flygoat.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 09:14:17AM +0800, Jiaxun Yang wrote:
-> This controller can be found on Loongson-2K SoC, Loongson-3
-> systems with RS780E/LS7A PCH.
-> 
-> The RS780E part of code was previously located at
-> arch/mips/pci/ops-loongson3.c and now it can use generic PCI
-> driver implementation.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> 
-> --
-> v2:
-> 	- Clean up according to rob's suggestions
-> 	- Claim that it can't work as a module
-> v3:
-> 	- Fix a typo
-> v4:
-> 	- More clean-ups: Drop flag check, use devfn
-> v7:
-> 	- Fix ordering according to huacai's suggestion
-> ---
->  drivers/pci/controller/Kconfig        |  10 +
->  drivers/pci/controller/Makefile       |   1 +
->  drivers/pci/controller/pci-loongson.c | 251 ++++++++++++++++++++++++++
->  3 files changed, 262 insertions(+)
->  create mode 100644 drivers/pci/controller/pci-loongson.c
+Christian Hewitt <christianshewitt@gmail.com> writes:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+>> On 15 Apr 2020, at 1:59 pm, chewitt <christianshewitt@gmail.com> wrote:
+>> 
+>> From: Christian Hewitt <christianshewitt@gmail.com>
+>> 
+>> The frddr_a node was accidently deleted when creating a common dtsi for the
+>> Khadas VIM3/VIM3L boards, preventing audio from working on the VIM3.
+>> 
+>> Fixes: 4f26cc1c96c9 ("arm64: dts: khadas-vim3: move common nodes into meson-khadas-vim3.dtsi")
+>> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+>> ---
+>> arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi | 4 ++++
+>> 1 file changed, 4 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+>> index c33e85fbdaba..c6c8caed8327 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+>> @@ -154,6 +154,10 @@
+>> 	clock-latency = <50000>;
+>> };
+>> 
+>> +&frddr_a {
+>> +	status = "okay";
+>> +};
+>> +
+>> &frddr_b {
+>> 	status = "okay";
+>> };
+>> -- 
+>> 2.17.1
+>
+> NB: I appears the same change was sent by Neil in [1] as a fix to 5.4, but
+> this appears to have been dropped/missed somewhere.
+>
+> [1] https://patchwork.kernel.org/patch/11198535/
+
+Hmm, not sure how I dropped that one.  I applied (again) the original
+from Neil (with updated tags from Jerome) and queued as fix for v5.7-rc.
+
+Sorry,
+
+Kevin
