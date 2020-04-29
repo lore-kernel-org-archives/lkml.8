@@ -2,107 +2,116 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F4AC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE15C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF8B21973
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD5DA21D91
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:45:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Hofz04tB"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="fj7G1yNM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgD2PpN (ORCPT
+        id S1726949AbgD2Ppe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:45:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45010 "EHLO
+        Wed, 29 Apr 2020 11:45:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbgD2PpN (ORCPT
+        with ESMTP id S1726539AbgD2Ppd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:45:13 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE2F8C03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:45:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=n4SiF6VzKpSikyxuEjK2tPE8HtYTsR9Hpkf9W1SwGK4=; b=Hofz04tBzULPDF6kymNT5agJJD
-        AcLgCygy6kHRSAj1yIiXaRlusRHFvZN3QxcNO11oWAX1Saxo6asRdJ5suGan4TEkwDjYZ1gO8keeH
-        E+R4e4ailrcVZ7wUhKJ/DO0lLwXNhaXpUMQB1i+cRZ1cf5us3ptQGxY5dHkrdqGVskbqigrUmdzEi
-        kDk0ejMMJaphvwTHhUYb9v11gOt4azgRqkdyzvr1h1W+O4ohRBhy/enot050JZiCUELlhMF+pG0yH
-        uAFNdo07ASL3QAbn7T/0sLVPIxcxucT4LyBr9o68/Ns7Nql8KkGf7mTTTNG6S5cfHMM1ir7aQTkNP
-        6qXdvvqQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTosr-0002JC-CU; Wed, 29 Apr 2020 15:44:25 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3B8283011E8;
-        Wed, 29 Apr 2020 17:44:23 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 14BA720BD9729; Wed, 29 Apr 2020 17:44:23 +0200 (CEST)
-Date:   Wed, 29 Apr 2020 17:44:23 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Joerg Roedel <jroedel@suse.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [RFC][PATCH] x86/mm: Sync all vmalloc mappings before text_poke()
-Message-ID: <20200429154423.GM13592@hirez.programming.kicks-ass.net>
-References: <20200429054857.66e8e333@oasis.local.home>
- <20200429105941.GQ30814@suse.de>
- <20200429082854.6e1796b5@oasis.local.home>
- <20200429100731.201312a9@gandalf.local.home>
- <20200429141004.GR30814@suse.de>
- <20200429103216.34b6f7aa@gandalf.local.home>
+        Wed, 29 Apr 2020 11:45:33 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81CC7C03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:45:33 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id f8so2048249lfe.12
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:45:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OKvac1bajpItzhuenoL2HhjmxuXDr5Pv3lediBuvToA=;
+        b=fj7G1yNMGZ4U9adER/SwvrxROAJuHEUwx5/7bjSlCepoQn+CLaO3UAR5ooi49ffT28
+         LH8SJNVZ5+dXaFiRqscVxkwdEeobr6IOxd6iSLZlvIW/jnvDxoa7ro7AK9ByEzf3HWpn
+         JJWo8iNIwQK3IlHBvFqAmC7IsgQ8/vfUJxOULOuRgH9PmCsvAzYleoc/ENnjJMODKUaE
+         LPb7e4nudKBXnQxAJTrLUMtFgl/TCG026A7jHFR5RCQr45GK6A6KE1JbMoa7VRIjmXlc
+         YYDJD1ux+paGDEFfmEdDyxXTuFkysOIGzN1CC2qB69legGjSa9PJSWP01LvxLfme/t+y
+         /4xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OKvac1bajpItzhuenoL2HhjmxuXDr5Pv3lediBuvToA=;
+        b=rZzYJUeE8pEDplM8Yk9fpp0g3sG9KQlqGBrccvJ/uN7csqrz4kMr8JQUZifznXKILr
+         uest6R2egZSYoicfWYLXYfyi9NDvyjzecehzkAFzqzPpgZCkto4XEpiz4M5NIY20xRhL
+         QJsZD/F3/QmNa508OY1//peJui0NhprG4l8Yvpso13600BCp+RCgZ3zs4IW6Ry+2rB7V
+         RYWk73pL7D04ipa/Jy1cp8tZtAtAR+8Jhke9YQmw3jeYVmqhLvSPm9ObbctNutSFwYva
+         PZm4TLGlkbDQDSHOWt0zONTNX0EVvHOB9y5B2B/Fu/xZfqdHMmdNq1B/aBt3jimoQ5iW
+         TY5g==
+X-Gm-Message-State: AGi0PuYu/86MMTPa40Eb/+kZiIltiusBLwGoKpl2gJ9gy5duNK6KGEkb
+        Wb2EDwTCvxM0ciTf7VqZKbMc7A==
+X-Google-Smtp-Source: APiQypIrZoH6DqAujBzByLFpfg9w+AwrbJ28FDDtVgAMbJYdCn0iLRrLohVlWs/WetSSt7iE1U5ggw==
+X-Received: by 2002:ac2:57cb:: with SMTP id k11mr23290266lfo.19.1588175131830;
+        Wed, 29 Apr 2020 08:45:31 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id r12sm2447765ljc.12.2020.04.29.08.45.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 08:45:31 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 68BC21021F9; Wed, 29 Apr 2020 18:45:42 +0300 (+03)
+Date:   Wed, 29 Apr 2020 18:45:42 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/25] Large pages in the page cache
+Message-ID: <20200429154542.kcqrtu3zrui5r6ah@box>
+References: <20200429133657.22632-1-willy@infradead.org>
+ <20200429154002.n3mq2ysz37puf73y@box>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200429103216.34b6f7aa@gandalf.local.home>
+In-Reply-To: <20200429154002.n3mq2ysz37puf73y@box>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 10:32:16AM -0400, Steven Rostedt wrote:
-> On Wed, 29 Apr 2020 16:10:04 +0200
-> Joerg Roedel <jroedel@suse.de> wrote:
-> 
-> > On Wed, Apr 29, 2020 at 10:07:31AM -0400, Steven Rostedt wrote:
-> > > Talking with Mathieu about this on IRC, he pointed out that my code does
-> > > have a vzalloc() that is called:
-> > > 
-> > > in trace_pid_write()
-> > > 
-> > > 	pid_list->pids = vzalloc((pid_list->pid_max + 7) >> 3);
-> > > 
-> > > This is done when -P1,2 is on the trace-cmd command line.  
+On Wed, Apr 29, 2020 at 06:40:02PM +0300, Kirill A. Shutemov wrote:
+> On Wed, Apr 29, 2020 at 06:36:32AM -0700, Matthew Wilcox wrote:
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > > 
-> > Yeah, I was guessing something like this, init_mm has a mapping which
-> > poking_mm has not. I currently try to reproduce this on one of my
-> > machines.
+> > This patch set does not pass xfstests.  Test at your own risk.  It is
+> > based on the readahead rewrite which is in Andrew's tree.  The large
+> > pages somehow manage to fall off the LRU, so the test VM quickly runs
+> > out of memory and freezes.  To reproduce:
+> > 
+> > # mkfs.xfs /dev/sdb && mount /dev/sdb /mnt && dd if=/dev/zero bs=1M count=2048 of=/mnt/bigfile && sync && sleep 2 && sync && echo 1 >/proc/sys/vm/drop_caches 
+> > # /host/home/willy/kernel/xarray-2/tools/vm/page-types | grep thp
+> > 0x0000000000401800	       511        1  ___________Ma_________t____________________	mmap,anonymous,thp
+> > 0x0000000000405868	         1        0  ___U_lA____Ma_b_______t____________________	uptodate,lru,active,mmap,anonymous,swapbacked,thp
+> > # dd if=/mnt/bigfile of=/dev/null bs=2M count=5
+> > # /host/home/willy/kernel/xarray-2/tools/vm/page-types | grep thp
+> > 0x0000000000400000	      2516        9  ______________________t____________________	thp
+> > 0x0000000000400028	         1        0  ___U_l________________t____________________	uptodate,lru,thp
+> > 0x000000000040006c	       106        0  __RU_lA_______________t____________________	referenced,uptodate,lru,active,thp
 > 
-> Note, in use_temporary_mm(poking_mm), poking_mm only contains the page that
-
-poking_mm should contain the full kernel map, the userspace part is 2
-pages in a random location to alias two kernel pages.
-
-So a vmalloc fault _should_ work.
-
-> needs to be updated. But will get added to per_cpu(cpu_tlbstate.loaded_mm),
-> which appears to be the one that's not updated.
+> Note that you have 107 pages on LRU. It is only head pages. With order-5
+> pages it is over 13MiB.
 > 
-> -- Steve
+> Looks like everything is fine.
+
+/proc/kpageflags reads page's flag bit directly instead of relying on
+PageLRU:
+
+	u |= kpf_copy_bit(k, KPF_LRU,		PG_lru);
+
+Tail pages don't have this bit set. They rely on head page's flag for
+PageLRU().
+
+It would be nice to get it fixed, but I guess it is too late. Somebody may
+rely on the current behaviour by now.
+
+-- 
+ Kirill A. Shutemov
