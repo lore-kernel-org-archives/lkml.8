@@ -2,79 +2,80 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 318A4C83001
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73927C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B6B2206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 516A42074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:50:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XpsPFxZa"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cK2TC6oq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgD2Atu (ORCPT
+        id S1726509AbgD2Aum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 20:49:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46630 "EHLO
+        Tue, 28 Apr 2020 20:50:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726420AbgD2Att (ORCPT
+        by vger.kernel.org with ESMTP id S1726353AbgD2Aul (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 20:49:49 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D2A1C035493
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 17:49:48 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id h11so171304plr.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 17:49:48 -0700 (PDT)
+        Tue, 28 Apr 2020 20:50:41 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE1EAC03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 17:50:39 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id c24so254075uap.13
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 17:50:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Q3EtAKvEWUW0/w8OE9AzaYUShPhgEQZLo83EeVoVlc8=;
-        b=XpsPFxZaKEr5HNrwdLuHLBro4Q5ws03ekVwIfeuLisq1Awlppg8GH1tIGMYhyA3Sz7
-         4ATUAgx1MVLSFttmueMe1mlHnEbFsthxOxWIC17+NLy43GuPldaWJCd03/bFRfP+HvVP
-         x30IY/T14k/EHzusAjSy+CzGRfkwgknV2LEc4=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6u3sVYzO/Ci5rYvWAGcPeyuh2kJ6IDPGvpL5WgquApI=;
+        b=cK2TC6oquRyuDEIZ1S6rIu8b3VOBFMwrJQubosXZZog80NmR+y/OlKbMCRaYQhZhpm
+         sWdEbha+b9pOy8AmCfTklC2xUV8b1e0VwH2uu5DoFuI05bntFwhljyerZYyRnK32Ze1Z
+         pmka47TcDe2giuk2cFnHmM+QKkaEQD1W78IU4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Q3EtAKvEWUW0/w8OE9AzaYUShPhgEQZLo83EeVoVlc8=;
-        b=DJWlQyxPEE6niY9jNcAE+tI9GrTjbb8ZD2CH/BXYGD7+b2L3ZSI69E/875MYDjrejb
-         YusImlwIbrtCvT5BMpFfWFq2jJNW/WJ5jPKIVwWC5k9CWjZtCoBA7EncBO15NxWxlQMN
-         d0b70VjLmfoJ8EiA+i73OaPIbNnwV56Tke0qWA+2EzF4+ygD62k3/v4KQMTb3IVr2ep/
-         VuW/dQlK/X0cICcRzbjWynGVK3HaZ8jfTGL9C7C4hb2nH9f1mpeq18wlaOMVqwB2xt8C
-         A3wQ/Uu2G8j3eTPd1gnhTvJzyXijNfirtyVgHV/ua+hp5WwnBs5uFbwdI6XDjQdUSBiM
-         0jLA==
-X-Gm-Message-State: AGi0PubvAQiyMDsLnnttwuY0pQK4oIUtqmcAcnL0Amb8khEeiRqX4Q2m
-        XV8LbYHpIftLG48c+2wdKHybgQ==
-X-Google-Smtp-Source: APiQypKbNcABrcklk/jOHdelRiUtXSs4G6lWcVte78/wBQee0IK+DS+s0hk+TPBBJkWfCkERI4hA4A==
-X-Received: by 2002:a17:902:7241:: with SMTP id c1mr29864763pll.113.1588121387832;
-        Tue, 28 Apr 2020 17:49:47 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id b3sm14073059pgh.75.2020.04.28.17.49.46
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6u3sVYzO/Ci5rYvWAGcPeyuh2kJ6IDPGvpL5WgquApI=;
+        b=RfE78tai5G+7VU+J6VmEsMGhBlf50ABQRZRNA2Cck4jw89TU9zZo95GPev79/CB9/U
+         fNWs6YaRsqXEGWyPXsKmW7Wha8LP5d9hvTvHhqVp+ng+7YlW1+n3rJ8Kq3yo6GDF13tk
+         c8H0/o8qyMqV+J6ES9qBLsI9LMFBv0QrTUaYwdjEDu3aUDYrmkUSO6SNghg0W4rpoNci
+         lMeaTx2rTI0iWvprTBAsq7USzkVf2mogSA63gltv4/duwDT0UKJ+zwvU/yorN1PvwVm2
+         KRa5yhr0f3EmsYzgNf6BNucDCeieMYmjbtSiz4T3dj/cr8I21L4kxfs2Y/iLBCrIJxt0
+         u/fA==
+X-Gm-Message-State: AGi0Pua+xBhMlAZ2oVcBLd6oGzTI8M1kIY61+sxtzla0pRk3SbHU9sw+
+        VM70Fct/ZGqSD8p/bsW/Q+4ys6TYqPs=
+X-Google-Smtp-Source: APiQypJnPoB9T7yYiv/d8OlLecmfamjfetfCRKMdU9/Z2SJI5opjmYoTS8JMw7k4qoh+vDPQ6En4HA==
+X-Received: by 2002:a9f:2907:: with SMTP id t7mr22066689uat.4.1588121438924;
+        Tue, 28 Apr 2020 17:50:38 -0700 (PDT)
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
+        by smtp.gmail.com with ESMTPSA id r188sm4631180vsb.20.2020.04.28.17.50.38
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 17:49:47 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 17:49:45 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Alok Chauhan <alokc@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH v3 15/17] spi: spi-qcom-qspi: Use OPP API to set clk/perf
- state
-Message-ID: <20200429004945.GP4525@google.com>
-References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
- <1588080785-6812-16-git-send-email-rnayak@codeaurora.org>
+        Tue, 28 Apr 2020 17:50:38 -0700 (PDT)
+Received: by mail-ua1-f46.google.com with SMTP id y10so285758uao.8
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 17:50:38 -0700 (PDT)
+X-Received: by 2002:ab0:375a:: with SMTP id i26mr1184039uat.120.1588121438064;
+ Tue, 28 Apr 2020 17:50:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1588080785-6812-16-git-send-email-rnayak@codeaurora.org>
+References: <20200428172322.1.I396f351e364f3c09df7c7606e79abefb8682c092@changeid>
+ <20200428172322.2.Iacb3c8152c3cf9015a91308678155a578b0cc050@changeid> <a23b7a97f349e6f74b993a4e127564ad3f7d6929.camel@perches.com>
+In-Reply-To: <a23b7a97f349e6f74b993a4e127564ad3f7d6929.camel@perches.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 28 Apr 2020 17:50:26 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Us6LyfgeXvxnqq+KhHN1djok1y+W_xzSb-KGFy2wgEMg@mail.gmail.com>
+Message-ID: <CAD=FV=Us6LyfgeXvxnqq+KhHN1djok1y+W_xzSb-KGFy2wgEMg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: Make "offset" and "unsigned int", not just "unsigned"
+To:     Joe Perches <joe@perches.com>
+Cc:     LinusW <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -82,65 +83,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-On Tue, Apr 28, 2020 at 07:03:03PM +0530, Rajendra Nayak wrote:
-> QSPI needs to vote on a performance state of a power domain depending on
-> the clock rate. Add support for it by specifying the perf state/clock rate
-> as an OPP table in device tree.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Alok Chauhan <alokc@codeaurora.org>
-> Cc: Akash Asthana <akashast@codeaurora.org>
-> Cc: linux-spi@vger.kernel.org
-> ---
->  drivers/spi/spi-qcom-qspi.c | 29 ++++++++++++++++++++++++++++-
->  1 file changed, 28 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/spi/spi-qcom-qspi.c b/drivers/spi/spi-qcom-qspi.c
-> index 3c4f83b..724a658 100644
-> --- a/drivers/spi/spi-qcom-qspi.c
-> +++ b/drivers/spi/spi-qcom-qspi.c
-> @@ -8,6 +8,7 @@
->  #include <linux/of.h>
->  #include <linux/of_platform.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/pm_opp.h>
->  #include <linux/spi/spi.h>
->  #include <linux/spi/spi-mem.h>
->  
-> @@ -139,6 +140,8 @@ struct qcom_qspi {
->  	struct device *dev;
->  	struct clk_bulk_data *clks;
->  	struct qspi_xfer xfer;
-> +	struct opp_table *opp_table;
-> +	bool has_opp_table;
->  	/* Lock to protect xfer and IRQ accessed registers */
->  	spinlock_t lock;
->  };
-> @@ -235,7 +238,7 @@ static int qcom_qspi_transfer_one(struct spi_master *master,
->  		speed_hz = xfer->speed_hz;
->  
->  	/* In regular operation (SBL_EN=1) core must be 4x transfer clock */
-> -	ret = clk_set_rate(ctrl->clks[QSPI_CLK_CORE].clk, speed_hz * 4);
-> +	ret = dev_pm_opp_set_rate(ctrl->dev, speed_hz * 4);
->  	if (ret) {
->  		dev_err(ctrl->dev, "Failed to set core clk %d\n", ret);
->  		return ret;
-> @@ -481,6 +484,20 @@ static int qcom_qspi_probe(struct platform_device *pdev)
->  	master->handle_err = qcom_qspi_handle_err;
->  	master->auto_runtime_pm = true;
->  
-> +	ctrl->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "core");
-> +	if (IS_ERR(ctrl->opp_table)) {
-> +		ret = PTR_ERR(ctrl->opp_table);
-> +		goto exit_probe_master_put;
-> +	}
-> +	/* OPP table is optional */
-> +	ret = dev_pm_opp_of_add_table(&pdev->dev);
-> +	if (!ret) {
-> +		ctrl->has_opp_table = true;
-> +	} else if (ret != -ENODEV) {
-> +		dev_err(&pdev->dev, "Invalid OPP table in Device tree\n");
-> +		return ret;
+On Tue, Apr 28, 2020 at 5:38 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Tue, 2020-04-28 at 17:23 -0700, Douglas Anderson wrote:
+> > When I copied the function prototypes from the GPIO header file into
+> > my own driver, checkpatch yelled at me saying that I shouldn't use use
+> > "unsigned" but instead should say "unsigned int".  Let's make the
+> > header file use "unsigned int" so others who copy like I did won't get
+> > yelled at.
+>
+> There are a few other unsigned declarations in the file.
 
-		goto exit_probe_master_put;
+There are?  I swear I looked for them before I sent my patch and I
+couldn't find them.  Then I looked again upon seeing your reply and I
+still can't find them.  My eyes are bad, though.  Maybe you can give
+me specifics?
+
+
+> Maybe do all of them (and remove the unnecessary externs)?
+
+You mean just remove the word "extern" everywhere in this file?  Sure,
+I can if you want.
+
+
+> trivial reformatting of the function pointer block too
+
+Wow, I must be totally out of it.  Maybe it's the gin and tonic I just
+had.  I don't understand this comment either.  Can you clarify?
+
+
+-Doug
