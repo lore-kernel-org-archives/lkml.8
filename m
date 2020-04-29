@@ -2,158 +2,122 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F61C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D683BC83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAD372083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:07:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HrWP0fNy"
+	by mail.kernel.org (Postfix) with ESMTP id BBF2720787
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:13:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbgD2IHi (ORCPT
+        id S1726457AbgD2INg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:07:38 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:34957 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbgD2IHg (ORCPT
+        Wed, 29 Apr 2020 04:13:36 -0400
+Received: from twspam01.aspeedtech.com ([211.20.114.71]:57593 "EHLO
+        twspam01.aspeedtech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726355AbgD2INg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:07:36 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200429080407euoutp0211d47e828473aa61447e7d7595212e37~KO7BmcpUP2723727237euoutp02x
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:04:07 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200429080407euoutp0211d47e828473aa61447e7d7595212e37~KO7BmcpUP2723727237euoutp02x
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1588147447;
-        bh=8wZtlNmNqWWCVeLYNpsp4VIu5nk8QGOZAUKwMJbtN/c=;
-        h=From:Subject:To:Cc:Date:References:From;
-        b=HrWP0fNyONxEJwz4zWQk9srR6sqlY4W/4V6cJ43GjtvgLgYoZAuVyZIyTc7HcrP9s
-         txYGPf3kcirkrEkloGb0ltrxnZOGCfN6coK69fc2a6lCkzuK/VKzCHxJkO5ccaclKq
-         d6OTBdz7gSB0Jj+40gI4U9tlz+zvJlJfw4bNDy6Y=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200429080407eucas1p2398f54b5f3116b986dca2c0d9ea8aaed~KO7BT0cP-1544915449eucas1p2j;
-        Wed, 29 Apr 2020 08:04:07 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 23.3E.60679.7F439AE5; Wed, 29
-        Apr 2020 09:04:07 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200429080406eucas1p21147ed99ad98332729c2a2aff2a33fb2~KO7BBpZ9U1544915449eucas1p2i;
-        Wed, 29 Apr 2020 08:04:06 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200429080406eusmtrp28f80f2181d97d267a8a40ba2cabbca4b~KO7A_lh_p1582015820eusmtrp23;
-        Wed, 29 Apr 2020 08:04:06 +0000 (GMT)
-X-AuditID: cbfec7f4-0cbff7000001ed07-22-5ea934f75dd1
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 79.DB.07950.6F439AE5; Wed, 29
-        Apr 2020 09:04:06 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200429080406eusmtip1e05c22505112d3c95906e63981b56f34~KO7Ap0eWQ2927929279eusmtip1E;
-        Wed, 29 Apr 2020 08:04:06 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH] video: fbdev: controlfb: fix build for COMPILE_TEST=y &&
- PPC_PMAC=y && PPC32=n
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        kbuild test robot <lkp@intel.com>
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Message-ID: <ba50c26a-d69b-d88d-b34d-3194971b1018@samsung.com>
-Date:   Wed, 29 Apr 2020 10:04:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Wed, 29 Apr 2020 04:13:36 -0400
+Received: from mail.aspeedtech.com (twmbx02.aspeed.com [192.168.0.24])
+        by twspam01.aspeedtech.com with ESMTP id 03T82qFe086043;
+        Wed, 29 Apr 2020 16:02:52 +0800 (GMT-8)
+        (envelope-from ryan_chen@aspeedtech.com)
+Received: from TWMBX02.aspeed.com (192.168.0.24) by TWMBX02.aspeed.com
+ (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.620.29; Wed, 29 Apr
+ 2020 16:12:46 +0800
+Received: from TWMBX02.aspeed.com ([fe80::997d:c0a7:f01f:e1a7]) by
+ TWMBX02.aspeed.com ([fe80::997d:c0a7:f01f:e1a7%12]) with mapi id
+ 15.00.0620.020; Wed, 29 Apr 2020 16:12:45 +0800
+From:   Ryan Chen <ryan_chen@aspeedtech.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+CC:     Brendan Higgins <brendanhiggins@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v0 linux master] i2c/busses: Avoid i2c interrupt status
+ clear race condition.
+Thread-Topic: [PATCH v0 linux master] i2c/busses: Avoid i2c interrupt status
+ clear race condition.
+Thread-Index: AQHWHdeQ1mqTBOPAdE+n+yVhmYVsFKiPNOCAgACLErA=
+Date:   Wed, 29 Apr 2020 08:12:45 +0000
+Message-ID: <56add9c6e6b5410986325a1360466e4b@TWMBX02.aspeed.com>
+References: <20200429033737.2781-1-ryan_chen@aspeedtech.com>
+ <20200429075357.GA1957@kunai>
+In-Reply-To: <20200429075357.GA1957@kunai>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [192.168.2.87]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHeXe2s+NycpyGDxZpC4UEb2k00qRAaAaFH/pQYurKg4o6bUdn
-        VoQZlNjNTFcNo5y2qYUu70qKzlsXNSnNZTcdi1SYRt6a6MzjmeS33/O8z+99/w+8BCZ6yXMn
-        kuQZlEIuSxHjAm5jr/W971JwZUyAysCTlE58wyTDC7O45PWd3zzJx9YSXDJ9zYRLKqwNSNLQ
-        NsI/zJdeNRpxadviU6607NUUR/rjZh9HWq4awaVztbsi8ShBaDyVkqSkFP5hcYLEocFabrpe
-        eGG+eYmXg7Tb8pEDAWQw6Ho7eflIQIjICgTDg/04W8wj+Pmrm88WcwisZit3U7HUjdsVHYL+
-        EZNdsSBY/nKXz0zh5EG4d6MKMexCyqB9vB1n2JWMhPLiasQIGPkcgaZIv34VQQjJMOgZiGJm
-        uKQXWFUNG+528hT8Ge/iMSwkneHNI/NGCox0gzHzEw7LHtBkKcGYO4Gs4sOnoVGcjRoOi8+6
-        +Sy7wHRfvZ13wloLIzNCNYLVvEm73YRAd99mt0Pg6+AyzqTDyL1Q0+rPto+ApqYUY9pAOoHR
-        4syGcILCxgf2thDyrovYaW/Qa/X45rP5LZUYy1LomunAC9Bu9ZbV1FtWU29ZTf0/w1PErUJu
-        VCadmkDR++RUlh8tS6Uz5Ql+59JSa9H6R3pn65tvRq0rZw2IJJDYUah3rIgR8WRKOjvVgIDA
-        xK5CU6I2RiSMl2VfpBRpsYrMFIo2oB0EV+wmDNJMnRGRCbIMKpmi0inF5imHcHDPQYfmwv+G
-        RpdMJgfpVQOlId/D6Y4gj4duuse0Z/GJyabEnvO8pElX2hh9eS1sT0S6rjR8efht6/EIvNPH
-        1DW6cuXzB1vgAH57Zva0ubBOY8uNzR9zXnBXKwsqVo3HXpy8lOWZe9RrzNQXXz7hm+Z3K0Rb
-        tl8cVlzvrcm2HAiIUxaJuXSiLNAHU9Cyf7P4oXlEAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBIsWRmVeSWpSXmKPExsVy+t/xu7rfTFbGGex9p22x8OFdZosrX9+z
-        WZzo+8BqcXnXHDaLV82P2CxW/NzKaLF171V2B3aPxhs32Dz2flvA4rF4z0smj/vdx5k8lky7
-        yubxeZNcAFuUnk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqR
-        vl2CXsaFc5tYCjbwVnzZ8Z21gXEZdxcjJ4eEgInE280PWLsYuTiEBJYySjw+8Zuxi5EDKCEj
-        cXx9GUSNsMSfa11sEDWvGSUmnnvFDJJgE7CSmNi+ihHEFhZIlNj3YB8bSK+IgJ/E3zO5IPXM
-        AqsZJfa0X2QGifMK2EkcPRsFUs4ioCrxc9pWsFZRgQiJwztmgdm8AoISJ2c+YQGxmQXUJf7M
-        u8QMYYtL3HoynwnClpfY/nYO8wRGgVlIWmYhaZmFpGUWkpYFjCyrGEVSS4tz03OLjfSKE3OL
-        S/PS9ZLzczcxAmNp27GfW3Ywdr0LPsQowMGoxMO7gWdFnBBrYllxZe4hRgkOZiUR3kcZy+KE
-        eFMSK6tSi/Lji0pzUosPMZoCPTSRWUo0OR8Y53kl8YamhuYWlobmxubGZhZK4rwdAgdjhATS
-        E0tSs1NTC1KLYPqYODilGhjn+yxbMStErUEh6tiGF6aTHOKKWs76THM5oKP/4TyXcdrUiNOy
-        iyxPWSVxViUEfU6KOh1wkTPm9cttN0rjV63e/l146eISzqmv6nrC69+u05faMTNZw/nVJdvK
-        6IVf018uuJi0qrbcttByprVIke9qqcnnfNtsshzbtjK4n7n42zVgtu3r/tNKLMUZiYZazEXF
-        iQDxne+AuwIAAA==
-X-CMS-MailID: 20200429080406eucas1p21147ed99ad98332729c2a2aff2a33fb2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200429080406eucas1p21147ed99ad98332729c2a2aff2a33fb2
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200429080406eucas1p21147ed99ad98332729c2a2aff2a33fb2
-References: <CGME20200429080406eucas1p21147ed99ad98332729c2a2aff2a33fb2@eucas1p2.samsung.com>
+X-DNSRBL: 
+X-MAIL: twspam01.aspeedtech.com 03T82qFe086043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+-----Original Message-----
+From: Wolfram Sang [mailto:wsa@the-dreams.de] 
+Sent: Wednesday, April 29, 2020 3:54 PM
+To: Ryan Chen <ryan_chen@aspeedtech.com>
+Cc: Brendan Higgins <brendanhiggins@google.com>; Benjamin Herrenschmidt <benh@kernel.crashing.org>; Joel Stanley <joel@jms.id.au>; Andrew Jeffery <andrew@aj.id.au>; linux-i2c@vger.kernel.org; openbmc@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org; linux-aspeed@lists.ozlabs.org; linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v0 linux master] i2c/busses: Avoid i2c interrupt status clear race condition.
 
-powerpc allyesconfig fails like this:
+On Wed, Apr 29, 2020 at 11:37:37AM +0800, ryan_chen wrote:
+> In AST2600 there have a slow peripheral bus between CPU  and i2c 
+> controller.
+> Therefore GIC i2c interrupt status clear have delay timing, when CPU 
+> issue write clear i2c controller interrupt status.
+> To avoid this issue, the driver need have read after write  clear at 
+> i2c ISR.
+> 
+> Signed-off-by: ryan_chen <ryan_chen@aspeedtech.com>
 
-drivers/video/fbdev/controlfb.c: In function 'controlfb_mmap':
-drivers/video/fbdev/controlfb.c:756:23: error: implicit declaration of function 'pgprot_cached_wthru'; did you mean 'pgprot_cached'? [-Werror=implicit-function-declaration]
-  756 |   vma->vm_page_prot = pgprot_cached_wthru(vma->vm_page_prot);
-      |                       ^~~~~~~~~~~~~~~~~~~
-      |                       pgprot_cached
-drivers/video/fbdev/controlfb.c:756:23: error: incompatible types when assigning to type 'pgprot_t' {aka 'struct <anonymous>'} from type 'int'
+v0? is it a prototype?
+[Ryan Chen] It is not prototype it is official patch.
+And is there maybe a Fixes: tag for it?
+[Ryan Chen] Yes it is a fix patch.
 
-Fix it by adding missing PPC32 dependency.
-
-Fixes: a07a63b0e24d ("video: fbdev: controlfb: add COMPILE_TEST support")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Reported-by: kbuild test robot <lkp@intel.com>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
----
- drivers/video/fbdev/controlfb.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-Index: b/drivers/video/fbdev/controlfb.c
-===================================================================
---- a/drivers/video/fbdev/controlfb.c
-+++ b/drivers/video/fbdev/controlfb.c
-@@ -47,7 +47,7 @@
- #include <linux/nvram.h>
- #include <linux/adb.h>
- #include <linux/cuda.h>
--#ifdef CONFIG_PPC_PMAC
-+#if defined(CONFIG_PPC_PMAC) && defined(CONFIG_PPC32)
- #include <asm/prom.h>
- #include <asm/btext.h>
- #endif
-@@ -55,7 +55,7 @@
- #include "macmodes.h"
- #include "controlfb.h"
- 
--#ifndef CONFIG_PPC_PMAC
-+#if !defined(CONFIG_PPC_PMAC) || !defined(CONFIG_PPC32)
- #define invalid_vram_cache(addr)
- #undef in_8
- #undef out_8
+> ---
+>  drivers/i2c/busses/i2c-aspeed.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-aspeed.c 
+> b/drivers/i2c/busses/i2c-aspeed.c index 07c1993274c5..f51702d86a90 
+> 100644
+> --- a/drivers/i2c/busses/i2c-aspeed.c
+> +++ b/drivers/i2c/busses/i2c-aspeed.c
+> @@ -603,6 +603,7 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void *dev_id)
+>  	/* Ack all interrupts except for Rx done */
+>  	writel(irq_received & ~ASPEED_I2CD_INTR_RX_DONE,
+>  	       bus->base + ASPEED_I2C_INTR_STS_REG);
+> +	readl(bus->base + ASPEED_I2C_INTR_STS_REG);
+>  	irq_remaining = irq_received;
+>  
+>  #if IS_ENABLED(CONFIG_I2C_SLAVE)
+> @@ -645,9 +646,11 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void *dev_id)
+>  			irq_received, irq_handled);
+>  
+>  	/* Ack Rx done */
+> -	if (irq_received & ASPEED_I2CD_INTR_RX_DONE)
+> +	if (irq_received & ASPEED_I2CD_INTR_RX_DONE) {
+>  		writel(ASPEED_I2CD_INTR_RX_DONE,
+>  		       bus->base + ASPEED_I2C_INTR_STS_REG);
+> +		readl(bus->base + ASPEED_I2C_INTR_STS_REG);
+> +	}
+>  	spin_unlock(&bus->lock);
+>  	return irq_remaining ? IRQ_NONE : IRQ_HANDLED;  }
+> --
+> 2.17.1
+> 
