@@ -2,110 +2,66 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5CAC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A19C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98D2921927
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:49:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588164577;
-	bh=3TPpJC53ymK37dZLXDXOfPIIzQw46+VQdVgo7v80E9s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E9M8cZheTVQf4NYahu7bZ/OpBXcAct5K6iYe4ssJx+0zrMlDmmJq0N+8MigtoFzLC
-	 GYyjmUrw4JyP2K+skjYTIMBTpjPYR0TRLEGsEbpA3LK4rpUwdJqQ7YuFmFzQs6FK+K
-	 DqKnLP1CFnGWCVEoAv2MVr1tHmL0LYbsOLot+roo=
+	by mail.kernel.org (Postfix) with ESMTP id A5B9F208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:51:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KWI8M1r0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbgD2Mth (ORCPT
+        id S1726740AbgD2MvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:49:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48220 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726599AbgD2Mtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:49:36 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D52621D7E;
-        Wed, 29 Apr 2020 12:49:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588164575;
-        bh=3TPpJC53ymK37dZLXDXOfPIIzQw46+VQdVgo7v80E9s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0aZzGHv6mH0BcgdxOn+uYVz2RvCaR1PMEVYKmLouOMFvZ/Tiy5I2+NaOA2IPzxi2Y
-         TMUaSGI45uJQrha9eDb3dc/AdSkaryRftgCE5Ga2Q0ppLJc+QiipFVuPigInGP4V+j
-         eNI3DzHG3UvKuVYIPGufUmdrkUGfE7fWIkkkH68M=
-Date:   Wed, 29 Apr 2020 13:49:33 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Leslie =?utf-8?B?SHNpYSjlpI/pgqbpgLJfUGVnYXRyb24p?= 
-        <Leslie_Hsia@pegatroncorp.com>
-Cc:     "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hermes =?utf-8?B?SHNpZWgo6Kyd5pe75YqtX1BlZ2F0cm9uKQ==?= 
-        <Hermes_Hsieh@pegatroncorp.com>,
-        "jesse.sung@canonical.com" <jesse.sung@canonical.com>,
-        "jic23@kernel.org" <jic23@kernel.org>
-Subject: Re: [PATCH] subsystem: Amplifier driver for TAS5805M,Texas
- instruments
-Message-ID: <20200429124933.GJ4201@sirena.org.uk>
-References: <754706C925201D4896E92CCAD6B38E4401F0F733E3@PTW-EX-37.PEGA.CORP.PEGATRON>
- <20200428113033.GE5677@sirena.org.uk>
- <C84B7899-1FC4-43CC-9FAE-8FECE09E8D4E@pegatroncorp.com>
+        Wed, 29 Apr 2020 08:51:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726516AbgD2MvQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 08:51:16 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25B86C03C1AD;
+        Wed, 29 Apr 2020 05:51:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=sRCgO9neRwXg7E1Pg9BwAuwaIvQxv5KwGOu2dgYS/Cs=; b=KWI8M1r0PtDE6DshAvv8FXzjgq
+        K8DyhGM2SK9tf/h/5ZsGeK8hrKsQbN3L+3M2DmfffsofsbVUUC//sOVYvmCZu6+qAecegP2EDSt3L
+        4tVTf2+Su9Oat6P7YaOteD2E9G+e23Kxd4WGRsSOe+xqeyjUT48WWqtxFoC6ClHeSdJTJT07eIYQh
+        b1H3TA2GFDAjcugmn/oklh3iE5L5dtHPSHLDL2ZKxazkqIGx/SODNvzGWOCt4DdosVwOaDDPGmfox
+        j3gu6ngQxu4jAoq5mG/U664a6M9+Xkt6UG5b4U+dW7K1PI2rAd8PAUZddBrA5J1sBsFzDu+s0D5gn
+        QyWSh/eQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTmB3-0003dB-B6; Wed, 29 Apr 2020 12:51:01 +0000
+Date:   Wed, 29 Apr 2020 05:51:01 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        kbuild test robot <lkp@intel.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] video: fbdev: controlfb: fix build for COMPILE_TEST=y
+ && PPC_PMAC=y && PPC32=n
+Message-ID: <20200429125101.GA21275@infradead.org>
+References: <CGME20200429104825eucas1p16bf37b71a3ab3a768d1eff6c48eb61dd@eucas1p1.samsung.com>
+ <fe520316-3863-e6c4-9581-5d709f49e906@samsung.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="451BZW+OUuJBCAYj"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <C84B7899-1FC4-43CC-9FAE-8FECE09E8D4E@pegatroncorp.com>
-X-Cookie: I know how to do SPECIAL EFFECTS!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <fe520316-3863-e6c4-9581-5d709f49e906@samsung.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---451BZW+OUuJBCAYj
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Apr 28, 2020 at 06:27:45PM +0000, Leslie Hsia(=E5=A4=8F=E9=82=A6=E9=
-=80=B2_Pegatron) wrote:
-
-Please don't top post, reply in line with needed context.  This allows
-readers to readily follow the flow of conversation and understand what
-you are talking about and also helps ensure that everything in the
-discussion is being addressed.
-
-> but he thought that this is an amplifier driver,
-> and we should put it into /sound/doc/codecs/,
-> so would you please give me an advice about the driver belongs to which s=
-ubsystem?
-> Jonathan, what do you think?
-
-A quick google suggests that this is an audio amplifier so I'd expect it
-to be in the audio subsystem.  If it were in IIO it wouldn't work with
-most userspace audio software...
-
---451BZW+OUuJBCAYj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6pd9wACgkQJNaLcl1U
-h9Dmowf5AUjajPkm6TWy/REW/DuKZSQCtdknps1+z1SiiWRwRHW62I0Gm+iPaTxW
-xFhA6o1UEc+eTbN8mezdskc3OH4v75Lto2hW2TXM+hepuh6n1LdP4RdK0b2H3nAG
-CYgwGKhgvoO7QM0keDx9h70fIsUHDMQyAObfX6MBbQyivF2Cbhp+FTFNy2P3cV/b
-adrf5QeWLVu/Mq6TR2A3m/31NJYDnarVTKnfSGaRJmxyJtvvqI22vC9SMGg4a/07
-1YwQxGjtPu0RSrJpfE99oR+2zoQUbAXDw7jjqOChK4RrmO5AfoqlHRYFkFzNYZFY
-fo0cEugpdQBCm6l4SvIWJRaeYZC5yw==
-=Boc5
------END PGP SIGNATURE-----
-
---451BZW+OUuJBCAYj--
+Why do we even bother allocing the driver to compile for !ppc32
+given that it clearly needs ppc-specific infrastructure?  The whole
+idea of needing magic stubs for the COMPILE_TEST case seems rather
+counterproduction.
