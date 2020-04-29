@@ -2,129 +2,168 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74310C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21231C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C01B221F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE0820B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:59:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588183190;
+	bh=uKVXdg34+bztAgTFd7nuch2OdjnH6f6f+YwPjkMWGJ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YEB/FASDqM0rG2byIG5CF4PzfHKVtqStg1KCmSUpCX/6Sd0hddy8xnBpfeGrwqmqO
+	 JrFB9Dt8RwTfZQFjQLOrmWE2kEklM51zQYIm8CzpHQZSX2EDTxDKnhdIGVulDNvHau
+	 flCiIPDHyGCy4sU6d9/zDhYipKP4i5MGgDdowtOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgD2R72 (ORCPT
+        id S1727027AbgD2R7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:59:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41536 "EHLO mx2.suse.de"
+        Wed, 29 Apr 2020 13:59:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbgD2R71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:59:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3CF9DACC2;
-        Wed, 29 Apr 2020 17:59:24 +0000 (UTC)
-Subject: Re: [PATCH v3 1/1] dma: actions: Fix lockdep splat for owl-dma
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-actions@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <2f3e665270b8d170ea19cc66c6f0c68bf8fe97ff.1588173497.git.cristian.ciocaltea@gmail.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <87e4f05f-e942-2a39-1f87-fe01fb6c4248@suse.de>
-Date:   Wed, 29 Apr 2020 19:59:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726423AbgD2R7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 13:59:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B68C920B1F;
+        Wed, 29 Apr 2020 17:59:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588183188;
+        bh=uKVXdg34+bztAgTFd7nuch2OdjnH6f6f+YwPjkMWGJ4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VLvmgh5hiOXOYRzq7Pe1/72+ImTN2ycukWM8kmUNAR15gTXhEk7L+yYFGVWajg9pu
+         PIKUvU80FG+ouSVjL3CIaNL2OTaIAHZqA+CYzmxlEljPRhW6ZfivpZ1Z9YjeyGNHJE
+         EpXZO5nLcbeBl6X/mdfmq/ho7KQWwausMJPZ7QqY=
+Date:   Wed, 29 Apr 2020 19:59:45 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Manivannan Sadhasivam <mani@kernel.org>
+Cc:     johan@kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, patong.mxl@gmail.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 2/2] usb: serial: xr_serial: Add gpiochip support
+Message-ID: <20200429175945.GA2336267@kroah.com>
+References: <20200428195651.6793-1-mani@kernel.org>
+ <20200428195651.6793-3-mani@kernel.org>
+ <20200429174727.GF6443@Mani-XPS-13-9360>
 MIME-Version: 1.0
-In-Reply-To: <2f3e665270b8d170ea19cc66c6f0c68bf8fe97ff.1588173497.git.cristian.ciocaltea@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429174727.GF6443@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 29.04.20 um 17:28 schrieb Cristian Ciocaltea:
-> When the kernel is built with lockdep support and the owl-dma driver is
-> used, the following message is shown:
+On Wed, Apr 29, 2020 at 11:17:27PM +0530, Manivannan Sadhasivam wrote:
+> Hi Greg,
 > 
-> [    2.496939] INFO: trying to register non-static key.
-> [    2.501889] the code is fine but needs lockdep annotation.
-> [    2.507357] turning off the locking correctness validator.
-> [    2.512834] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.3+ #15
-> [    2.519084] Hardware name: Generic DT based system
-> [    2.523878] Workqueue: events_freezable mmc_rescan
-> [    2.528681] [<801127f0>] (unwind_backtrace) from [<8010da58>] (show_stack+0x10/0x14)
-> [    2.536420] [<8010da58>] (show_stack) from [<8080fbe8>] (dump_stack+0xb4/0xe0)
-> [    2.543645] [<8080fbe8>] (dump_stack) from [<8017efa4>] (register_lock_class+0x6f0/0x718)
-> [    2.551816] [<8017efa4>] (register_lock_class) from [<8017b7d0>] (__lock_acquire+0x78/0x25f0)
-> [    2.560330] [<8017b7d0>] (__lock_acquire) from [<8017e5e4>] (lock_acquire+0xd8/0x1f4)
-> [    2.568159] [<8017e5e4>] (lock_acquire) from [<80831fb0>] (_raw_spin_lock_irqsave+0x3c/0x50)
-> [    2.576589] [<80831fb0>] (_raw_spin_lock_irqsave) from [<8051b5fc>] (owl_dma_issue_pending+0xbc/0x120)
-> [    2.585884] [<8051b5fc>] (owl_dma_issue_pending) from [<80668cbc>] (owl_mmc_request+0x1b0/0x390)
-> [    2.594655] [<80668cbc>] (owl_mmc_request) from [<80650ce0>] (mmc_start_request+0x94/0xbc)
-> [    2.602906] [<80650ce0>] (mmc_start_request) from [<80650ec0>] (mmc_wait_for_req+0x64/0xd0)
-> [    2.611245] [<80650ec0>] (mmc_wait_for_req) from [<8065aa10>] (mmc_app_send_scr+0x10c/0x144)
-> [    2.619669] [<8065aa10>] (mmc_app_send_scr) from [<80659b3c>] (mmc_sd_setup_card+0x4c/0x318)
-> [    2.628092] [<80659b3c>] (mmc_sd_setup_card) from [<80659f0c>] (mmc_sd_init_card+0x104/0x430)
-> [    2.636601] [<80659f0c>] (mmc_sd_init_card) from [<8065a3e0>] (mmc_attach_sd+0xcc/0x16c)
-> [    2.644678] [<8065a3e0>] (mmc_attach_sd) from [<8065301c>] (mmc_rescan+0x3ac/0x40c)
-> [    2.652332] [<8065301c>] (mmc_rescan) from [<80143244>] (process_one_work+0x2d8/0x780)
-> [    2.660239] [<80143244>] (process_one_work) from [<80143730>] (worker_thread+0x44/0x598)
-> [    2.668323] [<80143730>] (worker_thread) from [<8014b5f8>] (kthread+0x148/0x150)
-> [    2.675708] [<8014b5f8>] (kthread) from [<801010b4>] (ret_from_fork+0x14/0x20)
-> [    2.682912] Exception stack(0xee8fdfb0 to 0xee8fdff8)
-> [    2.687954] dfa0:                                     00000000 00000000 00000000 00000000
-> [    2.696118] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [    2.704277] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> On Wed, Apr 29, 2020 at 01:26:51AM +0530, mani@kernel.org wrote:
+> > From: Manivannan Sadhasivam <mani@kernel.org>
+> > 
+> > Add gpiochip support for Maxlinear/Exar USB to serial converter
+> > for controlling the available gpios.
+> > 
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: linux-gpio@vger.kernel.org
+> > Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+> > ---
+> >  drivers/usb/serial/xr_serial.c | 186 ++++++++++++++++++++++++++++++++-
+> >  drivers/usb/serial/xr_serial.h |   7 ++
+> >  2 files changed, 192 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/usb/serial/xr_serial.c b/drivers/usb/serial/xr_serial.c
+> > index ea4a0b167d3f..d86fd40839f8 100644
+> > --- a/drivers/usb/serial/xr_serial.c
+> > +++ b/drivers/usb/serial/xr_serial.c
+> > @@ -476,6 +476,189 @@ static void xr_break_ctl(struct tty_struct *tty, int break_state)
+> >  		   state);
+> >  }
+> >  
+> > +#ifdef CONFIG_GPIOLIB
+> > +
 > 
-> The obvious fix would be to use 'spin_lock_init()' on 'pchan->lock'
-> before attempting to call 'spin_lock_irqsave()' in 'owl_dma_get_pchan()'.
+> [...]
 > 
-> However, according to Manivannan Sadhasivam, 'pchan->lock' was supposed
-> to only protect 'pchan->vchan' while 'od->lock' does a similar job in
-> 'owl_dma_terminate_pchan'.
+> > +
+> > +static int xr_gpio_init(struct usb_serial_port *port)
+> > +{
+> > +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
+> > +	int ret = 0;
+> > +
+> > +	if (port_priv->idProduct == XR21V141X_ID)
+> > +		ret = xr21v141x_gpio_init(port);
+> > +
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	port_priv->gc.label = "xr_gpios";
+> > +	port_priv->gc.request = xr_gpio_request;
+> > +	port_priv->gc.get_direction = xr_gpio_direction_get;
+> > +	port_priv->gc.direction_input = xr_gpio_direction_input;
+> > +	port_priv->gc.direction_output = xr_gpio_direction_output;
+> > +	port_priv->gc.get = xr_gpio_get;
+> > +	port_priv->gc.set = xr_gpio_set;
+> > +	port_priv->gc.owner = THIS_MODULE;
+> > +	port_priv->gc.parent = &port->dev;
+> > +	port_priv->gc.base = -1;
+> > +	port_priv->gc.can_sleep = true;
+> > +
+> > +	ret = gpiochip_add_data(&port_priv->gc, port);
+> > +	if (!ret)
+> > +		port_priv->gpio_registered = true;
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static void xr_gpio_remove(struct usb_serial_port *port)
+> > +{
+> > +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
+> > +
+> > +	if (port_priv->gpio_registered) {
+> > +		gpiochip_remove(&port_priv->gc);
+> > +		port_priv->gpio_registered = false;
+> > +	}
+> > +}
+> > +
+> > +#else
+> > +
+> > +static int xr_gpio_init(struct usb_serial_port *port)
+> > +{
+> > +	return 0;
+> > +}
+> > +
+> > +static void xr_gpio_remove(struct usb_serial_port *port)
+> > +{
+> > +	/* Nothing to do */
+> > +}
+> > +
+> > +#endif
+> > +
+> >  static int xr_port_probe(struct usb_serial_port *port)
+> >  {
+> >  	struct usb_serial *serial = port->serial;
+> > @@ -495,13 +678,14 @@ static int xr_port_probe(struct usb_serial_port *port)
+> >  
+> >  	usb_set_serial_port_data(port, port_priv);
+> >  
+> > -	return 0;
+> > +	return xr_gpio_init(port);
 > 
-> Therefore, this patch will simply substitute 'pchan->lock' with 'od->lock'
-> and removes the 'lock' attribute in 'owl_dma_pchan' struct.
+> Just realised that the gpiochip is registered for 2 interfaces exposed by
+> this chip. This is due to the fact that this chip presents CDC-ACM model,
+> so there are 2 interfaces (interrupt and bulk IN/OUT).
 > 
+> We shouldn't need gpiochip for interface 0. So what is the recommended way
+> to filter that?
 
-Please add:
+Not create the gpiochip for interface 0?  :)
 
-Fixes: 47e20577c24d ("dmaengine: Add Actions Semi Owl family S900 DMA 
-driver")
+I really don't know what else to say here, sorry.
 
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
-> Changes in v3:
-> * Get rid of the kerneldoc comment for the removed struct attribute
-> * Add the Reviewed-by tag in the commit message
-> 
-> Changes in v2:
-> * Improve the fix as suggested by Manivannan Sadhasivam: substitute
->    'pchan->lock' with 'od->lock' and get rid of the 'lock' attribute in
->    'owl_dma_pchan' struct
-> * Update the commit message to reflect the changes
-> 
->   drivers/dma/owl-dma.c | 8 +++-----
->   1 file changed, 3 insertions(+), 5 deletions(-)
-
-Otherwise no objections from my side,
-
-Acked-by: Andreas Färber <afaerber@suse.de>
-
-Maybe the DMA maintainers can add those two lines when picking it up, to 
-avoid a v4?
-
-Regards,
-Andreas
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+greg k-h
