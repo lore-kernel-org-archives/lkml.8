@@ -2,137 +2,127 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BB3C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F646C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2770D206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:16:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="hIiC1FDC"
+	by mail.kernel.org (Postfix) with ESMTP id EE66C2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:16:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588169775;
+	bh=RTEeKjUF1paJxifL2yr5+8cCDLpxaByH64rNDTnk/74=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OKmp66jUu4rFiwh5riwV6kYC4HpuCp4jzJm5TYXZZ82GW5+Ts1IUZNHq7EbanGruv
+	 RBjsovkVbqIrDa0wyLiWJHv26cXSM/gsa54zVgjMsRxdtkg+zF1DF8cmbcnoySqkt0
+	 fDUtkGLw0dU2Zakzdcq1Nz0BQmNbstaBxsFCxZxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgD2OQG (ORCPT
+        id S1727095AbgD2OQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:16:06 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:15306 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbgD2OQF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:16:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1588169765; x=1619705765;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=fUIXPujQe0+9QpgzpvomVP/BdpWJkMkzfXPolLDQ6R0=;
-  b=hIiC1FDC/Dd+UN4XMsnNauC5T/W7ZM/ALBkkIROeT5HarED2Zv02YTxQ
-   yEUsCKeTsJPakd9Qfk/LO8ZfjKssGRj8vsUzWrMRqP4fpEQHEPnKHJJFn
-   0+CvwlGGj3cUdVGOdZgSFQbjWhUQIyDAaZhi5kRhR1rjwyk0cwAkBul3Y
-   jpAuaiYTuILPwQnMy+rVTIPu5RT8lWNYk4YFp+/RMoS2dWF85gq81lfg4
-   sOAM77qfO9oS99p42OVmjcxJss+U8M8/jmx64DHrkySC4p37wFaHufrZm
-   8ybBCcEfHsusTirpnDYhnHJ8OfCrUEpCZCELZvJtL8kh75mVW5Ous/8jc
-   A==;
-IronPort-SDR: C29Q0VgoMsJXcLV7bfoL0uqaItF7K9hkaz9JgETNTvrIcskJOJ2ykCdh2XNZllOQyA7osCm6Wu
- 64bNCk/stk/Si0pFz1ijBTEAywYeyCJEM84YekOle0LVirYepVo/xsbZ68Mpl5KbW1zVGbzHMX
- LvgxicFjNJJRlqxEu/O+zAk0mX4Xe0px+Yb5qf2I/adJzvLwmuONtRL0/6SQvU9AOeYK7xlySY
- 9PCRT515OlSSdqZCcT8khlUD6lbLZi42JwMX9sBIia2QyNGdVXPsZD7Toy3kZFodl82EkqaDkL
- 4l4=
-X-IronPort-AV: E=Sophos;i="5.73,332,1583218800"; 
-   d="scan'208";a="74958230"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Apr 2020 07:16:04 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 29 Apr 2020 07:16:03 -0700
-Received: from [10.205.29.86] (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Wed, 29 Apr 2020 07:16:01 -0700
-Subject: Re: [PATCH net v2] net: macb: fix an issue about leak related system
- resources
-To:     Dejin Zheng <zhengdejin5@gmail.com>, <davem@davemloft.net>,
-        <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-        <yash.shah@sifive.com>, <netdev@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20200429135651.32635-1-zhengdejin5@gmail.com>
-From:   Nicolas Ferre <nicolas.ferre@microchip.com>
-Organization: microchip
-Message-ID: <3ed83017-f3de-b6b0-91d0-d9075ad9eed5@microchip.com>
-Date:   Wed, 29 Apr 2020 16:15:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 10:16:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726599AbgD2OQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 10:16:13 -0400
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6923420B80
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 14:16:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588169772;
+        bh=RTEeKjUF1paJxifL2yr5+8cCDLpxaByH64rNDTnk/74=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=k2JQJ8fpMdmxLGcpMg47+0e4J+hktbo4FqU0UFKJ4IbHu6TLTZ9vHZMac3cIZyjBS
+         bqTFMJrMFH/92PkZFdiLNCU5Ck/JVhKH2Bls7kkThGiWwWTG18q1neQ95aatEkGcVZ
+         ETk250WB2U1zIwmtoNRomh7rVskItnXAz4fJCy+8=
+Received: by mail-ed1-f50.google.com with SMTP id w2so1652254edx.4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:16:12 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaCU+HsgFA08yFJgOzBaOK3bg5qB/Gyk7rtAekwf0PN2ENVjZ5Y
+        Ws0f+TVbiKwzgF61VFM3GY7YVnR7Om3cMQaYLw==
+X-Google-Smtp-Source: APiQypItwtCq5f4ckv/WzvZKMkryr9MF+5+w+xUswDZzzQpddnaUOnlv7PJd7bxb8Txbi68jXzKqiS8LDs7q6NzaYYQ=
+X-Received: by 2002:aa7:dd95:: with SMTP id g21mr2635984edv.148.1588169770819;
+ Wed, 29 Apr 2020 07:16:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200429135651.32635-1-zhengdejin5@gmail.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200420135045.27984-1-yuehaibing@huawei.com> <20200429071337.49528-1-yuehaibing@huawei.com>
+In-Reply-To: <20200429071337.49528-1-yuehaibing@huawei.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Wed, 29 Apr 2020 22:15:58 +0800
+X-Gmail-Original-Message-ID: <CAAOTY__5rwRQhuy4vT8OiAKMM2bQtCb7w5AW9B5rqL+UVdVpsg@mail.gmail.com>
+Message-ID: <CAAOTY__5rwRQhuy4vT8OiAKMM2bQtCb7w5AW9B5rqL+UVdVpsg@mail.gmail.com>
+Subject: Re: [PATCH v3 -next] drm/mediatek: Fix Kconfig warning
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-kernel@vger.kernel.orc,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/2020 at 15:56, Dejin Zheng wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> A call of the function macb_init() can fail in the function
-> fu540_c000_init. The related system resources were not released
-> then. use devm_platform_ioremap_resource() to replace ioremap()
-> to fix it.
-> 
-> Fixes: c218ad559020ff9 ("macb: Add support for SiFive FU540-C000")
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reviewed-by: Yash Shah <yash.shah@sifive.com>
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+Hi, YueHaibing:
+
+YueHaibing <yuehaibing@huawei.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=8829=E6=
+=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=883:14=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> WARNING: unmet direct dependencies detected for MTK_MMSYS
+>   Depends on [n]: (ARCH_MEDIATEK [=3Dy] || COMPILE_TEST [=3Dn]) && COMMON=
+_CLK_MT8173_MMSYS [=3Dn]
+>   Selected by [y]:
+>   - DRM_MEDIATEK [=3Dy] && HAS_IOMEM [=3Dy] && DRM [=3Dy] && (ARCH_MEDIAT=
+EK [=3Dy] || ARM && COMPILE_TEST [=3Dn]) && COMMON_CLK [=3Dy] && HAVE_ARM_S=
+MCCC [=3Dy] && OF [=3Dy]
+>
+> Make DRM_MEDIATEK depend on MTK_MMSYS to fix this.
+
+Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+
+>
+> Fixes: 2c758e301ed9 ("soc / drm: mediatek: Move routing control to mmsys =
+device")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
-> v1 -> v2:
->          - Nicolas and Andy suggest use devm_platform_ioremap_resource()
->            to repalce devm_ioremap() to fix this issue. Thanks Nicolas
->            and Andy.
->          - Yash help me to review this patch, Thanks Yash!
-> 
->   drivers/net/ethernet/cadence/macb_main.c | 8 +-------
->   1 file changed, 1 insertion(+), 7 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-> index a0e8c5bbabc0..99354e327d1f 100644
-> --- a/drivers/net/ethernet/cadence/macb_main.c
-> +++ b/drivers/net/ethernet/cadence/macb_main.c
-> @@ -4172,13 +4172,7 @@ static int fu540_c000_clk_init(struct platform_device *pdev, struct clk **pclk,
-> 
->   static int fu540_c000_init(struct platform_device *pdev)
->   {
-> -       struct resource *res;
-> -
-> -       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> -       if (!res)
-> -               return -ENODEV;
-> -
-> -       mgmt->reg = ioremap(res->start, resource_size(res));
-> +       mgmt->reg = devm_platform_ioremap_resource(pdev, 1);
->          if (!mgmt->reg)
-
-Is your test valid then?
-
-Please use:
-if (IS_ERR(base))
-    return PTR_ERR(base);
-As advised by:
-lib/devres.c:156
-
-Regards,
-   Nicolas
-
->                  return -ENOMEM;
-> 
+> v3: make DRM_MEDIATEK depends on MTK_MMSYS
+> v2: select COMMON_CLK_MT8173_MMSYS instead of adding DRM_MEDIATEK depende=
+ncy
+> ---
+>  drivers/gpu/drm/mediatek/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/mediatek/=
+Kconfig
+> index c420f5a3d33b..aa74aac3cbcc 100644
+> --- a/drivers/gpu/drm/mediatek/Kconfig
+> +++ b/drivers/gpu/drm/mediatek/Kconfig
+> @@ -6,12 +6,12 @@ config DRM_MEDIATEK
+>         depends on COMMON_CLK
+>         depends on HAVE_ARM_SMCCC
+>         depends on OF
+> +       depends on MTK_MMSYS
+>         select DRM_GEM_CMA_HELPER
+>         select DRM_KMS_HELPER
+>         select DRM_MIPI_DSI
+>         select DRM_PANEL
+>         select MEMORY
+> -       select MTK_MMSYS
+>         select MTK_SMI
+>         select VIDEOMODE_HELPERS
+>         help
 > --
-> 2.25.0
-> 
-
-
--- 
-Nicolas Ferre
+> 2.17.1
+>
+>
