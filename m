@@ -2,116 +2,116 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1702C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 520C5C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB441206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30899208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:31:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LgIeyeiv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkEC36zO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgD2Ram (ORCPT
+        id S1726971AbgD2Rbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:30:42 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:10491 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726755AbgD2Ral (ORCPT
+        Wed, 29 Apr 2020 13:31:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33604 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726456AbgD2Rbe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:30:41 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588181441; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=k1LxYJkImQ30ypmeQ6MNMFerbkjFb8uValw6syMj8iM=; b=LgIeyeivtZhbTNovuZF2pjIhXuCuBjEFcNuuSX07zYb1eCD7Yb3FBtTo/h6riJf+NcGkWDMw
- ij9U4pDngv9Xz/3R3hbKbg3OG6rQnopASyJpXmCKAgxKhoPzwsicOYaRmpYd+qKtSrbv7qVo
- 0Q+JUm0aDv4hzvX4dx56XC/ZrY8=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea9b9ad.7fa23d9e4340-smtp-out-n03;
- Wed, 29 Apr 2020 17:30:21 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B3407C433F2; Wed, 29 Apr 2020 17:30:21 +0000 (UTC)
-Received: from [10.46.162.249] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: hemantk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E2E9DC433CB;
-        Wed, 29 Apr 2020 17:30:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E2E9DC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
-Subject: Re: [PATCH v2 3/8] bus: mhi: core: Read transfer length from an event
- properly
-To:     Jeffrey Hugo <jhugo@codeaurora.org>,
-        Bhaumik Bhatt <bbhatt@codeaurora.org>, mani@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1588042766-17496-1-git-send-email-bbhatt@codeaurora.org>
- <1588042766-17496-4-git-send-email-bbhatt@codeaurora.org>
- <cbd0698d-52ca-fad6-a658-e6e0009bde66@codeaurora.org>
-From:   Hemant Kumar <hemantk@codeaurora.org>
-Message-ID: <967ee378-bac9-32ba-0110-162dfdb71c1a@codeaurora.org>
-Date:   Wed, 29 Apr 2020 10:30:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <cbd0698d-52ca-fad6-a658-e6e0009bde66@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 29 Apr 2020 13:31:34 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCBB5C03C1AE;
+        Wed, 29 Apr 2020 10:31:33 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id b11so3544762wrs.6;
+        Wed, 29 Apr 2020 10:31:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=GVaaD4ZP2LsvYrQiC9DHBqhpWsryLH+VB+jrhDKuI+s=;
+        b=GkEC36zOMNd8ILoVveJEU2PUQayboQo9mC2ohlKRNRXk/6dqeJbmzlUOBh/wZPmFmR
+         CxnHEeRGd61S7ascOca4T5x4mekAjTas0/gy/nW5mCOcO6QFFCpLWSqJ7CVnB+DEfNZM
+         Zh+Dbo0o8t1QqiecASrGdsYurN0i+DQiC85V1R1RJOBUSAJlItbDwAjWDh0eiXgBwWWd
+         Fwl09k3d7sL/szeN2iKuUz/CXw4KaPi5EoTfcubvAQ7WgQI72DxUtpPIl7bXM+7DYKrL
+         5OB/j/aZ4NR2qKSRZbamCbflsg+AE7ZliUUxgxIQjbTEGUMRzZUo5nBz/pam/Y49nMHA
+         2aGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=GVaaD4ZP2LsvYrQiC9DHBqhpWsryLH+VB+jrhDKuI+s=;
+        b=B2XZVW3fQ5qwWdoFI3kEOlgA7EqpAXk60WtwBu4YOTYAzDE0vYtuGYs9+8f1bE+Nfs
+         3aHUgdVPBQq4ruKRN4OHxbJfY1Xmm1AVSkRwAY3hV4uNP3VdV03FubzItW46ANEI+Jb0
+         Dv4HhBViIBdpJ64+eTdKgCsADUTjwS18TBVJgELcZIyLNhxMHL42NIxTrqlfR2TVDlLU
+         s3ZRxcGbDlcNBi7sKTWei//ksT7egp+7vRvzpnvR4psAVBXLwR1t/8RlCj2Ydos+spSG
+         uRXIDfqAjivkyaYYc2DU1UeAYJgsQuc/CMjr1r2uaj4rtfKHChnDyqgSmIf7Qrw9q8e6
+         0dlg==
+X-Gm-Message-State: AGi0PuayohWlPXxXTcjotgo6XfJtcG5tfOtHc7eytuVRvdP982GYdctr
+        Oax3CXPtn5X4aEi52Ah/pYEDhz+yA/s=
+X-Google-Smtp-Source: APiQypJlBVVPtGDroRJN1e3WN+emkpRB4zwgBqzJs7JUEByeTKcELABKlzEjCnufDl1GoWkBZxRceQ==
+X-Received: by 2002:adf:a11a:: with SMTP id o26mr39761355wro.284.1588181492142;
+        Wed, 29 Apr 2020 10:31:32 -0700 (PDT)
+Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id j11sm31177182wrr.62.2020.04.29.10.31.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 10:31:31 -0700 (PDT)
+From:   Al Cooper <alcooperx@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Al Cooper <alcooperx@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v4 0/4] Add XHCI, EHCI and OHCI support for Broadcom STB SoS's
+Date:   Wed, 29 Apr 2020 13:31:08 -0400
+Message-Id: <20200429173112.38366-1-alcooperx@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jeff
+v4 - A few more fixes to the brcm,bcm7445-ehci.yaml dt-bindings
+     document requested by Rob Herring.
+   - Fixed ordering issue in MAINTAINERS as requested by
+     Andy Shevchenko.
 
-On 4/28/20 7:50 AM, Jeffrey Hugo wrote:
-> On 4/27/2020 8:59 PM, Bhaumik Bhatt wrote:
->> From: Hemant Kumar <hemantk@codeaurora.org>
->>
->> When MHI Driver receives an EOT event, it reads xfer_len from the
->> event in the last TRE. The value is under control of the MHI device
->> and never validated by Host MHI driver. The value should never be
->> larger than the real size of the buffer but a malicious device can
->> set the value 0xFFFF as maximum. This causes device to memory
-> 
-> The device will overflow, or the driver?
-Done.
-> 
->> overflow (both read or write). Fix this issue by reading minimum of
->> transfer length from event and the buffer length provided.
->>
->> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
->> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
->> ---
->>   drivers/bus/mhi/core/main.c | 5 ++++-
->>   1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
->> index 1ccd4cc..3d468d9 100644
->> --- a/drivers/bus/mhi/core/main.c
->> +++ b/drivers/bus/mhi/core/main.c
->> @@ -521,7 +521,10 @@ static int parse_xfer_event(struct mhi_controller 
->> *mhi_cntrl,
->>                   mhi_cntrl->unmap_single(mhi_cntrl, buf_info);
->>               result.buf_addr = buf_info->cb_buf;
->> -            result.bytes_xferd = xfer_len;
->> +
->> +            /* truncate to buf len if xfer_len is larger */
->> +            result.bytes_xferd =
->> +                min_t(u16, xfer_len, buf_info->len);
->>               mhi_del_ring_element(mhi_cntrl, buf_ring);
->>               mhi_del_ring_element(mhi_cntrl, tre_ring);
->>               local_rp = tre_ring->rp;
->>
-> 
-> 
+v3 - Addressed all of Andy Shevchenko's review comments for
+     ehci-brcm.c.
+   - Fixed the brcm,bcm7445-ehci.yaml dt-bindings document,
+     dt_binding_check now passes.
+   - Added the XHCI functionality to xhci-plat.c instead of creating
+     new brcmstb files, as suggested by Mathias Nyman.
+
+v2 - Addressed Andy Shevchenko's review comments.
+   - Fixed dt_binding_check error pointed out by Rob Herring.
+   - Removed pr_info message in ehci_brcm_init as suggested by
+     Greg Kroah-Hartman.
+
+
+Al Cooper (4):
+  dt-bindings: Add Broadcom STB USB support
+  usb: xhci: xhci-plat: Add support for Broadcom STB SoC's
+  usb: ehci: Add new EHCI driver for Broadcom STB SoC's
+  usb: host: Add ability to build new Broadcom STB USB drivers
+
+ .../bindings/usb/brcm,bcm7445-ehci.yaml       |  60 ++++
+ .../devicetree/bindings/usb/usb-xhci.txt      |   1 +
+ MAINTAINERS                                   |   8 +
+ drivers/usb/host/Kconfig                      |  16 +
+ drivers/usb/host/Makefile                     |  16 +-
+ drivers/usb/host/ehci-brcm.c                  | 286 ++++++++++++++++++
+ drivers/usb/host/xhci-plat.c                  |  10 +
+ 7 files changed, 391 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+ create mode 100644 drivers/usb/host/ehci-brcm.c
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.17.1
+
