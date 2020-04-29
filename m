@@ -2,132 +2,88 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97254C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 389D1C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77DD1208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:13:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dq/v240y"
+	by mail.kernel.org (Postfix) with ESMTP id F38EA214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:14:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588169692;
+	bh=43u72/t/ee5ojO4oVLnLby9cPaSn1J3/cJbGM3NvKqA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nCJo9pjf3NSrB9qc52LVgNJVN629vn2+3NHYSB2u6yaclWErHxEbjRhkRiXqMn7Og
+	 Vyj1ZlyxQkBY2fSX4qbPBwSVFwDAFwxoZmX1sdC7HaznwaIznUWv8MQ/0Ha3jvHAvn
+	 lFbm5QBlvddHSMnxDkN+qroYdWrcKC2XCQ1ZMDWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbgD2ONe (ORCPT
+        id S1726961AbgD2OOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:13:34 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52113 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726871AbgD2ONe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:13:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588169613;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=z5KJj0/IEeIDfSeMUgMfCAULVkkEU1Ysj/D3ASB/G5k=;
-        b=dq/v240yzSKPeAyKfp9Aw1V1Dtkc+THcrCAO3Z44JbndB6kugv3o8mdR4Rs+TOJEBIAQUj
-        a6ALh0pjmsg5rrTq0AJAdUxRqInecTJ0r2ukvSYW3XFTNs+HCTeiI/iKyYSvrFTrs4N1hR
-        XVi0/GE/VGwlfuB2CkOFL6yTeCnQn3s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-300-eJjW36AfMLWIeaVqCQ_XUQ-1; Wed, 29 Apr 2020 10:13:23 -0400
-X-MC-Unique: eJjW36AfMLWIeaVqCQ_XUQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 29 Apr 2020 10:14:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726691AbgD2OOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 10:14:50 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C31EF108BD0F;
-        Wed, 29 Apr 2020 14:13:19 +0000 (UTC)
-Received: from [10.10.116.80] (ovpn-116-80.rdu2.redhat.com [10.10.116.80])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 998945D9E5;
-        Wed, 29 Apr 2020 14:13:02 +0000 (UTC)
-Subject: Re: [PATCH v5 0/4] introduction of migration_version attribute for
- VFIO live migration
-To:     Yan Zhao <yan.y.zhao@intel.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
-        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eauger@redhat.com" <eauger@redhat.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "Yang, Ziye" <ziye.yang@intel.com>,
-        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "aik@ozlabs.ru" <aik@ozlabs.ru>,
-        "felipe@nutanix.com" <felipe@nutanix.com>,
-        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Zeng, Xin" <xin.zeng@intel.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "Liu, Changpeng" <changpeng.liu@intel.com>,
-        "berrange@redhat.com" <berrange@redhat.com>,
-        "eskultet@redhat.com" <eskultet@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "dinechin@redhat.com" <dinechin@redhat.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>
-References: <20200421023718.GA12111@joy-OptiPlex-7040>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D86DF06@SHSMSX104.ccr.corp.intel.com>
- <20200422073628.GA12879@joy-OptiPlex-7040> <20200424191049.GU3106@work-vm>
- <20200426013628.GC12879@joy-OptiPlex-7040> <20200427153743.GK2923@work-vm>
- <20200428005429.GJ12879@joy-OptiPlex-7040> <20200428141437.GG2794@work-vm>
- <20200429072616.GL12879@joy-OptiPlex-7040> <20200429082201.GA2834@work-vm>
- <20200429093555.GM12879@joy-OptiPlex-7040>
-From:   Eric Blake <eblake@redhat.com>
-Organization: Red Hat, Inc.
-Message-ID: <94cd58d2-0580-53cd-6ca2-2c33146e0f2c@redhat.com>
-Date:   Wed, 29 Apr 2020 09:13:01 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        by mail.kernel.org (Postfix) with ESMTPSA id D77BE206B8;
+        Wed, 29 Apr 2020 14:14:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588169690;
+        bh=43u72/t/ee5ojO4oVLnLby9cPaSn1J3/cJbGM3NvKqA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=q/DOOSTbPKc+xKJLH+AfDJ9GyvLsoxLf4W6Jh5vUtR2dTsdFlyiiyHaTTW5M4I3Md
+         7K9pEv5tgIEftLbJ7Mv7ISf68HCuyKQWOewny9CHLhftj2OT2aG9GFwjcAJnljkrWw
+         86L3hTwWlwWuHU7sQrn2k7Fq5hB2tRfxGeej34a8=
+Date:   Wed, 29 Apr 2020 15:14:47 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, alsa-devel@alsa-project.org,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: fsl_easrc: Check NULL pinter before dereference
+Message-ID: <20200429141447.GA7115@sirena.org.uk>
+References: <1587731404-29750-1-git-send-email-shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200429093555.GM12879@joy-OptiPlex-7040>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
+Content-Disposition: inline
+In-Reply-To: <1587731404-29750-1-git-send-email-shengjiu.wang@nxp.com>
+X-Cookie: Colors may fade in time.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[meta-comment]
 
-On 4/29/20 4:35 AM, Yan Zhao wrote:
-> On Wed, Apr 29, 2020 at 04:22:01PM +0800, Dr. David Alan Gilbert wrote:
-[...]
->>>>>>>>>>>>>>>>> This patchset introduces a migration_version attribute under sysfs
->>>>>>>>>>> of VFIO
->>>>>>>>>>>>>>>>> Mediated devices.
+--envbJBWh7q8WU6mo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hmm, several pages with up to 16 levels of quoting, with editors making 
-the lines ragged, all before I get to the real meat of the email. 
-Remember, it's okay to trim content,...
+On Fri, Apr 24, 2020 at 08:30:04PM +0800, Shengjiu Wang wrote:
+> The patch 955ac624058f: "ASoC: fsl_easrc: Add EASRC ASoC CPU DAI
+> drivers" from Apr 16, 2020, leads to the following Smatch complaint:
 
->> So why don't we split the difference; lets say that it should start with
->> the hex PCI Vendor ID.
->>
-> The problem is for mdev devices, if the parent devices are not PCI devices,
-> they don't have PCI vendor IDs.
+This doesn't apply against current code, please check and resend.
 
-...to just what you are replying to.
+--envbJBWh7q8WU6mo
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Eric Blake, Principal Software Engineer
-Red Hat, Inc.           +1-919-301-3226
-Virtualization:  qemu.org | libvirt.org
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6pi9cACgkQJNaLcl1U
+h9ABhgf/Uk314RG7VeGN0KlDEV4ZB3mUNgKCSP9bX8M2Qvz69PM7MUKLD3rRJf0m
+vlTonmGIhCOWSdlO2wv3hGVZpvGBVGEZqVAvhNjR6FhYKGkxwRtorX2ST1YVJtOQ
+EwhPHr8mLG9PEpgqKI6AP04IWYb4oMjSnBENXghM5OsN8yo6kcTXGKmghbArxlIN
+KXafD8ZgEy+U2roducwWjOZeSfIj9agN5F+so91mH883uymDWGAiWQ/g4AkxdJRx
+Qdl0xw10BAwSKTZ+Nc2aJTHEs+ZzCLfxq+d4X7aGSJ4wBk/7ZdtmGsw+yxxFux/L
+9HFw4EnfuD5Imx5whPbJd6WJ7yIkzg==
+=X07d
+-----END PGP SIGNATURE-----
+
+--envbJBWh7q8WU6mo--
