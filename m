@@ -2,151 +2,120 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA39C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B7FC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45E382076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:20:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588144842;
-	bh=MC7v/B/AUB+89bATTGb3hziKs1OjKTAH6JyUhQGNvPI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sA73kT1SFw6ME7zTlqzOyFPOuTjMII4Kn08J7kUqBDDHCmnxT1O/ScPXKrXiM4hSE
-	 DMivcRqEAWEGeQc/FprCI5MvuhbpWc86GN5bpjKHh4SnHEHsdI5iAqMfpsAXDEHARJ
-	 M0nALRLe/vsXV18RbPQvCs5TqMLUOwTbwSfnjxMA=
+	by mail.kernel.org (Postfix) with ESMTP id C07F92076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:21:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgD2HUl (ORCPT
+        id S1726572AbgD2HVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 03:20:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57414 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726483AbgD2HUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 03:20:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 884C62076B;
-        Wed, 29 Apr 2020 07:20:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588144839;
-        bh=MC7v/B/AUB+89bATTGb3hziKs1OjKTAH6JyUhQGNvPI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PkjuO7H3O+1g5LH2lMW2dsDVrHOO7kKFPejUHYQdMR/RVCWUu1Q5uR3jxTV41YQVA
-         hr9CwS7A4WPgsZW+Zu3VU4EIdX1PRdNZ4fOufw2vFT2iTQEFzs7lr2PpwIUe4rm69/
-         pk650QeRHER3wPv6jTm0tc/KPTTk6cp+YveQTt+I=
-Date:   Wed, 29 Apr 2020 09:20:36 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     mani@kernel.org
-Cc:     johan@kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, patong.mxl@gmail.com
-Subject: Re: [PATCH 1/2] usb: serial: Add MaxLinear/Exar USB to Serial driver
-Message-ID: <20200429072036.GA2045202@kroah.com>
-References: <20200428195651.6793-1-mani@kernel.org>
- <20200428195651.6793-2-mani@kernel.org>
+        Wed, 29 Apr 2020 03:21:22 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:8564 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726386AbgD2HVV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 03:21:21 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03T7FcRf029194;
+        Wed, 29 Apr 2020 03:21:18 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 30pes2c83a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 03:21:18 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 03T7LGc3060520
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 29 Apr 2020 03:21:16 -0400
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 29 Apr 2020 00:21:15 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 29 Apr 2020 00:21:15 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03T7LCcS006213;
+        Wed, 29 Apr 2020 03:21:12 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>
+CC:     <jic23@kernel.org>, <gregkh@linuxfoundation.org>,
+        Dragos Bogdan <dragos.bogdan@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] staging: iio: ad2s1210: Fix SPI reading
+Date:   Wed, 29 Apr 2020 10:21:29 +0300
+Message-ID: <20200429072129.81504-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428195651.6793-2-mani@kernel.org>
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-29_02:2020-04-28,2020-04-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ mlxscore=0 suspectscore=0 bulkscore=0 phishscore=0 priorityscore=1501
+ clxscore=1015 malwarescore=0 impostorscore=0 lowpriorityscore=0
+ mlxlogscore=960 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004290059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 01:26:50AM +0530, mani@kernel.org wrote:
-> From: Manivannan Sadhasivam <mani@kernel.org>
-> 
-> Add support for MaxLinear/Exar USB to Serial converters. This driver
-> only supports XR21V141X series but provision has been made to support
-> other series in future.
-> 
-> This driver is inspired from the initial one submitted by Patong Yang:
-> 
-> https://patchwork.kernel.org/patch/10543261/
-> 
-> While the initial driver was a custom tty USB driver exposing whole
-> new serial interface ttyXRUSBn, this version is completely based on USB
-> serial core thus exposing the interfaces as ttyUSBn. This will avoid
-> the overhead of exposing a new USB serial interface which the userspace
-> tools are unaware of.
+From: Dragos Bogdan <dragos.bogdan@analog.com>
 
-Nice work!
+If the serial interface is used, the 8-bit address should be latched using
+the rising edge of the WR/FSYNC signal.
 
-Some comments below:
+This basically means that a CS change is required between the first byte
+sent, and the second one.
+This change splits the single-transfer transfer of 2 bytes into 2 transfers
+with a single byte, and CS change in-between.
 
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * MaxLinear/Exar USB to Serial driver
-> + *
-> + * Based on initial driver written by Patong Yang <patong.mxl@gmail.com>
-> + *
-> + * Copyright (c) 2020 Manivannan Sadhasivam <mani@kernel.org>
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/tty.h>
-> +#include <linux/usb.h>
-> +#include <linux/usb/serial.h>
-> +
-> +#include "xr_serial.h"
+Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/staging/iio/resolver/ad2s1210.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-No need for a .h file for a single .c file.
+diff --git a/drivers/staging/iio/resolver/ad2s1210.c b/drivers/staging/iio/resolver/ad2s1210.c
+index 4b25a3a314ed..ed404355ea4c 100644
+--- a/drivers/staging/iio/resolver/ad2s1210.c
++++ b/drivers/staging/iio/resolver/ad2s1210.c
+@@ -130,17 +130,24 @@ static int ad2s1210_config_write(struct ad2s1210_state *st, u8 data)
+ static int ad2s1210_config_read(struct ad2s1210_state *st,
+ 				unsigned char address)
+ {
+-	struct spi_transfer xfer = {
+-		.len = 2,
+-		.rx_buf = st->rx,
+-		.tx_buf = st->tx,
++	struct spi_transfer xfers[] = {
++		{
++			.len = 1,
++			.rx_buf = &st->rx[0],
++			.tx_buf = &st->tx[0],
++			.cs_change = 1,
++		}, {
++			.len = 1,
++			.rx_buf = &st->rx[1],
++			.tx_buf = &st->tx[1],
++		},
+ 	};
+ 	int ret = 0;
+ 
+ 	ad2s1210_set_mode(MOD_CONFIG, st);
+ 	st->tx[0] = address | AD2S1210_MSB_IS_HIGH;
+ 	st->tx[1] = AD2S1210_REG_FAULT;
+-	ret = spi_sync_transfer(st->sdev, &xfer, 1);
++	ret = spi_sync_transfer(st->sdev, xfers, 2);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-- 
+2.17.1
 
-> +static int xr_get_reg(struct usb_serial_port *port, u8 block, u16 reg,
-> +		      u16 *val)
-> +{
-> +	struct usb_serial *serial = port->serial;
-> +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-> +	void *dmabuf;
-> +	int ret = -EINVAL;
-> +
-> +	dmabuf = kmalloc(sizeof(reg), GFP_KERNEL);
-
-So that is 2 bytes?
-
-> +	if (!dmabuf)
-> +		return -ENOMEM;
-> +
-> +	if (port_priv->idProduct == XR21V141X_ID) {
-> +		/* XR21V141X uses custom command for reading UART registers */
-> +		ret = usb_control_msg(serial->dev,
-> +				      usb_rcvctrlpipe(serial->dev, 0),
-> +				      XR_GET_XR21V141X,
-> +				      USB_DIR_IN | USB_TYPE_VENDOR, 0,
-> +				      reg | (block << 8), dmabuf,
-> +				      port_priv->reg_width,
-> +				      USB_CTRL_SET_TIMEOUT);
-> +	}
-> +
-> +	if (ret == port_priv->reg_width) {
-> +		memcpy(val, dmabuf, port_priv->reg_width);
-
-But here you copy ->reg_width bytes in?  How do you know val can hold
-that much?  It's only set to be 1, so you copy 1 byte to a 16bit value?
-What part of the 16bits did you just copy those 8 bits to (hint, think
-cpu endian issues...)
-
-That feels really really odd and a bit broken.
-
-> --- /dev/null
-> +++ b/drivers/usb/serial/xr_serial.h
-> @@ -0,0 +1,103 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-
-Are you sure about the "+"?  I have to ask :)
-
-> +
-> +#ifndef __LINUX_USB_SERIAL_XR_SERIAL_H
-> +#define __LINUX_USB_SERIAL_XR_SERIAL_H
-
-As you will drop this file, just a general statement, no need for
-__LINUX as this is all Linux :)
-
-thanks,
-
-greg k-h
