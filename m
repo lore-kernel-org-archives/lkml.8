@@ -2,197 +2,163 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D84F4C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 229DEC83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B63C621D90
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:14:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Alq3gBQh"
+	by mail.kernel.org (Postfix) with ESMTP id F2F8821D79
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:15:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588155316;
+	bh=LLt7qmUw0m1Uyii6IbwRHiCsqr5DdkcnudxPYdbRV7M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fNZqIzbKhLujSEn5unzl38XttuMKuQuIbiw90esKvRA+HO89kGHAzStMBs9AFB7El
+	 i+D2cDxIkcc3nbX9hE7WrT2fgL03Ypl++UEJH0ru2LEw3M7mJ10DvwgXSrE4nwa1Dt
+	 ybQTk9D3PWdCM7B0pyKzcZy99WJA35foeojqK2Jo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgD2KOc (ORCPT
+        id S1726785AbgD2KPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 06:14:32 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:5302 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726345AbgD2KOb (ORCPT
+        Wed, 29 Apr 2020 06:15:15 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35004 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbgD2KPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 06:14:31 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03TACTrZ017973;
-        Wed, 29 Apr 2020 12:13:43 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=W5A8lTFTfg+9iuepDFbRf4C+euOmp/nYF0WkFVb9u5o=;
- b=Alq3gBQhIyAHVodxDf8TqfFkbAZIFn7wy2gckqe0kyMIxkOtIcLiSe+WKo9E8ar4QJ/S
- l948MtEbrcbq72YHY/sKwUzy7lYreyBd2NXg8nr0aKb2EtKMz6lcPheqVQAOSI1bGzsU
- m7fpSWzT3wNRhI7g+D9235QUsyFr71rrMtdvv2rJ5VPQBZSR33u4E5tM1ER8SHKC7II8
- zknaO0+2FemsepXW9KKJEV7+jCYEDxYWNWBEVwW6EIyP917c12ZEj08oAjuvuwtd1o5i
- EvTYJUZpNLXsjQ+j/3a0YbpRiviWiuOvB8IsEYh5Mvrgx63xavdkJTahXKSsb7ApTovx 4Q== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30mhcc5nex-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 12:13:43 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 80D2A10002A;
-        Wed, 29 Apr 2020 12:13:42 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 48F2220B86D;
-        Wed, 29 Apr 2020 12:13:42 +0200 (CEST)
-Received: from [10.211.9.35] (10.75.127.44) by SFHDAG6NODE2.st.com
- (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 29 Apr
- 2020 12:13:33 +0200
-Subject: Re: [PATCH v2 06/12] mtd: rawnand: stm32_fmc2: use FMC2_TIMEOUT_MS
- for timeouts
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-CC:     <richard@nod.at>, <vigneshr@ti.com>, <lee.jones@linaro.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <tony@atomide.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>, <marex@denx.de>
-References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
- <1586966256-29548-7-git-send-email-christophe.kerello@st.com>
- <20200427202212.0235d987@xps13> <0e2c9a6a-aa21-7814-9af8-629de6568fab@st.com>
- <20200429113529.5ddc3ad9@xps13> <b6b31f36-8e8f-4042-2587-0dcad82aafc5@st.com>
- <20200429120632.7bce63e6@xps13>
-From:   Christophe Kerello <christophe.kerello@st.com>
-Message-ID: <cf4f4d00-7cfd-d0df-3004-9fd534e62bd0@st.com>
-Date:   Wed, 29 Apr 2020 12:13:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 29 Apr 2020 06:15:14 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x18so1824187wrq.2;
+        Wed, 29 Apr 2020 03:15:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Njrl+LtsYOcLWuGaTy+eEj39sQfLR9JQYx3iweX+KpU=;
+        b=IFf/tsOR3P29D3EvmDuNC8LdwdKyF5bVNOpYZXdS2rrE7DVB5shqIQr0lC/NpcnkNQ
+         6OKJmatoK3M6ztkrsZppiyV8kYCMWhD1IhlkKPf+YJ7igTnD2uAfUSFSDBgmKKt7i4jm
+         XoDzsZD9SRaMsKyiMNdxleMEctQNpYIYw0v0rWWXFZ5CezyXsKR1gvpi4LFHVKIbHtLa
+         Kt4Zbri1oL6QR43+G30/18HeK+g7OUTcvr213Vd9rZ8ogFSIcY7c6+cqDZ9mLQoi4Aew
+         7SOyCeD21Xi0R6/Ha/ShSXhnp9RcS6xOQXkm9/t7kOb1B5B1smtloENaLYK1jOQAZQCM
+         rFZg==
+X-Gm-Message-State: AGi0PuaHXXH2U0MARtc4pUQ6t/I3i/yILe+hTbrAWqXV/AopAn12/9Dc
+        fgAPGB9SY+rwHCqrrOHF9oI=
+X-Google-Smtp-Source: APiQypJGgFvLLqTU1s5YisUTtz/tbz+dtqB8uoU/wVmtyeOtMDieqK+p6vICrzf6demSsbqO+3KtGw==
+X-Received: by 2002:a5d:428a:: with SMTP id k10mr38619699wrq.59.1588155312300;
+        Wed, 29 Apr 2020 03:15:12 -0700 (PDT)
+Received: from localhost (ip-37-188-130-62.eurotel.cz. [37.188.130.62])
+        by smtp.gmail.com with ESMTPSA id n6sm6870097wmc.28.2020.04.29.03.15.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 03:15:11 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 12:15:10 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>,
+        Yafang Shao <laoar.shao@gmail.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm, memcg: Avoid stale protection values when cgroup
+ is above protection
+Message-ID: <20200429101510.GA28637@dhcp22.suse.cz>
+References: <cover.1588092152.git.chris@chrisdown.name>
+ <d454fca5d6b38b74d8dc35141e8519b02089a698.1588092152.git.chris@chrisdown.name>
 MIME-Version: 1.0
-In-Reply-To: <20200429120632.7bce63e6@xps13>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-29_03:2020-04-29,2020-04-29 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d454fca5d6b38b74d8dc35141e8519b02089a698.1588092152.git.chris@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/29/20 12:06 PM, Miquel Raynal wrote:
-> Hi Christophe,
+On Tue 28-04-20 19:26:47, Chris Down wrote:
+> From: Yafang Shao <laoar.shao@gmail.com>
 > 
-> Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 29 Apr
-> 2020 11:41:44 +0200:
+> A cgroup can have both memory protection and a memory limit to isolate
+> it from its siblings in both directions - for example, to prevent it
+> from being shrunk below 2G under high pressure from outside, but also
+> from growing beyond 4G under low pressure.
 > 
->> On 4/29/20 11:35 AM, Miquel Raynal wrote:
->>> Hi Christophe,
->>>
->>> Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 29 Apr
->>> 2020 11:27:43 +0200:
->>>    
->>>> Hi Miquèl,
->>>>
->>>> On 4/27/20 8:22 PM, Miquel Raynal wrote:
->>>>> Hi Christophe,
->>>>>
->>>>> Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 15 Apr
->>>>> 2020 17:57:30 +0200:
->>>>>     >>>> This patch removes the constant FMC2_TIMEOUT_US.
->>>>>> FMC2_TIMEOUT_MS is set to 5 seconds and this constant is used
->>>>>> each time that we need to wait (except when the timeout value
->>>>>> is set by the framework)
->>>>>>
->>>>>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
->>>>>> ---
->>>>>>     drivers/mtd/nand/raw/stm32_fmc2_nand.c | 11 +++++------
->>>>>>     1 file changed, 5 insertions(+), 6 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
->>>>>> index ab53314..f159c39 100644
->>>>>> --- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
->>>>>> +++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
->>>>>> @@ -37,8 +37,7 @@
->>>>>>     /* Max ECC buffer length */
->>>>>>     #define FMC2_MAX_ECC_BUF_LEN		(FMC2_BCHDSRS_LEN * FMC2_MAX_SG)
->>>>>>     >> -#define FMC2_TIMEOUT_US			1000
->>>>>> -#define FMC2_TIMEOUT_MS			1000
->>>>>> +#define FMC2_TIMEOUT_MS			5000
->>>>>>     >>   /* Timings */
->>>>>>     #define FMC2_THIZ			1
->>>>>> @@ -525,9 +524,9 @@ static int stm32_fmc2_ham_calculate(struct nand_chip *chip, const u8 *data,
->>>>>>     	u32 sr, heccr;
->>>>>>     	int ret;
->>>>>>     >> -	ret = readl_relaxed_poll_timeout(fmc2->io_base + FMC2_SR,
->>>>>> -					 sr, sr & FMC2_SR_NWRF, 10,
->>>>>> -					 FMC2_TIMEOUT_MS);
->>>>>> +	ret = readl_relaxed_poll_timeout_atomic(fmc2->io_base + FMC2_SR,
->>>>>> +						sr, sr & FMC2_SR_NWRF, 1,
->>>>>> +						1000 * FMC2_TIMEOUT_MS);
->>>>>
->>>>> Is the _atomic suffix needed here? If yes it would deserve a separate
->>>>> patch with Fixes/Stable tags.
->>>>>     >>
->>>> I have currently not seen any issues. So, I will remove this modification as we will move to regmap_read_poll_timeout in patch 10.
->>>>   
->>>>>>     	if (ret) {
->>>>>>     		dev_err(fmc2->dev, "ham timeout\n");
->>>>>>     		return ret;
->>>>>> @@ -1315,7 +1314,7 @@ static int stm32_fmc2_waitrdy(struct nand_chip *chip, unsigned long timeout_ms)
->>>>>>     	/* Check if there is no pending requests to the NAND flash */
->>>>>>     	if (readl_relaxed_poll_timeout_atomic(fmc2->io_base + FMC2_SR, sr,
->>>>>>     					      sr & FMC2_SR_NWRF, 1,
->>>>>> -					      FMC2_TIMEOUT_US))
->>>>>> +					      1000 * FMC2_TIMEOUT_MS))
->>>>>>     		dev_warn(fmc2->dev, "Waitrdy timeout\n");
->>>>>>     >>   	/* Wait tWB before R/B# signal is low */
->>>>>
->>>>> You change the timeouts from 1ms to 5s.
->>>>>
->>>>> Maybe 5s is a little bit too much IMHO but we don't really care as this
->>>>> is a timeout. However 1ms is tight. If you are changing this value
->>>>> because it triggers error (eg. when the machine is loaded), then it is
->>>>> a fix and should appear like it.
->>>>>
->>>>> Thanks,
->>>>> Miquèl
->>>>>     >>
->>>> No errors currently happens.
->>>> During our stress tests, in a overloaded system, we have seen that we could be close to 1 second, even if we never met this value.
->>>> So, to be safe, I have set this timeout to 5 seconds.
->>>> As it is just a timeout value, I have not seen any side effect.
->>>> I am using the same timeout constant to avoid to have one timeout per cases.
->>>
->>> Something is wrong in my mind:
->>> You say you observe delays of almost up to 1 second, but the polling
->>> currently happens on 1000 us = 1ms, either you had timeouts or I
->>> misread something?
->>>
->>> Thanks,
->>> Miquèl
->>>    
->>
->> Hi Miquèl,
->>
->> My fault. For this polling, we never met 1 ms.
->> The 1 second observed was on the sequencer when we read/write a page (as it the same timeout value that is used)
+> Commit 9783aa9917f8 ("mm, memcg: proportional memory.{low,min} reclaim")
+> implemented proportional scan pressure so that multiple siblings in
+> excess of their protection settings don't get reclaimed equally but
+> instead in accordance to their unprotected portion.
 > 
-> OK I get it. So perhaps you can give these details in the commit log to
-> explain why you use 5 seconds instead of one.
+> During limit reclaim, this proportionality shouldn't apply of course:
+> there is no competition, all pressure is from within the cgroup and
+> should be applied as such. Reclaim should operate at full efficiency.
 > 
-> Thanks,
-> Miquèl
+> However, mem_cgroup_protected() never expected anybody to look at the
+> effective protection values when it indicated that the cgroup is above
+> its protection. As a result, a query during limit reclaim may return
+> stale protection values that were calculated by a previous reclaim cycle
+> in which the cgroup did have siblings.
 > 
+> When this happens, reclaim is unnecessarily hesitant and potentially
+> slow to meet the desired limit. In theory this could lead to premature
+> OOM kills, although it's not obvious this has occurred in practice.
 
-Hi Miquèl,
+Thanks this describes the underlying problem. I would be also explicit
+that the issue should be visible only on tail memcgs which have both
+max/high and protection configured and the effect depends on the
+difference between the two (the smaller it is the largrger the effect).
 
-A proposal could also be to split this patch:
-  - a first patch that is using only one timeout value.
-  - a second patch that is increasing the value to 5 seconds.
+There is no mention about the fix. The patch resets effective values for
+the reclaim root and I've had some concerns about that
+http://lkml.kernel.org/r/20200424162103.GK11591@dhcp22.suse.cz.
+Johannes has argued that other races are possible and I didn't get to
+think about it thoroughly. But this patch is introducing a new
+possibility of breaking protection. If we want to have a quick and
+simple fix that would be easier to backport to older kernels then I
+would feel much better if we simply workedaround the problem as
+suggested earlier http://lkml.kernel.org/r/20200423061629.24185-1-laoar.shao@gmail.com
+We can rework the effective values calculation to be more robust against
+races on top of that because this is likely a more tricky thing to do.
 
-Regards,
-Christophe Kerello.
+> Fixes: 9783aa9917f8 ("mm, memcg: proportional memory.{low,min} reclaim")
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> Signed-off-by: Chris Down <chris@chrisdown.name>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Roman Gushchin <guro@fb.com>
+> 
+> [hannes@cmpxchg.org: rework code comment]
+> [hannes@cmpxchg.org: changelog]
+> [chris@chrisdown.name: fix store tear]
+> [chris@chrisdown.name: retitle]
+> ---
+>  mm/memcontrol.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 0be00826b832..b0374be44e9e 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -6392,8 +6392,19 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+>  
+>  	if (!root)
+>  		root = root_mem_cgroup;
+> -	if (memcg == root)
+> +	if (memcg == root) {
+> +		/*
+> +		 * The cgroup is the reclaim root in this reclaim
+> +		 * cycle, and therefore not protected. But it may have
+> +		 * stale effective protection values from previous
+> +		 * cycles in which it was not the reclaim root - for
+> +		 * example, global reclaim followed by limit reclaim.
+> +		 * Reset these values for mem_cgroup_protection().
+> +		 */
+> +		WRITE_ONCE(memcg->memory.emin, 0);
+> +		WRITE_ONCE(memcg->memory.elow, 0);
+>  		return MEMCG_PROT_NONE;
+> +	}
+>  
+>  	usage = page_counter_read(&memcg->memory);
+>  	if (!usage)
+> -- 
+> 2.26.2
+
+-- 
+Michal Hocko
+SUSE Labs
