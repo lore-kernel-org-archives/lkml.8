@@ -2,88 +2,121 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1281EC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E40C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECE2520775
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51AF820787
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:48:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="v0bP8FVP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AbdbpevH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgD2IsJ (ORCPT
+        id S1726672AbgD2IsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:48:09 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:36793 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgD2IsH (ORCPT
+        Wed, 29 Apr 2020 04:48:18 -0400
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:37593 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726345AbgD2IsS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:48:07 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MZCOl-1jgegV2MXh-00V7l9; Wed, 29 Apr 2020 10:47:54 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Ioana Radulescu <ruxandra.radulescu@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dpaa2-eth: debugfs: use div64_u64 for division
-Date:   Wed, 29 Apr 2020 10:47:22 +0200
-Message-Id: <20200429084740.2665893-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Wed, 29 Apr 2020 04:48:18 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id ABC72A2A;
+        Wed, 29 Apr 2020 04:48:16 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Wed, 29 Apr 2020 04:48:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=wcrdqsNcPwVtovwXtckouIEc10K
+        wvG5XzJ9jmHmMR34=; b=v0bP8FVPnComujsnhBi5tEXFAwqf6NMgtounAvPFAi3
+        VDOVQdR0rzz9K3lMc+L4TQG8rFhoAamxcdtTtiVN8lRVrdQs0FurxA7xTo/dH0O0
+        kgXFuge6ZLGyI5dsEzC24rRkIvpGFs2wa2o2PMD1Q4GvP1I+PpKdtxk+y/kNBzda
+        MsL+y8ofFxDMzpn0aJ9BCpiyQhgodRb7/iHbmRxs1NFKmTQQ1YW0W4XgDdK++6F3
+        FLUFQMb6+5LEDa5E4sBXh2S3txZRWF66gGjpb1JG91QU+LjOY14BTBFgfc8ZGZqv
+        ReeNg+6ei0U2JqzwCRbtAenPUOy4Zq56HrYubdQR1Ew==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=wcrdqs
+        NcPwVtovwXtckouIEc10KwvG5XzJ9jmHmMR34=; b=AbdbpevHQg58Vp9/JksvML
+        JpFVc8LZovfA77OxghfwCmjKJfw9GNKxAQncq6+G58jgydC28HgNSRnjd7FgbaGS
+        FIEboQoEDMxncUwJplGy+VcQ0P3zevmmgFSoayXvSjkznnpm9Spy9MpqHeleAjMj
+        amNiBwbb7uXhSEX5aLRVAD7oMHCUkgmbRVrm7N/ZtAXnxgluzF1ue7rkwfy5zYUI
+        gxebSyAz40Fosc6/xyn2eEldByg7eoEANXpguuOhK6IV0zbt3TmIuj94MKnhlqsN
+        3D6Ry/PBj6xd8LEJzjaXUvRdz5wRP7XCTeQDXYmEk+vUoo+4p+72bXlqznjc0tVg
+        ==
+X-ME-Sender: <xms:Tz-pXoecD_ubgJ3FLfTu_KsnOwwNurdSojjIIQ0TW8TggrsZLg8bjQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieefgddtkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:Tz-pXh1ockIj6T_SsmIrFJQjUQ00pQm7slOLEVCcBpq6rZiDOmoDNg>
+    <xmx:Tz-pXptpxUoZ6U8rhPDyQ69rumqvs_mTNaclL_sL3tSyZX8XctUJIQ>
+    <xmx:Tz-pXl8elV62J6lm6MKMuzW1pvi25wmBNz9kmyaT7RrVJqpMg0U8UQ>
+    <xmx:UD-pXnzMOUhezOMD7dDNNdz_yLo4hg5xzBtVT2bNvpSxJQW_dEnpbNS72gc>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1874A3065EE9;
+        Wed, 29 Apr 2020 04:48:15 -0400 (EDT)
+Date:   Wed, 29 Apr 2020 10:48:13 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v8 v5 1/3] media: dt-bindings: ov8856: Document YAML
+ bindings
+Message-ID: <20200429084813.j3pxcbzdmeywqym4@gilmour.lan>
+References: <20200428180718.1609826-1-robert.foss@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:JfNeeEx0olSSRzhxiQEp15g+QVP6cDJNVOOCYktX9TalmzZn3hd
- z2oYTqndiXg/znyl2mxXOxFj7KS9ryp18cKZor6IT+ivkN9a0jsy2CYNqvh4E/NHdMwPkyA
- n9KqnRTc97pMM/bgE4GfpLcr59CLE/v9wfnud1d3J3+rZJIsMOdlSSkwC7zPyHyCpZJ2AMz
- qcYy3sqIkRgkF9rMq42uQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:95pt5O6yTM0=:dYCSEoJZBytA9RaJU0hG1/
- B7Y1bI/hIalo/N/UrY5WGsa7F6DQkyM7TE+KP1ym/+6Nnt8SteugYBLQRqCdoQ1H3MUdNGL+z
- NktN1U9CEvf+m+KXfh33zKHQh6Dh08uusCP+GNvrFc/wwOfIuUm5qSzgnJAdZUNzMXfRuAFk3
- Mg8pjIHyTIgYS1zhczCf0Buqltn4MwxEG9QIsXiFhi+7n9/qFcCipRLaCJuNVi5xtfJgfgBFl
- jbh/XtKCF++HsSRvxTezwYiGGehPjR1KDNJ2dT6zCB07+sfXsjXq+S4ugMkgz17+UiiPv7n92
- dmMECdJ/yt2yOWa1At026X4/6edpuIS6QJVVlDEFZ7MbXuukFefSpvE0u/NzDRbEd6a8uRoQz
- q5JeiC2+hPNTDYfGnwxB6QmvsQZYqclYRfMO5BDOWxn7oBlXWIIYz48tZqs4x4WAqpmB+HL1U
- TF82/bKIG5HOZiq4ki04ghOyWiptBMc4zjhYAFa2yQP2c8uPzoVVrypyRKCbymrtJ+2znVV9F
- RGi58Wlvsdxp29WHdAWX1SlHwqGRKgvXG1oFySZ5k4Nd/Gog4B6+kUkD+zeaq4H7G0TYNwR9B
- W1mAIWRSwtsvzWf/cAIVaVvqdCU1UmFSIOav0r15Z5tImXjC6slhM+IO/B2JJtxOU3NTOZ+JR
- aJ6eJubQkpeDyYs3UF5/w3IFE2sqbRPFozHjt3Al1r5L1BW8jL5cRXzYeJYwUE0c3Ed5JHLrt
- bLJwsOmpnndNw9kQFxf4lQLf/NTu1ZHg4MvOBvMuhOTfZxKTkSSROkdt+YqUKIz9mldfUpJ4+
- JKFtNeprj/gXFXLIcjk61v7y1QI8ScRuWXW84dY7JbJMQ4OKis=
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zpihnrmips3hshsi"
+Content-Disposition: inline
+In-Reply-To: <20200428180718.1609826-1-robert.foss@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A plain 64-bit division breaks building on 32-bit architectures:
 
-ERROR: modpost: "__aeabi_uldivmod" [drivers/net/ethernet/freescale/dpaa2/fsl-dpaa2-eth.ko] undefined!
+--zpihnrmips3hshsi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-As this function is not performance critical, just use the external
-helper instead.
+On Tue, Apr 28, 2020 at 08:07:16PM +0200, Robert Foss wrote:
+> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+>=20
+> This patch adds documentation of device tree in YAML schema for the
+> OV8856 CMOS image sensor.
+>=20
+> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> Signed-off-by: Robert Foss <robert.foss@linaro.org>
 
-Fixes: 460fd830dd9d ("dpaa2-eth: add channel stat to debugfs")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/ethernet/freescale/dpaa2/dpaa2-eth-debugfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
 
-diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth-debugfs.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth-debugfs.c
-index 80291afff3ea..0a31e4268dfb 100644
---- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth-debugfs.c
-+++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth-debugfs.c
-@@ -139,7 +139,7 @@ static int dpaa2_dbg_ch_show(struct seq_file *file, void *offset)
- 			   ch->stats.dequeue_portal_busy,
- 			   ch->stats.frames,
- 			   ch->stats.cdan,
--			   ch->stats.frames / ch->stats.cdan,
-+			   div64_u64(ch->stats.frames, ch->stats.cdan),
- 			   ch->buf_count);
- 	}
- 
--- 
-2.26.0
+Thanks!
+Maxime
 
+--zpihnrmips3hshsi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqk/TQAKCRDj7w1vZxhR
+xZpoAP42DgPROuzDTF5EuqRDWfCvMVhdg1sOirg+0fkdipMlpAD+Pb10jAPRj/tA
+6bO2fdjmT1kcv5cAiQMmOGG+H4zeMQc=
+=zN+J
+-----END PGP SIGNATURE-----
+
+--zpihnrmips3hshsi--
