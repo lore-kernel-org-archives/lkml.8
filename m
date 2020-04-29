@@ -2,186 +2,87 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A88C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46783C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0708D2064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:48:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dRi64CTp"
+	by mail.kernel.org (Postfix) with ESMTP id 28F1020661
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:49:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgD2SsC (ORCPT
+        id S1727071AbgD2StW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 14:48:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26619 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726423AbgD2SsB (ORCPT
+        Wed, 29 Apr 2020 14:49:22 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:45853 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbgD2StW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 14:48:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588186079;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9c/8llqBZkCeNlra1PyT1QmApy4gucK27prTzV0bdxM=;
-        b=dRi64CTpk8NPxuYkMCbnjSXcMWVa9Gilu1CMjR7UMDGnzg6lNs+H7/hNSGQlLO2pXnCi9O
-        K7PQsmzk9jTeRJIicAT7cNfTeDhSZ4MP0bCW/i+puD3FZ6nU1l+1W+YmFYC5kt2QbHoHUn
-        lMRpz3OLmwQ+AX7C7A5NomSnFg+KXOY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-359-knXWLH00MVG2roC0QEQWvQ-1; Wed, 29 Apr 2020 14:47:58 -0400
-X-MC-Unique: knXWLH00MVG2roC0QEQWvQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5456C107ACF7;
-        Wed, 29 Apr 2020 18:47:56 +0000 (UTC)
-Received: from x2.localnet (ovpn-114-53.phx2.redhat.com [10.3.114.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 415D54D6F1;
-        Wed, 29 Apr 2020 18:47:49 +0000 (UTC)
-From:   Steve Grubb <sgrubb@redhat.com>
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, omosnace@redhat.com, fw@strlen.de,
-        twoerner@redhat.com, Eric Paris <eparis@parisplace.org>,
-        ebiederm@xmission.com, tgraf@infradead.org
-Subject: Re: [PATCH ghak25 v4 3/3] audit: add subj creds to NETFILTER_CFG record to cover async unregister
-Date:   Wed, 29 Apr 2020 14:47:48 -0400
-Message-ID: <3348737.k9gCtgYObn@x2>
-Organization: Red Hat
-In-Reply-To: <20200429143146.3vlcmwvljo74ydb4@madcap2.tricolour.ca>
-References: <cover.1587500467.git.rgb@redhat.com> <CAHC9VhR9sNB58A8uQ4FNgAXOgVJ3RaWF4y5MAo=3mcTojaym0Q@mail.gmail.com> <20200429143146.3vlcmwvljo74ydb4@madcap2.tricolour.ca>
+        Wed, 29 Apr 2020 14:49:22 -0400
+Received: from localhost ([109.41.192.52]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MAgMY-1jItPe1mtU-00B39G; Wed, 29 Apr 2020 20:48:58 +0200
+Date:   Wed, 29 Apr 2020 20:48:54 +0200
+From:   Andreas Klinger <ak@it-klinger.de>
+To:     jic23@kernel.org
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org,
+        tglx@linutronix.de, allison@lohutok.net, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] iio: bmp280: fix compensation of humidity
+Message-ID: <20200429184852.GA17547@arbad>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:AdbQLe8B4HsYrW02JRaow2+X0OO3gZNqUU2fAlkjX+E5s3Dp9q/
+ rkQ4DdHXGAApZKu8JJPKiH1Z3HZJ4F2kxUpLoLKiIgcuh2FsrQ20oCmZRr2593jKE+Y4UHP
+ 3y8spH5ReJudrTxi5vsbVPPDqnt7+fjQ44zlZZfh6CRMweIkd/mT9bs2gWqQ80zkrnpLBOZ
+ gecZ71znEc1WIoKsAE0tw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:IrgSeIFd9j0=:Z+sIHlvIHx2rwR/qOB+XVF
+ W3hZC54vEBO2QtjzQPdHPaV/UmfF0rgHQPkaUwFGG4mTP48G93RCbf3CNHI6o41aH3VjN+/MX
+ XSUxBhIkuNeuTiL3sHH6nSneDrhMOhD1SdmzrAI1hBAeY4LkiJzEehTdRAp/s0hvBFkG1u7yZ
+ iMU/IpmwbARwKFwI85S1QGuT0NSNE/eVhonMdK603PA3KQY+r7VzdUJC4fYF5W329zEQYUJsB
+ YnNiS6/7guP0HAqiI4/hNCg78Jm0IiEkhRcq4KqBAFMKpSRbMKHU/5pxbAMW6RkCn5PlAytNN
+ a6PChL+hUCbpKqiJXVCQQuPoeyy7O5wPUnCw/fCWFhsg21Zh3kY5mS+NqsSsSwm4N2h/zMjyU
+ pZ6R9AgLovAbvZosgVIAgIk7VeIpP/8OpqKlM97wTN+hm8crnZPdeNP9E0XfzypnCPwZ8af5C
+ nCUbTQFLjLY56FtrCfketKlETMivMCvQ+VuU9QyvQgBHGfgjfsgHMNRn/hRKxm5XLh13HvlAV
+ /Ji3k2dQcUDd7XtMUkKofZ0iDsBYnv3gXLwhlfuv07umYQugwznbj8qGUJyFri9hd7Z/jZ7JK
+ 4BJdK8gU78EI0pBPmxrxdM/XAiZIvJcvzUpPSRTBbHBw4bnYBlvTMI7ReSjZjOptKmyg0wADi
+ tWU80C/EW8qvXNof9VmSCHhx50bXIN0WeTLFA1psFYGmpKGsCroZQHHD9YPVv3ANYYQ/S0YbO
+ 0JJYWxh8s5a0u+Ryk9kcZ4SnKPwC5y+BkIXu8HiatV8Ott81zbb1wUS+6rglMBUwOXxSSLoq4
+ xJI70s9JAEUbBrsfGvAIWkKwYpImzLsB1QBAco42Plk8iOtnN6U23TulG7J3z5hr6iEkdsW
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, April 29, 2020 10:31:46 AM EDT Richard Guy Briggs wrote:
-> On 2020-04-28 18:25, Paul Moore wrote:
-> > On Wed, Apr 22, 2020 at 5:40 PM Richard Guy Briggs <rgb@redhat.com> 
-wrote:
-> > > Some table unregister actions seem to be initiated by the kernel to
-> > > garbage collect unused tables that are not initiated by any userspace
-> > > actions.  It was found to be necessary to add the subject credentials
-> > > to  cover this case to reveal the source of these actions.  A sample
-> > > record:
-> > >   type=NETFILTER_CFG msg=audit(2020-03-11 21:25:21.491:269) : table=nat
-> > >   family=bridge entries=0 op=unregister pid=153 uid=root auid=unset
-> > >   tty=(none) ses=unset subj=system_u:system_r:kernel_t:s0
-> > >   comm=kworker/u4:2 exe=(null)> 
-> > [I'm going to comment up here instead of in the code because it is a
-> > bit easier for everyone to see what the actual impact might be on the
-> > records.]
-> > 
-> > Steve wants subject info in this case, okay, but let's try to trim out
-> > some of the fields which simply don't make sense in this record; I'm
-> > thinking of fields that are unset/empty in the kernel case and are
-> > duplicates of other records in the userspace/syscall case.  I think
-> > that means we can drop "tty", "ses", "comm", and "exe" ... yes?
-> 
-> From the ghak28 discussion, this list and order was selected due to
-> Steve's preference for the "kernel" record convention, so deviating from
-> this will create yet a new field list.  I'll defer to Steve on this.  It
-> also has to do with the searchability of fields if they are missing.
-> 
-> I do agree that some fields will be superfluous in the kernel case.
-> The most important field would be "subj", but then "pid" and "comm", I
-> would think.  Based on this contents of the "subj" field, I'd think that
-> "uid", "auid", "tty", "ses" and "exe" are not needed.
+Output of humidity compensation is limited to the range between 0 and
+100 percent. Add this to the compensation formula as described in the
+datasheet chapter 4.2.3.
 
-We can't be adding deleting fields based on how its triggered. If they are 
-unset, that is fine. The main issue is they have to behave the same.
+Change to v1:
+Thanks to Tomasz for suggesting the easier to use function clamp_val()
+which is now used.
 
-> > While "auid" is a potential target for removal based on the
-> > dup-or-unset criteria, I think it falls under Steve's request for
-> > subject info here, even if it is garbage in this case.
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+---
+ drivers/iio/pressure/bmp280-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-auid is always unset for daemons. We do not throw it away because of that.
-
--Steve
-
-> If we keep auid, I'd say keep ses, since they usually go together,
-> though they are separated by another field in this "kernel" record field
-> ordering.
-> 
-> I expect this orphan record to occur so infrequently that I don't think
-> bandwidth or space are a serious concern.
-> 
-> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > ---
-> > > 
-> > >  kernel/auditsc.c | 18 ++++++++++++++++++
-> > >  1 file changed, 18 insertions(+)
-> > > 
-> > > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> > > index d281c18d1771..d7a45b181be0 100644
-> > > --- a/kernel/auditsc.c
-> > > +++ b/kernel/auditsc.c
-> > > @@ -2557,12 +2557,30 @@ void __audit_log_nfcfg(const char *name, u8 af,
-> > > unsigned int nentries,> > 
-> > >                        enum audit_nfcfgop op)
-> > >  
-> > >  {
-> > >  
-> > >         struct audit_buffer *ab;
-> > > 
-> > > +       const struct cred *cred;
-> > > +       struct tty_struct *tty;
-> > > +       char comm[sizeof(current->comm)];
-> > > 
-> > >         ab = audit_log_start(audit_context(), GFP_KERNEL,
-> > >         AUDIT_NETFILTER_CFG);
-> > >         if (!ab)
-> > >         
-> > >                 return;
-> > >         
-> > >         audit_log_format(ab, "table=%s family=%u entries=%u op=%s",
-> > >         
-> > >                          name, af, nentries, audit_nfcfgs[op].s);
-> > > 
-> > > +
-> > > +       cred = current_cred();
-> > > +       tty = audit_get_tty();
-> > > +       audit_log_format(ab, " pid=%u uid=%u auid=%u tty=%s ses=%u",
-> > > +                        task_pid_nr(current),
-> > > +                        from_kuid(&init_user_ns, cred->uid),
-> > > +                        from_kuid(&init_user_ns,
-> > > audit_get_loginuid(current)), +                        tty ?
-> > > tty_name(tty) : "(none)",
-> > > +                        audit_get_sessionid(current));
-> > > +       audit_put_tty(tty);
-> > > +       audit_log_task_context(ab); /* subj= */
-> > > +       audit_log_format(ab, " comm=");
-> > > +       audit_log_untrustedstring(ab, get_task_comm(comm, current));
-> > > +       audit_log_d_path_exe(ab, current->mm); /* exe= */
-> > > +
-> > > 
-> > >         audit_log_end(ab);
-> > >  
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(__audit_log_nfcfg);
-> 
-> - RGB
-> 
-> --
-> Richard Guy Briggs <rgb@redhat.com>
-> Sr. S/W Engineer, Kernel Security, Base Operating Systems
-> Remote, Ottawa, Red Hat Canada
-> IRC: rgb, SunRaycer
-> Voice: +1.647.777.2635, Internal: (81) 32635
-
-
-
-
+diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
+index 29c209cc1108..297ee2205bf6 100644
+--- a/drivers/iio/pressure/bmp280-core.c
++++ b/drivers/iio/pressure/bmp280-core.c
+@@ -271,6 +271,8 @@ static u32 bmp280_compensate_humidity(struct bmp280_data *data,
+ 		+ (s32)2097152) * calib->H2 + 8192) >> 14);
+ 	var -= ((((var >> 15) * (var >> 15)) >> 7) * (s32)calib->H1) >> 4;
+ 
++	var = clamp_val(var, 0, 419430400);
++
+ 	return var >> 12;
+ };
+ 
+-- 
+2.20.1
