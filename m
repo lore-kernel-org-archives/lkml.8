@@ -2,154 +2,164 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91526C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB6CC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E39D20757
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:24:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="iOr8ewoJ"
+	by mail.kernel.org (Postfix) with ESMTP id 3552020757
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:25:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgD2WYN (ORCPT
+        id S1727123AbgD2WZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 18:24:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51432 "EHLO
+        Wed, 29 Apr 2020 18:25:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726481AbgD2WYN (ORCPT
+        by vger.kernel.org with ESMTP id S1726481AbgD2WZP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 18:24:13 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3FD6C03C1AE
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 15:24:11 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id c63so3822164qke.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 15:24:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N5mT0UrjUVQ+LKtL+fJLsV3ZSWofkUiis5zRHwPIn6g=;
-        b=iOr8ewoJWDPUm01VpYhUnSr9hu0AeEv6mfKoy4WSbmPz+/U2GA7+WDNRk0WJsTr04U
-         WhxArBkqGiHwH0eVdTIWnoL2lyOAaBVi4x1F0X0nEES18bInCY3AoJMlIib4tpDmAdxs
-         X7eeSjHDlUpSG+PL0co1Tyuc+DJhSQ4t8uQ+LuavTBCLciYgDVJx3PVtAcyjl3j4wKri
-         +DOHBcB3E07UZcN0SYf130nFWdo5rAhUExJzxtOhx+0LMeZ6/Fs5yr2STov3KzQztfHR
-         x1GxeerLoqqe9mY/rx8xoHFNGVexQMEVsKc0iGMkuGORAV/L/eIfTdeeManhzMDJZbM2
-         w42A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N5mT0UrjUVQ+LKtL+fJLsV3ZSWofkUiis5zRHwPIn6g=;
-        b=JUsTA9vZvR3YoBByo2k6b94PyeuBTuIbfZYasQ2TwCbgNxmwhBpjl3vUJijKieU4EM
-         rOwlUTu48R+5bSMFKsMLKlrBTeieRRo/lsKlI4NWYU10KEQp8ni44QOJJkWNJS9KaP3+
-         EMK1YQiBSWM/9r0D6lbayk2uXlyRrrvEVj99DhMvNGybxzaWQV3uayAegmN8GV1XwDBs
-         hU0eG0g3nXXlP15oab0T+LbFktSIWG3C/16AveroSmMeUqp/kQ0krizEkRMeNGoC40EO
-         JkF+tILqpAr7FauIgyaA5IY9TpyBbSaFd0RngSYQ00olMczao1BMNsfPNA+oqlU0iey9
-         MIug==
-X-Gm-Message-State: AGi0PuZUg8QDZHnTjzuDHTqjJpICOUiBMFNfdr2/Zee/fLjESQjji79i
-        Cu+9OT4+gvzsscvxIOjxcazI+pbVnDhEHw==
-X-Google-Smtp-Source: APiQypLmSLmxNDDWl0UnrQSTpUW2GmUZbQRHdvicW/k4j+I6MtsmkbywTZggJAVAGijrzMf1lY8ehQ==
-X-Received: by 2002:a37:e54:: with SMTP id 81mr644968qko.284.1588199049619;
-        Wed, 29 Apr 2020 15:24:09 -0700 (PDT)
-Received: from ovpn-113-19.phx2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id v27sm517889qtb.35.2020.04.29.15.24.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Apr 2020 15:24:08 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     cl@linux.com, rientjes@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] mm/slub: fix stack overruns with SLUB_STATS
-Date:   Wed, 29 Apr 2020 18:23:56 -0400
-Message-Id: <20200429222356.4322-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Wed, 29 Apr 2020 18:25:15 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12B57C03C1AE;
+        Wed, 29 Apr 2020 15:25:15 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 515CB2A0801
+Subject: Re: [PATCH 2/2] platform/chrome: typec: Register Type C switches
+To:     Prashant Malani <pmalani@chromium.org>,
+        linux-kernel@vger.kernel.org
+Cc:     heikki.krogerus@linux.intel.com, twawrzynczak@chromium.org,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>
+References: <20200422222242.241699-1-pmalani@chromium.org>
+ <20200422222242.241699-2-pmalani@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <542cfe8f-04a5-8dbb-b498-90254bb4c54e@collabora.com>
+Date:   Thu, 30 Apr 2020 00:25:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200422222242.241699-2-pmalani@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to copy SLUB_STATS items from root memcg cache to new
-memcg cache copies. Doing so could result in stack overruns because the
-store function only accepts 0 to clear the stat and returns an error for
-everything else while the show method would print out the whole stat.
-Then, the mismatch of the lengths returns from show and store methods
-happens in memcg_propagate_slab_attrs(),
+Hi Prashant,
 
-else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf))
-	buf = mbuf;
+Following my previous comments ...
 
-max_attr_size is only 2 from slab_attr_store(), then, it uses mbuf[64]
-in show_stat() later where a bounch of sprintf() would overrun the stack
-variable. Fix it by always allocating a page of buffer to be used in
-show_stat() if SLUB_STATS=y which should only be used for debug purpose.
+On 23/4/20 0:22, Prashant Malani wrote:
+> Register Type C mux and switch handles, when provided via firmware
+> bindings. These will allow the cros-ec-typec driver, and also alternate
+> mode drivers to configure connected Muxes correctly, according to PD
+> information retrieved from the Chrome OS EC.
+> 
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> ---
+>  drivers/platform/chrome/cros_ec_typec.c | 47 +++++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+> 
+> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+> index eda57db26f8d..324ead297c4d 100644
+> --- a/drivers/platform/chrome/cros_ec_typec.c
+> +++ b/drivers/platform/chrome/cros_ec_typec.c
+> @@ -14,6 +14,8 @@
+>  #include <linux/platform_data/cros_usbpd_notify.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/usb/typec.h>
+> +#include <linux/usb/typec_mux.h>
+> +#include <linux/usb/role.h>
+>  
+>  #define DRV_NAME "cros-ec-typec"
+>  
+> @@ -25,6 +27,9 @@ struct cros_typec_port {
+>  	struct typec_partner *partner;
+>  	/* Port partner PD identity info. */
+>  	struct usb_pd_identity p_identity;
+> +	struct typec_switch *ori_sw;
+> +	struct typec_mux *mux;
+> +	struct usb_role_switch *role_sw;
+>  };
+>  
+>  /* Platform-specific data for the Chrome OS EC Type C controller. */
+> @@ -84,6 +89,40 @@ static int cros_typec_parse_port_props(struct typec_capability *cap,
+>  	return 0;
+>  }
+>  
+> +static int cros_typec_get_switch_handles(struct cros_typec_port *port,
+> +					 struct fwnode_handle *fwnode,
+> +					 struct device *dev)
+> +{
+> +	port->mux = fwnode_typec_mux_get(fwnode, NULL);
+> +	if (IS_ERR(port->mux)) {
+> +		dev_info(dev, "Mux handle not found.\n");
 
- # echo 1 > /sys/kernel/slab/fs_cache/shrink
- BUG: KASAN: stack-out-of-bounds in number+0x421/0x6e0
- Write of size 1 at addr ffffc900256cfde0 by task kworker/76:0/53251
+Be quiet also here, dev_dbg at most, as you're ignoring the error anyway at the end.
 
- Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
- Workqueue: memcg_kmem_cache memcg_kmem_cache_create_func
- Call Trace:
-  dump_stack+0xa7/0xea
-  print_address_description.constprop.5.cold.7+0x64/0x384
-  __kasan_report.cold.8+0x76/0xda
-  kasan_report+0x41/0x60
-  __asan_store1+0x6d/0x70
-  number+0x421/0x6e0
-  vsnprintf+0x451/0x8e0
-  sprintf+0x9e/0xd0
-  show_stat+0x124/0x1d0
-  alloc_slowpath_show+0x13/0x20
-  __kmem_cache_create+0x47a/0x6b0
+> +		goto mux_err;
+> +	}
+> +
+> +	port->ori_sw = fwnode_typec_switch_get(fwnode);
+> +	if (IS_ERR(port->ori_sw)) {
+> +		dev_info(dev, "Orientation switch handle not found.\n");
 
- addr ffffc900256cfde0 is located in stack of task kworker/76:0/53251 at offset 0 in frame:
-  process_one_work+0x0/0xb90
+Same here
 
- this frame has 1 object:
-  [32, 72) 'lockdep_map'
+> +		goto ori_sw_err;
+> +	}
+> +
+> +	port->role_sw = fwnode_usb_role_switch_get(fwnode);
+> +	if (IS_ERR(port->role_sw)) {
+> +		dev_info(dev, "USB role switch handle not found.\n");
 
- Memory state around the buggy address:
-  ffffc900256cfc80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  ffffc900256cfd00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- >ffffc900256cfd80: 00 00 00 00 00 00 00 00 00 00 00 00 f1 f1 f1 f1
-                                                        ^
-  ffffc900256cfe00: 00 00 00 00 00 f2 f2 f2 00 00 00 00 00 00 00 00
-  ffffc900256cfe80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ==================================================================
- Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: __kmem_cache_create+0x6ac/0x6b0
- Workqueue: memcg_kmem_cache memcg_kmem_cache_create_func
- Call Trace:
-  dump_stack+0xa7/0xea
-  panic+0x23e/0x452
-  __stack_chk_fail+0x22/0x30
-  __kmem_cache_create+0x6ac/0x6b0
+And here.
 
-Fixes: 107dab5c92d5 ("slub: slub-specific propagation changes")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/slub.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/mm/slub.c b/mm/slub.c
-index 9bf44955c4f1..57731f29dde3 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -5639,7 +5639,8 @@ static void memcg_propagate_slab_attrs(struct kmem_cache *s)
- 		 */
- 		if (buffer)
- 			buf = buffer;
--		else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf))
-+		else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf) &&
-+			 !IS_ENABLED(CONFIG_SLUB_STATS))
- 			buf = mbuf;
- 		else {
- 			buffer = (char *) get_zeroed_page(GFP_KERNEL);
--- 
-2.21.0 (Apple Git-122.2)
-
+> +		goto role_sw_err;
+> +	}
+> +
+> +	return 0;
+> +
+> +role_sw_err:
+> +	usb_role_switch_put(port->role_sw);
+> +ori_sw_err:
+> +	typec_switch_put(port->ori_sw);
+> +mux_err:
+> +	typec_mux_put(port->mux);
+> +
+> +	return -ENODEV;
+> +}
+> +
+>  static void cros_unregister_ports(struct cros_typec_data *typec)
+>  {
+>  	int i;
+> @@ -91,6 +130,9 @@ static void cros_unregister_ports(struct cros_typec_data *typec)
+>  	for (i = 0; i < typec->num_ports; i++) {
+>  		if (!typec->ports[i])
+>  			continue;
+> +		usb_role_switch_put(typec->ports[i]->role_sw);
+> +		typec_switch_put(typec->ports[i]->ori_sw);
+> +		typec_mux_put(typec->ports[i]->mux);
+>  		typec_unregister_port(typec->ports[i]->port);
+>  	}
+>  }
+> @@ -153,6 +195,11 @@ static int cros_typec_init_ports(struct cros_typec_data *typec)
+>  			ret = PTR_ERR(cros_port->port);
+>  			goto unregister_ports;
+>  		}
+> +
+> +		ret = cros_typec_get_switch_handles(cros_port, fwnode, dev);
+> +		if (ret)
+> +			dev_info(dev, "No switch control for port %d\n",
+> +				 port_num);
+>  	}
+>  
+>  	return 0;
+> 
