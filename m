@@ -2,219 +2,107 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4FFC83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DE6C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6F0E2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1D512083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:08:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mzGwcRnu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jNkYpc6S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgD2RIQ (ORCPT
+        id S1726951AbgD2RI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:08:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58092 "EHLO
+        Wed, 29 Apr 2020 13:08:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726838AbgD2RIP (ORCPT
+        by vger.kernel.org with ESMTP id S1726423AbgD2RI2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:08:15 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61407C035493
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:08:15 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id x25so2893439wmc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:08:15 -0700 (PDT)
+        Wed, 29 Apr 2020 13:08:28 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F00CEC03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:08:27 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id l19so3397523lje.10
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:08:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OmhWnXth/1A2zdJKsZMj2+vlFmsDfxZsIDA5SZ6zP3o=;
-        b=mzGwcRnuuGEc7QpRyskmYXkErO6T7vAvIGVnIg2n7qW04qEnZvx5oUzAJ5Gxh4vBjs
-         NorLXIbNm5dyb1Tfp8dSoFvfTHmmsLKQPPnx7WmFOpJ2SykBQwQcLZCWN3p9R1HZY4bz
-         8g3guOwAnkNKtPtK3s6xABdVtRK1RU4i2n5oin5JlOZ5bm4gsUJx/kJmtmgWmbbLCFos
-         xc+R1s1ojy9dIdQOU7wv/znqlefvErzD9jXK/7HCZa2uXGrHKUTktAt3li0+cJOqDFy4
-         vGTLaZ9beopEtHUxD7TS3jhipT5yYSD1nJo5COJn1l5HUTI9Pa8XJvwJFO3A+mVJ5JYT
-         ncbg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2F/GGX+E0c0+b/vD1LG0X0Imv+S43d6dDOK/FkPT3g8=;
+        b=jNkYpc6S0ZAt1d7I3WBLADvu8AvAoumyVfy15MqXYeffwC+o4Cob9YDhPtMZ8QWvH+
+         NIwdCDYO3Ztb8zQ3NlSssEXDT66TreFG8fQZFp2Sf/GUZvt3pdbYSGtLKGnxRX+tQTcQ
+         zb1kabUEdqdEgPGAX3PG8+MATiYMctEl87v0wIV8vw6cs9cJg5IaVwlKG6Zfiv5akn75
+         jDsY1e2YbK6YsNoc8BmOCB3Kw7UeY8zYQ1iUdKYUGLuug2TQemrSwaCGKE4Xe4nS9V9P
+         WBX0kvYhtVFlazgSsG0wd6v0mt1vwy7k9/83/pCmG6nJkn1eoGUkQmSC02Cnl2AeuK8+
+         nCzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OmhWnXth/1A2zdJKsZMj2+vlFmsDfxZsIDA5SZ6zP3o=;
-        b=T9QbJilK8OKGvhD7uxReaAO45I7HgA1eipTy7s4r7yjJ7t9a188pMTZTVZsigqYR3/
-         zqRGuzA1Hqbrv+c2k+40+DWxNLjnYmXeEIAFLo1W8+QzEETTOB10MK/il5RWuFb78Oz/
-         gyvALIP5yBmcpDuELS+256SuBztDLIhOYqHzENoPapRX8MtLNf6Ux85F24tlo0OGPqN1
-         /ATxqR+p4EsLV1DeYNwd9l/AAUuaVZK/qfwBUrxgYPoUNRmFGds1jvIkh+56o3lCh3H3
-         zFUQPzhf4uPrQlBH+tU6Y+uH+36b3NSPFfOVoX9AUI/0tgzvorCA9oAOa6di0ulKjefs
-         9oTA==
-X-Gm-Message-State: AGi0PuZg7AmlIbz09FJW7ABFqDxVPQyTBZIlLj0zLxoTi1kWisFvj2rv
-        rtAZZoIieOTx8xUFzFAKGbmIvA==
-X-Google-Smtp-Source: APiQypJ6SJj9JFl0Ap0o8f53q6YJ5wKK2xElS/MI2R0BRSXQfNfPFjCqOYRypDRwwlXhYHQgp2OREw==
-X-Received: by 2002:a05:600c:2c47:: with SMTP id r7mr4272520wmg.50.1588180093830;
-        Wed, 29 Apr 2020 10:08:13 -0700 (PDT)
-Received: from wychelm.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id x18sm8502940wmi.29.2020.04.29.10.08.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 10:08:13 -0700 (PDT)
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patches@linaro.org
-Subject: [PATCH] serial: kgdboc: Allow earlycon initialization to be deferred
-Date:   Wed, 29 Apr 2020 18:08:04 +0100
-Message-Id: <20200429170804.880720-1-daniel.thompson@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2F/GGX+E0c0+b/vD1LG0X0Imv+S43d6dDOK/FkPT3g8=;
+        b=S+/6DUohDU5pkTrOwPMnLmsBCOfvktnLSuWpZIzR+mu4PHMz1bHsCBKskVlIq2sruQ
+         VAZz+9oikQAHU1tNy6PmuPuQAFvir+4euhAW3wqmqlvdoEOQbn9NUeH9v1pD4Fta8W+0
+         wFvP/TFqCuE3PPYHoyhDqJ5iLV6GiUo4o2fCs54QUicVRlBwdgrsaQrBvx4c/KvAsJ8K
+         D95kbRjL3MDgVi9Iiu1pauxZcB73dv9JDaYk3aGWEX5XDaxlnWvnbrIczuiLisGM7/nn
+         UCD3mHEkI7TYFoY1Raq/8zIswJYUo0kjcKLxb0dI5Is4TH3kKCUB1xvjeZgzdnA4LS64
+         Kn6A==
+X-Gm-Message-State: AGi0PuaZITbpohwcdRXUDtqD/i+LV6Mob79CcqyiAE7hMAhfN3GtlXOJ
+        xqOhRSRILFBIhyBsu1u5VVlsl5+UNchmC+2bdjPFiA==
+X-Google-Smtp-Source: APiQypI/p8hMCfeSVM1tpb+Hmphas9b6HroclmJaxP7F1hxtSeUvsqPKT++NGG1tH/H5GveF7lU55+kiTYZblxp87+I=
+X-Received: by 2002:a2e:8046:: with SMTP id p6mr20607906ljg.21.1588180106288;
+ Wed, 29 Apr 2020 10:08:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200424114058.21199-1-benjamin.gaignard@st.com> <7657495.QyJl4BcWH5@kreacher>
+In-Reply-To: <7657495.QyJl4BcWH5@kreacher>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 29 Apr 2020 19:08:14 +0200
+Message-ID: <CAKfTPtBNH8x=83RVQajgK859qQGjMTyvEdP4GioMONEZp9t-NA@mail.gmail.com>
+Subject: Re: [RFC 0/3] Introduce cpufreq minimum load QoS
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>, hugues.fruchet@st.com,
+        mchehab@kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As described in the big comment in the patch, earlycon initialization
-can be deferred if, a) earlycon was supplied without arguments and, b)
-the ACPI SPCR table hasn't yet been parsed.
+On Wed, 29 Apr 2020 at 17:50, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> On Friday, April 24, 2020 1:40:55 PM CEST Benjamin Gaignard wrote:
+> > When start streaming from the sensor the CPU load could remain very low
+> > because almost all the capture pipeline is done in hardware (i.e. without
+> > using the CPU) and let believe to cpufreq governor that it could use lower
+> > frequencies. If the governor decides to use a too low frequency that
+> > becomes a problem when we need to acknowledge the interrupt during the
+> > blanking time.
+> > The delay to ack the interrupt and perform all the other actions before
+> > the next frame is very short and doesn't allow to the cpufreq governor to
+> > provide the required burst of power. That led to drop the half of the frames.
+> >
+> > To avoid this problem, DCMI driver informs the cpufreq governors by adding
+> > a cpufreq minimum load QoS resquest.
+>
+> This seems to be addressing a use case that can be addressed with the help of
+> utilization clamps with less power overhead.
 
-Unfortunately, if deferred, then the earlycon is not ready during early
-parameter parsing so kgdboc cannot use it. This patch mitigates the
-problem by giving kgdboc_earlycon a second chance during
-dbg_late_init(). Adding a special purpose interface slightly increase
-the intimacy between kgdboc and debug-core but this seems better than
-adding kgdb specific hooks into the arch code (and much, much better
-than faking non-intimacy with function pointers).
+Can't freq_qos_update_request() be also used if you don't have cgroup
+enabled on your system ?
 
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
----
-
-Notes:
-    Hi Doug,
-    
-    This patch extends your patch set to make it easier to deploy on ACPI
-    systems[1]:
-      earlycon kgdboc_earlycon kgdboc=ttyAMA0
-    
-    I have mixed feeling about it because it adds calls from debug-core
-    into kgdboc and I don't think there are other examples of this.
-    However earlycon auto-configuration is so awesome I'd like to
-    be able to keep using it and this is the best I have come up with
-    so far ;-).
-    
-    
-    Daniel.
-    
-    
-    [1] And also on DT based arm64 systems that have ACPI support
-        enabled at compile time because such systems don't decide
-        whether to adopt DT or ACPI until after early parameter
-        parsing.
-
- drivers/tty/serial/kgdboc.c | 26 +++++++++++++++++++++++++-
- include/linux/kgdb.h        |  2 ++
- kernel/debug/debug_core.c   |  4 ++++
- 3 files changed, 31 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-index 7aca0a67fc0b..a7a079ce2c5d 100644
---- a/drivers/tty/serial/kgdboc.c
-+++ b/drivers/tty/serial/kgdboc.c
-@@ -509,6 +509,8 @@ static struct kgdb_io kgdboc_earlycon_io_ops = {
- 	.is_console		= true,
- };
-
-+static bool kgdboc_earlycon_late_enable __initdata;
-+
- static int __init kgdboc_earlycon_init(char *opt)
- {
- 	struct console *con;
-@@ -529,7 +531,23 @@ static int __init kgdboc_earlycon_init(char *opt)
- 	console_unlock();
-
- 	if (!con) {
--		pr_info("Couldn't find kgdb earlycon\n");
-+		/*
-+		 * If earlycon deferred its initialization then we also need to
-+		 * do that since there is no console at this point. We will
-+		 * only defer ourselves when kgdboc_earlycon has no arguments.
-+		 * This is because earlycon init is only deferred if there are
-+		 * no arguments to earlycon (we assume that a user who doesn't
-+		 * specify an earlycon driver won't know the right console name
-+		 * to put into kgdboc_earlycon and will let that auto-configure
-+		 * too).
-+		 */
-+		if (!kgdboc_earlycon_late_enable &&
-+		    earlycon_acpi_spcr_enable && (!opt || !opt[0])) {
-+			earlycon_kgdboc_late_enable = true;
-+			pr_info("No suitable earlycon yet, will try later\n");
-+		} else {
-+			pr_info("Couldn't find kgdb earlycon\n");
-+		}
- 		return 0;
- 	}
-
-@@ -545,6 +563,12 @@ static int __init kgdboc_earlycon_init(char *opt)
- }
-
- early_param("kgdboc_earlycon", kgdboc_earlycon_init);
-+
-+void __init kgdb_earlycon_late_init(void)
-+{
-+	if (kgdboc_earlycon_late_enable)
-+		earlycon_kgdboc_init(NULL);
-+}
- #endif /* CONFIG_KGDB_SERIAL_CONSOLE */
-
- module_init(init_kgdboc);
-diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
-index 77a3c519478a..02867a2f0eb4 100644
---- a/include/linux/kgdb.h
-+++ b/include/linux/kgdb.h
-@@ -227,6 +227,8 @@ extern int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt);
- extern void kgdb_arch_late(void);
-
-
-+extern void __init kgdb_earlycon_late_init(void);
-+
- /**
-  * struct kgdb_arch - Describe architecture specific values.
-  * @gdb_bpt_instr: The instruction to trigger a breakpoint.
-diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index 2d74dcbca477..f066ef2bc615 100644
---- a/kernel/debug/debug_core.c
-+++ b/kernel/debug/debug_core.c
-@@ -963,11 +963,15 @@ void __weak kgdb_arch_late(void)
- {
- }
-
-+void __init __weak kgdb_earlycon_late_init(void)
-+
- void __init dbg_late_init(void)
- {
- 	dbg_is_early = false;
- 	if (kgdb_io_module_registered)
- 		kgdb_arch_late();
-+	else
-+		kgdb_earlycon_late_init();
- 	kdb_init(KDB_INIT_FULL);
-
- 	if (kgdb_io_module_registered && kgdb_break_asap)
-
-base-commit: 6a8b55ed4056ea5559ebe4f6a4b247f627870d4c
-prerequisite-patch-id: cbaa70eb783f1f34aec7f5839d1fecbc7616a9f6
-prerequisite-patch-id: d7543cdd19fb194ded3361d52818970083efdb06
-prerequisite-patch-id: 2238d976451dac9e3ee1bf02a077d633e342aa0c
-prerequisite-patch-id: 9e4296261b608ee172060d04b3de431a5e370096
-prerequisite-patch-id: 2b008e0e14a212072874ecb483d9c6844d161b08
-prerequisite-patch-id: f5b692b89c997d828832e3ab27fffb8f770d7b6f
-prerequisite-patch-id: 851d6f4874aa24540db9d765275ae736e8b2955b
-prerequisite-patch-id: d3969c2fb7cd320eafebe63d7da270dac5a82fc9
-prerequisite-patch-id: e1fc1478b7f75094d263ffc64a9f3528151831cf
-prerequisite-patch-id: 45fb53996a9f5993e03673c10eebf2834c58307f
-prerequisite-patch-id: 50ac1ddb52c3cce8b712036f212fdd67d7493112
---
-2.25.1
-
+>
+> Thanks!
+>
+>
+>
