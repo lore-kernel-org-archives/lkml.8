@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF4CC83011
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358B3C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0426B2137B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BB662137B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:09:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgD2WJu (ORCPT
+        id S1728245AbgD2WJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 18:09:50 -0400
+        Wed, 29 Apr 2020 18:09:44 -0400
 Received: from mga09.intel.com ([134.134.136.24]:61308 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727961AbgD2WIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 18:08:51 -0400
-IronPort-SDR: XCmkXFXzVWUmkNJRRf0wBESQzsmYH44P0LBIa9ULutLMPljIZu1i7q1NDuy3b9mfwu+BkATcmu
- vdU4oH76aK2w==
+        id S1728002AbgD2WIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 18:08:54 -0400
+IronPort-SDR: 7LMEilFc7N3MJlzvYRlxkmlMSUpbYg6OJQSrao9pFIh19RupZV78JH3YKSKADpjHxClEkOXMDk
+ tSThxShim+TA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 15:08:50 -0700
-IronPort-SDR: wHiZvt4QeK+1g8UwKX+7tHC1VH92phIoYfNMA55H6uojHwMG3eXRdnqDDBJ8Mm+gl53kjXn4eE
- 8xXE0tBgskhQ==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 15:08:52 -0700
+IronPort-SDR: 01B1B+noaRsFveAQnMg10Y5g4MAwi82ZZk/eGTjNIOD3XoDpF8cH9PYXbRRz8Wy8Bsqcxnd9PZ
+ JT0uo80Cd19w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
-   d="scan'208";a="276308915"
+   d="scan'208";a="276308927"
 Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by orsmga002.jf.intel.com with ESMTP; 29 Apr 2020 15:08:49 -0700
+  by orsmga002.jf.intel.com with ESMTP; 29 Apr 2020 15:08:51 -0700
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
 To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -60,9 +60,9 @@ To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Dave Martin <Dave.Martin@arm.com>,
         Weijiang Yang <weijiang.yang@intel.com>
 Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v10 18/26] mm: Update can_follow_write_pte() for shadow stack
-Date:   Wed, 29 Apr 2020 15:07:24 -0700
-Message-Id: <20200429220732.31602-19-yu-cheng.yu@intel.com>
+Subject: [PATCH v10 21/26] ELF: UAPI and Kconfig additions for ELF program properties
+Date:   Wed, 29 Apr 2020 15:07:27 -0700
+Message-Id: <20200429220732.31602-22-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200429220732.31602-1-yu-cheng.yu@intel.com>
 References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
@@ -73,80 +73,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Can_follow_write_pte() ensures a read-only page is COWed by checking the
-FOLL_COW flag, and uses pte_dirty() to validate the flag is still valid.
-
-Like a writable data page, a shadow stack page is writable, and becomes
-read-only during copy-on-write, but it is always dirty.  Thus, in the
-can_follow_write_pte() check, it belongs to the writable page case and
-should be excluded from the read-only page pte_dirty() check.  Apply
-the same changes to can_follow_write_pmd().
+Introduce basic ELF definitions relating to the NT_GNU_PROPERTY_TYPE_0
+note.
 
 Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
 v10:
-- Reverse name changes to can_follow_write_*().
+- Merge GNU_PROPERTY_X86_FEATURE_1_* from a separate patch.
 
- mm/gup.c         | 8 +++++---
- mm/huge_memory.c | 8 +++++---
- 2 files changed, 10 insertions(+), 6 deletions(-)
+ fs/Kconfig.binfmt        | 3 +++
+ include/linux/elf.h      | 8 ++++++++
+ include/uapi/linux/elf.h | 8 ++++++++
+ 3 files changed, 19 insertions(+)
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 50681f0286de..c737782403ee 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -385,10 +385,12 @@ static int follow_pfn_pte(struct vm_area_struct *vma, unsigned long address,
-  * FOLL_FORCE can write to even unwritable pte's, but only
-  * after we've gone through a COW cycle and they are dirty.
-  */
--static inline bool can_follow_write_pte(pte_t pte, unsigned int flags)
-+static inline bool can_follow_write_pte(pte_t pte, unsigned int flags,
-+					struct vm_area_struct *vma)
- {
- 	return pte_write(pte) ||
--		((flags & FOLL_FORCE) && (flags & FOLL_COW) && pte_dirty(pte));
-+		((flags & FOLL_FORCE) && (flags & FOLL_COW) &&
-+		 !arch_shadow_stack_mapping(vma->vm_flags) && pte_dirty(pte));
- }
+diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
+index 62dc4f577ba1..d2cfe0729a73 100644
+--- a/fs/Kconfig.binfmt
++++ b/fs/Kconfig.binfmt
+@@ -36,6 +36,9 @@ config COMPAT_BINFMT_ELF
+ config ARCH_BINFMT_ELF_STATE
+ 	bool
  
- static struct page *follow_page_pte(struct vm_area_struct *vma,
-@@ -431,7 +433,7 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
- 	}
- 	if ((flags & FOLL_NUMA) && pte_protnone(pte))
- 		goto no_page;
--	if ((flags & FOLL_WRITE) && !can_follow_write_pte(pte, flags)) {
-+	if ((flags & FOLL_WRITE) && !can_follow_write_pte(pte, flags, vma)) {
- 		pte_unmap_unlock(ptep, ptl);
- 		return NULL;
- 	}
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 608746bb9d19..cb1b0cb4b4eb 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1520,10 +1520,12 @@ vm_fault_t do_huge_pmd_wp_page(struct vm_fault *vmf, pmd_t orig_pmd)
-  * FOLL_FORCE can write to even unwritable pmd's, but only
-  * after we've gone through a COW cycle and they are dirty.
-  */
--static inline bool can_follow_write_pmd(pmd_t pmd, unsigned int flags)
-+static inline bool can_follow_write_pmd(pmd_t pmd, unsigned int flags,
-+					struct vm_area_struct *vma)
- {
- 	return pmd_write(pmd) ||
--	       ((flags & FOLL_FORCE) && (flags & FOLL_COW) && pmd_dirty(pmd));
-+	       ((flags & FOLL_FORCE) && (flags & FOLL_COW) &&
-+		!arch_shadow_stack_mapping(vma->vm_flags) && pmd_dirty(pmd));
- }
++config ARCH_USE_GNU_PROPERTY
++	bool
++
+ config BINFMT_ELF_FDPIC
+ 	bool "Kernel support for FDPIC ELF binaries"
+ 	default y if !BINFMT_ELF
+diff --git a/include/linux/elf.h b/include/linux/elf.h
+index e3649b3e970e..459cddcceaac 100644
+--- a/include/linux/elf.h
++++ b/include/linux/elf.h
+@@ -2,6 +2,7 @@
+ #ifndef _LINUX_ELF_H
+ #define _LINUX_ELF_H
  
- struct page *follow_trans_huge_pmd(struct vm_area_struct *vma,
-@@ -1536,7 +1538,7 @@ struct page *follow_trans_huge_pmd(struct vm_area_struct *vma,
++#include <linux/types.h>
+ #include <asm/elf.h>
+ #include <uapi/linux/elf.h>
  
- 	assert_spin_locked(pmd_lockptr(mm, pmd));
+@@ -56,4 +57,11 @@ static inline int elf_coredump_extra_notes_write(struct coredump_params *cprm) {
+ extern int elf_coredump_extra_notes_size(void);
+ extern int elf_coredump_extra_notes_write(struct coredump_params *cprm);
+ #endif
++
++/* NT_GNU_PROPERTY_TYPE_0 header */
++struct gnu_property {
++	u32 pr_type;
++	u32 pr_datasz;
++};
++
+ #endif /* _LINUX_ELF_H */
+diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+index 34c02e4290fe..61251ecabdd7 100644
+--- a/include/uapi/linux/elf.h
++++ b/include/uapi/linux/elf.h
+@@ -36,6 +36,7 @@ typedef __s64	Elf64_Sxword;
+ #define PT_LOPROC  0x70000000
+ #define PT_HIPROC  0x7fffffff
+ #define PT_GNU_EH_FRAME		0x6474e550
++#define PT_GNU_PROPERTY		0x6474e553
  
--	if (flags & FOLL_WRITE && !can_follow_write_pmd(*pmd, flags))
-+	if (flags & FOLL_WRITE && !can_follow_write_pmd(*pmd, flags, vma))
- 		goto out;
+ #define PT_GNU_STACK	(PT_LOOS + 0x474e551)
  
- 	/* Avoid dumping huge zero page */
+@@ -443,4 +444,11 @@ typedef struct elf64_note {
+   Elf64_Word n_type;	/* Content type */
+ } Elf64_Nhdr;
+ 
++/* .note.gnu.property types */
++#define GNU_PROPERTY_X86_FEATURE_1_AND		0xc0000002
++
++/* Bits of GNU_PROPERTY_X86_FEATURE_1_AND */
++#define GNU_PROPERTY_X86_FEATURE_1_IBT		0x00000001
++#define GNU_PROPERTY_X86_FEATURE_1_SHSTK	0x00000002
++
+ #endif /* _UAPI_LINUX_ELF_H */
 -- 
 2.21.0
 
