@@ -2,166 +2,194 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06097C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF1CC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7612221EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3CF21D93
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:33:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h8N/S0u6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KfhqtV5r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbgD2Ocg (ORCPT
+        id S1726910AbgD2OdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:32:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56195 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726815AbgD2Ocf (ORCPT
+        Wed, 29 Apr 2020 10:33:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726511AbgD2OdR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:32:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588170753;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=NZ5MFDXotHZB03JKNrUMWgXgunYYuAen7GqrXpy/Jdg=;
-        b=h8N/S0u62GXLJDa/LHL6YtX+hWbvKTJlf91bRs35XXGWMKRbwVjE/ZCWf8Cw7fjN8gJFis
-        2DlRxaJmlCASulb/m7vsT0FW7yat5jOJjZiJ5ubdNykjsG+2RKOWfKmcnCL40lHJYPTGF2
-        yRnttGnwEQ0h0oWa/fKD4gMHLfngEOg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-107-L-ni4mCuPB66h3atKQTxwA-1; Wed, 29 Apr 2020 10:32:30 -0400
-X-MC-Unique: L-ni4mCuPB66h3atKQTxwA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9972E10A65C2;
-        Wed, 29 Apr 2020 14:32:00 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.3.128.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8C66F5D9C9;
-        Wed, 29 Apr 2020 14:31:49 +0000 (UTC)
-Date:   Wed, 29 Apr 2020 10:31:46 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, sgrubb@redhat.com,
-        omosnace@redhat.com, fw@strlen.de, twoerner@redhat.com,
-        Eric Paris <eparis@parisplace.org>, ebiederm@xmission.com,
-        tgraf@infradead.org
-Subject: Re: [PATCH ghak25 v4 3/3] audit: add subj creds to NETFILTER_CFG
- record to cover async unregister
-Message-ID: <20200429143146.3vlcmwvljo74ydb4@madcap2.tricolour.ca>
-References: <cover.1587500467.git.rgb@redhat.com>
- <b8ba40255978a73ea15e3859d5c945ecd5fede8e.1587500467.git.rgb@redhat.com>
- <CAHC9VhR9sNB58A8uQ4FNgAXOgVJ3RaWF4y5MAo=3mcTojaym0Q@mail.gmail.com>
+        Wed, 29 Apr 2020 10:33:17 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0153AC03C1AD;
+        Wed, 29 Apr 2020 07:33:17 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id f3so2446317ioj.1;
+        Wed, 29 Apr 2020 07:33:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+HxWllnBn+1zJz8WVHl3XZ5HneD7xfI7ue7Ll9hMj1k=;
+        b=KfhqtV5rBOv6WOPFrGrYP/W1ymZ0aF9SZWOUKTF1n0i7rFrDefDx/4PskiRm2TV6jK
+         1iMmW8zXk2FY0kRY/5LaMSFcy7yqJaueSxuZGlHeL3qWbUUQ/uUphVhRSJwTip6ls/UK
+         WGzM4iEBp3oyEiYpjZPL3N2n8hr8QG+ytFiICfkyWAek8zLxBYIo4ZmjTiswe36UBI3E
+         OArdRdcXNuCX3fJ3UZTi0/4tQxp7qIWFtmF4xDbTnsRh33WkGy10dUVghO7QWUcFZBYi
+         Appo2aATelJJExpbw83M6RGbDQH0dKMNK/vOxpzG44na5nUeSMeA8qa7v24wKzcja9Td
+         TXOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+HxWllnBn+1zJz8WVHl3XZ5HneD7xfI7ue7Ll9hMj1k=;
+        b=pi7dz9M9KMXzeMzRdp6Hq7v/UUAxaISLzcKbhvfB+HxNKIVmUCzk8vWpam9xeyzSeH
+         NRdgQbviEDxJxoW4VtVrgGCz0ol5mdyy3Gxw/8GVPWeO25IxHxbg7AUrCTjeXO3d8sAB
+         a1Ye944Qn4X1KhcVI4+yrMFi124GehTBXvi3ztM7QGT0RzC6yqQIRi+jrQ4BY3Wo7QOi
+         DILpv9Hb7XFajwxJjUoXE7EfUiBRIEdDsmsAw+0S7Yo0QV8Ca7naC5Eb9HTG8qhQ6DV1
+         kX+lzx7hd427FO1oly+huevaNw5+rnHIO6Q8pgWbacsIEduc9O2jpYuQ1PYCDEDztI+q
+         S94g==
+X-Gm-Message-State: AGi0PuYOMGrxylgQjGMftADmW5vmbD2LQjOG+Ys5XuMHx7GRyNMgFMl3
+        kvl4NLVBHUSPBxIA904xUoHof33zF9B0GMFi7pw=
+X-Google-Smtp-Source: APiQypL9ZMEuyRwR1ix42kKXhDIen1mp+JUktqgLX56B4R1/wXlWDuBNoGzXc4uMoKsa1XQiVoCkhLIVE8RD84ArNA8=
+X-Received: by 2002:a02:bb91:: with SMTP id g17mr29560141jan.88.1588170794879;
+ Wed, 29 Apr 2020 07:33:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhR9sNB58A8uQ4FNgAXOgVJ3RaWF4y5MAo=3mcTojaym0Q@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20200428144314.24533-3-vaibhavgupta40@gmail.com> <20200428172917.GA177492@google.com>
+In-Reply-To: <20200428172917.GA177492@google.com>
+From:   Vaibhav Gupta <vaibhav.varodek@gmail.com>
+Date:   Wed, 29 Apr 2020 20:02:11 +0530
+Message-ID: <CAPBsFfDv0UWvo9KAs4zowmE=No_sk5DOq1ROLjFBDAK4STdKEA@mail.gmail.com>
+Subject: Re: [Linux-kernel-mentees] [PATCH v2 2/2] realtek/8139cp: Remove
+ Legacy Power Management
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        Shannon Nelson <snelson@pensando.io>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Martin Habets <mhabets@solarflare.com>, netdev@vger.kernel.org,
+        bjorn@helgaas.com, linux-kernel-mentees@lists.linuxfoundation.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        skhan@linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-28 18:25, Paul Moore wrote:
-> On Wed, Apr 22, 2020 at 5:40 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > Some table unregister actions seem to be initiated by the kernel to
-> > garbage collect unused tables that are not initiated by any userspace
-> > actions.  It was found to be necessary to add the subject credentials to
-> > cover this case to reveal the source of these actions.  A sample record:
+On Tue, 28 Apr 2020 at 22:59, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Tue, Apr 28, 2020 at 08:13:14PM +0530, Vaibhav Gupta wrote:
+> > Upgrade power management from legacy to generic using dev_pm_ops.
 > >
-> >   type=NETFILTER_CFG msg=audit(2020-03-11 21:25:21.491:269) : table=nat family=bridge entries=0 op=unregister pid=153 uid=root auid=unset tty=(none) ses=unset subj=system_u:system_r:kernel_t:s0 comm=kworker/u4:2 exe=(null)
-> 
-> [I'm going to comment up here instead of in the code because it is a
-> bit easier for everyone to see what the actual impact might be on the
-> records.]
-> 
-> Steve wants subject info in this case, okay, but let's try to trim out
-> some of the fields which simply don't make sense in this record; I'm
-> thinking of fields that are unset/empty in the kernel case and are
-> duplicates of other records in the userspace/syscall case.  I think
-> that means we can drop "tty", "ses", "comm", and "exe" ... yes?
-
-From the ghak28 discussion, this list and order was selected due to
-Steve's preference for the "kernel" record convention, so deviating from
-this will create yet a new field list.  I'll defer to Steve on this.  It
-also has to do with the searchability of fields if they are missing.
-
-I do agree that some fields will be superfluous in the kernel case.
-The most important field would be "subj", but then "pid" and "comm", I
-would think.  Based on this contents of the "subj" field, I'd think that
-"uid", "auid", "tty", "ses" and "exe" are not needed.
-
-> While "auid" is a potential target for removal based on the
-> dup-or-unset criteria, I think it falls under Steve's request for
-> subject info here, even if it is garbage in this case.
-
-If we keep auid, I'd say keep ses, since they usually go together,
-though they are separated by another field in this "kernel" record field
-ordering.
-
-I expect this orphan record to occur so infrequently that I don't think
-bandwidth or space are a serious concern.
-
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > Add "__maybe_unused" attribute to resume() and susend() callbacks
+> > definition to suppress compiler warnings.
+> >
+> > Generic callback requires an argument of type "struct device*". Hence,
+> > convert it to "struct net_device*" using "dev_get_drv_data()" to use
+> > it in the callback.
+> >
+> > Most of the cleaning part is to remove pci_save_state(),
+> > pci_set_power_state(), etc power management function calls.
+> >
+> > Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 > > ---
-> >  kernel/auditsc.c | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
+> >  drivers/net/ethernet/realtek/8139cp.c | 25 +++++++------------------
+> >  1 file changed, 7 insertions(+), 18 deletions(-)
 > >
-> > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> > index d281c18d1771..d7a45b181be0 100644
-> > --- a/kernel/auditsc.c
-> > +++ b/kernel/auditsc.c
-> > @@ -2557,12 +2557,30 @@ void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
-> >                        enum audit_nfcfgop op)
-> >  {
-> >         struct audit_buffer *ab;
-> > +       const struct cred *cred;
-> > +       struct tty_struct *tty;
-> > +       char comm[sizeof(current->comm)];
-> >
-> >         ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_NETFILTER_CFG);
-> >         if (!ab)
-> >                 return;
-> >         audit_log_format(ab, "table=%s family=%u entries=%u op=%s",
-> >                          name, af, nentries, audit_nfcfgs[op].s);
-> > +
-> > +       cred = current_cred();
-> > +       tty = audit_get_tty();
-> > +       audit_log_format(ab, " pid=%u uid=%u auid=%u tty=%s ses=%u",
-> > +                        task_pid_nr(current),
-> > +                        from_kuid(&init_user_ns, cred->uid),
-> > +                        from_kuid(&init_user_ns, audit_get_loginuid(current)),
-> > +                        tty ? tty_name(tty) : "(none)",
-> > +                        audit_get_sessionid(current));
-> > +       audit_put_tty(tty);
-> > +       audit_log_task_context(ab); /* subj= */
-> > +       audit_log_format(ab, " comm=");
-> > +       audit_log_untrustedstring(ab, get_task_comm(comm, current));
-> > +       audit_log_d_path_exe(ab, current->mm); /* exe= */
-> > +
-> >         audit_log_end(ab);
+> > diff --git a/drivers/net/ethernet/realtek/8139cp.c b/drivers/net/ethernet/realtek/8139cp.c
+> > index 60d342f82fb3..4f2fb1393966 100644
+> > --- a/drivers/net/ethernet/realtek/8139cp.c
+> > +++ b/drivers/net/ethernet/realtek/8139cp.c
+> > @@ -2054,10 +2054,9 @@ static void cp_remove_one (struct pci_dev *pdev)
+> >       free_netdev(dev);
 > >  }
-> >  EXPORT_SYMBOL_GPL(__audit_log_nfcfg);
-> 
-> -- 
-> paul moore
-> www.paul-moore.com
-> 
+> >
+> > -#ifdef CONFIG_PM
+> > -static int cp_suspend (struct pci_dev *pdev, pm_message_t state)
+> > +static int __maybe_unused cp_suspend(struct device *device)
+> >  {
+> > -     struct net_device *dev = pci_get_drvdata(pdev);
+> > +     struct net_device *dev = dev_get_drvdata(device);
+> >       struct cp_private *cp = netdev_priv(dev);
+> >       unsigned long flags;
+> >
+> > @@ -2075,16 +2074,12 @@ static int cp_suspend (struct pci_dev *pdev, pm_message_t state)
+> >
+> >       spin_unlock_irqrestore (&cp->lock, flags);
+> >
+> > -     pci_save_state(pdev);
+> > -     pci_enable_wake(pdev, pci_choose_state(pdev, state), cp->wol_enabled);
+>
+> This one is a little more interesting because it relies on the driver
+> state (cp->wol_enabled).  IIUC, the corresponding pci_enable_wake() in
+> the generic path is in pci_prepare_to_sleep() (called from
+> pci_pm_suspend_noirq()).
+>
+> But of course the generic path doesn't look at cp->wol_enabled.  It
+> looks at device_may_wakeup(), but I don't know whether there's a
+> connection between that and cp->wol_enabled.
+I have tested it by just compiling it. I will try to dig a bit more deep into
+this and check if it is affecting something (on the basis of code).
+The final test has to done with hardware.
 
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+-- Vaibhav Gupta
+>
+> > -     pci_set_power_state(pdev, pci_choose_state(pdev, state));
+> > -
+> >       return 0;
+> >  }
+> >
+> > -static int cp_resume (struct pci_dev *pdev)
+> > +static int __maybe_unused cp_resume(struct device *device)
+> >  {
+> > -     struct net_device *dev = pci_get_drvdata (pdev);
+> > +     struct net_device *dev = dev_get_drvdata(device);
+> >       struct cp_private *cp = netdev_priv(dev);
+> >       unsigned long flags;
+> >
+> > @@ -2093,10 +2088,6 @@ static int cp_resume (struct pci_dev *pdev)
+> >
+> >       netif_device_attach (dev);
+> >
+> > -     pci_set_power_state(pdev, PCI_D0);
+> > -     pci_restore_state(pdev);
+> > -     pci_enable_wake(pdev, PCI_D0, 0);
+> > -
+> >       /* FIXME: sh*t may happen if the Rx ring buffer is depleted */
+> >       cp_init_rings_index (cp);
+> >       cp_init_hw (cp);
+> > @@ -2111,7 +2102,6 @@ static int cp_resume (struct pci_dev *pdev)
+> >
+> >       return 0;
+> >  }
+> > -#endif /* CONFIG_PM */
+> >
+> >  static const struct pci_device_id cp_pci_tbl[] = {
+> >          { PCI_DEVICE(PCI_VENDOR_ID_REALTEK,     PCI_DEVICE_ID_REALTEK_8139), },
+> > @@ -2120,15 +2110,14 @@ static const struct pci_device_id cp_pci_tbl[] = {
+> >  };
+> >  MODULE_DEVICE_TABLE(pci, cp_pci_tbl);
+> >
+> > +static SIMPLE_DEV_PM_OPS(cp_pm_ops, cp_suspend, cp_resume);
+> > +
+> >  static struct pci_driver cp_driver = {
+> >       .name         = DRV_NAME,
+> >       .id_table     = cp_pci_tbl,
+> >       .probe        = cp_init_one,
+> >       .remove       = cp_remove_one,
+> > -#ifdef CONFIG_PM
+> > -     .resume       = cp_resume,
+> > -     .suspend      = cp_suspend,
+> > -#endif
+> > +     .driver.pm    = &cp_pm_ops,
+> >  };
+> >
+> >  module_pci_driver(cp_driver);
+> > --
+> > 2.26.2
+> >
