@@ -2,92 +2,78 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 404A1C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF35C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF912072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:45:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926242072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgD2Kpa (ORCPT
+        id S1726760AbgD2Kpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 06:45:30 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:3078 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726554AbgD2Kpa (ORCPT
+        Wed, 29 Apr 2020 06:45:40 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:64558 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726516AbgD2Kpk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 06:45:30 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03TAjQED032380;
-        Wed, 29 Apr 2020 06:45:26 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30pes2cuge-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 06:45:26 -0400
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 03TAjPaH037238
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 29 Apr 2020 06:45:25 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 29 Apr
- 2020 06:45:24 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 29 Apr 2020 06:45:23 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03TAjHYR018374;
-        Wed, 29 Apr 2020 06:45:18 -0400
-From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jic23@kernel.org>
-CC:     <knaack.h@gmx.de>, <Michael.Hennerich@analog.com>,
-        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Subject: [PATCH] iio: adc: ad7768-1: Fix channel endian spec
-Date:   Wed, 29 Apr 2020 13:45:35 +0300
-Message-ID: <20200429104535.82988-1-sergiu.cuciurean@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 29 Apr 2020 06:45:40 -0400
+Received: from fsav404.sakura.ne.jp (fsav404.sakura.ne.jp [133.242.250.103])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 03TAjHEc016517;
+        Wed, 29 Apr 2020 19:45:17 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav404.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp);
+ Wed, 29 Apr 2020 19:45:17 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 03TAjAE5016499
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Wed, 29 Apr 2020 19:45:16 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [patch] mm, oom: stop reclaiming if GFP_ATOMIC will start failing
+ soon
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>
+References: <alpine.DEB.2.22.394.2004241347310.70176@chino.kir.corp.google.com>
+ <20200425172706.26b5011293e8dc77b1dccaf3@linux-foundation.org>
+ <alpine.DEB.2.22.394.2004261959310.80211@chino.kir.corp.google.com>
+ <20200427133051.b71f961c1bc53a8e72c4f003@linux-foundation.org>
+ <28e35a8b-400e-9320-5a97-accfccf4b9a8@suse.cz>
+ <alpine.DEB.2.22.394.2004281436280.131129@chino.kir.corp.google.com>
+ <31f1f84d-c5fe-824b-3c28-1a9ad69fcae5@suse.cz>
+ <20200429090437.GX28637@dhcp22.suse.cz>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <bcf6d15f-cbdb-8c45-6087-a0f2aab737c6@i-love.sakura.ne.jp>
+Date:   Wed, 29 Apr 2020 19:45:07 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-29_04:2020-04-29,2020-04-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- mlxscore=0 suspectscore=0 bulkscore=0 phishscore=0 priorityscore=1501
- clxscore=1011 malwarescore=0 impostorscore=0 lowpriorityscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004290090
+In-Reply-To: <20200429090437.GX28637@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change removes the endian description from the iio channel spec.
-In this way, the default (IIO_CPU) endian will be used, matching the
-be32_to_cpu() conversion from ad7768_spi_reg_read().
+On 2020/04/29 18:04, Michal Hocko wrote:
+> Completely agreed! The in kernel OOM killer is to deal with situations
+> when memory is desperately depleted without any sign of a forward
+> progress. If there is a reclaimable memory then we are not there yet.
+> If a workload can benefit from early oom killing based on response time
+> then we have facilities to achieve that (e.g. PSI).
 
-Fixes: 8a15c73a9bcfe ("iio: adc: Add AD7768-1 ADC basic support")
-
-Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
----
- drivers/iio/adc/ad7768-1.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-index a0027797a7fe..99da13c3511a 100644
---- a/drivers/iio/adc/ad7768-1.c
-+++ b/drivers/iio/adc/ad7768-1.c
-@@ -144,7 +144,6 @@ static const struct iio_chan_spec ad7768_channels[] = {
- 			.realbits = 24,
- 			.storagebits = 32,
- 			.shift = 8,
--			.endianness = IIO_BE,
- 		},
- 	},
- };
--- 
-2.17.1
+Can PSI work even if userspace process cannot avoid reclaimable memory
+allocations (e.g. page fault, file read) is already stalling? I'm not sure
+whether PSI allows responding quickly enough to "keep reclaimable memory
+allocations not to reclaim" despite there is still reclaimable memory...
 
