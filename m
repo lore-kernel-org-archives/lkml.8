@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FF9C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3AEC83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B35E72082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C399206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:34:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=narfindustries.com header.i=@narfindustries.com header.b="QTe8P/nJ"
+	dkim=pass (2048-bit key) header.d=narfindustries.com header.i=@narfindustries.com header.b="gL05+r8l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgD2TeH (ORCPT
+        id S1727815AbgD2TeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 15:34:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52884 "EHLO
+        Wed, 29 Apr 2020 15:34:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726481AbgD2TeC (ORCPT
+        by vger.kernel.org with ESMTP id S1727774AbgD2TeE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 15:34:02 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16EF1C03C1AE
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:34:02 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id a10so1420330uad.7
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:34:02 -0700 (PDT)
+        Wed, 29 Apr 2020 15:34:04 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0A91C035493
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:34:03 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id i5so1452915uaq.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:34:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=narfindustries.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=4KMlR1T8YEASHfzC3QAXH5FVSQ9dLIwlEypighkNyiE=;
-        b=QTe8P/nJ2+TkotR/DrQkw/xzerXm/iVvQ+hJhO+NaFc7JuXeyUlL8C/QZQKEwPR1Nx
-         Dddqe7ulJOpYShSCiMvETzRdy7neHZr88BgkNpIroP/4OTlA+GGTNrjkFC52BVUIA4r6
-         WlHDUwhxUpyYmHRPm5atoev9RGepi3LuvrNjWJ1Ye7iMKLj4L5agcT04FQotSwNUi2ou
-         XKhowTTbat7ieZUs2sBDNCR66bT5XanyF6I43ajUSS2LjKc2YkVOY5r3wY5FUor6jWa0
-         DXaEQufwJSkb7zu8fVYSJept3a+rqiP9c25LEmBEgatW10oUNFdFvmNBCAH5CUOMJ+jO
-         CYbQ==
+        bh=byoUl3WWDZv0UcSfpTGX7lJO0zcZe0ssHJvgqM1+GGY=;
+        b=gL05+r8lh2NhbG6Mib2C+MwCxJ2rTiWbsfneYbWjcOzVx8wo5GTh4t/fToB9LTCu/+
+         HGoIl58GZgH7iI8H3qU0lt9RCjOLx/9T1w62M2ReYZcbyVayC4JfzOwHD9y3fLMhGgNE
+         GWucsvrmWhkz5849E3RyJ0dU7Cv6dcVJp2Osbs1GU7BMa/oXrEdSo0lhcxfqbsLZZdr3
+         zVCt0E/siqeySWaP3u0enAZWw/XosKBBRj7SrORJDIGD7xNR+bgO7XJSUXvUGGq/KBhv
+         /sAikxn1HkEzFLxb9SSnk5VVdSdI41LQpwMRykbB+67t+S+xLtxvvHq6oYUtWrdXF0dY
+         9wOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=4KMlR1T8YEASHfzC3QAXH5FVSQ9dLIwlEypighkNyiE=;
-        b=BgrPxba8NdvJg7xeGoT+F0lrritO9KGfNYLnISYhRfCARluvBa2XGOCSBQP3xFldIB
-         hWC4cLrB0yXttG9yphgPFRpn4rOZjMmFw3hPt6qtUwWok1IFT2xM3YVS3XRGZ669hakU
-         1nzY/parYupIq/Ym6RzpBy30y+sqMaiGKBJ1SHpujZkZ8y1QnjaKHcLZcH+IycMQY4BR
-         T7YML6GgbcxEJ5gvMQA8eibkljUYl07GGCliJHwWt1zAFBM1/icRM+2qmhItWAU7osyR
-         Y51QIizBp7Rt+0TJEGUOi0QBr6sPCGKhwV9Nez9ACehzwTiyiIvAEaqj5JQwqDOx8PCj
-         eSdg==
-X-Gm-Message-State: AGi0PubvRsMDF6lbsmTI7uhClsHI7GjMHixiFS0Sf+PxCTegFP1NtE8P
-        R6Okrnc3jUq0fW7RIGex+9Dt0Q==
-X-Google-Smtp-Source: APiQypJ/TBZperNsISUw5tJTbj06ZkzaEQVYL/aZqIiKD5FF7dEQZHduh+3QxSfIsNejCIoJYeBQ2g==
-X-Received: by 2002:ab0:32d2:: with SMTP id f18mr25493038uao.141.1588188839647;
-        Wed, 29 Apr 2020 12:33:59 -0700 (PDT)
+        bh=byoUl3WWDZv0UcSfpTGX7lJO0zcZe0ssHJvgqM1+GGY=;
+        b=cUr/+aar4Go22EMVJC1awIwqlenhFzFZyY2/OOPzLU/t1CGsbZddzoH2KROijNA81g
+         1fO162PWE9M7qaJKrgpRYTJJSYqxUhRCi4G6yhEY99HMTc7dp9cGsw1Eq/sG2hM4A2OY
+         8ouVuNEv36hESDowzwqXpn9QZZFDAY9nI/Ck58fbVfcP4xLN/FD676+hHHraLau3hHI3
+         HeHBkPSE0bddNY2MV2hKAIeNDBp9uKYNK126vfhe4KZIz4/+d1ExCQZHmuLPTBVbp76t
+         nyzNULrukzDfxy+OGaQTDYgNk7MYeyxfRQolSjc54xmTkDqvkm4CBB+yHfzqnXOPGORe
+         CsMA==
+X-Gm-Message-State: AGi0PuYvssjLf221ET9FL2R3+Of0oKSB2q462/mFM1+S/jBONe9CVXBv
+        OE+xL3TE1VKOCD8RV02eOZdJbG3Ccb9kug==
+X-Google-Smtp-Source: APiQypJIhL0g26QRYag7RFEQuE0DWQ/Q7MybojYuNBnGe0kvqij5pXnSKsJEY9MJGOgMpB08+6OIlw==
+X-Received: by 2002:a9f:26e2:: with SMTP id 89mr24145592uay.104.1588188842430;
+        Wed, 29 Apr 2020 12:34:02 -0700 (PDT)
 Received: from localhost.localdomain ([24.171.221.68])
-        by smtp.gmail.com with ESMTPSA id k26sm76764uag.10.2020.04.29.12.33.58
+        by smtp.gmail.com with ESMTPSA id k26sm76764uag.10.2020.04.29.12.34.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 12:33:59 -0700 (PDT)
+        Wed, 29 Apr 2020 12:34:02 -0700 (PDT)
 From:   Javier Malave <javier.malave@narfindustries.com>
 To:     bx@narfindustries.com
 Cc:     Javier Malave <javier.malave@narfindustries.com>,
         linux-kernel@vger.kernel.org, ah@narfindustries.com
-Subject: [RFC 6/9] Process Server for Popcorn Distributed Thread Execution
-Date:   Wed, 29 Apr 2020 15:32:53 -0400
-Message-Id: <2f980c70e3d808a70a0d06f5a88caa584e7c8004.1588127445.git.javier.malave@narfindustries.com>
+Subject: [RFC 7/9] Virtual Memory Address Server for Distributed Thread Execution
+Date:   Wed, 29 Apr 2020 15:32:54 -0400
+Message-Id: <10fb2ec5acf90c3fe583b76343e5740ef84d367e.1588127445.git.javier.malave@narfindustries.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1588127445.git.javier.malave@narfindustries.com>
 References: <0>
@@ -77,1392 +77,919 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the core migration and back migration processor.
-It contains handlers for migration, back migration and
-distributed futex messages. It also handles remote process
-exits.
+Popcorn Linux implements software-based distributed
+shared memory by extending Linux's virtual memory subsystem,
+and enables processes on different machines to observe a
+common and coherent virtual address space. Coherency of virtual
+memory pages of different hosts is ensured using a
+reader-replicate/writer-invalidate, page-level consistency protocol.
 
-This module is triggered by popcorn_migrate syscall via
-the function process_server_do_migration. If the process
-that triggers the system call is its origin node, then
-__do_migration triggers the forward migration process to
-the user specified destination node. The forward migration 
-process uses a kernel thread called remote_thread_main.
-
-Otherwise, if the process is in a remote node, it already
-has been migrated away, so __do_back_migration triggers the 
-back migration process to the specified destination node 
-(which in this case should be the origin node).
-
-Process Server is in charge of processing additional
-functionality. When nodes receive Popcorn messages (see 
-RFC 9/9  Message Layer) specific handlers to each Popcorn
-server post work to the Popcorn work queues.    
-
-The Process Server calls upon the appropriate "process"
-function to complete the work. There are two routines in charge 
-of this: process_remote_works and run_remote_worker.  
+The VMA server's job is to implement the aforementioned protocol.
+Currently this work is fully managed at the origin node.
+Remote delegation of VMA operations is not supported except for
+MUNMAP.
 ---
- arch/x86/kernel/process_server.c |  250 +++++++
- include/popcorn/process_server.h |   18 +
- kernel/popcorn/process_server.c  | 1037 ++++++++++++++++++++++++++++++
- kernel/popcorn/process_server.h  |   21 +
- 4 files changed, 1326 insertions(+)
- create mode 100644 arch/x86/kernel/process_server.c
- create mode 100644 include/popcorn/process_server.h
- create mode 100644 kernel/popcorn/process_server.c
- create mode 100644 kernel/popcorn/process_server.h
+ include/popcorn/vma_server.h |  33 ++
+ kernel/popcorn/vma_server.c  | 818 +++++++++++++++++++++++++++++++++++
+ kernel/popcorn/vma_server.h  |  24 +
+ 3 files changed, 875 insertions(+)
+ create mode 100644 include/popcorn/vma_server.h
+ create mode 100644 kernel/popcorn/vma_server.c
+ create mode 100644 kernel/popcorn/vma_server.h
 
-diff --git a/arch/x86/kernel/process_server.c b/arch/x86/kernel/process_server.c
+diff --git a/include/popcorn/vma_server.h b/include/popcorn/vma_server.h
 new file mode 100644
-index 000000000..4819efb33
+index 000000000..162f41368
 --- /dev/null
-+++ b/arch/x86/kernel/process_server.c
-@@ -0,0 +1,250 @@
-+/*
-+ * File:
-+ * 	process_server.c
-+ *
-+ * Description:
-+ * 	this file implements the x86 architecture specific
-+ *  helper functionality of the process server
-+ *
-+ * Created on:
-+ * 	Sep 19, 2014
-+ *
-+ * Author:
-+ * 	Sharath Kumar Bhat, SSRG, VirginiaTech
-+ *
-+ */
-+
-+/* File includes */
-+#include <linux/sched.h>
-+#include <linux/kdebug.h>
-+#include <linux/ptrace.h>
-+#include <asm/uaccess.h>
-+#include <asm/prctl.h>
-+#include <asm/proto.h>
-+#include <asm/desc.h>
-+#include <asm/fpu/internal.h>
-+
-+#include <popcorn/types.h>
-+#include <popcorn/regset.h>
-+
-+/*
-+ * Function:
-+ *		save_thread_info
-+ *
-+ * Description:
-+ *		this function saves the architecture specific info of the task
-+ *		to the struct struct field_arch structure passed
-+ *
-+ * Input:
-+ *	regs,	pointer to the pt_regs field of the task
-+ *
-+ * Output:
-+ *	arch,	pointer to the struct field_arch structure type where the
-+ *			architecture specific information of the task has to be
-+ *			saved
-+ *
-+ * Return value:
-+ *	on success, returns 0
-+ * 	on failure, returns negative integer
-+ */
-+int save_thread_info(struct field_arch *arch)
-+{
-+	unsigned short fsindex, gsindex;
-+	unsigned long ds, es, fs, gs;
-+	int cpu;
-+
-+	BUG_ON(!arch);
-+
-+	cpu = get_cpu();
-+
-+	/*
-+	 * Segments
-+	 * CS and SS are set during the user/kernel mode switch.
-+	 * Thus, nothing to do with them.
-+	 */
-+
-+	ds = current->thread.ds;
-+	es = current->thread.es;
-+
-+	savesegment(fs, fsindex);
-+	if (fsindex) {
-+		fs = get_desc_base(current->thread.tls_array + current->thread.fsbase);
-+	} else {
-+		rdmsrl(MSR_FS_BASE, fs);
-+	}
-+
-+	savesegment(gs, gsindex);
-+	if (gsindex) {
-+		gs = get_desc_base(current->thread.tls_array + current->thread.gsbase);
-+	} else {
-+		rdmsrl(MSR_KERNEL_GS_BASE, gs);
-+	}
-+
-+	WARN_ON(ds);
-+	WARN_ON(es);
-+	WARN_ON(gs);
-+	arch->tls = fs;
-+
-+	put_cpu();
-+
-+	/*
-+	PSPRINTK("%s [%d] tls %lx\n", __func__, current->pid, arch->tls);
-+	*/
-+
-+	return 0;
-+}
-+
-+
-+/*
-+ * Function:
-+ *		restore_thread_info
-+ *
-+ * Description:
-+ *		this function restores the architecture specific info of the
-+ *		task from the struct field_arch structure passed
-+ *
-+ * Input:
-+ * 	arch,	pointer to the struct field_arch structure type from which the
-+ *			architecture specific information of the task has to be
-+ *			restored
-+ *
-+ *	restore_segments,
-+ *			restore segmentations as well if segs is true. Unless, do
-+ *			not restore the segmentation units (for back migration)
-+ *
-+ * Output:
-+ *	none
-+ *
-+ * Return value:
-+ *	on success, returns 0
-+ * 	on failure, returns negative integer
-+ */
-+int restore_thread_info(struct field_arch *arch, bool restore_segments)
-+{
-+	struct pt_regs *regs = current_pt_regs();
-+	struct regset_x86_64 *regset = &arch->regs_x86;
-+	int cpu;
-+
-+	cpu = get_cpu();
-+
-+	regs->r15 = regset->r15;
-+	regs->r14 = regset->r14;
-+	regs->r13 = regset->r13;
-+	regs->r12 = regset->r12;
-+	regs->bp = regset->rbp;
-+	regs->bx = regset->rbx;
-+
-+	regs->r11 = regset->r11;
-+	regs->r10 = regset->r10;
-+	regs->r9 = regset->r9;
-+	regs->r8 = regset->r8;
-+	regs->ax = regset->rax;
-+	regs->cx = regset->rcx;
-+	regs->dx = regset->rdx;
-+	regs->si = regset->rsi;
-+	regs->di = regset->rdi;
-+
-+	regs->ip = regset->rip;
-+	regs->sp = regset->rsp;
-+	regs->flags = regset->rflags;
-+
-+	if (restore_segments) {
-+		regs->cs = __USER_CS;
-+		regs->ss = __USER_DS;
-+
-+		/*
-+		current->thread.ds = regset->ds;
-+		current->thread.es = regset->es;
-+		*/
-+
-+		if (arch->tls) {
-+			do_arch_prctl_64(current, ARCH_SET_FS, arch->tls);
-+		}
-+		/*
-+		if (arch->thread_gs) {
-+			do_arch_prctl_64(current, ARCH_SET_GS, arch->thread_gs);
-+		}
-+		*/
-+	}
-+
-+	put_cpu();
-+
-+#ifdef CONFIG_POPCORN_DEBUG_VERBOSE
-+	PSPRINTK("%s [%d] ip %lx\n", __func__, current->pid, regs->ip);
-+	PSPRINTK("%s [%d] sp %lx bp %lx\n", __func__, current->pid, regs->sp, regs->bp);
-+#endif
-+	return 0;
-+}
-+
-+#include <asm/stacktrace.h>
-+noinline_for_stack void update_frame_pointer(void)
-+{
-+	unsigned long *rbp;
-+	rbp = __builtin_frame_address(0); /* update_frame_pointer */
-+
-+	/* User rbp is at one stack frames below */
-+	*rbp = current_pt_regs()->bp;	/* sched_migrate */
-+}
-+
-+
-+/*
-+ * Function:
-+ *		dump_processor_regs
-+ *
-+ * Description:
-+ *		this function prints the architecture specific registers specified
-+ *		in the input argument
-+ *
-+ * Input:
-+ * 	task,	pointer to the architecture specific registers
-+ *
-+ * Output:
-+ * 	none
-+ *
-+ * Return value:
-+ *	void
-+ *
-+ * Why don't use show_all() for x86?
-+ */
-+void dump_processor_regs(struct pt_regs* regs)
-+{
-+	unsigned long fs, gs;
-+	unsigned long fsindex, gsindex;
-+
-+	dump_stack();
-+	if (!regs) return;
-+	printk(KERN_ALERT"DUMP REGS %s\n", __func__);
-+
-+	if (NULL != regs) {
-+		printk(KERN_ALERT"r15{%lx}\n",regs->r15);
-+		printk(KERN_ALERT"r14{%lx}\n",regs->r14);
-+		printk(KERN_ALERT"r13{%lx}\n",regs->r13);
-+		printk(KERN_ALERT"r12{%lx}\n",regs->r12);
-+		printk(KERN_ALERT"r11{%lx}\n",regs->r11);
-+		printk(KERN_ALERT"r10{%lx}\n",regs->r10);
-+		printk(KERN_ALERT"r9{%lx}\n",regs->r9);
-+		printk(KERN_ALERT"r8{%lx}\n",regs->r8);
-+		printk(KERN_ALERT"bp{%lx}\n",regs->bp);
-+		printk(KERN_ALERT"bx{%lx}\n",regs->bx);
-+		printk(KERN_ALERT"ax{%lx}\n",regs->ax);
-+		printk(KERN_ALERT"cx{%lx}\n",regs->cx);
-+		printk(KERN_ALERT"dx{%lx}\n",regs->dx);
-+		printk(KERN_ALERT"di{%lx}\n",regs->di);
-+		printk(KERN_ALERT"orig_ax{%lx}\n",regs->orig_ax);
-+		printk(KERN_ALERT"ip{%lx}\n",regs->ip);
-+		printk(KERN_ALERT"cs{%lx}\n",regs->cs);
-+		printk(KERN_ALERT"flags{%lx}\n",regs->flags);
-+		printk(KERN_ALERT"sp{%lx}\n",regs->sp);
-+		printk(KERN_ALERT"ss{%lx}\n",regs->ss);
-+	}
-+	rdmsrl(MSR_FS_BASE, fs);
-+	rdmsrl(MSR_GS_BASE, gs);
-+	printk(KERN_ALERT"fs{%lx} - %lx content %lx\n",fs, current->thread.fsbase, fs ? * (unsigned long*)fs : 0x1234567l);
-+	printk(KERN_ALERT"gs{%lx} - %lx content %lx\n",gs, current->thread.gsbase, fs ? * (unsigned long*)gs : 0x1234567l);
-+
-+	savesegment(fs, fsindex);
-+	savesegment(gs, gsindex);
-+	printk(KERN_ALERT"fsindex{%lx} - %x\n",fsindex, current->thread.fsindex);
-+	printk(KERN_ALERT"gsindex{%lx} - %x\n",gsindex, current->thread.gsindex);
-+	printk(KERN_ALERT"REGS DUMP COMPLETE\n");
-+}
-diff --git a/include/popcorn/process_server.h b/include/popcorn/process_server.h
-new file mode 100644
-index 000000000..ebe0787c6
---- /dev/null
-+++ b/include/popcorn/process_server.h
-@@ -0,0 +1,18 @@
++++ b/include/popcorn/vma_server.h
+@@ -0,0 +1,33 @@
 +// SPDX-License-Identifier: GPL-2.0, 3-clause BSD
-+#ifndef __POPCORN_PROCESS_SERVER_H
-+#define __POPCORN_PROCESS_SERVER_H
++#ifndef INCLUDE_POPCORN_VMA_SERVER_H_
++#define INCLUDE_POPCORN_VMA_SERVER_H_
 +
 +
-+int process_server_do_migration(struct task_struct *tsk, unsigned int dst_nid,
-+				void __user *uregs);
-+int process_server_task_exit(struct task_struct *tsk);
-+int update_frame_pointer(void);
++/*
++ * VMA operation handlers for origin
++ */
++int vma_server_munmap_origin(unsigned long start, size_t len, int nid_except);
 +
-+long process_server_do_futex_at_remote(u32 __user *uaddr, int op, u32 val,
-+				       bool valid_ts, struct timespec64 *ts,
-+				       u32 __user *uaddr2, u32 val2, u32 val3);
 +
-+struct remote_context;
-+void free_remote_context(struct remote_context *rc);
++/*
++ * Retrieve VMAs from origin
++ */
++int vma_server_fetch_vma(struct task_struct *tsk, unsigned long address);
 +
-+#endif /* __POPCORN_PROCESS_SERVER_H */
-diff --git a/kernel/popcorn/process_server.c b/kernel/popcorn/process_server.c
++/*
++ * VMA operation handler for remote
++ */
++unsigned long vma_server_mmap_remote(struct file *file, unsigned long addr,
++				     unsigned long len, unsigned long prot,
++				     unsigned long flags, unsigned long pgoff);
++
++int vma_server_munmap_remote(unsigned long start, size_t len);
++int vma_server_brk_remote(unsigned long oldbrk, unsigned long brk);
++int vma_server_madvise_remote(unsigned long start, size_t len, int behavior);
++int vma_server_mprotect_remote(unsigned long start, size_t len,
++			       unsigned long prot);
++int vma_server_mremap_remote(unsigned long addr, unsigned long old_len,
++			     unsigned long new_len, unsigned long flags,
++			     unsigned long new_addr);
++
++#endif /* INCLUDE_POPCORN_VMA_SERVER_H_ */
+diff --git a/kernel/popcorn/vma_server.c b/kernel/popcorn/vma_server.c
 new file mode 100644
-index 000000000..48b72b7a5
+index 000000000..256267c0e
 --- /dev/null
-+++ b/kernel/popcorn/process_server.c
-@@ -0,0 +1,1037 @@
++++ b/kernel/popcorn/vma_server.c
+@@ -0,0 +1,818 @@
 +// SPDX-License-Identifier: GPL-2.0, BSD
 +/*
-+ * /kernel/popcorn/process_server.c
++ * /kernel/popcorn/vma_server.c
 + *
-+ * Popcorn Linux thread migration implementation.
++ * Popcorn Linux VMA handler implementation.
 + *
-+ * This is Popcorn's core migration handler. It
-+ * also defines and registers handlers for
-+ * other key Popcorn work.
++ * VMA Server implements a reader-replicate/
++ * writer invalidate page-level coherency protocol.
 + *
 + * This work was an extension of David Katz MS Thesis,
-+ * rewritten by Sang-Hoon to support multithread
-+ * environment.
++ * rewritten by Sang-Hoon to support multithread environment.
 + *
 + * author, Javier Malave, Rebecca Shapiro, Andrew Hughes,
 + * Narf Industries 2020 (modifications for upstream RFC)
-+ * author Sang-Hoon Kim, SSRG Virginia Tech 2017
-+ * author Antonio Barbalace, SSRG Virginia Tech 2014-2016
-+ * author Vincent Legout, Sharat Kumar Bath, Ajithchandra Saya, SSRG Virginia Tech 2014-2015
-+ * author David Katz, Marina Sadini, SSRG Virginia 2013
++ * author Sang-Hoon Kim, SSRG Virginia Tech 2016-2017
++ * author Vincent Legout, Antonio Barbalace, SSRG Virginia Tech 2016
++ * author Ajith Saya, Sharath Bhat, SSRG Virginia Tech 2015
++ * author Marina Sadini, Antonio Barbalace, SSRG Virginia Tech 2014
++ * author Marina Sadini, SSRG Virginia Tech 2013
 + */
 +
-+#include <linux/sched.h>
-+#include <linux/threads.h>
 +#include <linux/slab.h>
++#include <linux/mm.h>
 +#include <linux/kthread.h>
++
++#include <linux/mman.h>
++#include <linux/highmem.h>
 +#include <linux/ptrace.h>
-+#include <linux/mmu_context.h>
-+#include <linux/fs.h>
-+#include <linux/futex.h>
 +#include <linux/sched/mm.h>
-+#include <linux/uaccess.h>
-+
-+#include <asm/mmu_context.h>
-+#include <asm/kdebug.h>
-+
++#include <linux/elf.h>
++#include <linux/syscalls.h>
 +#include <popcorn/bundle.h>
 +
 +#include "types.h"
-+#include "process_server.h"
++#include "util.h"
 +#include "vma_server.h"
 +#include "page_server.h"
 +#include "wait_station.h"
-+#include "util.h"
 +
-+static struct list_head remote_contexts[2];
-+static spinlock_t remote_contexts_lock[2];
 +
-+inline void __lock_remote_contexts(spinlock_t *remote_contexts_lock, int index)
++const char *vma_op_code_sz[] = {
++	"mmap", "munmap", "mprotect", "mremap", "madvise", "brk"
++};
++
++/*
++ *   This function performs a diff between all VMA's pcorand the current VMA
++ */
++static unsigned long map_difference(struct mm_struct *mm, struct file *file,
++				    unsigned long start, unsigned long end,
++				    unsigned long prot, unsigned long flags,
++				    unsigned long pgoff)
 +{
-+	spin_lock(remote_contexts_lock + index);
-+}
++	unsigned long ret = start;
++	unsigned long error;
++	unsigned long populate = 0;
++	struct vm_area_struct *vma;
 +
-+inline void __unlock_remote_contexts(spinlock_t *remote_contexts_lock, int index)
-+{
-+	spin_unlock(remote_contexts_lock + index);
-+}
++	VSPRINTK("  [%d] map+ %lx %lx\n", current->pid, start, end);
++	for (vma = current->mm->mmap; start < end; vma = vma->vm_next) {
 +
-+/* Hold the corresponding remote_contexts_lock */
-+static struct remote_context *__lookup_remote_contexts_in(int nid, int tgid)
-+{
-+	struct remote_context *rc;
++		if (vma == NULL || end <= vma->vm_start) {
++			/*
++			 * We've reached the end of the list, or the VMA is fully
++			 * above the region of interest
++			 */
++			VSPRINTK("  [%d] map0 %lx -- %lx @ %lx, %lx\n", current->pid,
++					start, end, pgoff, prot);
++			error = do_mmap_pgoff(file, start, end - start,
++					      prot, flags, pgoff, &populate, NULL);
++			if (error != start) {
++				ret = VM_FAULT_SIGBUS;
++			}
++			break;
++		} else if (start >= vma->vm_start && end <= vma->vm_end) {
++			/*
++			 * VMA fully encompases the region of interest. nothing to do
++			 */
++			break;
++		} else if (start >= vma->vm_start
++				&& start < vma->vm_end && end > vma->vm_end) {
++			/*
++			 * VMA includes the start of the region of interest
++			 * but not the end. advance start (no mapping to do)
++			 */
++			pgoff += ((vma->vm_end - start) >> PAGE_SHIFT);
++			start = vma->vm_end;
++		} else if (start < vma->vm_start
++				&& vma->vm_start < end && end <= vma->vm_end) {
++			/*
++			 * VMA includes the end of the region of interest
++			 * but not the start
++			 */
++			VSPRINTK("  [%d] map1 %lx -- %lx @ %lx\n", current->pid,
++					start, vma->vm_start, pgoff);
++			error = do_mmap_pgoff(file, start, vma->vm_start - start,
++					      prot, flags, pgoff, &populate, NULL);
++			if (error != start) {
++				ret = VM_FAULT_SIGBUS;;
++			}
++			break;
++		} else if (start <= vma->vm_start && vma->vm_end <= end) {
++			/* VMA is fully within the region of interest */
++			VSPRINTK("  [%d] map2 %lx -- %lx @ %lx\n", current->pid,
++					start, vma->vm_start, pgoff);
++			error = do_mmap_pgoff(file, start, vma->vm_start - start,
++					      prot, flags, pgoff, &populate, NULL);
++			if (error != start) {
++				ret = VM_FAULT_SIGBUS;
++				break;
++			}
 +
-+	list_for_each_entry(rc, remote_contexts + INDEX_INBOUND, list) {
-+		if (rc->remote_tgids[nid] == tgid)
-+			return rc;
++			/*
++			 * Then advance to the end of this VMA
++			 */
++			pgoff += ((vma->vm_end - start) >> PAGE_SHIFT);
++			start = vma->vm_end;
++		}
 +	}
-+	return NULL;
-+}
-+
-+inline struct remote_context *__get_mm_remote(struct mm_struct *mm)
-+{
-+	struct remote_context *rc = mm->remote;
-+	atomic_inc(&rc->count);
-+	return rc;
-+}
-+
-+inline struct remote_context *get_task_remote(struct task_struct *tsk)
-+{
-+	return __get_mm_remote(tsk->mm);
-+}
-+
-+inline bool __put_task_remote(struct remote_context *rc)
-+{
-+	if (!atomic_dec_and_test(&rc->count)) return false;
-+
-+	__lock_remote_contexts(remote_contexts_lock, rc->for_remote);
-+#ifdef CONFIG_POPCORN_CHECK_SANITY
-+	BUG_ON(atomic_read(&rc->count));
-+#endif
-+	list_del(&rc->list);
-+	__unlock_remote_contexts(remote_contexts_lock, rc->for_remote);
-+
-+	free_remote_context_pages(rc);
-+	kfree(rc);
-+	return true;
-+}
-+
-+inline bool put_task_remote(struct task_struct *tsk)
-+{
-+	return __put_task_remote(tsk->mm->remote);
-+}
-+
-+void free_remote_context(struct remote_context *rc)
-+{
-+#ifdef CONFIG_POPCORN_CHECK_SANITY
-+	BUG_ON(atomic_read(&rc->count) != 1 && atomic_read(&rc->count) != 2);
-+#endif
-+	__put_task_remote(rc);
-+}
-+
-+static struct remote_context *__alloc_remote_context(int nid, int tgid,
-+						     bool remote)
-+{
-+	struct remote_context *rc = kmalloc(sizeof(*rc), GFP_KERNEL);
-+	int i;
-+
-+	if (!rc)
-+		return ERR_PTR(-ENOMEM);
-+
-+	INIT_LIST_HEAD(&rc->list);
-+	atomic_set(&rc->count, 1); /* Account for mm->remote in a near future */
-+	rc->mm = NULL;
-+
-+	rc->tgid = tgid;
-+	rc->for_remote = remote;
-+
-+	for (i = 0; i < FAULTS_HASH; i++) {
-+		INIT_HLIST_HEAD(&rc->faults[i]);
-+		spin_lock_init(&rc->faults_lock[i]);
-+	}
-+
-+	INIT_LIST_HEAD(&rc->vmas);
-+	spin_lock_init(&rc->vmas_lock);
-+
-+	rc->stop_remote_worker = false;
-+
-+	rc->remote_worker = NULL;
-+	INIT_LIST_HEAD(&rc->remote_works);
-+	spin_lock_init(&rc->remote_works_lock);
-+	init_completion(&rc->remote_works_ready);
-+
-+	memset(rc->remote_tgids, 0x00, sizeof(rc->remote_tgids));
-+
-+	INIT_RADIX_TREE(&rc->pages, GFP_ATOMIC);
-+
-+	return rc;
-+}
-+
-+static void __build_task_comm(char *buffer, char *path)
-+{
-+	int i, ch;
-+	for (i = 0; (ch = *(path++)) != '\0';) {
-+		if (ch == '/')
-+			i = 0;
-+		else if (i < (TASK_COMM_LEN - 1))
-+			buffer[i++] = ch;
-+	}
-+	buffer[i] = '\0';
++	WARN_ON(populate);
++	return ret;
 +}
 +
 +/*
-+ *  This function implements a distributed mutex.
++ * VMA operation delegators at remotes
 + */
-+long process_server_do_futex_at_remote(u32 __user *uaddr, int op, u32 val,
-+				       bool valid_ts, struct timespec64 *ts,
-+				       u32 __user *uaddr2, u32 val2, u32 val3)
++static vma_op_request_t *__alloc_vma_op_request(enum vma_op_code opcode)
 +{
-+	struct wait_station *ws = get_wait_station(current);
-+	remote_futex_request req = {
-+		.origin_pid = current->origin_pid,
-+		.remote_ws = ws->id,
-+		.op = op,
-+		.val = val,
-+		.ts = {
-+			.tv_sec = -1,
-+		},
-+		.uaddr = uaddr,
-+		.uaddr2 = uaddr2,
-+		.val2 = val2,
-+		.val3 = val3,
-+	};
-+	remote_futex_response *res;
-+	long ret = 0;
++	vma_op_request_t *req = kmalloc(sizeof(*req), GFP_KERNEL);
 +
-+	if (valid_ts) {
-+		req.ts = *ts;
++	if(!req)
++		return req;
++
++	req->origin_pid = current->origin_pid,
++	req->remote_pid = current->pid,
++	req->operation = opcode;
++
++	return req;
++}
++
++static int __delegate_vma_op(vma_op_request_t *req, vma_op_response_t **resp)
++{
++	vma_op_response_t *res;
++	struct wait_station *ws = get_wait_station(current);
++
++	req->remote_ws = ws->id;
++
++	pcn_kmsg_send(PCN_KMSG_TYPE_VMA_OP_REQUEST,
++			current->origin_nid, req, sizeof(*req));
++	res = wait_at_station(ws);
++	WARN_ON(res->operation != req->operation);
++
++	*resp = res;
++	return res->ret;
++}
++
++static int handle_vma_op_response(struct pcn_kmsg_message *msg)
++{
++	vma_op_response_t *res = (vma_op_response_t *)msg;
++	struct wait_station *ws = wait_station(res->remote_ws);
++
++	ws->private = res;
++	complete(&ws->pendings);
++
++	return 0;
++}
++
++unsigned long vma_server_mmap_remote(struct file *file,
++				     unsigned long addr, unsigned long len,
++				     unsigned long prot, unsigned long flags,
++				     unsigned long pgoff)
++{
++	unsigned long ret = 0;
++	vma_op_request_t *req;
++	vma_op_response_t *res;
++
++	if(!(req = __alloc_vma_op_request(VMA_OP_MMAP)))
++		return -ENOMEM;
++
++	req->addr = addr;
++	req->len = len;
++	req->prot = prot;
++	req->flags = flags;
++	req->pgoff = pgoff;
++	get_file_path(file, req->path, sizeof(req->path));
++
++	VSPRINTK("\n## VMA mmap [%d] %lx - %lx, %lx %lx\n", current->pid,
++			addr, addr + len, prot, flags);
++	if (req->path[0] != '\0') {
++		VSPRINTK("  [%d] %s\n", current->pid, req->path);
 +	}
 +
++	ret = __delegate_vma_op(req, &res);
 +
-+	pcn_kmsg_send(PCN_KMSG_TYPE_FUTEX_REQUEST,
-+			current->origin_nid, &req, sizeof(req));
++	VSPRINTK("  [%d] %ld %lx -- %lx\n", current->pid,
++			ret, res->addr, res->addr + res->len);
 +
-+	res = wait_at_station(ws);
-+	ret = res->ret;
++	if (ret)
++		goto out_free;
++
++	while (!down_write_trylock(&current->mm->mmap_sem)) {
++		schedule();
++	}
++	ret = map_difference(current->mm, file, res->addr, res->addr + res->len,
++			prot, flags, pgoff);
++	up_write(&current->mm->mmap_sem);
++
++out_free:
++	kfree(req);
 +	pcn_kmsg_done(res);
 +
 +	return ret;
 +}
 +
-+static int handle_remote_futex_response(struct pcn_kmsg_message *msg)
-+{
-+	remote_futex_response *res = (remote_futex_response *)msg;
-+	struct wait_station *ws = wait_station(res->remote_ws);
-+
-+	ws->private = res;
-+	complete(&ws->pendings);
-+	return 0;
-+}
-+
-+static int process_remote_futex_request(remote_futex_request *req)
++int vma_server_munmap_remote(unsigned long start, size_t len)
 +{
 +	int ret;
-+	int err = 0;
-+	remote_futex_response *res;
-+	ktime_t t, *tp = NULL;
++	vma_op_request_t *req;
++	vma_op_response_t *res;
 +
-+	if (timespec64_valid(&req->ts)) {
-+		t = timespec64_to_ktime(req->ts);
-+		t = ktime_add_safe(ktime_get(), t);
-+		tp = &t;
-+	}
++	VSPRINTK("\n## VMA munmap [%d] %lx %lx\n", current->pid, start, len);
 +
-+
-+	ret = do_futex(req->uaddr, req->op, req->val,
-+			tp, req->uaddr2, req->val2, req->val3);
-+
-+	res = pcn_kmsg_get(sizeof(*res));
-+
-+	if(!res) {
-+		err = -ENOMEM;
-+		goto out;
-+	}
-+
-+	res->remote_ws = req->remote_ws;
-+	res->ret = ret;
-+
-+	pcn_kmsg_post(PCN_KMSG_TYPE_FUTEX_RESPONSE,
-+			current->remote_nid, res, sizeof(*res));
-+
-+out:
-+	pcn_kmsg_done(req);
-+	return err;
-+}
-+
-+/*
-+ *  This function handles process exit.
-+ */
-+static void __terminate_remotes(struct remote_context *rc)
-+{
-+	int nid;
-+	origin_task_exit_t req = {
-+		.origin_pid = current->pid,
-+		.exit_code = current->exit_code,
-+	};
-+
-+	/* Take down peer vma workers */
-+	for (nid = 0; nid < MAX_POPCORN_NODES; nid++) {
-+		if (nid == my_nid || rc->remote_tgids[nid] == 0) continue;
-+		PSPRINTK("TERMINATE [%d/%d] with 0x%d\n",
-+				rc->remote_tgids[nid], nid, req.exit_code);
-+
-+		req.remote_pid = rc->remote_tgids[nid];
-+		pcn_kmsg_send(PCN_KMSG_TYPE_TASK_EXIT_ORIGIN, nid, &req, sizeof(req));
-+	}
-+}
-+
-+static int __exit_origin_task(struct task_struct *tsk)
-+{
-+	struct remote_context *rc = tsk->mm->remote;
-+
-+	if (tsk->remote) {
-+		put_task_remote(tsk);
-+	}
-+	tsk->remote = NULL;
-+	tsk->origin_nid = tsk->origin_pid = -1;
-+
-+	/**
-+	 * Trigger peer termination if this is the last user thread
-+	 * referring to this mm.
-+	 */
-+	if (atomic_read(&tsk->mm->mm_users) == 1) {
-+		__terminate_remotes(rc);
-+	}
-+
-+	return 0;
-+}
-+
-+static int __exit_remote_task(struct task_struct *tsk)
-+{
-+	/* Something went south. Notify the origin. */
-+	if (tsk->exit_code != TASK_PARKED) {
-+		if (!get_task_remote(tsk)->stop_remote_worker) {
-+			remote_task_exit_t req = {
-+				.origin_pid = tsk->origin_pid,
-+				.remote_pid = tsk->pid,
-+				.exit_code = tsk->exit_code,
-+			};
-+			pcn_kmsg_send(PCN_KMSG_TYPE_TASK_EXIT_REMOTE,
-+					tsk->origin_nid, &req, sizeof(req));
-+		}
-+		put_task_remote(tsk);
-+	}
-+
-+	put_task_remote(tsk);
-+	tsk->remote = NULL;
-+	tsk->origin_nid = tsk->origin_pid = -1;
-+
-+	return 0;
-+}
-+
-+int process_server_task_exit(struct task_struct *tsk)
-+{
-+	WARN_ON(tsk != current);
-+
-+	if (!distributed_process(tsk))
-+		return -ESRCH;
-+
-+	PSPRINTK("EXITED [%d] %s%s / 0x%x\n", tsk->pid,
-+			tsk->at_remote ? "remote" : "local",
-+			tsk->is_worker ? " worker": "",
-+			tsk->exit_code);
-+
-+	if (tsk->is_worker)
-+		return 0;
-+
-+	if (tsk->at_remote)
-+		return __exit_remote_task(tsk);
-+	else
-+		return __exit_origin_task(tsk);
-+}
-+
-+/*
-+ * Handle the notification of the task kill at the remote.
-+ */
-+static void process_remote_task_exit(remote_task_exit_t *req)
-+{
-+	struct task_struct *tsk = current;
-+	int exit_code = req->exit_code;
-+
-+	if (tsk->remote_pid != req->remote_pid) {
-+		printk(KERN_INFO"%s: pid mismatch %d != %d\n", __func__,
-+				tsk->remote_pid, req->remote_pid);
-+		pcn_kmsg_done(req);
-+		return;
-+	}
-+
-+	PSPRINTK("%s [%d] 0x%x\n", __func__, tsk->pid, req->exit_code);
-+
-+	tsk->remote = NULL;
-+	tsk->remote_nid = -1;
-+	tsk->remote_pid = -1;
-+	put_task_remote(tsk);
-+
-+	exit_code = req->exit_code;
-+	pcn_kmsg_done(req);
-+
-+	if (exit_code & CSIGNAL)
-+		force_sig(exit_code & CSIGNAL, tsk);
-+
-+	do_exit(exit_code);
-+}
-+
-+static void process_origin_task_exit(struct remote_context *rc,
-+				     origin_task_exit_t *req)
-+{
-+	BUG_ON(!current->is_worker);
-+
-+	PSPRINTK("\nTERMINATE [%d] with 0x%x\n", current->pid, req->exit_code);
-+	current->exit_code = req->exit_code;
-+	rc->stop_remote_worker = true;
-+
-+	pcn_kmsg_done(req);
-+}
-+
-+/*
-+ *    This function handles back migration.
-+ *    If there is a pid mismatch the function will exit.
-+ *    Otherwise it will restore the process at origin.
-+ */
-+static void process_back_migration(back_migration_request_t *req)
-+{
-+	if (current->remote_pid != req->remote_pid) {
-+		printk(KERN_INFO"%s: pid mismatch during back migration (%d != %d)\n",
-+				__func__, current->remote_pid, req->remote_pid);
-+		goto out_free;
-+	}
-+
-+	PSPRINTK("### BACKMIG [%d] from [%d/%d]\n",
-+			current->pid, req->remote_pid, req->remote_nid);
-+
-+	/* Welcome home */
-+
-+	current->remote = NULL;
-+	current->remote_nid = -1;
-+	current->remote_pid = -1;
-+	put_task_remote(current);
-+
-+	current->personality = req->personality;
-+
-+	/* XXX signals */
-+
-+	/* mm is not updated here; has been synchronized through vma operations */
-+
-+	restore_thread_info(&req->arch, true);
-+
-+out_free:
-+	pcn_kmsg_done(req);
-+}
-+
-+/*
-+ * Send a message to <dst_nid> for migrating back a task <task>.
-+ * This is a back migration
-+ *  => <task> must already been migrated to <dst_nid>.
-+ * It returns -1 in error case.
-+ */
-+static int __do_back_migration(struct task_struct *tsk, int dst_nid,
-+			       void __user *uregs)
-+{
-+	back_migration_request_t *req;
-+	int ret = 0;
-+	int size = 0;
-+
-+	might_sleep();
-+
-+	BUG_ON(tsk->origin_nid == -1 && tsk->origin_pid == -1);
-+
-+	req = pcn_kmsg_get(sizeof(*req));
-+
-+	if(!req) {
-+		return -ENOMEM;
-+	}
-+
-+	req->origin_pid = tsk->origin_pid;
-+	req->remote_nid = my_nid;
-+	req->remote_pid = tsk->pid;
-+
-+	req->personality = tsk->personality;
-+
-+	size = regset_size(get_popcorn_node_arch(dst_nid));
-+	if(!size) {
-+		return -EINVAL;
-+
-+	}
-+	ret = copy_from_user(&req->arch.regsets, uregs,
-+			size);
-+
-+	save_thread_info(&req->arch);
-+
-+	ret = pcn_kmsg_post(
-+		PCN_KMSG_TYPE_TASK_MIGRATE_BACK, dst_nid, req, sizeof(*req));
-+
-+	do_exit(TASK_PARKED);
-+
-+	return ret;
-+}
-+
-+/*
-+ *  Remote thread
-+ */
-+static int handle_remote_task_pairing(struct pcn_kmsg_message *msg)
-+{
-+	remote_task_pairing_t *req = (remote_task_pairing_t *)msg;
-+	struct task_struct *tsk;
-+	int from_nid = PCN_KMSG_FROM_NID(req);
-+	int ret = 0;
-+
-+	tsk = __get_task_struct(req->your_pid);
-+	if (!tsk) {
-+		ret = -ESRCH;
-+		goto out;
-+	}
-+	BUG_ON(tsk->at_remote);
-+	BUG_ON(!tsk->remote);
-+
-+	tsk->remote_nid = from_nid;
-+	tsk->remote_pid = req->my_pid;
-+	tsk->remote->remote_tgids[from_nid] = req->my_tgid;
-+
-+	put_task_struct(tsk);
-+out:
-+	pcn_kmsg_done(req);
-+	return ret;
-+}
-+
-+static int __pair_remote_task(void)
-+{
-+	remote_task_pairing_t req = {
-+		.my_tgid = current->tgid,
-+		.my_pid = current->pid,
-+		.your_pid = current->origin_pid,
-+	};
-+	return pcn_kmsg_send(
-+			PCN_KMSG_TYPE_TASK_PAIRING, current->origin_nid, &req, sizeof(req));
-+}
-+
-+
-+struct remote_thread_params {
-+	clone_request_t *req;
-+};
-+
-+/*
-+ *   This function performs the main proceess
-+ *   migration operation. It demotes temporary priviledge prior
-+ *   to injecting the thread info into the clone request.
-+ *   Upon success, the function returns to user-space.
-+ */
-+static int remote_thread_main(void *_args)
-+{
-+	struct remote_thread_params *params = _args;
-+	clone_request_t *req = params->req;
-+	int ret = 0;
-+
-+#ifdef CONFIG_POPCORN_DEBUG_VERBOSE
-+	PSPRINTK("%s [%d] started for [%d/%d]\n", __func__,
-+			current->pid, req->origin_pid, PCN_KMSG_FROM_NID(req));
-+#endif
-+
-+	current->flags &= ~PF_KTHREAD;
-+	current->origin_nid = PCN_KMSG_FROM_NID(req);
-+	current->origin_pid = req->origin_pid;
-+	current->remote = get_task_remote(current);
-+
-+	set_fs(USER_DS);
-+
-+	restore_thread_info(&req->arch, true);
-+
-+	if((ret = __pair_remote_task())) {
-+#ifdef CONFIG_POPCORN_DEBUG_VERBOSE
-+		PSPRINTK("%s [%d] failed __pair_remote_task() for [%d/%d]\n", __func__,
-+			current->pid, req->origin_pid, PCN_KMSG_FROM_NID(req));
-+#endif
-+		return ret;
-+	}
-+
-+	PSPRINTK("\n####### MIGRATED - [%d/%d] from [%d/%d]\n",
-+			current->pid, my_nid, current->origin_pid, current->origin_nid);
-+
-+	kfree(params);
-+	pcn_kmsg_done(req);
-+
-+	return ret;
-+}
-+
-+static int __fork_remote_thread(clone_request_t *req)
-+{
-+	struct remote_thread_params *params;
-+	params = kmalloc(sizeof(*params), GFP_KERNEL);
-+	params->req = req;
-+
-+	/* The loop deals with signals between concurrent migration */
-+	while (kernel_thread(remote_thread_main, params,
-+					CLONE_THREAD | CLONE_SIGHAND | SIGCHLD) < 0) {
-+		schedule();
-+	}
-+	return 0;
-+}
-+
-+static int __construct_mm(clone_request_t *req, struct remote_context *rc)
-+{
-+	struct mm_struct *mm;
-+	struct file *f;
-+	struct rlimit rlim_stack;
-+
-+	if(!(mm = mm_alloc())) {
-+		return -ENOMEM;
-+	}
-+
-+	task_lock(current->group_leader);
-+	rlim_stack = current->signal->rlim[RLIMIT_STACK];
-+	task_unlock(current->group_leader);
-+
-+	arch_pick_mmap_layout(mm, &rlim_stack);
-+
-+	f = filp_open(req->exe_path, O_RDONLY | O_LARGEFILE | O_EXCL, 0);
-+	if (IS_ERR(f)) {
-+		PCNPRINTK_ERR("cannot open executable from %s\n", req->exe_path);
-+		mmdrop(mm);
-+		return -EINVAL;
-+	}
-+	set_mm_exe_file(mm, f);
-+	filp_close(f, NULL);
-+
-+	mm->task_size = req->task_size;
-+	mm->start_stack = req->stack_start;
-+	mm->start_brk = req->start_brk;
-+	mm->brk = req->brk;
-+	mm->env_start = req->env_start;
-+	mm->env_end = req->env_end;
-+	mm->arg_start = req->arg_start;
-+	mm->arg_end = req->arg_end;
-+	mm->start_code = req->start_code;
-+	mm->end_code = req->end_code;
-+	mm->start_data = req->start_data;
-+	mm->end_data = req->end_data;
-+	mm->def_flags = req->def_flags;
-+
-+	use_mm(mm);
-+
-+	rc->mm = mm;  /* No need to increase mm_users due to mm_alloc() */
-+	mm->remote = rc;
-+
-+	return 0;
-+}
-+
-+static void __terminate_remote_threads(struct remote_context *rc)
-+{
-+	struct task_struct *tsk;
-+
-+	/* Terminate userspace threads. Tried to use do_group_exit() but it
-+	 * didn't work */
-+	rcu_read_lock();
-+	for_each_thread(current, tsk) {
-+		if (tsk->is_worker)
-+			continue;
-+		force_sig(current->exit_code, tsk);
-+	}
-+	rcu_read_unlock();
-+}
-+
-+static void __run_remote_worker(struct remote_context *rc)
-+{
-+	while (!rc->stop_remote_worker) {
-+		struct work_struct *work = NULL;
-+		struct pcn_kmsg_message *msg;
-+		int wait_ret;
-+		unsigned long flags;
-+
-+		wait_ret = wait_for_completion_interruptible_timeout(
-+					&rc->remote_works_ready, HZ);
-+		if (wait_ret == 0)
-+			continue;
-+
-+		spin_lock_irqsave(&rc->remote_works_lock, flags);
-+
-+		if (!list_empty(&rc->remote_works)) {
-+			work = list_first_entry(
-+					&rc->remote_works, struct work_struct, entry);
-+			list_del(&work->entry);
-+		}
-+		spin_unlock_irqrestore(&rc->remote_works_lock, flags);
-+
-+		if (!work)
-+			continue;
-+
-+		msg = ((struct pcn_kmsg_work *)work)->msg;
-+
-+		switch (msg->header.type) {
-+		case PCN_KMSG_TYPE_TASK_MIGRATE:
-+			__fork_remote_thread((clone_request_t *)msg);
-+			break;
-+		case PCN_KMSG_TYPE_VMA_OP_REQUEST:
-+			process_vma_op_request((vma_op_request_t *)msg);
-+			break;
-+		case PCN_KMSG_TYPE_TASK_EXIT_ORIGIN:
-+			process_origin_task_exit(rc, (origin_task_exit_t *)msg);
-+			break;
-+		default:
-+			printk("Unknown remote work type %d\n", msg->header.type);
-+			break;
-+		}
-+
-+		/* msg is released (pcn_kmsg_done()) in each handler */
-+		kfree(work);
-+	}
-+}
-+
-+struct remote_worker_params {
-+	clone_request_t *req;
-+	struct remote_context *rc;
-+	char comm[TASK_COMM_LEN];
-+};
-+
-+static int remote_worker_main(void *data)
-+{
-+	struct remote_worker_params *params = (struct remote_worker_params *)data;
-+	struct remote_context *rc = params->rc;
-+	clone_request_t *req = params->req;
-+	int mm_err = 0;
-+
-+	might_sleep();
-+	kfree(params);
-+
-+	PSPRINTK("%s: [%d] for [%d/%d]\n", __func__,
-+			current->pid, req->origin_tgid, PCN_KMSG_FROM_NID(req));
-+	PSPRINTK("%s: [%d] %s\n", __func__,
-+			current->pid, req->exe_path);
-+
-+	current->flags &= ~PF_RANDOMIZE;	/* Disable ASLR for now*/
-+	current->flags &= ~PF_KTHREAD;	/* Demote to a user thread */
-+
-+	current->personality = req->personality;
-+	current->is_worker = true;
-+	current->at_remote = true;
-+	current->origin_nid = PCN_KMSG_FROM_NID(req);
-+	current->origin_pid = req->origin_pid;
-+
-+	set_user_nice(current, 0);
-+
-+	if ((mm_err = __construct_mm(req, rc))) {
-+		return mm_err;
-+	}
-+
-+	get_task_remote(current);
-+	rc->tgid = current->tgid;
-+
-+	__run_remote_worker(rc);
-+
-+	__terminate_remote_threads(rc);
-+
-+	put_task_remote(current);
-+	return current->exit_code;
-+}
-+
-+static void __schedule_remote_work(struct remote_context *rc,
-+				   struct pcn_kmsg_work *work)
-+{
-+	/* Exploit the list_head in work_struct */
-+	struct list_head *entry = &((struct work_struct *)work)->entry;
-+	unsigned long flags;
-+
-+	INIT_LIST_HEAD(entry);
-+	spin_lock_irqsave(&rc->remote_works_lock, flags);
-+	list_add(entry, &rc->remote_works);
-+	spin_unlock_irqrestore(&rc->remote_works_lock, flags);
-+
-+	complete(&rc->remote_works_ready);
-+}
-+
-+static void clone_remote_thread(struct work_struct *_work)
-+{
-+	struct pcn_kmsg_work *work = (struct pcn_kmsg_work *)_work;
-+	clone_request_t *req = work->msg;
-+	int nid_from = PCN_KMSG_FROM_NID(req);
-+	int tgid_from = req->origin_tgid;
-+	struct remote_context *rc;
-+	struct remote_context *rc_new =
-+			__alloc_remote_context(nid_from, tgid_from, true);
-+
-+	BUG_ON(!rc_new);
-+
-+	__lock_remote_contexts(remote_contexts_lock, INDEX_INBOUND);
-+	rc = __lookup_remote_contexts_in(nid_from, tgid_from);
-+	if (!rc) {
-+		struct remote_worker_params *params;
-+
-+		rc = rc_new;
-+		rc->remote_tgids[nid_from] = tgid_from;
-+		list_add(&rc->list, remote_contexts + INDEX_INBOUND);
-+		__unlock_remote_contexts(remote_contexts_lock, INDEX_INBOUND);
-+
-+		params = kmalloc(sizeof(*params), GFP_KERNEL);
-+		BUG_ON(!params);
-+
-+		params->rc = rc;
-+		params->req = req;
-+		__build_task_comm(params->comm, req->exe_path);
-+		smp_wmb();
-+
-+		rc->remote_worker =
-+				kthread_run(remote_worker_main, params, params->comm);
-+	} else {
-+		__unlock_remote_contexts(remote_contexts_lock, INDEX_INBOUND);
-+		kfree(rc_new);
-+	}
-+
-+	/* Schedule this fork request */
-+	__schedule_remote_work(rc, work);
-+	return;
-+}
-+
-+static int handle_clone_request(struct pcn_kmsg_message *msg)
-+{
-+	clone_request_t *req = (clone_request_t *)msg;
-+	struct pcn_kmsg_work *work = kmalloc(sizeof(*work), GFP_ATOMIC);
-+	if(!work)
-+		return -ENOMEM;
-+
-+	work->msg = req;
-+	INIT_WORK((struct work_struct *)work, clone_remote_thread);
-+	queue_work(popcorn_wq, (struct work_struct *)work);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Handle remote works at the origin
-+ */
-+int request_remote_work(pid_t pid, struct pcn_kmsg_message *req)
-+{
-+	struct task_struct *tsk = __get_task_struct(pid);
-+
-+	if (!tsk) {
-+		printk(KERN_INFO"%s: invalid origin task %d for remote work %d\n",
-+				__func__, pid, req->header.type);
-+		pcn_kmsg_done(req);
-+		return -ESRCH;
-+	}
-+
-+	/*
-+	 * Origin-initiated remote works are node-wide operations, thus, enqueue
-+	 * such requests into the remote work queue.
-+	 * On the other hand, remote-initated remote works are thread-wise requests.
-+	 * So, pending the requests to the per-thread work queue.
-+	 */
-+	if (tsk->at_remote) {
-+		struct remote_context *rc = get_task_remote(tsk);
-+		struct pcn_kmsg_work *work = kmalloc(sizeof(*work), GFP_ATOMIC);
-+
-+		BUG_ON(!tsk->is_worker);
-+		work->msg = req;
-+
-+		__schedule_remote_work(rc, work);
-+
-+		__put_task_remote(rc);
-+	} else {
-+		BUG_ON(tsk->remote_work);
-+		tsk->remote_work = req;
-+		complete(&tsk->remote_work_pended);
-+	}
-+
-+	put_task_struct(tsk);
-+	return 0;
-+}
-+
-+static int __process_remote_works(void)
-+{
-+	int err = 0;
-+	bool run = true;
-+	BUG_ON(current->at_remote);
-+
-+	while (run) {
-+		struct pcn_kmsg_message *req;
-+		long ret;
-+		ret = wait_for_completion_interruptible_timeout(
-+				&current->remote_work_pended, HZ);
-+		if (ret == 0)
-+			continue;
-+
-+		req = (struct pcn_kmsg_message *)current->remote_work;
-+		current->remote_work = NULL;
-+		smp_wmb();
-+
-+		if (!req)
-+			continue;
-+
-+		switch (req->header.type) {
-+		case PCN_KMSG_TYPE_VMA_OP_REQUEST:
-+			process_vma_op_request((vma_op_request_t *)req);
-+			break;
-+		case PCN_KMSG_TYPE_VMA_INFO_REQUEST:
-+			process_vma_info_request((vma_info_request_t *)req);
-+			break;
-+		case PCN_KMSG_TYPE_FUTEX_REQUEST:
-+			err = process_remote_futex_request((remote_futex_request *)req);
-+			break;
-+		case PCN_KMSG_TYPE_TASK_EXIT_REMOTE:
-+			process_remote_task_exit((remote_task_exit_t *)req);
-+			run = false;
-+			break;
-+		case PCN_KMSG_TYPE_TASK_MIGRATE_BACK:
-+			process_back_migration((back_migration_request_t *)req);
-+			run = false;
-+			break;
-+		default:
-+			if (WARN_ON("Received unsupported remote work")) {
-+				printk("  type: %d\n", req->header.type);
-+			}
-+		}
-+	}
-+	return err;
-+}
-+
-+/*
-+ * Send a message to <dst_nid> for migrating a task <task>.
-+ * This function will ask the remote node to create a thread to host the task.
-+ * It returns <0 in error case.
-+ */
-+static int __request_clone_remote(int dst_nid, struct task_struct *tsk,
-+				  void __user *uregs)
-+{
-+	struct mm_struct *mm = get_task_mm(tsk);
-+	clone_request_t *req;
-+	int ret = 0;
-+	int size = 0;
-+
-+	req = pcn_kmsg_get(sizeof(*req));
-+
-+	if (!req) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	/* struct mm_struct */
-+	if (get_file_path(mm->exe_file, req->exe_path, sizeof(req->exe_path))) {
-+		printk("%s: cannot get path to exe binary\n", __func__);
-+		ret = -ESRCH;
-+		pcn_kmsg_put(req);
-+		goto out;
-+	}
-+
-+	req->task_size = mm->task_size;
-+	req->stack_start = mm->start_stack;
-+	req->start_brk = mm->start_brk;
-+	req->brk = mm->brk;
-+	req->env_start = mm->env_start;
-+	req->env_end = mm->env_end;
-+	req->arg_start = mm->arg_start;
-+	req->arg_end = mm->arg_end;
-+	req->start_code = mm->start_code;
-+	req->end_code = mm->end_code;
-+	req->start_data = mm->start_data;
-+	req->end_data = mm->end_data;
-+	req->def_flags = mm->def_flags;
-+
-+	/* struct tsk_struct */
-+	req->origin_tgid = tsk->tgid;
-+	req->origin_pid = tsk->pid;
-+
-+	req->personality = tsk->personality;
-+
-+	/* Register sets from userspace */
-+	size = regset_size(get_popcorn_node_arch(dst_nid));
-+	if(!size) {
-+		return -EINVAL;
-+
-+	}
-+	ret = copy_from_user(&req->arch.regsets, uregs,
-+			     size);
-+
-+	save_thread_info(&req->arch);
-+
-+	ret = pcn_kmsg_post(PCN_KMSG_TYPE_TASK_MIGRATE, dst_nid, req, sizeof(*req));
-+
-+out:
-+	mmput(mm);
-+	return ret;
-+}
-+
-+/*
-+ * do_migration takes care of the original process migration
-+ * to a remote node. Its complementary function being
-+ * do_back_migration which returns a process from a remote node
-+ * back to the origin node.
-+ *
-+ * The first thread gets migrated attaches the remote context to
-+ * mm->remote, which indicates some threads in this process is
-+ * distributed. At this point tsk->remote gets a link to the
-+ * remote context.
-+ *
-+ */
-+static int __do_migration(struct task_struct *tsk, int dst_nid,
-+			  void __user *uregs)
-+{
-+	int ret = 0;
-+	struct remote_context *rc;
-+
-+	rc = __alloc_remote_context(my_nid, tsk->tgid, false);
-+	if (IS_ERR(rc))
-+		return PTR_ERR(rc);
-+
-+	if (cmpxchg(&tsk->mm->remote, 0, rc)) {
-+		kfree(rc);
-+	} else {
-+		rc->mm = tsk->mm;
-+		rc->remote_tgids[my_nid] = tsk->tgid;
-+
-+		__lock_remote_contexts(remote_contexts_lock, INDEX_OUTBOUND);
-+		list_add(&rc->list, remote_contexts + INDEX_OUTBOUND);
-+		__unlock_remote_contexts(remote_contexts_lock, INDEX_OUTBOUND);
-+	}
-+
-+	tsk->remote = get_task_remote(tsk);
-+
-+	ret = __request_clone_remote(dst_nid, tsk, uregs);
++	ret = vm_munmap(start, len);
 +	if (ret)
 +		return ret;
 +
-+	ret = __process_remote_works();
++	if(!(req = __alloc_vma_op_request(VMA_OP_MUNMAP)))
++		return -ENOMEM;
++
++	req->addr = start;
++	req->len = len;
++
++	ret = __delegate_vma_op(req, &res);
++
++	VSPRINTK("  [%d] %d %lx -- %lx\n", current->pid,
++			ret, res->addr, res->addr + res->len);
++
++	kfree(req);
++	pcn_kmsg_done(res);
++
 +	return ret;
 +}
 +
-+/*
-+ * Migrate the specified task <task> to node <dst_nid>
-+ * Currently, this function will put the specified task to sleep,
-+ * and push its info over to the remote node.
-+ * The remote node will then create a new thread and import that
-+ * info into its new context.
-+ */
-+int process_server_do_migration(struct task_struct *tsk, unsigned int dst_nid,
-+				void __user *uregs)
++int vma_server_brk_remote(unsigned long oldbrk, unsigned long brk)
 +{
-+	int ret = 0;
++	int ret;
++	vma_op_request_t *req;
++	vma_op_response_t *res;
 +
-+	if (tsk->origin_nid == dst_nid) {
-+		ret = __do_back_migration(tsk, dst_nid, uregs);
-+	} else {
-+		ret = __do_migration(tsk, dst_nid, uregs);
-+		if (ret) {
-+			tsk->remote = NULL;
-+			tsk->remote_pid = tsk->remote_nid = -1;
-+			put_task_remote(tsk);
++	if(!(req = __alloc_vma_op_request(VMA_OP_BRK)))
++		return -ENOMEM;
++
++	req->brk = brk;
++
++	VSPRINTK("\n## VMA brk-ed [%d] %lx --> %lx\n", current->pid, oldbrk, brk);
++
++	ret = __delegate_vma_op(req, &res);
++
++	VSPRINTK("  [%d] %d %lx\n", current->pid, ret, res->brk);
++
++	kfree(req);
++	pcn_kmsg_done(res);
++
++	return ret;
++}
++
++int vma_server_madvise_remote(unsigned long start, size_t len, int behavior)
++{
++	int ret;
++	vma_op_request_t *req;
++	vma_op_response_t *res;
++
++	if(!(req = __alloc_vma_op_request(VMA_OP_MADVISE)))
++		return -ENOMEM;
++
++	req->addr = start;
++	req->len = len;
++	req->behavior = behavior;
++
++	VSPRINTK("\n## VMA madvise-d [%d] %lx %lx %d\n", current->pid,
++			start, len, behavior);
++
++	ret = __delegate_vma_op(req, &res);
++
++	VSPRINTK("  [%d] %d %lx -- %lx %d\n", current->pid,
++			ret, res->addr, res->addr + res->len, behavior);
++
++	kfree(req);
++	pcn_kmsg_done(res);
++
++	return ret;
++}
++
++int vma_server_mprotect_remote(unsigned long start, size_t len,
++			       unsigned long prot)
++{
++	int ret;
++	vma_op_request_t *req;
++	vma_op_response_t *res;
++
++	if(!(req = __alloc_vma_op_request(VMA_OP_MPROTECT)))
++		return -ENOMEM;
++
++	req->start = start;
++	req->len = len;
++	req->prot = prot;
++
++	VSPRINTK("\nVMA mprotect [%d] %lx %lx %lx\n", current->pid,
++			start, len, prot);
++
++	ret = __delegate_vma_op(req, &res);
++
++	VSPRINTK("  [%d] %d %lx -- %lx %lx\n", current->pid,
++			ret, res->start, res->start + res->len, prot);
++
++	kfree(req);
++	pcn_kmsg_done(res);
++
++	return ret;
++}
++
++int vma_server_mremap_remote(unsigned long addr, unsigned long old_len,
++			     unsigned long new_len, unsigned long flags,
++			     unsigned long new_addr)
++{
++	WARN_ON_ONCE("Does not support remote mremap yet");
++	VSPRINTK("\nVMA mremap [%d] %lx %lx %lx %lx %lx\n", current->pid,
++			addr, old_len, new_len, flags, new_addr);
++	return -EINVAL;
++}
++
++
++/*
++ * VMA handlers for origin
++ */
++int vma_server_munmap_origin(unsigned long start, size_t len, int nid_except)
++{
++	int nid;
++	vma_op_request_t *req;
++	struct remote_context *rc = get_task_remote(current);
++
++	if(!(req = __alloc_vma_op_request(VMA_OP_MUNMAP)))
++		return -ENOMEM;
++
++	req->start = start;
++	req->len = len;
++
++	for (nid = 0; nid < MAX_POPCORN_NODES; nid++) {
++		struct wait_station *ws;
++		vma_op_response_t *res;
++
++		if (!get_popcorn_node_online(nid) || !rc->remote_tgids[nid])
++			continue;
++
++		if (nid == my_nid || nid == nid_except)
++			continue;
++
++		ws = get_wait_station(current);
++		req->remote_ws = ws->id;
++		req->origin_pid = rc->remote_tgids[nid];
++
++		VSPRINTK("  [%d] ->munmap [%d/%d] %lx+%lx\n", current->pid,
++				req->origin_pid, nid, start, len);
++		pcn_kmsg_send(PCN_KMSG_TYPE_VMA_OP_REQUEST, nid, req, sizeof(*req));
++		res = wait_at_station(ws);
++	}
++	kfree(req);
++	put_task_remote(current);
++
++	vm_munmap(start, len);
++	return 0;
++}
++
++/*
++ * VMA worker
++ *
++ * We do this because functions related to memory mapping operate
++ * on "current". Thus, we need mmap/munmap/madvise in our process
++ */
++static void __reply_vma_op(vma_op_request_t *req, long ret)
++{
++	vma_op_response_t *res = pcn_kmsg_get(sizeof(*res));
++
++	res->origin_pid = current->pid;
++	res->remote_pid = req->remote_pid;
++	res->remote_ws = req->remote_ws;
++
++	res->operation = req->operation;
++	res->ret = ret;
++	res->addr = req->addr;
++	res->len = req->len;
++
++	pcn_kmsg_post(PCN_KMSG_TYPE_VMA_OP_RESPONSE,
++			PCN_KMSG_FROM_NID(req), res, sizeof(*res));
++}
++
++/*
++ * Handle delegated VMA operations
++ * Currently, the remote worker only handles munmap VMA operations.
++ */
++static long __process_vma_op_at_remote(vma_op_request_t *req)
++{
++	long ret = -EPERM;
++
++	switch (req->operation) {
++	case VMA_OP_MUNMAP:
++		ret = vm_munmap(req->addr, req->len);
++		break;
++	case VMA_OP_MMAP:
++	case VMA_OP_MPROTECT:
++	case VMA_OP_MREMAP:
++	case VMA_OP_BRK:
++	case VMA_OP_MADVISE:
++		WARN_ON("Not implemented yet");
++		break;
++	default:
++		WARN_ON("unreachable");
++	}
++	return ret;
++}
++
++static long __process_vma_op_at_origin(vma_op_request_t *req)
++{
++	long ret = -EPERM;
++	int from_nid = PCN_KMSG_FROM_NID(req);
++
++	switch (req->operation) {
++	case VMA_OP_MMAP: {
++		unsigned long populate = 0;
++		unsigned long raddr;
++		struct file *f = NULL;
++		struct mm_struct *mm = get_task_mm(current);
++
++		if (req->path[0] != '\0')
++			f = filp_open(req->path, O_RDONLY | O_LARGEFILE, 0);
++
++		if (IS_ERR(f)) {
++			ret = PTR_ERR(f);
++			printk("  [%d] Cannot open %s %ld\n", current->pid, req->path, ret);
++			mmput(mm);
++			break;
 +		}
++		down_write(&mm->mmap_sem);
++		raddr = do_mmap_pgoff(f, req->addr, req->len, req->prot,
++				      req->flags, req->pgoff, &populate, NULL);
++		up_write(&mm->mmap_sem);
++		if (populate)
++			mm_populate(raddr, populate);
++
++		ret = IS_ERR_VALUE(raddr) ? raddr : 0;
++		req->addr = raddr;
++		VSPRINTK("  [%d] %lx %lx -- %lx %lx %lx\n", current->pid,
++				ret, req->addr, req->addr + req->len, req->prot, req->flags);
++
++		if (f)
++			filp_close(f, NULL);
++		mmput(mm);
++		break;
++	}
++	case VMA_OP_BRK: {
++		unsigned long brk = req->brk;
++		req->brk = ksys_brk(req->brk);
++		ret = brk != req->brk;
++		break;
++	}
++	case VMA_OP_MUNMAP:
++		ret = vma_server_munmap_origin(req->addr, req->len, from_nid);
++		break;
++	case VMA_OP_MPROTECT:
++		ret = ksys_mprotect(req->addr, req->len, req->prot);
++		break;
++	case VMA_OP_MREMAP:
++		ret = ksys_mremap(req->addr, req->old_len, req->new_len,
++				  req->flags, req->new_addr);
++		break;
++	case VMA_OP_MADVISE:
++		if (req->behavior == MADV_RELEASE) {
++			ret = process_madvise_release_from_remote(
++					from_nid, req->start, req->start + req->len);
++		} else {
++			ret = ksys_madvise(req->start, req->len, req->behavior);
++		}
++		break;
++	default:
++		WARN_ON("unreachable");
 +	}
 +
 +	return ret;
 +}
 +
-+DEFINE_KMSG_RW_HANDLER(origin_task_exit, origin_task_exit_t, remote_pid);
-+DEFINE_KMSG_RW_HANDLER(remote_task_exit, remote_task_exit_t, origin_pid);
-+DEFINE_KMSG_RW_HANDLER(back_migration, back_migration_request_t, origin_pid);
-+DEFINE_KMSG_RW_HANDLER(remote_futex_request, remote_futex_request, origin_pid);
++void process_vma_op_request(vma_op_request_t *req)
++{
++	long ret = 0;
++	VSPRINTK("\nVMA_OP_REQUEST [%d] %s %lx %lx\n", current->pid,
++			vma_op_code_sz[req->operation], req->addr, req->len);
++
++	if (current->at_remote) {
++		ret = __process_vma_op_at_remote(req);
++	} else {
++		ret = __process_vma_op_at_origin(req);
++	}
++
++	VSPRINTK("  [%d] ->%s %ld\n", current->pid,
++			vma_op_code_sz[req->operation], ret);
++
++	__reply_vma_op(req, ret);
++	pcn_kmsg_done(req);
++}
 +
 +/*
-+ * Initialize the process server.
++ * Response for remote VMA request and handling the response
 + */
-+int __init process_server_init(void)
++struct vma_info {
++	struct list_head list;
++	unsigned long addr;
++	atomic_t pendings;
++	struct completion complete;
++	wait_queue_head_t pendings_wait;
++
++	volatile int ret;
++	volatile vma_info_response_t *response;
++};
++
++static struct vma_info *__lookup_pending_vma_request(struct remote_context *rc,
++						     unsigned long addr)
 +{
-+	INIT_LIST_HEAD(&remote_contexts[0]);
-+	INIT_LIST_HEAD(&remote_contexts[1]);
++	struct vma_info *vi;
 +
-+	spin_lock_init(&remote_contexts_lock[0]);
-+	spin_lock_init(&remote_contexts_lock[1]);
++	list_for_each_entry(vi, &rc->vmas, list) {
++		if (vi->addr == addr) return vi;
++	}
++	return NULL;
++}
 +
-+	/* Register handlers */
-+	REGISTER_KMSG_HANDLER(PCN_KMSG_TYPE_TASK_MIGRATE, clone_request);
-+	REGISTER_KMSG_HANDLER(PCN_KMSG_TYPE_TASK_MIGRATE_BACK, back_migration);
-+	REGISTER_KMSG_HANDLER(PCN_KMSG_TYPE_TASK_PAIRING, remote_task_pairing);
++static int handle_vma_info_response(struct pcn_kmsg_message *msg)
++{
++	vma_info_response_t *res = (vma_info_response_t *)msg;
++	struct task_struct *tsk;
++	unsigned long flags;
++	struct vma_info *vi;
++	struct remote_context *rc;
 +
-+	REGISTER_KMSG_HANDLER(PCN_KMSG_TYPE_TASK_EXIT_REMOTE, remote_task_exit);
-+	REGISTER_KMSG_HANDLER(PCN_KMSG_TYPE_TASK_EXIT_ORIGIN, origin_task_exit);
++	tsk = __get_task_struct(res->remote_pid);
++	if (WARN_ON(!tsk)) {
++		goto out_free;
++	}
++	rc = get_task_remote(tsk);
 +
-+	REGISTER_KMSG_HANDLER(PCN_KMSG_TYPE_FUTEX_REQUEST, remote_futex_request);
-+	REGISTER_KMSG_HANDLER(PCN_KMSG_TYPE_FUTEX_RESPONSE, remote_futex_response);
++	spin_lock_irqsave(&rc->vmas_lock, flags);
++	vi = __lookup_pending_vma_request(rc, res->addr);
++	spin_unlock_irqrestore(&rc->vmas_lock, flags);
++	put_task_remote(tsk);
++	put_task_struct(tsk);
++
++	if (WARN_ON(!vi)) {
++		goto out_free;
++	}
++
++	vi->response = res;
++	complete(&vi->complete);
++	return 0;
++
++out_free:
++	pcn_kmsg_done(res);
++	return 0;
++}
++
++/*
++ * Handle VMA info requests at the origin.
++ * This is invoked through the remote work delegation.
++ */
++void process_vma_info_request(vma_info_request_t *req)
++{
++	vma_info_response_t *res = NULL;
++	struct mm_struct *mm;
++	struct vm_area_struct *vma;
++	unsigned long addr = req->addr;
++
++	might_sleep();
++
++	while (!res) {
++		res = kmalloc(sizeof(*res), GFP_KERNEL);
++	}
++	res->addr = addr;
++
++	mm = get_task_mm(current);
++	down_read(&mm->mmap_sem);
++
++	vma = find_vma(mm, addr);
++	if (unlikely(!vma)) {
++		printk("vma_info: vma does not exist at %lx\n", addr);
++		res->result = -ENOENT;
++		goto out_up;
++	}
++	if (likely(vma->vm_start <= addr)) {
++		goto good;
++	}
++	if (unlikely(!(vma->vm_flags & VM_GROWSDOWN))) {
++		printk("vma_info: vma does not really exist at %lx\n", addr);
++		res->result = -ENOENT;
++		goto out_up;
++	}
++
++good:
++	res->vm_start = vma->vm_start;
++	res->vm_end = vma->vm_end;
++	res->vm_flags = vma->vm_flags;
++	res->vm_pgoff = vma->vm_pgoff;
++
++	get_file_path(vma->vm_file, res->vm_file_path, sizeof(res->vm_file_path));
++	res->result = 0;
++
++out_up:
++	up_read(&mm->mmap_sem);
++	mmput(mm);
++
++	if (res->result == 0) {
++		VSPRINTK("\n## VMA_INFO [%d] %lx -- %lx %lx\n", current->pid,
++				res->vm_start, res->vm_end, res->vm_flags);
++		if (!vma_info_anon(res)) {
++			VSPRINTK("  [%d] %s + %lx\n", current->pid,
++					res->vm_file_path, res->vm_pgoff);
++		}
++	}
++
++	res->remote_pid = req->remote_pid;
++	pcn_kmsg_send(PCN_KMSG_TYPE_VMA_INFO_RESPONSE,
++			PCN_KMSG_FROM_NID(req), res, sizeof(*res));
++
++	pcn_kmsg_done(req);
++	kfree(res);
++	return;
++}
++
++
++static struct vma_info *__alloc_vma_info_request(struct task_struct *tsk,
++						 unsigned long addr,
++						 vma_info_request_t **preq)
++{
++	struct vma_info *vi = kmalloc(sizeof(*vi), GFP_KERNEL);
++	vma_info_request_t *req = kmalloc(sizeof(*req), GFP_KERNEL);
++
++	if(!vi || !req)
++		return vi;
++
++	INIT_LIST_HEAD(&vi->list);
++	vi->addr = addr;
++	vi->response = (volatile vma_info_response_t *)0xdeadbeaf;
++	atomic_set(&vi->pendings, 0);
++	init_completion(&vi->complete);
++	init_waitqueue_head(&vi->pendings_wait);
++
++	req->origin_pid = tsk->origin_pid;
++	req->remote_pid = tsk->pid;
++	req->addr = addr;
++
++	*preq = req;
++
++	return vi;
++}
++
++static int __update_vma(struct task_struct *tsk, vma_info_response_t *res)
++{
++	struct mm_struct *mm = tsk->mm;
++	struct vm_area_struct *vma;
++	unsigned long prot;
++	unsigned flags = MAP_FIXED;
++	struct file *f = NULL;
++	unsigned long err = 0;
++	int ret = 0;
++	unsigned long addr = res->addr;
++
++	if (res->result) {
++		down_read(&mm->mmap_sem);
++		return res->result;
++	}
++
++	while (!down_write_trylock(&mm->mmap_sem)) {
++		schedule();
++	}
++	vma = find_vma(mm, addr);
++	VSPRINTK("  [%d] %lx %lx\n", tsk->pid, vma ? vma->vm_start : 0, addr);
++
++	if (vma && vma->vm_start <= addr)
++		goto out;
++
++	if (vma_info_anon(res)) {
++		flags |= MAP_ANONYMOUS;
++	} else {
++		f = filp_open(res->vm_file_path, O_RDONLY | O_LARGEFILE, 0);
++		if (IS_ERR(f)) {
++			printk(KERN_ERR"%s: cannot find backing file %s\n",__func__,
++				res->vm_file_path);
++			ret = -EIO;
++			goto out;
++		}
++
++		VSPRINTK("  [%d] %s + %lx\n", tsk->pid,
++				res->vm_file_path, res->vm_pgoff);
++	}
++
++	prot  = ((res->vm_flags & VM_READ) ? PROT_READ : 0)
++			| ((res->vm_flags & VM_WRITE) ? PROT_WRITE : 0)
++			| ((res->vm_flags & VM_EXEC) ? PROT_EXEC : 0);
++
++	flags = flags
++			| ((res->vm_flags & VM_DENYWRITE) ? MAP_DENYWRITE : 0)
++			| ((res->vm_flags & VM_SHARED) ? MAP_SHARED : MAP_PRIVATE)
++			| ((res->vm_flags & VM_GROWSDOWN) ? MAP_GROWSDOWN : 0);
++
++	err = map_difference(mm, f, res->vm_start, res->vm_end,
++				prot, flags, res->vm_pgoff);
++
++	if (f) filp_close(f, NULL);
++
++out:
++	downgrade_write(&mm->mmap_sem);
++	return ret;
++}
++
++/*
++ * Fetch VMA information from the origin.
++ * mm->mmap_sem is down_read() at this point and should be downed upon return.
++ */
++int vma_server_fetch_vma(struct task_struct *tsk, unsigned long address)
++{
++	struct vma_info *vi = NULL;
++	unsigned long flags;
++	DEFINE_WAIT(wait);
++	int ret = 0;
++	unsigned long addr = address & PAGE_MASK;
++	vma_info_request_t *req = NULL;
++	struct remote_context *rc = get_task_remote(tsk);
++
++	might_sleep();
++
++	VSPRINTK("\n## VMAFAULT [%d] %lx %lx\n", current->pid,
++			address, instruction_pointer(current_pt_regs()));
++
++	spin_lock_irqsave(&rc->vmas_lock, flags);
++	vi = __lookup_pending_vma_request(rc, addr);
++	if (!vi) {
++		struct vma_info *v;
++		spin_unlock_irqrestore(&rc->vmas_lock, flags);
++
++		vi = __alloc_vma_info_request(tsk, addr, &req);
++
++		if(!vi || !req)
++			return -ENOMEM;
++
++		spin_lock_irqsave(&rc->vmas_lock, flags);
++		v = __lookup_pending_vma_request(rc, addr);
++		if (!v) {
++			list_add(&vi->list, &rc->vmas);
++		} else {
++			kfree(vi);
++			vi = v;
++			kfree(req);
++			req = NULL;
++		}
++	}
++	up_read(&tsk->mm->mmap_sem);
++
++	if (req) {
++		spin_unlock_irqrestore(&rc->vmas_lock, flags);
++
++		VSPRINTK("  [%d] %lx ->[%d/%d]\n", current->pid,
++				addr, tsk->origin_pid, tsk->origin_nid);
++		pcn_kmsg_send(PCN_KMSG_TYPE_VMA_INFO_REQUEST,
++				tsk->origin_nid, req, sizeof(*req));
++		wait_for_completion(&vi->complete);
++
++		ret = vi->ret =
++			__update_vma(tsk, (vma_info_response_t *)vi->response);
++
++		spin_lock_irqsave(&rc->vmas_lock, flags);
++		list_del(&vi->list);
++		spin_unlock_irqrestore(&rc->vmas_lock, flags);
++
++		pcn_kmsg_done((void *)vi->response);
++		wake_up_all(&vi->pendings_wait);
++
++		kfree(req);
++	} else {
++		VSPRINTK("  [%d] %lx already pended\n", current->pid, addr);
++		atomic_inc(&vi->pendings);
++		prepare_to_wait(&vi->pendings_wait, &wait, TASK_UNINTERRUPTIBLE);
++		spin_unlock_irqrestore(&rc->vmas_lock, flags);
++
++		io_schedule();
++		finish_wait(&vi->pendings_wait, &wait);
++
++		smp_rmb();
++		ret = vi->ret;
++		if (atomic_dec_and_test(&vi->pendings)) {
++			kfree(vi);
++		}
++		down_read(&tsk->mm->mmap_sem);
++	}
++
++	put_task_remote(tsk);
++	return ret;
++}
++
++DEFINE_KMSG_RW_HANDLER(vma_info_request, vma_info_request_t, origin_pid);
++DEFINE_KMSG_RW_HANDLER(vma_op_request, vma_op_request_t, origin_pid);
++
++int vma_server_init(void)
++{
++	REGISTER_KMSG_HANDLER(
++			PCN_KMSG_TYPE_VMA_INFO_REQUEST, vma_info_request);
++	REGISTER_KMSG_HANDLER(
++			PCN_KMSG_TYPE_VMA_INFO_RESPONSE, vma_info_response);
++
++	REGISTER_KMSG_HANDLER(PCN_KMSG_TYPE_VMA_OP_REQUEST, vma_op_request);
++	REGISTER_KMSG_HANDLER(PCN_KMSG_TYPE_VMA_OP_RESPONSE, vma_op_response);
 +
 +	return 0;
 +}
-diff --git a/kernel/popcorn/process_server.h b/kernel/popcorn/process_server.h
+diff --git a/kernel/popcorn/vma_server.h b/kernel/popcorn/vma_server.h
 new file mode 100644
-index 000000000..22e8f51f1
+index 000000000..7ca760a85
 --- /dev/null
-+++ b/kernel/popcorn/process_server.h
-@@ -0,0 +1,21 @@
++++ b/kernel/popcorn/vma_server.h
+@@ -0,0 +1,24 @@
 +// SPDX-License-Identifier: GPL-2.0, BSD
-+#ifndef __INTERNAL_PROCESS_SERVER_H__
-+#define __INTERNAL_PROCESS_SERVER_H__
++#ifndef __INTERNAL_VMA_SERVER_H_
++#define __INTERNAL_VMA_SERVER_H_
 +
-+#include <popcorn/process_server.h>
++#include <popcorn/vma_server.h>
 +
-+enum {
-+	INDEX_OUTBOUND = 0,
-+	INDEX_INBOUND = 1,
++enum vma_op_code {
++	VMA_OP_NOP = -1,
++	VMA_OP_MMAP,
++	VMA_OP_MUNMAP,
++	VMA_OP_MPROTECT,
++	VMA_OP_MREMAP,
++	VMA_OP_MADVISE,
++	VMA_OP_BRK,
++	VMA_OP_MAX,
 +};
 +
-+struct task_struct;
-+struct field_arch;
++struct remote_context;
 +
-+inline void __lock_remote_contexts(spinlock_t *remote_contexts_lock, int index);
-+inline void __unlock_remote_contexts(spinlock_t *remote_contexts_lock,
-+				     int index);
++void process_vma_info_request(vma_info_request_t *req);
 +
-+int save_thread_info(struct field_arch *arch);
-+int restore_thread_info(struct field_arch *arch, bool restore_segments);
-+#endif /* __INTERNAL_PROCESS_SERVER_H_ */
++void process_vma_op_request(vma_op_request_t *req);
++
++#endif /* __INTERNAL_VMA_SERVER_H_ */
 -- 
 2.17.1
 
