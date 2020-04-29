@@ -2,112 +2,260 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9A0C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60637C8300B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D37872072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B0E020575
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:33:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgD2EbO (ORCPT
+        id S1726816AbgD2Edc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 00:31:14 -0400
-Received: from smtprelay0037.hostedemail.com ([216.40.44.37]:43600 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726305AbgD2EbN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 00:31:13 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id C1819181D341E;
-        Wed, 29 Apr 2020 04:31:12 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: salt06_61b932e2e7907
-X-Filterd-Recvd-Size: 2810
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf17.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 29 Apr 2020 04:31:11 +0000 (UTC)
-Message-ID: <0dcf9712a49968da1935061de130bc3668e63088.camel@perches.com>
-Subject: Re: [PATCH 1/3] staging: qlge: Remove multi-line dereferences from
- qlge_main.c
-From:   Joe Perches <joe@perches.com>
-To:     Rylan Dmello <mail@rylan.coffee>,
-        Manish Chopra <manishc@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 28 Apr 2020 21:31:10 -0700
-In-Reply-To: <aae9feb569c60758ab09c923c09b600295f4cb32.1588132908.git.mail@rylan.coffee>
-References: <aae9feb569c60758ab09c923c09b600295f4cb32.1588132908.git.mail@rylan.coffee>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Wed, 29 Apr 2020 00:33:32 -0400
+Received: from mga12.intel.com ([192.55.52.136]:18221 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726305AbgD2Edb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 00:33:31 -0400
+IronPort-SDR: TlPUM3AHyX2zWqC4wOOJURR66gAhVzodzXV1h/ducmomjyjmXAXJe6a2+9dRx7TqIINaMPK/jZ
+ yYRLr+Az/yXQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 21:33:31 -0700
+IronPort-SDR: 85dDf45wB06mg376sxTfHU6qK6/V1dAHwoSAhO4D0ws9EY3D06AJzT5SwSM3lvNpoEJvSs9Ask
+ C1ovlIcIZVNA==
+X-IronPort-AV: E=Sophos;i="5.73,330,1583222400"; 
+   d="scan'208";a="246725444"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 21:33:30 -0700
+From:   ira.weiny@intel.com
+To:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Al Viro <viro@zeniv.linux.org.uk>,
+        Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: [PATCH V11.2] Documentation/dax: Update Usage section
+Date:   Tue, 28 Apr 2020 21:33:28 -0700
+Message-Id: <20200429043328.411431-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200428222145.409961-1-ira.weiny@intel.com>
+References: <20200428222145.409961-1-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-29 at 00:04 -0400, Rylan Dmello wrote:
-> Fix checkpatch.pl warnings:
-> 
->   WARNING: Avoid multiple line dereference - prefer 'qdev->func'
->   WARNING: Avoid multiple line dereference - prefer 'qdev->flags'
+From: Ira Weiny <ira.weiny@intel.com>
 
-Assuming you are doing this for exercise:
+Update the Usage section to reflect the new individual dax selection
+functionality.
 
-It'd be better to unindent all the switch/case
-blocks for the entire function so more functions
-fit on single lines
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-	switch (foo) {
-	case bar:
-		{
-			...;
+---
+Changes from V11.1:
+	Make filesystem/file system consistently filesystem
+	grammatical fixes
 
-should be:
+Changes from V11:
+	Minor changes from Darrick
 
-	switch (foo) {
-	case bar: {
-		...;
+Changes from V10:
+	Clarifications from Dave
+	Add '-c' to xfs_io examples
 
-goto exit; might as well be break; and remove
-the exit label too.
+Changes from V9:
+	Fix missing ')'
+	Fix trailing '"' (fixed this!)
 
-> Signed-off-by: Rylan Dmello <mail@rylan.coffee>
-> ---
->  drivers/staging/qlge/qlge_main.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
-> index d7e4dfafc1a3..10daae025790 100644
-> --- a/drivers/staging/qlge/qlge_main.c
-> +++ b/drivers/staging/qlge/qlge_main.c
-> @@ -396,8 +396,7 @@ static int ql_set_mac_addr_reg(struct ql_adapter *qdev, u8 *addr, u32 type,
->  			 * the route field to NIC core.
->  			 */
->  			cam_output = (CAM_OUT_ROUTE_NIC |
-> -				      (qdev->
-> -				       func << CAM_OUT_FUNC_SHIFT) |
-> +				      (qdev->func << CAM_OUT_FUNC_SHIFT) |
->  					(0 << CAM_OUT_CQ_ID_SHIFT));
->  			if (qdev->ndev->features & NETIF_F_HW_VLAN_CTAG_RX)
->  				cam_output |= CAM_OUT_RV;
-> @@ -3432,9 +3431,9 @@ static int ql_request_irq(struct ql_adapter *qdev)
->  				     &qdev->rx_ring[0]);
->  			status =
->  			    request_irq(pdev->irq, qlge_isr,
-> -					test_bit(QL_MSI_ENABLED,
-> -						 &qdev->
-> -						 flags) ? 0 : IRQF_SHARED,
-> +					test_bit(QL_MSI_ENABLED, &qdev->flags)
-> +						? 0
-> +						: IRQF_SHARED,
->  					intr_context->name, &qdev->rx_ring[0]);
->  			if (status)
->  				goto err_irq;
+Changes from V8:
+	Updates from Darrick
+
+Changes from V7:
+	Cleanups/clarifications from Darrick and Dan
+
+Changes from V6:
+	Update to allow setting FS_XFLAG_DAX any time.
+	Update with list of behaviors from Darrick
+	https://lore.kernel.org/lkml/20200409165927.GD6741@magnolia/
+
+Changes from V5:
+	Update to reflect the agreed upon semantics
+	https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
+---
+ Documentation/filesystems/dax.txt | 142 +++++++++++++++++++++++++++++-
+ 1 file changed, 139 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
+index 679729442fd2..735fb4b54117 100644
+--- a/Documentation/filesystems/dax.txt
++++ b/Documentation/filesystems/dax.txt
+@@ -20,8 +20,144 @@ Usage
+ If you have a block device which supports DAX, you can make a filesystem
+ on it as usual.  The DAX code currently only supports files with a block
+ size equal to your kernel's PAGE_SIZE, so you may need to specify a block
+-size when creating the filesystem.  When mounting it, use the "-o dax"
+-option on the command line or add 'dax' to the options in /etc/fstab.
++size when creating the filesystem.
++
++Currently 3 filesystems support DAX: ext2, ext4 and xfs.  Enabling DAX on them
++is different.
++
++Enabling DAX on ext4 and ext2
++-----------------------------
++
++When mounting the filesystem, use the "-o dax" option on the command line or
++add 'dax' to the options in /etc/fstab.  This works to enable DAX on all files
++within the filesystem.  It is equivalent to the '-o dax=always' behavior below.
++
++
++Enabling DAX on xfs
++-------------------
++
++Summary
++-------
++
++ 1. There exists an in-kernel file access mode flag S_DAX that corresponds to
++    the statx flag STATX_ATTR_DAX.  See the manpage for statx(2) for details
++    about this access mode.
++
++ 2. There exists a persistent flag FS_XFLAG_DAX that can be applied to regular
++    files and directories. This advisory flag can be set or cleared at any
++    time, but doing so does not immediately affect the S_DAX state.
++
++ 3. If the persistent FS_XFLAG_DAX flag is set on a directory, this flag will
++    be inherited by all regular files and subdirectories that are subsequently
++    created in this directory. Files and subdirectories that exist at the time
++    this flag is set or cleared on the parent directory are not modified by
++    this modification of the parent directory.
++
++ 4. There exist dax mount options which can override FS_XFLAG_DAX in the
++    setting of the S_DAX flag.  Given underlying storage which supports DAX the
++    following hold:
++
++    "-o dax=inode"  means "follow FS_XFLAG_DAX" and is the default.
++
++    "-o dax=never"  means "never set S_DAX, ignore FS_XFLAG_DAX."
++
++    "-o dax=always" means "always set S_DAX ignore FS_XFLAG_DAX."
++
++    "-o dax"        is a legacy option which is an alias for "dax=always".
++		    This may be removed in the future so "-o dax=always" is
++		    the preferred method for specifying this behavior.
++
++    NOTE: Modifications to and the inheritance behavior of FS_XFLAG_DAX remain
++    the same even when the filesystem is mounted with a dax option.  However,
++    in-core inode state (S_DAX) will be overridden until the filesystem is
++    remounted with dax=inode and the inode is evicted from kernel memory.
++
++ 5. The S_DAX policy can be changed via:
++
++    a) Setting the parent directory FS_XFLAG_DAX as needed before files are
++       created
++
++    b) Setting the appropriate dax="foo" mount option
++
++    c) Changing the FS_XFLAG_DAX flag on existing regular files and
++       directories.  This has runtime constraints and limitations that are
++       described in 6) below.
++
++ 6. When changing the S_DAX policy via toggling the persistent FS_XFLAG_DAX flag,
++    the change in behaviour for existing regular files may not occur
++    immediately.  If the change must take effect immediately, the administrator
++    needs to:
++
++    a) stop the application so there are no active references to the data set
++       the policy change will affect
++
++    b) evict the data set from kernel caches so it will be re-instantiated when
++       the application is restarted. This can be achieved by:
++
++       i. drop-caches
++       ii. a filesystem unmount and mount cycle
++       iii. a system reboot
++
++
++Details
++-------
++
++There are 2 per-file dax flags.  One is a persistent inode setting (FS_XFLAG_DAX)
++and the other is a volatile flag indicating the active state of the feature
++(S_DAX).
++
++FS_XFLAG_DAX is preserved within the filesystem.  This persistent config
++setting can be set, cleared and/or queried using the FS_IOC_FS[GS]ETXATTR ioctl
++(see ioctl_xfs_fsgetxattr(2)) or an utility such as 'xfs_io'.
++
++New files and directories automatically inherit FS_XFLAG_DAX from
++their parent directory _when_ _created_.  Therefore, setting FS_XFLAG_DAX at
++directory creation time can be used to set a default behavior for an entire
++sub-tree.
++
++To clarify inheritance, here are 3 examples:
++
++Example A:
++
++mkdir -p a/b/c
++xfs_io -c 'chattr +x' a
++mkdir a/b/c/d
++mkdir a/e
++
++	dax: a,e
++	no dax: b,c,d
++
++Example B:
++
++mkdir a
++xfs_io -c 'chattr +x' a
++mkdir -p a/b/c/d
++
++	dax: a,b,c,d
++	no dax:
++
++Example C:
++
++mkdir -p a/b/c
++xfs_io -c 'chattr +x' c
++mkdir a/b/c/d
++
++	dax: c,d
++	no dax: a,b
++
++
++The current enabled state (S_DAX) is set when a file inode is instantiated in
++memory by the kernel.  It is set based on the underlying media support, the
++value of FS_XFLAG_DAX and the filesystem's dax mount option.
++
++statx can be used to query S_DAX.  NOTE that only regular files will ever have
++S_DAX set and therefore statx will never indicate that S_DAX is set on
++directories.
++
++Setting the FS_XFLAG_DAX flag (specifically or through inheritance) occurs even
++if the underlying media does not support dax and/or the filesystem is
++overridden with a mount option.
++
+ 
+ 
+ Implementation Tips for Block Driver Writers
+@@ -94,7 +230,7 @@ sysadmins have an option to restore the lost data from a prior backup/inbuilt
+ redundancy in the following ways:
+ 
+ 1. Delete the affected file, and restore from a backup (sysadmin route):
+-   This will free the file system blocks that were being used by the file,
++   This will free the filesystem blocks that were being used by the file,
+    and the next time they're allocated, they will be zeroed first, which
+    happens through the driver, and will clear bad sectors.
+ 
+-- 
+2.25.1
 
