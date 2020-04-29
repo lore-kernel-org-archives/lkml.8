@@ -2,110 +2,96 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3C4C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C46AC83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84D832072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:40:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hTH+5zGY"
+	by mail.kernel.org (Postfix) with ESMTP id 023062085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:41:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgD2Mkt (ORCPT
+        id S1726789AbgD2MlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:40:49 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52232 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726516AbgD2Mks (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:40:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588164047;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=BjMHTfluX9v8MZZhvCrUdyjgxKC2vAgjaDfuCMkh7PQ=;
-        b=hTH+5zGYaNNalM+uysvBSzCFbZXFTV1FKbIirSkWqGQkHa7M1SbM5zRArj1R7h+Xca/dYD
-        wPVi9QB7WROSH9cxMkiny9PS64AKlxy9M/cHrlvlSNf+PjdQg+HINBq+ur63t+KRGb6JYW
-        RVzlWN2yUSExXTjMnVvHaTZy0KKtgS0=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-453-p3OWfdZkOjKgzKEEFiRnew-1; Wed, 29 Apr 2020 08:40:45 -0400
-X-MC-Unique: p3OWfdZkOjKgzKEEFiRnew-1
-Received: by mail-wr1-f72.google.com with SMTP id f15so1672487wrj.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:40:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=BjMHTfluX9v8MZZhvCrUdyjgxKC2vAgjaDfuCMkh7PQ=;
-        b=ooWI/IVFoOcdtbLPL0qe/hw39utiTH7hn3udY+IkHcgOg4QDwtptftQbD2qPz5rwHa
-         5oO5SxAvX6nZQ5aVAI0QUZ314OKuRdD2c91CYSAbrFu5Aj7tEZ7eAYDCuzuGvnHw7qkB
-         rZkQCvGFukZffm5Wn44l5yHP8AIgO0dqwVjtImA/uPL6M/Ywo9WM0oVI1ZEph75qWcYU
-         UsAK6xHVvUN3ks//Z+5CO7bu1aAKzehnX3j1VZKmD5qLrkzRvGzi6caSglIP9KCuLPOz
-         P2Tt6WtGDx4QI5u9XCdzcaICnPMjAubgR0jetH7aZXvzfECbvoTZJCRAOzFQnDQRR1Jj
-         Kj3Q==
-X-Gm-Message-State: AGi0PuarhDFcoDKE3qcE6nlHLOLbNF1eoZ2gTB1gnEklaiav9rnWd27J
-        wWYdrWbxO0S2EfzLdxCt+TbFZ+fjQ3AOeUc2XGgHD2Fab3oplDTC1hQueVqCyfcSRXkRksyyS3y
-        IV9+pRNyBRN87dywMrwOSq5Xw
-X-Received: by 2002:adf:f5ce:: with SMTP id k14mr42200026wrp.39.1588164044258;
-        Wed, 29 Apr 2020 05:40:44 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLZp4jcS3C85kE+Rk2hnA1Olxxl/7H/RjDxxqruRxr0nOa6AbCjvPxxdM01bMtyZ/8kZwX59g==
-X-Received: by 2002:adf:f5ce:: with SMTP id k14mr42199996wrp.39.1588164044066;
-        Wed, 29 Apr 2020 05:40:44 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id w11sm7350204wmi.32.2020.04.29.05.40.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 05:40:42 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, x86@kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH RFC 3/6] KVM: x86: interrupt based APF page-ready event delivery
-In-Reply-To: <546bb75a-ec00-f748-1f44-2b5299a3d3d7@redhat.com>
-References: <20200429093634.1514902-1-vkuznets@redhat.com> <20200429093634.1514902-4-vkuznets@redhat.com> <546bb75a-ec00-f748-1f44-2b5299a3d3d7@redhat.com>
-Date:   Wed, 29 Apr 2020 14:40:41 +0200
-Message-ID: <87ees6h3cm.fsf@vitty.brq.redhat.com>
+        Wed, 29 Apr 2020 08:41:01 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3382 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726516AbgD2MlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 08:41:00 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id F2D9E481BCF15DD98D02;
+        Wed, 29 Apr 2020 20:40:52 +0800 (CST)
+Received: from DESKTOP-C3MD9UG.china.huawei.com (10.166.215.55) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 29 Apr 2020 20:40:43 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH 1/1] i2c: sh_mobile: eliminate a misreported warning
+Date:   Wed, 29 Apr 2020 20:40:17 +0800
+Message-ID: <20200429124017.397-1-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.215.55]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
+The warning is caused by the branches "if (pd->pos == -1)" and
+"if (pd->pos == 0)", because they appear after "real_pos = pd->pos - 2",
+so the compiler doesn't known the value of real_pos is negative through
+these two branches.
 
-> On 29/04/20 11:36, Vitaly Kuznetsov wrote:
->> +
->> +	Type 1 page (page missing) events are currently always delivered as
->> +	synthetic #PF exception. Type 2 (page ready) are either delivered
->> +	by #PF exception (when bit 3 of MSR_KVM_ASYNC_PF_EN is clear) or
->> +	via an APIC interrupt (when bit 3 set). APIC interrupt delivery is
->> +	controlled by MSR_KVM_ASYNC_PF2.
->
-> I think we should (in the non-RFC version) block async page faults
-> completely and only keep APF_HALT unless the guest is using page ready
-> interrupt delivery.
+To avoid this warning, eliminate the middleman "data".
 
-Sure, we can do that. This is, however, a significant behavioral change:
-APF_HALT frees the host, not the guest, so even if the combined
-performance of all guests on the same pCPU remain the same guests with
-e.g. a lot of simultaneously running processes may suffer more.
+drivers/i2c/busses/i2c-sh_mobile.c: In function ‘sh_mobile_i2c_isr’:
+drivers/i2c/busses/i2c-sh_mobile.c:396:26: warning: ‘data’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+   pd->msg->buf[real_pos] = data;
+                          ^
+drivers/i2c/busses/i2c-sh_mobile.c:369:16: note: ‘data’ was declared here
+  unsigned char data;
 
-In theory, we can keep two mechanisms side by side for as long as we
-want but if the end goal is to have '#PF abuse eliminated' than we'll
-have to get rid of the legacy one some day. The day when the new
-mechanism lands is also a good choice :-)
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+---
+ drivers/i2c/busses/i2c-sh_mobile.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/i2c/busses/i2c-sh_mobile.c b/drivers/i2c/busses/i2c-sh_mobile.c
+index d83ca4028fa0..2cca1b21e26e 100644
+--- a/drivers/i2c/busses/i2c-sh_mobile.c
++++ b/drivers/i2c/busses/i2c-sh_mobile.c
+@@ -366,7 +366,6 @@ static int sh_mobile_i2c_isr_tx(struct sh_mobile_i2c_data *pd)
+ 
+ static int sh_mobile_i2c_isr_rx(struct sh_mobile_i2c_data *pd)
+ {
+-	unsigned char data;
+ 	int real_pos;
+ 
+ 	/* switch from TX (address) to RX (data) adds two interrupts */
+@@ -387,13 +386,11 @@ static int sh_mobile_i2c_isr_rx(struct sh_mobile_i2c_data *pd)
+ 		if (real_pos < 0)
+ 			i2c_op(pd, OP_RX_STOP);
+ 		else
+-			data = i2c_op(pd, OP_RX_STOP_DATA);
++			pd->msg->buf[real_pos] = i2c_op(pd, OP_RX_STOP_DATA);
+ 	} else if (real_pos >= 0) {
+-		data = i2c_op(pd, OP_RX);
++		pd->msg->buf[real_pos] = i2c_op(pd, OP_RX);
+ 	}
+ 
+-	if (real_pos >= 0)
+-		pd->msg->buf[real_pos] = data;
+  done:
+ 	pd->pos++;
+ 	return pd->pos == (pd->msg->len + 2);
 -- 
-Vitaly
+2.26.0.106.g9fadedd
+
 
