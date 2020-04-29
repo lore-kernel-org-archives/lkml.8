@@ -2,167 +2,100 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 195E9C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9B4C8300A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 037F52085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A4E1206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:39:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbgD2Ni5 (ORCPT
+        id S1728323AbgD2NjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:38:57 -0400
-Received: from 8bytes.org ([81.169.241.247]:40220 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728012AbgD2Nhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:37:51 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id A12D6EFF; Wed, 29 Apr 2020 15:37:39 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     Daniel Drake <drake@endlessm.com>, jonathan.derrick@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v3 23/34] iommu/mediatek-v1 Convert to probe/release_device() call-backs
-Date:   Wed, 29 Apr 2020 15:37:01 +0200
-Message-Id: <20200429133712.31431-24-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200429133712.31431-1-joro@8bytes.org>
-References: <20200429133712.31431-1-joro@8bytes.org>
+        Wed, 29 Apr 2020 09:39:07 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24646 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728308AbgD2NjF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 09:39:05 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03TDW8Jl120025;
+        Wed, 29 Apr 2020 09:39:00 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mggvqc0s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 09:38:59 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03TDWFfq120723;
+        Wed, 29 Apr 2020 09:38:59 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mggvqbwh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 09:38:58 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03TDUmZn003743;
+        Wed, 29 Apr 2020 13:38:55 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma01fra.de.ibm.com with ESMTP id 30mcu8duh6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 13:38:55 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03TDcrwb54132832
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Apr 2020 13:38:53 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 322BEAE051;
+        Wed, 29 Apr 2020 13:38:53 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2BDF9AE055;
+        Wed, 29 Apr 2020 13:38:52 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.162.91])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 29 Apr 2020 13:38:52 +0000 (GMT)
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     linux-integrity@vger.kernel.org
+Cc:     Mimi Zohar <zohar@linux.ibm.com>, Mickael Salaun <mic@digikod.net>,
+        Steve Grubb <sgrubb@redhat.com>, Jann Horn <jannh@google.com>,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] ima: extending IMA policy to support interpreters
+Date:   Wed, 29 Apr 2020 09:38:41 -0400
+Message-Id: <1588167523-7866-1-git-send-email-zohar@linux.ibm.com>
+X-Mailer: git-send-email 2.7.5
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-29_05:2020-04-29,2020-04-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ suspectscore=1 mlxscore=0 lowpriorityscore=0 adultscore=0 phishscore=0
+ bulkscore=0 priorityscore=1501 malwarescore=0 clxscore=1015
+ mlxlogscore=883 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004290110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+On file open, the kernel has no way of differentiating between files
+containing data and those with code that will be executed.  Only the
+interpreter knows how the file will be used.  To bridge this gap, this
+patch set extends the IMA policy language:
 
-Convert the Mediatek-v1 IOMMU driver to use the probe_device() and
-release_device() call-backs of iommu_ops, so that the iommu core code
-does the group and sysfs setup.
+- to identify files with the executable mode bit set
+- to support the new file open flag MAY_OPENEXEC introduced by Mickael
+  Salaun's "[PATCH v3 0/5] Add support for RESOLVE_MAYEXEC" patch set.
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- drivers/iommu/mtk_iommu_v1.c | 50 +++++++++++++++---------------------
- 1 file changed, 20 insertions(+), 30 deletions(-)
+Mimi
 
-diff --git a/drivers/iommu/mtk_iommu_v1.c b/drivers/iommu/mtk_iommu_v1.c
-index a31be05601c9..7bdd74c7cb9f 100644
---- a/drivers/iommu/mtk_iommu_v1.c
-+++ b/drivers/iommu/mtk_iommu_v1.c
-@@ -416,14 +416,12 @@ static int mtk_iommu_create_mapping(struct device *dev,
- 	return 0;
- }
- 
--static int mtk_iommu_add_device(struct device *dev)
-+static struct iommu_device *mtk_iommu_probe_device(struct device *dev)
- {
- 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
--	struct dma_iommu_mapping *mtk_mapping;
- 	struct of_phandle_args iommu_spec;
- 	struct of_phandle_iterator it;
- 	struct mtk_iommu_data *data;
--	struct iommu_group *group;
- 	int err;
- 
- 	of_for_each_phandle(&it, err, dev->of_node, "iommus",
-@@ -442,35 +440,28 @@ static int mtk_iommu_add_device(struct device *dev)
- 	}
- 
- 	if (!fwspec || fwspec->ops != &mtk_iommu_ops)
--		return -ENODEV; /* Not a iommu client device */
-+		return ERR_PTR(-ENODEV); /* Not a iommu client device */
- 
--	/*
--	 * This is a short-term bodge because the ARM DMA code doesn't
--	 * understand multi-device groups, but we have to call into it
--	 * successfully (and not just rely on a normal IOMMU API attach
--	 * here) in order to set the correct DMA API ops on @dev.
--	 */
--	group = iommu_group_alloc();
--	if (IS_ERR(group))
--		return PTR_ERR(group);
-+	data = dev_iommu_priv_get(dev);
- 
--	err = iommu_group_add_device(group, dev);
--	iommu_group_put(group);
--	if (err)
--		return err;
-+	return &data->iommu;
-+}
- 
--	data = dev_iommu_priv_get(dev);
-+static void mtk_iommu_probe_finalize(struct device *dev)
-+{
-+	struct dma_iommu_mapping *mtk_mapping;
-+	struct mtk_iommu_data *data;
-+	int err;
-+
-+	data        = dev_iommu_priv_get(dev);
- 	mtk_mapping = data->dev->archdata.iommu;
--	err = arm_iommu_attach_device(dev, mtk_mapping);
--	if (err) {
--		iommu_group_remove_device(dev);
--		return err;
--	}
- 
--	return iommu_device_link(&data->iommu, dev);
-+	err = arm_iommu_attach_device(dev, mtk_mapping);
-+	if (err)
-+		dev_err(dev, "Can't create IOMMU mapping - DMA-OPS will not work\n");
- }
- 
--static void mtk_iommu_remove_device(struct device *dev)
-+static void mtk_iommu_release_device(struct device *dev)
- {
- 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
- 	struct mtk_iommu_data *data;
-@@ -479,9 +470,6 @@ static void mtk_iommu_remove_device(struct device *dev)
- 		return;
- 
- 	data = dev_iommu_priv_get(dev);
--	iommu_device_unlink(&data->iommu, dev);
--
--	iommu_group_remove_device(dev);
- 	iommu_fwspec_free(dev);
- }
- 
-@@ -534,8 +522,10 @@ static const struct iommu_ops mtk_iommu_ops = {
- 	.map		= mtk_iommu_map,
- 	.unmap		= mtk_iommu_unmap,
- 	.iova_to_phys	= mtk_iommu_iova_to_phys,
--	.add_device	= mtk_iommu_add_device,
--	.remove_device	= mtk_iommu_remove_device,
-+	.probe_device	= mtk_iommu_probe_device,
-+	.probe_finalize = mtk_iommu_probe_finalize,
-+	.release_device	= mtk_iommu_release_device,
-+	.device_group	= generic_device_group,
- 	.pgsize_bitmap	= ~0UL << MT2701_IOMMU_PAGE_SHIFT,
- };
- 
+Mimi Zohar (2):
+  ima: add policy support for identifying file execute mode bit
+  ima: add policy support for the new file open MAY_OPENEXEC flag
+
+ Documentation/ABI/testing/ima_policy |  7 ++++---
+ security/integrity/ima/ima_main.c    |  3 ++-
+ security/integrity/ima/ima_policy.c  | 33 +++++++++++++++++++++++++++------
+ 3 files changed, 33 insertions(+), 10 deletions(-)
+
 -- 
-2.17.1
+2.7.5
 
