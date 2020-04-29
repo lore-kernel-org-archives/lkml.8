@@ -2,136 +2,115 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9A7C8300A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E0CC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF36B20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:08:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BAPsDUNn"
+	by mail.kernel.org (Postfix) with ESMTP id EC8B62072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:09:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgD2QIv (ORCPT
+        id S1727047AbgD2QJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 12:08:51 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36203 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726915AbgD2QIu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 12:08:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588176528;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cZEMgwn0RdunIfg2yunfCJF8r1H9z41yqLf2sGNY0wM=;
-        b=BAPsDUNnjYcJILzI3D/q+mRNaaMhbBU6Gf6j8WdHV7t5xN2t39JbzadOiXE+bikRG8sM7i
-        FKkJH0AO9EbbmzS/acg71LQi8HzgnUkR/I74BS/G+fjw3Z263TOND622hqSqXIWYRjujyx
-        hhelJvxQnARjFp4Q8PPZo9fNwjEHMQE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-494-pvtDQR0OOPCL64QlN-zLcg-1; Wed, 29 Apr 2020 12:08:46 -0400
-X-MC-Unique: pvtDQR0OOPCL64QlN-zLcg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B80BA107ACCA;
-        Wed, 29 Apr 2020 16:08:44 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-114-55.ams2.redhat.com [10.36.114.55])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D1E3605F7;
-        Wed, 29 Apr 2020 16:08:41 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
-        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Eric Biederman <ebiederm@xmission.com>
-Subject: [PATCH v1 3/3] virtio-mem: Add memory with MHP_DRIVER_MANAGED
-Date:   Wed, 29 Apr 2020 18:08:03 +0200
-Message-Id: <20200429160803.109056-4-david@redhat.com>
-In-Reply-To: <20200429160803.109056-1-david@redhat.com>
-References: <20200429160803.109056-1-david@redhat.com>
+        Wed, 29 Apr 2020 12:09:12 -0400
+Received: from mga01.intel.com ([192.55.52.88]:49801 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726539AbgD2QJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 12:09:11 -0400
+IronPort-SDR: EKCP6PpRHvDwAO9R9pRS/mqdnRdvDzYchr+U8CPiXsTXrHMkIRk1hGv1baP20o7WbivKsKi/0y
+ dzbQNEQQWBOw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 09:09:11 -0700
+IronPort-SDR: o13zNz1X0zp6nQ4m3uOuK7eeFIPIHlOfwZSrqqI9JIJomJmMZ3m5cm5P8+cYRCH5n77jWhckeA
+ bAounM1t1bOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
+   d="scan'208";a="249494398"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by fmsmga008.fm.intel.com with ESMTP; 29 Apr 2020 09:09:11 -0700
+Message-ID: <c0177f20d14bd607b8293a802bb16782fae5113d.camel@intel.com>
+Subject: Re: [PATCH v3 05/10] x86/fpu/xstate: Define new functions for
+ clearing fpregs and xstates
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Date:   Wed, 29 Apr 2020 09:09:12 -0700
+In-Reply-To: <20200429092735.GA16407@zn.tnic>
+References: <20200328164307.17497-1-yu-cheng.yu@intel.com>
+         <20200328164307.17497-6-yu-cheng.yu@intel.com>
+         <20200429092735.GA16407@zn.tnic>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't want /sys/firmware/memmap entries and we want to indicate
-our memory as "System RAM (driver managed)" in /proc/iomem. This is
-especially relevant for kexec-tools, which have to be updated to
-support dumping virtio-mem memory after this patch. Expected behavior in
-kexec-tools:
-- Don't use this memory when creating a fixed-up firmware memmap. Works
-  now out of the box on x86-64.
-- Don't use this memory for placing kexec segments. Works now out of the
-  box on x86-64.
-- Consider "System RAM (driver managed)" when creating the elfcorehdr
-  for kdump. This memory has to be dumped. Needs update of kexec-tools.
+On Wed, 2020-04-29 at 11:27 +0200, Borislav Petkov wrote:
+> On Sat, Mar 28, 2020 at 09:43:02AM -0700, Yu-cheng Yu wrote:
+> > @@ -318,18 +313,40 @@ static inline void copy_init_fpstate_to_fpregs(void)
+> >   * Called by sys_execve(), by the signal handler code and by various
+> >   * error paths.
+> >   */
+> > -void fpu__clear(struct fpu *fpu)
+> > +static void fpu__clear(struct fpu *fpu, int clear_user_only)
+> 
+> I said:
+> 
+> "fpu__clear(struct fpu *fpu, bool user_only)"
+> 			     ^^^^^^^^^^^^^^
+> 
+> you made it
+> 
+> 		     ..., int clear_user_only)
+> 
+> Why?
+> 
+> If you agree with the review comment, then please do it as suggested. If
+> you don't, then say why you don't.
+> 
+> Why would you do something in-between?
+> 
+> >  {
+> > -	WARN_ON_FPU(fpu != &current->thread.fpu); /* Almost certainly an anomaly */
+> 
+> Why are you moving this into the callers when *both* do it?
+> 
+> > +	if (static_cpu_has(X86_FEATURE_FPU)) {
+> 
+> Flip this logic:
+> 
+> 	if (!static_cpu_has(X86_FEATURE_FPU)) {
+>                 fpu__drop(fpu);
+>                 fpu__initialize(fpu);
+> 		return;
+> 	}
+> 
+> 	fpregs_lock();
+> 	...
+> 
+> to save an indentation level and make the important case more readable
+> and locking more prominent.
 
-With this patch on x86-64:
+All fixed.
 
-/proc/iomem:
-	00000000-00000fff : Reserved
-	00001000-0009fbff : System RAM
-	[...]
-	fffc0000-ffffffff : Reserved
-	100000000-13fffffff : System RAM
-	140000000-147ffffff : System RAM (driver managed)
-	340000000-347ffffff : System RAM (driver managed)
-	348000000-34fffffff : System RAM (driver managed)
-	[..]
-	3280000000-32ffffffff : PCI Bus 0000:00
-
-/sys/firmware/memmap:
-	0000000000000000-000000000009fc00 (System RAM)
-	000000000009fc00-00000000000a0000 (Reserved)
-	00000000000f0000-0000000000100000 (Reserved)
-	0000000000100000-00000000bffe0000 (System RAM)
-	00000000bffe0000-00000000c0000000 (Reserved)
-	00000000feffc000-00000000ff000000 (Reserved)
-	00000000fffc0000-0000000100000000 (Reserved)
-	0000000100000000-0000000140000000 (System RAM)
-
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- drivers/virtio/virtio_mem.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-index 3101cbf9e59d..6f658d1aeac4 100644
---- a/drivers/virtio/virtio_mem.c
-+++ b/drivers/virtio/virtio_mem.c
-@@ -421,7 +421,8 @@ static int virtio_mem_mb_add(struct virtio_mem *vm, u=
-nsigned long mb_id)
- 		nid =3D memory_add_physaddr_to_nid(addr);
-=20
- 	dev_dbg(&vm->vdev->dev, "adding memory block: %lu\n", mb_id);
--	return add_memory(nid, addr, memory_block_size_bytes(), 0);
-+	return add_memory(nid, addr, memory_block_size_bytes(),
-+			  MHP_DRIVER_MANAGED);
- }
-=20
- /*
---=20
-2.25.3
+Thanks,
+Yu-cheng
 
