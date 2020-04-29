@@ -2,118 +2,106 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1BDC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A7EC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72D162070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5781920731
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:09:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rylan.coffee header.i=@rylan.coffee header.b="YuUbcqpb";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="l2U2bjpx"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GmElLMCX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgD2EEt (ORCPT
+        id S1726681AbgD2EJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 00:04:49 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:53473 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726548AbgD2EEt (ORCPT
+        Wed, 29 Apr 2020 00:09:42 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:17644 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725497AbgD2EJm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 00:04:49 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 289935C0392;
-        Wed, 29 Apr 2020 00:04:48 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Wed, 29 Apr 2020 00:04:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rylan.coffee; h=
-        date:from:to:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=hFef1z+7qhE8uSAgi3qJP1RsP94
-        Wmsl+o0e0YRp0D8c=; b=YuUbcqpbctfCLwjdABE48sFdI/r/uzEgnmDWlldh3Ir
-        HG7m/miahinctm2h86KWL7jCe364Q3e4x5VwBAWuYMe8NxxkFIu8+3kFKDtkz8yC
-        dAK3Mi3asdtn3B8P+jz3qffKQ4V+wAwSq2V8SEBLP12vqwzcboPj3Ps23TtqVxdJ
-        qGVrVAmEFnUbIxmkVeAwSQvahEUCTVpVv+9/XSAzFkk4URJM3of98UXNdGU541mu
-        pilSeQ7Gnfd+N3apIGuzTjUmZjnKPt0aQoEHNarRH5QZeT2drooRdfDecIdrchMo
-        aZkZZm4LxhtzBVQRutlpzpSYHJZ9tPPjptml5PyS13g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=hFef1z
-        +7qhE8uSAgi3qJP1RsP94Wmsl+o0e0YRp0D8c=; b=l2U2bjpxhrp7J6jcpH/2ST
-        JIkt0vYLtspIzSEmjzJeS8ZPsRyUjgaQCknDK57ajB3o+iK1LpYIYP0G0tV1rmIv
-        OJvb40Xw+kpVsstXLJCSOJwJCrY3R6JAu2qXRVFCeWeVJDAokIdRWaD1zFMBAVY+
-        wltdvy+m8bNrhrduoF/uP5yxsK8cHOkDus3DOPeJuyn/0QGh2vYqNB8l1iNlNv7I
-        S4yiU8UmoF627hYrfElgAm8aV8NWkRvHreUAc1qMMSFkRIhM8eJ/M8yFCK0D5xsq
-        dvJLHkYxKndvEbs9e8r1iAaHjD0zPuNtxnTvdkXcN1RpRnpvwfURYZ/FCnzbUYZw
-        ==
-X-ME-Sender: <xms:4PyoXqIqBSYWyWHzNUGlhp4gA_UTrRjm5frXt_V3aXgv98xIhPBWeQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedvgdejjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtjeenucfhrhhomheptfihlhgrnhcu
-    ffhmvghllhhouceomhgrihhlsehrhihlrghnrdgtohhffhgvvgeqnecukfhppedutdekrd
-    egledrudehkedrkeegnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrihhlsehrhihlrghnrdgtohhffhgvvg
-X-ME-Proxy: <xmx:4PyoXmjsKWaVzb_glkv7EZAalUtBkZBDTLXZqfdciiJsfZzPsM430Q>
-    <xmx:4PyoXolVzXyluwMyalD4j2cmACz_UVmy-pjVBvJUCCbZFjWmb_b3rw>
-    <xmx:4PyoXtUXHY3hWRtJL3BbkcOfUtKgHbTlqoHUi6vUTRdnjWP5BNwbsg>
-    <xmx:4PyoXspCSqpqjWwU4lAnuaxUOYUHNqNT5C_Q8lysVhVIIfeeLeCYtQ>
-Received: from athena (pool-108-49-158-84.bstnma.fios.verizon.net [108.49.158.84])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C4E06328005D;
-        Wed, 29 Apr 2020 00:04:47 -0400 (EDT)
-Date:   Wed, 29 Apr 2020 00:04:46 -0400
-From:   Rylan Dmello <mail@rylan.coffee>
-To:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] staging: qlge: Fix function argument alignment warning
- in qlge_main.c
-Message-ID: <45c37ee5d0605ac7274776edbb8e8e9108c786ce.1588132908.git.mail@rylan.coffee>
-References: <aae9feb569c60758ab09c923c09b600295f4cb32.1588132908.git.mail@rylan.coffee>
+        Wed, 29 Apr 2020 00:09:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588133381; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Reply-To: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=ZygyuDR/+QYBGGocHbLP5ReISc55KGqtsbV+9Eyjzc4=; b=GmElLMCXAefxRkR0FqYR/fjHxFWbTExS64AKUOtvocZXfrkZ1o4ACkSi7pUXpFyQI1Smk3+f
+ xo4iSIfxwVflZuI+XeV3X6Pr6yOkGaS2/D9uvwL8do7kGztjgN9X45L3w2KqedJ19z76kNTG
+ paimqlPu5UeIcFUKCjQm2nHCj3M=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea8fe03.7f04b35b69d0-smtp-out-n04;
+ Wed, 29 Apr 2020 04:09:39 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EC051C433F2; Wed, 29 Apr 2020 04:09:37 +0000 (UTC)
+Received: from quicinc.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: svaddagi)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5AB9AC433CB;
+        Wed, 29 Apr 2020 04:09:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5AB9AC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vatsa@codeaurora.org
+Date:   Wed, 29 Apr 2020 09:39:29 +0530
+From:   Srivatsa Vaddagiri <vatsa@codeaurora.org>
+To:     Stefano Stabellini <sstabellini@kernel.org>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>, konrad.wilk@oracle.com,
+        jasowang@redhat.com, jan.kiszka@siemens.com, will@kernel.org,
+        stefano.stabellini@xilinx.com, iommu@lists.linux-foundation.org,
+        virtualization@lists.linux-foundation.org,
+        virtio-dev@lists.oasis-open.org, tsoni@codeaurora.org,
+        pratikp@codeaurora.org, christoffer.dall@arm.com,
+        alex.bennee@linaro.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] virtio: Add bounce DMA ops
+Message-ID: <20200429040929.GC5097@quicinc.com>
+Reply-To: Srivatsa Vaddagiri <vatsa@codeaurora.org>
+References: <1588073958-1793-1-git-send-email-vatsa@codeaurora.org>
+ <1588073958-1793-6-git-send-email-vatsa@codeaurora.org>
+ <20200428121232-mutt-send-email-mst@kernel.org>
+ <20200428174952.GA5097@quicinc.com>
+ <20200428163448-mutt-send-email-mst@kernel.org>
+ <alpine.DEB.2.21.2004281556180.29217@sstabellini-ThinkPad-T480s>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <aae9feb569c60758ab09c923c09b600295f4cb32.1588132908.git.mail@rylan.coffee>
+In-Reply-To: <alpine.DEB.2.21.2004281556180.29217@sstabellini-ThinkPad-T480s>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch.pl check:
+* Stefano Stabellini <sstabellini@kernel.org> [2020-04-28 16:04:34]:
 
-  CHECK: Alignment should match open parenthesis
+> > > Is swiotlb commonly used for multiple devices that may be on different trust
+> > > boundaries (and not behind a hardware iommu)?
+> 
+> The trust boundary is not a good way of describing the scenario and I
+> think it leads to miscommunication.
+> 
+> A better way to describe the scenario would be that the device can only
+> DMA to/from a small reserved-memory region advertised on device tree.
+> 
+> Do we have other instances of devices that can only DMA to/from very
+> specific and non-configurable address ranges? If so, this series could
+> follow their example.
 
-Signed-off-by: Rylan Dmello <mail@rylan.coffee>
----
- drivers/staging/qlge/qlge_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+AFAICT there is no such notion in current DMA API.
 
-diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
-index 0edeea525fef..c493da03e45f 100644
---- a/drivers/staging/qlge/qlge_main.c
-+++ b/drivers/staging/qlge/qlge_main.c
-@@ -4450,7 +4450,7 @@ static int ql_init_device(struct pci_dev *pdev, struct net_device *ndev,
- 	pci_save_state(pdev);
- 	qdev->reg_base =
- 	    ioremap(pci_resource_start(pdev, 1),
--			    pci_resource_len(pdev, 1));
-+		    pci_resource_len(pdev, 1));
- 	if (!qdev->reg_base) {
- 		dev_err(&pdev->dev, "Register mapping failed.\n");
- 		err = -ENOMEM;
-@@ -4460,7 +4460,7 @@ static int ql_init_device(struct pci_dev *pdev, struct net_device *ndev,
- 	qdev->doorbell_area_size = pci_resource_len(pdev, 3);
- 	qdev->doorbell_area =
- 	    ioremap(pci_resource_start(pdev, 3),
--			    pci_resource_len(pdev, 3));
-+		    pci_resource_len(pdev, 3));
- 	if (!qdev->doorbell_area) {
- 		dev_err(&pdev->dev, "Doorbell register mapping failed.\n");
- 		err = -ENOMEM;
+static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size,
+                bool is_ram)
+{
+        return end <= min_not_zero(*dev->dma_mask, dev->bus_dma_limit);
+}
+
+Only the max address a device can access is defined and not a range that we seem
+to need here. I think we need to set the bus_dma_limit to 0 for virtio devices
+which will force the use of swiotlb_map API. We should also have a per-device
+swiotlb pool defined, so that swiotlb can use the pool meant for the given
+device.
+
 -- 
-2.26.2
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
