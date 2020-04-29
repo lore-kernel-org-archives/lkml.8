@@ -2,331 +2,190 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF31C8300B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 23:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77373C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 23:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E99E2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 23:18:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o8v4X9AR"
+	by mail.kernel.org (Postfix) with ESMTP id 5B6AE2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 23:20:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgD2XSg (ORCPT
+        id S1727095AbgD2XUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 19:18:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbgD2XSd (ORCPT
+        Wed, 29 Apr 2020 19:20:53 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40208 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbgD2XUx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 19:18:33 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48BF6C035495
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 16:18:31 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id u10so3156533lfo.8
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 16:18:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CbLlq66sQ9c2dpjM4PO9GavQ8mLZTTgTJBAsom1lrl4=;
-        b=o8v4X9ARjoK8udY7bCronH4Z5nsYMjaLUGECMiOK6+ImTYIaP4L0QfuiqTJsQWGfyZ
-         iVZaCX4dFBne8lLO9qw04RZnCmhRRCVP+q4HhEBFiDT1RtCx91VSkez1xEyc/Y7/vlPq
-         7d1gacWSSSKG5H3oXWBD1xhcvLCeCfwkQtoMLjuYZXPuuwy/8U5SKbvL5oW7KbOLDozO
-         sagHydZoXyUXwc91/CgRlnk2Tr7xq0d65/CmHUILhvoEWpOjBmUO1LfvUJKWnAdfLMjc
-         ye3tHnkPlfnU/y3KDVT9NDEDLuYV+qwy6VSH1vNTijEhO+2p0005IvV4533VEWfFfkOy
-         4BwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CbLlq66sQ9c2dpjM4PO9GavQ8mLZTTgTJBAsom1lrl4=;
-        b=KK43RC9DEHt6wh/IBYeh96cSUKr4tHc+twYLE1/GwN9pR+PrDXUPvCTTfOJ64oQ1pB
-         rsaK050U+d7sl+aOQjZhjwzMapjzUtCGs1idQNns4UgU3Uu5w7Q0rSQrgsQAt+hjH05G
-         VADgsK8pb0nTlW5Uq8HaVWQXGOm8D+NDr5rrFwqgODAR9zTSFDrjZ9F6of6Z3U6/9SLM
-         6qHxk0vwUcwhepqSPQWawRtyvUKIXhaQMYEKpBuuyD1u5RDfKixASk0ohnNryw3QjZCT
-         sap0rwRcKZme2gEOvxnbhOkUEsI18qu0ufBRlxU8a5l1NyAXx3ERxmed8Tn7AlX+B7ms
-         Xv1Q==
-X-Gm-Message-State: AGi0PuZ+XkSr9lM5rKoE/Mknu4JGbHBT46IuNCgDXhUn5QFabd5hGCo7
-        gJhmFiZ+O/2LQUeKQAjOEG6lFXU36fiDhb32H8BaBg==
-X-Google-Smtp-Source: APiQypKsmAiIkZkAXJv3TNFdsoOqjHZqol0/KFmcRvdMfyq15JAnSuckNesRRNLYTgIi6bvQRGu8dTBYopRYlYR4oik=
-X-Received: by 2002:a19:7909:: with SMTP id u9mr136944lfc.130.1588202309097;
- Wed, 29 Apr 2020 16:18:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200306042831.17827-1-elder@linaro.org>
-In-Reply-To: <20200306042831.17827-1-elder@linaro.org>
-From:   Evan Green <evgreen@google.com>
-Date:   Wed, 29 Apr 2020 16:17:52 -0700
-Message-ID: <CAE=gft6dezobVsdmKwa8qYJzS-2ZaTxG7Vp6MYK2ve_hawSagw@mail.gmail.com>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver (UPDATED)
-To:     Alex Elder <elder@linaro.org>
-Cc:     David Miller <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Dan Williams <dcbw@redhat.com>,
-        Eric Caruso <ejcaruso@google.com>,
-        Susheel Yadav Yadagiri <syadagir@codeaurora.org>,
-        Chaitanya Pratapa <cpratapa@codeaurora.org>,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Siddharth Gupta <sidgup@codeaurora.org>,
-        netdev@vger.kernel.org,
+        Wed, 29 Apr 2020 19:20:53 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 915DB2A00F7
+Subject: Re: [PATCH 2/2] platform/chrome: typec: Register Type C switches
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-soc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>
+References: <20200422222242.241699-1-pmalani@chromium.org>
+ <20200422222242.241699-2-pmalani@chromium.org>
+ <12b56c9e-d8c7-82fa-57c8-7a33236ba188@collabora.com>
+ <CACeCKadOzR++ctpG52ZBZZewXFRz39crHotsTC9+MjSWBoE_Dg@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <dc1b244a-a6d2-7c2d-c6ae-1474bd61e628@collabora.com>
+Date:   Thu, 30 Apr 2020 01:20:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <CACeCKadOzR++ctpG52ZBZZewXFRz39crHotsTC9+MjSWBoE_Dg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 5, 2020 at 8:28 PM Alex Elder <elder@linaro.org> wrote:
->
-> This series presents the driver for the Qualcomm IP Accelerator (IPA).
->
-> This is version 2 of this updated series.  It includes the following
-> small changes since the previous version:
->   - Now based on net-next instead of v5.6-rc
->   - Config option now named CONFIG_QCOM_IPA
->   - Some minor cleanup in the GSI code
->   - Small change to replenish logic
->   - No longer depends on remoteproc bug fixes
-> What follows is the basically same explanation as was posted previously.
->
->                                         -Alex
->
-> I have posted earlier versions of this code previously, but it has
-> undergone quite a bit of development since the last time, so rather
-> than calling it "version 3" I'm just treating it as a new series
-> (indicating it's been updated in this message).  The fast/data path
-> is the same as before.  But the driver now (nearly) supports a
-> second platform, its transaction handling has been generalized
-> and improved, and modem activities are now handled in a more
-> unified way.
->
-> This series is available (based on net-next in branch "ipa_updated-v2"
-> in this git repository:
->   https://git.linaro.org/people/alex.elder/linux.git
->
-> The branch depends on other one other small patch that I sent out
-> for review earlier.
->   https://lore.kernel.org/lkml/20200306042302.17602-1-elder@linaro.org/
->
-
-I realize this is all already in (yay!), but it took me a long time to
-get around to fully reading this driver. I'll paste my notes here for
-posterity or possible future patches. Overall the driver seemed well
-documented and thoughtfully written. As someone who has seen the old
-downstream IPA driver (though I didn't look long as my brain started
-hurting), I greatly appreciate the work required by Alex to polish
-this all up. So firstly, thanks Alex!
-
-Onto the notes. There are a couple themes I noticed. The driver seems
-occasionally to be unnecessarily layer-caked. I noticed "could be
-inlined" as a common refrain in my feedback. There are also a couple
-places with hand-rolled refcounting, atomic exchanges, and odd
-mutexes. I haven't fully digested those to be able to know how to get
-rid of them, but I'll point them out as something that "doesn't smell
-quite right".
-
-Acronyms (for my own benefit):
-ee - execution environment
-ep - endpoint
-er - endpoint or route ID
-rt - resource type
-dcd - Dynamic clock division (request to GCC to turn you off)
-bcr - Backwards compatibility register
-comp - Core master port
-holb - ???
-
-ipa_main.c:
-What is IPA_VALIDATION. Can this just be on always or removed?
-otherwise it will likely bit rot.
-I'd like to see this suspend_ref go away.
-ipa_reg.c can be inlined
-ipa_mem_init can be inlined.
+Hi Prashant,
 
 
-IPA_NOTIFY:
-Shouldn't CONFIG_IPA depend on IPA_NOTIFY?
+On 30/4/20 1:02, Prashant Malani wrote:
+> Hi Enric,
+> 
+> Thanks for your review. Kindly see inline:
+> 
+> On Wed, Apr 29, 2020 at 3:22 PM Enric Balletbo i Serra
+> <enric.balletbo@collabora.com> wrote:
+>>
+>> Hi Prashant,
+>>
+>> Thank you for your patch.
+>>
+>> On 23/4/20 0:22, Prashant Malani wrote:
+>>> Register Type C mux and switch handles, when provided via firmware
+>>> bindings. These will allow the cros-ec-typec driver, and also alternate
+>>> mode drivers to configure connected Muxes correctly, according to PD
+>>> information retrieved from the Chrome OS EC.
+>>>
+>>> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+>>> ---
+>>>  drivers/platform/chrome/cros_ec_typec.c | 47 +++++++++++++++++++++++++
+>>>  1 file changed, 47 insertions(+)
+>>>
+>>> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+>>> index eda57db26f8d..324ead297c4d 100644
+>>> --- a/drivers/platform/chrome/cros_ec_typec.c
+>>> +++ b/drivers/platform/chrome/cros_ec_typec.c
+>>> @@ -14,6 +14,8 @@
+>>>  #include <linux/platform_data/cros_usbpd_notify.h>
+>>>  #include <linux/platform_device.h>
+>>>  #include <linux/usb/typec.h>
+>>> +#include <linux/usb/typec_mux.h>
+>>> +#include <linux/usb/role.h>
+>>>
+>>>  #define DRV_NAME "cros-ec-typec"
+>>>
+>>> @@ -25,6 +27,9 @@ struct cros_typec_port {
+>>>       struct typec_partner *partner;
+>>>       /* Port partner PD identity info. */
+>>>       struct usb_pd_identity p_identity;
+>>> +     struct typec_switch *ori_sw;
+>>> +     struct typec_mux *mux;
+>>> +     struct usb_role_switch *role_sw;
+>>>  };
+>>>
+>>>  /* Platform-specific data for the Chrome OS EC Type C controller. */
+>>> @@ -84,6 +89,40 @@ static int cros_typec_parse_port_props(struct typec_capability *cap,
+>>>       return 0;
+>>>  }
+>>>
+>>> +static int cros_typec_get_switch_handles(struct cros_typec_port *port,
+>>> +                                      struct fwnode_handle *fwnode,
+>>> +                                      struct device *dev)
+>>> +{
+>>> +     port->mux = fwnode_typec_mux_get(fwnode, NULL);
+>>> +     if (IS_ERR(port->mux)) {
+>>
+>> Should you return an error if NULL is returned (IS_ERR_OR_NULL) ? I think that
+>> fwnode_typec_mux_get can return NULL too.
+> I think returning NULL can be considered "not an error" for devices
+> that don't have kernel-controlled muxes (which won't have this
+> property defined).
+> So this check should be fine as is.
+>>
+>>
+>>> +             dev_info(dev, "Mux handle not found.\n");
+>>> +             goto mux_err;
+>>> +     }
+>>> +
+>>> +     port->ori_sw = fwnode_typec_switch_get(fwnode);
+>>> +     if (IS_ERR(port->ori_sw)) {
+>>
+>> ditto
+>>
+>>> +             dev_info(dev, "Orientation switch handle not found.\n");
+>>> +             goto ori_sw_err;
+>>> +     }
+>>> +
+>>> +     port->role_sw = fwnode_usb_role_switch_get(fwnode);
+>>> +     if (IS_ERR(port->role_sw)) {
+>>
+>> ditto
+>>
+>>> +             dev_info(dev, "USB role switch handle not found.\n");
+>>> +             goto role_sw_err;
+>>> +     }
+>>> +
+>>> +     return 0;
+>>> +
+>>> +role_sw_err:
+>>> +     usb_role_switch_put(port->role_sw);
 
+I see, and put checks for NULL, so it's fine. Thanks for the clarification.
 
-ipa_data.h
-Why are ipa_resource_src and ipa_resource_dst separate structures?
-maybe the extern globals at the bottom should just be moved into ipa_main.c
-
-
-ipa_endpoint.h
-Add a note for enum ipa_endpoint_name indicating who is TXing and RXing
-
-
-ipa_data-sc7180.c
-Where is IPA_ENDPOINT_MODEM_LAN_TX definition?
-
-
-ipa_clock.c
-IPA_CORE_CLOCK_RATE - Should probably be specified in DT as a fixed
-frequency rather than here in code.
-Interconnect bandwidths - Are these a function of the core clock rate?
-This may be fine for the initial version, but is there any way to
-derive the bandwidth requirement?
-ipa_interconnect_init_one - Probably best to just inline this
-ipa_clock_get_additional - Seems sketchy, would like to remove this
-Overall don't like the homebrew reference counting here. Would runtime
-PM help you do this?
-
-
-ipa_interrupt.h
-I'd like to get rid of ipa_interrupt_add and ipa_interrupt_remove.
-Seems like there's no need for these to be dynamically added, it's all
-one driver.
-
-
-ipa_interrupt.c
-Why does ipa_interrupt_setup() need to dynamically allocate the
-structure, can't we just embed it in struct ipa?
-Without the kzalloc, ipa_interrupt_setup() and
-ipa_interrupt_teardown() are simple enough they can probably be
-inlined (at least teardown for sure).
-Interrupt processing seems a little odd. What I would have expected is:
-Hard ISR reads pending bits, and immediately writes all pending bits
-to quiesce them. Save bitmask of pending bits, and send to the
-threaded handler. Threaded handler then reads and clears pending bits
-out, and acts on any.
-Fixes interrupt storm in ipa_isr() if an unexpected interrupt comes in
-but an expected interrupt is also pending.
-Avoids multiple register writes (one for each bit) in ipa_interrupt_process()
-Saves all the register reads in ipa_interrupt_process_all(). That
-additional read in the loop seems like it shouldn't be there either
-way.
-
-
-ipa_mem.h
-Is IPA_SHARED_MEM_SIZE supposed to be defined? It's mentioned in the comment.
-Comment says the number of canaries is the same for all IPA versions,
-but ipa_data-sdm845.c and ipa_data-sc7180.c seem to have different
-canary counts for IPA_MEM_UC_INFO?
-Should the number of canaries really be part of the chipset-specific
-config info if it's never going to change?
-Do the canary values eat into the previous region? Can we add a
-warning to ensure we don't write canary values off the beginning of
-the memory region?
-
-
-ipa_mem.c
-Maybe remove ipa_mem_teardown() if we're not planning to add anything
-to it soon, or inline it in the header for now.
-Does ipa_mem_zero_modem() erase canary values previously set up?
-
-
-gsi.h
-Why make gsi_evt_ring_state 0xf? Remove assignments and let enum do its thing.
-enum gsi_ee_id - Probably worth commenting that this defines the
-layout of the per-EE register regions, so rearranging this would
-horribly break our access to hardware.
-
-
-gsi_reg.h
-What is gsi v2.0? Is that the same as IPA 4.0?
-Why do the channel macros have things like CH_C and EE_N in them? Why
-not just CH and EE? Oh, I also see CH_E, what's that?
-
-
-gsi.c:
-enum gsi_err_code: Where's 0x7?
-gsi_channel_deprogram(): delete
-gsi_channel_update(): I'm worried about this refcount thing, how does it work?
-gsi_event_bitmap_init() can be inlined
-gsi_evt_ring_setup() and gsi_evt_ring_teardown() can be removed
-gsi_teardown(): inline
-gsi_evt_ring_exit(): remove
-
-
-ipa_gsi.h:
-Comment for ipa_gsi_channel_tx_completed has wrong function name copypasta.
-
-
-ipa_gsi.c:
-This is an interesting mezzanine interface, it looks like it was
-designed to keep GSI code from calling IPA code directly. Why is that?
-Could these at least be inlined into the ipa_gsi.h?
-
-
-gsi_trans.h:
-Why is it important that struct gsi_trans be < 128 bytes?
-
-
-gsi_trans.c:
-gsi_tre_type - Should this be in a header?
-TRE_FLAGS_ - Should these be in a header? Also, replace GENMASK(x,x)
-with BIT(x). TRE_FLAGS_IEOB_FMASK is never used (which is fine, but
-should it be?)
-gsi_trans_tre_reserve() - Why atomic_try_cmpxchg? What's the
-difference between that and atomic_cmpxchg?
-gsi_tre_len_opcode() - If len is truncated to 16 bits, why is u32
-passed in? Is len sometimes used as 32 bits?
-gsi_trans_tre_fill() - If it doesn't do a 16-byte atomic write, is
-this a problem? Could the controller see a half-baked TRE?
-
-
-ipa_endpoint.c:
-What is HOLB timer?
-
-
-ipa_table.c:
-ipa_table_valid() - This just runs all 3-bit possibilities. Could use
-flags and a loop instead.
-ipa_table_teardown() - Remove?
-
-
-ipa_cmd.c:
-ipa_cmd_tag_process_add() - What happened here? Is this just
-functionality we're not using right now?
-
-
-ipa_modem.c
-ipa_start_xmit() - Could returning BUSY result in an infinite loop if
-something goes wrong in the lower layers?
-ipa_modem_start() - Shouldn't we print some errors if the state
-variable has an unexpected value (ie not RUNNING)? In those cases we
-are likely not in a good place.
-
-
-ipa_qmi.c:
-ipa_qmi_indication() could be inlined
-init_modem_driver_req() use of static means this can never run
-concurrently with itself, right? Also if the request gets stuck in
-qmi_txn_wait() you're hosed.
-
-
-ipa_qmi_msg.c
-You could macro-ize the initialization of these elements, which would
-make things way shorter, and probably easier to read. I'm imagining
-for instance the first element in the file could be reduced to
-IPA_QMI_ELEM(QMI_OPT_FLAG, 1, struct ipa_indication_register_req,
-master_driver_init_complete_valid, 0x10)
-
-
-ipa_smp2p.c:
-s/Motex/Mutex/
-Actually I don't get why the mutex is needed at all. It's certainly
-not needed in ipa_smp2p_disable() (stores are already atomic), and
-threaded irqs already have mutual exclusion. Or are you trying to make
-sure ipa_smp2p_disable() doesn't return until
-ipa_smp2p_modem_setup_ready_isr() has fully completed? If that's
-really why, you should explain that's what it's doing and why it's
-necessary.
-Thinking more about it, why can't you just actually disable the irq?
-That calls synchronize_irq, which will flush out any instances of the
-irq running. Then no mutex necessary!
-ipa_smp2p_irq_init(), and _exit() can be inlined.
-I'd love to see clock_on and the weird reference counting go away. Is
-that really necessary?
+>>> +ori_sw_err:
+>>> +     typec_switch_put(port->ori_sw);
+>>> +mux_err:
+>>> +     typec_mux_put(port->mux);
+>>> +
+>>> +     return -ENODEV;
+>>> +}
+>>> +
+>>>  static void cros_unregister_ports(struct cros_typec_data *typec)
+>>>  {
+>>>       int i;
+>>> @@ -91,6 +130,9 @@ static void cros_unregister_ports(struct cros_typec_data *typec)
+>>>       for (i = 0; i < typec->num_ports; i++) {
+>>>               if (!typec->ports[i])
+>>>                       continue;
+>>> +             usb_role_switch_put(typec->ports[i]->role_sw);
+>>> +             typec_switch_put(typec->ports[i]->ori_sw);
+>>> +             typec_mux_put(typec->ports[i]->mux);
+>>>               typec_unregister_port(typec->ports[i]->port);
+>>>       }
+>>>  }
+>>> @@ -153,6 +195,11 @@ static int cros_typec_init_ports(struct cros_typec_data *typec)
+>>>                       ret = PTR_ERR(cros_port->port);
+>>>                       goto unregister_ports;
+>>>               }
+>>> +
+>>> +             ret = cros_typec_get_switch_handles(cros_port, fwnode, dev);
+>>> +             if (ret)
+>>> +                     dev_info(dev, "No switch control for port %d\n",
+>>> +                              port_num);
+>>
+>> When drivers are working, they should not spit out any messages, make
+>> this dev_dbg() at the most. Be quiet, please.
+> Ack. Will update this in the next version.
+>>
+>>
+>>>       }
+>>>
+>>>       return 0;
+>>>
