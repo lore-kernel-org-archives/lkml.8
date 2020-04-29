@@ -4,133 +4,178 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 101CFC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4FDC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAE4120BED
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B973E206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:13:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588194566;
-	bh=9usa5vqarbwkjusCiHaWM/qcbLoAS67d0O3WtQaWisU=;
+	s=default; t=1588194786;
+	bh=s9TT0lMxNNaV9BNhB/68BjoWi5w0tNu+nqeW3fIn3c0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s+NZrICuEAlEmV+evnIqGo/VzEoR/v7jeTHCyWeooH3rGzQOmymp0VG/Kw7o9RyAW
-	 nGKs4RGi7g6PhKRotcK/8wr67LIoRb8+FTeAYjwWBev6dceJFBnasUrBS+Au2YjYCk
-	 dxllm/FkfnPyWQgl7qXHuXfD95LvYm4t27cofwuE=
+	b=EErhvi3JtWkMxGcrjwEBnIZrCkmdq3IX5FRRox7gES7YNaZSohBRgn7TLcthY0P/q
+	 tbeZLq/e0DWrenjaQ3mtvFAsGUS+MZ9elgtH5HHKjrvDs0HJPNoHa4avGL9fdr6c4K
+	 Ga5B1m4XdwVUtK1cxUuLj7EmxBJ84+4rMhniexDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgD2VJ0 (ORCPT
+        id S1726974AbgD2VNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 17:09:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54932 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbgD2VJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 17:09:25 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14E65206F0;
-        Wed, 29 Apr 2020 21:09:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588194564;
-        bh=9usa5vqarbwkjusCiHaWM/qcbLoAS67d0O3WtQaWisU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xRvJ7kD4gYKl03I0KQFDTWgldsiBWbDFW3D3RecjNLi0Qs90Q9/Wks7p+ZAOIPMch
-         GSTgqUGRqxkvQAfdo2J5zgGtbeSfFs/ZXoKj45ESezozEqQxKfWwzqmHlOfG3qzRlt
-         uAMexcfFYSbEN5LP1eTk4lMWc4JHj6gTJONvfPMs=
-Date:   Wed, 29 Apr 2020 22:09:17 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Marc Zyngier <maz@kernel.org>, Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Brian Cain <bcain@codeaurora.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        James Morse <james.morse@arm.com>,
-        Jonas Bonn <jonas@southpole.se>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Rich Felker <dalias@libc.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: kvm: fix gcc-10 shift warning
-Message-ID: <20200429210916.GB8604@willie-the-truck>
-References: <20200429185657.4085975-1-arnd@arndb.de>
+        Wed, 29 Apr 2020 17:13:06 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:39275 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726511AbgD2VNF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 17:13:05 -0400
+Received: by mail-oo1-f67.google.com with SMTP id c83so770032oob.6;
+        Wed, 29 Apr 2020 14:13:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Wram8/kvGtBAPhudD3mqn9Lg4Z/ZgDC7ak83b1h5db8=;
+        b=FpCbEo3CH4WjBqpa1CKbLXD5++Sh6aAw+lwIq2wQOyJMzu0PQeN4Xo2oPVijTW9XRo
+         NmEz+2+UuDN7mfqto3nYUsvO2aRCUVqh5lCs3+crjawi+UofvUIr4FtcksgDjkXmk/Ab
+         vpT6EO/kfGae7pGP9QhcAbUtNK/YSXlZ9KkmmWwnKu8FSbhyaS5F7zhAq1BS2Z+KKK/x
+         9ZNPbFg3YS/vNGM4/1Qs68oYyT3Awwn9DFmbZAKs3+MYLtKXYD+Fvd0AgpJAKcKggIUo
+         4s5FQgbR9QIhaOHhI1lenS4noMYQlpZRwceLR2/JtqQgfaWUlne7OfN8tddsaFsgReQh
+         6RDg==
+X-Gm-Message-State: AGi0PuYsNdIsCQYJU1R+0f3NtVYhbQzTPXFBr9u4ZLtJB6J+4hvqglqo
+        m95KuOG/8Ci7AfJsAB6b1A==
+X-Google-Smtp-Source: APiQypLPtKMDPynnB2XXcurJjkj+Cn6H8/fxekGEw0MPH9dURNDuAQSyJXCcqt/ccUdZs51T2QL4tA==
+X-Received: by 2002:a4a:accf:: with SMTP id c15mr8418oon.29.1588194784387;
+        Wed, 29 Apr 2020 14:13:04 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s10sm648162otd.69.2020.04.29.14.13.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 14:13:03 -0700 (PDT)
+Received: (nullmailer pid 7846 invoked by uid 1000);
+        Wed, 29 Apr 2020 21:13:02 -0000
+Date:   Wed, 29 Apr 2020 16:13:02 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Al Cooper <alcooperx@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v5 1/4] dt-bindings: Add Broadcom STB USB support
+Message-ID: <20200429211302.GA4535@bogus>
+References: <20200429200826.20177-1-alcooperx@gmail.com>
+ <20200429200826.20177-2-alcooperx@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200429185657.4085975-1-arnd@arndb.de>
+In-Reply-To: <20200429200826.20177-2-alcooperx@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 08:56:20PM +0200, Arnd Bergmann wrote:
-> gcc-10 warns that the 32-bit zero cannot be shifted more than
-> 32 bits to the right:
+On Wed, Apr 29, 2020 at 04:08:23PM -0400, Al Cooper wrote:
+> Add DT bindings for Broadcom STB USB EHCI and XHCI drivers.
 > 
-> arch/arm64/kvm/../../../virt/kvm/arm/mmu.c: In function 'clear_hyp_p4d_entry':
-> arch/arm64/include/asm/pgtable.h:630:35: error: right shift count >= width of type [-Werror=shift-count-overflow]
->   630 | #define pud_index(addr)  (((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
->       |                                   ^~
-> arch/arm64/include/asm/memory.h:271:45: note: in definition of macro '__phys_to_virt'
->   271 | #define __phys_to_virt(x) ((unsigned long)((x) - physvirt_offset))
->       |                                             ^
-> arch/arm64/include/asm/pgtable.h:633:42: note: in expansion of macro '__va'
->   633 | #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
->       |                                          ^~~~
-> arch/arm64/include/asm/pgtable.h:632:73: note: in expansion of macro 'pud_index'
->   632 | #define pud_offset_phys(dir, addr) (p4d_page_paddr(READ_ONCE(*(dir))) + pud_index(addr) * sizeof(pud_t))
->       |                                                                         ^~~~~~~~~
-> arch/arm64/include/asm/pgtable.h:633:47: note: in expansion of macro 'pud_offset_phys'
->   633 | #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
->       |                                               ^~~~~~~~~~~~~~~
-> arch/arm64/kvm/../../../virt/kvm/arm/mmu.c:510:36: note: in expansion of macro 'pud_offset'
->   510 |  pud_t *pud_table __maybe_unused = pud_offset(p4d, 0);
->       |                                    ^~~~~~~~~~
+> NOTE: The OHCI driver is not included because it uses the generic
+>       platform driver.
 > 
-> This is harmless, and the warning is a little bit silly for
-> a zero constant, but it's trivial to fix by making it an
-> unsigned long, so do that.
-> 
-> Fixes: 22998131ab33 ("arm64: add support for folded p4d page tables")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
 > ---
->  virt/kvm/arm/mmu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../bindings/usb/brcm,bcm7445-ehci.yaml       | 60 +++++++++++++++++++
+>  .../devicetree/bindings/usb/usb-xhci.txt      |  1 +
+>  2 files changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
 > 
-> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-> index 48d4288c5f1b..534d9798c3cb 100644
-> --- a/virt/kvm/arm/mmu.c
-> +++ b/virt/kvm/arm/mmu.c
-> @@ -507,7 +507,7 @@ static void clear_hyp_pgd_entry(pgd_t *pgd)
+> diff --git a/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml b/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+> new file mode 100644
+> index 000000000000..7c67f7dd7a67
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/usb/brcm,bcm7445-ehci.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Broadcom STB USB EHCI Controller Device Tree Bindings
+> +
+> +allOf:
+> +  - $ref: "usb-hcd.yaml"
+> +
+> +maintainers:
+> +  - Al Cooper <alcooperx@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +    contains:
+
+Drop contains. Other strings present are not allowed.
+
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +      const: brcm,bcm7445-ehci
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description: Clock specifier for the EHCI clock
+> +
+> +  clock-names:
+> +    const: sw_usb
+> +
+> +  phys:
+> +    maxItems: 1
+> +
+> +  phy-names:
+> +    const: usbphy
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - phys
+> +  - clocks
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    usb@f0b00300 {
+> +        compatible = "brcm,bcm7445-ehci";
+> +        reg = <0xf0b00300 0xa8>;
+> +        interrupts = <0x0 0x5a 0x0>;
+> +        phys = <&usbphy_0 0x0>;
+> +        phy-names = "usbphy";
+> +        clocks = <&usb20>;
+> +        clock-names = "sw_usb";
+> +    };
+> +
+> +...
+> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> index dc025f126d71..23e89d798b1b 100644
+> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> @@ -24,6 +24,7 @@ Required properties:
+>        device
+>      - "renesas,rcar-gen3-xhci" for a generic R-Car Gen3 or RZ/G2 compatible
+>        device
+> +    - "brcm,bcm7445-xhci" for Broadcom STB SoCs with XHCI
+>      - "xhci-platform" (deprecated)
 >  
->  static void clear_hyp_p4d_entry(p4d_t *p4d)
->  {
-> -	pud_t *pud_table __maybe_unused = pud_offset(p4d, 0);
-> +	pud_t *pud_table __maybe_unused = pud_offset(p4d, 0UL);
->  	VM_BUG_ON(p4d_huge(*p4d));
->  	p4d_clear(p4d);
->  	pud_free(NULL, pud_table);
+>      When compatible with the generic version, nodes must list the
 > -- 
-> 2.26.0
-
-Acked-by: Will Deacon <will@kernel.org>
-
-Will
+> 2.17.1
+> 
