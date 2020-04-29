@@ -2,109 +2,117 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC0CC8300D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60449C8300A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79B7720BED
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D91520757
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:03:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OnTh7Lnf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jYjww6TR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727920AbgD2WCC (ORCPT
+        id S1727089AbgD2WDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 18:02:02 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:14834 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727865AbgD2WB2 (ORCPT
+        Wed, 29 Apr 2020 18:03:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48274 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726481AbgD2WDv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 18:01:28 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea9f8f60000>; Wed, 29 Apr 2020 15:00:22 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 29 Apr 2020 15:01:28 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 29 Apr 2020 15:01:28 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Apr
- 2020 22:01:28 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 29 Apr 2020 22:01:28 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.165.152]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ea9f9360001>; Wed, 29 Apr 2020 15:01:27 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH v11 4/9] clk: tegra: Add Tegra210 CSI TPG clock gate
-Date:   Wed, 29 Apr 2020 15:00:01 -0700
-Message-ID: <1588197606-32124-5-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Wed, 29 Apr 2020 18:03:51 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3163C03C1AE;
+        Wed, 29 Apr 2020 15:03:51 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id k133so3304123oih.12;
+        Wed, 29 Apr 2020 15:03:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VuIJyUBI77A7IsS+UOzXlF4URqxn4aKY6yPSfUat6bs=;
+        b=jYjww6TRFcRX3Y23g1fUDaSBixBCmtlAr7R6Tr647wYfD6+VQtLpQyI3KQy3e9YvVZ
+         GpcxE8fFEo6OWVSKuQwuHBjMY4thiSIdKoHlvitdIYxmtyZpsMeQejW1hdtDaMB4wmk0
+         F7jHmJII2Gtb6LCbj5zCojkV1FYAgJwh+xYKpP2RtNrp7FRaObjHYxH9sg/TrRzwJHs6
+         li/TE2Nx2Vs6kvMJWzIHQzUj7Egf5+H/qSp0aglmR2A/9ci3Mcn2ZBQRk2z4sNW5E2k8
+         wD3tk7bVwZl351JxP4iOxPoHCGy92KYF/3XHy2wtZdSpGhHG4SJRGO7npCeAVQIm061u
+         6Yyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VuIJyUBI77A7IsS+UOzXlF4URqxn4aKY6yPSfUat6bs=;
+        b=opHnCCv31KSe3tij6f2edWlhbQTyl5/QXOpvA6VaQwxUmOynVhmDvCHVRdvrqbY0Va
+         HRVnyRCNALvkrobdZGy00F9vCf8zX/INnGtaqejZxTVQqEvhXahhbP6E9GdtCxkyK8h6
+         Z1wOXWw3Vg0q6xqmgKXHjwB86LmpdUVOgfW6NE+i0yWpC7z4bJzhNLp5zZQ8uVl8HHIy
+         QYJoJ49KNQuJQj+7PJ0o/AHKxEGHhtoOcGrY1rghwNuDLH+p8c0BOlG1wehMqOv1S1XL
+         Db1PsfvzsCPGJxDGuZrqy3tyMTvidYxsnsUK0N4UKcH0HimbP2eZ70eT3BYGj/OiuYwO
+         9mZg==
+X-Gm-Message-State: AGi0PubxZtVmnuJIuBysxBdsg+4Iad8lmdOg6KVQqidwayxuO1WfiNre
+        Hxv12kJhmnY+9ccTxS6YU3m1UB1GU+b9S3YLGfbq/OEC
+X-Google-Smtp-Source: APiQypJ3zwVfJk2nMrXMJzcY0A34yx8sFc7iQq4Qt4G4w6K/OJdPad49V5wxoF+Zc/LWhjYb6zlkiutTqfBQpvdh7bQ=
+X-Received: by 2002:aca:b783:: with SMTP id h125mr349467oif.62.1588197830734;
+ Wed, 29 Apr 2020 15:03:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588197622; bh=/06MYnopqzjyrf2N0nRAUhGBnkcd6r/kBjlHyehzo9I=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=OnTh7Lnf95pn1pC0KGnA28A2MYXevs7uvk/iXDD0/bw00Ud5gRMk9YnkptmxeRRuW
-         DmOlMgdoAE6uzgnql1AH+fm0sYBP6/SPlMyUWZuNpT2+bvprKSELYwu3Thq/z3khLC
-         sp2jcDXeBh3y1IDeHCdNY4+Opng0LFI6R1CnHy8+2R5NV4n4+NtvMfNYqcNRmQxPGm
-         gLgZs2GNjEqgbwzx8ky+f3tcGF6M3m5edeBu7b8wwh4ABcBLz6ZHrmX39VHCT8jdu/
-         AvZbMW2FcGqXz+8b18/BF116HcAatcF5ZDo6ZVZYuXFXNUsri/z5rk2q80acG+Pjjj
-         S7tmAdQpkaosw==
+References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200429215955.GN1551@shell.armlinux.org.uk>
+In-Reply-To: <20200429215955.GN1551@shell.armlinux.org.uk>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Wed, 29 Apr 2020 23:03:24 +0100
+Message-ID: <CA+V-a8syz--q7MCNL_5TZmnYqgc7W6nuXJOt6VJhJutuS3seKQ@mail.gmail.com>
+Subject: Re: [PATCH 04/18] ARM: debug-ll: Add support for r8a7742
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra210 CSI hardware internally uses PLLD for internal test pattern
-generator logic.
+Hi,
 
-PLLD_BASE register in CAR has a bit CSI_CLK_SOURCE to enable PLLD
-out to CSI during TPG mode.
+Thank you for the review.
 
-This patch adds this CSI TPG clock gate to Tegra210 clock driver
-to allow Tegra video driver to ungate CSI TPG clock during TPG mode
-and gate during non TPG mode.
+On Wed, Apr 29, 2020 at 11:00 PM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Wed, Apr 29, 2020 at 10:56:41PM +0100, Lad Prabhakar wrote:
+> > @@ -1701,6 +1709,7 @@ config DEBUG_UART_PHYS
+> >       default 0xe6e60000 if DEBUG_RCAR_GEN2_SCIF0
+> >       default 0xe6e68000 if DEBUG_RCAR_GEN2_SCIF1
+> >       default 0xe6ee0000 if DEBUG_RCAR_GEN2_SCIF4
+> > +     default 0xe6c60000 if DEBUG_RCAR_GEN2_SCIFA2
+>
+> Hi,
+>
+> This is ordered by address.  Please keep it so.
+>
+Sure will do that.
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/clk/tegra/clk-tegra210.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Cheers,
+--Prabhakar
 
-diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
-index defe3b7..81a879b 100644
---- a/drivers/clk/tegra/clk-tegra210.c
-+++ b/drivers/clk/tegra/clk-tegra210.c
-@@ -3035,6 +3035,13 @@ static __init void tegra210_periph_clk_init(void __iomem *clk_base,
- 					     periph_clk_enb_refcnt);
- 	clks[TEGRA210_CLK_DSIB] = clk;
- 
-+	/* csi_tpg */
-+	clk = clk_register_gate(NULL, "csi_tpg", "pll_d",
-+				CLK_SET_RATE_PARENT, clk_base + PLLD_BASE,
-+				23, 0, &pll_d_lock);
-+	clk_register_clkdev(clk, "csi_tpg", NULL);
-+	clks[TEGRA210_CLK_CSI_TPG] = clk;
-+
- 	/* la */
- 	clk = tegra_clk_register_periph("la", la_parents,
- 			ARRAY_SIZE(la_parents), &tegra210_la, clk_base,
--- 
-2.7.4
-
+> Thanks.
+>
+> --
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
