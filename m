@@ -2,111 +2,80 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F93C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59680C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C834020757
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:52:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cS07YRd6"
+	by mail.kernel.org (Postfix) with ESMTP id 35C1E20757
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:53:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgD2VwK (ORCPT
+        id S1727815AbgD2VxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 17:52:10 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29841 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726481AbgD2VwJ (ORCPT
+        Wed, 29 Apr 2020 17:53:12 -0400
+Received: from smtprelay0210.hostedemail.com ([216.40.44.210]:60898 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726911AbgD2VxK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 17:52:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588197128;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bojb283LbZjvKIHJt1clVMBEgqpvP3QKnksXiKnl240=;
-        b=cS07YRd6Gyt6TQsa0t7hwmo41oXCglWwqHVzH81JV6OeM6Di9vk/vudhnBpFG51b1OvYsg
-        h1CflGZTMFXxtSp99ZBa7RyGsLXW09PCHwsFTb5gcRiVJuBkQtCWFV01lr9p3ja8+Kkh1B
-        6hcFsO7ELkHXtCv9E/0zV7ZiedeNS90=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-30-4JVByMLlPVWUrj8Bs74wCw-1; Wed, 29 Apr 2020 17:52:04 -0400
-X-MC-Unique: 4JVByMLlPVWUrj8Bs74wCw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B3707107ACCA;
-        Wed, 29 Apr 2020 21:52:02 +0000 (UTC)
-Received: from treble (ovpn-113-19.rdu2.redhat.com [10.10.113.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7C27579B6;
-        Wed, 29 Apr 2020 21:52:01 +0000 (UTC)
-Date:   Wed, 29 Apr 2020 16:51:59 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     x86@kernel.org
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, mingo@kernel.org,
-        hpa@zytor.com, ast@kernel.org, peterz@infradead.org,
-        rdunlap@infradead.org, Arnd Bergmann <arnd@arndb.de>
-Subject: BPF vs objtool again
-Message-ID: <20200429215159.eah6ksnxq6g5adpx@treble>
-References: <30c3ca29ba037afcbd860a8672eef0021addf9fe.1563413318.git.jpoimboe@redhat.com>
- <tip-3193c0836f203a91bef96d88c64cccf0be090d9c@git.kernel.org>
+        Wed, 29 Apr 2020 17:53:10 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 88EC8837F253;
+        Wed, 29 Apr 2020 21:53:09 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: jump77_1b7053dcfbe42
+X-Filterd-Recvd-Size: 2010
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 29 Apr 2020 21:53:08 +0000 (UTC)
+Message-ID: <31b23951ee2b8e2391f3208b60a7132df18be74e.camel@perches.com>
+Subject: Re: [PATCH 03/10] efi/x86: Use pr_efi_err for error messages
+From:   Joe Perches <joe@perches.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 29 Apr 2020 14:53:07 -0700
+In-Reply-To: <20200429214332.GC1621173@rani.riverdale.lan>
+References: <20200429174120.1497212-1-nivedita@alum.mit.edu>
+         <20200429174120.1497212-5-nivedita@alum.mit.edu>
+         <f74fe4ad56c0471f863ce550869391c8811f9893.camel@perches.com>
+         <CAMj1kXGn70BmapKe=6sA17gMCcWRLCebQJFnyObwRbAefOcEng@mail.gmail.com>
+         <20200429214332.GC1621173@rani.riverdale.lan>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <tip-3193c0836f203a91bef96d88c64cccf0be090d9c@git.kernel.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 12:14:08PM -0700, tip-bot for Josh Poimboeuf wrote:
-> Commit-ID:  3193c0836f203a91bef96d88c64cccf0be090d9c
-> Gitweb:     https://git.kernel.org/tip/3193c0836f203a91bef96d88c64cccf0be090d9c
-> Author:     Josh Poimboeuf <jpoimboe@redhat.com>
-> AuthorDate: Wed, 17 Jul 2019 20:36:45 -0500
-> Committer:  Thomas Gleixner <tglx@linutronix.de>
-> CommitDate: Thu, 18 Jul 2019 21:01:06 +0200
+On Wed, 2020-04-29 at 17:43 -0400, Arvind Sankar wrote:
+> On Wed, Apr 29, 2020 at 08:49:21PM +0200, Ard Biesheuvel wrote:
+> > On Wed, 29 Apr 2020 at 20:47, Joe Perches <joe@perches.com> wrote:
+> > > On Wed, 2020-04-29 at 13:41 -0400, Arvind Sankar wrote:
+> > > > Use pr_efi_err instead of bare efi_printk for error messages.
+> > > 
+> > > Perhaps it'd be better to rename pr_efi_err to eri_err
+> > > so it's clearer it's a typical efi_ logging function.
+> > > 
+> > > $ git grep -w --name-only pr_efi_err | \
+> > >   xargs sed -i 's/\bpr_efi_err\b/efi_err/g'
+> > > 
+> > 
+> > Yeah, pr_efi_err() is probably not the best name
 > 
-> bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()
+> Should I rename pr_efi/pr_efi_err to, say, efi_pr_info/efi_pr_error?
 
-For some reason, this
+Perhaps not use pr_ in the name at all.
 
-  __attribute__((optimize("-fno-gcse")))
+I suggest:
 
-is disabling frame pointers in ___bpf_prog_run().  If you compile with
-CONFIG_FRAME_POINTER it'll show something like:
+pr_efi		-> efi_info (or efi_debug or efi_dbg)
+		   (it is guarded by an efi_quiet flag, default: on)
+pr_efi_err	-> efi_err
 
-  kernel/bpf/core.o: warning: objtool: ___bpf_prog_run.cold()+0x7: call without frame pointer save/setup
-
-Also, since GCC 9.1, the GCC docs say "The optimize attribute should be
-used for debugging purposes only. It is not suitable in production
-code."  That doesn't sound too promising.
-
-So it seems like this commit should be reverted. But then we're back to
-objtool being broken again in the RETPOLINE=n case, which means no ORC
-coverage in this function.  (See above commit for the details)
-
-Some ideas:
-
-- Skip objtool checking of that func/file (at least for RETPOLINE=n) --
-  but then it won't have ORC coverage.
-
-- Get rid of the "double goto" in ___bpf_prog_run(), which simplifies it
-  enough for objtool to understand -- but then the text explodes for
-  RETPOLINE=y.
-
-- Add -fno-gfcse to the Makefile for kernel/bpf/core.c -- but then that
-  affects the optimization of other functions in the file.  However I
-  don't think the impact is significant.
-
-- Move ___bpf_prog_run() to its own file with the -fno-gfcse flag.  I'm
-  thinking this could be the least bad option.  Alexei?
-
--- 
-Josh
 
