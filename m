@@ -4,35 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 358B3C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFD5C8300F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB662137B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D83214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgD2WJo (ORCPT
+        id S1728281AbgD2WJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 18:09:44 -0400
-Received: from mga09.intel.com ([134.134.136.24]:61308 "EHLO mga09.intel.com"
+        Wed, 29 Apr 2020 18:09:55 -0400
+Received: from mga09.intel.com ([134.134.136.24]:61302 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728002AbgD2WIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 18:08:54 -0400
-IronPort-SDR: 7LMEilFc7N3MJlzvYRlxkmlMSUpbYg6OJQSrao9pFIh19RupZV78JH3YKSKADpjHxClEkOXMDk
- tSThxShim+TA==
+        id S1727950AbgD2WIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 18:08:49 -0400
+IronPort-SDR: GhThBs38UiYH1SK8Mq8lqsTyJE2qsq3kqr90+uYEyPxREFd8ixNhQPElIg4yAUbpLXfy1cjlHt
+ 7IVG4bD5yvBQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 15:08:52 -0700
-IronPort-SDR: 01B1B+noaRsFveAQnMg10Y5g4MAwi82ZZk/eGTjNIOD3XoDpF8cH9PYXbRRz8Wy8Bsqcxnd9PZ
- JT0uo80Cd19w==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 15:08:49 -0700
+IronPort-SDR: Qxlpm41s9e3hABYhsoQMLiJrtMgVEIS429u+AeFHDZxyQzsrH5/X3lh9fukI9DQrkktfrtoneu
+ GWZhzr7KNIhA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
-   d="scan'208";a="276308927"
+   d="scan'208";a="276308911"
 Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by orsmga002.jf.intel.com with ESMTP; 29 Apr 2020 15:08:51 -0700
+  by orsmga002.jf.intel.com with ESMTP; 29 Apr 2020 15:08:48 -0700
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
 To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -60,9 +59,9 @@ To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Dave Martin <Dave.Martin@arm.com>,
         Weijiang Yang <weijiang.yang@intel.com>
 Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v10 21/26] ELF: UAPI and Kconfig additions for ELF program properties
-Date:   Wed, 29 Apr 2020 15:07:27 -0700
-Message-Id: <20200429220732.31602-22-yu-cheng.yu@intel.com>
+Subject: [PATCH v10 17/26] mm/mmap: Add shadow stack pages to memory accounting
+Date:   Wed, 29 Apr 2020 15:07:23 -0700
+Message-Id: <20200429220732.31602-18-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200429220732.31602-1-yu-cheng.yu@intel.com>
 References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
@@ -73,82 +72,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce basic ELF definitions relating to the NT_GNU_PROPERTY_TYPE_0
-note.
+Account shadow stack pages to stack memory.
 
 Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
 v10:
-- Merge GNU_PROPERTY_X86_FEATURE_1_* from a separate patch.
+- Use arch_shadow_stack_mapping() to make meaning clear.
 
- fs/Kconfig.binfmt        | 3 +++
- include/linux/elf.h      | 8 ++++++++
- include/uapi/linux/elf.h | 8 ++++++++
- 3 files changed, 19 insertions(+)
+v8:
+- Change shadow stake pages from data_vm to stack_vm.
 
-diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
-index 62dc4f577ba1..d2cfe0729a73 100644
---- a/fs/Kconfig.binfmt
-+++ b/fs/Kconfig.binfmt
-@@ -36,6 +36,9 @@ config COMPAT_BINFMT_ELF
- config ARCH_BINFMT_ELF_STATE
- 	bool
+ arch/x86/mm/pgtable.c         |  7 +++++++
+ include/asm-generic/pgtable.h | 11 +++++++++++
+ mm/mmap.c                     |  5 +++++
+ 3 files changed, 23 insertions(+)
+
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index aa4d396ff98d..f384e0314ba7 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -890,3 +890,10 @@ int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
  
-+config ARCH_USE_GNU_PROPERTY
-+	bool
+ #endif /* CONFIG_X86_64 */
+ #endif	/* CONFIG_HAVE_ARCH_HUGE_VMAP */
 +
- config BINFMT_ELF_FDPIC
- 	bool "Kernel support for FDPIC ELF binaries"
- 	default y if !BINFMT_ELF
-diff --git a/include/linux/elf.h b/include/linux/elf.h
-index e3649b3e970e..459cddcceaac 100644
---- a/include/linux/elf.h
-+++ b/include/linux/elf.h
-@@ -2,6 +2,7 @@
- #ifndef _LINUX_ELF_H
- #define _LINUX_ELF_H
++#ifdef CONFIG_ARCH_HAS_SHADOW_STACK
++bool arch_shadow_stack_mapping(vm_flags_t vm_flags)
++{
++	return (vm_flags & VM_SHSTK);
++}
++#endif
+diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+index 2c3875724809..dbd415ab7dd8 100644
+--- a/include/asm-generic/pgtable.h
++++ b/include/asm-generic/pgtable.h
+@@ -1215,6 +1215,17 @@ static inline pmd_t arch_maybe_pmd_mkwrite(pmd_t pmd, struct vm_area_struct *vma
+ #endif /* CONFIG_ARCH_MAYBE_MKWRITE */
+ #endif /* CONFIG_MMU */
  
-+#include <linux/types.h>
- #include <asm/elf.h>
- #include <uapi/linux/elf.h>
- 
-@@ -56,4 +57,11 @@ static inline int elf_coredump_extra_notes_write(struct coredump_params *cprm) {
- extern int elf_coredump_extra_notes_size(void);
- extern int elf_coredump_extra_notes_write(struct coredump_params *cprm);
- #endif
++#ifdef CONFIG_MMU
++#ifdef CONFIG_ARCH_HAS_SHADOW_STACK
++bool arch_shadow_stack_mapping(vm_flags_t vm_flags);
++#else
++static inline bool arch_shadow_stack_mapping(vm_flags_t vm_flags)
++{
++	return false;
++}
++#endif /* CONFIG_ARCH_HAS_SHADOW_STACK */
++#endif /* CONFIG_MMU */
 +
-+/* NT_GNU_PROPERTY_TYPE_0 header */
-+struct gnu_property {
-+	u32 pr_type;
-+	u32 pr_datasz;
-+};
-+
- #endif /* _LINUX_ELF_H */
-diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-index 34c02e4290fe..61251ecabdd7 100644
---- a/include/uapi/linux/elf.h
-+++ b/include/uapi/linux/elf.h
-@@ -36,6 +36,7 @@ typedef __s64	Elf64_Sxword;
- #define PT_LOPROC  0x70000000
- #define PT_HIPROC  0x7fffffff
- #define PT_GNU_EH_FRAME		0x6474e550
-+#define PT_GNU_PROPERTY		0x6474e553
+ /*
+  * Architecture PAGE_KERNEL_* fallbacks
+  *
+diff --git a/mm/mmap.c b/mm/mmap.c
+index f609e9ec4a25..70d240b3559c 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -1681,6 +1681,9 @@ static inline int accountable_mapping(struct file *file, vm_flags_t vm_flags)
+ 	if (file && is_file_hugepages(file))
+ 		return 0;
  
- #define PT_GNU_STACK	(PT_LOOS + 0x474e551)
- 
-@@ -443,4 +444,11 @@ typedef struct elf64_note {
-   Elf64_Word n_type;	/* Content type */
- } Elf64_Nhdr;
- 
-+/* .note.gnu.property types */
-+#define GNU_PROPERTY_X86_FEATURE_1_AND		0xc0000002
++	if (arch_shadow_stack_mapping(vm_flags))
++		return 1;
 +
-+/* Bits of GNU_PROPERTY_X86_FEATURE_1_AND */
-+#define GNU_PROPERTY_X86_FEATURE_1_IBT		0x00000001
-+#define GNU_PROPERTY_X86_FEATURE_1_SHSTK	0x00000002
-+
- #endif /* _UAPI_LINUX_ELF_H */
+ 	return (vm_flags & (VM_NORESERVE | VM_SHARED | VM_WRITE)) == VM_WRITE;
+ }
+ 
+@@ -3318,6 +3321,8 @@ void vm_stat_account(struct mm_struct *mm, vm_flags_t flags, long npages)
+ 		mm->stack_vm += npages;
+ 	else if (is_data_mapping(flags))
+ 		mm->data_vm += npages;
++	else if (arch_shadow_stack_mapping(flags))
++		mm->stack_vm += npages;
+ }
+ 
+ static vm_fault_t special_mapping_fault(struct vm_fault *vmf);
 -- 
 2.21.0
 
