@@ -1,119 +1,105 @@
 Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	TVD_SUBJ_WIPE_DEBT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C661C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47905C83009
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74CD6206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:24:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pTjVdU2l"
+	by mail.kernel.org (Postfix) with ESMTP id 280242073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:26:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgD2OYk (ORCPT
+        id S1726618AbgD2O0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:24:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726741AbgD2OYk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:24:40 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24F88C03C1AD;
-        Wed, 29 Apr 2020 07:24:40 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id i3so2342664ioo.13;
-        Wed, 29 Apr 2020 07:24:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A1CN4jZl4jTo+TBoqkD+2uQy2R8zmyg041lpKbHoH7M=;
-        b=pTjVdU2l+wv4rjf7RjiT6n/blcv5kQhRkTpYCmloytxCdlJT0daN6v+k5wiAG5V05p
-         +lyQmzwez7Vjd0dU1iU0E6Rw7gv7LqG1MW0U0Y8VRqwxCkoO6tKIPwR9r2MAefbYYF3B
-         mFTuY85Kakd1ESJLf7sgADtBuP8ayxrkUtE7UfCTQ/8abnCI++kDFGUmYfVXPuFStAw8
-         krNHekQgb2i+bDxKz/u6F0cAchKDkFph31Rl4hrAZW7Y5sov5rmfAJE/PJ4YSrK0H2Ne
-         PRHZ7THNVQjRH38dM2RLvEKtAl48F3dlOW+bgCnko5NxLdm07f4BuONIRIi/iW+PnDN+
-         AFcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A1CN4jZl4jTo+TBoqkD+2uQy2R8zmyg041lpKbHoH7M=;
-        b=m/Jz6Bm3UffPAM4GsF/45veXKBDMSBp0hMBN3sV4hcoIIci2Ki6/i1c70zVka7BMu+
-         Y57ita9TsyALb3IUS2G1wfagF+yNshJ2LRqUZDFgPS9OW/Me97Iy26641Unqwc8mIQP9
-         ck6c29mpCsQCGaPfvcFYl3QM+RVgSQGrugxiHTIDnmeG4TuEIBBvgG7S7Ag/baAqxeiJ
-         whZR4Acnx4c0WYJKC8QyesNjyCONHnpImRYtxJURB1sQnCHTt4Mm+uuESLkyXzIziv+x
-         t4J4Zs+SI/698deXoobaiLpvgv2i7MEEFQy7bmySEWHEI3qPff5tyCB8PoLMGarLEYMv
-         2ljg==
-X-Gm-Message-State: AGi0PuasUZhMOkBtXBZuKwMP+AFVXzrZPUrPShUPzoVcoRuNj5daGrOA
-        Jtoyd/BCBmB6EsK4yU2K7dkGea/kzLNK+eRclUY=
-X-Google-Smtp-Source: APiQypL3YJRLn/CjDFWSkIcYSR70WFcO7nOnYCpUZp/Dvytozh01gIQHSjZZDOziBum8nxJbwwX/Hj3cpRG7hohBiiU=
-X-Received: by 2002:a02:bb91:: with SMTP id g17mr29519507jan.88.1588170279522;
- Wed, 29 Apr 2020 07:24:39 -0700 (PDT)
+        Wed, 29 Apr 2020 10:26:32 -0400
+Received: from mga12.intel.com ([192.55.52.136]:54130 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726493AbgD2O0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 10:26:32 -0400
+IronPort-SDR: 3NyGrNPqwWL+pR9wjTFmMlH9YZL2nyc7LKubZkK/OzBDTGi+FHrfHlj3F5tOuDFpbEpxM9wnv6
+ uYkpWeaapaBg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 07:26:32 -0700
+IronPort-SDR: nHOb7/rn16dZLOGoxN/XQ9MazwIUxFRwGeiva5XLcWsEixjxco2xTE/14H6sL6yhYGSjRJXH0s
+ ylx8I0GDw0Uw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
+   d="scan'208";a="248001618"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 29 Apr 2020 07:26:31 -0700
+Received: from [10.255.166.42] (vramuthx-mobl1.gar.corp.intel.com [10.255.166.42])
+        by linux.intel.com (Postfix) with ESMTP id BD2D9580613;
+        Wed, 29 Apr 2020 07:26:26 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
+        robh+dt@kernel.org, linux-mips@vger.kernel.org,
+        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200429133308.4f91c35c@collabora.com>
+ <4c946dbc-1518-0f0d-fac7-b2cfb4836440@linux.intel.com>
+ <20200429153205.09c498cd@collabora.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <6b3ad9f3-2a3c-b44c-3c3f-24f2178dd3fa@linux.intel.com>
+Date:   Wed, 29 Apr 2020 22:26:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200428144314.24533-1-vaibhavgupta40@gmail.com> <d33991cc-c219-dc27-7559-f30dd5f4aa0a@gmail.com>
-In-Reply-To: <d33991cc-c219-dc27-7559-f30dd5f4aa0a@gmail.com>
-From:   Vaibhav Gupta <vaibhav.varodek@gmail.com>
-Date:   Wed, 29 Apr 2020 19:53:36 +0530
-Message-ID: <CAPBsFfDn2GV8=o63zBRDhHddNnH+jUiiNCB+WRPUqH1mZasEPA@mail.gmail.com>
-Subject: Re: [Linux-kernel-mentees] [PATCH v2 0/2] realtek ethernet : remove
- legacy power management callbacks.
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        Shannon Nelson <snelson@pensando.io>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Martin Habets <mhabets@solarflare.com>, netdev@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        skhan@linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200429153205.09c498cd@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 at 23:24, Heiner Kallweit <hkallweit1@gmail.com> wrote:
->
-> On 28.04.2020 16:43, Vaibhav Gupta wrote:
-> > The purpose of this patch series is to remove legacy power management callbacks
-> > from realtek ethernet drivers.
-> >
-> > The callbacks performing suspend() and resume() operations are still calling
-> > pci_save_state(), pci_set_power_state(), etc. and handling the powermanagement
-> > themselves, which is not recommended.
-> >
-> Did you test any of the changes? If not, then mention this at least.
-> A typical comment in the commit message would be "compile-tested only".
-Yeah its compile-tested only. I should have mention that. Thanks for
-pointing it out.
->
-> In addition the following should be changed.
-> [Linux-kernel-mentees] [PATCH v2 0/2]
-> Use
-> [PATCH net-next v2 0/2]
-> instead.
-Sure!
+Hi Boris,
 
---Vaibhav Gupta
->
-> > The conversion requires the removal of the those function calls and change the
-> > callback definition accordingly.
-> >
-> > Vaibhav Gupta (2):
-> >   realtek/8139too: Remove Legacy Power Management
-> >   realtek/8139cp: Remove Legacy Power Management
-> >
-> >  drivers/net/ethernet/realtek/8139cp.c  | 25 +++++++------------------
-> >  drivers/net/ethernet/realtek/8139too.c | 26 +++++++-------------------
-> >  2 files changed, 14 insertions(+), 37 deletions(-)
-> >
->
+   Thank you very much for the review comments and your time...
+
+On 29/4/2020 9:32 pm, Boris Brezillon wrote:
+> On Wed, 29 Apr 2020 21:29:40 +0800
+> "Ramuthevar, Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> 
+>> Hi Boris,
+>>
+>>      Thank you very much for the review comments and your time..
+>>
+>> On 29/4/2020 7:33 pm, Boris Brezillon wrote:
+>>> On Wed, 29 Apr 2020 18:42:05 +0800
+>>> "Ramuthevar,Vadivel MuruganX"
+>>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>>>    
+>>>> +#define NAND_WRITE_CMD		(EBU_CON_CS_P_LOW | HSNAND_CLE_OFFS)
+>>>> +#define NAND_WRITE_ADDR		(EBU_CON_CS_P_LOW | HSNAND_ALE_OFFS)
+>>>> +
+>>>
+>>> I thought we agreed on dropping those definitions.
+>>
+>> Yes , we agreed upon it, due to assertion/de-assertion of CS kept it.
+> 
+> And I keep thinking we don't need that, just pass
+> 'HSNAND_CLE_OFFS | HSNAND_CS_OFFS' directly.
+
+Agreed!, will update in the next-patch version, Thanks!
+
+Regards
+Vadivel
+
+> 
