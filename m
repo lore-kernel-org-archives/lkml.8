@@ -5,66 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 407C7C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58104C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2001820737
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3316B2074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:24:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BA2K2kqq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SFyoKw5b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgD2AYC (ORCPT
+        id S1726493AbgD2AYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 20:24:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42522 "EHLO
+        Tue, 28 Apr 2020 20:24:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726348AbgD2AYC (ORCPT
+        by vger.kernel.org with ESMTP id S1726348AbgD2AYE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 20:24:02 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4D0EC03C1AD
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 17:24:00 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id s18so140424pgl.12
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 17:24:00 -0700 (PDT)
+        Tue, 28 Apr 2020 20:24:04 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02C4CC03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 17:24:04 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id t40so33994pjb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 17:24:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jmncuCu+aKZhegSzTt7aF9ZhKop8EJqfLP9aJCLGrf4=;
-        b=BA2K2kqqewuaVRpteNeRs5dZSrjrzRp1kWnQ0GjL5CAtO8roNP3gMiRhYo799seH4o
-         TdW8F03C3/bt5Vbj520wGNlDyEVWyZpsCMREl+NazKoJUhi6wvyhQnVlA5ZKJ1hRRZ5D
-         mKk2eulKJ7muzlbGc1BOpt1wi6VGpDgo3b8Mc=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1sHtxZdT0wI1goo5Pdu5mOhzBJD4geRWltIkc91pB48=;
+        b=SFyoKw5brVEtpGCyhtXkkCmAoKTge7h/OfRJ/dgPsd+wFkvgV9zBoAa5hmhgDH2m4c
+         ml6QcgWYpZOPgzOi6QWV4bwPsiDP0E2AuQ6qsOHh18jxuzoEzIdmN6keeTpvrkvYJd41
+         JY8hLdf9wvVPtAAn6Ki2W+j3BOuicznR97Mr4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jmncuCu+aKZhegSzTt7aF9ZhKop8EJqfLP9aJCLGrf4=;
-        b=c/QeyQ+RjAuS7y0KLXINvK+YlHcoHmihqUkCKm4/eAFDuxni6VDCjIQskfyacu4EfC
-         PmUxwDeqIFl+6s68R80AaWvbiv2p7JDqyshY/xmS5P66FW0zWE5G4eaRjvlqJ7dDixad
-         9tUaGGVqGgk8AEIZ9BTbbQD9grccyd4xZSMRMmYgMtkczIfqV9PM1lI3V56RDiPKNyOU
-         uOJdBmf63b5Omyd5CPx1PUMNCoB73M59Kr3B54XXQsXcNlDmQk+Neve2BFFTXqDZ1+ug
-         l+YvB8ffimpG7oIz9QDQ1YX1/RW4W8H1GvKZbrlEZzhFnI4GFdBBo9U11kRA4CjGZcYp
-         noxw==
-X-Gm-Message-State: AGi0PuYioY5dR1h3I0Zes7BaxFTwf00IpRDavQ17AzFBksBY+qt2lr21
-        WUMXPhzUrD+LBPMdJM0hKSYcLA==
-X-Google-Smtp-Source: APiQypLM3czQW9EKrQcTgAQqT0/w5bYQiwPnPbqMlCzllO78rB6OL5shUwpeY3R9Ce2tt7QL1NQrsw==
-X-Received: by 2002:a62:780b:: with SMTP id t11mr31963820pfc.196.1588119840119;
-        Tue, 28 Apr 2020 17:24:00 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1sHtxZdT0wI1goo5Pdu5mOhzBJD4geRWltIkc91pB48=;
+        b=eB4YPXVoW96fAc+pft+d3Ny5HTU7X8rLxnvW3G5OERM47rwFxSK+kIv25nbn4sp1q4
+         955zWH6OyrBmGKO7I2sxhAIxPkWraK3waKBnAghW/nPYWvsRP/9uRf+g+OTv7oFpf6R7
+         3YyT7/4LURjlWbQjftAHRCgRgaW0YDPiDUhFPMTLDUSN4R0QEj+1ZR8a4sNAQnN35KNj
+         yqNbFchxLA1ZJqh3rv1+yqZd/PgKf5KBK/4WPM9OLpTpsFcJI177RzNGxmVcaSC94HUM
+         jwE7gI/wN4kuhNBpsWNds48WWVHoVcFGiYqddAAifygsGTlV7BzIZZiPIEk9aIwal01b
+         UgQQ==
+X-Gm-Message-State: AGi0PuYPxHEMPvzsQ3ZfNyTULuwj/iPizB/jKEr7QzT6VEMxnwJ6e1yv
+        K8zF2/PNwy/7TopXluQR2Ryh3Bf0vkzQ4g==
+X-Google-Smtp-Source: APiQypKY7h/Fyc2zt79ZV85Mae8EDg1UcACG9PeCPGLt4r7q/EMMLU2+bZVZ+z07SHdA2ygPjFm8/g==
+X-Received: by 2002:a17:90a:fa8d:: with SMTP id cu13mr28009pjb.27.1588119843473;
+        Tue, 28 Apr 2020 17:24:03 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id g6sm3102818pjx.48.2020.04.28.17.23.59
+        by smtp.gmail.com with ESMTPSA id g6sm3102818pjx.48.2020.04.28.17.24.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 17:23:59 -0700 (PDT)
+        Tue, 28 Apr 2020 17:24:03 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     linus.walleij@linaro.org
 Cc:     Douglas Anderson <dianders@chromium.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] gpio: Document proper return value for gpio drivers
-Date:   Tue, 28 Apr 2020 17:23:27 -0700
-Message-Id: <20200428172322.1.I396f351e364f3c09df7c7606e79abefb8682c092@changeid>
+Subject: [PATCH 2/2] gpio: Make "offset" and "unsigned int", not just "unsigned"
+Date:   Tue, 28 Apr 2020 17:23:28 -0700
+Message-Id: <20200428172322.2.Iacb3c8152c3cf9015a91308678155a578b0cc050@changeid>
 X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
+In-Reply-To: <20200428172322.1.I396f351e364f3c09df7c7606e79abefb8682c092@changeid>
+References: <20200428172322.1.I396f351e364f3c09df7c7606e79abefb8682c092@changeid>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,33 +74,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The legacy defines GPIOF_DIR_XXX are only for consumers. Document the
-proper ones.  Also: don't use "_XXX" since that's harder to find with
-"git grep".  Just list both of the values.
+When I copied the function prototypes from the GPIO header file into
+my own driver, checkpatch yelled at me saying that I shouldn't use use
+"unsigned" but instead should say "unsigned int".  Let's make the
+header file use "unsigned int" so others who copy like I did won't get
+yelled at.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
- include/linux/gpio/driver.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/linux/gpio/driver.h | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
 diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index b8fc92c177eb..7b5f5681b7e4 100644
+index 7b5f5681b7e4..8c41ae41b6bb 100644
 --- a/include/linux/gpio/driver.h
 +++ b/include/linux/gpio/driver.h
-@@ -267,9 +267,9 @@ struct gpio_irq_chip {
-  * @free: optional hook for chip-specific deactivation, such as
-  *	disabling module power and clock; may sleep
-  * @get_direction: returns direction for signal "offset", 0=out, 1=in,
-- *	(same as GPIOF_DIR_XXX), or negative error.
-- *	It is recommended to always implement this function, even on
-- *	input-only or output-only gpio chips.
-+ *	(same as GPIO_LINE_DIRECTION_OUT / GPIO_LINE_DIRECTION_IN),
-+ *	or negative error. It is recommended to always implement this
-+ *	function, even on input-only or output-only gpio chips.
-  * @direction_input: configures signal "offset" as input, or returns error
-  *	This can be omitted on input-only or output-only gpio chips.
-  * @direction_output: configures signal "offset" as output, or returns error
+@@ -349,30 +349,30 @@ struct gpio_chip {
+ 	struct module		*owner;
+ 
+ 	int			(*request)(struct gpio_chip *gc,
+-						unsigned offset);
++						unsigned int offset);
+ 	void			(*free)(struct gpio_chip *gc,
+-						unsigned offset);
++						unsigned int offset);
+ 	int			(*get_direction)(struct gpio_chip *gc,
+-						unsigned offset);
++						unsigned int offset);
+ 	int			(*direction_input)(struct gpio_chip *gc,
+-						unsigned offset);
++						unsigned int offset);
+ 	int			(*direction_output)(struct gpio_chip *gc,
+-						unsigned offset, int value);
++						unsigned int offset, int value);
+ 	int			(*get)(struct gpio_chip *gc,
+-						unsigned offset);
++						unsigned int offset);
+ 	int			(*get_multiple)(struct gpio_chip *gc,
+ 						unsigned long *mask,
+ 						unsigned long *bits);
+ 	void			(*set)(struct gpio_chip *gc,
+-						unsigned offset, int value);
++						unsigned int offset, int value);
+ 	void			(*set_multiple)(struct gpio_chip *gc,
+ 						unsigned long *mask,
+ 						unsigned long *bits);
+ 	int			(*set_config)(struct gpio_chip *gc,
+-					      unsigned offset,
++					      unsigned int offset,
+ 					      unsigned long config);
+ 	int			(*to_irq)(struct gpio_chip *gc,
+-						unsigned offset);
++						unsigned int offset);
+ 
+ 	void			(*dbg_show)(struct seq_file *s,
+ 						struct gpio_chip *gc);
+@@ -459,7 +459,7 @@ struct gpio_chip {
+ };
+ 
+ extern const char *gpiochip_is_requested(struct gpio_chip *gc,
+-			unsigned offset);
++			unsigned int offset);
+ 
+ /* add/remove chips */
+ extern int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+@@ -657,9 +657,9 @@ static inline int gpiochip_irqchip_add_nested(struct gpio_chip *gc,
+ }
+ #endif /* CONFIG_LOCKDEP */
+ 
+-int gpiochip_generic_request(struct gpio_chip *gc, unsigned offset);
+-void gpiochip_generic_free(struct gpio_chip *gc, unsigned offset);
+-int gpiochip_generic_config(struct gpio_chip *gc, unsigned offset,
++int gpiochip_generic_request(struct gpio_chip *gc, unsigned int offset);
++void gpiochip_generic_free(struct gpio_chip *gc, unsigned int offset);
++int gpiochip_generic_config(struct gpio_chip *gc, unsigned int offset,
+ 			    unsigned long config);
+ 
+ /**
 -- 
 2.26.2.303.gf8c07b1a785-goog
 
