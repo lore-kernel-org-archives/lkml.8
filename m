@@ -2,106 +2,273 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A25C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84947C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 467FD208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 649D0208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:56:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LftLBldN"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="a8f8v67x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726886AbgD2M43 (ORCPT
+        id S1726914AbgD2M4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:56:29 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:35104 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgD2M43 (ORCPT
+        Wed, 29 Apr 2020 08:56:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbgD2M4y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:56:29 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03TCuOIE031057;
-        Wed, 29 Apr 2020 07:56:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588164984;
-        bh=BGf8csyyHcOLjssO7OFly5YKTdo9iXmFjjWWBgojWc8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=LftLBldNNhHKfNu2OgzSSOyhj+HzsOPSUr+e3JSyAXoA15in5OGwhHTjjuZQ34IAX
-         /wEFMyr7vk17SPBz+uOiGyO/dYOejTbrJvz3HXqYl1pQ2fbSnFeHdu2gEefU2ciQ1w
-         oOS0kXq1s+x3/VvcrMoM+nAqibaqlgZ8Qz00tgng=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03TCuOQX104101;
-        Wed, 29 Apr 2020 07:56:24 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 29
- Apr 2020 07:56:24 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 29 Apr 2020 07:56:24 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03TCuOXl089811;
-        Wed, 29 Apr 2020 07:56:24 -0500
-Subject: Re: [PATCH v21 01/16] dt: bindings: Add multicolor class dt bindings
- documention
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
-References: <20200428160338.2793-1-dmurphy@ti.com>
- <20200428160338.2793-2-dmurphy@ti.com>
- <919e7c4d-0b4e-4335-0a9b-670752fd4845@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <498ad87f-72f1-937a-6014-54b1355a1cd0@ti.com>
-Date:   Wed, 29 Apr 2020 07:50:31 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 08:56:54 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE045C03C1AD
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:56:53 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id g13so2383884wrb.8
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:56:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XYk/cAtFVHXNtNHbOE2qkoNRhInGbwIFRUiqQNZ88tg=;
+        b=a8f8v67xBBbbpVhP2ojbET/hNZ3Ft77EH/K9RBJwH5wAvLfAJLqRVT2ulzFZaaZIXy
+         onGt6EFhq3iuy6nIXexzHVJYzYcfkkAzA+6SpfXAI9RskOGq/pXoz/AD1jwiEyky4/79
+         cxN3FZXm6gJdqOutPm09CdS5OKpF0APItnoMKKPFV8iMzX8znQ7mOuLK7eN32qZaIq1m
+         I/t/KNO7kcR6EGvWH/GWCPerfPLZ/n8tiwz8b+DGInDvsumojtLJWfmr5OknjMByR14R
+         QEPY87GcCzIsXU+Jyq5pHfSEPN6fmtm9kCGBigAdgAJRd7EN5XMvzhSIaRUL89Xgmmo6
+         /1nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XYk/cAtFVHXNtNHbOE2qkoNRhInGbwIFRUiqQNZ88tg=;
+        b=VjTpxl5yQx0yI1u3IxHVfmLBMW3BtHe5PsHhDWsqbB200FuNqhK3KhceXZDhExEqTP
+         giluGpQpAa2GOpuin3+q0A3JglrxDkNfEHQXdhUPtOBhXx37O7m5BZ5guunL5I2Ybzfm
+         Afwa+Ht56zAV1L8z3hmsUmQagq6v71MEiZxriSmU5otHVF0rky1suFaCpgMWaekYRuPM
+         Tc5zHwxJST46RLdAIhiklYj/3tuI5BYGMuSDR+r98qBwi28fASbt01fZljuwty2KUJv6
+         HJmSwPdno1IZUUlL43fS5pFxomKCls+Sv1Vo83sejEL8bISQr/jjW3Akg/DDBj4zlWJp
+         EXLA==
+X-Gm-Message-State: AGi0Pua5GcHQPQFtcmqjh0o1kTaLDGYusallNZBlZNwh9p2ZuuaiJ8XE
+        rgfRqCPOAVt3FmSPV2CrGQQG4w==
+X-Google-Smtp-Source: APiQypJwsQvNohta1HoBo/PvRb08fLLD2gpABkAb6Dkt6t7shvmXZLPP92iCaOUixL+dKtyh4Me/Cg==
+X-Received: by 2002:adf:a309:: with SMTP id c9mr36694231wrb.97.1588165012332;
+        Wed, 29 Apr 2020 05:56:52 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id h13sm28683465wrs.22.2020.04.29.05.56.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 05:56:51 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 14:57:36 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+Subject: Re: [PATCH] arm: dts: am33xx-l4: add gpio-line-names to gpio
+ controllers
+Message-ID: <20200429125736.GA31476@x1>
+References: <20200427233116.GA18917@x1>
+ <b15f2577-8a7d-4c18-1633-d47133247f49@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <919e7c4d-0b4e-4335-0a9b-670752fd4845@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b15f2577-8a7d-4c18-1633-d47133247f49@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+On Tue, Apr 28, 2020 at 10:37:43AM +0300, Grygorii Strashko wrote:
+> 
+> 
+> On 28/04/2020 02:31, Drew Fustini wrote:
+> > Add gpio-line-names properties to the gpio controller nodes.  The names
+> > correspond to the AM335x pin names which are also the muxmode 0 signal
+> > names.  Refer to "Table 4-2. Pin Attributes" in the TI AM335x Sitara
+> > Processors datasheet:
+> This misuse GPIO DT bindings:
+> "
+> Optionally, a GPIO controller may have a "gpio-line-names" property. This is
+> an array of strings defining the names of the GPIO lines going out of the
+> GPIO controller. This name should be the most meaningful producer name
+> for the system, such as a rail name indicating the usage. Package names
+> such as pin name are discouraged: such lines have opaque names (since they
+> are by definition generic purpose) and such names are usually not very
+> helpful. For example "MMC-CD", "Red LED Vdd" and "ethernet reset" are
+> reasonable line names as they describe what the line is used for. "GPIO0"
+> is not a good name to give to a GPIO line. Placeholders are discouraged:
+> rather use the "" (blank string) if the use of the GPIO line is undefined
+> in your design. The names are assigned starting from line offset 0 from
+> left to right from the passed array. An incomplete array (where the number
+> of passed named are less than ngpios) will still be used up until the last
+> provided valid line index.
+> "
 
-On 4/28/20 3:30 PM, Jacek Anaszewski wrote:
-> Dan,
->
-> On 4/28/20 6:03 PM, Dan Murphy wrote:
->> Add DT bindings for the LEDs multicolor class framework.
->> Add multicolor ID to the color ID list for device tree bindings.
->>
->> CC: Rob Herring <robh@kernel.org>
->> Acked-by: Pavel Machek <pavel@ucw.cz>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   .../bindings/leds/leds-class-multicolor.txt   | 98 +++++++++++++++++++
->>   drivers/leds/led-core.c                       |  1 +
->>   include/dt-bindings/leds/common.h             |  3 +-
->>   3 files changed, 101 insertions(+), 1 deletion(-)
->>   create mode 100644 
->> Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->>
->> diff --git 
->> a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt 
->> b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->> new file mode 100644
->> index 000000000000..4b1bd82f2a42
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->
-> Why isn't it yaml?
->
-Converted
+Thank you for pointing out that "Package names such as pin name are
+discouraged".  That is what I was doing in that patch which I now
+realize is incorrect.
 
-Dan
+The goal to adding the gpio-line-names was to have gpioinfo provide
+helpful information to a user on the BeagleBone.  Currently this is all
+that appears when booting 5.7-rc2 on a BegaleBone:
+
+debian@beaglebone:~$ gpioinfo
+gpiochip0 - 32 lines:
+	line   0:      unnamed       unused   input  active-high
+	line   1:      unnamed       unused   input  active-high
+	line   2:      unnamed       unused   input  active-high
+	line   3:      unnamed       unused   input  active-high
+	line   4:      unnamed       unused   input  active-high
+	line   5:      unnamed       unused   input  active-high
+	line   6:      unnamed         "cd"   input   active-low [used]
+	line   7:      unnamed       unused   input  active-high
+	line   8:      unnamed       unused   input  active-high
+	line   9:      unnamed       unused   input  active-high
+	line  10:      unnamed       unused   input  active-high
+	line  11:      unnamed       unused   input  active-high
+	line  12:      unnamed       unused   input  active-high
+	line  13:      unnamed       unused   input  active-high
+	line  14:      unnamed       unused   input  active-high
+	line  15:      unnamed       unused   input  active-high
+	line  16:      unnamed       unused   input  active-high
+	line  17:      unnamed       unused   input  active-high
+	line  18:      unnamed       unused   input  active-high
+	line  19:      unnamed       unused   input  active-high
+	line  20:      unnamed       unused   input  active-high
+	line  21:      unnamed       unused   input  active-high
+	line  22:      unnamed       unused   input  active-high
+	line  23:      unnamed       unused   input  active-high
+	line  24:      unnamed       unused   input  active-high
+	line  25:      unnamed       unused   input  active-high
+	line  26:      unnamed       unused   input  active-high
+	line  27:      unnamed       unused   input  active-high
+	line  28:      unnamed       unused   input  active-high
+	line  29:      unnamed       unused   input  active-high
+	line  30:      unnamed       unused   input  active-high
+	line  31:      unnamed       unused   input  active-high
+gpiochip1 - 32 lines:
+	line   0:      unnamed       unused   input  active-high
+	line   1:      unnamed       unused   input  active-high
+	line   2:      unnamed       unused   input  active-high
+	line   3:      unnamed       unused   input  active-high
+	line   4:      unnamed       unused   input  active-high
+	line   5:      unnamed       unused   input  active-high
+	line   6:      unnamed       unused   input  active-high
+	line   7:      unnamed       unused   input  active-high
+	line   8:      unnamed       unused   input  active-high
+	line   9:      unnamed       unused   input  active-high
+	line  10:      unnamed       unused   input  active-high
+	line  11:      unnamed       unused   input  active-high
+	line  12:      unnamed       unused   input  active-high
+	line  13:      unnamed       unused   input  active-high
+	line  14:      unnamed       unused   input  active-high
+	line  15:      unnamed       unused   input  active-high
+	line  16:      unnamed       unused   input  active-high
+	line  17:      unnamed       unused   input  active-high
+	line  18:      unnamed       unused   input  active-high
+	line  19:      unnamed       unused   input  active-high
+	line  20:      unnamed       unused   input  active-high
+	line  21:      unnamed "beaglebone:green:usr0" output active-high [used]
+	line  22:      unnamed "beaglebone:green:usr1" output active-high [used]
+	line  23:      unnamed "beaglebone:green:usr2" output active-high [used]
+	line  24:      unnamed "beaglebone:green:usr3" output active-high [used]
+	line  25:      unnamed       unused   input  active-high
+	line  26:      unnamed       unused   input  active-high
+	line  27:      unnamed       unused   input  active-high
+	line  28:      unnamed       unused   input  active-high
+	line  29:      unnamed       unused   input  active-high
+	line  30:      unnamed       unused   input  active-high
+	line  31:      unnamed       unused   input  active-high
+gpiochip2 - 32 lines:
+	line   0:      unnamed       unused   input  active-high
+	line   1:      unnamed       unused   input  active-high
+	line   2:      unnamed       unused   input  active-high
+	line   3:      unnamed       unused   input  active-high
+	line   4:      unnamed       unused   input  active-high
+	line   5:      unnamed       unused   input  active-high
+	line   6:      unnamed       unused   input  active-high
+	line   7:      unnamed       unused   input  active-high
+	line   8:      unnamed       unused   input  active-high
+	line   9:      unnamed       unused   input  active-high
+	line  10:      unnamed       unused   input  active-high
+	line  11:      unnamed       unused   input  active-high
+	line  12:      unnamed       unused   input  active-high
+	line  13:      unnamed       unused   input  active-high
+	line  14:      unnamed       unused   input  active-high
+	line  15:      unnamed       unused   input  active-high
+	line  16:      unnamed       unused   input  active-high
+	line  17:      unnamed       unused   input  active-high
+	line  18:      unnamed       unused   input  active-high
+	line  19:      unnamed       unused   input  active-high
+	line  20:      unnamed       unused   input  active-high
+	line  21:      unnamed       unused   input  active-high
+	line  22:      unnamed       unused   input  active-high
+	line  23:      unnamed       unused   input  active-high
+	line  24:      unnamed       unused   input  active-high
+	line  25:      unnamed       unused   input  active-high
+	line  26:      unnamed       unused   input  active-high
+	line  27:      unnamed       unused   input  active-high
+	line  28:      unnamed       unused   input  active-high
+	line  29:      unnamed       unused   input  active-high
+	line  30:      unnamed       unused   input  active-high
+	line  31:      unnamed       unused   input  active-high
+gpiochip3 - 32 lines:
+	line   0:      unnamed       unused   input  active-high
+	line   1:      unnamed       unused   input  active-high
+	line   2:      unnamed       unused   input  active-high
+	line   3:      unnamed       unused   input  active-high
+	line   4:      unnamed       unused   input  active-high
+	line   5:      unnamed       unused   input  active-high
+	line   6:      unnamed       unused   input  active-high
+	line   7:      unnamed       unused   input  active-high
+	line   8:      unnamed       unused   input  active-high
+	line   9:      unnamed       unused   input  active-high
+	line  10:      unnamed       unused   input  active-high
+	line  11:      unnamed       unused   input  active-high
+	line  12:      unnamed       unused   input  active-high
+	line  13:      unnamed       unused   input  active-high
+	line  14:      unnamed       unused   input  active-high
+	line  15:      unnamed       unused   input  active-high
+	line  16:      unnamed       unused   input  active-high
+	line  17:      unnamed       unused   input  active-high
+	line  18:      unnamed       unused   input  active-high
+	line  19:      unnamed       unused   input  active-high
+	line  20:      unnamed       unused   input  active-high
+	line  21:      unnamed       unused   input  active-high
+	line  22:      unnamed       unused   input  active-high
+	line  23:      unnamed       unused   input  active-high
+	line  24:      unnamed       unused   input  active-high
+	line  25:      unnamed       unused   input  active-high
+	line  26:      unnamed       unused   input  active-high
+	line  27:      unnamed       unused   input  active-high
+	line  28:      unnamed       unused   input  active-high
+	line  29:      unnamed       unused   input  active-high
+	line  30:      unnamed       unused   input  active-high
+	line  31:      unnamed       unused   input  active-high
+
+I discussed it with Robert Nelson and Jason Kridner and the idea came up
+that using the beagle pin header labels would be more useful than the
+AM3358 pin names.
+
+> Additional note. On other TI SoCs like am437x the same gpio line can be routed to more
+> than one pin (but only one pin can be used).
+> gpio0_0 GPIO IO -> A17, D16
+
+Thank you for that insights.
+
+Instead of am33xx-l4.dtsi, I am thinking of adding a gpio-line-names
+property in: source/arch/arm/boot/dts/am335x-bone-common.dtsi
+
+For gpiochip0, line 0 and line 1 would be "" as they are not connected
+to P8/P9 header.  line 2 would be labeled "P9_22", line 3 would be
+"P9_21", etc.  I'll post a complete patch for am335x-bone-common.dtsi
+and the gpioinfo output to demonstrate the usefulness.
+
+
+thanks,
+drew
 
