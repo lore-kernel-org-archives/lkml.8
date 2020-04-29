@@ -2,103 +2,165 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4D4C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC80C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E882220BED
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11A1320757
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:07:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lGqjPQl/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3D79jb7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgD2WG0 (ORCPT
+        id S1727824AbgD2WHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 18:06:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48668 "EHLO
+        Wed, 29 Apr 2020 18:07:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726481AbgD2WGY (ORCPT
+        by vger.kernel.org with ESMTP id S1726481AbgD2WHG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 18:06:24 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AC6EC03C1AE;
-        Wed, 29 Apr 2020 15:06:24 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49CCJs1VzRz9sSK;
-        Thu, 30 Apr 2020 08:06:21 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588197981;
-        bh=llel0p769tM009nqjF6teU3n59YzZG+i/iE2Lrn+Vv4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=lGqjPQl/b94Coas8Sai7PLNn6jFIT2GhsyOfRGewjx/UlnvpFjJj3LdnjOjFKYC1o
-         N1b6N1pBRHo3OsbwWkG4auASbGFSpws5wUU7QnZb9/jctFS+jlAIksRJzMSBgLmb8S
-         cY8J6DK1uc0Wu8fBIiFWRBqoAyr89sRVeUjXdUoXEFYSkhsawx5KCaALnCLBsLDmHL
-         TYFdc662LGP74wx9hDCbFCKpxLRkUw3dW0j1yMC0vXcF1DgOl1IFgRhdQUSjCYBMVN
-         4VulGO3jgu+/taK4ffF7lRQVZ6FhPJ1op2ZWyAQ2zoxdvh3vEG8O8UfZf9Na48zLgT
-         FXF4DdSF41Q9w==
-Date:   Thu, 30 Apr 2020 08:06:19 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jason Gerecke <killertofu@gmail.com>
-Subject: linux-next: Fixes tag needs some work in the hid tree
-Message-ID: <20200430080619.67ff0ac0@canb.auug.org.au>
+        Wed, 29 Apr 2020 18:07:06 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88A2BC03C1AE;
+        Wed, 29 Apr 2020 15:07:06 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id f7so1757551pfa.9;
+        Wed, 29 Apr 2020 15:07:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9ndRoPlpZBec4FKvvdG47QpHsR6Nba+z0J+SwIthjZk=;
+        b=C3D79jb7ilSAHTz9OU68LGMkmtVmvRhXcs9QnnUJuHYFVMI+CyP81stbxFpj4e+3lD
+         39eycotiG0E5RgJcWixUQuNFX4w5U5MR277EwljiB2PREOVxE+n9Kn4iFbb1tgpXAZSM
+         LntQvfLh1YvODX/pj7IW1w+rRaOh3vzFjFCTN1JrpG4ljUThPreehFIOq/MQXJ+kXsYS
+         G1QSh70hqoGxgxFr0kx80tITYSOQVDRxyDisc2056uUwF/eNvKsuMXKHcMQgLUAiX1WG
+         6QjNuiOA7g+qNd/Gqyy9cn91IdpZjxk0TEe7uLeoqWM1n1hCPSWdP09wPKS6ep5EwHlA
+         XZcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=9ndRoPlpZBec4FKvvdG47QpHsR6Nba+z0J+SwIthjZk=;
+        b=XPgVQP5nYoX321vHhPN6393FzjAZwqHQRM/AwgAe/YOo8uC9jyaL6AUwywloskDQLH
+         DTrowdJeE9ParFeNddD4Vz/qWUYhNWg6ljcPXG6OQDkZY6JK75RvROoKiO4HXcA+/zm/
+         bGWwOKpx5wqru+ni3jfwZRgqmcwiUXDGRySRZC7buDQoSv90Zxyeql7+3VCIXYkKR7U9
+         maL/7QmBB6SmLKOlg9Fnt5aQW9nqD41XWJKK5VI6Bh00kP9DY/sYkqPA/CiXk0FS3bjg
+         vCLp3YwMv1CtOtceJd4mjBcFkycn9M/kBoxEvRVRJpYZ1SaelKCgRUBqLXyogwiRVIDd
+         ID/Q==
+X-Gm-Message-State: AGi0PuZz4dqLMDeBAn7vByky6R5AWKsGUhnI8MyE86Woy20thnhhVTQt
+        60N2hMtDXX9mrePkoIWu3BUlSf5+
+X-Google-Smtp-Source: APiQypKr4XUJ7pjYbZmWvhtvPgRnCnwI49jHaohI3baAgQHs8YfpLCYz3duP8JmElF6h3RbRYXfK4g==
+X-Received: by 2002:a63:7c4:: with SMTP id 187mr317426pgh.59.1588198025793;
+        Wed, 29 Apr 2020 15:07:05 -0700 (PDT)
+Received: from [10.67.49.112] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 82sm1825658pfv.214.2020.04.29.15.07.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Apr 2020 15:07:05 -0700 (PDT)
+Subject: Re: [PATCH net-next v2 0/7] net: bcmgenet: add support for Wake on
+ Filter
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1588190526-2082-1-git-send-email-opendmb@gmail.com>
+From:   Doug Berger <opendmb@gmail.com>
+Autocrypt: addr=opendmb@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ rQQYjNSD8+NSdOsIpGNCZ9xhWw==
+Message-ID: <8ebd11c0-97f5-dfd4-d194-009d4df99aa6@gmail.com>
+Date:   Wed, 29 Apr 2020 15:07:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/922d1iaYv+dtd8Vqc8DfX=A";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <1588190526-2082-1-git-send-email-opendmb@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/922d1iaYv+dtd8Vqc8DfX=A
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 4/29/20 1:01 PM, Doug Berger wrote:
+> Changes in v2:
+> 	Corrected Signed-off-by for commit 3/7.
+> 
+> This commit set adds support for waking from 'standby' using a
+> Rx Network Flow Classification filter specified with ethtool.
+> 
+> The first two commits are bug fixes that should be applied to the
+> stable branches, but are included in this patch set to reduce merge
+> conflicts that might occur if not applied before the other commits
+> in this set.
+> 
+> The next commit consolidates WoL clock managment as a part of the
+> overall WoL configuration.
+> 
+> The next commit restores a set of functions that were removed from
+> the driver just prior to the 4.9 kernel release.
+> 
+> The following commit relocates the functions in the file to prevent
+> the need for additional forward declarations.
+> 
+> Next, support for the Rx Network Flow Classification interface of
+> ethtool is added.
+> 
+> Finally, support for the WAKE_FILTER wol method is added.
+> 
+> Doug Berger (7):
+>   net: bcmgenet: set Rx mode before starting netif
+>   net: bcmgenet: Fix WoL with password after deep sleep
+>   net: bcmgenet: move clk_wol management to bcmgenet_wol
+>   Revert "net: bcmgenet: remove unused function in bcmgenet.c"
+>   net: bcmgenet: code movement
+>   net: bcmgenet: add support for ethtool rxnfc flows
+>   net: bcmgenet: add WAKE_FILTER support
+> 
+>  drivers/net/ethernet/broadcom/genet/bcmgenet.c     | 673 +++++++++++++++++++--
+>  drivers/net/ethernet/broadcom/genet/bcmgenet.h     |  21 +-
+>  drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c |  90 ++-
+>  3 files changed, 708 insertions(+), 76 deletions(-)
+> 
+Please holdoff on this version as there is a bug here that I'd like to
+patch first.
 
-Hi all,
-
-In commit
-
-  dcce8ef8f70a ("HID: wacom: Report 2nd-gen Intuos Pro S center button stat=
-us over BT")
-
-Fixes tag
-
-  Fixes: cd47de45b855 ("HID: wacom: Add 2nd gen Intuos Pro Small support")
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Maybe you meant
-
-Fixes: 912c6aa67ad4 ("HID: wacom: Add 2nd gen Intuos Pro Small support")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/922d1iaYv+dtd8Vqc8DfX=A
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6p+lsACgkQAVBC80lX
-0GxFYwf/aWR2OAMTFV6BSI9P+IBsSVZAxw7cNAYJ2oXNwH2P+0T30Qm+GVaHmcVl
-mNHKIvLyue4mAQwvKj4WAKP9KZwD5u1leRmNFICGzhgpvjWKFC8WARashuBNGndc
-W55OxlYrfkF2tmCThBQ85jLGoIHrJscdV06iiVpXrbMbgHJZMiNovZjsfFwllygf
-ZC3QHMbi1g9hBozuNOPZN4PDcbbQ9tGoAnV7SMQtU3vmPuzs0KtJ40bJDJDENbBS
-xtQhma5aivY7za4gU8h8spgi5QikZ6R4+n/2rQuSA+SWKF2IN0WlfRHafc4Uexzi
-3uV5fbeAWyYVZLs4TKK0q2O4Lg1MkQ==
-=hwPD
------END PGP SIGNATURE-----
-
---Sig_/922d1iaYv+dtd8Vqc8DfX=A--
+Thanks,
+    Doug
