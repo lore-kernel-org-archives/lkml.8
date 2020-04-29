@@ -2,106 +2,124 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFACAC83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEFAC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA4C2074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:43:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588160615;
-	bh=Vptt1UPaXGgg60ik9YIZYYTweSPZHUiIzyKRufAMwew=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oKRDfGhIMGB5Ga/3vCnhkgYUGh5sPDTqVx1fXiXCf6JtcCvCjQEL8rmsC1/mHYHxL
-	 EmqLta2FhCZ9Z0cqwIwg5nki4Pdj1GMtnLpkaQheImNfJRkKcC3JH21fG5hntGAjq4
-	 VliZmhUY6jDaxcfb7rnzy5AosshIY7pMdgEhosUk=
+	by mail.kernel.org (Postfix) with ESMTP id C54412073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:44:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="m8aseD4B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726737AbgD2Lne (ORCPT
+        id S1726743AbgD2Lo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 07:43:34 -0400
-Received: from mail-wm1-f44.google.com ([209.85.128.44]:36459 "EHLO
-        mail-wm1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgD2Lne (ORCPT
+        Wed, 29 Apr 2020 07:44:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35396 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726345AbgD2Lo4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 07:43:34 -0400
-Received: by mail-wm1-f44.google.com with SMTP id u127so1669222wmg.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 04:43:32 -0700 (PDT)
+        Wed, 29 Apr 2020 07:44:56 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC275C03C1AD
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 04:44:54 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id j2so2111242wrs.9
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 04:44:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=ycL/xol5LXc1oCnHf2lKepLV8YI7R5oU0gAskKNmHEg=;
+        b=m8aseD4BGSL2eeyIyCCtWjiVzInZjA9AOhfIWWHODJqtsZn3u8IiZm78LhL6xbNLXZ
+         egBMXWzyS5tpOXxLihcfxqD+Lb2ikPScf8qTirnKlsO3Iw4So/70aOvCDL9XG3pDLZTD
+         MFyA6G+W+2lloNKnkwXdiIl78GUA8HPcqZgVV6JmrVySRDyfhw/Oe1KUPW2mVSo671o2
+         l6HNwZkudieQaqswTiPD0p3wq/2WHsKUqLgcnLjh5W7gLr1QAfVXaBUGD/iSvK7doL33
+         o3T/OEEmwDHnVzQKZod20K0v7oHIk64Ihl2XPtOQ7zkmzeHlpneKKQu2dNVhRie6qCsd
+         0rCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vevoXjwrhXkj2nIiMSFHvSIkFN/LcgtuZhtgDAeX9Ho=;
-        b=YMefvzWk97A6u3K0L0ZVr8W7vE1ogxWJV94aa9KTKzTmYc8kGi53tZh71ZVXR/so+M
-         OjpcXJpHk507wGrlLpBodmKK6gGbb3lpjjmOu1GbRvURBGhfEf51HLUlaehb/HEqskD9
-         LU+4dvg4OXFGx+JnElb/a3nb4n7rpLCyFM0T5zB+XoNjNaRQoIamiRhUX8H7kBpkM+I2
-         EjCC4rnvLrY3gxYcCPZ/Vgs6j3urVL2gLUb7Zi/Y3Cr2fAL91a4/fMBlqRuAGE9DmxpS
-         LX+hKkAgl4NEn+gHbdJ2xISIZKam0hUmIGgcfCXa0i9j9/gNW3ohre59WrVGt9l+1rH5
-         5f5A==
-X-Gm-Message-State: AGi0PuZIhJ6LDpyp8lKj4y+frsMHJ/asUVrBIWRrqXh6QenqT/H5RBJk
-        qCGqGcNeJDMHLxRVz87EyjoeVVtn
-X-Google-Smtp-Source: APiQypJQvLdxuHCouxvtvxUtGgJlISAl5jQQE/s/6hextuemczADwYjrAHODiBlHWhpH8mpep7fiaA==
-X-Received: by 2002:a05:600c:2945:: with SMTP id n5mr2815015wmd.148.1588160612267;
-        Wed, 29 Apr 2020 04:43:32 -0700 (PDT)
-Received: from localhost (ip-37-188-130-62.eurotel.cz. [37.188.130.62])
-        by smtp.gmail.com with ESMTPSA id z10sm30564879wrg.69.2020.04.29.04.43.30
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=ycL/xol5LXc1oCnHf2lKepLV8YI7R5oU0gAskKNmHEg=;
+        b=kt/C4I8gzwGdqbOmbTfyIHtr6ZxsybhqwH4bFJJLxoXjF1uMnH7WJW+qI2nngUC16x
+         0rRxashMQkDfW0G2s5mbBcxuvq+LJp8UAJ+qE387YvAukHIM8rPYfLX/+1s9XxJQVYX3
+         5U3XzX4zjhhsqlwOwvipTiXgX69LPLy0xpPuVIeOPIkd6BBVcEQ2NzldAFdqxOe86Kdy
+         OaS/yHX45BzleBFdx8g1jvlLsqGHoww4IUhL2deV65j9cYx7F+PicRIkU9fl6XzW2fKo
+         xwFfoMHa+E8Ur8k7MrHxp/WVRiSvGzU9L4XKpo5VoPfqlItRGVZQbL1PceqQToUD9LHs
+         m18w==
+X-Gm-Message-State: AGi0PuYyuI2BRGmQ87oryOA9tId4psQJizzHAw0Hs5h2hHmsWbm+6/Zz
+        Zqwl/z6gWm+oPa6MLYC/ofb4nQ==
+X-Google-Smtp-Source: APiQypJh67PJZJCKLabOQpyBwAm1TEQoQ/CjhAvqt2E5lBGcLL5HQluaH1NaN2U1R8Ksxp+nn0C5Xg==
+X-Received: by 2002:adf:f1c5:: with SMTP id z5mr38733111wro.100.1588160693203;
+        Wed, 29 Apr 2020 04:44:53 -0700 (PDT)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id z8sm28289847wrr.40.2020.04.29.04.44.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 04:43:31 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 13:43:29 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>
-Subject: Re: [patch] mm, oom: stop reclaiming if GFP_ATOMIC will start
- failing soon
-Message-ID: <20200429114329.GB28637@dhcp22.suse.cz>
-References: <alpine.DEB.2.22.394.2004241347310.70176@chino.kir.corp.google.com>
- <20200425172706.26b5011293e8dc77b1dccaf3@linux-foundation.org>
- <alpine.DEB.2.22.394.2004261959310.80211@chino.kir.corp.google.com>
- <20200427133051.b71f961c1bc53a8e72c4f003@linux-foundation.org>
- <28e35a8b-400e-9320-5a97-accfccf4b9a8@suse.cz>
- <alpine.DEB.2.22.394.2004281436280.131129@chino.kir.corp.google.com>
- <31f1f84d-c5fe-824b-3c28-1a9ad69fcae5@suse.cz>
- <20200429090437.GX28637@dhcp22.suse.cz>
- <bcf6d15f-cbdb-8c45-6087-a0f2aab737c6@i-love.sakura.ne.jp>
+        Wed, 29 Apr 2020 04:44:52 -0700 (PDT)
+References: <20200417184127.1319871-1-martin.blumenstingl@googlemail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org
+Cc:     narmstrong@baylibre.com, mturquette@baylibre.com, sboyd@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] clk: meson8b: updates for video clocks / resets
+In-reply-to: <20200417184127.1319871-1-martin.blumenstingl@googlemail.com>
+Date:   Wed, 29 Apr 2020 13:44:51 +0200
+Message-ID: <1jr1w6iki4.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bcf6d15f-cbdb-8c45-6087-a0f2aab737c6@i-love.sakura.ne.jp>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 29-04-20 19:45:07, Tetsuo Handa wrote:
-> On 2020/04/29 18:04, Michal Hocko wrote:
-> > Completely agreed! The in kernel OOM killer is to deal with situations
-> > when memory is desperately depleted without any sign of a forward
-> > progress. If there is a reclaimable memory then we are not there yet.
-> > If a workload can benefit from early oom killing based on response time
-> > then we have facilities to achieve that (e.g. PSI).
-> 
-> Can PSI work even if userspace process cannot avoid reclaimable memory
-> allocations (e.g. page fault, file read) is already stalling?
 
-The userspace itself would have to be careful and use mlock of course.
-But collecting the psi information itself should be pretty independent
-on memory allocations as monitoring the system memory state is one of
-the main usecases.
+On Fri 17 Apr 2020 at 20:41, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
 
-> I'm not sure
-> whether PSI allows responding quickly enough to "keep reclaimable memory
-> allocations not to reclaim" despite there is still reclaimable memory...
+> This is the first batch of fixes and updates for the Meson8/8b/8m2
+> clock controller driver.
+>
+> The first patch fixes the video clock hierarchy. Special thanks to
+> Neil for providing a lot of details about the video clock tree!
+>
+> The second and third came up while testing video output on my EC-100
+> (Endless Mini). This board is special because u-boot does not enable
+> the video outputs like most other u-boot versions do. However, this
+> is very useful for development because it shows (the hard way ;))
+> where the existing code is buggy.
+>
+> The last patch is a small improvement for the VPU clock so we
+> utilize the glitch-free mux (on SoCs which support it) and avoid
+> problems by changing the "live" clock tree at runtime (with the mali
+> clock this resulted in system hangs/freezes).
+>
+> In my opinion all of these patches - including the fixes - can go to
+> "next" because the relevant clock trees are still read-only.
+>
+>
+> Changes since v1 at [0]:
+> - updated the description in patch #1 to clarify that (it seems that)
+>   there is no fixed pre-multiplier for the HDMI PLL (like on GXL for
+>   example). Spotted by Jerome - thanks!
+> - simplified the logic for the active_low resets in patch #2 by
+>   shortening the if ... else. Thanks to Jerome for the suggestion.
+>
+>
+> [0] https://patchwork.kernel.org/cover/11489079/
+>
+>
+> Martin Blumenstingl (4):
+>   clk: meson: meson8b: Fix the first parent of vid_pll_in_sel
+>   clk: meson: meson8b: Fix the polarity of the RESET_N lines
+>   clk: meson: meson8b: Fix the vclk_div{1,2,4,6,12}_en gate bits
+>   clk: meson: meson8b: Make the CCF use the glitch-free VPU mux
 
-PSI is supposed to monitor time spent in the memory allocator (among
-other things) and report the tendency. This should be a sufficient
-metric to judge that a large part of the userspace is not making forward
-progress.
--- 
-Michal Hocko
-SUSE Labs
+Applied, Thx
+
+>
+>  drivers/clk/meson/meson8b.c | 105 +++++++++++++++++++++++++-----------
+>  1 file changed, 73 insertions(+), 32 deletions(-)
+
