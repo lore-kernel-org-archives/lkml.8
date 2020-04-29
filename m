@@ -2,130 +2,88 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C89C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E1AC83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 734E4206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:40:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b="iRH/fvJ6"
+	by mail.kernel.org (Postfix) with ESMTP id DAD542085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:40:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbgD2Nke (ORCPT
+        id S1728551AbgD2Nko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:40:34 -0400
-Received: from gproxy9-pub.mail.unifiedlayer.com ([69.89.20.122]:59082 "EHLO
-        gproxy9-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727863AbgD2Nka (ORCPT
+        Wed, 29 Apr 2020 09:40:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727906AbgD2Nhm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:40:30 -0400
-Received: from cmgw12.unifiedlayer.com (unknown [10.9.0.12])
-        by gproxy9.mail.unifiedlayer.com (Postfix) with ESMTP id 8CA461E0A79
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:40:29 -0600 (MDT)
-Received: from md-in-79.webhostbox.net ([43.225.55.182])
-        by cmsmtp with ESMTP
-        id TmwtjRkWTN8ArTmwujShec; Wed, 29 Apr 2020 07:40:29 -0600
-X-Authority-Reason: nr=8
-X-Authority-Analysis: v=2.3 cv=YYGTGTZf c=1 sm=1 tr=0
- a=LfuyaZh/8e9VOkaVZk0aRw==:117 a=LfuyaZh/8e9VOkaVZk0aRw==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=cl8xLZFz6L8A:10:nop_rcvd_month_year
- a=oz0wMknONp8A:10:endurance_base64_authed_username_1 a=vU9dKmh3AAAA:8
- a=VwQbUJbxAAAA:8 a=zKD5vtlRtLnuLDy9xr4A:9
- a=sfIEtMYjypgA:10:uccc_2email_address a=rsP06fVo5MYu2ilr0aT5:22
- a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=linumiz.com
-        ; s=default; h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Jq/MMu6L30dsLWRddLaNxkvwFcbee6RqmoIFiQYoC14=; b=iRH/fvJ68raZFp/QLSn0oo2x7m
-        olazxcq2tM1L7Vxou2ciatH+Rkr3WHGUj3t4sYnH76n9hvgg9GwzRfNcLcYZv6fyrTb7qyFyashiw
-        SqVH4vRmOzrLL3ijVt05qNbaJ2LEBd9HFCS1Heya1ZKrJTe1kWiQahlgbiSrECCecFldSIyuM4x72
-        c7Uz87S4iv9YcNyEJSr37memTn0pEqqXM7yBm6rJNXvN6NwW5rSCHiHGCnf5XeHbLERNwxhdxoBwI
-        ca8c3WXbOHoM2H3k1U5no7Wl4sXhGnQ6a5A4Qz7cI49OeMTDnr/aQgKO7FBm64OSKgDGPJKONezfg
-        5SGP7O5g==;
-Received: from p5b3f6bb1.dip0.t-ipconnect.de ([91.63.107.177]:33262 helo=localhost.localdomain)
-        by md-in-79.webhostbox.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <saravanan@linumiz.com>)
-        id 1jTmwr-0009y4-Iz; Wed, 29 Apr 2020 13:40:26 +0000
-From:   Saravanan Sekar <saravanan@linumiz.com>
-To:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, broonie@kernel.org,
-        lgirdwood@gmail.com, saravanan@linumiz.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: [PATCH v2 3/4] iio: accel: wsen-itds accel documentation
-Date:   Wed, 29 Apr 2020 15:39:42 +0200
-Message-Id: <20200429133943.18298-4-saravanan@linumiz.com>
+        Wed, 29 Apr 2020 09:37:42 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C417C03C1AD;
+        Wed, 29 Apr 2020 06:37:42 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 34E20791; Wed, 29 Apr 2020 15:37:36 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     Daniel Drake <drake@endlessm.com>, jonathan.derrick@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH v3 05/34] iommu/amd: Remove dma_mask check from check_device()
+Date:   Wed, 29 Apr 2020 15:36:43 +0200
+Message-Id: <20200429133712.31431-6-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200429133943.18298-1-saravanan@linumiz.com>
-References: <20200429133943.18298-1-saravanan@linumiz.com>
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - md-in-79.webhostbox.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - linumiz.com
-X-BWhitelist: no
-X-Source-IP: 91.63.107.177
-X-Source-L: No
-X-Exim-ID: 1jTmwr-0009y4-Iz
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: p5b3f6bb1.dip0.t-ipconnect.de (localhost.localdomain) [91.63.107.177]:33262
-X-Source-Auth: saravanan@linumiz.com
-X-Email-Count: 33
-X-Source-Cap: bGludW1jbWM7aG9zdGdhdG9yO21kLWluLTc5LndlYmhvc3Rib3gubmV0
-X-Local-Domain: yes
+In-Reply-To: <20200429133712.31431-1-joro@8bytes.org>
+References: <20200429133712.31431-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation about device operating mode and output data range
-supported according to operating mode
+From: Joerg Roedel <jroedel@suse.de>
 
-Signed-off-by: Saravanan Sekar <saravanan@linumiz.com>
+The check was only needed for the DMA-API implementation in the AMD
+IOMMU driver, which no longer exists.
+
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- .../ABI/testing/sysfs-bus-iio-wsen-itds       | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
+ drivers/iommu/amd_iommu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds b/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
-new file mode 100644
-index 000000000000..5979f2b8aa1a
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
-@@ -0,0 +1,23 @@
-+What:		/sys/bus/iio/devices/iio\:device0/in_accel_samp_freq_available
-+KernelVersion:	5.7
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Reading gives range of sample frequencies available for current operating mode
-+		after one data has generated.
-+
-+		Access: Read
-+		Valid values: represented in Hz
-+		- range [12.5, 1600] for high permormance mode
-+		- range [1.6, 200] for normal/low power mode
-+
-+What:		/sys/bus/iio/devices/iio\:device0/operating_mode
-+KernelVersion:	5.7
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Represents the device operating mode. High performance mode gives high output
-+		data rate and low noise compared to normal mode. Normal mode consumes less
-+		current.  In single shot device enters to lowpower after one data has
-+		generated.
-+
-+		Access: Read, Write
-+		Valid values: "lowpower", "normal", "high_perf", "single_shot"
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 73b4f84cf449..504f2db75eda 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -326,7 +326,7 @@ static bool check_device(struct device *dev)
+ {
+ 	int devid;
+ 
+-	if (!dev || !dev->dma_mask)
++	if (!dev)
+ 		return false;
+ 
+ 	devid = get_device_id(dev);
 -- 
 2.17.1
 
