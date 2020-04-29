@@ -2,110 +2,340 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB676C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F140C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A04D42073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78ADE2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:53:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgD2LvV (ORCPT
+        id S1726763AbgD2LxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 07:51:21 -0400
-Received: from mga09.intel.com ([134.134.136.24]:21491 "EHLO mga09.intel.com"
+        Wed, 29 Apr 2020 07:53:19 -0400
+Received: from verein.lst.de ([213.95.11.211]:34088 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726511AbgD2LvT (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 07:51:19 -0400
-IronPort-SDR: J2OP1BgeI2AszwR1fhWuUS3EUa8A5b/BngAlde5zLQTBSd9q9nTjPM5+lp83GLobpFNbZL9HLI
- TxeBcwQykc7w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 04:50:57 -0700
-IronPort-SDR: ZmnLxnuTdWZlaw/i1Am6MGyFdOIqPswoJt5vdE08OfpIb9S8g7E/3NJYjfF5YlSp06fawJrR71
- DwBG1X1POHRQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,331,1583222400"; 
-   d="scan'208";a="257939108"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.254.212.103]) ([10.254.212.103])
-  by orsmga003.jf.intel.com with ESMTP; 29 Apr 2020 04:50:49 -0700
-Subject: Re: [PATCH] perf stat: Fix uncore event mixed metric with workload
- error issue
-To:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, kan.liang@intel.com,
-        yao.jin@intel.com
-References: <20200427144116.27330-1-yao.jin@linux.intel.com>
- <20200428105155.GG1476763@krava>
- <20200428211922.GA874567@tassilo.jf.intel.com>
- <20200429081639.GJ1476763@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <a73d121d-d457-fc17-032f-b1b572cad858@linux.intel.com>
-Date:   Wed, 29 Apr 2020 19:50:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726511AbgD2LxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 07:53:19 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 872C568BFE; Wed, 29 Apr 2020 13:53:16 +0200 (CEST)
+Date:   Wed, 29 Apr 2020 13:53:16 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fixup! signal: factor copy_siginfo_to_external32 from
+ copy_siginfo_to_user32
+Message-ID: <20200429115316.GA7886@lst.de>
+References: <20200428074827.GA19846@lst.de> <20200428195645.1365019-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <20200429081639.GJ1476763@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428195645.1365019-1-arnd@arndb.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
+I did another pass at this, reducing the overhead of the x32 magic
+in common code down to renaming copy_siginfo_to_user32 to
+copy_siginfo_to_user32 and having a conditional #define to give it
+the old name back:
 
-On 4/29/2020 4:16 PM, Jiri Olsa wrote:
-> On Tue, Apr 28, 2020 at 02:19:22PM -0700, Andi Kleen wrote:
->>> I wonder this would break some expectations.. would it be
->>> more safe to detect duration event and bypass it from the
->>> decission? but maybe the case I'm worried about is not a
->>> problem at all.. Andi?
->>
->> Don't see what it would break.
->>
->> Yes maybe we need to special case duration_time more, but that would
->> be a much bigger patch.
-> 
-> would below change work for you? if duration_time is the only
-> case, I'd rather go with the special case for it
-> 
-> jirka
-> 
-> 
+---
+From 45e5263d7c24d854bb446b7e69dc53729ed842bc Mon Sep 17 00:00:00 2001
+From: Christoph Hellwig <hch@lst.de>
+Date: Wed, 29 Apr 2020 11:57:10 +0200
+Subject: signal: refactor copy_siginfo_to_user32
 
-Just tested, for the case of DRAM_BW_Use, it can work.
+Factor out a copy_siginfo_to_external32 helper from
+copy_siginfo_to_user32 that fills out the compat_siginfo, but does so
+on a kernel space data structure.  With that we can let architectures
+override copy_siginfo_to_user32 with their own implementations using
+copy_siginfo_to_external32.  That allows moving the x32 SIGCHLD purely
+to x86 architecture code.
 
-root@lkp-csl-2sp5 ~# perf stat -M DRAM_BW_Use -- sleep 1
+As a nice side effect copy_siginfo_to_external32 also comes in handy
+for avoiding a set_fs() call in the coredump code later on.
 
-  Performance counter stats for 'system wide':
+Contains improvements from Eric W. Biederman <ebiederm@xmission.com>
+and Arnd Bergmann <arnd@arndb.de>.
 
-               9.54 MiB  uncore_imc/cas_count_read/
-               3.26 MiB  uncore_imc/cas_count_write/
-         1002109793 ns   duration_time
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/x86/ia32/ia32_signal.c   |   2 +-
+ arch/x86/include/asm/compat.h |   8 ++-
+ arch/x86/kernel/signal.c      |  28 ++++++++-
+ include/linux/compat.h        |  11 +++-
+ kernel/signal.c               | 106 +++++++++++++++++-----------------
+ 5 files changed, 96 insertions(+), 59 deletions(-)
 
-        1.002109793 seconds time elapsed
+diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
+index f9d8804144d09..81cf22398cd16 100644
+--- a/arch/x86/ia32/ia32_signal.c
++++ b/arch/x86/ia32/ia32_signal.c
+@@ -350,7 +350,7 @@ int ia32_setup_rt_frame(int sig, struct ksignal *ksig,
+ 	unsafe_put_user(*(__u64 *)set, (__u64 *)&frame->uc.uc_sigmask, Efault);
+ 	user_access_end();
+ 
+-	if (__copy_siginfo_to_user32(&frame->info, &ksig->info, false))
++	if (__copy_siginfo_to_user32(&frame->info, &ksig->info))
+ 		return -EFAULT;
+ 
+ 	/* Set up registers for signal handler */
+diff --git a/arch/x86/include/asm/compat.h b/arch/x86/include/asm/compat.h
+index 52e9f3480f690..d4edf281fff49 100644
+--- a/arch/x86/include/asm/compat.h
++++ b/arch/x86/include/asm/compat.h
+@@ -214,7 +214,11 @@ static inline bool in_compat_syscall(void)
+ #endif
+ 
+ struct compat_siginfo;
+-int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
+-		const kernel_siginfo_t *from, bool x32_ABI);
++
++#ifdef CONFIG_X86_X32_ABI
++int copy_siginfo_to_user32(struct compat_siginfo __user *to,
++		const kernel_siginfo_t *from);
++#define copy_siginfo_to_user32 copy_siginfo_to_user32
++#endif /* CONFIG_X86_X32_ABI */
+ 
+ #endif /* _ASM_X86_COMPAT_H */
+diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
+index 83b74fb38c8fc..f3df262e370b3 100644
+--- a/arch/x86/kernel/signal.c
++++ b/arch/x86/kernel/signal.c
+@@ -37,6 +37,7 @@
+ #include <asm/vm86.h>
+ 
+ #ifdef CONFIG_X86_64
++#include <linux/compat.h>
+ #include <asm/proto.h>
+ #include <asm/ia32_unistd.h>
+ #endif /* CONFIG_X86_64 */
+@@ -511,6 +512,31 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
+ }
+ #endif /* CONFIG_X86_32 */
+ 
++#ifdef CONFIG_X86_X32_ABI
++static int x32_copy_siginfo_to_user(struct compat_siginfo __user *to,
++		const struct kernel_siginfo *from)
++{
++	struct compat_siginfo new;
++
++	copy_siginfo_to_external32(&new, from);
++	if (from->si_signo == SIGCHLD) {
++		new._sifields._sigchld_x32._utime = from->si_utime;
++		new._sifields._sigchld_x32._stime = from->si_stime;
++	}
++	if (copy_to_user(to, &new, sizeof(struct compat_siginfo)))
++		return -EFAULT;
++	return 0;
++}
++
++int copy_siginfo_to_user32(struct compat_siginfo __user *to,
++			   const struct kernel_siginfo *from)
++{
++	if (in_x32_syscall())
++		return x32_copy_siginfo_to_user(to, from);
++	return __copy_siginfo_to_user32(to, from);
++}
++#endif /* CONFIG_X86_X32_ABI */
++
+ static int x32_setup_rt_frame(struct ksignal *ksig,
+ 			      compat_sigset_t *set,
+ 			      struct pt_regs *regs)
+@@ -543,7 +569,7 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
+ 	user_access_end();
+ 
+ 	if (ksig->ka.sa.sa_flags & SA_SIGINFO) {
+-		if (__copy_siginfo_to_user32(&frame->info, &ksig->info, true))
++		if (x32_copy_siginfo_to_user(&frame->info, &ksig->info))
+ 			return -EFAULT;
+ 	}
+ 
+diff --git a/include/linux/compat.h b/include/linux/compat.h
+index 0480ba4db5929..e432df9be2e4b 100644
+--- a/include/linux/compat.h
++++ b/include/linux/compat.h
+@@ -402,8 +402,15 @@ long compat_get_bitmap(unsigned long *mask, const compat_ulong_t __user *umask,
+ 		       unsigned long bitmap_size);
+ long compat_put_bitmap(compat_ulong_t __user *umask, unsigned long *mask,
+ 		       unsigned long bitmap_size);
+-int copy_siginfo_from_user32(kernel_siginfo_t *to, const struct compat_siginfo __user *from);
+-int copy_siginfo_to_user32(struct compat_siginfo __user *to, const kernel_siginfo_t *from);
++void __copy_siginfo_to_external32(struct compat_siginfo *to,
++		const struct kernel_siginfo *from);
++int copy_siginfo_from_user32(kernel_siginfo_t *to,
++		const struct compat_siginfo __user *from);
++int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
++		const kernel_siginfo_t *from);
++#ifndef copy_siginfo_to_user32
++#define copy_siginfo_to_user32 __copy_siginfo_to_user32
++#endif
+ int get_compat_sigevent(struct sigevent *event,
+ 		const struct compat_sigevent __user *u_event);
+ 
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 284fc1600063b..3a74e67c12425 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -3235,94 +3235,94 @@ int copy_siginfo_from_user(kernel_siginfo_t *to, const siginfo_t __user *from)
+ }
+ 
+ #ifdef CONFIG_COMPAT
+-int copy_siginfo_to_user32(struct compat_siginfo __user *to,
+-			   const struct kernel_siginfo *from)
+-#if defined(CONFIG_X86_X32_ABI) || defined(CONFIG_IA32_EMULATION)
+-{
+-	return __copy_siginfo_to_user32(to, from, in_x32_syscall());
+-}
+-int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
+-			     const struct kernel_siginfo *from, bool x32_ABI)
+-#endif
++/**
++ * copy_siginfo_to_external32: copy a kernel signinfo into a 32-bit user one
++ * @to: compat siginfo destination
++ * @from: kernel siginfo source
++ *
++ * This function does not work properly for SIGCHLD on x32, but it does not need
++ * to as SIGCHLD never causes a coredump as this function is only intended to
++ * be used either by the coredump code or to implement copy_siginfo_to_user32,
++ * which can have its own arch version to deal with things like x32.
++ */
++void copy_siginfo_to_external32(struct compat_siginfo *to,
++		const struct kernel_siginfo *from)
+ {
+-	struct compat_siginfo new;
+-	memset(&new, 0, sizeof(new));
++	memset(to, 0, sizeof(*to));
+ 
+-	new.si_signo = from->si_signo;
+-	new.si_errno = from->si_errno;
+-	new.si_code  = from->si_code;
++	to->si_signo = from->si_signo;
++	to->si_errno = from->si_errno;
++	to->si_code  = from->si_code;
+ 	switch(siginfo_layout(from->si_signo, from->si_code)) {
+ 	case SIL_KILL:
+-		new.si_pid = from->si_pid;
+-		new.si_uid = from->si_uid;
++		to->si_pid = from->si_pid;
++		to->si_uid = from->si_uid;
+ 		break;
+ 	case SIL_TIMER:
+-		new.si_tid     = from->si_tid;
+-		new.si_overrun = from->si_overrun;
+-		new.si_int     = from->si_int;
++		to->si_tid     = from->si_tid;
++		to->si_overrun = from->si_overrun;
++		to->si_int     = from->si_int;
+ 		break;
+ 	case SIL_POLL:
+-		new.si_band = from->si_band;
+-		new.si_fd   = from->si_fd;
++		to->si_band = from->si_band;
++		to->si_fd   = from->si_fd;
+ 		break;
+ 	case SIL_FAULT:
+-		new.si_addr = ptr_to_compat(from->si_addr);
++		to->si_addr = ptr_to_compat(from->si_addr);
+ #ifdef __ARCH_SI_TRAPNO
+-		new.si_trapno = from->si_trapno;
++		to->si_trapno = from->si_trapno;
+ #endif
+ 		break;
+ 	case SIL_FAULT_MCEERR:
+-		new.si_addr = ptr_to_compat(from->si_addr);
++		to->si_addr = ptr_to_compat(from->si_addr);
+ #ifdef __ARCH_SI_TRAPNO
+-		new.si_trapno = from->si_trapno;
++		to->si_trapno = from->si_trapno;
+ #endif
+-		new.si_addr_lsb = from->si_addr_lsb;
++		to->si_addr_lsb = from->si_addr_lsb;
+ 		break;
+ 	case SIL_FAULT_BNDERR:
+-		new.si_addr = ptr_to_compat(from->si_addr);
++		to->si_addr = ptr_to_compat(from->si_addr);
+ #ifdef __ARCH_SI_TRAPNO
+-		new.si_trapno = from->si_trapno;
++		to->si_trapno = from->si_trapno;
+ #endif
+-		new.si_lower = ptr_to_compat(from->si_lower);
+-		new.si_upper = ptr_to_compat(from->si_upper);
++		to->si_lower = ptr_to_compat(from->si_lower);
++		to->si_upper = ptr_to_compat(from->si_upper);
+ 		break;
+ 	case SIL_FAULT_PKUERR:
+-		new.si_addr = ptr_to_compat(from->si_addr);
++		to->si_addr = ptr_to_compat(from->si_addr);
+ #ifdef __ARCH_SI_TRAPNO
+-		new.si_trapno = from->si_trapno;
++		to->si_trapno = from->si_trapno;
+ #endif
+-		new.si_pkey = from->si_pkey;
++		to->si_pkey = from->si_pkey;
+ 		break;
+ 	case SIL_CHLD:
+-		new.si_pid    = from->si_pid;
+-		new.si_uid    = from->si_uid;
+-		new.si_status = from->si_status;
+-#ifdef CONFIG_X86_X32_ABI
+-		if (x32_ABI) {
+-			new._sifields._sigchld_x32._utime = from->si_utime;
+-			new._sifields._sigchld_x32._stime = from->si_stime;
+-		} else
+-#endif
+-		{
+-			new.si_utime = from->si_utime;
+-			new.si_stime = from->si_stime;
+-		}
++		to->si_pid = from->si_pid;
++		to->si_uid = from->si_uid;
++		to->si_status = from->si_status;
++		to->si_utime = from->si_utime;
++		to->si_stime = from->si_stime;
+ 		break;
+ 	case SIL_RT:
+-		new.si_pid = from->si_pid;
+-		new.si_uid = from->si_uid;
+-		new.si_int = from->si_int;
++		to->si_pid = from->si_pid;
++		to->si_uid = from->si_uid;
++		to->si_int = from->si_int;
+ 		break;
+ 	case SIL_SYS:
+-		new.si_call_addr = ptr_to_compat(from->si_call_addr);
+-		new.si_syscall   = from->si_syscall;
+-		new.si_arch      = from->si_arch;
++		to->si_call_addr = ptr_to_compat(from->si_call_addr);
++		to->si_syscall   = from->si_syscall;
++		to->si_arch      = from->si_arch;
+ 		break;
+ 	}
++}
+ 
++int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
++			   const struct kernel_siginfo *from)
++{
++	struct compat_siginfo new;
++
++	copy_siginfo_to_external32(&new, from);
+ 	if (copy_to_user(to, &new, sizeof(struct compat_siginfo)))
+ 		return -EFAULT;
+-
+ 	return 0;
+ }
+ 
+-- 
+2.26.2
 
-Thanks
-Jin Yao
-
-> ---
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 9207b6c45475..2518204cffd1 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -1853,6 +1853,8 @@ static void setup_system_wide(int forks)
->   		struct evsel *counter;
->   
->   		evlist__for_each_entry(evsel_list, counter) {
-> +			if (counter->tool_event == PERF_TOOL_DURATION_TIME)
-> +				continue;
->   			if (!counter->core.system_wide)
->   				return;
->   		}
-> 
