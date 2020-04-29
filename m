@@ -2,81 +2,126 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D3BC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1373DC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A66D2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E090A2137B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:07:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SKJd4TTw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgD2KG5 (ORCPT
+        id S1726891AbgD2KG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 06:06:57 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3381 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726345AbgD2KGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 06:06:51 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3B04ED5A3D1979CF669D;
-        Wed, 29 Apr 2020 18:06:48 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 29 Apr 2020 18:06:41 +0800
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-To:     <geoff@infradead.org>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-kernel@vger.kernel.org>, <wangxiongfeng2@huawei.com>
-Subject: [PATCH] powerpc/ps3: Move static keyword to the front of declaration
-Date:   Wed, 29 Apr 2020 18:00:48 +0800
-Message-ID: <1588154448-56759-1-git-send-email-wangxiongfeng2@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Wed, 29 Apr 2020 06:06:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbgD2KGu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 06:06:50 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A315C03C1AD;
+        Wed, 29 Apr 2020 03:06:50 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id d15so1795779wrx.3;
+        Wed, 29 Apr 2020 03:06:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=hiVRqIqWp82b6MTssb1AB8jneuevgT3OTDW/kBeOt0I=;
+        b=SKJd4TTwE7XbjN/pvdpafc4kMmTuwVVmXWyB2OfwJkqeQvErPCR1Dlw0biozxaoAV7
+         L1VJSuUofn36L9umUizkUkyW+o2dDLzCpKGC/t6msVENR6x+612HFXHUsN3Ew9pnul8s
+         STMxaVPJpY2ZVcXszTki1iMKQ9P+DXQ5ySW4XluKTRwn5NR7eKrqEkQwmop0SuZCc0Dg
+         ZDdp+H7zuV5ru91jWxypd5kZiUpW0vJPUIl3h0sMaqB7UJKHMc2sgs5QkaZrj+Tai+yw
+         0zSdk5Ji+yw2DunNurRLz8v7gPZPgpjfcxZMKJclAHYYSzITrx5c7zBxXVnTxvOKC/Bn
+         QGLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hiVRqIqWp82b6MTssb1AB8jneuevgT3OTDW/kBeOt0I=;
+        b=aio2n/pYbLh0Quj6ulEzomK0Oeetzu6ypEN79KlKcZK1cfOcoaYsGJ5b7fBH8sDgBi
+         Ko6vejEY1x600uBNOpn3ObxyfvpNd3ZrEvo3nDB33YizLt/Sbjol6HuOI2jpJOSPCzah
+         NxFGEGpYU3+dh9Fr5cJiKqlrYzbvfr1N76zBa3ki9F2jbg6pLH1tJSkpf5EIlhKNIEt9
+         95rwrriRBB1OfKHdYl+8YUHTnoNbKG90A8usJCRbAugxd5GRu6IlTw7umxre4nLDnEM0
+         M0p/qI9BnTfDH0aO+NymLKkjGCiZis200Ew76+Jb38NIyUAXNIdelBmt5MaQZin2RxGg
+         BYfg==
+X-Gm-Message-State: AGi0PuZoNrNZdyBHyUjnhrmS0fg7oJZGtLoBoNidSXjo2pqeRDiiJIGt
+        McVFsnbvUA2XgElWfTgDQLO6vWeUznGA
+X-Google-Smtp-Source: APiQypJqiZPEPK7K5FK4ZJwgGP1FPoIZh2+iRsAWJUUR7ERDAuAoyfbGQHMYIDwbmn6xnQ3RqTq2UQ==
+X-Received: by 2002:adf:97de:: with SMTP id t30mr39832469wrb.135.1588154808257;
+        Wed, 29 Apr 2020 03:06:48 -0700 (PDT)
+Received: from ninjahost.lan (host-2-102-14-195.as13285.net. [2.102.14.195])
+        by smtp.gmail.com with ESMTPSA id 1sm7205478wmi.0.2020.04.29.03.06.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 03:06:47 -0700 (PDT)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        netdev@vger.kernel.org (open list:NETWORKING [GENERAL])
+Subject: [PATCH 4/6] net: atm: Add missing annotation for lec_seq_stop()
+Date:   Wed, 29 Apr 2020 11:05:26 +0100
+Message-Id: <20200429100529.19645-5-jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.25.3
+In-Reply-To: <20200429100529.19645-1-jbi.octave@gmail.com>
+References: <0/6>
+ <20200429100529.19645-1-jbi.octave@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the static keyword to the front of declaration of 'vuart_bus_priv',
-and resolve the following compiler warning that can be seen when
-building with warnings enabled (W=1):
+Sparse reports a warning at lec_seq_stop()
+warning: context imbalance in lec_seq_stop() - unexpected unlock
 
-drivers/ps3/ps3-vuart.c:867:1: warning: ‘static’ is not at beginning of declaration [-Wold-style-declaration]
- } static vuart_bus_priv;
- ^
+The root cause is the missing annotation at lec_seq_stop()
+The __release() annotation inside lec_seq_stop()
+tells only Sparse to shutdown the warning
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Add the missing __releases(&state->locked->lec_arp_lock)
+Add   __release(&state->locked->lec_arp_lock) annotation
+
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- drivers/ps3/ps3-vuart.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/atm/lec.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/ps3/ps3-vuart.c b/drivers/ps3/ps3-vuart.c
-index ddaa5ea..8e80e09 100644
---- a/drivers/ps3/ps3-vuart.c
-+++ b/drivers/ps3/ps3-vuart.c
-@@ -858,13 +858,13 @@ static int ps3_vuart_handle_port_interrupt(struct ps3_system_bus_device *dev)
- 	return 0;
+diff --git a/net/atm/lec.c b/net/atm/lec.c
+index 25fa3a7b72bd..22415bc11878 100644
+--- a/net/atm/lec.c
++++ b/net/atm/lec.c
+@@ -940,6 +940,7 @@ static void *lec_seq_start(struct seq_file *seq, loff_t *pos)
  }
  
--struct vuart_bus_priv {
-+static struct vuart_bus_priv {
- 	struct ports_bmp *bmp;
- 	unsigned int virq;
- 	struct mutex probe_mutex;
- 	int use_count;
- 	struct ps3_system_bus_device *devices[PORT_COUNT];
--} static vuart_bus_priv;
-+} vuart_bus_priv;
+ static void lec_seq_stop(struct seq_file *seq, void *v)
++	__releases(&state->locked->lec_arp_lock)
+ {
+ 	struct lec_state *state = seq->private;
  
- /**
-  * ps3_vuart_irq_handler - first stage interrupt handler
+@@ -947,7 +948,9 @@ static void lec_seq_stop(struct seq_file *seq, void *v)
+ 		spin_unlock_irqrestore(&state->locked->lec_arp_lock,
+ 				       state->flags);
+ 		dev_put(state->dev);
+-	}
++	} else
++		/* annotation for sparse */
++		__release(&state->locked->lec_arp_lock);
+ }
+ 
+ static void *lec_seq_next(struct seq_file *seq, void *v, loff_t *pos)
 -- 
-1.7.12.4
+2.25.3
 
