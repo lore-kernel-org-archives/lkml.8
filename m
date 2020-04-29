@@ -2,119 +2,82 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA52EC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2A5C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4B9421707
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:57:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HUrMkgpK"
+	by mail.kernel.org (Postfix) with ESMTP id A3A282173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:57:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbgD2N5A (ORCPT
+        id S1728070AbgD2N5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:57:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727089AbgD2N47 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:56:59 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 785E9C03C1AD;
-        Wed, 29 Apr 2020 06:56:59 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id h12so2341859pjz.1;
-        Wed, 29 Apr 2020 06:56:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=U2+xNJj7blIBAN27XYooXiQDtKXv0S4FTtN6zbBijtI=;
-        b=HUrMkgpKn/ZQfsXraS+H1vmtx/FSvAbCf908nuuZ7ZDLAdtoWMU8EkzdzlU9JQ8QZu
-         ANH8otGBqQl1q8UKJ2BjvOLrPE/YUkMH0q7UJYzSgGxKc2hXik53ixcLC5VWbrBfD14G
-         1Z1mu6ZdCWob82MPl0lnDmXBq9sobyEHrLjc7S+8hveoKPmNgzUjJYh4YYeJhGc6xlNr
-         DMHFpsP3cMWgpeULqF22dvF6j5frUCp6jOHv6Fvk52H/DB/MTfJXqI/ZLKA0Xog92Ozu
-         VUH5PIb0x3uZ1qJKdRPSMA65ZyjNRwWpOqydQknghkWfN8EQxcTd7wBF466HVIiqKwXL
-         rxjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=U2+xNJj7blIBAN27XYooXiQDtKXv0S4FTtN6zbBijtI=;
-        b=dNHqoIi0MKxZ1Yfx5u8jsRaAhS819pEOApvHDFzeVAvX+x5kqKI3eXjK1E6zzP0VdL
-         jix5gzdhde1swZ/EA3r+e4uLZflnD5L+VSYobMJUqCPII6Do963QtmZbzSBVhUilyX7Q
-         xFYiDVRJ5chCqDcNrzrt+EK/ckR1KHiZjbotOf5EcWIsvFnONIkMkAYEjMPZq3vwHULT
-         DBpz8TUzIe9XLAQAS2yk6W1l/l1E5oapQpMZQdDxNvjsExrhX/pVW++T8B6R7Us2ekjf
-         cpzejkMvj9oG7nBjKESh9vVZjix/UFwOa+iVL9wFoovuO0JvbtSj2YSa4tYgNDl2waDl
-         Pb7w==
-X-Gm-Message-State: AGi0PuZt/Gd9cl63ftTk0fJBNjSuUf/BOlPat1F7Y59UxZMoG/jVsRI6
-        a1Hd6CYH236AL0wHGSv/Sj8=
-X-Google-Smtp-Source: APiQypKa+Cdcrw/FaZJ+foMVdSOwfzVUl6D63+bLwA17pYPZl+DSsM1xY5H1GhaEVm3nVM20+u00ZA==
-X-Received: by 2002:a17:902:8ec1:: with SMTP id x1mr33887861plo.180.1588168619043;
-        Wed, 29 Apr 2020 06:56:59 -0700 (PDT)
-Received: from localhost ([89.208.244.169])
-        by smtp.gmail.com with ESMTPSA id y24sm1151342pfn.211.2020.04.29.06.56.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Apr 2020 06:56:58 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     nicolas.ferre@microchip.com, davem@davemloft.net,
-        paul.walmsley@sifive.com, palmer@dabbelt.com, yash.shah@sifive.com,
-        netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH net v2] net: macb: fix an issue about leak related system resources
-Date:   Wed, 29 Apr 2020 21:56:51 +0800
-Message-Id: <20200429135651.32635-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 29 Apr 2020 09:57:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37370 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727092AbgD2N5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 09:57:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6D802AC5B;
+        Wed, 29 Apr 2020 13:56:58 +0000 (UTC)
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Kangjie Lu <kjlu@umn.edu>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] gpio: exar: Fix bad handling for ida_simple_get error path
+Date:   Wed, 29 Apr 2020 15:56:54 +0200
+Message-Id: <20200429135654.30120-1-tiwai@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A call of the function macb_init() can fail in the function
-fu540_c000_init. The related system resources were not released
-then. use devm_platform_ioremap_resource() to replace ioremap()
-to fix it.
+The commit 7ecced0934e5 ("gpio: exar: add a check for the return value
+of ida_simple_get fails") added a goto jump to the common error
+handler for ida_simple_get() error, but this is wrong in two ways:
+it doesn't set the proper return code and, more badly, it invokes
+ida_simple_remove() with a negative index that shall lead to a kernel
+panic via BUG_ON().
 
-Fixes: c218ad559020ff9 ("macb: Add support for SiFive FU540-C000")
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Yash Shah <yash.shah@sifive.com>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+This patch addresses those two issues.
+
+Fixes: 7ecced0934e5 ("gpio: exar: add a check for the return value of ida_simple_get fails")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 ---
-v1 -> v2:
-	- Nicolas and Andy suggest use devm_platform_ioremap_resource()
-	  to repalce devm_ioremap() to fix this issue. Thanks Nicolas
-	  and Andy.
-	- Yash help me to review this patch, Thanks Yash!
+ drivers/gpio/gpio-exar.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
- drivers/net/ethernet/cadence/macb_main.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
-
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index a0e8c5bbabc0..99354e327d1f 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -4172,13 +4172,7 @@ static int fu540_c000_clk_init(struct platform_device *pdev, struct clk **pclk,
+diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
+index da1ef0b1c291..b1accfba017d 100644
+--- a/drivers/gpio/gpio-exar.c
++++ b/drivers/gpio/gpio-exar.c
+@@ -148,8 +148,10 @@ static int gpio_exar_probe(struct platform_device *pdev)
+ 	mutex_init(&exar_gpio->lock);
  
- static int fu540_c000_init(struct platform_device *pdev)
- {
--	struct resource *res;
--
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	if (!res)
--		return -ENODEV;
--
--	mgmt->reg = ioremap(res->start, resource_size(res));
-+	mgmt->reg = devm_platform_ioremap_resource(pdev, 1);
- 	if (!mgmt->reg)
- 		return -ENOMEM;
+ 	index = ida_simple_get(&ida_index, 0, 0, GFP_KERNEL);
+-	if (index < 0)
+-		goto err_destroy;
++	if (index < 0) {
++		ret = index;
++		goto err_mutex_destroy;
++	}
  
+ 	sprintf(exar_gpio->name, "exar_gpio%d", index);
+ 	exar_gpio->gpio_chip.label = exar_gpio->name;
+@@ -176,6 +178,7 @@ static int gpio_exar_probe(struct platform_device *pdev)
+ 
+ err_destroy:
+ 	ida_simple_remove(&ida_index, index);
++err_mutex_destroy:
+ 	mutex_destroy(&exar_gpio->lock);
+ 	return ret;
+ }
 -- 
-2.25.0
+2.16.4
 
