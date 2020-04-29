@@ -2,71 +2,121 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 845E9C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F9DC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 669862070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D342070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:04:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rylan.coffee header.i=@rylan.coffee header.b="crNq3xEQ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ap0rU8p2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgD2EDq (ORCPT
+        id S1726784AbgD2EEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 00:03:46 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:55984 "EHLO mail5.wrs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725497AbgD2EDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 00:03:46 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 03T429Dc016366
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Tue, 28 Apr 2020 21:02:45 -0700
-Received: from pek-lpggp2 (128.224.153.75) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.40) with Microsoft SMTP Server id 14.3.487.0; Tue, 28 Apr 2020
- 21:02:21 -0700
-Received: by pek-lpggp2 (Postfix, from userid 20544)    id 9CBF2721D81; Wed, 29
- Apr 2020 12:01:51 +0800 (CST)
-From:   Jiping Ma <jiping.ma2@windriver.com>
-To:     <will.deacon@arm.com>, <mark.rutland@arm.com>,
-        <catalin.marinas@arm.com>, <jiping.ma2@windriver.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] perf: perf can not parser the backtrace of app in the 32bit system and 64bit kernel.
-Date:   Wed, 29 Apr 2020 12:01:51 +0800
-Message-ID: <1588132911-64901-1-git-send-email-jiping.ma2@windriver.com>
-X-Mailer: git-send-email 1.9.1
+        Wed, 29 Apr 2020 00:04:14 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:38215 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726669AbgD2EEN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 00:04:13 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 9CA7E5C0395;
+        Wed, 29 Apr 2020 00:04:12 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Wed, 29 Apr 2020 00:04:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rylan.coffee; h=
+        date:from:to:subject:message-id:mime-version:content-type; s=
+        fm3; bh=XdFu2LVocl6Q8NRZueDlDbnMeY4kJhnop+dhw+CTWks=; b=crNq3xEQ
+        miE6QtiCrnOUqpkUSUbBDRh2qsLXBjG4HVxh1b2hlkbmRldO1/jHjbCd+DtOcTLb
+        f0cvGH7kS9R/3NQ5gjzO3xU6h9azxNRaeWXTR/zdxxJDju9+V0ZtWO5aly3a7d3B
+        T4FTCp2jg8a1S0f3YywQO1H4oYS7lgrTQ6vDggyCIJ5oIoM3O8UOZ0LQqk8FgtPI
+        8gW7GdqDfVEpP2lDdEs14v7bEv4zTML0JsdAdOybOrB1t2IluWVE4poLi5NuUy0o
+        kpAGo1Ky+yaZsyscpDdTCyClWPGweoOBktpAJDCpliH0ySPgW/DNg0qHuLSTsHMm
+        2M9nJ+0DutgrJQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=content-type:date:from:message-id
+        :mime-version:subject:to:x-me-proxy:x-me-proxy:x-me-sender
+        :x-me-sender:x-sasl-enc; s=fm2; bh=XdFu2LVocl6Q8NRZueDlDbnMeY4kJ
+        hnop+dhw+CTWks=; b=Ap0rU8p20uDRjVwyqeEfPRPwYh8Yhg5FhwxcNYkK+Fi/s
+        dkygVnc4RUkpT7vGrkLzMcoG8xOSINjIPzdVgZVIgCIway5XhZpia30qEoiUg9YP
+        Pe39K0EozzX2HdZUnX7zTIWsKgpE6EVlChCVoiI2f6EuYYqqvNIbiemHDHRUSmmy
+        R2aKBYH+WoeZmvyRLR7cUUzcDU6TWj3ZOpaNteojVaUbQzlJtkc2aIjZHMU9mLIq
+        E4ZwKiUo3X59+Bo40uQpGazN2bCwa5joz6Fwu4O/NvgUe/4/AHrIe8/EBsueOqJj
+        dkqJYnmuYHCjRl9q0661QnGRuvohFcjphPTfF8ATA==
+X-ME-Sender: <xms:vPyoXoFKinLs4iFfob71EhWroSu2ZC_faqiXKSqWPy2Dp7bAUmCGrA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedvgdejjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkgggtugesthdtredttddtjeenucfhrhhomheptfihlhgrnhcuffhm
+    vghllhhouceomhgrihhlsehrhihlrghnrdgtohhffhgvvgeqnecukfhppedutdekrdegle
+    drudehkedrkeegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
+    rhhomhepmhgrihhlsehrhihlrghnrdgtohhffhgvvg
+X-ME-Proxy: <xmx:vPyoXo_6lwTCZjiP9zzQhqGgOG0z5xpv17_TZmzydjxplGK58JgRcQ>
+    <xmx:vPyoXvwjDwynT_gqwxqnShMSqn_Mg8kVS64npyqmPkDVqnuoa_Rw_Q>
+    <xmx:vPyoXkN4owSIgiL4AiXzXqEuvrN4PqFCEqzzUOqOaJPmwBE5d2wlFA>
+    <xmx:vPyoXjlzDAW0Tn4JeVudDopDQHTJu1M0mc_wPzMyiW8SpzIZ7pBsQA>
+Received: from athena (pool-108-49-158-84.bstnma.fios.verizon.net [108.49.158.84])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1479C3280064;
+        Wed, 29 Apr 2020 00:04:12 -0400 (EDT)
+Date:   Wed, 29 Apr 2020 00:04:10 -0400
+From:   Rylan Dmello <mail@rylan.coffee>
+To:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] staging: qlge: Remove multi-line dereferences from
+ qlge_main.c
+Message-ID: <aae9feb569c60758ab09c923c09b600295f4cb32.1588132908.git.mail@rylan.coffee>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Record PC value from regs[15], it should be regs[32], which cause perf
-parser the backtrace failed.
+Fix checkpatch.pl warnings:
 
-Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
+  WARNING: Avoid multiple line dereference - prefer 'qdev->func'
+  WARNING: Avoid multiple line dereference - prefer 'qdev->flags'
+
+Signed-off-by: Rylan Dmello <mail@rylan.coffee>
 ---
- arch/arm64/kernel/perf_regs.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/staging/qlge/qlge_main.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/kernel/perf_regs.c b/arch/arm64/kernel/perf_regs.c
-index 0bbac61..04088e6 100644
---- a/arch/arm64/kernel/perf_regs.c
-+++ b/arch/arm64/kernel/perf_regs.c
-@@ -32,6 +32,10 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
- 	if ((u32)idx == PERF_REG_ARM64_PC)
- 		return regs->pc;
- 
-+	if (perf_reg_abi(current) == PERF_SAMPLE_REGS_ABI_32
-+		&& idx == 15)
-+		return regs->regs[PERF_REG_ARM64_PC];
-+
- 	return regs->regs[idx];
- }
- 
+diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
+index d7e4dfafc1a3..10daae025790 100644
+--- a/drivers/staging/qlge/qlge_main.c
++++ b/drivers/staging/qlge/qlge_main.c
+@@ -396,8 +396,7 @@ static int ql_set_mac_addr_reg(struct ql_adapter *qdev, u8 *addr, u32 type,
+ 			 * the route field to NIC core.
+ 			 */
+ 			cam_output = (CAM_OUT_ROUTE_NIC |
+-				      (qdev->
+-				       func << CAM_OUT_FUNC_SHIFT) |
++				      (qdev->func << CAM_OUT_FUNC_SHIFT) |
+ 					(0 << CAM_OUT_CQ_ID_SHIFT));
+ 			if (qdev->ndev->features & NETIF_F_HW_VLAN_CTAG_RX)
+ 				cam_output |= CAM_OUT_RV;
+@@ -3432,9 +3431,9 @@ static int ql_request_irq(struct ql_adapter *qdev)
+ 				     &qdev->rx_ring[0]);
+ 			status =
+ 			    request_irq(pdev->irq, qlge_isr,
+-					test_bit(QL_MSI_ENABLED,
+-						 &qdev->
+-						 flags) ? 0 : IRQF_SHARED,
++					test_bit(QL_MSI_ENABLED, &qdev->flags)
++						? 0
++						: IRQF_SHARED,
+ 					intr_context->name, &qdev->rx_ring[0]);
+ 			if (status)
+ 				goto err_irq;
 -- 
-1.9.1
+2.26.2
 
