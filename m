@@ -6,66 +6,66 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7BDC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBA6C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 773B320B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BE5D2085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588177594;
-	bh=OiQXZe6hCW138tYAnRswGeoKdLQ6Hw8I5G+iCYDuqSY=;
+	s=default; t=1588177600;
+	bh=+ZFmSTfRlzLSqIImDH7J+JHuq7zyyWHC0ptJUMmXft0=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=AdErSDQGRWkd6d3+nO3+K2Wcjf0qegCWOwqLKL0NAXezn42vUM+2j5+xyW+V6qlkZ
-	 nHZMyEDk1eTxxxX2kRvHYqJUWeDhlkro/gz7OhP0UvMPEMkkL5koFa+oUUPEnZkl77
-	 0VVZNE+Zvt770Xad4aBRJO/5/z6bIgwrNbmgU86g=
+	b=nkJ5mRs1o2A0EnoZkYP2l3RqO7Fg963o2vmxfgjlDQjwEwwL4Gz1C8ILwFPq6kBC0
+	 h4m/B7DZrpbNv/TYnfguNxJh24vqC3L8iwJvE0FBSdtoAnn2MeDxKwenoalWO4Hh0u
+	 Qf3wpIHl9viRgFEjMH2PYhpGInLA93q/tSp9uu28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgD2Q0d (ORCPT
+        id S1727074AbgD2Q0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 12:26:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42492 "EHLO mail.kernel.org"
+        Wed, 29 Apr 2020 12:26:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbgD2Q0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 12:26:33 -0400
+        id S1726481AbgD2Q0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 12:26:38 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 405D12083B;
-        Wed, 29 Apr 2020 16:26:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10CFF2076B;
+        Wed, 29 Apr 2020 16:26:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588177592;
-        bh=OiQXZe6hCW138tYAnRswGeoKdLQ6Hw8I5G+iCYDuqSY=;
+        s=default; t=1588177598;
+        bh=+ZFmSTfRlzLSqIImDH7J+JHuq7zyyWHC0ptJUMmXft0=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=XNlg6OYIYarsvAQRR1teQRTPiMKRK2f4WIUG3ton2/DuJ1pahK98nRiIBdGX+7ttn
-         3b8aVbvslCIEwoVNW3/O7Y+V2L4Yla5Gk1Rm2/ZexSeMggqyXkMuKvDip6ZJlIOHKg
-         tJwcEKSNbEdRfOeOg1ixTijn7KIAF2udi1UZgqxk=
-Date:   Wed, 29 Apr 2020 17:26:30 +0100
+        b=jNtwpDlN2/yGU87aQZnyuN1IH98wv1CpRVpBC4Uwt/70lA0qwy5OTnoe2aHRSBp1D
+         h8Ozoh62f6XvG7IfwUZLY8MseaEy1tb57+jJf+GZoEy6PcVaUQdJlvbxcCr3Rrl35A
+         vXmxiQ+oXRTxE74U6ugksHMR6+IwBMln6lqNHRR8=
+Date:   Wed, 29 Apr 2020 17:26:36 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     nicoleotsuka@gmail.com, festevam@gmail.com,
-        alsa-devel@alsa-project.org, tiwai@suse.com, timur@kernel.org,
-        Xiubo.Lee@gmail.com, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        lgirdwood@gmail.com, perex@perex.cz
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-In-Reply-To: <1587731404-29750-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1587731404-29750-1-git-send-email-shengjiu.wang@nxp.com>
-Subject: Re: [PATCH] ASoC: fsl_easrc: Check NULL pinter before dereference
-Message-Id: <158817756638.27768.6987853594586973570.b4-ty@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        kbuild test robot <lkp@intel.com>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Richard Fitzgerald <rf@opensource.wolfsonmicro.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+In-Reply-To: <20200428214642.3925004-1-arnd@arndb.de>
+References: <20200428214642.3925004-1-arnd@arndb.de>
+Subject: Re: [PATCH] ASoC: rt5682: fix I2C/Soundwire dependencies
+Message-Id: <158817756638.27768.13590393174406922978.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020 20:30:04 +0800, Shengjiu Wang wrote:
-> The patch 955ac624058f: "ASoC: fsl_easrc: Add EASRC ASoC CPU DAI
-> drivers" from Apr 16, 2020, leads to the following Smatch complaint:
+On Tue, 28 Apr 2020 23:46:14 +0200, Arnd Bergmann wrote:
+> If one of the two is a loadable module, the combined driver must
+> not be built-in:
 > 
-> sound/soc/fsl/fsl_easrc.c:1529 fsl_easrc_hw_free()
-> warn: variable dereferenced before check 'ctx' (see line 1527)
-> 
-> sound/soc/fsl/fsl_easrc.c
->   1526          struct fsl_asrc_pair *ctx = runtime->private_data;
->   1527          struct fsl_easrc_ctx_priv *ctx_priv = ctx->private;
->                                                       ^^^^^
-> Dereference
+> aarch64-linux-ld: sound/soc/codecs/rt5682.o: in function `rt5682_sdw_hw_free':
+> rt5682.c:(.text+0xb34): undefined reference to `sdw_stream_remove_slave'
+> aarch64-linux-ld: sound/soc/codecs/rt5682.o: in function `rt5682_sdw_hw_params':
+> rt5682.c:(.text+0xe78): undefined reference to `sdw_stream_add_slave'
 > 
 > [...]
 
@@ -75,8 +75,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: fsl_easrc: Check for null pointer before dereferencing "ctx" in fsl_easrc_hw_free()
-      commit: f3fc1ea011f09156886e8f4beb240ea814f2197a
+[1/1] ASoC: rt5682: fix I2C/Soundwire dependencies
+      commit: fd443a20c2f0950f3c31765a08f7dd49b3bc69cb
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
