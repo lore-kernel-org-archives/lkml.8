@@ -2,128 +2,162 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8893C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C7BC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C47A02137B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75E3C2186A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:26:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mrEkFjIN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KMlppx4p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgD2M00 (ORCPT
+        id S1726940AbgD2M0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:26:26 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:35168 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbgD2M0Z (ORCPT
+        Wed, 29 Apr 2020 08:26:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726628AbgD2M0g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:26:25 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03TCJg04100013;
-        Wed, 29 Apr 2020 12:25:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=G4T1e0Zu5w17lAkgEzo9mQq+TIDEuIlWIBxxTVixN+0=;
- b=mrEkFjIN2dsubqvlOyU9teA2iauOOA1kWYCl/UD12g5OblLFdVciyoDXOkGZN5ZaWQnV
- KC80T8wDmrH9jQNU3Lw9Il7BYApSGpdYYqNkO1llGWgAEszEtwNhky4hEZmBT7vKARi+
- uxpAwvmjwCJFTpoEnv+tcQuhIPCdlDsKxZ1adAs7ha1sgzn4Cn39OKxn5qIXOrpWoIDx
- HnwSU5WY4NrDVsGYep9Qnn5qFUWyXkYCYC+TgEw9zIB6nxRsJf5NbXqrraz6E/kK9LIO
- iYiQYyvpW+89DXkkH+6ipAbYG3pixgOMhSX97DaUbgQfAX3IcVlf0Ic2uutg8EI0L1XH Zg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 30p01nuwqc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Apr 2020 12:25:55 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03TCGj3w058297;
-        Wed, 29 Apr 2020 12:25:55 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 30mxpjw1q6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Apr 2020 12:25:54 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03TCPlRN013991;
-        Wed, 29 Apr 2020 12:25:47 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 Apr 2020 05:25:47 -0700
-Date:   Wed, 29 Apr 2020 15:25:38 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     b.zolnierkie@samsung.com, gregkh@linuxfoundation.org,
-        mpe@ellerman.id.au, zhenzhong.duan@gmail.com, arnd@arndb.de,
-        tglx@linutronix.de, eric.y.miao@gmail.com, daniel@caiaq.de,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] video: fbdev: pxa3xx_gcu: Fix some resource leak in an
- error handling path in 'pxa3xx_gcu_probe()'
-Message-ID: <20200429122538.GO2014@kadam>
-References: <20200429043438.96212-1-christophe.jaillet@wanadoo.fr>
+        Wed, 29 Apr 2020 08:26:36 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70FF5C03C1AD;
+        Wed, 29 Apr 2020 05:26:36 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id h11so773213plr.11;
+        Wed, 29 Apr 2020 05:26:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mE/G5KaL0uIC70ovNSoaKbcQfn9t7OEF0yBBgrML3hs=;
+        b=KMlppx4pE5inHa/GRFclaen/QiPzJ6iPcMIBuKSKArFoBCartZuz/RdszlFnXo5fJN
+         wU+rOh0GFzzKZgxRSd9An+pJhIO1VpatedA9PZ6Vow/hAM3GXyZINV94WsgG9eCcbUu1
+         24r99OBCXSSf4xTmil7QsEsmdepzEckg56AHWFNNwnw9BggrstxvvPOoSFYMmo0tIG3K
+         Np/Ywbi6JEUNmSW74OF1/skvceyQMF8towsly/jcBv6F2w6/vOPqiibTw8m+H8b7scjd
+         f4WXhfk+BSX3o//fWSoVkmVxCWtjy0/UOhxMGlpXIYB0GNU9f6xG7EuG+U0slU8yn2Ly
+         LttQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=mE/G5KaL0uIC70ovNSoaKbcQfn9t7OEF0yBBgrML3hs=;
+        b=QGyOoa95Y6PYtwRHtWW0yD2+SNTt4VDruDr01JKvzg1ZW2CEMX30iCDNce2Kr6Btkr
+         bHU8tQAL9c/pUg8e7BCIPjaCdAwmgudr6VOu6+UDQ97VMzVOqiVqdlrjJU7HU0A5G6yc
+         XJYrtWTFMQ2lwKhNiX2B823NgJKfPVcngJgEnNd1KKE76PYL47EKuT1cs+J1+Wn0zVOy
+         ehDy/M5EzPrFjHHf+tyDipB+uJxENxSMmHCoF+7YBaoUhw+RTzZvBT/bBNk+19/2amUu
+         zImNNmgIGpStI8EyhDKEtuQ/3mBvEujr7UXHVz8HoIB+lX4iIdHDCOn2CDsGKslWD/W4
+         grTw==
+X-Gm-Message-State: AGi0PuY5ezzMwgP0eSXV8rkRGn/fpGgPJlJWnwIFjDcOu+3NXC3Pub+1
+        UbBOAg96T3xNYKHJdqqEYSV7iHey
+X-Google-Smtp-Source: APiQypKVdpfpEK4zjQRRfP0OMTWMeKy/EpqeeARCpOcK9Duio0dbQ4bVQFiVc9VXeKN/Rz2AR+hMJg==
+X-Received: by 2002:a17:902:5a0b:: with SMTP id q11mr33277048pli.23.1588163195605;
+        Wed, 29 Apr 2020 05:26:35 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b11sm978819pgj.92.2020.04.29.05.26.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Apr 2020 05:26:34 -0700 (PDT)
+Subject: Re: [PATCH] watchdog: iTCO: fix link error
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200428212959.2993304-1-arnd@arndb.de>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <645115f0-5d3d-d8e5-9c26-64378e0d1c6f@roeck-us.net>
+Date:   Wed, 29 Apr 2020 05:26:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429043438.96212-1-christophe.jaillet@wanadoo.fr>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 bulkscore=0 adultscore=0 phishscore=0 suspectscore=2
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004290105
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 clxscore=1011
- phishscore=0 mlxlogscore=999 adultscore=0 priorityscore=1501 mlxscore=0
- suspectscore=2 malwarescore=0 lowpriorityscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004290105
+In-Reply-To: <20200428212959.2993304-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 06:34:38AM +0200, Christophe JAILLET wrote:
-> If an error occurs in the loop where we call 'pxa3xx_gcu_add_buffer()',
-> any resource already allocated should be freed.
+On 4/28/20 2:29 PM, Arnd Bergmann wrote:
+> When the MFD driver is a loadable module, the watchdog driver fails
+> to get linked into the kernel:
 > 
-> In order to fix it, add a call to 'pxa3xx_gcu_free_buffers()' in the error
-> handling path, as already done in the remove function.
+> drivers/watchdog/iTCO_wdt.o: In function `update_no_reboot_bit_pmc':
+> iTCO_wdt.c:(.text+0x54f): undefined reference to `intel_pmc_gcr_update'
 > 
-> Fixes: 364dbdf3b6c3 ("video: add driver for PXA3xx 2D graphics accelerator")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> The code is written to support operation without the MFD driver, so
+> add a Kconfig dependency that allows this, while disallowing the watchdog
+> to be built-in when the MFD driver is a module.
+> 
+> Fixes: 25f1ca31e230 ("platform/x86: intel_pmc_ipc: Convert to MFD")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+
 > ---
->  drivers/video/fbdev/pxa3xx-gcu.c | 1 +
+>  drivers/watchdog/Kconfig | 1 +
 >  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/video/fbdev/pxa3xx-gcu.c b/drivers/video/fbdev/pxa3xx-gcu.c
-> index 4279e13a3b58..68d9c7a681d4 100644
-> --- a/drivers/video/fbdev/pxa3xx-gcu.c
-> +++ b/drivers/video/fbdev/pxa3xx-gcu.c
-> @@ -675,6 +675,7 @@ static int pxa3xx_gcu_probe(struct platform_device *pdev)
->  
->  err_disable_clk:
->  	clk_disable_unprepare(priv->clk);
-> +	pxa3xx_gcu_free_buffers(dev, priv);
-
-The error handling in this function makes no sense and is buggy.  It
-should be that it unwinds in the reverse order from the allocation.  The
-goto should be "goto free_most_recently_allocated_resource;".  Since the
-unwind is done in the wrong order it causes a couple bugs.
-
-These buffers are the last thing which we allocated so they should be
-the first thing which we free.  In this case, calling
-pxa3xx_gcu_free_buffers() before the buffers are allocated is confusing
-but harmless.  The clk_disable_unprepare() is done on some paths where
-the clock was not enabled and that will trigger a WARN() so that's a
-bug.  Syzcaller will complain and if you have reboot on WARN then it's
-annoying.
-
-The second bug is that we don't deregister the misc device or release
-the DMA memory on failure when we allocate the buffers in the loop.
-
-regards,
-dan carpenter
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 66ca69f30f01..67a83578810e 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -1217,6 +1217,7 @@ config ITCO_WDT
+>  	depends on (X86 || IA64) && PCI
+>  	select WATCHDOG_CORE
+>  	depends on I2C || I2C=n
+> +	depends on MFD_INTEL_PMC_BXT || !MFD_INTEL_PMC_BXT
+>  	select LPC_ICH if !EXPERT
+>  	select I2C_I801 if !EXPERT && I2C
+>  	---help---
+> 
 
