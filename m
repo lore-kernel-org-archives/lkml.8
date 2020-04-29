@@ -2,111 +2,84 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E37E4C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B63C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B189920731
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A79E22192A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:16:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="GivbK70Y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jVQ5osqf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgD2MPS (ORCPT
+        id S1727052AbgD2MQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:15:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40122 "EHLO
+        Wed, 29 Apr 2020 08:16:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726556AbgD2MPS (ORCPT
+        by vger.kernel.org with ESMTP id S1726524AbgD2MQT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:15:18 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF7B1C03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:15:16 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id h6so1471462lfc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:15:16 -0700 (PDT)
+        Wed, 29 Apr 2020 08:16:19 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E18A6C03C1AD
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:16:18 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id w20so2394928ljj.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:16:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fR8uUeszZzFt2LU2tuKirZn9/ZjcfUzUQ8MAaG7aJLU=;
-        b=GivbK70Yv83IrbrW7RhyIJdlS0bHppB43QCI+a4XVmY1/4udQeKLqvMPBq7OxM/056
-         uwcfBGuL4DltRCWPQVj8cVbNuvYMki5OEe7YtVUPHH9StzW0f3XVWAzDdm6KFjyvo2ZA
-         ONal6lpruxUL2QKx/PxeBOHbdefVIbbwQ9vk8=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=l4hDIJCDKgb4QJRH77lrv/BKKESfMFPpw/eu45ndVLk=;
+        b=jVQ5osqfPhLb6kqXlke+Yq5O5jpAUgnjip18N6tStX3o84+RcoTxisglPe4PdlIC42
+         YsygTr5CONv4uSYE44kUtuerR+Zz/kyRN3uGKGmUBUvigC9t5umI4z5T44PBdVtR+AVx
+         PGoCNKCQ92iEaFj44zvVjG9i+DQK0lsFDK1Ggv0J6e2qZUbG9ZsKqbe7eEKtCLIM85Bv
+         bkDNlR+QiEj8SXBiWDEfclrL2PGfRrgP3jZ0sC2yuX7AFttD/xdJirC0qaq+oF2aYukF
+         moWBReBCc/T734CNF89iyQnZ3TB69Q09w2FyCmBbD+37GZ+U5HMQFvfC1cewRuraY73n
+         a7mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fR8uUeszZzFt2LU2tuKirZn9/ZjcfUzUQ8MAaG7aJLU=;
-        b=MmEevUd6hYyMCuwGTaAqflKRofuvLfl8+WIa/vXFcbbImemP9SieCcZYAF1jP2SLzR
-         zDUeEAPtxJrNgneCmlaw04iAg8dVkCWXXCPcKqriROCrtT1Dqui9InGgXd002Jx2vKls
-         HEhE2zFUq53BtOoV8wTzQrzLLje7nMydf9UGlmVAtJR1/6eznIniRsEslBcvFEIVoGkj
-         hNTjNfxaavP6ujI37dUl7dRHZgSgkgH0f9nE5ep/Icz68gZwwK10xpurA23CQAw7bS8n
-         2QF6lqXi0BR8038EZxjrb1d0pYC663h9E0yEVHX2+G6pswgwBF17CdtrjFfJmoAN2tKh
-         Dh8A==
-X-Gm-Message-State: AGi0PuYeA+yY9Zkcmo/d8Fd/Fe1omknGCMYtlTZxqUeBmD1xwNJBQuIf
-        /f0mLqtLRkrJbPADg+ITy/QrHQ==
-X-Google-Smtp-Source: APiQypLeMlSBJaJY8gtk/W5nI4lvaeHsjiQ1yDq0jG4P+mgzUjcApTyZVTBPIGrd1YKYMhPE7tlb1g==
-X-Received: by 2002:ac2:5e26:: with SMTP id o6mr21918859lfg.49.1588162515349;
-        Wed, 29 Apr 2020 05:15:15 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-116-45.cgn.fibianet.dk. [5.186.116.45])
-        by smtp.gmail.com with ESMTPSA id l18sm2183374ljg.98.2020.04.29.05.15.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 05:15:14 -0700 (PDT)
-Subject: Re: [RFC PATCH bpf-next 0/6] bpf, printk: add BTF-based type printing
-To:     Joe Perches <joe@perches.com>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com, kafai@fb.com,
-        songliubraving@fb.com, andriin@fb.com, john.fastabend@gmail.com,
-        kpsingh@chromium.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-References: <1587120160-3030-1-git-send-email-alan.maguire@oracle.com>
- <20200418160536.4mrvqh2lasqbyk77@ast-mbp>
- <alpine.LRH.2.21.2004201623390.12711@localhost>
- <7d6019da19d52c851d884731b1f16328fdbe2e3d.camel@perches.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <9c14a68e-c374-bca4-d0f8-c25b51c8dfe4@rasmusvillemoes.dk>
-Date:   Wed, 29 Apr 2020 14:15:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l4hDIJCDKgb4QJRH77lrv/BKKESfMFPpw/eu45ndVLk=;
+        b=FusjQ8caXWpXEvY/HSyjW8E9wfaFZdhr/fN+RS2nwa60loOJq1O41ZfAsNd6Ozq3vL
+         dKqIWexd8NWAxnO80wHc88H5cIZ+wPI1oopIwydAz9yL/3bdS6pGOyLVFKmQR0quzgg0
+         FMkTLFJIUmN36rWHbNsTuk/RaiiQStxng92eOOAdEPVjl9J2tXl86Rios/5Tg+GJvw89
+         fsFKrY+JtS+WD+f/0WTbSbEqz52BTh0mOAB4rCGNvXsltWD9cmrwcbCXYBu3EvgxmJdD
+         lcu+Zhz9wUzsGmyqCKOVPwxR3NZO8DsQO2K89XKClLOgB6sdeurPUH4K1VU3kIiBQkIf
+         9x0Q==
+X-Gm-Message-State: AGi0PubnjqDzdSc4dp1XbNNoebpa27sSRszVpL1If4R76dP0Vbqs/r95
+        fKSwUBPRwKGGX2Qbk//ZcOQfmGKthzi2/otdDFVaUQ==
+X-Google-Smtp-Source: APiQypIGpYmRMV8dUpi/6uObL1nzzISH+8h5QWHeAlSd8ihzU1MAcUwAWx4wnOAGosmYDQxx8rxVeYSPGbyBjrReLSg=
+X-Received: by 2002:a2e:b6cf:: with SMTP id m15mr20188195ljo.168.1588162577327;
+ Wed, 29 Apr 2020 05:16:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <7d6019da19d52c851d884731b1f16328fdbe2e3d.camel@perches.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200428172322.1.I396f351e364f3c09df7c7606e79abefb8682c092@changeid>
+In-Reply-To: <20200428172322.1.I396f351e364f3c09df7c7606e79abefb8682c092@changeid>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 29 Apr 2020 14:16:05 +0200
+Message-ID: <CACRpkdbHAFiarn8Gn618cuMZpyEkPBkzDZO4-xR4hYd_jNXKdQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: Document proper return value for gpio drivers
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/04/2020 18.32, Joe Perches wrote:
-> On Mon, 2020-04-20 at 16:29 +0100, Alan Maguire wrote:
+On Wed, Apr 29, 2020 at 2:24 AM Douglas Anderson <dianders@chromium.org> wrote:
 
->>>>   struct sk_buff *skb = alloc_skb(64, GFP_KERNEL);
->>>>
->>>>   pr_info("%pTN<struct sk_buff>", skb);
->>>
->>> why follow "TN" convention?
->>> I think "%p<struct sk_buff>" is much more obvious, unambiguous, and
->>> equally easy to parse.
->>>
->>
->> That was my first choice, but the first character
->> after the 'p' in the '%p' specifier signifies the
->> pointer format specifier. If we use '<', and have
->> '%p<', where do we put the modifiers? '%p<xYz struct foo>'
->> seems clunky to me.
+> The legacy defines GPIOF_DIR_XXX are only for consumers. Document the
+> proper ones.  Also: don't use "_XXX" since that's harder to find with
+> "git grep".  Just list both of the values.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-There's also the issue that %p followed by alnum has been understood to
-be reserved/specially handled by the kernel's printf implementation for
-a decade, while other characters have so far been treated as "OK, this
-was just a normal %p". A quick grep for %p< only gives a hit in
-drivers/scsi/dc395x.c, but there could be others (with field width
-modifier between % and p), and in any case I think it's a bad idea to
-extend the set of characters that cannot follow %p.
+Patch applied! Sorry for the historical confusion.
 
-Rasmus
+Yours,
+Linus Walleij
