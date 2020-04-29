@@ -2,103 +2,104 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C62C4C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43E0C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF3AC2074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FBCC2074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:12:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="dkPv3tWo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbgD2PLL (ORCPT
+        id S1727882AbgD2PMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:11:11 -0400
-Received: from mga09.intel.com ([134.134.136.24]:34434 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726516AbgD2PLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:11:10 -0400
-IronPort-SDR: ElUws5vpdG3KgsCcWkiWQMsBBSgaUdJlBN1IViucBAmcpqOeMuxxhF7+M6irM7ijffaBk3Dw/Z
- zQj17VCE/N4g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 08:11:09 -0700
-IronPort-SDR: djrkxjwSWyZod30Qu1TcOUeLgAzClPtfzriYb4a+RxiOOFVGRXgNirZbBx315VcBzBIryl8t/D
- PV6a0xbc0xBA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
-   d="scan'208";a="276199069"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga002.jf.intel.com with ESMTP; 29 Apr 2020 08:11:08 -0700
-Date:   Wed, 29 Apr 2020 08:10:57 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/2] KVM: nVMX: vmcs.SYSENTER optimization and "fix"
-Message-ID: <20200429151057.GB15992@linux.intel.com>
-References: <20200428231025.12766-1-sean.j.christopherson@intel.com>
- <CALMp9eQLPPAzM+vsrSMO6thOnCRpn6ab+VOh-1UKZug8==ME8g@mail.gmail.com>
+        Wed, 29 Apr 2020 11:12:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726854AbgD2PMQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 11:12:16 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03069C03C1AD
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:12:16 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id j26so1988747ots.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:12:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5Dw9z3skpovx5U+Kokok0Gl+LhbKi7TC3S8cZHyqEUI=;
+        b=dkPv3tWoN9rA8+Bpd+XhqvQdAVTKC5limvdKzHBCx1BarPDm57/tI78fBE7uL+DU13
+         O+AdIpD3a43by+BV6dogoQY6jcRVPQzgoHMQ2/ZyLQ89a8AqDasMiHo+R7jnddEjMysW
+         weDMB8rrapD3D21eqEKS/uTdXAsIUn3UizXUdAER0MkK+RQUQbyR0rmkcFB3iXfF5JjO
+         V4aIZK19mtcUR+rO0sv76y5Tch4CtoYxls2o2TsK222FmVZ4jIxFjdOotGiM8ByBi9XE
+         /HIbF/OzTvGtilnlXBZAlg9tzAenf1Iy9nSCfhDsZztkn6+d0LG5oWPsr4xbTHLYq7Ki
+         Be1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5Dw9z3skpovx5U+Kokok0Gl+LhbKi7TC3S8cZHyqEUI=;
+        b=UYxjnTqWQnFKcGQ5D1kSMyTOJRDkfL/XCqDpbkkJTKM5y3qn83VGWAKJn2PahYnLrx
+         wDwkOh/zTxDLqMJk0+UFxl/330woRZf+aqmKJVbEO7xuWVgMXzl57HQ7/SBa+lqtZS2D
+         mNAbShOsj37O+FfPttpZLy1v978MQghvobszYAPigWh5Mkm1BcZDIx5B1XnZFvVOASlP
+         rCMaSYgIhbJ13hC23ZNaTt/SotMUlMv1Q4yfhfixNtNa7hECXLQXDnGTCOOciro4kkoz
+         n5Mi6HYcc4NgF1h68yszJi02ziPQyLvzM6hs9XLr/W6ERFF30ONdrLo2mGRAnaPbISUP
+         zpkQ==
+X-Gm-Message-State: AGi0PubN61A+87IQrF5qR0ip3ShOc10x77NhWvZMiPAw7H4PZdBF/JCo
+        0cDkVjllEG2VL1kpTeqWu9uZN9x579WxcvOC++nImg==
+X-Google-Smtp-Source: APiQypKIJWHbxA5JB3lkWleLMMBByUMCEMnUlnt76a3lN0G0WNuQD4Dk7h+dye5tgPuRW+q4nMRv5v6zQwQumku/iX8=
+X-Received: by 2002:a9d:7dd8:: with SMTP id k24mr26893979otn.33.1588173135382;
+ Wed, 29 Apr 2020 08:12:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALMp9eQLPPAzM+vsrSMO6thOnCRpn6ab+VOh-1UKZug8==ME8g@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <1587748215-9587-1-git-send-email-tharvey@gateworks.com> <20200429033740.GP32592@dragon>
+In-Reply-To: <20200429033740.GP32592@dragon>
+From:   Tim Harvey <tharvey@gateworks.com>
+Date:   Wed, 29 Apr 2020 08:12:04 -0700
+Message-ID: <CAJ+vNU23EFFjxC4gATy1d1CU7GQQZ8+p+9eiQkF_r4vhR-p+ng@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: gw552x: add USB OTG support
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 04:45:25PM -0700, Jim Mattson wrote:
-> On Tue, Apr 28, 2020 at 4:10 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
+On Tue, Apr 28, 2020 at 8:37 PM Shawn Guo <shawnguo@kernel.org> wrote:
+>
+> On Fri, Apr 24, 2020 at 10:10:15AM -0700, Tim Harvey wrote:
+> > The GW552x-B board revision adds USB OTG support.
 > >
-> > Patch 1 is a "fix" for handling SYSENTER_EIP/ESP in L2 on a 32-bit vCPU.
-> > The primary motivation is to provide consistent behavior after patch 2.
+> > Enable the device-tree node and configure the OTG_ID pin.
 > >
-> > Patch 2 is essentially a re-submission of a nested VMX optimization to
-> > avoid redundant VMREADs to the SYSENTER fields in the nested VM-Exit path.
+> > Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> > ---
+> >  arch/arm/boot/dts/imx6qdl-gw552x.dtsi | 16 ++++++++++++++--
+> >  1 file changed, 14 insertions(+), 2 deletions(-)
 > >
-> > After patch 2 and without patch 1, KVM would end up with weird behavior
-> > where L1 and L2 would only see 32-bit values for their own SYSENTER_E*P
-> > MSRs, but L1 could see a 64-bit value for L2's MSRs.
-> >
-> > Sean Christopherson (2):
-> >   KVM: nVMX: Truncate writes to vmcs.SYSENTER_EIP/ESP for 32-bit vCPU
-> >   KVM: nVMX: Drop superfluous VMREAD of vmcs02.GUEST_SYSENTER_*
-> >
-> >  arch/x86/kvm/vmx/nested.c |  4 ----
-> >  arch/x86/kvm/vmx/vmx.c    | 18 ++++++++++++++++--
-> >  2 files changed, 16 insertions(+), 6 deletions(-)
-> 
-> It seems like this could be fixed more generally by truncating
-> natural-width fields on 32-bit vCPUs in handle_vmwrite(). However,
-> that also would imply that we can't shadow any natural-width fields on
-> a 32-bit vCPU.
+> > diff --git a/arch/arm/boot/dts/imx6qdl-gw552x.dtsi b/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
+> > index dc646b7..133a1e3 100644
+> > --- a/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
+> > +++ b/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
+> > @@ -12,8 +12,6 @@
+> >               led1 = &led1;
+> >               led2 = &led2;
+> >               nand = &gpmi;
+> > -             usb0 = &usbh1;
+> > -             usb1 = &usbotg;
+>
+> Have some comments about this change in the commit log?
+>
 
-handle_vmwrite() and handle_vmread() already correctly handle truncating
-writes/reads when L1 isn't in 64-bit mode.
+Shawn,
 
-This path is effectively out-of-band, for lack of a better phrase.  The
-WRMSR is intercepted and the data is stuffed into vmcs02.  Without these
-patches, the effective L2 state depends on the underlying hardware
-capabilities, e.g. L2 gets 64-bit behavior if L0 is a 64-bit CPU, and
-32-bit behavior if L0 is a 32-bit CPU.  It's "wrong", but consistent as the
-value seen by L2 is the same value that is saved into vmcs12.  Of course in
-the 64-bit CPU case, L1 can't actually see the full value via VMREAD as the
-vCPU is 32-bit, but at least the underlying memory/machinery is consistent.
+I shouldn't have removed those... will submit a v2. Thank you for catching this!
 
-With just patch 2, the above would still be true for 64-bit L0, but for
-32-bit L0 it would result in L2 seeing a 32-bit value while saving a 64-bit
-value into vmcs12.  Again, L1 wouldn't see the 64-bit value when using
-VMREAD, but the value in memory is still wrong-ish.
-
-Truncating the value on WRMSR interception makes the behavior fully
-dependent on the vCPU capabilities, i.e. what L2 sees is the same value
-that's saved into vmcs12, which is the same value seen by VMREAD in L1,
-irrespective of whether L0 is 64-bit or 32-bit.
+Tim
