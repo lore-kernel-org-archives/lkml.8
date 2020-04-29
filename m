@@ -2,164 +2,296 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6A3C83001
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70131C83001
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E67C320731
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FC2D20730
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:21:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TOAaZYbw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgD2CUa (ORCPT
+        id S1726635AbgD2CVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 22:20:30 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:38163 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726430AbgD2CU3 (ORCPT
+        Tue, 28 Apr 2020 22:21:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726158AbgD2CVW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 22:20:29 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R731e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0Tx-0ovS_1588126817;
-Received: from 30.27.118.60(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0Tx-0ovS_1588126817)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 29 Apr 2020 10:20:19 +0800
-Subject: Re: [PATCH v2 1/7] KVM: s390: clean up redundant 'kvm_run' parameters
-To:     Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
-        mpe@ellerman.id.au, benh@kernel.crashing.org,
-        frankja@linux.ibm.com, david@redhat.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com, maz@kernel.org,
-        james.morse@arm.com, julien.thierry.kdev@gmail.com,
-        suzuki.poulose@arm.com, christoffer.dall@arm.com,
-        peterx@redhat.com, kvm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200422125810.34847-1-tianjia.zhang@linux.alibaba.com>
- <20200422125810.34847-2-tianjia.zhang@linux.alibaba.com>
- <20200422154543.2efba3dd.cohuck@redhat.com>
- <dc5e0fa3-558b-d606-bda9-ed281cf9e9ae@de.ibm.com>
- <20200422180403.03f60b0c.cohuck@redhat.com>
- <5e1e126d-f1b0-196c-594b-4289d0afb9a8@linux.alibaba.com>
- <20200423123901.72a4c6a4.cohuck@redhat.com>
- <71344f73-c34f-a373-49d1-5d839c6be5f6@linux.alibaba.com>
- <1d73b700-4a20-3d7a-66d1-29b5afa03f4d@de.ibm.com>
- <73f6ecd0-ac47-eaad-0e4f-2d41c2b34450@redhat.com>
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Message-ID: <1b8167f2-eb91-5f17-8dc4-dcfaa5bbb075@linux.alibaba.com>
-Date:   Wed, 29 Apr 2020 10:20:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+        Tue, 28 Apr 2020 22:21:22 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 109A3C03C1AC;
+        Tue, 28 Apr 2020 19:21:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=cKGLOpBW4qS3y+pSSeknlOPB4GuywQqaIP5NAkI3phg=; b=TOAaZYbwlvmhe7a3bX4UBPMl8g
+        MxcFA1SBtsecnMjpu3Xk2gQq1t3UYHkPjlxkb1XBkCTLFiaSstXR0YMJ6Bt7dQo1nUEuh34Dd2Lgx
+        6BG+shZqj4pzsEgQ0yQ4AhxIsjeqHs58A08N8BmTC24Tng+tWHLnDLDIq5EN8RiL+FatAP4Y2SVAD
+        LTiuuGbqAUoHI30oREXQHNdova4wUbypSpixAb2H5dMjoxaBug59Kae1ekAY9eKHDg3+EiRFdF/5z
+        6370HWQBCKHo7Up+IGGFD4p2M15KpKerbW+SX9j+MNsfoX6aX49U+oXXwaibqIvS6caji1SBFlrEC
+        mgbkL1SQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTcLg-0002L2-Ph; Wed, 29 Apr 2020 02:21:20 +0000
+Subject: Re: [PATCH V11.1] Documentation/dax: Update Usage section
+To:     ira.weiny@intel.com, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org
+References: <20200428002142.404144-5-ira.weiny@intel.com>
+ <20200428222145.409961-1-ira.weiny@intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <28f97c0b-6c7f-7496-b57d-0342a4dcc0af@infradead.org>
+Date:   Tue, 28 Apr 2020 19:21:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <73f6ecd0-ac47-eaad-0e4f-2d41c2b34450@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200428222145.409961-1-ira.weiny@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020/4/26 20:59, Thomas Huth wrote:
-> On 23/04/2020 13.00, Christian Borntraeger wrote:
->>
->>
->> On 23.04.20 12:58, Tianjia Zhang wrote:
->>>
->>>
->>> On 2020/4/23 18:39, Cornelia Huck wrote:
->>>> On Thu, 23 Apr 2020 11:01:43 +0800
->>>> Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
->>>>
->>>>> On 2020/4/23 0:04, Cornelia Huck wrote:
->>>>>> On Wed, 22 Apr 2020 17:58:04 +0200
->>>>>> Christian Borntraeger <borntraeger@de.ibm.com> wrote:
->>>>>>    
->>>>>>> On 22.04.20 15:45, Cornelia Huck wrote:
->>>>>>>> On Wed, 22 Apr 2020 20:58:04 +0800
->>>>>>>> Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
->>>>>>>>       
->>>>>>>>> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
->>>>>>>>> structure. Earlier than historical reasons, many kvm-related function
->>>>>>>>
->>>>>>>> s/Earlier than/For/ ?
->>>>>>>>       
->>>>>>>>> parameters retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time.
->>>>>>>>> This patch does a unified cleanup of these remaining redundant parameters.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
->>>>>>>>> ---
->>>>>>>>>     arch/s390/kvm/kvm-s390.c | 37 ++++++++++++++++++++++---------------
->>>>>>>>>     1 file changed, 22 insertions(+), 15 deletions(-)
->>>>>>>>>
->>>>>>>>> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
->>>>>>>>> index e335a7e5ead7..d7bb2e7a07ff 100644
->>>>>>>>> --- a/arch/s390/kvm/kvm-s390.c
->>>>>>>>> +++ b/arch/s390/kvm/kvm-s390.c
->>>>>>>>> @@ -4176,8 +4176,9 @@ static int __vcpu_run(struct kvm_vcpu *vcpu)
->>>>>>>>>         return rc;
->>>>>>>>>     }
->>>>>>>>>     -static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->>>>>>>>> +static void sync_regs_fmt2(struct kvm_vcpu *vcpu)
->>>>>>>>>     {
->>>>>>>>> +    struct kvm_run *kvm_run = vcpu->run;
->>>>>>>>>         struct runtime_instr_cb *riccb;
->>>>>>>>>         struct gs_cb *gscb;
->>>>>>>>>     @@ -4235,7 +4236,7 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->>>>>>>>>             }
->>>>>>>>>             if (vcpu->arch.gs_enabled) {
->>>>>>>>>                 current->thread.gs_cb = (struct gs_cb *)
->>>>>>>>> -                        &vcpu->run->s.regs.gscb;
->>>>>>>>> +                        &kvm_run->s.regs.gscb;
->>>>>>>>
->>>>>>>> Not sure if these changes (vcpu->run-> => kvm_run->) are really worth
->>>>>>>> it. (It seems they amount to at least as much as the changes advertised
->>>>>>>> in the patch description.)
->>>>>>>>
->>>>>>>> Other opinions?
->>>>>>>
->>>>>>> Agreed. It feels kind of random. Maybe just do the first line (move kvm_run from the
->>>>>>> function parameter list into the variable declaration)? Not sure if this is better.
->>>>>>>    
->>>>>>
->>>>>> There's more in this patch that I cut... but I think just moving
->>>>>> kvm_run from the parameter list would be much less disruptive.
->>>>>>     
->>>>>
->>>>> I think there are two kinds of code(`vcpu->run->` and `kvm_run->`), but
->>>>> there will be more disruptive, not less.
->>>>
->>>> I just fail to see the benefit; sure, kvm_run-> is convenient, but the
->>>> current code is just fine, and any rework should be balanced against
->>>> the cost (e.g. cluttering git annotate).
->>>>
->>>
->>> cluttering git annotate ? Does it mean Fix xxxx ("comment"). Is it possible to solve this problem by splitting this patch?
->>
->> No its about breaking git blame (and bugfix backports) for just a cosmetic improvement.
+On 4/28/20 3:21 PM, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> It could be slightly more than a cosmetic improvement (depending on the
-> smartness of the compiler): vcpu->run-> are two dereferences, while
-> kvm_run-> is only one dereference. So it could be slightly more compact
-> and faster code.
+> Update the Usage section to reflect the new individual dax selection
+> functionality.
 > 
->   Thomas
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> ---
+> Changes from V11:
+> 	Minor changes from Darrick
+> 
+> Changes from V10:
+> 	Clarifications from Dave
+> 	Add '-c' to xfs_io examples
+> 
+> Changes from V9:
+> 	Fix missing ')'
+> 	Fix trialing '"'
+
+trailing
+
+> 
+> Changes from V8:
+> 	Updates from Darrick
+> 
+> Changes from V7:
+> 	Cleanups/clarifications from Darrick and Dan
+> 
+> Changes from V6:
+> 	Update to allow setting FS_XFLAG_DAX any time.
+> 	Update with list of behaviors from Darrick
+> 	https://lore.kernel.org/lkml/20200409165927.GD6741@magnolia/
+> 
+> Changes from V5:
+> 	Update to reflect the agreed upon semantics
+> 	https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
+> ---
+>  Documentation/filesystems/dax.txt | 142 +++++++++++++++++++++++++++++-
+>  1 file changed, 139 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
+> index 679729442fd2..dc1c1aa36cc2 100644
+> --- a/Documentation/filesystems/dax.txt
+> +++ b/Documentation/filesystems/dax.txt
+> @@ -17,11 +17,147 @@ For file mappings, the storage device is mapped directly into userspace.
+>  Usage
+>  -----
+>  
+> -If you have a block device which supports DAX, you can make a filesystem
+> +If you have a block device which supports DAX, you can make a file system
+>  on it as usual.  The DAX code currently only supports files with a block
+>  size equal to your kernel's PAGE_SIZE, so you may need to specify a block
+> -size when creating the filesystem.  When mounting it, use the "-o dax"
+> -option on the command line or add 'dax' to the options in /etc/fstab.
+> +size when creating the file system.
+> +
+> +Currently 3 filesystems support DAX: ext2, ext4 and xfs.  Enabling DAX on them
+
+Why "file system" in the first paragraph when "filesystem" is used here and below?
+
+> +is different.
+> +
+> +Enabling DAX on ext4 and ext2
+> +-----------------------------
+> +
+> +When mounting the filesystem, use the "-o dax" option on the command line or
+> +add 'dax' to the options in /etc/fstab.  This works to enable DAX on all files
+> +within the filesystem.  It is equivalent to the '-o dax=always' behavior below.
+> +
+> +
+> +Enabling DAX on xfs
+> +-------------------
+> +
+> +Summary
+> +-------
+> +
+> + 1. There exists an in-kernel file access mode flag S_DAX that corresponds to
+> +    the statx flag STATX_ATTR_DAX.  See the manpage for statx(2) for details
+> +    about this access mode.
+> +
+> + 2. There exists a persistent flag FS_XFLAG_DAX that can be applied to regular
+> +    files and directories. This advisory flag can be set or cleared at any
+> +    time, but doing so does not immediately affect the S_DAX state.
+> +
+> + 3. If the persistent FS_XFLAG_DAX flag is set on a directory, this flag will
+> +    be inherited by all regular files and subdirectories that are subsequently
+> +    created in this directory. Files and subdirectories that exist at the time
+> +    this flag is set or cleared on the parent directory are not modified by
+> +    this modification of the parent directory.
+> +
+> + 4. There exists dax mount options which can override FS_XFLAG_DAX in the
+
+             exist
+
+> +    setting of the S_DAX flag.  Given underlying storage which supports DAX the
+> +    following hold:
+> +
+> +    "-o dax=inode"  means "follow FS_XFLAG_DAX" and is the default.
+> +
+> +    "-o dax=never"  means "never set S_DAX, ignore FS_XFLAG_DAX."
+> +
+> +    "-o dax=always" means "always set S_DAX ignore FS_XFLAG_DAX."
+> +
+> +    "-o dax"        is a legacy option which is an alias for "dax=always".
+> +		    This may be removed in the future so "-o dax=always" is
+> +		    the preferred method for specifying this behavior.
+> +
+> +    NOTE: Modifications to and the inheritance behavior of FS_XFLAG_DAX remain
+> +    the same even when the file system is mounted with a dax option.  However,
+> +    in-core inode state (S_DAX) will be overridden until the file system is
+
+                                     "file system" (2 times above)
+
+> +    remounted with dax=inode and the inode is evicted from kernel memory.
+> +
+> + 5. The S_DAX policy can be changed via:
+> +
+> +    a) Setting the parent directory FS_XFLAG_DAX as needed before files are
+> +       created
+> +
+> +    b) Setting the appropriate dax="foo" mount option
+> +
+> +    c) Changing the FS_XFLAG_DAX on existing regular files and directories.
+
+                       FS_XFLAGS_DAX flag on
+
+> +       This has runtime constraints and limitations that are described in 6)
+> +       below.
+> +
+> + 6. When changing the S_DAX policy via toggling the persistent FS_XFLAG_DAX flag,
+> +    the change in behaviour for existing regular files may not occur
+> +    immediately.  If the change must take effect immediately, the administrator
+> +    needs to:
+> +
+> +    a) stop the application so there are no active references to the data set
+> +       the policy change will affect
+> +
+> +    b) evict the data set from kernel caches so it will be re-instantiated when
+> +       the application is restarted. This can be achieved by:
+> +
+> +       i. drop-caches
+> +       ii. a filesystem unmount and mount cycle
+
+filesystem
+
+> +       iii. a system reboot
+> +
+> +
+> +Details
+> +-------
+> +
+> +There are 2 per-file dax flags.  One is a persistent inode setting (FS_XFLAG_DAX)
+> +and the other is a volatile flag indicating the active state of the feature
+> +(S_DAX).
+> +
+> +FS_XFLAG_DAX is preserved within the file system.  This persistent config
+
+file system
+
+> +setting can be set, cleared and/or queried using the FS_IOC_FS[GS]ETXATTR ioctl
+> +(see ioctl_xfs_fsgetxattr(2)) or an utility such as 'xfs_io'.
+> +
+> +New files and directories automatically inherit FS_XFLAG_DAX from
+> +their parent directory _when_ _created_.  Therefore, setting FS_XFLAG_DAX at
+> +directory creation time can be used to set a default behavior for an entire
+> +sub-tree.
+> +
+> +To clarify inheritance, here are 3 examples:
+> +
+> +Example A:
+> +
+> +mkdir -p a/b/c
+> +xfs_io -c 'chattr +x' a
+> +mkdir a/b/c/d
+> +mkdir a/e
+> +
+> +	dax: a,e
+> +	no dax: b,c,d
+> +
+> +Example B:
+> +
+> +mkdir a
+> +xfs_io -c 'chattr +x' a
+> +mkdir -p a/b/c/d
+> +
+> +	dax: a,b,c,d
+> +	no dax:
+> +
+> +Example C:
+> +
+> +mkdir -p a/b/c
+> +xfs_io -c 'chattr +x' c
+> +mkdir a/b/c/d
+> +
+> +	dax: c,d
+> +	no dax: a,b
+> +
+> +
+> +The current enabled state (S_DAX) is set when a file inode is instantiated in
+> +memory by the kernel.  It is set based on the underlying media support, the
+> +value of FS_XFLAG_DAX and the file system's dax mount option.
+> +
+> +statx can be used to query S_DAX.  NOTE that only regular files will ever have
+> +S_DAX set and therefore statx will never indicate that S_DAX is set on
+> +directories.
+> +
+> +Setting the FS_XFLAG_DAX (specifically or through inheritance) occurs even if
+
+           the FS_XFLAG_DAX flag
+
+> +the underlying media does not support dax and/or the file system is overridden
+
+file system
+
+Just be consistent, please.
+
+> +with a mount option.
+> +
+>  
+>  
+>  Implementation Tips for Block Driver Writers
 > 
 
-If the compiler is smart enough, this place can be automatically 
-optimized, but we can't just rely on the compiler, if not? This requires 
-a trade-off between code cleanliness readability and breaking git blame.
-In addition, I have removed the changes here and sent a v4 patch. Please 
-also help review it.
+thanks.
+-- 
+~Randy
 
-Thanks and best,
-Tianjia
