@@ -2,124 +2,111 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C176DC83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F93C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E4F220757
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:51:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588197094;
-	bh=zzbAROcZjDIWpI2AVBgh/PsMuE+z2F5jB65yqNftvhY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HkbgaR93BjyAEyPpVlr3fCxRxedn2Er173ji+KbYLUnadunqFFo6Pv3ySEvPcqqQm
-	 b6e3Al+gmwEwPktFnyt4Feg1Xo0qoWxkhWU/KHuRQGfwIjvHUfhndeBx8bVkkVgEtk
-	 cQuSQ1JT+qsp4/nvF5db0n/u1DxPXrsqWimP2/Sw=
+	by mail.kernel.org (Postfix) with ESMTP id C834020757
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:52:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cS07YRd6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgD2Vvd (ORCPT
+        id S1727833AbgD2VwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 17:51:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbgD2Vvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 17:51:33 -0400
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 29 Apr 2020 17:52:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29841 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726481AbgD2VwJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 17:52:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588197128;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bojb283LbZjvKIHJt1clVMBEgqpvP3QKnksXiKnl240=;
+        b=cS07YRd6Gyt6TQsa0t7hwmo41oXCglWwqHVzH81JV6OeM6Di9vk/vudhnBpFG51b1OvYsg
+        h1CflGZTMFXxtSp99ZBa7RyGsLXW09PCHwsFTb5gcRiVJuBkQtCWFV01lr9p3ja8+Kkh1B
+        6hcFsO7ELkHXtCv9E/0zV7ZiedeNS90=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-30-4JVByMLlPVWUrj8Bs74wCw-1; Wed, 29 Apr 2020 17:52:04 -0400
+X-MC-Unique: 4JVByMLlPVWUrj8Bs74wCw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B22B720B1F;
-        Wed, 29 Apr 2020 21:51:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588197092;
-        bh=zzbAROcZjDIWpI2AVBgh/PsMuE+z2F5jB65yqNftvhY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CDechDbWVk1cf54E1W1FviFigjrzDWvi/YUHL8US/DxGCUTz/PzTgFEsx1vNofl97
-         tyuQh+LnjOBsqRsh1ZxpZ7+r4eoRKewidDHwQk9QWPDWmYChBezbumijWLBnX2sWWs
-         ajaA1ILzCJn8AIB5pAya4Y3MTrGYBNBtD7hJMezQ=
-Received: by mail-io1-f49.google.com with SMTP id b12so3926450ion.8;
-        Wed, 29 Apr 2020 14:51:32 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZefrSESEw9a/GeNxtpQTKzO+C50rRhkKqDGTaCcSkFk8AHF+j/
-        sk5yOLKInjAhICIXR3Bh/BgwxDZjaQGpCY9z5fI=
-X-Google-Smtp-Source: APiQypINNclMKxGwHaJyPAEG7gd4uP2wdISWcWZ/mrGkVwaeY3K4I6ejEkqM2J/mhockQu94EgMDMwpqPah8cxjLulY=
-X-Received: by 2002:a6b:5904:: with SMTP id n4mr273245iob.142.1588197091171;
- Wed, 29 Apr 2020 14:51:31 -0700 (PDT)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B3707107ACCA;
+        Wed, 29 Apr 2020 21:52:02 +0000 (UTC)
+Received: from treble (ovpn-113-19.rdu2.redhat.com [10.10.113.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7C27579B6;
+        Wed, 29 Apr 2020 21:52:01 +0000 (UTC)
+Date:   Wed, 29 Apr 2020 16:51:59 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     x86@kernel.org
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, mingo@kernel.org,
+        hpa@zytor.com, ast@kernel.org, peterz@infradead.org,
+        rdunlap@infradead.org, Arnd Bergmann <arnd@arndb.de>
+Subject: BPF vs objtool again
+Message-ID: <20200429215159.eah6ksnxq6g5adpx@treble>
+References: <30c3ca29ba037afcbd860a8672eef0021addf9fe.1563413318.git.jpoimboe@redhat.com>
+ <tip-3193c0836f203a91bef96d88c64cccf0be090d9c@git.kernel.org>
 MIME-Version: 1.0
-References: <20200429174120.1497212-1-nivedita@alum.mit.edu>
- <20200429174120.1497212-11-nivedita@alum.mit.edu> <CAMj1kXF_-ZA4ghy_8Gx831UcAwn0VjFmDub5L1_h28vV+sdPDw@mail.gmail.com>
- <20200429213944.GB1621173@rani.riverdale.lan> <CAMj1kXHf9bXX8uDeSEL46r39uPiBOPjfmvkcL_MFtf9ZAo8ZqQ@mail.gmail.com>
- <20200429214855.GD1621173@rani.riverdale.lan>
-In-Reply-To: <20200429214855.GD1621173@rani.riverdale.lan>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 29 Apr 2020 23:51:20 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFEFz7Exeah2MGEbxdR8OL4XtJXwxAn1TLr2Gqjv+k-rA@mail.gmail.com>
-Message-ID: <CAMj1kXFEFz7Exeah2MGEbxdR8OL4XtJXwxAn1TLr2Gqjv+k-rA@mail.gmail.com>
-Subject: Re: [PATCH 09/10] efi/x86: Support builtin command line
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <tip-3193c0836f203a91bef96d88c64cccf0be090d9c@git.kernel.org>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 at 23:48, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Wed, Apr 29, 2020 at 11:40:51PM +0200, Ard Biesheuvel wrote:
-> > On Wed, 29 Apr 2020 at 23:39, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > >
-> > > On Wed, Apr 29, 2020 at 09:07:32PM +0200, Ard Biesheuvel wrote:
-> > > > On Wed, 29 Apr 2020 at 19:41, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > > > >
-> > > > > Add support for the x86 CMDLINE_BOOL and CMDLINE_OVERRIDE configuration
-> > > > > options.
-> > > > >
-> > > > > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> > > > > ---
-> > > > >  drivers/firmware/efi/libstub/x86-stub.c | 12 ++++++++----
-> > > > >  1 file changed, 8 insertions(+), 4 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-> > > > > index 85a924fecc87..0faba30d6406 100644
-> > > > > --- a/drivers/firmware/efi/libstub/x86-stub.c
-> > > > > +++ b/drivers/firmware/efi/libstub/x86-stub.c
-> > > > > @@ -680,7 +680,6 @@ unsigned long efi_main(efi_handle_t handle,
-> > > > >         unsigned long buffer_start, buffer_end;
-> > > > >         struct setup_header *hdr = &boot_params->hdr;
-> > > > >         efi_status_t status;
-> > > > > -       unsigned long cmdline_paddr;
-> > > > >
-> > > > >         efi_system_table = sys_table_arg;
-> > > > >
-> > > > > @@ -739,9 +738,14 @@ unsigned long efi_main(efi_handle_t handle,
-> > > > >                 image_offset = 0;
-> > > > >         }
-> > > > >
-> > > > > -       cmdline_paddr = ((u64)hdr->cmd_line_ptr |
-> > > > > -                        ((u64)boot_params->ext_cmd_line_ptr << 32));
-> > > > > -       efi_parse_options((char *)cmdline_paddr);
-> > > > > +#ifdef CONFIG_CMDLINE_BOOL
-> > > > > +       efi_parse_options(CONFIG_CMDLINE);
-> > > > > +#endif
-> > > >
-> > > > Can we use IS_ENABLED() here as well?
-> > >
-> > > Unfortunately on x86, CONFIG_CMDLINE is not defined if
-> > > CONFIG_CMDLINE_BOOL isn't enabled. So turning this into an
-> > > IS_ENABLED(CONFIG_CMDLINE_BOOL) causes a compile error when it's
-> > > disabled due to CONFIG_CMDLINE being an undeclared symbol.
-> > >
-> >
-> > What about
-> >
-> > efi_parse_options(CONFIG_CMDLINE "");
-> >
-> > ?
->
-> That's still a syntax error if CONFIG_CMDLINE is undefined, no? It's not
-> defined to be empty -- it's undefined. IS_ENABLED doesn't work on
-> string-valued options so I can't use IS_ENABLED(CONFIG_CMDLINE) either.
+On Thu, Jul 18, 2019 at 12:14:08PM -0700, tip-bot for Josh Poimboeuf wrote:
+> Commit-ID:  3193c0836f203a91bef96d88c64cccf0be090d9c
+> Gitweb:     https://git.kernel.org/tip/3193c0836f203a91bef96d88c64cccf0be090d9c
+> Author:     Josh Poimboeuf <jpoimboe@redhat.com>
+> AuthorDate: Wed, 17 Jul 2019 20:36:45 -0500
+> Committer:  Thomas Gleixner <tglx@linutronix.de>
+> CommitDate: Thu, 18 Jul 2019 21:01:06 +0200
+> 
+> bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()
 
-I see. Not the end of the world to have to keep it as is, I was just curious.
+For some reason, this
+
+  __attribute__((optimize("-fno-gcse")))
+
+is disabling frame pointers in ___bpf_prog_run().  If you compile with
+CONFIG_FRAME_POINTER it'll show something like:
+
+  kernel/bpf/core.o: warning: objtool: ___bpf_prog_run.cold()+0x7: call without frame pointer save/setup
+
+Also, since GCC 9.1, the GCC docs say "The optimize attribute should be
+used for debugging purposes only. It is not suitable in production
+code."  That doesn't sound too promising.
+
+So it seems like this commit should be reverted. But then we're back to
+objtool being broken again in the RETPOLINE=n case, which means no ORC
+coverage in this function.  (See above commit for the details)
+
+Some ideas:
+
+- Skip objtool checking of that func/file (at least for RETPOLINE=n) --
+  but then it won't have ORC coverage.
+
+- Get rid of the "double goto" in ___bpf_prog_run(), which simplifies it
+  enough for objtool to understand -- but then the text explodes for
+  RETPOLINE=y.
+
+- Add -fno-gfcse to the Makefile for kernel/bpf/core.c -- but then that
+  affects the optimization of other functions in the file.  However I
+  don't think the impact is significant.
+
+- Move ___bpf_prog_run() to its own file with the -fno-gfcse flag.  I'm
+  thinking this could be the least bad option.  Alexei?
+
+-- 
+Josh
+
