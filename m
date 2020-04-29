@@ -2,96 +2,104 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD31C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7649DC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28C82205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:28:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="oz6BuGxK"
+	by mail.kernel.org (Postfix) with ESMTP id 61417205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:28:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgD2T2s (ORCPT
+        id S1727087AbgD2T2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 15:28:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726524AbgD2T2q (ORCPT
+        Wed, 29 Apr 2020 15:28:52 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:51498 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbgD2T2v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 15:28:46 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF51EC035493
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:28:44 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id k133so2868062oih.12
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:28:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HrWcuaUF1HhijaMJhHIxXSdQF25IxURehoKzpWG38wE=;
-        b=oz6BuGxKcLsvPcSWuaD64ljtycmubLeGNLddDXfMv1UECC45aLYmESQWtiSmV8I3MQ
-         iN5/smqBbdtg+Z+YUOoYxdi+Xd8gCgs5IvJzZFmsI0iwEdFwud4v6J+WR5YEp0uWU5OR
-         OgJIasumbfRiXfs+nivQF5cNevC7pPoRzHLQ6v3JfTJ9A8LMw1EEEXw+3LKemlxnjWSJ
-         2k9xs2UvTAjEaohgFL2r54LiXObxbHfXxsmC1u6t3czJAFeFJByvXy31x110Kga1x3+A
-         FcTmoXr0lJECl2QS5y01sUS8VR4sDTAtLuaG5oVDcw+ech1DRlg9u13eSWjZiLUz2hQK
-         SAmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HrWcuaUF1HhijaMJhHIxXSdQF25IxURehoKzpWG38wE=;
-        b=nwxhvAg/+r5fGH+fpuNyWC/yxV8mdBiQHA4dc26lF/y8M/2/kZ87HmJUj8ApFafT56
-         K/vhmEVbyYXqCN3bwNkn8i0EjawfEL+EsKd3widwLwoDWaSS4m2G4sDkmXT9t83cCGjs
-         2JlUiNkSE9giUXiaXfYIELmOD5I2GCrjcAmzjFoU0kHJZjDlCOsGx4Bah/oIN2WseruV
-         dKEgEba1KfVKEb8WB2cyswPK9A5k/hIFF7/AjKqKYEBiriXTv+d/Hl6gBFWzO1oquKtF
-         eNsApZ3fcRYgsZZlKXZvbn9M/I22+wakN+FzLu+17+lAvyp5owowgULdMx6iqStCpJIw
-         I3Gg==
-X-Gm-Message-State: AGi0PuZrokE6jWMgH31e42k0mZVeKoL963vQdQv9/KY7zK8dG4vU/v2v
-        +5e6SM8ltWazByYRPOZ/DTJdLLfNp1CPqoO7EPqZ1A==
-X-Google-Smtp-Source: APiQypJdKenEudzwmRCZsVJROESba9igAfdi955cc/HXfQHfGJhnwpqdCdg1cSi3aWNuxlg4vPxYVVubva8Ng3NxLiY=
-X-Received: by 2002:aca:1b0f:: with SMTP id b15mr2859389oib.96.1588188524148;
- Wed, 29 Apr 2020 12:28:44 -0700 (PDT)
+        Wed, 29 Apr 2020 15:28:51 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 8AF0C804D0;
+        Wed, 29 Apr 2020 21:28:46 +0200 (CEST)
+Date:   Wed, 29 Apr 2020 21:28:40 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        kbuild test robot <lkp@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] video: fbdev: controlfb: fix build for COMPILE_TEST=y
+ && PPC_PMAC=y && PPC32=n
+Message-ID: <20200429192840.GA1022@ravnborg.org>
+References: <CGME20200429104825eucas1p16bf37b71a3ab3a768d1eff6c48eb61dd@eucas1p1.samsung.com>
+ <fe520316-3863-e6c4-9581-5d709f49e906@samsung.com>
 MIME-Version: 1.0
-References: <20200429110726.448625-1-robert.marko@sartura.hr> <20200429.115946.788260021055034651.davem@davemloft.net>
-In-Reply-To: <20200429.115946.788260021055034651.davem@davemloft.net>
-From:   Robert Marko <robert.marko@sartura.hr>
-Date:   Wed, 29 Apr 2020 21:28:33 +0200
-Message-ID: <CA+HBbNHRyk4_nmV0HyRH=x1-L+-DFd7SQKhX6APnJA0oNEtBNA@mail.gmail.com>
-Subject: Re: [PATCH net-next v4 0/3] net: phy: mdio: add IPQ40xx MDIO support
-To:     David Miller <davem@davemloft.net>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fe520316-3863-e6c4-9581-5d709f49e906@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=rOUgymgbAAAA:8 a=QyXUC8HyAAAA:8 a=7gkXJVJtAAAA:8
+        a=hD80L64hAAAA:8 a=r0KyO4OkOOGdkHu8Tb4A:9 a=CjuIK1q_8ugA:10
+        a=MP9ZtiD8KjrkvI0BhSjB:22 a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 8:59 PM David Miller <davem@davemloft.net> wrote:
->
-> From: Robert Marko <robert.marko@sartura.hr>
-> Date: Wed, 29 Apr 2020 13:07:24 +0200
->
-> > This patch series provides support for the IPQ40xx built-in MDIO interface.
-> > Included are driver, devicetree bindings for it and devicetree node.
->
-> The DT changes don't apply cleanly to net-next, please respin.
-Sorry about that, I accidentally based the patch on DTS that has USB
-nodes in it.
-USB patches are also in the process of being upstreamed.
+Hi Bartlomiej
 
-I will send a v5 ASAP.
-Thanks
->
-> Thanks.
+On Wed, Apr 29, 2020 at 12:48:24PM +0200, Bartlomiej Zolnierkiewicz wrote:
+> 
+> powerpc allyesconfig fails like this:
+> 
+> drivers/video/fbdev/controlfb.c: In function 'controlfb_mmap':
+> drivers/video/fbdev/controlfb.c:756:23: error: implicit declaration of function 'pgprot_cached_wthru'; did you mean 'pgprot_cached'? [-Werror=implicit-function-declaration]
+>   756 |   vma->vm_page_prot = pgprot_cached_wthru(vma->vm_page_prot);
+>       |                       ^~~~~~~~~~~~~~~~~~~
+>       |                       pgprot_cached
+> drivers/video/fbdev/controlfb.c:756:23: error: incompatible types when assigning to type 'pgprot_t' {aka 'struct <anonymous>'} from type 'int'
+> 
+> Fix it by adding missing PPC32 dependency.
+> 
+> Fixes: a07a63b0e24d ("video: fbdev: controlfb: add COMPILE_TEST support")
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+
+I've updated my build script to include a few popwerpc 32 bit configs.
+Patch looked correct, and my builds was OK.
+So applied to drm-misc-next and pushed out.
+
+If my prodding of Christoph will result in anything only time will tell.
+
+	Sam
+
+> ---
+> v2: fix implicit btext_update_display() function declaration error
+> 
+>  drivers/video/fbdev/controlfb.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Index: b/drivers/video/fbdev/controlfb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/controlfb.c
+> +++ b/drivers/video/fbdev/controlfb.c
+> @@ -55,7 +55,7 @@
+>  #include "macmodes.h"
+>  #include "controlfb.h"
+>  
+> -#ifndef CONFIG_PPC_PMAC
+> +#if !defined(CONFIG_PPC_PMAC) || !defined(CONFIG_PPC32)
+>  #define invalid_vram_cache(addr)
+>  #undef in_8
+>  #undef out_8
