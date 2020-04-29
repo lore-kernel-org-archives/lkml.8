@@ -2,353 +2,360 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D9DC83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15875C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD9532074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01882073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:38:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgD2Ogq (ORCPT
+        id S1726785AbgD2Oiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:36:46 -0400
-Received: from mga04.intel.com ([192.55.52.120]:49199 "EHLO mga04.intel.com"
+        Wed, 29 Apr 2020 10:38:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39534 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726691AbgD2Ogp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:36:45 -0400
-IronPort-SDR: 3V8DQYL1YTPPReGwN+FiNyqAQDDFnbhPW1xe06CgfBCt9IzUBIb0QkXqauzEig3Pc+LsbbxXVq
- bATP79fPHONw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 07:36:44 -0700
-IronPort-SDR: 8k9b3bLAofBaaIhf/W//xPJxMtvcSIcZp/iFbijN59JDRONpdumn06S7m3Vq4NXwNm8YGMD0KQ
- v0VQCZhRVvqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
-   d="scan'208";a="257978135"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
-  by orsmga003.jf.intel.com with ESMTP; 29 Apr 2020 07:36:40 -0700
-Subject: Re: [PATCH v10 4/5] usb: renesas-xhci: Add ROM loader for uPD720201
-To:     Vinod Koul <vkoul@kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        =?UTF-8?Q?Andreas_B=c3=b6hler?= <dev@aboehler.at>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200424101410.2364219-1-vkoul@kernel.org>
- <20200424101410.2364219-5-vkoul@kernel.org>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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 fiD/
-Message-ID: <94266bc2-ae44-d7a2-61e9-4e09c29bd18d@linux.intel.com>
-Date:   Wed, 29 Apr 2020 17:39:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726451AbgD2Oiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 10:38:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D2AD3ABCC;
+        Wed, 29 Apr 2020 14:38:46 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200424101410.2364219-5-vkoul@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
+Date:   Wed, 29 Apr 2020 16:38:47 +0200
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     Jason Baron <jbaron@akamai.com>
+Cc:     Khazhismel Kumykov <khazhy@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] eventpoll: fix missing wakeup for ovflist in
+ ep_poll_callback
+In-Reply-To: <6fa9b33c-b661-f0f6-1965-e379c7201172@akamai.com>
+References: <20200424025057.118641-1-khazhy@google.com>
+ <20200424190039.192373-1-khazhy@google.com>
+ <66f26e74-6c7b-28c2-8b3f-faf8ea5229d4@akamai.com>
+ <CACGdZYLD9ZqJNVktHUVe6N4t28VKy-Z76ZcCdsAOJHZRXaYGSA@mail.gmail.com>
+ <a2f22c3c-c25a-4bda-8339-a7bdaf17849e@akamai.com>
+ <c365a245574d4a4ed8a922018bcf4f45@suse.de>
+ <6fa9b33c-b661-f0f6-1965-e379c7201172@akamai.com>
+Message-ID: <ec0acbcbbe2ee562e0f23f8fdf6daac5@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.4.2020 13.14, Vinod Koul wrote:
-> uPD720201 supports ROM and allows software to program the ROM and boot
-> from it. Add support for detecting if ROM is present, if so load the ROM
-> if not programmed earlier.
+On 2020-04-29 06:12, Jason Baron wrote:
+> On 4/28/20 2:10 PM, Roman Penyaev wrote:
+>> On 2020-04-27 22:38, Jason Baron wrote:
+>>> On 4/25/20 4:59 PM, Khazhismel Kumykov wrote:
+>>>> On Sat, Apr 25, 2020 at 9:17 AM Jason Baron <jbaron@akamai.com> 
+>>>> wrote:
+>>>>> 
+>>>>> 
+>>>>> 
+>>>>> On 4/24/20 3:00 PM, Khazhismel Kumykov wrote:
+>>>>>> In the event that we add to ovflist, before 339ddb53d373 we would 
+>>>>>> be
+>>>>>> woken up by ep_scan_ready_list, and did no wakeup in 
+>>>>>> ep_poll_callback.
+>>>>>> With that wakeup removed, if we add to ovflist here, we may never 
+>>>>>> wake
+>>>>>> up. Rather than adding back the ep_scan_ready_list wakeup - which 
+>>>>>> was
+>>>>>> resulting in unnecessary wakeups, trigger a wake-up in 
+>>>>>> ep_poll_callback.
+>>>>> 
+>>>>> I'm just curious which 'wakeup' we are talking about here? There 
+>>>>> is:
+>>>>> wake_up(&ep->wq) for the 'ep' and then there is the nested one via:
+>>>>> ep_poll_safewake(ep, epi). It seems to me that its only about the 
+>>>>> later
+>>>>> one being missing not both? Is your workload using nested epoll?
+>>>>> 
+>>>>> If so, it might make sense to just do the later, since the point of
+>>>>> the original patch was to minimize unnecessary wakeups.
+>>>> 
+>>>> The missing wake-ups were when we added to ovflist instead of 
+>>>> rdllist.
+>>>> Both are "the ready list" together - so I'd think we'd want the same
+>>>> wakeups regardless of which specific list we added to.
+>>>> ep_poll_callback isn't nested specific?
+>>>> 
+>>> 
+>>> So I was thinking that ep_poll() would see these events on the
+>>> ovflist without an explicit wakeup, b/c the overflow list being 
+>>> active
+>>> implies that the ep_poll() path would add them to the rdllist in
+>>> ep_scan_read_list(). Thus, it will see the events either in the
+>>> current ep_poll() context or via a subsequent syscall to 
+>>> epoll_wait().
+>>> 
+>>> However, there are other paths that can call ep_scan_ready_list() 
+>>> thus
+>>> I agree with you that both wakeups here are necessary.
+>>> 
+>>> I do think are are still (smaller) potential races in 
+>>> ep_scan_ready_list()
+>>> where we have:
+>>> 
+>>>         write_lock_irq(&ep->lock);
+>>>         list_splice_init(&ep->rdllist, &txlist);
+>>>         WRITE_ONCE(ep->ovflist, NULL);
+>>>         write_unlock_irq(&ep->lock);
+>>> 
+>>> And in the ep_poll path we have:
+>>> 
+>>> static inline int ep_events_available(struct eventpoll *ep)
+>>> {
+>>>         return !list_empty_careful(&ep->rdllist) ||
+>>>                 READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR;
+>>> }
+>>> 
+>>> 
+>>> Seems to me that first bit needs to be the following, since
+>>> ep_events_available() is now checked in a lockless way:
+>>> 
+>>> 
+>>>         write_lock_irq(&ep->lock);
+>>>     WRITE_ONCE(ep->ovflist, NULL);
+>>>     smp_wmb();
+>>>         list_splice_init(&ep->rdllist, &txlist);
+>>>         write_unlock_irq(&ep->lock);
+>> 
+>> 
+>> Hi Jason,
+>> 
+>> For the first chunk you refer the order seems irrelevant.
+>> Either you see something not empty, you go take the lock
+>> and then check lists under the lock, either you see all
+>> lists are empty.
+>> 
 > 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Cc: Christian Lamparter <chunkeey@googlemail.com>
-> ---
->  drivers/usb/host/xhci-pci-renesas.c | 342 +++++++++++++++++++++++++++-
->  1 file changed, 341 insertions(+), 1 deletion(-)
+> Hi Roman,
 > 
-> diff --git a/drivers/usb/host/xhci-pci-renesas.c b/drivers/usb/host/xhci-pci-renesas.c
-> index 402e86912c9f..6bb537999754 100644
-> --- a/drivers/usb/host/xhci-pci-renesas.c
-> +++ b/drivers/usb/host/xhci-pci-renesas.c
-> @@ -50,6 +50,22 @@
->  #define RENESAS_RETRY	10000
->  #define RENESAS_DELAY	10
->  
-> +#define ROM_VALID_01 0x2013
-> +#define ROM_VALID_02 0x2026
-> +
-> +static int renesas_verify_fw_version(struct pci_dev *pdev, u32 version)
-> +{
-> +	switch (version) {
-> +	case ROM_VALID_01:
-> +	case ROM_VALID_02:
-> +		return 0;
-> +	default:
-> +		dev_err(&pdev->dev, "FW has invalid version :%d\n", version);
-> +		return 1;
-> +	}
-> +	return -EINVAL;
+> It does matter. Let's say we have:
+> 
+> epfd1->epfd2->socket. And thread a is doing an
+> epoll_wait() on epfd1, and thread b is doing
+> epoll_wait on epfd2. then:
+> 
+> 1) data comes in on socket
+> 
+> ep_poll_callback() wakes up threads a and b
+> 
+> 2) thread a runs
+> 
+> ep_poll()
+>  ep_scan_ready_list()
+>   ep_send_events_proc()
+>    ep_item_poll()
+>      ep_scan_ready_list()
+>        list_splice_init(&ep->rdllist, &txlist);
+> 
+> 3) now thread b is running
+> 
+> ep_poll()
+>  ep_events_available()
+>    returns false
+>  schedule_hrtimeout_range()
+> 
+> Thus, thread c has missed a wakeup and will never
+> get it.
+> 
+> 
+> Similarly, for the second chunk I referenced.
 
-This never returns -EINVAL
-Maybe just get rid of the default case and print
-the error message before returning
+Hi Jason,
 
-> +}
-> +
->  static int renesas_fw_download_image(struct pci_dev *dev,
->  				     const u32 *fw,
->  				     size_t step)
-> @@ -144,10 +160,84 @@ static int renesas_fw_verify(const void *fw_data,
->  	return 0;
->  }
->  
-> -static int renesas_fw_check_running(struct pci_dev *pdev)
-> +static bool renesas_check_rom(struct pci_dev *pdev)
->  {
-> +	u16 rom_status;
-> +	int retval;
-> +
-> +	/* Check if external ROM exists */
-> +	retval = pci_read_config_word(pdev, RENESAS_ROM_STATUS, &rom_status);
-> +	if (retval)
-> +		return false;
-> +
-> +	rom_status &= RENESAS_ROM_STATUS_ROM_EXISTS;
-> +	if (rom_status) {
-> +		dev_dbg(&pdev->dev, "External ROM exists\n");
-> +		return true; /* External ROM exists */
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +static int renesas_check_rom_state(struct pci_dev *pdev)
-> +{
-> +	u16 rom_state;
-> +	u32 version;
->  	int err;
-> +
-> +	/* check FW version */
-> +	err = pci_read_config_dword(pdev, RENESAS_FW_VERSION, &version);
-> +	if (err)
-> +		return pcibios_err_to_errno(err);
-> +
-> +	version &= RENESAS_FW_VERSION_FIELD;
-> +	version = version >> RENESAS_FW_VERSION_OFFSET;
-> +
-> +	err = renesas_verify_fw_version(pdev, version);
-> +	if (err)
-> +		return err;
-> +
-> +	/*
-> +	 * Test if ROM is present and loaded, if so we can skip everything
-> +	 */
-> +	err = pci_read_config_word(pdev, RENESAS_ROM_STATUS, &rom_state);
-> +	if (err)
-> +		return pcibios_err_to_errno(err);
-> +
-> +	if (rom_state & BIT(15)) {
-> +		/* ROM exists */
-> +		dev_dbg(&pdev->dev, "ROM exists\n");
-> +
-> +		/* Check the "Result Code" Bits (6:4) and act accordingly */
-> +		switch (rom_state & RENESAS_ROM_STATUS_RESULT) {
-> +		case RENESAS_ROM_STATUS_SUCCESS:
-> +			return 0;
-> +
-> +		case RENESAS_ROM_STATUS_NO_RESULT: /* No result yet */
-> +			return 0;
-> +
-> +		case RENESAS_ROM_STATUS_ERROR: /* Error State */
-> +		default: /* All other states are marked as "Reserved states" */
-> +			dev_err(&pdev->dev, "Invalid ROM..");
-> +			break;
-> +		}
-> +	}
-> +
-> +	return -EIO;
-> +}
-> +
-> +static int renesas_fw_check_running(struct pci_dev *pdev)
-> +{
->  	u8 fw_state;
-> +	int err;
-> +
-> +	/* Check if device has ROM and loaded, if so skip everything */
-> +	err = renesas_check_rom(pdev);
-> +	if (err) { /* we have rom */
-> +		err = renesas_check_rom_state(pdev);
-> +		if (!err)
-> +			return err;
-> +	}
->  
->  	/*
->  	 * Test if the device is actually needing the firmware. As most
-> @@ -303,11 +393,261 @@ static int renesas_fw_download(struct pci_dev *pdev,
->  	return 0;
->  }
->  
-> +static void renesas_rom_erase(struct pci_dev *pdev)
-> +{
-> +	int retval, i;
-> +	u8 status;
-> +
-> +	dev_dbg(&pdev->dev, "Performing ROM Erase...\n");
-> +	retval = pci_write_config_dword(pdev, RENESAS_DATA0,
-> +					RENESAS_ROM_ERASE_MAGIC);
-> +	if (retval) {
-> +		dev_err(&pdev->dev, "ROM erase, magic word write failed: %d\n",
-> +			pcibios_err_to_errno(retval));
-> +		return;
-> +	}
-> +
-> +	retval = pci_read_config_byte(pdev, RENESAS_ROM_STATUS, &status);
-> +	if (retval) {
-> +		dev_err(&pdev->dev, "ROM status read failed: %d\n",
-> +			pcibios_err_to_errno(retval));
-> +		return;
-> +	}
-> +	status |= RENESAS_ROM_STATUS_ERASE;
-> +	retval = pci_write_config_byte(pdev, RENESAS_ROM_STATUS, status);
-> +	if (retval) {
-> +		dev_err(&pdev->dev, "ROM erase set word write failed\n");
-> +		return;
-> +	}
-> +
-> +	/* sleep a bit while ROM is erased */
-> +	msleep(20);
-> +
-> +	for (i = 0; i < RENESAS_RETRY; i++) {
-> +		retval = pci_read_config_byte(pdev, RENESAS_ROM_STATUS,
-> +					      &status);
-> +		status &= RENESAS_ROM_STATUS_ERASE;
-> +		if (!status)
-> +			break;
-> +
-> +		mdelay(RENESAS_DELAY);
-> +	}
-> +
-> +	if (i == RENESAS_RETRY)
-> +		dev_dbg(&pdev->dev, "Chip erase timedout: %x\n", status);
-> +
-> +	dev_dbg(&pdev->dev, "ROM Erase... Done success\n");
-> +}
-> +
-> +static bool renesas_download_rom(struct pci_dev *pdev,
-> +				 const u32 *fw, size_t step)
-> +{
-> +	bool data0_or_data1;
-> +	u8 fw_status;
-> +	size_t i;
-> +	int err;
-> +
-> +	/*
-> +	 * The hardware does alternate between two 32-bit pages.
-> +	 * (This is because each row of the firmware is 8 bytes).
-> +	 *
-> +	 * for even steps we use DATA0, for odd steps DATA1.
-> +	 */
-> +	data0_or_data1 = (step & 1) == 1;
-> +
-> +	/* Read "Set DATAX" and confirm it is cleared. */
-> +	for (i = 0; i < RENESAS_RETRY; i++) {
-> +		err = pci_read_config_byte(pdev, RENESAS_ROM_STATUS_MSB,
-> +					   &fw_status);
-> +		if (err) {
-> +			dev_err(&pdev->dev, "Read ROM Status failed: %d\n",
-> +				pcibios_err_to_errno(err));
-> +			return false;
-> +		}
-> +		if (!(fw_status & BIT(data0_or_data1)))
-> +			break;
-> +
-> +		udelay(RENESAS_DELAY);
-> +	}
-> +	if (i == RENESAS_RETRY) {
-> +		dev_err(&pdev->dev, "Timeout for Set DATAX step: %zd\n", step);
-> +		return false;
-> +	}
-> +
-> +	/*
-> +	 * Write FW data to "DATAX".
-> +	 * "LSB is left" => force little endian
-> +	 */
-> +	err = pci_write_config_dword(pdev, data0_or_data1 ?
-> +				     RENESAS_DATA1 : RENESAS_DATA0,
-> +				     (__force u32)cpu_to_le32(fw[step]));
-> +	if (err) {
-> +		dev_err(&pdev->dev, "Write to DATAX failed: %d\n",
-> +			pcibios_err_to_errno(err));
-> +		return false;
-> +	}
-> +
-> +	udelay(100);
-> +
-> +	/* Set "Set DATAX". */
-> +	err = pci_write_config_byte(pdev, RENESAS_ROM_STATUS_MSB,
-> +				    BIT(data0_or_data1));
-> +	if (err) {
-> +		dev_err(&pdev->dev, "Write config for DATAX failed: %d\n",
-> +			pcibios_err_to_errno(err));
-> +		return false;
-> +	}
-> +
-> +	return true;
-> +}
+Yes, that makes sense.
 
-The above function is almost identical to renesas_fw_download_image() added in a 
-previous patch.
-To avoid code duplication I'm sure one function that handles both cases would be possible. 
+>>> 
+>>> And also this bit:
+>>> 
+>>>         WRITE_ONCE(ep->ovflist, EP_UNACTIVE_PTR)>>
+>>>         /*
+>>>          * Quickly re-inject items left on "txlist".
+>>>          */
+>>>         list_splice(&txlist, &ep->rdllist);
+>>> 
+>>> Should I think better be reversed as well to:
+>>> 
+>>> list_splice(&txlist, &ep->rdllist);
+>>> smp_wmb();
+>>> WRITE_ONCE(ep->ovflist, EP_UNACTIVE_PTR);
+>> 
+>> But this one is much more interesting.  I understand what you
+>> are trying to achieve: we can't leave both lists empty for the
+>> short period of time, if there is something left the caller
+>> of ep_events_available() should be able to see one of the lists
+>> is not empty, otherwise it can be too late.
+>> 
+>> But the problem you've spotted is much worse. Some remains
+>> can be in the txlist (this can happen if caller of epoll_wait
+>> wants to harvest only 1 event, but there are more in the ->rdlist).
+>> And we again get the lost wakeup.
+>> 
+>> Problem is reproduced by the test below.  The idea is simple:
+>> we have 10 threads and 10 event fds. Each thread can harvest
+>> only 1 event. 1 producer fires all 10 events at once and waits
+>> that all 10 events will be observed by 10 threads.
+>> 
+>> The fix is basically a revert of 339ddb53d373 with 1 major
+>> exception: we do wakeups from ep_scan_ready_list() but
+>> if txlist is not empty && if ep_scan_ready_list() is called
+>> from the routine, which sends events, not reads it
+>> (thus we protect ourselves from repeated wake ups)
+>> 
+>> I will send the code a bit later.
+> 
+> This was discussed as part of the original discussion around
+> 339ddb53d373: https://lkml.org/lkml/2019/10/7/905
 
--Mathias
+True! This is the exact scenario which is covered by the
+test from my previous email. And the test fails. I forgot
+about this discussion.
+
+> The context was more a performance difference rather than
+> a semantic difference, but as I pointed out I believe that
+> behavior pre-dates the above commit and goes back to:
+> 86c0517 fs/epoll: deal with wait_queue only once
+> 
+> There, since the thread is left on the waitqueue over the
+> ep_scan_ready_list() thus the ep_wakeup() (that was removed
+> in 339ddb53d373), would no longer wakeup other potential
+> waiters.
+> 
+> So since I think this behavior change goes back to 5.0 and there
+> really haven't been any reports, I don't think there are
+> too many apps relying on these semantics that your test
+> case is showing. It would be interesting to confirm that
+> your test does indeed succeed/fail before/after that patch.
+
+The main problem is that two sequential wakeups can hit the
+same thread, while the wait queue entry is still in the list.
+You also described this in https://lkml.org/lkml/2019/10/7/905
+
+If we wakeup only from ep_poll_callback (current code state)
+we have to be sure each wakeup hits new wait queue entry.
+This behavior can be achieved with autoremove_wake_function,
+which should be also good performance-wise, since after
+an explicit wakeup you don't need to remove the wait entry
+from the list under the lock.
+
+At the end it turns out like this:
+
+1. either we need to wakeup additionally from ep_scan_ready_list(),
+    this is what we had prior 339ddb53d373.
+
+2. either we wait with autoremove_wake_function, thus we
+    guarantee, that each new wakeup hits new thread.
+
+
+I'm testing both variants using the last test I sent yesterday,
+works so far.
+
+I personally tend to the second variant, I really don't like
+"we-wakeup-from-all-the-places" solution.
+
+Could you please take a look on the patch below? It probably
+needs some tweaks, but the idea should be clear.
+
+> Also, as part of that original discussion, you had a patch
+> that I think addresses this. I would be ok with that, in
+> addition to a patch to address the ordering issue I pointed
+> out. I can post a patch for the former, if you think this
+> plan makes sense?
+
+Go ahead with you reordering findings! That is correct for
+a single wakeup, which we have in the ep_poll_callback().
+
+--
+Roman
+
+
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index d6ba0e52439b..1057598cd299 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -1822,7 +1822,6 @@ static int ep_poll(struct eventpoll *ep, struct 
+epoll_event __user *events,
+  {
+         int res = 0, eavail, timed_out = 0;
+         u64 slack = 0;
+-       bool waiter = false;
+         wait_queue_entry_t wait;
+         ktime_t expires, *to = NULL;
+
+@@ -1867,21 +1866,12 @@ static int ep_poll(struct eventpoll *ep, struct 
+epoll_event __user *events,
+          */
+         ep_reset_busy_poll_napi_id(ep);
+
+-       /*
+-        * We don't have any available event to return to the caller.  
+We need
+-        * to sleep here, and we will be woken by ep_poll_callback() 
+when events
+-        * become available.
+-        */
+-       if (!waiter) {
+-               waiter = true;
+-               init_waitqueue_entry(&wait, current);
+-
++       do {
++               init_wait(&wait);
+                 write_lock_irq(&ep->lock);
+                 __add_wait_queue_exclusive(&ep->wq, &wait);
+                 write_unlock_irq(&ep->lock);
+-       }
+
+-       for (;;) {
+                 /*
+                  * We don't want to sleep if the ep_poll_callback() 
+sends us
+                  * a wakeup in between. That's why we set the task state
+@@ -1911,6 +1901,16 @@ static int ep_poll(struct eventpoll *ep, struct 
+epoll_event __user *events,
+                         timed_out = 1;
+                         break;
+                 }
++
++               /* We were woken up, thus go and try to harvest some 
+events */
++               eavail = 1;
++
++       } while (0);
++
++       if (!list_empty_careful(&wait.entry)) {
++               write_lock_irq(&ep->lock);
++               __remove_wait_queue(&ep->wq, &wait);
++               write_unlock_irq(&ep->lock);
+         }
+         __set_current_state(TASK_RUNNING);
+@@ -1925,12 +1925,6 @@ static int ep_poll(struct eventpoll *ep, struct 
+epoll_event __user *events,
+             !(res = ep_send_events(ep, events, maxevents)) && 
+!timed_out)
+                 goto fetch_events;
+
+-       if (waiter) {
+-               write_lock_irq(&ep->lock);
+-               __remove_wait_queue(&ep->wq, &wait);
+-               write_unlock_irq(&ep->lock);
+-       }
+-
+         return res;
+  }
+
+
+
