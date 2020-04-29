@@ -2,219 +2,127 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFFCC8300A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 928E1C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8272C205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D31C205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:12:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qcTL7rWJ"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="A0OKwu8d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgD2TLG (ORCPT
+        id S1727057AbgD2TM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 15:11:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49226 "EHLO
+        Wed, 29 Apr 2020 15:12:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726456AbgD2TLF (ORCPT
+        by vger.kernel.org with ESMTP id S1726456AbgD2TM1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 15:11:05 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1445EC035493
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:11:05 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id j2so3890019wrs.9
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:11:04 -0700 (PDT)
+        Wed, 29 Apr 2020 15:12:27 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5736C03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:12:26 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id ck5so1710274qvb.11
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:12:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:subject:in-reply-to:date:message-id
-         :mime-version;
-        bh=HwBlAhl9IzjqWMkaY5fyYm/8tsGpWsJDdfPbj+qf/cw=;
-        b=qcTL7rWJWMCsNYOvmkLnkfwL1OYQTFMr1oCDP+/LG+yoZ54Rb09KxnGDEhScoCYRWF
-         H4Q948HySr2ev6c5+yXIJk0A7XgdS9Jt3n5zOvgZKwn5N+n/aQSPjIl4Gf4r4dHVsHSg
-         RvkXVOyk5xjFz/WTsFhLoJro+kI6XofIpdZKh8fLCvAcvWp1ZRbzSB86WvgZ12nBDKN4
-         awslm7Rk+FHcP8VphplAImX5lym/fvkXDhdhz7pvJ9MLmKnFP+K3Suau4ZfAzHeXFHz1
-         iPHQ2IVMe8S4FWhMm2gEO/iyjzisibU4+dyYf1sMXI8acPoXKyG8lI9ahmeW+YAHoovv
-         VOyw==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=PUrBMG4JrKH9eNLOcFyuwpbAs2LJukJ05nwE2n+46mQ=;
+        b=A0OKwu8drvTyhlgre6qriR0lY2UD5mtsPhl/RMnN/QchW+SC5qbhaJknuPR3+14NzG
+         v0QH//2b+pSlA0goCTmZ4g/xdUyOm58PwlGZPo1XrRZfTcU3YdG0k/KdZuqipu6RE1EK
+         rxhpaY/JBjgfT8/rP+QkJq0qBpI9oOHCV1CVk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=HwBlAhl9IzjqWMkaY5fyYm/8tsGpWsJDdfPbj+qf/cw=;
-        b=i+ImA18XhqSE/tK4f2XS6fhQGWakRxfd9b3Xk/zsfYpu1ECckxF3GOVaXkdCJK9Uzs
-         E8NkfCkWhbB9fTgqQySQKvvp88L9XdW8x/tVVFT4cc32PggKnubWGuDlhOEOUZnalvo6
-         ObrFaMNBjNdevUKsDlBWxyAyI+5BH7nAl3n0dgGmqxZ/tRXAG2OjN0Ahc3gCD6QZekht
-         IwobzZKS9EZpP6i5Pkd2Hgz7Gw5daHyLE3G6tmpEtnbLK8ONqOyMn1KFkjPN0/NOIxIW
-         CBhxdbQQqndutJJ+7jitwvmOizXB9Udns/eHzPTIIB77XD998fBq9kB9lZJ3c+l2YbyO
-         VnIQ==
-X-Gm-Message-State: AGi0PuZo/+rCDNOVBNiitXOnV8HxBUbgvb+BAGLCaoEqwcHc9gLvZXA7
-        0U5WrVTyatCCfiJl1f83K5elKA==
-X-Google-Smtp-Source: APiQypKJQgl13isxg5O+xfkBHxn3MAO2tiktrpReGj1EhlU4/X2r3NgW/pVCXn/XoI3DnPrTA122NQ==
-X-Received: by 2002:adf:cd84:: with SMTP id q4mr38584918wrj.320.1588187463599;
-        Wed, 29 Apr 2020 12:11:03 -0700 (PDT)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id m8sm254005wrx.54.2020.04.29.12.11.02
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PUrBMG4JrKH9eNLOcFyuwpbAs2LJukJ05nwE2n+46mQ=;
+        b=h82NlpKRQzpqlxiNRON0GWamBxsKBZeUsfeNU6u0ec7C7N3p/K9QkBQNxwzHKvTX1g
+         xDw50/k4w9nboeYwwuQMQIZpZ2/5NHUHWVeybCeDfzOViMYPm0xmuPphYbQyEMgggS7x
+         9yb4AXUwEws8BVYo3CdwAJ+4OR6a92uW01tf2W7teYY4S2yf8BJ1I6Pw5fhjwvgSLuA9
+         AonopT6fa9GdQIbWoqXx8aXS6Z8UiESDw4xGr98udxezF4UNEa0OR9FOgqlSyJbiJveP
+         d3JYDbj95y5Mzzb72d4Ktxrf/gdPsjrw0U+lnkWQ01t1fxe9O9vIN/cqwKCD5IvxH5UG
+         OsFA==
+X-Gm-Message-State: AGi0PubKAmf+yywtwtYY6uZnTKBzExC3Aa6QIg8N6PU+lA5BOch7FP79
+        l/Uklx9PJoPE1aA3n1KUnequKg==
+X-Google-Smtp-Source: APiQypJ8Zv81pXMzK29YnrnefaXJdUNVB+pxh7RSIQ6ULtupWwQN8DSBxa+wpXbbGqmG+J7g/OUKDA==
+X-Received: by 2002:a0c:99e9:: with SMTP id y41mr35664750qve.164.1588187545880;
+        Wed, 29 Apr 2020 12:12:25 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id q17sm78727qtk.84.2020.04.29.12.12.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 12:11:02 -0700 (PDT)
-References: <20200415102320.4606-1-christianshewitt@gmail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     chewitt <christianshewitt@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: meson: sm1-khadas-vim3l: add audio playback to vim3l
-In-reply-to: <20200415102320.4606-1-christianshewitt@gmail.com>
-Date:   Wed, 29 Apr 2020 21:11:02 +0200
-Message-ID: <1jmu6uhzuh.fsf@starbuckisacylon.baylibre.com>
+        Wed, 29 Apr 2020 12:12:25 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 15:12:24 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Xiao Yang <yangx.jy@cn.fujitsu.com>, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH] kernel/trace: Stop and wait for kthread on preempt irq
+ module unload
+Message-ID: <20200429191224.GA75562@google.com>
+References: <20200424223630.224895-1-joel@joelfernandes.org>
+ <5EA80319.7080005@cn.fujitsu.com>
+ <20200428104409.0995ceb0@gandalf.local.home>
+ <20200428104543.3926eaaf@gandalf.local.home>
+ <5EA96AE8.6000707@cn.fujitsu.com>
+ <20200429123141.580f89ce@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429123141.580f89ce@gandalf.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 29, 2020 at 12:31:41PM -0400, Steven Rostedt wrote:
+> On Wed, 29 Apr 2020 19:54:16 +0800
+> Xiao Yang <yangx.jy@cn.fujitsu.com> wrote:
+> 
+> > On 2020/4/28 22:45, Steven Rostedt wrote:
+> > > diff --git a/kernel/trace/preemptirq_delay_test.c b/kernel/trace/preemptirq_delay_test.c  
+> > >>  index 1c28ca20e30b..6d9131ae7e8c 100644
+> > >>  --- a/kernel/trace/preemptirq_delay_test.c
+> > >>  +++ b/kernel/trace/preemptirq_delay_test.c
+> > >>  @@ -113,15 +113,27 @@ static int preemptirq_delay_run(void *data)
+> > >>
+> > >>    	for (i = 0; i<  s; i++)
+> > >>    		(testfuncs[i])(i);
+> > >>  +
+> > >>  +	while (!kthread_should_stop()) {
+> > >>  +		schedule();
+> > >>  +		set_current_state(TASK_INTERRUPTIBLE);
+> > >>  +	}
+> > >>  +
+> > >>  +	__set_current_state(TASK_RUNNING);
+> > >>  +
+> > >>    	return 0;
+> > >>    }
+> > >>  
+> > Hi Steven,
+> > 
+> > Thanks for your patch.
+> > 
+> > I also used the following steps to do test and didn't get any 
+> > warning/panic after applying your patch.
+> > ---------------------------------
+> > for i in $(seq 1 100); do modprobe preemptirq_delay_test test_mode=irq 
+> > delay=500000; rmmod preemptirq_delay_test; done
+> > for i in $(seq 1 100); do modprobe preemptirq_delay_test 
+> > test_mode=preempt delay=500000; rmmod preemptirq_delay_test; done
+> > ---------------------------------
+> > 
+> > But I am not sure which fix(from you and Joel) is better.
+> 
+> Mine ;-)
+> 
+> The "kthread_should_stop()" is the normal way to end kernel threads. Using
+> get/put is not the orthodox way.
 
-On Wed 15 Apr 2020 at 12:23, chewitt <christianshewitt@gmail.com> wrote:
+Agreed :-) thanks.
 
-> From: Christian Hewitt <christianshewitt@gmail.com>
->
-> Add the sound and related audio nodes to the VIM3L board.
->
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> ---
->  .../dts/amlogic/meson-sm1-khadas-vim3l.dts    | 88 +++++++++++++++++++
->  1 file changed, 88 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
-> index dbbf29a0dbf6..b900a433ef7a 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
-> @@ -8,6 +8,7 @@
->  
->  #include "meson-sm1.dtsi"
->  #include "meson-khadas-vim3.dtsi"
-> +#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
->  
->  / {
->  	compatible = "khadas,vim3l", "amlogic,sm1";
-> @@ -31,6 +32,69 @@
->  		regulator-boot-on;
->  		regulator-always-on;
->  	};
-> +
-> +	sound {
-> +		compatible = "amlogic,axg-sound-card";
-> +		model = "SM1-KHADAS-VIM3L";
-> +		audio-aux-devs = <&tdmout_b>;
-> +		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
-> +				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
-> +				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
-> +				"TDM_B Playback", "TDMOUT_B OUT";
-> +
-> +		assigned-clocks = <&clkc CLKID_MPLL2>,
-> +				  <&clkc CLKID_MPLL0>,
-> +				  <&clkc CLKID_MPLL1>;
-> +		assigned-clock-parents = <0>, <0>, <0>;
-> +		assigned-clock-rates = <294912000>,
-> +				       <270950400>,
-> +				       <393216000>;
-> +		status = "okay";
-> +
-> +		dai-link-0 {
-> +			sound-dai = <&frddr_a>;
-> +		};
-> +
-> +		dai-link-1 {
-> +			sound-dai = <&frddr_b>;
-> +		};
-> +
-> +		dai-link-2 {
-> +			sound-dai = <&frddr_c>;
-> +		};
-> +
-> +		/* 8ch hdmi interface */
-
-VIM3(L) should not use TDMOUT B or C for the HDMI interface
-* B is on the 40pin header
-* C is on the m2 connector
-
-A is not routed to the outside world and should prefered for this.
-
-See :
-https://lore.kernel.org/linux-amlogic/20200421141814.639480-1-jbrunet@baylibre.com/
-
-> +		dai-link-3 {
-> +			sound-dai = <&tdmif_b>;
-> +			dai-format = "i2s";
-> +			dai-tdm-slot-tx-mask-0 = <1 1>;
-> +			dai-tdm-slot-tx-mask-1 = <1 1>;
-> +			dai-tdm-slot-tx-mask-2 = <1 1>;
-> +			dai-tdm-slot-tx-mask-3 = <1 1>;
-> +			mclk-fs = <256>;
-> +
-> +			codec {
-> +				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
-> +			};
-> +		};
-> +
-> +		/* hdmi glue */
-> +		dai-link-4 {
-> +			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
-> +
-> +			codec {
-> +				sound-dai = <&hdmi_tx>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&arb {
-> +	status = "okay";
-> +};
-> +
-> +&clkc_audio {
-> +	status = "okay";
->  };
->  
->  &cpu0 {
-> @@ -61,6 +125,18 @@
->  	clock-latency = <50000>;
->  };
->  
-> +&frddr_a {
-> +	status = "okay";
-> +};
-> +
-> +&frddr_b {
-> +	status = "okay";
-> +};
-> +
-> +&frddr_c {
-> +	status = "okay";
-> +};
-> +
->  &pwm_AO_cd {
->  	pinctrl-0 = <&pwm_ao_d_e_pins>;
->  	pinctrl-names = "default";
-> @@ -93,3 +169,15 @@
->  	phy-names = "usb2-phy0", "usb2-phy1";
->  };
->   */
-> +
-> +&tdmif_b {
-> +	status = "okay";
-> +};
-> +
-> +&tdmout_b {
-> +	status = "okay";
-> +};
-> +
-> +&tohdmitx {
-> +	status = "okay";
-> +};
+ - Joel
 
