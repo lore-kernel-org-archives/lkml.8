@@ -2,171 +2,86 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3A1C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D620FC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A26702073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:39:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="Av56D6yt"
+	by mail.kernel.org (Postfix) with ESMTP id AAF13206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgD2Pjy (ORCPT
+        id S1726949AbgD2PlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:39:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44180 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbgD2Pjy (ORCPT
+        Wed, 29 Apr 2020 11:41:01 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35756 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726519AbgD2PlA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:39:54 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E01CBC03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:39:53 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id e25so3115214ljg.5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:39:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qP3I6OPRVWktvzkLiuD0CRDumnj0JjO4b9VfB41a1Gg=;
-        b=Av56D6yt+xBIXmC+kkn2QjTa6cXAqFcY2i0P234NzbBxlJGw51PW6TFOIwMUy2fJsf
-         yqbKnIiU2BsuH1oz2LImBIjciM0jjzzHA2bWIFs99MigbHTNPdwc61euBXbFOI98aEoE
-         +qcfQWleDUj3wviEzHoApiiIeqLu2H7MXV8mZEwYiuUghh56+/fL31/Z+1ExBkjaMY93
-         mM2/7D8ofSQJBXR+jEbTfCU4dFWdX9X6WnkNeafCWZdC2N95GIm6XRHZAONMnDq/DJsr
-         5DSATLf8PG6yZq3QcUh98cb1Ml74AJkXtAtpkbhRO9/h2FFeleCFdwrZqWwr3NyrokcO
-         VcJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qP3I6OPRVWktvzkLiuD0CRDumnj0JjO4b9VfB41a1Gg=;
-        b=Ln8QTDWjxhAoRzlKd2y4Px8UxPo9tnaW4PIy/mKkD4bqfCfLtaE64RTrVr465c0RKJ
-         W5iwmUKu6LIDseGf7CFZt+lN/6oLWsz2uXtQRQhDwFoF3Fje7kSkBVxEQTwQxRNuNZJr
-         Vwo2mOlytU+NwAeQTyxGNkgesmVtD5pIYbFSI0w3FWInxgEQtI0SGEIyKXBAmb1Fl+HI
-         AIUDjSP4nQbKLq3bNheU8JPYQzqCdkiRXpg1LzT2g9kNlO9WvTjcl7YWG8J7m9FhUIPs
-         IzhXG0pyiY7izvJVTFGoyM0de3hm6Djc6gcRiARZ6w86249MtjkXdNt8pYm/vxcb9MCv
-         /gGA==
-X-Gm-Message-State: AGi0Pua2y9K/AYRO9LRGj8Hz+cI4JhbSpQq3rdtgEf0IXHevD6AyNd4I
-        ha1Zb6v1DweRt74hGj6AmtLLv4jw/OY=
-X-Google-Smtp-Source: APiQypK1xFR5litchNV0f6pAe9wwsLoR7dp/Vk/RX6+WG2yQC5hmTjx30oqeL3LDl+iUDS/VE4Yhgw==
-X-Received: by 2002:a2e:330f:: with SMTP id d15mr2686948ljc.250.1588174792271;
-        Wed, 29 Apr 2020 08:39:52 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id i20sm3151493lfe.15.2020.04.29.08.39.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 08:39:51 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id E045B1021F9; Wed, 29 Apr 2020 18:40:02 +0300 (+03)
-Date:   Wed, 29 Apr 2020 18:40:02 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/25] Large pages in the page cache
-Message-ID: <20200429154002.n3mq2ysz37puf73y@box>
-References: <20200429133657.22632-1-willy@infradead.org>
+        Wed, 29 Apr 2020 11:41:00 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jTopT-0004nr-Du; Wed, 29 Apr 2020 15:40:55 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Jack Wang <jinpu.wang@cloud.ionos.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: pm80xx: remove redundant assignments to status
+Date:   Wed, 29 Apr 2020 16:40:55 +0100
+Message-Id: <20200429154055.286617-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429133657.22632-1-willy@infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 06:36:32AM -0700, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> This patch set does not pass xfstests.  Test at your own risk.  It is
-> based on the readahead rewrite which is in Andrew's tree.  The large
-> pages somehow manage to fall off the LRU, so the test VM quickly runs
-> out of memory and freezes.  To reproduce:
-> 
-> # mkfs.xfs /dev/sdb && mount /dev/sdb /mnt && dd if=/dev/zero bs=1M count=2048 of=/mnt/bigfile && sync && sleep 2 && sync && echo 1 >/proc/sys/vm/drop_caches 
-> # /host/home/willy/kernel/xarray-2/tools/vm/page-types | grep thp
-> 0x0000000000401800	       511        1  ___________Ma_________t____________________	mmap,anonymous,thp
-> 0x0000000000405868	         1        0  ___U_lA____Ma_b_______t____________________	uptodate,lru,active,mmap,anonymous,swapbacked,thp
-> # dd if=/mnt/bigfile of=/dev/null bs=2M count=5
-> # /host/home/willy/kernel/xarray-2/tools/vm/page-types | grep thp
-> 0x0000000000400000	      2516        9  ______________________t____________________	thp
-> 0x0000000000400028	         1        0  ___U_l________________t____________________	uptodate,lru,thp
-> 0x000000000040006c	       106        0  __RU_lA_______________t____________________	referenced,uptodate,lru,active,thp
+From: Colin Ian King <colin.king@canonical.com>
 
-Note that you have 107 pages on LRU. It is only head pages. With order-5
-pages it is over 13MiB.
+The variable status is being assigned with a value that is never read
+hence the assignment is redundant and can be removed.
 
-Looks like everything is fine.
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/scsi/pm8001/pm80xx_hwi.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-> 0x0000000000400228	         1        0  ___U_l___I____________t____________________	uptodate,lru,reclaim,thp
-> 0x0000000000401800	       511        1  ___________Ma_________t____________________	mmap,anonymous,thp
-> 0x0000000000405868	         1        0  ___U_lA____Ma_b_______t____________________	uptodate,lru,active,mmap,anonymous,swapbacked,thp
-> 
-> 
-> The principal idea here is that a large part of the overhead in dealing
-> with individual pages is that there's just so darned many of them.  We
-> would be better off dealing with fewer, larger pages, even if they don't
-> get to be the size necessary for the CPU to use a larger TLB entry.
-> 
-> Matthew Wilcox (Oracle) (24):
->   mm: Allow hpages to be arbitrary order
->   mm: Introduce thp_size
->   mm: Introduce thp_order
->   mm: Introduce offset_in_thp
->   fs: Add a filesystem flag for large pages
->   fs: Introduce i_blocks_per_page
->   fs: Make page_mkwrite_check_truncate thp-aware
->   fs: Support THPs in zero_user_segments
->   bio: Add bio_for_each_thp_segment_all
->   iomap: Support arbitrarily many blocks per page
->   iomap: Support large pages in iomap_adjust_read_range
->   iomap: Support large pages in read paths
->   iomap: Support large pages in write paths
->   iomap: Inline data shouldn't see large pages
->   xfs: Support large pages
->   mm: Make prep_transhuge_page return its argument
->   mm: Add __page_cache_alloc_order
->   mm: Allow large pages to be added to the page cache
->   mm: Allow large pages to be removed from the page cache
->   mm: Remove page fault assumption of compound page size
->   mm: Add DEFINE_READAHEAD
->   mm: Make page_cache_readahead_unbounded take a readahead_control
->   mm: Make __do_page_cache_readahead take a readahead_control
->   mm: Add large page readahead
-> 
-> William Kucharski (1):
->   mm: Align THP mappings for non-DAX
-> 
->  drivers/nvdimm/btt.c    |   4 +-
->  drivers/nvdimm/pmem.c   |   6 +-
->  fs/ext4/verity.c        |   4 +-
->  fs/f2fs/verity.c        |   4 +-
->  fs/iomap/buffered-io.c  | 110 ++++++++++++++++--------------
->  fs/jfs/jfs_metapage.c   |   2 +-
->  fs/xfs/xfs_aops.c       |   4 +-
->  fs/xfs/xfs_super.c      |   2 +-
->  include/linux/bio.h     |  13 ++++
->  include/linux/bvec.h    |  23 +++++++
->  include/linux/fs.h      |   1 +
->  include/linux/highmem.h |  15 +++--
->  include/linux/huge_mm.h |  25 +++++--
->  include/linux/mm.h      |  97 ++++++++++++++-------------
->  include/linux/pagemap.h |  62 ++++++++++++++---
->  mm/filemap.c            |  60 ++++++++++++-----
->  mm/highmem.c            |  62 ++++++++++++++++-
->  mm/huge_memory.c        |  49 ++++++--------
->  mm/internal.h           |  13 ++--
->  mm/memory.c             |   7 +-
->  mm/page_io.c            |   2 +-
->  mm/page_vma_mapped.c    |   4 +-
->  mm/readahead.c          | 145 ++++++++++++++++++++++++++++++----------
->  23 files changed, 485 insertions(+), 229 deletions(-)
-> 
-> -- 
-> 2.26.2
-> 
-
+diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
+index 4d205ebaee87..f5e36375a68f 100644
+--- a/drivers/scsi/pm8001/pm80xx_hwi.c
++++ b/drivers/scsi/pm8001/pm80xx_hwi.c
+@@ -235,7 +235,6 @@ ssize_t pm80xx_get_fatal_dump(struct device *cdev,
+ 			pm8001_ha->forensic_fatal_step = 1;
+ 			pm8001_ha->fatal_forensic_shift_offset = 0;
+ 			pm8001_ha->forensic_last_offset	= 0;
+-			status = 0;
+ 			offset = (int)
+ 			((char *)pm8001_ha->forensic_info.data_buf.direct_data
+ 			- (char *)buf);
+@@ -258,7 +257,6 @@ ssize_t pm80xx_get_fatal_dump(struct device *cdev,
+ 					forensic_info.data_buf.direct_data,
+ 					"%08x ", *(temp + index));
+ 			}
+-			status = 0;
+ 			offset = (int)
+ 			((char *)pm8001_ha->forensic_info.data_buf.direct_data
+ 			- (char *)buf);
+@@ -285,7 +283,6 @@ ssize_t pm80xx_get_fatal_dump(struct device *cdev,
+ 		pm8001_cw32(pm8001_ha, 0, MEMBASE_II_SHIFT_REGISTER,
+ 			pm8001_ha->fatal_forensic_shift_offset);
+ 		pm8001_ha->fatal_bar_loc = 0;
+-		status = 0;
+ 		offset = (int)
+ 			((char *)pm8001_ha->forensic_info.data_buf.direct_data
+ 			- (char *)buf);
 -- 
- Kirill A. Shutemov
+2.25.1
+
