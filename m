@@ -2,360 +2,235 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15875C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17021C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F01882073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5CF02073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:39:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Q3cXQ8bV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgD2Oiu (ORCPT
+        id S1726871AbgD2OjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:38:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39534 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726451AbgD2Oiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:38:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D2AD3ABCC;
-        Wed, 29 Apr 2020 14:38:46 +0000 (UTC)
+        Wed, 29 Apr 2020 10:39:05 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:50379 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726451AbgD2OjE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 10:39:04 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03TEcUx7020853;
+        Wed, 29 Apr 2020 16:38:57 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : from : to : cc
+ : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=EYGBSDm1wv06sHxoVMD8B6GSZnWRBOWdfk0lRWRXmPU=;
+ b=Q3cXQ8bVyNKrHQy/+NQw8/d4OHm1jnHAJMe7H+BuH2WkxcjWcD+b7b1495MqG//c9Jib
+ LwnNGzPTdv98EPQYrUpKjGK1TBmpcJYMGUwrFnOI8j8bWNyqL7YiBlW49l3XwrjLYXmQ
+ eweMF+Fkli/LzmJHtK2zWRiopY9lvTuE2+qvAbwOzhNLN6wx1cxuPSe36nkyX9cX9XN4
+ FcghqJpH5sNYllnm5zArZvfgkJIx7uKXv1pB9VkrmszQ7XdFLeMkelS2cO/dng7fbXIt
+ Og/GVY76QJfVX6hQHxxHFUElgT/nc4W6NMPHbCXooWIvwK92mAhr+A6b2sAricxKNv8d GQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30mhcc6xak-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 16:38:57 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AE4D810002A;
+        Wed, 29 Apr 2020 16:38:56 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 97ABF222CEF;
+        Wed, 29 Apr 2020 16:38:56 +0200 (CEST)
+Received: from lmecxl0889.tpe.st.com (10.75.127.44) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Apr
+ 2020 16:38:55 +0200
+Subject: Re: [PATCH v3 12/14] remoteproc: Introducing function
+ rproc_set_state_machine()
+From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        <bjorn.andersson@linaro.org>, <ohad@wizery.com>
+CC:     <loic.pallardy@st.com>, <s-anna@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <corbet@lwn.net>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200424200135.28825-1-mathieu.poirier@linaro.org>
+ <20200424200135.28825-13-mathieu.poirier@linaro.org>
+ <d297aeab-4f7e-95e0-04c0-266e0f08b2d0@st.com>
+Message-ID: <1438e3f6-3d8a-7edd-f552-b01f84316ec7@st.com>
+Date:   Wed, 29 Apr 2020 16:38:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 29 Apr 2020 16:38:47 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Jason Baron <jbaron@akamai.com>
-Cc:     Khazhismel Kumykov <khazhy@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2] eventpoll: fix missing wakeup for ovflist in
- ep_poll_callback
-In-Reply-To: <6fa9b33c-b661-f0f6-1965-e379c7201172@akamai.com>
-References: <20200424025057.118641-1-khazhy@google.com>
- <20200424190039.192373-1-khazhy@google.com>
- <66f26e74-6c7b-28c2-8b3f-faf8ea5229d4@akamai.com>
- <CACGdZYLD9ZqJNVktHUVe6N4t28VKy-Z76ZcCdsAOJHZRXaYGSA@mail.gmail.com>
- <a2f22c3c-c25a-4bda-8339-a7bdaf17849e@akamai.com>
- <c365a245574d4a4ed8a922018bcf4f45@suse.de>
- <6fa9b33c-b661-f0f6-1965-e379c7201172@akamai.com>
-Message-ID: <ec0acbcbbe2ee562e0f23f8fdf6daac5@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+In-Reply-To: <d297aeab-4f7e-95e0-04c0-266e0f08b2d0@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-29_07:2020-04-29,2020-04-29 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-29 06:12, Jason Baron wrote:
-> On 4/28/20 2:10 PM, Roman Penyaev wrote:
->> On 2020-04-27 22:38, Jason Baron wrote:
->>> On 4/25/20 4:59 PM, Khazhismel Kumykov wrote:
->>>> On Sat, Apr 25, 2020 at 9:17 AM Jason Baron <jbaron@akamai.com> 
->>>> wrote:
->>>>> 
->>>>> 
->>>>> 
->>>>> On 4/24/20 3:00 PM, Khazhismel Kumykov wrote:
->>>>>> In the event that we add to ovflist, before 339ddb53d373 we would 
->>>>>> be
->>>>>> woken up by ep_scan_ready_list, and did no wakeup in 
->>>>>> ep_poll_callback.
->>>>>> With that wakeup removed, if we add to ovflist here, we may never 
->>>>>> wake
->>>>>> up. Rather than adding back the ep_scan_ready_list wakeup - which 
->>>>>> was
->>>>>> resulting in unnecessary wakeups, trigger a wake-up in 
->>>>>> ep_poll_callback.
->>>>> 
->>>>> I'm just curious which 'wakeup' we are talking about here? There 
->>>>> is:
->>>>> wake_up(&ep->wq) for the 'ep' and then there is the nested one via:
->>>>> ep_poll_safewake(ep, epi). It seems to me that its only about the 
->>>>> later
->>>>> one being missing not both? Is your workload using nested epoll?
->>>>> 
->>>>> If so, it might make sense to just do the later, since the point of
->>>>> the original patch was to minimize unnecessary wakeups.
->>>> 
->>>> The missing wake-ups were when we added to ovflist instead of 
->>>> rdllist.
->>>> Both are "the ready list" together - so I'd think we'd want the same
->>>> wakeups regardless of which specific list we added to.
->>>> ep_poll_callback isn't nested specific?
->>>> 
->>> 
->>> So I was thinking that ep_poll() would see these events on the
->>> ovflist without an explicit wakeup, b/c the overflow list being 
->>> active
->>> implies that the ep_poll() path would add them to the rdllist in
->>> ep_scan_read_list(). Thus, it will see the events either in the
->>> current ep_poll() context or via a subsequent syscall to 
->>> epoll_wait().
->>> 
->>> However, there are other paths that can call ep_scan_ready_list() 
->>> thus
->>> I agree with you that both wakeups here are necessary.
->>> 
->>> I do think are are still (smaller) potential races in 
->>> ep_scan_ready_list()
->>> where we have:
->>> 
->>>         write_lock_irq(&ep->lock);
->>>         list_splice_init(&ep->rdllist, &txlist);
->>>         WRITE_ONCE(ep->ovflist, NULL);
->>>         write_unlock_irq(&ep->lock);
->>> 
->>> And in the ep_poll path we have:
->>> 
->>> static inline int ep_events_available(struct eventpoll *ep)
->>> {
->>>         return !list_empty_careful(&ep->rdllist) ||
->>>                 READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR;
->>> }
->>> 
->>> 
->>> Seems to me that first bit needs to be the following, since
->>> ep_events_available() is now checked in a lockless way:
->>> 
->>> 
->>>         write_lock_irq(&ep->lock);
->>>     WRITE_ONCE(ep->ovflist, NULL);
->>>     smp_wmb();
->>>         list_splice_init(&ep->rdllist, &txlist);
->>>         write_unlock_irq(&ep->lock);
->> 
->> 
->> Hi Jason,
->> 
->> For the first chunk you refer the order seems irrelevant.
->> Either you see something not empty, you go take the lock
->> and then check lists under the lock, either you see all
->> lists are empty.
->> 
-> 
-> Hi Roman,
-> 
-> It does matter. Let's say we have:
-> 
-> epfd1->epfd2->socket. And thread a is doing an
-> epoll_wait() on epfd1, and thread b is doing
-> epoll_wait on epfd2. then:
-> 
-> 1) data comes in on socket
-> 
-> ep_poll_callback() wakes up threads a and b
-> 
-> 2) thread a runs
-> 
-> ep_poll()
->  ep_scan_ready_list()
->   ep_send_events_proc()
->    ep_item_poll()
->      ep_scan_ready_list()
->        list_splice_init(&ep->rdllist, &txlist);
-> 
-> 3) now thread b is running
-> 
-> ep_poll()
->  ep_events_available()
->    returns false
->  schedule_hrtimeout_range()
-> 
-> Thus, thread c has missed a wakeup and will never
-> get it.
+
+
+On 4/29/20 11:22 AM, Arnaud POULIQUEN wrote:
 > 
 > 
-> Similarly, for the second chunk I referenced.
-
-Hi Jason,
-
-Yes, that makes sense.
-
->>> 
->>> And also this bit:
->>> 
->>>         WRITE_ONCE(ep->ovflist, EP_UNACTIVE_PTR)>>
->>>         /*
->>>          * Quickly re-inject items left on "txlist".
->>>          */
->>>         list_splice(&txlist, &ep->rdllist);
->>> 
->>> Should I think better be reversed as well to:
->>> 
->>> list_splice(&txlist, &ep->rdllist);
->>> smp_wmb();
->>> WRITE_ONCE(ep->ovflist, EP_UNACTIVE_PTR);
->> 
->> But this one is much more interesting.  I understand what you
->> are trying to achieve: we can't leave both lists empty for the
->> short period of time, if there is something left the caller
->> of ep_events_available() should be able to see one of the lists
->> is not empty, otherwise it can be too late.
->> 
->> But the problem you've spotted is much worse. Some remains
->> can be in the txlist (this can happen if caller of epoll_wait
->> wants to harvest only 1 event, but there are more in the ->rdlist).
->> And we again get the lost wakeup.
->> 
->> Problem is reproduced by the test below.  The idea is simple:
->> we have 10 threads and 10 event fds. Each thread can harvest
->> only 1 event. 1 producer fires all 10 events at once and waits
->> that all 10 events will be observed by 10 threads.
->> 
->> The fix is basically a revert of 339ddb53d373 with 1 major
->> exception: we do wakeups from ep_scan_ready_list() but
->> if txlist is not empty && if ep_scan_ready_list() is called
->> from the routine, which sends events, not reads it
->> (thus we protect ourselves from repeated wake ups)
->> 
->> I will send the code a bit later.
+> On 4/24/20 10:01 PM, Mathieu Poirier wrote:
+>> Introducting function rproc_set_state_machine() to add
+>> operations and a set of flags to use when synchronising with
+>> a remote processor.
+>>
+>> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>> ---
+>>  drivers/remoteproc/remoteproc_core.c     | 54 ++++++++++++++++++++++++
+>>  drivers/remoteproc/remoteproc_internal.h |  6 +++
+>>  include/linux/remoteproc.h               |  3 ++
+>>  3 files changed, 63 insertions(+)
+>>
+>> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+>> index 48afa1f80a8f..5c48714e8702 100644
+>> --- a/drivers/remoteproc/remoteproc_core.c
+>> +++ b/drivers/remoteproc/remoteproc_core.c
+>> @@ -2065,6 +2065,59 @@ int devm_rproc_add(struct device *dev, struct rproc *rproc)
+>>  }
+>>  EXPORT_SYMBOL(devm_rproc_add);
+>>  
+>> +/**
+>> + * rproc_set_state_machine() - Set a synchronisation ops and set of flags
+>> + *			       to use with a remote processor
+>> + * @rproc:	The remote processor to work with
+>> + * @sync_ops:	The operations to use when synchronising with a remote
+>> + *		processor
+>> + * @sync_flags:	The flags to use when deciding if the remoteproc core
+>> + *		should be synchronising with a remote processor
+>> + *
+>> + * Returns 0 on success, an error code otherwise.
+>> + */
+>> +int rproc_set_state_machine(struct rproc *rproc,
+>> +			    const struct rproc_ops *sync_ops,
+>> +			    struct rproc_sync_flags sync_flags)
 > 
-> This was discussed as part of the original discussion around
-> 339ddb53d373: https://lkml.org/lkml/2019/10/7/905
-
-True! This is the exact scenario which is covered by the
-test from my previous email. And the test fails. I forgot
-about this discussion.
-
-> The context was more a performance difference rather than
-> a semantic difference, but as I pointed out I believe that
-> behavior pre-dates the above commit and goes back to:
-> 86c0517 fs/epoll: deal with wait_queue only once
+> So this API should be called by platform driver only in case of synchronization
+> support, right?
+> In this case i would rename it as there is also a state machine in "normal" boot
+> proposal: rproc_set_sync_machine or rproc_set_sync_state_machine
 > 
-> There, since the thread is left on the waitqueue over the
-> ep_scan_ready_list() thus the ep_wakeup() (that was removed
-> in 339ddb53d373), would no longer wakeup other potential
-> waiters.
+
+Reviewing the stm32 series, i wonder if sync_flags should be a pointer to a const structure
+as the platform driver should not update it during the rproc live cycle.
+Then IMO, using a pointer to the structure instead of the structure seems more 
+in line with the rest of the remoteproc API.
+
+>> +{
+>> +	if (!rproc || !sync_ops)
+>> +		return -EINVAL;
+>> +
+>> +	/*
+>> +	 * No point in going further if we never have to synchronise with
+>> +	 * the remote processor.
+>> +	 */
+>> +	if (!sync_flags.on_init &&
+>> +	    !sync_flags.after_stop && !sync_flags.after_crash)
+>> +		return 0;
+>> +
+>> +	/*
+>> +	 * Refuse to go further if remoteproc operations have been allocated
+>> +	 * but they will never be used.
+>> +	 */
+>> +	if (rproc->ops && sync_flags.on_init &&
+>> +	    sync_flags.after_stop && sync_flags.after_crash)
+>> +		return -EINVAL;
+>> +
+>> +	/*
+>> +	 * Don't allow users to set this more than once to avoid situations
+>> +	 * where the remote processor can't be recovered.
+>> +	 */
+>> +	if (rproc->sync_ops)
+>> +		return -EINVAL;
+>> +
+>> +	rproc->sync_ops = kmemdup(sync_ops, sizeof(*sync_ops), GFP_KERNEL);
+>> +	if (!rproc->sync_ops)
+>> +		return -ENOMEM;
+>> +
+>> +	rproc->sync_flags = sync_flags;
+>> +	/* Tell the core what to do when initialising */
+>> +	rproc_set_sync_flag(rproc, RPROC_SYNC_STATE_INIT);
 > 
-> So since I think this behavior change goes back to 5.0 and there
-> really haven't been any reports, I don't think there are
-> too many apps relying on these semantics that your test
-> case is showing. It would be interesting to confirm that
-> your test does indeed succeed/fail before/after that patch.
-
-The main problem is that two sequential wakeups can hit the
-same thread, while the wait queue entry is still in the list.
-You also described this in https://lkml.org/lkml/2019/10/7/905
-
-If we wakeup only from ep_poll_callback (current code state)
-we have to be sure each wakeup hits new wait queue entry.
-This behavior can be achieved with autoremove_wake_function,
-which should be also good performance-wise, since after
-an explicit wakeup you don't need to remove the wait entry
-from the list under the lock.
-
-At the end it turns out like this:
-
-1. either we need to wakeup additionally from ep_scan_ready_list(),
-    this is what we had prior 339ddb53d373.
-
-2. either we wait with autoremove_wake_function, thus we
-    guarantee, that each new wakeup hits new thread.
-
-
-I'm testing both variants using the last test I sent yesterday,
-works so far.
-
-I personally tend to the second variant, I really don't like
-"we-wakeup-from-all-the-places" solution.
-
-Could you please take a look on the patch below? It probably
-needs some tweaks, but the idea should be clear.
-
-> Also, as part of that original discussion, you had a patch
-> that I think addresses this. I would be ok with that, in
-> addition to a patch to address the ordering issue I pointed
-> out. I can post a patch for the former, if you think this
-> plan makes sense?
-
-Go ahead with you reordering findings! That is correct for
-a single wakeup, which we have in the ep_poll_callback().
-
---
-Roman
-
-
-diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index d6ba0e52439b..1057598cd299 100644
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -1822,7 +1822,6 @@ static int ep_poll(struct eventpoll *ep, struct 
-epoll_event __user *events,
-  {
-         int res = 0, eavail, timed_out = 0;
-         u64 slack = 0;
--       bool waiter = false;
-         wait_queue_entry_t wait;
-         ktime_t expires, *to = NULL;
-
-@@ -1867,21 +1866,12 @@ static int ep_poll(struct eventpoll *ep, struct 
-epoll_event __user *events,
-          */
-         ep_reset_busy_poll_napi_id(ep);
-
--       /*
--        * We don't have any available event to return to the caller.  
-We need
--        * to sleep here, and we will be woken by ep_poll_callback() 
-when events
--        * become available.
--        */
--       if (!waiter) {
--               waiter = true;
--               init_waitqueue_entry(&wait, current);
--
-+       do {
-+               init_wait(&wait);
-                 write_lock_irq(&ep->lock);
-                 __add_wait_queue_exclusive(&ep->wq, &wait);
-                 write_unlock_irq(&ep->lock);
--       }
-
--       for (;;) {
-                 /*
-                  * We don't want to sleep if the ep_poll_callback() 
-sends us
-                  * a wakeup in between. That's why we set the task state
-@@ -1911,6 +1901,16 @@ static int ep_poll(struct eventpoll *ep, struct 
-epoll_event __user *events,
-                         timed_out = 1;
-                         break;
-                 }
-+
-+               /* We were woken up, thus go and try to harvest some 
-events */
-+               eavail = 1;
-+
-+       } while (0);
-+
-+       if (!list_empty_careful(&wait.entry)) {
-+               write_lock_irq(&ep->lock);
-+               __remove_wait_queue(&ep->wq, &wait);
-+               write_unlock_irq(&ep->lock);
-         }
-         __set_current_state(TASK_RUNNING);
-@@ -1925,12 +1925,6 @@ static int ep_poll(struct eventpoll *ep, struct 
-epoll_event __user *events,
-             !(res = ep_send_events(ep, events, maxevents)) && 
-!timed_out)
-                 goto fetch_events;
-
--       if (waiter) {
--               write_lock_irq(&ep->lock);
--               __remove_wait_queue(&ep->wq, &wait);
--               write_unlock_irq(&ep->lock);
--       }
--
-         return res;
-  }
-
-
-
+> Is there a use case where sync_flags.on_init is false and other flags are true?
+> 
+> Look like on_init is useless and should not be exposed to the platform driver.
+> Or comments are missing to explain the usage of it vs the other flags.
+> 
+> Regards,
+> Arnaud
+>  
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL(rproc_set_state_machine);
+>> +
+>>  /**
+>>   * rproc_type_release() - release a remote processor instance
+>>   * @dev: the rproc's device
+>> @@ -2088,6 +2141,7 @@ static void rproc_type_release(struct device *dev)
+>>  	kfree_const(rproc->firmware);
+>>  	kfree_const(rproc->name);
+>>  	kfree(rproc->ops);
+>> +	kfree(rproc->sync_ops);
+>>  	kfree(rproc);
+>>  }
+>>  
+>> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
+>> index 7dcc0a26892b..c1a293a37c78 100644
+>> --- a/drivers/remoteproc/remoteproc_internal.h
+>> +++ b/drivers/remoteproc/remoteproc_internal.h
+>> @@ -27,6 +27,8 @@ struct rproc_debug_trace {
+>>  /*
+>>   * enum rproc_sync_states - remote processsor sync states
+>>   *
+>> + * @RPROC_SYNC_STATE_INIT	state to use when the remoteproc core
+>> + *				is initialising.
+>>   * @RPROC_SYNC_STATE_SHUTDOWN	state to use after the remoteproc core
+>>   *				has shutdown (rproc_shutdown()) the
+>>   *				remote processor.
+>> @@ -39,6 +41,7 @@ struct rproc_debug_trace {
+>>   * operation to use.
+>>   */
+>>  enum rproc_sync_states {
+>> +	RPROC_SYNC_STATE_INIT,
+>>  	RPROC_SYNC_STATE_SHUTDOWN,
+>>  	RPROC_SYNC_STATE_CRASHED,
+>>  };
+>> @@ -47,6 +50,9 @@ static inline void rproc_set_sync_flag(struct rproc *rproc,
+>>  				       enum rproc_sync_states state)
+>>  {
+>>  	switch (state) {
+>> +	case RPROC_SYNC_STATE_INIT:
+>> +		rproc->sync_with_rproc = rproc->sync_flags.on_init;
+>> +		break;
+>>  	case RPROC_SYNC_STATE_SHUTDOWN:
+>>  		rproc->sync_with_rproc = rproc->sync_flags.after_stop;
+>>  		break;
+>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+>> index ceb3b2bba824..a75ed92b3de6 100644
+>> --- a/include/linux/remoteproc.h
+>> +++ b/include/linux/remoteproc.h
+>> @@ -619,6 +619,9 @@ struct rproc *rproc_get_by_child(struct device *dev);
+>>  struct rproc *rproc_alloc(struct device *dev, const char *name,
+>>  			  const struct rproc_ops *ops,
+>>  			  const char *firmware, int len);
+>> +int rproc_set_state_machine(struct rproc *rproc,
+>> +			    const struct rproc_ops *sync_ops,
+>> +			    struct rproc_sync_flags sync_flags);
+>>  void rproc_put(struct rproc *rproc);
+>>  int rproc_add(struct rproc *rproc);
+>>  int rproc_del(struct rproc *rproc);
+>>
