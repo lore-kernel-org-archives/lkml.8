@@ -2,109 +2,144 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EADBC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CD1C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9572206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18061206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:35:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WASWlBRB"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="CDZaj6HR";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PL4Mc2Ik"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbgD2Oem (ORCPT
+        id S1727099AbgD2OfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:34:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33904 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726484AbgD2Oel (ORCPT
+        Wed, 29 Apr 2020 10:35:14 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:40931 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726348AbgD2OfN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:34:41 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78C41C03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:34:41 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id q7so2157661qkf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:34:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rIL4ApehH49g+0+y5OYiHX2Oybm6lORCKM20y01yZyk=;
-        b=WASWlBRBzQWJ+KWMiJ1PoJd/TTqH0NOoUHKPTsvnaAtF+2MilmX4x40jd3Vct8lD+W
-         E7v8JzClLBPlmXzuseNhz13qBEqefDzk5uUUl2jPWi5KgfOUv60/E54MwZnJ/Hfx4k/x
-         3yUq2KfboJDyd8e5KaEYqVbm/GaGk9Lk2d3PbGeMqXE4y3CBSHjklv/4ZgaaHkoiDyRf
-         aXD+VqOfjwNyEWAUfM9KSjH0nt5k29BhFLgqFVXPoFgwcLssGZxMCSsYUDULayMxVAhh
-         IvCbScPSOUygfeG6P6W9lOLsT5dLa/N3dZAUvNnj51SDhzkIIDO31biFt7/YDqW6boCi
-         uarg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rIL4ApehH49g+0+y5OYiHX2Oybm6lORCKM20y01yZyk=;
-        b=cL28Mbl3rf1HQvFu1RG8MLj69/jKehHNv+HxHQBwpfJCkrVYIu6rjXN44pfUjMMEDZ
-         +bQ1+iWm5B0OZQoUBUPRx1vl3E3JsdNr6EGBiNfb6z+vIHrf2HkWdUF9w2gOYKqZnLXO
-         EioXt3DyiCCdzK8zwkMsDI08Nx3Qg2k0cRxKx+mdYjWcpqz5TIJXTc+3hobP+8aJFkl8
-         oIOgdsIClotOyrQenBaOWlwSWlBUpgblChZubWzbWHFSYTgnizXzrblXdZdujm/OuKcW
-         O9wSe9r+85mdUfpPBTdvYFI1dTjZzHr5XVKiycDuK9xgZMcpu6Lbhp5Q8j5F7qxVlTZM
-         YbFw==
-X-Gm-Message-State: AGi0PuZ1aOuWrUGy3pCIw0Rz/csZMfe/M7Z8atseGQyk0ZIDv2nm212R
-        6LbNhcktMMZn0O2srhnrurI=
-X-Google-Smtp-Source: APiQypKTgN4JaR+rKiqwwTrTpzzd/tbjiq1vMLnLgfNxMnSp0opHhEjEiBUEzk8k3zM0OJ/RTGmLCA==
-X-Received: by 2002:a37:7b01:: with SMTP id w1mr34172015qkc.167.1588170880678;
-        Wed, 29 Apr 2020 07:34:40 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id p80sm15706893qke.96.2020.04.29.07.34.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 07:34:39 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 930E4409A3; Wed, 29 Apr 2020 11:34:37 -0300 (-03)
-Date:   Wed, 29 Apr 2020 11:34:37 -0300
-To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH RESEND] perf tools: Fix function name in comment
-Message-ID: <20200429143437.GA29329@kernel.org>
-References: <1588141992-48382-1-git-send-email-zhangshaokun@hisilicon.com>
+        Wed, 29 Apr 2020 10:35:13 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 628275C0411;
+        Wed, 29 Apr 2020 10:35:12 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 29 Apr 2020 10:35:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=7NflUZehQMCLBE0ifLIpSr1EDnn
+        wo5t9jU2qH5OWXro=; b=CDZaj6HRDXELNSxfD+av0zYYHyXWhNBYgr2hxCGIHpt
+        dT3fzI/ebRdxjUpT/rZlO8aI9bUpZEpvFiOahw7TC9LDqyqLL67DTSc+npHmMQ2g
+        4NZk5cXzCu+jWESM9r+Opz71MVzSl6nNl5HteenD8LSph9D4IYV3szaZJXptCaBc
+        dTyWrrDFaklsBpUH2cdwj3Oh0KYfLXpXZFUhwi+gRQAeMBJPuBBcl2/khSD7VfSH
+        MT6+Duybnw70QV7NGC0CgR0YfkgtJ3HFOByPuLdq6NCilTfKBy1N0inuckSrm8uz
+        qKnpm2bU4dXr3iOo9R5caKDX2KFSlXjASbL/J6g6CKA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=7NflUZ
+        ehQMCLBE0ifLIpSr1EDnnwo5t9jU2qH5OWXro=; b=PL4Mc2IkiUGQRB5/B8oLzy
+        96gRWt25D+zZDgb2x75EApZrGqmVDoI1G5nKAqqwgUZkkw6GLPLAJXGy7ZGFSHDl
+        0kcm00NosuGmYV1byCAXALbHPEcJ29SrJ88mzSCE53sHDaKlcMqXFDummiJ7LpqM
+        kZ6cBLKkIGhdZJCmy5x9Sc2zfEWfYrHo3uGOf4Oao9Buph6DZMTp9km55lxFAw4C
+        0epjRLagKuco3fBK9LuWhkmM7q9V+jXc2SLdWgleS2PxKqT7D9oMVOf0KxKmN7Fy
+        JufLRuaYq4yTG8QOp2rAqAl7Rgq7SDRZV9mEpSRtACguE9QzyuhgnOwuTHmhmdJQ
+        ==
+X-ME-Sender: <xms:n5CpXk2e7JduXD774By5U3JhJuNdc2wzl3cvDlWlAvAF4LjFfnpIOQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieefgdejkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
+    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
+    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:n5CpXpxtmh0h0oNuQXuZjYLr9OfXIp95lirN40XuOw6EP0nE_DhmSA>
+    <xmx:n5CpXjiGyrmvqwTSgHK9gO_H8s9i07iAtbZjMN2JEDmLBgiBwJfDSQ>
+    <xmx:n5CpXowRmvipaFG-69S5rOqmg3mMuAwWNlEwdmquXLPEyIXKJ3krxg>
+    <xmx:oJCpXnfDzSC-0y1ghD9wNxK_x5nJwHD3aRMKonqmvWonG-4oknsw8g>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 52C403280065;
+        Wed, 29 Apr 2020 10:35:11 -0400 (EDT)
+Date:   Wed, 29 Apr 2020 16:35:10 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Priit Laes <plaes@plaes.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 1/4] clk: sunxi-ng: a10/a20: rewrite init code to a
+ platform driver
+Message-ID: <20200429143510.ksi27lok2udtmfas@gilmour.lan>
+References: <20200417221730.555954-1-plaes@plaes.org>
+ <20200417221730.555954-2-plaes@plaes.org>
+ <20200420124935.asfbgv7envb2af55@gilmour.lan>
+ <20200420203228.GA4734@plaes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zjre4utny3hlv3nb"
 Content-Disposition: inline
-In-Reply-To: <1588141992-48382-1-git-send-email-zhangshaokun@hisilicon.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200420203228.GA4734@plaes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Apr 29, 2020 at 02:33:12PM +0800, Shaokun Zhang escreveu:
-> get_cpuid_str() is used in tools/perf/arch/xxx/util/header.c,
-> fix the name in comment.
-> 
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> CC: Andi Kleen <ak@linux.intel.com>
-> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-> ---
->  tools/perf/pmu-events/pmu-events.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
-> index 53e76d5d5b37..c8f306b572f4 100644
-> --- a/tools/perf/pmu-events/pmu-events.h
-> +++ b/tools/perf/pmu-events/pmu-events.h
-> @@ -26,7 +26,7 @@ struct pmu_event {
->   * Map a CPU to its table of PMU events. The CPU is identified by the
->   * cpuid field, which is an arch-specific identifier for the CPU.
->   * The identifier specified in tools/perf/pmu-events/arch/xxx/mapfile
-> - * must match the get_cpustr() in tools/perf/arch/xxx/util/header.c)
-> + * must match the get_cpuid_str() in tools/perf/arch/xxx/util/header.c)
->   *
->   * The  cpuid can contain any character other than the comma.
->   */
 
-Thanks, applied.
+--zjre4utny3hlv3nb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-- Arnaldo
+Hi,
+
+On Mon, Apr 20, 2020 at 08:32:28PM +0000, Priit Laes wrote:
+> On Mon, Apr 20, 2020 at 02:49:35PM +0200, Maxime Ripard wrote:
+> > On Sat, Apr 18, 2020 at 01:17:27AM +0300, Priit Laes wrote:
+> > > In order to register regmap for sun7i CCU, there needs to be
+> > > a device structure already bound to the CCU device node.
+> > >=20
+> > > Convert the sun4i/sun7i CCU setup to platform driver to use
+> > > it later as platform device.
+> > >=20
+> > > Signed-off-by: Priit Laes <plaes@plaes.org>
+> >=20
+> > You can't relly do that though. We have timers that need those clocks b=
+efore the
+> > device model is initialized.
+>=20
+> Ok, I'm somewhat lost now... are these the affected timers on sun7i follo=
+wing:
+> - allwinner,sun4i-a10-timer (timer@1c20c00)
+> - allwinner,sun7i-a20-hstimer (hstimer@1c60000)
+
+Yep
+
+> Any ideas on what approach I could actually use?
+
+I guess you could keep the CLK_OF_DECLARE registration, and then have a
+platform_driver probe and register the regmap?
+
+> Also, similar timer dependency would affect then sun6i-a31 and sun9i-a80
+> platforms too...
+
+Indeed.
+
+Maxime
+
+--zjre4utny3hlv3nb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqmQngAKCRDj7w1vZxhR
+xVUBAPsHWuYy2OQT3UljAEr+aCiI8CLm5ELTsyDmgwGv5k61AgEAvf5uXLGuI8YM
+fCSMZorTWij/bLfDbEfqowLUaGK8dQ8=
+=MvDN
+-----END PGP SIGNATURE-----
+
+--zjre4utny3hlv3nb--
