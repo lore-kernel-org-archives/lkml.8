@@ -2,60 +2,60 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF06CC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17589C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C09B2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBE1F2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:10:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Ki9ou0QL"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hcsCgevW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgD2RJv (ORCPT
+        id S1727838AbgD2RKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:09:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58388 "EHLO
+        Wed, 29 Apr 2020 13:10:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727124AbgD2RJs (ORCPT
+        by vger.kernel.org with ESMTP id S1727799AbgD2RJ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:09:48 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8EAAC035493
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:09:47 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id a7so1008120pju.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:09:47 -0700 (PDT)
+        Wed, 29 Apr 2020 13:09:57 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF4C4C035494
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:09:57 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 18so1361938pfv.8
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:09:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=qz7MuNPVCvdbh+ZgEThp7mjF9Pplt5mjBACsV2Ifvtc=;
-        b=Ki9ou0QL17XeJqMGAzR+vJooMXCq2UVnKFe2WCK5pfbhEOZKkm/gtulD4baZo2BYuj
-         YPDpA1T7YNtwcvrxUJ2lofaqTVzfsNxIgg7GL+FuFv1D6k7PF8n6p3rx7jmSd2POhauZ
-         rQCbNiBNOiaPkMg78JG8mzrE7dzm+sTnG0NEI=
+        bh=xcQN/WNJ3PKuzjvXhZJ/eOoFGMkNcGIRid3lH/vICig=;
+        b=hcsCgevWbfyIOS3Ma5Zc7uCJmmPfS2go8mKkbtKUu8xteho7w++FLL7Ffz4bA6YcZ8
+         FGvlufLOfG9YnHegDls4Qs4j6Z32taJJi+zIwlClvPhXiIWgYo0gOzCnCobc0lNn1Qkf
+         VPCTGM9kESMs6PeCEbRweRhbksbnb/5EFhRQE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=qz7MuNPVCvdbh+ZgEThp7mjF9Pplt5mjBACsV2Ifvtc=;
-        b=Cc1sLTTSz6oNtCJb/hd9h43NNLJRV69xwGTnMiQh2LuX8kpIqsmAgEiRgbWQHYiMLO
-         tBkgFyAnc3TebzIl/O+GA3zUhgYOn8kwBbpiJkelPhAStIKhfo0aL5ntrcqYi2qW54w3
-         ldJsPcsiB8Q1LA865qCNyblmEEb1qilKSOBxP2N2WMP8WKrcMcu3fPDU5jCg4NX58mf5
-         s9gBcKBIMgW4qZ4wDw8MOBZoY/qWZ9M1DZaNVl3PfqtC3stR88HZ9CZ6GjoCutqCgC/6
-         rFBrJUBrbgRJRD/sSXPhTRf+JtB+VreXxeI2imyLHL1VRiGR21dL9pL1aQjjZPgjiEVY
-         7S/g==
-X-Gm-Message-State: AGi0PuY82DaiWOuM2mSEd28Dqguv4Fs87G/UNJYNVEV4uE0cSfAK4wwg
-        kdBBu9YVKa6ieXAL6PFDPCfyjQ==
-X-Google-Smtp-Source: APiQypKA5hmarlTT9SXRBLBup4msTow5wEWUhBC3ApwlSFn8Umw7DJtzgBL4kDB+94R/rPBauv9bUQ==
-X-Received: by 2002:a17:902:7793:: with SMTP id o19mr34971438pll.107.1588180187306;
-        Wed, 29 Apr 2020 10:09:47 -0700 (PDT)
+        bh=xcQN/WNJ3PKuzjvXhZJ/eOoFGMkNcGIRid3lH/vICig=;
+        b=A39H15B/0itUN4OJ8ND+qfnT9fhhkC+w89pNyogFHUj6x4TNIKOQPVvgAncJL2YIuR
+         +RSZU2i9VzdrB/M+xG4wrEko5tSlGIIRsm82OU8sTvhWctx7kxTTo0jVUfCLiuvCuio2
+         x2xjZwMuCOFR37TwTYaXIH4zru3cv8aIDCVR5IdSuHr+quvkP7ROuiaeN0lXXqTd1WP3
+         +Rqt1duqF9rwCybglQyRbhLvo+3/W4xVeQFPYlp1WsZOBURzf6+8ZDFfaIg6uUUIm64o
+         ohCSPFkqvBhuysIyphPW4IDKf9Ul4mxCcE5CWWLbv/fBBewIgtxUCRMeWMvZTPfFCIZH
+         Qrcg==
+X-Gm-Message-State: AGi0Pub4TpHzEQKYQ9DdvMhfszJEgD6SpMW+0hr8a9jK9hkeCla5k/4m
+        BCEdLQIJuffGgCUwpO2O8mCJ+A==
+X-Google-Smtp-Source: APiQypI2r7KKRGsuq3L884nKjCvqNbuMuJC3pzGKQRH2L1+DsPz8xxzAhFZZOxGeTWra83HnQtHhMA==
+X-Received: by 2002:a63:1e18:: with SMTP id e24mr31238033pge.296.1588180197178;
+        Wed, 29 Apr 2020 10:09:57 -0700 (PDT)
 Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id y63sm1574456pfg.138.2020.04.29.10.09.44
+        by smtp.gmail.com with ESMTPSA id y63sm1574456pfg.138.2020.04.29.10.09.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 10:09:46 -0700 (PDT)
+        Wed, 29 Apr 2020 10:09:56 -0700 (PDT)
 From:   Scott Branden <scott.branden@broadcom.com>
 To:     Luis Chamberlain <mcgrof@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -76,9 +76,9 @@ Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
         Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
         Andy Gross <agross@kernel.org>,
         Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH v4 5/7] bcm-vk: add bcm_vk UAPI
-Date:   Wed, 29 Apr 2020 10:09:12 -0700
-Message-Id: <20200429170914.30976-6-scott.branden@broadcom.com>
+Subject: [PATCH v4 7/7] MAINTAINERS: bcm-vk: add maintainer for Broadcom VK Driver
+Date:   Wed, 29 Apr 2020 10:09:14 -0700
+Message-Id: <20200429170914.30976-8-scott.branden@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200429170914.30976-1-scott.branden@broadcom.com>
 References: <20200429170914.30976-1-scott.branden@broadcom.com>
@@ -87,119 +87,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add user space api for bcm-vk driver.
+Add maintainer entry for new Broadcom VK Driver
 
 Signed-off-by: Scott Branden <scott.branden@broadcom.com>
 ---
- include/uapi/linux/misc/bcm_vk.h | 99 ++++++++++++++++++++++++++++++++
- 1 file changed, 99 insertions(+)
- create mode 100644 include/uapi/linux/misc/bcm_vk.h
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/include/uapi/linux/misc/bcm_vk.h b/include/uapi/linux/misc/bcm_vk.h
-new file mode 100644
-index 000000000000..783087b7c31f
---- /dev/null
-+++ b/include/uapi/linux/misc/bcm_vk.h
-@@ -0,0 +1,99 @@
-+/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-2-Clause) */
-+/*
-+ * Copyright 2018-2020 Broadcom.
-+ */
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c1175fc0aadb..cbc132a9b766 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3613,6 +3613,13 @@ L:	netdev@vger.kernel.org
+ S:	Supported
+ F:	drivers/net/ethernet/broadcom/tg3.*
+ 
++BROADCOM VK DRIVER
++M:	Scott Branden <scott.branden@broadcom.com>
++L:	bcm-kernel-feedback-list@broadcom.com
++S:	Supported
++F:	drivers/misc/bcm-vk/
++F:	include/uapi/linux/misc/bcm_vk.h
 +
-+#ifndef __UAPI_LINUX_MISC_BCM_VK_H
-+#define __UAPI_LINUX_MISC_BCM_VK_H
-+
-+#include <linux/ioctl.h>
-+#include <linux/types.h>
-+
-+#define BCM_VK_MAX_FILENAME 64
-+
-+struct vk_image {
-+	__u32 type; /* Type of image */
-+#define VK_IMAGE_TYPE_BOOT1 1 /* 1st stage (load to SRAM) */
-+#define VK_IMAGE_TYPE_BOOT2 2 /* 2nd stage (load to DDR) */
-+	char filename[BCM_VK_MAX_FILENAME]; /* Filename of image */
-+};
-+
-+struct vk_reset {
-+	__u32 arg1;
-+	__u32 arg2;
-+};
-+
-+#define VK_MAGIC		0x5e
-+
-+/* Load image to Valkyrie */
-+#define VK_IOCTL_LOAD_IMAGE	_IOW(VK_MAGIC, 0x2, struct vk_image)
-+
-+/* Send Reset to Valkyrie */
-+#define VK_IOCTL_RESET		_IOW(VK_MAGIC, 0x4, struct vk_reset)
-+
-+/*
-+ * message block - basic unit in the message where a message's size is always
-+ *		   N x sizeof(basic_block)
-+ */
-+struct vk_msg_blk {
-+	__u8 function_id;
-+#define VK_FID_TRANS_BUF	5
-+#define VK_FID_SHUTDOWN		8
-+	__u8 size;
-+	__u16 trans_id; /* transport id, queue & msg_id */
-+	__u32 context_id;
-+	__u32 args[2];
-+#define VK_CMD_PLANES_MASK	0x000f /* number of planes to up/download */
-+#define VK_CMD_UPLOAD		0x0400 /* memory transfer to vk */
-+#define VK_CMD_DOWNLOAD		0x0500 /* memory transfer from vk */
-+#define VK_CMD_MASK		0x0f00 /* command mask */
-+};
-+
-+#define VK_BAR_FWSTS			0x41c
-+#define VK_BAR_COP_FWSTS		0x428
-+/* VK_FWSTS definitions */
-+#define VK_FWSTS_RELOCATION_ENTRY	BIT(0)
-+#define VK_FWSTS_RELOCATION_EXIT	BIT(1)
-+#define VK_FWSTS_INIT_START		BIT(2)
-+#define VK_FWSTS_ARCH_INIT_DONE		BIT(3)
-+#define VK_FWSTS_PRE_KNL1_INIT_DONE	BIT(4)
-+#define VK_FWSTS_PRE_KNL2_INIT_DONE	BIT(5)
-+#define VK_FWSTS_POST_KNL_INIT_DONE	BIT(6)
-+#define VK_FWSTS_INIT_DONE		BIT(7)
-+#define VK_FWSTS_APP_INIT_START		BIT(8)
-+#define VK_FWSTS_APP_INIT_DONE		BIT(9)
-+#define VK_FWSTS_MASK			0xffffffff
-+#define VK_FWSTS_READY			(VK_FWSTS_INIT_START | \
-+					 VK_FWSTS_ARCH_INIT_DONE | \
-+					 VK_FWSTS_PRE_KNL1_INIT_DONE | \
-+					 VK_FWSTS_PRE_KNL2_INIT_DONE | \
-+					 VK_FWSTS_POST_KNL_INIT_DONE | \
-+					 VK_FWSTS_INIT_DONE | \
-+					 VK_FWSTS_APP_INIT_START | \
-+					 VK_FWSTS_APP_INIT_DONE)
-+/* Deinit */
-+#define VK_FWSTS_APP_DEINIT_START	BIT(23)
-+#define VK_FWSTS_APP_DEINIT_DONE	BIT(24)
-+#define VK_FWSTS_DRV_DEINIT_START	BIT(25)
-+#define VK_FWSTS_DRV_DEINIT_DONE	BIT(26)
-+#define VK_FWSTS_RESET_DONE		BIT(27)
-+#define VK_FWSTS_DEINIT_TRIGGERED	(VK_FWSTS_APP_DEINIT_START | \
-+					 VK_FWSTS_APP_DEINIT_DONE  | \
-+					 VK_FWSTS_DRV_DEINIT_START | \
-+					 VK_FWSTS_DRV_DEINIT_DONE)
-+/* Last nibble for reboot reason */
-+#define VK_FWSTS_RESET_REASON_SHIFT	28
-+#define VK_FWSTS_RESET_REASON_MASK	(0xf << VK_FWSTS_RESET_REASON_SHIFT)
-+#define VK_FWSTS_RESET_SYS_PWRUP	(0x0 << VK_FWSTS_RESET_REASON_SHIFT)
-+#define VK_FWSTS_RESET_MBOX_DB		(0x1 << VK_FWSTS_RESET_REASON_SHIFT)
-+#define VK_FWSTS_RESET_M7_WDOG		(0x2 << VK_FWSTS_RESET_REASON_SHIFT)
-+#define VK_FWSTS_RESET_TEMP		(0x3 << VK_FWSTS_RESET_REASON_SHIFT)
-+#define VK_FWSTS_RESET_PCI_FLR		(0x4 << VK_FWSTS_RESET_REASON_SHIFT)
-+#define VK_FWSTS_RESET_PCI_HOT		(0x5 << VK_FWSTS_RESET_REASON_SHIFT)
-+#define VK_FWSTS_RESET_PCI_WARM		(0x6 << VK_FWSTS_RESET_REASON_SHIFT)
-+#define VK_FWSTS_RESET_PCI_COLD		(0x7 << VK_FWSTS_RESET_REASON_SHIFT)
-+#define VK_FWSTS_RESET_L1		(0x8 << VK_FWSTS_RESET_REASON_SHIFT)
-+#define VK_FWSTS_RESET_L0		(0x9 << VK_FWSTS_RESET_REASON_SHIFT)
-+#define VK_FWSTS_RESET_UNKNOWN		(0xf << VK_FWSTS_RESET_REASON_SHIFT)
-+
-+#endif /* __UAPI_LINUX_MISC_BCM_VK_H */
+ BROCADE BFA FC SCSI DRIVER
+ M:	Anil Gurumurthy <anil.gurumurthy@qlogic.com>
+ M:	Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
 -- 
 2.17.1
 
