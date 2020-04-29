@@ -2,117 +2,87 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0462C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72479C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B632214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:53:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rfqtl/yN"
+	by mail.kernel.org (Postfix) with ESMTP id 4AE662076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgD2UxM (ORCPT
+        id S1727047AbgD2U41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 16:53:12 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:19546 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727049AbgD2Uwn (ORCPT
+        Wed, 29 Apr 2020 16:56:27 -0400
+Received: from smtprelay0185.hostedemail.com ([216.40.44.185]:38046 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726456AbgD2U41 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 16:52:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588193563; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=WIo04m5DvvXhO1a8uko76GWkE9AMVf53ZeZpDgYxOKs=; b=rfqtl/yNoudUjtx/1dPUsyHK7E4v4prCqQp5anuRkm4AyAjTK+i5hEfKC3rnq4L3GHg7/dpN
- 8FcoC3OO0DcYTeDVnw4VKqVCey8/dq/avcsgWFdvDBVe3tgKvy0P+za1P40xnPwF2xyZ9FyM
- 8YbhCwSbItkaRsxE/YGpG9qRqog=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea9e91b.7f4247d0fa78-smtp-out-n02;
- Wed, 29 Apr 2020 20:52:43 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 23252C433D2; Wed, 29 Apr 2020 20:52:42 +0000 (UTC)
-Received: from bbhatt-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3B347C433D2;
-        Wed, 29 Apr 2020 20:52:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3B347C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
-From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
-To:     mani@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hemantk@codeaurora.org, jhugo@codeaurora.org,
-        Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v3 7/9] bus: mhi: core: Return appropriate error codes for AMSS load failure
-Date:   Wed, 29 Apr 2020 13:52:29 -0700
-Message-Id: <1588193551-31439-8-git-send-email-bbhatt@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1588193551-31439-1-git-send-email-bbhatt@codeaurora.org>
-References: <1588193551-31439-1-git-send-email-bbhatt@codeaurora.org>
+        Wed, 29 Apr 2020 16:56:27 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 2A4F33D13;
+        Wed, 29 Apr 2020 20:56:26 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: town34_724d5c9ce7815
+X-Filterd-Recvd-Size: 1767
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 29 Apr 2020 20:56:25 +0000 (UTC)
+Message-ID: <3dc7bdaa58490f5906efc11a4d6113e42a087723.camel@perches.com>
+Subject: [PATCH] checkpatch: Disallow --git and --file/--fix
+From:   Joe Perches <joe@perches.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andy Whitcroft <apw@shadowen.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Wed, 29 Apr 2020 13:56:24 -0700
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When loading AMSS firmware using BHIe protocol, return -ETIMEDOUT if no
-response is received within the timeout or return -EIO in case of a
-protocol returned failure or an MHI error state.
+Don't allow these options to be combined.
 
-Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+Miscellanea:
+
+o Add missing $P: to some die("reason message") output
+
+Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/bus/mhi/core/boot.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ scripts/checkpatch.pl | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
-index bc70edc..4e49a0e 100644
---- a/drivers/bus/mhi/core/boot.c
-+++ b/drivers/bus/mhi/core/boot.c
-@@ -176,6 +176,7 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
- 	void __iomem *base = mhi_cntrl->bhie;
- 	rwlock_t *pm_lock = &mhi_cntrl->pm_lock;
- 	u32 tx_status, sequence_id;
-+	int ret;
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index e4af60..4a5c6bb 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -246,6 +246,8 @@ list_types(0) if ($list_types);
+ $fix = 1 if ($fix_inplace);
+ $check_orig = $check;
  
- 	read_lock_bh(pm_lock);
- 	if (!MHI_REG_ACCESS_VALID(mhi_cntrl->pm_state)) {
-@@ -198,19 +199,19 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
- 	read_unlock_bh(pm_lock);
++die "$P: --git cannot be used with --file or --fix\n" if ($git && ($file || $fix));
++
+ my $exit = 0;
  
- 	/* Wait for the image download to complete */
--	wait_event_timeout(mhi_cntrl->state_event,
--			   MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state) ||
--			   mhi_read_reg_field(mhi_cntrl, base,
--					      BHIE_TXVECSTATUS_OFFS,
--					      BHIE_TXVECSTATUS_STATUS_BMSK,
--					      BHIE_TXVECSTATUS_STATUS_SHFT,
--					      &tx_status) || tx_status,
--			   msecs_to_jiffies(mhi_cntrl->timeout_ms));
--
--	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state))
-+	ret = wait_event_timeout(mhi_cntrl->state_event,
-+				 MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state) ||
-+				 mhi_read_reg_field(mhi_cntrl, base,
-+						    BHIE_TXVECSTATUS_OFFS,
-+						   BHIE_TXVECSTATUS_STATUS_BMSK,
-+						   BHIE_TXVECSTATUS_STATUS_SHFT,
-+						    &tx_status) || tx_status,
-+				 msecs_to_jiffies(mhi_cntrl->timeout_ms));
-+	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state) ||
-+	    tx_status != BHIE_TXVECSTATUS_STATUS_XFER_COMPL)
- 		return -EIO;
- 
--	return (tx_status == BHIE_TXVECSTATUS_STATUS_XFER_COMPL) ? 0 : -EIO;
-+	return (!ret) ? -ETIMEDOUT : 0;
+ my $perl_version_ok = 1;
+@@ -269,11 +271,11 @@ if ($color =~ /^[01]$/) {
+ } elsif ($color =~ /^auto$/i) {
+ 	$color = (-t STDOUT);
+ } else {
+-	die "Invalid color mode: $color\n";
++	die "$P: Invalid color mode: $color\n";
  }
  
- static int mhi_fw_load_sbl(struct mhi_controller *mhi_cntrl,
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+ # skip TAB size 1 to avoid additional checks on $tabsize - 1
+-die "Invalid TAB size: $tabsize\n" if ($tabsize < 2);
++die "$P: Invalid TAB size: $tabsize\n" if ($tabsize < 2);
+ 
+ sub hash_save_array_words {
+ 	my ($hashRef, $arrayRef) = @_;
+
+
