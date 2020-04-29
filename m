@@ -2,97 +2,165 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B319BC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB5DC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7CF21BE5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:52:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588182761;
-	bh=ES/AC49kG70DIeBoUFCj6k0/eXWr5dZhz6D6I3bt4SM=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=euWxAV4b9mZmWhf7/4gf3kob0FAvmkcfnXyYZVte61fyzKaRteFtHMYPHz1gGuWAr
-	 7uvrr4guH1sX6u+0WEtCtKwJN2E1fN1pTgarg3Dh7M7zTrMpFxyNq7Ia+B5r5DXJZp
-	 g7Xb1so7yHPD9S+55ab+Gs22UmaduXIi/x76rgGw=
+	by mail.kernel.org (Postfix) with ESMTP id CA1A32064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:54:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mVsd5ru3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgD2Rwl (ORCPT
+        id S1726781AbgD2RyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:52:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34442 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbgD2Rwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:52:40 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01343214AF;
-        Wed, 29 Apr 2020 17:52:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588182760;
-        bh=ES/AC49kG70DIeBoUFCj6k0/eXWr5dZhz6D6I3bt4SM=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=wRyAaHr5GrGTXM5UgLJZIGl01uLgXsmF67jImQIB4jOhTJmsonSizjobNcp41Ubsc
-         M/j/qsxZVe1RjDctWECoOEuEOm32HimXfyI/9cd6udD2f98MTRrMpZ97ss7wc2u8JY
-         zkjYThF72UP0xDNodhG0kqbJzuo7JIsBeXaezpLM=
-Date:   Wed, 29 Apr 2020 18:52:38 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     "patrice.chotard@st.com" <patrice.chotard@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        mcoquelin.stm32@gmail.com, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20200429102625.25974-1-patrice.chotard@st.com>
-References: <20200429102625.25974-1-patrice.chotard@st.com>
-Subject: Re: spi: stm32-qspi: Fix unbalanced pm_runtime_enable issue
-Message-Id: <158818274449.17408.18085895262432291085.b4-ty@kernel.org>
+        Wed, 29 Apr 2020 13:54:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726481AbgD2RyZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 13:54:25 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49D18C03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:54:25 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id l78so2927514qke.7
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:54:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=V04cfTgPwsOaE9K2g2VsgPhrMgAixKyeveOTHytG5tM=;
+        b=mVsd5ru3Yi5oyTnXf7KzEQgMl9EyOwUdEH2xlPdE77cScRsvmbWnk5204RqU8NsDBS
+         i8Q/zKxil2PLn2fhPHrYVsX8M7pSYjJk5RPzMaueOzuHtPMJNlzZOWTW4ZcNmXQ0ni1B
+         m14VUxbsgPlAFVeoR1Y/2kLt8I8F+B8kxJpr0lh+fgpKldeQ/m7PYjDN64+nEgELobEK
+         BU02VGDAtX28TDQFi0LlXWrwjwDjJ4R5ldKdYIYgg8K9B5L02TQhcFRNSafjjQqgvNBT
+         gPBKC1R1kVFHoq4GXAhJIHDD0/UZGg7WLjiZVL74j/kR7OEKfo+AxMZP7Cab94ztUbc+
+         gLqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=V04cfTgPwsOaE9K2g2VsgPhrMgAixKyeveOTHytG5tM=;
+        b=SOx+O8CZmAty7JKOK0dVf2DqLiW2tUXKgCdRSMStm/LuDtHZQ1qNasaNyGOIFVCYl9
+         nluGEMB+ehIO3OrCXAi9ca5EVhu54+nF8YE8RsnYr3zK+RbNYXgzj5d7mkspoo5oyy5L
+         5x++ENa5EVnW2b0sGdClC6ZplolPyuZkX7bUVx9USiC1fH3xJ3BRfPxnbkJ1X8MOKa58
+         DscRGUDAx8HnSkNei1xJ1uFW677PDDMxFByMpfwX0RKEBuCc3Re51yhY3jcs7KLxliMY
+         OfPSCK/FfE/CqVshitVYYfZAIkVkFgnte5M1MxYSE3BPgllvZsy1aggMvAo0KUlB1Y3W
+         k2Pg==
+X-Gm-Message-State: AGi0PuZWHL3RoclhlQ0ZuKRjTnix101X2zO9QNRZMsWjj9RNZzSYUYVP
+        PnGwEiJCYZO9q19barcTnxw=
+X-Google-Smtp-Source: APiQypJG6rUrtYBiB56IFcxYg21zWnKCs2XLU8o4djJgxlg9XirtoiU2mI65E44Emj+/Z3edCGm0pA==
+X-Received: by 2002:a37:617:: with SMTP id 23mr35309683qkg.11.1588182863395;
+        Wed, 29 Apr 2020 10:54:23 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id d69sm16267115qke.111.2020.04.29.10.54.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 10:54:22 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id A9F66409A3; Wed, 29 Apr 2020 14:54:20 -0300 (-03)
+Date:   Wed, 29 Apr 2020 14:54:20 -0300
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2 1/2] perf parse-events: fix memory leaks found on
+ parse_events
+Message-ID: <20200429175420.GD30487@kernel.org>
+References: <20200319023101.82458-1-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200319023101.82458-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 12:26:25 +0200, patrice.chotard@st.com wrote:
-> From: Patrice Chotard <patrice.chotard@st.com>
+Em Wed, Mar 18, 2020 at 07:31:00PM -0700, Ian Rogers escreveu:
+> Memory leaks found by applying LLVM's libfuzzer on the parse_events
+> function.
 > 
-> Issue detected by unbinding/binding the stm32 qspi driver as following:
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/parse-events.c | 2 ++
+>  tools/perf/util/parse-events.y | 3 ++-
+>  2 files changed, 4 insertions(+), 1 deletion(-)
 > 
-> root@stm32mp2:~# echo 40430000.spi > /sys/bus/platform/drivers/stm32-qspi/404300
-> 00.spi/driver/unbind
-> root@stm32mp2:~# echo 40430000.spi > /sys/bus/platform/drivers/stm32-qspi/bind
-> [  969.864021] stm32-qspi 40430000.spi: Unbalanced pm_runtime_enable!
-> [  970.225161] spi-nor spi0.0: mx66u51235f (65536 Kbytes)
-> [  970.935721] spi-nor spi0.1: mx66u51235f (65536 Kbytes)
-> 
-> [...]
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 593b6b03785d..1e0bec5c0846 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -1482,6 +1482,8 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+>  
+>  		list_for_each_entry_safe(pos, tmp, &config_terms, list) {
+>  			list_del_init(&pos->list);
+> +			if (pos->free_str)
+> +				free(pos->val.str);
 
-Applied to
+I'm applying it but only after changing it to zfree(&pos->free_str), to
+make sure that any othe rcode that may still hold a pointer to pos will
+see a NULL in ->free_str and crash sooner rather than later.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.8
+>  			free(pos);
+>  		}
+>  		return -EINVAL;
 
-Thanks!
+And the following should be in a different patch
 
-[1/1] spi: stm32-qspi: Fix unbalanced pm_runtime_enable issue
-      commit: be6ef160840f23d9723d9bd008ca08e864ce4745
+> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+> index 94f8bcd83582..8212cc771667 100644
+> --- a/tools/perf/util/parse-events.y
+> +++ b/tools/perf/util/parse-events.y
+> @@ -44,7 +44,7 @@ static void free_list_evsel(struct list_head* list_evsel)
+>  
+>  	list_for_each_entry_safe(evsel, tmp, list_evsel, core.node) {
+>  		list_del_init(&evsel->core.node);
+> -		perf_evsel__delete(evsel);
+> +		evsel__delete(evsel);
+>  	}
+>  	free(list_evsel);
+>  }
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+And this one in another, I'll fix this up, but please try in the future
+to provide different patches for different fixes, so that if we
+eventually find out that one of the unrelated fixes is wrong, then we
+can revert the patch more easily with 'git revert' instead of having to
+do a patch that reverts just part of the bigger hodge-podge patch.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+If you go and have a track record of doing this as piecemeal as
+possible, I will in turn feel more confident of processing your patches
+in a faster fashion ;-) :-)
 
 Thanks,
-Mark
+
+- Arnaldo
+
+> @@ -326,6 +326,7 @@ PE_NAME opt_pmu_config
+>  	}
+>  	parse_events_terms__delete($2);
+>  	parse_events_terms__delete(orig_terms);
+> +	free(pattern);
+>  	free($1);
+>  	$$ = list;
+>  #undef CLEANUP_YYABORT
+> -- 
+> 2.25.1.696.g5e7596f4ac-goog
+> 
+
+-- 
+
+- Arnaldo
