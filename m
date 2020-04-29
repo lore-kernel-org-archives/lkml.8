@@ -2,153 +2,136 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0418AC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C16BC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C49B120757
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E3520757
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:49:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DZI9EqBQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="teeEESUm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgD2Vss (ORCPT
+        id S1727790AbgD2Vs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 17:48:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45910 "EHLO
+        Wed, 29 Apr 2020 17:48:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726950AbgD2Vss (ORCPT
+        by vger.kernel.org with ESMTP id S1726950AbgD2Vs6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 17:48:48 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 001E8C03C1AE;
-        Wed, 29 Apr 2020 14:48:47 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id f12so2805187edn.12;
-        Wed, 29 Apr 2020 14:48:47 -0700 (PDT)
+        Wed, 29 Apr 2020 17:48:58 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FA13C03C1AE;
+        Wed, 29 Apr 2020 14:48:58 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id s63so3724201qke.4;
+        Wed, 29 Apr 2020 14:48:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Aq48/n9M1PNfkEkQZMtYV6avU1Sg9OhOWgHmCLSAwlg=;
-        b=DZI9EqBQTOGT+2WTL6ysVUrLX52ji+w99GBAWeDjrOAMi0ITA/nvCUU5xibk+ShDUD
-         WKi7RCckj3y+n2WcaPOUI0wdSkroPX9a+4BOxZg01dRka+xwkyodwYP0JKWi9lS/Wa+k
-         o5ZwGl/hC69tYPsxwm5A71AmzToP+r9Y+ax6u33VuXbAXKIEda1PlYagU5wpRud96p6o
-         gPqEInGdSnDfaLIALMiGip/BfkmdBAwHFR4rV/wq2MI6wNM0/GnIghbGUCh1f3evqs4i
-         Lf5gr17935+rWPWH8dMmfeOMvOVlADh66lCqmBHf3qipjoB1XXcZJmMDIfYdigwfw4cI
-         4QtQ==
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=thOleSHGhWbyHTDIvGgOd2/dGZB7Vh84eyjPoRKiWnQ=;
+        b=teeEESUmzLLMOEc90ylDqcqx+Qfva8yu1CNLVDB8LPlO/RdfYgYiynsCiHuZ6CSq7y
+         dd1Za8shoKcSXbm7Zn/9lrvmK7zgjCF8/tZa9M+lKNDDLM2nt4R6sG1LfMfL+uMEbUXB
+         JjkH4ijiD9kUoEUaDaHUzGSxmO/MiUPUvXUc3cQkGXMZRShlhI85bkhYt3FhBtFfePJT
+         77bsjgFMZNmZU6RZMbhyEUsaxx0EoxYBoRoTaNRJsTWVwKEp1Tu0/Dgg1bCL6kIwxbeD
+         kiD2ksYa3IqrKKcKB/jv+/EdlD94C3RcoeG6zjYoBJ0itB26K/jOccJwq07uS7FIrXEw
+         YrBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Aq48/n9M1PNfkEkQZMtYV6avU1Sg9OhOWgHmCLSAwlg=;
-        b=D5G5juZAWjnk4vzr4MRlYY/IPMH8aey925fqRtPlqi9VribLDdo8sOShqbChA7T6nB
-         E7s+uMVWzmlnyujy+0xwViPDX8lrbJ0SJxTlJagNOjUq4TPm3fFmi+TOUfnvlN+Xavan
-         1MmVCmHLlHfPN2ELebFvvlXDPtnopytM/dBEBh3vKMibJEW6/Y1mD5f0b6v1vDIe3yIH
-         404WXNc8i3KM8DiNkDeUblzduj//ea8kCXFKVuh/GsJkxuKDY4KCbR0+8ChsATZxnL+Y
-         4w8NUtcQEltIWN41skqsPMSAhjwXLVclHkp3JSMcHJ9LD4Ra3fZQloDOfoep7VkNp1Ps
-         xqAA==
-X-Gm-Message-State: AGi0PuaqurcsUpQpCL0ihcOEGYD02cJTt623gTjYGJyqQPA2OGjavaNa
-        DfdLyiVHl3IAN+mlxEqt1IvBAKPc
-X-Google-Smtp-Source: APiQypIFOaJxlkeLpRVmDTmFtRrbDOHBfypfFaBesx/2JFjFAEbZdWKyrujn+IwdzbARgXW5q6cu9A==
-X-Received: by 2002:a50:c016:: with SMTP id r22mr37944edb.388.1588196926443;
-        Wed, 29 Apr 2020 14:48:46 -0700 (PDT)
-Received: from [10.67.49.116] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id u18sm741575edx.27.2020.04.29.14.48.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 14:48:45 -0700 (PDT)
-Subject: Re: [PATCH net-next v2 7/7] net: bcmgenet: add WAKE_FILTER support
-To:     Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1588190526-2082-1-git-send-email-opendmb@gmail.com>
- <1588190526-2082-8-git-send-email-opendmb@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <b05f6b6a-28ea-0a5c-61b0-0053c0e81ca6@gmail.com>
-Date:   Wed, 29 Apr 2020 14:48:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=thOleSHGhWbyHTDIvGgOd2/dGZB7Vh84eyjPoRKiWnQ=;
+        b=OcdKW/Ks8QbfSwhooXFb1qh1Hbj+xxNBs2/u4hUMj1RCOYHtUxr7V/CQ7azH0fa2Hc
+         zKN9vQ7PIyMbS4h796SigpPkJi/IFjg0NBF2F6YxIUNpJ/P/nUiuN281oteq2BiauYb+
+         0bBTRyTZJh5Pw3x8IvP+v8nQLUkj05KoETk5+8k3plhNcLFVTXc9vLJNmIZXJuuWUl9h
+         6K4a2nEi178tNSk56YZRqmp7SRMDlN5oJkFunnxw3GyLi5WXcPGviosv1qE/tQOxTk5j
+         biGvIy0otpCC/AkBtCl22RySX94mBMnLYrg1fyEy6KQO/74bBQ+bgGNW+1OsN075Qbg+
+         Kx5Q==
+X-Gm-Message-State: AGi0PuZB7Kk9O8YARiYiZKx7n7No8BVuODHVw1sLmrWYyoVXgPlO5uJn
+        7g/xqt+nUgZGz4vV2Z2iHh2HZqsGPxc=
+X-Google-Smtp-Source: APiQypKY/EdqZ/JiagMoO4/EeKVtAr0upVP5Aae4lmR3rSpX8iCJ5cmj6wANetfMh+g7taAwygienw==
+X-Received: by 2002:a37:6296:: with SMTP id w144mr574513qkb.310.1588196937327;
+        Wed, 29 Apr 2020 14:48:57 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id p11sm309691qki.25.2020.04.29.14.48.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 14:48:56 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 29 Apr 2020 17:48:55 -0400
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 09/10] efi/x86: Support builtin command line
+Message-ID: <20200429214855.GD1621173@rani.riverdale.lan>
+References: <20200429174120.1497212-1-nivedita@alum.mit.edu>
+ <20200429174120.1497212-11-nivedita@alum.mit.edu>
+ <CAMj1kXF_-ZA4ghy_8Gx831UcAwn0VjFmDub5L1_h28vV+sdPDw@mail.gmail.com>
+ <20200429213944.GB1621173@rani.riverdale.lan>
+ <CAMj1kXHf9bXX8uDeSEL46r39uPiBOPjfmvkcL_MFtf9ZAo8ZqQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1588190526-2082-8-git-send-email-opendmb@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXHf9bXX8uDeSEL46r39uPiBOPjfmvkcL_MFtf9ZAo8ZqQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/29/20 1:02 PM, Doug Berger wrote:
-> This commit enables support for the WAKE_FILTER method of Wake on
-> LAN for the GENET driver. The method can be enabled by adding 'f'
-> to the interface 'wol' setting specified by ethtool.
+On Wed, Apr 29, 2020 at 11:40:51PM +0200, Ard Biesheuvel wrote:
+> On Wed, 29 Apr 2020 at 23:39, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > On Wed, Apr 29, 2020 at 09:07:32PM +0200, Ard Biesheuvel wrote:
+> > > On Wed, 29 Apr 2020 at 19:41, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> > > >
+> > > > Add support for the x86 CMDLINE_BOOL and CMDLINE_OVERRIDE configuration
+> > > > options.
+> > > >
+> > > > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> > > > ---
+> > > >  drivers/firmware/efi/libstub/x86-stub.c | 12 ++++++++----
+> > > >  1 file changed, 8 insertions(+), 4 deletions(-)
+> > > >
+> > > > diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+> > > > index 85a924fecc87..0faba30d6406 100644
+> > > > --- a/drivers/firmware/efi/libstub/x86-stub.c
+> > > > +++ b/drivers/firmware/efi/libstub/x86-stub.c
+> > > > @@ -680,7 +680,6 @@ unsigned long efi_main(efi_handle_t handle,
+> > > >         unsigned long buffer_start, buffer_end;
+> > > >         struct setup_header *hdr = &boot_params->hdr;
+> > > >         efi_status_t status;
+> > > > -       unsigned long cmdline_paddr;
+> > > >
+> > > >         efi_system_table = sys_table_arg;
+> > > >
+> > > > @@ -739,9 +738,14 @@ unsigned long efi_main(efi_handle_t handle,
+> > > >                 image_offset = 0;
+> > > >         }
+> > > >
+> > > > -       cmdline_paddr = ((u64)hdr->cmd_line_ptr |
+> > > > -                        ((u64)boot_params->ext_cmd_line_ptr << 32));
+> > > > -       efi_parse_options((char *)cmdline_paddr);
+> > > > +#ifdef CONFIG_CMDLINE_BOOL
+> > > > +       efi_parse_options(CONFIG_CMDLINE);
+> > > > +#endif
+> > >
+> > > Can we use IS_ENABLED() here as well?
+> >
+> > Unfortunately on x86, CONFIG_CMDLINE is not defined if
+> > CONFIG_CMDLINE_BOOL isn't enabled. So turning this into an
+> > IS_ENABLED(CONFIG_CMDLINE_BOOL) causes a compile error when it's
+> > disabled due to CONFIG_CMDLINE being an undeclared symbol.
+> >
 > 
-> Rx network flow rules can be specified using ethtool. Rules that
-> define a flow-type with the RX_CLS_FLOW_WAKE action (i.e. -2) can
-> wake the system from the 'standby' power state when the WAKE_FILTER
-> WoL method is enabled.
+> What about
 > 
-> Signed-off-by: Doug Berger <opendmb@gmail.com>
+> efi_parse_options(CONFIG_CMDLINE "");
+> 
+> ?
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+That's still a syntax error if CONFIG_CMDLINE is undefined, no? It's not
+defined to be empty -- it's undefined. IS_ENABLED doesn't work on
+string-valued options so I can't use IS_ENABLED(CONFIG_CMDLINE) either.
