@@ -2,146 +2,187 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6464EC8300C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EACDC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C1E8206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:07:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="a8bAvr4t"
+	by mail.kernel.org (Postfix) with ESMTP id 66D93206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:08:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbgD2LH4 (ORCPT
+        id S1726864AbgD2LIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 07:07:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726808AbgD2LHx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 07:07:53 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36269C03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 04:07:53 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f13so1954858wrm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 04:07:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KJmebWLDjLh8vCDBka3zVT6nvvCa+5XmuntIjuQhiRE=;
-        b=a8bAvr4tStYxSiUIDr6CBH1RpXcjAMY6BYfytKrGJMS3014kO0oblUdosbqFinyAsn
-         /y7zsjtKhwO/CCEzsfFbCbo9oamzSyyaSqYgbX9Y8pM7M6wTXDaSR7LIPlhWDD3NBQCe
-         Yx81Yuh5JvZAMajTarm3aG00aEUr3wES/l62cTslRFXyitByx+FCrtFh3mU/orHyrIis
-         N80oRdH4FhllSfLWsF3mLu5eSEiJ4QsuwCpZpM/CF6Y70ixk7UE73F7/GKxKE1nsfwYp
-         +gS+wxjIHW08Rkpppp7y4Ht3pHTK7ParjBdVZf77zGNqIi/A1VxpVpmru3bLauvJyHzy
-         2UPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KJmebWLDjLh8vCDBka3zVT6nvvCa+5XmuntIjuQhiRE=;
-        b=hIBZJ0kBDAtgJ//wG7X1bvSy46sdIUKe0ZPS4U2VhK3uqXnUJwK3E86bIchV0H3QWV
-         t9ehLN8EHuMndcecLu8yNhHj3U9SEe8TgDkPDNn//fdbvO0lc18KBcL44NHLdGINW4Ks
-         SUr+9bEH09YmhXg1UOyPCPDOspFk3zIkjjyQWwt70Szcv1Bhy2ViJsjM4uYqDYAxLWou
-         1KGh3lFsKRujJxn9wHXthUEgWXPTg6kJVffOBGFARtfzvApJcBL53S3uJc9mJELay12E
-         X+IufeEJwRN6EXlYhQi7HXTVRStE8bK7LVk7uiKJDNFUm5X95UaJLqE8DBTaSUij9PId
-         jSVw==
-X-Gm-Message-State: AGi0PubNACuoSvanNWZsebzredkv5EuXJqHv388PtPAOt9mUv9R6yriQ
-        7PCPqHENH7NqnZCecu6Djwy7cg==
-X-Google-Smtp-Source: APiQypIz3/hA+7TRshIH/ZVdn0UyHlwF6q8tWlAm9hqsVhDplySuS0IVFw3daGFhG17P0Yof3jG+0g==
-X-Received: by 2002:a5d:4443:: with SMTP id x3mr37857274wrr.162.1588158471948;
-        Wed, 29 Apr 2020 04:07:51 -0700 (PDT)
-Received: from localhost.localdomain ([2a0e:b107:830:0:47e5:c676:4796:5818])
-        by smtp.googlemail.com with ESMTPSA id u7sm7679963wmg.41.2020.04.29.04.07.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 04:07:51 -0700 (PDT)
-From:   Robert Marko <robert.marko@sartura.hr>
-To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     Robert Marko <robert.marko@sartura.hr>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Subject: [PATCH net-next v4 3/3] ARM: dts: qcom: ipq4019: add MDIO node
-Date:   Wed, 29 Apr 2020 13:07:27 +0200
-Message-Id: <20200429110726.448625-4-robert.marko@sartura.hr>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200429110726.448625-1-robert.marko@sartura.hr>
-References: <20200429110726.448625-1-robert.marko@sartura.hr>
+        Wed, 29 Apr 2020 07:08:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:37328 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726677AbgD2LIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 07:08:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CBABE1042;
+        Wed, 29 Apr 2020 04:08:01 -0700 (PDT)
+Received: from [10.57.33.170] (unknown [10.57.33.170])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E52D3F73D;
+        Wed, 29 Apr 2020 04:07:59 -0700 (PDT)
+Subject: Re: [linux-sunxi] Re: Audio sound card name [was [PATCH 4/7] arm64:
+ dts: allwinner: a64: Add HDMI audio]
+To:     =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@siol.net>,
+        Maxime Ripard <maxime@cerno.tech>, Chen-Yu Tsai <wens@csie.org>
+Cc:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Marcus Cooper <codekipper@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <20200426120442.11560-1-peron.clem@gmail.com>
+ <20200429081729.qa3gqtl5sof2jhem@gilmour.lan>
+ <f9b701d9-0c4e-6e41-1ce8-52adf0f59a2a@arm.com>
+ <2545943.S5iK65abk1@jernej-laptop>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <8a6b9707-d6c0-04ea-97a6-27cbbe468631@arm.com>
+Date:   Wed, 29 Apr 2020 12:07:56 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <2545943.S5iK65abk1@jernej-laptop>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the necessary MDIO interface node
-to the Qualcomm IPQ4019 DTSI.
+On 2020-04-29 11:53 am, Jernej Škrabec wrote:
+> Dne sreda, 29. april 2020 ob 12:43:06 CEST je Robin Murphy napisal(a):
+>> On 2020-04-29 9:17 am, Maxime Ripard wrote:
+>>> On Wed, Apr 29, 2020 at 02:24:00PM +0800, Chen-Yu Tsai wrote:
+>>>> On Wed, Apr 29, 2020 at 1:11 AM Robin Murphy <robin.murphy@arm.com>
+> wrote:
+>>>>> On 2020-04-28 5:49 pm, Clément Péron wrote:
+>>>>>> Hi Mark, Rob,
+>>>>>>
+>>>>>> On Tue, 28 Apr 2020 at 18:04, Maxime Ripard <maxime@cerno.tech> wrote:
+>>>>>>> On Tue, Apr 28, 2020 at 10:54:00AM +0200, Clément Péron wrote:
+>>>>>>>> Hi Maxime,
+>>>>>>>>
+>>>>>>>> On Tue, 28 Apr 2020 at 10:00, Maxime Ripard <maxime@cerno.tech>
+> wrote:
+>>>>>>>>> On Sun, Apr 26, 2020 at 02:04:39PM +0200, Clément Péron wrote:
+>>>>>>>>>> From: Marcus Cooper <codekipper@gmail.com>
+>>>>>>>>>>
+>>>>>>>>>> Add a simple-soundcard to link audio between HDMI and I2S.
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+>>>>>>>>>> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+>>>>>>>>>> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+>>>>>>>>>> ---
+>>>>>>>>>>
+>>>>>>>>>>     arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 21
+>>>>>>>>>>     +++++++++++++++++++
+>>>>>>>>>>     1 file changed, 21 insertions(+)
+>>>>>>>>>>
+>>>>>>>>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>>>>>>>>>> b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi index
+>>>>>>>>>> e56e1e3d4b73..08ab6b5e72a5 100644
+>>>>>>>>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>>>>>>>>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>>>>>>>>>> @@ -102,6 +102,25 @@
+>>>>>>>>>>
+>>>>>>>>>>                  status = "disabled";
+>>>>>>>>>>          
+>>>>>>>>>>          };
+>>>>>>>>>>
+>>>>>>>>>> +     hdmi_sound: hdmi-sound {
+>>>>>>>>>> +             compatible = "simple-audio-card";
+>>>>>>>>>> +             simple-audio-card,format = "i2s";
+>>>>>>>>>> +             simple-audio-card,name = "allwinner,hdmi";
+>>>>>>>>>
+>>>>>>>>> I'm not sure what the usual card name should be like though. I would
+>>>>>>>>> assume that this should be something specific enough so that you're
+>>>>>>>>> able to differentiate between boards / SoC so that the userspace
+>>>>>>>>> can choose a different configuration based on it?
+>>>>>>>>
+>>>>>>>> I really don't know what we should use here,
+>>>>>>>> I just have a look at other SoC:
+>>>>>>>> rk3328: "HDMI"
+>>>>>>>> rk3399: "hdmi-sound"
+>>>>>>>> r8a774c0-cat874: "CAT874 HDMI sound"
+>>>>>>>>
+>>>>>>>> But maybe it's time to introduce proper name:
+>>>>>>>> What about :
+>>>>>>>> pat
+>>>>>>>> sun50i-h6-hdmi
+>>>>>>>
+>>>>>>> It's pretty much what we've been using for the other sound cards we
+>>>>>>> have, so it makes sense to me.
+>>>>>>
+>>>>>> I have a question regarding the simple-audio-card,name.
+>>>>>> In this patch, I would like to introduce a simple-audio-card for the
+>>>>>> Allwinner A64 HDMI.
+>>>>>>
+>>>>>> What should be the preferred name for this sound card?
+>>>>>> "sun50i-a64-hdmi" ? "allwinner, sun50i-a64-hdmi" ?
+>>>>>
+>>>>> I can at least speak for RK3328, and the reasoning there was that as the
+>>>>> user looking at what `aplay -l` says, I don't give a hoot about what the
+>>>>> SoC may be called, I see two cards and I want to know, with the least
+>>>>> amount of uncertainty, which one will make the sound come out of the
+>>>>> port that's labelled "HDMI" on the box ;)
+>>>>
+>>>> I agree. The user really doesn't care what SoC the system uses. The only
+>>>> real requirement is to be able to tell which output the card is related
+>>>> to, i.e. is it onboard or an external DAC, is it analog or HDMI, etc..
+>>>
+>>> Yeah, but it's exactly the point.
+>>>
+>>> If we also end up with "HDMI" as our card name, then the userspace has no
+>>> way to tell anymore if it's running from an rk3328 or an allwinner SoC,
+>>> or something else entirely. And therefore it cannot really configure
+>>> anything to work out of the box anymore.
+>>
+>> OK, you're a userspace audio application - enlighten me as to what exact
+>> chip you're running on here, and why you need to know:
+>>
+>> card 0: HDMI [HDA ATI HDMI]
+>>
+>> or how about here?
+>>
+>> card 0: Intel [HDA Intel]
+>>
+>>
+>> Furthermore, your argument works both ways - if the equivalent (or in
+>> common cases like DesignWare IP blocks, exact same) thing across 3
+>> different SoCs has 3 different names, then it's that much harder for
+>> userspace that wants to present a consistent behaviour. I don't know
+>> exactly why LibreELEC have downstream patches that standardise all the
+>> Rockchip ones to "HDMI", but I can't help noting that they do.
+>>
+>> With simple-audio-card we're talking about trivial interfaces that often
+>> don't expose any controls at all, so there's unlikely to be much
+>> 'configuration' for userspace to do beyond choosing which card to output to.
+> 
+> This combination (DesignWare HDMI controller + I2S) is same as on Rockchip.
+> Only difference is slightly different version of HDMI controller and different
+> I2S core. Not sure what kind of configuration do you have in mind, but all
+> these controllers support 2-8 channels, different sample sizes, even
+> passthrough mode can be set (but it's not implemented yet). I would say that
+> this audio output supports quiet a few possible configurations.
 
-Built-in QCA8337N switch is managed using it,
-and since we have a driver for it lets add it.
+Right, what I'm getting at is that the stuff that matters is all regular 
+audio capabilities exposed via the appropriate APIs, and any choices are 
+going to be mostly based on the audio being played and what the receiver 
+on the other end of the link supports. I'm genuinely curious as to what 
+actual configuration decision could be made purely based on the SoC 
+name, regardless of the board, receiver, or the capabilities advertised 
+by the interface itself.
 
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Luka Perkov <luka.perkov@sartura.hr>
----
-Changes from v3 to v4:
-* Change compatible to IPQ4019
-
-Changes from v2 to v3:
-* Correct commit title
-
- arch/arm/boot/dts/qcom-ipq4019.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index b4803a428340..8b72a149bc33 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -578,6 +578,34 @@ wifi1: wifi@a800000 {
- 			status = "disabled";
- 		};
- 
-+		mdio: mdio@90000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "qcom,ipq4019-mdio";
-+			reg = <0x90000 0x64>;
-+			status = "disabled";
-+
-+			ethphy0: ethernet-phy@0 {
-+				reg = <0>;
-+			};
-+
-+			ethphy1: ethernet-phy@1 {
-+				reg = <1>;
-+			};
-+
-+			ethphy2: ethernet-phy@2 {
-+				reg = <2>;
-+			};
-+
-+			ethphy3: ethernet-phy@3 {
-+				reg = <3>;
-+			};
-+
-+			ethphy4: ethernet-phy@4 {
-+				reg = <4>;
-+			};
-+		};
-+
- 		usb3_ss_phy: ssphy@9a000 {
- 			compatible = "qcom,usb-ss-ipq4019-phy";
- 			#phy-cells = <0>;
--- 
-2.26.2
-
+Thanks,
+Robin.
