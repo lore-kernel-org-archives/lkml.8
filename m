@@ -8,70 +8,68 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC49C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B13C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7C0E2137B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96A432137B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:07:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="huwf0HvL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d16Dcqtd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgD2KGv (ORCPT
+        id S1726827AbgD2KGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 06:06:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48334 "EHLO
+        Wed, 29 Apr 2020 06:06:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbgD2KGq (ORCPT
+        with ESMTP id S1726345AbgD2KGq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Apr 2020 06:06:46 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8490DC03C1AD;
-        Wed, 29 Apr 2020 03:06:45 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k1so1788709wrx.4;
-        Wed, 29 Apr 2020 03:06:45 -0700 (PDT)
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 874C1C03C1AE;
+        Wed, 29 Apr 2020 03:06:46 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id r26so1372698wmh.0;
+        Wed, 29 Apr 2020 03:06:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Nu1X2CW6jPtDQ0aEhEItVv3kksJg5s4aseacqkeIhzw=;
-        b=huwf0HvL6kpp+czUgrhjvRS4qZYndq90uhZM4bWYOZfbxK7vqRE95//PfH49sRMF0K
-         gjmLwjrKYHai0Y52Fg/6e0HydeOgU3IZ2Bffnx3P6/xgWvTcMCUvc050VNQICGtjhSKP
-         xnOCt9d9gN4JkAWiQ65oqNc16HqXA+tIm4LSDYqZJZNwJOG0as5NQVCECvMpJK8obg7n
-         HX/kf2pSKCE1B0T9WXGId98rqK7ZOkExlBZj/mKS4bepIidwYPVTu9fVdF5patYeGxwK
-         Zy2HnES4sM/lzJdoupRJRjcOHI89hlcW0pPIxFWGAV1tA7j5jWM/H+14sQKZEJg1wjGz
-         dUpw==
+        bh=Pw3wwMTVVUGeM6C/JIXbWoSi/kG/eOapGiuDxmHz9Pw=;
+        b=d16DcqtdtUQeEUkn/bpCndXkgJuMBw4AfpDTDFYPV8bb0lfCiG8oqDHzmFgK8nMd5X
+         /qIij6KpBZwoDNnGhEFeyMVvk8sJOyp9I4woTZSW3g66Alxx3pNHN/Il8y24Xhl2p6fh
+         4kGMFzP0cx8vjrvzyCEa1o0+tu4KVZsYcX5eTG1KgCxUqBXoDTwLdV+mZmK94uM+MCOi
+         4oMWcWUiBfpaOlQEZkbUdy/VS8SEw25MScomY8BdIzJyWbWdgeHsY1Yfa42WOg5jUUiM
+         BivcnAPvNHjbO6FtGI26cB8B2auZ0wp1QYD3Zejw8razYLCdDjoOGDLS4q/7PJ62X+7p
+         vKxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Nu1X2CW6jPtDQ0aEhEItVv3kksJg5s4aseacqkeIhzw=;
-        b=Ucsbq1lPpL5/7lcRqLz7zI2byM9DBCFDR44V2VyUPQYgnGUQ59wl33+YFU0ujhuaX0
-         0NxY13JRzvHR3C9m0P90qMfa9owPEFVMLiTJ63ZtvgTlMaNsKaPjnE39s5DRcC2+7KIz
-         hIveuMmvdMFcbJJ9jyHTLGDMbh6JQ7XiCr6rriGqRoW8WDqgFzFW93Q2AZp82tTDYrHB
-         oJHNbNDZkxtftI0vayJDf4/yI4pocCaoSk0L02zKFHRE6S7zVQSEdaYjJ+HSK7eWOKFH
-         UfZjqECK1N+HuaeidC53fYi6wjVFhMmCtaRiaZ4mhxs8TaHCJMzQ9OZKT3H7MTWehxTc
-         eBGA==
-X-Gm-Message-State: AGi0PuZZhOVPGM0OQgcCFGfxTu6O+MwGAv3v1ZTV5KB/B5OFX8YBz73H
-        oG4PhhWdf4F8i/uPnpuWCUpv8W++xQ==
-X-Google-Smtp-Source: APiQypJ/GTZod9A7Y8IqPtMshR7Flx22YxFkPVs6PA3aNO1TPy2CHjJzDQ5A67Gu+PvIRtWiVlvtWA==
-X-Received: by 2002:adf:b1c9:: with SMTP id r9mr41352720wra.271.1588154803962;
-        Wed, 29 Apr 2020 03:06:43 -0700 (PDT)
+        bh=Pw3wwMTVVUGeM6C/JIXbWoSi/kG/eOapGiuDxmHz9Pw=;
+        b=DOjpw+qUIsgfcvv9NBGaReNnEjZ0psF70IgGegpIvh1aoE/w/1xRWu1MZuFd+xl5zw
+         mhzWUN3v6/8BtIlzFm1NvWnJHQIrc0Kxu4MT6wQ6sKimyrleehEysQzk9ha7dkBx8oHE
+         z2JE6jkAHsattLMvlib0jpvR5iyIcJ5qFkpfQwQhaitAWD+QODuHrzZHHeFnUHkhjHdi
+         S7ck5/N5Jtj7N3FA5/7R+RkIidmGWWo2Z66CAxo/20M1kshWUdKh8Cgrn9CtVfzVZMeE
+         xrythD7vBQBzQLY0WkJiXSHvtwj26qSuXDZHlq5mGGJYpDiQYAP85+q877/bELO2Og6A
+         5Rcw==
+X-Gm-Message-State: AGi0PuY+TdVoKkdosgF0khjPnzJ6c1U2QiFeHauxgeLD+8DeyEjL1mCU
+        lYmcSFe7IVWPNrq91QHVbA54rW6374hC
+X-Google-Smtp-Source: APiQypLcc6eZ9uECXO7qlAoldSWnzjTUBFfKSfXsLfUegC2QxTGR/ZcJBym9S2dOFWa11D2evGcdHQ==
+X-Received: by 2002:a7b:cfc9:: with SMTP id f9mr2469942wmm.61.1588154804962;
+        Wed, 29 Apr 2020 03:06:44 -0700 (PDT)
 Received: from ninjahost.lan (host-2-102-14-195.as13285.net. [2.102.14.195])
-        by smtp.gmail.com with ESMTPSA id 1sm7205478wmi.0.2020.04.29.03.06.43
+        by smtp.gmail.com with ESMTPSA id 1sm7205478wmi.0.2020.04.29.03.06.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 03:06:43 -0700 (PDT)
+        Wed, 29 Apr 2020 03:06:44 -0700 (PDT)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-usb@vger.kernel.org (open list:USB GADGET/PERIPHERAL SUBSYSTEM),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/ZYNQ
-        ARCHITECTURE)
-Subject: [PATCH 1/6] usb: gadget: Add missing annotation for xudc_handle_setup()
-Date:   Wed, 29 Apr 2020 11:05:23 +0100
-Message-Id: <20200429100529.19645-2-jbi.octave@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev@vger.kernel.org (open list:NETWORKING [IPv4/IPv6])
+Subject: [PATCH 2/6] udp: Add missing annotations for busylock_acquire() and busylock_release()
+Date:   Wed, 29 Apr 2020 11:05:24 +0100
+Message-Id: <20200429100529.19645-3-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.25.3
 In-Reply-To: <20200429100529.19645-1-jbi.octave@gmail.com>
 References: <0/6>
@@ -83,31 +81,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at xudc_handle_setup()
+Sparse reports warnings
 
-warning: context imbalance in xudc_handle_setup() - unexpected unlock
+warning: context imbalance in busylock_acquire() - wrong count at exit
+warning: context imbalance in busylock_release() - unexpected unlock
 
-The root cause is the missing annotation at xudc_handle_setup()
+The root cause is the missing annotations at
+busylock_acquire() and busylock_release()
 
-Add the missing __must_hold(&udc->lock) annotation
+The __release(busy) annotation inside busylock_release()
+tells Sparse and not GCC to shutdown the warning
+in case the condition is not satisfied.
+
+Add the missing __acquires(busy) annotation
+Add the missing __releases(busy) annotation
+Add the __release(busy) annotation
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- drivers/usb/gadget/udc/udc-xilinx.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/ipv4/udp.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/usb/gadget/udc/udc-xilinx.c b/drivers/usb/gadget/udc/udc-xilinx.c
-index 29d8e5f8bb58..ae22882dba6a 100644
---- a/drivers/usb/gadget/udc/udc-xilinx.c
-+++ b/drivers/usb/gadget/udc/udc-xilinx.c
-@@ -1733,6 +1733,7 @@ static void xudc_set_clear_feature(struct xusb_udc *udc)
-  * Process setup packet and delegate to gadget layer.
-  */
- static void xudc_handle_setup(struct xusb_udc *udc)
-+	__must_hold(&udc->lock)
+diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
+index db76b9609299..5ca12a945ac3 100644
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -1430,6 +1430,7 @@ static int udp_busylocks_log __read_mostly;
+ static spinlock_t *udp_busylocks __read_mostly;
+ 
+ static spinlock_t *busylock_acquire(void *ptr)
++	__acquires(busy)
  {
- 	struct xusb_ep *ep0 = &udc->ep[0];
- 	struct usb_ctrlrequest setup;
+ 	spinlock_t *busy;
+ 
+@@ -1439,9 +1440,13 @@ static spinlock_t *busylock_acquire(void *ptr)
+ }
+ 
+ static void busylock_release(spinlock_t *busy)
++	__releases(busy)
+ {
+ 	if (busy)
+ 		spin_unlock(busy);
++	else
++		/* annotation for sparse */
++		__release(busy);
+ }
+ 
+ int __udp_enqueue_schedule_skb(struct sock *sk, struct sk_buff *skb)
 -- 
 2.25.3
 
