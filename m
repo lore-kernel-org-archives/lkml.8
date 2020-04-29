@@ -2,340 +2,179 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70630C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3E3C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 587852076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA43B2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:00:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgD2G77 (ORCPT
+        id S1726546AbgD2HA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 02:59:59 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35407 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726158AbgD2G77 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 02:59:59 -0400
-Received: by mail-lf1-f65.google.com with SMTP id r17so728680lff.2;
-        Tue, 28 Apr 2020 23:59:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sp4Q0pxUVysVvGlDJYjuzQkE2LcHHYkVNEZ4IUcHcII=;
-        b=Jl0s51wywtnxndRpTBDMS23rfio26GeT9T3VEYrCjoccIBw+wkk8KuBs3r/Jl52s7M
-         7RrJllGCk10E1AwQy9/yzUUEJitXQRw52mO5d40i9gTTvbT/5FKRx2i3qzSWkwO/sVzw
-         kaWzUV1l+9oNdt6BZPvdoNdZYDCF+SMBZZhEzkh3yDFDVUi5l4Ee6z1vTtImROvR1fqG
-         uYvbTs4ScPzdyydqVYx7bGiXz4HH+HI3tjSsyFttf0xLS43n9/IGUfdL0x406jMGUkTB
-         otYj5jJhpHO0YPF/UUidI2j73dOtAHEFZB2i6LKYRsdjAUSO/zl0Gq7C3j7i6jU/Nym2
-         NZ7g==
-X-Gm-Message-State: AGi0PubraJOMMSPoqYJfMYS55WI8h4jT+dNuTCSEOS5Q/vza+Gi37ZvF
-        +HHsIF1F36WXFd/nH9gfOA4=
-X-Google-Smtp-Source: APiQypKStLl9Za1B95Bwx+XF6pKyPEwRFwXM2rV+0XVJAIVTm/bX6g7vISufkwR15UnD3CkCOFcWIQ==
-X-Received: by 2002:a19:5f04:: with SMTP id t4mr21859571lfb.208.1588143595216;
-        Tue, 28 Apr 2020 23:59:55 -0700 (PDT)
-Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
-        by smtp.gmail.com with ESMTPSA id k18sm1971777lfg.81.2020.04.28.23.59.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 23:59:54 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 09:59:08 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     sre@kernel.org, robh+dt@kernel.org, broonie@kernel.org,
-        lgirdwood@gmail.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH v10 05/11] power: supply: bd70528: use linear ranges
-Message-ID: <88a69f3726d6031c83cde549157b93d737c8e828.1586925868.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1586925868.git.matti.vaittinen@fi.rohmeurope.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1586925868.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 29 Apr 2020 03:00:26 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:42934 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726158AbgD2HAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 03:00:25 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxv9v8JaleeaktAA--.6S2;
+        Wed, 29 Apr 2020 15:00:13 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH v5] MIPS: Loongson: Add DMA support for LS7A
+Date:   Wed, 29 Apr 2020 15:00:11 +0800
+Message-Id: <1588143611-6815-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dxv9v8JaleeaktAA--.6S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxCr4xtry7XFWkAw43XFyrZwb_yoWrWFyxpa
+        9xA3Z5Gr4YgF15CrZ5AFW8ur1rAFZ5KrW3GF42vw15tasxZ34FqFs3GF18Xr1UAF1DG3Wx
+        XFWrKw48GF1xCFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8
+        CwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
+        1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij
+        64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+        0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4U
+        MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU9o7NUUU
+        UU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the bd70528 to use common linear_range code instead of
-implementing a copy of it in this driver.
+In the current market, the most used bridge chip on the Loongson
+platform are RS780E and LS7A, the RS780E bridge chip is already
+supported by the mainline kernel.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+In order to use the default implementation of __phys_to_dma() and
+__dma_to_phys() in dma-direct.h, remove CONFIG_ARCH_HAS_PHYS_TO_DMA
+and then set the bus's DMA limit to 36 bit for RS780E to maintain
+downward compatibility.
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
 
-Changes since v9:
- - Add commas to last struct members as suggested by Andy
+Hi Christoph and Jiaxun,
 
- drivers/power/supply/Kconfig           |   1 +
- drivers/power/supply/bd70528-charger.c | 144 ++++++++++---------------
- 2 files changed, 56 insertions(+), 89 deletions(-)
+Thank you very much for your suggestions.
 
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index f3424fdce341..9f19636db922 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -695,6 +695,7 @@ config CHARGER_UCS1002
- config CHARGER_BD70528
- 	tristate "ROHM bd70528 charger driver"
- 	depends on MFD_ROHM_BD70528
-+	select LINEAR_RANGES
- 	default n
- 	help
- 	 Say Y here to enable support for getting battery status
-diff --git a/drivers/power/supply/bd70528-charger.c b/drivers/power/supply/bd70528-charger.c
-index 3b820110ecfa..7c1f0b99c71b 100644
---- a/drivers/power/supply/bd70528-charger.c
-+++ b/drivers/power/supply/bd70528-charger.c
-@@ -72,6 +72,7 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/power_supply.h>
-+#include <linux/linear_range.h>
+v5:
+  - use the default implementation of __phys_to_dma()
+    and __dma_to_phys() in dma-direct.h
+
+ arch/mips/Kconfig                                  |  1 -
+ arch/mips/include/asm/mach-loongson64/boot_param.h |  5 +++++
+ arch/mips/loongson64/dma.c                         | 22 +++++++++++-----------
+ arch/mips/loongson64/env.c                         |  2 ++
+ 4 files changed, 18 insertions(+), 12 deletions(-)
+
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 9f15539..12b6bdb 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -1454,7 +1454,6 @@ choice
+ config CPU_LOONGSON64
+ 	bool "Loongson 64-bit CPU"
+ 	depends on SYS_HAS_CPU_LOONGSON64
+-	select ARCH_HAS_PHYS_TO_DMA
+ 	select CPU_MIPSR2
+ 	select CPU_HAS_PREFETCH
+ 	select CPU_SUPPORTS_64BIT_KERNEL
+diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h b/arch/mips/include/asm/mach-loongson64/boot_param.h
+index fc9f14b..cccf4cb 100644
+--- a/arch/mips/include/asm/mach-loongson64/boot_param.h
++++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
+@@ -197,6 +197,7 @@ enum loongson_bridge_type {
+ 	LS7A = 2
+ };
  
- #define CHG_STAT_SUSPEND	0x0
- #define CHG_STAT_TRICKLE	0x1
-@@ -335,38 +336,37 @@ static int bd70528_get_present(struct bd70528_psy *bdpsy, int *val)
- 	return 0;
++struct pci_dev;
+ struct loongson_system_configuration {
+ 	u32 nr_cpus;
+ 	u32 nr_nodes;
+@@ -221,9 +222,13 @@ struct loongson_system_configuration {
+ 	u32 nr_sensors;
+ 	struct sensor_device sensors[MAX_SENSORS];
+ 	u64 workarounds;
++	void (*dma_config)(struct pci_dev *pdev);
+ };
+ 
+ extern struct efi_memory_map_loongson *loongson_memmap;
+ extern struct loongson_system_configuration loongson_sysconf;
+ 
++extern void rs780e_dma_config(struct pci_dev *pdev);
++extern void ls7a_dma_config(struct pci_dev *pdev);
++
+ #endif
+diff --git a/arch/mips/loongson64/dma.c b/arch/mips/loongson64/dma.c
+index 5e86635..6878bcc 100644
+--- a/arch/mips/loongson64/dma.c
++++ b/arch/mips/loongson64/dma.c
+@@ -1,24 +1,24 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#include <linux/dma-direct.h>
++#include <linux/pci.h>
+ #include <linux/init.h>
+ #include <linux/swiotlb.h>
+ 
+-dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
++void rs780e_dma_config(struct pci_dev *pdev)
+ {
+-	/* We extract 2bit node id (bit 44~47, only bit 44~45 used now) from
+-	 * Loongson-3's 48bit address space and embed it into 40bit */
+-	long nid = (paddr >> 44) & 0x3;
+-	return ((nid << 44) ^ paddr) | (nid << 37);
++	pdev->dev.bus_dma_limit = DMA_BIT_MASK(36);
  }
  
--struct bd70528_linear_range {
--	int min;
--	int step;
--	int vals;
--	int low_sel;
--};
--
--static const struct bd70528_linear_range current_limit_ranges[] = {
-+static const struct linear_range current_limit_ranges[] = {
- 	{
- 		.min = 5,
- 		.step = 1,
--		.vals = 36,
--		.low_sel = 0,
-+		.min_sel = 0,
-+		.max_sel = 0x22,
- 	},
- 	{
- 		.min = 40,
- 		.step = 5,
--		.vals = 5,
--		.low_sel = 0x23,
-+		.min_sel = 0x23,
-+		.max_sel = 0x26,
- 	},
- 	{
- 		.min = 60,
- 		.step = 20,
--		.vals = 8,
--		.low_sel = 0x27,
-+		.min_sel = 0x27,
-+		.max_sel = 0x2d,
- 	},
- 	{
- 		.min = 200,
- 		.step = 50,
--		.vals = 7,
--		.low_sel = 0x2e,
--	}
-+		.min_sel = 0x2e,
-+		.max_sel = 0x34,
-+	},
-+	{
-+		.min = 500,
-+		.step = 0,
-+		.min_sel = 0x35,
-+		.max_sel = 0x3f,
-+	},
- };
- 
- /*
-@@ -374,18 +374,18 @@ static const struct bd70528_linear_range current_limit_ranges[] = {
-  * voltage for low temperatures. The driver currently only reads
-  * the charge current at room temperature. We do set both though.
-  */
--static const struct bd70528_linear_range warm_charge_curr[] = {
-+static const struct linear_range warm_charge_curr[] = {
- 	{
- 		.min = 10,
- 		.step = 10,
--		.vals = 20,
--		.low_sel = 0,
-+		.min_sel = 0,
-+		.max_sel = 0x12,
- 	},
- 	{
- 		.min = 200,
- 		.step = 25,
--		.vals = 13,
--		.low_sel = 0x13,
-+		.min_sel = 0x13,
-+		.max_sel = 0x1f,
- 	},
- };
- 
-@@ -398,56 +398,6 @@ static const struct bd70528_linear_range warm_charge_curr[] = {
- #define MAX_WARM_CHG_CURR_SEL 0x1f
- #define MIN_CHG_CURR_SEL 0x0
- 
--static int find_value_for_selector_low(const struct bd70528_linear_range *r,
--				       int selectors, unsigned int sel,
--				       unsigned int *val)
--{
--	int i;
--
--	for (i = 0; i < selectors; i++) {
--		if (r[i].low_sel <= sel && r[i].low_sel + r[i].vals >= sel) {
--			*val = r[i].min + (sel - r[i].low_sel) * r[i].step;
--			return 0;
--		}
--	}
--	return -EINVAL;
--}
--
--/*
-- * For BD70528 voltage/current limits we happily accept any value which
-- * belongs the range. We could check if value matching the selector is
-- * desired by computing the range min + (sel - sel_low) * range step - but
-- * I guess it is enough if we use voltage/current which is closest (below)
-- * the requested?
-- */
--static int find_selector_for_value_low(const struct bd70528_linear_range *r,
--				       int selectors, unsigned int val,
--				       unsigned int *sel, bool *found)
--{
--	int i;
--	int ret = -EINVAL;
--
--	*found = false;
--	for (i = 0; i < selectors; i++) {
--		if (r[i].min <= val) {
--			if (r[i].min + r[i].step * r[i].vals >= val) {
--				*found = true;
--				*sel = r[i].low_sel + (val - r[i].min) /
--				       r[i].step;
--				ret = 0;
--				break;
--			}
--			/*
--			 * If the range max is smaller than requested
--			 * we can set the max supported value from range
--			 */
--			*sel = r[i].low_sel + r[i].vals;
--			ret = 0;
--		}
--	}
--	return ret;
--}
--
- static int get_charge_current(struct bd70528_psy *bdpsy, int *ma)
+-phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t daddr)
++void ls7a_dma_config(struct pci_dev *pdev)
  {
- 	unsigned int sel;
-@@ -463,9 +413,9 @@ static int get_charge_current(struct bd70528_psy *bdpsy, int *ma)
+-	/* We extract 2bit node id (bit 44~47, only bit 44~45 used now) from
+-	 * Loongson-3's 48bit address space and embed it into 40bit */
+-	long nid = (daddr >> 37) & 0x3;
+-	return ((nid << 37) ^ daddr) | (nid << 44);
+ }
  
- 	sel &= BD70528_MASK_CHG_CHG_CURR;
- 
--	ret = find_value_for_selector_low(&warm_charge_curr[0],
--					  ARRAY_SIZE(warm_charge_curr), sel,
--					  ma);
-+	ret = linear_range_get_value_array(&warm_charge_curr[0],
-+					   ARRAY_SIZE(warm_charge_curr),
-+					   sel, ma);
- 	if (ret) {
- 		dev_err(bdpsy->dev,
- 			"Unknown charge current value 0x%x\n",
-@@ -491,10 +441,9 @@ static int get_current_limit(struct bd70528_psy *bdpsy, int *ma)
- 
- 	sel &= BD70528_MASK_CHG_DCIN_ILIM;
- 
--	ret = find_value_for_selector_low(&current_limit_ranges[0],
--					  ARRAY_SIZE(current_limit_ranges), sel,
--					  ma);
--
-+	ret = linear_range_get_value_array(&current_limit_ranges[0],
-+					   ARRAY_SIZE(current_limit_ranges),
-+					   sel, ma);
- 	if (ret) {
- 		/* Unspecified values mean 500 mA */
- 		*ma = 500;
-@@ -588,15 +537,28 @@ static int set_charge_current(struct bd70528_psy *bdpsy, int ma)
- 		goto set;
- 	}
- 
--	ret = find_selector_for_value_low(&warm_charge_curr[0],
--					  ARRAY_SIZE(warm_charge_curr), ma,
--					  &reg, &found);
-+/*
-+ * For BD70528 voltage/current limits we happily accept any value which
-+ * belongs the range. We could check if value matching the selector is
-+ * desired by computing the range min + (sel - sel_low) * range step - but
-+ * I guess it is enough if we use voltage/current which is closest (below)
-+ * the requested?
-+ */
++void loongson_dma_config(struct pci_dev *pdev)
++{
++	loongson_sysconf.dma_config(pdev);
++}
 +
-+	ret = linear_range_get_selector_low_array(warm_charge_curr,
-+						  ARRAY_SIZE(warm_charge_curr),
-+						  ma, &reg, &found);
- 	if (ret) {
-+		dev_err(bdpsy->dev,
-+			 "Unsupported charge current %u mA\n", ma);
- 		reg = MIN_CHG_CURR_SEL;
- 		goto set;
++DECLARE_PCI_FIXUP_EARLY(PCI_ANY_ID, PCI_ANY_ID, loongson_dma_config);
++
+ void __init plat_swiotlb_setup(void)
+ {
+ 	swiotlb_init(1);
+diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
+index 71f4aaf..496f401 100644
+--- a/arch/mips/loongson64/env.c
++++ b/arch/mips/loongson64/env.c
+@@ -192,8 +192,10 @@ void __init prom_init_env(void)
+ 	if (vendor == PCI_VENDOR_ID_LOONGSON && device == 0x7a00) {
+ 		pr_info("The bridge chip is LS7A\n");
+ 		loongson_sysconf.bridgetype = LS7A;
++		loongson_sysconf.dma_config = ls7a_dma_config;
+ 	} else {
+ 		pr_info("The bridge chip is RS780E or SR5690\n");
+ 		loongson_sysconf.bridgetype = RS780E;
++		loongson_sysconf.dma_config = rs780e_dma_config;
  	}
- 	if (!found) {
--		/* There was a gap in supported values and we hit it */
-+		/*
-+		 * There was a gap in supported values and we hit it.
-+		 * Yet a smaller value was found so we use it.
-+		 */
- 		dev_warn(bdpsy->dev,
- 			 "Unsupported charge current %u mA\n", ma);
- 	}
-@@ -648,17 +610,21 @@ static int set_current_limit(struct bd70528_psy *bdpsy, int ma)
- 		goto set;
- 	}
- 
--	ret = find_selector_for_value_low(&current_limit_ranges[0],
--					  ARRAY_SIZE(current_limit_ranges), ma,
--					  &reg, &found);
-+	ret = linear_range_get_selector_low_array(current_limit_ranges,
-+					ARRAY_SIZE(current_limit_ranges),
-+					ma, &reg, &found);
- 	if (ret) {
-+		dev_err(bdpsy->dev, "Unsupported current limit %umA\n", ma);
- 		reg = MIN_CURR_LIMIT_SEL;
- 		goto set;
- 	}
- 	if (!found) {
--		/* There was a gap in supported values and we hit it ?*/
--		dev_warn(bdpsy->dev, "Unsupported current limit %umA\n",
--			 ma);
-+		/*
-+		 * There was a gap in supported values and we hit it.
-+		 * We found a smaller value from ranges and use it.
-+		 * Warn user though.
-+		 */
-+		dev_warn(bdpsy->dev, "Unsupported current limit %umA\n", ma);
- 	}
- 
- set:
+ }
 -- 
-2.21.0
+2.1.0
 
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
