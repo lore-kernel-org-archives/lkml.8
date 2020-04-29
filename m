@@ -2,155 +2,230 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B778CC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD07BC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C05420787
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A64F20775
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:47:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="mDylNO0I";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="E2GG4Ytp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbgD2Ips (ORCPT
+        id S1726530AbgD2Ird (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:45:48 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35189 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgD2Ips (ORCPT
+        Wed, 29 Apr 2020 04:47:33 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:60171 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726345AbgD2Irc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:45:48 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e26so1055714otr.2;
-        Wed, 29 Apr 2020 01:45:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nZsuyZk+W3ZQ3D4T7ElXnkZvkP0cegNtGGjskMJOrWs=;
-        b=mqq2Pg3HtS6DAgt1Zvas+71GJAk4oZLDN9sDO21dQ0qQ9jmlW2bJfPaYpdRu7nRHad
-         MiJ4wyzdWnhM7J7HPJU/cEXVBqWA0VQCBJKPt8w0vBNdRx7fqUTGpKmDhosPwYP0lqoX
-         PGXO0p42Rq6h91bYMgTmrLS7OuV8gFGqE2kYjCUnIKCnZVB3LeSdDiA+DWbpqArXDVVd
-         /DZ4ZCfaJ7RHwcNIoeA9hcoRV6Uop5ED1BZVpci8pQtxPjt4KAuSVkwFR0BkmQtlv0Tv
-         tWsQvABSInE8SnoHPyhKiZ9xevKMQrL1VOxnQ8SDf4pxITiA+l5l35zIqpu2V4EGhACF
-         o0Uw==
-X-Gm-Message-State: AGi0PuZNqnL+JOT6oYqjWqan4s85tOwHfMBBbOU480T0UsVBzXKAJOcM
-        mNCs6LuamEs03lFaf2Rdazjn4nO9cQI689XeWbzs7Q==
-X-Google-Smtp-Source: APiQypISoD3rKWZ6uVLPAZhyrACde80GeD/rrdp9qI+e6ZrUlQ2zKUSmtpFRopMPzmvn/lB4sCDboFc8p/Zu0MR6gWQ=
-X-Received: by 2002:a9d:564:: with SMTP id 91mr25765762otw.250.1588149947154;
- Wed, 29 Apr 2020 01:45:47 -0700 (PDT)
+        Wed, 29 Apr 2020 04:47:32 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 9AB75580104;
+        Wed, 29 Apr 2020 04:47:30 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 29 Apr 2020 04:47:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=+x1hnvO451DFLw58Xq3iUsbF2Jz
+        alXMCx3P3fGnFW08=; b=mDylNO0ImdJQcBjcJhxqGwZ0gLH65YlOxSjvQREEP3f
+        4qGYzmConM9HkJufYMjsnhf4/U5f/nMYa7Y4bpNHEPZRGxnLHIjQiWjERglE53zA
+        oKMD/cPGAwRaPGqCJ5/SiN46qyNsjQGFSvMny9nDQB6IkO1SJfBgD9EdtiaVDZ7d
+        A/0pbA75VQ1czsx3Ud3zZ0Ct1tM7dRs5LdgkX5nrL4wlzG5WiI+zMV3YRbG6e9lU
+        EfEjiSIOEGi0F1dFrhGkZzyaX9IhNnWJBcdmGy3kakaIYmrgYV2DTu3hhEr3UJ+B
+        5cyi95cQhZgjntybSHnjxI/ELKDeyPR6wO+DmEdIyNQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=+x1hnv
+        O451DFLw58Xq3iUsbF2JzalXMCx3P3fGnFW08=; b=E2GG4YtpPx9b335eVlOleh
+        Vf8483NTNxzjs95yfN4uRYnvVs2tiKuUvRyMMVSInBLyjh+qMlQ0dVtjSwJbsDUK
+        WQWtSA+Bwb1TRuouQ6Rb6pdXfGYF71YpiWoLMMd4B0/gUi2rfcg5JorfqN0JJssQ
+        b5NszxFBVjt1AJHxC1DJ+KMryBcTxX33yCPmx9xaU+gujbvcPTEUhLLXynjJE6yy
+        miqhu3mWUKdKBcCgKILcyM6xOfgqmO5G1ZTnt75gOcYXtIUlupWdCgLceHSTqR8Q
+        BUigUlYpBZcCXoJnGIlSKCLjDvyVjMLksV6GI/iUupM/vJJdPxnutvDdSf42SJBQ
+        ==
+X-ME-Sender: <xms:HT-pXhpN54g-6aCMfmUe-4DMD6dWLtA3usgSR6go2S5ER7rxsPhAww>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieefgddtkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:HT-pXrVffufAEMQkyDUZKoQp7m4gU6WDQH-928szCVw6XspkjR09Bw>
+    <xmx:HT-pXkD0RZGaxlLx-cC-xX6d0cZb-LFHZKS3nww8to01I-3FCcWuVg>
+    <xmx:HT-pXuTBDDqX0KhTqh3gFz8BYE7BbY0XahpKNhyToXMGSNRpH-Z_Jw>
+    <xmx:Ij-pXvat0UK807ynw6DTDs5CBzCYKJ5Cy3QP0hnPHBSOnNjslvCryA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D9FE03280066;
+        Wed, 29 Apr 2020 04:47:24 -0400 (EDT)
+Date:   Wed, 29 Apr 2020 10:47:23 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH v7 08/12] arm: dts: s5pv210: Add node for SGX 540
+Message-ID: <20200429084723.jxybvsakniinvivt@gilmour.lan>
+References: <cover.1587760454.git.hns@goldelico.com>
+ <3fd18c747426e15fd1f3500b9c4adce2db9ddd0c.1587760454.git.hns@goldelico.com>
+ <NYBE9Q.YH08US7A7DC3@crapouillou.net>
+ <BN6PR04MB0660A180D2069848E5C03D7EA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+ <20200427154617.GA1798@pi3>
+ <BN6PR04MB06605F014024061C894AFBA4A3AC0@BN6PR04MB0660.namprd04.prod.outlook.com>
+ <BN6PR04MB0660044B5B1D45BE4CBCD2AAA3AC0@BN6PR04MB0660.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-References: <20200422072137.8517-1-o.rempel@pengutronix.de>
- <CAMuHMdU1ZmSm_tjtWxoFNako2fzmranGVz5qqD2YRNEFRjX0Sw@mail.gmail.com>
- <20200428154718.GA24923@lunn.ch> <6791722391359fce92b39e3a21eef89495ccf156.camel@toradex.com>
-In-Reply-To: <6791722391359fce92b39e3a21eef89495ccf156.camel@toradex.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 29 Apr 2020 10:45:35 +0200
-Message-ID: <CAMuHMdXm7n6cE5-ZjwxU_yKSrCaZCwqc_tBA+M_Lq53hbH2-jg@mail.gmail.com>
-Subject: Re: [PATCH net-next v3] net: phy: micrel: add phy-mode support for
- the KSZ9031 PHY
-To:     Philippe Schenker <philippe.schenker@toradex.com>
-Cc:     "andrew@lunn.ch" <andrew@lunn.ch>,
-        "sergei.shtylyov@cogentembedded.com" 
-        <sergei.shtylyov@cogentembedded.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "david@protonic.nl" <david@protonic.nl>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="u22eiu3zouiknukx"
+Content-Disposition: inline
+In-Reply-To: <BN6PR04MB0660044B5B1D45BE4CBCD2AAA3AC0@BN6PR04MB0660.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Philippe,
 
-On Tue, Apr 28, 2020 at 6:16 PM Philippe Schenker
-<philippe.schenker@toradex.com> wrote:
-> On Tue, 2020-04-28 at 17:47 +0200, Andrew Lunn wrote:
-> > On Tue, Apr 28, 2020 at 05:28:30PM +0200, Geert Uytterhoeven wrote:
-> > > This triggers on Renesas Salvator-X(S):
-> > >
-> > >     Micrel KSZ9031 Gigabit PHY e6800000.ethernet-ffffffff:00:
-> > > *-skew-ps values should be used only with phy-mode = "rgmii"
-> > >
-> > > which uses:
-> > >
-> > >         phy-mode = "rgmii-txid";
-> > >
-> > > and:
-> > >
-> > >         rxc-skew-ps = <1500>;
-> > >
-> > > If I understand Documentation/devicetree/bindings/net/ethernet-
-> > > controller.yaml
-> > > correctly:
-> >
-> > Checking for skews which might contradict the PHY-mode is new. I think
-> > this is the first PHY driver to do it. So i'm not too surprised it has
-> > triggered a warning, or there is contradictory documentation.
-> >
-> > Your use cases is reasonable. Have the normal transmit delay, and a
-> > bit shorted receive delay. So we should allow it. It just makes the
-> > validation code more complex :-(
->
-> I reviewed Oleksij's patch that introduced this warning. I just want to
-> explain our thinking why this is a good thing, but yes maybe we change
-> that warning a little bit until it lands in mainline.
->
-> The KSZ9031 driver didn't support for proper phy-modes until now as it
-> don't have dedicated registers to control tx and rx delays. With
-> Oleksij's patch this delay is now done accordingly in skew registers as
-> best as possible. If you now also set the rxc-skew-ps registers those
-> values you previously set with rgmii-txid or rxid get overwritten.
->
-> We chose the warning to occur on phy-modes 'rgmii-id', 'rgmii-rxid' and
-> 'rgmii-txid' as on those, with the 'rxc-skew-ps' value present,
-> overwriting skew values could occur and you end up with values you do
-> not wanted. We thought, that most of the boards have just 'rgmii' set in
-> phy-mode with specific skew-values present.
->
-> @Geert if you actually want the PHY to apply RXC and TXC delays just
-> insert 'rgmii-id' in your DT and remove those *-skew-ps values. If you
+--u22eiu3zouiknukx
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That seems to work for me, but of course doesn't take into account PCB
-routing.
+Hi,
 
-> need custom timing due to PCB routing it was thought out to use the phy-
-> mode 'rgmii' and do the whole required timing with the *-skew-ps values.
+On Tue, Apr 28, 2020 at 03:58:03PM -0700, Jonathan Bakker wrote:
+> On 2020-04-28 2:39 p.m., Jonathan Bakker wrote:
+> > On 2020-04-27 8:46 a.m., Krzysztof Kozlowski wrote:
+> >> On Sun, Apr 26, 2020 at 07:57:12AM -0700, Jonathan Bakker wrote:
+> >>> Hi Paul,
+> >>>
+> >>> On 2020-04-26 5:56 a.m., Paul Cercueil wrote:
+> >>>>
+> >>>>
+> >>>> Le ven. 24 avril 2020 =E0 22:34, H. Nikolaus Schaller <hns@goldelico=
+=2Ecom> a =E9crit :
+> >>>>> From: Jonathan Bakker <xc-racer2@live.ca>
+> >>>>>
+> >>>>> All s5pv210 devices have a PowerVR SGX 540 (revision 120) attached.
+> >>>>>
+> >>>>> There is no external regulator for it so it can be enabled by defau=
+lt.
+> >>>>>
+> >>>>> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> >>>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> >>>>> ---
+> >>>>> =A0arch/arm/boot/dts/s5pv210.dtsi | 13 +++++++++++++
+> >>>>> =A01 file changed, 13 insertions(+)
+> >>>>>
+> >>>>> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5p=
+v210.dtsi
+> >>>>> index 2ad642f51fd9..abbdda205c1b 100644
+> >>>>> --- a/arch/arm/boot/dts/s5pv210.dtsi
+> >>>>> +++ b/arch/arm/boot/dts/s5pv210.dtsi
+> >>>>> @@ -512,6 +512,19 @@ vic3: interrupt-controller@f2300000 {
+> >>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 #interrupt-cells =3D <1>;
+> >>>>> =A0=A0=A0=A0=A0=A0=A0=A0 };
+> >>>>>
+> >>>>> +=A0=A0=A0=A0=A0=A0=A0 gpu: gpu@f3000000 {
+> >>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 compatible =3D "samsung,s5pv210-=
+sgx540-120";
+> >>
+> >> This should not pass the bindings check because you missed last
+> >> compatibles.
+> >>
+> >=20
+> > Thanks for pointing that out, I'll add it and make sure it passes the b=
+indings check.
+> >=20
+> >>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 reg =3D <0xf3000000 0x10000>;
+> >>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 interrupt-parent =3D <&vic2>;
+> >>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 interrupts =3D <10>;
+> >>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 clock-names =3D "core";
+> >>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 clocks =3D <&clocks CLK_G3D>;
+> >>>>> +
+> >>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clocks =3D <&clocks MOU=
+T_G3D>, <&clocks DOUT_G3D>;
+> >>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clock-rates =3D <0>, <6=
+6700000>;
+> >>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clock-parents =3D <&clo=
+cks MOUT_MPLL>;
+> >>>>
+> >>>> What are these clocks for, and why are they reparented / reclocked?
+> >>>>
+> >>>> Shouldn't they be passed to 'clocks' as well?
+> >>>>
+> >>>> -Paul
+> >>>>
+> >>>
+> >>> The G3D clock system can have multiple parents, and for stable operat=
+ion
+> >>> it's recommended to use the MPLL clock as the parent (which in turn
+> >>> is actually a mux as well).  MOUT_G3D is simply the mux for CLK_G3D
+> >>> (SGX core clock), DOUT_G3D is the divider.  DOUT_G3D could equally be=
+ CLK_G3D
+> >>> (and probably should be, for readability) as CLK_G3D is simply the ga=
+te and
+> >>> DOUT_G3D is the divider for it.
+> >>
+> >> Good point, it should be CLK_G3D instead of DOUT.  Can you fix this as
+> >> well?
+> >=20
+> > Yep, will do.  Nikolaus, I'll send you an updated patch to include.
+> >=20
+>=20
+> How are assigned-clocks handled in the yaml DT schema?  When running make=
+ dtbs_check,
+> I end up with messages such as
+>=20
+> arch/arm/boot/dts/s5pv210-aquila.dt.yaml: gpu@f3000000: 'assigned-clock-p=
+arents', 'assigned-clock-rates', 'assigned-clocks' do not match any of the =
+regexes: 'pinctrl-[0-9]+'
+>=20
+> Do they need to explicitly be listed as valid entries?
 
-That mean we do have to provide all values again?
-Using "rgmii" without any skew values makes DHCP fail on R-Car H3 ES2.0,
-M3-W (ES1.0), and M3-N (ES1.0). Interestingly, DHCP still works on R-Car
-H3 ES1.0.
+If you have additionalProperties set to false, yes. But you should really
+consider not using them in the first place, since they provide no guarantee=
+ on
+whether the setup you did in the DT will remain during the life of the syst=
+em.
 
-Note that I'm not too-familiar with the actual skew values needed
-(CC Mizuguchi-san).
+I'm not sure why it's needed on that SoC in particular, but this should be =
+fixed
+in the driver itself (either the clock or the GPU driver).
 
-Related commits:
-  - 0e45da1c6ea6b186 ("arm64: dts: r8a7795: salvator-x: Fix
-EthernetAVB PHY timing")
-  - dda3887907d74338 ("arm64: dts: r8a7795: Use rgmii-txid phy-mode
-for EthernetAVB")
-  - 7eda14afb8843a0d ("arm64: dts: renesas: r8a77990: ebisu: Fix
-EthernetAVB phy mode to rgmii")
+Maxime
 
-Thanks!
+--u22eiu3zouiknukx
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Gr{oetje,eeting}s,
+-----BEGIN PGP SIGNATURE-----
 
-                        Geert
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqk/GwAKCRDj7w1vZxhR
+xR+OAP9zSq/md3bxfVKk4er7ZI7jk8/dQzTxgBO3mo3r+wRqmwEAy6d+UHyzeb5t
+qZLq2zIdK45SI8CMqYcGeBsbBQ1iVAc=
+=VCha
+-----END PGP SIGNATURE-----
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--u22eiu3zouiknukx--
