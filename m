@@ -6,91 +6,69 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF68C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7108BC83009
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 255132087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C95D20B80
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:28:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgD2N2T (ORCPT
+        id S1726926AbgD2N2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:28:19 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:37375 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgD2N2S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:28:18 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MMoKq-1jmYab34Dc-00IkSx; Wed, 29 Apr 2020 15:27:45 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        ethanwu <ethanwu@synology.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Qu Wenruo <wqu@suse.com>,
-        Filipe Manana <fdmanana@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] btrfs: fix gcc-4.8 build warning
-Date:   Wed, 29 Apr 2020 15:27:32 +0200
-Message-Id: <20200429132743.1295615-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Wed, 29 Apr 2020 09:28:22 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:51284 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726822AbgD2N2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 09:28:20 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2DFC29AB7CC4F543F003;
+        Wed, 29 Apr 2020 21:28:18 +0800 (CST)
+Received: from localhost (10.166.215.154) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Wed, 29 Apr 2020
+ 21:28:10 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <perex@perex.cz>, <tiwai@suse.com>, <tglx@linutronix.de>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] ALSA: seq: oss: remove unused inline function snd_seq_oss_timer_is_realtime
+Date:   Wed, 29 Apr 2020 21:28:05 +0800
+Message-ID: <20200429132805.18712-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:KH1m7wBDezZNoN+FjxVuy94lMQJ9bWrd/tO1oFR2mLGheRV1NVc
- BJFLD4jjHJttqw25Pbr6KvDFQgd+GDO0hjqqZsv3Ums0GzpA3Szvlo1GfP50veB+KZdMNll
- bAYX6m8iobNXIDggtkmTBtnByz/sjOc+X4n2k/XIjKYtR2Hez3j+qdcKvKOqnGXgGHJ/vYL
- H/L47ifLbl9lRNW1SE/1g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nkDSVy9ys80=:4nBoS9wW55c2TCkt9ivTYp
- XA3SRxSNTrxRdBOY5kkvKz1DvN/cCHwzEMcHlBb+cp1/bmi69RrKu9eGcZJJ/tC2ZB9gvK/JK
- hpud/f4XHLm/dIDlozxIJPdNM86N/7zBKfk0S+Mi/EUuwrQVby54x9o4lLI+nuG8ufpnCOTiR
- Xn5Efsp4bIhekUuekt/etw8vuGevbo/9mIHRQPMFmjF/V73OVF191VE7+B3xQQnnarFK2afY3
- PLGhGop3ZwiipSUiZsPep63oLpAH3Mgi8VwSZKkRbPjncUnRO7O4juAQNQNhqaPOaM9CTa0ZM
- y79PIaoICXfXYTc99bf7FCOaT/k8c3vfegg66PeF2mU0OGqPydOVm0ntYEZ/sq277RSljGIgX
- o9e25j6TZF/yyXPF1w6K4Y39wSrXTWjcLAl/pcRVVYwHimmDgwZOCdciquY8QPAcwY2ZjMwFX
- 6c2mLX+3IbJU+FfI/mBR/8PZWtsX9EWN5E8enUAFJBuLD2t8mUKP+1e5uz67prehSTaR4H5+r
- AkBh6ys6UeyORzw2ktZ+aw9n6uJIUum3h3eZmUP5Uktq8b5v+YjeNaCMk6ACrVmWSIiYozdKU
- Bx8V+tjD6Hh5iMUwweqUXyauvIMQgpBQxkBfcHJZUAVTnYoI7JfBypwTNNKECzpw7ON2KZ8Z9
- I2zYerxJRtpm5SGo4u5TbcPcEFmmbV/158NO4e3xGANIxfi/nYHxjtyTI9Ujvc46XNYffBL8x
- O8ABkz2m94AfU2YKjenHku7yvRxVvfF4KK4rBIjeOfVPNKcxVvBaE9unXsjhM998jNslEuBeV
- KLGBjBPlAZxysoCtpX4r5cG3nZMzYT0oLbVpygdRizoSGCWCDM=
+Content-Type: text/plain
+X-Originating-IP: [10.166.215.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some older compilers like gcc-4.8 warn about mismatched curly
-braces in a initializer:
+There's no callers in-tree.
 
-fs/btrfs/backref.c: In function 'is_shared_data_backref':
-fs/btrfs/backref.c:394:9: error: missing braces around
-initializer [-Werror=missing-braces]
-  struct prelim_ref target = {0};
-         ^
-fs/btrfs/backref.c:394:9: error: (near initialization for
-'target.rbnode') [-Werror=missing-braces]
-
-Use the GNU empty initializer extension to avoid this.
-
-Fixes: ed58f2e66e84 ("btrfs: backref, don't add refs from shared block when resolving normal backref")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- fs/btrfs/backref.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/core/seq/oss/seq_oss_timer.h | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/fs/btrfs/backref.c b/fs/btrfs/backref.c
-index 60a69f7c0b36..ac3c34f47b56 100644
---- a/fs/btrfs/backref.c
-+++ b/fs/btrfs/backref.c
-@@ -392,7 +392,7 @@ static int is_shared_data_backref(struct preftrees *preftrees, u64 bytenr)
- 	struct rb_node **p = &preftrees->direct.root.rb_root.rb_node;
- 	struct rb_node *parent = NULL;
- 	struct prelim_ref *ref = NULL;
--	struct prelim_ref target = {0};
-+	struct prelim_ref target = {};
- 	int result;
+diff --git a/sound/core/seq/oss/seq_oss_timer.h b/sound/core/seq/oss/seq_oss_timer.h
+index 2d86125b5d0f..dee190b4ec6b 100644
+--- a/sound/core/seq/oss/seq_oss_timer.h
++++ b/sound/core/seq/oss/seq_oss_timer.h
+@@ -44,14 +44,4 @@ snd_seq_oss_timer_cur_tick(struct seq_oss_timer *timer)
+ 	return timer->cur_tick;
+ }
  
- 	target.parent = bytenr;
+-
+-/*
+- * is realtime event?
+- */
+-static inline int
+-snd_seq_oss_timer_is_realtime(struct seq_oss_timer *timer)
+-{
+-	return timer->realtime;
+-}
+-
+ #endif
 -- 
-2.26.0
+2.17.1
+
 
