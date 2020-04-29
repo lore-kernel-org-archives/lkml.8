@@ -2,89 +2,216 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B61EC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0168CC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E26C2222A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:48:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588189703;
-	bh=SFR74rYP9+0171FFCb6xDPTTpNtn0bIHwSgFclfamCE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=S2M/0peTva0TGnBWj3HWfbB0sS1qoRpdwPcCMXBnLYB+Ycl1bVb+hvtEknVFwddPv
-	 gSlZnWMeLEsR3fMU7MPvBBjuwjL7vdu4IN5Yzd4Z2TpunyeEEppyp3j6PwSugqql0I
-	 PpcH1rrP9Jwy1crWbg7SnBAHdszl8/ghKkzP8sS0=
+	by mail.kernel.org (Postfix) with ESMTP id DBF2121D79
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgD2TsW (ORCPT
+        id S1726877AbgD2Tw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 15:48:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50144 "EHLO mail.kernel.org"
+        Wed, 29 Apr 2020 15:52:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60218 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727892AbgD2TsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 15:48:16 -0400
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 294AA22200;
-        Wed, 29 Apr 2020 19:48:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588189696;
-        bh=SFR74rYP9+0171FFCb6xDPTTpNtn0bIHwSgFclfamCE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=upV3Ifzz+cvLqIozeRKbsBvPn0Cp7d3sXcIKtqgSU1XwmqHSBGFOcdNlsURh1AEoL
-         5RScngGLRrgb3HZKt8vRvYNwGxnAM2X+ruEqQiP9kaLvVMJDxYHU5GyKFnlMVDRaxB
-         2YsqSGxVUlin2mykY+rYlCnsgnK/RzNRweIGLP54=
-Received: by mail-il1-f173.google.com with SMTP id s10so3621291iln.11;
-        Wed, 29 Apr 2020 12:48:16 -0700 (PDT)
-X-Gm-Message-State: AGi0Pua/NxeTDHMAVXWXvJAhPXZva/tj7bOcRIDR3Ac/SOyZExKi6RQy
-        KrfNDjigBszRNErhFvLN2JLMTZYlwkTPBQyP/FY=
-X-Google-Smtp-Source: APiQypJ/sJvL1QmMgGrcOxk5QdvbljU3Mk4YHsiqvrV/lveZgGlUmAgVNNWNZ76O2PEF0iLiyG7Pd986zBScJQUTLn0=
-X-Received: by 2002:a92:405:: with SMTP id 5mr31735312ile.279.1588189695602;
- Wed, 29 Apr 2020 12:48:15 -0700 (PDT)
+        id S1726456AbgD2Tw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 15:52:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 979CEADFF;
+        Wed, 29 Apr 2020 19:52:23 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id 56810604EB; Wed, 29 Apr 2020 21:52:22 +0200 (CEST)
+Date:   Wed, 29 Apr 2020 21:52:22 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        David Jander <david@protonic.nl>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
+        Marek Vasut <marex@denx.de>,
+        Christian Herber <christian.herber@nxp.com>
+Subject: Re: [PATCH net-next v3 1/2] ethtool: provide UAPI for PHY
+ master/slave configuration.
+Message-ID: <20200429195222.GA17581@lion.mk-sys.cz>
+References: <20200428075308.2938-1-o.rempel@pengutronix.de>
+ <20200428075308.2938-2-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-References: <20200429174120.1497212-1-nivedita@alum.mit.edu>
- <20200429174120.1497212-5-nivedita@alum.mit.edu> <f74fe4ad56c0471f863ce550869391c8811f9893.camel@perches.com>
- <CAMj1kXGn70BmapKe=6sA17gMCcWRLCebQJFnyObwRbAefOcEng@mail.gmail.com>
- <3fa8fba37f9339adc993cdb7afc77ed0e063967d.camel@perches.com>
- <CAMj1kXHN1j4+h-mTf_EpsaX3-ifAtKJOPmSSq9LvHoFUUg+0bw@mail.gmail.com> <f53e716ac4da310d0d9ed7d211ac17ba8ec64699.camel@perches.com>
-In-Reply-To: <f53e716ac4da310d0d9ed7d211ac17ba8ec64699.camel@perches.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 29 Apr 2020 21:48:04 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEwxqPA7t8N+A25+VnxO4opBdM6__An=Er-Yh+QLOZ3Jw@mail.gmail.com>
-Message-ID: <CAMj1kXEwxqPA7t8N+A25+VnxO4opBdM6__An=Er-Yh+QLOZ3Jw@mail.gmail.com>
-Subject: Re: [PATCH 03/10] efi/x86: Use pr_efi_err for error messages
-To:     Joe Perches <joe@perches.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428075308.2938-2-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 at 21:47, Joe Perches <joe@perches.com> wrote:
->
-> On Wed, 2020-04-29 at 20:59 +0200, Ard Biesheuvel wrote:
-> > On Wed, 29 Apr 2020 at 20:57, Joe Perches <joe@perches.com> wrote:
-> > > On Wed, 2020-04-29 at 20:49 +0200, Ard Biesheuvel wrote:
-> > > > On Wed, 29 Apr 2020 at 20:47, Joe Perches <joe@perches.com> wrote:
-> > > > > Looking at code for efi_printk -> efi_char16_printk,
-> > > > > it's somewhat difficult to see where the "output_string"
-> > > > > function pointer is set.  Any clue?
-> > > > It is set by the firmware.
-> > >
-> > > Sure, where in the code though?
-> > >
-> >
-> > In which code? The firmware code?
->
-> I presume it's set from a struct received from hardware/firmware
-> somewhere in drivers/firmware/efi, but it doesn't seem clear where.
->
+On Tue, Apr 28, 2020 at 09:53:07AM +0200, Oleksij Rempel wrote:
+> This UAPI is needed for BroadR-Reach 100BASE-T1 devices. Due to lack of
+> auto-negotiation support, we needed to be able to configure the
+> MASTER-SLAVE role of the port manually or from an application in user
+> space.
+> 
+> The same UAPI can be used for 1000BASE-T or MultiGBASE-T devices to
+> force MASTER or SLAVE role. See IEEE 802.3-2018:
+> 22.2.4.3.7 MASTER-SLAVE control register (Register 9)
+> 22.2.4.3.8 MASTER-SLAVE status register (Register 10)
+> 40.5.2 MASTER-SLAVE configuration resolution
+> 45.2.1.185.1 MASTER-SLAVE config value (1.2100.14)
+> 45.2.7.10 MultiGBASE-T AN control 1 register (Register 7.32)
+> 
+> The MASTER-SLAVE role affects the clock configuration:
+> 
+> -------------------------------------------------------------------------------
+> When the  PHY is configured as MASTER, the PMA Transmit function shall
+> source TX_TCLK from a local clock source. When configured as SLAVE, the
+> PMA Transmit function shall source TX_TCLK from the clock recovered from
+> data stream provided by MASTER.
+> 
+> iMX6Q                     KSZ9031                XXX
+> ------\                /-----------\        /------------\
+>       |                |           |        |            |
+>  MAC  |<----RGMII----->| PHY Slave |<------>| PHY Master |
+>       |<--- 125 MHz ---+-<------/  |        | \          |
+> ------/                \-----------/        \------------/
+>                                                ^
+>                                                 \-TX_TCLK
+> 
+> -------------------------------------------------------------------------------
+> 
+> Since some clock or link related issues are only reproducible in a
+> specific MASTER-SLAVE-role, MAC and PHY configuration, it is beneficial
+> to provide generic (not 100BASE-T1 specific) interface to the user space
+> for configuration flexibility and trouble shooting.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+[...]
+> diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+> index 72c69a9c8a98a..a6a774beb2f90 100644
+> --- a/drivers/net/phy/phy.c
+> +++ b/drivers/net/phy/phy.c
+> @@ -285,6 +285,9 @@ int phy_ethtool_ksettings_set(struct phy_device *phydev,
+>  	      duplex != DUPLEX_FULL)))
+>  		return -EINVAL;
+>  
+> +	if (!ethtool_validate_master_slave_cfg(cmd->base.master_slave_cfg))
+> +		return -EINVAL;
+> +
 
-It is a field in the EFI system table, which we dereference directly.
+Unless we can/want to pass extack down here, I would prefer to have the
+sanity check in ethtool_update_linkmodes() or ethtool_set_linkmodes() so
+that we can set meaningful error message and offending attribute in
+extack. (It could be even part of the policy.) Also, with the check only
+here, drivers/devices not calling phy_ethtool_set_link_ksettings()
+(directly or via phy_ethtool_set_link_ksettings()) and not handling the
+new members themselves would silently ignore any value from userspace.
+
+>  	phydev->autoneg = autoneg;
+>  
+>  	phydev->speed = speed;
+[...]
+> +static int genphy_setup_master_slave(struct phy_device *phydev)
+> +{
+> +	u16 ctl = 0;
+> +
+> +	if (!phydev->is_gigabit_capable)
+> +		return 0;
+
+Shouldn't we rather return -EOPNOTSUPP if value different from
+CFG_UNKNOWN was requested?
+
+> +
+> +	switch (phydev->master_slave_set) {
+> +	case PORT_MODE_CFG_MASTER_PREFERRED:
+> +		ctl |= CTL1000_PREFER_MASTER;
+> +		break;
+> +	case PORT_MODE_CFG_SLAVE_PREFERRED:
+> +		break;
+> +	case PORT_MODE_CFG_MASTER_FORCE:
+> +		ctl |= CTL1000_AS_MASTER;
+> +		/* fallthrough */
+> +	case PORT_MODE_CFG_SLAVE_FORCE:
+> +		ctl |= CTL1000_ENABLE_MASTER;
+> +		break;
+> +	case PORT_MODE_CFG_UNKNOWN:
+> +		return 0;
+> +	default:
+> +		phydev_warn(phydev, "Unsupported Master/Slave mode\n");
+> +		return 0;
+> +	}
+[...]
+> diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+> index 92f737f101178..eb680e3d6bda5 100644
+> --- a/include/uapi/linux/ethtool.h
+> +++ b/include/uapi/linux/ethtool.h
+> @@ -1666,6 +1666,31 @@ static inline int ethtool_validate_duplex(__u8 duplex)
+>  	return 0;
+>  }
+>  
+> +/* Port mode */
+> +#define PORT_MODE_CFG_UNKNOWN		0
+> +#define PORT_MODE_CFG_MASTER_PREFERRED	1
+> +#define PORT_MODE_CFG_SLAVE_PREFERRED	2
+> +#define PORT_MODE_CFG_MASTER_FORCE	3
+> +#define PORT_MODE_CFG_SLAVE_FORCE	4
+> +#define PORT_MODE_STATE_UNKNOWN		0
+> +#define PORT_MODE_STATE_MASTER		1
+> +#define PORT_MODE_STATE_SLAVE		2
+> +#define PORT_MODE_STATE_ERR		3
+
+You have "MASTER_SLAVE" or "master_slave" everywhere but "PORT_MODE" in
+these constants which is inconsistent.
+
+> +
+> +static inline int ethtool_validate_master_slave_cfg(__u8 cfg)
+> +{
+> +	switch (cfg) {
+> +	case PORT_MODE_CFG_MASTER_PREFERRED:
+> +	case PORT_MODE_CFG_SLAVE_PREFERRED:
+> +	case PORT_MODE_CFG_MASTER_FORCE:
+> +	case PORT_MODE_CFG_SLAVE_FORCE:
+> +	case PORT_MODE_CFG_UNKNOWN:
+> +		return 1;
+> +	}
+> +
+> +	return 0;
+> +}
+
+Should we really allow CFG_UNKNOWN in client requests? As far as I can
+see, this value is handled as no-op which should be rather expressed by
+absence of the attribute. Allowing the client to request a value,
+keeping current one and returning 0 (success) is IMHO wrong.
+
+Also, should this function be in UAPI header?
+
+[...]
+> @@ -119,7 +123,12 @@ static int linkmodes_fill_reply(struct sk_buff *skb,
+>  	}
+>  
+>  	if (nla_put_u32(skb, ETHTOOL_A_LINKMODES_SPEED, lsettings->speed) ||
+> -	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_DUPLEX, lsettings->duplex))
+> +	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_DUPLEX, lsettings->duplex) ||
+> +	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG,
+> +		       lsettings->master_slave_cfg) ||
+> +	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_MASTER_SLAVE_STATE,
+> +		       lsettings->master_slave_state))
+> +
+>  		return -EMSGSIZE;
+
+From the two handlers you introduced, it seems we only get CFG_UNKNOWN
+or STATE_UNKNOWN if driver or device does not support the feature at all
+so it would be IMHO more appropriate to omit the attribute in such case.
+
+Michal
+
+>  
+>  	return 0;
