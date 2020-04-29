@@ -2,144 +2,704 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CEDC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D485C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5D072085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6CBB2085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:31:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="fsdbxE9Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AjFFE7u6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgD2Naj (ORCPT
+        id S1726905AbgD2NbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:30:39 -0400
-Received: from mout.web.de ([212.227.17.11]:54393 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbgD2Naj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:30:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1588167022;
-        bh=/MTQc9gAsJAPP4H8/tzw9TM1Qf8zudFOc4Xfmf7+dYw=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=fsdbxE9Y9QjcpcTNcDW5A6vLho0tdp1NHLllHlKKk9jr3duMgpRDz1MwAwEyZGFbC
-         Cs96J68+R+oAjGMOTeIgy9hjJM8TUQ+9ER2LltZmtxP+aEw624v7hKV6uXR3uWIHVZ
-         OBA5rNeNnFXPYggFnDvAm/R+2LuRb2bES+xQU76U=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.72.72]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MFL2m-1jQXf73GXE-00EJ4M; Wed, 29
- Apr 2020 15:30:21 +0200
-To:     Bernard Zhao <bernard@vivo.com>, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        opensource.kernel@vivo.com, Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] clk/meson: Complete exception handling in
- meson8b_clkc_init_common()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <ceba9706-0819-54cf-c3d3-9ceb93d31c5e@web.de>
-Date:   Wed, 29 Apr 2020 15:30:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 09:31:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52038 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbgD2NbU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 09:31:20 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D818C03C1AD
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 06:31:19 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id d17so2506857wrg.11
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 06:31:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q89I+OY4SnTCFD+bA3jMOZm/jnBkJLXwMB+AuLhWjxA=;
+        b=AjFFE7u6p3zNATECL1keRrRADJX3eC/Cel6qg6d5bHpfpQYmWrXOiScq08iSgV015/
+         OJDWk/m1GK7DFngWyp7tISsZ/H3JCL1IxlW7PbKgbRS4VaEeNWT3tT7IVM9SBJHquTHq
+         tR/nEelrX+OE+QustxGaSzrLcf15hk1pvL4MY30bef/ioK7zLwbm49/G8zHD1Bp0c33V
+         7pSdIlnoFuN0iKZf9PLbNH6lAmLYaV5QTy3zJP0TFuy8VJ+dTFGOhBJVBiFXo2zld/Gd
+         ct/SAal4lnjhCd+hHTzXxCrTAeFjnCUoSMZ7QZe/glkli4ojT/RgAOpKxatGE8TZGrri
+         K7xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q89I+OY4SnTCFD+bA3jMOZm/jnBkJLXwMB+AuLhWjxA=;
+        b=Rh8TgxlRySWe0RrapanWUMV4DA9yuGHg00P/4w7hwn5nbAnsaonaE3xjSOusXgzNQO
+         LEO15kRigeFWnl+CXf0EM+M+jYTzHOIn7yGr6v6sV5QOEZgDvjEDv0GW8Uz6nXUXzZeE
+         0HIvEKeoA0MKcplRFoRu25mAtkp8OZfaQ0EujZ6qHo6HitZitSt9cJ79aGHgl+5b2GHr
+         qLz1waYFKXXTuWNMxU4tE1Snnuh/O0m71YwlLBKcaZvUoJTaLSsgt35iEH0zAb1aqysB
+         6aOk6qQf8krumVd2pJkuBK5zcBs90rz587azTiZrmZcDpi6SAkCFwITRb6k6w6Z3ObM4
+         9amw==
+X-Gm-Message-State: AGi0PubutsBH66rmXDnNAGs2dC/jK2yfkX87/uFNVJ/5aEUBZ9GL31bu
+        w1DAR2//e75QDHy4+oKvXfM=
+X-Google-Smtp-Source: APiQypJfHkd1n5yNoitjf1L7RmYmeG2tnZ77vIGZej/rhiPoqITXjd40KOMZRSzOsgnQdHj9tTLpIw==
+X-Received: by 2002:adf:8543:: with SMTP id 61mr37006920wrh.243.1588167078069;
+        Wed, 29 Apr 2020 06:31:18 -0700 (PDT)
+Received: from akira-laptop.home ([2a01:cb19:8b28:7600:a0b9:1c6f:cfba:2b21])
+        by smtp.googlemail.com with ESMTPSA id s9sm32359136wrg.27.2020.04.29.06.31.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 06:31:17 -0700 (PDT)
+From:   Akira Shimahara <akira215corp@gmail.com>
+To:     greg@kroah.com
+Cc:     zbr@ioremap.net, linux-kernel@vger.kernel.org,
+        Akira Shimahara <akira215corp@gmail.com>
+Subject: [PATCH v3 1/5] w1_therm: fix reset_select_slave. Creating w1_therm.h
+Date:   Wed, 29 Apr 2020 15:30:48 +0200
+Message-Id: <20200429133048.139402-1-akira215corp@gmail.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:VbtUozrdnS3f3mFsMO90WUGM4iLjjRhtjaQ2tdiDGbLTbeM8kps
- oeBHZw3l4M5oaDrHpnAZ/tz2cVpUMocce20jjzTJHfDqQgg3QoHS7AQLt8Wfug2chbbxkY9
- sAsH2sUA+2LKOHNghLioNcBvzcVZq9SEmjalf6ke6Elv4s4hIdn17v3OGEYXSe06mNz1bxw
- 0PhXOUbwuExEI8rxgOE4A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0WnMMYIuquU=:xwc98jCk5A95enBKww7nVB
- 41Mb80XNIKMDDVGiYbtQl3csVIr1rP4fi1XSzOqV886C29z9WOeeVO8k8GfD08qeKCiUut/kH
- k9SUFuVV80TRCrUB8vSfvkxxWz3YqrA2bMEnankibACtpfy/BWvNSmHjQRxhtoyDFUHVjALsS
- IyClxlWKjMEQE05hzLGPfu2fDWx0NM97kilJvqjC5ciPm9fb7Qk/TX80mrLoBfCt4yE4xq9og
- 82d4gviF0yc365ZSaMaWAsE5GakAXNoZGSV8xR9Ay2Epz+hbqc/KbYRm6mA5rz/IXgmRSLNIh
- LEmMfrUZCHzWWobj/ZDT1J0Kor04yHtZovxZTo2YlJzOIhfZLATe/tsM6N9zBqw4yqhCXRFXf
- Wr9lCj2xgEEu8XaDs0XuaaNBVkdscac6v+4f41cEDYjwJp1ZdEq1S0O5G29/dux+4H6WC/ZYe
- BJMAFMio9GhIwGChikz1WXrbn+avS7ag93XzsijRMscO5LVUfHkc35jUqP7tQcDIBLGgHd4MM
- Wqu9tAxSPxyl6DiHSLEPIPDOkn8DjS+pr87pt443ceGTCkCBiZkIA5NQcMGOxJ7E0wTr/Udid
- pwN7zpIrIr6110Mnj6KVk1kgHSqRIL15VUJ5eC7GyFd8YVE2ggtLcSi0ZUf1zEEY8C3AlISr0
- 8m0a8Ozn3p5ksDQjbtv7Y584YOe/hUHFRWp48bSsYQm3w5M8VRDI+f6khvHQbjmhvuOhtD+F+
- FTijKRWaa7Eu1y4PcYEYKuopYWHhDYMSQjlYX4bqcrqX6xXXNjMRiXwaq1Csc8oPNsTiLP8M0
- KhDIf/BueyMp8ub1ViGAyziIUp0KU+77mM4MQRBotbHjT6HynhO/QsKO2WxWzMBtWSX4wIVQi
- jJzgF2R/pnVJOk+fZaRwXEQfENk3FGoEsnovr3oNW0vkzoKN10wYtlPWYX9hP9Kp6DgpKx6O2
- 7axOJlSmZm0YdaNyGMLEszF6KfDOdD3AkjpvGDv44REMrKIweQigIDwV2n2tToEMPyIHNHZKd
- dnX6/PCYV3ddFcmdWwBqUJxeMlS0eYqDdGOjjabNtos7a+9GfdzsyIZtZYxDXNF0EPDPWsGZJ
- eWjZwJfx2aEAXFQAmdbhj46pW0FsWHoA6r/QGkTFbo72H8C7twyc3sL5q9/FFDQcXp6J+3+r3
- MB3373nLxjh+kQBJf3MQK+08N1nn+ZeKHyhaDzwg+4AaXGGSP3TDV18E42dtnU9jpd0nkYhaF
- ihYRX8HFXjgOYD5ii
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> In common init function, when run into err branch, we didn`t
-> use kfree to release kzmalloc area, this may bring in memleak
+Patch for enhancement of w1_therm module.
+ - Creating a w1_therm.h file to clean up the code and documenting it.
+ - fix reset_select_slave function: w1_reset_select_slave() from w1_io.c
+	could not be used here because a SKIP ROM command is sent if only
+	one device is on the line. At the beginning of the search process,
+	sl->master->slave_count is 1 even if more devices are on the line,
+	causing data collision in the bus.
 
-* I suggest to improve also this change description.
+Signed-off-by: Akira Shimahara <akira215corp@gmail.com>
+---
+ drivers/w1/slaves/w1_therm.c | 325 ++++++++++++++++-------------------
+ drivers/w1/slaves/w1_therm.h | 151 ++++++++++++++++
+ 2 files changed, 301 insertions(+), 175 deletions(-)
+ create mode 100644 drivers/w1/slaves/w1_therm.h
 
-* Please move the resource release functions to end of
-  the function =E2=80=9Cmeson8b_clkc_init_common=E2=80=9D here.
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
-Documentation/process/coding-style.rst?id=3D96c9a7802af7d500a582d89a8b8645=
-84fe878c1b#n450
+diff --git a/drivers/w1/slaves/w1_therm.c b/drivers/w1/slaves/w1_therm.c
+index 18f08d7..6245950 100644
+--- a/drivers/w1/slaves/w1_therm.c
++++ b/drivers/w1/slaves/w1_therm.c
+@@ -5,19 +5,15 @@
+  * Copyright (c) 2004 Evgeniy Polyakov <zbr@ioremap.net>
+  */
+ 
+-#include <asm/types.h>
+-
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
+ #include <linux/sched.h>
+-#include <linux/device.h>
+-#include <linux/types.h>
+ #include <linux/slab.h>
+ #include <linux/delay.h>
+ #include <linux/hwmon.h>
+ 
+-#include <linux/w1.h>
++#include "w1_therm.h"
+ 
+ #define W1_THERM_DS18S20	0x10
+ #define W1_THERM_DS1822		0x22
+@@ -41,55 +37,6 @@
+ static int w1_strong_pullup = 1;
+ module_param_named(strong_pullup, w1_strong_pullup, int, 0);
+ 
+-struct w1_therm_family_data {
+-	uint8_t rom[9];
+-	atomic_t refcnt;
+-};
+-
+-struct therm_info {
+-	u8 rom[9];
+-	u8 crc;
+-	u8 verdict;
+-};
+-
+-/* return the address of the refcnt in the family data */
+-#define THERM_REFCNT(family_data) \
+-	(&((struct w1_therm_family_data *)family_data)->refcnt)
+-
+-static int w1_therm_add_slave(struct w1_slave *sl)
+-{
+-	sl->family_data = kzalloc(sizeof(struct w1_therm_family_data),
+-		GFP_KERNEL);
+-	if (!sl->family_data)
+-		return -ENOMEM;
+-	atomic_set(THERM_REFCNT(sl->family_data), 1);
+-	return 0;
+-}
+-
+-static void w1_therm_remove_slave(struct w1_slave *sl)
+-{
+-	int refcnt = atomic_sub_return(1, THERM_REFCNT(sl->family_data));
+-
+-	while (refcnt) {
+-		msleep(1000);
+-		refcnt = atomic_read(THERM_REFCNT(sl->family_data));
+-	}
+-	kfree(sl->family_data);
+-	sl->family_data = NULL;
+-}
+-
+-static ssize_t w1_slave_show(struct device *device,
+-	struct device_attribute *attr, char *buf);
+-
+-static ssize_t w1_slave_store(struct device *device,
+-	struct device_attribute *attr, const char *buf, size_t size);
+-
+-static ssize_t w1_seq_show(struct device *device,
+-	struct device_attribute *attr, char *buf);
+-
+-static DEVICE_ATTR_RW(w1_slave);
+-static DEVICE_ATTR_RO(w1_seq);
+-
+ static struct attribute *w1_therm_attrs[] = {
+ 	&dev_attr_w1_slave.attr,
+ 	NULL,
+@@ -101,6 +48,7 @@ static struct attribute *w1_ds28ea00_attrs[] = {
+ 	NULL,
+ };
+ 
++/*------------------------------attribute groups----------------------------*/
+ ATTRIBUTE_GROUPS(w1_therm);
+ ATTRIBUTE_GROUPS(w1_ds28ea00);
+ 
+@@ -154,6 +102,7 @@ static const struct hwmon_chip_info w1_chip_info = {
+ #define W1_CHIPINFO	NULL
+ #endif
+ 
++/*------------------------------family operations---------------------------*/
+ static struct w1_family_ops w1_therm_fops = {
+ 	.add_slave	= w1_therm_add_slave,
+ 	.remove_slave	= w1_therm_remove_slave,
+@@ -168,6 +117,7 @@ static struct w1_family_ops w1_ds28ea00_fops = {
+ 	.chip_info	= W1_CHIPINFO,
+ };
+ 
++/*--------------------family binding on operations struct-------------------*/
+ static struct w1_family w1_therm_family_DS18S20 = {
+ 	.fid = W1_THERM_DS18S20,
+ 	.fops = &w1_therm_fops,
+@@ -193,26 +143,7 @@ static struct w1_family w1_therm_family_DS1825 = {
+ 	.fops = &w1_therm_fops,
+ };
+ 
+-struct w1_therm_family_converter {
+-	u8			broken;
+-	u16			reserved;
+-	struct w1_family	*f;
+-	int			(*convert)(u8 rom[9]);
+-	int			(*precision)(struct device *device, int val);
+-	int			(*eeprom)(struct device *device);
+-};
+-
+-/* write configuration to eeprom */
+-static inline int w1_therm_eeprom(struct device *device);
+-
+-/* Set precision for conversion */
+-static inline int w1_DS18B20_precision(struct device *device, int val);
+-static inline int w1_DS18S20_precision(struct device *device, int val);
+-
+-/* The return value is millidegrees Centigrade. */
+-static inline int w1_DS18B20_convert_temp(u8 rom[9]);
+-static inline int w1_DS18S20_convert_temp(u8 rom[9]);
+-
++/*----------------------Device capability description-----------------------*/
+ static struct w1_therm_family_converter w1_therm_families[] = {
+ 	{
+ 		.f		= &w1_therm_family_DS18S20,
+@@ -246,78 +177,7 @@ static struct w1_therm_family_converter w1_therm_families[] = {
+ 	}
+ };
+ 
+-static inline int w1_therm_eeprom(struct device *device)
+-{
+-	struct w1_slave *sl = dev_to_w1_slave(device);
+-	struct w1_master *dev = sl->master;
+-	u8 rom[9], external_power;
+-	int ret, max_trying = 10;
+-	u8 *family_data = sl->family_data;
+-
+-	if (!sl->family_data) {
+-		ret = -ENODEV;
+-		goto error;
+-	}
+-
+-	/* prevent the slave from going away in sleep */
+-	atomic_inc(THERM_REFCNT(family_data));
+-
+-	ret = mutex_lock_interruptible(&dev->bus_mutex);
+-	if (ret != 0)
+-		goto dec_refcnt;
+-
+-	memset(rom, 0, sizeof(rom));
+-
+-	while (max_trying--) {
+-		if (!w1_reset_select_slave(sl)) {
+-			unsigned int tm = 10;
+-			unsigned long sleep_rem;
+-
+-			/* check if in parasite mode */
+-			w1_write_8(dev, W1_READ_PSUPPLY);
+-			external_power = w1_read_8(dev);
+-
+-			if (w1_reset_select_slave(sl))
+-				continue;
+-
+-			/* 10ms strong pullup/delay after the copy command */
+-			if (w1_strong_pullup == 2 ||
+-			    (!external_power && w1_strong_pullup))
+-				w1_next_pullup(dev, tm);
+-
+-			w1_write_8(dev, W1_COPY_SCRATCHPAD);
+-
+-			if (external_power) {
+-				mutex_unlock(&dev->bus_mutex);
+-
+-				sleep_rem = msleep_interruptible(tm);
+-				if (sleep_rem != 0) {
+-					ret = -EINTR;
+-					goto dec_refcnt;
+-				}
+-
+-				ret = mutex_lock_interruptible(&dev->bus_mutex);
+-				if (ret != 0)
+-					goto dec_refcnt;
+-			} else if (!w1_strong_pullup) {
+-				sleep_rem = msleep_interruptible(tm);
+-				if (sleep_rem != 0) {
+-					ret = -EINTR;
+-					goto mt_unlock;
+-				}
+-			}
+-
+-			break;
+-		}
+-	}
+-
+-mt_unlock:
+-	mutex_unlock(&dev->bus_mutex);
+-dec_refcnt:
+-	atomic_dec(THERM_REFCNT(family_data));
+-error:
+-	return ret;
+-}
++/*------------------------ Device dependent func---------------------------*/
+ 
+ /* DS18S20 does not feature configuration register */
+ static inline int w1_DS18S20_precision(struct device *device, int val)
+@@ -375,7 +235,7 @@ static inline int w1_DS18B20_precision(struct device *device, int val)
+ 	while (max_trying--) {
+ 		crc = 0;
+ 
+-		if (!w1_reset_select_slave(sl)) {
++		if (!reset_select_slave(sl)) {
+ 			int count = 0;
+ 
+ 			/* read values to only alter precision bits */
+@@ -388,7 +248,7 @@ static inline int w1_DS18B20_precision(struct device *device, int val)
+ 			if (rom[8] == crc) {
+ 				rom[4] = (rom[4] & ~mask) | (precision_bits & mask);
+ 
+-				if (!w1_reset_select_slave(sl)) {
++				if (!reset_select_slave(sl)) {
+ 					w1_write_8(dev, W1_WRITE_SCRATCHPAD);
+ 					w1_write_8(dev, rom[2]);
+ 					w1_write_8(dev, rom[3]);
+@@ -434,40 +294,55 @@ static inline int w1_DS18S20_convert_temp(u8 rom[9])
+ 	return t;
+ }
+ 
+-static inline int w1_convert_temp(u8 rom[9], u8 fid)
++/*-------------------------Interface Functions------------------------------*/
++static int w1_therm_add_slave(struct w1_slave *sl)
+ {
+-	int i;
++	sl->family_data = kzalloc(sizeof(struct w1_therm_family_data),
++		GFP_KERNEL);
++	if (!sl->family_data)
++		return -ENOMEM;
++	atomic_set(THERM_REFCNT(sl->family_data), 1);
++	return 0;
++}
+ 
+-	for (i = 0; i < ARRAY_SIZE(w1_therm_families); ++i)
+-		if (w1_therm_families[i].f->fid == fid)
+-			return w1_therm_families[i].convert(rom);
++static void w1_therm_remove_slave(struct w1_slave *sl)
++{
++	int refcnt = atomic_sub_return(1, THERM_REFCNT(sl->family_data));
++
++	while (refcnt) {
++		msleep(1000);
++		refcnt = atomic_read(THERM_REFCNT(sl->family_data));
++	}
++	kfree(sl->family_data);
++	sl->family_data = NULL;
++}
++
++/*------------------------Hardware Functions--------------------------*/
++
++/* Safe version of reser_select_slave - avoid using the one in w_io.c */
++static int reset_select_slave(struct w1_slave *sl)
++{
++	u8 match[9] = { W1_MATCH_ROM, };
++	u64 rn = le64_to_cpu(*((u64 *)&sl->reg_num));
++
++	if (w1_reset_bus(sl->master))
++		return -ENODEV;
++
++	memcpy(&match[1], &rn, 8);
++	w1_write_block(sl->master, match, 9);
+ 
+ 	return 0;
+ }
+ 
+-static ssize_t w1_slave_store(struct device *device,
+-			      struct device_attribute *attr, const char *buf,
+-			      size_t size)
++static inline int w1_convert_temp(u8 rom[9], u8 fid)
+ {
+-	int val, ret;
+-	struct w1_slave *sl = dev_to_w1_slave(device);
+ 	int i;
+ 
+-	ret = kstrtoint(buf, 0, &val);
+-	if (ret)
+-		return ret;
++	for (i = 0; i < ARRAY_SIZE(w1_therm_families); ++i)
++		if (w1_therm_families[i].f->fid == fid)
++			return w1_therm_families[i].convert(rom);
+ 
+-	for (i = 0; i < ARRAY_SIZE(w1_therm_families); ++i) {
+-		if (w1_therm_families[i].f->fid == sl->family->fid) {
+-			/* zero value indicates to write current configuration to eeprom */
+-			if (val == 0)
+-				ret = w1_therm_families[i].eeprom(device);
+-			else
+-				ret = w1_therm_families[i].precision(device, val);
+-			break;
+-		}
+-	}
+-	return ret ? : size;
++	return 0;
+ }
+ 
+ static ssize_t read_therm(struct device *device,
+@@ -497,7 +372,7 @@ static ssize_t read_therm(struct device *device,
+ 		info->verdict = 0;
+ 		info->crc = 0;
+ 
+-		if (!w1_reset_select_slave(sl)) {
++		if (!reset_select_slave(sl)) {
+ 			int count = 0;
+ 			unsigned int tm = 750;
+ 			unsigned long sleep_rem;
+@@ -505,7 +380,7 @@ static ssize_t read_therm(struct device *device,
+ 			w1_write_8(dev, W1_READ_PSUPPLY);
+ 			external_power = w1_read_8(dev);
+ 
+-			if (w1_reset_select_slave(sl))
++			if (reset_select_slave(sl))
+ 				continue;
+ 
+ 			/* 750ms strong pullup (or delay) after the convert */
+@@ -535,7 +410,7 @@ static ssize_t read_therm(struct device *device,
+ 				}
+ 			}
+ 
+-			if (!w1_reset_select_slave(sl)) {
++			if (!reset_select_slave(sl)) {
+ 
+ 				w1_write_8(dev, W1_READ_SCRATCHPAD);
+ 				count = w1_read_block(dev, info->rom, 9);
+@@ -564,6 +439,81 @@ error:
+ 	return ret;
+ }
+ 
++static inline int w1_therm_eeprom(struct device *device)
++{
++	struct w1_slave *sl = dev_to_w1_slave(device);
++	struct w1_master *dev = sl->master;
++	u8 rom[9], external_power;
++	int ret, max_trying = 10;
++	u8 *family_data = sl->family_data;
++
++	if (!sl->family_data) {
++		ret = -ENODEV;
++		goto error;
++	}
++
++	/* prevent the slave from going away in sleep */
++	atomic_inc(THERM_REFCNT(family_data));
++
++	ret = mutex_lock_interruptible(&dev->bus_mutex);
++	if (ret != 0)
++		goto dec_refcnt;
++
++	memset(rom, 0, sizeof(rom));
++
++	while (max_trying--) {
++		if (!reset_select_slave(sl)) {
++			unsigned int tm = 10;
++			unsigned long sleep_rem;
++
++			/* check if in parasite mode */
++			w1_write_8(dev, W1_READ_PSUPPLY);
++			external_power = w1_read_8(dev);
++
++			if (reset_select_slave(sl))
++				continue;
++
++			/* 10ms strong pullup/delay after the copy command */
++			if (w1_strong_pullup == 2 ||
++			    (!external_power && w1_strong_pullup))
++				w1_next_pullup(dev, tm);
++
++			w1_write_8(dev, W1_COPY_SCRATCHPAD);
++
++			if (external_power) {
++				mutex_unlock(&dev->bus_mutex);
++
++				sleep_rem = msleep_interruptible(tm);
++				if (sleep_rem != 0) {
++					ret = -EINTR;
++					goto dec_refcnt;
++				}
++
++				ret = mutex_lock_interruptible(&dev->bus_mutex);
++				if (ret != 0)
++					goto dec_refcnt;
++			} else if (!w1_strong_pullup) {
++				sleep_rem = msleep_interruptible(tm);
++				if (sleep_rem != 0) {
++					ret = -EINTR;
++					goto mt_unlock;
++				}
++			}
++
++			break;
++		}
++	}
++
++mt_unlock:
++	mutex_unlock(&dev->bus_mutex);
++dec_refcnt:
++	atomic_dec(THERM_REFCNT(family_data));
++error:
++	return ret;
++}
++
++/*------------------------Interface sysfs--------------------------*/
++
+ static ssize_t w1_slave_show(struct device *device,
+ 			     struct device_attribute *attr, char *buf)
+ {
+@@ -597,6 +547,31 @@ static ssize_t w1_slave_show(struct device *device,
+ 	return ret;
+ }
+ 
++static ssize_t w1_slave_store(struct device *device,
++			      struct device_attribute *attr, const char *buf,
++			      size_t size)
++{
++	struct w1_slave *sl = dev_to_w1_slave(device);
++	int val, ret, i;
++
++	ret = kstrtoint(buf, 10, &val);
++	if (ret)
++		return ret;
++
++	for (i = 0; i < ARRAY_SIZE(w1_therm_families); ++i) {
++		if (w1_therm_families[i].f->fid == sl->family->fid) {
++	/* zero value indicates to write current configuration to eeprom */
++			if (val == 0)
++				ret = w1_therm_families[i].eeprom(device);
++			else
++				ret = w1_therm_families[i].precision(device,
++								val);
++			break;
++		}
++	}
++	return ret ? : size;
++}
++
+ #if IS_REACHABLE(CONFIG_HWMON)
+ static int w1_read_temp(struct device *device, u32 attr, int channel,
+ 			long *val)
+diff --git a/drivers/w1/slaves/w1_therm.h b/drivers/w1/slaves/w1_therm.h
+new file mode 100644
+index 0000000..b73af0b
+--- /dev/null
++++ b/drivers/w1/slaves/w1_therm.h
+@@ -0,0 +1,151 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ *	w1_therm.h
++ *
++ * Written by Akira Shimahara
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef __W1_THERM_H
++#define __W1_THERM_H
++
++#include <asm/types.h>
++
++#include <linux/device.h>
++#include <linux/types.h>
++#include <linux/mutex.h>
++#include <linux/w1.h>
++
++/*----------------------------------Structs---------------------------------*/
++
++/**
++ * struct w1_therm_family_converter
++ * @brief Used to bind standard function call
++ * to device specific function
++ * it could be routed to NULL if device don't support feature
++ * see helper : device_family()
++ */
++struct w1_therm_family_converter {
++	u8			broken;
++	u16			reserved;
++	struct w1_family	*f;
++	int			(*convert)(u8 rom[9]);
++	int			(*precision)(struct device *device, int val);
++	int			(*eeprom)(struct device *device);
++};
++
++/**
++ * struct w1_therm_family_data
++ * @param rom data
++ * @param refcnt ref count
++ */
++struct w1_therm_family_data {
++	uint8_t rom[9];
++	atomic_t refcnt;
++};
++
++/**
++ * struct therm_info
++ * @brief Only used to store temperature reading
++ * @param rom RAM device data
++ * @param crc computed crc from rom
++ * @param verdict 1 crc checked, 0 crc not matching
++ */
++struct therm_info {
++	u8 rom[9];
++	u8 crc;
++	u8 verdict;
++};
++
++/*-----------------------Device specific functions-------------------------*/
++
++/* write configuration to eeprom */
++static inline int w1_therm_eeprom(struct device *device);
++
++/* Set precision for conversion */
++static inline int w1_DS18B20_precision(struct device *device, int val);
++static inline int w1_DS18S20_precision(struct device *device, int val);
++
++/* The return value is millidegrees Centigrade. */
++static inline int w1_DS18B20_convert_temp(u8 rom[9]);
++static inline int w1_DS18S20_convert_temp(u8 rom[9]);
++
++/*-------------------------------Macros--------------------------------------*/
++
++/* return the address of the refcnt in the family data */
++#define THERM_REFCNT(family_data) \
++	(&((struct w1_therm_family_data *)family_data)->refcnt)
++
++/*---------------------------Hardware Functions-----------------------------*/
++
++/**
++ * reset_select_slave() - reset and select a slave
++ * @brief Resets the bus and select the slave by sending either a ROM MATCH
++ * w1_reset_select_slave() from w1_io.c could not be used
++ * here because a SKIP ROM command is sent if only one device is on the line.
++ * At the beginning of the such process, sl->master->slave_count is 1 even if
++ * more devices are on the line, causing collision on the line.
++ * The w1 master lock must be held.
++ * @param sl the slave to select
++ * @return 0 if success, negative kernel error code otherwise
++ */
++static int reset_select_slave(struct w1_slave *sl);
++
++/** read_therm()
++ * @param sl pointer to the slave to read
++ * @param info pointer to a structure to store the read results
++ * @return 0 if success, -kernel error code otherwise
++ */
++static ssize_t read_therm(struct device *device,
++			struct w1_slave *sl, struct therm_info *info);
++
++/*----------------------------Interface sysfs-------------------------------*/
++
++/** @brief A callback function to output the temperature Old way
++ *  read temperature and return the result in the sys file
++ *  This has been kept for compatibility
++ */
++static ssize_t w1_slave_show(struct device *device,
++	struct device_attribute *attr, char *buf);
++
++/** @brief A callback function to set the resolution Old way
++ *  This has been kept for compatibility
++ *  @param 0, it write config in the EEPROM
++ *  @param 9..12, it set the resolution in the RAM
++ */
++static ssize_t w1_slave_store(struct device *device,
++	struct device_attribute *attr, const char *buf, size_t size);
++
++static ssize_t w1_seq_show(struct device *device,
++	struct device_attribute *attr, char *buf);
++
++/*-----------------------------Attributes declarations----------------------*/
++
++static DEVICE_ATTR_RW(w1_slave);
++static DEVICE_ATTR_RO(w1_seq);
++
++/*--------------------------Interface Functions-----------------------------*/
++
++/** w1_therm_add_slave() - Called each time a search discover a new device
++ * @brief used to initialized slave (family datas)
++ * @param sl slave just discovered
++ * @return 0 - If success, negative kernel code otherwise
++ */
++static int w1_therm_add_slave(struct w1_slave *sl);
++
++/** w1_therm_remove_slave() - Called each time a slave is removed
++ * @brief used to free memory
++ * @param sl slave to be removed
++ */
++static void w1_therm_remove_slave(struct w1_slave *sl);
++
++#endif  /* __W1_THERM_H */
+\ No newline at end of file
+-- 
+2.25.4
 
-* Will the tag =E2=80=9CFixes=E2=80=9D be relevant then for the completed =
-exception handling?
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
-Documentation/process/submitting-patches.rst?id=3D96c9a7802af7d500a582d89a=
-8b864584fe878c1b#n183
-
-Regards,
-Markus
