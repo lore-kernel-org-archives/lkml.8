@@ -2,132 +2,137 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0070C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E836C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED7D2076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:38:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588199926;
-	bh=vlQNsP7dAHVkcYkloa8JjBPvOJ835TBWE0k1u8gtsCI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dK1AAPD15J1Z2j+pY7M99izNpMVoSAODfSzedo2M9fqmBhbMkYQ3ePKs/byRY6Op7
-	 d15J13Uep6vq6tULaKGnM2rgleDXS/DBj1OfegxXDAYu6qNnt+raleUYjJhJRJ8WN+
-	 JeqtDBLsnBGcBOsSk4OjAe8aHs+HVgIO0xWKsYsk=
+	by mail.kernel.org (Postfix) with ESMTP id 286DE20BED
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:41:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="f12ZywN6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgD2Wip (ORCPT
+        id S1727101AbgD2Wla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 18:38:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53660 "EHLO
+        Wed, 29 Apr 2020 18:41:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726164AbgD2Wip (ORCPT
+        by vger.kernel.org with ESMTP id S1726164AbgD2Wla (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 18:38:45 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E25EC03C1AE
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 15:38:43 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id u10so3091141lfo.8
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 15:38:43 -0700 (PDT)
+        Wed, 29 Apr 2020 18:41:30 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCD23C03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 15:41:29 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id l78so3844283qke.7
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 15:41:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a189DpcB+cR0a9sR1cWjCHfr0hMEKTR3GgF8mFeUCs0=;
-        b=LLd9jSr+Bqmzh6IHdgIqt/bdYR9XqhcRoXQb1O694fr+x8hPsgulwZSwk38Cmfh/TG
-         /WtyJkaNdWvJaGMbaMjeU+mE2P68xJnC2IwfxBUrOB9bzPuoMIecaAUWsMK+67szAyVB
-         jEJi7LLcwTgwKmTOYlQIgFOwXcjzAK6wd6wQE=
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yBgZcrV4iWdwc8bXr1UgNLaniSphIyQASgPqncouw5A=;
+        b=f12ZywN6K7/T0vh/KFA3gH3gfK1sZ3o1eqim7onv3KljZBN4EOi4bv6G5V+XbG4ut1
+         QQLVUyAfs4arAjqaqFVeMkgjxNn40gaGCjoQ7o0T29H6bsy2WzWeCqi+bO3ZRddrrCIx
+         ZpoSV5qQBQZnrndmt08qcR/DcYoVpUDmC5hY7V0oWPPMSFSPw5y5/KRbFoEpmjdnydS9
+         baSt1dM3SYcyQ1N3yyIRPCOPHVdxSN8akC48vdq9aPEUZEPCm7Q2lckDBnXUDRGzXwp2
+         4bh9Wy/0+rhTYdXvbRRxtmS5bIVA54WQzEwFvGgqOS4DEMnxOYBSpNngwveCYRtgj0jf
+         jg8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a189DpcB+cR0a9sR1cWjCHfr0hMEKTR3GgF8mFeUCs0=;
-        b=jc38yLmHvgWNS/dmMsNN/J/sW15Vmkp4iD6yhzCWgtpdh2S10r4XN93W0GHXCQetUM
-         ZwsYQSW+TwVTSEmIsfDHwKjuX7A5SKRh+P5Qu3E/R0f+BW4+hIeCj/MbPU7GB8WYcwjF
-         cD0y8RUBv/jFnv46DBgkvzh6Fymjn/mX81aBCSgyjzIXfKOpkEVzFStyM8rjUSAAaCnf
-         9tMH4UXRcMOLBHuq8xq96gMRzZdsHh2Ca9q+Idv9chzAuD2AzgiLs7Ej7Uvp15mvSXIV
-         RSkL5dpE6cGDrRV6tC97Rs9IzCoFMwj8N4Gvn5Bd42qGW/w9UCj8Zj2Yf2Z2Mo8LmSox
-         TnvA==
-X-Gm-Message-State: AGi0PuZWxjIr0eZ1LhVVPXRVpju7x3DVn33UgJExGTlLQxeNB4Hf95ZY
-        OFqHhC5QydRDZoU2hJXizO7EfR0hzxQ=
-X-Google-Smtp-Source: APiQypKkBOsb2IhM3Dt4QPYnad+Kqmr1sn9Ziw26tNLxVsJZZ0Jc7y+9qWLwGfrhJvBHU7C91/oXZg==
-X-Received: by 2002:a19:ee06:: with SMTP id g6mr59465lfb.90.1588199920814;
-        Wed, 29 Apr 2020 15:38:40 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id p14sm3442551lfe.87.2020.04.29.15.38.39
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 15:38:39 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id w20so4440675ljj.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 15:38:39 -0700 (PDT)
-X-Received: by 2002:a2e:814e:: with SMTP id t14mr281196ljg.204.1588199918722;
- Wed, 29 Apr 2020 15:38:38 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yBgZcrV4iWdwc8bXr1UgNLaniSphIyQASgPqncouw5A=;
+        b=HsAkIpz65YCgwtz0SyFEQszaRyAOX8/s4qUOjuDPSXq6RsOT8SzVx1DLGK3SyshwCx
+         w0s3PfKhWP3kXTsR2BVa0z0sl8iz1gMIHYui9jvycXIqvh9gL6QFLi+DRlYVtgQtr53t
+         g/70qx4GlRyZqnQe2wvfmPAFSvro3Df8o7TvR0WYQOBIDu8j4u5rcnWvfvEZu3Fe9R6a
+         aBRiA8IWCjC+Saly+Ly+lq61TCJRRpcS9M5TTWwflgZRAXgA5MmuYWA/9KH1hjsHPsZw
+         oA/xfoAisnXNGV7vBzqO604vX3vBDevcpDHJ3jaeQC4xWgLdDBuKPcEX83+tM9vF4o02
+         EDsQ==
+X-Gm-Message-State: AGi0PuYP3lff09uEqJJiPDvsw/+pAFJ8SelsWGNAthdHybggVuWOc/1B
+        Z3PbORAekVjaVOzTp6X4KXw0HQ==
+X-Google-Smtp-Source: APiQypLKqND0JKjNOfB6OKttFWw4PueCh+kW/uTm/J+/8LnYtWQ1Yu18biU6LtzJiRmM87wUIsCivg==
+X-Received: by 2002:a05:620a:1305:: with SMTP id o5mr811497qkj.222.1588200089029;
+        Wed, 29 Apr 2020 15:41:29 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id v27sm551028qtb.35.2020.04.29.15.41.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 Apr 2020 15:41:28 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jTvOR-0000GO-Rd; Wed, 29 Apr 2020 19:41:27 -0300
+Date:   Wed, 29 Apr 2020 19:41:27 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Felix Kuehling <felix.kuehling@amd.com>
+Cc:     linux-mm@kvack.org, Ralph Campbell <rcampbell@nvidia.com>,
+        "Yang, Philip" <Philip.Yang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        amd-gfx@lists.freedesktop.org, Ben Skeggs <bskeggs@redhat.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        dri-devel@lists.freedesktop.org, Christoph Hellwig <hch@lst.de>,
+        intel-gfx@lists.freedesktop.org,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-kernel@vger.kernel.org,
+        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
+        nouveau@lists.freedesktop.org
+Subject: Re: [PATCH hmm 5/5] mm/hmm: remove the customizable pfn format from
+ hmm_range_fault
+Message-ID: <20200429224127.GB3824@ziepe.ca>
+References: <5-v1-4eb72686de3c+5062-hmm_no_flags_jgg@mellanox.com>
+ <ec276ac2-a346-5728-4ac6-9c9bd9ffcd41@amd.com>
 MIME-Version: 1.0
-References: <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com>
- <20200411182043.GA3136@redhat.com> <CAHk-=wgwXpKepChGi4ZhQVxZxD0ic8s2CDXvUmqBTMaKGz-fjg@mail.gmail.com>
- <20200412195049.GA23824@redhat.com> <CAHk-=wiDwR+6ugYaKEGHfYteLF+NH5xu=T7uuUTkK9y-hr6zow@mail.gmail.com>
- <AM6PR03MB51708CF53D8A02086427DAC2E4AC0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wi_zr9dwX3UBYvgkmm6eVQfRP50orryJ6ZVAxuFqdSG5A@mail.gmail.com>
- <20200428190836.GC29960@redhat.com> <CAHk-=wi03QRcUR1DfbEr+Pw-DAMENzY-FuRcGawtj9p597=p2w@mail.gmail.com>
- <CAG48ez03ABTa-KbCtFHqB1hOT7dgAM96c3kiw-e80B+utSEwYw@mail.gmail.com>
- <CAHk-=wjTLnMuZmBO2foeHhsLAoUTpUi7oBVJ67F4XKB+tdEDbQ@mail.gmail.com>
- <CAG48ez3EQOvdbzu9aO-cEAJwF_=fJzn1Cg0LMs3ruc=5r1ie5w@mail.gmail.com>
- <CAHk-=whTgFbjGTP=CqMWs_LOkY7bWvLQGYKwKx86amdbMovAkw@mail.gmail.com>
- <CAG48ez2-Nu2ALN6VEUZL-prtR_Kk8QYBHcnvuh0aU2e4zf37RA@mail.gmail.com>
- <CAHk-=wh=G47oD2F1CgOrvGFbEPh2ddMKLV4_wV_bs6S=98aZ5A@mail.gmail.com> <AM6PR03MB5170A6AA240D2E8F5E88B911E4AD0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-In-Reply-To: <AM6PR03MB5170A6AA240D2E8F5E88B911E4AD0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 29 Apr 2020 15:38:21 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wguiKq8yf11WJjgSL4ADKZ5sLe_Qbd7vHEqAkTvZJ+d+Q@mail.gmail.com>
-Message-ID: <CAHk-=wguiKq8yf11WJjgSL4ADKZ5sLe_Qbd7vHEqAkTvZJ+d+Q@mail.gmail.com>
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Waiman Long <longman@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ec276ac2-a346-5728-4ac6-9c9bd9ffcd41@amd.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 12:23 PM Bernd Edlinger
-<bernd.edlinger@hotmail.de> wrote:
->
-> By the way, all other attempts to fix it look much more dangerous
-> than my initially proposed patch, you know the one you hated, but
-> it does work and does not look overly complicated either.
+On Wed, Apr 22, 2020 at 01:52:32PM -0400, Felix Kuehling wrote:
+> [+Philip Yang]
+> 
+> Am 2020-04-21 um 8:21 p.m. schrieb Jason Gunthorpe:
+> > From: Jason Gunthorpe <jgg@mellanox.com>
+> >
+> > Presumably the intent here was that hmm_range_fault() could put the data
+> > into some HW specific format and thus avoid some work. However, nothing
+> > actually does that, and it isn't clear how anything actually could do that
+> > as hmm_range_fault() provides CPU addresses which must be DMA mapped.
+> >
+> > Perhaps there is some special HW that does not need DMA mapping, but we
+> > don't have any examples of this, and the theoretical performance win of
+> > avoiding an extra scan over the pfns array doesn't seem worth the
+> > complexity. Plus pfns needs to be scanned anyhow to sort out any
+> > DEVICE_PRIVATE pages.
+> >
+> > This version replaces the uint64_t with an usigned long containing a pfn
+> > and fix flags. On input flags is filled with the HMM_PFN_REQ_* values, on
+> > successful output it is filled with HMM_PFN_* values, describing the state
+> > of the pages.
+> >
+> > amdgpu is simple to convert, it doesn't use snapshot and doesn't use
+> > per-page flags.
+> >
+> > nouveau uses only 16 hmm_pte entries at most (ie fits in a few cache
+> > lines), and it sweeps over its pfns array a couple of times anyhow.
+> >
+> > Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> 
+> Hi Jason,
+> 
+> I pointed out a typo in the documentation inline. Other than that, the
+> series is
+> 
+> Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
+> 
+> I'll try to build it and run some basic tests later.
 
-I don't think it works.
+Got it, thanks! Let me know if there are problems
 
-The whole "take lock, release it in the middle, then re-take it" is
-fundamentally a broken model. We've never had it work well, and it
-tends to have subtle issues. That's particularly true when you then
-open-core the (only) acceptable sequence something like five times.
-
-> What was the reason why that cannot be done this way?
-
-If it had introduced a new locking model, and new locking helpers for
-that model, with a comment in _one_ place, and nobody doing the ad-hoc
-locking on their own, that might be more acceptable.
-
-But that's not what that patch did. No way will I take something that
-is so fragile and hacky, and repeats the hack N times.
-
-If you do it properly, with a helper function instead of repeating
-that fragile nasty thing, maybe it will look better to me.
-
-That said, locks that get released in the middle aren't really locks.
-But at least if the only way to take that lock had the "oh, this lock
-is in that inconsistent state, I will return -EAGAIN", that would be
-one thing. But when you have N different users and rely on all of them
-getting that special semantic right, you're doing something wrong.
-
-                Linus
+Jason
