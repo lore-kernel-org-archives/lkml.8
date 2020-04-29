@@ -2,193 +2,119 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8877DC83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AECB4C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63DAA2072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:58:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XG2QdsAY"
+	by mail.kernel.org (Postfix) with ESMTP id 9051E2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgD2K6P (ORCPT
+        id S1726608AbgD2K7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 06:58:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726558AbgD2K6O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 06:58:14 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2949CC03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 03:58:14 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id u6so2107309ljl.6
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 03:58:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3MQTEzz/bgUGqn27HLWx05JdvUwv0M9LPIujeg8+b5w=;
-        b=XG2QdsAYz9E7hY9503tkL1sFJprfMBUwQSKtdzpkylC0jxzM5jc9xUMTYi/hg5KaZy
-         OPAzpsVJBv8yjM3g4WpbE51LEkOZUyqIrJtpzljk/JdmUHqvqzyfpCsRoc0i+AO58I20
-         o9Knw7Qtp7UOQyohP0flDwSX/KSOABYKd72SarHzD6qsog9kcRs4VrC+0lKm7SnV/aKL
-         +kHxwsQEQNocOT4nwctpZ0QMxRdSlymVBWTJxR9fcAG3nVbB0ZMQEu1mJgy3lC63lMGi
-         Yk+igqB/9+AzAAOen8USV+9PpBnG6vEY+D5eExz0gM+uVpB6YksAPvAaNs6Cah7aCeMU
-         y2ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3MQTEzz/bgUGqn27HLWx05JdvUwv0M9LPIujeg8+b5w=;
-        b=Bb2TYJGuEUZCoH6sJAViN7cCHxQvOdtoBpZbMKc25fwgVLUdcQpfkzTfLH3Cy92WIS
-         HL5+nN4QxpCLu3RL0rO4Xp9W/vZrGOW8VPxOpnw5/hYl/iXD1P6rWR4wPBvemYx98GyB
-         7WoEsnsGBuEOCdVRgdExAS2h4oarlvY/XEur4P3Njzt9NUfjXsf5B898qUUjm3XffZDc
-         FnVjICVCXaJn3liIDd0DNK/z66OQrSaHZVisBa4tCWUGoSRFfm9MCXGK5Xq/XqwOpvTa
-         GbgYSotLwRpmBBD5A8gC9qWj52msofAPHUkV58YlIGGw4dLI/IiCfUYkQjhJx3Ie6fYq
-         YI9Q==
-X-Gm-Message-State: AGi0PuZgf4ys50Wj3iRKPAJEfNkFFkm2me/GVSFBrvVmvl+eO8bhGN2B
-        6cGNUIjE1VOaLqFJ2ksxBKKONK2S+aZlFFZQ9KB/nA==
-X-Google-Smtp-Source: APiQypKC6shf0ejaOe03ju3dzacATI5s1zrN2YicbE63hD7OHdvvDXDh0Ho7o0zRZ/SYFeK0XdzXPcUw8Zh9/qtrCH8=
-X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr12036777ljm.165.1588157892313;
- Wed, 29 Apr 2020 03:58:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200428182224.822179290@linuxfoundation.org>
-In-Reply-To: <20200428182224.822179290@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 29 Apr 2020 16:28:00 +0530
-Message-ID: <CA+G9fYscqG8jKYYPTH86hgHBB0nkTe21gzpzJfj+pWp1NhPV-A@mail.gmail.com>
-Subject: Re: [PATCH 4.19 000/131] 4.19.119-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
+        Wed, 29 Apr 2020 06:59:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60296 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726426AbgD2K7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 06:59:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 788E7AB8F;
+        Wed, 29 Apr 2020 10:59:43 +0000 (UTC)
+Date:   Wed, 29 Apr 2020 12:59:41 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
+Subject: Re: [RFC][PATCH] x86/mm: Sync all vmalloc mappings before text_poke()
+Message-ID: <20200429105941.GQ30814@suse.de>
+References: <20200429054857.66e8e333@oasis.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429054857.66e8e333@oasis.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 at 00:01, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.119 release.
-> There are 131 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 30 Apr 2020 18:20:45 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.119-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Hi Steven,
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+On Wed, Apr 29, 2020 at 05:48:57AM -0400, Steven Rostedt wrote:
+> From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> 
+> Tzvetomir was adding a feature to trace-cmd that would allow the user
+> to specify filtering on process IDs within a tracing instance (or
+> buffer). When he added this feature and tested it on tracing PIDs 1 and
+> 2, it caused his kernel to hang.
+> 
+> He sent me his code and I was able to reproduce the hang as well. I
+> bisected it down to this commit 763802b53a42 ("x86/mm: split
+> vmalloc_sync_all()"). It was 100% reproducible. With the commit it
+> would hang, and reverting the commit, it would work.
+> 
+> Adding a bunch of printk()s, I found where it locked up. It was after
+> the recording was finished, and a write of "0" to
+> tracefs/instance/foo/events/enable. And in the code, it was:
+> 
+> (you may skip to the end of the chain)
+> 
+> system_enable_write() {
+>   __ftrace_set_clr_event() {
+>     __ftrace_set_clr_event_nolock() {
+>       ftrace_event_enable_disable() {
+>         __ftrace_event_enable_disable() {
+>           call->class->reg() <trace_event_reg()> {
+>             trace_point_probe_unregister() {
+>               tracepoint_remove_func() {
+>                 static_key_slow_dec() {
+>                   __static_key_slow_dec() {
+> 
+>     <continued>
+> 
+>   __static_key_slow_dec_cpus_locked() {
+>     jump_label_update() {
+>       __jump_label_update()
+>         arch_jump_label_transform() {
+>           jump_label_transform() {
+>             __jump_label_transform() {
+>               text_poke_bp() {
+>                 text_poke_bp_batch() {
+>                   text_poke() {
+>                     __text_poke() {
+> 
+>     <continued> (This is where you want to see)
+> 
+>   use_temporary_mm() {
+>     switch_mm_irqs_off() {
+>       load_new_mm_cr3() {
+>         write_cr3() <<--- Lock up!
 
-Summary
-------------------------------------------------------------------------
+I don't see how it could lock up in write_cr3(), at least on bare-metal.
+What is the environment this happens, 32 or 64 bit, in a VM or
+bare-metal?
 
-kernel: 4.19.119-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: 3fc812d65db6b5ad19f0ef548492a25ba2a276bc
-git describe: v4.19.118-132-g3fc812d65db6b
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.118-132-g3fc812d65db6b
+I think it is more likely that your lockup is actually a page-fault
+loop, where the #PF handler does not map the faulting address correctly.
 
+But I have to look closer into how text_poke() works before I can say
+more.
 
-No regressions (compared to build v4.19.118)
+Btw, in case it happens on x86-64, does it also happen without
+vmalloc-stacks?
 
-No fixes (compared to build v4.19.118)
+Regards,
 
-Ran 32114 total tests in the following environments and test suites.
-
-Environmnts
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* libgpiod
-* linux-log-parser
-* perf
-* network-basic-tests
-* kselftest/net
-* kselftest/networking
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-native/networking
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-* kselftest-vsyscall-mode-none/networking
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+	Joerg
