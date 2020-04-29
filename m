@@ -2,102 +2,122 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8ED5C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D354C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEE5F2076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47EFA20731
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:08:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uZ0qDzVI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgD2UGb (ORCPT
+        id S1726971AbgD2UIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 16:06:31 -0400
-Received: from mga18.intel.com ([134.134.136.126]:37019 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726456AbgD2UGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 16:06:30 -0400
-IronPort-SDR: OqmVG6wuJxhpQbu6OPYgekd/oHCyHWVmDMqvwFDKln8Zn+sye7UbKRFnWS1qSI98GSJTiPgXoM
- aHI/PfKTRHlg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 13:06:30 -0700
-IronPort-SDR: m0hwcU/Pm2d+wtnIowylzWCVRuCjU8EwMkKdW30+nKlBoOHV3ncQiMMWzW2at5i/VsEZUZBqrr
- cmL1GXMTa68g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
-   d="scan'208";a="459315579"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 29 Apr 2020 13:06:29 -0700
-Date:   Wed, 29 Apr 2020 13:06:29 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Oliver Upton <oupton@google.com>,
-        Peter Shier <pshier@google.com>
-Subject: Re: [PATCH 09/13] KVM: nVMX: Prioritize SMI over nested IRQ/NMI
-Message-ID: <20200429200629.GH15992@linux.intel.com>
-References: <20200423022550.15113-1-sean.j.christopherson@intel.com>
- <20200423022550.15113-10-sean.j.christopherson@intel.com>
- <CALMp9eSuYqeVmWhb6q7T5DAW_Npbuin_N1+sbWjvcu0zTqiwsQ@mail.gmail.com>
- <20200428225949.GP12735@linux.intel.com>
- <CALMp9eRFfEB1avbQv0O0V=EGrJdSNTxg8Z-BONmQ--dV66CuAg@mail.gmail.com>
- <20200429145040.GA15992@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200429145040.GA15992@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 29 Apr 2020 16:08:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58310 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726456AbgD2UIl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 16:08:41 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06FBCC03C1AE;
+        Wed, 29 Apr 2020 13:08:41 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id a32so1220410pje.5;
+        Wed, 29 Apr 2020 13:08:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=WOZd7qcxe4gLtfO9RC05iwoT4m60cIyVOvlJ52Dodz0=;
+        b=uZ0qDzVIvjQrC6G/nlImR7fsWsAHeptwzaKi+7jjUPUgBIoH4UtRJ5iUQj1ilKogwA
+         GKQuSOggGQ6hQa30CIylRuxP10sFrGzYq/fQExmS0+was6M0oYXbEXWsGTSzL+nVa/77
+         5lZIgmIiBRBCUeUX6kFQ74auM12c6it9vvG1FwQ5BtfDKoMwiX4KB6I2537L0yyR01+q
+         qHpUiFGnRcfrDfyE/CzS9YHmQ99Pu/xhSn4TAE4kgyWzdapZfu9r+b6jQmOxbJD70Hph
+         FzmJL/U/Bma0Xp6wRP2fHEcFk3WoqLDHvJtmXDYqemAO/hsEyAcsvB7PbNuXxslTANg1
+         lA8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WOZd7qcxe4gLtfO9RC05iwoT4m60cIyVOvlJ52Dodz0=;
+        b=jGk3j4s4ew5+e4XyfcgInwsFsTFhniM9mGMwAhcs9tipnlkgX8XxzDDYIioNYfgHpq
+         Un/VB5666f/LfhZcb/FMmDjiZ7zGw3xL16DZa/NGc4WE2K0EG2sRWY6t9Fvd9Uelmwwa
+         IRlIuV2qtMQb+jxtSrtWKtqdbUp1dSDR3c68kxgDylQjv9PhWHksi34CpQABYPXpboFO
+         yB2+KcIBvRP06lKzTalHhBCsqvZNm6nW1ezgAx5X33KUHISDTZsdcSvS6ew/k4qJ8E9X
+         3XAcCV07afUZ17Z/X5bCsXMaVXISIZbhtsTHbJmOAllLA7SHWmgUYq0bzbZeeMZGyvk+
+         Gl5g==
+X-Gm-Message-State: AGi0PuYOvq8xmLWIm6sNVr4RfMNxd1n/UYhpmYnZC5SnpfwfIU334Xzg
+        vWtKw2+VPsc8S6ARPs7/GXrxeOo2iHQ=
+X-Google-Smtp-Source: APiQypIUekAlCRG9AHQxZFGj0HO6s1oQEECvbuzapVx9ziOgexmgfyEn69aMdXM7lBxVlbDphTNklg==
+X-Received: by 2002:a17:90a:17ed:: with SMTP id q100mr203798pja.80.1588190920194;
+        Wed, 29 Apr 2020 13:08:40 -0700 (PDT)
+Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id z23sm1638957pfr.136.2020.04.29.13.08.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 13:08:39 -0700 (PDT)
+From:   Al Cooper <alcooperx@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Al Cooper <alcooperx@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v5 0/4] Add XHCI, EHCI and OHCI support for Broadcom STB SoS's
+Date:   Wed, 29 Apr 2020 16:08:22 -0400
+Message-Id: <20200429200826.20177-1-alcooperx@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 07:50:40AM -0700, Sean Christopherson wrote:
-> On Tue, Apr 28, 2020 at 04:16:16PM -0700, Jim Mattson wrote:
-> > On Tue, Apr 28, 2020 at 3:59 PM Sean Christopherson
-> > <sean.j.christopherson@intel.com> wrote:
-> > >
-> > > On Tue, Apr 28, 2020 at 03:04:02PM -0700, Jim Mattson wrote:
-> > > > From the SDM, volume 3:
-> > > >
-> > > > • System-management interrupts (SMIs), INIT signals, and higher
-> > > > priority events take priority over MTF VM exits.
-> > > >
-> > > > I think this block needs to be moved up.
-> > >
-> > > Hrm.  It definitely needs to be moved above the preemption timer, though I
-> > > can't find any public documentation about the preemption timer's priority.
-> > > Preemption timer is lower priority than MTF, ergo it's not in the same
-> > > class as SMI.
-> > >
-> > > Regarding SMI vs. MTF and #DB trap, to actually prioritize SMIs above MTF
-> > > and #DBs, we'd need to save/restore MTF and pending #DBs via SMRAM.  I
-> > > think it makes sense to take the easy road and keep SMI after the traps,
-> > > with a comment to say it's technically wrong but not worth fixing.
-> > 
-> > Pending debug exceptions should just go in the pending debug
-> > exceptions field. End of story and end of complications. I don't
-> > understand why kvm is so averse to using this field the way it was
-> > intended.
-> 
-> Ah, it took my brain a bit to catch on.  I assume you're suggesting calling
-> nested_vmx_updated_pending_dbg() so that the pending #DB naturally gets
-> propagated to/from vmcs12 on SMI/RSM?  I think that should work.
+v5 - Use devm_platform_get_and_ioremap_resource() in ehci-brcm.c
+     as requested by Andy Shevchenko.
+   - Add pm_runtime_set_active() to ehci_resume() in ehci-brcm.c
+     as requested by Alan Stern.
 
-This works for L2, but not L1 :-(  And L2 can't be fixed without first
-fixing L1 because inject_pending_event() also incorrectly prioritizes #DB
-over SMI.  For L1, utilizing SMRAM to save/restore the pending #DB is
-likely the easiest solution as it avoids having to add new state for
-migration.
+v4 - A few more fixes to the brcm,bcm7445-ehci.yaml dt-bindings
+     document requested by Rob Herring.
+   - Fixed ordering issue in MAINTAINERS as requested by
+     Andy Shevchenko.
 
-I have everything coded up but it'll probably take a few weeks to test and
-get it sent out, need to focus on other stuff for a while.
+v3 - Addressed all of Andy Shevchenko's review comments for
+     ehci-brcm.c.
+   - Fixed the brcm,bcm7445-ehci.yaml dt-bindings document,
+     dt_binding_check now passes.
+   - Added the XHCI functionality to xhci-plat.c instead of creating
+     new brcmstb files, as suggested by Mathias Nyman.
+
+v2 - Addressed Andy Shevchenko's review comments.
+   - Fixed dt_binding_check error pointed out by Rob Herring.
+   - Removed pr_info message in ehci_brcm_init as suggested by
+     Greg Kroah-Hartman.
+
+
+Al Cooper (4):
+  dt-bindings: Add Broadcom STB USB support
+  usb: xhci: xhci-plat: Add support for Broadcom STB SoC's
+  usb: ehci: Add new EHCI driver for Broadcom STB SoC's
+  usb: host: Add ability to build new Broadcom STB USB drivers
+
+ .../bindings/usb/brcm,bcm7445-ehci.yaml       |  60 ++++
+ .../devicetree/bindings/usb/usb-xhci.txt      |   1 +
+ MAINTAINERS                                   |   8 +
+ drivers/usb/host/Kconfig                      |  16 +
+ drivers/usb/host/Makefile                     |  16 +-
+ drivers/usb/host/ehci-brcm.c                  | 290 ++++++++++++++++++
+ drivers/usb/host/xhci-plat.c                  |  10 +
+ 7 files changed, 395 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+ create mode 100644 drivers/usb/host/ehci-brcm.c
+
+-- 
+2.17.1
+
