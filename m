@@ -2,119 +2,127 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A45DC83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6A4C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 101312073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB9F6206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:34:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EI+fxZUk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgD2Pdj convert rfc822-to-8bit (ORCPT
+        id S1726907AbgD2PeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:33:39 -0400
-Received: from mga14.intel.com ([192.55.52.115]:8618 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726519AbgD2Pdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:33:38 -0400
-IronPort-SDR: NCPOqmRNQEwt/lEYKO3OrRp6m/RsVEyDKp9PPeyf0xNxwsZDhSDKYBaicHC6bzCkHuZwqCcfcz
- uCDnK6PMB6NA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 08:33:34 -0700
-IronPort-SDR: RJYX6NhL9qb6YXik0zGyrdsVjGAZts+z5OR23h/AT1O1RfL4r9BCr92aVLXAMEfP2p78jM7Zhd
- JTaLfbA5ZX7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
-   d="scan'208";a="459236582"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by fmsmga005.fm.intel.com with ESMTP; 29 Apr 2020 08:33:33 -0700
-Received: from fmsmsx161.amr.corp.intel.com (10.18.125.9) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 29 Apr 2020 08:33:33 -0700
-Received: from fmsmsx124.amr.corp.intel.com ([169.254.8.70]) by
- FMSMSX161.amr.corp.intel.com ([10.18.125.9]) with mapi id 14.03.0439.000;
- Wed, 29 Apr 2020 08:33:33 -0700
-From:   "Saleem, Shiraz" <shiraz.saleem@intel.com>
-To:     "Denis V. Lunev" <den@openvz.org>
-CC:     Konstantin Khorenko <khorenko@virtuozzo.com>,
-        "Latif, Faisal" <faisal.latif@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/1] i40iw: remove bogus call to
- netdev_master_upper_dev_get
-Thread-Topic: [PATCH 1/1] i40iw: remove bogus call to
- netdev_master_upper_dev_get
-Thread-Index: AQHWHV8iCMr9rO8fnEWOWdKxb9e/t6iQNmwQ
-Date:   Wed, 29 Apr 2020 15:33:32 +0000
-Message-ID: <9DD61F30A802C4429A01CA4200E302A7DCD5849C@fmsmsx124.amr.corp.intel.com>
-References: <20200428131511.11049-1-den@openvz.org>
-In-Reply-To: <20200428131511.11049-1-den@openvz.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.1.200.106]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 29 Apr 2020 11:34:06 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50628 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726519AbgD2PeF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 11:34:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588174443;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KKID24VeS04+SIozIuc8RuLZZFKJ5rduUKOoVcekO0A=;
+        b=EI+fxZUkpwDkICVM1F7oJX0xQyeIpPzmzoCLqgTEUmFnrB0eV1O5SD9XQeLEEYvceSlU6i
+        5d1/0Qn/qoNu3PGHwjbJeLtm+bOBf7gB2vJTaHc8EWPhx09Qalngyxmee/9sMM9ctUPcYq
+        gg/q+n+DWbfIseQwhFA/nMqc0Ef+l7A=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-271-ImdkNTjmOe6_ppYkUyX08g-1; Wed, 29 Apr 2020 11:33:56 -0400
+X-MC-Unique: ImdkNTjmOe6_ppYkUyX08g-1
+Received: by mail-wm1-f69.google.com with SMTP id l21so1381740wmh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:33:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KKID24VeS04+SIozIuc8RuLZZFKJ5rduUKOoVcekO0A=;
+        b=cTjNgOIOIFCvP0HX7XWZGt34QZfw9Vxv23B++mQJBCxmebmY2kY1RKE8iqHVkieQaB
+         s3NNByUH41oM0Vq8gioDcVdDpJ2yGsMxgzO/pmVkc/GBYylhh8yzPXyXdmkawRJe4npe
+         WJDPqhmm2cs89jpNE6+RHFcY5YuHN+JqcP3NvZgkDfU8XgFtBlJPc4d+OY//yNyDv6DF
+         MuE7uzPci1bjHvsRJD3FPWkFHpEKULgqpm9vUdca33hCMWAP15Jqa+Ci7S2FfYN9eRq5
+         Ce7+p45SOOezGEAisAfvJGUTj7/dSJYDeBFPQpcBNIIB2mpZ1htKkUdDYRVTBFQO3JNH
+         7yVQ==
+X-Gm-Message-State: AGi0PuZdKhku4shhfLOnjSqytIm/J8SEQtnpEAFKNEMEGrAoqUTpVzq4
+        9Dk5Ds464ijZtethWnzMY6WW+fsf1T0jNsGjgs01eYwA2gE/Lywjgt7evDQJUhCy/5nD/6ZAJ2r
+        E6AgD7UWg0Mfv2HKuPuSSMoug
+X-Received: by 2002:adf:fecd:: with SMTP id q13mr42286156wrs.12.1588174435308;
+        Wed, 29 Apr 2020 08:33:55 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJv7rM5XZdPpYa0XbuMbltzbpsnlCYEladdinC4riKF/z7q+xHJZ0Lq2AB1h1HtNI76PDhJ5w==
+X-Received: by 2002:adf:fecd:: with SMTP id q13mr42286134wrs.12.1588174435068;
+        Wed, 29 Apr 2020 08:33:55 -0700 (PDT)
+Received: from redhat.com (bzq-109-66-7-121.red.bezeqint.net. [109.66.7.121])
+        by smtp.gmail.com with ESMTPSA id u7sm8832675wmg.41.2020.04.29.08.33.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 08:33:54 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 11:33:51 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jason Wang <jasowang@redhat.com>, Tiwei Bie <tiwei.bie@intel.com>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vhost: fix default for vhost_iotlb
+Message-ID: <20200429113232-mutt-send-email-mst@kernel.org>
+References: <20200429142317.1847441-1-arnd@arndb.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429142317.1847441-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: [PATCH 1/1] i40iw: remove bogus call to netdev_master_upper_dev_get
+On Wed, Apr 29, 2020 at 04:23:04PM +0200, Arnd Bergmann wrote:
+> During randconfig build testing, I ran into a configuration that has
+> CONFIG_VHOST=m, CONFIG_VHOST_IOTLB=m and CONFIG_VHOST_RING=y, which
+> makes the iotlb implementation left out from vhost_ring, and in turn
+> leads to a link failure of the vdpa_sim module:
 > 
-> Local variable netdev is not used in these calls.
+> ERROR: modpost: "vringh_set_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.ko] undefined!
+> ERROR: modpost: "vringh_init_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.ko] undefined!
+> ERROR: modpost: "vringh_iov_push_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.ko] undefined!
+> ERROR: modpost: "vringh_iov_pull_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.ko] undefined!
+> ERROR: modpost: "vringh_complete_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.ko] undefined!
+> ERROR: modpost: "vringh_getdesc_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.ko] undefined!
 > 
-> It should be noted, that this change is required to work in bonded mode.
-> In the other case we would get the following assert:
->  "RTNL: assertion failed at net/core/dev.c (5665)"
-> with the calltrace as follows:
-> 	dump_stack+0x19/0x1b
-> 	netdev_master_upper_dev_get+0x61/0x70
-> 	i40iw_addr_resolve_neigh+0x1e8/0x220
-> 	i40iw_make_cm_node+0x296/0x700
-> 	? i40iw_find_listener.isra.10+0xcc/0x110
-> 	i40iw_receive_ilq+0x3d4/0x810
-> 	i40iw_puda_poll_completion+0x341/0x420
-> 	i40iw_process_ceq+0xa5/0x280
-> 	i40iw_ceq_dpc+0x1e/0x40
-> 	tasklet_action+0x83/0x140
-> 	__do_softirq+0x125/0x2bb
-> 	call_softirq+0x1c/0x30
-> 	do_softirq+0x65/0xa0
-> 	irq_exit+0x105/0x110
-> 	do_IRQ+0x56/0xf0
-> 	common_interrupt+0x16a/0x16a
-> 	? cpuidle_enter_state+0x57/0xd0
-> 	cpuidle_idle_call+0xde/0x230
-> 	arch_cpu_idle+0xe/0xc0
-> 	cpu_startup_entry+0x14a/0x1e0
-> 	start_secondary+0x1f7/0x270
-> 	start_cpu+0x5/0x14
+> Work around it by setting the default for VHOST_IOTLB to avoid this
+> configuration.
 > 
-> Signed-off-by: Denis V. Lunev <den@openvz.org>
-> CC: Konstantin Khorenko <khorenko@virtuozzo.com>
-> CC: Faisal Latif <faisal.latif@intel.com>
-> CC: Shiraz Saleem <shiraz.saleem@intel.com>
-> CC: Doug Ledford <dledford@redhat.com>
-> CC: Jason Gunthorpe <jgg@ziepe.ca>
-> CC: linux-rdma@vger.kernel.org
-> CC: linux-kernel@vger.kernel.org
+> Fixes: e6faeaa12841 ("vhost: drop vring dependency on iotlb")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  drivers/infiniband/hw/i40iw/i40iw_cm.c | 8 --------
->  1 file changed, 8 deletions(-)
+> I fixed this a while ago locally but never got around to sending the
+> fix. If the problem has been addressed differently in the meantime,
+> please ignore this one.
+
+
+So I ended up not sending e6faeaa12841 upstream because of this problem.
+But hey, that's a nice idea!
+I'll queue something like this for the next release.
+
+> ---
+>  drivers/vhost/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
+> diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
+> index 2c75d164b827..ee5f85761024 100644
+> --- a/drivers/vhost/Kconfig
+> +++ b/drivers/vhost/Kconfig
+> @@ -1,6 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config VHOST_IOTLB
+>  	tristate
+> +	default y if VHOST=m && VHOST_RING=y
+>  	help
+>  	  Generic IOTLB implementation for vhost and vringh.
+>  	  This option is selected by any driver which needs to support
+> -- 
+> 2.26.0
 
-Looks right. Thanks!
-
-Acked-by: Shiraz Saleem <shiraz.saleem@intel.com>
