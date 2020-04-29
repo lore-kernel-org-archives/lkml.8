@@ -2,129 +2,125 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E518EC83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2305C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0C762087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:35:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="SW+FIFOI"
+	by mail.kernel.org (Postfix) with ESMTP id D00952085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:35:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588167337;
+	bh=B8pSobiKyn8CUfQ+seeTjOXCyKoAE7PEkBa529ZuO9w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Bhu8Zk3TrCDGyoL3gH33PPgdzQ1VJ0odvvnqF3FhT+ncbeoO76EGlssSl0DLzmfvf
+	 MKyuntGerCRYkbqaRHSOBmdeA1bLLUQpr6qgVkSd/XcdFpqzEz2GsKT1LwhsDx5sVe
+	 bpiw3YjjYhDFgY0oMVb5AMxl1LAV8fyFZkDUJ3CA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgD2NfV (ORCPT
+        id S1727104AbgD2Nfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:35:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbgD2NfU (ORCPT
+        Wed, 29 Apr 2020 09:35:37 -0400
+Received: from mail-wm1-f46.google.com ([209.85.128.46]:52617 "EHLO
+        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbgD2Nfg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:35:20 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 389E3C03C1AD;
-        Wed, 29 Apr 2020 06:35:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3tROvqtlLIi2o+RSP+jyp7tId3DmJ3ljzBXYvMBHEjM=; b=SW+FIFOIi/vh1yH3OFKw1kBfR
-        NKALhZ7C9TqBNc3CWk0ERY4iQy2NDkI2kFaA+LhitjqWi4dUnO+PCFCwo3ifoXWISbr5r69aqYKRy
-        RxesRtxTQZXegALW99+h/RsjReo1dYPoVAvONHckrDyASsXFf99FGkdepjGLOYVlBkHCAqGfRByX5
-        Fs/NUZ1exmVJM+9WSH09rqtZRskoSpJhuQmO5ZlwImJ0k/cq+cWMOVBkUhDjJRYlCLLLHdFRn88FK
-        eOAepy8KTmbWahz1wdjv9j22GBxlVokvUDbR9gRm5zLkukYB71vZ5tJoRMWbtDsymaZ6dsBGTzVs5
-        PND73RCGw==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:33798)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jTmrp-0007rI-8F; Wed, 29 Apr 2020 14:35:13 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jTmro-00016y-Bm; Wed, 29 Apr 2020 14:35:12 +0100
-Date:   Wed, 29 Apr 2020 14:35:12 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH] [v2] ARM: oabi-compat: fix epoll_ctl build failure
-Message-ID: <20200429133512.GE1551@shell.armlinux.org.uk>
-References: <20200429132349.1294904-1-arnd@arndb.de>
+        Wed, 29 Apr 2020 09:35:36 -0400
+Received: by mail-wm1-f46.google.com with SMTP id 188so2055647wmc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 06:35:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=zVcMyyXgly8dcZ1W48/YJRsJdPDZ29G6svQLPAiabDU=;
+        b=l7CiP0E5tOiPKMGBSKl2zi/RjIZJp0CHspE6MvAjKMidoI3tJjJftz33Od7lPEJbvM
+         cOqLketS0uKZ+RhaiZLZCLJ5zspfMpWMjrSbLnmQAFj1Ms3JsXDKsnpm5dnEdBMks48w
+         MGZQx0jpE2QOYrT2J0ARj/4zkjvG3MLc0a4FzXGL0KEch4vBMQBvY6l77GsjiocBXtqB
+         KXTJvBx+VfSI0mV+nvAcVtD2g+bAkzMBh9c5j1LS7fbqItTH8PzhemIPEPmlpqSawWx7
+         WjMHJTFcPvO4QTAH7oEdN9T6FQuRTMXEdIz6kn/A1QXNi+E3zJNRXt1FCzQxGLNz06fq
+         rApg==
+X-Gm-Message-State: AGi0Pubx0TsBLzTGVmg6pEvtco7kzyhCMZTxehVQQUenLqHU+zB7gH+1
+        sw3IEIKHOjiFtr3uw5f4xJQ=
+X-Google-Smtp-Source: APiQypIfI2Iu/A8rMm0AqpV0Ln7Plf5ZvMG4mOEGuK6Ja6mwzohrK5s6Wa1wqyfvDlvwJf2IjaOFDw==
+X-Received: by 2002:a1c:c2d6:: with SMTP id s205mr3520417wmf.90.1588167334367;
+        Wed, 29 Apr 2020 06:35:34 -0700 (PDT)
+Received: from localhost (ip-37-188-130-62.eurotel.cz. [37.188.130.62])
+        by smtp.gmail.com with ESMTPSA id 138sm8249950wmb.14.2020.04.29.06.35.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 06:35:33 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 15:35:32 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Vaneet Narang <v.narang@samsung.com>
+Cc:     Maninder Singh <maninder1.s@samsung.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        AMIT SAHRAWAT <a.sahrawat@samsung.com>
+Subject: Re: (2) [PATCH 1/1] mm/vmscan.c: change prototype for
+ shrink_page_list
+Message-ID: <20200429133532.GF28637@dhcp22.suse.cz>
+References: <20200429130912.GE28637@dhcp22.suse.cz>
+ <20200429120951.GC28637@dhcp22.suse.cz>
+ <1588139967-19012-1-git-send-email-maninder1.s@samsung.com>
+ <20200429125323epcms5p67a539511c573cd598d78b726503e3204@epcms5p6>
+ <CGME20200429055946epcas5p2d5faf2b320913d59a4a8380cb017053c@epcms5p8>
+ <20200429132940epcms5p81e75e09469b62253ff512222c568556f@epcms5p8>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200429132349.1294904-1-arnd@arndb.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200429132940epcms5p81e75e09469b62253ff512222c568556f@epcms5p8>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 03:23:24PM +0200, Arnd Bergmann wrote:
-> Two functions are not declared or defined when CONFIG_EPOLL is
-> disabled:
+On Wed 29-04-20 18:59:40, Vaneet Narang wrote:
+> Hi Michal, 
 > 
-> arch/arm/kernel/sys_oabi-compat.c: In function 'sys_oabi_epoll_ctl':
-> arch/arm/kernel/sys_oabi-compat.c:258:6: error: implicit declaration of function 'ep_op_has_event' [-Werror=implicit-function-declaration]
->   258 |  if (ep_op_has_event(op) &&
->       |      ^~~~~~~~~~~~~~~
-> arch/arm/kernel/sys_oabi-compat.c:265:9: error: implicit declaration of function 'do_epoll_ctl'; did you mean 'sys_epoll_ctl'? [-Werror=implicit-function-declaration]
->   265 |  return do_epoll_ctl(epfd, op, fd, &kernel, false);
->       |         ^~~~~~~~~~~~
->       |         sys_epoll_ctl
+> >> >
+> >> >Acked-by: Michal Hocko <mhocko@suse.com>
+> >> >
+> >> >Is there any reason to move declarations here?
+> >> >
+> >> 
+> >> "unsigned int ret" was changed mistakenely, sending V2.
+> >> and "unsigned int nr_reclaimed" is changed to remove hole.
+>  
+> >Could you be more specific? Have you seen a better stack allocation
+> >footprint?
 > 
-> Replace the function with the sys_ni_syscall stub in this case.
+> We didn't check stack allocation footprint, we did changes just by looking into the code.
+> we thought changing reclaimed type from long to int on 64 bit platform will add 
+> hole of 4 bytes between two stack variables nr_reclaimed & nr_taken.
 > 
-> Fixes: c281634c8652 ("ARM: compat: remove KERNEL_DS usage in sys_oabi_epoll_ctl()")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> v2: use sys_ni_syscall() instead of removing the function body
-> ---
->  arch/arm/kernel/sys_oabi-compat.c | 2 ++
->  kernel/sys_ni.c                   | 1 +
->  2 files changed, 3 insertions(+)
+> So we tried to remove that hole by packing it with bool.
 > 
-> diff --git a/arch/arm/kernel/sys_oabi-compat.c b/arch/arm/kernel/sys_oabi-compat.c
-> index 85a1e95341d8..2488c69242cf 100644
-> --- a/arch/arm/kernel/sys_oabi-compat.c
-> +++ b/arch/arm/kernel/sys_oabi-compat.c
-> @@ -249,6 +249,7 @@ struct oabi_epoll_event {
->  	__u64 data;
->  } __attribute__ ((packed,aligned(4)));
->  
-> +#ifdef CONFIG_EPOLL
->  asmlinkage long sys_oabi_epoll_ctl(int epfd, int op, int fd,
->  				   struct oabi_epoll_event __user *event)
->  {
-> @@ -264,6 +265,7 @@ asmlinkage long sys_oabi_epoll_ctl(int epfd, int op, int fd,
->  
->  	return do_epoll_ctl(epfd, op, fd, &kernel, false);
->  }
-> +#endif
->  
->  asmlinkage long sys_oabi_epoll_wait(int epfd,
->  				    struct oabi_epoll_event __user *events,
-> diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
-> index 42ce28c460f6..9ee6a46b1795 100644
-> --- a/kernel/sys_ni.c
-> +++ b/kernel/sys_ni.c
-> @@ -68,6 +68,7 @@ COND_SYSCALL(epoll_create1);
->  COND_SYSCALL(epoll_ctl);
->  COND_SYSCALL(epoll_pwait);
->  COND_SYSCALL_COMPAT(epoll_pwait);
-> +COND_SYSCALL(oabi_epoll_ctl); /* ARM OABI specific */
->  
->  /* fs/fcntl.c */
->  
+>  	unsigned long nr_scanned;                 --> Size and alignment 8 byte for long 
+> -	unsigned long nr_reclaimed = 0;           --> Changing to int will make its size as 4  
+>  	unsigned long nr_taken;                   --> nr_taken needs alignment of 8 so will add hole.
+>  	struct reclaim_stat stat;
+>  	int file = is_file_lru(lru);
+>  	enum vm_event_item item;
+>  	struct pglist_data *pgdat = lruvec_pgdat(lruvec);
+>  	struct zone_reclaim_stat *reclaim_stat = &lruvec->reclaim_stat;
+> +	unsigned int nr_reclaimed = 0;            --> So moving to this place to pack it along with bool 
+>  	bool stalled = false;
+> 
+> 
+> Overall stack footprint might not change as compiler makes function stack pointer as 16 byte aligned but we did this 
+> as we normally follow this coding convention when defining structures or stack variables. 
 
-I know what Chris said, but do we really want to be polluting generic
-kernel files with arch specific stuff like this?
+My understanding is that gcc can and does tricks when allocating space
+for local variables. It can use registers and there is no dictated
+structure on the placing of variable or ordering (unlike for
+structures).
 
+Anyway, I would prefer if the patch was doing one thing at the time.
+If you can see some (have a look ./scripts/bloat-o-meter) improvements
+from reordering, make it a separate patch with some numbers attached.
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+Michal Hocko
+SUSE Labs
