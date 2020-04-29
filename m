@@ -2,113 +2,115 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD6AC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CC3C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07A9F20B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFA3821D79
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:53:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F5ul1L8C"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="S6rWdOZY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgD2PvR (ORCPT
+        id S1726811AbgD2PxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:51:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45996 "EHLO
+        Wed, 29 Apr 2020 11:53:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbgD2PvQ (ORCPT
+        with ESMTP id S1726530AbgD2PxT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:51:16 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AABF5C03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:51:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=NxBBFFm6MtwCSdPcYTRckA3NQsUn3OiyYrVi4AMqwnQ=; b=F5ul1L8C/XskogCvKJ7LlCJhxO
-        aEbtYahfIeSU21RzUMsl9uZ5r10KqANOnR1jsEOW9tK4Cq3MBhpGKSBrSQVB9phdebLADYTGKOlH4
-        VgStoiCqApU9zqGEWPJ7rcdX9WjI02fLZ8JdcW1pGCOWLIXve1N6yUg6hr5AkrADB3tcgk1GveKxO
-        9VO5ndtowBnBFjzkofqJ2rF3jPSmRsmCrtIIfyURzmKfGZ98AH1F0M6gcOjUe+6bLPuPbXqLVzzvD
-        xZmfy8U5d7ZgssyrtyGXEbUzpWW4AiifAGHsyzhDjCuW9PoLrICqF0sl+6Ky+umNJ/XoeVLQRfkN2
-        pCIWfZbw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTozP-0000df-GE; Wed, 29 Apr 2020 15:51:11 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DC0143011E8;
-        Wed, 29 Apr 2020 17:51:09 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C378620BD9729; Wed, 29 Apr 2020 17:51:09 +0200 (CEST)
-Date:   Wed, 29 Apr 2020 17:51:09 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     jpoimboe@redhat.com, alexandre.chartre@oracle.com,
-        linux-kernel@vger.kernel.org, jthierry@redhat.com,
-        tglx@linutronix.de, x86@kernel.org, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH v2 02/14] objtool: Fix ORC vs alternatives
-Message-ID: <20200429155109.GN13592@hirez.programming.kicks-ass.net>
-References: <20200428191101.886208539@infradead.org>
- <20200428191659.499074346@infradead.org>
- <alpine.LSU.2.21.2004291622160.28992@pobox.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.2004291622160.28992@pobox.suse.cz>
+        Wed, 29 Apr 2020 11:53:19 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39CFFC03C1AD
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:53:18 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id h12so2430174pjz.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:53:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:cc:from:to:message-id;
+        bh=bZ2uka4PKxjNOr47/snGSXxilpTApOVFg/i0FxlPvdM=;
+        b=S6rWdOZYnP8kNPYHI1Fl1b/K810hbnXQ6gVm/FyWNk8SqPYUbaEU7qCKKEL/Wm3y59
+         S2efPyMEdz+YVaK9i3VbjjQ9wWFsUyUfnxTsiE5ZcaeNeehVcXMLtq5uiRERk8lHSJIT
+         DyGGFmLjwS9/jSwqDEfErRMRm3g3mSxEkmIuwxUSY+pz+DXuYMB4u0cD3gNOpcJ+A1gh
+         ZirCaSMXbT0Q4qhjfoPOFtk4WQmeDTWGKOFmORXObnnEqtH5sFSwhGt7PZ87xTM3YgwW
+         5JGDrbZWh5Vx+1EW6SqRnV5YCVWy6ksFLE/R6xcP8g5PnGVWZbm6Du0wO/55Rzie2KwG
+         p0Ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:cc:from:to:message-id;
+        bh=bZ2uka4PKxjNOr47/snGSXxilpTApOVFg/i0FxlPvdM=;
+        b=JaThdHnn9+y9x7WAi7zgJ4snYrfqWI4HwkxMhPKmBjlE/6cAwEl7MBBUPeSsFQN/8F
+         OwsJd4kaaEWFpgsfP617KREne/TeqIv82WB1YVXSg4IWlfLJOyfFbPrmZz+sVNrdnMOa
+         R+ZqfZ3vFNgHAW1bQIZjLDWzV76qANps8wToPMwwRAckCm4wN7PPVygYsFu0nZBukH2v
+         N3l7emCmjBLjj/7yvbqTytYRAzkE5gNQp8CGhVEShc7XHw59zCz79F0x1BgbRLBf7MQD
+         YlT512cEIb10fnGCdeVbO2w9hzLaH/zja3mR5rEdVrlCC5GB+f1GJ5tJvGsLVWMu35Cp
+         2R3A==
+X-Gm-Message-State: AGi0PuZKiHkJeVxNms+5TAOKqo2Wu4F9nO8f/FjNL8Ns7y1FybxdS4eo
+        duK7PralVgjjMPESzfcT6k0fmMxywFxA4A==
+X-Google-Smtp-Source: APiQypLcUxgmaOGnEDrDSlI9lIATbE5uv3KudtostRSms2/dzW+4agHTHuO43W+rAFqwTqyo65XcXg==
+X-Received: by 2002:a17:902:9a41:: with SMTP id x1mr14809736plv.250.1588175597385;
+        Wed, 29 Apr 2020 08:53:17 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id u3sm1397943pfb.105.2020.04.29.08.53.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 08:53:16 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 08:53:16 -0700 (PDT)
+X-Google-Original-Date: Wed, 29 Apr 2020 08:46:39 PDT (-0700)
+Subject: [GIT PULL] RISC-V Fixes for 5.7-rc4
+CC:         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Message-ID: <mhng-bd053cce-6f5a-40f4-9e58-a5ee70cc73a1@palmerdabbelt-glaptop1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 04:33:31PM +0200, Miroslav Benes wrote:
-> On Tue, 28 Apr 2020, Peter Zijlstra wrote:
-> >  /*
-> > + * Alternatives should not contain any ORC entries, this in turn means they
-> > + * should not contain any CFI ops, which implies all instructions should have
-> > + * the same same CFI state.
-> > + *
-> > + * It is possible to constuct alternatives that have unreachable holes that go
-> > + * unreported (because they're NOPs), such holes would result in CFI_UNDEFINED
-> > + * states which then results in ORC entries, which we just said we didn't want.
-> > + *
-> > + * Avoid them by copying the CFI entry of the first instruction into the whole
-> > + * alternative.
-> > + */
-> > +static void fill_alternative_cfi(struct objtool_file *file, struct instruction *insn)
-> > +{
-> > +	struct instruction *first_insn = insn;
-> > +	int alt_group = insn->alt_group;
-> > +
-> > +	sec_for_each_insn_continue(file, insn) {
-> > +		if (insn->alt_group != alt_group)
-> > +			break;
-> > +		insn->cfi = first_insn->cfi;
-> > +	}
-> > +}
-> 
-> If I am reading this and previous patch correctly...
-> 
-> The function would copy cfi only to "orig" alternative (its insn->alts is 
-> non-empty, orig_insn->alt_group differs from new_insn->alt_group), right? 
+The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
 
-Yes.
+  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
 
-> Would it make sense to do the same for "new" alternative, because of the 
-> invariant? It seems to me it is not processed anywhere that way.
+are available in the Git repository at:
 
-No.
+  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-5.7-rc4
 
-> Am I missing something? Whenever I try to read all this alternatives 
-> handling in objtool, I get lost pretty soon.
+for you to fetch changes up to a5fe13c7b49478c95e74f31f5b8b8347735684a7:
 
-We only care about the ORC covering the original range, because that is
-the range we execute code from. The memory where we store the
-alternative instructions (.altinstruction section) is never executed,
-that is, RIP should never point there, so we don't need ORC data covering
-it.
+  riscv: select ARCH_HAS_STRICT_KERNEL_RWX only if MMU (2020-04-24 11:40:40 -0700)
 
+----------------------------------------------------------------
+RISC-V Fixes for 5.7-rc4
+
+This tag contains a handful of fixes that I'd like to target for 5.7.
+Specifically:
+
+* The change of a linker argument to allow linking with lld.
+* A build fix for configurations without a frame pointer.
+* A handful of build fixes related the SBI 0.1 vs 0.2 split.
+* The removal of STRICT_KERNEL_RWX for !MMU, which isn't useful
+
+----------------------------------------------------------------
+Damien Le Moal (1):
+      riscv: select ARCH_HAS_STRICT_KERNEL_RWX only if MMU
+
+Guenter Roeck (1):
+      RISC-V: stacktrace: Declare sp_in_global outside ifdef
+
+Ilie Halip (1):
+      riscv: fix vdso build with lld
+
+Kefeng Wang (3):
+      riscv: sbi: Correct sbi_shutdown() and sbi_clear_ipi() export
+      tty: riscv: Using RISCV_SBI_V01 instead of RISCV_SBI
+      riscv: sbi: Fix undefined reference to sbi_shutdown
+
+ arch/riscv/Kconfig              |  2 +-
+ arch/riscv/kernel/sbi.c         | 17 ++++++++++-------
+ arch/riscv/kernel/stacktrace.c  |  4 ++--
+ arch/riscv/kernel/vdso/Makefile |  6 +++---
+ drivers/tty/hvc/Kconfig         |  2 +-
+ drivers/tty/serial/Kconfig      |  2 +-
+ 6 files changed, 18 insertions(+), 15 deletions(-)
