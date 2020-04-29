@@ -2,179 +2,146 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3E3C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 636BAC83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA43B2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CC452073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:01:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgD2HA0 (ORCPT
+        id S1726561AbgD2HBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 03:00:26 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:42934 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726158AbgD2HAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 03:00:25 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxv9v8JaleeaktAA--.6S2;
-        Wed, 29 Apr 2020 15:00:13 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v5] MIPS: Loongson: Add DMA support for LS7A
-Date:   Wed, 29 Apr 2020 15:00:11 +0800
-Message-Id: <1588143611-6815-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dxv9v8JaleeaktAA--.6S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxCr4xtry7XFWkAw43XFyrZwb_yoWrWFyxpa
-        9xA3Z5Gr4YgF15CrZ5AFW8ur1rAFZ5KrW3GF42vw15tasxZ34FqFs3GF18Xr1UAF1DG3Wx
-        XFWrKw48GF1xCFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-        6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
-        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8
-        CwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
-        1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij
-        64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
-        0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4U
-        MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU9o7NUUU
-        UU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Wed, 29 Apr 2020 03:01:11 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40291 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726158AbgD2HBL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 03:01:11 -0400
+Received: by mail-lj1-f196.google.com with SMTP id y4so1416205ljn.7;
+        Wed, 29 Apr 2020 00:01:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ptPYLDei9LMsvhdKW9/nay5bhWp9Qq4b7cAcaUxshS0=;
+        b=sI7Q3oMH3ORGN4oKJKwqzteji/kk9Q7ewqE3/Y7odvuM0e2BrYhh5TWi3hPNyAj0G0
+         tFqetBv5RxQj0P0V2mM8noMXqZrkJVRTHYJs0BKIB7RlihiLUxu9JduA1P+ows7wG0nJ
+         R3O5NfaOyrbAAxh3vMvyQkLb2pav5CBz2HYhdiLQSzPbalLiH3RGTrvKIH6g93eWD3cZ
+         sj9zHrnrysnAwJdjPUm0h1/3SsfazfuWrQHE+pgvu7URXktOoYH2bQ8FDBc6L0PL15wx
+         GXdHWUeQCgjht+EeuABBiT8XZUa/CSUoQ9mFkzxD4HRu8tPTsBZmTSePgwtnoaVPr0kn
+         KwlA==
+X-Gm-Message-State: AGi0PuaPI+LONLGG8aNn+8X+fhPKfHhPahUFeSee6ysBkFRleRigCGyf
+        VY0SNZgmqXTKEcDNo9qxzWU=
+X-Google-Smtp-Source: APiQypKMS7huMXVCwkN0xqaQZEasmGknHyh+qzVqmq/W6qhQomOoC00vc8yxZ9z4Kv8EM7paUv0ttQ==
+X-Received: by 2002:a2e:96c2:: with SMTP id d2mr20730865ljj.214.1588143668845;
+        Wed, 29 Apr 2020 00:01:08 -0700 (PDT)
+Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
+        by smtp.gmail.com with ESMTPSA id w29sm1775466lfq.35.2020.04.29.00.01.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 00:01:08 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 10:00:22 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     sre@kernel.org, robh+dt@kernel.org, broonie@kernel.org,
+        lgirdwood@gmail.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH v10 06/11] dt-bindings: battery: add new battery
+ parameters
+Message-ID: <f2f0eef84a3b0bf852ffb07e2a6224f5b19ab653.1586925868.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1586925868.git.matti.vaittinen@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1586925868.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the current market, the most used bridge chip on the Loongson
-platform are RS780E and LS7A, the RS780E bridge chip is already
-supported by the mainline kernel.
+Add:
 
-In order to use the default implementation of __phys_to_dma() and
-__dma_to_phys() in dma-direct.h, remove CONFIG_ARCH_HAS_PHYS_TO_DMA
-and then set the bus's DMA limit to 36 bit for RS780E to maintain
-downward compatibility.
+ - trickle-charge-current-microamp:
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Some chargers have 3 charging stages. First one when battery is almost
+empty is often called as trickle-charge. Last state when battery has been
+"woken up" is usually called as fast-charge. In addition to this some
+chargers have a 'middle state' which ROHM BD99954 data-sheet describes as
+pre-charge. Some batteries can benefit from this 3-phase charging
+[citation needed].
+
+Introduce trickle-charge-current-microamp so that batteries can give
+charging current limit for all three states.
+
+ - precharge-upper-limit-microvolt:
+
+When battery voltage has reached certain limit we change from
+trickle-charge to next charging state (pre-charge for BD99954). Allow
+battery to specify this limit.
+
+ - re-charge-voltage-microvolt:
+
+Allow giving a battery specific voltage limit for chargers which can
+automatically re-start charging when battery has discharghed down to
+this limit.
+
+- over-voltage-threshold-microvolt
+
+Allow specifying voltage threshold after which the battery is assumed to
+be faulty.
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
 
-Hi Christoph and Jiaxun,
+No changes since v9
 
-Thank you very much for your suggestions.
+ Documentation/devicetree/bindings/power/supply/battery.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-v5:
-  - use the default implementation of __phys_to_dma()
-    and __dma_to_phys() in dma-direct.h
-
- arch/mips/Kconfig                                  |  1 -
- arch/mips/include/asm/mach-loongson64/boot_param.h |  5 +++++
- arch/mips/loongson64/dma.c                         | 22 +++++++++++-----------
- arch/mips/loongson64/env.c                         |  2 ++
- 4 files changed, 18 insertions(+), 12 deletions(-)
-
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 9f15539..12b6bdb 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -1454,7 +1454,6 @@ choice
- config CPU_LOONGSON64
- 	bool "Loongson 64-bit CPU"
- 	depends on SYS_HAS_CPU_LOONGSON64
--	select ARCH_HAS_PHYS_TO_DMA
- 	select CPU_MIPSR2
- 	select CPU_HAS_PREFETCH
- 	select CPU_SUPPORTS_64BIT_KERNEL
-diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h b/arch/mips/include/asm/mach-loongson64/boot_param.h
-index fc9f14b..cccf4cb 100644
---- a/arch/mips/include/asm/mach-loongson64/boot_param.h
-+++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
-@@ -197,6 +197,7 @@ enum loongson_bridge_type {
- 	LS7A = 2
- };
+diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+index 3049cf88bdcf..5e29595edd74 100644
+--- a/Documentation/devicetree/bindings/power/supply/battery.txt
++++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+@@ -11,15 +11,21 @@ different type. This prevents unpredictable, potentially harmful,
+ behavior should a replacement that changes the battery type occur
+ without a corresponding update to the dtb.
  
-+struct pci_dev;
- struct loongson_system_configuration {
- 	u32 nr_cpus;
- 	u32 nr_nodes;
-@@ -221,9 +222,13 @@ struct loongson_system_configuration {
- 	u32 nr_sensors;
- 	struct sensor_device sensors[MAX_SENSORS];
- 	u64 workarounds;
-+	void (*dma_config)(struct pci_dev *pdev);
- };
- 
- extern struct efi_memory_map_loongson *loongson_memmap;
- extern struct loongson_system_configuration loongson_sysconf;
- 
-+extern void rs780e_dma_config(struct pci_dev *pdev);
-+extern void ls7a_dma_config(struct pci_dev *pdev);
++Please note that not all charger drivers respect all of the properties.
 +
- #endif
-diff --git a/arch/mips/loongson64/dma.c b/arch/mips/loongson64/dma.c
-index 5e86635..6878bcc 100644
---- a/arch/mips/loongson64/dma.c
-+++ b/arch/mips/loongson64/dma.c
-@@ -1,24 +1,24 @@
- // SPDX-License-Identifier: GPL-2.0
--#include <linux/dma-direct.h>
-+#include <linux/pci.h>
- #include <linux/init.h>
- #include <linux/swiotlb.h>
+ Required Properties:
+  - compatible: Must be "simple-battery"
  
--dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
-+void rs780e_dma_config(struct pci_dev *pdev)
- {
--	/* We extract 2bit node id (bit 44~47, only bit 44~45 used now) from
--	 * Loongson-3's 48bit address space and embed it into 40bit */
--	long nid = (paddr >> 44) & 0x3;
--	return ((nid << 44) ^ paddr) | (nid << 37);
-+	pdev->dev.bus_dma_limit = DMA_BIT_MASK(36);
- }
- 
--phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t daddr)
-+void ls7a_dma_config(struct pci_dev *pdev)
- {
--	/* We extract 2bit node id (bit 44~47, only bit 44~45 used now) from
--	 * Loongson-3's 48bit address space and embed it into 40bit */
--	long nid = (daddr >> 37) & 0x3;
--	return ((nid << 37) ^ daddr) | (nid << 44);
- }
- 
-+void loongson_dma_config(struct pci_dev *pdev)
-+{
-+	loongson_sysconf.dma_config(pdev);
-+}
-+
-+DECLARE_PCI_FIXUP_EARLY(PCI_ANY_ID, PCI_ANY_ID, loongson_dma_config);
-+
- void __init plat_swiotlb_setup(void)
- {
- 	swiotlb_init(1);
-diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
-index 71f4aaf..496f401 100644
---- a/arch/mips/loongson64/env.c
-+++ b/arch/mips/loongson64/env.c
-@@ -192,8 +192,10 @@ void __init prom_init_env(void)
- 	if (vendor == PCI_VENDOR_ID_LOONGSON && device == 0x7a00) {
- 		pr_info("The bridge chip is LS7A\n");
- 		loongson_sysconf.bridgetype = LS7A;
-+		loongson_sysconf.dma_config = ls7a_dma_config;
- 	} else {
- 		pr_info("The bridge chip is RS780E or SR5690\n");
- 		loongson_sysconf.bridgetype = RS780E;
-+		loongson_sysconf.dma_config = rs780e_dma_config;
- 	}
- }
+ Optional Properties:
++ - over-voltage-threshold-microvolt: battery over-voltage limit
++ - re-charge-voltage-microvolt: limit to automatically start charging again
+  - voltage-min-design-microvolt: drained battery voltage
+  - voltage-max-design-microvolt: fully charged battery voltage
+  - energy-full-design-microwatt-hours: battery design energy
+  - charge-full-design-microamp-hours: battery design capacity
++ - trickle-charge-current-microamp: current for trickle-charge phase
+  - precharge-current-microamp: current for pre-charge phase
++ - precharge-upper-limit-microvolt: limit when to change to constant charging
+  - charge-term-current-microamp: current for charge termination phase
+  - constant-charge-current-max-microamp: maximum constant input current
+  - constant-charge-voltage-max-microvolt: maximum constant input voltage
 -- 
-2.1.0
+2.21.0
 
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
