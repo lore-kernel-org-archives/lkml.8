@@ -2,44 +2,40 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD87C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 126ACC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 176F720B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0BC9208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:48:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgD2QsB (ORCPT
+        id S1726960AbgD2Qrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 12:48:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58272 "EHLO mx2.suse.de"
+        Wed, 29 Apr 2020 12:47:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58186 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726884AbgD2Qry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 12:47:54 -0400
+        id S1726456AbgD2Qru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 12:47:50 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 44D2DAD76;
-        Wed, 29 Apr 2020 16:47:51 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id BB954AD49;
+        Wed, 29 Apr 2020 16:47:47 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org,
-        helgaas@kernel.org, linux-kernel@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com
+        helgaas@kernel.org, linux-kernel@vger.kernel.org
 Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
         linux-pci@vger.kernel.org, wahrenst@gmx.net,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v7 3/4] PCI: brcmstb: Wait for Raspberry Pi's firmware when present
-Date:   Wed, 29 Apr 2020 18:47:33 +0200
-Message-Id: <20200429164734.21506-4-nsaenzjulienne@suse.de>
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v7 0/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
+Date:   Wed, 29 Apr 2020 18:47:30 +0200
+Message-Id: <20200429164734.21506-1-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200429164734.21506-1-nsaenzjulienne@suse.de>
-References: <20200429164734.21506-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,62 +43,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-xHCI's PCI fixup, run at the end of pcie-brcmstb's probe, depends on
-RPi4's VideoCore firmware interface to be up and running. It's possible
-for both initializations to race, so make sure it's available prior to
-starting.
+On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
+loaded directly from an EEPROM or, if not present, by the SoC's
+co-processor, VideoCore. This series adds support for the later.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Note that there are a set of constraints we have to consider (some of
+them I missed on v1):
+ - We need to make sure the VideoCore firmware interface is up and
+   running before running the VL805 firmware load call.
+
+ - There is no way to discern RPi4's VL805 chip from other platforms',
+   so we need the firmware load to happen *before* running
+   quirk_usb_handoff_xhci(). Failure to do so results in an unwarranted
+   5 second wait while the fixup code polls xHC's unexisting state.
+
+By Florian's suggestion I've been spending some time exploring the device
+link[1] API in order to see if that could save us from explicitly creating
+probe dependencies between pcie-brcmstb and firmware/raspberrypi (patch #3).
+Technically these dependencies could be inferred from DT. It turns out Saravana
+Kannan has been looking at this already. A new boot mechanism, activated with
+fw_devlink=on takes care of the device probe ordering on devices with
+consumer/supplier relationships. For now this relationship is created based on
+the usage of generic DT properties, but has no support for vendor-specifc DT
+properties, which we'd be forced to use in order to create a relationship
+between our two devices since our setup is highly non generic. There will
+probably be at some point support for such properties, and we will then be able
+to revisit some of this code.
+
+All this is based on the work by Tim Gover in RPi's downstream
+kernel[2].
+
+[1] https://www.kernel.org/doc/html/v4.13/driver-api/device_link.html
+[2] https://github.com/raspberrypi/linux/commit/9935b4c7e360b4494b4cb6e3ce797238a1ab78bd
 
 ---
 
 Changes since v6:
-- Add more complete comment
+ - Make rpi_firmware_init_vl805() more robust
+ - Rewrite comments and patch descriptions to be more accessible to non RPi
+   fluent people
+ - Removed Florian's Reviewed-by in patch #2 as function changed
+   substantially
+ - Tested with/witout u-boot
 
- drivers/pci/controller/pcie-brcmstb.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Changes since v5:
+ - Fix issues reported by Kbuild test robot
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 6d79d14527a6..0b97b94c4a9a 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -28,6 +28,8 @@
- #include <linux/string.h>
- #include <linux/types.h>
- 
-+#include <soc/bcm2835/raspberrypi-firmware.h>
-+
- #include "../pci.h"
- 
- /* BRCM_PCIE_CAP_REGS - Offset for the mandatory capability config regs */
-@@ -917,11 +919,26 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node, *msi_np;
- 	struct pci_host_bridge *bridge;
-+	struct device_node *fw_np;
- 	struct brcm_pcie *pcie;
- 	struct pci_bus *child;
- 	struct resource *res;
- 	int ret;
- 
-+	/*
-+	 * We have to wait for Raspberry Pi's firmware interface to be up as a
-+	 * PCI fixup, rpi_firmware_init_vl805(), depends on it. This driver's
-+	 * probe can race with the firmware interface's (see
-+	 * drivers/firmware/raspberrypi.c) and potentially break the PCI fixup.
-+	 */
-+	fw_np = of_find_compatible_node(NULL, NULL,
-+					"raspberrypi,bcm2835-firmware");
-+	if (fw_np && !rpi_firmware_get(fw_np)) {
-+		of_node_put(fw_np);
-+		return -EPROBE_DEFER;
-+	}
-+	of_node_put(fw_np);
-+
- 	bridge = devm_pci_alloc_host_bridge(&pdev->dev, sizeof(*pcie));
- 	if (!bridge)
- 		return -ENOMEM;
+Changes since v4:
+ - Addressed Sergei's comments
+ - Fix potential warning in patch #2
+
+Changes since v3:
+ - Addressed Greg's comments
+
+There was no v2, my bad.
+
+Changes since v1:
+ - Addressed Floarians comments
+
+Nicolas Saenz Julienne (4):
+  soc: bcm2835: Add notify xHCI reset property
+  firmware: raspberrypi: Introduce vl805 init routine
+  PCI: brcmstb: Wait for Raspberry Pi's firmware when present
+  USB: pci-quirks: Add Raspberry Pi 4 quirk
+
+ drivers/firmware/Kconfig                   |  3 +-
+ drivers/firmware/raspberrypi.c             | 52 ++++++++++++++++++++++
+ drivers/pci/controller/pcie-brcmstb.c      | 17 +++++++
+ drivers/usb/host/pci-quirks.c              | 16 +++++++
+ include/soc/bcm2835/raspberrypi-firmware.h |  9 +++-
+ 5 files changed, 95 insertions(+), 2 deletions(-)
+
 -- 
 2.26.2
 
