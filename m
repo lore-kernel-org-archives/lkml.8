@@ -2,81 +2,133 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84379C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6F0C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB902083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15294208E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:39:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VEWbDlyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgD2ViV (ORCPT
+        id S1726974AbgD2Vjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 17:38:21 -0400
-Received: from muru.com ([72.249.23.125]:51722 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbgD2ViV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 17:38:21 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 8507F810A;
-        Wed, 29 Apr 2020 21:39:08 +0000 (UTC)
-Date:   Wed, 29 Apr 2020 14:38:17 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Andreas Kemnade <andreas@kemnade.info>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime
- autosuspend
-Message-ID: <20200429213817.GU37466@atomide.com>
-References: <20200421180220.GB37466@atomide.com>
- <70F19A6E-7B36-4873-9364-F284A14EE3A0@goldelico.com>
- <20200421182017.GC37466@atomide.com>
- <D3E40A6A-39B8-4F3F-9ABC-28EAE8D623A6@goldelico.com>
- <20200422120418.49a40c75@aktux>
- <6E3A50D9-0F15-4A56-8C5E-7CDC63E8AF9F@goldelico.com>
- <A2AC3E81-49B2-4CF2-A7CF-6075AEB1B72D@goldelico.com>
- <44AD9673-AE02-498F-A5CC-48499DF226E3@goldelico.com>
- <E8575FE4-4BC2-41B7-B574-339C58D9CB5E@goldelico.com>
- <891CBD28-3F91-493D-AD80-6575608846A4@goldelico.com>
+        Wed, 29 Apr 2020 17:39:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44456 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726481AbgD2Vjr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 17:39:47 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6A6BC03C1AE;
+        Wed, 29 Apr 2020 14:39:47 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id k12so3302939qtm.4;
+        Wed, 29 Apr 2020 14:39:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=//81xuDvw91NBaGMo+Bz8c0hjBsHlIYF4T1Vb0VVEKY=;
+        b=VEWbDlyyto3P5se9pAuHdp3HB7tEO93f8SekLR2N5ljJaViCYo9BN7XM+EBsZP8Lcp
+         7lwk3pxG7w0ekHWl4HQGpDNCL9jDRtHuvWpbnaEMR5EBT40WdVkohAVs3OhuHYf4R6Ki
+         ZONR+NCueT96EBBRY9dbWnNyyvh6NMuhJVj8AdMG3athLtFTOulaIh4TSi3FRjhz6FTj
+         6WY5j+royn9wy9jWJWsYJC9Bs9HYhxPDglBjQrclZV/+Ua+MmR/j/WXL4tPPELnkFRie
+         fFvvgQI8bkkioU/8ZI5qmROcUR3OGreyuTuR8TDXmdZ4pQ93Ev0gJBhirMbnF+Ya/+ue
+         hyGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=//81xuDvw91NBaGMo+Bz8c0hjBsHlIYF4T1Vb0VVEKY=;
+        b=IDqUJO7fzcqr7wdRxrqBh4EAnRJYHzE9ghBvosMBc7vhr3QS1U2y0MUAx1MIAPUOUc
+         D0ARzTFiJY4iTzQhII+tFOf3jsECsbBE6SSXxeP8nCb7MUyYJaFeTfBMOyBvzPTS/rza
+         LcaL2x7nYtripC1txkO9HFHc/n1GWnpEzjzieyXa/6SlE+WYjC4VBniNODlDE55SDBJ/
+         ikxeTdc2nz+lnv9Qe3h46usg/aRBkZO/C5qHDuWZIKredc8qfBktWRKDUu+kWPpmC1vE
+         aZyhwERL8jIwnkit4DuCQyvLFP3beUkpqpl176k2xOGqctP8mUSNhgGplrazur+uaDB4
+         x4oA==
+X-Gm-Message-State: AGi0PubcAsqV3mZRs1WWRkiznv52xG1wfUIg85Cu00dPd7ovTMbeK37f
+        r97QesSB7cp+mHMTXOMK5v0=
+X-Google-Smtp-Source: APiQypL5f0/42X6H/Sqf+fFr1BX3JRcnlSfKpVCtbEvEzXJ/Aj+6ETtsQMvrDFCx10DysP0NzjLt4A==
+X-Received: by 2002:aed:2e65:: with SMTP id j92mr347270qtd.273.1588196386857;
+        Wed, 29 Apr 2020 14:39:46 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id u11sm418859qtj.10.2020.04.29.14.39.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 14:39:46 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 29 Apr 2020 17:39:44 -0400
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 09/10] efi/x86: Support builtin command line
+Message-ID: <20200429213944.GB1621173@rani.riverdale.lan>
+References: <20200429174120.1497212-1-nivedita@alum.mit.edu>
+ <20200429174120.1497212-11-nivedita@alum.mit.edu>
+ <CAMj1kXF_-ZA4ghy_8Gx831UcAwn0VjFmDub5L1_h28vV+sdPDw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <891CBD28-3F91-493D-AD80-6575608846A4@goldelico.com>
+In-Reply-To: <CAMj1kXF_-ZA4ghy_8Gx831UcAwn0VjFmDub5L1_h28vV+sdPDw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [200429 21:35]:
-> I have reworked the way the spinlocks, setting and resetting
-> of the hdq_irqstatus bits are done and now it works right from
-> start of boot. Without any timeouts or delays.
+On Wed, Apr 29, 2020 at 09:07:32PM +0200, Ard Biesheuvel wrote:
+> On Wed, 29 Apr 2020 at 19:41, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > Add support for the x86 CMDLINE_BOOL and CMDLINE_OVERRIDE configuration
+> > options.
+> >
+> > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> > ---
+> >  drivers/firmware/efi/libstub/x86-stub.c | 12 ++++++++----
+> >  1 file changed, 8 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+> > index 85a924fecc87..0faba30d6406 100644
+> > --- a/drivers/firmware/efi/libstub/x86-stub.c
+> > +++ b/drivers/firmware/efi/libstub/x86-stub.c
+> > @@ -680,7 +680,6 @@ unsigned long efi_main(efi_handle_t handle,
+> >         unsigned long buffer_start, buffer_end;
+> >         struct setup_header *hdr = &boot_params->hdr;
+> >         efi_status_t status;
+> > -       unsigned long cmdline_paddr;
+> >
+> >         efi_system_table = sys_table_arg;
+> >
+> > @@ -739,9 +738,14 @@ unsigned long efi_main(efi_handle_t handle,
+> >                 image_offset = 0;
+> >         }
+> >
+> > -       cmdline_paddr = ((u64)hdr->cmd_line_ptr |
+> > -                        ((u64)boot_params->ext_cmd_line_ptr << 32));
+> > -       efi_parse_options((char *)cmdline_paddr);
+> > +#ifdef CONFIG_CMDLINE_BOOL
+> > +       efi_parse_options(CONFIG_CMDLINE);
+> > +#endif
 > 
-> I am not exactly sure what went wrong, but it seems as if
-> the read is already done when the write interrupt status
-> bit is processed. Then, the old logic did wipe out both
-> bits by hdq_reset_irqstatus() and the read code did timeout
-> because it did not notice that the data had already been
-> available. This may depend on other system activities so
-> that it can explain why other tests didn't reveal it.
+> Can we use IS_ENABLED() here as well?
+
+Unfortunately on x86, CONFIG_CMDLINE is not defined if
+CONFIG_CMDLINE_BOOL isn't enabled. So turning this into an
+IS_ENABLED(CONFIG_CMDLINE_BOOL) causes a compile error when it's
+disabled due to CONFIG_CMDLINE being an undeclared symbol.
+
 > 
-> omap_hdq_runtime_resume() and omap_hdq_runtime_suspend()
-> also behave fine.
-> 
-> Before I can post something I need to clean up my hacks
-> and add similar fixes to omap_hdq_break() and omap_w1_triplet()
-> where I hope that I don't break those...
-
-OK good to hear you were able to figure out what is
-going on here.
-
-Regards,
-
-Tony
+> > +       if (!IS_ENABLED(CONFIG_CMDLINE_OVERRIDE)) {
+> > +               unsigned long cmdline_paddr = ((u64)hdr->cmd_line_ptr |
+> > +                                              ((u64)boot_params->ext_cmd_line_ptr << 32));
+> > +               efi_parse_options((char *)cmdline_paddr);
+> > +       }
+> >
+> >         /*
+> >          * At this point, an initrd may already have been loaded by the
+> > --
+> > 2.26.2
+> >
