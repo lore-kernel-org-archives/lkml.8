@@ -2,105 +2,215 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C01C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C589C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 417A42082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:36:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bt2AeFPb"
+	by mail.kernel.org (Postfix) with ESMTP id 614A220731
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:37:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbgD2Ig0 (ORCPT
+        id S1726692AbgD2Ihe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:36:26 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51406 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726530AbgD2IgZ (ORCPT
+        Wed, 29 Apr 2020 04:37:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34454 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726436AbgD2Ihe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:36:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588149384;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZRgQdTkn6qzRkQ8VVsW9dG8WYy4nYX+Jt55KEFeKtGA=;
-        b=bt2AeFPbS8c5/9pK9xDWvXzwSgwFvbuP/cLKEYCcrW9MQBN2c3tBEukW95PCiTgUQTYFNx
-        jm8OYNRaDrn43lYVbALuNAekSZHd6un84tF5QmSFr1Ub3oQTq9h9CBZsKiNd968X455Cdt
-        Bs0rGrOM928PdziBwBBzwMK+6VjF+QA=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-142-NbAodbhuNOa1oIDvB6y9HA-1; Wed, 29 Apr 2020 04:36:19 -0400
-X-MC-Unique: NbAodbhuNOa1oIDvB6y9HA-1
-Received: by mail-wr1-f69.google.com with SMTP id p16so1354492wro.16
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 01:36:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZRgQdTkn6qzRkQ8VVsW9dG8WYy4nYX+Jt55KEFeKtGA=;
-        b=gO1+Oj7PZ/t5L36uweqs9wGD0WgpOvJ+GXDLjRhkPy0iVz6aFfpPbt98/N7PCUFM7T
-         X6rsipSzB70BjtpV6XKidQ4Qqnd1yUwHKOKsk0LasnKiX9BkQ2eFrOflOrjS98n6YE6b
-         UqzLhsfWBitR7mBaWOJLcFXa9j98GkOkPGJzrKzdiSUtyvhPj/KGQPvjrM2PkPEhKMhe
-         2mexHITILuN0JNO7e2/loFBlBO3m/fMAWJsOIvIH84AZ52QHvg7gEnQizQnARSKj2fOz
-         I/FBaGbAahG7DrAkktc3vNLQZRKjBoJ4T6vrr+jh1w/0Xw3hcS1nWncUUp6zxVyduRfJ
-         7PsA==
-X-Gm-Message-State: AGi0Pua9EZg1OUeMn1huk+XXBb7Dm4qjieJ2MXkrhV/cbGknw3db8kuk
-        +Hc8wy+UeGEUvn7+Hgr3pvpORqwwtyEZNx5ZRuyBsIr7dkfW5FL5IvB4nU+0FdYtLXSvtRJELXZ
-        CChTTZTJw/zIeALTZbwAMehtc
-X-Received: by 2002:adf:9342:: with SMTP id 60mr36541879wro.129.1588149378460;
-        Wed, 29 Apr 2020 01:36:18 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLSaWR1sAvWMX7AGwwO6UHEwfuQ24iWbemgcg/Uw0ef/sYvFheYyqtDLemSd+ABFL6cnQwmhw==
-X-Received: by 2002:adf:9342:: with SMTP id 60mr36541854wro.129.1588149378247;
-        Wed, 29 Apr 2020 01:36:18 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:ac19:d1fb:3f5f:d54f? ([2001:b07:6468:f312:ac19:d1fb:3f5f:d54f])
-        by smtp.gmail.com with ESMTPSA id s6sm6686281wmh.17.2020.04.29.01.36.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 01:36:17 -0700 (PDT)
-Subject: Re: [PATCH 12/13] KVM: x86: Replace late check_nested_events() hack
- with more precise fix
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Oliver Upton <oupton@google.com>,
-        Peter Shier <pshier@google.com>
-References: <20200423022550.15113-1-sean.j.christopherson@intel.com>
- <20200423022550.15113-13-sean.j.christopherson@intel.com>
- <CALMp9eTiGdYPpejAOLNz7zzqP1wPXb_zSL02F27VMHeHGzANJg@mail.gmail.com>
- <20200428222010.GN12735@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <6b35ec9b-9565-ea6c-3de5-0957a9f76257@redhat.com>
-Date:   Wed, 29 Apr 2020 10:36:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 29 Apr 2020 04:37:34 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A52EC03C1AD;
+        Wed, 29 Apr 2020 01:37:34 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 862B52A205F;
+        Wed, 29 Apr 2020 09:37:31 +0100 (BST)
+Date:   Wed, 29 Apr 2020 10:37:27 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     masonccyang@mxic.com.tw
+Cc:     "Pratyush Yadav" <me@yadavpratyush.com>, broonie@kernel.org,
+        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        miquel.raynal@bootlin.com, "Pratyush Yadav" <p.yadav@ti.com>,
+        richard@nod.at, tudor.ambarus@microchip.com, vigneshr@ti.com
+Subject: Re: [PATCH v2 0/5] mtd: spi-nor: Add support for Octal 8D-8D-8D
+ mode
+Message-ID: <20200429103727.20835000@collabora.com>
+In-Reply-To: <OF04289CE2.B346916F-ON48258559.002280BD-48258559.00295800@mxic.com.tw>
+References: <1587451187-6889-1-git-send-email-masonccyang@mxic.com.tw>
+        <20200421092328.129308f6@collabora.com>
+        <20200427175536.2mmei2fy6f7bg6jm@yadavpratyush.com>
+        <OF18214CA5.6A9B2B30-ON48258558.001D894C-48258558.002249E0@mxic.com.tw>
+        <20200428085401.574wmo6qddmumd7q@yadavpratyush.com>
+        <OF04289CE2.B346916F-ON48258559.002280BD-48258559.00295800@mxic.com.tw>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200428222010.GN12735@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/20 00:20, Sean Christopherson wrote:
->> So, that's what this mess was all about! Well, this certainly looks better.
-> Right?  I can't count the number of times I've looked at this code and
-> wondered what the hell it was doing.
+On Wed, 29 Apr 2020 15:31:35 +0800
+masonccyang@mxic.com.tw wrote:
+
+> Hi Pratyush,
 > 
-> Side topic, I just realized you're reviewing my original series.  Paolo
-> commandeered it to extend it to SVM. https://patchwork.kernel.org/cover/11508679/
+>  
+> > > > > On Tue, 21 Apr 2020 14:39:42 +0800
+> > > > > Mason Yang <masonccyang@mxic.com.tw> wrote:
+> > > > >   
+> > > > > > Hello,
+> > > > > > 
+> > > > > > This is repost of patchset from Boris Brezillon's
+> > > > > > [RFC,00/18] mtd: spi-nor: Proposal for 8-8-8 mode support [1].  
+> > > > > 
+> > > > > I only quickly went through the patches you sent and saying it's a
+> > > > > repost of the RFC is a bit of a lie. You completely ignored the   
+> state
+> > > > > tracking I was trying to do to avoid leaving the flash in 8D mode   
+> when
+> > > > > suspending/resetting the board, and I think that part is crucial.   
+> If I
+> > > > > remember correctly, we already had this discussion so I must say   
+> I'm a
+> > > > > bit disappointed.
+> > > > > 
+> > > > > Can you sync with Pratyush? I think his series [1] is better in   
+> that 
+> > > it  
+> > > > > tries to restore the flash in single-SPI mode before suspend (it's
+> > > > > missing the shutdown case, but that can be easily added I think).   
+> Of
+> > > > > course that'd be even better to have proper state tracking at the   
+> SPI
+> > > > > NOR level.  
+> > > > 
+> > > > Hi Mason,
+> > > > 
+> > > > I posted a re-roll of my series here [0]. Could you please base your   
+> 
+> > > > changes on top of it? Let me know if the series is missing something   
+> you 
+> > >   
+> > > > need.
+> > > > 
+> > > > [0]   
+> > >   
+> https://lore.kernel.org/linux-mtd/20200424184410.8578-1-p.yadav@ti.com/
+> > > 
+> > > 
+> > > Our mx25uw51245g supports BFPT DWORD-18,19 and 20 data and xSPI   
+> profile 
+> > > 1.0,
+> > > and it comply with BFPT DWORD-19, octal mode enable sequences by write   
+> CFG 
+> > > Reg2 
+> > > with instruction 0x72. Therefore, I can't apply your patches.  
+> > 
+> > I didn't mean apply my patches directly. I meant more along the lines of   
+> 
+> > edit your patches to work on top of my series. It should be as easy as 
+> > adding your flash's fixup hooks and its octal DTR enable hook, but if my   
+> 
+> > series is missing something you need (like complete Profile 1.0 parsing,   
+> 
+> > which I left out because I wanted to be conservative and didn't see any 
+> > immediate use-case for us), let me know, and we can work together to 
+> > address it.  
+> 
+> yes,sure!
+> let's work together to upstream the Octal 8D-8D-8D driver to mainline.
+> 
+> The main concern is where and how to enable xSPI octal mode?
+> 
+> Vignesh don't agree to enable it in fixup hooks and that's why I patched
+> it to spi_nor_late_init_params() and confirmed the device support xSPI 
+> Octal mode after BFPT DWORD-19 and xSPI pf 1.0 have been parsed.
+> 
+> I can't apply your patches to enable xSPI Octal mode for mx25uw51245g 
+> because your patches set up Octal protocol first and then using Octal 
+> protocol to write Configuration Register 2(CFG Reg2). I think driver
+> should write CFG Reg2 in SPI 1-1-1 mode (power on state) and make sure
+> write CFG Reg 2 is success and then setup Octa protocol in the last.
+> 
+> As JESD216F description on BFPT DOWRD 19th, only two way to enable 
+> xSPI Octal mode;
+> one is by two instruction: issue instruction 06h(WREN) and then E8h.
+> the other is issue instruction 06h, then issue instruction 72h (Write
+> CFG Reg2), address 0h and data 02h (8D-8D-8D).
+> 
+> Let our patches comply with this. you may refer to my patches
+> [v2,3/5] mtd: spi-nor: Parse BFPT DWORD-18, 19 and 20 for Octal 8D-8D-8D 
+> mode
+> 
+>                  /* Octal mode enable sequences. */
+>                  switch (bfpt.dwords[BFPT_DWORD(19)] & 
+> BFPT_DWORD19_OCTAL_SEQ_MASK) {
+>                  case BFPT_DWORD19_TWO_INST:
+> +       ----> to patch here.
+>                                  break;
+>                  case BFPT_DWORD19_CFG_REG2:
+>                                  params->xspi_enable = 
+> spi_nor_cfg_reg2_octal_enable;
+>                                  break;
+>                  default:
+>                                  break;
+>                  }
+> 
+> 
+> >   
+> > > I quickly went through your patches but can't reply them in each your 
+> > > patches.
+> > > 
+> > > i.e,.
+> > > 1) [v4,03/16] spi: spi-mem: allow specifying a command's extension
+> > > 
+> > > -                                u8 opcode;
+> > > +                                u16 opcode;
+> > > 
+> > > big/little Endian issue, right? 
+> > > why not just u8 ext_opcode;
+> > > No any impact for exist code and actually only xSPI device use   
+> extension 
+> > > command.  
+> > 
+> > Boris already explained the reasoning behind it.  
+> 
+> yup, I got his point and please make sure CPU data access.
+> 
+> i.e,.
+> Fix endianness of the BFPT DWORDs and xSPI in sfdp.c
+> 
+> and your patch,
+> +                                ext = spi_nor_get_cmd_ext(nor, op);
+> +                                op->cmd.opcode = (op->cmd.opcode << 8) | 
+> ext;
+> +                                op->cmd.nbytes = 2;
+> 
+> I think maybe using u8 opcode[2] could avoid endianness.
+> 
 
-If you can just send a patch to squash into 9/13 I can take care of it.
+Again, if there's an endianness issue it's in your SPI driver, not
+here, and I suspect you'd have the same issue with the address cycles.
+SPI mem protocols has been using big endian for everything, and I think
+that should be applied to dual-byte opcodes too.
 
-Paolo
+> Moreover, Vignesh think it's fine to use u8 ext_opcode in my v1 patches.
+> please check his comments on
+> https://patchwork.ozlabs.org/project/linux-mtd/patch/1573808288-19365-3-git-send-email-masonccyang@mxic.com.tw/ 
+> 
+> 
+> 
+> Let's open this discussion and maybe Vighesh and Tudor could have some 
+> comments on it.
 
+Changing for opcode[2] would mean patching all spi-mem drivers. That's
+doable, but given we already have the address field encoded in a u64, I
+don't see a good reason to not apply that rule to the opcode.
