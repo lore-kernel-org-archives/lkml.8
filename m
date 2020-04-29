@@ -4,34 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8699FC8300A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5E4C8300E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67627214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44240214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:10:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbgD2WJ5 (ORCPT
+        id S1728321AbgD2WKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 18:09:57 -0400
-Received: from mga09.intel.com ([134.134.136.24]:61306 "EHLO mga09.intel.com"
+        Wed, 29 Apr 2020 18:10:12 -0400
+Received: from mga09.intel.com ([134.134.136.24]:61304 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727933AbgD2WIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 18:08:49 -0400
-IronPort-SDR: QAZBZQ+Nojq1cmQyD28yxiVHeb5E3jIv+PHy9CTGyVEjR7yInj26Aw4F1Ao2BDn/NkOBPBq3pF
- uxqrfFQ6QSNA==
+        id S1727872AbgD2WIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 18:08:45 -0400
+IronPort-SDR: hRKsZFFIQixe9c+euo1hTY6Zkg3ShnEfVwEgYZRzEY0PQU6WhVEe3HRqQgFeFcwmbjM1tEi0+R
+ o7CoIg3y2isA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 15:08:48 -0700
-IronPort-SDR: wUPVS6TcPPbWAbooMO8NjtL8Z4wUCmoBJDKvJwh8pI0Ugdlvf7Cmbj8k5QRjSmB+Y+2bKrQAYs
- h3mXof4ZmPLw==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 15:08:45 -0700
+IronPort-SDR: PFXMnD/j+kXYm8CKr+hLBEvIHbyZcKPhf0ucejIQHc8TYKQ9zHrRtVm0vZnmlb0cV9YN+FFokj
+ Kv7R5n21D3SQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
-   d="scan'208";a="276308906"
+   d="scan'208";a="276308882"
 Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by orsmga002.jf.intel.com with ESMTP; 29 Apr 2020 15:08:48 -0700
+  by orsmga002.jf.intel.com with ESMTP; 29 Apr 2020 15:08:44 -0700
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
 To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -59,9 +60,9 @@ To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Dave Martin <Dave.Martin@arm.com>,
         Weijiang Yang <weijiang.yang@intel.com>
 Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v10 16/26] mm: Add guard pages around a shadow stack.
-Date:   Wed, 29 Apr 2020 15:07:22 -0700
-Message-Id: <20200429220732.31602-17-yu-cheng.yu@intel.com>
+Subject: [PATCH v10 10/26] x86/mm: Update pte_modify for _PAGE_COW
+Date:   Wed, 29 Apr 2020 15:07:16 -0700
+Message-Id: <20200429220732.31602-11-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200429220732.31602-1-yu-cheng.yu@intel.com>
 References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
@@ -72,96 +73,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-INCSSP(Q/D) increments shadow stack pointer and 'pops and discards' the
-first and the last elements in the range, effectively touches those memory
-areas.
+Pte_modify() changes a PTE to 'newprot'.  It doesn't use the pte_*()
+helpers that a previous patch fixed up, so we need a new site.
 
-The maximum moving distance by INCSSPQ is 255 * 8 = 2040 bytes and
-255 * 4 = 1020 bytes by INCSSPD.  Both ranges are far from PAGE_SIZE.
-Thus, putting a gap page on both ends of a shadow stack prevents INCSSP,
-CALL, and RET from going beyond.
+Introduce fixup_dirty_pte() to set the dirty bits based on _PAGE_RW, and
+apply the same changes to pmd_modify().
 
 Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 ---
 v10:
-- Define ARCH_SHADOW_STACK_GUARD_GAP.
+- Change static_cpu_has() to cpu_feature_enabled().
+- Replace _PAGE_CHG_MASK approach with fixup functions.
 
- arch/x86/include/asm/processor.h | 10 ++++++++++
- include/linux/mm.h               | 24 ++++++++++++++++++++----
- 2 files changed, 30 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/pgtable.h | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 3bcf27caf6c9..eb9536f803f9 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -907,6 +907,16 @@ static inline void spin_lock_prefetch(const void *x)
- #define STACK_TOP		TASK_SIZE_LOW
- #define STACK_TOP_MAX		TASK_SIZE_MAX
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 5f89035d1e60..f4870cd040de 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -726,6 +726,21 @@ static inline pmd_t pmd_mknotpresent(pmd_t pmd)
  
-+/*
-+ * Shadow stack pointer is moved by CALL, JMP, and INCSSP(Q/D).  INCSSPQ
-+ * moves shadow stack pointer up to 255 * 8 = ~2 KB (~1KB for INCSSPD) and
-+ * touches the first and the last element in the range, which triggers a
-+ * page fault if the range is not in a shadow stack.  Because of this,
-+ * creating 4-KB guard pages around a shadow stack prevents these
-+ * instructions from going beyond.
-+ */
-+#define ARCH_SHADOW_STACK_GUARD_GAP PAGE_SIZE
+ static inline u64 flip_protnone_guard(u64 oldval, u64 val, u64 mask);
+ 
++static inline pteval_t fixup_dirty_pte(pteval_t pteval)
++{
++	pte_t pte = __pte(pteval);
 +
- #define INIT_THREAD  {						\
- 	.addr_limit		= KERNEL_DS,			\
++	if (pte_dirty(pte)) {
++		pte = pte_mkclean(pte);
++
++		if (pte_flags(pte) & _PAGE_RW)
++			pte = pte_set_flags(pte, _PAGE_DIRTY_HW);
++		else
++			pte = pte_set_flags(pte, _PAGE_COW);
++	}
++	return pte_val(pte);
++}
++
+ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+ {
+ 	pteval_t val = pte_val(pte), oldval = val;
+@@ -736,16 +751,34 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+ 	 */
+ 	val &= _PAGE_CHG_MASK;
+ 	val |= check_pgprot(newprot) & ~_PAGE_CHG_MASK;
++	val = fixup_dirty_pte(val);
+ 	val = flip_protnone_guard(oldval, val, PTE_PFN_MASK);
+ 	return __pte(val);
  }
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index f0669e3cdd37..68eadf2c466d 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2630,6 +2630,10 @@ void page_cache_async_readahead(struct address_space *mapping,
- 				pgoff_t offset,
- 				unsigned long size);
  
-+#ifndef ARCH_SHADOW_STACK_GUARD_GAP
-+#define ARCH_SHADOW_STACK_GUARD_GAP 0
-+#endif
++static inline int pmd_write(pmd_t pmd);
++static inline pmdval_t fixup_dirty_pmd(pmdval_t pmdval)
++{
++	pmd_t pmd = __pmd(pmdval);
 +
- extern unsigned long stack_guard_gap;
- /* Generic expand stack which grows the stack according to GROWS{UP,DOWN} */
- extern int expand_stack(struct vm_area_struct *vma, unsigned long address);
-@@ -2662,9 +2666,15 @@ static inline struct vm_area_struct * find_vma_intersection(struct mm_struct * m
- static inline unsigned long vm_start_gap(struct vm_area_struct *vma)
++	if (pmd_dirty(pmd)) {
++		pmd = pmd_mkclean(pmd);
++
++		if (pmd_flags(pmd) & _PAGE_RW)
++			pmd = pmd_set_flags(pmd, _PAGE_DIRTY_HW);
++		else
++			pmd = pmd_set_flags(pmd, _PAGE_COW);
++	}
++	return pmd_val(pmd);
++}
++
+ static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
  {
- 	unsigned long vm_start = vma->vm_start;
-+	unsigned long gap = 0;
+ 	pmdval_t val = pmd_val(pmd), oldval = val;
  
--	if (vma->vm_flags & VM_GROWSDOWN) {
--		vm_start -= stack_guard_gap;
-+	if (vma->vm_flags & VM_GROWSDOWN)
-+		gap = stack_guard_gap;
-+	else if (vma->vm_flags & VM_SHSTK)
-+		gap = ARCH_SHADOW_STACK_GUARD_GAP;
-+
-+	if (gap != 0) {
-+		vm_start -= gap;
- 		if (vm_start > vma->vm_start)
- 			vm_start = 0;
- 	}
-@@ -2674,9 +2684,15 @@ static inline unsigned long vm_start_gap(struct vm_area_struct *vma)
- static inline unsigned long vm_end_gap(struct vm_area_struct *vma)
- {
- 	unsigned long vm_end = vma->vm_end;
-+	unsigned long gap = 0;
-+
-+	if (vma->vm_flags & VM_GROWSUP)
-+		gap = stack_guard_gap;
-+	else if (vma->vm_flags & VM_SHSTK)
-+		gap = ARCH_SHADOW_STACK_GUARD_GAP;
- 
--	if (vma->vm_flags & VM_GROWSUP) {
--		vm_end += stack_guard_gap;
-+	if (gap != 0) {
-+		vm_end += gap;
- 		if (vm_end < vma->vm_end)
- 			vm_end = -PAGE_SIZE;
- 	}
+ 	val &= _HPAGE_CHG_MASK;
+ 	val |= check_pgprot(newprot) & ~_HPAGE_CHG_MASK;
++	val = fixup_dirty_pmd(val);
+ 	val = flip_protnone_guard(oldval, val, PHYSICAL_PMD_PAGE_MASK);
+ 	return __pmd(val);
+ }
 -- 
 2.21.0
 
