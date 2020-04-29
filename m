@@ -2,226 +2,155 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD22C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9B9C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A96FB2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 198D72083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:47:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="joG3GSna"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="JwUMktf4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgD2Oqv (ORCPT
+        id S1726762AbgD2Orb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:46:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35888 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726539AbgD2Oqu (ORCPT
+        Wed, 29 Apr 2020 10:47:31 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:57307 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726348AbgD2Ora (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:46:50 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 530C3C03C1AE;
-        Wed, 29 Apr 2020 07:46:50 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id g74so2157832qke.13;
-        Wed, 29 Apr 2020 07:46:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=uegLoaGJrRXIo3UvM2TnGR4muRuT5O7FyR/8C1ZUKP8=;
-        b=joG3GSnaYBRZhQbM/qg0tvQ7SRIXV9GktxzsWx7uXY1s4sG+Ivfjy5AOx1iypz2Au+
-         dqmvvUt7BtBVODy/ne9bgiKNGhFXRiQO/u3FFGljz9llwgiuxDIrb3LMfVsw6AujxdKx
-         e3f4eYHt8Se4O7j4JPsfZTJ3b5bhv9YBXME4gRH+NnJAhOsW6PqnuaXnTF+ubhkISOKt
-         KT9Qc+7dyHqm3y4TzW15vo3OggYUbs7LlMAYJXVkPwhhe/jJlOR0HZmLocoM5Goyqile
-         0sBz/Q1q/gEeehlat8p1V8DeQ2tcVJOvY4yemRrxVYU4D6Yd/OvFeVj+pphtJsgfClYH
-         Wxow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uegLoaGJrRXIo3UvM2TnGR4muRuT5O7FyR/8C1ZUKP8=;
-        b=aHpzwnRlvFG7LR0UFsU1FgOrgj5xUo1ipkcQ/fP5ItkKawG3ZUECTf1B9+ZgRAU7de
-         ZSY2l0V/AS2q8qoBzZniUswoYk/flK9A+x+3qDPavi9MsGuqhjeJ+SI8Svmd+eqle1H/
-         j0vq7YALLGsKBqat7ZZM4zNnbH48XwzYlxCaUPRrBT+vKY+mFJmNnVqXRa2mJ2TE5Ub6
-         dJRy2EQsyyn14HQlVb1eNONAW/HP76rsKGqv0l7ZrIKU2XD9s4+0FM69vXSr4cGDvJLA
-         ggVousk1zkE2HbpLFmn4AzRgs6LOeyG/C4C2bYCnGGy69dhjPDaog9WhmmiSO6D4w6A6
-         gBaw==
-X-Gm-Message-State: AGi0Pua457TM77sJlITEcBl3jCijoEimXHrTjlnRmsBPZiagWdi6AAug
-        ZL8LHB013WJFxIicT8D9kL0=
-X-Google-Smtp-Source: APiQypK4xvPE45TMp0rjKQvGGJpTzCdvm8/pjG6I2mVlZgh0fUpBCdyNGFiXlKrv//AOMIGfYLloow==
-X-Received: by 2002:a37:5143:: with SMTP id f64mr16629748qkb.155.1588171609206;
-        Wed, 29 Apr 2020 07:46:49 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id o27sm15860313qko.71.2020.04.29.07.46.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 07:46:48 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0DC14409A3; Wed, 29 Apr 2020 11:46:46 -0300 (-03)
-Date:   Wed, 29 Apr 2020 11:46:46 -0300
-To:     kajoljain <kjain@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com,
-        maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com,
-        peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com,
-        jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com,
-        alexander.shishkin@linux.intel.com, mingo@kernel.org,
-        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
-        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
-        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH v8 0/7] powerpc/perf: Add json file metric support for
- the hv_24x7 socket/chip level events
-Message-ID: <20200429144646.GA30487@kernel.org>
-References: <20200401203340.31402-1-kjain@linux.ibm.com>
- <fa31bc42-d34c-c788-0109-350d769b51ce@linux.ibm.com>
+        Wed, 29 Apr 2020 10:47:30 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03TEkRih027849;
+        Wed, 29 Apr 2020 16:47:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=JrIPiTkgDLXSrRQnzVSRty80wJa9TRbjQJelaiwRij0=;
+ b=JwUMktf48FF2PsljXEuCR2xkw9mjJjeopDNAzqIeJL97nifniD7adyIsogQB3N1ND0no
+ +oynYWeBUAMTnwhqPPRJHeb7OyBwQAhypgu/YsEUYa8w5742NlVpUIwNNL2jhc903xSZ
+ cxwUJraOoL5JZ79h+079PzHbMpgKRqOzfoTzouKt6qKEjXLLAh+AEzZ9KGTCUKoMsKYt
+ vkTj/cvwlUug+xyunlSIeBd1aRd6F1izLa1EuGFixG1iYGLhr0G+FmRLb9F7NrDO/3WT
+ rr7Pg28i1yclIfr3Eu/EIDsnGCAeCtlaRXe5O9tMY5jTJIPdxGPsjLQp6iIxL0Fg56w3 Vg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30mhcc6yhx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 16:47:22 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 07D5910002A;
+        Wed, 29 Apr 2020 16:47:22 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EAFEE2AAF65;
+        Wed, 29 Apr 2020 16:47:21 +0200 (CEST)
+Received: from lmecxl0889.tpe.st.com (10.75.127.47) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Apr
+ 2020 16:47:20 +0200
+Subject: Re: [PATCH v2 12/12] remoteproc: stm32: Set synchronisation state
+ machine if needed
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
+CC:     <loic.pallardy@st.com>, <linux-remoteproc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200424202505.29562-1-mathieu.poirier@linaro.org>
+ <20200424202505.29562-13-mathieu.poirier@linaro.org>
+From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Message-ID: <defc59b2-4d64-a108-2e5e-ecc579f70a8b@st.com>
+Date:   Wed, 29 Apr 2020 16:47:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fa31bc42-d34c-c788-0109-350d769b51ce@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200424202505.29562-13-mathieu.poirier@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-29_07:2020-04-29,2020-04-29 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Apr 28, 2020 at 12:02:42PM +0530, kajoljain escreveu:
-> Hi Arnaldo,
-> 	Please let me know if there any changes required in this patchset,
-> as some of its patches are still not part of your perf/core tree.
 
-Thanks, I checked and all seems ok, added Jiri's Acked-by, appreciated,
-thanks,
 
-- Arnaldo
- 
-> Thanks,
-> Kajol Jain
+On 4/24/20 10:25 PM, Mathieu Poirier wrote:
+> Set the flags and operations to use if the M4 has been started
+> by another entity than the remoteproc core.
 > 
-> On 4/2/20 2:03 AM, Kajol Jain wrote:
-> > Patchset adds json file metric support for the hv_24x7 socket/chip level
-> > events. "hv_24x7" pmu interface events needs system dependent parameter
-> > like socket/chip/core. For example, hv_24x7 chip level events needs
-> > specific chip-id to which the data is requested should be added as part
-> > of pmu events.
-> > 
-> > So to enable JSON file support to "hv_24x7" interface, patchset reads
-> > total number of sockets details in sysfs under 
-> > "/sys/devices/hv_24x7/interface/".
-> > 
-> > Second patch of the patchset adds expr_scanner_ctx object to hold user
-> > data for the expr scanner, which can be used to hold runtime parameter.
-> > 
-> > Patch 4 & 6 of the patchset handles perf tool plumbing needed to replace
-> > the "?" character in the metric expression to proper value and hv_24x7
-> > json metric file for different Socket/chip resources.
-> > 
-> > Patch set also enable Hz/hz prinitg for --metric-only option to print
-> > metric data for bus frequency.
-> > 
-> > Applied and tested all these patches cleanly on top of jiri's flex changes
-> > with the changes done by Kan Liang for "Support metric group constraint"
-> > patchset and made required changes.
-> > 
-> > Also apply this patch on top of the fix patch send earlier
-> > for printing metric name incase overlapping events.
-> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=perf/core&id=37cd7f65bf71a48f25eeb6d9be5dacb20d008ea6
-> > 
-> > Changelog:
-> > v7 -> v8
-> > - Add test case for testing parsing of "?" in metric expression
-> > - Reaname variables name to runtime
-> > 
-> > v6 -> v7
-> > - Spit patchset into two patch series one for kernel changes and other
-> >   for tool side changes.
-> > - Made changes Suggested by Jiri, including rather then reading runtime
-> >   parameter from metric name, actually add it in structure egroup and
-> >   metric_expr.
-> > - As we don't need to read runtime parameter from metric name,
-> >   now I am not appending it and rather just printing it in
-> >   generic_metric function.
-> > 
-> > Kernel Side changes patch series: https://lkml.org/lkml/2020/3/27/58
-> > 
-> > v5 -> v6
-> > - resolve compilation issue due to rearranging patch series.
-> > - Rather then adding new function to take careof case for runtime param
-> >   in metricgroup__add_metric, using metricgroup__add_metric_param itself
-> >   for that work.
-> > - Address some optimization suggested like using directly file path
-> >   rather then adding new macro in header.c
-> > - Change commit message on patch where we are adding "?" support
-> >   by adding simple example.
-> > 
-> > v4 -> v5
-> > - Using sysfs__read_int instead of sysfs__read_ull while reading
-> >   parameter value in powerpc/util/header.c file.
-> > 
-> > - Using asprintf rather then malloc and sprintf 
-> >   Suggested by Arnaldo Carvalho de Melo
-> > 
-> > - Break patch 6 from previous version to two patch,
-> >   - One to add refactor current "metricgroup__add_metric" function
-> >     and another where actually "?" handling infra added.
-> > 
-> > - Add expr__runtimeparam as part of 'expr_scanner_ctx' struct
-> >   rather then making it global variable. Thanks Jiri for
-> >   adding this structure to hold user data for the expr scanner.
-> > 
-> > - Add runtime param as agrugement to function 'expr__find_other'
-> >   and 'expr__parse' and made changes on references accordingly.
-> > 
-> > v3 -> v4
-> > - Apply these patch on top of Kan liang changes.
-> >   As suggested by Jiri.
-> > 
-> > v2 -> v3
-> > - Remove setting  event_count to 0 part in function 'h_24x7_event_read'
-> >   with comment rather then adding 0 to event_count value.
-> >   Suggested by: Sukadev Bhattiprolu
-> > 
-> > - Apply tool side changes require to replace "?" on Jiri's flex patch
-> >   series and made all require changes to make it compatible with added
-> >   flex change.
-> > 
-> > v1 -> v2
-> > - Rename hv-24x7 metric json file as nest_metrics.json
-> > 
-> > Jiri Olsa (2):
-> >   perf expr: Add expr_ prefix for parse_ctx and parse_id
-> >   perf expr: Add expr_scanner_ctx object
-> > 
-> > Kajol Jain (5):
-> >   perf/tools: Refactoring metricgroup__add_metric function
-> >   perf/tools: Enhance JSON/metric infrastructure to handle "?"
-> >   perf/tests/expr: Added test for runtime param in metric expression
-> >   tools/perf: Enable Hz/hz prinitg for --metric-only option
-> >   perf/tools/pmu-events/powerpc: Add hv_24x7 socket/chip level metric
-> >     events
-> > 
-> >  tools/perf/arch/powerpc/util/header.c         |  8 ++
-> >  .../arch/powerpc/power9/nest_metrics.json     | 19 +++++
-> >  tools/perf/tests/expr.c                       | 20 +++--
-> >  tools/perf/util/expr.c                        | 25 +++---
-> >  tools/perf/util/expr.h                        | 19 +++--
-> >  tools/perf/util/expr.l                        | 37 ++++++---
-> >  tools/perf/util/expr.y                        |  6 +-
-> >  tools/perf/util/metricgroup.c                 | 78 +++++++++++++------
-> >  tools/perf/util/metricgroup.h                 |  2 +
-> >  tools/perf/util/stat-display.c                |  2 -
-> >  tools/perf/util/stat-shadow.c                 | 19 +++--
-> >  11 files changed, 164 insertions(+), 71 deletions(-)
-> >  create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-> > 
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> ---
+>  drivers/remoteproc/stm32_rproc.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
+> index dcae6103e3df..02dad3f51c7a 100644
+> --- a/drivers/remoteproc/stm32_rproc.c
+> +++ b/drivers/remoteproc/stm32_rproc.c
+> @@ -598,13 +598,20 @@ static struct rproc_ops st_rproc_ops = {
+>  	.get_boot_addr	= rproc_elf_get_boot_addr,
+>  };
+>  
+> -static __maybe_unused struct rproc_ops st_rproc_sync_ops = {
+> +static struct rproc_ops st_rproc_sync_ops = {
+>  	.start		= stm32_rproc_sync_start,
+>  	.stop		= stm32_rproc_stop,
+> +	.kick		= stm32_rproc_kick,
 
--- 
+Seems independent of the path.
 
-- Arnaldo
+>  	.parse_fw       = stm32_rproc_sync_parse_fw,
+>  	.find_loaded_rsc_table = stm32_rproc_sync_elf_find_loaded_rsc_table,
+>  };
+>  
+> +static struct rproc_sync_flags st_sync_flags = {
+> +	.on_init = true, /* sync with MCU when the kernel boots */
+> +	.after_stop = false, /* don't resync with MCU if stopped from sysfs */
+> +	.after_crash = false, /* don't resync with MCU after a crash */
+> +};
+> +
+could be const
+
+>  static const struct of_device_id stm32_rproc_match[] = {
+>  	{ .compatible = "st,stm32mp1-m4" },
+>  	{},
+> @@ -803,6 +810,7 @@ static int stm32_rproc_probe(struct platform_device *pdev)
+>  	struct stm32_rproc *ddata;
+>  	struct device_node *np = dev->of_node;
+>  	struct rproc *rproc;
+> +	struct rproc_sync_flags sync_flags = {0};
+>  	unsigned int state;
+>  	bool auto_boot = false;
+>  	int ret;
+> @@ -837,11 +845,17 @@ static int stm32_rproc_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	if (state == M4_STATE_CRUN) {
+> +		auto_boot = true;
+> +		sync_flags = st_sync_flags;
+
+seems an useless copy 
+
+Regards,
+Arnaud
+
+>  		ret = stm32_rproc_get_loaded_rsc_table(pdev, ddata);
+>  		if (ret)
+>  			goto free_rproc;
+>  	}
+>  
+> +	ret = rproc_set_state_machine(rproc, &st_rproc_sync_ops, sync_flags);
+> +	if (ret)
+> +		goto free_rproc;
+> +
+>  	rproc->auto_boot = auto_boot;
+>  	rproc->has_iommu = false;
+>  	ddata->workqueue = create_workqueue(dev_name(dev));
+> 
