@@ -2,116 +2,111 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A26C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E37E4C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D188F20B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:13:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588162399;
-	bh=u4q8FeVjq66c39pqaDcuSEyHVkmprJELW74mmEQTIaE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=odpEVPQ7hxtXbKIAxbCJvLktsIxNU6d93sxVaVz3k8BGMXOWiaPAbQLy+K5+tdOjr
-	 GX3ECKlEYoIkWoHHwd4sJF7CvRQr/9+CDlhcoeCDltkgg1GzEwUFDERUIMxrEeYvWU
-	 WHu7yb/Phpizxch+yXAO8VB5iAJgsGtXs2cLlm2E=
+	by mail.kernel.org (Postfix) with ESMTP id B189920731
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:15:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="GivbK70Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgD2MNT (ORCPT
+        id S1726839AbgD2MPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:13:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727070AbgD2MNN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:13:13 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33A292087E;
-        Wed, 29 Apr 2020 12:13:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588162392;
-        bh=u4q8FeVjq66c39pqaDcuSEyHVkmprJELW74mmEQTIaE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LkccZMaFK0HPa/lbTJpwOfhl8YJedaGt+oqHcEse9oxecOG+ePMQl8+6lXN291eQt
-         XMOEz6IrJ3WVM70u8VUu+lzZReL1NMjGZKzI6S/iVHo09sj1mB7r8KpyAoFiY7glgP
-         IM3XoNOsXV/iAUpplEFGhw3FFVTD9pPI8zvfFoQM=
-Date:   Wed, 29 Apr 2020 13:13:10 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, robh@kernel.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hauke@hauke-m.de,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
- transfers
-Message-ID: <20200429121310.GH4201@sirena.org.uk>
-References: <cover.1587702428.git.eswara.kota@linux.intel.com>
- <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
- <310ca761-e7ae-1192-99fd-a1960697806b@gmail.com>
- <46f31699-e781-ae33-3ee5-d51e6940ee43@linux.intel.com>
+        Wed, 29 Apr 2020 08:15:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726556AbgD2MPS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 08:15:18 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF7B1C03C1AD
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:15:16 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id h6so1471462lfc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:15:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fR8uUeszZzFt2LU2tuKirZn9/ZjcfUzUQ8MAaG7aJLU=;
+        b=GivbK70Yv83IrbrW7RhyIJdlS0bHppB43QCI+a4XVmY1/4udQeKLqvMPBq7OxM/056
+         uwcfBGuL4DltRCWPQVj8cVbNuvYMki5OEe7YtVUPHH9StzW0f3XVWAzDdm6KFjyvo2ZA
+         ONal6lpruxUL2QKx/PxeBOHbdefVIbbwQ9vk8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fR8uUeszZzFt2LU2tuKirZn9/ZjcfUzUQ8MAaG7aJLU=;
+        b=MmEevUd6hYyMCuwGTaAqflKRofuvLfl8+WIa/vXFcbbImemP9SieCcZYAF1jP2SLzR
+         zDUeEAPtxJrNgneCmlaw04iAg8dVkCWXXCPcKqriROCrtT1Dqui9InGgXd002Jx2vKls
+         HEhE2zFUq53BtOoV8wTzQrzLLje7nMydf9UGlmVAtJR1/6eznIniRsEslBcvFEIVoGkj
+         hNTjNfxaavP6ujI37dUl7dRHZgSgkgH0f9nE5ep/Icz68gZwwK10xpurA23CQAw7bS8n
+         2QF6lqXi0BR8038EZxjrb1d0pYC663h9E0yEVHX2+G6pswgwBF17CdtrjFfJmoAN2tKh
+         Dh8A==
+X-Gm-Message-State: AGi0PuYeA+yY9Zkcmo/d8Fd/Fe1omknGCMYtlTZxqUeBmD1xwNJBQuIf
+        /f0mLqtLRkrJbPADg+ITy/QrHQ==
+X-Google-Smtp-Source: APiQypLeMlSBJaJY8gtk/W5nI4lvaeHsjiQ1yDq0jG4P+mgzUjcApTyZVTBPIGrd1YKYMhPE7tlb1g==
+X-Received: by 2002:ac2:5e26:: with SMTP id o6mr21918859lfg.49.1588162515349;
+        Wed, 29 Apr 2020 05:15:15 -0700 (PDT)
+Received: from [192.168.1.149] (ip-5-186-116-45.cgn.fibianet.dk. [5.186.116.45])
+        by smtp.gmail.com with ESMTPSA id l18sm2183374ljg.98.2020.04.29.05.15.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Apr 2020 05:15:14 -0700 (PDT)
+Subject: Re: [RFC PATCH bpf-next 0/6] bpf, printk: add BTF-based type printing
+To:     Joe Perches <joe@perches.com>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com, kafai@fb.com,
+        songliubraving@fb.com, andriin@fb.com, john.fastabend@gmail.com,
+        kpsingh@chromium.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+References: <1587120160-3030-1-git-send-email-alan.maguire@oracle.com>
+ <20200418160536.4mrvqh2lasqbyk77@ast-mbp>
+ <alpine.LRH.2.21.2004201623390.12711@localhost>
+ <7d6019da19d52c851d884731b1f16328fdbe2e3d.camel@perches.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <9c14a68e-c374-bca4-d0f8-c25b51c8dfe4@rasmusvillemoes.dk>
+Date:   Wed, 29 Apr 2020 14:15:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zq44+AAfm4giZpo5"
-Content-Disposition: inline
-In-Reply-To: <46f31699-e781-ae33-3ee5-d51e6940ee43@linux.intel.com>
-X-Cookie: I know how to do SPECIAL EFFECTS!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <7d6019da19d52c851d884731b1f16328fdbe2e3d.camel@perches.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 20/04/2020 18.32, Joe Perches wrote:
+> On Mon, 2020-04-20 at 16:29 +0100, Alan Maguire wrote:
 
---zq44+AAfm4giZpo5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>>>>   struct sk_buff *skb = alloc_skb(64, GFP_KERNEL);
+>>>>
+>>>>   pr_info("%pTN<struct sk_buff>", skb);
+>>>
+>>> why follow "TN" convention?
+>>> I think "%p<struct sk_buff>" is much more obvious, unambiguous, and
+>>> equally easy to parse.
+>>>
+>>
+>> That was my first choice, but the first character
+>> after the 'p' in the '%p' specifier signifies the
+>> pointer format specifier. If we use '<', and have
+>> '%p<', where do we put the modifiers? '%p<xYz struct foo>'
+>> seems clunky to me.
 
-On Wed, Apr 29, 2020 at 04:20:53PM +0800, Dilip Kota wrote:
-> On 4/28/2020 7:10 PM, Daniel Schwierzeck wrote:
+There's also the issue that %p followed by alnum has been understood to
+be reserved/specially handled by the kernel's printf implementation for
+a decade, while other characters have so far been treated as "OK, this
+was just a normal %p". A quick grep for %p< only gives a hit in
+drivers/scsi/dc395x.c, but there could be others (with field width
+modifier between % and p), and in any case I think it's a bad idea to
+extend the set of characters that cannot follow %p.
 
-> > actually there is no real bottom half. Reading or writing the FIFOs is
-> > fast and is therefore be done in hard IRQ context. But as the comment
-
-> Doing FIFO r/w in threaded irqs shouldn't cause any impact on maximum
-> transfer rate i think.
-
-Have you actually tested this?  Generally adding extra latency is going
-to lead to some opportunity for the hardware to idle and the longer the
-hardware is idle the lower the throughput.
-
-> Also the ISR should be quick enough, doing FIFO r/w in ISR adds up more
-> latency to ISR.
-> Handling the FIFOs r/w in threaded irq will be a better way.
-
-Consider what happens on a heavily loaded system - the threaded
-interrupt will have to be scheduled along with other tasks.
-
-> > for lantiq_ssc_bussy_work() state, the driver needs some busy-waiting
-> > after the last interrupt. I don't think it's worth to replace this with
-> > threaded interrupts which add more runtime overhead and likely decrease
-> > the maximum transfer speed.
-
-> Workqueue has a higher chances of causing SPI transfers timedout.
-
-because...?
-
---zq44+AAfm4giZpo5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6pb1UACgkQJNaLcl1U
-h9B5Xwf9HYTpgwJhe8Mt24YHCYdheKLib494VcuElZXJPwV8qe4CbHLu0OaMB8Nt
-eMnwvPeuQwMCZdAVlUONXcAhodLdAqnQ/vW4Pv3EmsvTsIcpdQwS9U3ECZpg3GsQ
-2/h0SN8MUv4abWuaINGq2aSzrkEo54IdDbKL2hX/EBgb3eYEbslZLADMPrj1GbUq
-XZ/+4/hZYBJGOU0GhMhEICTVLRRn3WaX7D7zsKnhYuJSBy0MawdkHcvbTbMf/5mb
-ueROU1mpDvze2eNPtzaAT/IC63tb9DCL1j3MeVc7Vfr1zbaB/AWtMr4hxjr9+6jP
-tC0FaIJds95B1JxelaCLXRuR7GA0mw==
-=/9PQ
------END PGP SIGNATURE-----
-
---zq44+AAfm4giZpo5--
+Rasmus
